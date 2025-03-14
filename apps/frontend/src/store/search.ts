@@ -1,6 +1,6 @@
 import Store from '@/store/store';
-import {Severity, severities} from 'inspecjs';
-import {parse} from 'search-query-parser';
+import {controlStatuses, Severity} from 'inspecjs';
+import _ from 'lodash';
 import {
   Action,
   getModule,
@@ -9,147 +9,698 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {ExtendedControlStatus} from './data_filters';
+import {
+  CciSearchTerm,
+  ClassificationSearchTerm,
+  CodeSearchTerm,
+  ControlIdSearchTerm,
+  DescriptionSearchTerm,
+  EvaluationTagSearchTerm,
+  FilenameSearchTerm,
+  GroupNameSearchTerm,
+  IaControlsSearchTerm,
+  KeywordsSearchTerm,
+  NistIdFilter,
+  RuleIdSearchTerm,
+  SearchFilterSyncModule,
+  StigIdSearchTerm,
+  TitleSearchTerm,
+  UserGroupSearchTerm,
+  VulIdSearchTerm
+} from './search_filter_sync';
 
-export interface ISearchState {
-  searchTerm: string;
-  freeSearch: string;
-  titleSearchTerms: string[];
-  descriptionSearchTerms: string[];
-  controlIdSearchTerms: string[];
-  codeSearchTerms: string[];
-  NISTIdFilter: string[];
-  statusFilter: ExtendedControlStatus[];
-  severityFilter: Severity[];
-}
+import SearchString from 'search-string';
 
-export interface SearchQuery {
-  [key: string]: {
-    include?: string;
-    exclude?: string;
-  };
-}
+/** Type used to represent a parsed value and negated pair from query string  */
+export type SearchEntry<T> = {
+  value: T; // ex: string, ExtendedControlStatus, Severity, etc.
+  negated: boolean;
+};
 
-export const statusTypes = [
-  'Not Applicable',
-  'From Profile',
-  'Profile Error',
-  'Passed',
-  'Failed',
-  'Not Reviewed',
-  'Waived'
-];
+/** List of possible status types  */
+export const statusTypes = [...controlStatuses, 'Waived'];
 
-export function lowercaseAll(input: string | string[]): string | string[] {
-  if (typeof input === 'string') {
-    return input.toLowerCase();
-  } else {
-    return input.map((string) => {
-      return string.toLowerCase();
-    });
-  }
-}
-
-export function valueToSeverity(severity: string): Severity {
-  if (severities.find((severity) => severity === severity.toLowerCase())) {
-    return severity as Severity;
-  } else {
-    return 'none';
-  }
-}
 @Module({
   namespaced: true,
   dynamic: true,
   store: Store,
   name: 'SearchModule'
 })
-class Search extends VuexModule implements ISearchState {
-  controlIdSearchTerms: string[] = [];
-  codeSearchTerms: string[] = [];
-  NISTIdFilter: string[] = [];
-  descriptionSearchTerms: string[] = [];
-  freeSearch = '';
-  searchTerm = '';
-  statusFilter: ExtendedControlStatus[] = [];
-  severityFilter: Severity[] = [];
-  titleSearchTerms: string[] = [];
+class Search extends VuexModule {
+  searchTerm = ''; // Value entered into the top search bar
   tagFilter: string[] = [];
 
-  /** Update the current search */
-  @Action
-  updateSearch(newValue: string) {
-    if (newValue) {
-      this.context.commit('SET_SEARCH', newValue);
-    } else {
-      this.context.commit('SET_SEARCH', '');
-    }
-  }
+  /** Current value of the parsed query string
+   * Standard format for the condition array:
+   * Example: [ { keyword: 'status', value: 'Passed', negated: false },
+   * { keyword: 'status', value: 'Failed', negated: true },
+   * { keyword: 'severity', value: 'low', negated: true } ]
+   */
+  parsedSearchResult = SearchString.parse(this.searchTerm);
 
-  @Action
-  parseSearch() {
-    this.clear();
-    const options = {
-      keywords: [
-        'status',
-        'severity',
-        'impact',
-        'id',
-        'title',
-        'nist',
-        'desc',
-        'description',
-        'code',
-        'input',
-        'tags'
-      ]
-    };
-    const searchResult = parse(this.searchTerm, options);
-    if (typeof searchResult === 'string') {
-      this.setFreesearch(searchResult);
-    } else {
-      for (const prop in searchResult) {
-        const include: string | string[] = searchResult[prop] || '';
-        switch (prop) {
-          case 'status':
-            this.addStatusFilter(
-              include as ExtendedControlStatus | ExtendedControlStatus[]
-            );
-            break;
-          case 'severity':
-            this.addSeverityFilter(include as Severity | Severity[]);
-            break;
-          case 'id':
-            this.addIdFilter(lowercaseAll(include));
-            break;
-          case 'title':
-            this.addTitleFilter(lowercaseAll(include));
-            break;
-          case 'nist':
-            this.addNISTIdFilter(lowercaseAll(include));
-            break;
-          case 'desc':
-          case 'description':
-            this.addDescriptionFilter(lowercaseAll(include));
-            break;
-          case 'code':
-            this.addCodeFilter(lowercaseAll(include));
-            break;
-          case 'tags':
-            this.addTagFilter(lowercaseAll(include));
-            break;
-          case 'text':
-            if (typeof include === 'string') {
-              this.setFreesearch(include);
-            }
-            break;
-        }
-      }
-    }
-  }
+  inFileSearchTerms: {
+    controlId: SearchEntry<ControlIdSearchTerm>[];
+    code: SearchEntry<CodeSearchTerm>[];
+    ruleid: SearchEntry<RuleIdSearchTerm>[];
+    vulid: SearchEntry<VulIdSearchTerm>[];
+    stigid: SearchEntry<StigIdSearchTerm>[];
+    classification: SearchEntry<ClassificationSearchTerm>[];
+    groupName: SearchEntry<GroupNameSearchTerm>[];
+    cci: SearchEntry<CciSearchTerm>[];
+    iacontrols: SearchEntry<IaControlsSearchTerm>[];
+    NISTIdFilter: SearchEntry<NistIdFilter>[];
+    description: SearchEntry<DescriptionSearchTerm>[];
+    statusFilter: SearchEntry<ExtendedControlStatus>[];
+    severityFilter: SearchEntry<Severity>[];
+    title: SearchEntry<TitleSearchTerm>[];
+    keywords: SearchEntry<KeywordsSearchTerm>[];
+  } = {
+    controlId: [],
+    code: [],
+    ruleid: [],
+    vulid: [],
+    stigid: [],
+    classification: [],
+    groupName: [],
+    cci: [],
+    iacontrols: [],
+    NISTIdFilter: [],
+    description: [],
+    statusFilter: [],
+    severityFilter: [],
+    title: [],
+    keywords: []
+  };
+
+  fileMetadataSearchTerms: {
+    filename: SearchEntry<FilenameSearchTerm>[];
+    group: SearchEntry<UserGroupSearchTerm>[];
+    evalTag: SearchEntry<EvaluationTagSearchTerm>[];
+  } = {
+    filename: [],
+    group: [],
+    evalTag: []
+  };
 
   /** Sets the current search */
   @Mutation
   SET_SEARCH(newSearch: string) {
     this.searchTerm = newSearch;
+  }
+
+  /** Update the current search */
+  @Action
+  updateSearch(newSearch: string) {
+    if (newSearch) {
+      this.context.commit('SET_SEARCH', newSearch);
+    } else {
+      this.context.commit('SET_SEARCH', '');
+    }
+  }
+
+  /** Mapper for category input fields to valid filter values*/
+  categoryToFilterMapping: Map<string, string> = new Map([
+    ['Keywords', 'keywords'],
+    ['ID', 'id'],
+    ['Vul ID', 'vulid'],
+    ['Rule ID', 'ruleid'],
+    ['Title', 'title'],
+    ['Nist', 'nist'],
+    ['Description', 'description'],
+    ['Code', 'code'],
+    ['Stig ID', 'stigid'],
+    ['Classification', 'classification'],
+    ['IA Control', 'iaControl'],
+    ['Group Name', 'groupname'],
+    ['CCIs', 'cci'],
+
+    ['File Name', 'filename'],
+    ['Group', 'group'],
+    ['Tag', 'tag']
+  ]);
+
+  /**
+   * Allows values to be added to a specific field in the querystring.
+   * @param searchPayload - An object of (The field to add to (e.g., status, severity, etc.)), value (The value to add to the field (e.g., "Passed","Failed", etc.)), and previousValues (The values already in the querystring)
+   *
+   */
+  @Action
+  addSearchFilter(searchPayload: {
+    field: string;
+    value: string;
+    negated: boolean;
+  }) {
+    // Category or file filter type filter
+    const categoryFilter = this.categoryToFilterMapping.get(
+      searchPayload.field
+    );
+    const usingCategoryFilter = !!categoryFilter;
+    const isDuplicateCategoryFilter = this.parsedSearchResult
+      .getConditionArray()
+      .find(
+        (value) =>
+          value.keyword === categoryFilter &&
+          value.value === searchPayload.value
+      );
+
+    if (usingCategoryFilter && !isDuplicateCategoryFilter) {
+      this.parsedSearchResult.addEntry(
+        categoryFilter,
+        searchPayload.value,
+        searchPayload.negated
+      );
+    }
+
+    // Quick filter
+    const usingQuickFilter = !categoryFilter;
+    const isDuplicateQuickFilter = this.parsedSearchResult
+      .getConditionArray()
+      .find(
+        (value) =>
+          value.keyword === searchPayload.field &&
+          value.value === searchPayload.value
+      );
+
+    if (usingQuickFilter && !isDuplicateQuickFilter) {
+      this.parsedSearchResult.addEntry(
+        searchPayload.field,
+        searchPayload.value,
+        searchPayload.negated
+      );
+    }
+    this.updateSearch(this.parsedSearchResult.toString());
+  }
+
+  /**
+   * Allows values to be removed from a specific field in the querystring.
+   * @param searchPayload - An object of field (The field to add to (e.g., status, severity, etc.)), value (The value to add to the field (e.g., "Passed","Failed", etc.)), and previousValues (The values already in the querystring)
+   */
+  @Action
+  removeSearchFilter<T>(searchPayload: {
+    field: string;
+    value: T;
+    negated: boolean;
+  }) {
+    if (!this.parsedSearchResult) {
+      return;
+    }
+
+    const clonedConditionArray = this.parsedSearchResult
+      .getConditionArray()
+      .slice();
+    for (const searchEntry of clonedConditionArray) {
+      const payloadValue = _.isString(searchPayload.value)
+        ? searchPayload.value.toLowerCase()
+        : searchPayload.value;
+      if (
+        searchEntry.keyword === searchPayload.field &&
+        searchEntry.value.toLowerCase() === payloadValue
+      ) {
+        this.parsedSearchResult.removeEntry(
+          searchPayload.field,
+          searchEntry.value,
+          searchPayload.negated
+        );
+      }
+    }
+    this.updateSearch(this.parsedSearchResult.toString());
+  }
+
+  // Status filtering
+
+  @Action
+  addStatusFilter(
+    status:
+      | SearchEntry<ExtendedControlStatus>
+      | SearchEntry<ExtendedControlStatus>[]
+  ) {
+    this.context.commit('ADD_STATUS', status);
+  }
+
+  @Action
+  removeStatusFilter(status: SearchEntry<ExtendedControlStatus>) {
+    this.context.commit('REMOVE_STATUS', status);
+  }
+
+  @Action
+  setStatusFilter(status: SearchEntry<ExtendedControlStatus>[]) {
+    this.context.commit('SET_STATUS', status);
+  }
+
+  /** Adds a status filter */
+  @Mutation
+  ADD_STATUS(
+    status:
+      | SearchEntry<ExtendedControlStatus>
+      | SearchEntry<ExtendedControlStatus>[]
+  ) {
+    this.inFileSearchTerms.statusFilter =
+      this.inFileSearchTerms.statusFilter.concat(status);
+  }
+
+  /** Removes a status filter */
+  @Mutation
+  REMOVE_STATUS(status: SearchEntry<ExtendedControlStatus>) {
+    this.inFileSearchTerms.statusFilter =
+      this.inFileSearchTerms.statusFilter.filter(
+        (filter) => filter.value.toLowerCase() !== status.value.toLowerCase()
+      );
+  }
+
+  @Mutation
+  CLEAR_STATUS() {
+    this.inFileSearchTerms.statusFilter = [];
+  }
+
+  @Mutation
+  SET_STATUS(status: SearchEntry<ExtendedControlStatus>[]) {
+    this.inFileSearchTerms.statusFilter = status;
+  }
+
+  // Severity filtering
+
+  /** Adds severity to filter */
+  @Action
+  addSeverityFilter(severity: SearchEntry<Severity> | SearchEntry<Severity>[]) {
+    this.context.commit('ADD_SEVERITY', severity);
+  }
+
+  @Action
+  removeSeverity(severity: SearchEntry<Severity>) {
+    this.context.commit('REMOVE_SEVERITY', severity);
+  }
+
+  @Action
+  setSeverity(severity: SearchEntry<Severity>[]) {
+    this.context.commit('SET_SEVERITY', severity);
+  }
+
+  @Action
+  clearSeverityFilter() {
+    this.context.commit('CLEAR_SEVERITY');
+  }
+
+  @Mutation
+  ADD_SEVERITY(severity: SearchEntry<Severity> | SearchEntry<Severity>[]) {
+    this.inFileSearchTerms.severityFilter =
+      this.inFileSearchTerms.severityFilter.concat(severity);
+  }
+
+  @Mutation
+  REMOVE_SEVERITY(severity: SearchEntry<Severity>) {
+    this.inFileSearchTerms.severityFilter =
+      this.inFileSearchTerms.severityFilter.filter(
+        (filter) => filter.value.toLowerCase() !== severity.value.toLowerCase()
+      );
+  }
+
+  /** Sets the severity filter */
+  @Mutation
+  SET_SEVERITY(severity: SearchEntry<Severity>[]) {
+    this.inFileSearchTerms.severityFilter = severity;
+  }
+
+  /** Clears all severity filters */
+  @Mutation
+  CLEAR_SEVERITY() {
+    this.inFileSearchTerms.severityFilter = [];
+  }
+
+  // Control ID Filtering
+
+  /** Adds control id to filter */
+  @Action
+  addIdFilter(
+    id: SearchEntry<ControlIdSearchTerm> | SearchEntry<ControlIdSearchTerm>[]
+  ) {
+    this.context.commit('ADD_ID', id);
+  }
+
+  @Mutation
+  ADD_ID(
+    id: SearchEntry<ControlIdSearchTerm> | SearchEntry<ControlIdSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.controlId =
+      this.inFileSearchTerms.controlId.concat(id);
+  }
+
+  /** Sets the control IDs filter */
+  @Mutation
+  SET_ID(ids: SearchEntry<ControlIdSearchTerm>[]) {
+    this.inFileSearchTerms.controlId = ids;
+  }
+
+  /** Clears all control ID filters */
+  @Mutation
+  CLEAR_ID() {
+    this.inFileSearchTerms.controlId = [];
+  }
+
+  // Title filtering
+
+  /** Adds a title filter */
+  @Action
+  addTitleFilter(
+    title: SearchEntry<TitleSearchTerm> | SearchEntry<TitleSearchTerm>[]
+  ) {
+    this.context.commit('ADD_TITLE', title);
+  }
+
+  @Mutation
+  ADD_TITLE(
+    title: SearchEntry<TitleSearchTerm> | SearchEntry<TitleSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.title = this.inFileSearchTerms.title.concat(title);
+  }
+
+  /** Sets the title filters */
+  @Mutation
+  SET_TITLE(titles: SearchEntry<TitleSearchTerm>[]) {
+    this.inFileSearchTerms.title = titles;
+  }
+
+  /** Clears all title filters */
+  @Mutation
+  CLEAR_TITLE() {
+    this.inFileSearchTerms.title = [];
+  }
+
+  // NIST ID Filtering
+
+  /** Adds NIST ID to filter */
+  @Action
+  addNISTIdFilter(
+    NISTId: SearchEntry<NistIdFilter> | SearchEntry<NistIdFilter>[]
+  ) {
+    this.context.commit('ADD_NIST', NISTId);
+  }
+
+  @Mutation
+  ADD_NIST(NISTId: SearchEntry<NistIdFilter> | SearchEntry<NistIdFilter>[]) {
+    this.inFileSearchTerms.NISTIdFilter =
+      this.inFileSearchTerms.NISTIdFilter.concat(NISTId);
+  }
+
+  /** Clears all NIST ID filters */
+  @Mutation
+  CLEAR_NIST() {
+    this.inFileSearchTerms.NISTIdFilter = [];
+  }
+
+  // Description Filtering
+
+  /** Calls the description mutator to add a description to the filter */
+  @Action
+  addDescriptionFilter(
+    description:
+      | SearchEntry<DescriptionSearchTerm>
+      | SearchEntry<DescriptionSearchTerm>[]
+  ) {
+    this.context.commit('ADD_DESCRIPTION', description);
+  }
+
+  /** Adds a description to the filter */
+  @Mutation
+  ADD_DESCRIPTION(
+    description:
+      | SearchEntry<DescriptionSearchTerm>
+      | SearchEntry<DescriptionSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.description =
+      this.inFileSearchTerms.description.concat(description);
+  }
+
+  /** Clears all description from the filters */
+  @Mutation
+  CLEAR_DESCRIPTION() {
+    this.inFileSearchTerms.description = [];
+  }
+
+  // Code filtering
+
+  /** Adds code to filter */
+  @Action
+  addCodeFilter(
+    code: SearchEntry<CodeSearchTerm> | SearchEntry<CodeSearchTerm>[]
+  ) {
+    this.context.commit('ADD_CODE', code);
+  }
+
+  @Mutation
+  ADD_CODE(code: SearchEntry<CodeSearchTerm> | SearchEntry<CodeSearchTerm>[]) {
+    this.inFileSearchTerms.code = this.inFileSearchTerms.code.concat(code);
+  }
+
+  /** Clears all code filters */
+  @Mutation
+  CLEAR_CODE() {
+    this.inFileSearchTerms.code = [];
+  }
+
+  // Ruleid filtering
+
+  /** Adds Ruleid to filter */
+  @Action
+  addRuleidFilter(
+    ruleid: SearchEntry<RuleIdSearchTerm> | SearchEntry<RuleIdSearchTerm>[]
+  ) {
+    this.context.commit('ADD_RULEID', ruleid);
+  }
+
+  @Mutation
+  ADD_RULEID(
+    ruleid: SearchEntry<RuleIdSearchTerm> | SearchEntry<RuleIdSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.ruleid =
+      this.inFileSearchTerms.ruleid.concat(ruleid);
+  }
+
+  /** Clears all Ruleid filters */
+  @Mutation
+  CLEAR_RULEID() {
+    this.inFileSearchTerms.ruleid = [];
+  }
+
+  // Vulid filtering
+
+  /** Adds Vulid to filter */
+  @Action
+  addVulidFilter(
+    vulid: SearchEntry<VulIdSearchTerm> | SearchEntry<VulIdSearchTerm>[]
+  ) {
+    this.context.commit('ADD_VULID', vulid);
+  }
+
+  @Mutation
+  ADD_VULID(
+    vulid: SearchEntry<VulIdSearchTerm> | SearchEntry<VulIdSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.vulid = this.inFileSearchTerms.vulid.concat(vulid);
+  }
+
+  /** Clears all Vulid filters */
+  @Mutation
+  CLEAR_VULID() {
+    this.inFileSearchTerms.vulid = [];
+  }
+
+  // Stigid filtering
+
+  /** Adds Stigid to filter */
+  @Action
+  addStigidFilter(
+    stigid: SearchEntry<StigIdSearchTerm> | SearchEntry<StigIdSearchTerm>[]
+  ) {
+    this.context.commit('ADD_STIGID', stigid);
+  }
+
+  @Mutation
+  ADD_STIGID(
+    stigid: SearchEntry<StigIdSearchTerm> | SearchEntry<StigIdSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.stigid =
+      this.inFileSearchTerms.stigid.concat(stigid);
+  }
+
+  /** Clears all Stigid filters */
+  @Mutation
+  CLEAR_STIGID() {
+    this.inFileSearchTerms.stigid = [];
+  }
+
+  // Classification filtering
+
+  /** Adds Classification to filter */
+  @Action
+  addClassificationFilter(
+    classification:
+      | SearchEntry<ClassificationSearchTerm>
+      | SearchEntry<ClassificationSearchTerm>[]
+  ) {
+    this.context.commit('ADD_CLASSIFICATION', classification);
+  }
+
+  @Mutation
+  ADD_CLASSIFICATION(
+    classification:
+      | SearchEntry<ClassificationSearchTerm>
+      | SearchEntry<ClassificationSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.classification =
+      this.inFileSearchTerms.classification.concat(classification);
+  }
+
+  /** Clears all Classification filters */
+  @Mutation
+  CLEAR_CLASSIFICATION() {
+    this.inFileSearchTerms.classification = [];
+  }
+
+  // Groupname filtering
+
+  /** Adds Groupname to filter */
+  @Action
+  addGroupnameFilter(
+    groupname:
+      | SearchEntry<GroupNameSearchTerm>
+      | SearchEntry<GroupNameSearchTerm>[]
+  ) {
+    this.context.commit('ADD_GROUPNAME', groupname);
+  }
+
+  @Mutation
+  ADD_GROUPNAME(
+    groupname:
+      | SearchEntry<GroupNameSearchTerm>
+      | SearchEntry<GroupNameSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.groupName =
+      this.inFileSearchTerms.groupName.concat(groupname);
+  }
+
+  /** Clears all Groupname filters */
+  @Mutation
+  CLEAR_GROUPNAME() {
+    this.inFileSearchTerms.groupName = [];
+  }
+
+  // CCI filtering
+
+  /** Adds CCI to filter */
+  @Action
+  addCciFilter(cci: SearchEntry<CciSearchTerm> | SearchEntry<CciSearchTerm>[]) {
+    this.context.commit('ADD_CCI', cci);
+  }
+
+  @Mutation
+  ADD_CCI(cci: SearchEntry<CciSearchTerm> | SearchEntry<CciSearchTerm>[]) {
+    this.inFileSearchTerms.cci = this.inFileSearchTerms.cci.concat(cci);
+  }
+
+  /** Clears all CCI filters */
+  @Mutation
+  CLEAR_CCI() {
+    this.inFileSearchTerms.cci = [];
+  }
+
+  // IA Controls filtering
+
+  /** Adds IA Controls to filter */
+  @Action
+  addIaControlsFilter(
+    iaControl:
+      | SearchEntry<IaControlsSearchTerm>
+      | SearchEntry<IaControlsSearchTerm>[]
+  ) {
+    this.context.commit('ADD_IA_CONTROL', iaControl);
+  }
+
+  @Mutation
+  ADD_IA_CONTROL(
+    iaControl:
+      | SearchEntry<IaControlsSearchTerm>
+      | SearchEntry<IaControlsSearchTerm>[]
+  ) {
+    this.inFileSearchTerms.iacontrols =
+      this.inFileSearchTerms.iacontrols.concat(iaControl);
+  }
+
+  /** Clears all CCI filters */
+  @Mutation
+  CLEAR_IA_CONTROLS() {
+    this.inFileSearchTerms.iacontrols = [];
+  }
+
+  /** Adds Keywords to filter */
+  @Action
+  addKeywordsFilter(keyword: SearchEntry<KeywordsSearchTerm>) {
+    this.context.commit('ADD_KEYWORD', keyword);
+  }
+
+  @Mutation
+  ADD_KEYWORD(keyword: SearchEntry<KeywordsSearchTerm>) {
+    this.inFileSearchTerms.keywords =
+      this.inFileSearchTerms.keywords.concat(keyword);
+  }
+
+  /** Clears all keyword filters */
+  @Mutation
+  CLEAR_KEYWORDS() {
+    this.inFileSearchTerms.keywords = [];
+  }
+
+  /** Adds filename to filter */
+  @Action
+  addFilenameFilter(filename: SearchEntry<FilenameSearchTerm>) {
+    this.context.commit('ADD_FILENAME', filename);
+  }
+
+  @Mutation
+  ADD_FILENAME(filename: SearchEntry<FilenameSearchTerm>) {
+    this.fileMetadataSearchTerms.filename =
+      this.fileMetadataSearchTerms.filename.concat(filename);
+  }
+
+  /** Clears all filename filters */
+  @Mutation
+  CLEAR_FILENAME() {
+    this.fileMetadataSearchTerms.filename = [];
+  }
+
+  /** Adds user group to filter */
+  @Action
+  addUserGroupFilter(group: SearchEntry<UserGroupSearchTerm>) {
+    this.context.commit('ADD_USER_GROUP', group);
+  }
+
+  @Mutation
+  ADD_USER_GROUP(group: SearchEntry<UserGroupSearchTerm>) {
+    this.fileMetadataSearchTerms.group =
+      this.fileMetadataSearchTerms.group.concat(group);
+  }
+
+  /** Clears all user group filters */
+  @Mutation
+  CLEAR_USER_GROUP() {
+    this.fileMetadataSearchTerms.group = [];
+  }
+
+  /** Adds evaluation tag to filter */
+  @Action
+  addEvalTagFilter(evalTag: SearchEntry<EvaluationTagSearchTerm>) {
+    this.context.commit('ADD_EVAL_TAG', evalTag);
+  }
+
+  @Mutation
+  ADD_EVAL_TAG(evalTag: SearchEntry<EvaluationTagSearchTerm>) {
+    this.fileMetadataSearchTerms.evalTag =
+      this.fileMetadataSearchTerms.evalTag.concat(evalTag);
+  }
+
+  /** Clears all evaluation tag filters */
+  @Mutation
+  CLEAR_EVAL_TAG() {
+    this.fileMetadataSearchTerms.evalTag = [];
   }
 
   /** Clears all current filters */
@@ -162,309 +713,157 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_NIST');
     this.context.commit('CLEAR_DESCRIPTION');
     this.context.commit('CLEAR_CODE');
-    this.context.commit('CLEAR_TAG');
-    this.context.commit('CLEAR_FREESEARCH');
+    this.context.commit('CLEAR_RULEID');
+    this.context.commit('CLEAR_VULID');
+    this.context.commit('CLEAR_STIGID');
+    this.context.commit('CLEAR_CLASSIFICATION');
+    this.context.commit('CLEAR_GROUPNAME');
+    this.context.commit('CLEAR_RULEID');
+    this.context.commit('CLEAR_CCI');
+    this.context.commit('CLEAR_IA_CONTROLS');
+    this.context.commit('CLEAR_FILENAME');
+    this.context.commit('CLEAR_KEYWORDS');
+    this.context.commit('CLEAR_USER_GROUP');
+    this.context.commit('CLEAR_EVAL_TAG');
   }
 
-  // Generic filtering
+  /** Set the parsed search result */
+  @Mutation
+  setParsedSearchResult(parsedSearchResult: SearchString) {
+    this.parsedSearchResult = parsedSearchResult;
+  }
+
+  /** Parse search bar to add strings to needed filter category */
   @Action
-  addSearchFilter(searchPayload: {
-    field: string;
-    value: string;
-    previousValues: (string | ExtendedControlStatus)[];
-  }) {
-    // If we already have search filtering
-    if (this.searchTerm.trim() !== '') {
-      // If our current filters include the field
-      if (
-        this.searchTerm.toLowerCase().indexOf(`${searchPayload.field}:`) !== -1
-      ) {
-        const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
-        const newSearch = this.searchTerm.replace(
-          replaceRegex,
-          `${searchPayload.field}:"${searchPayload.previousValues
-            .concat(searchPayload.value)
-            .join(',')}"`
-        );
-        this.context.commit('SET_SEARCH', newSearch);
-      } // We have a filter already, but it doesn't include the field
-      else {
-        const newSearch = `${this.searchTerm} ${
-          searchPayload.field
-        }:"${searchPayload.previousValues
-          .concat(searchPayload.value)
-          .join(',')}"`;
-        this.context.commit('SET_SEARCH', newSearch);
+  parseSearch() {
+    this.clear();
+    const freeTextTransformer = (text: string) => ({
+      key: 'keywords',
+      value: text
+    });
+    const parsedSearchResult = SearchString.parse(this.searchTerm, [
+      freeTextTransformer
+    ]);
+    this.setParsedSearchResult(parsedSearchResult);
+    for (const prop of parsedSearchResult.getConditionArray()) {
+      const include = {
+        value: prop.value,
+        negated: prop.negated
+      };
+      if (include.value === '') {
+        continue;
+      }
+
+      switch (prop.keyword) {
+        case 'status':
+          this.addStatusFilter({
+            value: include.value as ExtendedControlStatus,
+            negated: include.negated
+          });
+          break;
+        case 'severity':
+          this.addSeverityFilter({
+            value: include.value as Severity,
+            negated: include.negated
+          });
+          break;
+        case 'id':
+          this.addIdFilter({value: include.value, negated: include.negated});
+          break;
+        case 'title':
+          this.addTitleFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'nist':
+          this.addNISTIdFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'desc':
+        case 'description':
+          this.addDescriptionFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'code':
+          this.addCodeFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'ruleid':
+          this.addRuleidFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'vulid':
+          this.addVulidFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'stigid':
+          this.addStigidFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'class':
+        case 'classification':
+          this.addClassificationFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'groupname':
+          this.addGroupnameFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'cci':
+          this.addCciFilter({value: include.value, negated: include.negated});
+          break;
+        case 'iaControl':
+          this.addIaControlsFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'filename':
+          this.addFilenameFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'group':
+          this.addUserGroupFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'tag':
+          this.addEvalTagFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'keywords':
+          this.addKeywordsFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
       }
     }
-    // We don't have any search yet
-    else {
-      this.context.commit(
-        'SET_SEARCH',
-        `${searchPayload.field}:"${searchPayload.value}"`
-      );
-    }
-    this.parseSearch();
-  }
 
-  @Action
-  removeSearchFilter(searchPayload: {
-    field: string;
-    value: string;
-    previousValues: (string | ExtendedControlStatus)[];
-  }) {
-    searchPayload.previousValues = searchPayload.previousValues.filter(
-      (filter) => filter.toLowerCase() !== searchPayload.value.toLowerCase()
-    );
-    const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
-    if (searchPayload.previousValues.length !== 0) {
-      // If we still have any filters
-      const newSearch = this.searchTerm.replace(
-        replaceRegex,
-        `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`
-      );
-      this.context.commit('SET_SEARCH', newSearch);
-    } // Otherwise just remove the text from the search bar
-    else {
-      const newSearch = this.searchTerm.replace(replaceRegex, '');
-      this.context.commit('SET_SEARCH', newSearch);
-    }
-    this.parseSearch();
-  }
-
-  // Status filtering
-
-  @Action
-  addStatusFilter(status: ExtendedControlStatus | ExtendedControlStatus[]) {
-    this.context.commit('ADD_STATUS', status);
-  }
-
-  @Action
-  removeStatusFilter(status: ExtendedControlStatus) {
-    this.context.commit('REMOVE_STATUS', status);
-  }
-
-  @Action
-  setStatusFilter(status: ExtendedControlStatus[]) {
-    this.context.commit('SET_STATUS', status);
-  }
-
-  /** Adds a status filter */
-  @Mutation
-  ADD_STATUS(status: ExtendedControlStatus | ExtendedControlStatus[]) {
-    this.statusFilter = this.statusFilter.concat(status);
-  }
-
-  /** Removes a status filter */
-  @Mutation
-  REMOVE_STATUS(status: ExtendedControlStatus) {
-    this.statusFilter = this.statusFilter.filter(
-      (filter) => filter.toLowerCase() !== status.toLowerCase()
-    );
-  }
-
-  @Mutation
-  CLEAR_STATUS() {
-    this.statusFilter = [];
-  }
-
-  @Mutation
-  SET_STATUS(status: ExtendedControlStatus[]) {
-    this.statusFilter = status;
-  }
-
-  // Severity filtering
-
-  /** Adds severity to filter */
-  @Action
-  addSeverityFilter(severity: Severity | Severity[]) {
-    this.context.commit('ADD_SEVERITY', severity);
-  }
-
-  @Action
-  removeSeverity(severity: Severity) {
-    this.context.commit('REMOVE_SEVERITY', severity);
-  }
-
-  @Action
-  setSeverity(severity: Severity[]) {
-    this.context.commit('SET_SEVERITY', severity);
-  }
-
-  @Action
-  clearSeverityFilter() {
-    this.context.commit('CLEAR_SEVERITY');
-  }
-
-  @Mutation
-  ADD_SEVERITY(severity: Severity | Severity[]) {
-    this.severityFilter = this.severityFilter.concat(severity);
-  }
-
-  @Mutation
-  REMOVE_SEVERITY(severity: Severity) {
-    this.severityFilter = this.severityFilter.filter(
-      (filter) => filter.toLowerCase() !== severity.toLowerCase()
-    );
-  }
-
-  /** Sets the severity filter */
-  @Mutation
-  SET_SEVERITY(severity: Severity[]) {
-    this.severityFilter = severity;
-  }
-
-  /** Clears all severity filters */
-  @Mutation
-  CLEAR_SEVERITY() {
-    this.severityFilter = [];
-  }
-
-  // Control ID Filtering
-
-  /** Adds control id to filter */
-  @Action
-  addIdFilter(id: string | string[]) {
-    this.context.commit('ADD_ID', id);
-  }
-
-  @Mutation
-  ADD_ID(id: string | string[]) {
-    this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
-  }
-
-  /** Sets the control IDs filter */
-  @Mutation
-  SET_ID(ids: string[]) {
-    this.controlIdSearchTerms = ids;
-  }
-
-  /** Clears all control ID filters */
-  @Mutation
-  CLEAR_ID() {
-    this.controlIdSearchTerms = [];
-  }
-
-  // Title filtering
-
-  /** Adds a title filter */
-  @Action
-  addTitleFilter(title: string | string[]) {
-    this.context.commit('ADD_TITLE', title);
-  }
-
-  @Mutation
-  ADD_TITLE(title: string | string[]) {
-    this.titleSearchTerms = this.titleSearchTerms.concat(title);
-  }
-
-  /** Sets the title filters */
-  @Mutation
-  SET_TITLE(titles: string[]) {
-    this.titleSearchTerms = titles;
-  }
-
-  /** Clears all title filters */
-  @Mutation
-  CLEAR_TITLE() {
-    this.titleSearchTerms = [];
-  }
-
-  // NIST ID Filtering
-
-  /** Adds NIST ID to filter */
-  @Action
-  addNISTIdFilter(NISTId: string | string[]) {
-    this.context.commit('ADD_NIST', NISTId);
-  }
-
-  @Mutation
-  ADD_NIST(NISTId: string | string[]) {
-    this.NISTIdFilter = this.NISTIdFilter.concat(NISTId);
-  }
-
-  /** Clears all NIST ID filters */
-  @Mutation
-  CLEAR_NIST() {
-    this.NISTIdFilter = [];
-  }
-
-  // Description Filtering
-
-  /** Calls the description mutator to add a description to the filter */
-  @Action
-  addDescriptionFilter(description: string | string[]) {
-    this.context.commit('ADD_DESCRIPTION', description);
-  }
-
-  /** Adds a description to the filter */
-  @Mutation
-  ADD_DESCRIPTION(description: string | string[]) {
-    this.descriptionSearchTerms =
-      this.descriptionSearchTerms.concat(description);
-  }
-
-  /** Clears all description from the filters */
-  @Mutation
-  CLEAR_DESCRIPTION() {
-    this.descriptionSearchTerms = [];
-  }
-
-  // Code filtering
-
-  /** Adds code to filter */
-  @Action
-  addCodeFilter(code: string | string[]) {
-    this.context.commit('ADD_CODE', code);
-  }
-
-  @Mutation
-  ADD_CODE(code: string | string[]) {
-    this.codeSearchTerms = this.codeSearchTerms.concat(code);
-  }
-
-  /** Clears all code filters */
-  @Mutation
-  CLEAR_CODE() {
-    this.codeSearchTerms = [];
-  }
-
-  // Tag filtering
-
-  /** Adds code to filter */
-  @Action
-  addTagFilter(tag: string | string[]) {
-    this.context.commit('ADD_TAG', tag);
-  }
-
-  @Mutation
-  ADD_TAG(tag: string | string[]) {
-    this.tagFilter = this.tagFilter.concat(tag);
-  }
-
-  /** Clears all code filters */
-  @Mutation
-  CLEAR_TAG() {
-    this.tagFilter = [];
-  }
-
-  // Freetext search
-
-  /** Sets the current fulltext search */
-  @Action
-  setFreesearch(search: string) {
-    this.context.commit('SET_FREESEARCH', search);
-  }
-
-  @Mutation
-  SET_FREESEARCH(text: string) {
-    this.freeSearch = text;
-  }
-
-  /** Removes the current fulltext search */
-  @Mutation
-  CLEAR_FREESEARCH() {
-    this.freeSearch = '';
+    SearchFilterSyncModule.alterStatusBoolean();
+    SearchFilterSyncModule.alterSeverityBoolean();
   }
 }
 
