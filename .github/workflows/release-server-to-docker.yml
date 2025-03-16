@@ -39,14 +39,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          platforms: linux/amd64
-          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} # mainline can stay at 'latest' and only update the digest instead of tags and digest
+      # - name: Build and push
+      #   id: docker_build
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: .
+      #     push: true
+      #     platforms: linux/amd64
+      #     tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} # mainline can stay at 'latest' and only update the digest instead of tags and digest
       - name: Get Docker SHA
         shell: bash
         id: get-docker-sha
@@ -61,13 +61,14 @@ jobs:
           git switch -c "${{ env.VERSION_HYPHENATED }}" # swap to sha for mainline
           yq e -i '.args.HEIMDALL_VERSION="${{ steps.format-tag.outputs.replaced }}" | .tags[0]="${{ steps.format-tag.outputs.replaced }}" | .labels."org.opencontainers.image.version"="${{ steps.format-tag.outputs.replaced }}" | .resources[1].tag="mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}" | .resources[1].url="docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"' hardening_manifest.yaml
           sed -i s/HEIMDALL_VERSION=\.\*/HEIMDALL_VERSION=${{ steps.format-tag.outputs.replaced }}/ Dockerfile
+          touch testing_automation
           git diff
-          git add hardening_manifest.yaml Dockerfile
-          git -c "user.name=Automated Heimdall Release" -c "user.email=saf@groups.mitre.org" commit -s -m "Updating Heimdall to ${{ steps.format-tag.outputs.replaced }}"
+          git add hardening_manifest.yaml Dockerfile testing_automation
+          git -c "user.name=Automated Heimdall Release" -c "user.email=saf@groups.mitre.org" commit -s -m "testing automation"
       - name: Create issue, branch, and merge request for Iron Bank repo
         working-directory: ../ironbank_heimdall
         run: |
-          ISSUE=$(curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data '{"title": "Update Heimdall to ${{ steps.format-tag.outputs.replaced }}"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues" | jq ".iid")
+          ISSUE=$(curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data '{"title": "testing automation"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues" | jq ".iid")
           DEFAULT_BRANCH=$(curl --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}" | jq -r ".default_branch") # likely 'development'
           git push 'https://${{ secrets.SAF_IRONBANK_REPO1_USERNAME }}:${{ secrets.SAF_IRONBANK_REPO1_PAT }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git' "${{ env.VERSION_HYPHENATED }}":"${ISSUE}-update-heimdall-to-${{ env.VERSION_HYPHENATED }}"
-          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data "{\"allow_collaboration\": true, \"squash\": true, \"remove_source_branch\": true, \"source_branch\": \"${ISSUE}-update-heimdall-to-${{ env.VERSION_HYPHENATED }}\", \"target_branch\": \"${DEFAULT_BRANCH}\", \"title\": \"Resolve \\\"Update Heimdall to ${{ steps.format-tag.outputs.replaced }}\\\"\", \"description\": \"Closes #${ISSUE}\"}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/merge_requests"
+          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data "{\"allow_collaboration\": true, \"squash\": true, \"remove_source_branch\": true, \"source_branch\": \"${ISSUE}-update-heimdall-to-${{ env.VERSION_HYPHENATED }}\", \"target_branch\": \"${DEFAULT_BRANCH}\", \"title\": \"testing automation\", \"description\": \"Closes #${ISSUE}\"}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/merge_requests"
