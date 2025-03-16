@@ -8,6 +8,8 @@ on:
       version:
         description: 'Version'
         required: true
+  pull_request: # remove
+    branches: [master]
 
 env:
   IRONBANK_HEIMDALL_PROJECT_ID: 5450 # this is for heimdall (non mainline) - I think these can be in-line envs instead of supplied by github repo/org level secrets/values since each push/release workflow will have a unique ironbank id due to the mainline vs release + heimdalllite vs heimdall matrix
