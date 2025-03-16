@@ -16,7 +16,7 @@ env:
 
 jobs:
   docker:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Run string replace to remove the v from the version number before using it in the docker tag
         uses: frabert/replace-string-action@v2
