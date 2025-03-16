@@ -19,7 +19,7 @@ COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/
 COPY apps/frontend/package.json apps/frontend/tsconfig.* ./apps/frontend/
 COPY libs/hdf-converters/package.json libs/hdf-converters/tsconfig.* ./libs/hdf-converters/
 COPY libs/inspecjs/package.json libs/inspecjs/tsconfig.* ./libs/inspecjs/
-COPY libs/interfaces/package.json libs/interfaces/tsconfig.json ./libs/interfaces/
+COPY libs/common/package.json libs/common/tsconfig.json ./libs/common/
 COPY libs/password-complexity/package.json ./libs/password-complexity/
 
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock

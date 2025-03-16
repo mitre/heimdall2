@@ -99,7 +99,7 @@ import {EvaluationModule} from '@/store/evaluations';
 import {GroupsModule} from '@/store/groups';
 import {SnackbarModule} from '@/store/snackbar';
 import {IVuetifyItems} from '@/utilities/helper_util';
-import {IEvaluation, IEvaluationGroup} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationGroup} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';

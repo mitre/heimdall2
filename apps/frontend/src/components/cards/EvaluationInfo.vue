@@ -57,7 +57,7 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/common/interfaces';
 import {ContextualizedEvaluation} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';

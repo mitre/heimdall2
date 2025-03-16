@@ -231,7 +231,7 @@ import {
   get_eval_start_time
 } from '@/utilities/delta_util';
 import Base from '@/views/Base.vue';
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/common/interfaces';
 import {ControlStatus} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';
