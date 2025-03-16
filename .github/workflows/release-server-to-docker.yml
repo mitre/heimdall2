@@ -12,7 +12,7 @@ on:
 env:
   IRONBANK_HEIMDALL_PROJECT_ID: 5450 # this is for heimdall (non mainline) - I think these can be in-line envs instead of supplied by github repo/org level secrets/values since each push/release workflow will have a unique ironbank id due to the mainline vs release + heimdalllite vs heimdall matrix
 
-# pull request sha: ${{ github.event.pull_request.head.sha }} - will only be used during testing | on push sha: ${{ github.sha }} - will likely be used with mainline | new tag: ${{ steps.format-tag.outputs.replaced }} or underscored version: ${{ env.VERSION_UNDERSCORED }} - will be used during releases
+# pull request sha: ${{ github.event.pull_request.head.sha }} - will only be used during testing | on push sha: ${{ github.sha }} - will likely be used with mainline | new tag: ${{ steps.format-tag.outputs.replaced }} or hyphenated version: ${{ env.VERSION_HYPHENATED }} - will be used during releases
 
 jobs:
   docker:
@@ -26,10 +26,10 @@ jobs:
           string: '${{ github.event.release.tag_name || github.event.inputs.version}}'
           replace-with: ''
           flags: 'g'
-      - name: Convert periods to underscores in version string
+      - name: Convert periods to hyphens in version string
         shell: bash
         run: |
-          echo "VERSION_UNDERSCORED=$(echo ${{ steps.format-tag.outputs.replaced }} | sed 's/\./-/g')" >> $GITHUB_ENV
+          echo "VERSION_HYPHENATED=$(echo ${{ steps.format-tag.outputs.replaced }} | sed 's/\./-/g')" >> $GITHUB_ENV
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
@@ -58,7 +58,7 @@ jobs:
         working-directory: ../ironbank_heimdall
         run: |
           git clone https://repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git .
-          git switch -c "${{ env.VERSION_UNDERSCORED }}" # swap to sha for mainline
+          git switch -c "${{ env.VERSION_HYPHENATED }}" # swap to sha for mainline
           yq e -i '.args.HEIMDALL_VERSION="${{ steps.format-tag.outputs.replaced }}" | .tags[0]="${{ steps.format-tag.outputs.replaced }}" | .labels."org.opencontainers.image.version"="${{ steps.format-tag.outputs.replaced }}" | .resources[1].tag="mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}" | .resources[1].url="docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"' hardening_manifest.yaml
           sed -i s/HEIMDALL_VERSION=\.\*/HEIMDALL_VERSION=${{ steps.format-tag.outputs.replaced }}/ Dockerfile
           git diff
@@ -69,5 +69,5 @@ jobs:
         run: |
           ISSUE=$(curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data '{"title": "Update Heimdall to ${{ steps.format-tag.outputs.replaced }}"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues" | jq ".iid")
           DEFAULT_BRANCH=$(curl --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}" | jq -r ".default_branch") # likely 'development'
-          git push 'https://${{ secrets.SAF_IRONBANK_REPO1_USERNAME }}:${{ secrets.SAF_IRONBANK_REPO1_PAT }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git' "${{ env.VERSION_UNDERSCORED }}":"${ISSUE}-update-heimdall-to-${{ env.VERSION_UNDERSCORED }}"
-          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data "{\"allow_collaboration\": true, \"squash\": true, \"remove_source_branch\": true, \"source_branch\": \"${ISSUE}-update-heimdall-to-${{ env.VERSION_UNDERSCORED }}\", \"target_branch\": \"${DEFAULT_BRANCH}\", \"title\": \"Resolve \\\"Update Heimdall to ${{ steps.format-tag.outputs.replaced }}\\\"\", \"description\": \"Closes #${ISSUE}\"}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/merge_requests"
+          git push 'https://${{ secrets.SAF_IRONBANK_REPO1_USERNAME }}:${{ secrets.SAF_IRONBANK_REPO1_PAT }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git' "${{ env.VERSION_HYPHENATED }}":"${ISSUE}-update-heimdall-to-${{ env.VERSION_HYPHENATED }}"
+          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data "{\"allow_collaboration\": true, \"squash\": true, \"remove_source_branch\": true, \"source_branch\": \"${ISSUE}-update-heimdall-to-${{ env.VERSION_HYPHENATED }}\", \"target_branch\": \"${DEFAULT_BRANCH}\", \"title\": \"Resolve \\\"Update Heimdall to ${{ steps.format-tag.outputs.replaced }}\\\"\", \"description\": \"Closes #${ISSUE}\"}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/merge_requests"
