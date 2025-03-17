@@ -13,19 +13,7 @@
       <UploadButton />
       <ExportButton>
         <v-list-item class="px-0">
-          <ExportCaat :filter="allFilter" />
-        </v-list-item>
-        <v-list-item class="px-0">
-          <ExportNist :filter="allFilter" />
-        </v-list-item>
-        <v-list-item class="px-0">
-          <ExportASFFModal :filter="allFilter" />
-        </v-list-item>
-        <v-list-item class="px-0">
           <ExportCKLModal :filter="allFilter" />
-        </v-list-item>
-        <v-list-item class="px-0">
-          <ExportCSVModal :filter="allFilter" />
         </v-list-item>
         <v-list-item class="px-0">
           <ExportJson />
