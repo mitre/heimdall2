@@ -5,6 +5,7 @@ export enum INPUT_TYPES {
   BURP = 'burp',
   CHECKLIST = 'checklist',
   CONVEYOR = 'conveyor',
+  DEPENDENCY_TRACK = 'dependencyTrack',
   FORTIFY = 'fortify',
   GOSEC = 'gosec',
   GRYPE = 'grype',
@@ -34,6 +35,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ASFF]: ['Findings', 'AwsAccountId', 'ProductArn'],
   [INPUT_TYPES.CONVEYOR]: ['api_error_message', 'api_response'],
   [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion'],
+  [INPUT_TYPES.DEPENDENCY_TRACK]: ['version', 'meta', 'project', 'findings'],
   [INPUT_TYPES.FORTIFY]: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
   [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
   [INPUT_TYPES.GRYPE]: [
@@ -164,6 +166,13 @@ export function fingerprint(guessOptions: {
       splitLines[0].includes('Severity')
     ) {
       return INPUT_TYPES.PRISMA;
+    } else if (
+      splitLines[0].includes('SourceName') &&
+      splitLines[0].includes('DetectorType') &&
+      splitLines[0].includes('DetectorName') &&
+      splitLines[0].includes('DecoderName')
+    ) {
+      return INPUT_TYPES.TRUFFLEHOG;
     } else if (
       guessOptions.data.indexOf('veracode') !== -1 &&
       guessOptions.data.indexOf('detailedreport') !== -1

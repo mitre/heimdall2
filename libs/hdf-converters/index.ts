@@ -22,6 +22,7 @@ export * from './src/converters-from-hdf/xccdf/reverse-xccdf-mapper';
 export * from './src/conveyor-mapper';
 export * from './src/cyclonedx-sbom-mapper';
 export * from './src/dbprotect-mapper';
+export * from './src/dependency-track-mapper';
 export * from './src/fortify-mapper';
 export * from './src/gosec-mapper';
 export * from './src/ionchannel-mapper';

@@ -1,4 +1,4 @@
-ARG BASE_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/nodejs-22-minimal:1
 
 FROM $BASE_CONTAINER AS builder
 
@@ -19,7 +19,7 @@ COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/
 COPY apps/frontend/package.json apps/frontend/tsconfig.* ./apps/frontend/
 COPY libs/hdf-converters/package.json libs/hdf-converters/tsconfig.* ./libs/hdf-converters/
 COPY libs/inspecjs/package.json libs/inspecjs/tsconfig.* ./libs/inspecjs/
-COPY libs/common/package.json libs/common/tsconfig.* ./libs/common/
+COPY libs/common/package.json libs/common/tsconfig.json ./libs/common/
 COPY libs/password-complexity/package.json ./libs/password-complexity/
 
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock

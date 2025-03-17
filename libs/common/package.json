@@ -1,15 +1,15 @@
 {
   "name": "@heimdall/common",
-  "version": "2.10.16",
+  "version": "2.11.2",
   "private": true,
   "description": "Common utilities and interfaces between the front and backends of Heimdall",
   "files": [
     "lib"
   ],
   "exports": {
-    ".": "./src/index.ts",
-    "./interfaces": "./src/interfaces/index.ts",
-    "./crypto": "./src/crypto/index.ts"
+    ".": "./index.ts",
+    "./interfaces": "./interfaces/index.ts",
+    "./crypto": "./crypto/index.ts"
   },
   "scripts": {
     "prepack": "yarn build && node prepack.js",

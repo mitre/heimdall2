@@ -67,7 +67,7 @@
         </button>
         <!-- Menu def -->
         <div
-          class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 [&[data-te-dropdown-show]]:grid"
+          class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 data-te-dropdown-show:grid"
           id="resultSetsList"
           data-te-dropdown-menu-ref
           aria-labelledby="resultSetsList"
@@ -232,7 +232,7 @@
         <div class="mb-0">
           <!-- Button def -->
           <button
-            class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+            class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-2 focus:z-3 focus:outline-hidden [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
             type="button"
             data-te-collapse-init
             data-te-target="#collapseable-{{fileID}}"
@@ -241,7 +241,7 @@
           >
             {{filename}}
             <span
-              class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+              class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-data-te-collapse-collapsed:mr-0 group-data-te-collapse-collapsed:rotate-0 group-data-te-collapse-collapsed:fill-[#212529] motion-reduce:transition-none"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -308,7 +308,7 @@
             <div class="mb-0">
               <!-- Button def -->
               <button
-                class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+                class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-2 focus:z-3 focus:outline-hidden [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
                 type="button"
                 data-te-collapse-init
                 data-te-target="#result-accordion-body-{{resultID}}"
@@ -324,14 +324,14 @@
                   </div>
                   <!-- Result status indicator -->
                   <div
-                    class="grid w-40 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
+                    class="grid w-40 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black"
                   >
                     <span>{{{resultStatus.icon}}}</span>
                     <span>{{resultStatus.status}}</span>
                   </div>
                   <!-- Result severity indicator -->
                   <div
-                    class="grid w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:hidden"
+                    class="grid w-28 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:hidden"
                   >
                     <span>{{{resultSeverity.icon}}}</span>
                     <span>{{resultSeverity.severity}}</span>
@@ -340,7 +340,7 @@
                   {{#controlTags}}
                   <div class="w-24 lg:hidden">
                     <span
-                      class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
+                      class="rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black"
                     >
                       {{.}}
                     </span>
@@ -355,7 +355,7 @@
                 </span>
                 <!-- Result severity indicator -->
                 <div
-                  class="hidden w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:grid"
+                  class="hidden w-28 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:grid"
                 >
                   <span>{{{resultSeverity.icon}}}</span>
                   <span>{{resultSeverity.severity}}</span>
@@ -371,7 +371,7 @@
                   {{#controlTags}}
                   <div class="w-24">
                     <span
-                      class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
+                      class="rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black"
                     >
                       {{.}}
                     </span>
@@ -380,7 +380,7 @@
                 </div>
 
                 <span
-                  class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+                  class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-data-te-collapse-collapsed:mr-0 group-data-te-collapse-collapsed:rotate-0 group-data-te-collapse-collapsed:fill-[#212529] motion-reduce:transition-none"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -520,7 +520,7 @@
               <tr>
                 <td>
                   <!-- Result status indicator -->
-                  <div class="rounded border border-black px-2 py-1">
+                  <div class="rounded-sm border border-black px-2 py-1">
                     {{resultStatus.status}}
                   </div>
                 </td>
@@ -530,7 +530,7 @@
                 </td>
                 <td>
                   <!-- Result severity indicator -->
-                  <div class="rounded border border-black px-2 py-1">
+                  <div class="rounded-sm border border-black px-2 py-1">
                     {{resultSeverity.severity}}
                   </div>
                 </td>
@@ -556,7 +556,7 @@
                   <!-- Control tags -->
                   <div class="flex flex-wrap gap-x-2 gap-y-1">
                     {{#controlTags}}
-                    <div class="rounded border border-black px-2 py-1">
+                    <div class="rounded-sm border border-black px-2 py-1">
                       {{.}}
                     </div>
                     {{/controlTags}}
