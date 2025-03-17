@@ -854,7 +854,6 @@ export function checklistRules(
   filters: ChecklistFilter
 ): readonly ExtendedVuln[] {
   // If an attribute name changes in the checklist mapping, make sure it is reflected here
-  // TODO: edit the lhs of this Record's type to be keyof ChecklistVuln
   const checklistFilters: Partial<
     Record<keyof ExtendedVuln | 'keywords', FilterRecord>
   > = {
