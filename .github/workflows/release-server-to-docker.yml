@@ -68,7 +68,7 @@ jobs:
       - name: Create issue, branch, and merge request for Iron Bank repo
         working-directory: ../ironbank_heimdall
         run: |
-          ISSUE=$(curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data '{"title": "testing automation"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues" | jq ".iid")
+          ISSUE=$(curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data '{"title": "testing automation", "labels": "Status::Review"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues" | jq ".iid")
           DEFAULT_BRANCH=$(curl --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}" | jq -r ".default_branch") # likely 'development'
           git push 'https://${{ secrets.SAF_IRONBANK_REPO1_USERNAME }}:${{ secrets.SAF_IRONBANK_REPO1_PAT }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git' "${{ env.VERSION_HYPHENATED }}":"${ISSUE}-update-heimdall-to-${{ env.VERSION_HYPHENATED }}"
           curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data "{\"allow_collaboration\": true, \"squash\": true, \"remove_source_branch\": true, \"source_branch\": \"${ISSUE}-update-heimdall-to-${{ env.VERSION_HYPHENATED }}\", \"target_branch\": \"${DEFAULT_BRANCH}\", \"title\": \"testing automation\", \"description\": \"Closes #${ISSUE}\"}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/merge_requests"
