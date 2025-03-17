@@ -60,6 +60,7 @@ import {
   UserGroupSearchTerm,
   VulIdSearchTerm
 } from './search_filter_sync';
+import {ExtendedVuln} from '@/views/Checklist.vue';
 
 const MAX_CACHE_ENTRIES = 20;
 
@@ -849,24 +850,28 @@ export const FilteredDataModule = getModule(FilteredData);
  *
  */
 export function checklistRules(
-  rules: readonly ChecklistVuln[],
+  rules: readonly ExtendedVuln[],
   filters: ChecklistFilter
-): readonly ChecklistVuln[] {
+): readonly ExtendedVuln[] {
   // If an attribute name changes in the checklist mapping, make sure it is reflected here
-  const checklistFilters: Record<string, FilterRecord> = {
+  // TODO: edit the lhs of this Record's type to be keyof ChecklistVuln
+  const checklistFilters: Partial<
+    Record<keyof ExtendedVuln | 'keywords', FilterRecord>
+  > = {
     severity: filters.severity,
     vulnNum: filters.vulidSearchTerms,
     ruleId: filters.ruleidSearchTerms,
-    ruleVersion: filters.stigidSearchTerms,
+    ruleVer: filters.stigidSearchTerms,
     class: filters.classificationSearchTerms,
     groupTitle: filters.groupNameSearchTerms,
     cciRef: filters.cciSearchTerms,
-    iacontrols: filters.iaControlsSearchTerms,
+    iaControls: filters.iaControlsSearchTerms,
     status: _.filter(
       filters.status,
       (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'
     ),
-    keywords: filters.keywordsSearchTerms
+    keywords: filters.keywordsSearchTerms,
+    nist: filters.nistIdFilter
   };
   const filteredRules = filterChecklistBy(rules, checklistFilters);
   return filteredRules;
@@ -925,7 +930,7 @@ export function filterControlsByKeywords(
  *
  */
 export function filterRulesByKeywords(
-  rules: ChecklistVuln[],
+  rules: ExtendedVuln[],
   keywords: FilterRecord
 ) {
   let result = rules;
@@ -996,9 +1001,9 @@ export function filterControlsBy(
  *
  */
 export function filterChecklistBy(
-  rules: readonly ChecklistVuln[],
+  rules: readonly ExtendedVuln[],
   filters: Record<string, FilterRecord>
-): readonly ChecklistVuln[] {
+): readonly ExtendedVuln[] {
   const activeFilters: Record<string, FilterRecord> = _.pickBy(
     filters,
     (value) =>
@@ -1028,7 +1033,7 @@ export function filterChecklistBy(
   });
 
   // Overall keywords filtering
-  const final: ChecklistVuln[] = filterRulesByKeywords(
+  const final: ExtendedVuln[] = filterRulesByKeywords(
     firstPass,
     filters.keywords
   );

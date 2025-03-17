@@ -145,6 +145,9 @@ import ChecklistRuleEdit from '@/components/global/checklist/ChecklistRuleEdit.v
 import ChecklistSeverityOverride from '@/components/global/checklist/ChecklistSeverityOverride.vue';
 import ExportButton from '@/components/generic/ExportButton.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
+import {CCI_REF_DELIMITER, nistDisplay} from '@/utilities/checklist_util';
+
+export type ExtendedVuln = ChecklistVuln & {nist: string[]};
 
 @Component({
   components: {
@@ -314,11 +317,16 @@ export default class Checklist extends RouteMixin {
     return result;
   }
 
-  get allRules() {
-    let rulesList: ChecklistVuln[] = [];
-    for (const stig of InspecDataModule.getChecklist(this.fileFilter)?.stigs ??
-      []) {
-      rulesList = [...rulesList, ...stig.vulns];
+  get allRules(): ExtendedVuln[] {
+    const rulesList: ExtendedVuln[] = [];
+    const stigs = InspecDataModule.getChecklist(this.fileFilter)?.stigs;
+    for (const stig of stigs || []) {
+      for (const vuln of stig.vulns) {
+        rulesList.push({
+          ...vuln,
+          nist: vuln.cciRef.split(CCI_REF_DELIMITER).map(nistDisplay)
+        });
+      }
     }
     return rulesList;
   }

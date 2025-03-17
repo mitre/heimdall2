@@ -27,7 +27,7 @@
       <!-- Rule References -->
       <div class="my-3 d-flex flex-column">
         <span class="text-overline white--text">References: </span>
-        <div v-for="cci in selectedRule.cciRef.split('; ')" :key="cci">
+        <div v-for="cci in selectedRule.cciRef.split(delimiter)" :key="cci">
           <span>{{ cci }}: {{ cciDescription(cci) }}</span>
           <div class="d-flex align-center">
             <span class="mr-2">NIST 800-53 Rev 5.1.1:</span>
@@ -115,17 +115,20 @@ import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {ChecklistVuln} from '@mitre/hdf-converters';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import {is_control, NistControl, parse_nist} from 'inspecjs';
+import {
+  nistDisplay,
+  nistTag,
+  CCI_REF_DELIMITER
+} from '@/utilities/checklist_util';
 
 @Component
 export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
 
-  nistTag(cci: string): string {
-    return CCI_DESCRIPTIONS[cci].nist.slice(-1)[0];
-  }
+  delimiter = CCI_REF_DELIMITER;
 
   nistUrl(cci: string): string {
-    const control = [this.nistTag(cci)].map(parse_nist).filter(is_control)[0];
+    const control = [nistTag(cci)].map(parse_nist).filter(is_control)[0];
     const url = control.canonize({
       pad_zeros: true,
       add_periods: false,
@@ -172,9 +175,7 @@ export default class ChecklistRuleInfoBody extends Vue {
   }
 
   nistDisplay(cci: string): string {
-    const tag = [this.nistTag(cci)].map(parse_nist).filter(is_control)[0];
-    const display = tag.canonize();
-    return display;
+    return nistDisplay(cci);
   }
 
   cciDescription(cci: string): string {
