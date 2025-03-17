@@ -23,8 +23,7 @@
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0"
   },
   "dependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.0",
     "run-script-os": "^1.1.6"
   }
 }
