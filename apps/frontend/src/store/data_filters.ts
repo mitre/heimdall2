@@ -229,13 +229,16 @@ function controlContainsTerm(
  *
  */
 function ruleContainsTerm(
-  rule: ChecklistVuln,
+  rule: ExtendedVuln,
   filter: SearchEntry<GenericSearchEntryValue>
 ): boolean {
   // See if any contain filter term
   return Object.values(rule).some((value) => {
     if (_.isBoolean(value)) {
       return value;
+    }
+    if (_.isArray(value)) {
+      return value.some((v) => v.toLowerCase().includes(filter.value));
     }
     return value?.toLowerCase().includes(filter.value);
   });
