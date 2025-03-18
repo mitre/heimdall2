@@ -182,25 +182,6 @@ export default class Checklist extends RouteMixin {
     | SourcedContextualizedProfile
     | null = null;
 
-  exportCkl() {
-    type FileData = {
-      filename: string;
-      data: string;
-    };
-    const checklist = InspecDataModule.getChecklist(this.fileFilter);
-    if (checklist) {
-      const checklistString = 'NEEDS FIXING';
-      //const checklistString = ChecklistConverter.toChecklist(checklist);
-      const file: FileData[] = [
-        {
-          filename: checklist.filename,
-          data: '<?xml version="1.0" encoding="UTF-8"?>' + checklistString
-        }
-      ];
-      saveSingleOrMultipleFiles(file, 'ckl');
-    }
-  }
-
   get selectedRule() {
     if (
       this.filteredRules.some((rule) =>
