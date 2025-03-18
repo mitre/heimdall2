@@ -14,13 +14,13 @@
         <v-col :cols="4">
           <div>
             <span class="text-overline white--text">Rule ID: </span>
-            {{ shortRuleId(selectedRule.ruleId) }}
+            {{ selectedRule.ruleId }}
           </div>
         </v-col>
         <v-col :cols="4">
           <div>
             <span class="text-overline white--text">STIG ID: </span>
-            {{ shortStigId(selectedRule.ruleVer) }}
+            {{ selectedRule.ruleVer }}
           </div>
         </v-col>
       </v-row>
@@ -59,16 +59,6 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 export default class ChecklistRuleInfoHeader extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
   @Prop({type: Boolean, required: true}) readonly shortIdEnabled!: boolean;
-
-  shortRuleId(ruleId: string) {
-    return this.shortIdEnabled ? ruleId.split('r')[0] || ruleId : ruleId;
-  }
-
-  shortStigId(stigId: string) {
-    return this.shortIdEnabled
-      ? stigId.split('-').slice(0, 2).join('-')
-      : stigId;
-  }
 }
 </script>
 
