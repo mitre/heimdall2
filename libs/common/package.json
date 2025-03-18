@@ -3,9 +3,27 @@
   "version": "2.11.2",
   "private": true,
   "description": "Common utilities and interfaces between the front and backends of Heimdall",
-  "main": "index.ts",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": "./index.ts",
+    "./interfaces": "./interfaces/index.ts",
+    "./crypto": "./crypto/index.ts"
+  },
   "scripts": {
+    "prepack": "yarn build && node prepack.js",
+    "postpack": "run-script-os",
+    "postpack:darwin:linux": "mv package.json.orig package.json",
+    "postpack:win32": "move package.json.orig package.json",
+    "build": "run-script-os",
+    "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json",
+    "build:win32": "../../node_modules/.bin/tsc -p ./tsconfig.build.json",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.0",
+    "run-script-os": "^1.1.6"
   }
 }

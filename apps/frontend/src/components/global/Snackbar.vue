@@ -3,12 +3,16 @@
     v-if="show"
     id="info-snackbar"
     v-model="show"
-    :color="error ? 'error' : 'success'"
+    :color="error ? 'error' : warning ? 'warning' : 'success'"
     elevation="24"
     timeout="10000"
     top
   >
     {{ message }}
+
+    <div>
+      <a :href="'' + href"> {{ hrefText }} </a>
+    </div>
 
     <template #action="{attrs}">
       <v-btn id="hide-snackbar" text v-bind="attrs" @click="show = false">
@@ -39,6 +43,10 @@ export default class Snackbar extends Vue {
     return SnackbarModule.error;
   }
 
+  get warning(): boolean {
+    return SnackbarModule.warn;
+  }
+
   get message(): string {
     this.messageContent = SnackbarModule.message;
     if (this.error) {
@@ -54,6 +62,14 @@ export default class Snackbar extends Vue {
         return 'The action completed successfully.';
       }
     }
+  }
+
+  get href(): string {
+    return SnackbarModule.linkUrl;
+  }
+
+  get hrefText(): string {
+    return SnackbarModule.linkText;
   }
 }
 </script>
