@@ -7,6 +7,7 @@
         icon="mdi-check-all"
         @click="showModal"
         v-on="on"
+        data-cy="exportCkl"
       />
     </template>
     <v-card>
@@ -283,8 +284,8 @@
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {ChecklistFilter, ControlsFilter} from '@/store/data_filters';
-import {ChecklistFile, InspecDataModule} from '@/store/data_store';
-import {EvaluationFile, FileID, ProfileFile} from '@/store/report_intake';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {
   cleanUpFilename,

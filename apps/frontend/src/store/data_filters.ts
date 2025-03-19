@@ -873,7 +873,8 @@ export function checklistRules(
       (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'
     ),
     keywords: filters.keywordsSearchTerms,
-    nist: filters.nistIdFilter
+    nist: filters.nistIdFilter,
+    id: filters.vulidSearchTerms
   };
   const filteredRules = filterChecklistBy(rules, checklistFilters);
   return filteredRules;

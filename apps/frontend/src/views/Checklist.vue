@@ -123,7 +123,6 @@ import UploadButton from '@/components/generic/UploadButton.vue';
 import {ChecklistVuln, Severity} from '@mitre/hdf-converters';
 import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
-import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {AppInfoModule} from '@/store/app_info';
 import ChecklistRulesTable from '@/components/global/checklist/ChecklistRulesTable.vue';
@@ -135,7 +134,10 @@ import ExportButton from '@/components/generic/ExportButton.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import {CCI_REF_DELIMITER, nistDisplay} from '@/utilities/checklist_util';
 
-export type ExtendedVuln = ChecklistVuln & {nist: string[]};
+export type ExtendedVuln = ChecklistVuln & {
+  nist: string[];
+  id: string;
+};
 
 @Component({
   components: {
@@ -293,7 +295,8 @@ export default class Checklist extends RouteMixin {
       for (const vuln of stig.vulns) {
         rulesList.push({
           ...vuln,
-          nist: vuln.cciRef.split(CCI_REF_DELIMITER).map(nistDisplay)
+          nist: vuln.cciRef.split(CCI_REF_DELIMITER).map(nistDisplay),
+          id: vuln.vulnNum
         });
       }
     }

@@ -65,4 +65,65 @@ export default class Sidebar {
     cy.get('[data-cy=exportButton]').click();
     cy.get('[data-cy=exportJson]').click();
   }
+
+  exportFileToCkl(name: string): void {
+    cy.get('[data-cy=exportButton]').click();
+    cy.get('[data-cy=exportCkl]').click();
+    cy.contains(name).within(() => cy.get('input[role=checkbox]').click());
+    cy.contains('Export').click();
+  }
+
+  filterByCategory(
+    property: string,
+    keyword: string,
+    exclusive?: boolean
+  ): void {
+    const categoryFiltersHeader = /Category Filters/;
+    this.selectDropdownFilter(
+      categoryFiltersHeader,
+      property,
+      keyword,
+      exclusive
+    );
+  }
+
+  filterByMetadata(property: string, keyword: string, exclusive?: boolean) {
+    const metadataFiltersHeader = /^((?!Category).)* Filters/;
+    this.selectDropdownFilter(
+      metadataFiltersHeader,
+      property,
+      keyword,
+      exclusive
+    );
+  }
+
+  selectDropdownFilter(
+    headerRegExp: RegExp,
+    property: string,
+    keyword: string,
+    exclusive?: boolean
+  ) {
+    cy.contains(headerRegExp)
+      .parent()
+      .contains('Filter Properties')
+      .parent()
+      .within(() => cy.get('input[type=text]').click());
+
+    cy.get('div[role=option]').contains(property).click();
+
+    cy.contains(headerRegExp)
+      .parent()
+      .contains('Enter filter keyword')
+      .parent()
+      .within(() => cy.get('input[type=text]').clear().type(keyword));
+
+    if (exclusive) {
+      cy.contains('Exclusive (-) Filter')
+        .parent()
+        .within(() => cy.get('input[type=radio]'))
+        .click();
+    }
+
+    cy.contains(headerRegExp).parent().contains('Add').click();
+  }
 }

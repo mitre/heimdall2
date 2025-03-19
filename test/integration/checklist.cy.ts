@@ -45,7 +45,6 @@ context('Checklist', () => {
 
     // Passed
     it.skip('can unload and reload files under the correct dropdowns', () => {
-      // 3. Is the file unloadable and reloadable? Can a non-checklist file be loaded and seen that it is not under the Checklists dropdown?
       uploadModal.loadSample(checklistFile);
       sidebar.closeFile(checklistFile);
       sidebarVerifier.isFileNotLoadedUnderDropdown('Checklists', checklistFile);
@@ -56,7 +55,6 @@ context('Checklist', () => {
     // Passed
     it.skip('can save the CKL file and export it to HDF', () => {
       // TODO: modify the file first and then do the saving stuff
-      // 4. Is the file saveable to HDF? (What does this mean?)
       uploadModal.loadSample(checklistFile);
       sidebar.saveFileToHdf(checklistFile);
       sidebar.exportFileToHdf();
@@ -68,6 +66,17 @@ context('Checklist', () => {
           'eq',
           'Red Hat Enterprise Linux 8 Security Technical Implementation Guide'
         );
+    });
+
+    it('can save the CKL file and export it', () => {
+      const text = 'This is new text.';
+      uploadModal.loadSample(checklistFile);
+
+      sidebar.exportFileToCkl(checklistFile);
+      // checklistPageVerifier.fileWasModified(
+      //   checklistFile,
+      //   `<COMMENTS>${text}</COMMENTS>`
+      // );
     });
 
     // Passed
@@ -139,11 +148,48 @@ context('Checklist', () => {
       checklistPageVerifier.hasMaximalNumberOfRules();
     });
 
-    it.skip('can apply category filters properly', () => {
+    it('can apply category filters properly', () => {
       uploadModal.loadSample(checklistFile);
       // 7. Do the filter keywords work? What if we try invalid inputs and keywords?
-      sidebar.filterKeywords();
-      checklistPageVerifier.filteringKeywordsWorks();
+      // sidebar.filterKeywords();
+      // checklistPageVerifier.filteringKeywordsWorks();
+
+      sidebar.filterByCategory('Keywords', 'vendor');
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('ID', 'V-24'); // broken on checklist view
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('Vul ID', 'V-23022');
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('Rule ID', '023');
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('Title', 'method');
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('Nist', 'CM-6');
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('Description', 'capabilities');
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('Code', '"targetKey": "2921"'); // broken on checklist view
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('Stig ID', '023'); // broken on results view
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('Classification', 'Unclass'); // broken on results and checklist view
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('IA Control', 'asdf'); // broken on results and checklist view
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
+      sidebar.filterByCategory('CCIs', 'CCI-001314'); // broken on results view
+      checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
+
       // 8. Top-navigation bar: type in some query string, like the keyword "vendor". Is this reflected in the sidebar? If so, look for its row under "Selected Filters" and remove it as a keyword. --- this might not be a Checklist test but a Sidebar test. TODO: maybe make a Sidebar and top-nav bar test per each page since they're both found on each page.
       // 9. Sidebar filter: add a negated filter. Correct number of results? No?
       // 10. Try to add a filter that already exists. Does it get added? More than 1 filter, or no?
