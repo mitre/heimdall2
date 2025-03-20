@@ -52,7 +52,7 @@ context('Checklist', () => {
       uploadModal.loadSample(checklistFile);
     });
 
-    // Passed
+    // Passed (doesn't include modifying the file beforehand- that fails, see below TODO comment)
     it.skip('can save the CKL file and export it to HDF', () => {
       // TODO: modify the file first and then do the saving stuff
       uploadModal.loadSample(checklistFile);
@@ -68,6 +68,8 @@ context('Checklist', () => {
         );
     });
 
+    // TODO: fix finding details + comments + severity override + prob status changing not saving correctly
+    // luckily target data + technology area mutation + saving works
     it('can save the CKL file and export it', () => {
       const text = 'This is new text.';
       uploadModal.loadSample(checklistFile);
