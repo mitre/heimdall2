@@ -3,7 +3,7 @@ import {Component, Vue} from 'vue-property-decorator';
 @Component({})
 export default class RouteMixin extends Vue {
   // get the value of the current route
-  get current_route() {
+  get currentRoute() {
     return this.$router.currentRoute.path.split('/')[1];
   }
 
