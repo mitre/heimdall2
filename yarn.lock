@@ -21535,9 +21535,9 @@ ws@^8.13.0:
   integrity sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==
 
 xml-formatter@^3.6.2:
-  version "3.6.4"
-  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-3.6.4.tgz#c9e70b9e4fc02f1ec9b9e561ef148418bfdbeeb0"
-  integrity sha512-vkvTNw4u9mp72lMmJHw771NE9EJLX0kfwIcP+ZEo9eJ6HmotX23vmykyROyIQ9Y3a+ckdUdhxIE2ZO66rYuPrg==
+  version "3.6.5"
+  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-3.6.5.tgz#ef541394aa56de432ce5ead3f175640d8cd8a92e"
+  integrity sha512-5Dvux87y+abquO3Om8zRyOUdYkc22BnSS3zMhL2UgeCC+3lz9FbSBpAhzxmk+/qfTO3ypLRwTxJvByoG+FjTMA==
   dependencies:
     xml-parser-xo "^4.1.2"
 
