@@ -5,6 +5,12 @@ import {readFileSync} from 'fs';
 import 'jest';
 import {AllRaw} from '../util/fs';
 
+/**
+ * Utility function to load a desired sample file into heimdall for testing
+ *
+ * @param sampleName Name of the sample that should be loaded
+ * @returns Promise of the FileID
+ */
 export function loadSample(sampleName: string) {
   const sample: Sample | undefined = samples.find(
     (samp) => samp.filename === sampleName
@@ -19,6 +25,29 @@ export function loadSample(sampleName: string) {
   });
 }
 
+/**
+ * Utility function to load a desired checklist sample into heimdall for testing
+ *
+ * @param sampleName Name of the checklist sample that should be loaded
+ * @returns Promise of the FileID
+ */
+export function loadChecklistFile(sampleName: string) {
+  const sample: Sample | undefined = samples.find(
+    (samp) => samp.filename === sampleName
+  );
+  if (sample === undefined) {
+    return null;
+  }
+  const fileName = sample.path.split('/');
+  const data: string = readFileSync(`public/${sample.path}`, 'utf8');
+  return InspecIntakeModule.loadFile({
+    file: new File([new Blob([data])], fileName[fileName.length - 1])
+  });
+}
+
+/**
+ * Load all sample files
+ */
 export function loadAll(): void {
   const data = AllRaw();
   Object.values(data).forEach((fileResult) => {
@@ -30,6 +59,9 @@ export function loadAll(): void {
   });
 }
 
+/**
+ * Remove all loaded sample files
+ */
 export function removeAllFiles(): void {
   const ids = InspecDataModule.allFiles.map((f) => f.uniqueId);
   for (const id of ids) {
@@ -45,6 +77,12 @@ export function addElemWithDataAppToBody() {
   document.body.append(app);
 }
 
+/**
+ * Provides status count for testing purposes
+ *
+ * @param status Status value that should be checked
+ * @returns Count of the provided status value
+ */
 export function expectedCount(
   status: 'failed' | 'passed' | 'notReviewed' | 'notApplicable' | 'profileError'
 ) {
