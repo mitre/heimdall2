@@ -5374,9 +5374,9 @@
     lru-cache "*"
 
 "@types/luxon@^3.3.1":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.6.0.tgz#2e1c136e84c6cd86dab3e764e9b1f93d07ce2479"
-  integrity sha512-RtEj20xRyG7cRp142MkQpV3GRF8Wo2MtDkKLz65MQs7rM1Lh8bz+HtfPXCCJEYpnDFu6VwAq/Iv2Ikyp9Jw/hw==
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.6.2.tgz#be6536931801f437eafcb9c0f6d6781f72308041"
+  integrity sha512-R/BdP7OxEMc44l2Ex5lSXHoIXTB2JLNa3y2QISIbr58U/YcsffyQrYW//hZSdrfxrjRZj3GcUoxMPGdO8gSYuw==
 
 "@types/methods@^1.1.4":
   version "1.1.4"
