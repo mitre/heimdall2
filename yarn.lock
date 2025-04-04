@@ -311,15 +311,15 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.779.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.779.0.tgz#f9dffffe1ac547df9b219c9d4e8e0392ff6ba83f"
-  integrity sha512-Lagz+ersQaLNYkpOU9V12PYspT//lGvhPXlKU3OXDj3whDchdqUdtRKY8rmV+jli4KXe+udx/hj2yqrFRfKGvQ==
+  version "3.782.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.782.0.tgz#ed807a1cd9a3e7a55bf41dfb486da0bbd1f4852d"
+  integrity sha512-V6JR2JAGYQY7J8wk5un5n/ja2nfCUyyoRCF8Du8JL91NGI8i41Mdr/TzuOGwTgFl6RSXb/ge1K1jk30OH4MugQ==
   dependencies:
     "@aws-crypto/sha1-browser" "5.2.0"
     "@aws-crypto/sha256-browser" "5.2.0"
     "@aws-crypto/sha256-js" "5.2.0"
     "@aws-sdk/core" "3.775.0"
-    "@aws-sdk/credential-provider-node" "3.777.0"
+    "@aws-sdk/credential-provider-node" "3.782.0"
     "@aws-sdk/middleware-bucket-endpoint" "3.775.0"
     "@aws-sdk/middleware-expect-continue" "3.775.0"
     "@aws-sdk/middleware-flexible-checksums" "3.775.0"
@@ -329,13 +329,13 @@
     "@aws-sdk/middleware-recursion-detection" "3.775.0"
     "@aws-sdk/middleware-sdk-s3" "3.775.0"
     "@aws-sdk/middleware-ssec" "3.775.0"
-    "@aws-sdk/middleware-user-agent" "3.775.0"
+    "@aws-sdk/middleware-user-agent" "3.782.0"
     "@aws-sdk/region-config-resolver" "3.775.0"
     "@aws-sdk/signature-v4-multi-region" "3.775.0"
     "@aws-sdk/types" "3.775.0"
-    "@aws-sdk/util-endpoints" "3.775.0"
+    "@aws-sdk/util-endpoints" "3.782.0"
     "@aws-sdk/util-user-agent-browser" "3.775.0"
-    "@aws-sdk/util-user-agent-node" "3.775.0"
+    "@aws-sdk/util-user-agent-node" "3.782.0"
     "@aws-sdk/xml-builder" "3.775.0"
     "@smithy/config-resolver" "^4.1.0"
     "@smithy/core" "^3.2.0"
