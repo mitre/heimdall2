@@ -183,10 +183,10 @@ context('Checklist', () => {
       sidebar.filterByCategory('Stig ID', '023'); // broken on results view
       checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
 
-      sidebar.filterByCategory('Classification', 'Unclass'); // broken on results and checklist view
+      sidebar.filterByCategory('Classification', 'Unclass'); // broken on results view
       checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
 
-      sidebar.filterByCategory('IA Control', 'asdf'); // broken on results and checklist view
+      sidebar.filterByCategory('IA Control', 'asdf'); // broken on results view
       checklistPageVerifier.doesNotHaveMaximalNumberOfRules();
 
       sidebar.filterByCategory('CCIs', 'CCI-001314'); // broken on results view
