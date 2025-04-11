@@ -125,7 +125,7 @@
     "vue-jest": "^3.0.7"
   },
   "resolutions": {
-    "adm-zip": "0.5.12",
+    "adm-zip": "0.5.16",
     "@types/lru-cache/lru-cache@*": "^10.3.0",
     "prismjs": "1.30.0"
   },
