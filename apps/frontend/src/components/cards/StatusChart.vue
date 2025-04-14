@@ -3,13 +3,14 @@
     :categories="categories"
     :series="series"
     :center-value="centerValue"
-    @category-selected="onSelect"
+    @slice-selected="onSliceSelect"
+    @legend-selected="onLegendSelect"
   />
 </template>
 
 <script lang="ts">
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {ExtendedControlStatus, Filter} from '@/store/data_filters';
+import {ExtendedControlStatus, ControlsFilter} from '@/store/data_filters';
 import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
 import Vue from 'vue';
@@ -32,7 +33,8 @@ export default class StatusChart extends Vue {
     | ExtendedControlStatus[]
     | null;
 
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
+
   @Prop({type: Boolean, default: false}) showCompliance!: boolean;
 
   categories: Category<ControlStatus>[] = [
@@ -81,18 +83,42 @@ export default class StatusChart extends Vue {
     ];
   }
 
-  onSelect(status: Category<ControlStatus>) {
-    if (SearchModule.statusFilter?.indexOf(status.value) !== -1) {
+  onSliceSelect(status: Category<ControlStatus>) {
+    const singleSelected =
+      SearchModule.inFileSearchTerms.statusFilter.length === 1;
+    for (const filter of SearchModule.inFileSearchTerms.statusFilter) {
       SearchModule.removeSearchFilter({
         field: 'status',
-        value: status.value,
-        previousValues: this.value || []
+        value: filter.value,
+        negated: false // Defaulted as false
+      });
+    }
+    if (!singleSelected) {
+      // Apply selected status
+      SearchModule.addSearchFilter({
+        field: 'status',
+        value: status.value.toLowerCase(),
+        negated: false // Defaulted as false
+      });
+    }
+  }
+
+  onLegendSelect(status: Category<ControlStatus>) {
+    if (
+      SearchModule.inFileSearchTerms.statusFilter?.find((obj) => {
+        return obj.value === status.value.toLowerCase();
+      }) !== undefined
+    ) {
+      SearchModule.removeSearchFilter({
+        field: 'status',
+        value: status.value.toLowerCase(),
+        negated: false // Defaulted as false
       });
     } else {
       SearchModule.addSearchFilter({
         field: 'status',
-        value: status.value,
-        previousValues: this.value || []
+        value: status.value.toLowerCase(),
+        negated: false // Defaulted as false
       });
     }
   }

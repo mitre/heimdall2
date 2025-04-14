@@ -95,7 +95,11 @@
       <v-chip-group column>
         <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
           <template #activator="{on}">
-            <v-chip :href="tag.url" target="_blank" v-on="on">
+            <v-chip
+              :href="`${tag.url}#active-release-version`"
+              target="_blank"
+              v-on="on"
+            >
               {{ tag.label }}
             </v-chip>
           </template>

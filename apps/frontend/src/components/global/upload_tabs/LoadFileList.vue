@@ -667,7 +667,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
         // Remove any database files that may have been in the URL
         // by calling the router and causing it to write the appropriate
         // route to the URL bar
-        this.navigateWithNoErrors(`/${this.current_route}`);
+        this.navigateWithNoErrors(`/${this.currentRoute}`);
       }
     });
     this.deleteItemDialog = false;

@@ -16,6 +16,7 @@ import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {Category} from './ApexPieChart.vue';
+import {ControlStatus, Severity} from 'inspecjs';
 
 export interface SeriesItem {
   name: string;
@@ -31,7 +32,10 @@ export interface SeriesItem {
   }
 })
 export default class ApexLineChart extends Vue {
-  @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
+  @Prop({required: true, type: Array}) readonly categories!: Category<
+    Severity | ControlStatus
+  >[];
+
   @Prop({required: true, type: Array}) readonly series!: number[];
   @Prop({type: Number}) readonly upperRange!: number; //upper bound of y axis
   @Prop({type: Boolean}) readonly sevChart!: boolean; //identifies chart as severity chart

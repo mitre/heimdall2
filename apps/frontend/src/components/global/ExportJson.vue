@@ -7,6 +7,7 @@
         icon="mdi-code-json"
         @click="export_json()"
         v-on="on"
+        data-cy="exportJson"
       />
     </template>
     <span>JSON Download</span>

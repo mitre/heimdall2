@@ -10,6 +10,8 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
+import {Asset, ChecklistAsset, ChecklistObject} from '@mitre/hdf-converters';
+import _ from 'lodash';
 import {
   Action,
   getModule,
@@ -23,7 +25,10 @@ import {FilteredDataModule} from './data_filters';
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
   return p.sourcedFrom === null;
 }
-
+/** Checklist file type  */
+export type ChecklistFile = ChecklistObject & {
+  filename: string;
+};
 @Module({
   namespaced: true,
   dynamic: true,
@@ -36,6 +41,9 @@ export class InspecData extends VuexModule {
 
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
+
+  /** State var containing all checklist files that have been added */
+  checklistFiles: EvaluationFile[] = [];
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
@@ -55,6 +63,63 @@ export class InspecData extends VuexModule {
     return this.profileFiles;
   }
 
+  /** Return all checklist files only */
+  get allChecklistFiles(): EvaluationFile[] {
+    const cklFiles: EvaluationFile[] = [];
+    const files: EvaluationFile[] = this.executionFiles;
+    for (const file of files) {
+      const checklist: ChecklistObject = _.get(
+        file.evaluation.data,
+        'passthrough.checklist'
+      ) as unknown as ChecklistObject;
+      if (checklist) {
+        cklFiles.push(file);
+      }
+    }
+    return cklFiles;
+  }
+
+  /** Get specific checklist file by fileID */
+  get getChecklist(): (fileID: FileID) => ChecklistFile {
+    return (fileID: FileID) => {
+      const checklistFile = this.allChecklistFiles.find(
+        (f) => f.uniqueId === fileID
+      );
+      const checklist: ChecklistObject = _.get(
+        checklistFile?.evaluation.data,
+        'passthrough.checklist'
+      ) as unknown as ChecklistObject;
+      return {
+        ...checklist,
+        filename: checklistFile?.filename ?? 'Default Checklist Filename'
+      };
+    };
+  }
+
+  /**
+   * Updates the execution file with the provided asset.
+   *
+   * @param {Object} params - The parameters for the update.
+   * @param {FileID} params.fileId - The unique identifier of the file to update.
+   * @param {Asset} params.asset - The asset to update in the execution file.
+   */ @Mutation
+  UPDATE_CHECKLIST_ASSET({file, asset}: {file: FileID; asset: ChecklistAsset}) {
+    const index = this.executionFiles.findIndex((f) => f.uniqueId === file);
+    if (index > -1) {
+      // Update the execution file logic here
+      _.set(
+        this.executionFiles[index].evaluation,
+        'data.passthrough.checklist.asset',
+        asset
+      );
+    }
+  }
+
+  @Action
+  updateChecklistAsset({file, asset}: {file: FileID; asset: ChecklistAsset}) {
+    this.context.commit('UPDATE_CHECKLIST_ASSET', {file, asset});
+  }
+
   /**
    * Returns a readonly list of all executions currently held in the data store
    * including associated context
@@ -65,11 +130,11 @@ export class InspecData extends VuexModule {
 
   get loadedDatabaseIds(): string[] {
     const ids: string[] = [];
-    this.allFiles.forEach((file) => {
+    for (const file of this.allFiles) {
       if (file.database_id) {
         ids.push(file.database_id.toString());
       }
-    });
+    }
     return ids;
   }
 
@@ -105,6 +170,15 @@ export class InspecData extends VuexModule {
   }
 
   /**
+   * Adds a checklist file to the store.
+   * @param newChecklist The checklist to add
+   */
+  @Mutation
+  addChecklist(newChecklist: EvaluationFile) {
+    this.checklistFiles.push(newChecklist);
+  }
+
+  /**
    * Adds an execution file to the store.
    * @param newExecution The execution to add
    */
@@ -121,6 +195,7 @@ export class InspecData extends VuexModule {
     FilteredDataModule.clear_file(fileId);
     this.context.commit('REMOVE_PROFILE', fileId);
     this.context.commit('REMOVE_RESULT', fileId);
+    this.context.commit('REMOVE_CHECKLIST', fileId);
   }
 
   @Action
@@ -159,6 +234,14 @@ export class InspecData extends VuexModule {
     );
   }
 
+  @Mutation
+  REMOVE_CHECKLIST(fileId: FileID) {
+    const index = this.checklistFiles.findIndex((cf) => cf.uniqueId !== fileId);
+    if (index > -1) {
+      this.checklistFiles.splice(index, 1);
+    }
+  }
+
   /**
    * Clear all stored data.
    */
@@ -166,6 +249,7 @@ export class InspecData extends VuexModule {
   reset() {
     this.profileFiles = [];
     this.executionFiles = [];
+    this.checklistFiles = [];
   }
 }
 

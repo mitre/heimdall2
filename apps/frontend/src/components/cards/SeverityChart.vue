@@ -2,19 +2,20 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
-    @category-selected="onSelect"
+    @slice-selected="onSliceSelect"
+    @legend-selected="onLegendSelect"
   />
 </template>
 
 <script lang="ts">
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {Filter} from '@/store/data_filters';
+import {ControlsFilter} from '@/store/data_filters';
 import {SeverityCountModule} from '@/store/severity_counts';
 import {Severity} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {SearchModule, valueToSeverity} from '../../store/search';
+import {SearchEntry, SearchModule} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -26,8 +27,8 @@ import {SearchModule, valueToSeverity} from '../../store/search';
   }
 })
 export default class SeverityChart extends Vue {
-  @Prop({type: Array}) readonly value!: Severity[];
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Array}) readonly value!: SearchEntry<Severity>[];
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
 
   categories: Category<Severity>[] = [
     {label: 'None', value: 'none', color: 'severityNone'},
@@ -59,22 +60,44 @@ export default class SeverityChart extends Vue {
     ];
   }
 
-  onSelect(severity: Category<Severity>) {
+  onSliceSelect(severity: Category<Severity>) {
+    const singleSelected =
+      SearchModule.inFileSearchTerms.severityFilter.length === 1;
+    for (const filter of SearchModule.inFileSearchTerms.severityFilter) {
+      SearchModule.removeSearchFilter({
+        field: 'severity',
+        value: filter.value,
+        negated: false // Defaulted as false
+      });
+    }
+    if (!singleSelected) {
+      // Apply selected status
+      SearchModule.addSearchFilter({
+        field: 'severity',
+        value: severity.value.toLowerCase(),
+        negated: false // Defaulted as false
+      });
+    }
+  }
+
+  onLegendSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
     if (
       this.value &&
-      this.value?.indexOf(valueToSeverity(severity.value)) !== -1
+      this.value?.find((obj) => {
+        return obj.value === severity.value;
+      }) !== undefined
     ) {
       SearchModule.removeSearchFilter({
         field: 'severity',
-        value: valueToSeverity(severity.value),
-        previousValues: this.value
+        value: severity.value,
+        negated: false // Defaulted as false
       });
     } else {
       SearchModule.addSearchFilter({
         field: 'severity',
-        value: valueToSeverity(severity.value),
-        previousValues: this.value
+        value: severity.value,
+        negated: false // Defaulted as false
       });
     }
   }

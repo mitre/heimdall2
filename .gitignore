@@ -20,6 +20,7 @@ coverage
 .cache
 test/screenshots
 test/videos
+cypress/downloads
 
 # IDEs and editors
 /.idea

@@ -2,7 +2,7 @@ import {gen_variants, gen_visibilities} from '@/utilities/color_util';
 import '@mdi/font/css/materialdesignicons.css';
 import Vuetify, {colors} from 'vuetify/lib';
 
-const statuses = {
+export const statuses = {
   statusPassed: colors.green.base,
   statusFailed: colors.red.base,
   statusNotApplicable: colors.lightBlue.base,
@@ -10,15 +10,7 @@ const statuses = {
   statusNotReviewed: colors.orange.base,
   statusProfileError: colors.indigo.lighten2,
   statusNotRun: colors.teal.darken2,
-  statusFromProfile: colors.teal.base,
-  statuspassed: colors.green.base,
-  statusfailed: colors.red.base,
-  statusnodata: colors.orange.lighten1,
-  statusnotreviewed: colors.orange.base,
-  statusskipped: colors.orange.base,
-  statusprofileerror: colors.indigo.lighten2,
-  statusnotrun: colors.teal.darken2,
-  statusfromprofile: colors.teal.base
+  statusFromProfile: colors.teal.base
 };
 
 // Get colors generated from base mitre using UtilColorGenerator.
@@ -43,7 +35,7 @@ const branding = {
   mitreCardShadow: '#d6d6d6'
 };
 
-const severities = {
+export const severities = {
   severityNone: colors.lightBlue.base,
   severityLow: colors.yellow.base,
   severityMedium: colors.orange.base,

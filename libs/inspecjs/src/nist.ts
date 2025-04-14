@@ -50,9 +50,9 @@ export class NistControl {
   rawText?: string;
 
   /** Trivial constructor */
-  constructor(subSpecs: string[], rawRext?: string) {
+  constructor(subSpecs: string[], rawText?: string) {
     this.subSpecifiers = subSpecs;
-    this.rawText = rawRext;
+    this.rawText = rawText;
   }
 
   /** This function checks if the given control is contained by or equivalent to this control.

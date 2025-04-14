@@ -3,17 +3,32 @@
  */
 
 import {Trinary} from '@/enums/Trinary';
+import {severities, statuses} from '@/plugins/vuetify';
 import {InspecDataModule} from '@/store/data_store';
+import {EvaluationModule} from '@/store/evaluations';
 import {
+  EvaluationFile,
   FileID,
+  InspecFile,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
 import {
+  Assettype,
+  ChecklistAsset,
+  ChecklistObject,
+  Severity as ChecklistSeverity,
+  ChecklistVuln,
+  Role,
+  StatusMapping,
+  Techarea
+} from '@mitre/hdf-converters';
+import {
   ContextualizedControl,
   ContextualizedProfile,
   ControlStatus,
+  LowercasedControlStatus,
   NistControl,
   Severity
 } from 'inspecjs';
@@ -26,44 +41,90 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {SearchEntry} from './search';
+import {
+  CciSearchTerm,
+  ClassificationSearchTerm,
+  CodeSearchTerm,
+  ControlIdSearchTerm,
+  DescriptionSearchTerm,
+  EvaluationTagSearchTerm,
+  FilenameSearchTerm,
+  GroupNameSearchTerm,
+  IaControlsSearchTerm,
+  KeywordsSearchTerm,
+  NistIdFilter,
+  RuleIdSearchTerm,
+  StigIdSearchTerm,
+  TitleSearchTerm,
+  UserGroupSearchTerm,
+  VulIdSearchTerm
+} from './search_filter_sync';
+import {ExtendedVuln} from '@/views/Checklist.vue';
 
 const MAX_CACHE_ENTRIES = 20;
 
 export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
-/** Contains common filters on data from the store. */
-export interface Filter {
-  // General
+export type GenericSearchEntryValue = string | ExtendedControlStatus | Severity;
+
+export type FilterRecord =
+  | boolean
+  | SearchEntry<GenericSearchEntryValue>[]
+  | undefined;
+
+/** Contains common filters for controls. */
+export interface ControlsFilter {
   /** Which file these objects came from. Undefined => any */
   fromFile: FileID[];
 
   // Control specific
   /** What status the controls can have. Undefined => any */
-  status?: ExtendedControlStatus[];
+  status?: SearchEntry<ExtendedControlStatus>[];
 
   /** What severity the controls can have. Undefined => any */
-  severity?: Severity[];
+  severity?: SearchEntry<Severity>[];
+
+  /** Titles to search for */
+  titleSearchTerms?: SearchEntry<TitleSearchTerm>[];
+
+  /** Descriptions to search for */
+  descriptionSearchTerms?: SearchEntry<DescriptionSearchTerm>[];
+
+  /** Code to search for */
+  codeSearchTerms?: SearchEntry<CodeSearchTerm>[];
+
+  /** CCIs to search for */
+  nistIdFilter?: SearchEntry<NistIdFilter>[];
+
+  /** Checklist keywords to search for */
+  keywordsSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
 
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
 
+  /** A specific control id */
+  control_id?: string;
+
+  /** Filenames to search for  */
+  filenameSearchTerms?: SearchEntry<FilenameSearchTerm>[];
+
+  /** User groups to search for  */
+  userGroupSearchTerms?: SearchEntry<UserGroupSearchTerm>[];
+
+  /** Evaluation tags to search for  */
+  evalTagSearchTerms?: SearchEntry<EvaluationTagSearchTerm>[];
+
+  // End of "generic" filters
+
+  /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
+  treeFilters?: TreeMapState;
+
   /** Control IDs to search for */
-  ids?: string[];
-
-  /** Titles to search for */
-  titleSearchTerms?: string[];
-
-  /** Descriptions to search for */
-  descriptionSearchTerms?: string[];
-
-  /** Code to search for */
-  codeSearchTerms?: string[];
+  ids?: SearchEntry<ControlIdSearchTerm>[];
 
   /** Tags to search for */
   tagFilter?: string[];
-
-  /** CCIs to search for */
-  nistIdFilter?: string[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -75,12 +136,63 @@ export interface Filter {
    * - code
    */
   searchTerm?: string;
+}
 
-  /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
-  treeFilters?: TreeMapState;
+/** Contains common filters for a checklist. */
+export interface ChecklistFilter {
+  /** Which file these objects came from. Undefined => any */
+  fromFile: FileID;
+
+  // Control specific
+  /** What status the controls can have. Undefined => any */
+  status?: SearchEntry<ExtendedControlStatus>[];
+
+  /** What severity the controls can have. Undefined => any */
+  severity?: SearchEntry<Severity>[];
+
+  /** Titles to search for */
+  titleSearchTerms?: SearchEntry<TitleSearchTerm>[];
+
+  /** Descriptions to search for */
+  descriptionSearchTerms?: SearchEntry<DescriptionSearchTerm>[];
+
+  /** Code to search for */
+  codeSearchTerms?: SearchEntry<CodeSearchTerm>[];
+
+  /** CCIs to search for */
+  nistIdFilter?: SearchEntry<NistIdFilter>[];
+
+  /** Checklist keywords to search for */
+  keywordsSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
+
+  /** Whether or not to allow/include overlayed controls */
+  omit_overlayed_controls?: boolean;
 
   /** A specific control id */
   control_id?: string;
+
+  // End of "generic" filters
+
+  /** Ruleid to search for */
+  ruleidSearchTerms?: SearchEntry<RuleIdSearchTerm>[];
+
+  /** Vulid to search for */
+  vulidSearchTerms?: SearchEntry<VulIdSearchTerm>[];
+
+  /** Stigid to search for */
+  stigidSearchTerms?: SearchEntry<StigIdSearchTerm>[];
+
+  /** Classification to search for */
+  classificationSearchTerms?: SearchEntry<ClassificationSearchTerm>[];
+
+  /** Groupname to search for */
+  groupNameSearchTerms?: SearchEntry<GroupNameSearchTerm>[];
+
+  /** Checklist CCIs to search for */
+  cciSearchTerms?: SearchEntry<CciSearchTerm>[];
+
+  /** Checklist CCIs to search for */
+  iaControlsSearchTerms?: SearchEntry<IaControlsSearchTerm>[];
 }
 
 export type TreeMapState = string[]; // Representing the current path spec, from root
@@ -90,7 +202,7 @@ export type TreeMapState = string[]; // Representing the current path spec, from
  * @param term The string to search with
  * @param contextControl The control to search for term in
  */
-function contains_term(
+function controlContainsTerm(
   contextControl: ContextualizedControl,
   term: string
 ): boolean {
@@ -108,6 +220,104 @@ function contains_term(
   return searchables.some((s) => s.toLowerCase().includes(term));
 }
 
+/**
+ * Searches rule to see if term exists
+ *
+ * @param rule - Checklist rule to check
+ * @param filter - Filter object to search for
+ * @returns If term exists true, else false
+ *
+ */
+function ruleContainsTerm(
+  rule: ExtendedVuln,
+  filter: SearchEntry<GenericSearchEntryValue>
+): boolean {
+  // See if any contain filter term
+  return Object.values(rule).some((value) => {
+    if (_.isBoolean(value)) {
+      return value;
+    }
+    if (_.isArray(value)) {
+      return value.some((v) => v.toLowerCase().includes(filter.value));
+    }
+    return value?.toLowerCase().includes(filter.value);
+  });
+}
+
+export interface FilesFilter {
+  filenameSearchTerms?: SearchEntry<FilenameSearchTerm>[];
+  userGroupSearchTerms?: SearchEntry<UserGroupSearchTerm>[];
+  evalTagSearchTerms?: SearchEntry<EvaluationTagSearchTerm>[];
+}
+
+export function fileMatchesFilter(
+  file: InspecFile,
+  filter?: FilesFilter
+): boolean {
+  if (filter === undefined) return true;
+
+  interface FileFilteringProperties {
+    filename: string[];
+    groups: string[];
+    tags: string[];
+  }
+
+  // note we wrap the filename in an array so it can be filtered using the same functions used for tags and groups
+  const fileProperties: FileFilteringProperties = {
+    filename: [file.filename.toLowerCase()],
+    groups: [],
+    tags: []
+  };
+
+  // if an evaluation exists from the database, populate the group names and tag values
+  const evaluation = EvaluationModule.evaluationForFile(file);
+  if (evaluation) {
+    fileProperties.groups = evaluation.groups.map((g: {name: string}) =>
+      g.name.toLowerCase()
+    );
+    fileProperties.tags = evaluation.evaluationTags.map((t: {value: string}) =>
+      t.value.toLowerCase()
+    );
+  }
+
+  // return true if any filter term matches any of the property values
+  function oneMatches(fileProperty: string[], filterTerms: string[]): boolean {
+    return filterTerms.some((term) =>
+      fileProperty.some((p) => p.includes(term.toLowerCase()))
+    );
+  }
+
+  // just get the term values, either the negated or not negated
+  function getTerms(terms: SearchEntry<string>[], negated: boolean) {
+    return terms
+      .filter((t) => (negated ? t.negated : !t.negated))
+      .map((t) => t.value);
+  }
+
+  const termsPropPairs = [
+    {terms: filter.filenameSearchTerms, prop: fileProperties.filename},
+    {terms: filter.userGroupSearchTerms, prop: fileProperties.groups},
+    {terms: filter.evalTagSearchTerms, prop: fileProperties.tags}
+  ];
+
+  for (const {terms, prop} of termsPropPairs) {
+    if (terms) {
+      const positive = getTerms(terms, false);
+      const negative = getTerms(terms, true);
+
+      if (positive.length > 0 && !oneMatches(prop, positive)) {
+        return false;
+      }
+
+      if (negative.length > 0 && oneMatches(prop, negative)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
 @Module({
   namespaced: true,
   dynamic: true,
@@ -117,6 +327,106 @@ function contains_term(
 export class FilteredData extends VuexModule {
   selectedEvaluationIds: FileID[] = [];
   selectedProfileIds: FileID[] = [];
+  selectedChecklistId: FileID = '';
+
+  /** Filter state for the checklist view */
+  checklistFilterState: string = '';
+
+  /** Sets the current checklist state */
+  @Mutation
+  SET_CHECKLIST_FILTER_STATE(checklistState: string) {
+    this.checklistFilterState = checklistState;
+  }
+
+  /** Update the current checklist state */
+  @Action
+  setChecklistFilterState(checklistState: string) {
+    this.context.commit('SET_CHECKLIST_FILTER_STATE', checklistState);
+  }
+
+  /** Filter state for the results view */
+  resultsFilterState: string = '';
+
+  /** Sets the current results state */
+  @Mutation
+  SET_RESULTS_FILTER_STATE(resultsState: string) {
+    this.resultsFilterState = resultsState;
+  }
+
+  /** Update the current results state */
+  @Action
+  setResultsFilterState(resultsState: string) {
+    this.context.commit('SET_RESULTS_FILTER_STATE', resultsState);
+  }
+
+  /** Filter state for the profiles view */
+  profilesFilterState: string = '';
+
+  /** Sets the current results state */
+  @Mutation
+  SET_PROFILES_FILTER_STATE(profilesState: string) {
+    this.profilesFilterState = profilesState;
+  }
+
+  /** Update the current results state */
+  @Action
+  setProfilesFilterState(profilesState: string) {
+    this.context.commit('SET_PROFILES_FILTER_STATE', profilesState);
+  }
+
+  /** For Checklist Viewer */
+  readonly emptyRule: ChecklistVuln = {
+    status: StatusMapping.Not_Reviewed,
+    findingdetails: '',
+    comments: '',
+    severityoverride: ChecklistSeverity.Empty,
+    severityjustification: '',
+    vulnNum: '',
+    severity: ChecklistSeverity.Empty,
+    groupTitle: '',
+    ruleId: '',
+    ruleVer: '',
+    ruleTitle: '',
+    vulnDiscuss: '',
+    iaControls: '',
+    checkContent: '',
+    fixText: '',
+    falsePositives: '',
+    falseNegatives: '',
+    documentable: 'false',
+    mitigations: '',
+    potentialImpact: '',
+    thirdPartyTools: '',
+    mitigationControl: '',
+    responsibility: '',
+    securityOverrideGuidance: '',
+    checkContentRef: '',
+    weight: '',
+    class: 'Unclass',
+    stigRef: '',
+    targetKey: '',
+    stigUuid: '',
+    legacyId: '',
+    cciRef: ''
+  };
+
+  readonly emptyAsset: ChecklistAsset = {
+    role: Role.None,
+    assettype: Assettype.DefaultValue,
+    hostname: '',
+    hostip: '',
+    hostmac: '',
+    hostfqdn: '',
+    marking: '',
+    targetcomment: '',
+    techarea: Techarea.Empty,
+    targetkey: '',
+    webordatabase: false,
+    webdbsite: '',
+    webdbinstance: ''
+  };
+
+  selectedRule: ChecklistVuln = this.emptyRule;
 
   @Mutation
   SELECT_EVALUATIONS(files: FileID[]): void {
@@ -130,6 +440,16 @@ export class FilteredData extends VuexModule {
     this.selectedProfileIds = [
       ...new Set([...files, ...this.selectedProfileIds])
     ];
+  }
+
+  @Mutation
+  SELECT_CHECKLIST(file: FileID): void {
+    this.selectedChecklistId = file;
+  }
+
+  @Mutation
+  SELECT_RULE(rule: ChecklistVuln): void {
+    this.selectedRule = rule;
   }
 
   @Mutation
@@ -147,6 +467,11 @@ export class FilteredData extends VuexModule {
   }
 
   @Mutation
+  CLEAR_CHECKLIST(): void {
+    this.selectedChecklistId = '';
+  }
+
+  @Mutation
   CLEAR_ALL_EVALUATIONS(): void {
     this.selectedEvaluationIds = [];
   }
@@ -154,6 +479,11 @@ export class FilteredData extends VuexModule {
   @Mutation
   CLEAR_ALL_PROFILES(): void {
     this.selectedProfileIds = [];
+  }
+
+  @Mutation
+  CLEAR_ALL_CHECKLISTS(): void {
+    this.selectedChecklistId = '';
   }
 
   @Action
@@ -191,6 +521,11 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
+  public selectRule(rule: ChecklistVuln): void {
+    this.SELECT_RULE(rule);
+  }
+
+  @Action
   public toggle_evaluation(fileID: FileID): void {
     if (this.selectedEvaluationIds.includes(fileID)) {
       this.CLEAR_EVALUATION(fileID);
@@ -209,9 +544,21 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
+  public select_exclusive_checklist(fileID: FileID): void {
+    const checklist: ChecklistObject = _.get(
+      InspecDataModule.allChecklistFiles.find((f) => f.uniqueId === fileID)
+        ?.evaluation.data,
+      'passthrough.checklist'
+    ) as unknown as ChecklistObject;
+    this.SELECT_CHECKLIST(fileID);
+    this.selectRule(checklist.stigs[0].vulns[0] ?? this.emptyRule);
+  }
+
+  @Action
   public clear_file(fileID: FileID): void {
     this.CLEAR_EVALUATION(fileID);
     this.CLEAR_PROFILE(fileID);
+    this.CLEAR_CHECKLIST();
   }
 
   /**
@@ -219,21 +566,25 @@ export class FilteredData extends VuexModule {
    * Get all evaluations from the specified file ids
    */
   get evaluations(): (
-    files: FileID[]
+    files: FileID[],
+    filter?: FilesFilter
   ) => readonly SourcedContextualizedEvaluation[] {
-    return (files: FileID[]) => {
-      return InspecDataModule.contextualExecutions.filter((e) =>
-        files.includes(e.from_file.uniqueId)
+    return (files: FileID[], filter?: FilesFilter) => {
+      return InspecDataModule.contextualExecutions.filter(
+        (e) =>
+          files.includes(e.from_file.uniqueId) &&
+          fileMatchesFilter(e.from_file, filter)
       );
     };
   }
 
   get profiles_for_evaluations(): (
-    files: FileID[]
+    files: FileID[],
+    filter?: FilesFilter
   ) => readonly ContextualizedProfile[] {
-    return (files: FileID[]) => {
+    return (files: FileID[], filter?: FilesFilter) => {
       // Filter to those that match our filter. In this case that just means come from the right file id
-      return this.evaluations(files).flatMap(
+      return this.evaluations(files, filter).flatMap(
         (evaluation) => evaluation.contains
       );
     };
@@ -243,16 +594,33 @@ export class FilteredData extends VuexModule {
    * Parameterized getter.
    * Get all profiles from the specified file ids.
    */
-  get profiles(): (files: FileID[]) => readonly SourcedContextualizedProfile[] {
-    return (files: FileID[]) => {
-      return InspecDataModule.contextualProfiles.filter((e) => {
-        return files.includes(e.from_file.uniqueId);
-      });
+  get profiles(): (
+    files: FileID[],
+    filter?: FilesFilter
+  ) => readonly SourcedContextualizedProfile[] {
+    return (files: FileID[], filter?: FilesFilter) => {
+      return InspecDataModule.contextualProfiles.filter(
+        (e) =>
+          files.includes(e.from_file.uniqueId) &&
+          fileMatchesFilter(e.from_file, filter)
+      );
+    };
+  }
+
+  get checklists(): (file: FileID) => EvaluationFile[] {
+    return (file: FileID) => {
+      return InspecDataModule.allChecklistFiles.filter(
+        (e) => e.uniqueId === file
+      );
     };
   }
 
   get selected_file_ids(): FileID[] {
     return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
+  }
+
+  get selected_checklist(): FileID {
+    return this.selectedChecklistId;
   }
 
   get selected_evaluation_ids(): FileID[] {
@@ -292,6 +660,10 @@ export class FilteredData extends VuexModule {
     }
   }
 
+  get checklist_selected(): Trinary {
+    return this.selectedChecklistId ? Trinary.On : Trinary.Off;
+  }
+
   // check to see if any evaluation is selected
   get any_evaluation_selected(): boolean {
     return this.selectedEvaluationIds.length > 0;
@@ -301,16 +673,19 @@ export class FilteredData extends VuexModule {
    * Parameterized getter.
    * Get all controls from all profiles from the specified file id.
    * Utilizes the profiles getter to accelerate the file filter.
+   *
+   * @param filter - Filters to apply
+   * @returns Controls from all profiles from the specified file id
    */
-  get controls(): (filter: Filter) => readonly ContextualizedControl[] {
+  get controls(): (filter: ControlsFilter) => readonly ContextualizedControl[] {
     /** Cache by filter */
     const localCache: LRUCache<string, readonly ContextualizedControl[]> =
       new LRUCache({max: MAX_CACHE_ENTRIES});
 
-    return (filter: Filter) => {
+    return (filter: ControlsFilter) => {
       // Generate a hash for cache purposes.
       // If the "searchTerm" string is not null, we don't cache - no need to pollute
-      const id: string = filter_cache_key(filter);
+      const id: string = filterCacheKey(filter);
 
       // Check if we have this cached:
       const cached = localCache.get(id);
@@ -318,12 +693,18 @@ export class FilteredData extends VuexModule {
         return cached;
       }
 
+      const filesFilter = {
+        filenameSearchTerms: filter.filenameSearchTerms,
+        userGroupSearchTerms: filter.userGroupSearchTerms,
+        evalTagSearchTerms: filter.evalTagSearchTerms
+      } as FilesFilter;
+
       // Get profiles from loaded Results
       let profiles: readonly ContextualizedProfile[] =
-        this.profiles_for_evaluations(filter.fromFile);
+        this.profiles_for_evaluations(filter.fromFile, filesFilter);
 
       // Get profiles from loaded Profiles
-      profiles = profiles.concat(this.profiles(filter.fromFile));
+      profiles = profiles.concat(this.profiles(filter.fromFile, filesFilter));
 
       // And all the controls they contain
       let controls: readonly ContextualizedControl[] = profiles.flatMap(
@@ -335,18 +716,22 @@ export class FilteredData extends VuexModule {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
-      const controlFilters: Record<string, boolean | string[] | undefined> = {
+      const controlFilters: Record<string, FilterRecord> = {
         'root.hdf.severity': filter.severity,
         'hdf.wraps.id': filter.ids,
         'hdf.wraps.title': filter.titleSearchTerms,
         'hdf.wraps.desc': filter.descriptionSearchTerms,
         'hdf.rawNistTags': filter.nistIdFilter,
         full_code: filter.codeSearchTerms,
-        'hdf.waived': filter.status?.includes('Waived'),
+        'hdf.waived': filter.status?.includes({
+          value: 'Waived',
+          negated: false
+        }),
         'root.hdf.status': _.filter(
           filter.status,
-          (status) => status !== 'Waived'
-        )
+          (status) => status.value !== 'Waived'
+        ),
+        keywords: filter.keywordsSearchTerms
       };
       controls = filterControlsBy(controls, controlFilters);
 
@@ -372,14 +757,6 @@ export class FilteredData extends VuexModule {
         );
       }
 
-      // Freeform search
-      if (filter.searchTerm !== undefined) {
-        const term = filter.searchTerm.toLowerCase();
-
-        // Filter controls to those that contain search term
-        controls = controls.filter((c) => contains_term(c, term));
-      }
-
       // Filter by nist stuff
       if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
@@ -397,18 +774,124 @@ export class FilteredData extends VuexModule {
       return r;
     };
   }
+
+  /** List of status switches */
+  controlStatusSwitches: {
+    name: string;
+    value: LowercasedControlStatus;
+    enabled: boolean;
+    color: keyof typeof statuses;
+  }[] = [
+    {
+      name: 'Passed',
+      value: 'passed',
+      enabled: false,
+      color: 'statusPassed'
+    },
+    {
+      name: 'Failed',
+      value: 'failed',
+      enabled: false,
+      color: 'statusFailed'
+    },
+    {
+      name: 'Not Applicable',
+      value: 'not applicable',
+      enabled: false,
+      color: 'statusNotApplicable'
+    },
+    {
+      name: 'Not Reviewed',
+      value: 'not reviewed',
+      enabled: false,
+      color: 'statusNotReviewed'
+    }
+  ];
+
+  /** List of severity switches */
+  severitySwitches: {
+    name: string;
+    value: Severity;
+    enabled: boolean;
+    color: keyof typeof severities;
+  }[] = [
+    {
+      name: 'Low',
+      value: 'low',
+      enabled: false,
+      color: 'severityLow'
+    },
+    {
+      name: 'Medium',
+      value: 'medium',
+      enabled: false,
+      color: 'severityMedium'
+    },
+    {
+      name: 'High',
+      value: 'high',
+      enabled: false,
+      color: 'severityHigh'
+    },
+    {
+      name: 'Critical',
+      value: 'critical',
+      enabled: false,
+      color: 'severityCritical'
+    }
+  ];
 }
 
 export const FilteredDataModule = getModule(FilteredData);
+
+/**
+ * Get checklist rules that should be displayed.
+ *
+ * @param rules - Array of checklist rules
+ * @param filters - Any filters that should be applied
+ * @returns Array of checklist rules after processing
+ *
+ */
+export function checklistRules(
+  rules: readonly ExtendedVuln[],
+  filters: ChecklistFilter
+): readonly ExtendedVuln[] {
+  // If an attribute name changes in the checklist mapping, make sure it is reflected here
+  const checklistFilters: Partial<
+    Record<keyof ExtendedVuln | 'keywords', FilterRecord>
+  > = {
+    severity: filters.severity,
+    vulnNum: filters.vulidSearchTerms,
+    ruleId: filters.ruleidSearchTerms,
+    ruleVer: filters.stigidSearchTerms,
+    class: filters.classificationSearchTerms,
+    groupTitle: filters.groupNameSearchTerms,
+    cciRef: filters.cciSearchTerms,
+    iaControls: filters.iaControlsSearchTerms,
+    status: _.filter(
+      filters.status,
+      (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'
+    ),
+    keywords: filters.keywordsSearchTerms,
+    nist: filters.nistIdFilter,
+    id: filters.vulidSearchTerms
+  };
+  const filteredRules = filterChecklistBy(rules, checklistFilters);
+  return filteredRules;
+}
 
 /**
  * Generates a unique string to represent a filter.
  * Does some minor "acceleration" techniques such as
  * - annihilating empty search terms
  * - defaulting "omit_overlayed_controls"
+ *
+ * @param f - Filter object
+ * @returns Converted newFilter to a JSON string.
+ *
  */
-export function filter_cache_key(f: Filter) {
-  const newFilter: Filter = {
+export function filterCacheKey(f: ControlsFilter) {
+  const newFilter: ControlsFilter = {
     searchTerm: f.searchTerm?.trim() || '',
     omit_overlayed_controls: f.omit_overlayed_controls || false,
     ...f
@@ -416,40 +899,170 @@ export function filter_cache_key(f: Filter) {
   return JSON.stringify(newFilter);
 }
 
+/**
+ * Filters controls by keyword filters
+ *
+ * @param controls - Array of contextualized controls
+ * @returns Filtered array of controls
+ *
+ */
+export function filterControlsByKeywords(
+  controls: ContextualizedControl[],
+  keywords: FilterRecord
+) {
+  let results = controls;
+  if (keywords && Array.isArray(keywords)) {
+    for (const filter of keywords) {
+      results = !filter.negated
+        ? controls.filter((control) => {
+            return controlContainsTerm(control, filter.value);
+          })
+        : controls.filter((control) => {
+            return !controlContainsTerm(control, filter.value);
+          });
+    }
+  }
+  return results;
+}
+
+/**
+ * Filters checklist rules by keyword filters
+ *
+ * @param controls - Array of checklist rules
+ * @returns Filtered array of checklist rules
+ *
+ */
+export function filterRulesByKeywords(
+  rules: ExtendedVuln[],
+  keywords: FilterRecord
+) {
+  let result = rules;
+  if (keywords && Array.isArray(keywords)) {
+    for (const filter of keywords) {
+      result = !filter.negated
+        ? result.filter((rule) => ruleContainsTerm(rule, filter))
+        : result.filter((rule) => !ruleContainsTerm(rule, filter));
+    }
+  }
+  return result;
+}
+
+/**
+ * Filters controls by given filters
+ *
+ * @param controls - Array of contextualized controls
+ * @param filters - Filters to apply to the controls
+ * @returns Filtered array of controls
+ *
+ */
 export function filterControlsBy(
   controls: readonly ContextualizedControl[],
-  filters: Record<string, boolean | string[] | undefined>
+  filters: Record<string, FilterRecord>
 ): readonly ContextualizedControl[] {
-  const activeFilters: typeof filters = _.pickBy(
+  const activeFilters: Record<string, FilterRecord> = _.pickBy(
     filters,
-    (value, _key) =>
+    (value) =>
       (Array.isArray(value) && value.length > 0) ||
-      (typeof value === 'boolean' && value)
+      (_.isBoolean(value) && value)
   );
-  return controls.filter((control) => {
-    return Object.entries(activeFilters).every(([filter, value]) => {
-      const item: string | string[] | boolean = _.get(control, filter);
-      if (Array.isArray(value) && typeof item !== 'boolean') {
-        return value?.some((term) => {
-          return arrayOrStringIncludes(item, (compareValue) =>
-            compareValue.toLowerCase().includes(term.toLowerCase())
+
+  // Filter out specific categories
+  const firstPass = controls.filter((control) => {
+    return Object.entries(activeFilters).every(([path, filter]) => {
+      // Skip keywords for now
+      if (path === 'keywords') {
+        return true;
+      }
+      const item: unknown = _.get(control, path);
+      if (Array.isArray(filter) && !_.isBoolean(item)) {
+        return filter.some((term) => {
+          const isIncluded = fieldIncludes(item, (compareValue) =>
+            compareValue.toLowerCase().includes(term.value.toLowerCase())
           );
+          return !term.negated ? isIncluded : !isIncluded;
         });
       } else {
-        return item === value;
+        return item === filter;
       }
     });
   });
+
+  // Overall keywords filtering
+  const final: ContextualizedControl[] = filterControlsByKeywords(
+    firstPass,
+    activeFilters.keywords
+  );
+  return final;
 }
 
-/** Iterate over a string or array of strings and call the string compare function provided on every element **/
-function arrayOrStringIncludes(
-  arrayOrString: string | string[],
+/**
+ * Filters checklist rules by given filters
+ *
+ * @param rules - Array of checklist rules
+ * @param filters - Filters to apply to the checklist rules
+ * @returns Filtered checklist rules
+ *
+ */
+export function filterChecklistBy(
+  rules: readonly ExtendedVuln[],
+  filters: Record<string, FilterRecord>
+): readonly ExtendedVuln[] {
+  const activeFilters: Record<string, FilterRecord> = _.pickBy(
+    filters,
+    (value) =>
+      (Array.isArray(value) && value.length > 0) ||
+      (_.isBoolean(value) && value)
+  );
+
+  // Filter out specific categories
+  const firstPass = rules.filter((rule) => {
+    return Object.entries(activeFilters).every(([path, filter]) => {
+      // Skip keywords for now
+      if (path === 'keywords') {
+        return true;
+      }
+      const item: unknown = _.get(rule, path);
+      if (Array.isArray(filter) && !_.isBoolean(item)) {
+        return filter.some((term) => {
+          const isIncluded = fieldIncludes(item, (compareValue) =>
+            compareValue.toLowerCase().includes(term.value.toLowerCase())
+          );
+          return !term.negated ? isIncluded : !isIncluded;
+        });
+      } else {
+        return item === filter;
+      }
+    });
+  });
+
+  // Overall keywords filtering
+  const final: ExtendedVuln[] = filterRulesByKeywords(
+    firstPass,
+    filters.keywords
+  );
+
+  return final;
+}
+
+/**
+ * Checks provided entry and calls the string compare function provided on every element
+ *
+ * @param entry - Value of the entry
+ * @param comparator - Function used to compare
+ * @returns A boolean value returned from the comparator function passed
+ *
+ */
+function fieldIncludes(
+  entry: unknown,
   comparator: (compareValue: string) => boolean
 ) {
-  if (typeof arrayOrString === 'string') {
-    return comparator(arrayOrString);
+  if (typeof entry === 'string') {
+    return comparator(entry);
+  } else if (_.isBoolean(entry)) {
+    return entry;
+  } else if (Array.isArray(entry)) {
+    return entry.some((value) => comparator(value));
   } else {
-    return arrayOrString.some((value) => comparator(value));
+    return false;
   }
 }

@@ -10,7 +10,7 @@
         {{ warning_banner }}
       </v-banner>
       <v-tabs
-        vertical
+        :vertical="$vuetify.breakpoint.mdAndUp"
         class="left-justify-tabs"
         :value="activeTab"
         color="primary-visible"
@@ -138,11 +138,17 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     const numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
       files.includes(prof)
     ).length;
+    const numChecklists = InspecDataModule.allChecklistFiles.filter((ckl) =>
+      files.includes(ckl.uniqueId)
+    ).length;
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-    if (numEvaluations >= numProfiles) {
+    if (numChecklists > numProfiles && numChecklists >= numEvaluations) {
+      if (this.currentRoute !== 'checklists')
+        this.navigateWithNoErrors(`/checklists`);
+    } else if (numEvaluations >= numProfiles) {
       // Only navigate the user to the results page if they are not
       // already on the compare page.
-      if (this.current_route === 'compare') {
+      if (this.currentRoute === 'compare') {
         this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
       } else {
         this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);

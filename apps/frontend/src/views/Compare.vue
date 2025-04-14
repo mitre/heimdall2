@@ -211,7 +211,7 @@ import UploadButton from '@/components/generic/UploadButton.vue';
 import Modal from '@/components/global/Modal.vue';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {ControlsFilter, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
@@ -331,17 +331,16 @@ export default class Compare extends Vue {
     });
   }
 
-  get filter(): Filter {
+  get filter(): ControlsFilter {
     return {
-      status: SearchModule.statusFilter,
-      severity: SearchModule.severityFilter,
+      status: SearchModule.inFileSearchTerms.statusFilter,
+      severity: SearchModule.inFileSearchTerms.severityFilter,
       fromFile: this.file_filter,
-      ids: SearchModule.controlIdSearchTerms,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      searchTerm: SearchModule.freeSearch,
-      codeSearchTerms: SearchModule.codeSearchTerms,
+      ids: SearchModule.inFileSearchTerms.controlId,
+      titleSearchTerms: SearchModule.inFileSearchTerms.title,
+      descriptionSearchTerms: SearchModule.inFileSearchTerms.description,
+      nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
+      codeSearchTerms: SearchModule.inFileSearchTerms.code,
       tagFilter: SearchModule.tagFilter,
       omit_overlayed_controls: true
     };
@@ -482,28 +481,28 @@ export default class Compare extends Vue {
       lowCounts.push(
         SeverityCountModule.low({
           fromFile: [file.uniqueId],
-          status: ['Failed'],
+          status: [{value: 'Failed', negated: false}],
           omit_overlayed_controls: true
         })
       );
       medCounts.push(
         SeverityCountModule.medium({
           fromFile: [file.uniqueId],
-          status: ['Failed'],
+          status: [{value: 'Failed', negated: false}],
           omit_overlayed_controls: true
         })
       );
       highCounts.push(
         SeverityCountModule.high({
           fromFile: [file.uniqueId],
-          status: ['Failed'],
+          status: [{value: 'Failed', negated: false}],
           omit_overlayed_controls: true
         })
       );
       critCounts.push(
         SeverityCountModule.critical({
           fromFile: [file.uniqueId],
-          status: ['Failed'],
+          status: [{value: 'Failed', negated: false}],
           omit_overlayed_controls: true
         })
       );
