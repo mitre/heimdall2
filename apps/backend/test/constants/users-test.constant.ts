@@ -37,6 +37,16 @@ export const BAD_LDAP_AUTHENTICATION = {
   password: 'zoiderg'
 };
 
+export const AWS_S3_AUTHENTICATION = {
+  accessToken: 'localkey',
+  secretToken: 'secretkey'
+};
+
+export const BAD_AWS_S3_AUTHENTICATION = {
+  accessToken: 'badlocalkey',
+  secretToken: 'badsecretkey'
+};
+  
 export const SPLUNK_AUTHENTICATION = {
   username: 'admin',
   password: 'Valid_password!',
