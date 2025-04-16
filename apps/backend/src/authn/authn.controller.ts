@@ -100,7 +100,7 @@ export class AuthnController {
 
   @Get('okta')
   @UseGuards(AuthGuard('okta'))
-  @UseFilters(new AuthenticationExceptionFilter())
+  @UseFilters(new AuthenticationExceptionFilter('okta'))
   async loginToOkta(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
@@ -109,7 +109,7 @@ export class AuthnController {
 
   @Get('okta/callback')
   @UseGuards(AuthGuard('okta'))
-  @UseFilters(new AuthenticationExceptionFilter())
+  @UseFilters(new AuthenticationExceptionFilter('okta'))
   async getUserFromOkta(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
@@ -117,6 +117,7 @@ export class AuthnController {
 
   @Get('oidc')
   @UseGuards(AuthGuard('oidc'))
+  @UseFilters(new AuthenticationExceptionFilter('oidc'))
   async loginToOIDC(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
@@ -125,7 +126,7 @@ export class AuthnController {
 
   @Get('oidc/callback')
   @UseGuards(AuthGuard('oidc'))
-  @UseFilters(new AuthenticationExceptionFilter())
+  @UseFilters(new AuthenticationExceptionFilter('oidc'))
   async getUserFromOIDC(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
