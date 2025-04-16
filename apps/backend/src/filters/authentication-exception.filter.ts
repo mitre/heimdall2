@@ -14,11 +14,11 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       _.get(request, 'authInfo.message') ===
       'Unable to verify authorization request state.'
     ) {
-      return response.redirect(301, '/authn/oidc');
+      return response.redirect(302, '/authn/oidc');
     }
     response.cookie('authenticationError', exception.message, {
       secure: this.configService.isInProductionMode()
     });
-    response.redirect(301, '/');
+    response.redirect(302, '/');
   }
 }
