@@ -22,7 +22,8 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
     ) {
       return response.redirect(302, `/authn/${this.authenticationType}`);
     }
-    response.cookie('authenticationError', exception.message, {
+    const authError = `${_.get(request, 'authInfo.message')}\n${exception.message}`.trim()
+    response.cookie('authenticationError', authError, {
       secure: this.configService.isInProductionMode()
     });
     response.redirect(302, '/');
