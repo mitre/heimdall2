@@ -37,7 +37,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         clientID: configService.get('OIDC_CLIENTID') || 'disabled',
         clientSecret: configService.get('OIDC_CLIENT_SECRET') || 'disabled',
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc/callback`,
-        scope: 'openid profile email'
+        scope: 'profile email'
       },
       async function (
         //changed from 4-arity function to 9-arity, because 'profile' in 4-arity was not providing required data
