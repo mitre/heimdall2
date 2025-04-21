@@ -2165,7 +2165,7 @@
 
 "@govtechsg/passport-openidconnect@https://github.com/Amndeep7/passport-openidconnect#logging":
   version "1.0.3"
-  resolved "https://github.com/Amndeep7/passport-openidconnect#99d0ec9ee06fb85c2f0e3c0c6bab1d3ecdfe3f99"
+  resolved "https://github.com/Amndeep7/passport-openidconnect#d20a5ce25d3a0fe815ddcd05133cf95ba8e0965c"
   dependencies:
     oauth "^0.10.0"
     passport-strategy "^1.0.0"
