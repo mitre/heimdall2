@@ -1,6 +1,6 @@
 import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
-import {Strategy} from 'passport-openidconnect';
+import {Strategy} from '@govtechsg/passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
@@ -37,7 +37,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         clientID: configService.get('OIDC_CLIENTID') || 'disabled',
         clientSecret: configService.get('OIDC_CLIENT_SECRET') || 'disabled',
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc/callback`,
-        scope: 'profile email'
+        scope: 'openid profile email'
       },
       async function (
         //changed from 4-arity function to 9-arity, because 'profile' in 4-arity was not providing required data
