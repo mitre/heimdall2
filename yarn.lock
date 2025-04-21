@@ -2163,10 +2163,9 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.1.tgz#de633db3ec2ef6a3c89e2f19038063e8a122e2c2"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
-"@govtechsg/passport-openidconnect@^1.0.3":
+"@govtechsg/passport-openidconnect@https://github.com/Amndeep7/passport-openidconnect#logging":
   version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@govtechsg/passport-openidconnect/-/passport-openidconnect-1.0.3.tgz#257085687a671b0dc980bcc20b8bf7622ccbec56"
-  integrity sha512-Xf7B4gxg6HV+rRwBxqk+icexS1BT9Yd9ERnkw+PQVvId02OoEqqFo55kn9sine2mMCuh/OYQU95jlT/9CU1AtQ==
+  resolved "https://github.com/Amndeep7/passport-openidconnect#99d0ec9ee06fb85c2f0e3c0c6bab1d3ecdfe3f99"
   dependencies:
     oauth "^0.10.0"
     passport-strategy "^1.0.0"
