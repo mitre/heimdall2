@@ -33,7 +33,8 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
         callbackURL: `${configService.get('EXTERNAL_URL') || 'disabled'}/authn/okta/callback`,
-        scope: ['openid', 'email', 'profile']
+        scope: ['openid', 'email', 'profile'],
+				sessionKey: 'thisisasessionkey'
       },
       async function (
         // Like in oidc.strategy.ts, we changed the arity of the function to 9 to access the data we need from 'uiProfile' due to updates in the passport-openidconnect library which otherwise caused failures in the authentication process
