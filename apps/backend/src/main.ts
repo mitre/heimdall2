@@ -72,6 +72,9 @@ async function bootstrap() {
         resave: false
       })
     );
+    if (configService.isInProductionMode()) {
+      app.getHttpAdapter().getInstance().set('trust proxy', 1);
+    }
   }
   app.use(
     '/authn/login',
