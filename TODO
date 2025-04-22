@@ -1,0 +1,7 @@
+# TODO items
+
+- do another review of the cert building procress - our current implementation assumes that we have an existing consolidated pem or cert file but we have to cover the case where we have to create that script or document it to tell the user to 'go follow this process' and then bring back the created cert.
+
+- we acully need to do some live testing to ensure our certificate enhancments and process actually work in real life. 
+
+- If we are going to push it as part of this PR I want to ensure it is actually working so it is not a blocker to the merging of the core value of this pr which is the logging enhancements and fixes.
