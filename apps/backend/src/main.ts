@@ -105,6 +105,13 @@ async function bootstrap() {
       whitelist: true
     })
   );
+
+  app.use((req, res, next) => {
+    console.log('Session:', req.session);
+    console.log('Cookies:', req.cookies);
+    next();
+  });
+
   await app.listen(configService.get('PORT') || 3000);
 }
 bootstrap();
