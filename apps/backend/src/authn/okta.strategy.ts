@@ -4,19 +4,17 @@ import {Strategy} from '@govtechsg/passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
-interface OktaProfile {
+type Profile = {
+  provider: string;
   id: string;
   displayName: string;
-  name: {familyName: string; givenName: string};
-  emails: [{value: string}];
-  _raw: string;
-  _json: {
-    given_name: string;
-    family_name: string;
-    email: string;
-    email_verified: boolean;
+  name: {
+    familyName: string;
+    givenName: string;
+    middleName: string;
   };
-}
+  emails: {value: string}[];
+};
 
 @Injectable()
 export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
@@ -33,36 +31,24 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
         callbackURL: `${configService.get('EXTERNAL_URL') || 'disabled'}/authn/okta/callback`,
-        scope: ['openid', 'email', 'profile'],
-				sessionKey: 'thisisasessionkey'
+        scope: ['openid', 'email', 'profile']
       },
       async function (
-        // Like in oidc.strategy.ts, we changed the arity of the function to 9 to access the data we need from 'uiProfile' due to updates in the passport-openidconnect library which otherwise caused failures in the authentication process
-        // NOTE: Some variables are not used in this function, but they are required to be present in the function signature. These are indicated with an underscore prefix.
         _issuer: string,
-        uiProfile: OktaProfile,
-        _idProfile: object,
-        _context: object,
-        _idToken: string,
-        _accessToken: string,
-        _refreshToken: string,
-        _params: object,
+        profile: Profile,
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
-        const userData = uiProfile._json;
-        const {given_name, family_name, email, email_verified} = userData;
-        if (email_verified) {
+        if (profile.emails.length > 0 && profile.emails[0].value) {
           const user = await authnService.validateOrCreateUser(
-            email,
-            given_name,
-            family_name,
+            profile.emails[0].value,
+            profile.name.givenName,
+            profile.name.familyName,
             'okta'
           );
           return done(null, user);
-        } else {
-          throw new UnauthorizedException('Incorrect Username or Password');
         }
+        throw new UnauthorizedException('Incorrect Username or Password');
       }
     );
   }
