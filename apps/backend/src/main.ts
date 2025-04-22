@@ -75,6 +75,7 @@ async function bootstrap() {
     if (configService.isInProductionMode()) {
       app.getHttpAdapter().getInstance().set('trust proxy', true);
     }
+    app.use(passport.session());
   }
   app.use(
     '/authn/login',
