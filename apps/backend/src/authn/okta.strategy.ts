@@ -1,76 +1,95 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {Injectable, Logger, OnModuleInit, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
-import {Strategy} from 'passport-openidconnect';
+import {Strategy, TokenSet, UserinfoResponse} from 'openid-client';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
-
-interface OktaProfile {
-  id: string;
-  displayName: string;
-  name: {familyName: string; givenName: string};
-  emails: [{value: string}];
-  _raw: string;
-  _json: {
-    given_name: string;
-    family_name: string;
-    email: string;
-    email_verified: boolean;
-  };
-}
+import {Client, Issuer} from 'openid-client';
 
 @Injectable()
-export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
+export class OktaStrategy extends PassportStrategy(Strategy, 'okta') implements OnModuleInit {
+  private readonly logger = new Logger(OktaStrategy.name);
+  private client: Client;
+
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService
   ) {
-    super(
-      {
-        issuer: `https://${
-          configService.get('OKTA_DOMAIN') || 'disabled'
-        }/oauth2/default`,
-        authorizationURL: `https://${
-          configService.get('OKTA_DOMAIN') || 'disabled'
-        }/oauth2/default/v1/authorize`,
-        tokenURL: `https://${
-          configService.get('OKTA_DOMAIN') || 'disabled'
-        }/oauth2/default/v1/token`,
-        userInfoURL: `https://${
-          configService.get('OKTA_DOMAIN') || 'disabled'
-        }/oauth2/default/v1/userinfo`,
-        clientID: configService.get('OKTA_CLIENTID') || 'disabled',
-        clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
-        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/okta/callback`,
+    super({
+      client: null, // Will be set during onModuleInit
+      params: {
         scope: 'openid email profile'
       },
-      async function (
-        // Like in oidc.strategy.ts, we changed the arity of the function to 9 to access the data we need from 'uiProfile' due to updates in the passport-openidconnect library which otherwise caused failures in the authentication process
-        // NOTE: Some variables are not used in this function, but they are required to be present in the function signature. These are indicated with an underscore prefix.
-        _issuer: string,
-        uiProfile: OktaProfile,
-        _idProfile: object,
-        _context: object,
-        _idToken: string,
-        _accessToken: string,
-        _refreshToken: string,
-        _params: object,
-        //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        done: any
-      ) {
-        const userData = uiProfile._json;
-        const {given_name, family_name, email, email_verified} = userData;
-        if (email_verified) {
-          const user = await authnService.validateOrCreateUser(
-            email,
-            given_name,
-            family_name,
-            'okta'
-          );
-          return done(null, user);
-        } else {
-          throw new UnauthorizedException('Incorrect Username or Password');
-        }
-      }
-    );
+      passReqToCallback: false, // We don't need the request object in the verify function
+      usePKCE: true // Use PKCE for more security (Proof Key for Code Exchange)
+    });
+  }
+
+  /**
+   * Initialize the OpenID Connect client during module initialization
+   * This allows us to use async operations like Issuer.discover()
+   */
+  async onModuleInit() {
+    try {
+      const oktaDomain = this.configService.get('OKTA_DOMAIN') || 'disabled';
+      const issuerUrl = `https://${oktaDomain}/oauth2/default`;
+      
+      this.logger.log(`Discovering OpenID Connect endpoints from ${issuerUrl}`);
+      
+      // Discover OpenID Connect endpoints automatically
+      const oktaIssuer = await Issuer.discover(issuerUrl);
+      
+      this.logger.log('OpenID Connect endpoints discovered successfully');
+      
+      // Create OIDC client
+      this.client = new oktaIssuer.Client({
+        client_id: this.configService.get('OKTA_CLIENTID') || 'disabled',
+        client_secret: this.configService.get('OKTA_CLIENTSECRET') || 'disabled',
+        redirect_uris: [`${this.configService.get('EXTERNAL_URL')}/authn/okta/callback`],
+        response_types: ['code'],
+      });
+      
+      // Update the strategy with the client
+      Object.assign(this, {client: this.client});
+      
+      this.logger.log('Okta OIDC strategy initialized successfully');
+    } catch (error) {
+      this.logger.error(`Failed to initialize Okta OIDC strategy: ${error.message}`);
+      console.error(error);
+      // Continue running even if Okta strategy initialization fails
+      // This allows the application to start and other auth methods to work
+    }
+  }
+
+  /**
+   * Validate the user from the TokenSet and Userinfo
+   * This is the verify callback function for passport-openid-client
+   */
+  async validate(tokenSet: TokenSet, userinfo: UserinfoResponse) {
+    this.logger.log(`Validating Okta user with email: ${userinfo.email}`);
+    
+    if (!userinfo.email) {
+      this.logger.error('Email not provided in Okta userinfo response');
+      throw new UnauthorizedException('Email is required for authentication');
+    }
+    
+    if (userinfo.email_verified !== true) {
+      this.logger.warn(`User email ${userinfo.email} is not verified`);
+      throw new UnauthorizedException('Email verification required');
+    }
+    
+    try {
+      const user = await this.authnService.validateOrCreateUser(
+        userinfo.email,
+        userinfo.given_name || '',
+        userinfo.family_name || '',
+        'okta'
+      );
+      
+      this.logger.log(`Okta authentication successful for user: ${userinfo.email}`);
+      return user;
+    } catch (error) {
+      this.logger.error(`Error validating Okta user: ${error.message}`);
+      throw new UnauthorizedException('Failed to authenticate with Okta');
+    }
   }
 }

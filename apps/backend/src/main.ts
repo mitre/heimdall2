@@ -12,9 +12,14 @@ import helmet from 'helmet';
 import passport = require('passport');
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'], // Enable all log levels in development
+  });
+  
   const configService = app.get<ConfigService>(ConfigService);
   app.enableShutdownHooks();
+  
+  // Setup Helmet for security headers
   app.use(helmet());
   app.use(
     helmet.contentSecurityPolicy({
@@ -22,10 +27,6 @@ async function bootstrap() {
         // These are the defaults from helmet, except upgrade-insecure-requests
         // is removed since it causes issues for users trying to run over http
         // https://github.com/mitre/heimdall2/issues/787
-        // This whole block can be changed back to
-        // ...helmet.contentSecurityPolicy.getDefaultDirectives()
-        // If heimdall begins providing users with an easy way to generate a SSL
-        // certificate as part of deployment.
         'base-uri': ["'self'"],
         'block-all-mixed-content': [],
         'default-src': ["'self'"],
@@ -47,37 +48,69 @@ async function bootstrap() {
       }
     })
   );
+  
+  // Setup JSON parsing with increased limit
   app.use(json({limit: '50mb'}));
+  
+  // Initialize Passport (must come before session middleware)
   app.use(passport.initialize());
-  // Sessions are only used for oauth callbacks
+  
+  // Trust proxy in production - important for cookies behind load balancers/proxies
+  if (configService.isInProductionMode()) {
+    app.getHttpAdapter().getInstance().set('trust proxy', 1);
+  }
+  
+  // Sessions for authentication
   if (configService.enabledOauthStrategies().length) {
+    // Configure session store
+    const store = new (postgresSessionStore(session))({
+      conObject: {
+        ...configService.getDbConfig(),
+        ssl: configService.getSSLConfig()
+      },
+      tableName: 'session',
+      createTableIfMissing: true, // Auto-create the session table if it doesn't exist
+    });
+    
+    // Session middleware configuration
     app.use(
       session({
+        name: 'heimdall.sid', // Custom name to avoid collisions
         secret: generateDefault(),
-        store: new (postgresSessionStore(session))({
-          conObject: {
-            ...configService.getDbConfig(),
-            /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
-          those are equal to the dialectOptions passed to sequelize */
-            ssl: configService.getSSLConfig()
-          },
-          tableName: 'session'
-        }),
-        proxy: configService.isInProductionMode() ? true : undefined,
+        store: store,
+        proxy: configService.isInProductionMode(),
         cookie: {
-          maxAge: 60 * 60,
-          secure: configService.isInProductionMode()
-        }, // 1 hour
-        saveUninitialized: true,
-        resave: false
+          maxAge: 60 * 60 * 1000, // 1 hour
+          secure: configService.isInProductionMode(),
+          httpOnly: true,
+          sameSite: 'lax' // Balances security and usability
+        },
+        saveUninitialized: false, // Don't create sessions for non-authenticated users
+        resave: false,
+        rolling: true // Reset cookie expiration on each request
       })
     );
+    
+    // Setup passport session handling (must come after session middleware)
+    app.use(passport.session());
+    
+    // Add default serialization/deserialization for Passport
+    // This is needed for session support with all authentication strategies
+    passport.serializeUser((user: any, done) => {
+      done(null, user);
+    });
+    
+    passport.deserializeUser((obj: any, done) => {
+      done(null, obj);
+    });
   }
+  
+  // Rate limiting for login attempts
   app.use(
     '/authn/login',
     rateLimit({
-      windowMs: 60 * 1000,
-      max: 20,
+      windowMs: 60 * 1000, // 1 minute
+      max: 20, // Max 20 requests per minute
       message: {
         status: 429,
         message: 'Too Many Requests',
@@ -85,7 +118,8 @@ async function bootstrap() {
       }
     })
   );
-  // Allow for file uploads up to 50 mb
+  
+  // Configuration for file uploads
   multer({
     limits: {
       fieldSize:
@@ -95,12 +129,32 @@ async function bootstrap() {
     }
   });
 
+  // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       whitelist: true
     })
   );
+  
+  // Add session debugging middleware in non-production environments
+  if (!configService.isInProductionMode()) {
+    app.use((req: any, res: any, next: any) => {
+      if (req.url.includes('/authn/')) {
+        console.log('Auth Request URL:', req.url);
+        console.log('Session ID:', req.sessionID);
+        console.log('Session:', req.session);
+        console.log('Cookies:', req.cookies);
+      }
+      next();
+    });
+  }
+
   await app.listen(configService.get('PORT') || 3000);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
-bootstrap();
+
+bootstrap().catch(err => {
+  console.error('Failed to start application:', err);
+  process.exit(1);
+});
