@@ -73,7 +73,7 @@ async function bootstrap() {
       })
     );
     if (configService.isInProductionMode()) {
-      app.getHttpAdapter().getInstance().set('trust proxy', 1);
+      app.getHttpAdapter().getInstance().set('trust proxy', true);
     }
   }
   app.use(
