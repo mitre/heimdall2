@@ -4,11 +4,12 @@ import {TokenEndpointResponse, UserInfoResponse} from 'oauth4webapi';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
-// Use require for openid-client to avoid ES module import issues
-const openidClient = require('openid-client');
+// Import the Passport integration directly
+const {Strategy} = require('openid-client/passport');
+const {Issuer} = require('openid-client');
 
 @Injectable()
-export class OktaStrategy extends PassportStrategy(openidClient.Strategy, 'okta') implements OnModuleInit {
+export class OktaStrategy extends PassportStrategy(Strategy, 'okta') implements OnModuleInit {
   private readonly logger = new Logger(OktaStrategy.name);
   private client: any = null; // Using any until we fix all type issues
 
@@ -38,7 +39,7 @@ export class OktaStrategy extends PassportStrategy(openidClient.Strategy, 'okta'
       this.logger.log(`Discovering OpenID Connect endpoints from ${issuerUrl}`);
       
       // Discover OpenID Connect endpoints automatically
-      const oktaIssuer = await openidClient.Issuer.discover(issuerUrl);
+      const oktaIssuer = await Issuer.discover(issuerUrl);
       
       this.logger.log('OpenID Connect endpoints discovered successfully');
       
