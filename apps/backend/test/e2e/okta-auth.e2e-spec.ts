@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { ConfigService } from '../src/config/config.service';
+import request from 'supertest';
+import { AppModule } from '../../src/app.module';
+import { ConfigService } from '../../src/config/config.service';
 import axios from 'axios';
 
 describe('Okta Authentication (e2e)', () => {
@@ -83,7 +83,7 @@ describe('Okta Authentication (e2e)', () => {
       
       // We can't directly test onModuleInit, so we create a new instance of OktaStrategy
       // and check it doesn't throw errors when initializing
-      const { OktaStrategy } = await import('../src/authn/okta.strategy');
+      const { OktaStrategy } = await import('../../src/authn/okta.strategy');
       const strategy = new OktaStrategy(
         app.get('AuthnService'), 
         app.get('ConfigService')

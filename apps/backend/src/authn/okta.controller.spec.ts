@@ -134,7 +134,18 @@ describe('AuthnController - Okta Integration', () => {
     });
 
     it('should handle unknown user in callback', async () => {
-      const mockUser = { email: null } as User; // Empty user
+      // Create a minimal User object with required properties
+      const mockUser = {
+        id: 0,
+        email: null,
+        firstName: '',
+        lastName: '',
+        organization: '',
+        title: '',
+        role: 0,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      } as unknown as User; // Cast to User
       const mockResponse = {
         redirect: jest.fn(),
         cookie: jest.fn(),

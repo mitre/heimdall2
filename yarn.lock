@@ -14207,6 +14207,11 @@ jose@^5.9.6:
   resolved "https://registry.yarnpkg.com/jose/-/jose-5.9.6.tgz#77f1f901d88ebdc405e57cce08d2a91f47521883"
   integrity sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==
 
+jose@^6.0.10:
+  version "6.0.10"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-6.0.10.tgz#52d96e1a671b4c02e13b71e0d35abea2e774712b"
+  integrity sha512-skIAxZqcMkOrSwjJvplIPYrlXGpxTPnro2/QWTDCxAdWQrSTV5/KqspMWmi5WAx5+ULswASJiZ0a+1B/Lxt9cw==
+
 js-base64@^2.4.3:
   version "2.6.4"
   resolved "https://registry.npmjs.org/js-base64/-/js-base64-2.6.4.tgz#f4e686c5de1ea1f867dbcad3d46d969428df98c4"
@@ -16339,6 +16344,11 @@ oauth2-mock-server@^7.0.0:
     is-plain-object "^5.0.0"
     jose "^5.9.6"
 
+oauth4webapi@^3.4.1:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/oauth4webapi/-/oauth4webapi-3.5.0.tgz#9be1227e2a6af7761dd0d1a811ce33050077974b"
+  integrity sha512-DF3mLWNuxPkxJkHmWxbSFz4aE5CjWOsm465VBfBdWzmzX4Mg3vF8icxK+iKqfdWrIumBJ2TaoNQWx+SQc2bsPQ==
+
 oauth@0.10.x:
   version "0.10.0"
   resolved "https://registry.npmjs.org/oauth/-/oauth-0.10.0.tgz#3551c4c9b95c53ea437e1e21e46b649482339c58"
@@ -16531,6 +16541,14 @@ opener@^1.5.2:
   version "1.5.2"
   resolved "https://registry.npmjs.org/opener/-/opener-1.5.2.tgz#5d37e1f35077b9dcac4301372271afdeb2a13598"
   integrity sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==
+
+openid-client@^6.4.2:
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/openid-client/-/openid-client-6.4.2.tgz#3e85842ca466074f92ae268ed218b99bcab349db"
+  integrity sha512-4zBRTsKNRTyKxV5cFzl+LtamsYx/FsWhejjax+qgMkFNGtLj1gMtng2iSoJqqWUT0FHU3IUhO53aeBePg7Sp/g==
+  dependencies:
+    jose "^6.0.10"
+    oauth4webapi "^3.4.1"
 
 optionator@^0.8.1:
   version "0.8.3"
