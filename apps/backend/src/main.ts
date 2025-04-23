@@ -109,7 +109,6 @@ async function bootstrap() {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((req: any, res: any, next: any) => {
     console.log('Session:', req.session);
-    console.log('Cookies:', req.cookies);
     next();
   });
 
