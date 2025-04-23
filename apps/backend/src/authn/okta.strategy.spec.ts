@@ -4,7 +4,20 @@ import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 import {UnauthorizedException} from '@nestjs/common';
 
-// Mock the openid-client library
+// Mock the openid-client passport module
+jest.mock('openid-client/passport', () => {
+  return {
+    Strategy: jest.fn().mockImplementation(() => {
+      return function() {
+        return {
+          authenticate: jest.fn()
+        };
+      };
+    })
+  };
+});
+
+// Mock the openid-client main module
 jest.mock('openid-client', () => {
   // Create mock client with userinfo method
   const mockClient = {
@@ -35,15 +48,7 @@ jest.mock('openid-client', () => {
   return {
     Issuer: {
       discover: jest.fn().mockResolvedValue(mockIssuer)
-    },
-    // Mock the Strategy class exported by openid-client
-    Strategy: jest.fn().mockImplementation(() => {
-      return function() {
-        return {
-          authenticate: jest.fn()
-        };
-      };
-    })
+    }
   };
 });
 
@@ -223,12 +228,12 @@ describe('OktaStrategy', () => {
 
   describe('onModuleInit', () => {
     it('should initialize OIDC client during onModuleInit', async () => {
-      // Mock Issuer.discover using module mock
-      const openidClientModule = require('openid-client');
+      // Mock Issuer.discover
+      const { Issuer } = require('openid-client');
       
       await oktaStrategy.onModuleInit();
       
-      expect(openidClientModule.Issuer.discover).toHaveBeenCalledWith('https://test-okta-domain.okta.com/oauth2/default');
+      expect(Issuer.discover).toHaveBeenCalledWith('https://test-okta-domain.okta.com/oauth2/default');
       expect(oktaStrategy['logger'].log).toHaveBeenCalledWith(
         expect.stringContaining('Discovering OpenID Connect endpoints')
       );
@@ -242,8 +247,8 @@ describe('OktaStrategy', () => {
 
     it('should handle errors during initialization', async () => {
       // Reset the mock and make it reject
-      const openidClientModule = require('openid-client');
-      openidClientModule.Issuer.discover.mockRejectedValueOnce(new Error('Discovery failed'));
+      const { Issuer } = require('openid-client');
+      Issuer.discover.mockRejectedValueOnce(new Error('Discovery failed'));
       
       await oktaStrategy.onModuleInit();
       
