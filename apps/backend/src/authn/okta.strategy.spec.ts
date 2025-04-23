@@ -136,6 +136,10 @@ describe('OktaStrategy', () => {
     jest.spyOn(oktaStrategy['logger'], 'error').mockImplementation(() => {});
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     jest.spyOn(oktaStrategy['logger'], 'warn').mockImplementation(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    jest.spyOn(oktaStrategy['logger'], 'debug').mockImplementation(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    jest.spyOn(oktaStrategy['logger'], 'verbose').mockImplementation(() => {});
   });
 
   it('should validate a user with valid token and userinfo', async () => {
@@ -166,15 +170,19 @@ describe('OktaStrategy', () => {
     );
 
     // Verify logging
-    expect(oktaStrategy['logger'].log).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Validating Okta user with email: test@example.com'
-      )
+    expect(oktaStrategy['logger'].verbose).toHaveBeenCalledWith(
+      'Validating Okta user',
+      expect.objectContaining({
+        email: 'test@example.com',
+        context: 'OktaStrategy.validate'
+      })
     );
     expect(oktaStrategy['logger'].log).toHaveBeenCalledWith(
-      expect.stringContaining(
-        'Okta authentication successful for user: test@example.com'
-      )
+      'Okta authentication successful',
+      expect.objectContaining({
+        email: 'test@example.com',
+        context: 'OktaStrategy.validate'
+      })
     );
 
     // Verify the result
@@ -209,7 +217,10 @@ describe('OktaStrategy', () => {
 
     // Verify logging
     expect(oktaStrategy['logger'].error).toHaveBeenCalledWith(
-      expect.stringContaining('Email not provided in Okta userinfo response')
+      'Email not provided in Okta userinfo response',
+      expect.objectContaining({
+        context: 'OktaStrategy.validate'
+      })
     );
   });
 
@@ -236,7 +247,11 @@ describe('OktaStrategy', () => {
 
     // Verify logging
     expect(oktaStrategy['logger'].warn).toHaveBeenCalledWith(
-      expect.stringContaining('User email test@example.com is not verified')
+      'User email is not verified',
+      expect.objectContaining({
+        email: 'test@example.com',
+        context: 'OktaStrategy.validate'
+      })
     );
   });
 
@@ -251,16 +266,23 @@ describe('OktaStrategy', () => {
       expect(Issuer.discover).toHaveBeenCalledWith(
         'https://test-okta-domain.okta.com/oauth2/default'
       );
-      expect(oktaStrategy['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining('Discovering OpenID Connect endpoints')
+      expect(oktaStrategy['logger'].verbose).toHaveBeenCalledWith(
+        'Discovering OpenID Connect endpoints',
+        expect.objectContaining({
+          context: 'OktaStrategy.onModuleInit'
+        })
+      );
+      expect(oktaStrategy['logger'].debug).toHaveBeenCalledWith(
+        'OpenID Connect endpoints discovered successfully',
+        expect.objectContaining({
+          context: 'OktaStrategy.onModuleInit'
+        })
       );
       expect(oktaStrategy['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'OpenID Connect endpoints discovered successfully'
-        )
-      );
-      expect(oktaStrategy['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining('Okta OIDC strategy initialized successfully')
+        'Okta OIDC strategy initialized successfully',
+        expect.objectContaining({
+          context: 'OktaStrategy.onModuleInit'
+        })
       );
     });
 
@@ -276,7 +298,10 @@ describe('OktaStrategy', () => {
         expect.stringContaining(
           'Failed to initialize Okta OIDC strategy: Discovery failed'
         ),
-        expect.any(String) // For the error.stack parameter
+        expect.objectContaining({
+          context: 'OktaStrategy.onModuleInit',
+          name: 'Error'
+        })
       );
     });
 
@@ -352,7 +377,12 @@ describe('OktaStrategy', () => {
       ).rejects.toThrow(UnauthorizedException);
 
       expect(oktaStrategy['logger'].error).toHaveBeenCalledWith(
-        expect.stringContaining('Error validating Okta user')
+        'Error validating Okta user',
+        expect.objectContaining({
+          email: 'test@example.com',
+          error: 'Service error',
+          context: 'OktaStrategy.validate'
+        })
       );
     });
   });

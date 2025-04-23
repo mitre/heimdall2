@@ -118,6 +118,10 @@ describe('AuthnController - Okta Integration', () => {
     jest.spyOn(controller['logger'], 'warn').mockImplementation(() => {});
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     jest.spyOn(controller['logger'], 'error').mockImplementation(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    jest.spyOn(controller['logger'], 'debug').mockImplementation(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    jest.spyOn(controller['logger'], 'verbose').mockImplementation(() => {});
   });
 
   it('should be defined', () => {
@@ -136,8 +140,11 @@ describe('AuthnController - Okta Integration', () => {
         userID: 'test-user-id',
         accessToken: 'test-access-token'
       });
-      expect(controller['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining('Initiating Okta login flow')
+      expect(controller['logger'].verbose).toHaveBeenCalledWith(
+        'Initiating Okta login flow',
+        expect.objectContaining({
+          context: 'AuthnController.loginToOkta'
+        })
       );
       expect(authnService.login).toHaveBeenCalledWith(mockUser);
     });
@@ -159,14 +166,18 @@ describe('AuthnController - Okta Integration', () => {
       await controller.getUserFromOkta(mockRequest as any);
 
       expect(controller['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Okta login callback received for user: test@example.com'
-        )
+        'Okta login callback received',
+        expect.objectContaining({
+          user: 'test@example.com',
+          context: 'AuthnController.getUserFromOkta'
+        })
       );
       expect(controller['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining(
-          'Okta login completed successfully for user: test@example.com'
-        )
+        'Okta login completed successfully',
+        expect.objectContaining({
+          user: 'test@example.com',
+          context: 'AuthnController.getUserFromOkta'
+        })
       );
       expect(authnService.login).toHaveBeenCalledWith(mockUser);
       expect(mockResponse.cookie).toHaveBeenCalledTimes(2);
@@ -192,7 +203,11 @@ describe('AuthnController - Okta Integration', () => {
       await controller.getUserFromOkta(mockRequest as any);
 
       expect(controller['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining('Okta login callback received for user')
+        'Okta login callback received',
+        expect.objectContaining({
+          user: 'unknown',
+          context: 'AuthnController.getUserFromOkta'
+        })
       );
       // This should still work without throwing errors
       expect(mockResponse.cookie).toHaveBeenCalledTimes(2);

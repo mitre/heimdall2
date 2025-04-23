@@ -39,7 +39,9 @@ export class AuthnController {
         'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
       );
     } else {
-      this.logger.log(`Local login successful for user: ${(req.user as User).email}`);
+      this.logger.log(
+        `Local login successful for user: ${(req.user as User).email}`
+      );
       return this.authnService.login(req.user as User);
     }
   }
@@ -49,7 +51,9 @@ export class AuthnController {
   async loginToLDAP(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
-    this.logger.log(`LDAP login successful for user: ${(req.user as User).email}`);
+    this.logger.log(
+      `LDAP login successful for user: ${(req.user as User).email}`
+    );
     return this.authnService.login(req.user as User);
   }
 
@@ -66,7 +70,9 @@ export class AuthnController {
   @UseGuards(AuthGuard('github'))
   @UseFilters(new AuthenticationExceptionFilter('github'))
   async getUserFromGithubLogin(@Req() req: Request): Promise<void> {
-    this.logger.log(`GitHub login successful for user: ${(req.user as User).email}`);
+    this.logger.log(
+      `GitHub login successful for user: ${(req.user as User).email}`
+    );
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
   }
@@ -84,7 +90,9 @@ export class AuthnController {
   @UseGuards(AuthGuard('gitlab'))
   @UseFilters(new AuthenticationExceptionFilter('gitlab'))
   async getUserFromGitlabLogin(@Req() req: Request): Promise<void> {
-    this.logger.log(`GitLab login successful for user: ${(req.user as User).email}`);
+    this.logger.log(
+      `GitLab login successful for user: ${(req.user as User).email}`
+    );
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
   }
@@ -102,7 +110,9 @@ export class AuthnController {
   @UseGuards(AuthGuard('google'))
   @UseFilters(new AuthenticationExceptionFilter('google'))
   async getUserFromGoogle(@Req() req: Request): Promise<void> {
-    this.logger.log(`Google login successful for user: ${(req.user as User).email}`);
+    this.logger.log(
+      `Google login successful for user: ${(req.user as User).email}`
+    );
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
   }
@@ -113,7 +123,11 @@ export class AuthnController {
   async loginToOkta(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
-    this.logger.log(`Initiating Okta login flow`);
+    this.logger.verbose(`Initiating Okta login flow`, {
+      context: 'AuthnController.loginToOkta',
+      ipAddress: req.ip || req.connection?.remoteAddress || 'unknown',
+      userAgent: req.headers?.['user-agent'] || 'unknown'
+    });
     return this.authnService.login(req.user as User);
   }
 
@@ -121,10 +135,30 @@ export class AuthnController {
   @UseGuards(AuthGuard('okta'))
   @UseFilters(new AuthenticationExceptionFilter('okta'))
   async getUserFromOkta(@Req() req: Request): Promise<void> {
-    this.logger.log(`Okta login callback received for user: ${(req.user as User)?.email || 'unknown'}`);
-    const session = await this.authnService.login(req.user as User);
-    await this.setSessionCookies(req, session);
-    this.logger.log(`Okta login completed successfully for user: ${(req.user as User).email}`);
+    try {
+      const userEmail = (req.user as User)?.email || 'unknown';
+      this.logger.log(`Okta login callback received`, {
+        user: userEmail,
+        context: 'AuthnController.getUserFromOkta'
+      });
+
+      const session = await this.authnService.login(req.user as User);
+      await this.setSessionCookies(req, session);
+
+      this.logger.log(`Okta login completed successfully`, {
+        user: userEmail,
+        context: 'AuthnController.getUserFromOkta'
+      });
+    } catch (error) {
+      this.logger.error(
+        `Error during Okta callback processing: ${error.message}`,
+        {
+          stack: error.stack,
+          context: 'AuthnController.getUserFromOkta'
+        }
+      );
+      throw error; // Let the exception filter handle this
+    }
   }
 
   @Get('oidc')
@@ -141,10 +175,30 @@ export class AuthnController {
   @UseGuards(AuthGuard('oidc'))
   @UseFilters(new AuthenticationExceptionFilter('oidc'))
   async getUserFromOIDC(@Req() req: Request): Promise<void> {
-    this.logger.log(`OIDC login callback received for user: ${(req.user as User)?.email || 'unknown'}`);
-    const session = await this.authnService.login(req.user as User);
-    await this.setSessionCookies(req, session);
-    this.logger.log(`OIDC login completed successfully for user: ${(req.user as User).email}`);
+    try {
+      const userEmail = (req.user as User)?.email || 'unknown';
+      this.logger.log(`OIDC login callback received`, {
+        user: userEmail,
+        context: 'AuthnController.getUserFromOIDC'
+      });
+
+      const session = await this.authnService.login(req.user as User);
+      await this.setSessionCookies(req, session);
+
+      this.logger.log(`OIDC login completed successfully`, {
+        user: userEmail,
+        context: 'AuthnController.getUserFromOIDC'
+      });
+    } catch (error) {
+      this.logger.error(
+        `Error during OIDC callback processing: ${error.message}`,
+        {
+          stack: error.stack,
+          context: 'AuthnController.getUserFromOIDC'
+        }
+      );
+      throw error; // Let the exception filter handle this
+    }
   }
 
   async setSessionCookies(
@@ -154,28 +208,51 @@ export class AuthnController {
       accessToken: string;
     }
   ): Promise<void> {
-    this.logger.debug(`Setting session cookies for user ID: ${session.userID}`);
-    
+    this.logger.debug(`Setting session cookies`, {
+      userID: session.userID,
+      context: 'AuthnController.setSessionCookies'
+    });
+
+    if (!req.res) {
+      this.logger.error('Response object is undefined, cannot set cookies', {
+        context: 'AuthnController.setSessionCookies'
+      });
+      throw new Error('Response object is undefined');
+    }
+
     // Set secure cookie in production, allow non-secure in development
     const secure = this.configService.isInProductionMode();
-    
-    // Set user ID cookie
-    req.res?.cookie('userID', session.userID, {
-      secure: secure,
-      httpOnly: false, // Frontend needs to access this
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'lax' // Balances security and usability
-    });
-    
-    // Set access token cookie
-    req.res?.cookie('accessToken', session.accessToken, {
-      secure: secure,
-      httpOnly: false, // Frontend needs to access this
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'lax' // Balances security and usability
-    });
-    
-    // Redirect to home page
-    req.res?.redirect('/');
+    const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+
+    try {
+      // Set user ID cookie
+      req.res.cookie('userID', session.userID, {
+        secure: secure,
+        httpOnly: false, // Frontend needs to access this
+        maxAge: maxAge,
+        sameSite: 'lax' // Balances security and usability
+      });
+
+      // Set access token cookie
+      req.res.cookie('accessToken', session.accessToken, {
+        secure: secure,
+        httpOnly: false, // Frontend needs to access this
+        maxAge: maxAge,
+        sameSite: 'lax' // Balances security and usability
+      });
+
+      // Redirect to home page
+      req.res.redirect('/');
+
+      this.logger.debug('Session cookies set successfully', {
+        context: 'AuthnController.setSessionCookies'
+      });
+    } catch (error) {
+      this.logger.error(`Failed to set session cookies: ${error.message}`, {
+        stack: error.stack,
+        context: 'AuthnController.setSessionCookies'
+      });
+      throw error;
+    }
   }
 }

@@ -13,12 +13,12 @@ import passport = require('passport');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log', 'debug', 'verbose'], // Enable all log levels in development
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'] // Enable all log levels in development
   });
-  
+
   const configService = app.get<ConfigService>(ConfigService);
   app.enableShutdownHooks();
-  
+
   // Setup Helmet for security headers
   app.use(helmet());
   app.use(
@@ -48,18 +48,18 @@ async function bootstrap() {
       }
     })
   );
-  
+
   // Setup JSON parsing with increased limit
   app.use(json({limit: '50mb'}));
-  
+
   // Initialize Passport (must come before session middleware)
   app.use(passport.initialize());
-  
+
   // Trust proxy in production - important for cookies behind load balancers/proxies
   if (configService.isInProductionMode()) {
     app.getHttpAdapter().getInstance().set('trust proxy', 1);
   }
-  
+
   // Sessions for authentication
   if (configService.enabledOauthStrategies().length) {
     // Configure session store
@@ -69,9 +69,9 @@ async function bootstrap() {
         ssl: configService.getSSLConfig()
       },
       tableName: 'session',
-      createTableIfMissing: true, // Auto-create the session table if it doesn't exist
+      createTableIfMissing: true // Auto-create the session table if it doesn't exist
     });
-    
+
     // Session middleware configuration
     app.use(
       session({
@@ -90,21 +90,21 @@ async function bootstrap() {
         rolling: true // Reset cookie expiration on each request
       })
     );
-    
+
     // Setup passport session handling (must come after session middleware)
     app.use(passport.session());
-    
+
     // Add default serialization/deserialization for Passport
     // This is needed for session support with all authentication strategies
     passport.serializeUser((user: any, done) => {
       done(null, user);
     });
-    
+
     passport.deserializeUser((obj: any, done) => {
       done(null, obj);
     });
   }
-  
+
   // Rate limiting for login attempts
   app.use(
     '/authn/login',
@@ -118,7 +118,7 @@ async function bootstrap() {
       }
     })
   );
-  
+
   // Configuration for file uploads
   multer({
     limits: {
@@ -136,7 +136,7 @@ async function bootstrap() {
       whitelist: true
     })
   );
-  
+
   // Add session debugging middleware in non-production environments
   if (!configService.isInProductionMode()) {
     app.use((req: any, res: any, next: any) => {
@@ -154,7 +154,7 @@ async function bootstrap() {
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
-bootstrap().catch(err => {
+bootstrap().catch((err) => {
   console.error('Failed to start application:', err);
   process.exit(1);
 });

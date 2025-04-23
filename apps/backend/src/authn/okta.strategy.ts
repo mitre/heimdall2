@@ -47,12 +47,19 @@ export class OktaStrategy
       const oktaDomain = this.configService.get('OKTA_DOMAIN') || 'disabled';
       const issuerUrl = `https://${oktaDomain}/oauth2/default`;
 
-      this.logger.log(`Discovering OpenID Connect endpoints from ${issuerUrl}`);
+      this.logger.verbose(`Discovering OpenID Connect endpoints`, {
+        issuerUrl,
+        context: 'OktaStrategy.onModuleInit'
+      });
 
       // Discover OpenID Connect endpoints automatically
       const oktaIssuer = await Issuer.discover(issuerUrl);
 
-      this.logger.log('OpenID Connect endpoints discovered successfully');
+      this.logger.debug('OpenID Connect endpoints discovered successfully', {
+        context: 'OktaStrategy.onModuleInit',
+        issuer: oktaIssuer.metadata.issuer,
+        authEndpoint: oktaIssuer.metadata.authorization_endpoint
+      });
 
       // Create OIDC client
       this.client = new oktaIssuer.Client({
@@ -68,14 +75,22 @@ export class OktaStrategy
       // Update the strategy with the client
       Object.assign(this, {client: this.client});
 
-      this.logger.log('Okta OIDC strategy initialized successfully');
+      this.logger.log('Okta OIDC strategy initialized successfully', {
+        context: 'OktaStrategy.onModuleInit',
+        pkceEnabled: true,
+        redirectUri: `${this.configService.get('EXTERNAL_URL')}/authn/okta/callback`
+      });
     } catch (error) {
+      // Use structured logging with context object for better debugging
       this.logger.error(
         `Failed to initialize Okta OIDC strategy: ${error.message}`,
-        error.stack
+        {
+          stack: error.stack,
+          name: error.name,
+          details: error.toString(),
+          context: 'OktaStrategy.onModuleInit'
+        }
       );
-      // eslint-disable-next-line no-console
-      console.error(error);
       // Continue running even if Okta strategy initialization fails
       // This allows the application to start and other auth methods to work
     }
@@ -86,15 +101,25 @@ export class OktaStrategy
    * This is the verify callback function for passport-openid-client
    */
   async validate(tokenSet: TokenEndpointResponse, userinfo: UserInfoResponse) {
-    this.logger.log(`Validating Okta user with email: ${userinfo.email}`);
+    this.logger.verbose(`Validating Okta user`, {
+      email: userinfo.email,
+      context: 'OktaStrategy.validate',
+      hasIdToken: !!tokenSet.id_token
+    });
 
     if (!userinfo.email) {
-      this.logger.error('Email not provided in Okta userinfo response');
+      this.logger.error('Email not provided in Okta userinfo response', {
+        context: 'OktaStrategy.validate',
+        userinfo: JSON.stringify(userinfo)
+      });
       throw new UnauthorizedException('Email is required for authentication');
     }
 
     if (userinfo.email_verified !== true) {
-      this.logger.warn(`User email ${userinfo.email} is not verified`);
+      this.logger.warn(`User email is not verified`, {
+        email: userinfo.email,
+        context: 'OktaStrategy.validate'
+      });
       throw new UnauthorizedException('Email verification required');
     }
 
@@ -106,12 +131,19 @@ export class OktaStrategy
         'okta'
       );
 
-      this.logger.log(
-        `Okta authentication successful for user: ${userinfo.email}`
-      );
+      this.logger.log(`Okta authentication successful`, {
+        email: userinfo.email,
+        userId: user.id,
+        context: 'OktaStrategy.validate'
+      });
       return user;
     } catch (error) {
-      this.logger.error(`Error validating Okta user: ${error.message}`);
+      this.logger.error(`Error validating Okta user`, {
+        email: userinfo.email,
+        error: error.message,
+        stack: error.stack,
+        context: 'OktaStrategy.validate'
+      });
       throw new UnauthorizedException('Failed to authenticate with Okta');
     }
   }

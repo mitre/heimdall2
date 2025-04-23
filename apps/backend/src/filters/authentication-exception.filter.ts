@@ -7,17 +7,15 @@ import {ConfigService} from '../config/config.service';
 export class AuthenticationExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(AuthenticationExceptionFilter.name);
   private readonly configService = new ConfigService();
-  
-  constructor(
-    readonly authenticationType?: 'oidc' | 'okta' | string
-  ) {}
+
+  constructor(readonly authenticationType?: 'oidc' | 'okta' | string) {}
 
   catch(exception: Error, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest();
     const response = ctx.getResponse();
     const correlationId = uuidv4();
-    
+
     // Extract useful information
     const requestInfo = {
       method: request.method,
@@ -40,18 +38,36 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
     };
 
     // Log the authentication error with correlation ID for traceability
-    this.logger.warn(
-      `Authentication Error [${correlationId}]: ${exception.message} at ${request.url}`,
-      {
-        requestInfo,
-        errorData
-      }
-    );
+    // Use error level for actual exceptions, warn level for state issues
+    if (
+      exception.name === 'UnauthorizedException' ||
+      exception.message.includes('Authentication failed')
+    ) {
+      this.logger.warn(
+        `Authentication Error [${correlationId}]: ${exception.message}`,
+        {
+          requestInfo,
+          errorData,
+          context: 'AuthenticationExceptionFilter.catch'
+        }
+      );
+    } else {
+      this.logger.error(
+        `Authentication Error [${correlationId}]: ${exception.message}`,
+        {
+          requestInfo,
+          errorData,
+          context: 'AuthenticationExceptionFilter.catch',
+          stack: exception.stack
+        }
+      );
+    }
 
     // Handle state verification error - a common issue with OIDC authentication
     if (
       this.authenticationType &&
-      _.get(request, 'authInfo.message') === 'Unable to verify authorization request state.'
+      _.get(request, 'authInfo.message') ===
+        'Unable to verify authorization request state.'
     ) {
       this.logger.warn(
         `State verification failed for ${this.authenticationType} authentication [${correlationId}]`
@@ -59,68 +75,79 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
 
       // Clear all auth-related cookies to start with a clean slate
       this.clearAuthCookies(response);
-      
+
       // Redirect to auth entry point - using 302 (temporary) redirect
       return response.redirect(302, `/authn/${this.authenticationType}`);
     }
-    
+
     // For other OIDC errors, try to provide a helpful error message
     if (errorData.authInfo && this.authenticationType) {
       // Log context of error to help with debugging
       this.logger.debug(
-        `Authentication context [${correlationId}]: ${JSON.stringify(errorData.authInfo)}`,
+        `Authentication context [${correlationId}]: ${JSON.stringify(errorData.authInfo)}`
       );
-      
+
       // Clear cookies to help prevent cascading errors
       this.clearAuthCookies(response);
     }
 
     // Set an error message cookie - use a specific message based on error type if possible
     let errorMessage = exception.message;
-    
+
     // Check for common errors and provide friendly messages
-    if (exception.message.includes('ETIMEDOUT') || exception.message.includes('ECONNREFUSED')) {
+    if (
+      exception.message.includes('ETIMEDOUT') ||
+      exception.message.includes('ECONNREFUSED')
+    ) {
       errorMessage = `Could not connect to authentication provider. Please try again later. [${correlationId}]`;
     } else if (exception.message.includes('state')) {
       errorMessage = `Authentication session error. Please try again. [${correlationId}]`;
     } else if (exception.message.includes('validation')) {
       errorMessage = `Invalid user information received. Please contact support. [${correlationId}]`;
     }
-    
+
     // Set a cookie with the error message
     response.cookie('authenticationError', errorMessage, {
       secure: this.configService.isInProductionMode(),
-      httpOnly: false,  // Allow JavaScript to access this cookie for frontend error display
+      httpOnly: false, // Allow JavaScript to access this cookie for frontend error display
       maxAge: 300000 // 5 minutes
     });
-    
+
     // Set correlation ID cookie for tracking issues
     response.cookie('errorCorrelationId', correlationId, {
       secure: this.configService.isInProductionMode(),
       httpOnly: false,
       maxAge: 300000 // 5 minutes
     });
-    
+
     // Redirect to home page with 302 (temporary) redirect
     response.redirect(302, '/');
   }
-  
+
   /**
    * Clears all authentication-related cookies to help resolve state issues
+   * @param response - Express response object
    */
-  private clearAuthCookies(response: any): void {
+  private clearAuthCookies(response: {
+    clearCookie: (name: string) => void;
+  }): void {
     // Clear session cookie
     response.clearCookie('connect.sid');
-    
+
     // Clear any error or auth cookies
     response.clearCookie('authenticationError');
     response.clearCookie('errorCorrelationId');
-    
+
     // Clear any other potential cookies related to auth state
     response.clearCookie('userID');
     response.clearCookie('accessToken');
-    
-    // Log cookie clearing
-    this.logger.debug('Cleared authentication cookies');
+
+    // Log cookie clearing with context
+    this.logger.debug('Cleared authentication cookies', {
+      context: 'AuthenticationExceptionFilter.clearAuthCookies',
+      authenticationType: this.authenticationType,
+      correlationId:
+        new Date().getTime().toString(36) + Math.random().toString(36).slice(2)
+    });
   }
 }
