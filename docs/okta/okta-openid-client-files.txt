@@ -1,0 +1,22 @@
+# Primary implementation files
+/apps/backend/src/authn/okta.strategy.ts
+/apps/backend/src/authn/okta.strategy.spec.ts
+/apps/backend/src/authn/authn.module.ts
+/apps/backend/src/authn/authn.controller.ts
+/apps/backend/src/authn/oidc.strategy.ts
+
+# Test files
+/apps/backend/src/authn/okta.validate.spec.ts
+/apps/backend/src/authn/okta.simple.spec.ts
+/apps/backend/src/authn/okta.controller.spec.ts
+/apps/backend/src/authn/authn.controller.okta.spec.ts
+
+# Supporting changes
+/apps/backend/package.json
+/apps/backend/src/config/config.service.ts
+/apps/backend/src/config/dto/startup-settings.dto.ts
+/apps/backend/src/filters/authentication-exception.filter.ts
+/apps/backend/src/filters/authentication-exception.filter.spec.ts
+
+# Documentation
+/okta-openid-client-documentation.md
