@@ -1,17 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthnController } from './authn.controller';
-import { AuthnService } from './authn.service';
-import { ConfigService } from '../config/config.service';
-import { User } from '../users/user.model';
+import {Test, TestingModule} from '@nestjs/testing';
+import {AuthnController} from './authn.controller';
+import {AuthnService} from './authn.service';
+import {ConfigService} from '../config/config.service';
+import {User} from '../users/user.model';
 
 // Mock AuthGuard and other guards
 jest.mock('@nestjs/passport', () => {
   return {
     AuthGuard: jest.fn().mockImplementation(() => {
       return {
-        canActivate: jest.fn().mockReturnValue(true),
+        canActivate: jest.fn().mockReturnValue(true)
       };
-    }),
+    })
   };
 });
 
@@ -20,9 +20,9 @@ jest.mock('../guards/local-auth.guard', () => {
   return {
     LocalAuthGuard: jest.fn().mockImplementation(() => {
       return {
-        canActivate: jest.fn().mockReturnValue(true),
+        canActivate: jest.fn().mockReturnValue(true)
       };
-    }),
+    })
   };
 });
 
@@ -31,9 +31,9 @@ jest.mock('../filters/authentication-exception.filter', () => {
   return {
     AuthenticationExceptionFilter: jest.fn().mockImplementation(() => {
       return {
-        catch: jest.fn(),
+        catch: jest.fn()
       };
-    }),
+    })
   };
 });
 
@@ -46,8 +46,8 @@ describe('AuthnController - Okta Integration', () => {
     const mockAuthnService = {
       login: jest.fn().mockResolvedValue({
         userID: 'test-user-id',
-        accessToken: 'test-access-token',
-      }),
+        accessToken: 'test-access-token'
+      })
     };
 
     const mockConfigService = {
@@ -59,7 +59,7 @@ describe('AuthnController - Okta Integration', () => {
         return undefined;
       }),
       isInProductionMode: jest.fn().mockReturnValue(false),
-      isLocalLoginAllowed: jest.fn().mockReturnValue(true),
+      isLocalLoginAllowed: jest.fn().mockReturnValue(true)
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -67,13 +67,13 @@ describe('AuthnController - Okta Integration', () => {
       providers: [
         {
           provide: AuthnService,
-          useValue: mockAuthnService,
+          useValue: mockAuthnService
         },
         {
           provide: ConfigService,
-          useValue: mockConfigService,
-        },
-      ],
+          useValue: mockConfigService
+        }
+      ]
     }).compile();
 
     controller = module.get<AuthnController>(AuthnController);
@@ -81,8 +81,11 @@ describe('AuthnController - Okta Integration', () => {
     configService = module.get<ConfigService>(ConfigService);
 
     // Spy on logger methods
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     jest.spyOn(controller['logger'], 'log').mockImplementation(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     jest.spyOn(controller['logger'], 'warn').mockImplementation(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     jest.spyOn(controller['logger'], 'error').mockImplementation(() => {});
   });
 
@@ -92,14 +95,14 @@ describe('AuthnController - Okta Integration', () => {
 
   describe('loginToOkta', () => {
     it('should initiate Okta login flow', async () => {
-      const mockUser = { email: 'test@example.com' } as User;
-      const mockRequest = { user: mockUser };
+      const mockUser = {email: 'test@example.com'} as User;
+      const mockRequest = {user: mockUser};
 
       const result = await controller.loginToOkta(mockRequest as any);
 
       expect(result).toEqual({
         userID: 'test-user-id',
-        accessToken: 'test-access-token',
+        accessToken: 'test-access-token'
       });
       expect(controller['logger'].log).toHaveBeenCalledWith(
         expect.stringContaining('Initiating Okta login flow')
@@ -110,23 +113,27 @@ describe('AuthnController - Okta Integration', () => {
 
   describe('getUserFromOkta', () => {
     it('should handle Okta callback correctly', async () => {
-      const mockUser = { email: 'test@example.com' } as User;
+      const mockUser = {email: 'test@example.com'} as User;
       const mockResponse = {
         redirect: jest.fn(),
-        cookie: jest.fn(),
+        cookie: jest.fn()
       };
       const mockRequest = {
         user: mockUser,
-        res: mockResponse,
+        res: mockResponse
       };
 
       await controller.getUserFromOkta(mockRequest as any);
 
       expect(controller['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining('Okta login callback received for user: test@example.com')
+        expect.stringContaining(
+          'Okta login callback received for user: test@example.com'
+        )
       );
       expect(controller['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining('Okta login completed successfully for user: test@example.com')
+        expect.stringContaining(
+          'Okta login completed successfully for user: test@example.com'
+        )
       );
       expect(authnService.login).toHaveBeenCalledWith(mockUser);
       expect(mockResponse.cookie).toHaveBeenCalledTimes(2);
@@ -148,20 +155,26 @@ describe('AuthnController - Okta Integration', () => {
       } as unknown as User; // Cast to User
       const mockResponse = {
         redirect: jest.fn(),
-        cookie: jest.fn(),
+        cookie: jest.fn()
       };
       const mockRequest = {
         user: mockUser,
-        res: mockResponse,
+        res: mockResponse
       };
 
       // Mock implementation to avoid null error
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       jest.spyOn(controller['logger'], 'log').mockImplementation(() => {});
 
-      await expect(controller.getUserFromOkta(mockRequest as any)).resolves.not.toThrow();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await expect(
+        controller.getUserFromOkta(mockRequest as any)
+      ).resolves.not.toThrow();
 
       expect(controller['logger'].log).toHaveBeenCalledWith(
-        expect.stringContaining('Okta login callback received for user: unknown')
+        expect.stringContaining(
+          'Okta login callback received for user: unknown'
+        )
       );
       expect(authnService.login).toHaveBeenCalledWith(mockUser);
     });
@@ -173,15 +186,15 @@ describe('AuthnController - Okta Integration', () => {
 
       const mockResponse = {
         redirect: jest.fn(),
-        cookie: jest.fn(),
+        cookie: jest.fn()
       };
       const mockRequest = {
-        res: mockResponse,
+        res: mockResponse
       };
 
       const session = {
         userID: 'user-123',
-        accessToken: 'access-token-123',
+        accessToken: 'access-token-123'
       };
 
       await controller.setSessionCookies(mockRequest as any, session);
@@ -195,7 +208,7 @@ describe('AuthnController - Okta Integration', () => {
           secure: true,
           httpOnly: false,
           maxAge: 24 * 60 * 60 * 1000, // 24 hours
-          sameSite: 'lax',
+          sameSite: 'lax'
         })
       );
 
@@ -208,7 +221,7 @@ describe('AuthnController - Okta Integration', () => {
           secure: true,
           httpOnly: false,
           maxAge: 24 * 60 * 60 * 1000, // 24 hours
-          sameSite: 'lax',
+          sameSite: 'lax'
         })
       );
 
@@ -221,15 +234,15 @@ describe('AuthnController - Okta Integration', () => {
 
       const mockResponse = {
         redirect: jest.fn(),
-        cookie: jest.fn(),
+        cookie: jest.fn()
       };
       const mockRequest = {
-        res: mockResponse,
+        res: mockResponse
       };
 
       const session = {
         userID: 'user-123',
-        accessToken: 'access-token-123',
+        accessToken: 'access-token-123'
       };
 
       await controller.setSessionCookies(mockRequest as any, session);
@@ -243,7 +256,7 @@ describe('AuthnController - Okta Integration', () => {
           secure: false,
           httpOnly: false,
           maxAge: 24 * 60 * 60 * 1000, // 24 hours
-          sameSite: 'lax',
+          sameSite: 'lax'
         })
       );
     });
