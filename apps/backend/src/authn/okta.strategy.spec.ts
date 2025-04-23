@@ -57,6 +57,7 @@ jest.mock('openid-client', () => {
 jest.mock('@nestjs/passport', () => {
   return {
     PassportStrategy: jest.fn().mockImplementation(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return function (options: any) {
         return {
           ...options
@@ -68,6 +69,7 @@ jest.mock('@nestjs/passport', () => {
 
 describe('OktaStrategy', () => {
   let oktaStrategy: OktaStrategy;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let configService: ConfigService;
   let authnService: AuthnService;
 
@@ -88,7 +90,7 @@ describe('OktaStrategy', () => {
     const mockAuthnService = {
       validateOrCreateUser: jest
         .fn()
-        .mockImplementation((email, firstName, lastName, source) => {
+        .mockImplementation((email, firstName, lastName, _source) => {
           // Return a mock user for testing
           return Promise.resolve({
             id: 1,
@@ -273,7 +275,8 @@ describe('OktaStrategy', () => {
       expect(oktaStrategy['logger'].error).toHaveBeenCalledWith(
         expect.stringContaining(
           'Failed to initialize Okta OIDC strategy: Discovery failed'
-        )
+        ),
+        expect.any(String) // For the error.stack parameter
       );
     });
 
@@ -291,9 +294,12 @@ describe('OktaStrategy', () => {
         isInProductionMode: jest.fn().mockReturnValue(false)
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const strategy = new OktaStrategy(
-        {validateOrCreateUser: jest.fn()} as any,
-        mockConfigService as any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        {validateOrCreateUser: jest.fn()} as unknown as AuthnService,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        mockConfigService as unknown as ConfigService
       );
 
       // We can't access options directly, but we can verify proper initialization
@@ -306,6 +312,7 @@ describe('OktaStrategy', () => {
   });
 
   describe('Integration with Authentication Flow', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let mockRequest;
     let mockResponse;
 
