@@ -1,5 +1,7 @@
 import {ArgumentsHost, Catch, ExceptionFilter, Logger} from '@nestjs/common';
 import * as _ from 'lodash';
+// This import is used at line 17 - ignore false positives from static analysis tools
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {v4 as uuidv4} from 'uuid';
 import {ConfigService} from '../config/config.service';
 
@@ -8,7 +10,7 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(AuthenticationExceptionFilter.name);
   private readonly configService = new ConfigService();
 
-  constructor(readonly authenticationType?: 'oidc' | 'okta' | string) {}
+  constructor(readonly authenticationType?: string) {}
 
   catch(exception: Error, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
@@ -147,7 +149,8 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       context: 'AuthenticationExceptionFilter.clearAuthCookies',
       authenticationType: this.authenticationType,
       correlationId:
-        new Date().getTime().toString(36) + Math.random().toString(36).slice(2)
+        new Date().getTime().toString(36) +
+        Math.random().toString(36).substring(2)
     });
   }
 }

@@ -173,7 +173,7 @@ export class AuthnService {
       };
     } else {
       const expiresIn = limitJWTTime(
-        this.configService.get('JWT_EXPIRE_TIME') || '60s',
+        this.configService.get('JWT_EXPIRE_TIME') ?? '60s',
         false
       );
       const expireTime = moment(new Date(Date.now() + expiresIn)).format(

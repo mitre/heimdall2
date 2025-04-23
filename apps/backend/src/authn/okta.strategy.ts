@@ -33,7 +33,7 @@ export class OktaStrategy
     private readonly configService: ConfigService
   ) {
     // Read configuration at constructor time
-    const scope = configService.get('OKTA_SCOPE') || 'openid email profile';
+    const scope = configService.get('OKTA_SCOPE') ?? 'openid email profile';
     const usePKCE =
       configService.get('OKTA_USE_PKCE')?.toLowerCase() !== 'false';
     const passReqToCallback =
@@ -53,14 +53,14 @@ export class OktaStrategy
    */
   async onModuleInit() {
     try {
-      const oktaDomain = this.configService.get('OKTA_DOMAIN') || 'disabled';
+      const oktaDomain = this.configService.get('OKTA_DOMAIN') ?? 'disabled';
       const authServerPath =
-        this.configService.get('OKTA_AUTH_SERVER_PATH') || '/oauth2/default';
+        this.configService.get('OKTA_AUTH_SERVER_PATH') ?? '/oauth2/default';
       const issuerUrl = `https://${oktaDomain}${authServerPath}`;
 
       // Get customizable scope
       const scope =
-        this.configService.get('OKTA_SCOPE') || 'openid email profile';
+        this.configService.get('OKTA_SCOPE') ?? 'openid email profile';
 
       // Configure PKCE usage (default to true for security)
       const usePKCE =
@@ -68,12 +68,12 @@ export class OktaStrategy
 
       // Get custom callback path
       const callbackPath =
-        this.configService.get('OKTA_CALLBACK_PATH') || '/authn/okta/callback';
+        this.configService.get('OKTA_CALLBACK_PATH') ?? '/authn/okta/callback';
       const redirectUri = `${this.configService.get('EXTERNAL_URL')}${callbackPath}`;
 
       // Discovery timeout configuration
       const discoveryTimeout = parseInt(
-        this.configService.get('OKTA_DISCOVERY_TIMEOUT') || '10000',
+        this.configService.get('OKTA_DISCOVERY_TIMEOUT') ?? '10000',
         10
       );
 
@@ -132,9 +132,9 @@ export class OktaStrategy
 
       // Create OIDC client
       this.client = new oktaIssuer.Client({
-        client_id: this.configService.get('OKTA_CLIENTID') || 'disabled',
+        client_id: this.configService.get('OKTA_CLIENTID') ?? 'disabled',
         client_secret:
-          this.configService.get('OKTA_CLIENTSECRET') || 'disabled',
+          this.configService.get('OKTA_CLIENTSECRET') ?? 'disabled',
         redirect_uris: [redirectUri],
         response_types: ['code'],
         // Add token refresh support if configured
@@ -179,7 +179,7 @@ export class OktaStrategy
    */
   async validate(tokenSet: TokenEndpointResponse, userinfo: UserInfoResponse) {
     // Generate correlation ID for tracing this validation process
-    const correlationId = `okta_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const correlationId = `okta_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 
     this.logger.verbose(`Validating Okta user`, {
       email: userinfo.email,
@@ -214,9 +214,9 @@ export class OktaStrategy
     try {
       // Get name mapping config - this allows mapping different OIDC provider claim names
       const givenNameClaim =
-        this.configService.get('OKTA_GIVEN_NAME_CLAIM') || 'given_name';
+        this.configService.get('OKTA_GIVEN_NAME_CLAIM') ?? 'given_name';
       const familyNameClaim =
-        this.configService.get('OKTA_FAMILY_NAME_CLAIM') || 'family_name';
+        this.configService.get('OKTA_FAMILY_NAME_CLAIM') ?? 'family_name';
 
       // Use the configured claim names with fallbacks - ensure string type
       const firstName = String(

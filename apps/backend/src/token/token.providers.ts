@@ -27,10 +27,10 @@ export const tokenProviders = [
     imports: [ConfigModule],
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => ({
-      secret: configService.get('JWT_SECRET') || generateDefault(),
+      secret: configService.get('JWT_SECRET') ?? generateDefault(),
       signOptions: {
         expiresIn: limitJWTTime(
-          configService.get('JWT_EXPIRE_TIME') || '60s',
+          configService.get('JWT_EXPIRE_TIME') ?? '60s',
           true
         )
       }

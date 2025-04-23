@@ -215,7 +215,7 @@ export class AuthnController {
     }
   ): Promise<void> {
     // Generate correlation ID for this session setup
-    const correlationId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const correlationId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 
     this.logger.debug(`Setting session cookies`, {
       userID: session.userID,
@@ -239,7 +239,7 @@ export class AuthnController {
     const maxAge = maxAgeStr ? parseInt(maxAgeStr, 10) : 24 * 60 * 60 * 1000; // Default to 24 hours
 
     // Get configurable sameSite setting
-    const sameSite = this.configService.get('OKTA_COOKIE_SAMESITE') || 'lax';
+    const sameSite = this.configService.get('OKTA_COOKIE_SAMESITE') ?? 'lax';
 
     // Get configurable httpOnly setting (default false to allow frontend access)
     const httpOnly =
@@ -247,7 +247,7 @@ export class AuthnController {
 
     // Get configurable redirect path (default to home)
     const redirectPath =
-      this.configService.get('OKTA_REDIRECT_AFTER_LOGIN') || '/';
+      this.configService.get('OKTA_REDIRECT_AFTER_LOGIN') ?? '/';
 
     try {
       // Set user ID cookie

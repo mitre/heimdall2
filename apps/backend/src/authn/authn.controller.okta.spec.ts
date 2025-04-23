@@ -4,10 +4,6 @@ import {AuthnService} from './authn.service';
 import {ConfigService} from '../config/config.service';
 import {OktaStrategy} from './okta.strategy';
 import {User} from '../users/user.model';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {UnauthorizedException} from '@nestjs/common';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {AuthGuard} from '@nestjs/passport';
 
 // Mock LocalAuthGuard
 jest.mock('../guards/local-auth.guard', () => {

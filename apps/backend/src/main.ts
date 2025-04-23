@@ -123,7 +123,7 @@ async function bootstrap() {
   multer({
     limits: {
       fieldSize:
-        parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') || '50') *
+        parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') ?? '50') *
         1024 *
         1024
     }
@@ -150,7 +150,7 @@ async function bootstrap() {
     });
   }
 
-  await app.listen(configService.get('PORT') || 3000);
+  await app.listen(configService.get('PORT') ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
 

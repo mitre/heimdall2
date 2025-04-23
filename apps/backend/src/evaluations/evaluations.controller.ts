@@ -209,7 +209,7 @@ export class EvaluationsController {
         const createdDto: EvaluationDto = new EvaluationDto(
           evaluation,
           true,
-          `${this.configService.get('EXTERNAL_URL') || ''}/results/${
+          `${this.configService.get('EXTERNAL_URL') ?? ''}/results/${
             evaluation.id
           }`
         );

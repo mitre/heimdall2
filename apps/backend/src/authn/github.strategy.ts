@@ -23,19 +23,19 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     private readonly configService: ConfigService
   ) {
     super({
-      clientID: configService.get('GITHUB_CLIENTID') || 'disabled',
-      clientSecret: configService.get('GITHUB_CLIENTSECRET') || 'disabled',
+      clientID: configService.get('GITHUB_CLIENTID') ?? 'disabled',
+      clientSecret: configService.get('GITHUB_CLIENTSECRET') ?? 'disabled',
       authorizationURL: `
         ${
-          configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ||
+          configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ??
           configService.defaultGithubBaseURL
         }login/oauth/authorize`,
       tokenURL: `${
-        configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ||
+        configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ??
         configService.defaultGithubBaseURL
       }login/oauth/access_token`,
       userProfileURL: `${
-        configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+        configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ??
         configService.defaultGithubAPIURL
       }user`,
       scope: 'user:email',
@@ -51,7 +51,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     const githubEmails = await axios
       .get<GithubEmail[]>(
         `${
-          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ??
           this.configService.defaultGithubAPIURL
         }user/emails`,
         {
@@ -65,7 +65,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     const userInfoResponse = await axios
       .get<GithubProfile>(
         `${
-          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ??
           this.configService.defaultGithubAPIURL
         }user`,
         {

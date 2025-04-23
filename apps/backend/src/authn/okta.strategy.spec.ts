@@ -69,8 +69,6 @@ jest.mock('@nestjs/passport', () => {
 
 describe('OktaStrategy', () => {
   let oktaStrategy: OktaStrategy;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let configService: ConfigService;
   let authnService: AuthnService;
 
   beforeEach(async () => {
@@ -121,7 +119,6 @@ describe('OktaStrategy', () => {
 
     // Get service instances
     oktaStrategy = moduleRef.get<OktaStrategy>(OktaStrategy);
-    configService = moduleRef.get<ConfigService>(ConfigService);
     authnService = moduleRef.get<AuthnService>(AuthnService);
 
     // Manually add the validate and onModuleInit methods to make tests pass
@@ -337,18 +334,12 @@ describe('OktaStrategy', () => {
   });
 
   describe('Integration with Authentication Flow', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    let mockRequest;
     let mockResponse;
 
     beforeEach(() => {
       mockResponse = {
         redirect: jest.fn(),
         cookie: jest.fn()
-      };
-
-      mockRequest = {
-        res: mockResponse
       };
     });
 
