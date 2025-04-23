@@ -24,7 +24,7 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
   ) {
     super(
       {
-        issuer: `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2`,
+        issuer: `https://${configService.get('OKTA_DOMAIN') || 'disabled'}`,
         authorizationURL: `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/authorize`,
         tokenURL: `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/token`,
         userInfoURL: `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/userinfo`,
