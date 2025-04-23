@@ -18,6 +18,12 @@ import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
+// Constants for logging contexts to avoid duplication
+const CONTEXT_OKTA_LOGIN = 'AuthnController.loginToOkta';
+const CONTEXT_OKTA_CALLBACK = 'AuthnController.getUserFromOkta';
+const CONTEXT_OIDC_CALLBACK = 'AuthnController.getUserFromOIDC';
+const CONTEXT_SESSION_COOKIES = 'AuthnController.setSessionCookies';
+
 @UseInterceptors(LoggingInterceptor)
 @Controller('authn')
 export class AuthnController {
@@ -124,7 +130,7 @@ export class AuthnController {
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.verbose(`Initiating Okta login flow`, {
-      context: 'AuthnController.loginToOkta',
+      context: CONTEXT_OKTA_LOGIN,
       ipAddress: req.ip || req.connection?.remoteAddress || 'unknown',
       userAgent: req.headers?.['user-agent'] || 'unknown'
     });
@@ -139,7 +145,7 @@ export class AuthnController {
       const userEmail = (req.user as User)?.email || 'unknown';
       this.logger.log(`Okta login callback received`, {
         user: userEmail,
-        context: 'AuthnController.getUserFromOkta'
+        context: CONTEXT_OKTA_CALLBACK
       });
 
       const session = await this.authnService.login(req.user as User);
@@ -147,14 +153,14 @@ export class AuthnController {
 
       this.logger.log(`Okta login completed successfully`, {
         user: userEmail,
-        context: 'AuthnController.getUserFromOkta'
+        context: CONTEXT_OKTA_CALLBACK
       });
     } catch (error) {
       this.logger.error(
         `Error during Okta callback processing: ${error.message}`,
         {
           stack: error.stack,
-          context: 'AuthnController.getUserFromOkta'
+          context: CONTEXT_OKTA_CALLBACK
         }
       );
       throw error; // Let the exception filter handle this
@@ -179,7 +185,7 @@ export class AuthnController {
       const userEmail = (req.user as User)?.email || 'unknown';
       this.logger.log(`OIDC login callback received`, {
         user: userEmail,
-        context: 'AuthnController.getUserFromOIDC'
+        context: CONTEXT_OIDC_CALLBACK
       });
 
       const session = await this.authnService.login(req.user as User);
@@ -187,14 +193,14 @@ export class AuthnController {
 
       this.logger.log(`OIDC login completed successfully`, {
         user: userEmail,
-        context: 'AuthnController.getUserFromOIDC'
+        context: CONTEXT_OIDC_CALLBACK
       });
     } catch (error) {
       this.logger.error(
         `Error during OIDC callback processing: ${error.message}`,
         {
           stack: error.stack,
-          context: 'AuthnController.getUserFromOIDC'
+          context: CONTEXT_OIDC_CALLBACK
         }
       );
       throw error; // Let the exception filter handle this
@@ -210,12 +216,12 @@ export class AuthnController {
   ): Promise<void> {
     this.logger.debug(`Setting session cookies`, {
       userID: session.userID,
-      context: 'AuthnController.setSessionCookies'
+      context: CONTEXT_SESSION_COOKIES
     });
 
     if (!req.res) {
       this.logger.error('Response object is undefined, cannot set cookies', {
-        context: 'AuthnController.setSessionCookies'
+        context: CONTEXT_SESSION_COOKIES
       });
       throw new Error('Response object is undefined');
     }
@@ -245,12 +251,12 @@ export class AuthnController {
       req.res.redirect('/');
 
       this.logger.debug('Session cookies set successfully', {
-        context: 'AuthnController.setSessionCookies'
+        context: CONTEXT_SESSION_COOKIES
       });
     } catch (error) {
       this.logger.error(`Failed to set session cookies: ${error.message}`, {
         stack: error.stack,
-        context: 'AuthnController.setSessionCookies'
+        context: CONTEXT_SESSION_COOKIES
       });
       throw error;
     }

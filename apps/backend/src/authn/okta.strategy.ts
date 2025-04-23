@@ -9,6 +9,10 @@ import {TokenEndpointResponse, UserInfoResponse} from 'oauth4webapi';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
+// Constants for logging contexts to avoid duplication
+const CONTEXT_INIT = 'OktaStrategy.onModuleInit';
+const CONTEXT_VALIDATE = 'OktaStrategy.validate';
+
 // Import the Passport integration directly
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const {Strategy} = require('openid-client/passport');
@@ -49,14 +53,14 @@ export class OktaStrategy
 
       this.logger.verbose(`Discovering OpenID Connect endpoints`, {
         issuerUrl,
-        context: 'OktaStrategy.onModuleInit'
+        context: CONTEXT_INIT
       });
 
       // Discover OpenID Connect endpoints automatically
       const oktaIssuer = await Issuer.discover(issuerUrl);
 
       this.logger.debug('OpenID Connect endpoints discovered successfully', {
-        context: 'OktaStrategy.onModuleInit',
+        context: CONTEXT_INIT,
         issuer: oktaIssuer.metadata.issuer,
         authEndpoint: oktaIssuer.metadata.authorization_endpoint
       });
@@ -76,7 +80,7 @@ export class OktaStrategy
       Object.assign(this, {client: this.client});
 
       this.logger.log('Okta OIDC strategy initialized successfully', {
-        context: 'OktaStrategy.onModuleInit',
+        context: CONTEXT_INIT,
         pkceEnabled: true,
         redirectUri: `${this.configService.get('EXTERNAL_URL')}/authn/okta/callback`
       });
@@ -88,7 +92,7 @@ export class OktaStrategy
           stack: error.stack,
           name: error.name,
           details: error.toString(),
-          context: 'OktaStrategy.onModuleInit'
+          context: CONTEXT_INIT
         }
       );
       // Continue running even if Okta strategy initialization fails
@@ -103,13 +107,13 @@ export class OktaStrategy
   async validate(tokenSet: TokenEndpointResponse, userinfo: UserInfoResponse) {
     this.logger.verbose(`Validating Okta user`, {
       email: userinfo.email,
-      context: 'OktaStrategy.validate',
+      context: CONTEXT_VALIDATE,
       hasIdToken: !!tokenSet.id_token
     });
 
     if (!userinfo.email) {
       this.logger.error('Email not provided in Okta userinfo response', {
-        context: 'OktaStrategy.validate',
+        context: CONTEXT_VALIDATE,
         userinfo: JSON.stringify(userinfo)
       });
       throw new UnauthorizedException('Email is required for authentication');
@@ -118,7 +122,7 @@ export class OktaStrategy
     if (userinfo.email_verified !== true) {
       this.logger.warn(`User email is not verified`, {
         email: userinfo.email,
-        context: 'OktaStrategy.validate'
+        context: CONTEXT_VALIDATE
       });
       throw new UnauthorizedException('Email verification required');
     }
@@ -134,7 +138,7 @@ export class OktaStrategy
       this.logger.log(`Okta authentication successful`, {
         email: userinfo.email,
         userId: user.id,
-        context: 'OktaStrategy.validate'
+        context: CONTEXT_VALIDATE
       });
       return user;
     } catch (error) {
@@ -142,7 +146,7 @@ export class OktaStrategy
         email: userinfo.email,
         error: error.message,
         stack: error.stack,
-        context: 'OktaStrategy.validate'
+        context: CONTEXT_VALIDATE
       });
       throw new UnauthorizedException('Failed to authenticate with Okta');
     }
