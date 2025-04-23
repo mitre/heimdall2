@@ -214,49 +214,73 @@ export class AuthnController {
       accessToken: string;
     }
   ): Promise<void> {
+    // Generate correlation ID for this session setup
+    const correlationId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
     this.logger.debug(`Setting session cookies`, {
       userID: session.userID,
-      context: CONTEXT_SESSION_COOKIES
+      context: CONTEXT_SESSION_COOKIES,
+      correlationId
     });
 
     if (!req.res) {
       this.logger.error('Response object is undefined, cannot set cookies', {
-        context: CONTEXT_SESSION_COOKIES
+        context: CONTEXT_SESSION_COOKIES,
+        correlationId
       });
       throw new Error('Response object is undefined');
     }
 
     // Set secure cookie in production, allow non-secure in development
     const secure = this.configService.isInProductionMode();
-    const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+
+    // Use configurable session max age (default 24 hours)
+    const maxAgeStr = this.configService.get('OKTA_SESSION_MAXAGE');
+    const maxAge = maxAgeStr ? parseInt(maxAgeStr, 10) : 24 * 60 * 60 * 1000; // Default to 24 hours
+
+    // Get configurable sameSite setting
+    const sameSite = this.configService.get('OKTA_COOKIE_SAMESITE') || 'lax';
+
+    // Get configurable httpOnly setting (default false to allow frontend access)
+    const httpOnly =
+      this.configService.get('OKTA_COOKIE_HTTP_ONLY')?.toLowerCase() === 'true';
+
+    // Get configurable redirect path (default to home)
+    const redirectPath =
+      this.configService.get('OKTA_REDIRECT_AFTER_LOGIN') || '/';
 
     try {
       // Set user ID cookie
       req.res.cookie('userID', session.userID, {
-        secure: secure,
-        httpOnly: false, // Frontend needs to access this
-        maxAge: maxAge,
-        sameSite: 'lax' // Balances security and usability
+        secure,
+        httpOnly,
+        maxAge,
+        sameSite: sameSite as 'lax' | 'strict' | 'none'
       });
 
       // Set access token cookie
       req.res.cookie('accessToken', session.accessToken, {
-        secure: secure,
-        httpOnly: false, // Frontend needs to access this
-        maxAge: maxAge,
-        sameSite: 'lax' // Balances security and usability
+        secure,
+        httpOnly,
+        maxAge,
+        sameSite: sameSite as 'lax' | 'strict' | 'none'
       });
 
-      // Redirect to home page
-      req.res.redirect('/');
+      // Redirect to configured path
+      req.res.redirect(redirectPath);
 
       this.logger.debug('Session cookies set successfully', {
-        context: CONTEXT_SESSION_COOKIES
+        context: CONTEXT_SESSION_COOKIES,
+        correlationId,
+        maxAge,
+        sameSite,
+        redirectPath
       });
     } catch (error) {
       this.logger.error(`Failed to set session cookies: ${error.message}`, {
         stack: error.stack,
-        context: CONTEXT_SESSION_COOKIES
+        context: CONTEXT_SESSION_COOKIES,
+        correlationId
       });
       throw error;
     }

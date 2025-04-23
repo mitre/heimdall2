@@ -218,16 +218,26 @@ Our implementation uses a hybrid authentication approach with `openid-client` fo
    - PKCE implementation is essential for security (already implemented)
    - Proper token validation
    - Email verification checks
+   - Secure cookie handling based on environment
 
 2. **Error Handling**:
    - Graceful handling of authentication failures
-   - Proper logging for debugging
+   - Proper logging with context objects and correlation IDs
    - User-friendly error redirection
+   - Configurable retry mechanisms for discovery
 
 3. **Scalability**:
    - Stateless design where possible
    - Proper session management
    - Performance considerations for token validation
+   - Timeout handling for external service calls
+
+4. **Configurability**:
+   - Extensive environment variable configuration options
+   - Custom authorization server path support
+   - Flexible scope configuration
+   - Customizable callback paths
+   - Session cookie configuration options
 
 ## References and Community Resources
 
@@ -259,17 +269,93 @@ Our implementation uses a hybrid authentication approach with `openid-client` fo
    - [jest-openid-client](https://www.npmjs.com/package/jest-openid-client) - For Jest testing with openid-client
    - [nock](https://github.com/nock/nock) - For HTTP request mocking
 
+## Environment Variables and Configuration
+
+Our Okta implementation supports extensive configuration through environment variables, making it flexible for different organizational needs.
+
+### Core Settings
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `OKTA_DOMAIN` | (required) | Your Okta domain (e.g., your-domain.okta.com) |
+| `OKTA_CLIENTID` | (required) | Your Okta client ID |
+| `OKTA_CLIENTSECRET` | (required) | Your Okta client secret |
+| `EXTERNAL_URL` | (required) | Your application's external URL |
+
+### Advanced OIDC Settings
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `OKTA_AUTH_SERVER_PATH` | `/oauth2/default` | Custom authorization server path |
+| `OKTA_SCOPE` | `openid email profile` | OAuth scopes to request |
+| `OKTA_USE_PKCE` | `true` | Whether to use PKCE for enhanced security |
+| `OKTA_CALLBACK_PATH` | `/authn/okta/callback` | OAuth callback path |
+| `OKTA_DISCOVERY_TIMEOUT` | `10000` | Timeout for OIDC discovery in ms |
+| `OKTA_RETRY_DISCOVERY` | `false` | Whether to retry discovery on failure |
+| `OKTA_ENABLE_TOKEN_REFRESH` | `false` | Enable token refresh capability |
+| `OKTA_PASS_REQ_TO_CALLBACK` | `false` | Pass request object to callback function |
+
+### User Profile Settings
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `OKTA_GIVEN_NAME_CLAIM` | `given_name` | Claim to use for user's first name |
+| `OKTA_FAMILY_NAME_CLAIM` | `family_name` | Claim to use for user's last name |
+| `OKTA_REQUIRE_EMAIL_VERIFIED` | `true` | Require email verification |
+
+### Session and Cookies
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `OKTA_SESSION_MAXAGE` | `86400000` (24 hours) | Max age for session cookies in ms |
+| `OKTA_COOKIE_SAMESITE` | `lax` | SameSite cookie setting (lax, strict, none) |
+| `OKTA_COOKIE_HTTP_ONLY` | `false` | Whether cookies are HTTP only |
+| `OKTA_REDIRECT_AFTER_LOGIN` | `/` | Path to redirect to after successful login |
+
+### Usage Examples
+
+#### Custom Authorization Server
+
+For organizations using a custom authorization server:
+
+```
+OKTA_DOMAIN=your-domain.okta.com
+OKTA_AUTH_SERVER_PATH=/oauth2/your-custom-server
+```
+
+#### Enhanced Security
+
+For maximum security settings:
+
+```
+OKTA_USE_PKCE=true
+OKTA_REQUIRE_EMAIL_VERIFIED=true
+OKTA_COOKIE_SAMESITE=strict
+OKTA_SESSION_MAXAGE=3600000  # 1 hour
+```
+
+#### Custom Claims Mapping
+
+For IdPs with non-standard claim names:
+
+```
+OKTA_GIVEN_NAME_CLAIM=first_name
+OKTA_FAMILY_NAME_CLAIM=last_name
+```
+
 ## Next Steps
 
 1. **Immediate Priorities**:
    - Implement enhanced unit tests, especially for `onModuleInit()`
    - Add integration tests for the controller interaction
    - Add error handling tests
+   - Add tests for new environment variable configurations
 
 2. **Future Improvements**:
    - Consider adding E2E tests with mock OIDC server
    - Refine error handling for better user experience
-   - Consider session management optimizations
+   - Consider session management optimizations 
+   - Add refreshToken support for longer sessions
 
 ## Environment Setup for Testing
 

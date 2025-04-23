@@ -48,6 +48,12 @@ This repository contains the source code for Heimdall's [Backend](https://github
   - [Versioning and State of Development](#versioning-and-state-of-development)
   - [Contributing, Issues and Support](#contributing-issues-and-support)
     - [Contributing](#contributing)
+  - [Okta Authentication Configuration](#okta-authentication-configuration)
+    - [Core Environment Variables](#core-environment-variables)
+    - [Advanced OIDC Settings](#advanced-oidc-settings)
+    - [User Profile Settings](#user-profile-settings)
+    - [Session and Cookies](#session-and-cookies)
+    - [Example Use Cases](#example-use-cases)
     - [Issues and Support](#issues-and-support)
 
 ## Demos
@@ -110,7 +116,7 @@ Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Li
 | Authenticated REST API                                                         |                    |                                     :white_check_mark:                                      |
 | CRUD Capabilities                                                              |                    |                                     :white_check_mark:                                      |
 | Users & Roles & multi-team support                                             |                    |                                     :white_check_mark:                                      |
-| Authentication & Authorization                                                 | Hosting Webserver  | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
+| Authentication & Authorization                                                 | Hosting Webserver  | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta<br />(with [extensive configuration options](#okta-authentication-configuration)) |
 
 ### Use Cases
 
@@ -549,6 +555,73 @@ This project uses the [Semantic Versioning Policy](https://semver.org/)
 ### Contributing
 
 Please feel free to look through our issues, make a fork and submit _PRs_ and improvements. We love hearing from our end-users and the community and will be happy to engage with you on suggestions, updates, fixes or new capabilities.
+
+## Okta Authentication Configuration
+
+Heimdall supports extensive configuration for Okta authentication through environment variables, allowing you to customize the OIDC integration for different organizational needs.
+
+### Core Environment Variables
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `OKTA_DOMAIN` | (required) | Your Okta domain (e.g., your-domain.okta.com) |
+| `OKTA_CLIENTID` | (required) | Your Okta client ID |
+| `OKTA_CLIENTSECRET` | (required) | Your Okta client secret |
+| `EXTERNAL_URL` | (required) | Your application's external URL |
+
+### Advanced OIDC Settings
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `OKTA_AUTH_SERVER_PATH` | `/oauth2/default` | Custom authorization server path |
+| `OKTA_SCOPE` | `openid email profile` | OAuth scopes to request |
+| `OKTA_USE_PKCE` | `true` | Whether to use PKCE for enhanced security |
+| `OKTA_CALLBACK_PATH` | `/authn/okta/callback` | OAuth callback path |
+| `OKTA_DISCOVERY_TIMEOUT` | `10000` | Timeout for OIDC discovery in ms |
+| `OKTA_RETRY_DISCOVERY` | `false` | Whether to retry discovery on failure |
+| `OKTA_ENABLE_TOKEN_REFRESH` | `false` | Enable token refresh capability |
+| `OKTA_PASS_REQ_TO_CALLBACK` | `false` | Pass request object to callback function |
+
+### User Profile Settings
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `OKTA_GIVEN_NAME_CLAIM` | `given_name` | Claim to use for user's first name |
+| `OKTA_FAMILY_NAME_CLAIM` | `family_name` | Claim to use for user's last name |
+| `OKTA_REQUIRE_EMAIL_VERIFIED` | `true` | Require email verification |
+
+### Session and Cookies
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `OKTA_SESSION_MAXAGE` | `86400000` (24 hours) | Max age for session cookies in ms |
+| `OKTA_COOKIE_SAMESITE` | `lax` | SameSite cookie setting (lax, strict, none) |
+| `OKTA_COOKIE_HTTP_ONLY` | `false` | Whether cookies are HTTP only |
+| `OKTA_REDIRECT_AFTER_LOGIN` | `/` | Path to redirect to after successful login |
+
+### Example Use Cases
+
+**Custom Authorization Server:**
+```
+OKTA_DOMAIN=your-domain.okta.com
+OKTA_AUTH_SERVER_PATH=/oauth2/your-custom-server
+```
+
+**Enhanced Security Settings:**
+```
+OKTA_USE_PKCE=true
+OKTA_REQUIRE_EMAIL_VERIFIED=true
+OKTA_COOKIE_SAMESITE=strict
+OKTA_SESSION_MAXAGE=3600000  # 1 hour
+```
+
+**Custom Claims Mapping:**
+```
+OKTA_GIVEN_NAME_CLAIM=first_name
+OKTA_FAMILY_NAME_CLAIM=last_name
+```
+
+For more detailed information about the Okta implementation, please refer to the [Okta OpenID Client Documentation](docs/okta/okta-openid-client-documentation.md).
 
 ### Issues and Support
 
