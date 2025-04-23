@@ -1,16 +1,27 @@
-import {Injectable, Logger, OnModuleInit, UnauthorizedException} from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleInit,
+  UnauthorizedException
+} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {TokenEndpointResponse, UserInfoResponse} from 'oauth4webapi';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
 // Import the Passport integration directly
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {Strategy} = require('openid-client/passport');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {Issuer} = require('openid-client');
 
 @Injectable()
-export class OktaStrategy extends PassportStrategy(Strategy, 'okta') implements OnModuleInit {
+export class OktaStrategy
+  extends PassportStrategy(Strategy, 'okta')
+  implements OnModuleInit
+{
   private readonly logger = new Logger(OktaStrategy.name);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private client: any = null; // Using any until we fix all type issues
 
   constructor(
@@ -35,28 +46,35 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') implements 
     try {
       const oktaDomain = this.configService.get('OKTA_DOMAIN') || 'disabled';
       const issuerUrl = `https://${oktaDomain}/oauth2/default`;
-      
+
       this.logger.log(`Discovering OpenID Connect endpoints from ${issuerUrl}`);
-      
+
       // Discover OpenID Connect endpoints automatically
       const oktaIssuer = await Issuer.discover(issuerUrl);
-      
+
       this.logger.log('OpenID Connect endpoints discovered successfully');
-      
+
       // Create OIDC client
       this.client = new oktaIssuer.Client({
         client_id: this.configService.get('OKTA_CLIENTID') || 'disabled',
-        client_secret: this.configService.get('OKTA_CLIENTSECRET') || 'disabled',
-        redirect_uris: [`${this.configService.get('EXTERNAL_URL')}/authn/okta/callback`],
-        response_types: ['code'],
+        client_secret:
+          this.configService.get('OKTA_CLIENTSECRET') || 'disabled',
+        redirect_uris: [
+          `${this.configService.get('EXTERNAL_URL')}/authn/okta/callback`
+        ],
+        response_types: ['code']
       });
-      
+
       // Update the strategy with the client
       Object.assign(this, {client: this.client});
-      
+
       this.logger.log('Okta OIDC strategy initialized successfully');
     } catch (error) {
-      this.logger.error(`Failed to initialize Okta OIDC strategy: ${error.message}`);
+      this.logger.error(
+        `Failed to initialize Okta OIDC strategy: ${error.message}`,
+        error.stack
+      );
+      // eslint-disable-next-line no-console
       console.error(error);
       // Continue running even if Okta strategy initialization fails
       // This allows the application to start and other auth methods to work
@@ -69,17 +87,17 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') implements 
    */
   async validate(tokenSet: TokenEndpointResponse, userinfo: UserInfoResponse) {
     this.logger.log(`Validating Okta user with email: ${userinfo.email}`);
-    
+
     if (!userinfo.email) {
       this.logger.error('Email not provided in Okta userinfo response');
       throw new UnauthorizedException('Email is required for authentication');
     }
-    
+
     if (userinfo.email_verified !== true) {
       this.logger.warn(`User email ${userinfo.email} is not verified`);
       throw new UnauthorizedException('Email verification required');
     }
-    
+
     try {
       const user = await this.authnService.validateOrCreateUser(
         userinfo.email,
@@ -87,8 +105,10 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') implements 
         userinfo.family_name || '',
         'okta'
       );
-      
-      this.logger.log(`Okta authentication successful for user: ${userinfo.email}`);
+
+      this.logger.log(
+        `Okta authentication successful for user: ${userinfo.email}`
+      );
       return user;
     } catch (error) {
       this.logger.error(`Error validating Okta user: ${error.message}`);
