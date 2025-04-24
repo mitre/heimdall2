@@ -42,8 +42,8 @@ describe('Okta Authentication Logic', () => {
     try {
       const user = await mockAuthnService.validateOrCreateUser(
         userinfo.email,
-        userinfo.given_name || '',
-        userinfo.family_name || '',
+        userinfo.given_name ?? '',
+        userinfo.family_name ?? '',
         'okta'
       );
 
@@ -64,7 +64,7 @@ describe('Okta Authentication Logic', () => {
   // Simplified controller callback function
   async function handleCallback(req) {
     mockLogger.log(
-      `Login callback received for user: ${req.user?.email || 'unknown'}`
+      `Login callback received for user: ${req.user?.email ?? 'unknown'}`
     );
     const session = await mockAuthnService.login(req.user);
 

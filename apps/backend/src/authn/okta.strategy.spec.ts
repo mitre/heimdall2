@@ -316,8 +316,10 @@ describe('OktaStrategy', () => {
         isInProductionMode: jest.fn().mockReturnValue(false)
       };
 
+      // Create a testable instance to verify PKCE
+      // We use this instance to verify proper PKCE initialization
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const strategy = new OktaStrategy(
+      const testStrategy = new OktaStrategy(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         {validateOrCreateUser: jest.fn()} as unknown as AuthnService,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -325,7 +327,7 @@ describe('OktaStrategy', () => {
       );
 
       // We can't access options directly, but we can verify proper initialization
-      expect(strategy).toBeDefined();
+      expect(testStrategy).toBeDefined();
 
       // Extract the actual options from where they're set in the super() call
       // and verify PKCE is enabled
@@ -334,13 +336,16 @@ describe('OktaStrategy', () => {
   });
 
   describe('Integration with Authentication Flow', () => {
-    let mockResponse;
-
+    // Define mockResponse once so it's not recreated unnecessarily in beforeEach
+    const mockResponse = {
+      redirect: jest.fn(),
+      cookie: jest.fn()
+    };
+    
     beforeEach(() => {
-      mockResponse = {
-        redirect: jest.fn(),
-        cookie: jest.fn()
-      };
+      // Reset mocks between tests
+      mockResponse.redirect.mockClear();
+      mockResponse.cookie.mockClear();
     });
 
     it('should handle authentication errors', async () => {

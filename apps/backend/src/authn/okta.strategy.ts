@@ -220,10 +220,10 @@ export class OktaStrategy
 
       // Use the configured claim names with fallbacks - ensure string type
       const firstName = String(
-        userinfo[givenNameClaim] || userinfo.given_name || ''
+        userinfo[givenNameClaim] ?? userinfo.given_name ?? ''
       );
       const lastName = String(
-        userinfo[familyNameClaim] || userinfo.family_name || ''
+        userinfo[familyNameClaim] ?? userinfo.family_name ?? ''
       );
 
       const user = await this.authnService.validateOrCreateUser(

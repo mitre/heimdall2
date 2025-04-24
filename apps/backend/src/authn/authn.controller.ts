@@ -131,8 +131,8 @@ export class AuthnController {
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.verbose(`Initiating Okta login flow`, {
       context: CONTEXT_OKTA_LOGIN,
-      ipAddress: req.ip || req.connection?.remoteAddress || 'unknown',
-      userAgent: req.headers?.['user-agent'] || 'unknown'
+      ipAddress: req.ip ?? req.connection?.remoteAddress ?? 'unknown',
+      userAgent: req.headers?.['user-agent'] ?? 'unknown'
     });
     return this.authnService.login(req.user as User);
   }

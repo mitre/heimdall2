@@ -1,4 +1,6 @@
 import {Test} from '@nestjs/testing';
+// ConfigService is used in the testing module
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 import {UnauthorizedException} from '@nestjs/common';
@@ -24,8 +26,8 @@ async function validateUser(
   try {
     const user = await authnService.validateOrCreateUser(
       userinfo.email,
-      userinfo.given_name || '',
-      userinfo.family_name || '',
+      userinfo.given_name ?? '',
+      userinfo.family_name ?? '',
       'okta'
     );
 

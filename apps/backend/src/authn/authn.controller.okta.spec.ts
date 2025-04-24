@@ -191,9 +191,7 @@ describe('AuthnController - Okta Integration', () => {
         res: mockResponse
       };
 
-      // Mock the logger.log to avoid the error with email property
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      jest.spyOn(controller['logger'], 'log').mockImplementation(() => {});
+      // We're already mocking logger.log in beforeEach, so no need to mock it again here
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await controller.getUserFromOkta(mockRequest as any);
