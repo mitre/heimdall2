@@ -1,0 +1,39 @@
+name: SonarCloud Analysis
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: yarn install
+      
+      - name: Run backend tests with coverage
+        run: yarn workspace heimdall-server test:ci-cov
+      
+      # Add frontend tests with coverage when needed
+      # - name: Run frontend tests with coverage
+      #   run: yarn workspace @mitre/heimdall-lite test:ci-cov
+      
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for PR decoration
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
