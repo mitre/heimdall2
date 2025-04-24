@@ -27,22 +27,28 @@ jest.mock('openid-client', () => {
   }
 
   // Create a base client class for instanceof checks
-  class BaseClient {}
+  class BaseClient {
+    // This class intentionally left empty for instanceof checks
+    // It simulates the BaseClient class from openid-client
+  }
 
   // Create mock client with userinfo method
   class Client extends BaseClient {
+    userinfo: jest.Mock;
+    revoke: jest.Mock;
+
     constructor() {
       super();
-      return {
-        userinfo: jest.fn().mockResolvedValue({
-          email: 'test@example.com',
-          email_verified: true,
-          given_name: 'Test',
-          family_name: 'User',
-          sub: '123456'
-        }),
-        revoke: jest.fn().mockResolvedValue(undefined)
-      };
+      // Instead of returning an object in the constructor (which SonarCloud flags),
+      // we'll set properties on the instance
+      this.userinfo = jest.fn().mockResolvedValue({
+        email: 'test@example.com',
+        email_verified: true,
+        given_name: 'Test',
+        family_name: 'User',
+        sub: '123456'
+      });
+      this.revoke = jest.fn().mockResolvedValue(undefined);
     }
   }
 
@@ -64,7 +70,7 @@ jest.mock('openid-client', () => {
       this.Client = Client;
     }
 
-    static discover = jest.fn().mockResolvedValue(new Issuer());
+    static readonly discover = jest.fn().mockResolvedValue(new Issuer());
   }
 
   // Create a Strategy mock for passport integration

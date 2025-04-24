@@ -176,7 +176,7 @@ export class OktaStrategy
       // We need to access internal properties of the OpenIDConnectStrategy
       // that aren't exposed in the TypeScript definitions
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-assertion
-      const currentParams = (this as any)['_params'] || {};
+      const currentParams = (this as any)['_params'] ?? {};
       Object.defineProperty(this, '_params', {
         value: {...currentParams, scope},
         writable: true,
