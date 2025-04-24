@@ -8,10 +8,25 @@ on:
     branches:
       - master
 
+# Set permissions for the GITHUB_TOKEN
+permissions:
+  contents: read
+  pull-requests: read
+  # Required for SonarCloud PR decoration
+  checks: write
+  # Only required if using SonarCloud Security Reports
+  security-events: write
+
 jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
+    # Job-level permissions (overrides top-level)
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: write
+      security-events: write
     steps:
       - uses: actions/checkout@v3
         with:
@@ -33,7 +48,12 @@ jobs:
       #   run: yarn workspace @mitre/heimdall-lite test:ci-cov
       
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@v2.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for PR decoration
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          # Additional parameters for the scanner
+          args: >
+            -Dsonar.organization=mitre
+            -Dsonar.projectKey=mitre_heimdall2
