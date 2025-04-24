@@ -44,7 +44,7 @@ describe('AuthnController - Okta Integration', () => {
   let controller: AuthnController;
   let authnService: AuthnService;
   let configService: ConfigService;
-  
+
   // Clean up after tests
   afterAll(() => {
     jest.restoreAllMocks();

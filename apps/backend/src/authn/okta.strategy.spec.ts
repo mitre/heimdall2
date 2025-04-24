@@ -26,32 +26,46 @@ jest.mock('openid-client', () => {
     }
   }
 
+  // Create a base client class for instanceof checks
+  class BaseClient {}
+
   // Create mock client with userinfo method
-  const mockClient = {
-    userinfo: jest.fn().mockResolvedValue({
-      email: 'test@example.com',
-      email_verified: true,
-      given_name: 'Test',
-      family_name: 'User',
-      sub: '123456'
-    }),
-    revoke: jest.fn().mockResolvedValue(undefined)
-  };
-
-  // Create mock Client constructor
-  const MockClient = jest.fn().mockImplementation(() => mockClient);
-
-  // Create mock Issuer with Client constructor
-  const mockIssuer = {
-    Client: MockClient,
-    metadata: {
-      issuer: 'https://test-okta-domain.okta.com',
-      authorization_endpoint:
-        'https://test-okta-domain.okta.com/oauth2/v1/authorize',
-      token_endpoint: 'https://test-okta-domain.okta.com/oauth2/v1/token',
-      userinfo_endpoint: 'https://test-okta-domain.okta.com/oauth2/v1/userinfo'
+  class Client extends BaseClient {
+    constructor() {
+      super();
+      return {
+        userinfo: jest.fn().mockResolvedValue({
+          email: 'test@example.com',
+          email_verified: true,
+          given_name: 'Test',
+          family_name: 'User',
+          sub: '123456'
+        }),
+        revoke: jest.fn().mockResolvedValue(undefined)
+      };
     }
-  };
+  }
+
+  // Create mock issuer
+  class Issuer {
+    metadata: any;
+    Client: any;
+
+    constructor(metadata: any = {}) {
+      this.metadata = {
+        issuer: 'https://test-okta-domain.okta.com',
+        authorization_endpoint:
+          'https://test-okta-domain.okta.com/oauth2/v1/authorize',
+        token_endpoint: 'https://test-okta-domain.okta.com/oauth2/v1/token',
+        userinfo_endpoint:
+          'https://test-okta-domain.okta.com/oauth2/v1/userinfo',
+        ...metadata
+      };
+      this.Client = Client;
+    }
+
+    static discover = jest.fn().mockResolvedValue(new Issuer());
+  }
 
   // Create a Strategy mock for passport integration
   const Strategy = jest.fn().mockImplementation(() => {
@@ -64,9 +78,8 @@ jest.mock('openid-client', () => {
 
   return {
     TokenSet,
-    Issuer: {
-      discover: jest.fn().mockResolvedValue(mockIssuer)
-    },
+    BaseClient,
+    Issuer,
     // In v5.x the passport integration is part of the main module
     Strategy
   };
@@ -89,7 +102,7 @@ jest.mock('@nestjs/passport', () => {
 describe('OktaStrategy', () => {
   let oktaStrategy: OktaStrategy;
   let authnService: AuthnService;
-  
+
   // Clean up any mocks after all tests
   afterAll(() => {
     jest.restoreAllMocks();
@@ -388,7 +401,7 @@ describe('OktaStrategy', () => {
       mockResponse.redirect.mockClear();
       mockResponse.cookie.mockClear();
     });
-    
+
     afterEach(() => {
       // Clear any pending Promise resolutions that might be hanging
       jest.useRealTimers();

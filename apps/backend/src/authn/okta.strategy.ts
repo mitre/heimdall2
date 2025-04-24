@@ -27,6 +27,21 @@ export class OktaStrategy
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService
   ) {
+    // NOTE: For openid-client v5.x, we need to create a placeholder client instance
+    // that will be replaced with the real client during onModuleInit
+    // Import these inline to avoid ESM loading issues
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const {Issuer} = require('openid-client');
+    const dummyIssuer = new Issuer({
+      issuer: 'placeholder',
+      authorization_endpoint: 'placeholder',
+      token_endpoint: 'placeholder'
+    });
+    const dummyClient = new dummyIssuer.Client({
+      client_id: 'placeholder',
+      redirect_uris: ['placeholder']
+    });
+
     // Read configuration at constructor time
     const scope = configService.get('OKTA_SCOPE') ?? 'openid email profile';
     const usePKCE =
@@ -35,7 +50,7 @@ export class OktaStrategy
       configService.get('OKTA_PASS_REQ_TO_CALLBACK')?.toLowerCase() === 'true';
 
     super({
-      client: null, // Will be set during onModuleInit
+      client: dummyClient, // Temporary placeholder client that will be replaced during onModuleInit
       params: {scope},
       passReqToCallback, // Whether to include request in callback (useful for capturing headers/IP)
       usePKCE // Use PKCE for more security (Proof Key for Code Exchange)
@@ -149,11 +164,30 @@ export class OktaStrategy
           : undefined
       });
 
-      // Update the strategy with all configurable options
-      Object.assign(this, {
-        client: this.client,
-        params: {scope},
-        usePKCE
+      // For openid-client v5.x, we need to access the internal _client property
+      // This is how the client instance is stored in the OpenIDConnectStrategy
+      Object.defineProperty(this, '_client', {
+        value: this.client,
+        writable: true,
+        configurable: true
+      });
+
+      // Also update params and usePKCE for consistency
+      // We need to access internal properties of the OpenIDConnectStrategy
+      // that aren't exposed in the TypeScript definitions
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-assertion
+      const currentParams = (this as any)['_params'] || {};
+      Object.defineProperty(this, '_params', {
+        value: {...currentParams, scope},
+        writable: true,
+        configurable: true
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      Object.defineProperty(this, '_usePKCE', {
+        value: usePKCE,
+        writable: true,
+        configurable: true
       });
 
       this.logger.log('Okta OIDC strategy initialized successfully', {

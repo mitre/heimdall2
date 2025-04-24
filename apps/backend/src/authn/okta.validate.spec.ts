@@ -45,7 +45,7 @@ async function validateUser(
 describe('Okta User Validation', () => {
   let authnService: AuthnService;
   let logger: {log: jest.Mock; error: jest.Mock; warn: jest.Mock};
-  
+
   // Clean up after tests
   afterAll(() => {
     jest.restoreAllMocks();
