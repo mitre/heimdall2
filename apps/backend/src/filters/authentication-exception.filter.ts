@@ -24,8 +24,8 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       url: request.url,
       userAgent: request.headers['user-agent'],
       correlationId,
-      ip: request.ip || request.connection.remoteAddress,
-      authType: this.authenticationType || 'unknown'
+      ip: request.ip ?? request.connection.remoteAddress,
+      authType: this.authenticationType ?? 'unknown'
     };
 
     // Generate detailed error data

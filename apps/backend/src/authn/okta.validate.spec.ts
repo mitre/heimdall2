@@ -1,4 +1,4 @@
-import {Test, TestingModule} from '@nestjs/testing';
+import {Test} from '@nestjs/testing';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 import {UnauthorizedException} from '@nestjs/common';

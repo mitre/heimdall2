@@ -28,8 +28,9 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
       clientID: configService.get('GOOGLE_CLIENTID') ?? 'disabled',
       clientSecret: configService.get('GOOGLE_CLIENTSECRET') ?? 'disabled',
       callbackURL:
-        `${configService.get('EXTERNAL_URL')}/authn/google/callback` ??
-        'disabled',
+        configService.get('EXTERNAL_URL') 
+          ? `${configService.get('EXTERNAL_URL')}/authn/google/callback`
+          : 'disabled',
       scope: ['email', 'profile']
     });
   }

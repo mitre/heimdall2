@@ -47,7 +47,7 @@ function sanitize(fields: string[], values?: string[]): string[] {
       } else {
         return value;
       }
-    }) || []
+    }) ?? []
   );
 }
 
