@@ -66,10 +66,28 @@ export class OktaStrategy
   /**
    * Initialize the OpenID Connect client during module initialization
    * This allows us to use async operations like Issuer.discover()
+   *
+   * This method has high cognitive complexity due to the need to handle
+   * many configuration options and error conditions. Excepting the rule
+   * is better than artificially splitting the method.
    */
+  /* eslint-disable sonarjs/cognitive-complexity */
   async onModuleInit() {
     try {
-      const oktaDomain = this.configService.get('OKTA_DOMAIN') ?? 'disabled';
+      // Get required configuration variables (will throw if missing)
+      const oktaDomain = this.configService.get('OKTA_DOMAIN');
+      if (!oktaDomain) {
+        throw new Error('Missing required configuration: OKTA_DOMAIN');
+      }
+
+      const externalUrl = this.configService.get('EXTERNAL_URL');
+      if (!externalUrl) {
+        throw new Error(
+          'Missing required configuration: EXTERNAL_URL - needed for redirect URI'
+        );
+      }
+
+      // These have safe defaults that can be used
       const authServerPath =
         this.configService.get('OKTA_AUTH_SERVER_PATH') ?? '/oauth2/default';
       const issuerUrl = `https://${oktaDomain}${authServerPath}`;
@@ -85,13 +103,28 @@ export class OktaStrategy
       // Get custom callback path
       const callbackPath =
         this.configService.get('OKTA_CALLBACK_PATH') ?? '/authn/okta/callback';
-      const redirectUri = `${this.configService.get('EXTERNAL_URL')}${callbackPath}`;
+      const redirectUri = `${externalUrl}${callbackPath}`;
 
-      // Discovery timeout configuration
-      const discoveryTimeout = parseInt(
-        this.configService.get('OKTA_DISCOVERY_TIMEOUT') ?? '10000',
-        10
-      );
+      // Get discovery timeout
+      const defaultTimeout = 10000; // 10 seconds
+      const timeoutConfig = this.configService.get('OKTA_DISCOVERY_TIMEOUT');
+      let discoveryTimeout = defaultTimeout;
+
+      if (timeoutConfig) {
+        const parsedTimeout = parseInt(timeoutConfig, 10);
+        if (!isNaN(parsedTimeout) && parsedTimeout > 0) {
+          discoveryTimeout = parsedTimeout;
+        } else {
+          this.logger.warn(
+            'Invalid OKTA_DISCOVERY_TIMEOUT value, using default',
+            {
+              providedValue: timeoutConfig,
+              defaultValue: defaultTimeout,
+              context: CONTEXT_INIT
+            }
+          );
+        }
+      }
 
       this.logger.verbose(`Discovering OpenID Connect endpoints`, {
         issuerUrl,
@@ -151,11 +184,21 @@ export class OktaStrategy
         this.configService.get('OKTA_ENABLE_TOKEN_REFRESH')?.toLowerCase() ===
         'true';
 
-      // Create OIDC client
+      // Get client credentials (will throw if missing)
+      const clientId = this.configService.get('OKTA_CLIENTID');
+      if (!clientId) {
+        throw new Error('Missing required configuration: OKTA_CLIENTID');
+      }
+
+      const clientSecret = this.configService.get('OKTA_CLIENTSECRET');
+      if (!clientSecret) {
+        throw new Error('Missing required configuration: OKTA_CLIENTSECRET');
+      }
+
+      // Create OIDC client with validated configuration
       this.client = new oktaIssuer.Client({
-        client_id: this.configService.get('OKTA_CLIENTID') ?? 'disabled',
-        client_secret:
-          this.configService.get('OKTA_CLIENTSECRET') ?? 'disabled',
+        client_id: clientId,
+        client_secret: clientSecret,
         redirect_uris: [redirectUri],
         response_types: ['code'],
         // Add token refresh support if configured
@@ -222,6 +265,7 @@ export class OktaStrategy
       // error message, and the auth exception filter will handle the failure gracefully
     }
   }
+  /* eslint-enable sonarjs/cognitive-complexity */
 
   /**
    * Validate the user from the TokenSet and Userinfo

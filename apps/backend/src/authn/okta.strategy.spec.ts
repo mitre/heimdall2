@@ -7,6 +7,11 @@ import {UnauthorizedException} from '@nestjs/common';
 // Set fake timers to avoid hanging promises
 jest.useFakeTimers();
 
+// Mock the correlation-id.util
+jest.mock('../utils/correlation-id.util', () => ({
+  generateCorrelationId: jest.fn().mockReturnValue('test-correlation-id')
+}));
+
 // Mock the openid-client module which includes the passport strategy in v5.x
 jest.mock('openid-client', () => {
   // Create a TokenSet class to match openid-client v5.x interface
