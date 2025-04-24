@@ -87,7 +87,7 @@
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.1",
     "ms": "^2.1.3",
-    "openid-client": "^6.4.2",
+    "openid-client": "5.7.1",
     "passport": "^0.7.0",
     "passport-github": "^1.1.0",
     "passport-gitlab2": "^5.0.0",

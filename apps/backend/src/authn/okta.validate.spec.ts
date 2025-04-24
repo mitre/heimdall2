@@ -5,6 +5,9 @@ import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 import {UnauthorizedException} from '@nestjs/common';
 
+// Set fake timers to avoid hanging promises
+jest.useFakeTimers();
+
 // Create a simple version of the validate function to test the logic
 async function validateUser(
   authnService: AuthnService,
@@ -42,6 +45,12 @@ async function validateUser(
 describe('Okta User Validation', () => {
   let authnService: AuthnService;
   let logger: {log: jest.Mock; error: jest.Mock; warn: jest.Mock};
+  
+  // Clean up after tests
+  afterAll(() => {
+    jest.restoreAllMocks();
+    jest.useRealTimers();
+  });
 
   beforeEach(async () => {
     // Create mocks for dependencies

@@ -623,6 +623,8 @@ OKTA_FAMILY_NAME_CLAIM=last_name
 
 For more detailed information about the Okta implementation, please refer to the [Okta OpenID Client Documentation](docs/okta/okta-openid-client-documentation.md).
 
+**Note on Implementation**: Heimdall uses openid-client v5.7.1 for Okta authentication, which was chosen for its compatibility with CommonJS modules while maintaining all critical security features (PKCE, state parameter validation). This provides better stability across different environments without sacrificing security.
+
 ### Issues and Support
 
 Please feel free to contact us by **opening an issue** on the issue board or at [saf@groups.mitre.org](mailto:saf@groups.mitre.org) should you have any suggestions, questions or issues. If you have more general questions about MITRE's open source contributions, please contact us at [opensource@mitre.org](mailto:opensource@mitre.org).

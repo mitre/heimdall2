@@ -25,11 +25,14 @@ Our implementation uses a hybrid authentication approach with `openid-client` fo
 
 ## Technology Stack Details
 
-1. **openid-client v6.4.2**:
+1. **openid-client v5.7.1**:
    - Modern, standards-compliant OIDC implementation
    - Supports advanced security features like PKCE
    - Uses functional approach rather than class-based
    - Certified OpenID Connect implementation
+   - Compatible with CommonJS module system
+   
+   > **Note**: We deliberately use v5.7.1 instead of v6.x to avoid ESM compatibility issues with NestJS and CI environments. During implementation, we encountered a runtime error in the CI environment with v6.x due to its ESM-only nature, which caused conflicts with NestJS's CommonJS structure. After evaluating multiple approaches (complex runtime imports, Node.js experimental features, or downgrading), we determined that downgrading to v5.7.1 provided the best balance of compatibility and security. This version maintains all core security features (PKCE, state validation) while avoiding the module system incompatibilities. Import paths are also simplified with v5.x as Strategy is exported directly from the main module rather than a separate passport subdirectory.
 
 2. **NestJS Passport Integration**:
    - Uses PassportStrategy adapter pattern

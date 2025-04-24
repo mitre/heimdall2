@@ -5,8 +5,16 @@
  * This tests the core authentication logic without TypeScript type issues
  */
 
+// Set fake timers to avoid hanging promises
+jest.useFakeTimers();
+
 // Test the validation logic
 describe('Okta Authentication Logic', () => {
+  // Clean up mocks and timers after tests
+  afterAll(() => {
+    jest.restoreAllMocks();
+    jest.useRealTimers();
+  });
   // Mock dependencies
   const mockLogger = {
     log: jest.fn(),

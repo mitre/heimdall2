@@ -29,11 +29,12 @@ This PR implements a more robust Okta authentication strategy using the `openid-
 - Improved logging throughout authentication flow
 
 ## Files Modified
-1. `/apps/backend/package.json` - Added openid-client dependency
+1. `/apps/backend/package.json` - Added openid-client v5.7.1 dependency
 2. `/apps/backend/src/authn/okta.strategy.ts` - Complete rewrite using openid-client
 3. `/apps/backend/src/authn/authn.controller.ts` - Updated with better logging
 4. `/apps/backend/src/filters/authentication-exception.filter.ts` - Enhanced error handling
 5. `/apps/backend/src/main.ts` - Improved session configuration
+6. `/apps/backend/src/authn/okta.*.spec.ts` - Updated test files for v5.7.1 compatibility
 
 ## Testing
 - Unit tests for the Okta strategy have been updated
@@ -50,7 +51,9 @@ The implementation requires the same environment variables as before:
 ## Implementation Details
 The core issue addressed is that the original implementation using passport-openidconnect was failing during the first authentication attempt, likely due to issues with OpenID Connect state parameter handling and session management.
 
-The key insight of our solution is to use the more robust openid-client library specifically for Okta authentication, while maintaining compatibility with other authentication methods that use Passport.
+The key insight of our solution is to use the more robust openid-client library (v5.7.1) specifically for Okta authentication, while maintaining compatibility with other authentication methods that use Passport.
+
+**Note on Package Selection**: We deliberately chose openid-client v5.7.1 instead of the latest v6.x. This decision was made after encountering ESM compatibility issues in the CI environment with v6.x, which is ESM-only and conflicts with NestJS's CommonJS structure. Version 5.7.1 provides all the necessary security features while avoiding module system incompatibilities.
 
 Key technical components:
 

@@ -4,6 +4,9 @@ import {AuthnService} from './authn.service';
 import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
 
+// Set fake timers to avoid hanging promises
+jest.useFakeTimers();
+
 // Mock AuthGuard and other guards
 jest.mock('@nestjs/passport', () => {
   return {
@@ -41,6 +44,12 @@ describe('AuthnController - Okta Integration', () => {
   let controller: AuthnController;
   let authnService: AuthnService;
   let configService: ConfigService;
+  
+  // Clean up after tests
+  afterAll(() => {
+    jest.restoreAllMocks();
+    jest.useRealTimers();
+  });
 
   beforeEach(async () => {
     const mockAuthnService = {

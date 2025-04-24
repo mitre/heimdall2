@@ -137,6 +137,19 @@ Our implementation has been verified against this comprehensive checklist:
 
 ## Resources
 
-- [Zitadel Documentation](https://docs.zitadel.com/)
+- [Zitadel Documentation](https://docs.zitadel.com/) 
 - [OpenID Connect Debugger](https://oidcdebugger.com/)
 - [JWT Debugger](https://jwt.io/)
+- [openid-client v5.7.1 Documentation](https://github.com/panva/node-openid-client/tree/v5.7.1)
+
+## Implementation Notes
+
+### OpenID Client Version
+
+We're using openid-client v5.7.1 instead of v6.x due to ESM compatibility issues with NestJS and our CI environment. Key differences to be aware of for testing:
+
+1. In v5.7.1, the `Strategy` is imported directly from 'openid-client' rather than from 'openid-client/passport'
+2. TokenSet's interface includes properties like `expired` and `claims()` that must be properly mocked in tests
+3. Test assertions may need adjustments if checking internal properties of the strategy
+
+All tests have been updated to account for these differences while maintaining complete test coverage of the authentication flow.

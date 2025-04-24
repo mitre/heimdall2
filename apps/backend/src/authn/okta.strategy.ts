@@ -5,12 +5,8 @@ import {
   UnauthorizedException
 } from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
-// We use dynamic imports to avoid TypeScript issues with the openid-client module
-// and we'll use any types to avoid compatibility problems
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TokenSet = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type UserInfoResponse = any;
+// In openid-client v5.x, Strategy is exported from the main module, not a separate passport directory
+import {Issuer, Strategy, TokenSet, UserinfoResponse} from 'openid-client';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
@@ -18,20 +14,14 @@ import {AuthnService} from './authn.service';
 const CONTEXT_INIT = 'OktaStrategy.onModuleInit';
 const CONTEXT_VALIDATE = 'OktaStrategy.validate';
 
-// Import the Passport integration directly
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const {Strategy} = require('openid-client/passport');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const {Issuer} = require('openid-client');
-
 @Injectable()
 export class OktaStrategy
   extends PassportStrategy(Strategy, 'okta')
   implements OnModuleInit
 {
   private readonly logger = new Logger(OktaStrategy.name);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private client: any = null; // Using any until we fix all type issues
+  // Client type from openid-client package
+  private client: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   constructor(
     private readonly authnService: AuthnService,
@@ -97,10 +87,11 @@ export class OktaStrategy
       });
 
       // Discover OpenID Connect endpoints with configurable timeout
-      let oktaIssuer;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let oktaIssuer: Issuer<any>;
       try {
         // Use Promise.race to implement timeout
-        oktaIssuer = await Promise.race([
+        const raceResult = await Promise.race([
           Issuer.discover(issuerUrl),
           new Promise((_, reject) =>
             setTimeout(
@@ -109,6 +100,10 @@ export class OktaStrategy
             )
           )
         ]);
+
+        // Cast the result to Issuer type
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        oktaIssuer = raceResult as Issuer<any>;
       } catch (discoveryError) {
         this.logger.error(`OIDC discovery failed: ${discoveryError.message}`, {
           context: CONTEXT_INIT,
@@ -198,7 +193,7 @@ export class OktaStrategy
    * Validate the user from the TokenSet and Userinfo
    * This is the verify callback function for passport-openid-client
    */
-  async validate(tokenSet: TokenSet, userinfo: UserInfoResponse) {
+  async validate(tokenSet: TokenSet, userinfo: UserinfoResponse) {
     // Import the utility function for generating correlation IDs
     const {generateCorrelationId} = await import(
       '../utils/correlation-id.util'
