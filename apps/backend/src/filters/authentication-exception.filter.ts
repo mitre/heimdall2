@@ -65,7 +65,18 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       );
     }
 
-    // Handle state verification error - a common issue with OIDC authentication
+    // SECURITY: Handle state verification error - a critical security check for CSRF protection
+    // The state parameter is a security mechanism required by the OpenID Connect specification
+    // It protects against cross-site request forgery (CSRF) attacks during authentication
+    // 
+    // How state validation works:
+    // 1. During authorization request, a random state value is generated and stored in the session
+    // 2. This state is included in the redirect to the identity provider
+    // 3. The identity provider returns this state parameter unchanged in the callback
+    // 4. The openid-client library compares the returned state with the one stored in session
+    // 5. If they don't match, it indicates a potential CSRF attack and this error is thrown
+    //
+    // This handler specifically catches state validation failures and restarts the authentication flow
     if (
       this.authenticationType &&
       _.get(request, 'authInfo.message') ===
@@ -78,7 +89,8 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       // Clear all auth-related cookies to start with a clean slate
       this.clearAuthCookies(response);
 
-      // Redirect to auth entry point - using 302 (temporary) redirect
+      // Redirect to auth entry point - using 302 (temporary) redirect 
+      // to restart the authentication flow with fresh state
       return response.redirect(302, `/authn/${this.authenticationType}`);
     }
 

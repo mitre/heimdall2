@@ -12,10 +12,10 @@ This PR implements a more robust Okta authentication strategy using the `openid-
 - Enhanced validation and error handling
 
 ### 2. Improved Authentication Exception Filter
-- Added correlation IDs for tracking authentication errors
+- Added cryptographically secure correlation IDs (UUID v4) for tracking authentication errors
 - Implemented cookie clearing to prevent cascading errors
 - Enhanced error reporting with more user-friendly messages
-- Added structured logging for better debugging
+- Added structured logging with contextual information for better debugging
 
 ### 3. Enhanced Session Management
 - Fixed session middleware configuration
@@ -63,5 +63,9 @@ Key technical components:
 4. **Session Configuration**: We improved the session middleware configuration with better cookie settings and explicit passport serialization.
 
 5. **Error Recovery**: We implemented cookie clearing on authentication failures to ensure a clean start for subsequent attempts.
+
+6. **Secure Correlation ID Generation**: We implemented a utility module for generating cryptographically secure correlation IDs using UUID v4, replacing insecure random number generation used previously.
+
+7. **Code Quality Improvements**: We addressed numerous code quality issues detected by SonarCloud, including replacing logical OR with nullish coalescing for safer type handling, and eliminating unused imports.
 
 By combining these approaches, we've created a robust hybrid solution that addresses the authentication issues without requiring a complete rewrite of the authentication system.

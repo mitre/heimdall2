@@ -43,7 +43,13 @@ export class OktaStrategy
       client: null, // Will be set during onModuleInit
       params: {scope},
       passReqToCallback, // Whether to include request in callback (useful for capturing headers/IP)
-      usePKCE // Use PKCE for more security (Proof Key for Code Exchange)
+      usePKCE, // Use PKCE for more security (Proof Key for Code Exchange)
+      
+      // SECURITY: State parameter is automatically generated and validated by the openid-client library
+      // During the authorization request, a random state value is generated and stored in the session
+      // When the callback is received, the state in the request is compared with the stored state
+      // This prevents CSRF attacks where an attacker could forge a authentication callback
+      // If state validation fails, the AuthenticationExceptionFilter will handle the error and restart the flow
     });
   }
 

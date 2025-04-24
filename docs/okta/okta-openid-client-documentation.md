@@ -216,13 +216,14 @@ Our implementation uses a hybrid authentication approach with `openid-client` fo
 
 1. **Security**:
    - PKCE implementation is essential for security (already implemented)
+   - State parameter validation for CSRF protection (already implemented)
    - Proper token validation
    - Email verification checks
    - Secure cookie handling based on environment
 
 2. **Error Handling**:
    - Graceful handling of authentication failures
-   - Proper logging with context objects and correlation IDs
+   - Proper logging with context objects and cryptographically secure correlation IDs
    - User-friendly error redirection
    - Configurable retry mechanisms for discovery
 
@@ -268,6 +269,34 @@ Our implementation uses a hybrid authentication approach with `openid-client` fo
    - [mock-oidc-provider](https://github.com/Soluto/oidc-server-mock) - For OIDC server mocking
    - [jest-openid-client](https://www.npmjs.com/package/jest-openid-client) - For Jest testing with openid-client
    - [nock](https://github.com/nock/nock) - For HTTP request mocking
+
+## Security Features
+
+Our implementation includes several security enhancements and best practices:
+
+1. **Cryptographically Secure Correlation IDs**:
+   - All correlation IDs are generated using UUID v4 for strong randomness
+   - Implemented in the `utils/correlation-id.util.ts` utility module
+   - Used consistently throughout the authentication flow for tracing and debugging
+   - Replaces insecure pseudo-random number generation based on Math.random()
+
+2. **PKCE Flow**:
+   - Enabled by default and configurable via environment variables
+   - Provides enhanced protection against authorization code interception attacks
+
+3. **CSRF Protection with State Parameter**:
+   - State parameter validation is implemented as required by the OpenID Connect specification
+   - During authorization request, a cryptographically secure random state value is generated and stored in session
+   - The state is included in the redirect to Okta and returned in the callback
+   - Implementation validates that the returned state matches the one stored in session
+   - If validation fails, the authentication flow is restarted with a clean session
+   - Prevents attackers from forging authentication callbacks
+
+4. **Proper Cookie Security**:
+   - Configurable SameSite attributes
+   - Secure flags in production environments
+   - HTTPS-only cookies as a security best practice
+   - Configurable expiration timeframes
 
 ## Environment Variables and Configuration
 
