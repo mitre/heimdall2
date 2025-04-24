@@ -215,8 +215,10 @@ export class AuthnController {
     }
   ): Promise<void> {
     // Import the utility function for generating correlation IDs
-    const {generateCorrelationId} = await import('../utils/correlation-id.util');
-    
+    const {generateCorrelationId} = await import(
+      '../utils/correlation-id.util'
+    );
+
     // Generate correlation ID for this session setup
     const correlationId = generateCorrelationId('session');
 

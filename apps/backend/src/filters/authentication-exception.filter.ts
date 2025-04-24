@@ -1,7 +1,5 @@
 import {ArgumentsHost, Catch, ExceptionFilter, Logger} from '@nestjs/common';
 import * as _ from 'lodash';
-// This import is used at line 17 - ignore false positives from static analysis tools
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {v4 as uuidv4} from 'uuid';
 import {ConfigService} from '../config/config.service';
 
@@ -68,7 +66,7 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
     // SECURITY: Handle state verification error - a critical security check for CSRF protection
     // The state parameter is a security mechanism required by the OpenID Connect specification
     // It protects against cross-site request forgery (CSRF) attacks during authentication
-    // 
+    //
     // How state validation works:
     // 1. During authorization request, a random state value is generated and stored in the session
     // 2. This state is included in the redirect to the identity provider
@@ -89,7 +87,7 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       // Clear all auth-related cookies to start with a clean slate
       this.clearAuthCookies(response);
 
-      // Redirect to auth entry point - using 302 (temporary) redirect 
+      // Redirect to auth entry point - using 302 (temporary) redirect
       // to restart the authentication flow with fresh state
       return response.redirect(302, `/authn/${this.authenticationType}`);
     }
@@ -145,8 +143,7 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
   private clearAuthCookies(response: {
     clearCookie: (name: string) => void;
   }): void {
-    // Import uuid
-    const {v4: uuidv4} = require('uuid');
+    // Generate a correlation ID for this operation
     const clearingCorrelationId = uuidv4();
 
     // Clear session cookie

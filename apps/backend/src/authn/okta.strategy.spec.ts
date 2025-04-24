@@ -341,7 +341,7 @@ describe('OktaStrategy', () => {
       redirect: jest.fn(),
       cookie: jest.fn()
     };
-    
+
     beforeEach(() => {
       // Reset mocks between tests
       mockResponse.redirect.mockClear();
