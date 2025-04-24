@@ -133,6 +133,10 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
   private clearAuthCookies(response: {
     clearCookie: (name: string) => void;
   }): void {
+    // Import uuid
+    const {v4: uuidv4} = require('uuid');
+    const clearingCorrelationId = uuidv4();
+
     // Clear session cookie
     response.clearCookie('connect.sid');
 
@@ -148,9 +152,7 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
     this.logger.debug('Cleared authentication cookies', {
       context: 'AuthenticationExceptionFilter.clearAuthCookies',
       authenticationType: this.authenticationType,
-      correlationId:
-        new Date().getTime().toString(36) +
-        Math.random().toString(36).substring(2)
+      correlationId: clearingCorrelationId
     });
   }
 }

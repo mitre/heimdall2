@@ -178,8 +178,11 @@ export class OktaStrategy
    * This is the verify callback function for passport-openid-client
    */
   async validate(tokenSet: TokenEndpointResponse, userinfo: UserInfoResponse) {
+    // Import the utility function for generating correlation IDs
+    const {generateCorrelationId} = await import('../utils/correlation-id.util');
+    
     // Generate correlation ID for tracing this validation process
-    const correlationId = `okta_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    const correlationId = generateCorrelationId('okta');
 
     this.logger.verbose(`Validating Okta user`, {
       email: userinfo.email,

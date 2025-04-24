@@ -1,8 +1,5 @@
 import {AuthenticationExceptionFilter} from './authentication-exception.filter';
 import {ArgumentsHost} from '@nestjs/common';
-// This import is mocked below, but we need it for type information
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {v4 as uuidv4} from 'uuid';
 
 // Mock uuid
 jest.mock('uuid', () => ({

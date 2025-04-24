@@ -214,8 +214,11 @@ export class AuthnController {
       accessToken: string;
     }
   ): Promise<void> {
+    // Import the utility function for generating correlation IDs
+    const {generateCorrelationId} = await import('../utils/correlation-id.util');
+    
     // Generate correlation ID for this session setup
-    const correlationId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
+    const correlationId = generateCorrelationId('session');
 
     this.logger.debug(`Setting session cookies`, {
       userID: session.userID,
