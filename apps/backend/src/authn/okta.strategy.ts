@@ -174,8 +174,18 @@ export class OktaStrategy
           context: CONTEXT_INIT
         }
       );
-      // Continue running even if Okta strategy initialization fails
-      // This allows the application to start and other auth methods to work
+
+      // NOTE: We intentionally do not rethrow the error here to allow graceful degradation
+      // This is a deliberate design choice to prevent Okta initialization failures from
+      // blocking the entire application startup.
+      //
+      // Benefits of this approach:
+      // 1. Other authentication methods can still function properly
+      // 2. The application can start and operate in a degraded state
+      // 3. Administrators have time to fix Okta configuration issues
+      //
+      // When a user attempts to use Okta authentication, they will receive a proper
+      // error message, and the auth exception filter will handle the failure gracefully
     }
   }
 

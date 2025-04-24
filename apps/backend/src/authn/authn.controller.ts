@@ -241,7 +241,14 @@ export class AuthnController {
 
     // Use configurable session max age (default 24 hours)
     const maxAgeStr = this.configService.get('OKTA_SESSION_MAXAGE');
-    const maxAge = maxAgeStr ? parseInt(maxAgeStr, 10) : 24 * 60 * 60 * 1000; // Default to 24 hours
+    let maxAge = maxAgeStr ? parseInt(maxAgeStr, 10) : 24 * 60 * 60 * 1000; // Default to 24 hours
+    if (Number.isNaN(maxAge)) {
+      this.logger.warn('Invalid OKTA_SESSION_MAXAGE value, using default', {
+        context: CONTEXT_SESSION_COOKIES,
+        receivedValue: maxAgeStr
+      });
+      maxAge = 24 * 60 * 60 * 1000; // Fallback to default value if parseInt result is NaN
+    }
 
     // Get configurable sameSite setting
     const sameSite = this.configService.get('OKTA_COOKIE_SAMESITE') ?? 'lax';
