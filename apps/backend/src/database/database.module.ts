@@ -35,7 +35,7 @@ function getSynchronize(configService: ConfigService): boolean {
   }
 }
 
-function sanitize(fields: string[], values?: string[]): string[] {
+export function sanitize(fields: string[], values?: string[]): string[] {
   return (
     values?.map((value, index) => {
       if (
