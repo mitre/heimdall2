@@ -26,7 +26,7 @@ export class ApiKeyService {
     target: User | Group,
     createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; name: string; apiKey: string}> {
-    const APIKeySecret = this.configService.get('API_KEY_SECRET') ?? '';
+    const APIKeySecret = this.configService.get('API_KEY_SECRET') || '';
     const newApiKey = new ApiKey({
       userId: target instanceof User ? target.id : undefined,
       groupId: target instanceof Group ? target.id : undefined,

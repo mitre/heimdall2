@@ -29,13 +29,13 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
   ) {
     super(
       {
-        issuer: configService.get('OIDC_ISSUER') ?? 'disabled',
+        issuer: configService.get('OIDC_ISSUER') || 'disabled',
         authorizationURL:
-          configService.get('OIDC_AUTHORIZATION_URL') ?? 'disabled',
-        tokenURL: configService.get('OIDC_TOKEN_URL') ?? 'disabled',
-        userInfoURL: configService.get('OIDC_USER_INFO_URL') ?? 'disabled',
-        clientID: configService.get('OIDC_CLIENTID') ?? 'disabled',
-        clientSecret: configService.get('OIDC_CLIENT_SECRET') ?? 'disabled',
+          configService.get('OIDC_AUTHORIZATION_URL') || 'disabled',
+        tokenURL: configService.get('OIDC_TOKEN_URL') || 'disabled',
+        userInfoURL: configService.get('OIDC_USER_INFO_URL') || 'disabled',
+        clientID: configService.get('OIDC_CLIENTID') || 'disabled',
+        clientSecret: configService.get('OIDC_CLIENT_SECRET') || 'disabled',
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc/callback`,
         scope: 'openid profile email'
       },
