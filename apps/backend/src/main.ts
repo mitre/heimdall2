@@ -28,19 +28,21 @@ async function bootstrap() {
 				path: '/authn/okta'
 			},
 			loginCallback: {
-				path: '/authn/okta/callback',
+				path: '/authn/okta_callback',
 				// failureRedirect: '/login',
 				handler: ((req, res, next) => {
 					console.log('okta login handler request successful before redirect');
 					console.log(JSON.stringify(req.userContext, null, 2));
 					console.log(req.isAuthenticated());
 					console.log(JSON.stringify(req.session, null, 2));
+					console.log(`path is ${req.path}`);
+					console.log(`url is ${req.url}`);
 					next();
 				}) as RequestHandler,
-				afterCallback: '/authn/okta/loggedin'
+				afterCallback: '/authn/okta_loggedin'
 			},
 			logout: {
-				path: '/authn/okta/logout'
+				path: '/authn/okta_logout'
 			},
 			logoutCallback: {
 				path: '/logout'
