@@ -34,7 +34,7 @@ async function bootstrap() {
 					console.log('okta login handler request successful before redirect');
 					console.log(JSON.stringify(req.userContext, null, 2));
 					console.log(req.isAuthenticated());
-					console.log(JSON.stringify(res, null, 2));
+					console.log(req.route);
 					next();
 				}) as RequestHandler,
 				afterCallback: '/authn/okta/loggedin'
