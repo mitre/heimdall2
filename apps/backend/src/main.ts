@@ -1,6 +1,6 @@
 import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
-import {json} from 'express';
+import {json, RequestHandler} from 'express';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
 import {AppModule} from './app.module';
@@ -9,11 +9,34 @@ import {generateDefault} from './token/token.providers';
 import session = require('express-session');
 import postgresSessionStore = require('connect-pg-simple');
 import helmet from 'helmet';
-import passport = require('passport');
+// import passport = require('passport');
+import {ExpressOIDC} from '@okta/oidc-middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+	const oktaTenant = `${configService.get('OKTA_TENANT')?.startsWith('/') ? '' : '/'}${configService.get('OKTA_TENANT')}`;
+	const oidc = new ExpressOIDC({
+		issuer: `https://${configService.get('OKTA_DOMAIN')}/oauth2${oktaTenant}`,
+		client_id: configService.get('OKTA_CLIENTID') ?? 'disabled',
+		client_secret: configService.get('OKTA_CLIENTSECRET') ?? 'disabled',
+		appBaseUrl: configService.get('EXTERNAL_URL') ?? 'disabled',
+		scope: 'openid email profile',
+		routes: {
+			login: {
+				path: '/okta'
+			},
+			loginCallback: {
+				path: '/okta/callback',
+				// failureRedirect: '/login',
+				handler: ((req, _res, next) => {
+					console.log('okta login handler request successful before redirect');
+					console.log(JSON.stringify(req, null, 2));
+					next();
+				}) as RequestHandler
+			}
+		}
+	});
   app.enableShutdownHooks();
   app.use(helmet());
   app.use(
@@ -48,9 +71,9 @@ async function bootstrap() {
     })
   );
   app.use(json({limit: '50mb'}));
-  app.use(passport.initialize());
+  // app.use(passport.initialize());
   // Sessions are only used for oauth callbacks
-  if (configService.enabledOauthStrategies().length) {
+  // if (configService.enabledOauthStrategies().length) {
     app.use(
       session({
         secret: generateDefault(),
@@ -68,15 +91,16 @@ async function bootstrap() {
           maxAge: 60 * 60,
           secure: configService.isInProductionMode()
         }, // 1 hour
-        saveUninitialized: true,
+        saveUninitialized: false,
         resave: false
       })
     );
     if (configService.isInProductionMode()) {
       app.getHttpAdapter().getInstance().set('trust proxy', true);
     }
-    app.use(passport.session());
-  }
+		app.use(oidc.router);
+    // app.use(passport.session());
+  // }
   app.use(
     '/authn/login',
     rateLimit({
@@ -112,6 +136,13 @@ async function bootstrap() {
     next();
   });
 
+	oidc.on('ready', async () => {
   await app.listen(configService.get('PORT') || 3000);
+	});
+
+	oidc.on('error', err => {
+		console.log('oidc error');
+		console.log(JSON.stringify(err, null, 2));
+	});
 }
 bootstrap();

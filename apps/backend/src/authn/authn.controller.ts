@@ -13,6 +13,7 @@ import {Request} from 'express';
 import {ConfigService} from '../config/config.service';
 import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
 import {LocalAuthGuard} from '../guards/local-auth.guard';
+import {OktaAuthGuard} from '../guards/okta-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
@@ -99,20 +100,32 @@ export class AuthnController {
   }
 
   @Get('okta')
-  @UseGuards(AuthGuard('okta'))
+  // @UseGuards(AuthGuard('okta'))
   @UseFilters(new AuthenticationExceptionFilter('okta'))
   async loginToOkta(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
-    return this.authnService.login(req.user as User);
+		console.log("I don't think this codeblock is even called");
+		return Promise.reject("unreachable code I think");
+    // return this.authnService.login(req.user as User);
   }
 
   @Get('okta/callback')
-  @UseGuards(AuthGuard('okta'))
+  @UseGuards(OktaAuthGuard)
   @UseFilters(new AuthenticationExceptionFilter('okta'))
   async getUserFromOkta(@Req() req: Request): Promise<void> {
-    const session = await this.authnService.login(req.user as User);
+		console.log("in the okta callback");
+		console.log(JSON.stringify(req, null, 2));
+		// nominally this is only called on success so we should have this data but i guess better defaults for if we're missing this data is something we should figure out or throw an error
+		const email_verified = req.userContext?.userinfo?.email_verified ?? false;
+		const email = req.userContext?.userinfo?.email ?? "not an email";
+		const given_name = req.userContext?.userinfo?.given_name ?? "Hello";
+		const family_name = req.userContext?.userinfo?.family_name ?? "World";
+		if (email_verified) {
+			const user = await this.authnService.validateOrCreateUser(email, given_name, family_name, 'okta');
+    const session = await this.authnService.login(user);
     await this.setSessionCookies(req, session);
+		}
   }
 
   @Get('oidc')
