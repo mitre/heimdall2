@@ -16,6 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
 	const oktaTenant = `${configService.get('OKTA_TENANT')?.startsWith('/') ? '' : '/'}${configService.get('OKTA_TENANT')}`;
+	console.log(`attempted issuer https://${configService.get('OKTA_DOMAIN')}/oauth2${oktaTenant}`);
 	const oidc = new ExpressOIDC({
 		issuer: `https://${configService.get('OKTA_DOMAIN')}/oauth2${oktaTenant}`,
 		client_id: configService.get('OKTA_CLIENTID') ?? 'disabled',
@@ -136,7 +137,10 @@ async function bootstrap() {
     next();
   });
 
+	console.log('end of bootstrap function');
+
 	oidc.on('ready', async () => {
+		console.log('enters oidc ready state');
   await app.listen(configService.get('PORT') || 3000);
 	});
 
