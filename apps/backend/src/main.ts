@@ -36,6 +36,12 @@ async function bootstrap() {
 					next();
 				}) as RequestHandler,
 				afterCallback: '/authn/okta/login'
+			},
+			logout: {
+				path: '/authn/okta/logout'
+			},
+			logoutCallback: {
+				path: '/logout'
 			}
 		}
 	});
