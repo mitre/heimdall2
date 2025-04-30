@@ -33,9 +33,10 @@ async function bootstrap() {
 				handler: ((req, _res, next) => {
 					console.log('okta login handler request successful before redirect');
 					console.log(JSON.stringify(req.userContext, null, 2));
+					console.log(req.isAuthenticated());
 					next();
 				}) as RequestHandler,
-				afterCallback: '/authn/okta/login'
+				afterCallback: '/authn/okta/loggedin'
 			},
 			logout: {
 				path: '/authn/okta/logout'
@@ -96,7 +97,7 @@ async function bootstrap() {
         }),
         proxy: configService.isInProductionMode() ? true : undefined,
         cookie: {
-          maxAge: 60 * 60,
+          maxAge: 60 * 60 * 1000,
           secure: configService.isInProductionMode()
         }, // 1 hour
         saveUninitialized: false,

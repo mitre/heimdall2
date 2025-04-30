@@ -110,7 +110,7 @@ export class AuthnController {
   //   // return this.authnService.login(req.user as User);
   // }
 
-  @Get('okta/login')
+  @Get('okta/loggedin')
   // @UseGuards(OktaAuthGuard)
   // @UseFilters(new AuthenticationExceptionFilter('okta'))
   async getUserFromOkta(@Req() req: Request): Promise<void> {
