@@ -115,7 +115,7 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter('okta'))
   async getUserFromOkta(@Req() req: Request): Promise<void> {
 		console.log("in the okta callback");
-		console.log(JSON.stringify(req, null, 2));
+		console.log(JSON.stringify(req.session, null, 2));
 		// nominally this is only called on success so we should have this data but i guess better defaults for if we're missing this data is something we should figure out or throw an error
 		const email_verified = req.userContext?.userinfo?.email_verified ?? false;
 		const email = req.userContext?.userinfo?.email ?? "not an email";

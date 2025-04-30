@@ -6,7 +6,7 @@ export class OktaAuthGuard implements CanActivate {
 	canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
 		console.log('in okta guard');
 		const request = context.switchToHttp().getRequest();
-		console.log(JSON.stringify(request, null, 2));
+		console.log(JSON.stringify(request.session, null, 2));
 		console.log(`is authenticated: ${request.isAuthenticated()}`);
 		return request.isAuthenticated();
 	}
