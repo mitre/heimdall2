@@ -1,6 +1,6 @@
 import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
-import {json} from 'express';
+import {json, RequestHandler} from 'express';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
 import {AppModule} from './app.module';
@@ -9,11 +9,46 @@ import {generateDefault} from './token/token.providers';
 import session = require('express-session');
 import postgresSessionStore = require('connect-pg-simple');
 import helmet from 'helmet';
-import passport = require('passport');
+// import passport = require('passport');
+import {ExpressOIDC} from '@okta/oidc-middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+	const oktaTenant = `${configService.get('OKTA_TENANT')?.startsWith('/') ? '' : '/'}${configService.get('OKTA_TENANT')}`;
+	console.log(`attempted issuer https://${configService.get('OKTA_DOMAIN')}/oauth2${oktaTenant}`);
+	const oidc = new ExpressOIDC({
+		issuer: `https://${configService.get('OKTA_DOMAIN')}/oauth2${oktaTenant}`,
+		client_id: configService.get('OKTA_CLIENTID') ?? 'disabled',
+		client_secret: configService.get('OKTA_CLIENTSECRET') ?? 'disabled',
+		appBaseUrl: configService.get('EXTERNAL_URL') ?? 'disabled',
+		scope: 'openid email profile',
+		routes: {
+			login: {
+				path: '/authn/okta'
+			},
+			loginCallback: {
+				path: '/authn/okta_callback',
+				// failureRedirect: '/login',
+				handler: ((req, res, next) => {
+					console.log('okta login handler request successful before redirect');
+					console.log(JSON.stringify(req.userContext, null, 2));
+					console.log(req.isAuthenticated());
+					console.log(JSON.stringify(req.session, null, 2));
+					console.log(`path is ${req.path}`);
+					console.log(`url is ${req.url}`);
+					next();
+				}) as RequestHandler,
+				afterCallback: '/authn/okta_loggedin'
+			},
+			logout: {
+				path: '/authn/okta_logout'
+			},
+			logoutCallback: {
+				path: '/logout'
+			}
+		}
+	});
   app.enableShutdownHooks();
   app.use(helmet());
   app.use(
@@ -48,9 +83,9 @@ async function bootstrap() {
     })
   );
   app.use(json({limit: '50mb'}));
-  app.use(passport.initialize());
+  // app.use(passport.initialize());
   // Sessions are only used for oauth callbacks
-  if (configService.enabledOauthStrategies().length) {
+  // if (configService.enabledOauthStrategies().length) {
     app.use(
       session({
         secret: generateDefault(),
@@ -65,18 +100,19 @@ async function bootstrap() {
         }),
         proxy: configService.isInProductionMode() ? true : undefined,
         cookie: {
-          maxAge: 60 * 60,
+          maxAge: 60 * 60 * 1000,
           secure: configService.isInProductionMode()
         }, // 1 hour
-        saveUninitialized: true,
+        saveUninitialized: false,
         resave: false
       })
     );
     if (configService.isInProductionMode()) {
       app.getHttpAdapter().getInstance().set('trust proxy', true);
     }
-    app.use(passport.session());
-  }
+		app.use(oidc.router);
+    // app.use(passport.session());
+  // }
   app.use(
     '/authn/login',
     rateLimit({
@@ -108,10 +144,25 @@ async function bootstrap() {
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((req: any, res: any, next: any) => {
-    console.log('Session:', req.session);
+    console.log('Session:', JSON.stringify(req.session, null, 2));
     next();
   });
 
+	oidc.router.use((req: any, res: any, next: any) => {
+    console.log('Session from OIDC middleware:', JSON.stringify(req.session, null, 2));
+    next();
+  });
+
+	console.log('end of bootstrap function');
+
+	oidc.on('ready', async () => {
+		console.log('enters oidc ready state');
   await app.listen(configService.get('PORT') || 3000);
+	});
+
+	oidc.on('error', err => {
+		console.log('oidc error');
+		console.log(JSON.stringify(err, null, 2));
+	});
 }
 bootstrap();
