@@ -11,7 +11,6 @@ import postgresSessionStore = require('connect-pg-simple');
 import helmet from 'helmet';
 // import passport = require('passport');
 import {ExpressOIDC} from '@okta/oidc-middleware';
-import {inspect} from 'node:util';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -35,8 +34,7 @@ async function bootstrap() {
 					console.log('okta login handler request successful before redirect');
 					console.log(JSON.stringify(req.userContext, null, 2));
 					console.log(req.isAuthenticated());
-					console.log(inspect(req, { showHidden: true, depth: null }));
-					console.log(inspect(res, { showHidden: true, depth: null }));
+					console.log(JSON.stringify(req.session, null, 2));
 					next();
 				}) as RequestHandler,
 				afterCallback: '/authn/okta/loggedin'
@@ -145,6 +143,11 @@ async function bootstrap() {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((req: any, res: any, next: any) => {
     console.log('Session:', JSON.stringify(req.session, null, 2));
+    next();
+  });
+
+	oidc.router.use((req: any, res: any, next: any) => {
+    console.log('Session from OIDC middleware:', JSON.stringify(req.session, null, 2));
     next();
   });
 

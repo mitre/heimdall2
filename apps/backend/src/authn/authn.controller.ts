@@ -111,8 +111,8 @@ export class AuthnController {
   // }
 
   @Get('okta/loggedin')
-  // @UseGuards(OktaAuthGuard)
-  // @UseFilters(new AuthenticationExceptionFilter('okta'))
+  @UseGuards(OktaAuthGuard)
+  @UseFilters(new AuthenticationExceptionFilter('okta'))
   async getUserFromOkta(@Req() req: Request): Promise<void> {
 		console.log("in the okta callback");
 		console.log(JSON.stringify(req, null, 2));
