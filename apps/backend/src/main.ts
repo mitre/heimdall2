@@ -32,7 +32,7 @@ async function bootstrap() {
 				// failureRedirect: '/login',
 				handler: ((req, _res, next) => {
 					console.log('okta login handler request successful before redirect');
-					console.log(JSON.stringify(req, null, 2));
+					console.log(JSON.stringify(req.userContext, null, 2));
 					next();
 				}) as RequestHandler
 			}
