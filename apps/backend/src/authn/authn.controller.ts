@@ -99,18 +99,18 @@ export class AuthnController {
     await this.setSessionCookies(req, session);
   }
 
-  @Get('okta')
-  // @UseGuards(AuthGuard('okta'))
-  @UseFilters(new AuthenticationExceptionFilter('okta'))
-  async loginToOkta(
-    @Req() req: Request
-  ): Promise<{userID: string; accessToken: string}> {
-		console.log("I don't think this codeblock is even called");
-		return Promise.reject("unreachable code I think");
-    // return this.authnService.login(req.user as User);
-  }
+  // @Get('okta')
+  // // @UseGuards(AuthGuard('okta'))
+  // @UseFilters(new AuthenticationExceptionFilter('okta'))
+  // async loginToOkta(
+  //   @Req() req: Request
+  // ): Promise<{userID: string; accessToken: string}> {
+	// 	console.log("I don't think this codeblock is even called");
+	// 	return Promise.reject("unreachable code I think");
+  //   // return this.authnService.login(req.user as User);
+  // }
 
-  @Get('okta/callback')
+  @Get('okta/login')
   @UseGuards(OktaAuthGuard)
   @UseFilters(new AuthenticationExceptionFilter('okta'))
   async getUserFromOkta(@Req() req: Request): Promise<void> {

@@ -34,7 +34,8 @@ async function bootstrap() {
 					console.log('okta login handler request successful before redirect');
 					console.log(JSON.stringify(req.userContext, null, 2));
 					next();
-				}) as RequestHandler
+				}) as RequestHandler,
+				afterCallback: '/authn/okta/login'
 			}
 		}
 	});
@@ -133,7 +134,7 @@ async function bootstrap() {
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((req: any, res: any, next: any) => {
-    console.log('Session:', req.session);
+    console.log('Session:', JSON.stringify(req.session, null, 2));
     next();
   });
 
