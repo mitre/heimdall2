@@ -11,7 +11,7 @@ import postgresSessionStore = require('connect-pg-simple');
 import helmet from 'helmet';
 // import passport = require('passport');
 import {ExpressOIDC} from '@okta/oidc-middleware';
-import {inspect} = require('node:util');
+import {inspect} from 'node:util';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
