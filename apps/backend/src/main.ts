@@ -65,10 +65,10 @@ async function bootstrap() {
         }),
         proxy: configService.isInProductionMode() ? true : undefined,
         cookie: {
-          maxAge: 60 * 60,
+          maxAge: 60 * 60 * 1000,
           secure: configService.isInProductionMode()
         }, // 1 hour
-        saveUninitialized: true,
+        saveUninitialized: false,
         resave: false
       })
     );
@@ -108,7 +108,7 @@ async function bootstrap() {
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((req: any, res: any, next: any) => {
-    console.log('Session:', req.session);
+    console.log('Session:', JSON.stringify(req.session, null, 2));
     next();
   });
 
