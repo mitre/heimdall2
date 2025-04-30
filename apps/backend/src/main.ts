@@ -25,10 +25,10 @@ async function bootstrap() {
 		scope: 'openid email profile',
 		routes: {
 			login: {
-				path: '/okta'
+				path: '/authn/okta'
 			},
 			loginCallback: {
-				path: '/okta/callback',
+				path: '/authn/okta/callback',
 				// failureRedirect: '/login',
 				handler: ((req, _res, next) => {
 					console.log('okta login handler request successful before redirect');
