@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  zitadel:
+    image: ghcr.io/zitadel/zitadel:latest
+    container_name: zitadel-heimdall-test
+    command: start --masterkey "MasterkeyNeedsToHave32Characters" --tlsMode disabled
+    environment:
+      - ZITADEL_DATABASE_POSTGRES_HOST=database
+      - ZITADEL_DATABASE_POSTGRES_PORT=5432
+      - ZITADEL_DATABASE_POSTGRES_USER=zitadel
+      - ZITADEL_DATABASE_POSTGRES_PASSWORD=zitadel
+      - ZITADEL_DATABASE_POSTGRES_DATABASE=zitadel
+      - ZITADEL_EXTERNALSECURE=false
+      - ZITADEL_DEFAULTINSTANCE_SETUP_DONE=false
+      - ZITADEL_DEFAULTINSTANCE_SETUP_USERNAMEORGOWNER=admin
+      - ZITADEL_DEFAULTINSTANCE_SETUP_PASSWORDORGOWNER=Password1!
+      - ZITADEL_DEFAULTINSTANCE_SETUP_EMAILORGOWNER=admin@example.com
+      - ZITADEL_EXTERNALSECURE=false
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - heimdall-test
+
+  database:
+    image: postgres:15
+    container_name: database-zitadel-test
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=zitadel
+      - POSTGRES_PASSWORD=zitadel
+      - POSTGRES_DB=zitadel
+    volumes:
+      - zitadel-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zitadel"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - heimdall-test
+
+  heimdall-backend:
+    image: node:20-alpine
+    container_name: heimdall-backend-test
+    working_dir: /app
+    command: >
+      sh -c "cd /app &&
+             npm run start:dev"
+    volumes:
+      - ./apps/backend:/app
+      - ./node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+      - EXTERNAL_URL=http://localhost:3000
+      - DATABASE_HOST=heimdall-db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=heimdall
+      - OKTA_DOMAIN=zitadel-heimdall-test:8080
+      - OKTA_CLIENTID=clientid
+      - OKTA_CLIENTSECRET=clientsecret
+    ports:
+      - "3000:3000"
+    depends_on:
+      - heimdall-db
+      - zitadel
+    networks:
+      - heimdall-test
+
+  heimdall-db:
+    image: postgres:13
+    container_name: heimdall-db-test
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=heimdall
+    ports:
+      - "5432:5432"
+    volumes:
+      - heimdall-db:/var/lib/postgresql/data
+    networks:
+      - heimdall-test
+
+volumes:
+  zitadel-db:
+  heimdall-db:
+
+networks:
+  heimdall-test:
+    driver: bridge

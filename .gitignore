@@ -69,3 +69,8 @@ certs/*.pem
 
 # Database Content
 data/*
+
+# Session and recovery files for Claude Code
+recovery-prompt.md
+session.md
+CLAUDE.md
