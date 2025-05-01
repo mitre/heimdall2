@@ -108,6 +108,7 @@ async function bootstrap() {
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((req: any, res: any, next: any) => {
+    console.log('Url:', req.url);
     console.log('Session:', JSON.stringify(req.session, null, 2));
     next();
   });
