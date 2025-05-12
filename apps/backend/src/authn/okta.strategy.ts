@@ -24,16 +24,19 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
   ) {
     super(
       {
+	      // TODO: if the more specific var is passed in then use it otherwise try to provide a default
         issuer: configService.get('OKTA_ISSUER_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}`,
-        authorizationURL: configService.get('OKTA_AUTHORIZATION_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/authorize`,
+        authorizationURL:
+          configService.get('OKTA_AUTHORIZATION_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/authorize`,
         tokenURL: configService.get('OKTA_TOKEN_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/token`,
-        userInfoURL: configService.get('OKTA_USERINFO_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/userinfo`,
+        userInfoURL: configService.get('OKTA_USER_INFO_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/userinfo`,
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
-        callbackURL: `${configService.get('EXTERNAL_URL') || 'disabled'}/authn/okta_callback`,
+        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/okta_callback`,
         scope: ['openid', 'email', 'profile'],
         skipUserProfile: false
       },
+      // Okta has no concept of a 'verified' email - the account has to have an email address associated with it - which is why we can use the 3-arity function since we don't need access to the underlying JSON response
       async function (
         _issuer: string,
         profile: Profile,
@@ -51,7 +54,9 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
           );
           return done(null, user);
         }
-        throw new UnauthorizedException('Incorrect Username or Password');
+        return done(
+          new UnauthorizedException('Incorrect Username or Password')
+        );
       }
     );
   }
