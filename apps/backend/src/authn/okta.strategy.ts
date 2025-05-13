@@ -24,12 +24,10 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
   ) {
     super(
       {
-	      // TODO: if the more specific var is passed in then use it otherwise try to provide a default
-        issuer: configService.get('OKTA_ISSUER_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}`,
-        authorizationURL:
-          configService.get('OKTA_AUTHORIZATION_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/authorize`,
-        tokenURL: configService.get('OKTA_TOKEN_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/token`,
-        userInfoURL: configService.get('OKTA_USER_INFO_URL') || 'disabled', // `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/userinfo`,
+        issuer: configService.get('OKTA_ISSUER_URL') || `https://${configService.get('OKTA_DOMAIN')}` || 'disabled',
+        authorizationURL: configService.get('OKTA_AUTHORIZATION_URL') || `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/authorize`,
+        tokenURL: configService.get('OKTA_TOKEN_URL') || `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/token`,
+        userInfoURL: configService.get('OKTA_USER_INFO_URL') || `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/userinfo`,
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/okta_callback`,
