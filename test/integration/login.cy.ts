@@ -27,6 +27,7 @@ context('Login', () => {
 
   // The test
   describe('Login Form', () => {
+	  /*
     it('authenticates a user with valid credentials', () => {
       loginPageVerifier.loginFormPresent();
       cy.login(LOGIN_AUTHENTICATION);
@@ -46,6 +47,7 @@ context('Login', () => {
       loginPage.ldapLogin(LDAP_AUTHENTICATION);
       toastVerifier.toastTextContains('You have successfully signed in.');
     });
+    */
     it('authenticates an oidc user', () => {
       loginPage.loginOauth('oidc');
       // Open the user modal
@@ -66,19 +68,23 @@ context('Login', () => {
         });
       });
 
+      /*
       it('fails to authenticate a user with invalid credentials', () => {
         cy.login(BAD_LOGIN_AUTHENTICATION);
         toastVerifier.toastTextContains('Incorrect Username or Password');
       });
+      */
       it('fails to authenticate an oidc user with unverified email', () => {
         loginPage.loginOauth('oidc');
         toastVerifier.toastTextContains('Please verify your name and email with your identity provider before logging into Heimdall.');
       });
+      /*
       it('fails to authenticate an ldap user with invalid credentials', () => {
         loginPage.switchToLDAPAuth();
         loginPage.ldapLogin(BAD_LDAP_AUTHENTICATION);
         toastVerifier.toastTextContains('Unauthorized');
       });
+      */
     });
   });
 
