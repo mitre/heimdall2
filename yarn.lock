@@ -2165,9 +2165,9 @@
 
 "@govtechsg/passport-openidconnect@https://github.com/Amndeep7/passport-openidconnect#logging":
   version "1.0.3"
-  resolved "https://github.com/Amndeep7/passport-openidconnect#123718d391772e5519caad70a5c2aeefb0bdc659"
+  resolved "https://github.com/Amndeep7/passport-openidconnect#e26358baa762ce405917133035504a2655245e45"
   dependencies:
-    oauth "^0.10.0"
+    oauth "github:Amndeep7/node-oauth#logging"
     passport-strategy "^1.0.0"
 
 "@graphql-tools/merge@8.3.1":
@@ -16350,10 +16350,9 @@ oauth@0.9.x:
   resolved "https://registry.npmjs.org/oauth/-/oauth-0.9.15.tgz#bd1fefaf686c96b75475aed5196412ff60cfb9c1"
   integrity sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==
 
-oauth@^0.10.0:
+"oauth@github:Amndeep7/node-oauth#logging":
   version "0.10.2"
-  resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.10.2.tgz#fd7139b0ce1a1037bd11fa4e236afc588132418c"
-  integrity sha512-JtFnB+8nxDEXgNyniwz573xxbKSOu3R8D40xQKqcjwJ2CDkYqUDI53o6IuzDJBx60Z8VKCm271+t8iFjakrl8Q==
+  resolved "https://codeload.github.com/Amndeep7/node-oauth/tar.gz/c4bba6ac1ccd6c2ee4a92954463c5131557c194f"
 
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
