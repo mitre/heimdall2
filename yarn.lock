@@ -2165,7 +2165,7 @@
 
 "@govtechsg/passport-openidconnect@https://github.com/Amndeep7/passport-openidconnect#logging":
   version "1.0.3"
-  resolved "https://github.com/Amndeep7/passport-openidconnect#e26358baa762ce405917133035504a2655245e45"
+  resolved "https://github.com/Amndeep7/passport-openidconnect#c4ebb2d4c39c2925d61afbe95ef73e37031c1132"
   dependencies:
     oauth "github:Amndeep7/node-oauth#logging"
     passport-strategy "^1.0.0"
@@ -16352,7 +16352,7 @@ oauth@0.9.x:
 
 "oauth@github:Amndeep7/node-oauth#logging":
   version "0.10.2"
-  resolved "https://codeload.github.com/Amndeep7/node-oauth/tar.gz/c4bba6ac1ccd6c2ee4a92954463c5131557c194f"
+  resolved "https://codeload.github.com/Amndeep7/node-oauth/tar.gz/03b403aff4182b41c3dcf6fc91b2fe466c7eebe0"
 
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
