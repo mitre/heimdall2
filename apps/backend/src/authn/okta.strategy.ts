@@ -50,7 +50,7 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
-        console.log('profile object');
+        console.log('profile object - in oktastrategy file');
         console.log(JSON.stringify(profile, null, 2));
         if (profile.emails.length > 0 && profile.emails[0].value) {
           const user = await authnService.validateOrCreateUser(
