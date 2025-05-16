@@ -83,6 +83,7 @@
     "express-rate-limit": "^7.0.0",
     "express-session": "^1.17.1",
     "helmet": "^8.0.0",
+    "https-proxy-agent": "^7.0.6",
     "js-levenshtein": "^1.1.6",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.1",
