@@ -104,26 +104,31 @@ export class AuthnController {
   async loginToOkta(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
+    console.log('in the okta login func');
+    console.log(JSON.stringify(req.session, null, 2));
     return this.authnService.login(req.user as User);
   }
 
-  @Get('okta/callback')
+  @Get('okta_callback')
   @UseGuards(AuthGuard('okta'))
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromOkta(@Req() req: Request): Promise<void> {
+    console.log('in the okta login callback func');
+    console.log(JSON.stringify(req.session, null, 2));
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
   }
 
   @Get('oidc')
   @UseGuards(AuthGuard('oidc'))
+  @UseFilters(new AuthenticationExceptionFilter())
   async loginToOIDC(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
   }
 
-  @Get('oidc/callback')
+  @Get('oidc_callback')
   @UseGuards(AuthGuard('oidc'))
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromOIDC(@Req() req: Request): Promise<void> {
