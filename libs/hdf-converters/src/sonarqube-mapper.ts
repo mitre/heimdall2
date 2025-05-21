@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {coerce, lt} from 'semver';
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
@@ -91,6 +92,11 @@ function parseNistTags(issue: Issue): string[] {
   return tags;
 }
 
+enum AuthenticationMethod {
+  TokenAsUsername,
+  BearerToken
+}
+
 export class SonarQubeResults {
   data: IssueData = {
     issues: []
@@ -101,6 +107,7 @@ export class SonarQubeResults {
   branchName? = '';
   pullRequestID? = '';
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
+  authMethod?: AuthenticationMethod;
   constructor(
     sonarQubeHost: string,
     projectId: string,
@@ -116,6 +123,9 @@ export class SonarQubeResults {
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
+    const sonarqubeVersion = await axios.get<string>(`${this.sonarQubeHost}/api/server/version`).then(({data}) => data);
+    const sonarqubeTokenAsUsernameDeprecationVersion = '10.0.0';
+    this.authMethod = lt(coerce(sonarqubeVersion) || sonarqubeTokenAsUsernameDeprecationVersion, sonarqubeTokenAsUsernameDeprecationVersion) ? AuthenticationMethod.TokenAsUsername : AuthenticationMethod.BearerToken;
     return this.getProjectData();
   }
 
@@ -126,7 +136,8 @@ export class SonarQubeResults {
     while (paging) {
       await axios
         .get<IssueData>(`${this.sonarQubeHost}/api/issues/search`, {
-          auth: {username: this.userToken, password: ''},
+          auth: this.authMethod === AuthenticationMethod.TokenAsUsername ? {username: this.userToken, password: ''} : undefined,
+          headers: this.authMethod === AuthenticationMethod.BearerToken ? { Authorization: `Bearer ${this.userToken}` } : undefined,
           params: {
             componentKeys: this.projectId,
             types: 'VULNERABILITY',
@@ -152,7 +163,8 @@ export class SonarQubeResults {
       this.data.issues?.map((issue) =>
         axios
           .get(`${this.sonarQubeHost}/api/sources/raw`, {
-            auth: {username: this.userToken, password: ''},
+            auth: this.authMethod === AuthenticationMethod.TokenAsUsername ? {username: this.userToken, password: ''} : undefined,
+            headers: this.authMethod === AuthenticationMethod.BearerToken ? { Authorization: `Bearer ${this.userToken}` } : undefined,
             params: {
               key: issue.component,
               ...(this.branchName && {branch: this.branchName})
@@ -179,7 +191,8 @@ export class SonarQubeResults {
       this.data.issues?.map((issue) =>
         axios
           .get(`${this.sonarQubeHost}/api/rules/show`, {
-            auth: {username: this.userToken, password: ''},
+            auth: this.authMethod === AuthenticationMethod.TokenAsUsername ? {username: this.userToken, password: ''} : undefined,
+            headers: this.authMethod === AuthenticationMethod.BearerToken ? { Authorization: `Bearer ${this.userToken}` } : undefined,
             params: {
               key: issue.rule
             }
