@@ -16663,9 +16663,9 @@ nwsapi@^2.2.0:
     "@nx/nx-win32-x64-msvc" "20.0.7"
 
 oauth2-mock-server@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-8.0.0.tgz#f1761f29a497cb49e3a97589d80026e19f24b542"
-  integrity sha512-0Cy5Pt0PwsPepQVolsBi+yzPqC7PP4Ox+10JsWGZALWECxRQKqTUyV5XI6XyTg7CQE1MTkYWbAvnK2qh3oTdDg==
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-8.0.1.tgz#859414f4d2ec50eb3a87fe6920555f0221e705bb"
+  integrity sha512-nqLOC/Nc3fJ2r/Itr3AFf1Rh3jHR2TtuR06CuPVhC0u+F0e3uP6N+Xk6viYVvohvye9PlrnO3guuoYR9OtcdMw==
   dependencies:
     basic-auth "^2.0.1"
     cors "^2.8.5"
