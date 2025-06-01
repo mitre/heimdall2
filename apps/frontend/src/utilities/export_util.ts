@@ -7,15 +7,31 @@ type File = {
 };
 export async function saveSingleOrMultipleFiles(
   files: File[],
-  filetype: string
+  filetype: string,
+  insertBOM: boolean = false
 ) {
   if (files.length === 1) {
-    const blob = new Blob([files[0].data]);
+    let blob: Blob;
+    // Insert BOM to force UTF-8 encoding
+    if (insertBOM) {
+      blob = new Blob([new Uint8Array([0xef, 0xbb, 0xbf]), files[0].data]);
+    } else {
+      blob = new Blob([files[0].data]);
+    }
     saveAs(blob, cleanUpFilename(`${files[0]?.filename}`));
   } else {
     const zipfile = new ZipFile();
     files.forEach((file) => {
-      const buffer = Buffer.from(file.data);
+      let buffer: Buffer;
+      // Insert BOM to force UTF-8 encoding
+      if (insertBOM) {
+        buffer = Buffer.concat([
+          Buffer.from(new Uint8Array([0xef, 0xbb, 0xbf])),
+          Buffer.from(file.data)
+        ]);
+      } else {
+        buffer = Buffer.from(file.data);
+      }
       zipfile.addFile(file.filename, buffer);
     });
     const blob = new Blob([zipfile.toBuffer()]);
