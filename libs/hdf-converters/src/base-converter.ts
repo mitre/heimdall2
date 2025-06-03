@@ -262,7 +262,7 @@ export class BaseConverter<D = Record<string, unknown>> {
     if (_.keys(v).length > 0 && hasTransformer) {
       return {
         ...this.convertInternal(file, v),
-        ...(transformer(hasPath ? pathV : (file as T | T[])) as object)
+        ...this.convertInternal(hasPath ? pathV as Record<string, unknown> : file, (transformer(hasPath ? pathV : (file as T | T[])) as object))
       } as MappedReform<T, ILookupPath>;
     }
 
@@ -323,13 +323,17 @@ export class BaseConverter<D = Record<string, unknown>> {
           }
           if (Array.isArray(pathVal)) {
             v = pathVal.map((element: Record<string, unknown>) => {
-              return _.omit(this.convertInternal(element, lookupPath), [
+              let processed =  _.omit(this.convertInternal(element, lookupPath), [
                 'path',
                 'transformer',
                 'arrayTransformer',
                 'key',
                 'pathTransform'
               ]) as unknown as T;
+              if (transformer !== undefined) {
+                processed = this.evaluate(element, {...processed, transformer}) as T;
+              }
+              return processed;
             }) as any;
             if (arrayTransformer !== undefined) {
               if (Array.isArray(arrayTransformer)) {
