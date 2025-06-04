@@ -17,9 +17,9 @@ import {getCCIsForNISTTags} from './utils/global';
 // the Sonarqube schema typings are meant to support the four versions out right now (8, 9, 10, and 2025/25).  9 and 25 are supposed to be LTS releases.  8 is currently used by the Sonarcloud deployment though Sonarqube POCs say that it is no longer supported / they do not see many deployments of it.
 enum SonarqubeVersion {
   Eight = "8.0.0",
-    Nine = "9.0.0",
-    Ten = "10.0.0",
-    Twenty_five = "25.0.0"
+  Nine = "9.0.0",
+  Ten = "10.0.0",
+  Twenty_five = "25.0.0"
 }
 
 function isSonarqubeVersionEight(version: string): version is SonarqubeVersion.Eight {
@@ -68,7 +68,7 @@ type Issue_8 = {
   organization?: string;
   project: string;
   projectName?: string;
-  resolution?: string; // sows up in api sample responses but not in our locally generated samples; the changelog for the endpoint mentions something about 'resolutions' which might be the same as this endpoint?
+  resolution?: string; // shows up in api sample responses but not in our locally generated samples; the changelog for the endpoint mentions something about 'resolutions' which might be the same as this endpoint?
   rule: string;
   scope?: string;
   severity: string;
@@ -118,6 +118,7 @@ type Rule_8 = {
   defaultDebtRemFnOffset: string;
   defaultDebtRemFnType: string;
   defaultRemFnBaseEffort: string;
+  descriptionSections?: {content: string; key: string}[]; // sonarqube changelog says it was added in 9.5 if I'm interpreting "The field 'descriptionSections' has been added to the payload" properly, but sonarcloud (which is v8 nominally) has it too
   defaultRemFnType: string;
   effortToFixDescription?: unknown; // shows up in changelog but not in our locally generated samples
   htmlDesc: string;
@@ -142,7 +143,6 @@ type Rule_8 = {
 };
 
 type Rule_9 = Rule_8 & {
-  descriptionSections: {content: string; key: string}[];
   educationPrinciples: unknown[];
 };
 
@@ -175,7 +175,7 @@ type Data<T extends SonarqubeVersion> = {
   organization?: string
 }
 
-// TODO: review this impact mapping
+// https://docs.sonarsource.com/sonarqube-server/latest/user-guide/rules/overview/#how-severities-are-assigned
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['blocker', 1.0],
   ['critical', 0.7],
@@ -185,7 +185,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 const CWE_NIST_MAPPING = new CweNistMapping();
-const OWASP_NIST_MAPPING = new OwaspNistMapping();
 
 function parseCweTags<T extends SonarqubeVersion>(issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>): string[] {
   let searchSpace = '';
@@ -193,25 +192,28 @@ function parseCweTags<T extends SonarqubeVersion>(issue: SonarqubeVersionMapping
   if ('htmlDesc' in rule) {
     searchSpace += rule.htmlDesc;
   }
-  if ('descriptionSections' in rule) {
+  if (rule.descriptionSections) {
     searchSpace += rule.descriptionSections.map(s => s.content).join('');
   }
-
-  // CWE IDs are embedded inside of the HTML
-  return _.uniq(searchSpace.match(/CWE-\d\d\d?\d?\d?\d?\d/gi));
-}
-
-function parseOwaspTags<T extends SonarqubeVersion>(issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>): string[] {
-  // TODO: ask what to do about the OWASP/NIST mapping since it seems to have been changed as of 2021
-  // TODO: several deployments do not list owasp as a tag - we'd have to parse the html similar to cwes; this seems to have been bugged in the first place since it would at least in my sample only list one of the owasps instead of the multiple that it claimed applied in the resources section (and the ones in the resources section were different from the one listed in the systags list!)
-  const sysTags = issue.ruleInformation.rule.sysTags;
-  return sysTags.filter(s => s.toLowerCase().startsWith('owasp-'));
+  return _.uniq(searchSpace.match(/CWE-\d\d\d?\d?\d?\d?\d/gi)); // CWE IDs are embedded inside of the HTML
 }
 
 function parseNistTags<T extends SonarqubeVersion>(issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>): string[] {
-  const cweTags = parseCweTags<T>(issue).map((t) => CWE_NIST_MAPPING.nistFilter(t.split('-')[1])).flat();
-  const owaspTags = OWASP_NIST_MAPPING.nistFilterNoDefault(parseOwaspTags<T>(issue).map(o => o.substring('owasp-'.length).toUpperCase())).flat();
-  return _.uniq(cweTags.concat(owaspTags));
+  return _.uniq(parseCweTags<T>(issue).map((t) => CWE_NIST_MAPPING.nistFilter(t.split('-')[1])).flat());
+}
+
+function parseOwaspTags<T extends SonarqubeVersion>(issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>): string[] {
+  let searchSpace = '';
+  const rule = issue.ruleInformation.rule;
+  if ('htmlDesc' in rule) {
+    searchSpace += rule.htmlDesc;
+  }
+  if (rule.descriptionSections) {
+    searchSpace += rule.descriptionSections.map(s => s.content).join('');
+  }
+  const searchSpaceMatches = [...searchSpace.matchAll(/> ?OWASP.*?(Top .*?A\d\d?)/gu)].map(m => m[1]); // get the capture group which looks like 'Top 10 2021 Category A1'
+  const sysTagsMatches = issue.ruleInformation.rule.sysTags.filter(s => s.toLowerCase().startsWith('owasp-')).map(t => t.substring('owasp-'.length).toUpperCase()); // this will just look like 'A3'
+  return searchSpaceMatches.concat(sysTagsMatches);
 }
 
 export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<Data<T>> {
@@ -250,6 +252,9 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<D
                 if ('htmlDesc' in rule) {
                   return rule.htmlDesc;
                 }
+                if (!rule.descriptionSections) {
+                  return '';
+                }
                 const def = rule.descriptionSections.find((d) => d.key === 'default');
                 if (def) {
                   return def.content;
@@ -273,7 +278,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<D
                   getCCIsForNISTTags(parseNistTags(issue))
               },
               nist: {transformer: parseNistTags},
-              cwe: {transformer: parseCweTags},
+              cweid: {transformer: parseCweTags},
               owasp: {transformer: parseOwaspTags}
             },
             results: [
@@ -283,7 +288,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<D
                   transformer: (issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>): string => 
                   `${issue.component}:${issue.textRange.startLine}-${issue.textRange.endLine}\n<pre>${issue.codeSnippet.map((s) => s[0].toString() + ' ' + parseHtml(s[1])).join('\n')}</pre>`
                 },
-                start_time: ''
+                start_time: {path: 'creationDate'}
               }
             ],
             transformer: (issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>) => (
@@ -291,7 +296,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<D
                 descriptions: {
                   transformer: (issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>): ExecJSON.ControlDescription[] | null => {
                     const rule = issue.ruleInformation.rule;
-                    if ('descriptionSections' in rule && rule.descriptionSections.length > 0) {
+                    if (rule.descriptionSections && rule.descriptionSections.length > 0) {
                       const def = rule.descriptionSections.find((d) => d.key === 'default');
                       const introduction = rule.descriptionSections.find((d) => d.key === 'introduction');
                       const rootcause = rule.descriptionSections.find((d) => d.key === 'root_cause');
@@ -323,7 +328,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<D
   }
 }
 
-// Sonarqube used to require using the user token as the username and supplying no password, but added the bearer token method as an option in 10.x.  The bearer token method become the only allowed version in 25.x.
+// Sonarqube used to require using the user token as the username and supplying no password, but added the bearer token method as an option in 10.x.  The bearer token method became the only allowed version in 25.x.
 enum AuthenticationMethod {
   TokenAsUsername,
   BearerToken
@@ -337,7 +342,7 @@ export class SonarqubeResults {
     private readonly userToken: string,
     public readonly branchName?: string, // if branch/pr are not specified, then sonarqube uses the default branch
     public readonly pullRequestID?: string,
-    public readonly organization?: string
+    public readonly organization?: string // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
   ) {}
 
   logAxiosError(e: AxiosError): void {
@@ -368,8 +373,8 @@ export class SonarqubeResults {
         ...(this.authMethod === AuthenticationMethod.BearerToken && {headers: {Authorization: `Bearer ${this.userToken}`}}),
         params: {
           componentKeys: this.projectKey,
-          types: 'VULNERABILITY', // TODO: ask if we should keep it as vulnerabilities only or if we should expand to include everything, ex. code smells
-          statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED', // TODO: ask about this set of statuses - like do we want to keep 'resolved' as an active finding if the code author has marked it as being fine?  should we mark it as informational or even n/a?  what other statuses are out there?
+          types: 'VULNERABILITY', // TODO: ask if we should keep it as vulnerabilities only or if we should expand to include everything, ex. code smells --- make type a tag in the control and make sure that heimdall can actually let you filter on tag:nameoftag=valueoftag and not just tag:nameoftag; if fixing the filtering takes too long then do three different hdf files for codesmells, vulns, and bugs
+          statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED', // TODO: ask about this set of statuses - like do we want to keep 'resolved' as an active finding if the code author has marked it as being fine?  should we mark it as informational or even n/a?  what other statuses are out there? --- test what happens when using the workflow options in sonarqube and what kind of statuses come out; also test what happens if we resolve the problem - does it not return the issue anymore? if the issue isn't returned anymore, then we can ignore statuses entirely as a filter.  if the issue is returned, then we're going to have to handle the different statuses properly.  also it seems like these statuses might be changing between the major versions, at least 8 and 9
           p: page,
           ...(this.branchName && {branch: this.branchName}),
           ...(this.pullRequestID && {pullRequest: this.pullRequestID})
