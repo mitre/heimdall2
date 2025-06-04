@@ -1,4 +1,5 @@
 {
+  "/api/server/version": "9.9.8.100196",
   "/api/issues/search?componentKeys=xss&types=VULNERABILITY&statuses=OPEN,REOPENED,CONFIRMED,RESOLVED&p=1": {
     "total": 1,
     "p": 1,
@@ -246,8 +247,494 @@
     ],
     "facets": []
   },
-  "/api/sources/raw?key=xss:packages%2Fdocs%2Fsrc%2Fservice-worker.js": "// Imports\nimport { precacheAndRoute, matchPrecache } from 'workbox-precaching'\nimport { registerRoute, setDefaultHandler, setCatchHandler } from 'workbox-routing'\nimport { NetworkOnly, CacheFirst } from 'workbox-strategies'\n\nprecacheAndRoute(self.__WB_MANIFEST)\n\nconst cacheFirst = new CacheFirst()\nconst networkOnly = new NetworkOnly()\n\nregisterRoute(\n  ({ url, request }) => url.origin === self.location.origin && request.destination !== 'document',\n  cacheFirst\n)\n\nsetDefaultHandler(networkOnly)\n\nsetCatchHandler(async ({ url, request }) => {\n  if (\n    url.origin === self.location.origin &&\n    request.destination === 'document'\n  ) {\n    return matchPrecache(url.pathname.startsWith('/eo-UY/') ? '_crowdin.html' : '/_fallback.html')\n  }\n\n  return Response.error()\n})\n\nself.addEventListener('message', event => {\n  if (event.data === 'sw:update') self.skipWaiting()\n})\n\n",
-  "api/sources/raw?key=c130j_libc_unix:dev%2Fsrc%2Flibc_unix%2Fsumapss7.c": "\\\\sanitized\n#include <stdio.h>endif\n\n#include <sys/types.h>\n#include <sys/stat.h>\n#ifdef __linux\n#include <sys/ipc.h>\n#include <sys/shm.h>\n#endif\n#include <errno.h>\n#include <string.h>\n#include <fcntl.h>\n\n#ifndef PAGE_SIZE\n#define PAGE_SIZE 4096\n#endif\n\nvoid map_segment_rmnet( char *physDevName,\n                        void **Mapped_Address, char *Result );\nvoid map_segment_rfm2g( char *physDevName,\n                        void **Mapped_Address, char *Result );\n\n\n/************************************************************************\n ** ! void c_map_segment( char *Key_String,\n ** !                     long Size_Of_Area,\n ** !                     char Map_Local,\n ** !                     void **Mapped_Address,\n ** !                     char *Error );\n ** !\n ** ! INPUTS :\n ** ! char *Key_String      : Key identifying segment to be mapped.\n ** ! long Size_Of_Area     : Number of bytes to map.\n ** ! char Map_Local        : If this flag is set and the machine supports\n ** !                       : local memory then map the segment into \"hard\"\n ** !                       : local memory.\n ** !\n ** ! OUTPUTS :\n ** ! void **Mapped_Address : Logical address mapped.\n ** ! char *Error           : Succes of mapping. 0 = Ok, 1 = Fail.\n ** !\n ************************************************************************/\n\n#define RETURN_ERROR \\n         *Mapped_Address = NULL; \\n         *Error = 1; \\n         return;\nvoid c_map_segment( char *Key_String, long Size_Of_Area, char Map_Local,\n                    void **Mapped_Address, char *Error )\n\n{\n#ifndef WIN32\n\n   /*** NOTE : Map_Local is not yet implemented ***/\n\n   struct stat buf;            /* Used to check validity of key */\n   key_t       key;\n   int         shmid;\n   int         shmctrl;\n   struct shmid_ds shmid_buf;      /* struct shmid_ds from shm.h */\n   char       *Address_Mapped = NULL;\n   char       Key_Is_Physical_Device = ! strncmp(\"/dev/\", Key_String, 5);\n\n   /* ! If Key String is invalid */\n   if ( stat(Key_String, &buf) )\n   {\n      FILE *fd;\n      /* !! If this is a physical device, error is fatal */\n      if ( Key_Is_Physical_Device )\n      {\n         /* !!! Exit with error. */\n         (void)fprintf(stderr,\n            \">>> %s:%d:ERROR : c_map_segment : during open of %s\n\",\n           __FILE__, __LINE__, Key_String);\n         perror(\"--> \");\n         RETURN_ERROR\n      }\n      /* !! Try to create the file */\n      fd = fopen(Key_String, \"w\");\n      /* !! If NOT sucessfull */\n      if (! fd )\n      {\n         /* !! Exit with error. */\n         (void)fprintf(stderr,\n            \">>> ERROR : c_map_segment : during open of %s\n\", Key_String);\n         perror(\"--> \");\n         RETURN_ERROR\n      }\n\n      /* !! File open Ok, Write to File. */\n      fprintf(fd, \"Key\n\");\n      /* !! Close File. */\n      fclose(fd);\n\n      /* !! Try Key String again */\n      if ( stat(Key_String, &buf) )\n      {\n         /* !!! Exit with error. */\n         (void)fprintf(stderr,\n            \">>> ERROR : c_map_segment : during stat of %s\n\", Key_String);\n         perror(\"--> \");\n         RETURN_ERROR\n      }\n   }\n   /* ! End If */\n\n",
+  "/api/sources/show?key=xss:packages%2Fdocs%2Fsrc%2Fservice-worker.js": {
+  "sources": [
+    [ 1, "// Imports" ],
+    [
+      2,
+      "import { precacheAndRoute, matchPrecache } from 'workbox-precaching'"
+    ],
+    [
+      3,
+      "import { registerRoute, setDefaultHandler, setCatchHandler } from 'workbox-routing'"
+    ],
+    [
+      4,
+      "import { NetworkOnly, CacheFirst } from 'workbox-strategies'"
+    ],
+    [ 5, "" ],
+    [ 6, "precacheAndRoute(self.__WB_MANIFEST)" ],
+    [ 7, "" ],
+    [ 8, "const cacheFirst = new CacheFirst()" ],
+    [ 9, "const networkOnly = new NetworkOnly()" ],
+    [ 10, "" ],
+    [ 11, "registerRoute(" ],
+    [
+      12,
+      "  ({ url, request }) => url.origin === self.location.origin && request.destination !== 'document',"
+    ],
+    [ 13, "  cacheFirst" ],
+    [ 14, ")" ],
+    [ 15, "" ],
+    [ 16, "setDefaultHandler(networkOnly)" ],
+    [ 17, "" ],
+    [ 18, "setCatchHandler(async ({ url, request }) => {" ],
+    [ 19, "  if (" ],
+    [ 20, "    url.origin === self.location.origin &&" ],
+    [ 21, "    request.destination === 'document'" ],
+    [ 22, "  ) {" ],
+    [
+      23,
+      "    return matchPrecache(url.pathname.startsWith('/eo-UY/') ? '_crowdin.html' : '/_fallback.html')"
+    ],
+    [ 24, "  }" ],
+    [ 25, "" ],
+    [ 26, "  return Response.error()" ],
+    [ 27, "})" ],
+    [ 28, "" ],
+    [ 29, "self.addEventListener('message', event => {" ],
+    [ 30, "  if (event.data === 'sw:update') self.skipWaiting()" ],
+    [ 31, "})" ],
+    [ 32, "" ],
+    [ 33, "" ]
+  ]
+},
+  "api/sources/show?key=c130j_libc_unix:dev%2Fsrc%2Flibc_unix%2Fsumapss7.c": {
+  "sources": [
+    [
+      1,
+      "\\\\sanitized"
+    ],
+    [
+      2,
+      "#include <stdio.h>endif"
+    ],
+    [
+      3,
+      ""
+    ],
+    [
+      4,
+      "#include <sys/types.h>"
+    ],
+    [
+      5,
+      "#include <sys/stat.h>"
+    ],
+    [
+      6,
+      "#ifdef __linux"
+    ],
+    [
+      7,
+      "#include <sys/ipc.h>"
+    ],
+    [
+      8,
+      "#include <sys/shm.h>"
+    ],
+    [
+      9,
+      "#endif"
+    ],
+    [
+      10,
+      "#include <errno.h>"
+    ],
+    [
+      11,
+      "#include <string.h>"
+    ],
+    [
+      12,
+      "#include <fcntl.h>"
+    ],
+    [
+      13,
+      ""
+    ],
+    [
+      14,
+      "#ifndef PAGE_SIZE"
+    ],
+    [
+      15,
+      "#define PAGE_SIZE 4096"
+    ],
+    [
+      16,
+      "#endif"
+    ],
+    [
+      17,
+      ""
+    ],
+    [
+      18,
+      "void map_segment_rmnet( char *physDevName,"
+    ],
+    [
+      19,
+      "                        void **Mapped_Address, char *Result );"
+    ],
+    [
+      20,
+      "void map_segment_rfm2g( char *physDevName,"
+    ],
+    [
+      21,
+      "                        void **Mapped_Address, char *Result );"
+    ],
+    [
+      22,
+      ""
+    ],
+    [
+      23,
+      ""
+    ],
+    [
+      24,
+      "/************************************************************************"
+    ],
+    [
+      25,
+      " ** ! void c_map_segment( char *Key_String,"
+    ],
+    [
+      26,
+      " ** !                     long Size_Of_Area,"
+    ],
+    [
+      27,
+      " ** !                     char Map_Local,"
+    ],
+    [
+      28,
+      " ** !                     void **Mapped_Address,"
+    ],
+    [
+      29,
+      " ** !                     char *Error );"
+    ],
+    [
+      30,
+      " ** !"
+    ],
+    [
+      31,
+      " ** ! INPUTS :"
+    ],
+    [
+      32,
+      " ** ! char *Key_String      : Key identifying segment to be mapped."
+    ],
+    [
+      33,
+      " ** ! long Size_Of_Area     : Number of bytes to map."
+    ],
+    [
+      34,
+      " ** ! char Map_Local        : If this flag is set and the machine supports"
+    ],
+    [
+      35,
+      " ** !                       : local memory then map the segment into \"hard\""
+    ],
+    [
+      36,
+      " ** !                       : local memory."
+    ],
+    [
+      37,
+      " ** !"
+    ],
+    [
+      38,
+      " ** ! OUTPUTS :"
+    ],
+    [
+      39,
+      " ** ! void **Mapped_Address : Logical address mapped."
+    ],
+    [
+      40,
+      " ** ! char *Error           : Succes of mapping. 0 = Ok, 1 = Fail."
+    ],
+    [
+      41,
+      " ** !"
+    ],
+    [
+      42,
+      " ************************************************************************/"
+    ],
+    [
+      43,
+      ""
+    ],
+    [
+      44,
+      "#define RETURN_ERROR \\n         *Mapped_Address = NULL; \\n         *Error = 1; \\n         return;"
+    ],
+    [
+      45,
+      "void c_map_segment( char *Key_String, long Size_Of_Area, char Map_Local,"
+    ],
+    [
+      46,
+      "                    void **Mapped_Address, char *Error )"
+    ],
+    [
+      47,
+      ""
+    ],
+    [
+      48,
+      "{"
+    ],
+    [
+      49,
+      "#ifndef WIN32"
+    ],
+    [
+      50,
+      ""
+    ],
+    [
+      51,
+      "   /*** NOTE : Map_Local is not yet implemented ***/"
+    ],
+    [
+      52,
+      ""
+    ],
+    [
+      53,
+      "   struct stat buf;            /* Used to check validity of key */"
+    ],
+    [
+      54,
+      "   key_t       key;"
+    ],
+    [
+      55,
+      "   int         shmid;"
+    ],
+    [
+      56,
+      "   int         shmctrl;"
+    ],
+    [
+      57,
+      "   struct shmid_ds shmid_buf;      /* struct shmid_ds from shm.h */"
+    ],
+    [
+      58,
+      "   char       *Address_Mapped = NULL;"
+    ],
+    [
+      59,
+      "   char       Key_Is_Physical_Device = ! strncmp(\"/dev/\", Key_String, 5);"
+    ],
+    [
+      60,
+      ""
+    ],
+    [
+      61,
+      "   /* ! If Key String is invalid */"
+    ],
+    [
+      62,
+      "   if ( stat(Key_String, &buf) )"
+    ],
+    [
+      63,
+      "   {"
+    ],
+    [
+      64,
+      "      FILE *fd;"
+    ],
+    [
+      65,
+      "      /* !! If this is a physical device, error is fatal */"
+    ],
+    [
+      66,
+      "      if ( Key_Is_Physical_Device )"
+    ],
+    [
+      67,
+      "      {"
+    ],
+    [
+      68,
+      "         /* !!! Exit with error. */"
+    ],
+    [
+      69,
+      "         (void)fprintf(stderr,"
+    ],
+    [
+      70,
+      "            \">>> %s:%d:ERROR : c_map_segment : during open of %s"
+    ],
+    [
+      71,
+      "\","
+    ],
+    [
+      72,
+      "           __FILE__, __LINE__, Key_String);"
+    ],
+    [
+      73,
+      "         perror(\"--> \");"
+    ],
+    [
+      74,
+      "         RETURN_ERROR"
+    ],
+    [
+      75,
+      "      }"
+    ],
+    [
+      76,
+      "      /* !! Try to create the file */"
+    ],
+    [
+      77,
+      "      fd = fopen(Key_String, \"w\");"
+    ],
+    [
+      78,
+      "      /* !! If NOT sucessfull */"
+    ],
+    [
+      79,
+      "      if (! fd )"
+    ],
+    [
+      80,
+      "      {"
+    ],
+    [
+      81,
+      "         /* !! Exit with error. */"
+    ],
+    [
+      82,
+      "         (void)fprintf(stderr,"
+    ],
+    [
+      83,
+      "            \">>> ERROR : c_map_segment : during open of %s"
+    ],
+    [
+      84,
+      "\", Key_String);"
+    ],
+    [
+      85,
+      "         perror(\"--> \");"
+    ],
+    [
+      86,
+      "         RETURN_ERROR"
+    ],
+    [
+      87,
+      "      }"
+    ],
+    [
+      88,
+      ""
+    ],
+    [
+      89,
+      "      /* !! File open Ok, Write to File. */"
+    ],
+    [
+      90,
+      "      fprintf(fd, \"Key"
+    ],
+    [
+      91,
+      "\");"
+    ],
+    [
+      92,
+      "      /* !! Close File. */"
+    ],
+    [
+      93,
+      "      fclose(fd);"
+    ],
+    [
+      94,
+      ""
+    ],
+    [
+      95,
+      "      /* !! Try Key String again */"
+    ],
+    [
+      96,
+      "      if ( stat(Key_String, &buf) )"
+    ],
+    [
+      97,
+      "      {"
+    ],
+    [
+      98,
+      "         /* !!! Exit with error. */"
+    ],
+    [
+      99,
+      "         (void)fprintf(stderr,"
+    ],
+    [
+      100,
+      "            \">>> ERROR : c_map_segment : during stat of %s"
+    ],
+    [
+      101,
+      "\", Key_String);"
+    ],
+    [
+      102,
+      "         perror(\"--> \");"
+    ],
+    [
+      103,
+      "         RETURN_ERROR"
+    ],
+    [
+      104,
+      "      }"
+    ],
+    [
+      105,
+      "   }"
+    ],
+    [
+      106,
+      "   /* ! End If */"
+    ],
+    [
+      107,
+      ""
+    ],
+    [
+      108,
+      ""
+    ]
+  ]
+},
   "/api/rules/show?key=javascript:S2819": {
     "rule": {
       "key": "javascript:S2819",
