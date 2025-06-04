@@ -118,8 +118,8 @@ type Rule_8 = {
   defaultDebtRemFnOffset: string;
   defaultDebtRemFnType: string;
   defaultRemFnBaseEffort: string;
-  descriptionSections?: {content: string; key: string}[]; // sonarqube changelog says it was added in 9.5 if I'm interpreting "The field 'descriptionSections' has been added to the payload" properly, but sonarcloud (which is v8 nominally) has it too
   defaultRemFnType: string;
+  descriptionSections?: {content: string; key: string}[]; // sonarqube changelog says it was added in 9.5 if I'm interpreting "The field 'descriptionSections' has been added to the payload" properly, but sonarcloud (which is v8 nominally) has it too
   effortToFixDescription?: unknown; // shows up in changelog but not in our locally generated samples
   htmlDesc: string;
   isExternal: boolean;
@@ -143,7 +143,7 @@ type Rule_8 = {
 };
 
 type Rule_9 = Rule_8 & {
-  educationPrinciples: unknown[];
+  educationPrinciples?: unknown[];
 };
 
 type Rule_10 = Omit<Rule_9, 'debtOverloaded' | 'debtRemFnCoeff' | 'debtRemFnOffset' | 'defaultDebtRemFnCoeff' | 'defaultDebtRemFnOffset' | 'effortToFixDescription'> & {
