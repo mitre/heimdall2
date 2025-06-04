@@ -211,6 +211,10 @@ export class BaseConverter<D = Record<string, unknown>> {
     file: Record<string, unknown>,
     v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPath> {
+    if (v === undefined) {
+      return v;
+    }
+
     const hasTransformer =
       _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
     let transformer = (val: unknown) => val;

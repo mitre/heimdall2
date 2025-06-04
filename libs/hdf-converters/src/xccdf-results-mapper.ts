@@ -433,12 +433,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: Record<string, unknown>
                 ): ExecJSON.Reference => ({
-                  ...conditionallyProvideAttribute(
-                    'url',
-                    _.get(data, 'href'),
-                    _.has(data, 'href')
-                  ),
-                  ref: [
+                  ref: (_.has(data, 'publisher') || _.has(data, 'identifier') || _.has(data, 'type')) ? [
                     {
                       ...conditionallyProvideAttribute(
                         'text',
@@ -461,16 +456,13 @@ export class XCCDFResultsMapper extends BaseConverter {
                         _.has(data, 'type')
                       )
                     }
-                  ]
-                }),
-                ref: {
-                  path: 'text',
-                  transformer: (text: string) => text || undefined
-                },
-                url: {
-                  path: 'href',
-                  transformer: (text: string) => text || undefined
-                }
+                  ] : _.has(data, 'text') ? _.get(data, 'text') as string : undefined,
+                  ...conditionallyProvideAttribute(
+                    'url',
+                    _.get(data, 'href'),
+                    _.has(data, 'href') && _.get(data, 'href') !== ""
+                  )
+                })
               }
             ],
             source_location: {},
