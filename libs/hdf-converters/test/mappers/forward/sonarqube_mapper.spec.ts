@@ -1,13 +1,13 @@
 import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
-import {SonarQubeResults} from '../../../src/sonarqube-mapper';
+import {SonarqubeResults} from '../../../src/sonarqube-mapper';
 import {omitVersions} from '../../utils';
 
 const testURL = 'http://127.0.0.1:3001';
 
 describe('sonarqube_mapper', () => {
   it('Successfully pulls SonarQube vulnerabilities', async () => {
-    const mapper = new SonarQubeResults(testURL, 'xss', 'NotARealKey');
+    const mapper = new SonarqubeResults(testURL, 'xss', 'NotARealKey');
     const result: ExecJSON.Execution = await mapper.toHdf();
 
     // fs.writeFileSync(
@@ -26,7 +26,7 @@ describe('sonarqube_mapper', () => {
     );
   });
   it('Successfully pulls SonarQube vulnerabilities from a particular branch', async () => {
-    const mapper = new SonarQubeResults(
+    const mapper = new SonarqubeResults(
       testURL,
       'libc_unix',
       'NotARealKey',
@@ -52,12 +52,12 @@ describe('sonarqube_mapper', () => {
       )
     );
   });
-  it('Successfully pulls SonarQube vulnerabilities from a particular PullRequest', async () => {
-    const mapper = new SonarQubeResults(
+  it('Successfully pulls SonarQube vulnerabilities from a particular pull request', async () => {
+    const mapper = new SonarqubeResults(
       testURL,
       'libc_unix',
       'NotARealKey',
-      '',
+      undefined,
       '123'
     );
     const result: ExecJSON.Execution = await mapper.toHdf();
