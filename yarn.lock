@@ -20792,9 +20792,9 @@ tsutils@^3.21.0:
     tslib "^1.8.1"
 
 tsx@^4.7.1:
-  version "4.19.4"
-  resolved "https://registry.yarnpkg.com/tsx/-/tsx-4.19.4.tgz#647b4141f4fdd9d773a9b564876773d2846901f4"
-  integrity sha512-gK5GVzDkJK1SI1zwHf32Mqxf2tSJkNx+eYcNly5+nHvWqXUJYUkWBQtKauoESz3ymezAI++ZwT855x5p5eop+Q==
+  version "4.20.1"
+  resolved "https://registry.yarnpkg.com/tsx/-/tsx-4.20.1.tgz#f5ef9a5d4839184e4216064e3655cc9a65761986"
+  integrity sha512-JsFUnMHIE+g8KllOvWTrSOwCKM10xLcsesvUQR61znsbrcwZ4U/QaqdymmvTqG5GMD7k2VFv9UG35C4dRy34Ag==
   dependencies:
     esbuild "~0.25.0"
     get-tsconfig "^4.7.5"
