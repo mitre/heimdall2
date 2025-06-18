@@ -614,7 +614,6 @@ export class SonarqubeResults {
         .slice(Math.max(startLine - 3, 0), endLine + 3)
         .join('\n')
         .trim(); // slice wraps around if the start is less than 0 so we want to put a bounds check there to ensure we start at the top of the file; however, if the end is past the end of the array then it just goes until the end of the array so no bounds check is required there
-      // console.log('snippet', snippet);
       const location = `${component}:${startLine}-${endLine}\n`;
       const message = msg ? `${msg}\n` : '';
       return `${location}${message}<pre>\n${snippet}\n</pre>`;
