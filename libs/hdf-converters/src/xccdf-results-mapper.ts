@@ -433,34 +433,41 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: Record<string, unknown>
                 ): ExecJSON.Reference => ({
-                  ref: (_.has(data, 'publisher') || _.has(data, 'identifier') || _.has(data, 'type')) ? [
-                    {
-                      ...conditionallyProvideAttribute(
-                        'text',
-                        _.get(data, 'text'),
-                        _.has(data, 'text')
-                      ),
-                      ...conditionallyProvideAttribute(
-                        'publisher',
-                        _.get(data, 'publisher'),
-                        _.has(data, 'publisher')
-                      ),
-                      ...conditionallyProvideAttribute(
-                        'identifier',
-                        _.get(data, 'identifier'),
-                        _.has(data, 'identifier')
-                      ),
-                      ...conditionallyProvideAttribute(
-                        'type',
-                        _.get(data, 'type'),
-                        _.has(data, 'type')
-                      )
-                    }
-                  ] : _.has(data, 'text') ? _.get(data, 'text') as string : undefined,
+                  ref:
+                    _.has(data, 'publisher') ||
+                    _.has(data, 'identifier') ||
+                    _.has(data, 'type')
+                      ? [
+                          {
+                            ...conditionallyProvideAttribute(
+                              'text',
+                              _.get(data, 'text'),
+                              _.has(data, 'text')
+                            ),
+                            ...conditionallyProvideAttribute(
+                              'publisher',
+                              _.get(data, 'publisher'),
+                              _.has(data, 'publisher')
+                            ),
+                            ...conditionallyProvideAttribute(
+                              'identifier',
+                              _.get(data, 'identifier'),
+                              _.has(data, 'identifier')
+                            ),
+                            ...conditionallyProvideAttribute(
+                              'type',
+                              _.get(data, 'type'),
+                              _.has(data, 'type')
+                            )
+                          }
+                        ]
+                      : _.has(data, 'text')
+                        ? (_.get(data, 'text') as string)
+                        : undefined,
                   ...conditionallyProvideAttribute(
                     'url',
                     _.get(data, 'href'),
-                    _.has(data, 'href') && _.get(data, 'href') !== ""
+                    _.has(data, 'href') && _.get(data, 'href') !== ''
                   )
                 })
               }
