@@ -247,34 +247,19 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 const CWE_NIST_MAPPING = new CweNistMapping();
+const OWASP_NIST_MAPPING = new OwaspNistMapping();
 
-function parseCweTags<T extends SonarqubeVersion>(
+function parseOwaspInSysTags<T extends SonarqubeVersion>(
   issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
 ): string[] {
-  let searchSpace = '';
-  const rule = issue.ruleInformation.rule;
-  if ('htmlDesc' in rule) {
-    searchSpace += rule.htmlDesc;
-  }
-  if (rule.descriptionSections) {
-    searchSpace += rule.descriptionSections.map((s) => s.content).join('');
-  }
-  return _.uniq(searchSpace.match(/CWE-\d\d\d?\d?\d?\d?\d/gi)); // CWE IDs are embedded inside of the HTML
-}
-
-function parseNistTags<T extends SonarqubeVersion>(
-  issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
-): string[] {
-  return _.uniq(
-    parseCweTags<T>(issue)
-      .map((t) => CWE_NIST_MAPPING.nistFilter(t.split('-')[1]))
-      .flat()
-  );
+  return issue.ruleInformation.rule.sysTags
+    .filter((s) => s.toLowerCase().startsWith('owasp-'))
+    .map((t) => t.substring('owasp-'.length).toUpperCase()); // this will just look like 'A3'
 }
 
 function parseOwaspTags<T extends SonarqubeVersion>(
   issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
-): string[] {
+): string[] | undefined {
   let searchSpace = '';
   const rule = issue.ruleInformation.rule;
   if ('htmlDesc' in rule) {
@@ -286,10 +271,52 @@ function parseOwaspTags<T extends SonarqubeVersion>(
   const searchSpaceMatches = [
     ...searchSpace.matchAll(/> ?OWASP.*?(Top .*?A\d\d?)/gu)
   ].map((m) => m[1]); // get the capture group which looks like 'Top 10 2021 Category A1'
-  const sysTagsMatches = issue.ruleInformation.rule.sysTags
-    .filter((s) => s.toLowerCase().startsWith('owasp-'))
-    .map((t) => t.substring('owasp-'.length).toUpperCase()); // this will just look like 'A3'
-  return searchSpaceMatches.concat(sysTagsMatches);
+  const sysTagMatches = parseOwaspInSysTags<T>(issue);
+  const totalMatches = searchSpaceMatches.concat(sysTagMatches);
+
+  if (totalMatches.length) {
+    return totalMatches;
+  }
+  return undefined;
+}
+
+function parseCweTags<T extends SonarqubeVersion>(
+  issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
+): string[] | undefined {
+  let searchSpace = '';
+  const rule = issue.ruleInformation.rule;
+  if ('htmlDesc' in rule) {
+    searchSpace += rule.htmlDesc;
+  }
+  if (rule.descriptionSections) {
+    searchSpace += rule.descriptionSections.map((s) => s.content).join('');
+  }
+  const uniqueCwes = _.uniq(searchSpace.match(/CWE-\d\d\d?\d?\d?\d?\d/gi)); // CWE IDs are embedded inside of the HTML
+
+  if (uniqueCwes.length) {
+    return uniqueCwes;
+  }
+  return undefined;
+}
+
+function parseNistTags<T extends SonarqubeVersion>(
+  issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
+): string[] | undefined {
+  const uniqueNist = _.uniq(
+    (parseCweTags<T>(issue) ?? [])
+      .flatMap((t) => CWE_NIST_MAPPING.nistFilter(t.split('-')[1]))
+      .concat(
+        // adding in the systags' owasp tag since in older sonarqube versions sometimes no other guidance alignment is provided
+        (parseOwaspInSysTags<T>(issue) ?? []).flatMap((t) =>
+          OWASP_NIST_MAPPING.nistFilterNoDefault(t)
+        )
+      )
+  );
+
+  if (uniqueNist.length) {
+    return uniqueNist;
+  }
+  return undefined;
 }
 
 export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
@@ -378,7 +405,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
                 transformer: (
                   issue: SonarqubeVersionMapping[T]['issue'] &
                     IssueExtensions<T>
-                ): string[] => getCCIsForNISTTags(parseNistTags(issue))
+                ): string[] => getCCIsForNISTTags(parseNistTags(issue) ?? [])
               },
               nist: {transformer: parseNistTags},
               cweid: {transformer: parseCweTags},
