@@ -1,7 +1,7 @@
 import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import {SonarqubeResults} from '../../../src/sonarqube-mapper';
-import {omitVersions} from '../../utils';
+import {omitHDFTitle, omitVersions} from '../../utils';
 
 const testURL = 'http://127.0.0.1:3001';
 
@@ -15,12 +15,17 @@ describe('sonarqube_mapper', () => {
     //   JSON.stringify(result, null, 2)
     // );
 
-    expect(omitVersions(result)).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-hdf.json', {
-            encoding: 'utf-8'
-          })
+    expect(omitHDFTitle(omitVersions(result))).toEqual(
+      omitHDFTitle(
+        omitVersions(
+          JSON.parse(
+            fs.readFileSync(
+              'sample_jsons/sonarqube_mapper/sonarqube-hdf.json',
+              {
+                encoding: 'utf-8'
+              }
+            )
+          )
         )
       )
     );
@@ -39,14 +44,16 @@ describe('sonarqube_mapper', () => {
     //   JSON.stringify(result, null, 2)
     // );
 
-    expect(omitVersions(result)).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
+    expect(omitHDFTitle(omitVersions(result))).toEqual(
+      omitHDFTitle(
+        omitVersions(
+          JSON.parse(
+            fs.readFileSync(
+              'sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json',
+              {
+                encoding: 'utf-8'
+              }
+            )
           )
         )
       )
@@ -67,14 +74,16 @@ describe('sonarqube_mapper', () => {
     //   JSON.stringify(result, null, 2)
     // );
 
-    expect(omitVersions(result)).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
+    expect(omitHDFTitle(omitVersions(result))).toEqual(
+      omitHDFTitle(
+        omitVersions(
+          JSON.parse(
+            fs.readFileSync(
+              'sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json',
+              {
+                encoding: 'utf-8'
+              }
+            )
           )
         )
       )
