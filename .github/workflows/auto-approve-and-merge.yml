@@ -12,8 +12,6 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: hmarr/auto-approve-action@v4
-        with:
-          github-token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Enable auto-merge for Dependabot PRs
         run: gh pr merge --auto --merge "$PR_URL"
         env:
