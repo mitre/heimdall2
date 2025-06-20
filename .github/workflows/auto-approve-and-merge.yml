@@ -4,16 +4,12 @@ on:
     types: [labeled]
 permissions:
   pull-requests: write
-  contents: write
 
 jobs:
   approve:
     name: Auto-approve dependabot PRs
     if: github.event.pull_request.user.login == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'dependencies')
     runs-on: ubuntu-22.04
-    permissions:
-      pull-requests: write
-      contents: write
     steps:
       - uses: hmarr/auto-approve-action@v4
         with:
