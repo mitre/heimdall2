@@ -62,10 +62,10 @@
     "yaml": "^2.1.1"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.0",
+    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.14.161",
     "@types/node": "^22.0.0",
-    "jest": "^27.0.6",
+    "jest": "^30.0.2",
     "quicktype": "^15.0.260",
     "ts-jest": "^29.1.0",
     "tsx": "^4.7.1",
