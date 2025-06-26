@@ -206,7 +206,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   set wasViewed(_value: boolean) {
     this.$emit('control-viewed', this.control);
   }
-  
+
   get isOverlaid() {
     return this.control.extendsFrom.some(
       (extension) =>
