@@ -57,7 +57,7 @@ function controls_to_nist_node_data(
 ): TreemapNodeLeaf[] {
   return contextualizedControls.flatMap((cc) => {
     // Get the status color
-    const color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
+    const color = Chroma(colors.colorForStatus(cc.root.hdf.status));
     // Now make leaves for each nist control
     return cc.root.hdf.parsedNistTags.map((nc) => {
       return {
