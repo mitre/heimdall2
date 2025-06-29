@@ -244,9 +244,14 @@ export default class FileList extends Vue {
   }
 
   formatNumberOfScans(value: string | undefined): string {
-    return Number(value) !== -1
-      ? Number(value).toLocaleString('en-US').toString()
-      : '-';
+    const num = Number(value);
+
+    // Handle undefined, null, empty string, or invalid numbers
+    if (!value || isNaN(num) || num === -1) {
+      return '-';
+    }
+
+    return num.toLocaleString('en-US');
   }
 
   logout() {

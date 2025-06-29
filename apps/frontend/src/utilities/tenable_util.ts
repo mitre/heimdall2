@@ -1,4 +1,6 @@
-import Zip from 'adm-zip';
+/* eslint-disable prettier/prettier */
+//import Zip from 'adm-zip';
+import JSZip from 'jszip';
 import axios, {AxiosInstance} from 'axios';
 import {ServerModule} from '@/store/server';
 import {createWinstonLogger} from '../../../../libs/hdf-converters/src/utils/global';
@@ -24,49 +26,102 @@ export type ScanResults = {
 };
 
 const UTIL_NAME = 'Tenable.SC';
+const LOGIN_TIMEOUT = 30000; // 30 seconds
+const LOGIN_TIMEOUT_MSG =
+  'Login timed out. Ensure the provided credentials and domain/URL are valid and try again.';
 const logger = createWinstonLogger(UTIL_NAME, 'debug');
 
 export class TenableUtil {
   hostConfig: AuthInfo;
   axios_instance: AxiosInstance;
+  isServer: boolean = ServerModule.serverMode; // true if Tenable.SC Lite, false if Tenable.SC Enterprise
 
   constructor(hostConfig: AuthInfo) {
     this.hostConfig = hostConfig;
-    this.axios_instance = axios.create({
-      maxBodyLength: Infinity,
-      baseURL: hostConfig.host_url,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'x-apikey': `accesskey=${hostConfig.accesskey}; secretkey=${hostConfig.secretkey}`
-      }
-    });
-    logger.info(`Initializing Tenable Client`);
+    const baseURL = this.isServer
+      ? ''       // use backend proxy
+      : hostConfig.host_url; // talk directly to Tenable
+
+    const headers = this.isServer
+      ? {} // backend handles auth
+      : {
+          'Access-Control-Allow-Origin': '*',
+          'x-apikey': `accesskey=${hostConfig.accesskey}; secretkey=${hostConfig.secretkey}`
+        };
+
+    this.axios_instance = axios.create(
+      {
+        withCredentials: true, 
+        maxBodyLength: Infinity,
+        baseURL,
+        headers
+      });
+
+    logger.info(
+      `Tenable Client initialized in ${this.isServer ? 'Server' : 'Lite'} mode`
+    );
   }
 
   async loginToTenable(): Promise<boolean> {
     logger.info(`Connecting to Tenable Client`);
     return new Promise((resolve, reject) => {
-      setTimeout(
-        () =>
-          reject(
-            new Error(
-              'Login timed out. Please ensure the provided credentials and domain/URL are valid and try again.'
-            )
-          ),
-        5000
-      );
+      setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
 
       try {
-        this.axios_instance({
-          method: 'get',
-          url: '/rest/currentUser'
-        })
-          .then((response) => {
-            resolve(response.request.finished);
-          })
-          .catch((error) => {
-            reject(this.getRejectConnectionMessage(error));
-          });
+        const url = this.isServer ? '/api/tenable/login' : '/rest/currentUser';
+        if (this.isServer) {
+          // If running on the server, use the backend proxy endpoint
+          logger.info(`Using Server-Mode: ${url}`);
+          this.axios_instance
+            .post(url, {
+              host_url: this.hostConfig.host_url,
+              accesskey: this.hostConfig.accesskey,
+              secretkey: this.hostConfig.secretkey
+            })
+            .then((response) => {
+              if (response.data.success) {
+                logger.info(
+                  `Processing (Server-Mode) connected successfully: ${response.data.user.name}`
+                );
+                resolve(true);
+              } else {
+                logger.error(
+                  `Processing (Server-Mode) connection failed: ${response.data.message}`
+                );
+                reject(response.data.message);
+              }
+            })
+            .catch((error) => {
+              logger.error(
+                `Processing (Server-Mode) connection error -> ${error}`
+              );
+              reject(this.getRejectConnectionMessage(error));
+            });
+        } else {
+          // If running in the browser, set the CORS headers
+          logger.info(`Using Lite-Mode`);
+          this.axios_instance
+            .get(url)
+            .then((response) => {
+              // if (response.status === 200 && response.data?.response?.user) {
+              if (response.status === 200) {
+                logger.info('Processing (Lite-Mode) connected successfully');
+                resolve(true);
+              } else {
+                const msg =
+                  response.data?.message ||
+                  'Unexpected response structure from Tenable';
+                logger.error(
+                  `Processing (Lite-Mode) connection failed: ${msg}`
+                );
+                reject(msg);
+              }
+            })
+            .catch((error) => {
+              logger.error(`Processing (Lite-Mode) connecting error: ${error}`);
+              reject(this.getRejectConnectionMessage(error));
+            });
+        }
       } catch (e) {
         reject(`Unknown error: ${e}`);
       }
@@ -76,15 +131,41 @@ export class TenableUtil {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getRejectConnectionMessage(error: any): string {
     let rejectMsg = '';
-
+    const TENABLE_HOST_URL = ServerModule.tenableHostUrl;
+  
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
 
-      if (error.response.data.error_code == 74) {
-        rejectMsg = 'Incorrect Access or Secret key';
+      if (error.response.data.error_code == 74 || error.status === 403) {
+        rejectMsg = 'Incorrect Access or Secret key provided. Please check your credentials.';
+      } else if (error.code == 'ERR_BAD_REQUEST') {
+        if (error.status == 400) {
+          // If the error code is 400, it means the request was malformed
+          // If we are a server and the response data message is set (was set by the backend),
+          // we can assume the request was malformed due to Content Security Policy (CSP) violation
+          // and we can display a more user-friendly error message. Otherwise, we display the error
+          // message as is (e.g. the server is not reachable, the request is not allowed, etc)
+          if (this.isServer && error.response?.data?.message) {
+            rejectMsg = this.getCSPErrorMsg(this.hostConfig.host_url, TENABLE_HOST_URL)
+          } else {
+            rejectMsg = 'Malformed Request: ' + error.message;            
+          }
+        } else if (error.status == 401) {
+          // If the error code is 401, it means the request was unauthorized
+          rejectMsg =
+            'Unauthorized (missing or not accepted credentials): ' +
+            error.message;
+        } else {
+          // If the error code is not 400 or 401, it means the request was
+          // rejected by the server for some other reason
+          // (e.g. the server is not reachable, the request is not allowed, etc
+          rejectMsg = `Request Rejected (bad request) -> ${error.name} : ${error.message}, ${error.code}`;
+        }
       } else {
-        rejectMsg = `${error.name} : ${error.response.data.error_msg}`;
+        // If the error message was not a 'ERR_BAD_REQUEST', it means the request was rejected
+        // by the server for some other reason
+        rejectMsg = `Response Error -> ${error.name} : ${error.message}, ${error.code}`;
       }
     } else if (error.request) {
       // The request was made but no response was received.
@@ -93,13 +174,13 @@ export class TenableUtil {
 
       if (error.code == 'ERR_NETWORK') {
         // Check if the tenable url was provided - Content Security Policy (CSP)
-        const corsReject = `Access blocked by CORS or connection refused by the host: ${error.config.baseURL}. See Help for additional instructions.`;
-        const tenableUrl = ServerModule.tenableHostUrl;
-        if (tenableUrl) {
+        const corsReject = `Possible access blocked by CORS or connection refused by the host: ${error.config.baseURL}. See Help for additional instructions. Received Error: ${error.message}`;
+        // const tenableUrl = ServerModule.tenableHostUrl;
+        if (TENABLE_HOST_URL) {
           // If the URL is listed in the allows domains
           // (.env variable TENABLE_HOST_URL) check if they match
-          if (!error.config.baseURL.includes(tenableUrl)) {
-            rejectMsg = `Hostname: ${error.config.baseURL} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl}`;
+          if (!error.config.baseURL.includes(TENABLE_HOST_URL)) {
+            rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL) //`Hostname: ${error.config.baseURL} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl}`;
           } else {
             // CSP url did match, check for port match - reject appropriately
             const portNumber = parseInt(this.hostConfig.host_url.split(':')[2]);
@@ -112,7 +193,7 @@ export class TenableUtil {
         } else if (ServerModule.serverMode) {
           // The URL is not listed in the allows domains (CSP) and Heimdall instance is a server
           rejectMsg =
-            'The Content Security Policy directive environment variable "TENABLE_HOST_URL" not configured. See Help for additional instructions.';
+            'The Content Security Policy directive environment variable "TENABLE_HOST_URL" is not configured. See Help for additional instructions.';
         } else {
           rejectMsg = corsReject;
         }
@@ -121,11 +202,11 @@ export class TenableUtil {
       } else if (error.code == 'ERR_CONNECTION_REFUSED') {
         rejectMsg = `Received network connection refused by the host: ${error.config.baseURL}`;
       } else {
-        rejectMsg = `${error.name} : ${error.message}`;
+        rejectMsg = `Request Error-> ${error.name} : ${error.message}, ${error.code}`;
       }
     } else {
       // Something happened in setting up the request that triggered an Error
-      rejectMsg = `${error.name} : ${error.message}`;
+      rejectMsg = `Unknown Error-> ${error.name} : ${error.message}, ${error.code}`;
     }
     return rejectMsg;
   }
@@ -138,21 +219,16 @@ export class TenableUtil {
   async getScans(startTime: number, endTime: number): Promise<[]> {
     logger.info(`Getting scans from Tenable Client`);
     return new Promise((resolve, reject) => {
-      setTimeout(
-        () =>
-          reject(
-            new Error(
-              'Login timed out. Please ensure the provided credentials and domain/URL are valid and try again.'
-            )
-          ),
-        5000
-      );
+      setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
 
       try {
-        this.axios_instance({
-          method: 'get',
-          url: `/rest/scanResult?fields=name,description,details,scannedIPs,totalChecks,startTime,finishTime,status&startTime=${startTime}&endTime=${endTime}`
-        })
+        const url = this.buildTenableUrl(
+          `/rest/scanResult?fields=name,description,details,scannedIPs,totalChecks,startTime,finishTime,status&startTime=${startTime}&endTime=${endTime}`,
+          this.isServer
+        );
+
+        this.axios_instance
+          .get(url)
           .then((response) => {
             resolve(response.data.response.usable);
           })
@@ -176,28 +252,35 @@ export class TenableUtil {
   async getVulnerabilities(scanId: string): Promise<string> {
     logger.info(`Getting vulnerabilities from Tenable Client`);
     return new Promise((resolve, reject) => {
-      setTimeout(
-        () =>
-          reject(
-            new Error(
-              'Login timed out. Please check your CORS configuration and validate that the hostname is correct.'
-            )
-          ),
-        5000
-      );
+      setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
 
       try {
-        this.axios_instance({
-          method: 'post',
-          url: `rest/scanResult/${scanId}/download?downloadType=v2`,
-          responseType: 'arraybuffer'
-        })
-          .then((response) => {
+        const url = this.buildTenableUrl(
+          `rest/scanResult/${scanId}/download?downloadType=v2`,
+          this.isServer
+        );
+
+        this.axios_instance
+          .post(url, {}, {responseType: 'arraybuffer'})
+          .then(async (response) => {
             // Unzip response in memory
             try {
-              const zip = new Zip(Buffer.from(response.data));
-              const zipEntries = zip.getEntries();
-              resolve(zip.readAsText(zipEntries[0]));
+              // Convert arraybuffer response to a JSZip instance
+              const zip = await JSZip.loadAsync(response.data);
+
+              // Get a list of file names inside the ZIP archive
+              const fileNames = Object.keys(zip.files);
+              if (fileNames.length === 0) {
+                return reject(new Error('ZIP file is empty.'));
+              }
+
+              // Access the first file in the archive
+              const firstFile = zip.files[fileNames[0]];
+
+              // Read its contents as text
+              const text = await firstFile.async('text');
+
+              resolve(text);
             } catch (unzipErr) {
               reject(unzipErr);
             }
@@ -210,4 +293,31 @@ export class TenableUtil {
       }
     });
   }
+
+  /**
+   * Constructs a Tenable API URL based on the execution context.
+   * Ensure the path always starts with a leading slash
+   *
+   * @param path - The endpoint path to append to the base URL.
+   * @param isServer - Indicates if the code is running on the server.
+   *   - If `true`, prefixes the path with `/api/tenable` for server-side requests.
+   *   - If `false`, returns the path as-is for client-side requests.
+   * @returns The constructed URL string for the Tenable API.
+   */
+  buildTenableUrl(path: string, isServer: boolean) {
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    return isServer ? `/api/tenable${path}` : normalizedPath;
+  }
+
+  /**
+   * Generates an error message indicating a Content Security Policy (CSP) violation.
+   *
+   * @param baseURL - The hostname that triggered the CSP violation.
+   * @param tenableUrl - The hostname allowed by the CSP.
+   * @returns A string describing the CSP violation, including the offending and allowed hostnames.
+   */
+  getCSPErrorMsg(baseURL: string, tenableUrl: string): string {
+    return `Hostname: ${baseURL} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl}`;
+  }
+
 }

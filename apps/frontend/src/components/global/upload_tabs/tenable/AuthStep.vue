@@ -50,6 +50,7 @@
 
 <script lang="ts">
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {AuthInfo, TenableUtil} from '@/utilities/tenable_util';
@@ -122,7 +123,7 @@ export default class AuthStep extends Vue {
         SnackbarModule.notify('You have successfully signed in');
         this.$emit('authenticated', config);
       })
-      .catch((error) => {
+      .catch((error: string) => {
         if (error !== 'Incorrect Access or Secret key') {
           this.$emit('error');
         }
@@ -132,9 +133,11 @@ export default class AuthStep extends Vue {
 
   /** Init our fields */
   mounted() {
-    this.accesskey = localAccesskey.getDefault('');
-    this.secretkey = localSecretkey.getDefault('');
-    this.hostname = localHostname.getDefault('');
+    this.accesskey = localAccesskey.getDefault('0fa926a493ec4e1c8a4ffc2e1bb9d7fb');
+    this.secretkey = localSecretkey.getDefault('c78972f44aef48b1992a2a8ad6cfb6a5');
+    // If the hostname is not set, use the default from the server module
+    // (if not running in server mode the default is empty)
+    this.hostname = localHostname.getDefault(ServerModule.tenableHostUrl);
   }
 }
 </script>
