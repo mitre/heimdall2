@@ -183,47 +183,72 @@ export default class FileList extends Vue {
             SnackbarModule.failure(
               `Scan ${execution.id} hasn't finished, wait until completed before loading for viewing.`
             );
+          // eslint-disable-next-line prettier/prettier
+          } else if (execution.status === 'Failed' || execution.status === 'Error') {
+            SnackbarModule.failure(
+              `Scan ${execution.id} has failed, please check the Tenable.sc for more details.`
+            );
+          } else if (execution.status === 'Cancelled') {
+            SnackbarModule.failure(
+              `Scan ${execution.id} has been cancelled, please check the Tenable.sc for more details.`
+            );
+          } else if (execution.status === 'Paused') {
+            SnackbarModule.failure(
+              `Scan ${execution.id} is paused, please check the Tenable.sc for more details.`
+            );
+            // If the scan is completed, we can load the results
           } else {
-            const resultData = await new TenableUtil(
-              this.tenableConfig
-            ).getVulnerabilities(execution.id);
-            if (resultData) {
-              // Check is this scan is already loaded
-              let isLoaded = false;
-              const loadedFiles = InspecDataModule.allEvaluationFiles;
+            await new TenableUtil(this.tenableConfig)
+              .getVulnerabilities(execution.id)
+              .then(async (resultData: unknown) => {
+                if (resultData) {
+                  // Check is this scan is already loaded
+                  let isLoaded = false;
+                  const loadedFiles = InspecDataModule.allEvaluationFiles;
 
-              // We need to check if loaded zip file contained multiple scans, where they are
-              // loaded as [scanId]-[ReportHost] (i.e. 9214-mitre-saf-rhel8-mitre.org)
-              // if they are, just use the scanId for the Map key. If the scan contains a single
-              // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
-              const loadedMap = new Map(
-                loadedFiles.map((obj) => [
-                  obj.filename.indexOf('-') != -1
-                    ? obj.filename.substring(0, obj.filename.indexOf('-'))
-                    : obj.filename.substring(0, obj.filename.indexOf('.')),
-                  obj.uniqueId
-                ])
-              );
+                  // We need to check if loaded zip file contained multiple scans, where they are
+                  // loaded as [scanId]-[ReportHost] (i.e. 9214-mitre-saf-rhel8-mitre.org)
+                  // if they are, just use the scanId for the Map key. If the scan contains a single
+                  // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
+                  const loadedMap = new Map(
+                    loadedFiles.map((obj) => [
+                      obj.filename.indexOf('-') != -1
+                        ? obj.filename.substring(0, obj.filename.indexOf('-'))
+                        : obj.filename.substring(0, obj.filename.indexOf('.')),
+                      obj.uniqueId
+                    ])
+                  );
 
-              isLoaded = loadedMap.has(execution.id);
-              if (!isLoaded) {
-                try {
-                  const textFile: FileLoadOptions = {
-                    filename: execution.id + '.nessus',
-                    data: resultData
-                  };
-                  // .loadFile evaluates to data if file is not provided
-                  return await InspecIntakeModule.loadFile(textFile);
-                } catch (err) {
-                  SnackbarModule.failure(String(err));
+                  isLoaded =
+                    typeof execution.id === 'string' &&
+                    loadedMap.has(execution.id);
+                  if (!isLoaded) {
+                    try {
+                      const textFile: FileLoadOptions = {
+                        filename: execution.id + '.nessus',
+                        data:
+                          typeof resultData === 'string'
+                            ? resultData
+                            : JSON.stringify(resultData)
+                      };
+                      // .loadFile evaluates to data if file is not provided
+                      return await InspecIntakeModule.loadFile(textFile);
+                    } catch (err) {
+                      SnackbarModule.failure(String(err));
+                    }
+                  }
+                } else {
+                  SnackbarModule.failure(
+                    'Attempted to load an undefined execution'
+                  );
+                  throw new Error('Attempted to load an undefined execution');
                 }
-              }
-            } else {
-              SnackbarModule.failure(
-                'Attempted to load an undefined execution'
-              );
-              throw new Error('Attempted to load an undefined execution');
-            }
+              })
+              .catch((error: string) => {
+                SnackbarModule.failure(
+                  `Failed to load scan results for execution. Scan Id: ${execution.id}, ${error}`
+                );
+              });
           }
         }
       }

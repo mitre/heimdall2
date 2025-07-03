@@ -42,6 +42,8 @@ export class TenableUtil {
       ? ''       // use backend proxy
       : hostConfig.host_url; // talk directly to Tenable
 
+    // If running in the browser (Lite-Mode), set the AUTH and CORS headers
+    // Note: Server mode, headers are set by the backend does not require authentication headers
     const headers = this.isServer
       ? {} // backend handles auth
       : {
@@ -98,12 +100,11 @@ export class TenableUtil {
               reject(this.getRejectConnectionMessage(error));
             });
         } else {
-          // If running in the browser, set the CORS headers
+          // If running in Lite mode, connect directly to Tenable
           logger.info(`Using Lite-Mode`);
           this.axios_instance
             .get(url)
             .then((response) => {
-              // if (response.status === 200 && response.data?.response?.user) {
               if (response.status === 200) {
                 logger.info('Processing (Lite-Mode) connected successfully');
                 resolve(true);
@@ -149,23 +150,32 @@ export class TenableUtil {
           if (this.isServer && error.response?.data?.message) {
             rejectMsg = this.getCSPErrorMsg(this.hostConfig.host_url, TENABLE_HOST_URL)
           } else {
-            rejectMsg = 'Malformed Request: ' + error.message;            
+            rejectMsg = 'Malformed Request: ' + (error.response?.data?.message ?? error.message);         
           }
         } else if (error.status == 401) {
           // If the error code is 401, it means the request was unauthorized
           rejectMsg =
             'Unauthorized (missing or not accepted credentials): ' +
-            error.message;
+            (error.response?.data?.message ?? error.message);
+        } else if (error.status == 408) {
+          // If the error code is 408, it means the request timed out
+          rejectMsg = `Request Timeout -> 
+          ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+          ${error.response?.data?.code ?? error.code}`;
         } else {
           // If the error code is not 400 or 401, it means the request was
           // rejected by the server for some other reason
           // (e.g. the server is not reachable, the request is not allowed, etc
-          rejectMsg = `Request Rejected (bad request) -> ${error.name} : ${error.message}, ${error.code}`;
+          rejectMsg = `Request Rejected (bad request) -> 
+            ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+            ${error.response?.data?.code ?? error.code}`;
         }
       } else {
         // If the error message was not a 'ERR_BAD_REQUEST', it means the request was rejected
         // by the server for some other reason
-        rejectMsg = `Response Error -> ${error.name} : ${error.message}, ${error.code}`;
+        rejectMsg = `Response Error -> 
+          ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+          ${error.response?.data?.code ?? error.code}`;
       }
     } else if (error.request) {
       // The request was made but no response was received.
@@ -175,12 +185,11 @@ export class TenableUtil {
       if (error.code == 'ERR_NETWORK') {
         // Check if the tenable url was provided - Content Security Policy (CSP)
         const corsReject = `Possible access blocked by CORS or connection refused by the host: ${error.config.baseURL}. See Help for additional instructions. Received Error: ${error.message}`;
-        // const tenableUrl = ServerModule.tenableHostUrl;
         if (TENABLE_HOST_URL) {
           // If the URL is listed in the allows domains
           // (.env variable TENABLE_HOST_URL) check if they match
           if (!error.config.baseURL.includes(TENABLE_HOST_URL)) {
-            rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL) //`Hostname: ${error.config.baseURL} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl}`;
+            rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL)
           } else {
             // CSP url did match, check for port match - reject appropriately
             const portNumber = parseInt(this.hostConfig.host_url.split(':')[2]);
@@ -202,11 +211,15 @@ export class TenableUtil {
       } else if (error.code == 'ERR_CONNECTION_REFUSED') {
         rejectMsg = `Received network connection refused by the host: ${error.config.baseURL}`;
       } else {
-        rejectMsg = `Request Error-> ${error.name} : ${error.message}, ${error.code}`;
+        rejectMsg = `Request Error->
+          ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+          ${error.response?.data?.code ?? error.code}`;
       }
     } else {
       // Something happened in setting up the request that triggered an Error
-      rejectMsg = `Unknown Error-> ${error.name} : ${error.message}, ${error.code}`;
+      rejectMsg = `Unknown Error-> 
+        ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+        ${error.response?.data?.code ?? error.code}`;
     }
     return rejectMsg;
   }
@@ -256,12 +269,12 @@ export class TenableUtil {
 
       try {
         const url = this.buildTenableUrl(
-          `rest/scanResult/${scanId}/download?downloadType=v2`,
+          `/rest/scanResult/${scanId}/download?downloadType=v2`,
           this.isServer
         );
 
         this.axios_instance
-          .post(url, {}, {responseType: 'arraybuffer'})
+          .post(url, {}, {responseType: 'arraybuffer', headers: {'Content-Type': 'application/zip'}})
           .then(async (response) => {
             // Unzip response in memory
             try {
@@ -286,12 +299,34 @@ export class TenableUtil {
             }
           })
           .catch((error) => {
-            reject(error);
+            reject(this.getRejectMessage(error));
           });
       } catch (e) {
         reject(e);
       }
     });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getRejectMessage(error: any): string {
+    let rejectMsg = '';
+    if (error.code == 'ERR_BAD_REQUEST') {
+      if (error.status == 403) { 
+        // If the error code is 403, it means the request was forbidden
+        rejectMsg = 'Failed to download scan, this could be due to a bad scan';
+      } else {
+        rejectMsg = `Response Error ->
+          ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+          ${error.response?.data?.code ?? error.code}`; 
+      }
+    } else {
+      // If the error message was not a 'ERR_BAD_REQUEST', it means the request was rejected
+      // by the server for some other reason
+      rejectMsg = `Response Error -> 
+        ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+        ${error.response?.data?.code ?? error.code}`; 
+    }
+    return rejectMsg;
   }
 
   /**

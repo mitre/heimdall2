@@ -62,25 +62,52 @@ export class TenableController {
 
       return {success: true, user: result.data}; // ✅ Return plain object
     } catch (err) {
-      if (err.response?.status === 401) {
+      if (err.response?.status === HttpStatus.UNAUTHORIZED) {
         throw new HttpException(
-          'Invalid Tenable credentials',
+          {
+            status: HttpStatus.UNAUTHORIZED,
+            message: 'Invalid Tenable credentials',
+            code: 'INVALID_CREDENTIALS' // custom application error code (optional)
+          },
           HttpStatus.UNAUTHORIZED
         );
       } else if (err.code === 'ECONNREFUSED') {
         throw new HttpException(
-          'Tenable server is unreachable',
+          {
+            status: HttpStatus.BAD_GATEWAY,
+            message: 'Tenable server is unreachable',
+            code: 'SERVER_UNREACHABLE' // custom app code
+          },
           HttpStatus.BAD_GATEWAY
         );
       } else if (err.code === 'ENOTFOUND') {
         throw new HttpException(
-          'Tenable host URL is invalid (unable to resolve to an IP address)',
+          {
+            status: HttpStatus.BAD_REQUEST,
+            message:
+              'Tenable host URL is invalid (unable to resolve to an IP address)',
+            code: 'INVALID_HOST_URL' // custom app code
+          },
           HttpStatus.BAD_REQUEST
+        );
+      } else if (err.code === 'ETIMEDOUT') {
+        throw new HttpException(
+          {
+            status: HttpStatus.REQUEST_TIMEOUT,
+            message: 'Tenable server took too long to respond',
+            code: 'CONNECTION_TIMEOUT' // custom application error code (optional)
+          },
+          HttpStatus.REQUEST_TIMEOUT
         );
       } else {
         throw new HttpException(
-          err.response?.data?.message ||
-            `Unexpected error connecting to Tenable ${host_url}`,
+          {
+            status: err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            message:
+              err.response?.data?.message ||
+              `Unexpected error connecting to Tenable ${host_url}`,
+            code: 'TENABLE_PROXY_ERROR' // Optional custom app code
+          },
           err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR
         );
       }
@@ -101,15 +128,19 @@ export class TenableController {
   async proxy(@Req() req: Request, @Res() res: Response) {
     const creds = req.session.tenable;
 
+    // If credentials are missing, user is not authenticated, send 401 Unauthorized.
     if (!creds) {
       return res.status(401).json({error: 'Not authenticated with Tenable'});
     }
 
+    // Forward the incoming request to the Tenable API using stored credentials.
+    // Respond to the client with the status and data from Tenable's response or
+    // handle any errors that occur during the proxy request.
     try {
       const result = await this.tenableService.proxyRequest(req, creds);
       res.status(result.status).send(result.data);
     } catch (err) {
-      const status = err.response?.status || 500;
+      const status = err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
       const message = err.response?.data || 'Proxy error';
       res.status(status).send(message);
     }

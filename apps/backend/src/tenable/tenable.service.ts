@@ -31,7 +31,7 @@ export class TenableService {
       data,
       params,
       responseType:
-        method === 'GET' && req.get('accept')?.includes('zip')
+        method === 'POST' && req.get('content-type')?.includes('zip')
           ? 'arraybuffer'
           : 'json'
     });
