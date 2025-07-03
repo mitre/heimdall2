@@ -55,7 +55,7 @@
     "run-script-os": "^1.1.6",
     "semver": "^7.6.0",
     "tailwindcss": "^4.0.6",
-    "tw-elements": "^1.0.0-beta2",
+    "tw-elements": "^2.0.0",
     "validator": "^13.12.0",
     "winston": "^3.6.0",
     "xml-formatter": "^3.6.2",
