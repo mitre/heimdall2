@@ -82,14 +82,8 @@ export class TenableUtil {
             })
             .then((response) => {
               if (response.data.success) {
-                logger.info(
-                  `Processing (Server-Mode) connected successfully: ${response.data.user.name}`
-                );
                 resolve(true);
               } else {
-                logger.error(
-                  `Processing (Server-Mode) connection failed: ${response.data.message}`
-                );
                 reject(response.data.message);
               }
             })
