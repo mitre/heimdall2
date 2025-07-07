@@ -9,6 +9,10 @@ ARG YARNREPO_MIRROR=https://registry.npmjs.org
 ENV YARNREPO=$YARNREPO_MIRROR
 
 USER 0
+COPY certs/dodcerts.sh ./dodcerts.sh
+RUN chmod +x ./dodcerts.sh && \
+    ./dodcerts.sh && \
+    update-ca-trust
 WORKDIR /src
 
 # python3/make/compiler is a requirement for node-gyp
@@ -37,6 +41,10 @@ ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
 USER 0
+COPY certs/dodcerts.sh ./dodcerts.sh
+RUN chmod +x ./dodcerts.sh && \
+    ./dodcerts.sh && \
+    update-ca-trust
 WORKDIR /app
 
 RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
