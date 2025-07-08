@@ -127,11 +127,11 @@ export class TenableUtil {
   getRejectConnectionMessage(error: any): string {
     let rejectMsg = '';
     const TENABLE_HOST_URL = ServerModule.tenableHostUrl;
-  
+    const TENABLE_CSP_NOT_SET =
+      'The Content Security Policy directive environment variable "TENABLE_HOST_URL" is not configured. See Help for additional instructions.';
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-
       if (error.response.data.error_code == 74 || error.status === 403) {
         rejectMsg = 'Incorrect Access or Secret key provided. Please check your credentials.';
       } else if (error.code == 'ERR_BAD_REQUEST') {
@@ -151,13 +151,21 @@ export class TenableUtil {
           rejectMsg =
             'Unauthorized (missing or not accepted credentials): ' +
             (error.response?.data?.message ?? error.message);
+        } else if (error.status == 404) {
+          if (this.isServer && !TENABLE_HOST_URL) {
+            rejectMsg = TENABLE_CSP_NOT_SET;
+          } else {
+            rejectMsg = `Network Error -> 
+              ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+              ${error.response?.data?.code ?? error.code}`;          
+          }
         } else if (error.status == 408) {
           // If the error code is 408, it means the request timed out
           rejectMsg = `Request Timeout -> 
           ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
           ${error.response?.data?.code ?? error.code}`;
         } else {
-          // If the error code is not 400 or 401, it means the request was
+          // If the error code is not 400, 401, 404 or 408, it means the request was
           // rejected by the server for some other reason
           // (e.g. the server is not reachable, the request is not allowed, etc
           rejectMsg = `Request Rejected (bad request) -> 
@@ -195,8 +203,7 @@ export class TenableUtil {
           }
         } else if (ServerModule.serverMode) {
           // The URL is not listed in the allows domains (CSP) and Heimdall instance is a server
-          rejectMsg =
-            'The Content Security Policy directive environment variable "TENABLE_HOST_URL" is not configured. See Help for additional instructions.';
+          rejectMsg = TENABLE_CSP_NOT_SET;
         } else {
           rejectMsg = corsReject;
         }
@@ -240,7 +247,7 @@ export class TenableUtil {
             resolve(response.data.response.usable);
           })
           .catch((error) => {
-            reject(`${error.name} : ${error.message}`);
+            reject(this.getRejectMessage(error));
           });
       } catch (e) {
         reject(e);
@@ -305,7 +312,9 @@ export class TenableUtil {
   getRejectMessage(error: any): string {
     let rejectMsg = '';
     if (error.code == 'ERR_BAD_REQUEST') {
-      if (error.status == 403) { 
+      if (error.status == 401) {
+        rejectMsg = 'Not authenticated with Tenable or CSP not set';
+      } else if (error.status == 403) { 
         // If the error code is 403, it means the request was forbidden
         rejectMsg = 'Failed to download scan, this could be due to a bad scan';
       } else {
@@ -346,7 +355,7 @@ export class TenableUtil {
    * @returns A string describing the CSP violation, including the offending and allowed hostnames.
    */
   getCSPErrorMsg(baseURL: string, tenableUrl: string): string {
-    return `Hostname: ${baseURL} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl}`;
+    return `Hostname: ${baseURL} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl?.trim() || 'Host not set'}`;
   }
 
 }

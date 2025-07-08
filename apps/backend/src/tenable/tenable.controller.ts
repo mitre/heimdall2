@@ -23,6 +23,9 @@ declare module 'express-session' {
   }
 }
 
+const TENABLE_CSP_NOT_SET =
+  "Cannot set properties of undefined (setting 'tenable')";
+
 // NestJS controller that handles Tenable authentication and proxying requests to Tenable
 // It allows users to log in with their Tenable credentials and then proxies all subsequent requests
 // to the Tenable API, handling authentication via session storage.
@@ -57,12 +60,20 @@ export class TenableController {
           'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}`
         }
       });
-
       req.session.tenable = {host_url, accesskey, secretkey};
 
       return {success: true, user: result.data}; // ✅ Return plain object
     } catch (err) {
-      if (err.response?.status === HttpStatus.UNAUTHORIZED) {
+      if (err.message.includes(TENABLE_CSP_NOT_SET)) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            message: 'Tenable CSP not set',
+            code: 'ERR_NETWORK' // custom application error code (optional)
+          },
+          HttpStatus.NOT_FOUND
+        );
+      } else if (err.response?.status === HttpStatus.UNAUTHORIZED) {
         throw new HttpException(
           {
             status: HttpStatus.UNAUTHORIZED,
@@ -99,6 +110,18 @@ export class TenableController {
           },
           HttpStatus.REQUEST_TIMEOUT
         );
+      } else if (err.code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
+        throw new HttpException(
+          {
+            status: HttpStatus.BAD_GATEWAY,
+            message:
+              'SSL certificate verification failed while connecting to Tenable ' +
+              `(${host_url}). This may be due to an untrusted or incomplete TLS ` +
+              'certificate chain.',
+            code: 'UNABLE_TO_VERIFY_LEAF_SIGNATURE'
+          },
+          HttpStatus.BAD_GATEWAY
+        );
       } else {
         throw new HttpException(
           {
@@ -123,26 +146,45 @@ export class TenableController {
    * @returns Sends the proxied response from the Tenable service or an error response.
    *
    * @throws 401 if the user is not authenticated with Tenable.
+   * @throws 404 if user session content is not available.
    * @throws 500 or the proxied error status if the proxy request fails.
    */
   async proxy(@Req() req: Request, @Res() res: Response) {
-    const creds = req.session.tenable;
-
-    // If credentials are missing, user is not authenticated, send 401 Unauthorized.
-    if (!creds) {
-      return res.status(401).json({error: 'Not authenticated with Tenable'});
-    }
-
-    // Forward the incoming request to the Tenable API using stored credentials.
-    // Respond to the client with the status and data from Tenable's response or
-    // handle any errors that occur during the proxy request.
     try {
+      const creds = req.session.tenable;
+
+      // If credentials are missing, user is not authenticated, send 401 Unauthorized.
+      if (!creds) {
+        return res.status(401).json({error: 'Not authenticated with Tenable'});
+      }
+
+      // Forward the incoming request to the Tenable API using stored credentials.
+      // Respond to the client with the status and data from Tenable's response or
+      // handle any errors that occur during the proxy request.
       const result = await this.tenableService.proxyRequest(req, creds);
       res.status(result.status).send(result.data);
     } catch (err) {
-      const status = err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
-      const message = err.response?.data || 'Proxy error';
-      res.status(status).send(message);
+      if (
+        err.message.includes(
+          TENABLE_CSP_NOT_SET.replace('set', 'read').replace(
+            'setting',
+            'reading'
+          )
+        )
+      ) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            message: 'Tenable CSP not set',
+            code: 'ERR_NETWORK' // custom application error code (optional)
+          },
+          HttpStatus.NOT_FOUND
+        );
+      } else {
+        const status = err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
+        const message = err.response?.data || 'Proxy error';
+        res.status(status).send(message);
+      }
     }
   }
 }

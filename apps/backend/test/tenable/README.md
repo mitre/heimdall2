@@ -21,7 +21,7 @@ This project simulates a subset of the Tenable.sc REST API using [Prism](https:/
  > npm install -g @stoplight/prism-cli
 ```
 ### 2. Run the Mock Server
-In the tenable-sc-mock.yaml run this command:
+Navigate to the folder containing tenable-sc-mock.yaml and run this command:
 ```bash
   > prism mock tenable-sc-mock.yaml
 ```
@@ -32,6 +32,7 @@ Server starts on: `http://localhost:4010`
 ✅ Get Current User
 ```bash
   > curl -X GET http://localhost:4010/rest/currentUser -H "x-apikey: accesskey=abc123; secretkey=def456"
+  Note: The `accesskey` and `secretkey` in the curl command can be any string.
 ```
 ✅ Get Scan Results
 ```bash

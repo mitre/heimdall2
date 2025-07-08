@@ -156,21 +156,28 @@ export default class FileList extends Vue {
       dateNow.setDate(dateNow.getDate() - this.scanDays) / 1000
     );
 
-    const results = await new TenableUtil(this.tenableConfig).getScans(
-      startTime,
-      endTime
-    );
-    this.executions = [];
-    results.forEach((result: ScanResults) => {
-      result.totalChecks = this.formatNumberOfScans(result.totalChecks);
-      result.startTime = this.epochToDate(result.startTime);
-      result.finishTime = this.epochToDate(result.finishTime);
-      this.executions.push(result);
-    });
-    this.loading = false;
-    SnackbarModule.notify(
-      'Successfully queried Tenable.sc for available scan results'
-    );
+    await new TenableUtil(this.tenableConfig)
+      .getScans(startTime, endTime)
+      .then(async (resultData: unknown) => {
+        this.executions = [];
+        const results = resultData as ScanResults[];
+        results.forEach((result: ScanResults) => {
+          result.totalChecks = this.formatNumberOfScans(result.totalChecks);
+          result.startTime = this.epochToDate(result.startTime);
+          result.finishTime = this.epochToDate(result.finishTime);
+          this.executions.push(result);
+        });
+        this.loading = false;
+        SnackbarModule.notify(
+          'Successfully queried Tenable.sc for available scan results'
+        );
+      })
+      .catch((error: string) => {
+        this.loading = false;
+        SnackbarModule.failure(
+          `Failed to retrieve scan results from the Tenable server. ${error}`
+        );
+      });
   }
 
   async loadResults() {
@@ -183,7 +190,7 @@ export default class FileList extends Vue {
             SnackbarModule.failure(
               `Scan ${execution.id} hasn't finished, wait until completed before loading for viewing.`
             );
-          // eslint-disable-next-line prettier/prettier
+            // eslint-disable-next-line prettier/prettier
           } else if (execution.status === 'Failed' || execution.status === 'Error') {
             SnackbarModule.failure(
               `Scan ${execution.id} has failed, please check the Tenable.sc for more details.`
