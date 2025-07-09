@@ -171,7 +171,7 @@ export class TenableUtil {
             ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
             ${error.response?.data?.code ?? error.code}`;
         }
-      } else if (error.code = `ERR_BAD_RESPONSE`) {
+      } else if (error.code == `ERR_BAD_RESPONSE`) {
         if (error.status == 502) {
           rejectMsg = error.response?.data?.message ??
             'Response Error (SSL) -> Certificate verification failed. '+
