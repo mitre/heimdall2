@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-//import Zip from 'adm-zip';
 import JSZip from 'jszip';
 import axios, {AxiosInstance} from 'axios';
 import {ServerModule} from '@/store/server';

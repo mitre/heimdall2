@@ -1,28 +1,6 @@
-//import ZipFile from 'adm-zip';
 import JSZip from 'jszip';
 import {saveAs} from 'file-saver';
 
-// type File = {
-//   filename: string;
-//   data: string;
-// };
-// export async function saveSingleOrMultipleFiles(
-//   files: File[],
-//   filetype: string
-// ) {
-//   if (files.length === 1) {
-//     const blob = new Blob([files[0].data]);
-//     saveAs(blob, cleanUpFilename(`${files[0]?.filename}`));
-//   } else {
-//     const zipfile = new ZipFile();
-//     files.forEach((file) => {
-//       const buffer = Buffer.from(file.data);
-//       zipfile.addFile(file.filename, buffer);
-//     });
-//     const blob = new Blob([zipfile.toBuffer()]);
-//     saveAs(blob, `exported_${filetype}s.zip`);
-//   }
-// }
 type File = {
   filename: string;
   data: ArrayBuffer | Uint8Array | Blob | string;
