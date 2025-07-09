@@ -171,6 +171,16 @@ export class TenableUtil {
             ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
             ${error.response?.data?.code ?? error.code}`;
         }
+      } else if (error.code = `ERR_BAD_RESPONSE`) {
+        if (error.status == 502) {
+          rejectMsg = error.response?.data?.message ??
+            'Response Error (SSL) -> Certificate verification failed. '+
+            'Possible untrusted or incomplete TLS certificate chain.';
+        } else {
+          rejectMsg = `Response Error (bad request) -> 
+            ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+            ${error.response?.data?.code ?? error.code}`;
+        }
       } else {
         // If the error message was not a 'ERR_BAD_REQUEST', it means the request was rejected
         // by the server for some other reason
