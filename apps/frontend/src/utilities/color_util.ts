@@ -83,7 +83,7 @@ export function visible_against(colorHex: string): string {
   // https://github.com/mitre/heimdall2/issues/2350
   if (typeof Chroma !== 'undefined') {
     // Get the color
-    let color = Chroma.hex(colorHex);
+    let color = Chroma(colorHex);
 
     // Rotate 50 degrees in hue (arbitrary # but seems nice)
     color = color.set('hsl.h', '+180');
@@ -116,7 +116,7 @@ function lum_sigmoid(t: number, move: number) {
 /** Shifts a colors luminance by the specified amount */
 export function shift(baseColor: string, amount: number): string {
   if (typeof Chroma !== 'undefined') {
-    const c = Chroma.hex(baseColor);
+    const c = Chroma(baseColor);
     const baseL = c.luminance();
     const newL = lum_sigmoid(baseL, amount);
     const newC = c.luminance(newL);
