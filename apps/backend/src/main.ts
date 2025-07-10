@@ -65,13 +65,17 @@ async function bootstrap() {
         }),
         proxy: configService.isInProductionMode() ? true : undefined,
         cookie: {
-          maxAge: 60 * 60,
+          maxAge: 60 * 60 * 1000,
           secure: configService.isInProductionMode()
         }, // 1 hour
-        saveUninitialized: true,
+        saveUninitialized: false,
         resave: false
       })
     );
+    if (configService.isInProductionMode()) {
+      app.getHttpAdapter().getInstance().set('trust proxy', true);
+    }
+    app.use(passport.session());
   }
   app.use(
     '/authn/login',
@@ -101,6 +105,14 @@ async function bootstrap() {
       whitelist: true
     })
   );
+
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+  app.use((req: any, res: any, next: any) => {
+    console.log('Url:', req.url);
+    console.log('Session:', JSON.stringify(req.session, null, 2));
+    next();
+  });
+
   await app.listen(configService.get('PORT') || 3000);
 }
 bootstrap();
