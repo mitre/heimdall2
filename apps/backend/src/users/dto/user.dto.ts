@@ -1,4 +1,4 @@
-import {IUser} from '@heimdall/interfaces';
+import {IUser} from '@heimdall/common/interfaces';
 import {User} from '../user.model';
 
 export class UserDto implements IUser {

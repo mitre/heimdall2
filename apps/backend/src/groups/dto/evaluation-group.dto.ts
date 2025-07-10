@@ -1,4 +1,4 @@
-import {IEvaluationGroup} from '@heimdall/interfaces';
+import {IEvaluationGroup} from '@heimdall/common/interfaces';
 import {IsNotEmpty, IsString} from 'class-validator';
 
 export class EvaluationGroupDto implements IEvaluationGroup {

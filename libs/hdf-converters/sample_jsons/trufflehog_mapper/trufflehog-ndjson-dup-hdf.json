@@ -1,0 +1,94 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.11.2"
+  },
+  "version": "2.11.2",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Source ID: 1, Source Name: trufflehog - filesystem",
+      "title": "trufflehog - filesystem",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": [
+              "IA-5(7)"
+            ],
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Found URI secret using PLAIN decoder",
+          "id": "URI PLAIN",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Filesystem\": {\n      \"file\": \".git/config\",\n      \"line\": 13\n    }\n  }\n}",
+              "message": "{\n  \"Verified\": false,\n  \"VerificationError\": \"dialing local IP addresses is not allowed\",\n  \"Raw\": \"https://gitlab-ci-token:<token>>@gitlab.my_domain.dev\",\n  \"RawV2\": \"https://gitlab-ci-token:<token>@gitlab.my_domain.dev/foo/bar.git\",\n  \"Redacted\": \"https://gitlab-ci-token:********@gitlab.my_domain.dev\"\n}",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "IA-5(7)"
+            ],
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Found Postgres secret using PLAIN decoder",
+          "id": "Postgres PLAIN",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Filesystem\": {\n      \"file\": \"github.com/jackc/pgx/v5/pgxpool/pool.go\",\n      \"line\": 297\n    }\n  }\n}",
+              "message": "{\n  \"Verified\": false,\n  \"VerificationError\": \"lookup pg.example.com on 10.96.0.10:53: server misbehaving\",\n  \"Raw\": \"postgres://jack:secret@pg.example.com:5432\",\n  \"RawV2\": \"postgres://jack:secret@pg.example.com:5432\",\n  \"ExtraData\": {\n    \"sslmode\": \"verify-ca\"\n  }\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Filesystem\": {\n      \"file\": \"github.com/jackc/pgx/v5/pgconn/config.go\",\n      \"line\": 1\n    }\n  }\n}",
+              "message": "{\n  \"Verified\": false,\n  \"VerificationError\": \"lookup foo.example.com:5432,bar.example.com:5432: no such host\",\n  \"Raw\": \"postgres://jack:secret@foo.example.com:5432,bar.example.com:5432:5432\",\n  \"RawV2\": \"postgres://jack:secret@foo.example.com:5432,bar.example.com:5432:5432\",\n  \"ExtraData\": {\n    \"sslmode\": \"<unset>\"\n  }\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Filesystem\": {\n      \"file\": \"github.com/jackc/pgx/v5/pgconn/config.go\",\n      \"line\": 171\n    }\n  }\n}",
+              "message": "{\n  \"Verified\": false,\n  \"VerificationError\": \"lookup pg.example.com on 10.96.0.10:53: server misbehaving\",\n  \"Raw\": \"postgres://jack:secret@pg.example.com:5432\",\n  \"RawV2\": \"postgres://jack:secret@pg.example.com:5432\",\n  \"ExtraData\": {\n    \"sslmode\": \"verify-ca\"\n  }\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Filesystem\": {\n      \"file\": \"github.com/pressly/goose/v3/README.md\",\n      \"line\": 93\n    }\n  }\n}",
+              "message": "{\n  \"Verified\": false,\n  \"VerificationError\": \"lookup qwerty.us-east-1.redshift.amazonaws.com on 10.96.0.10:53: server misbehaving\",\n  \"Raw\": \"postgres://user:password@qwerty.us-east-1.redshift.amazonaws.com:5439\",\n  \"RawV2\": \"postgres://user:password@qwerty.us-east-1.redshift.amazonaws.com:5439\",\n  \"ExtraData\": {\n    \"sslmode\": \"<unset>\"\n  }\n}",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "ba8c9ae68b0c4d07e06e0821811f716812ea379467c1d57d3117741d471bd0af"
+    }
+  ],
+  "passthrough": {}
+}

@@ -273,7 +273,7 @@ import {
   IEvalPaginationParams,
   IEvaluation,
   IEvaluationTag
-} from '@heimdall/interfaces';
+} from '@heimdall/common/interfaces';
 import {Prop} from 'vue-property-decorator';
 import Component, {mixins} from 'vue-class-component';
 import {FilteredDataModule} from '../../../store/data_filters';

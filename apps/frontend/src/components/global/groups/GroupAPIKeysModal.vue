@@ -112,7 +112,7 @@ import ActionDialog from '@/components/generic/ActionDialog.vue';
 import Users from '@/components/global/groups/Users.vue';
 import CopyButton from '@/components/generic/CopyButton.vue';
 import {SnackbarModule} from '@/store/snackbar';
-import {IApiKey, IGroup} from '@heimdall/interfaces';
+import {IApiKey, IGroup} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';

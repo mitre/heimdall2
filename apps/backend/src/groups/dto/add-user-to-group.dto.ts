@@ -1,4 +1,4 @@
-import {IAddUserToGroup} from '@heimdall/interfaces';
+import {IAddUserToGroup} from '@heimdall/common/interfaces';
 import {IsNotEmpty, IsString} from 'class-validator';
 
 export class AddUserToGroupDto implements IAddUserToGroup {

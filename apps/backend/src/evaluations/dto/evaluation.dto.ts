@@ -1,4 +1,4 @@
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/common/interfaces';
 import {EvaluationTagDto} from '../../evaluation-tags/dto/evaluation-tag.dto';
 import {GroupDto} from '../../groups/dto/group.dto';
 import {Group} from '../../groups/group.model';

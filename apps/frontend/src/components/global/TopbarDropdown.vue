@@ -99,7 +99,7 @@ import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import UserModal from '@/components/global/UserModal.vue';
 import ServerMixin from '@/mixins/ServerMixin';
 import {ServerModule} from '@/store/server';
-import {IUser} from '@heimdall/interfaces';
+import {IUser} from '@heimdall/common/interfaces';
 import Component, {mixins} from 'vue-class-component';
 
 @Component({
