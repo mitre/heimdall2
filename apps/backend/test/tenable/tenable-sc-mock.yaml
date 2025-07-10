@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  title: Tenable.sc Mock API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4010
+
+components:
+  securitySchemes:
+    XApiKey:
+      type: apiKey
+      in: header
+      name: x-apikey
+
+security:
+  - XApiKey: []
+
+paths:
+  /rest/currentUser:
+    get:
+      summary: Get current user
+      responses:
+        '200':
+          description: A logged-in user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                      id:
+                        type: integer
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+              example:
+                response:
+                  username: admin
+                  id: 1
+                  permissions: ["read", "write"]
+
+  /rest/scanResult:
+    get:
+      summary: Get scan results with filters
+      parameters:
+        - in: query
+          name: fields
+          schema:
+            type: string
+        - in: query
+          name: startTime
+          schema:
+            type: string
+        - in: query
+          name: endTime
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Scan results list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        details:
+                          type: string
+                        scannedIPs:
+                          type: string
+                        totalChecks:
+                          type: integer
+                        startTime:
+                          type: string
+                        finishTime:
+                          type: string
+                        status:
+                          type: string
+              example:
+                response:
+                  - name: Daily Scan
+                    description: Internal scan results
+                    details: All systems OK
+                    scannedIPs: 192.168.1.1
+                    totalChecks: 50
+                    startTime: 2024-01-01T08:00:00Z
+                    finishTime: 2024-01-01T09:00:00Z
+                    status: completed
+
+  /rest/scanResult/{scanId}/download:
+    post:
+      summary: Download scan result
+      parameters:
+        - in: path
+          name: scanId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: downloadType
+          required: true
+          schema:
+            type: string
+            enum: [v2]
+      responses:
+        '200':
+          description: Binary scan report
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary

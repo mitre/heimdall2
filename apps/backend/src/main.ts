@@ -49,8 +49,12 @@ async function bootstrap() {
   );
   app.use(json({limit: '50mb'}));
   app.use(passport.initialize());
-  // Sessions are only used for oauth callbacks
-  if (configService.enabledOauthStrategies().length) {
+  // Sessions was previously set to only be used for oauth callbacks
+  // but now is used for Tenable authentication as well.
+  if (
+    configService.enabledOauthStrategies().length ||
+    configService.getTenableHostUrl().length
+  ) {
     app.use(
       session({
         secret: generateDefault(),
@@ -65,9 +69,9 @@ async function bootstrap() {
         }),
         proxy: configService.isInProductionMode() ? true : undefined,
         cookie: {
-          maxAge: 60 * 60,
+          maxAge: 60 * 60 * 1000, // 1 hour
           secure: configService.isInProductionMode()
-        }, // 1 hour
+        },
         saveUninitialized: true,
         resave: false
       })

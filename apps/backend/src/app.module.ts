@@ -17,6 +17,7 @@ import {GroupUsersModule} from './group-users/group-users.module';
 import {GroupsModule} from './groups/groups.module';
 import {StatisticsModule} from './statistics/statistics.module';
 import {UsersModule} from './users/users.module';
+import {TenableModule} from './tenable/tenable.module';
 
 @Module({
   controllers: [AppController],
@@ -35,7 +36,8 @@ import {UsersModule} from './users/users.module';
     GroupEvaluationsModule,
     GroupsModule,
     GroupUsersModule,
-    StatisticsModule
+    StatisticsModule,
+    TenableModule
   ],
   providers: [
     AppService,
