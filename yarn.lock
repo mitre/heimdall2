@@ -15642,9 +15642,9 @@ lunr@^2.3.9:
   integrity sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==
 
 luxon@^3.0.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.6.1.tgz#d283ffc4c0076cb0db7885ec6da1c49ba97e47b0"
-  integrity sha512-tJLxrKJhO2ukZ5z0gyjY1zPh3Rh88Ej9P7jNrZiHMUXHae1yvI2imgOZtL1TO8TW6biMMKfTtAOoEJANgtWBMQ==
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.7.1.tgz#9bd09aa84a56afb00c57ea78a8ec5bd16eb24ec0"
+  integrity sha512-RkRWjA926cTvz5rAb1BqyWkKbbjzCGchDUIKMCUvNi17j6f6j8uHGDV82Aqcqtzd+icoYpELmG3ksgGiFNNcNg==
 
 magic-string@0.30.17, magic-string@^0.30.17:
   version "0.30.17"
