@@ -200,7 +200,12 @@ export class TenableUtil {
           // If the URL is listed in the allows domains
           // (.env variable TENABLE_HOST_URL) check if they match
           if (!error.config.baseURL.includes(TENABLE_HOST_URL)) {
-            rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL)
+            if (error.config.baseURL) {
+              rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL)
+            } else {
+              // we assume that the connection was rejected, most likely is that the network path does not exist
+              rejectMsg = 'Connection refused by host, or broken network path'
+            }
           } else {
             // CSP url did match, check for port match - reject appropriately
             const portNumber = parseInt(this.hostConfig.host_url.split(':')[2]);
@@ -364,7 +369,7 @@ export class TenableUtil {
    * @returns A string describing the CSP violation, including the offending and allowed hostnames.
    */
   getCSPErrorMsg(baseURL: string, tenableUrl: string): string {
-    return `Hostname: ${baseURL} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl?.trim() || 'Host not set'}`;
+    return `Hostname: ${baseURL?.trim() || 'Unknown host'} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl?.trim() || 'Host not set'}`;
   }
 
 }
