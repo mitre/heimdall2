@@ -59,6 +59,7 @@ export class ConfigService {
       registrationEnabled: this.isRegistrationAllowed(),
       localLoginEnabled: this.isLocalLoginAllowed(),
       tenableHostUrl: this.getTenableHostUrl(),
+      forceTenableFrontend: this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',
       splunkHostUrl: this.getSplunkHostUrl()
     });
   }

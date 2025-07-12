@@ -60,9 +60,13 @@ export class TenableController {
           'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}`
         }
       });
+
+      // Assign the Tenable credentials to the session
       req.session.tenable = {host_url, accesskey, secretkey};
 
-      return {success: true, user: result.data}; // ✅ Return plain object
+      // Return the authenticated user data
+      // Note: result.data is already a plain object, no need to convert it.
+      return {success: true, user: result.data}; // Return plain object
     } catch (err) {
       if (err.message.includes(TENABLE_CSP_NOT_SET)) {
         throw new HttpException(
@@ -96,7 +100,7 @@ export class TenableController {
           {
             status: HttpStatus.BAD_REQUEST,
             message:
-              'Tenable host URL is invalid (unable to resolve to an IP address)',
+              'Unable to resolve Tenable host URL to an IP address (possible DNS resolution on the hosting platform).',
             code: 'INVALID_HOST_URL' // custom app code
           },
           HttpStatus.BAD_REQUEST
