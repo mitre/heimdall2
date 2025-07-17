@@ -2,6 +2,7 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from '@govtechsg/passport-openidconnect';
 import {HttpsProxyAgent} from 'https-proxy-agent';
+import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
@@ -23,6 +24,21 @@ interface OIDCProfile {
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
+  private readonly line = '_______________________________________________\n';
+  public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
+  public logger = winston.createLogger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.timestamp({
+        format: this.loggingTimeFormat
+      }),
+      winston.format.printf(
+        (info) =>
+          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
+      )
+    )
+  });
+
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
@@ -56,7 +72,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
             : undefined
       },
       // using the 9-arity function so that we can access the underlying JSON response and extract the 'email_verified' attribute
-      async function (
+      async (
         _issuer: string,
         uiProfile: OIDCProfile,
         _idProfile: object,
@@ -67,7 +83,9 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         _params: object,
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
-      ) {
+      ) => {
+        this.logger.debug('in oidc strategy file');
+        this.logger.debug(JSON.stringify(uiProfile, null, 2));
         const userData = uiProfile._json;
         const {given_name, family_name, email, email_verified, groups} =
           userData;

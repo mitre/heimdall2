@@ -2,14 +2,29 @@ import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {json} from 'express';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import multer from 'multer';
+import winston from 'winston';
+import passport = require('passport');
+import postgresSessionStore = require('connect-pg-simple');
+import session = require('express-session');
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
 import {generateDefault} from './token/token.providers';
-import session = require('express-session');
-import postgresSessionStore = require('connect-pg-simple');
-import helmet from 'helmet';
-import passport = require('passport');
+
+const line = '_______________________________________________\n';
+const loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
+const logger = winston.createLogger({
+  transports: [new winston.transports.Console()],
+  format: winston.format.combine(
+    winston.format.timestamp({
+      format: loggingTimeFormat
+    }),
+    winston.format.printf(
+      (info) => `${line}[${[info.timestamp]}] (Authn Service): ${info.message}`
+    )
+  )
+});
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -112,8 +127,8 @@ async function bootstrap() {
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   app.use((req: any, res: any, next: any) => {
-    console.log('Url:', req.url);
-    console.log('Session:', JSON.stringify(req.session, null, 2));
+    logger.debug('Url:', req.url);
+    logger.debug('Session:', JSON.stringify(req.session, null, 2));
     next();
   });
 

@@ -2,6 +2,7 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from '@govtechsg/passport-openidconnect';
 import {HttpsProxyAgent} from 'https-proxy-agent';
+import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
@@ -19,6 +20,21 @@ type Profile = {
 
 @Injectable()
 export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
+  private readonly line = '_______________________________________________\n';
+  public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
+  public logger = winston.createLogger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.timestamp({
+        format: this.loggingTimeFormat
+      }),
+      winston.format.printf(
+        (info) =>
+          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
+      )
+    )
+  });
+
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService
@@ -53,14 +69,14 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
             : undefined
       },
       // Okta has no concept of a 'verified' email - the account has to have an email address associated with it - which is why we can use the 3-arity function since we don't need access to the underlying JSON response
-      async function (
+      async (
         _issuer: string,
         profile: Profile,
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
-      ) {
-        console.log('profile object - in oktastrategy file');
-        console.log(JSON.stringify(profile, null, 2));
+      ) => {
+        this.logger.debug('in okta strategy file');
+        this.logger.debug(JSON.stringify(profile, null, 2));
         if (profile.emails.length > 0 && profile.emails[0].value) {
           const user = await authnService.validateOrCreateUser(
             profile.emails[0].value,
