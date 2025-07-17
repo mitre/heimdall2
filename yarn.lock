@@ -2201,11 +2201,12 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.1.tgz#de633db3ec2ef6a3c89e2f19038063e8a122e2c2"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
-"@govtechsg/passport-openidconnect@https://github.com/Amndeep7/passport-openidconnect#logging":
+"@govtechsg/passport-openidconnect@^1.0.3":
   version "1.0.3"
-  resolved "https://github.com/Amndeep7/passport-openidconnect#c4ebb2d4c39c2925d61afbe95ef73e37031c1132"
+  resolved "https://registry.npmjs.org/@govtechsg/passport-openidconnect/-/passport-openidconnect-1.0.3.tgz#257085687a671b0dc980bcc20b8bf7622ccbec56"
+  integrity sha512-Xf7B4gxg6HV+rRwBxqk+icexS1BT9Yd9ERnkw+PQVvId02OoEqqFo55kn9sine2mMCuh/OYQU95jlT/9CU1AtQ==
   dependencies:
-    oauth "github:Amndeep7/node-oauth#logging"
+    oauth "^0.10.0"
     passport-strategy "^1.0.0"
 
 "@graphql-tools/merge@8.3.1":
@@ -16793,9 +16794,10 @@ oauth@0.9.x:
   resolved "https://registry.npmjs.org/oauth/-/oauth-0.9.15.tgz#bd1fefaf686c96b75475aed5196412ff60cfb9c1"
   integrity sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==
 
-"oauth@github:Amndeep7/node-oauth#logging":
+oauth@^0.10.0:
   version "0.10.2"
-  resolved "https://codeload.github.com/Amndeep7/node-oauth/tar.gz/03b403aff4182b41c3dcf6fc91b2fe466c7eebe0"
+  resolved "https://registry.npmjs.org/oauth/-/oauth-0.10.2.tgz#fd7139b0ce1a1037bd11fa4e236afc588132418c"
+  integrity sha512-JtFnB+8nxDEXgNyniwz573xxbKSOu3R8D40xQKqcjwJ2CDkYqUDI53o6IuzDJBx60Z8VKCm271+t8iFjakrl8Q==
 
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
