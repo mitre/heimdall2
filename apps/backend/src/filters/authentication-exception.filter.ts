@@ -37,7 +37,7 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       `Authentication Error\n${JSON.stringify(errInfo, null, 2)}`
     );
     const authError =
-      `${_.get(request, 'authInfo.message')}\n${exception.message}`.trim();
+      `${_.has(request, 'authInfo.message') ? _.get(request, 'authInfo.message') : ''}\n${exception.message}`.trim();
     response.cookie('authenticationError', authError, {
       secure: this.configService.isInProductionMode()
     });
