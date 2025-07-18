@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, it} from 'vitest';
 import {FromHDFToSplunkMapper} from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
 
 export function delay(ms: number): Promise<void> {

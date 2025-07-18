@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {Stigdata, Checklist} from '../../../src/ckl-mapper/checklistJsonix';
 import {replaceCKLVersion} from '../../utils';
