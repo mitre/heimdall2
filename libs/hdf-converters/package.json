@@ -20,7 +20,7 @@
     "postpack": "run-script-os",
     "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
-    "test": "jest",
+    "test": "vitest",
     "csv2json": "tsx data/converters/csv2json.ts",
     "xml2json": "tsx data/converters/xml2json.ts"
   },
@@ -70,23 +70,7 @@
     "ts-jest": "^29.1.0",
     "tsx": "^4.7.1",
     "typedoc": "^0.26.2",
+    "vitest": "^3.2.4",
     "xml2js": "^0.6.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts",
-      "d.ts",
-      "node"
-    ],
-    "moduleNameMapper": {
-      "axios": "axios/dist/node/axios.cjs"
-    },
-    "rootDir": ".",
-    "testTimeout": 10000000,
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    }
   }
 }
