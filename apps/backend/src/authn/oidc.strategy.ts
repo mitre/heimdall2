@@ -1,6 +1,8 @@
 import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
-import {Strategy} from 'passport-openidconnect';
+import {Strategy} from '@govtechsg/passport-openidconnect';
+import {HttpsProxyAgent} from 'https-proxy-agent';
+import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
@@ -22,6 +24,21 @@ interface OIDCProfile {
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
+  private readonly line = '_______________________________________________\n';
+  public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
+  public logger = winston.createLogger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.timestamp({
+        format: this.loggingTimeFormat
+      }),
+      winston.format.printf(
+        (info) =>
+          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
+      )
+    )
+  });
+
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
@@ -36,14 +53,26 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         userInfoURL: configService.get('OIDC_USER_INFO_URL') || 'disabled',
         clientID: configService.get('OIDC_CLIENTID') || 'disabled',
         clientSecret: configService.get('OIDC_CLIENT_SECRET') || 'disabled',
-        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc/callback`,
-        scope: 'openid profile email'
+        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc_callback`,
+        pkce:
+          configService.get('OIDC_USES_PKCE_S256') === 'true'
+            ? 'S256'
+            : configService.get('OIDC_USES_PKCE_PLAIN') === 'true'
+              ? 'plain'
+              : undefined,
+        scope: ['openid', 'email', 'profile'],
+        skipUserProfile: false,
+        proxy:
+          configService.get('OIDC_USE_HTTPS_PROXY') === 'true'
+            ? true
+            : undefined,
+        agent:
+          configService.get('OIDC_USE_HTTPS_PROXY') === 'true'
+            ? new HttpsProxyAgent(configService.get('HTTPS_PROXY') ?? '')
+            : undefined
       },
-      async function (
-        //changed from 4-arity function to 9-arity, because 'profile' in 4-arity was not providing required data
-        //by changing to 9-arity we can access the data we need from the 'uiProfile' parameter
-        //the lack of needed data in 4-arity function may be a bug
-        // NOTE: Some variables are not used in this function, but they are required to be present in the function signature. These are indicated with an underscore prefix.
+      // using the 9-arity function so that we can access the underlying JSON response and extract the 'email_verified' attribute
+      async (
         _issuer: string,
         uiProfile: OIDCProfile,
         _idProfile: object,
@@ -54,7 +83,9 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         _params: object,
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
-      ) {
+      ) => {
+        this.logger.debug('in oidc strategy file');
+        this.logger.debug(JSON.stringify(uiProfile, null, 2));
         const userData = uiProfile._json;
         const {given_name, family_name, email, email_verified, groups} =
           userData;
@@ -74,11 +105,12 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
           }
 
           return done(null, user);
-        } else {
-          throw new UnauthorizedException(
-            'Please verify your email with your identity provider before logging into Heimdall.'
-          );
         }
+        return done(
+          new UnauthorizedException(
+            'Please verify your name and email with your identity provider before logging into Heimdall.'
+          )
+        );
       }
     );
   }
