@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {TwistlockResults} from '../../../src/twistlock-mapper';
 import {omitVersions} from '../../utils';
 

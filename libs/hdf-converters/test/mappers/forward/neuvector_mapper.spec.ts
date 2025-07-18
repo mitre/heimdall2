@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {NeuVectorMapper} from '../../../src/neuvector-mapper';
 import {omitVersions} from '../../utils';
 

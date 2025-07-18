@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {SnykMapper} from '../../../src/snyk-mapper';
 import {omitVersions} from '../../utils';
 

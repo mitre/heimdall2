@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {JfrogXrayMapper} from '../../../src/jfrog-xray-mapper';
 import {omitVersions} from '../../utils';
 
