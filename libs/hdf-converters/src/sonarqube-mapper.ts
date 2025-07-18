@@ -546,7 +546,8 @@ export class SonarqubeResults {
           }),
           params: {
             componentKeys: this.projectKey,
-            types: 'VULNERABILITY', // TODO: ask if we should keep it as vulnerabilities only or if we should expand to include everything, ex. code smells --- make type a tag in the control and make sure that heimdall can actually let you filter on tag:nameoftag=valueoftag and not just tag:nameoftag; if fixing the filtering takes too long then do three different hdf files for codesmells, vulns, and bugs
+	    // TODO: this turns slow as shit if we disable it with 6k+ stuffs.  time to debug why i guess cause it weren't always like this
+            // types: 'VULNERABILITY', // TODO: ask if we should keep it as vulnerabilities only or if we should expand to include everything, ex. code smells --- make type a tag in the control and make sure that heimdall can actually let you filter on tag:nameoftag=valueoftag and not just tag:nameoftag; if fixing the filtering takes too long then do three different hdf files for codesmells, vulns, and bugs
             statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED', // TODO: ask about this set of statuses - like do we want to keep 'resolved' as an active finding if the code author has marked it as being fine?  should we mark it as informational or even n/a?  what other statuses are out there? --- test what happens when using the workflow options in sonarqube and what kind of statuses come out; also test what happens if we resolve the problem - does it not return the issue anymore? if the issue isn't returned anymore, then we can ignore statuses entirely as a filter.  if the issue is returned, then we're going to have to handle the different statuses properly.  also it seems like these statuses might be changing between the major versions, at least 8 and 9
             p: page,
             ...(this.branchName && {branch: this.branchName}),
