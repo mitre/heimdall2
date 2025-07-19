@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import {expect, test} from 'vitest';
 import {HDFControl, hdfWrapControl} from '../src';
 import {ConversionResult, convertFile} from '../src/fileparse';
 

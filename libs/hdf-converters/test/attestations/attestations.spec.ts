@@ -1,6 +1,8 @@
 import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import moment from 'moment';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import yaml from 'yaml';
 import {
   addAttestationToHDF,
   advanceDate,
@@ -9,7 +11,6 @@ import {
   parseXLSXAttestations,
   convertAttestationToSegment
 } from '../../src/utils/attestations';
-import yaml from 'yaml';
 
 const validPassingAttestation_skippedControl: Attestation[] = [
   {
@@ -273,7 +274,7 @@ describe('addAttestationToHDF', () => {
       )
     ) as ExecJSON.Execution;
 
-    console.error = jest.fn();
+    console.error = vi.fn();
   });
 
   afterEach(() => {

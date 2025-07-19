@@ -1,5 +1,6 @@
 import fs from 'fs';
 import * as _ from 'lodash';
+import {describe, expect, it} from 'vitest';
 import {ASFFResults as Mapper} from '../../../src/asff-mapper/asff-mapper';
 import {omitVersions} from '../../utils';
 

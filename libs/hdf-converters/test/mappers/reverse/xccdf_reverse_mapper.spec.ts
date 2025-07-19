@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {FromHDFToXCCDFMapper} from '../../../index';
 import {replaceXCCDFVersion} from '../../utils';
 

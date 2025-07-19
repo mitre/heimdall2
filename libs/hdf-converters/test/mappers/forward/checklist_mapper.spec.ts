@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {omitVersions} from '../../utils';
 import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';

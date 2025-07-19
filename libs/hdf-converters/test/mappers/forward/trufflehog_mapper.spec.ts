@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {TrufflehogResults} from '../../../src/trufflehog-mapper';
 import {omitVersions} from '../../utils';
 
