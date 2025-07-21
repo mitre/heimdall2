@@ -2201,6 +2201,14 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.1.tgz#de633db3ec2ef6a3c89e2f19038063e8a122e2c2"
   integrity sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==
 
+"@govtechsg/passport-openidconnect@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/@govtechsg/passport-openidconnect/-/passport-openidconnect-1.0.3.tgz#257085687a671b0dc980bcc20b8bf7622ccbec56"
+  integrity sha512-Xf7B4gxg6HV+rRwBxqk+icexS1BT9Yd9ERnkw+PQVvId02OoEqqFo55kn9sine2mMCuh/OYQU95jlT/9CU1AtQ==
+  dependencies:
+    oauth "^0.10.0"
+    passport-strategy "^1.0.0"
+
 "@graphql-tools/merge@8.3.1":
   version "8.3.1"
   resolved "https://registry.npmjs.org/@graphql-tools/merge/-/merge-8.3.1.tgz#06121942ad28982a14635dbc87b5d488a041d722"
@@ -6443,6 +6451,11 @@ agent-base@^7.0.2, agent-base@^7.1.0:
   integrity sha512-o/zjMZRhJxny7OyEF+Op8X+efiELC7k7yOjMzgfzVqOzXqkBkWI79YoTdOtsuWd5BWhAGAuOY/Xa6xpiaWXiNg==
   dependencies:
     debug "^4.3.4"
+
+agent-base@^7.1.2:
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-7.1.3.tgz#29435eb821bc4194633a5b89e5bc4703bafc25a1"
+  integrity sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==
 
 aggregate-error@^3.0.0, aggregate-error@^3.1.0:
   version "3.1.0"
@@ -12782,6 +12795,14 @@ https-proxy-agent@^7.0.1:
     agent-base "^7.0.2"
     debug "4"
 
+https-proxy-agent@^7.0.6:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz#da8dfeac7da130b05c2ba4b59c9b6cd66611a6b9"
+  integrity sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==
+  dependencies:
+    agent-base "^7.1.2"
+    debug "4"
+
 human-signals@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
@@ -16773,6 +16794,11 @@ oauth@0.9.x:
   resolved "https://registry.npmjs.org/oauth/-/oauth-0.9.15.tgz#bd1fefaf686c96b75475aed5196412ff60cfb9c1"
   integrity sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==
 
+oauth@^0.10.0:
+  version "0.10.2"
+  resolved "https://registry.npmjs.org/oauth/-/oauth-0.10.2.tgz#fd7139b0ce1a1037bd11fa4e236afc588132418c"
+  integrity sha512-JtFnB+8nxDEXgNyniwz573xxbKSOu3R8D40xQKqcjwJ2CDkYqUDI53o6IuzDJBx60Z8VKCm271+t8iFjakrl8Q==
+
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -17467,14 +17493,6 @@ passport-oauth2@1.x.x, passport-oauth2@^1.4.0, passport-oauth2@^1.5.0:
     passport-strategy "1.x.x"
     uid2 "0.0.x"
     utils-merge "1.x.x"
-
-passport-openidconnect@^0.1.1:
-  version "0.1.2"
-  resolved "https://registry.npmjs.org/passport-openidconnect/-/passport-openidconnect-0.1.2.tgz#86c830a96cfc2cf7e0273d3eba2828ab6abb3166"
-  integrity sha512-JX3rTyW+KFZ/E9OF/IpXJPbyLO9vGzcmXB5FgSP2jfL3LGKJPdV7zUE8rWeKeeI/iueQggOeFa3onrCmhxXZTg==
-  dependencies:
-    oauth "0.10.x"
-    passport-strategy "1.x.x"
 
 passport-strategy@1.x.x, passport-strategy@^1.0.0:
   version "1.0.0"
