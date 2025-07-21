@@ -16,7 +16,7 @@
     "cypress-terminal-report": "^7.1.0",
     "cypress-wait-until": "^3.0.2",
     "eslint-plugin-cypress": "^3.0.0",
-    "json-server": "^0.17.0",
+    "json-server": "^1.0.0-beta.3",
     "oauth2-mock-server": "^8.0.0"
   }
 }
