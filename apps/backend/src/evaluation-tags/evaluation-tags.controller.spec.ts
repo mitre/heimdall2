@@ -1,6 +1,7 @@
 import {ForbiddenError} from '@casl/ability';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
+import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {CREATE_EVALUATION_TAG_DTO} from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {PRIVATE_GROUP} from '../../test/constants/groups-test.constant';
@@ -76,9 +77,8 @@ describe('EvaluationTagsController', () => {
     user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
   });
 
-  afterAll((done) => {
-    databaseService.closeConnection();
-    done();
+  afterAll(async () => {
+    await databaseService.closeConnection();
   });
 
   describe('index', () => {

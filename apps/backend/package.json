@@ -89,9 +89,11 @@
   },
   "devDependencies": {
     "@nestjs/testing": "^11.0.1",
+    "@swc/core": "^1.13.0",
     "@types/mock-fs": "^4.10.0",
     "mock-fs": "^5.0.0",
     "supertest": "^7.0.0",
+    "unplugin-swc": "^1.5.5",
     "vitest": "^3.2.4"
   }
 }

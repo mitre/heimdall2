@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import mock from 'mock-fs';
+import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
 import {
   DATABASE_URL_MOCK_ENV,
   ENV_MOCK_FILE,
@@ -28,7 +29,7 @@ describe('Config Service', () => {
     });
 
     it('should print to the console about how it was unable to read .env file', () => {
-      const consoleSpy = jest.spyOn(console, 'log');
+      const consoleSpy = vi.spyOn(console, 'log');
       // Used to make sure logs are outputted
       new ConfigService();
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -56,7 +57,7 @@ describe('Config Service', () => {
       expect(configService.get('DATABASE_USERNAME')).toEqual('postgres');
       expect(configService.get('DATABASE_PASSWORD')).toEqual('postgres');
       expect(configService.get('DATABASE_NAME')).toEqual(
-        'heimdallts_jest_testing_service_db'
+        'heimdallts_vitest_testing_service_db'
       );
       expect(configService.get('JWT_SECRET')).toEqual('abc123');
       expect(configService.get('NODE_ENV')).toEqual('test');
@@ -117,7 +118,7 @@ describe('Config Service', () => {
       expect.assertions(1);
       mock({
         '.env': mock.file({
-          content: 'DATABASE_NAME=heimdallts_jest_testing_service_db',
+          content: 'DATABASE_NAME=heimdallts_vitest_testing_service_db',
           mode: 0o000 // Set file system permissions to none
         })
       });
@@ -131,7 +132,7 @@ describe('Config Service', () => {
         '.env': ENV_MOCK_FILE
       });
       const configService = new ConfigService();
-      jest.spyOn(configService, 'get').mockImplementationOnce(() => {
+      vi.spyOn(configService, 'get').mockImplementationOnce(() => {
         throw new Error('');
       });
       expect(() => configService.get('DATABASE_NAME')).toThrowError();
