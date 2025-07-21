@@ -14,8 +14,10 @@
         v-model="secretkey"
         label="Secret Token (Key)"
         for="secretkey_field"
-        type="password"
+        :type="showSecret ? 'text' : 'password'"
         lazy-validation="lazy"
+        :append-icon="showSecret ? 'mdi-eye' : 'mdi-eye-off'"
+        @click:append="showSecret = !showSecret"
         :rules="[reqRule]"
         data-cy="tenablesecretkey"
       />
@@ -73,6 +75,7 @@ export default class AuthStep extends Vue {
   accesskey = '';
   secretkey = '';
   hostname = '';
+  showSecret = false;
 
   $refs!: {
     access_Key: HTMLInputElement;
