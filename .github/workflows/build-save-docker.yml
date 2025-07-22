@@ -20,14 +20,14 @@ jobs:
                   if (c ~ /[A-Za-z0-9_]/) {
                       out = c
                   } else {
-                      out = \"_\"
+                      out = "_"
                   }
                   for (i = 2; i <= length($0) && i <= 128; i++) {
                       c = substr($0, i, 1)
                       if (c ~ /[A-Za-z0-9_.-]/) {
                           out = out c
                       } else {
-                          out = out \"_\"
+                          out = out "_"
                       }
                   }
                   print out
