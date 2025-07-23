@@ -96,7 +96,7 @@ export function ensureContextualizedEvaluation(
   if ('contains' in data) {
     return data;
   } else {
-    return contextualizeEvaluation(data, [""]);
+    return contextualizeEvaluation(data, ['']);
   }
 }
 

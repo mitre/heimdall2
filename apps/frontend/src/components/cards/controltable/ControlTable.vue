@@ -180,11 +180,13 @@ export default class ControlTable extends Vue {
   onSingleExpandChange(newVal: boolean) {
     this.handleToggleSingleExpand(newVal);
   }
+
   get numOfViewed() {
     return this.raw_items.filter((elem) =>
       this.viewedControlIds.includes(elem.key)
     ).length;
   }
+
   toggleControlViewed(control: ContextualizedControl) {
     const key = control_unique_key(control);
     const alreadyViewed = this.viewedControlIds.indexOf(key);
@@ -197,9 +199,11 @@ export default class ControlTable extends Vue {
       this.viewedControlIds.splice(alreadyViewed, 1);
     }
   }
+
   mounted() {
     this.onResize();
   }
+
   onResize() {
     // Allow the page to settle before checking the controlTableHeader height
     // (this is what $nextTick is supposed to do but it's firing too quickly)
@@ -209,6 +213,7 @@ export default class ControlTable extends Vue {
       );
     }, 2000);
   }
+
   /** Callback to handle setting a new sort */
   set_sort(column: string, newSort: Sort) {
     this.sortId = 'none';
@@ -234,9 +239,11 @@ export default class ControlTable extends Vue {
         break;
     }
   }
+
   get expandAll() {
     return this.expanded.length === this.items.length;
   }
+
   set expandAll(value: boolean) {
     if (value) {
       this.singleExpand = false;
@@ -245,26 +252,32 @@ export default class ControlTable extends Vue {
       this.expanded = [];
     }
   }
+
   get controlTableTitleStyle() {
     return {top: `${HeightsModule.topbarHeight}px`};
   }
+
   get controlRowPinOffset() {
     // There is ~10px of padding being added which makes the ControlRowHeader look out of place
     return {top: `${this.topOfPage - 10}px`};
   }
+
   // The top of the page, relative to the topbar and the title bar
   get topOfPage() {
     return HeightsModule.topbarHeight + HeightsModule.controlTableHeaderHeight;
   }
+
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
     if (singleExpand) {
       this.expandAll = false;
     }
   }
+
   async updateTab(tab: string) {
     this.syncTab = tab;
   }
+
   /** Toggles the given expansion of a control details panel */
   toggle(key: string) {
     if (this.singleExpand) {
@@ -288,6 +301,7 @@ export default class ControlTable extends Vue {
       }
     }
   }
+
   jump_to_key(key: string) {
     if (!this.$vuetify.breakpoint.smAndDown) {
       this.$nextTick(() => {
@@ -298,9 +312,11 @@ export default class ControlTable extends Vue {
       });
     }
   }
+
   striptoChars(key: string) {
     return key.replace(/[^a-z0-9]/gi, '');
   }
+
   /** Return items as key, value pairs */
   get raw_items(): ListElt[] {
     return FilteredDataModule.controls(this.filter).map((d) => {
@@ -325,6 +341,7 @@ export default class ControlTable extends Vue {
       };
     });
   }
+
   /** Return items sorted and filters out viewed controls */
   get items(): ListElt[] {
     // Controls ascending/descending
@@ -396,4 +413,3 @@ export default class ControlTable extends Vue {
   z-index: 10;
 }
 </style>
-

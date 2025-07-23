@@ -169,7 +169,6 @@
         <input type="checkbox" id="input - cci" name="input - cci" onclick="alert('Hello world!')" />
         <label for="input - cci">cci</label><br> -->
 
-
         <!-- DataTable -->
         <v-row>
           <v-col xs-12>

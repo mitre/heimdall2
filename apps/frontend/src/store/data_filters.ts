@@ -119,34 +119,37 @@ function contains_mapping(
   // Check if the mappingSearchTerm is in the "has" property
   let mappingFound = false;
   if (mappingSearchTerm) {
-    const [mappingKey, mappingValue] = mappingSearchTerm.split(':').map(s => s.trim());
-    if (contextControl.sourcedFrom.has.includes("CCI->" + mappingKey)) {
+    const [mappingKey, mappingValue] = mappingSearchTerm
+      .split(':')
+      .map((s) => s.trim());
+    if (contextControl.sourcedFrom.has.includes('CCI->' + mappingKey)) {
       const mappings = Store.getters['mappings/mappings'];
-      if(mappings) {
+      if (mappings) {
         const mappingDict = mappings[`CCI->${mappingKey}`];
         if (mappingDict) {
-          if(asHDF.wraps.tags.cci) {
-            for(let key of asHDF.wraps.tags.cci) {
-              if(mappingDict[key]) {
-                if(mappingDict[key].includes(mappingValue)) {
-                  mappingFound = true
+          if (asHDF.wraps.tags.cci) {
+            for (const key of asHDF.wraps.tags.cci) {
+              if (mappingDict[key]) {
+                if (mappingDict[key].includes(mappingValue)) {
+                  mappingFound = true;
                 }
               }
             }
           }
         }
       }
-    }
-    else if(contextControl.sourcedFrom.has.includes("800-53->" + mappingKey)) {
+    } else if (
+      contextControl.sourcedFrom.has.includes('800-53->' + mappingKey)
+    ) {
       const mappings = Store.getters['mappings/mappings'];
-      if(mappings) {
+      if (mappings) {
         const mappingDict = mappings[`800-53->${mappingKey}`];
         if (mappingDict) {
-          if(asHDF.rawNistTags) {
-            for(let key of asHDF.rawNistTags) {
-              if(mappingDict[key]) {
-                if(mappingDict[key].includes(mappingValue)) {
-                  mappingFound = true
+          if (asHDF.rawNistTags) {
+            for (const key of asHDF.rawNistTags) {
+              if (mappingDict[key]) {
+                if (mappingDict[key].includes(mappingValue)) {
+                  mappingFound = true;
                 }
               }
             }
@@ -407,12 +410,15 @@ export class FilteredData extends VuexModule {
       }
       // Freeform search
 
-      if (filter.searchTerm !== undefined || filter.mappingSearchTerm !== undefined) {
+      if (
+        filter.searchTerm !== undefined ||
+        filter.mappingSearchTerm !== undefined
+      ) {
         const term = filter.searchTerm?.toLowerCase() ?? '';
         // Filter controls to those that contain search term or mapping search term
         controls = controls.filter((c) => contains_term(c, term));
       }
-      
+
       // Filter by nist stuff
       if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
@@ -426,7 +432,9 @@ export class FilteredData extends VuexModule {
       if (filter.mappingSearchTerm && filter.mappingSearchTerm.length > 0) {
         controls = controls.filter((control) => {
           return filter.mappingSearchTerm!.some((term) => {
-            const [mappingKey, mappingValue] = term.split(':').map(s => s.trim());
+            const [mappingKey, mappingValue] = term
+              .split(':')
+              .map((s) => s.trim());
             return contains_mapping(control, `${mappingKey}:${mappingValue}`);
           });
         });
@@ -437,7 +445,6 @@ export class FilteredData extends VuexModule {
     };
   }
 }
-
 
 export const FilteredDataModule = getModule(FilteredData);
 

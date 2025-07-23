@@ -102,7 +102,7 @@ class Search extends VuexModule implements ISearchState {
         'code',
         'input',
         'tags',
-        'guidance',
+        'guidance'
       ]
     };
     const searchResult = parse(this.searchTerm, options);
@@ -146,11 +146,18 @@ class Search extends VuexModule implements ISearchState {
             break;
           case 'guidance':
             // Check if the prop matches any of the enabled checkboxes
-            const combinedCheckboxes = Store.getters['selectedTags/combinedCheckboxes'];
-            if(this.searchTerm.split(":").length == 3) {
-              const matchingCheckbox = combinedCheckboxes.find((checkbox: any) => checkbox.label.toLowerCase() === this.searchTerm.split(":")[1].toLowerCase());
+            const combinedCheckboxes =
+              Store.getters['selectedTags/combinedCheckboxes'];
+            if (this.searchTerm.split(':').length == 3) {
+              const matchingCheckbox = combinedCheckboxes.find(
+                (checkbox: any) =>
+                  checkbox.label.toLowerCase() ===
+                  this.searchTerm.split(':')[1].toLowerCase()
+              );
               if (matchingCheckbox) {
-                this.addMappingGuidanceFilter(`${matchingCheckbox.label}:${this.searchTerm.split(":")[2]}`);
+                this.addMappingGuidanceFilter(
+                  `${matchingCheckbox.label}:${this.searchTerm.split(':')[2]}`
+                );
               }
             }
             break;
@@ -177,7 +184,7 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_CODE');
     this.context.commit('CLEAR_TAG');
     this.context.commit('CLEAR_FREESEARCH');
-    this.context.commit('CLEAR_MAPPING_GUIDANCE')
+    this.context.commit('CLEAR_MAPPING_GUIDANCE');
   }
 
   // Generic filtering
@@ -339,10 +346,12 @@ class Search extends VuexModule implements ISearchState {
   addMappingGuidanceFilter(mapping: string | string[]) {
     this.context.commit('ADD_MAPPING_GUIDANCE', mapping);
   }
+
   @Mutation
   ADD_MAPPING_GUIDANCE(mapping: string | string[]) {
     this.mappingGuidanceFilter = this.mappingGuidanceFilter.concat(mapping);
   }
+
   @Mutation
   CLEAR_MAPPING_GUIDANCE() {
     this.mappingGuidanceFilter = [];

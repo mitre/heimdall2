@@ -12,7 +12,6 @@ import {
   AnyProfile
 } from './fileparse';
 
-
 /**
  * Mixin type to express that this type wraps another data type to add additional fields,
  * without modifying the inner type.
@@ -61,7 +60,7 @@ interface Contains<Item> {
 }
 
 interface userGuidance<mappings> {
-  has: mappings
+  has: mappings;
 }
 
 // Create our three primary data types from the above mixins

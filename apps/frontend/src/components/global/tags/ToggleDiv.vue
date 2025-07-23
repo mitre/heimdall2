@@ -1,6 +1,8 @@
 <template>
   <v-container>
-    <v-btn @click="toggleModal" class="mx-2" fab dark small><v-icon dark> mdi-cog</v-icon></v-btn>
+    <v-btn class="mx-2" fab dark small @click="toggleModal"
+      ><v-icon dark> mdi-cog</v-icon></v-btn
+    >
     <v-dialog v-model="isModalVisible" max-width="600px">
       <v-card>
         <v-tabs v-model="activeTab">
@@ -14,7 +16,12 @@
               <v-switch
                 v-model="localDisplayUnviewedControls"
                 label="Show Only Unviewed"
-                @change="emitChange('displayUnviewedControls', localDisplayUnviewedControls)"
+                @change="
+                  emitChange(
+                    'displayUnviewedControls',
+                    localDisplayUnviewedControls
+                  )
+                "
               />
               <v-switch
                 v-model="localSyncTabs"
@@ -49,13 +56,13 @@
                     class="checkbox-item"
                   >
                     <v-switch
+                      v-model="localCheckedValues"
                       :label="checkbox.label"
                       :value="checkbox.id"
-                      v-model="localCheckedValues"
                       dense
                       hide-details
                       class="custom-switch"
-                    ></v-switch>
+                    />
                   </v-col>
                 </v-row>
                 <!-- Add User Defined Guidance Mappings label -->
@@ -71,31 +78,74 @@
                     class="checkbox-item"
                   >
                     <v-switch
+                      v-model="localCheckedValues"
                       :label="checkbox.label"
                       :value="checkbox.id"
-                      v-model="localCheckedValues"
                       dense
                       hide-details
                       class="custom-switch"
-                    ></v-switch>
-                    <v-btn @click="handleRemoveMapping(checkbox.id)" color="red" class="mx-2" fab dark small><v-icon dark> mdi-delete</v-icon></v-btn>
+                    />
+                    <v-btn
+                      color="red"
+                      class="mx-2"
+                      fab
+                      dark
+                      small
+                      @click="handleRemoveMapping(checkbox.id)"
+                      ><v-icon dark> mdi-delete</v-icon></v-btn
+                    >
                   </v-col>
                 </v-row>
                 <div class="accordion-container">
                   <v-expansion-panels>
                     <v-expansion-panel>
-                      <v-expansion-panel-header>CSV Instructions</v-expansion-panel-header>
+                      <v-expansion-panel-header
+                        >CSV Instructions</v-expansion-panel-header
+                      >
                       <v-expansion-panel-content>
-                        <p>In order to upload a guidance mapping as a CSV, please adhere to the following format:</p>
-                        <p>The first row of the csv, being the headers, should have minimum two values. The first value should be the name of your guidance mapping, and the second MUST be "CCI" or "800-53", depending on whether you are mapping from your guidance to CCI's or to NIST 800-53 families.</p>
-                        <p>Each row after the first must also include minimum two values, the first being your guidance tag, and the second being the CCI or 800-53 family that it maps to. Additionally, you may include an optional third value, which will be the descriptive text for the tag that appears on hover. (Note: You need only include this description for one instance of the tag)</p>
+                        <p>
+                          In order to upload a guidance mapping as a CSV, please
+                          adhere to the following format:
+                        </p>
+                        <p>
+                          The first row of the csv, being the headers, should
+                          have minimum two values. The first value should be the
+                          name of your guidance mapping, and the second MUST be
+                          "CCI" or "800-53", depending on whether you are
+                          mapping from your guidance to CCI's or to NIST 800-53
+                          families.
+                        </p>
+                        <p>
+                          Each row after the first must also include minimum two
+                          values, the first being your guidance tag, and the
+                          second being the CCI or 800-53 family that it maps to.
+                          Additionally, you may include an optional third value,
+                          which will be the descriptive text for the tag that
+                          appears on hover. (Note: You need only include this
+                          description for one instance of the tag)
+                        </p>
                       </v-expansion-panel-content>
                     </v-expansion-panel>
                     <v-expansion-panel>
-                      <v-expansion-panel-header>JSON Instructions</v-expansion-panel-header>
+                      <v-expansion-panel-header
+                        >JSON Instructions</v-expansion-panel-header
+                      >
                       <v-expansion-panel-content>
-                        <p>In order to upload a guidance mapping as a .json file, please adhere to the following format:</p>
-                        <p>The json must include four values: "type", which must be either "CCI" or "800-53", depending on which the mapping is based upon. "name", being the name of the guidance mapping. "mappings", which should be a json object which uses the user's tag as a key, and an array of CCI's or 800-53's the tag maps to. Finally, descriptions, which should be a json object optionally linking the user's tags to descriptions that will appear on hover. As an example:</p>
+                        <p>
+                          In order to upload a guidance mapping as a .json file,
+                          please adhere to the following format:
+                        </p>
+                        <p>
+                          The json must include four values: "type", which must
+                          be either "CCI" or "800-53", depending on which the
+                          mapping is based upon. "name", being the name of the
+                          guidance mapping. "mappings", which should be a json
+                          object which uses the user's tag as a key, and an
+                          array of CCI's or 800-53's the tag maps to. Finally,
+                          descriptions, which should be a json object optionally
+                          linking the user's tags to descriptions that will
+                          appear on hover. As an example:
+                        </p>
                         <pre>
 {
   "type": "CCI",
@@ -115,10 +165,17 @@
                   </v-expansion-panels>
                 </div>
                 <div class="button-container">
-                  <v-btn @click="triggerFileInput" color="primary">Add Mapping</v-btn>
+                  <v-btn color="primary" @click="triggerFileInput"
+                    >Add Mapping</v-btn
+                  >
                 </div>
               </div>
-              <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" />
+              <input
+                ref="fileInput"
+                type="file"
+                style="display: none"
+                @change="handleFileUpload"
+              />
             </v-card-text>
           </v-tab-item>
         </v-tabs-items>
@@ -127,7 +184,7 @@
   </v-container>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 export default {
   props: {
     displayUnviewedControls: Boolean,
@@ -178,21 +235,34 @@ export default {
   },
   created() {
     if (this.combinedCheckboxes.length >= 2) {
-      this.localCheckedValues = [this.combinedCheckboxes[0].id, this.combinedCheckboxes[1].id];
+      this.localCheckedValues = [
+        this.combinedCheckboxes[0].id,
+        this.combinedCheckboxes[1].id
+      ];
       this.syncCheckedValues(this.localCheckedValues);
     }
   },
   methods: {
     ...mapActions('selectedTags', ['addValue', 'removeValue']),
-    ...mapActions('mappings', ['addMapping', 'removeMapping', 'updateMapping', 'addDescription', 'removeDescription']),
+    ...mapActions('mappings', [
+      'addMapping',
+      'removeMapping',
+      'updateMapping',
+      'addDescription',
+      'removeDescription'
+    ]),
     toggleModal() {
       this.isModalVisible = !this.isModalVisible;
     },
     syncCheckedValues(newValues) {
-      const addedValues = newValues.filter(value => !this.checkedValues.includes(value));
-      const removedValues = this.checkedValues.filter(value => !newValues.includes(value));
-      addedValues.forEach(value => this.addValue(value));
-      removedValues.forEach(value => this.removeValue(value));
+      const addedValues = newValues.filter(
+        (value) => !this.checkedValues.includes(value)
+      );
+      const removedValues = this.checkedValues.filter(
+        (value) => !newValues.includes(value)
+      );
+      addedValues.forEach((value) => this.addValue(value));
+      removedValues.forEach((value) => this.removeValue(value));
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
@@ -219,34 +289,45 @@ export default {
       reader.readAsText(file);
     },
     processCSVContents(contents) {
-      const lines = contents.split('\n').map(line => line.trim()).filter(line => line);
+      const lines = contents
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line);
       if (lines.length === 0) {
         console.error('CSV file is empty or invalid.');
         return;
       }
-      const headers = lines[0].split(',').map(header => header.trim());
-      if (headers.length < 2 || (headers[1] !== 'CCI' && headers[1] !== '800-53')) {
-        console.error('CSV file must have at least two columns with the second column header being "CCI" or "800-53".');
+      const headers = lines[0].split(',').map((header) => header.trim());
+      if (
+        headers.length < 2 ||
+        (headers[1] !== 'CCI' && headers[1] !== '800-53')
+      ) {
+        console.error(
+          'CSV file must have at least two columns with the second column header being "CCI" or "800-53".'
+        );
         return;
       }
-      const data = lines.slice(1).map(line => {
-        const columns = line.split(',').map(column => column.trim());
-        if (columns.length < 2) {
-          console.error(`Invalid line format (less than 2 columns): ${line}`);
-          return null;
-        }
-        return {
-          mappingName: columns[0],
-          type: columns[1],
-          description: columns[2] || ""
-        };
-      }).filter(item => item);
+      const data = lines
+        .slice(1)
+        .map((line) => {
+          const columns = line.split(',').map((column) => column.trim());
+          if (columns.length < 2) {
+            console.error(`Invalid line format (less than 2 columns): ${line}`);
+            return null;
+          }
+          return {
+            mappingName: columns[0],
+            type: columns[1],
+            description: columns[2] || ''
+          };
+        })
+        .filter((item) => item);
       this.processCSVData(data, headers);
     },
     processCSVData(data, headers) {
       const mappingDict = {};
       const descriptionDict = {};
-      data.forEach(item => {
+      data.forEach((item) => {
         if (!mappingDict[item.type]) {
           mappingDict[item.type] = [];
         }
@@ -256,8 +337,14 @@ export default {
         }
       });
       // Use the Vuex action to add the mapping with a unique key
-      this.addMapping({ id: headers[1] + '->' + headers[0], mapping: mappingDict });
-      this.addDescription({ id: headers[1] + '->' + headers[0], descriptions: descriptionDict });
+      this.addMapping({
+        id: headers[1] + '->' + headers[0],
+        mapping: mappingDict
+      });
+      this.addDescription({
+        id: headers[1] + '->' + headers[0],
+        descriptions: descriptionDict
+      });
     },
     readJSONFile(file) {
       const reader = new FileReader();
@@ -276,20 +363,26 @@ export default {
         }
         const mappingDict = {};
         const descriptionDict = {};
-        Object.keys(json.mappings).forEach(key => {
-          json.mappings[key].forEach(mapping => {
+        Object.keys(json.mappings).forEach((key) => {
+          json.mappings[key].forEach((mapping) => {
             if (!mappingDict[mapping]) {
               mappingDict[mapping] = [];
             }
             mappingDict[mapping].push(key);
           });
         });
-        Object.keys(json.descriptions).forEach(key => {
+        Object.keys(json.descriptions).forEach((key) => {
           descriptionDict[key] = json.descriptions[key];
         });
         // Use the Vuex action to add the mapping with a unique key
-        this.addMapping({ id: json.type + '->' + json.name, mapping: mappingDict });
-        this.addDescription({ id: json.type + '->' + json.name, descriptions: descriptionDict });
+        this.addMapping({
+          id: json.type + '->' + json.name,
+          mapping: mappingDict
+        });
+        this.addDescription({
+          id: json.type + '->' + json.name,
+          descriptions: descriptionDict
+        });
       } catch (error) {
         console.error('Error parsing JSON file:', error);
       }
@@ -299,7 +392,9 @@ export default {
       this.removeMapping(id);
       this.removeDescription(id);
       // Remove the value from localCheckedValues
-      this.localCheckedValues = this.localCheckedValues.filter(value => value !== id);
+      this.localCheckedValues = this.localCheckedValues.filter(
+        (value) => value !== id
+      );
     },
     emitChange(prop, value) {
       this.$emit(`update:${prop}`, value);

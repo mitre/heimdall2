@@ -327,7 +327,7 @@ export class InspecIntake extends VuexModule {
       return false;
     }
   }
-  
+
   @Action
   async loadText(options: TextLoadOptions): Promise<FileID> {
     const fileID: FileID = uuid();
@@ -343,7 +343,10 @@ export class InspecIntake extends VuexModule {
         updatedAt: options.updatedAt,
         tags: options.tags
       } as EvaluationFile;
-      const evaluation = contextualizeEvaluation(result['1_0_ExecJson'], checkedValues) as SourcedContextualizedEvaluation;
+      const evaluation = contextualizeEvaluation(
+        result['1_0_ExecJson'],
+        checkedValues
+      ) as SourcedContextualizedEvaluation;
       evaluation.from_file = evalFile;
       evalFile.evaluation = evaluation;
       Object.freeze(evaluation);
@@ -354,7 +357,10 @@ export class InspecIntake extends VuexModule {
         uniqueId: fileID,
         filename: options.filename
       } as ProfileFile;
-      const profile = contextualizeProfile(result['1_0_ProfileJson'], checkedValues) as SourcedContextualizedProfile;
+      const profile = contextualizeProfile(
+        result['1_0_ProfileJson'],
+        checkedValues
+      ) as SourcedContextualizedProfile;
       profile.from_file = profileFile;
       profileFile.profile = profile;
       Object.freeze(profile);
@@ -362,10 +368,13 @@ export class InspecIntake extends VuexModule {
       FilteredDataModule.toggle_profile(profileFile.uniqueId);
     } else {
       console.error(result.errors);
-      throw new Error("Couldn't parse data. See developer's tools for more details.");
+      throw new Error(
+        "Couldn't parse data. See developer's tools for more details."
+      );
     }
     return fileID;
   }
+
   @Action
   async loadExecJson(options: ExecJSONLoadOptions) {
     const fileID: FileID = uuid();
@@ -379,7 +388,10 @@ export class InspecIntake extends VuexModule {
       updatedAt: options.updatedAt,
       tags: options.tags
     } as EvaluationFile;
-    const evaluation = contextualizeEvaluation(options.data, checkedValues) as SourcedContextualizedEvaluation;
+    const evaluation = contextualizeEvaluation(
+      options.data,
+      checkedValues
+    ) as SourcedContextualizedEvaluation;
     evaluation.from_file = evalFile;
     evalFile.evaluation = evaluation;
     Object.freeze(evaluation);

@@ -1,4 +1,4 @@
-import { Module } from 'vuex';
+import {Module} from 'vuex';
 interface Checkbox {
   id: string;
   label: string;
@@ -10,8 +10,8 @@ interface SelectedTagsState {
 const state: SelectedTagsState = {
   checkedValues: [],
   defaultCheckboxes: [
-    { id: 'cci', label: 'CCIs' },
-    { id: 'nist', label: '800-53s' }
+    {id: 'cci', label: 'CCIs'},
+    {id: 'nist', label: '800-53s'}
   ]
 };
 const mutations = {
@@ -21,23 +21,27 @@ const mutations = {
     }
   },
   REMOVE_VALUE(state: SelectedTagsState, value: string) {
-    state.checkedValues = state.checkedValues.filter(item => item !== value);
+    state.checkedValues = state.checkedValues.filter((item) => item !== value);
   }
 };
 const actions = {
-  addValue({ commit }: any, value: string) {
+  addValue({commit}: any, value: string) {
     commit('ADD_VALUE', value);
   },
-  removeValue({ commit }: any, value: string) {
+  removeValue({commit}: any, value: string) {
     commit('REMOVE_VALUE', value);
   }
 };
 const getters = {
   checkedValues: (state: SelectedTagsState) => state.checkedValues,
   defaultCheckboxes: (state: SelectedTagsState) => state.defaultCheckboxes,
-  combinedCheckboxes: (state: SelectedTagsState, getters: any, rootState: any) => {
+  combinedCheckboxes: (
+    state: SelectedTagsState,
+    getters: any,
+    rootState: any
+  ) => {
     const mappings = rootState.mappings.mappings;
-    const mappingCheckboxes = Object.keys(mappings).map(id => {
+    const mappingCheckboxes = Object.keys(mappings).map((id) => {
       const label = id.includes('->') ? id.split('->')[1].trim() : id;
       return {
         id,
