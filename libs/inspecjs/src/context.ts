@@ -160,6 +160,7 @@ export function contextualizeEvaluation(
   evaluation: AnyEval,
   additionalStrings: string[]
 ): ContextualizedEvaluation {
+  // To begin, create basic context for profiles and evaluation
   const evalContext: ContextualizedEvaluation = {
     data: evaluation,
     contains: [],
@@ -183,14 +184,14 @@ export function contextualizeEvaluation(
   for (const profile of evalContext.contains) {
     // We know these are from a report; label as such
     const asExec = profile.data as AnyEvalProfile;
-    
+
     // If it has a parent profile then we link them by extendedby/extendsfrom
     if (asExec.parent_profile !== undefined) {
       // Look it up
       const parent = evalContext.contains.find(
         (p) => p.data.name === asExec.parent_profile
       );
-      
+
       // Link it up
       if (parent) {
         parent.extendsFrom.push(profile);
@@ -198,7 +199,7 @@ export function contextualizeEvaluation(
       }
     }
   }
-  
+
   // Next step: Extract controls and connect them
   // Extract the controls and set them as the "contained" data for each profile
   // These ContextualizedControls are basically empty - just have data and from where they were sourced
@@ -210,7 +211,7 @@ export function contextualizeEvaluation(
     });
     allControls.push(...profile.contains);
   }
-  
+
   // Link each contextualized control
   for (const cc of allControls) {
     // Behavior changes based on if we have well-formed or malformed profile dependency
@@ -220,7 +221,7 @@ export function contextualizeEvaluation(
       if (cc.sourcedFrom.extendsFrom.length === 0) {
         continue;
       }
-      
+
       // Get the profile(s) that this control's owning profile is extending
       // For a wrapper profile, there might be many of these!
       // We don't know which one it will be, so we iterate
@@ -247,12 +248,12 @@ export function contextualizeEvaluation(
       let sameIdPopulated = sameId.find(
         (c) => c.hdf.segments && c.hdf.segments.length
       );
-      
+
       // If found a populated base, use that. If not, we substitute in the first found element in sameId. This is arbitrary.
       if (!sameIdPopulated) {
         sameIdPopulated = sameId[0];
       }
-      
+
       // If the object we end up with is "us", then just ignore
       if (Object.is(cc, sameIdPopulated)) {
         continue;
@@ -282,7 +283,7 @@ export function contextualizeProfile(
     sourcedFrom: null,
     has: additionalStrings // Add the array of strings to the has property
   };
-  
+
   // Now give it its controls
   for (const c of profile.controls) {
     const result = new ContextualizedControlImp(c, profileContext, [], []);
