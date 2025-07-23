@@ -296,10 +296,15 @@ function getHdfSpecificDataAttribute(
 }
 
 /**
- * ChecklistResults is a wrapper for ChecklistMapper using the intakeType
- *  default returns a single hdf object without any modifications
- *  split returns multiple hdf object based on number of iSTIG objects in checklist
- *  wrapper returns a single hdf object with an additional profile created using file name as profile name and adds parent_profile key to each mapped profile
+ * The `ChecklistResults` class extends the `ChecklistJsonixConverter` and is responsible for converting
+ * checklist data between different formats (XML CKL, HDF JSON).
+ *
+ * @extends ChecklistJsonixConverter
+ *
+ * @property {string | ExecJSON.Execution} data - The input data, which can be a string of XML data or an HDF JSON execution object.
+ * @property {Checklist} jsonixData - The JSON representation of the checklist data using the jsonix library.
+ * @property {ChecklistObject} checklistObject - The intermediate object representation of the checklist data.
+ * @property {boolean} withRaw - A flag indicating whether to include raw data in the output.
  */
 export class ChecklistResults extends ChecklistJsonixConverter {
   data: string | ExecJSON.Execution;
@@ -308,8 +313,12 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   withRaw: boolean;
 
   /**
-   * Creates instance of ChecklistResult object because ChecklistMapper uses the intermediate ChecklistObject to create HDF mapping
-   * @param checklistXml - string of xml data
+   * @param {string | ExecJSON.Execution} data - The input data, which can be either an HDF JSON object
+   * or an XML CKL string, depending on the direction of the conversion.
+   * @param {boolean} [withRaw=false] - A flag indicating whether to include raw data in the output.
+   * Defaults to false.
+   *
+   * @throws Will throw an error if the asset metadata is invalid.
    */
   constructor(data: string | ExecJSON.Execution, withRaw = false) {
     super(jsonixMapping);
@@ -332,10 +341,18 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     this.withRaw = withRaw;
   }
 
+  /**
+   * @method getJsonix
+   * @returns {Checklist} - Returns the JSON representation of the checklist data.
+   */
   getJsonix(): Checklist {
     return this.jsonixData;
   }
 
+  /**
+   * @method toCkl
+   * @returns {string} - Converts JSON data in jsonix format to CKL (Checklist) XML format.
+   */
   toCkl(): string {
     return xmlFormat(
       `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
@@ -345,6 +362,10 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     );
   }
 
+  /**
+   * @method toHdf
+   * @returns {ExecJSON.Execution} - Converts JSON data in intermediate format to HDF (Heimdall Data Format).
+   */
   toHdf(): ExecJSON.Execution {
     const numberOfStigs = this.checklistObject.stigs.length;
     if (numberOfStigs === 1) {

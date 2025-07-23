@@ -148,16 +148,18 @@
   </ResponsiveRowSwitch>
 </template>
 <script lang="ts">
-import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import { CCI_DESCRIPTIONS } from '@/utilities/cci_util';
-import { getControlRunTime } from '@/utilities/delta_util';
-import { nistCanonConfig, NIST_DESCRIPTIONS } from '@/utilities/nist_util';
-import { ContextualizedControl, is_control, parse_nist } from 'inspecjs';
 import * as _ from 'lodash';
 import Component, { mixins } from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { mapGetters } from 'vuex';
+import { ContextualizedControl, is_control, parse_nist } from 'inspecjs';
+import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
+import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
+import { CCI_DESCRIPTIONS } from '@/utilities/cci_util';
+import { getControlRunTime } from '@/utilities/delta_util';
+import { control_unique_key } from '@/utilities/format_util';
+import { nistCanonConfig, NIST_DESCRIPTIONS } from '@/utilities/nist_util';
+
 interface Tag {
   label: string;
   url: string;
@@ -200,7 +202,7 @@ interface Tag {
     return `severity${_.startCase(this.control.hdf.severity)}`;
   }
   get wasViewed(): boolean {
-    return this.viewedControls.indexOf(this.control.data.id) !== -1;
+    return this.viewedControls.indexOf(control_unique_key(this.control)) !== -1;
   }
   set wasViewed(_value: boolean) {
     this.$emit('control-viewed', this.control);

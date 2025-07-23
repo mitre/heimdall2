@@ -1,5 +1,5 @@
 import {GroupsModule} from '@/store/groups';
-import {IGroup} from '@heimdall/interfaces';
+import {IGroup} from '@heimdall/common/interfaces';
 import {intersectionBy} from 'lodash';
 import {Component, Vue} from 'vue-property-decorator';
 import {IVuetifyItems} from '../utilities/helper_util';

@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Users from '@/components/global/groups/Users.vue';
-import {ISlimUser} from '@heimdall/interfaces';
+import {ISlimUser} from '@heimdall/common/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, VModel} from 'vue-property-decorator';

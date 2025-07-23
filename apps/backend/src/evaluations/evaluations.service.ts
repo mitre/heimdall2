@@ -1,4 +1,4 @@
-import {IEvalPaginationParams} from '@heimdall/interfaces';
+import {IEvalPaginationParams} from '@heimdall/common/interfaces';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {FindOptions, Op, WhereOptions, Sequelize} from 'sequelize';

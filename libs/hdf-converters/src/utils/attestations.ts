@@ -160,7 +160,7 @@ export function addAttestationToHDF(
     }
     if (!found_control) {
       console.error(
-        `Control ${attestation.control_id} not found in HDF. Skipping attestation.`
+        `Attestation cannot be added for control ${attestation.control_id}. Skipping attestation.`
       );
     }
   }
@@ -202,18 +202,25 @@ function attestationCanBeAdded(
   attestation: Attestation,
   control: ExecJSON.Control
 ) {
-  if (attestation.control_id.toLowerCase() === control.id.toLowerCase()) {
-    if (control.results[0].status === 'skipped') {
-      return true;
-    } else {
-      console.error(
-        'Invalid control selected: Control must have "skipped" status to be attested'
-      );
-      return false;
-    }
-  } else {
+  if (attestation.control_id.toLowerCase() !== control.id.toLowerCase()) {
+    // An attestation cannot be added if it's not the same control.
     return false;
   }
+
+  if (control.results.length === 0) {
+    // There are no results for this control. It may be part of an overlay file.
+    return false;
+  }
+
+  if (control.results[0].status === 'skipped') {
+    // The attestation can be added if the control results show 'skipped', meaning it needs Manual Review.
+    return true;
+  }
+
+  console.error(
+    'Invalid control selected: The control must have "skipped" status to be attested'
+  );
+  return false;
 }
 
 function getFirstPath(
