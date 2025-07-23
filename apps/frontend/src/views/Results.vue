@@ -159,16 +159,6 @@
           </v-col>
         </v-row>
 
-        <!-- Calvinstuff - html
-        <div class="container">
-          <button @click="toggleDiv">Toggle Div</button>
-          <div v-if="isVisible" class="center-div">
-            This is a center-aligned div with a white background.
-          </div>
-        </div>
-        <input type="checkbox" id="input - cci" name="input - cci" onclick="alert('Hello world!')" />
-        <label for="input - cci">cci</label><br> -->
-
         <!-- DataTable -->
         <v-row>
           <v-col xs-12>

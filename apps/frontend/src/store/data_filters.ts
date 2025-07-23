@@ -356,24 +356,38 @@ export class FilteredData extends VuexModule {
    * Utilizes the profiles getter to accelerate the file filter.
    */
   get controls(): (filter: Filter) => readonly ContextualizedControl[] {
+    /** Cache by filter */
     const localCache: LRUCache<string, readonly ContextualizedControl[]> =
       new LRUCache({max: MAX_CACHE_ENTRIES});
+
     return (filter: Filter) => {
+      // Generate a hash for cache purposes.
+      // If the "searchTerm" string is not null, we don't cache - no need to pollute
       const id: string = filter_cache_key(filter);
+
+      // Check if we have this cached:
       const cached = localCache.get(id);
       if (cached !== undefined) {
         return cached;
       }
+      
+      // Get profiles from loaded Results
       let profiles: readonly ContextualizedProfile[] =
         this.profiles_for_evaluations(filter.fromFile);
+      
+      // Get profiles from loaded Profiles
       profiles = profiles.concat(this.profiles(filter.fromFile));
+      
+      // And all the controls they contain
       let controls: readonly ContextualizedControl[] = profiles.flatMap(
         (profile) => profile.contains
       );
+
       // Filter by single control id
       if (filter.control_id !== undefined) {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
+
       const controlFilters: Record<string, boolean | string[] | undefined> = {
         'root.hdf.severity': filter.severity,
         'hdf.wraps.id': filter.ids,
@@ -388,6 +402,7 @@ export class FilteredData extends VuexModule {
         )
       };
       controls = filterControlsBy(controls, controlFilters);
+
       // Filter by tags
       if (filter.tagFilter && filter.tagFilter.length > 0) {
         controls = controls.filter((control) => {
@@ -402,19 +417,21 @@ export class FilteredData extends VuexModule {
           }
         });
       }
+
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
         controls = controls.filter(
           (control) => control.extendedBy.length === 0
         );
       }
-      // Freeform search
 
+      // Freeform search
       if (
         filter.searchTerm !== undefined ||
         filter.mappingSearchTerm !== undefined
       ) {
         const term = filter.searchTerm?.toLowerCase() ?? '';
+
         // Filter controls to those that contain search term or mapping search term
         controls = controls.filter((c) => contains_term(c, term));
       }
@@ -423,11 +440,13 @@ export class FilteredData extends VuexModule {
       if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
         const control = new NistControl(filter.treeFilters);
+
+        // Get an hdf version so we have the fixed nist tags
         controls = controls.filter((c) => {
-          // Get an hdf version so we have the fixed nist tags
           return c.root.hdf.parsedNistTags.some((t) => control.contains(t));
         });
       }
+
       // Filter by mapping search term
       if (filter.mappingSearchTerm && filter.mappingSearchTerm.length > 0) {
         controls = controls.filter((control) => {
@@ -439,6 +458,7 @@ export class FilteredData extends VuexModule {
           });
         });
       }
+
       const r = Object.freeze(controls);
       localCache.set(id, r);
       return r;

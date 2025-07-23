@@ -330,11 +330,14 @@ export class InspecIntake extends VuexModule {
 
   @Action
   async loadText(options: TextLoadOptions): Promise<FileID> {
+    // Convert it
     const fileID: FileID = uuid();
     const result: ConversionResult = convertFile(options.text, true);
     // Get the checkedValues from the selectedTags module
     const checkedValues = Store.getters['selectedTags/checkedValues'];
+    // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
+      // A bit of chicken and egg here
       const evalFile = {
         uniqueId: fileID,
         filename: options.filename,
@@ -342,26 +345,36 @@ export class InspecIntake extends VuexModule {
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
         tags: options.tags
+        // evaluation
       } as EvaluationFile;
+
+      // Fixup the evaluation to be Sourced from a file.
       const evaluation = contextualizeEvaluation(
         result['1_0_ExecJson'],
         checkedValues
       ) as SourcedContextualizedEvaluation;
       evaluation.from_file = evalFile;
+
+      // Set and freeze
       evalFile.evaluation = evaluation;
       Object.freeze(evaluation);
       InspecDataModule.addExecution(evalFile);
       FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
     } else if (result['1_0_ProfileJson']) {
+      // Handle as profile
       const profileFile = {
         uniqueId: fileID,
         filename: options.filename
       } as ProfileFile;
+
+      // Fixup the evaluation to be Sourced from a file.
       const profile = contextualizeProfile(
         result['1_0_ProfileJson'],
         checkedValues
       ) as SourcedContextualizedProfile;
       profile.from_file = profileFile;
+
+      // Set and freeze
       profileFile.profile = profile;
       Object.freeze(profile);
       InspecDataModule.addProfile(profileFile);
@@ -375,11 +388,14 @@ export class InspecIntake extends VuexModule {
     return fileID;
   }
 
+  // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
   @Action
   async loadExecJson(options: ExecJSONLoadOptions) {
+    // Convert it
     const fileID: FileID = uuid();
     // Get the checkedValues from the selectedTags module
     const checkedValues = Store.getters['selectedTags/checkedValues'];
+    // A bit of chicken and egg here, this will be our circular JSON structure
     const evalFile = {
       uniqueId: fileID,
       filename: options.filename,
@@ -388,11 +404,15 @@ export class InspecIntake extends VuexModule {
       updatedAt: options.updatedAt,
       tags: options.tags
     } as EvaluationFile;
+
+    // Fixup the evaluation to be Sourced from a file.
     const evaluation = contextualizeEvaluation(
       options.data,
       checkedValues
     ) as SourcedContextualizedEvaluation;
     evaluation.from_file = evalFile;
+
+    // Set and freeze
     evalFile.evaluation = evaluation;
     Object.freeze(evaluation);
     InspecDataModule.addExecution(evalFile);
