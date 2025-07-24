@@ -1,0 +1,58 @@
+name: Build the Heimdall container and save it as an artifact in every PR
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  docker:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Convert branch name into a safe docker tag by replacing invalid characters with underscores
+        # docker tags must match this regex: https://github.com/distribution/reference/blob/727f80d42224f6696b8e1ad16b06aadf2c6b833b/regexp.go#L68
+        # git references (including branch names) must match these rules: https://git-scm.com/docs/git-check-ref-format
+        # note how the docker tags are considerably more restrictive
+        run: |
+          echo "DOCKER_TAG=$(
+            echo $GITHUB_HEAD_REF | awk '
+              {
+                  c = substr($0, 1, 1)
+                  if (c ~ /[A-Za-z0-9_]/) {
+                      out = c
+                  } else {
+                      out = "_"
+                  }
+                  for (i = 2; i <= length($0) && i <= 128; i++) {
+                      c = substr($0, i, 1)
+                      if (c ~ /[A-Za-z0-9_.-]/) {
+                          out = out c
+                      } else {
+                          out = out "_"
+                      }
+                  }
+                  print out
+              }'
+          )" >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Checkout the Heimdall Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build and save
+        id: docker_build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          platforms: linux/amd64
+          tags: mitre/heimdall2:${{ env.DOCKER_TAG }}
+          outputs: type=docker,dest=${{ runner.temp }}/heimdall.tar
+      - name: Upload docker tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: heimdall.tar
+          path: ${{ runner.temp }}/heimdall.tar
