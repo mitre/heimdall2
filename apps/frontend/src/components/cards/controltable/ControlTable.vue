@@ -142,7 +142,7 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
-import ToggleDiv from '@/components/global/tags/ToggleDiv';
+import ToggleDiv from '@/components/global/tags/ToggleDiv.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {HeightsModule} from '@/store/heights';
 import {getControlRunTime} from '@/utilities/delta_util';
