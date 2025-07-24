@@ -16,6 +16,7 @@
         </v-card-text>
       </v-card>
     </template>
+
     <template #set>
       <v-row class="pa-4">
         <div
@@ -38,6 +39,7 @@
         </v-tooltip>
       </v-row>
     </template>
+
     <template #severity>
       <v-card-text class="pa-2">
         <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
@@ -72,11 +74,13 @@
         </v-chip>
       </v-card-text>
     </template>
+
     <!-- eslint-disable vue/no-v-html -->
     <template #title>
       <div class="pa-2 title" v-html="sanitize_html(control.data.title)" />
     </template>
     <!-- eslint-enable vue/no-v-html -->
+
     <!-- ID and Tags -->
     <template #id>
       <v-card-text class="pa-2 title font-weight-bold">
@@ -135,6 +139,7 @@
         runTime
       }}</v-card-text>
     </template>
+
     <template #viewed>
       <v-container class="py-0 my-0 fill-height">
         <v-layout
@@ -153,6 +158,7 @@
     </template>
   </ResponsiveRowSwitch>
 </template>
+
 <script lang="ts">
 import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
@@ -171,6 +177,7 @@ interface Tag {
   url: string;
   description: string;
 }
+
 @Component({
   components: {
     ResponsiveRowSwitch
@@ -186,8 +193,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   readonly control!: ContextualizedControl;
 
   @Prop({type: Array, required: true}) readonly viewedControls!: string[];
+
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
+
   get runTime(): string {
     return `${_.truncate(getControlRunTime(this.control).toString(), {
       length: 5,
@@ -207,6 +216,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     }
   }
 
+  // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
   get status_color(): string {
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
@@ -375,6 +385,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 }
 </script>
+
 <style scoped>
 .checkbox-container {
   text-align: left;

@@ -36,6 +36,7 @@
             @input="set_sort('status', $event)"
           />
         </template>
+
         <template #set>
           <ColumnHeader
             text="Result Set"
@@ -43,6 +44,7 @@
             @input="set_sort('set', $event)"
           />
         </template>
+
         <template #id>
           <v-row class="pa-3">
             <ColumnHeader
@@ -65,9 +67,11 @@
             </v-tooltip>
           </v-row>
         </template>
+
         <template #title>
           <ColumnHeader text="Title" sort="disabled" />
         </template>
+
         <template #severity>
           <ColumnHeader
             :text="'Severity'"
@@ -75,9 +79,11 @@
             @input="set_sort('severity', $event)"
           />
         </template>
+
         <template #tags>
           <ColumnHeader text="Guidance Mappings" sort="disabled" />
         </template>
+
         <template #runTime>
           <ColumnHeader
             text="Run Time"
@@ -85,6 +91,7 @@
             @input="set_sort('runTime', $event)"
           />
         </template>
+
         <template #viewed>
           <ColumnHeader
             text="Controls Viewed"
@@ -96,6 +103,7 @@
         </template>
       </ResponsiveRowSwitch>
     </div>
+
     <!-- Body -->
     <v-lazy
       v-for="item in items"
@@ -123,31 +131,37 @@
     </v-lazy>
   </v-container>
 </template>
+
 <script lang="ts">
-import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
-import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
-import {HeightsModule} from '@/store/heights';
-import {getControlRunTime} from '@/utilities/delta_util';
-import {control_unique_key} from '@/utilities/format_util';
-import {ContextualizedControl, severities} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Ref, Watch} from 'vue-property-decorator';
-import ToggleDiv from '@/components/global/tags/ToggleDiv.vue';
+import {ContextualizedControl, severities} from 'inspecjs';
+import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails';
+import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader';
+import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch';
+import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader';
+import ToggleDiv from '@/components/global/tags/ToggleDiv';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {HeightsModule} from '@/store/heights';
+import {getControlRunTime} from '@/utilities/delta_util';
+import {control_unique_key} from '@/utilities/format_util';
+
 // Tracks the visibility of an HDF control
 interface ListElt {
   // A unique id to be used as a key.
   key: string;
+
   filename: string;
+
   // Computed values for status and severity, for sorting
   status_val: number;
   severity_val: number;
+
   control: ContextualizedControl;
 }
+
 @Component({
   components: {
     ControlRowHeader,
@@ -160,22 +174,28 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
+
   // Whether to allow multiple expansions
   singleExpand = true;
+
   // If the currently selected tab should sync
   syncTabs = false;
   syncTab = 'tab-test';
+
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: string[] = [];
+
   // Sorts
   sortId: Sort = 'none';
   sortStatus: Sort = 'none';
   sortSet: Sort = 'none';
   sortSeverity: Sort = 'none';
   sortRunTime: Sort = 'none';
+
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
   displayUnviewedControls = true;
+
   @Watch('singleExpand')
   onSingleExpandChange(newVal: boolean) {
     this.handleToggleSingleExpand(newVal);
@@ -283,8 +303,10 @@ export default class ControlTable extends Vue {
     if (this.singleExpand) {
       // Check if key already there
       const had = this.expanded.includes(key);
+
       // Clear
       this.expanded = [];
+
       // If key is new, add it
       if (!had) {
         this.expanded.push(key);
@@ -321,6 +343,7 @@ export default class ControlTable extends Vue {
   get raw_items(): ListElt[] {
     return FilteredDataModule.controls(this.filter).map((d) => {
       const key = control_unique_key(d);
+
       // File, hdf wrapper
       return {
         key,
@@ -350,7 +373,9 @@ export default class ControlTable extends Vue {
     let sort = true;
     // Our comparator function
     let cmp: (a: ListElt, b: ListElt) => number;
+
     let items = this.raw_items;
+
     if (this.sortId === 'ascending' || this.sortId === 'descending') {
       cmp = (a: ListElt, b: ListElt) =>
         a.control.data.id.localeCompare(b.control.data.id);
@@ -390,17 +415,21 @@ export default class ControlTable extends Vue {
     } else {
       sort = false;
     }
+
     // Displays only unviewed controls.
     if (this.displayUnviewedControls) {
       items = items.filter((val) => !this.viewedControlIds.includes(val.key));
     }
+
     if (sort === true) {
       items = items.sort((a, b) => cmp(a, b) * factor);
     }
+
     return items;
   }
 }
 </script>
+
 <style scoped>
 .pinned-header {
   position: sticky;
@@ -408,6 +437,7 @@ export default class ControlTable extends Vue {
   padding-top: 2px;
   padding-bottom: 2px;
 }
+
 .control-table-title {
   background-color: var(--v-secondary-lighten1);
   z-index: 10;

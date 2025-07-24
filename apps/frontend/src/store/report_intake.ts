@@ -417,6 +417,7 @@ export class InspecIntake extends VuexModule {
     Object.freeze(evaluation);
     InspecDataModule.addExecution(evalFile);
     FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
+
     return fileID;
   }
 }

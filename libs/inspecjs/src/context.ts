@@ -166,6 +166,7 @@ export function contextualizeEvaluation(
     contains: [],
     has: additionalStrings // Add the array of strings to the has property
   };
+
   for (const profile of evaluation.profiles) {
     const evalProfileContext: ContextualizedProfile = {
       data: profile,
