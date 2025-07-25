@@ -59,17 +59,23 @@ interface Contains<Item> {
   contains: Item;
 }
 
+interface userGuidance<mappings> {
+  has: mappings;
+}
+
 // Create our three primary data types from the above mixins
 // Essentially this is just describing the parent/child relationships each type has
 export interface ContextualizedEvaluation
   extends WrapsType<AnyEval>,
-    Contains<ContextualizedProfile[]> {}
+    Contains<ContextualizedProfile[]>,
+    userGuidance<string[]> {}
 
 export interface ContextualizedProfile
   extends WrapsType<AnyProfile>,
     Sourced<ContextualizedEvaluation | null>,
     Contains<ContextualizedControl[]>,
-    Extendable<ContextualizedProfile> {}
+    Extendable<ContextualizedProfile>,
+    userGuidance<string[]> {}
 export interface ContextualizedControl
   extends WrapsType<AnyControl>,
     Sourced<ContextualizedProfile>,
@@ -151,12 +157,14 @@ ${this.data.code}`.trim();
 }
 
 export function contextualizeEvaluation(
-  evaluation: AnyEval
+  evaluation: AnyEval,
+  additionalStrings: string[]
 ): ContextualizedEvaluation {
   // To begin, create basic context for profiles and evaluation
   const evalContext: ContextualizedEvaluation = {
     data: evaluation,
-    contains: []
+    contains: [],
+    has: additionalStrings // Add the array of strings to the has property
   };
 
   for (const profile of evaluation.profiles) {
@@ -165,7 +173,8 @@ export function contextualizeEvaluation(
       sourcedFrom: evalContext,
       extendedBy: [],
       extendsFrom: [],
-      contains: []
+      contains: [],
+      has: additionalStrings // Add the array of strings to the has property
     };
 
     // Add it to our parent
@@ -264,14 +273,16 @@ export function contextualizeEvaluation(
 // as a separate data structure.
 // As such, we can just do all the profile and controls from each in one fell swoop
 export function contextualizeProfile(
-  profile: AnyProfile
+  profile: AnyProfile,
+  additionalStrings: string[]
 ): ContextualizedProfile {
   const profileContext: ContextualizedProfile = {
     data: profile,
     extendedBy: [],
     extendsFrom: [],
     contains: [],
-    sourcedFrom: null
+    sourcedFrom: null,
+    has: additionalStrings // Add the array of strings to the has property
   };
 
   // Now give it its controls

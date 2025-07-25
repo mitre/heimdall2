@@ -16,24 +16,13 @@
             <v-card-title class="pb-0">Results View Data</v-card-title>
           </v-col>
           <v-spacer />
-          <v-col cols="3" md="auto" class="text-right pl-6 pb-0">
-            <v-switch
-              v-model="displayUnviewedControls"
-              label="Show Only Unviewed"
+          <v-col cols="3" md="auto" class="text-right pb-0">
+            <ToggleDiv
+              :displayUnviewedControls.sync="displayUnviewedControls"
+              :syncTabs.sync="syncTabs"
+              :singleExpand.sync="singleExpand"
+              :expandAll.sync="expandAll"
             />
-          </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <v-switch v-model="syncTabs" label="Sync Tabs" />
-          </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <v-switch
-              v-model="singleExpand"
-              label="Single Expand"
-              @change="handleToggleSingleExpand"
-            />
-          </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
           </v-col>
         </v-row>
       </v-row>
@@ -92,7 +81,7 @@
         </template>
 
         <template #tags>
-          <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
+          <ColumnHeader text="Guidance Mappings" sort="disabled" />
         </template>
 
         <template #runTime>
@@ -144,19 +133,20 @@
 </template>
 
 <script lang="ts">
+import * as _ from 'lodash';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Prop, Ref, Watch} from 'vue-property-decorator';
+import {ContextualizedControl, severities} from 'inspecjs';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
 import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
+import ToggleDiv from '@/components/global/tags/ToggleDiv.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {HeightsModule} from '@/store/heights';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {control_unique_key} from '@/utilities/format_util';
-import {ContextualizedControl, severities} from 'inspecjs';
-import * as _ from 'lodash';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop, Ref} from 'vue-property-decorator';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -177,7 +167,8 @@ interface ListElt {
     ControlRowHeader,
     ControlRowDetails,
     ColumnHeader,
-    ResponsiveRowSwitch
+    ResponsiveRowSwitch,
+    ToggleDiv
   }
 })
 export default class ControlTable extends Vue {
@@ -204,6 +195,11 @@ export default class ControlTable extends Vue {
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
   displayUnviewedControls = true;
+
+  @Watch('singleExpand')
+  onSingleExpandChange(newVal: boolean) {
+    this.handleToggleSingleExpand(newVal);
+  }
 
   get numOfViewed() {
     return this.raw_items.filter((elem) =>
