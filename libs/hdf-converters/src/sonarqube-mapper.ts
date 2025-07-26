@@ -1,4 +1,5 @@
 import axios, {AxiosError} from 'axios';
+import axiosRetry from 'axios-retry';
 import * as _ from 'lodash';
 import {coerce, lt} from 'semver';
 import {ExecJSON} from 'inspecjs';
@@ -12,6 +13,16 @@ import {
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
 import {getCCIsForNISTTags} from './utils/global';
+
+// default number of retry attempts is 3
+axiosRetry(axios, {
+  retryDelay: axiosRetry.exponentialDelay,
+  onRetry: (retryCount, error, _requestConfig) => {
+    console.log(
+      `Retry #${retryCount}/3 on ${error.config?.url}${error.request._options.search} due to ${error.code}`
+    );
+  }
+});
 
 // the Sonarqube schema typings are meant to support the four versions out right now (8, 9, 10, and 2025/25).  9 and 25 are supposed to be LTS releases.  8 is currently used by the Sonarcloud deployment though Sonarqube POCs say that it is no longer supported / they do not see many deployments of it.
 enum SonarqubeVersion {
@@ -516,11 +527,16 @@ export class SonarqubeResults {
   logAxiosError(e: AxiosError): void {
     // https://axios-http.com/docs/handling_errors - based off of their example as the best way to just surface the error
     if (e.response) {
+      console.log('response');
       console.log(e.response.status);
       console.log(e.response.data);
-    } else if (e.request) {
+    }
+    if (e.request) {
+      console.log('request');
       console.log(e.request);
-    } else {
+    }
+    if (e.message) {
+      console.log('message');
       console.log('Error', e.message);
     }
   }
@@ -546,8 +562,8 @@ export class SonarqubeResults {
           }),
           params: {
             componentKeys: this.projectKey,
-	    // TODO: this turns slow as shit if we disable it with 6k+ stuffs.  time to debug why i guess cause it weren't always like this
-            // types: 'VULNERABILITY', // TODO: ask if we should keep it as vulnerabilities only or if we should expand to include everything, ex. code smells --- make type a tag in the control and make sure that heimdall can actually let you filter on tag:nameoftag=valueoftag and not just tag:nameoftag; if fixing the filtering takes too long then do three different hdf files for codesmells, vulns, and bugs
+            // VULNERABILITY, BUG, CODE_SMELL - enum values as far as I can tell
+            // types: 'CODE_SMELL', // TODO: ask if we should keep it as vulnerabilities only or if we should expand to include everything, ex. code smells --- make type a tag in the control and make sure that heimdall can actually let you filter on tag:nameoftag=valueoftag and not just tag:nameoftag; if fixing the filtering takes too long then do three different hdf files for codesmells, vulns, and bugs
             statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED', // TODO: ask about this set of statuses - like do we want to keep 'resolved' as an active finding if the code author has marked it as being fine?  should we mark it as informational or even n/a?  what other statuses are out there? --- test what happens when using the workflow options in sonarqube and what kind of statuses come out; also test what happens if we resolve the problem - does it not return the issue anymore? if the issue isn't returned anymore, then we can ignore statuses entirely as a filter.  if the issue is returned, then we're going to have to handle the different statuses properly.  also it seems like these statuses might be changing between the major versions, at least 8 and 9
             p: page,
             ...(this.branchName && {branch: this.branchName}),
