@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {ZapMapper} from '../../../src/zap-mapper';
 import {omitVersions} from '../../utils';
 

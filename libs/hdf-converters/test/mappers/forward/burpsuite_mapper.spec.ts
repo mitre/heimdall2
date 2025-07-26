@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {BurpSuiteMapper} from '../../../src/burpsuite-mapper';
 import {omitVersions} from '../../utils';
 
