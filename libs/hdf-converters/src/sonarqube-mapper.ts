@@ -327,7 +327,8 @@ function parseNistTags<T extends SonarqubeVersion>(
   if (uniqueNist.length) {
     return uniqueNist;
   }
-  return undefined;
+
+  return ['SA-11']; // Sonarqube is a static code analysis tool so we'll use SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) to handle all the bugs and code smells as a default for whenever it doesn't have security guidance to give us.  Explicitly not using RA-5 (VULNERABILITY SCANNING) since all of those seem to have guidance associated with them.
 }
 
 export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
