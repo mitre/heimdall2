@@ -581,7 +581,7 @@ export class SonarqubeResults {
         })
         .catch((e) => {
           this.logAxiosError(e);
-          return Promise.reject('Failed at getting Sonarqube issue');
+          return Promise.reject(new Error('Failed at getting Sonarqube issue'));
         });
     }
     return results;
@@ -610,7 +610,9 @@ export class SonarqubeResults {
         .catch((e) => {
           this.logAxiosError(e);
           return Promise.reject(
-            `Failed at getting Sonarqube code snippet for ${component}`
+            new Error(
+              `Failed at getting Sonarqube code snippet for ${component}`
+            )
           );
         });
     };
@@ -701,7 +703,7 @@ export class SonarqubeResults {
         .then(({data}) => data)
         .catch((e) => {
           this.logAxiosError(e);
-          return Promise.reject('Failed at getting Sonarqube rule');
+          return Promise.reject(new Error('Failed at getting Sonarqube rule'));
         });
 
     const rulesAndOrgs: [string, string | undefined][] = _.uniqWith(
