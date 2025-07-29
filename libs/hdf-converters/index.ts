@@ -5,7 +5,7 @@ export * as CweNistMappingData from './src/mappings/CweNistMappingData';
 export * as NessusPluginNistMappingData from './src/mappings/NessusPluginNistMappingData';
 export * as NiktoNistMappingData from './src/mappings/NiktoNistMappingData';
 export * as NistCciMappingData from './src/mappings/NistCciMappingData';
-export * as OWaspNistMappingData from './src/mappings/OWaspNistMappingData';
+export * as OwaspNistMappingData from './src/mappings/OwaspNistMappingData';
 export * as ScoutsuiteNistMappingData from './src/mappings/ScoutsuiteNistMappingData';
 export * from './src/anchore-grype-mapper';
 export * from './src/aws-config-mapper';
