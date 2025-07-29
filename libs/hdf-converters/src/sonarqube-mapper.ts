@@ -587,7 +587,9 @@ export class SonarqubeResults {
     return results;
   }
 
-  async getCodeSnippets<T extends SonarqubeVersion>(issues: SonarqubeVersionMapping[T]['issue'][]): Promise<string[]> {
+  async getCodeSnippets<T extends SonarqubeVersion>(
+    issues: SonarqubeVersionMapping[T]['issue'][]
+  ): Promise<string[]> {
     const getFullFile = async (component: string): Promise<string> => {
       return axios
         .get<string>(`${this.sonarqubeHost}/api/sources/raw`, {
@@ -627,7 +629,7 @@ export class SonarqubeResults {
       const linenumberedFile = applyLineNumber(fullFiles[component]);
       const snippet = linenumberedFile
         .split('\n')
-        .slice(Math.max(startLine - 3, 0), endLine + 3)  // slice wraps around if the start is less than 0 so we want to put a bounds check there to ensure we start at the top of the file; however, if the end is past the end of the array then it just goes until the end of the array so no bounds check is required there
+        .slice(Math.max(startLine - 3, 0), endLine + 3) // slice wraps around if the start is less than 0 so we want to put a bounds check there to ensure we start at the top of the file; however, if the end is past the end of the array then it just goes until the end of the array so no bounds check is required there
         .join('\n')
         .trim();
       const location = `${component}:${startLine}-${endLine}\n`;
@@ -635,16 +637,53 @@ export class SonarqubeResults {
       return `${location}${message}<pre>\n${snippet}\n</pre>`;
     };
 
-    const components = _.uniq(issues.flatMap((issue) => issue.flows.length ? issue.flows.flatMap((flow) => flow.locations.map((location) => location.component)) : [issue.component]));
-    const fullFilePromises = await Promise.all(components.map((component) => getFullFile(component)));
+    const components = _.uniq(
+      issues.flatMap((issue) =>
+        issue.flows.length
+          ? issue.flows.flatMap((flow) =>
+              flow.locations.map((location) => location.component)
+            )
+          : [issue.component]
+      )
+    );
+    const fullFilePromises = await Promise.all(
+      components.map((component) => getFullFile(component))
+    );
     const fullFiles = Object.fromEntries(_.zip(components, fullFilePromises));
 
-    const snippets = issues.map((issue) => issue.flows.length ? issue.flows.flatMap((flow) => flow.locations.map((location) => getContextualizedSnippet(fullFiles, location.component, location.textRange.startLine, location.textRange.endLine, location.msg))).join('\n') : getContextualizedSnippet(fullFiles, issue.component, issue.textRange.startLine, issue.textRange.endLine)); 
+    const snippets = issues.map((issue) =>
+      issue.flows.length
+        ? issue.flows
+            .flatMap((flow) =>
+              flow.locations.map((location) =>
+                getContextualizedSnippet(
+                  fullFiles,
+                  location.component,
+                  location.textRange.startLine,
+                  location.textRange.endLine,
+                  location.msg
+                )
+              )
+            )
+            .join('\n')
+        : getContextualizedSnippet(
+            fullFiles,
+            issue.component,
+            issue.textRange.startLine,
+            issue.textRange.endLine
+          )
+    );
     return snippets;
   }
 
-  async getRules<T extends SonarqubeVersion>(issues: SonarqubeVersionMapping[T]['issue'][]): Promise<Rule<T>[]> {
-    const getRule = async (rule: string, organization?: string): Promise<Rule<T>> => axios
+  async getRules<T extends SonarqubeVersion>(
+    issues: SonarqubeVersionMapping[T]['issue'][]
+  ): Promise<Rule<T>[]> {
+    const getRule = async (
+      rule: string,
+      organization?: string
+    ): Promise<Rule<T>> =>
+      axios
         .get<Rule<T>>(`${this.sonarqubeHost}/api/rules/show`, {
           ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
             auth: {username: this.userToken, password: ''}
@@ -665,11 +704,23 @@ export class SonarqubeResults {
           return Promise.reject('Failed at getting Sonarqube rule');
         });
 
-    const rulesAndOrgs: [string, string | undefined][] = _.uniqWith(issues.map((issue) => [issue.rule, issue.organization]), _.isEqual);
-    const fullRulePromises = await Promise.all(rulesAndOrgs.map((ruleAndOrg) => getRule(...ruleAndOrg)));
-    const fullRules = Object.fromEntries(_.zip(rulesAndOrgs.map((ruleAndOrg) => ruleAndOrg.join('\n')), fullRulePromises));
+    const rulesAndOrgs: [string, string | undefined][] = _.uniqWith(
+      issues.map((issue) => [issue.rule, issue.organization]),
+      _.isEqual
+    );
+    const fullRulePromises = await Promise.all(
+      rulesAndOrgs.map((ruleAndOrg) => getRule(...ruleAndOrg))
+    );
+    const fullRules = Object.fromEntries(
+      _.zip(
+        rulesAndOrgs.map((ruleAndOrg) => ruleAndOrg.join('\n')),
+        fullRulePromises
+      )
+    );
 
-    const rules = issues.map((issue) => fullRules[[issue.rule, issue.organization].join('\n')]);
+    const rules = issues.map(
+      (issue) => fullRules[[issue.rule, issue.organization].join('\n')]
+    );
     return rules;
   }
 
@@ -705,7 +756,9 @@ export class SonarqubeResults {
     const sonarqubeVersion = await axios
       .get<string>(`${this.sonarqubeHost}/api/server/version`)
       .then(({data}) => data);
-    console.log(`Generating HDF for ${this.sonarqubeHost} version: ${sonarqubeVersion}`);
+    console.log(
+      `Generating HDF for ${this.sonarqubeHost} version: ${sonarqubeVersion}`
+    );
 
     this.authMethod = isSonarqubeVersionNine(sonarqubeVersion)
       ? AuthenticationMethod.TokenAsUsername
