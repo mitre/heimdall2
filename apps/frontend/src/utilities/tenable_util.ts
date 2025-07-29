@@ -25,7 +25,7 @@ export type ScanResults = {
 };
 
 const UTIL_NAME = 'Tenable.SC';
-const LOGIN_TIMEOUT = 30000; // 30 seconds
+const LOGIN_TIMEOUT = 60000; // 60 seconds
 const LOGIN_TIMEOUT_MSG =
   'Login timed out. Ensure the provided credentials and domain/URL are valid and try again.';
 const logger = createWinstonLogger(UTIL_NAME, 'debug');
