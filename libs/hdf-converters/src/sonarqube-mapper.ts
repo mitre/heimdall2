@@ -16,7 +16,7 @@ import {getCCIsForNISTTags} from './utils/global';
 
 // default number of retry attempts is 3
 axiosRetry(axios, {
-  retryDelay: axiosRetry.exponentialDelay,
+  retryDelay: axiosRetry.linearDelay(),
   onRetry: (retryCount, error, _requestConfig) => {
     console.log(
       `Retry #${retryCount}/3 on ${error.config?.url}${error.request._options.search} due to ${error.code}`
@@ -587,9 +587,7 @@ export class SonarqubeResults {
     return results;
   }
 
-  async getCodeSnippet<T extends SonarqubeVersion>(
-    issue: SonarqubeVersionMapping[T]['issue']
-  ): Promise<string> {
+  async getCodeSnippets<T extends SonarqubeVersion>(issues: SonarqubeVersionMapping[T]['issue'][]): Promise<string[]> {
     const getFullFile = async (component: string): Promise<string> => {
       return axios
         .get<string>(`${this.sonarqubeHost}/api/sources/raw`, {
@@ -619,81 +617,71 @@ export class SonarqubeResults {
         .split('\n')
         .map((l, i) => `${i + 1} ${l}`)
         .join('\n');
-    const getContextualizedSnippet = async (
+    const getContextualizedSnippet = (
+      fullFiles: Record<string, string>,
       component: string,
       startLine: number,
       endLine: number,
       msg?: string
-    ): Promise<string> => {
-      const fullFile = await getFullFile(component);
-      const linenumberedFile = applyLineNumber(fullFile);
+    ): string => {
+      const linenumberedFile = applyLineNumber(fullFiles[component]);
       const snippet = linenumberedFile
         .split('\n')
-        .slice(Math.max(startLine - 3, 0), endLine + 3)
+        .slice(Math.max(startLine - 3, 0), endLine + 3)  // slice wraps around if the start is less than 0 so we want to put a bounds check there to ensure we start at the top of the file; however, if the end is past the end of the array then it just goes until the end of the array so no bounds check is required there
         .join('\n')
-        .trim(); // slice wraps around if the start is less than 0 so we want to put a bounds check there to ensure we start at the top of the file; however, if the end is past the end of the array then it just goes until the end of the array so no bounds check is required there
+        .trim();
       const location = `${component}:${startLine}-${endLine}\n`;
       const message = msg ? `${msg}\n` : '';
       return `${location}${message}<pre>\n${snippet}\n</pre>`;
     };
 
-    if (issue.flows.length) {
-      return Promise.all(
-        issue.flows.flatMap((flow) =>
-          flow.locations.map((location) =>
-            getContextualizedSnippet(
-              location.component,
-              location.textRange.startLine,
-              location.textRange.endLine,
-              location.msg
-            )
-          )
-        )
-      ).then((contextualizedSnippets) => contextualizedSnippets.join('\n'));
-    } else {
-      return getContextualizedSnippet(
-        issue.component,
-        issue.textRange.startLine,
-        issue.textRange.endLine
-      );
-    }
+    const components = _.uniq(issues.flatMap((issue) => issue.flows.length ? issue.flows.flatMap((flow) => flow.locations.map((location) => location.component)) : [issue.component]));
+    const fullFilePromises = await Promise.all(components.map((component) => getFullFile(component)));
+    const fullFiles = Object.fromEntries(_.zip(components, fullFilePromises));
+
+    const snippets = issues.map((issue) => issue.flows.length ? issue.flows.flatMap((flow) => flow.locations.map((location) => getContextualizedSnippet(fullFiles, location.component, location.textRange.startLine, location.textRange.endLine, location.msg))).join('\n') : getContextualizedSnippet(fullFiles, issue.component, issue.textRange.startLine, issue.textRange.endLine)); 
+    return snippets;
   }
 
-  async getRule<T extends SonarqubeVersion>(
-    issue: SonarqubeVersionMapping[T]['issue']
-  ): Promise<Rule<T>> {
-    return axios
-      .get<Rule<T>>(`${this.sonarqubeHost}/api/rules/show`, {
-        ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
-          auth: {username: this.userToken, password: ''}
-        }),
-        ...(this.authMethod === AuthenticationMethod.BearerToken && {
-          headers: {Authorization: `Bearer ${this.userToken}`}
-        }),
-        params: {
-          key: issue.rule,
-          ...((issue.organization || this.organization) && {
-            organization: issue.organization || this.organization
-          }) // seems to be required for sonarcloud at least
-        }
-      })
-      .then(({data}) => data)
-      .catch((e) => {
-        this.logAxiosError(e);
-        return Promise.reject('Failed at getting Sonarqube rule');
-      });
+  async getRules<T extends SonarqubeVersion>(issues: SonarqubeVersionMapping[T]['issue'][]): Promise<Rule<T>[]> {
+    const getRule = async (rule: string, organization?: string): Promise<Rule<T>> => axios
+        .get<Rule<T>>(`${this.sonarqubeHost}/api/rules/show`, {
+          ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
+            auth: {username: this.userToken, password: ''}
+          }),
+          ...(this.authMethod === AuthenticationMethod.BearerToken && {
+            headers: {Authorization: `Bearer ${this.userToken}`}
+          }),
+          params: {
+            key: rule,
+            ...((organization || this.organization) && {
+              organization: organization || this.organization
+            }) // seems to be required for sonarcloud at least
+          }
+        })
+        .then(({data}) => data)
+        .catch((e) => {
+          this.logAxiosError(e);
+          return Promise.reject('Failed at getting Sonarqube rule');
+        });
+
+    const rulesAndOrgs: [string, string | undefined][] = _.uniqWith(issues.map((issue) => [issue.rule, issue.organization]), _.isEqual);
+    const fullRulePromises = await Promise.all(rulesAndOrgs.map((ruleAndOrg) => getRule(...ruleAndOrg)));
+    const fullRules = Object.fromEntries(_.zip(rulesAndOrgs.map((ruleAndOrg) => ruleAndOrg.join('\n')), fullRulePromises));
+
+    const rules = issues.map((issue) => fullRules[[issue.rule, issue.organization].join('\n')]);
+    return rules;
   }
 
   async generateHdf<T extends SonarqubeVersion>(
     sonarqubeVersion: string
   ): Promise<ExecJSON.Execution> {
     const searchResults = await this.getSearchResults<T>();
-    const codeSnippets = await Promise.all(
-      searchResults.issues.map((issue) => this.getCodeSnippet<T>(issue))
-    );
-    const rules = await Promise.all(
-      searchResults.issues.map((issue) => this.getRule<T>(issue))
-    );
+    console.log(`Got ${searchResults.issues.length} issues`);
+    const codeSnippets = await this.getCodeSnippets<T>(searchResults.issues);
+    console.log(`Got ${codeSnippets.length} code snippets`);
+    const rules = await this.getRules<T>(searchResults.issues);
+    console.log(`Got ${rules.length} rules`);
     const data: Data<T> = {
       sonarqubeVersion,
       sonarqubeHost: this.sonarqubeHost,
@@ -717,7 +705,7 @@ export class SonarqubeResults {
     const sonarqubeVersion = await axios
       .get<string>(`${this.sonarqubeHost}/api/server/version`)
       .then(({data}) => data);
-    console.log(`sonarqubeVersion: ${sonarqubeVersion}`);
+    console.log(`Generating HDF for ${this.sonarqubeHost} version: ${sonarqubeVersion}`);
 
     this.authMethod = isSonarqubeVersionNine(sonarqubeVersion)
       ? AuthenticationMethod.TokenAsUsername
