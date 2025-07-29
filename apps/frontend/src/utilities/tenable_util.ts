@@ -65,9 +65,6 @@ export class TenableUtil {
         headers
       });
 
-    console.log (`ServerModule.serverMode is: ${ServerModule.serverMode}`);
-    console.log (`ServerModule.forceTenableFrontend is: ${ServerModule.forceTenableFrontend}`);
-
     logger.info(
       `Tenable Client initialized in ${this.isServer ? 'Server' : 'Lite'} mode`
     );
