@@ -12,7 +12,10 @@ import {
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
-import {conditionallyProvideAttribute, getCCIsForNISTTags} from './utils/global';
+import {
+  conditionallyProvideAttribute,
+  getCCIsForNISTTags
+} from './utils/global';
 
 // default number of retry attempts is 3
 axiosRetry(axios, {
@@ -334,7 +337,8 @@ function parseNistTags<T extends SonarqubeVersion>(
 export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
   Data<T>
 > {
-  // TODO: withraw
+  withRaw: boolean;
+
   // TODO: flesh out mapping
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -422,10 +426,24 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
               nist: {transformer: parseNistTags},
               cweid: {transformer: parseCweTags},
               owasp: {transformer: parseOwaspTags},
-              transformer: (issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>) => ({
-                ...conditionallyProvideAttribute('Issue Type Vulnerability', true, issue.type === 'VULNERABILITY'),
-                ...conditionallyProvideAttribute('Issue Type Bug', true, issue.type === 'BUG'),
-                ...conditionallyProvideAttribute('Issue Type Code Smell', true, issue.type === 'CODE_SMELL'),
+              transformer: (
+                issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
+              ) => ({
+                ...conditionallyProvideAttribute(
+                  'Issue Type Vulnerability',
+                  true,
+                  issue.type === 'VULNERABILITY'
+                ),
+                ...conditionallyProvideAttribute(
+                  'Issue Type Bug',
+                  true,
+                  issue.type === 'BUG'
+                ),
+                ...conditionallyProvideAttribute(
+                  'Issue Type Code Smell',
+                  true,
+                  issue.type === 'CODE_SMELL'
+                )
               })
             },
             results: [
@@ -505,11 +523,21 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
         sha256: ''
       }
     ],
-    passthrough: {}
+    passthrough: {
+      transformer: (data: Data<T>): Record<string, unknown> => {
+        return {
+          ...conditionallyProvideAttribute('raw', data, this.withRaw)
+        };
+      }
+    }
   };
 
-  constructor(public readonly data: Data<T>) {
+  constructor(
+    public readonly data: Data<T>,
+    withRaw = false
+  ) {
     super(data, true);
+    this.withRaw = withRaw;
   }
 }
 
@@ -527,7 +555,8 @@ export class SonarqubeResults {
     private readonly userToken: string,
     public readonly branchName?: string, // if branch/pr are not specified, then sonarqube uses the default branch
     public readonly pullRequestID?: string,
-    public readonly organization?: string // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
+    public readonly organization?: string, // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
+    public readonly withRaw = false
   ) {}
 
   logAxiosError(e: AxiosError): void {
@@ -568,7 +597,7 @@ export class SonarqubeResults {
           }),
           params: {
             componentKeys: this.projectKey,
-            statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED', // TODO: ask about this set of statuses - like do we want to keep 'resolved' as an active finding if the code author has marked it as being fine?  should we mark it as informational or even n/a?  what other statuses are out there? --- test what happens when using the workflow options in sonarqube and what kind of statuses come out; also test what happens if we resolve the problem - does it not return the issue anymore? if the issue isn't returned anymore, then we can ignore statuses entirely as a filter.  if the issue is returned, then we're going to have to handle the different statuses properly.  also it seems like these statuses might be changing between the major versions, at least 8 and 9
+            statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED',
             p: page,
             ...(this.branchName && {branch: this.branchName}),
             ...(this.pullRequestID && {pullRequest: this.pullRequestID})
@@ -754,7 +783,7 @@ export class SonarqubeResults {
         }))
       }
     };
-    return new SonarqubeMapper<T>(data).toHdf();
+    return new SonarqubeMapper<T>(data, this.withRaw).toHdf();
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
