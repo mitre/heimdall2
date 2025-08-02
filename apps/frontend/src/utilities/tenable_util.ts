@@ -25,7 +25,7 @@ export type ScanResults = {
 };
 
 const UTIL_NAME = 'Tenable.SC';
-const LOGIN_TIMEOUT = 30000; // 30 seconds
+const LOGIN_TIMEOUT = 60000; // 60 seconds
 const LOGIN_TIMEOUT_MSG =
   'Login timed out. Ensure the provided credentials and domain/URL are valid and try again.';
 const logger = createWinstonLogger(UTIL_NAME, 'debug');
@@ -33,8 +33,15 @@ const logger = createWinstonLogger(UTIL_NAME, 'debug');
 export class TenableUtil {
   hostConfig: AuthInfo;
   axios_instance: AxiosInstance;
-  isServer: boolean = ServerModule.serverMode; // true if Tenable.SC Lite, false if Tenable.SC Enterprise
+  // If Heimdall Server AND FORCE_TENABLE_FRONTEND=FALSE(default) set to false, otherwise true (uses backend proxy) 
+  isServer: boolean = !ServerModule.serverMode ? false : ServerModule.forceTenableFrontend ? false: true; 
 
+  /**
+   * Initializes the TenableUtil with the provided host configuration.
+   * Sets up the axios instance for making requests to Tenable.
+   *
+   * @param hostConfig - The authentication information for connecting to Tenable.
+   */
   constructor(hostConfig: AuthInfo) {
     this.hostConfig = hostConfig;
     const baseURL = this.isServer
@@ -125,9 +132,13 @@ export class TenableUtil {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getRejectConnectionMessage(error: any): string {
     let rejectMsg = '';
+    const DEFAULT_REJECT_MSG =
+      `${error.name}: ${(error.response?.data?.message ?? error.message)}, 
+       ${error.response?.data?.code ?? error.code}`;
     const TENABLE_HOST_URL = ServerModule.tenableHostUrl;
     const TENABLE_CSP_NOT_SET =
       'The Content Security Policy directive environment variable "TENABLE_HOST_URL" is not configured. See Help for additional instructions.';
+
     if (error.response) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
@@ -140,10 +151,16 @@ export class TenableUtil {
           // we can assume the request was malformed due to Content Security Policy (CSP) violation
           // and we can display a more user-friendly error message. Otherwise, we display the error
           // message as is (e.g. the server is not reachable, the request is not allowed, etc)
-          if (this.isServer && error.response?.data?.message) {
-            rejectMsg = this.getCSPErrorMsg(this.hostConfig.host_url, TENABLE_HOST_URL)
+          if (this.isServer) {
+            if (error.response?.data?.code === 'INVALID_HOST_URL') { // Custom set in the backend
+              rejectMsg = (error.response?.data?.message ?? 'Tenable host URL to IP address resolution failed');
+            } else if (error.response?.data?.message) {
+              rejectMsg = this.getCSPErrorMsg(this.hostConfig.host_url, TENABLE_HOST_URL)
+            } else {
+              rejectMsg = DEFAULT_REJECT_MSG
+            }
           } else {
-            rejectMsg = 'Malformed Request: ' + (error.response?.data?.message ?? error.message);         
+            rejectMsg = DEFAULT_REJECT_MSG;
           }
         } else if (error.status == 401) {
           // If the error code is 401, it means the request was unauthorized
@@ -154,22 +171,16 @@ export class TenableUtil {
           if (this.isServer && !TENABLE_HOST_URL) {
             rejectMsg = TENABLE_CSP_NOT_SET;
           } else {
-            rejectMsg = `Network Error -> 
-              ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
-              ${error.response?.data?.code ?? error.code}`;          
+            rejectMsg = `Network Error -> ${DEFAULT_REJECT_MSG}`;    
           }
         } else if (error.status == 408) {
           // If the error code is 408, it means the request timed out
-          rejectMsg = `Request Timeout -> 
-          ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
-          ${error.response?.data?.code ?? error.code}`;
+          rejectMsg = `Request Timeout -> ${DEFAULT_REJECT_MSG}`;
         } else {
           // If the error code is not 400, 401, 404 or 408, it means the request was
           // rejected by the server for some other reason
           // (e.g. the server is not reachable, the request is not allowed, etc
-          rejectMsg = `Request Rejected (bad request) -> 
-            ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
-            ${error.response?.data?.code ?? error.code}`;
+          rejectMsg = `Request Rejected (bad request) -> ${DEFAULT_REJECT_MSG}`;
         }
       } else if (error.code == `ERR_BAD_RESPONSE`) {
         if (error.status == 502) {
@@ -177,16 +188,12 @@ export class TenableUtil {
             'Response Error (SSL) -> Certificate verification failed. '+
             'Possible untrusted or incomplete TLS certificate chain.';
         } else {
-          rejectMsg = `Response Error (bad request) -> 
-            ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
-            ${error.response?.data?.code ?? error.code}`;
+          rejectMsg = `Response Error (bad request) -> ${DEFAULT_REJECT_MSG}`;            
         }
       } else {
         // If the error message was not a 'ERR_BAD_REQUEST', it means the request was rejected
         // by the server for some other reason
-        rejectMsg = `Response Error -> 
-          ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
-          ${error.response?.data?.code ?? error.code}`;
+        rejectMsg = `Response Error -> ${DEFAULT_REJECT_MSG}`;
       }
     } else if (error.request) {
       // The request was made but no response was received.
@@ -226,15 +233,11 @@ export class TenableUtil {
       } else if (error.code == 'ERR_CONNECTION_REFUSED') {
         rejectMsg = `Received network connection refused by the host: ${error.config.baseURL}`;
       } else {
-        rejectMsg = `Request Error->
-          ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
-          ${error.response?.data?.code ?? error.code}`;
+        rejectMsg = `Request Error-> ${DEFAULT_REJECT_MSG}`;
       }
     } else {
       // Something happened in setting up the request that triggered an Error
-      rejectMsg = `Unknown Error-> 
-        ${error.name}: ${(error.response?.data?.message ?? error.message)}, 
-        ${error.response?.data?.code ?? error.code}`;
+      rejectMsg = `Unknown Error-> ${DEFAULT_REJECT_MSG}`;
     }
     return rejectMsg;
   }
