@@ -257,9 +257,9 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       if (!detailsMap.has(_.startCase(key))) {
         // Make sure all values are strings
         if (Array.isArray(value)) {
-          detailsMap.set(_.startCase(key), value.join(', '));
+	  detailsMap.set(_.startCase(key), value.map((v) => JSON.stringify(v, null, 2)).join(', '));
         } else if (typeof value === 'object') {
-          detailsMap.set(_.startCase(key), JSON.stringify(value));
+          detailsMap.set(_.startCase(key), JSON.stringify(value, null, 2));
         } else {
           detailsMap.set(_.startCase(key), String(value));
         }
