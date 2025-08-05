@@ -31,6 +31,7 @@ jobs:
           - 8089:8089
         env:
           SPLUNK_START_ARGS: --accept-license
+          SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
