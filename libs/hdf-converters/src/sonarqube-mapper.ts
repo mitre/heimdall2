@@ -1,5 +1,4 @@
 import axios, {AxiosError} from 'axios';
-import axiosRetry from 'axios-retry';
 import * as _ from 'lodash';
 import {coerce, lt} from 'semver';
 import {ExecJSON} from 'inspecjs';
@@ -16,16 +15,6 @@ import {
   conditionallyProvideAttribute,
   getCCIsForNISTTags
 } from './utils/global';
-
-// default number of retry attempts is 3
-axiosRetry(axios, {
-  retryDelay: axiosRetry.linearDelay(),
-  onRetry: (retryCount, error, _requestConfig) => {
-    console.log(
-      `Retry #${retryCount}/3 on ${error.config?.url}${error.request._options.search} due to ${error.code}`
-    );
-  }
-});
 
 // the Sonarqube schema typings are meant to support the four versions out right now (8, 9, 10, and 2025/25).  9 and 25 are supposed to be LTS releases.  8 is currently used by the Sonarcloud deployment though Sonarqube POCs say that it is no longer supported / they do not see many deployments of it.
 enum SonarqubeVersion {
