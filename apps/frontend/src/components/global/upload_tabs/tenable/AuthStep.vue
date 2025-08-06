@@ -17,9 +17,9 @@
         :type="showSecret ? 'text' : 'password'"
         lazy-validation="lazy"
         :append-icon="showSecret ? 'mdi-eye' : 'mdi-eye-off'"
-        @click:append="showSecret = !showSecret"
         :rules="[reqRule]"
         data-cy="tenablesecretkey"
+        @click:append="showSecret = !showSecret"
       />
       <v-text-field
         ref="hostname_value"
