@@ -390,7 +390,7 @@ export class BaseConverter<D = Record<string, unknown>> {
     } else if (pathArray[index].startsWith('$.')) {
       return _.get(this.data, pathArray[index].slice(2)) || ''; // having default values implemented like this also prevents 'null' from being passed through
     } else {
-      return _.get(file, pathArray[index]) || '';
+      return _.get(file, pathArray[index]) ?? '';
     }
   }
   hasPath(file: Record<string, unknown>, path: string | string[]): boolean {

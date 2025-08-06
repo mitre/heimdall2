@@ -4,7 +4,7 @@
     "release": "1.1 4.5.0",
     "target_id": "http://dtrack.example.org"
   },
-  "version": "2.10.3",
+  "version": "2.11.5",
   "statistics": {},
   "profiles": [
     {
@@ -60,7 +60,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "NOT_SET",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -130,7 +130,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -158,7 +158,7 @@
           ]
         }
       ],
-      "sha256": "5bbda4b1d386b05957e95e2701d9cf675ecec96aa07ca3e043edd565794c8277"
+      "sha256": "a21db95b129f48918a6ecd1ef4031d9e66224ab01d2f596f1ea3a2423741eeae"
     }
   ],
   "passthrough": {}
