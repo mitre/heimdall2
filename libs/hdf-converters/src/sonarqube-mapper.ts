@@ -644,6 +644,14 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
     passthrough: {
       transformer: (data: Data<T>): Record<string, unknown> => {
         return {
+          auxiliary_data: [
+            {
+              name: 'SonarQube',
+              data: {
+                ..._.omit(data, 'search.issues')
+              }
+            }
+          ],
           ...conditionallyProvideAttribute('raw', data, this.withRaw)
         };
       }
