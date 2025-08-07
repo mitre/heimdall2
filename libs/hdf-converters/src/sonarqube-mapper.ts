@@ -332,7 +332,6 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
 > {
   withRaw: boolean;
 
-  // TODO: flesh out mapping
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -419,9 +418,77 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
               nist: {transformer: parseNistTags},
               cweid: {transformer: parseCweTags},
               owasp: {transformer: parseOwaspTags},
+              createdAt: {path: 'ruleInformation.rule.createdAt'},
+              debtRemFnType: {path: 'ruleInformation.rule.debtRemFnType'},
+              defaultDebtRemFnType: {path: 'ruleInformation.rule.defaultDebtRemFnType'},
+              isExternal: {path: 'ruleInformation.rule.isExternal'},
+              isTemplate: {path: 'ruleInformation.rule.isTemplate'},
+              langName: {path: 'ruleInformation.rule.langName'},
+              remFnBaseEffort: {path: 'ruleInformation.rule.remFnBaseEffort'},
+              remFnOverloaded: {path: 'ruleInformation.rule.remFnOverloaded'},
+              remFnType: {path: 'ruleInformation.rule.remFnType'},
+              repo: {path: 'ruleInformation.rule.repo'},
+              scope: {path: 'ruleInformation.rule.scope'},
+              ruleSeverity: {path: 'ruleInformation.rule.severity'},
+              status: {path: 'ruleInformation.rule.status'},
               transformer: (
                 issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
               ) => ({
+                ...conditionallyProvideAttribute(
+                  'Actives',
+                  issue.ruleInformation.actives,
+                  issue.ruleInformation.actives.length !== 0
+                ),
+                ...conditionallyProvideAttribute(
+                  'Clean Code Attribute',
+                  issue.ruleInformation.rule.cleanCodeAttribute,
+                  issue.ruleInformation.rule.cleanCodeAttribute?.length !== 0
+                ),
+                ...conditionallyProvideAttribute(
+                  'Clean Code Attribute Category',
+                  issue.ruleInformation.rule.cleanCodeAttributeCategory,
+                  issue.ruleInformation.rule.cleanCodeAttributeCategory?.length !== 0
+                ),
+                ...conditionallyProvideAttribute(
+                  'Debt Overloaded',
+                  'debtOverloaded' in issue.ruleInformation.rule && issue.ruleInformation.rule.debtOverloaded,
+                  'debtOverloaded' in issue.ruleInformation.rule && issue.ruleInformation.rule.debtOverloaded !== undefined
+                ),
+                ...conditionallyProvideAttribute(
+                  'Debt Rem Fn Coeff',
+                  'debtRemFnCoeff' in issue.ruleInformation.rule && issue.ruleInformation.rule.debtRemFnCoeff,
+                  'debtRemFnCoeff' in issue.ruleInformation.rule && issue.ruleInformation.rule.debtRemFnCoeff !== undefined
+                ),
+                ...conditionallyProvideAttribute(
+                  'Debt Rem Fn Offset',
+                  'debtRemFnOffset' in issue.ruleInformation.rule && issue.ruleInformation.rule.debtRemFnOffset,
+                  'debtRemFnOffset' in issue.ruleInformation.rule
+                ),
+                ...conditionallyProvideAttribute(
+                  'Default Debt Rem Fn Coeff',
+                  'defaultDebtRemFnCoeff' in issue.ruleInformation.rule && issue.ruleInformation.rule.defaultDebtRemFnCoeff,
+                  'defaultDebtRemFnCoeff' in issue.ruleInformation.rule && issue.ruleInformation.rule.defaultDebtRemFnCoeff !== undefined
+                ),
+                ...conditionallyProvideAttribute(
+                  'Default Debt Rem Fn Offset',
+                  'defaultDebtRemFnOffset' in issue.ruleInformation.rule && issue.ruleInformation.rule.defaultDebtRemFnOffset,
+                  'defaultDebtRemFnOffset' in issue.ruleInformation.rule
+                ),
+                ...conditionallyProvideAttribute(
+                  'Education Principles',
+                  'educationPrinciples' in issue.ruleInformation.rule && issue.ruleInformation.rule.educationPrinciples,
+                  'educationPrinciples' in issue.ruleInformation.rule && issue.ruleInformation.rule.educationPrinciples?.length !== 0
+                ),
+                ...conditionallyProvideAttribute(
+                  'Effort To Fix Description',
+                  'effortToFixDescription' in issue.ruleInformation.rule && issue.ruleInformation.rule.effortToFixDescription,
+                  'effortToFixDescription' in issue.ruleInformation.rule && issue.ruleInformation.rule.effortToFixDescription !== undefined
+                ),
+                ...conditionallyProvideAttribute(
+                  'Impacts',
+                  issue.ruleInformation.rule.impacts,
+                  issue.ruleInformation.rule.impacts?.length !== 0
+                ),
                 ...conditionallyProvideAttribute(
                   'Issue Type Vulnerability',
                   true,
@@ -436,6 +503,31 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
                   'Issue Type Code Smell',
                   true,
                   issue.type === 'CODE_SMELL'
+                ),
+                ...conditionallyProvideAttribute(
+                  'Params',
+                  issue.ruleInformation.rule.params,
+                  issue.ruleInformation.rule.params?.length !== 0
+                ),
+                ...conditionallyProvideAttribute(
+                  'Security Standards',
+                  issue.ruleInformation.rule.securityStandards,
+                  issue.ruleInformation.rule.securityStandards?.length !== 0
+                ),
+                ...conditionallyProvideAttribute(
+                  'Sys Tags',
+                  issue.ruleInformation.rule.sysTags,
+                  issue.ruleInformation.rule.sysTags?.length !== 0
+                ),
+                ...conditionallyProvideAttribute(
+                  'Tags',
+                  issue.ruleInformation.rule.tags,
+                  issue.ruleInformation.rule.tags?.length !== 0
+                ),
+                ...conditionallyProvideAttribute(
+                  'Updated At',
+                  'updatedAt' in issue.ruleInformation.rule && issue.ruleInformation.rule.updatedAt,
+                  'updatedAt' in issue.ruleInformation.rule
                 )
               })
             },
@@ -443,7 +535,40 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {path: 'codeSnippet'},
-                start_time: {path: 'creationDate'}
+                start_time: {path: 'creationDate'},
+                message: {
+                  transformer: (issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>) => JSON.stringify({
+                    // Explanation of the violation
+                    Message: issue.message,
+
+                    // Useful information
+                    Author: issue.author,
+                    'Creation Date': issue.creationDate,
+                    Debt: issue.debt,
+                    Effort: issue.effort,
+                    ...conditionallyProvideAttribute('Issue Status', issue.issueStatus, issue.issueStatus?.length !== 0),
+                    ...conditionallyProvideAttribute('Resolution', issue.resolution, issue.resolution?.length !== 0),
+                    Status: issue.status,
+                    'Update Date': issue.updateDate,
+
+                    // all the rest
+                    ...conditionallyProvideAttribute('Actions', issue.actions, issue.actions?.length !== 0),
+                    ...conditionallyProvideAttribute('Attr', issue.attr, issue.attr !== undefined),
+                    ...conditionallyProvideAttribute('Code Variants', 'codeVariants' in issue && issue.codeVariants, 'codeVariants' in issue && issue.codeVariants?.length !== 0),
+                    ...conditionallyProvideAttribute('Comments', issue.comments, issue.comments?.length !== 0),
+                    ...conditionallyProvideAttribute('Flows', issue.flows, issue.flows?.length !== 0),
+                    ...conditionallyProvideAttribute('From Hotspot', 'fromHotspot' in issue && issue.fromHotspot, 'fromHotspot' in issue && issue.fromHotspot !== undefined && issue.fromHotspot !== null),
+                    Hash: issue.hash,
+                    Key: issue.key,
+                    ...conditionallyProvideAttribute('Message Formattings', issue.messageFormattings, issue.messageFormattings?.length !== 0),
+                    ...conditionallyProvideAttribute('Prioritized Rule', 'prioritizedRule' in issue && issue.prioritizedRule, 'prioritizedRule' in issue),
+                    ...conditionallyProvideAttribute('Project Name', issue.projectName, issue.projectName?.length !== 0),
+                    ...conditionallyProvideAttribute('Quick Fix Available', 'quickFixAvailable' in issue && issue.quickFixAvailable, 'quickFixAvailable' in issue && issue.quickFixAvailable !== undefined),
+                    ...conditionallyProvideAttribute('Rule Description Context Key', 'ruleDescriptionContextKey' in issue && issue.ruleDescriptionContextKey, 'ruleDescriptionContextKey' in issue && issue.ruleDescriptionContextKey?.length !== 0),
+                    ...conditionallyProvideAttribute('Tags', issue.tags, issue.tags?.length !== 0),
+                    ...conditionallyProvideAttribute('Transitions', issue.transitions, issue.transitions?.length !== 0),
+                  }, null, 2)
+                }
               }
             ],
             transformer: () => ({
@@ -529,7 +654,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
     public readonly data: Data<T>,
     withRaw = false
   ) {
-    super(data, true);
+    super(data);
     this.withRaw = withRaw;
   }
 }
@@ -553,7 +678,6 @@ export class SonarqubeResults {
   ) {}
 
   logAxiosError(e: AxiosError): void {
-    // https://axios-http.com/docs/handling_errors - based off of their example as the best way to just surface the error
     if (e.response) {
       console.log('response');
       console.log(e.response.status);
