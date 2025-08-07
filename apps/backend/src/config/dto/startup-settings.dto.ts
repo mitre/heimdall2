@@ -12,6 +12,7 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly registrationEnabled: boolean;
   readonly localLoginEnabled: boolean;
   readonly tenableHostUrl: string;
+  readonly forceTenableFrontend: boolean;
   readonly splunkHostUrl: string;
 
   constructor(settings: IStartupSettings) {
@@ -26,6 +27,7 @@ export class StartupSettingsDto implements IStartupSettings {
     this.registrationEnabled = settings.registrationEnabled;
     this.localLoginEnabled = settings.localLoginEnabled;
     this.tenableHostUrl = settings.tenableHostUrl;
+    this.forceTenableFrontend = settings.forceTenableFrontend;
     this.splunkHostUrl = settings.splunkHostUrl;
   }
 }
