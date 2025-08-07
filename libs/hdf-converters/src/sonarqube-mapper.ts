@@ -60,10 +60,15 @@ type SonarqubeVersionMapping = {
   [SonarqubeVersion.Twenty_five]: {issue: Issue_10; ruleInformation: Rule_25};
 };
 
+// many of these attributes show up in the API example responses, but not in our locally generated samples.
+// a few of them are mentioned in the changelog, but do not show up in samples or the examples
+// several of these attributes show up in sonarcloud (which is marked as major version 8) even though the documentation says that they should first only show up in latter versions.  to that end, I've marked them as optional for lack of any other action we can take.
 type Issue_8 = {
-  actions?: string[]; // shows up in api sample responses but not in our locally generated samples
-  attr?: {'jira-issue-key'?: string}; // shows up in api sample responses but not in our locally generated samples
+  actions?: string[];
+  attr?: {'jira-issue-key'?: string};
   author: string;
+  cleanCodeAttribute?: string;
+  cleanCodeAttributeCategory?: string;
   comments?: {
     key: string;
     login: string;
@@ -71,7 +76,7 @@ type Issue_8 = {
     markdown: string;
     updatable: boolean;
     createdAt: string;
-  }[]; // shows up in api sample responses but not in our locally generated samples
+  }[];
   component: string;
   creationDate: string;
   debt: string;
@@ -89,8 +94,10 @@ type Issue_8 = {
       component: string;
     }[];
   }[];
-  fromHotspot?: unknown; // the changelog mentions this attribute but it does not appear in the sonarcloud generated samples
+  fromHotspot?: unknown;
   hash: string;
+  impacts?: {severity: string; softwareQuality: string}[];
+  issueStatus?: string;
   key: string;
   line: number;
   message: string;
@@ -98,7 +105,7 @@ type Issue_8 = {
   organization?: string;
   project: string;
   projectName?: string;
-  resolution?: string; // shows up in api sample responses but not in our locally generated samples; the changelog for the endpoint mentions something about 'resolutions' which might be the same as this endpoint?
+  resolution?: string; // the changelog for the endpoint mentions something about 'resolutions' which might be the same as this endpoint?
   rule: string;
   scope?: string;
   severity: string;
@@ -110,22 +117,18 @@ type Issue_8 = {
     startLine: number;
     startOffset: number;
   };
-  transitions?: string[]; // shows up in api sample responses but not in our locally generated samples
+  transitions?: string[];
   type: string;
   updateDate: string;
 };
 
 type Issue_9 = Omit<Issue_8, 'fromHotspot'> & {
   quickFixAvailable?: boolean;
-  ruleDescriptionContextKey?: string; // shows up in api sample responses but not in our locally generated samples
+  ruleDescriptionContextKey?: string;
 };
 
 type Issue_10 = Issue_9 & {
-  cleanCodeAttribute: string;
-  cleanCodeAttributeCategory: string;
   codeVariants: string[];
-  impacts: {severity: string; softwareQuality: string}[];
-  issueStatus: string;
   prioritizedRule: boolean;
 };
 
@@ -153,25 +156,28 @@ type Search<T extends SonarqubeVersion> = {
     status: string;
     lang: string;
     langName: string;
-  }[]; // shows up in api sample responses but not in our locally generated samples
+  }[];
   total?: number; // deprecated as of 9.8
-  users?: {login: string; name: string; active: boolean; avatar: string}[]; // shows up in api sample responses but not in our locally generated samples
+  users?: {login: string; name: string; active: boolean; avatar: string}[];
 };
 
 type Rule_8 = {
+  cleanCodeAttribute?: string;
+  cleanCodeAttributeCategory?: string;
   createdAt: string;
   debtOverloaded: boolean;
-  debtRemFnCoeff?: unknown; // shows up in changelog but not in our locally generated samples
+  debtRemFnCoeff?: unknown;
   debtRemFnOffset: string;
   debtRemFnType: string;
-  defaultDebtRemFnCoeff?: unknown; // shows up in changelog but not in our locally generated samples
+  defaultDebtRemFnCoeff?: unknown;
   defaultDebtRemFnOffset: string;
   defaultDebtRemFnType: string;
   defaultRemFnBaseEffort: string;
   defaultRemFnType: string;
   descriptionSections?: {content: string; key: string}[]; // sonarqube changelog says it was added in 9.5 if I'm interpreting "The field 'descriptionSections' has been added to the payload" properly, but sonarcloud (which is v8 nominally) has it too
-  effortToFixDescription?: unknown; // shows up in changelog but not in our locally generated samples
+  effortToFixDescription?: unknown;
   htmlDesc: string;
+  impacts?: {severity: string; softwareQuality: string}[];
   isExternal: boolean;
   isTemplate: boolean;
   key: string;
@@ -185,6 +191,7 @@ type Rule_8 = {
   remFnType: string;
   repo: string;
   scope: string;
+  securityStandards?: unknown[];
   severity: string;
   status: string;
   sysTags: string[];
@@ -205,9 +212,6 @@ type Rule_10 = Omit<
   | 'defaultDebtRemFnOffset'
   | 'effortToFixDescription'
 > & {
-  cleanCodeAttribute: string;
-  cleanCodeAttributeCategory: string;
-  impacts: {severity: string; softwareQuality: string}[];
   updatedAt: string;
 };
 
