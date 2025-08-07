@@ -9,7 +9,7 @@
     {
       "name": "SonarQube Scan",
       "version": "SonarQube v9.9.8.100196",
-      "title": "SonarQube Scan of project xss on http://127.0.0.1:3001 at 2025-06-18T06:34:37.478Z",
+      "title": "SonarQube Scan of project xss on http://127.0.0.1:3001 at 2025-08-07T03:11:35.773Z",
       "supports": [],
       "attributes": [],
       "groups": [],
@@ -33,20 +33,83 @@
               "Top 10 2021 Category A1",
               "Top 10 2017 Category A3",
               "A3"
+            ],
+            "createdAt": "2021-12-06T19:35:19+0000",
+            "debtRemFnType": "CONSTANT_ISSUE",
+            "defaultDebtRemFnType": "CONSTANT_ISSUE",
+            "isExternal": false,
+            "isTemplate": false,
+            "langName": "JavaScript",
+            "remFnBaseEffort": "10min",
+            "remFnOverloaded": false,
+            "remFnType": "CONSTANT_ISSUE",
+            "repo": "javascript",
+            "scope": "MAIN",
+            "ruleSeverity": "CRITICAL",
+            "status": "READY",
+            "Debt Overloaded": false,
+            "Debt Rem Fn Offset": "10min",
+            "Default Debt Rem Fn Offset": "10min",
+            "Issue Type Vulnerability": true,
+            "Sys Tags": [
+              "cwe",
+              "html5",
+              "owasp-a3"
             ]
           },
           "results": [
             {
               "status": "failed",
               "code_desc": "xss:packages/docs/src/service-worker.js:29-29\n<pre>\n27 })\n28 \n29 self.addEventListener('message', event => {\n30   if (event.data === 'sw:update') self.skipWaiting()\n31 })\n32\n</pre>",
-              "start_time": "2020-09-01T17:04:31+0000"
+              "start_time": "2020-09-01T17:04:31+0000",
+              "message": "{\n  \"Message\": \"Verify the message's origin in this cross-origin communication.\",\n  \"Author\": \"example@example.com\",\n  \"Creation Date\": \"2020-09-01T17:04:31+0000\",\n  \"Debt\": \"10min\",\n  \"Effort\": \"10min\",\n  \"Status\": \"OPEN\",\n  \"Update Date\": \"2021-12-06T20:27:51+0000\",\n  \"Hash\": \"8be50716e6366451fef374e82fb66aca\",\n  \"Key\": \"AX2RcGnrl-KH7KTFNgLl\",\n  \"Quick Fix Available\": false,\n  \"Tags\": [\n    \"cwe\",\n    \"html5\",\n    \"owasp-a3\"\n  ]\n}"
             }
           ],
           "descriptions": null
         }
       ],
-      "sha256": "97a12d92c8bde8322fe265d815362c3dc09da4ff4a68a9cad16969a08b781deb"
+      "sha256": "877e835cb79dc934e87e5324b9cd4366d8e8197bc7d502901c7760b674b64542"
     }
   ],
-  "passthrough": {}
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "SonarQube",
+        "data": {
+          "sonarqubeVersion": "9.9.8.100196",
+          "sonarqubeHost": "http://127.0.0.1:3001",
+          "projectKey": "xss",
+          "search": {
+            "components": [
+              {
+                "key": "xss:packages/docs/src/service-worker.js",
+                "enabled": true,
+                "qualifier": "FIL",
+                "name": "service-worker.js",
+                "longName": "packages/docs/src/service-worker.js",
+                "path": "packages/docs/src/service-worker.js"
+              },
+              {
+                "key": "xss",
+                "enabled": true,
+                "qualifier": "TRK",
+                "name": "xss",
+                "longName": "xss"
+              }
+            ],
+            "effortTotal": 10,
+            "facets": [],
+            "paging": {
+              "pageIndex": 1,
+              "pageSize": 100,
+              "total": 1
+            },
+            "total": 1,
+            "p": 1,
+            "ps": 100
+          }
+        }
+      }
+    ]
+  }
 }

@@ -9,7 +9,7 @@
     {
       "name": "SonarQube Scan",
       "version": "SonarQube v9.9.8.100196",
-      "title": "SonarQube Scan of project libc_unix on http://127.0.0.1:3001 at 2025-06-18T06:34:37.499Z using pull request 123",
+      "title": "SonarQube Scan of project libc_unix on http://127.0.0.1:3001 at 2025-08-07T03:11:35.797Z using pull request 123",
       "supports": [],
       "attributes": [],
       "groups": [],
@@ -36,20 +36,84 @@
               "Top 10 2021 Category A1",
               "Top 10 2017 Category A5",
               "A5"
+            ],
+            "createdAt": "2021-01-21T16:26:38-0500",
+            "debtRemFnType": "CONSTANT_ISSUE",
+            "defaultDebtRemFnType": "CONSTANT_ISSUE",
+            "isExternal": false,
+            "isTemplate": false,
+            "langName": "C",
+            "remFnBaseEffort": "10min",
+            "remFnOverloaded": false,
+            "remFnType": "CONSTANT_ISSUE",
+            "repo": "c",
+            "scope": "MAIN",
+            "ruleSeverity": "CRITICAL",
+            "status": "READY",
+            "Debt Overloaded": false,
+            "Debt Rem Fn Offset": "10min",
+            "Default Debt Rem Fn Offset": "10min",
+            "Issue Type Vulnerability": true,
+            "Sys Tags": [
+              "cert",
+              "cwe",
+              "owasp-a5"
             ]
           },
           "results": [
             {
               "status": "failed",
               "code_desc": "libc_unix:dev/src/libc_unix/sumapss7.c:65-65\nFile checked here\n<pre>\n63 \n64    /* ! If Key String is invalid */\n65    if ( stat(Key_String, &buf) )\n66    {\n67       FILE *fd;\n68       /* !! If this is a physical device, error is fatal */\n</pre>\nlibc_unix:dev/src/libc_unix/sumapss7.c:79-79\nFile used here\n<pre>\n77       }\n78       /* !! Try to create the file */\n79       fd = fopen(Key_String, \"w\");\n80       /* !! If NOT sucessfull */\n81       if (! fd )\n82       {\n</pre>",
-              "start_time": "2021-10-05T07:48:39-0400"
+              "start_time": "2021-10-05T07:48:39-0400",
+              "message": "{\n  \"Message\": \"Remove this TOCTOU race condition window when accessing files\",\n  \"Author\": \"\",\n  \"Creation Date\": \"2021-10-05T07:48:39-0400\",\n  \"Debt\": \"10min\",\n  \"Effort\": \"10min\",\n  \"Status\": \"OPEN\",\n  \"Update Date\": \"2021-10-05T07:48:39-0400\",\n  \"Flows\": [\n    {\n      \"locations\": [\n        {\n          \"component\": \"libc_unix:dev/src/libc_unix/sumapss7.c\",\n          \"textRange\": {\n            \"startLine\": 65,\n            \"endLine\": 65,\n            \"startOffset\": 8,\n            \"endOffset\": 30\n          },\n          \"msg\": \"File checked here\"\n        }\n      ]\n    },\n    {\n      \"locations\": [\n        {\n          \"component\": \"libc_unix:dev/src/libc_unix/sumapss7.c\",\n          \"textRange\": {\n            \"startLine\": 79,\n            \"endLine\": 79,\n            \"startOffset\": 11,\n            \"endOffset\": 33\n          },\n          \"msg\": \"File used here\"\n        }\n      ]\n    }\n  ],\n  \"Hash\": \"8430f2c6db3e4549755fbd9e481817c7\",\n  \"Key\": \"AXzck64vC85-0Ss6yFbS\",\n  \"Quick Fix Available\": false,\n  \"Tags\": [\n    \"cert\",\n    \"cwe\",\n    \"owasp-a5\"\n  ]\n}"
             }
           ],
           "descriptions": null
         }
       ],
-      "sha256": "7056d87e705b94f0873db022f02679d83f2f9253a1887bca5bb17c9526e997a6"
+      "sha256": "b6f4cc220c866a374adae1ddd0bc2dd6f52534e778dd119380a5c001ce8ddd17"
     }
   ],
-  "passthrough": {}
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "SonarQube",
+        "data": {
+          "sonarqubeVersion": "9.9.8.100196",
+          "sonarqubeHost": "http://127.0.0.1:3001",
+          "projectKey": "libc_unix",
+          "pullRequestID": "123",
+          "search": {
+            "components": [
+              {
+                "key": "libc_unix:dev/src/libc_unix/sumapss7.c",
+                "enabled": true,
+                "qualifier": "FIL",
+                "name": "sumapss7.c",
+                "longName": "dev/src/libc_unix/sumapss7.c",
+                "path": "dev/src/libc_unix/sumapss7.c"
+              },
+              {
+                "key": "libc_unix",
+                "enabled": true,
+                "qualifier": "TRK",
+                "name": "libc_unix",
+                "longName": "libc_unix"
+              }
+            ],
+            "effortTotal": 20,
+            "facets": [],
+            "paging": {
+              "pageIndex": 1,
+              "pageSize": 100,
+              "total": 1
+            },
+            "total": 1,
+            "p": 1,
+            "ps": 100
+          }
+        }
+      }
+    ]
+  }
 }
