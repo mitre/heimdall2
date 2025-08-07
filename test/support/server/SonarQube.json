@@ -1,6 +1,6 @@
 {
   "/api/server/version": "9.9.8.100196",
-  "/api/issues/search?componentKeys=xss&types=VULNERABILITY&statuses=OPEN,REOPENED,CONFIRMED,RESOLVED&p=1": {
+  "/api/issues/search?componentKeys=xss&statuses=OPEN,REOPENED,CONFIRMED,RESOLVED&p=1": {
     "total": 1,
     "p": 1,
     "ps": 100,
@@ -62,7 +62,7 @@
     ],
     "facets": []
   },
-  "/api/issues/search?componentKeys=libc_unix&types=VULNERABILITY&statuses=OPEN,REOPENED,CONFIRMED,RESOLVED&p=1&branch=release": {
+  "/api/issues/search?componentKeys=libc_unix&statuses=OPEN,REOPENED,CONFIRMED,RESOLVED&p=1&branch=release": {
     "total": 1,
     "p": 1,
     "ps": 100,
@@ -156,7 +156,7 @@
     ],
     "facets": []
   },
-  "/api/issues/search?componentKeys=libc_unix&types=VULNERABILITY&statuses=OPEN,REOPENED,CONFIRMED,RESOLVED&p=1&pullRequest=123": {
+  "/api/issues/search?componentKeys=libc_unix&statuses=OPEN,REOPENED,CONFIRMED,RESOLVED&p=1&pullRequest=123": {
     "total": 1,
     "p": 1,
     "ps": 100,
