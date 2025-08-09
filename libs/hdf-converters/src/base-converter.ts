@@ -211,6 +211,10 @@ export class BaseConverter<D = Record<string, unknown>> {
     file: Record<string, unknown>,
     v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPath> {
+    if (v === undefined) {
+      return v;
+    }
+
     const hasTransformer =
       _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
     let transformer = (val: unknown) => val;
@@ -262,7 +266,10 @@ export class BaseConverter<D = Record<string, unknown>> {
     if (_.keys(v).length > 0 && hasTransformer) {
       return {
         ...this.convertInternal(file, v),
-        ...(transformer(hasPath ? pathV : (file as T | T[])) as object)
+        ...this.convertInternal(
+          hasPath ? (pathV as Record<string, unknown>) : file,
+          transformer(hasPath ? pathV : (file as T | T[])) as object
+        )
       } as MappedReform<T, ILookupPath>;
     }
 
@@ -323,13 +330,23 @@ export class BaseConverter<D = Record<string, unknown>> {
           }
           if (Array.isArray(pathVal)) {
             v = pathVal.map((element: Record<string, unknown>) => {
-              return _.omit(this.convertInternal(element, lookupPath), [
-                'path',
-                'transformer',
-                'arrayTransformer',
-                'key',
-                'pathTransform'
-              ]) as unknown as T;
+              let processed = _.omit(
+                this.convertInternal(element, lookupPath),
+                [
+                  'path',
+                  'transformer',
+                  'arrayTransformer',
+                  'key',
+                  'pathTransform'
+                ]
+              ) as unknown as T;
+              if (transformer !== undefined) {
+                processed = this.evaluate(element, {
+                  ...processed,
+                  transformer
+                }) as T;
+              }
+              return processed;
             }) as any;
             if (arrayTransformer !== undefined) {
               if (Array.isArray(arrayTransformer)) {
@@ -373,7 +390,7 @@ export class BaseConverter<D = Record<string, unknown>> {
     } else if (pathArray[index].startsWith('$.')) {
       return _.get(this.data, pathArray[index].slice(2)) || ''; // having default values implemented like this also prevents 'null' from being passed through
     } else {
-      return _.get(file, pathArray[index]) || '';
+      return _.get(file, pathArray[index]) ?? '';
     }
   }
   hasPath(file: Record<string, unknown>, path: string | string[]): boolean {
