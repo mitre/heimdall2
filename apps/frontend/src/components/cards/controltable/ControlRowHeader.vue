@@ -148,6 +148,7 @@ import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
 import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
+import {control_unique_key} from '@/utilities/format_util';
 import {Prop} from 'vue-property-decorator';
 
 interface Tag {
@@ -199,7 +200,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get wasViewed(): boolean {
-    return this.viewedControls.indexOf(this.control.data.id) !== -1;
+    return this.viewedControls.indexOf(control_unique_key(this.control)) !== -1;
   }
 
   set wasViewed(_value: boolean) {

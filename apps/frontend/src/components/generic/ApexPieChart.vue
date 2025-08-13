@@ -10,12 +10,14 @@
 </template>
 
 <script lang="ts">
-import {ColorHackModule} from '@/store/color_hack';
-import {ApexOptions} from 'apexcharts';
 import Vue from 'vue';
-import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {ApexOptions} from 'apexcharts';
+import VueApexCharts from 'vue-apexcharts';
+
+import {ColorHackModule} from '@/store/color_hack';
+import {SeriesItem} from './ApexLineChart.vue';
 
 // Represents a slice of the pie.
 export interface Category<C extends string> {
@@ -48,17 +50,29 @@ type ApexTotalType = {
 })
 export default class ApexPieChart extends Vue {
   @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
-  @Prop({required: true, type: Array}) readonly series!: number[];
+  @Prop({required: true, type: Array}) readonly series!: SeriesItem[];
   @Prop({required: false, type: String}) readonly centerValue!: string;
 
-  // Generate the chart options based on categories
+  /**
+   * Builds and returns the ApexCharts configuration for a donut chart.
+   *  - Dynamically includes center labels if `centerValue` is defined.
+   *  - Adjusts vertical offsets for donut chart label alignment.
+   *  - Configures interactive behaviors like selection and hover cursor changes.
+   *  - Emits 'category-selected' when a chart segment is clicked.
+   *  - Applies custom colors using ColorHackModule to meet ApexCharts requirements.
+   *  - Uses legend, shadow, and stroke settings for visual consistency.
+   */
   get chartOptions(): ApexOptions {
-    // This prevents code duplication to use the default behavior of ApexCharts if the total needs to be calculated.
+    // Set up default total label configuration for the donut center.
+    // This prevents code duplication to use the default behavior of ApexCharts
+    // if the total needs to be calculated.
     let totalHash: ApexTotalType = {
       show: true,
       color: '#008FFB'
     };
 
+    // If a center value is provided, override default total label
+    // with custom label and formatter (used with the comparison view)
     if (this.centerValue) {
       totalHash = {
         ...totalHash,
@@ -69,11 +83,20 @@ export default class ApexPieChart extends Vue {
       };
     }
 
+    // Adjust vertical label positioning when rendering the normal view
+    const donutLabelOffsetY = this.centerValue === undefined ? -25 : -12;
+    const donutValueOffsetY = this.centerValue === undefined ? -2 : 10;
+
     return {
+      // Define chart segment labels based on the category labels
       labels: this.categories.map((cat) => cat.label),
+
+      // Format the data label to show the actual value instead of percentage
       dataLabels: {
         formatter: (val, opts) => opts.w.config.series[opts.seriesIndex]
       },
+
+      // Enable bottom-positioned legend with clickable toggles and series color usage
       legend: {
         position: 'bottom',
         onItemClick: {
@@ -83,6 +106,8 @@ export default class ApexPieChart extends Vue {
           useSeriesColors: true
         }
       },
+
+      // Configure donut-specific plot options including center labels
       plotOptions: {
         pie: {
           donut: {
@@ -90,33 +115,43 @@ export default class ApexPieChart extends Vue {
               show: true,
               name: {
                 show: true,
-                color: undefined
+                color: undefined,
+                offsetY: donutLabelOffsetY // dynamic offset for center label
               },
-              value: {color: '#99a2ac'},
-              total: totalHash
+              value: {
+                color: '#99a2ac',
+                offsetY: donutValueOffsetY // dynamic offset for center value
+              },
+              total: totalHash // total label configuration (either default or custom)
             }
           }
         }
       },
+
+      // Define chart type and interactive behavior
       chart: {
         type: 'donut',
         toolbar: {
           show: false
         },
         events: {
+          // Emit selected category when a chart segment is clicked
           dataPointSelection: (_event, _chartContext, config) => {
             this.$emit(
               'category-selected',
               this.categories[config.dataPointIndex]
             );
           },
+          // Change cursor to pointer on hover
           dataPointMouseEnter: (_event) => {
             document.body.style.cursor = 'pointer';
           },
+          // Restore default cursor on mouse leave
           dataPointMouseLeave: (_event) => {
             document.body.style.cursor = 'default';
           }
         },
+        // Apply drop shadow for visual depth
         dropShadow: {
           enabled: true,
           top: 0,
@@ -125,8 +160,12 @@ export default class ApexPieChart extends Vue {
           opacity: 0.35
         }
       },
+
+      // Disable border stroke around pie slices
       stroke: {width: 0},
-      // Apex charts does not support color names; must use color hack module
+
+      // Set custom colors for each segment using a color helper module
+      // (ApexCharts does not support named CSS colors)
       colors: this.categories.map((cat) =>
         ColorHackModule.lookupColor(cat.color)
       )
