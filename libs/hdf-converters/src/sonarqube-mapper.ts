@@ -13,8 +13,11 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
 import {
   conditionallyProvideAttribute,
+  createWinstonLogger,
   getCCIsForNISTTags
 } from './utils/global';
+
+const logger = createWinstonLogger('SonarQube2HDF');
 
 // the Sonarqube schema typings are meant to support the four versions out right now (8, 9, 10, and 2025/25).  9 and 25 are supposed to be LTS releases.  8 is currently used by the Sonarcloud deployment though Sonarqube POCs say that it is no longer supported / they do not see many deployments of it.
 enum SonarqubeVersion {
@@ -780,17 +783,17 @@ export class SonarqubeResults {
 
   logAxiosError(e: AxiosError): void {
     if (e.response) {
-      console.log('response');
-      console.log(e.response.status);
-      console.log(e.response.data);
+      logger.debug('response');
+      logger.debug(e.response.status);
+      logger.debug(e.response.data);
     }
     if (e.request) {
-      console.log('request');
-      console.log(e.request);
+      logger.debug('request');
+      logger.debug(e.request);
     }
     if (e.message) {
-      console.log('message');
-      console.log('Error', e.message);
+      logger.debug('message');
+      logger.debug('Error', e.message);
     }
   }
 
@@ -980,11 +983,11 @@ export class SonarqubeResults {
     sonarqubeVersion: string
   ): Promise<ExecJSON.Execution> {
     const searchResults = await this.getSearchResults<T>();
-    console.log(`Got ${searchResults.issues.length} issues`);
+    logger.debug(`Got ${searchResults.issues.length} issues`);
     const codeSnippets = await this.getCodeSnippets<T>(searchResults.issues);
-    console.log(`Got ${codeSnippets.length} code snippets`);
+    logger.debug(`Got ${codeSnippets.length} code snippets`);
     const rules = await this.getRules<T>(searchResults.issues);
-    console.log(`Got ${rules.length} rules`);
+    logger.debug(`Got ${rules.length} rules`);
     const data: Data<T> = {
       sonarqubeVersion,
       sonarqubeHost: this.sonarqubeHost,
@@ -1008,7 +1011,7 @@ export class SonarqubeResults {
     const sonarqubeVersion = await axios
       .get<string>(`${this.sonarqubeHost}/api/server/version`)
       .then(({data}) => data);
-    console.log(
+    logger.debug(
       `Generating HDF for ${this.sonarqubeHost} version: ${sonarqubeVersion}`
     );
 
@@ -1025,7 +1028,7 @@ export class SonarqubeResults {
     } else if (isSonarqubeVersionTwenty_five(sonarqubeVersion)) {
       return this.generateHdf<SonarqubeVersion.Twenty_five>(sonarqubeVersion);
     } else {
-      console.log(
+      logger.debug(
         `Sonarqube version ${sonarqubeVersion} is not formally supported.  Please create an issue at https://github.com/mitre/heimdall2/issues if something is broken.`
       );
       return this.generateHdf<SonarqubeVersion.Twenty_five>(sonarqubeVersion);
