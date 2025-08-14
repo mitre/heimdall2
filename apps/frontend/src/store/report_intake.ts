@@ -51,6 +51,7 @@ import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
 import {SnackbarModule} from './snackbar';
+import selectedTags from '@/store/selected_tags';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -332,6 +333,8 @@ export class InspecIntake extends VuexModule {
     // Convert it
     const fileID: FileID = uuid();
     const result: ConversionResult = convertFile(options.text, true);
+    // Get the checkedValues from the selectedTags module
+    const checkedValues = Store.getters['selectedTags/checkedValues'];
     // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
       // A bit of chicken and egg here
@@ -345,10 +348,11 @@ export class InspecIntake extends VuexModule {
         // evaluation
       } as EvaluationFile;
 
-      // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
+      // Fixup the evaluation to be Sourced from a file.
       const evaluation = contextualizeEvaluation(
-        result['1_0_ExecJson']
-      ) as unknown as SourcedContextualizedEvaluation;
+        result['1_0_ExecJson'],
+        checkedValues
+      ) as SourcedContextualizedEvaluation;
       evaluation.from_file = evalFile;
 
       // Set and freeze
@@ -363,10 +367,11 @@ export class InspecIntake extends VuexModule {
         filename: options.filename
       } as ProfileFile;
 
-      // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
+      // Fixup the evaluation to be Sourced from a file.
       const profile = contextualizeProfile(
-        result['1_0_ProfileJson']
-      ) as unknown as SourcedContextualizedProfile;
+        result['1_0_ProfileJson'],
+        checkedValues
+      ) as SourcedContextualizedProfile;
       profile.from_file = profileFile;
 
       // Set and freeze
@@ -375,7 +380,6 @@ export class InspecIntake extends VuexModule {
       InspecDataModule.addProfile(profileFile);
       FilteredDataModule.toggle_profile(profileFile.uniqueId);
     } else {
-      // eslint-disable-next-line no-console
       console.error(result.errors);
       throw new Error(
         "Couldn't parse data. See developer's tools for more details."
@@ -389,6 +393,8 @@ export class InspecIntake extends VuexModule {
   async loadExecJson(options: ExecJSONLoadOptions) {
     // Convert it
     const fileID: FileID = uuid();
+    // Get the checkedValues from the selectedTags module
+    const checkedValues = Store.getters['selectedTags/checkedValues'];
     // A bit of chicken and egg here, this will be our circular JSON structure
     const evalFile = {
       uniqueId: fileID,
@@ -401,7 +407,8 @@ export class InspecIntake extends VuexModule {
 
     // Fixup the evaluation to be Sourced from a file.
     const evaluation = contextualizeEvaluation(
-      options.data
+      options.data,
+      checkedValues
     ) as SourcedContextualizedEvaluation;
     evaluation.from_file = evalFile;
 

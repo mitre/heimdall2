@@ -246,6 +246,7 @@ import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';
 import {StatusCountModule} from '../store/status_counts';
 import {compare_times} from '../utilities/delta_util';
+import ToggleDiv from '@/components/global/tags/ToggleDiv.vue';
 
 @Component({
   components: {
@@ -269,7 +270,8 @@ import {compare_times} from '../utilities/delta_util';
     EvaluationInfo,
     ExportSplunkModal,
     ProfileData,
-    UploadButton
+    UploadButton,
+    ToggleDiv
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
@@ -372,6 +374,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
       nistIdFilter: SearchModule.NISTIdFilter,
+      mappingSearchTerm: SearchModule.mappingGuidanceFilter,
       searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
       tagFilter: SearchModule.tagFilter,
@@ -393,6 +396,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       codeSearchTerms: SearchModule.codeSearchTerms,
       tagFilter: SearchModule.tagFilter,
       nistIdFilter: SearchModule.NISTIdFilter,
+      mappingSearchTerm: SearchModule.mappingGuidanceFilter,
       ids: SearchModule.controlIdSearchTerms,
       fromFile: this.file_filter,
       searchTerm: SearchModule.freeSearch,

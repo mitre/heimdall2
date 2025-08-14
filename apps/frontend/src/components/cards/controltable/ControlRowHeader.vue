@@ -31,8 +31,9 @@
               class="ml-2"
               v-bind="attrs"
               v-on="on"
-              >mdi-delta</v-icon
             >
+              mdi-delta
+            </v-icon>
           </template>
           <span>This control has been modified in an overlay</span>
         </v-tooltip>
@@ -95,7 +96,12 @@
       <v-chip-group column>
         <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
           <template #activator="{on}">
-            <v-chip :href="tag.url" target="_blank" v-on="on">
+            <v-chip
+              :href="tag.url"
+              target="_blank"
+              active-class="NONE"
+              v-on="on"
+            >
               {{ tag.label }}
             </v-chip>
           </template>
@@ -105,7 +111,21 @@
       <v-chip-group column>
         <v-tooltip v-for="(tag, i) in cciTags" :key="'cci-chip' + i" bottom>
           <template #activator="{on}">
-            <v-chip style="cursor: help" v-on="on">
+            <v-chip style="cursor: help" active-class="NONE" v-on="on">
+              {{ tag.label }}
+            </v-chip>
+          </template>
+          <span>{{ tag.description }}</span>
+        </v-tooltip>
+      </v-chip-group>
+      <v-chip-group column active-class="NONE">
+        <v-tooltip
+          v-for="(tag, i) in mappedTags"
+          :key="'mapped-chip' + i"
+          bottom
+        >
+          <template #activator="{on}">
+            <v-chip style="cursor: help" active-class="NONE" v-on="on">
               {{ tag.label }}
             </v-chip>
           </template>
@@ -140,16 +160,17 @@
 </template>
 
 <script lang="ts">
+import * as _ from 'lodash';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
+import {mapGetters} from 'vuex';
+import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {getControlRunTime} from '@/utilities/delta_util';
-import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
-import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
-import * as _ from 'lodash';
-import Component, {mixins} from 'vue-class-component';
 import {control_unique_key} from '@/utilities/format_util';
-import {Prop} from 'vue-property-decorator';
+import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
 
 interface Tag {
   label: string;
@@ -160,16 +181,21 @@ interface Tag {
 @Component({
   components: {
     ResponsiveRowSwitch
+  },
+  computed: {
+    ...mapGetters('selectedTags', ['checkedValues']),
+    ...mapGetters('mappings', ['mappings']),
+    ...mapGetters('mappings', ['descriptions'])
   }
 })
 export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Object, required: true})
   readonly control!: ContextualizedControl;
 
-  @Prop({type: Array, required: true})
-  readonly viewedControls!: string[];
+  @Prop({type: Array, required: true}) readonly viewedControls!: string[];
 
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
+  @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   get runTime(): string {
     return `${_.truncate(getControlRunTime(this.control).toString(), {
@@ -190,8 +216,8 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     }
   }
 
+  // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
   get status_color(): string {
-    // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
 
@@ -215,6 +241,21 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     );
   }
 
+  severity_arrow_count(severity: string): number {
+    switch (severity) {
+      case 'low':
+        return 1;
+      case 'medium':
+        return 2;
+      case 'high':
+        return 3;
+      case 'critical':
+        return 4;
+      default:
+        return 0;
+    }
+  }
+
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
   // and relies on a script not contained in the project
   descriptionForTag(tag: string): string {
@@ -232,6 +273,9 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get nistTags(): Tag[] {
+    if (!this.checkedValues.includes('nist')) {
+      return [];
+    }
     let nistTags = this.control.hdf.rawNistTags;
     nistTags = nistTags.filter((tag) => tag.search(/Rev.*\d/i) === -1);
     return nistTags.map((tag) => {
@@ -254,7 +298,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   get cciTags(): Tag[] {
     let cci_tags: string | string[] = this.control.data.tags.cci || '';
-    if (!cci_tags) {
+    if (!cci_tags || !this.checkedValues.includes('cci')) {
       return [];
     } else if (typeof cci_tags == 'string') {
       cci_tags = cci_tags.split(' ');
@@ -262,6 +306,55 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
+  }
+
+  get mappedTags(): Tag[] {
+    const tags: Tag[] = [];
+    const labelSet: Set<string> = new Set(); // Set to keep track of unique labels
+    const mappings = this.mappings;
+    const descriptions = this.descriptions;
+    for (const key in mappings) {
+      if (this.checkedValues.includes(key)) {
+        const mapping = mappings[key];
+        const type = key.includes('->') ? key.split('->')[0].trim() : key;
+        if (type == 'CCI') {
+          for (const cci of this.control.data.tags.cci || []) {
+            if (mapping[cci]) {
+              const name = key.includes('->') ? key.split('->')[1].trim() : key;
+              mapping[cci].forEach((userMapping) => {
+                const label = `${name}: ${userMapping}`;
+                if (!labelSet.has(label)) {
+                  tags.push({
+                    label: label,
+                    url: '',
+                    description: descriptions[key][userMapping]
+                  });
+                  labelSet.add(label); // Add the label to the set
+                }
+              });
+            }
+          }
+        } else if (type == '800-53') {
+          for (const nistTag of this.control.hdf.rawNistTags || []) {
+            if (mapping[nistTag]) {
+              const name = key.includes('->') ? key.split('->')[1].trim() : key;
+              mapping[nistTag].forEach((userMapping) => {
+                const label = `${name}: ${userMapping}`;
+                if (!labelSet.has(label)) {
+                  tags.push({
+                    label: label,
+                    url: '',
+                    description: descriptions[key][userMapping]
+                  });
+                  labelSet.add(label); // Add the label to the set
+                }
+              });
+            }
+          }
+        }
+      }
+    }
+    return tags;
   }
 
   showLegacy(control: ContextualizedControl) {
@@ -277,5 +370,37 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     );
     return legacyID ? '(' + legacyID + ')' : '';
   }
+
+  // Add the computed property for checkedValues
+  get checkedValues(): string[] {
+    return this.$store.getters['selectedTags/checkedValues'];
+  }
+
+  get mappings(): {[id: string]: {[key: string]: string[]}} {
+    return this.$store.getters['mappings/mappings'];
+  }
+
+  get descriptions(): {[id: string]: {[mappingName: string]: string}} {
+    return this.$store.getters['mappings/descriptions'];
+  }
 }
 </script>
+
+<style scoped>
+.checkbox-container {
+  text-align: left;
+}
+.add-mapping-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+}
+.add-mapping-button:hover {
+  background-color: darkblue;
+}
+</style>
