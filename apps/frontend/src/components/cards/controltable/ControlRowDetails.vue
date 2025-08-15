@@ -141,6 +141,17 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     }
   }
 
+  get cweControlString(): string | null {
+    const cwe = this.control.hdf.wraps.tags.cweid;
+    if (!cwe) {
+      return null;
+    } else if (Array.isArray(cwe)) {
+      return cwe.join(', ');
+    } else {
+      return cwe;
+    }
+  }
+
   get main_desc(): string {
     if (this.control.data.desc) {
       return this.control.data.desc.trim();
@@ -222,6 +233,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     detailsMap.set('Impact', this.control.data.impact);
     detailsMap.set('NIST Controls', this.control.hdf.rawNistTags.join(', '));
     detailsMap.set('CCI Controls', this.cciControlString);
+    detailsMap.set('CWE ID', this.cweControlString);
     detailsMap.set(
       'Check',
       this.control.hdf.descriptions.check || this.control.data.tags.check
@@ -230,12 +242,11 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       'Fix',
       this.control.hdf.descriptions.fix || this.control.data.tags.fix
     );
-    detailsMap.set('CWE ID', _.get(this.control, 'hdf.wraps.tags.cweid'));
 
     const sparseControl = _.omit(this.control, [
       'data.tags.nist',
       'data.tags.cci',
-      'data.tags.cwe',
+      'data.tags.cweid',
       'data.tags.severity',
       'data.tags.severityoverride',
       'data.tags.severityjustification'
@@ -246,9 +257,12 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       if (!detailsMap.has(_.startCase(key))) {
         // Make sure all values are strings
         if (Array.isArray(value)) {
-          detailsMap.set(_.startCase(key), value.join(', '));
+          detailsMap.set(
+            _.startCase(key),
+            value.map((v) => JSON.stringify(v, null, 2)).join(', ')
+          );
         } else if (typeof value === 'object') {
-          detailsMap.set(_.startCase(key), JSON.stringify(value));
+          detailsMap.set(_.startCase(key), JSON.stringify(value, null, 2));
         } else {
           detailsMap.set(_.startCase(key), String(value));
         }

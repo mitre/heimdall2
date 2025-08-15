@@ -4,7 +4,7 @@
     "release": "1.2 4.10.1",
     "target_id": ""
   },
-  "version": "2.10.3",
+  "version": "2.11.5",
   "statistics": {},
   "profiles": [
     {
@@ -62,7 +62,7 @@
             "attributionAlternateIdentifier": "CVE-2022-25844",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-25844?component-type=npm&component-name=angular&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -132,7 +132,7 @@
             "attributionAlternateIdentifier": "CVE-2022-25869",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-25869?component-type=npm&component-name=angular&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -204,7 +204,7 @@
             "attributionAlternateIdentifier": "CVE-2023-26116",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26116?component-type=npm&component-name=angular&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -276,7 +276,7 @@
             "attributionAlternateIdentifier": "CVE-2023-26118",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26118?component-type=npm&component-name=angular&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -348,7 +348,7 @@
             "attributionAlternateIdentifier": "CVE-2024-21490",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2024-21490?component-type=npm&component-name=angular&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -418,7 +418,7 @@
             "attributionAlternateIdentifier": "CVE-2020-7760",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-7760?component-type=npm&component-name=codemirror&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -490,7 +490,7 @@
             "attributionAlternateIdentifier": "CVE-2022-21222",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-21222?component-type=npm&component-name=css-what&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -562,7 +562,7 @@
             "attributionAlternateIdentifier": "CVE-2021-3803",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-3803?component-type=npm&component-name=nth-check&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -632,7 +632,7 @@
             "attributionAlternateIdentifier": "CVE-2019-16728",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-16728?component-type=npm&component-name=dompurify&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -702,7 +702,7 @@
             "attributionAlternateIdentifier": "CVE-2020-11023",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-11023?component-type=npm&component-name=jquery&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -772,7 +772,7 @@
             "attributionAlternateIdentifier": "CVE-2020-23064",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-23064?component-type=npm&component-name=jquery&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -842,7 +842,7 @@
             "attributionAlternateIdentifier": "CVE-2020-11022",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-11022?component-type=npm&component-name=jquery&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -910,7 +910,7 @@
             "attributionAlternateIdentifier": "CVE-2021-23413",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-23413?component-type=npm&component-name=jszip&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -980,7 +980,7 @@
             "attributionAlternateIdentifier": "CVE-2022-48285",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-48285?component-type=npm&component-name=jszip&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1052,7 +1052,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1124,7 +1124,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1194,7 +1194,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1256,7 +1256,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.00384,
             "vulnerabilityEpssPercentile": 0.72639,
             "vulnerabilityCweId": 1321,
@@ -1266,7 +1266,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1338,7 +1338,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1400,7 +1400,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.00107,
             "vulnerabilityEpssPercentile": 0.42397,
             "vulnerabilityCweId": 1321,
@@ -1410,7 +1410,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1478,7 +1478,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1548,7 +1548,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1620,7 +1620,7 @@
             "attributionAlternateIdentifier": "CVE-2022-21670",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-21670?component-type=npm&component-name=markdown-it&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1692,7 +1692,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1764,7 +1764,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1832,7 +1832,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1904,7 +1904,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1974,7 +1974,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2046,7 +2046,7 @@
             "attributionAlternateIdentifier": "CVE-2023-45133",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-45133?component-type=npm&component-name=%40babel%2Ftraverse&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2118,7 +2118,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2180,7 +2180,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.01248,
             "vulnerabilityEpssPercentile": 0.85248,
             "vulnerabilityCweId": 1321,
@@ -2190,7 +2190,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2258,7 +2258,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2330,7 +2330,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2402,7 +2402,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2470,7 +2470,7 @@
             "attributionAlternateIdentifier": "CVE-2021-3777",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-3777?component-type=npm&component-name=tmpl&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2542,7 +2542,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2614,7 +2614,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2684,7 +2684,7 @@
             "attributionAlternateIdentifier": "CVE-2021-32640",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-32640?component-type=npm&component-name=ws&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2746,7 +2746,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.37658,
             "vulnerabilityEpssPercentile": 0.97111,
             "vulnerabilityCweId": 1321,
@@ -2756,7 +2756,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2826,7 +2826,7 @@
             "attributionAlternateIdentifier": "CVE-2020-7789",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-7789?component-type=npm&component-name=node-notifier&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2898,7 +2898,7 @@
             "attributionAlternateIdentifier": "",
             "attributionReferenceUrl": "",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2966,7 +2966,7 @@
             "attributionAlternateIdentifier": "CVE-2021-3868",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-3868?component-type=npm&component-name=prompts&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3026,7 +3026,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.0016,
             "vulnerabilityEpssPercentile": 0.51701,
             "vulnerabilityCweId": 77,
@@ -3036,7 +3036,7 @@
             "attributionAlternateIdentifier": "CVE-2021-42740",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-42740?component-type=npm&component-name=shell-quote&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3108,7 +3108,7 @@
             "attributionAlternateIdentifier": "CVE-2023-41037",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-41037?component-type=npm&component-name=openpgp&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3180,7 +3180,7 @@
             "attributionAlternateIdentifier": "CVE-2020-15168",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-15168?component-type=npm&component-name=node-fetch&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3250,7 +3250,7 @@
             "attributionAlternateIdentifier": "CVE-2022-0235",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-0235?component-type=npm&component-name=node-fetch&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3322,7 +3322,7 @@
             "attributionAlternateIdentifier": "CVE-2021-32803",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-32803?component-type=npm&component-name=tar&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3392,7 +3392,7 @@
             "attributionAlternateIdentifier": "CVE-2021-32804",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-32804?component-type=npm&component-name=tar&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3464,7 +3464,7 @@
             "attributionAlternateIdentifier": "CVE-2021-37701",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-37701?component-type=npm&component-name=tar&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3536,7 +3536,7 @@
             "attributionAlternateIdentifier": "CVE-2021-37712",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-37712?component-type=npm&component-name=tar&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3604,7 +3604,7 @@
             "attributionAlternateIdentifier": "CVE-2024-28863",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2024-28863?component-type=npm&component-name=tar&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3676,7 +3676,7 @@
             "attributionAlternateIdentifier": "CVE-2021-23364",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-23364?component-type=npm&component-name=browserslist&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3748,7 +3748,7 @@
             "attributionAlternateIdentifier": "CVE-2022-25883",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-25883?component-type=npm&component-name=semver&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3820,7 +3820,7 @@
             "attributionAlternateIdentifier": "CVE-2020-15366",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-15366?component-type=npm&component-name=ajv&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3890,7 +3890,7 @@
             "attributionAlternateIdentifier": "CVE-2020-26291",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-26291?component-type=npm&component-name=urijs&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3958,7 +3958,7 @@
             "attributionAlternateIdentifier": "CVE-2021-27516",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-27516?component-type=npm&component-name=urijs&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4028,7 +4028,7 @@
             "attributionAlternateIdentifier": "CVE-2021-3647",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-3647?component-type=npm&component-name=urijs&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4098,7 +4098,7 @@
             "attributionAlternateIdentifier": "CVE-2022-1233",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-1233?component-type=npm&component-name=urijs&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4166,7 +4166,7 @@
             "attributionAlternateIdentifier": "CVE-2022-24723",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-24723?component-type=npm&component-name=urijs&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4234,7 +4234,7 @@
             "attributionAlternateIdentifier": "CVE-2022-1243",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-1243?component-type=npm&component-name=urijs&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4306,7 +4306,7 @@
             "attributionAlternateIdentifier": "CVE-2020-15168",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-15168?component-type=npm&component-name=node-fetch&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4376,7 +4376,7 @@
             "attributionAlternateIdentifier": "CVE-2022-0235",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-0235?component-type=npm&component-name=node-fetch&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4438,7 +4438,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.37658,
             "vulnerabilityEpssPercentile": 0.97111,
             "vulnerabilityCweId": 1321,
@@ -4448,7 +4448,7 @@
             "attributionAlternateIdentifier": "CVE-2020-7774",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-7774?component-type=npm&component-name=y18n&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4520,7 +4520,7 @@
             "attributionAlternateIdentifier": "CVE-2020-7608",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-7608?component-type=npm&component-name=yargs-parser&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4590,7 +4590,7 @@
             "attributionAlternateIdentifier": "CVE-2020-7733",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-7733?component-type=npm&component-name=ua-parser-js&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4658,7 +4658,7 @@
             "attributionAlternateIdentifier": "CVE-2020-7793",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-7793?component-type=npm&component-name=ua-parser-js&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4730,7 +4730,7 @@
             "attributionAlternateIdentifier": "CVE-2022-25927",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-25927?component-type=npm&component-name=ua-parser-js&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -4758,7 +4758,7 @@
           ]
         }
       ],
-      "sha256": "f683db98bbff5073a9d20faf859676144c66d271436d88fae863704e55a3c933"
+      "sha256": "9c243c1b1c9eb66874bec22b3b6a722925a5b6de0e837685212f273af647c20c"
     }
   ],
   "passthrough": {}

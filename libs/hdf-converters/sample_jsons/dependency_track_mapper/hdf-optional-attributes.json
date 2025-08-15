@@ -4,7 +4,7 @@
     "release": "1.2 4.10.1",
     "target_id": ""
   },
-  "version": "2.10.3",
+  "version": "2.11.5",
   "statistics": {},
   "profiles": [
     {
@@ -62,7 +62,7 @@
             "attributionAlternateIdentifier": "CVE-2023-2976",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-2976?component-type=maven&component-name=com.google.guava%2Fguava&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -132,7 +132,7 @@
             "attributionAlternateIdentifier": "CVE-2020-8908",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-8908?component-type=maven&component-name=com.google.guava%2Fguava&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -192,7 +192,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.00404,
             "vulnerabilityEpssPercentile": 0.7328,
             "vulnerabilityCweId": 502,
@@ -202,7 +202,7 @@
             "attributionAlternateIdentifier": "CVE-2019-16942",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-16942?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -262,7 +262,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.00404,
             "vulnerabilityEpssPercentile": 0.7328,
             "vulnerabilityCweId": 502,
@@ -272,7 +272,7 @@
             "attributionAlternateIdentifier": "CVE-2019-16943",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-16943?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -332,7 +332,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.00784,
             "vulnerabilityEpssPercentile": 0.81055,
             "vulnerabilityCweId": 502,
@@ -342,7 +342,7 @@
             "attributionAlternateIdentifier": "CVE-2019-17531",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-17531?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -412,7 +412,7 @@
             "attributionAlternateIdentifier": "CVE-2020-25649",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-25649?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -482,7 +482,7 @@
             "attributionAlternateIdentifier": "CVE-2020-36518",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-36518?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -552,7 +552,7 @@
             "attributionAlternateIdentifier": "CVE-2022-42003",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-42003?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -622,7 +622,7 @@
             "attributionAlternateIdentifier": "CVE-2022-42004",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-42004?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -692,7 +692,7 @@
             "attributionAlternateIdentifier": "CVE-2019-10219",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-10219?component-type=maven&component-name=org.hibernate%2Fhibernate-validator&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -762,7 +762,7 @@
             "attributionAlternateIdentifier": "CVE-2020-10693",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-10693?component-type=maven&component-name=org.hibernate%2Fhibernate-validator&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -834,7 +834,7 @@
             "attributionAlternateIdentifier": "CVE-2021-28170",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-28170?component-type=maven&component-name=org.glassfish%2Fjavax.el&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -906,7 +906,7 @@
             "attributionAlternateIdentifier": "CVE-2020-11002",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-11002?component-type=maven&component-name=io.dropwizard%2Fdropwizard-validation&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -978,7 +978,7 @@
             "attributionAlternateIdentifier": "CVE-2020-5245",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-5245?component-type=maven&component-name=io.dropwizard%2Fdropwizard-validation&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1050,7 +1050,7 @@
             "attributionAlternateIdentifier": "CVE-2017-18640",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2017-18640?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1110,7 +1110,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.00811,
             "vulnerabilityEpssPercentile": 0.81397,
             "vulnerabilityCweId": 502,
@@ -1120,7 +1120,7 @@
             "attributionAlternateIdentifier": "CVE-2022-1471",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-1471?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1192,7 +1192,7 @@
             "attributionAlternateIdentifier": "CVE-2022-25857",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-25857?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1262,7 +1262,7 @@
             "attributionAlternateIdentifier": "CVE-2022-38749",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-38749?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1332,7 +1332,7 @@
             "attributionAlternateIdentifier": "CVE-2022-38750",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-38750?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1402,7 +1402,7 @@
             "attributionAlternateIdentifier": "CVE-2022-38751",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-38751?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1472,7 +1472,7 @@
             "attributionAlternateIdentifier": "CVE-2022-38752",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-38752?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1542,7 +1542,7 @@
             "attributionAlternateIdentifier": "CVE-2022-41854",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-41854?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1612,7 +1612,7 @@
             "attributionAlternateIdentifier": "CVE-2023-6378",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-6378?component-type=maven&component-name=ch.qos.logback%2Flogback-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1682,7 +1682,7 @@
             "attributionAlternateIdentifier": "CVE-2021-42550",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-42550?component-type=maven&component-name=ch.qos.logback%2Flogback-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1752,7 +1752,7 @@
             "attributionAlternateIdentifier": "CVE-2023-6378",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-6378?component-type=maven&component-name=ch.qos.logback%2Flogback-classic&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1822,7 +1822,7 @@
             "attributionAlternateIdentifier": "CVE-2021-42550",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-42550?component-type=maven&component-name=ch.qos.logback%2Flogback-classic&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1892,7 +1892,7 @@
             "attributionAlternateIdentifier": "CVE-2023-26048",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26048?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-util&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -1960,7 +1960,7 @@
             "attributionAlternateIdentifier": "CVE-2020-27218",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-27218?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2030,7 +2030,7 @@
             "attributionAlternateIdentifier": "CVE-2021-34428",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-34428?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2100,7 +2100,7 @@
             "attributionAlternateIdentifier": "CVE-2022-2047",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-2047?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2170,7 +2170,7 @@
             "attributionAlternateIdentifier": "CVE-2023-26048",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26048?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2240,7 +2240,7 @@
             "attributionAlternateIdentifier": "CVE-2023-26049",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26049?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2310,7 +2310,7 @@
             "attributionAlternateIdentifier": "CVE-2020-27223",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-27223?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-http&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2380,7 +2380,7 @@
             "attributionAlternateIdentifier": "CVE-2022-2047",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-2047?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-http&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2450,7 +2450,7 @@
             "attributionAlternateIdentifier": "CVE-2023-26048",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26048?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-http&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2522,7 +2522,7 @@
             "attributionAlternateIdentifier": "CVE-2023-40167",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-40167?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-http&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2594,7 +2594,7 @@
             "attributionAlternateIdentifier": "CVE-2021-28165",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-28165?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-io&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2666,7 +2666,7 @@
             "attributionAlternateIdentifier": "CVE-2021-28168",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-28168?component-type=maven&component-name=org.glassfish.jersey.core%2Fjersey-common&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2734,7 +2734,7 @@
             "attributionAlternateIdentifier": "CVE-2020-27216",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-27216?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-webapp&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2802,7 +2802,7 @@
             "attributionAlternateIdentifier": "CVE-2021-28169",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-28169?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-servlets&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2874,7 +2874,7 @@
             "attributionAlternateIdentifier": "CVE-2023-36479",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-36479?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-servlets&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -2944,7 +2944,7 @@
             "attributionAlternateIdentifier": "CVE-2020-15250",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-15250?component-type=maven&component-name=junit%2Fjunit&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3014,7 +3014,7 @@
             "attributionAlternateIdentifier": "CVE-2019-14900",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-14900?component-type=maven&component-name=org.hibernate%2Fhibernate-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3084,7 +3084,7 @@
             "attributionAlternateIdentifier": "CVE-2020-25638",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-25638?component-type=maven&component-name=org.hibernate%2Fhibernate-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3144,7 +3144,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.00664,
             "vulnerabilityEpssPercentile": 0.79249,
             "vulnerabilityCweId": 611,
@@ -3154,7 +3154,7 @@
             "attributionAlternateIdentifier": "CVE-2020-10683",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-10683?component-type=maven&component-name=org.dom4j%2Fdom4j&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3222,7 +3222,7 @@
             "attributionAlternateIdentifier": "CVE-2020-13956",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-13956?component-type=maven&component-name=org.apache.httpcomponents%2Fhttpclient&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3282,7 +3282,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.00697,
             "vulnerabilityEpssPercentile": 0.79842,
             "vulnerabilityCweId": 611,
@@ -3292,7 +3292,7 @@
             "attributionAlternateIdentifier": "CVE-2022-0839",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-0839?component-type=maven&component-name=org.liquibase%2Fliquibase-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3360,7 +3360,7 @@
             "attributionAlternateIdentifier": "CVE-2022-2048",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-2048?component-type=maven&component-name=org.eclipse.jetty.http2%2Fhttp2-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3428,7 +3428,7 @@
             "attributionAlternateIdentifier": "CVE-2024-22201",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2024-22201?component-type=maven&component-name=org.eclipse.jetty.http2%2Fhttp2-common&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3498,7 +3498,7 @@
             "attributionAlternateIdentifier": "CVE-2023-44487",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-44487?component-type=maven&component-name=org.eclipse.jetty.http2%2Fhttp2-common&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3570,7 +3570,7 @@
             "attributionAlternateIdentifier": "CVE-2023-36478",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-36478?component-type=maven&component-name=org.eclipse.jetty.http2%2Fhttp2-hpack&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3642,7 +3642,7 @@
             "attributionAlternateIdentifier": "CVE-2018-11087",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2018-11087?component-type=maven&component-name=com.rabbitmq%2Famqp-client&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3712,7 +3712,7 @@
             "attributionAlternateIdentifier": "CVE-2023-46120",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-46120?component-type=maven&component-name=com.rabbitmq%2Famqp-client&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3772,7 +3772,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": 0.5181,
             "vulnerabilityEpssPercentile": 0.97514,
             "vulnerabilityCweId": 502,
@@ -3782,7 +3782,7 @@
             "attributionAlternateIdentifier": "CVE-2021-42392",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-42392?component-type=maven&component-name=com.h2database%2Fh2&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3844,7 +3844,7 @@
             "vulnerabilityOwaspLikelihoodScore": "",
             "vulnerabilityOwaspTechnicalImpactScore": "",
             "vulnerabilityOwaspBusinessImpactScore": "",
-            "vulnerabilitySeverityRank": "",
+            "vulnerabilitySeverityRank": 0,
             "vulnerabilityEpssScore": "",
             "vulnerabilityEpssPercentile": "",
             "vulnerabilityCweId": 88,
@@ -3854,7 +3854,7 @@
             "attributionAlternateIdentifier": "CVE-2022-23221",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-23221?component-type=maven&component-name=com.h2database%2Fh2&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3926,7 +3926,7 @@
             "attributionAlternateIdentifier": "CVE-2018-14335",
             "attributionReferenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2018-14335?component-type=maven&component-name=com.h2database%2Fh2&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1",
             "analysisState": "",
-            "analysisIsSuppressed": ""
+            "analysisIsSuppressed": false
           },
           "refs": [],
           "source_location": {},
@@ -3954,7 +3954,7 @@
           ]
         }
       ],
-      "sha256": "56cfc8cbb2458a0c47e8194d772ead3a33b50fece89271bbd959687c0eb48dd5"
+      "sha256": "176cf6a6900895b297e4bb5641c46c92098a1d3d3a82e07c709ecba1645d1f66"
     }
   ],
   "passthrough": {}
