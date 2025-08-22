@@ -5806,14 +5806,14 @@
     webpack "^5.54.0"
 
 "@vue/cli-plugin-unit-jest@~5.0.3":
-  version "5.0.8"
-  resolved "https://registry.npmjs.org/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.8.tgz#527da4b94a7957e29e771752b0b4f6bcede81b07"
-  integrity sha512-8aTmXUxEUdhJEjMHHoHI1wgi2SHzVRgCQQWIn5lgCAV2xJnXng09+wv8Ap0dhO4Z5vOOA/7xnubMQ9pDLqiskg==
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.9.tgz#902ec24439447ef4eb394c0d947e4b7116763c6c"
+  integrity sha512-Fp5aos0+S64UeBcdxiC7+6jSWRN1b3iIwIB3v+tpkCaBDsR+54f66MQMqv6lfF16l2HT8qLbsjq8dbxDljilsA==
   dependencies:
     "@babel/core" "^7.12.16"
     "@babel/plugin-transform-modules-commonjs" "^7.15.0"
     "@types/jest" "^27.0.1"
-    "@vue/cli-shared-utils" "^5.0.8"
+    "@vue/cli-shared-utils" "^5.0.9"
     babel-jest "^27.1.0"
     deepmerge "^4.2.2"
     jest "^27.1.0"
