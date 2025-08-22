@@ -5773,11 +5773,11 @@
   integrity sha512-aBdZWrYKxLuFz1FDsk/muFD7GycrsW73Gi11yRc7R2W7Bm8mDRc9HKAI790gdg4NV+chkDFmfkegjg5iMDEpAA==
 
 "@vue/cli-plugin-eslint@^5.0.3":
-  version "5.0.8"
-  resolved "https://registry.npmjs.org/@vue/cli-plugin-eslint/-/cli-plugin-eslint-5.0.8.tgz#754939265c2c5b746fa36c7d7705a89138e193bf"
-  integrity sha512-d11+I5ONYaAPW1KyZj9GlrV/E6HZePq5L5eAF5GgoVdu6sxr6bDgEoxzhcS1Pk2eh8rn1MxG/FyyR+eCBj/CNg==
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-5.0.9.tgz#011ae81be6f016a94002aa3b25d453c52f77c83e"
+  integrity sha512-OfAa85qhP0dKSprI8+9qjbXW8BzOlOvEtXwdrTrAKlD6aN8oa/u6k4vbfJGdYbpsbpkj8FXYdCRkTgNG8KZbxg==
   dependencies:
-    "@vue/cli-shared-utils" "^5.0.8"
+    "@vue/cli-shared-utils" "^5.0.9"
     eslint-webpack-plugin "^3.1.0"
     globby "^11.0.2"
     webpack "^5.54.0"
