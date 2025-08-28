@@ -1,4 +1,5 @@
-import {data} from './OWaspNistMappingData';
+import {data} from './OwaspNistMappingData';
+import * as _ from 'lodash';
 import {OwaspNistMappingItem} from './OwaspNistMappingItem';
 
 export interface IOWASPJSONID {
@@ -13,45 +14,23 @@ export class OwaspNistMapping {
   data: OwaspNistMappingItem[];
 
   constructor() {
-    this.data = [];
-
-    if (Array.isArray(data)) {
-      data.forEach((line: IOWASPJSONID) => {
-        this.data.push(new OwaspNistMappingItem(line));
-      });
-    }
+    this.data = data.map(
+      (line: IOWASPJSONID) => new OwaspNistMappingItem(line)
+    );
   }
-  nistFilterNoDefault(identifiers: string[]): string[] {
+
+  nistFilterNoDefault(identifiers: string | string[]): string[] {
+    let ids: string[] = [];
     if (Array.isArray(identifiers)) {
-      if (identifiers.length === 0) {
-        return [];
-      } else {
-        const matches: string[] = [];
-        identifiers.forEach((id) => {
-          const item = this.data.find((element) => element.id === id);
-          if (
-            item !== null &&
-            item !== undefined &&
-            item.nistId !== '' &&
-            matches.indexOf(item.nistId) === -1
-          ) {
-            matches.push(item.nistId);
-          }
-        });
-        return matches;
-      }
+      ids = identifiers;
     } else {
-      const matches: string[] = [];
-      const item = this.data.find((element) => element.id === identifiers);
-      if (
-        item !== null &&
-        item !== undefined &&
-        item.nistId !== '' &&
-        matches.indexOf(item.nistId) === -1
-      ) {
-        matches.push(item.nistId);
-      }
-      return matches;
+      ids = [identifiers];
     }
+
+    return _.uniq(
+      _.compact(
+        ids.map((id) => this.data.find((element) => element.id === id)?.nistId)
+      )
+    );
   }
 }
