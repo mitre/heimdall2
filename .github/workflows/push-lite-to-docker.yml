@@ -4,12 +4,17 @@ on:
   push:
     branches: [master]
 
+permissions:
+  contents: read
+
 jobs:
   docker:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to DockerHub
@@ -17,7 +22,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Build and push the container image to Dockerhub
         id: docker_build
         uses: docker/build-push-action@v6
         with:
@@ -26,3 +31,22 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: mitre/heimdall-lite:latest
+      - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment
+        shell: bash
+        id: get-docker-sha
+        run: |
+          echo "DOCKER_SHA=$(docker pull mitre/heimdall-lite:latest > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:latest | cut -d '@' -f 2)" >> $GITHUB_ENV
+      - name: Upgrade Iron Bank
+        uses: mitre/ironbank_release_action@v1
+        with:
+          name: Heimdall-Lite
+          version: ${{ github.sha }}
+          ironbank_pat: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}
+          ironbank_username: ${{ secrets.SAF_IRONBANK_REPO1_USERNAME }}
+          ironbank_project_id: 17077
+          ironbank_project_clone_url: repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall-lite-mainline.git
+          git_commit_author_name: "Automated Heimdall Release"
+          git_commit_author_email: "saf@mitre.org"
+          update_commands: |
+            yq e -i '.args.HEIMDALL_VERSION=\"${{ github.sha }}\" | .tags[0]=\"${{ github.sha }}\" | .labels.\"org.opencontainers.image.version\"=\"${{ github.sha }}\" | .resources[0].tag=\"mitre/heimdall-lite:${{ github.sha }}\" | .resources[0].url=\"docker://docker.io/mitre/heimdall-lite@${{ env.DOCKER_SHA }}\"' hardening_manifest.yaml
+            sed -i s/HEIMDALL_VERSION=\.\*/HEIMDALL_VERSION=${{ github.sha }}/ Dockerfile
