@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.11.6",
+  "version": "2.12.0",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -46,7 +46,7 @@
   "dependencies": {
     "@casl/ability": "^6.0.0",
     "@govtechsg/passport-openidconnect": "^1.0.3",
-    "@heimdall/common": "^2.11.2",
+    "@heimdall/common": "^2.12.0",
     "@heimdall/password-complexity": "^2.6.6",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/common": "^11.0.16",
