@@ -23,12 +23,13 @@ import {TenableModule} from './tenable/tenable.module';
   controllers: [AppController],
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', '..', '..', 'dist', 'frontend')
+      rootPath: join(__dirname, '..', '..', '..', '..', 'dist', 'frontend'),
+      renderPath: '*splat'
     }),
+    ConfigModule,
     ApiKeyModule,
     UsersModule,
     DatabaseModule,
-    ConfigModule,
     AuthzModule,
     AuthnModule,
     EvaluationTagsModule,

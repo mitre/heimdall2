@@ -141,7 +141,7 @@ export class TenableController {
     }
   }
 
-  @All('{*splat}')
+  @All('*splat')
   /**
    * Proxies a request to the Tenable service using the user's session credentials.
    *
