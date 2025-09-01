@@ -1,5 +1,6 @@
 import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
+import {NestExpressApplication} from '@nestjs/platform-express';
 import {json} from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -27,8 +28,9 @@ const logger = winston.createLogger({
 });
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+  app.set('query parser', 'extended');
   app.enableShutdownHooks();
   app.use(helmet());
   app.use(
