@@ -56,7 +56,7 @@
     "@nestjs/platform-express": "^11.1.6",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/sequelize": "^11.0.0",
-    "@nestjs/serve-static": "^4.0.0",
+    "@nestjs/serve-static": "^5.0.3",
     "@types/bcryptjs": "^3.0.0",
     "@types/connect-pg-simple": "^7.0.0",
     "@types/express": "^5.0.0",
