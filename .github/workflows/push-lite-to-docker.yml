@@ -30,12 +30,12 @@ jobs:
           file: Dockerfile.lite
           push: true
           platforms: linux/amd64
-          tags: mitre/heimdall-lite:latest
+          tags: mitre/heimdall-lite:latest,mitre/heimdall-lite:${{ github.sha }}
       - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment
         shell: bash
         id: get-docker-sha
         run: |
-          echo "DOCKER_SHA=$(docker pull mitre/heimdall-lite:latest > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:latest | cut -d '@' -f 2)" >> $GITHUB_ENV
+          echo "DOCKER_SHA=$(docker pull mitre/heimdall-lite:latest > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:${{ github.sha }} | cut -d '@' -f 2)" >> $GITHUB_ENV
       - name: Upgrade Iron Bank
         uses: mitre/ironbank_release_action@v1
         with:
