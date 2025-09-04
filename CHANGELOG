@@ -1,3 +1,21 @@
+v2.12.1
+
+- forgot to swap the docker pull to also be pulling on the sha @Amndeep7 (#7184)
+- Upgrade @vue/eslint-config-prettier @Amndeep7 (#7179)
+- include the SHA as a tag when pushing the latest tag to dockerhub @Amndeep7 (#7178)
+
+## Dependency Updates
+
+- Bump cypress from 15.0.0 to 15.1.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7181)
+- Bump dotenv from 17.2.1 to 17.2.2 @[dependabot[bot]](https://github.com/apps/dependabot) (#7180)
+- Bump @nestjs/serve-static from 4.0.2 to 5.0.3 @[dependabot[bot]](https://github.com/apps/dependabot) (#6656)
+- Bump @nestjs/platform-express from 10.4.19 to 11.1.6 @[dependabot[bot]](https://github.com/apps/dependabot) (#7132)
+- Bump @aws-sdk/client-s3 from 3.878.0 to 3.879.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7176)
+- Bump @aws-sdk/client-sts from 3.876.0 to 3.879.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7175)
+- Bump @aws-sdk/client-s3 from 3.876.0 to 3.878.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7174)
+- Bump @aws-sdk/client-config-service from 3.873.0 to 3.876.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7173)
+
+
 v2.12.0
 
 - Push directly to ironbank from github actions @Amndeep7 (#6448)
