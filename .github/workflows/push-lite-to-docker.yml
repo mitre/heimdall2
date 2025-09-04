@@ -35,7 +35,7 @@ jobs:
         shell: bash
         id: get-docker-sha
         run: |
-          echo "DOCKER_SHA=$(docker pull mitre/heimdall-lite:latest > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:${{ github.sha }} | cut -d '@' -f 2)" >> $GITHUB_ENV
+          echo "DOCKER_SHA=$(docker pull mitre/heimdall-lite:${{ github.sha }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:${{ github.sha }} | cut -d '@' -f 2)" >> $GITHUB_ENV
       - name: Upgrade Iron Bank
         uses: mitre/ironbank_release_action@v1
         with:
