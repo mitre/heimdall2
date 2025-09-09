@@ -36,6 +36,9 @@
   "devDependencies": {
     "dotenv-cli": "^10.0.0"
   },
+  "resolutions": {
+    "@types/d3-dispatch": "3.0.6"
+  },
   "engines": {
     "node": ">=22"
   },
