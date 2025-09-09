@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
+    "@typescript-eslint/parser": "^8.43.0",
     "lerna": "^8.1.2",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^10.0.1",
