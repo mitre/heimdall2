@@ -124,10 +124,6 @@
     "ts-jest": "^29.1.0",
     "vue-jest": "^3.0.7"
   },
-  "resolutions": {
-    "@types/lru-cache/lru-cache@*": "^10.3.0",
-    "prismjs": "1.30.0"
-  },
   "engines": {
     "node": ">=22"
   },
