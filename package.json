@@ -37,7 +37,9 @@
     "dotenv-cli": "^10.0.0"
   },
   "resolutions": {
-    "@types/d3-dispatch": "3.0.6"
+    "@types/d3-dispatch": "3.0.6",
+    "@types/node": "^22.10.7",
+    "@apollo/protobufjs/@types/node": "^10.17.60"
   },
   "engines": {
     "node": ">=22"
