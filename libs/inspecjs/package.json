@@ -15,7 +15,7 @@
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
     "ts-jest": "^29.1.0",
-    "typedoc": "^0.26.2"
+    "typedoc": "^0.28.12"
   },
   "jest": {
     "rootDir": ".",
