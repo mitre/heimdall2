@@ -11197,18 +11197,16 @@ eslint-plugin-prettier@^5.0.0:
     prettier-linter-helpers "^1.0.0"
     synckit "^0.11.7"
 
-eslint-plugin-vue@^9.15.0:
-  version "9.33.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-9.33.0.tgz#de33eba8f78e1d172c59c8ec7fbfd60c6ca35c39"
-  integrity sha512-174lJKuNsuDIlLpjeXc5E2Tss8P44uIimAfGD0b90k0NoirJqpG7stLuU9Vp/9ioTOrQdWVREc4mRd1BD+CvGw==
+eslint-plugin-vue@^10.4.0:
+  version "10.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-10.4.0.tgz#2ae20df43801d20515c58ec2ae0555bf1127a080"
+  integrity sha512-K6tP0dW8FJVZLQxa2S7LcE1lLw3X8VvB3t887Q6CLrFVxHYBXGANbXvwNzYIu6Ughx1bSJ5BDT0YB3ybPT39lw==
   dependencies:
     "@eslint-community/eslint-utils" "^4.4.0"
-    globals "^13.24.0"
     natural-compare "^1.4.0"
     nth-check "^2.1.1"
     postcss-selector-parser "^6.0.15"
     semver "^7.6.3"
-    vue-eslint-parser "^9.4.3"
     xml-name-validator "^4.0.0"
 
 eslint-scope@5.1.1, eslint-scope@^5.1.1:
@@ -12663,7 +12661,7 @@ globals@^11.1.0:
   resolved "https://registry.npmjs.org/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
-globals@^13.19.0, globals@^13.20.0, globals@^13.24.0:
+globals@^13.19.0, globals@^13.20.0:
   version "13.24.0"
   resolved "https://registry.npmjs.org/globals/-/globals-13.24.0.tgz#8432a19d78ce0c1e833949c36adb345400bb1171"
   integrity sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==
@@ -22482,7 +22480,7 @@ vue-cookies@^1.7.4:
   resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.8.6.tgz#31b05e39b8c3dfe5012b5013395b4f6b86f86c3a"
   integrity sha512-e2kYaHj1Y/zVsBSM3KWlOoVJ5o3l4QZjytNU7xdCgmkw3521CMUerqHekBGZKXXC1oRxYljBeeOK2SCel6cKuw==
 
-vue-eslint-parser@^9.3.1, vue-eslint-parser@^9.4.3:
+vue-eslint-parser@^9.3.1:
   version "9.4.3"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-9.4.3.tgz#9b04b22c71401f1e8bca9be7c3e3416a4bde76a8"
   integrity sha512-2rYRLWlIpaiN8xbPiDyXZXRgLGOtWxERV7ND5fFAv5qo1D2N9Fu9MNajBNc6o13lZ+24DAWCkQCvj4klgmcITg==
