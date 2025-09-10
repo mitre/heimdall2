@@ -24,7 +24,7 @@ enum SonarqubeVersion {
   Eight = '8.0.0',
   Nine = '9.0.0',
   Ten = '10.0.0',
-  Twenty_five = '25.0.0'
+  Twenty_five = '2025.0.0'
 }
 
 // intentionally open ended to support versions less than 8, but it is unlikely that they will be out there based on discussions with Sonar engineers
@@ -32,28 +32,44 @@ function isSonarqubeVersionEight(
   version: string
 ): version is SonarqubeVersion.Eight {
   const nextHigherVersion = SonarqubeVersion.Nine;
-  return lt(coerce(version) || nextHigherVersion, nextHigherVersion);
+  const v = coerce(version);
+  if (v === null) {
+    throw new Error(`Was not able to coerce ${version} into a semver compatible version string`);
+  }
+  return lt(v, nextHigherVersion);
 }
 
 function isSonarqubeVersionNine(
   version: string
 ): version is SonarqubeVersion.Nine {
   const nextHigherVersion = SonarqubeVersion.Ten;
-  return lt(coerce(version) || nextHigherVersion, nextHigherVersion);
+  const v = coerce(version);
+  if (v === null) {
+    throw new Error(`Was not able to coerce ${version} into a semver compatible version string`);
+  }
+  return lt(v, nextHigherVersion);
 }
 
 function isSonarqubeVersionTen(
   version: string
 ): version is SonarqubeVersion.Ten {
   const nextHigherVersion = SonarqubeVersion.Twenty_five;
-  return lt(coerce(version) || nextHigherVersion, nextHigherVersion);
+  const v = coerce(version);
+  if (v === null) {
+    throw new Error(`Was not able to coerce ${version} into a semver compatible version string`);
+  }
+  return lt(v, nextHigherVersion);
 }
 
 function isSonarqubeVersionTwenty_five(
   version: string
 ): version is SonarqubeVersion.Twenty_five {
-  const nextHigherVersion = '26.0.0'; // using 26 for now, but I am unsure what the actual next major version will be - this function can be changed once we identify the next version that contains impactful breaking changes
-  return lt(coerce(version) || nextHigherVersion, nextHigherVersion);
+  const nextHigherVersion = '2026.0.0'; // using 26 for now, but I am unsure what the actual next major version will be - this function can be changed once we identify the next version that contains impactful breaking changes
+  const v = coerce(version);
+  if (v === null) {
+    throw new Error(`Was not able to coerce ${version} into a semver compatible version string`);
+  }
+  return lt(v, nextHigherVersion);
 }
 
 type SonarqubeVersionMapping = {
