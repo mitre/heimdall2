@@ -35,7 +35,9 @@ function isSonarqubeVersionEight(
   const nextHigherVersion = SonarqubeVersion.Nine;
   const v = coerce(version);
   if (v === null) {
-    throw new Error(`Was not able to coerce ${version} into a semver compatible version string`);
+    throw new Error(
+      `Was not able to coerce ${version} into a semver compatible version string`
+    );
   }
   return lt(v, nextHigherVersion);
 }
@@ -46,7 +48,9 @@ function isSonarqubeVersionNine(
   const nextHigherVersion = SonarqubeVersion.Ten;
   const v = coerce(version);
   if (v === null) {
-    throw new Error(`Was not able to coerce ${version} into a semver compatible version string`);
+    throw new Error(
+      `Was not able to coerce ${version} into a semver compatible version string`
+    );
   }
   return lt(v, nextHigherVersion);
 }
@@ -57,7 +61,9 @@ function isSonarqubeVersionTen(
   const nextHigherVersion = SonarqubeVersion.Twenty_five;
   const v = coerce(version);
   if (v === null) {
-    throw new Error(`Was not able to coerce ${version} into a semver compatible version string`);
+    throw new Error(
+      `Was not able to coerce ${version} into a semver compatible version string`
+    );
   }
   return lt(v, nextHigherVersion);
 }
@@ -68,7 +74,9 @@ function isSonarqubeVersionTwenty_five(
   const nextHigherVersion = '2026.0.0'; // using 26 for now, but I am unsure what the actual next major version will be - this function can be changed once we identify the next version that contains impactful breaking changes
   const v = coerce(version);
   if (v === null) {
-    throw new Error(`Was not able to coerce ${version} into a semver compatible version string`);
+    throw new Error(
+      `Was not able to coerce ${version} into a semver compatible version string`
+    );
   }
   return lt(v, nextHigherVersion);
 }
@@ -973,7 +981,9 @@ export class SonarqubeResults {
         .then(({data}) => data)
         .catch((e) => {
           this.logAxiosError(e);
-          return Promise.reject(new Error(`Failed at getting Sonarqube rule: ${rule}`));
+          return Promise.reject(
+            new Error(`Failed at getting Sonarqube rule: ${rule}`)
+          );
         });
 
     const rulesAndOrgs: [string, string | undefined][] = _.uniqWith(
