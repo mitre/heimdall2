@@ -2,6 +2,7 @@ import axios, {AxiosError} from 'axios';
 import * as _ from 'lodash';
 import {coerce, lt} from 'semver';
 import {ExecJSON} from 'inspecjs';
+import {inspect} from 'util';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -805,7 +806,7 @@ export class SonarqubeResults {
     }
     if (e.request) {
       logger.debug('request');
-      logger.debug(e.request);
+      logger.debug(inspect(e.request, {depth: 3}));
     }
     if (e.message) {
       logger.debug('message');
@@ -972,7 +973,7 @@ export class SonarqubeResults {
         .then(({data}) => data)
         .catch((e) => {
           this.logAxiosError(e);
-          return Promise.reject(new Error('Failed at getting Sonarqube rule'));
+          return Promise.reject(new Error(`Failed at getting Sonarqube rule: ${rule}`));
         });
 
     const rulesAndOrgs: [string, string | undefined][] = _.uniqWith(
