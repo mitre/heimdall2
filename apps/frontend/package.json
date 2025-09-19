@@ -89,7 +89,7 @@
     "search-query-parser": "^1.5.5",
     "semver": "^7.6.0",
     "tailwindcss": "^4.0.0",
-    "uuid": "^11.0.2",
+    "uuid": "^13.0.0",
     "vue": "~2.7.16",
     "vue-apexcharts": "^1.5.1",
     "vue-class-component": "^7.0.2",
