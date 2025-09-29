@@ -15,6 +15,7 @@ import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {formatCompliance} from '@mitre/hdf-converters';
 import {Category} from './ApexPieChart.vue';
 
 export interface SeriesItem {
@@ -128,10 +129,16 @@ export default class ApexLineChart extends Vue {
           }
         },
         labels: {
+	formatter: (val) => formatCompliance(val, false, 0),
           style: {
             colors: '#FFFFFF'
           }
         }
+      },
+      tooltip: {
+        y: {
+	  formatter: (val) => formatCompliance(val, false, 0)
+	}
       },
       grid: {
         borderColor: '#f1f1f1'
