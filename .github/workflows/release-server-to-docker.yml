@@ -47,7 +47,28 @@ jobs:
         shell: bash
         id: get-docker-sha
         run: |
-          echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2)" >> $GITHUB_ENV
+          MAX_RETRIES=5
+          RETRY_DELAY=0.5 # in seconds
+          RETRY_COUNT=0
+          SUCCESS=false
+
+          while [ "$RETRY_COUNT" -lt "$MAX_RETRIES" ]; do
+            if docker pull mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}; then
+              SUCCESS=true
+              break
+            else
+              RETRY_COUNT="$((RETRY_COUNT + 1))"
+              echo "Retry $RETRY_COUNT/$MAX_RETRIES: Docker pull failed.  Retrying in $RETRY_DELAY seconds..."
+              sleep "$RETRY_DELAY"
+            fi
+          done
+
+          if [ "$SUCCESS" = true ]; then
+            echo "DOCKER_SHA=$(docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2)" >> $GITHUB_ENV
+          else
+            echo "Docker pull failed after $MAX_RETRIES attempts."
+            exit 1
+          fi
       - name: Upgrade Iron Bank
         uses: mitre/ironbank_release_action@v1
         with:
