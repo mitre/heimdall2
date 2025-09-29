@@ -95,6 +95,7 @@
                     :upper-range="100"
                     :title="'Total Compliance'"
                     :y-title="'% Compliance'"
+                    :tooltipMaxDisplayPrecision="2"
                   />
                 </v-col>
                 <v-col v-else-if="tab == 2 && ableTab" cols="12">
