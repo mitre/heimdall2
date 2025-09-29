@@ -129,7 +129,7 @@ export default class ApexLineChart extends Vue {
           }
         },
         labels: {
-	formatter: (val) => formatCompliance(val, false, 0),
+          formatter: (val) => formatCompliance(val, false, 0),
           style: {
             colors: '#FFFFFF'
           }
@@ -137,8 +137,8 @@ export default class ApexLineChart extends Vue {
       },
       tooltip: {
         y: {
-	  formatter: (val) => formatCompliance(val, false, 0)
-	}
+          formatter: (val) => formatCompliance(val, false, 0)
+        }
       },
       grid: {
         borderColor: '#f1f1f1'

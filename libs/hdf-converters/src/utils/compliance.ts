@@ -4,7 +4,11 @@ export const MAX_DECIMAL_PRECISION = 2;
 
 // Format all final compliance level results to (by default) hundredths place percentage of compliance level
 // Returns string typed compliance level
-export function formatCompliance(rawCompliance: number, showAsPercentage = true, maxDisplayPrecision = MAX_DECIMAL_PRECISION): string {
+export function formatCompliance(
+  rawCompliance: number,
+  showAsPercentage = true,
+  maxDisplayPrecision = MAX_DECIMAL_PRECISION
+): string {
   let truncatedCompliance =
     Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * rawCompliance) /
     Math.pow(10, MAX_DECIMAL_PRECISION);
