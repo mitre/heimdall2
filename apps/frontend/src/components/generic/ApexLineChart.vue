@@ -38,7 +38,8 @@ export default class ApexLineChart extends Vue {
   @Prop({type: Boolean}) readonly sevChart!: boolean; //identifies chart as severity chart
   @Prop({type: String}) readonly title!: string;
   @Prop({type: String}) readonly yTitle!: string;
-  @Prop({type: Number, default: undefined}) readonly tooltipMaxDisplayPrecision!: number | undefined;
+  @Prop({type: Number, default: undefined})
+  readonly tooltipMaxDisplayPrecision!: number | undefined;
 
   //gives apex charts the severity colors
   sevColors: string[] = ['#FFEB3B', '#FF9800', '#FF5722', '#F44336'];
@@ -138,7 +139,8 @@ export default class ApexLineChart extends Vue {
       },
       tooltip: {
         y: {
-          formatter: (val) => formatCompliance(val, false, this.tooltipMaxDisplayPrecision)
+          formatter: (val) =>
+            formatCompliance(val, false, this.tooltipMaxDisplayPrecision)
         }
       },
       grid: {
