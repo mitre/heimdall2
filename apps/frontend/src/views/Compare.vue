@@ -350,9 +350,9 @@ export default class Compare extends Vue {
 
   // Use the FilteredDataModule to search and filter out keys that do not match
   get searched_sets(): [string, ControlSeries][] {
-    const found = new Set(FilteredDataModule.controls(this.filter).map(
-      (value) => value.data.id
-    ));
+    const found = new Set(
+      FilteredDataModule.controls(this.filter).map((value) => value.data.id)
+    );
     // Cross-reference the list of keys found above with the keys in the ControlSeriesLookup object
     // Then convert to a list of entries (destructured objects) for ease of use.
     return Object.entries(
@@ -375,7 +375,7 @@ export default class Compare extends Vue {
   }
 
   getPassthroughFields() {
-    for(const file of this.files) {
+    for (const file of this.files) {
       if ('passthrough' in file.evaluation.data) {
         const passthroughData = _.get(file.evaluation.data, 'passthrough');
         if (_.isObject(passthroughData)) {
