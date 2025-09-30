@@ -95,7 +95,6 @@
                     :upper-range="100"
                     :title="'Total Compliance'"
                     :y-title="'% Compliance'"
-                    :tooltipMaxDisplayPrecision="2"
                   />
                 </v-col>
                 <v-col v-else-if="tab == 2 && ableTab" cols="12">
@@ -106,6 +105,7 @@
                     :sev-chart="true"
                     :title="'Failed Tests by Severity'"
                     :y-title="'Tests Failed'"
+                    :tooltip-max-display-precision="0"
                   />
                 </v-col>
                 <v-col v-else cols="12" />
