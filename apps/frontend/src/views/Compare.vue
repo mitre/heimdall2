@@ -105,6 +105,7 @@
                     :sev-chart="true"
                     :title="'Failed Tests by Severity'"
                     :y-title="'Tests Failed'"
+                    :tooltip-max-display-precision="0"
                   />
                 </v-col>
                 <v-col v-else cols="12" />
@@ -349,13 +350,13 @@ export default class Compare extends Vue {
 
   // Use the FilteredDataModule to search and filter out keys that do not match
   get searched_sets(): [string, ControlSeries][] {
-    const found = FilteredDataModule.controls(this.filter).map(
-      (value) => value.data.id
+    const found = new Set(
+      FilteredDataModule.controls(this.filter).map((value) => value.data.id)
     );
     // Cross-reference the list of keys found above with the keys in the ControlSeriesLookup object
     // Then convert to a list of entries (destructured objects) for ease of use.
     return Object.entries(
-      _.pickBy(this.curr_delta.pairings, (_id, key) => found.includes(key))
+      _.pickBy(this.curr_delta.pairings, (_id, key) => found.has(key))
     );
   }
 
@@ -374,7 +375,7 @@ export default class Compare extends Vue {
   }
 
   getPassthroughFields() {
-    this.files.forEach((file) => {
+    for (const file of this.files) {
       if ('passthrough' in file.evaluation.data) {
         const passthroughData = _.get(file.evaluation.data, 'passthrough');
         if (_.isObject(passthroughData)) {
@@ -382,13 +383,13 @@ export default class Compare extends Vue {
             Object.keys(passthroughData)
               .filter(
                 (key) =>
-                  this.compareItems.indexOf(`Passthrough Field: ${key}`) === -1
+                  !this.compareItems.includes(`Passthrough Field: ${key}`)
               )
               .map((key) => `Passthrough Field: ${key}`)
           );
         }
       }
-    });
+    }
   }
 
   changeSort(): void {
@@ -508,10 +509,7 @@ export default class Compare extends Vue {
         })
       );
     }
-    series.push(lowCounts);
-    series.push(medCounts);
-    series.push(highCounts);
-    series.push(critCounts);
+    series.push(lowCounts, medCounts, highCounts, critCounts);
     return series;
   }
 
@@ -521,10 +519,7 @@ export default class Compare extends Vue {
     const med = {name: 'Failed Medium Severity', data: this.sev_series[1]};
     const high = {name: 'Failed High Severity', data: this.sev_series[2]};
     const crit = {name: 'Failed Critical Severity', data: this.sev_series[3]};
-    series.push(low);
-    series.push(med);
-    series.push(high);
-    series.push(crit);
+    series.push(low, med, high, crit);
     return series;
   }
 
