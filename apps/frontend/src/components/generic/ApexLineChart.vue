@@ -78,6 +78,9 @@ export default class ApexLineChart extends Vue {
         type: 'line',
         zoom: {
           enabled: false
+        },
+        toolbar: {
+          show: false
         }
         //background: '#000'
       },
@@ -142,9 +145,6 @@ export default class ApexLineChart extends Vue {
           formatter: (val) =>
             formatCompliance(val, false, this.tooltipMaxDisplayPrecision)
         }
-      },
-      toolbar: {
-        show: false
       },
       grid: {
         borderColor: '#f1f1f1'
