@@ -143,6 +143,9 @@ export default class ApexLineChart extends Vue {
             formatCompliance(val, false, this.tooltipMaxDisplayPrecision)
         }
       },
+      toolbar: {
+        show: false
+      },
       grid: {
         borderColor: '#f1f1f1'
       }
