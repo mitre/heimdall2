@@ -89,7 +89,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         const userData = uiProfile._json;
         const {given_name, family_name, email, email_verified, groups} =
           userData;
-        if (configService.get('OIDC_USE_VERIFIED_EMAIL') === 'false' || email_verified) {
+        if (configService.get('OIDC_USES_VERIFIED_EMAIL') === 'false' || email_verified) {
           const user = await authnService.validateOrCreateUser(
             email,
             given_name,
