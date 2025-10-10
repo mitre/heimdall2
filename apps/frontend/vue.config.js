@@ -38,6 +38,9 @@ module.exports = {
   outputDir: '../../dist/frontend',
   configureWebpack: {
     resolve: {
+      alias: {
+        vue: '@vue/compat'
+      },
       fallback: {
         fs: false,
         http2: false
@@ -84,6 +87,24 @@ module.exports = {
     ]
   },
   chainWebpack: (config) => {
+    // Configure Vue 3 compatibility mode
+    config.resolve.alias.set('vue', '@vue/compat');
+
+    // Configure vue-loader for Vue 3 compat mode
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2 // Full Vue 2 compatibility mode
+            }
+          }
+        };
+      });
+
     // Disable resolve symlinks to silence eslint when using `npm link`
     // (when developing inspecjs locally): https://stackoverflow.com/a/57518476/1670307
     config.resolve.symlinks(false);
