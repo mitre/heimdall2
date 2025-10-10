@@ -9208,9 +9208,9 @@ custom-event-polyfill@^1.0.7:
   integrity sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w==
 
 cypress-terminal-report@^7.1.0:
-  version "7.2.1"
-  resolved "https://registry.npmjs.org/cypress-terminal-report/-/cypress-terminal-report-7.2.1.tgz#28f4a9c857e932b4c50a3d5c5b0fd0690db3e5a6"
-  integrity sha512-Mm6gWjenl/WlxStMRHqeZhN+rlKaxuNLwOCN13tCJbr8bcBXicHu0lXf7QYKuMxF7fEixNeWneu49C3ncmPhpg==
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/cypress-terminal-report/-/cypress-terminal-report-7.3.0.tgz#0b372a73794e0eb1725e6fc94fc75e581b400363"
+  integrity sha512-yzAdExJSyhn1cJkF5qulf+Q1p+qwnqJVmUvY58qv5/IX6ijxZHR/zBsQATSqrxJ1CoB+Hb0HLA6KnIaQ00Q0sQ==
   dependencies:
     chalk "^4.0.0"
     compare-versions "^6.1.1"
