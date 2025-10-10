@@ -9,14 +9,11 @@ import {SeverityCount} from '@/store/severity_counts';
 import {ISidebarState} from '@/store/sidebar_state';
 import {ISpinnerState} from '@/store/spinner';
 import {StatusCount} from '@/store/status_counts';
-import Vue from 'vue';
-import Vuex from 'vuex';
+import {createStore} from 'vuex';
 import {config} from 'vuex-module-decorators';
 import {IHeightsState} from './heights';
 
 config.rawError = true;
-
-Vue.use(Vuex);
 
 /**
  * The core store for all of our components.
@@ -45,6 +42,11 @@ export interface StoreType {
   groups: IGroupState;
   spinner: ISpinnerState;
 }
-const store = new Vuex.Store<StoreType>({});
+
+// Create Vuex 4 store
+const store = createStore<StoreType>({
+  state: () => ({} as StoreType),
+  modules: {}
+});
 
 export default store;

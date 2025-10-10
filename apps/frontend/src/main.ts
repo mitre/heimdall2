@@ -7,24 +7,13 @@ import store from '@/store/store';
 import axios from 'axios';
 import 'core-js/stable';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
-import Vue from 'vue';
+import {createApp} from 'vue';
 import VueCookies from 'vue-cookies';
 import Vuetify from 'vuetify/lib';
 import {Resize} from 'vuetify/lib/directives';
 
-Vue.config.productionTip = false;
-
-Vue.use(VueCookies);
-Vue.use(Vuetify, {
-  directives: {
-    Resize
-  }
-});
-
-new Vue({
-  router,
-  store,
-  vuetify,
+// Create Vue 3 app instance
+const app = createApp({
   created() {
     axios.interceptors.response.use(
       (response) => response, // simply return the response
@@ -41,8 +30,22 @@ new Vue({
       }
     );
   },
-  render: (h) => h(App)
-}).$mount('#app');
+  render: () => App
+});
+
+// Install plugins using Vue 3 API
+app.use(VueCookies);
+app.use(Vuetify, {
+  directives: {
+    Resize
+  }
+});
+app.use(router);
+app.use(store);
+app.use(vuetify);
+
+// Mount app
+app.mount('#app');
 
 // The following line is a hot patch to add regex support, there are better
 // places to edit Prism variables, but could not locate them. Namely this is

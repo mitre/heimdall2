@@ -9,13 +9,10 @@ import Landing from '@/views/Landing.vue';
 import Login from '@/views/Login.vue';
 import Results from '@/views/Results.vue';
 import Signup from '@/views/Signup.vue';
-import Vue from 'vue';
-import Router from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 
-Vue.use(Router);
-
-const router = new Router({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes: [
     {
       path: '/results',
@@ -73,7 +70,7 @@ const router = new Router({
       meta: {requiresAuth: true, requiresAdmin: true}
     },
     {
-      path: '*',
+      path: '/:pathMatch(.*)*',
       redirect: '/',
       meta: {requiresAuth: true}
     }
