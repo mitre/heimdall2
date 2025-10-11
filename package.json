@@ -1,11 +1,20 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "libs/*",
-    "test"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "libs/*",
+      "test"
+    ],
+    "nohoist": [
+      "**/vue",
+      "**/vue/**",
+      "**/@vue/**",
+      "**/vuetify",
+      "**/vuetify/**"
+    ]
+  },
   "scripts": {
     "backend": "yarn workspace heimdall-server",
     "build": "lerna run build",
@@ -24,6 +33,10 @@
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f database",
     "docker:ps": "docker compose ps",
+    "db:create": "yarn backend sequelize-cli db:create",
+    "db:migrate": "yarn backend sequelize-cli db:migrate",
+    "db:seed": "yarn backend sequelize-cli db:seed:all",
+    "db:init": "yarn db:create && yarn db:migrate && yarn db:seed",
     "dev:backend": "./node_modules/.bin/dotenv -e ./apps/backend/.env -- yarn backend start:dev",
     "dev:frontend-old": "yarn frontend serve",
     "dev:frontend-v3": "yarn frontend-v3 dev",

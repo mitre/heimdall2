@@ -2,6 +2,8 @@ services:
   database:
     image: postgres:13
     restart: unless-stopped
+    env_file:
+      - ./apps/backend/.env
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 30s
@@ -11,11 +13,12 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=heimdall-server-production
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USERNAME}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - PGDATA=/var/lib/postgresql/data/pgdata
     ports:
-      - "5433:5432"
+      - "${DATABASE_PORT}:5432"
 
   certs:
     image: registry.access.redhat.com/ubi9/ubi:latest
