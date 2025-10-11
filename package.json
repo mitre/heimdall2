@@ -1,33 +1,28 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "libs/*",
-    "test"
-  ],
+  "packageManager": "pnpm@10.10.0",
   "scripts": {
-    "backend": "yarn workspace heimdall-server",
-    "build": "lerna run build",
-    "cli": "yarn workspace @heimdall/cli",
-    "common": "yarn workspace @heimdall/common",
-    "cypress-test": "yarn workspace @heimdall/cypress-tests",
-    "frontend": "yarn workspace @mitre/heimdall-lite",
-    "hdf-converters": "yarn workspace @mitre/hdf-converters",
-    "inspecjs": "yarn workspace inspecjs",
-    "lint": "lerna run lint",
-    "lint:ci": "lerna run lint:ci",
-    "pack:all": "lerna exec yarn pack --scope inspecjs --scope @mitre/heimdall-lite --scope @mitre/hdf-converters --parallel",
-    "start": "yarn backend start",
-    "start:dev": "./node_modules/.bin/dotenv -e ./apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/common --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
+    "backend": "pnpm --filter heimdall-server",
+    "build": "pnpm -r run build",
+    "cli": "pnpm --filter @heimdall/cli",
+    "common": "pnpm --filter @heimdall/common",
+    "cypress-test": "pnpm --filter @heimdall/cypress-tests",
+    "frontend": "pnpm --filter @mitre/heimdall-lite",
+    "hdf-converters": "pnpm --filter @mitre/hdf-converters",
+    "inspecjs": "pnpm --filter inspecjs",
+    "lint": "pnpm -r run lint",
+    "lint:ci": "pnpm -r run lint:ci",
+    "start": "pnpm backend start",
+    "start:dev": "dotenv -e ./apps/backend/.env -- pnpm -r --workspace-concurrency=1 run start:dev",
     "docker:up": "docker compose up database -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f database",
     "docker:ps": "docker compose ps",
-    "db:create": "yarn backend sequelize-cli db:create",
-    "db:migrate": "yarn backend sequelize-cli db:migrate",
-    "db:seed": "yarn backend sequelize-cli db:seed:all",
-    "db:init": "yarn db:create && yarn db:migrate && yarn db:seed",
+    "db:create": "pnpm backend sequelize-cli db:create",
+    "db:migrate": "pnpm backend sequelize-cli db:migrate",
+    "db:seed": "pnpm backend sequelize-cli db:seed:all",
+    "db:init": "pnpm db:create && pnpm db:migrate && pnpm db:seed",
     "test:ui": "cypress run",
     "test:ui:open": "cypress open"
   },
@@ -37,7 +32,6 @@
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.0.0",
-    "lerna": "^9.0.0",
     "prettier": "^3.2.4",
     "prettier-plugin-organize-imports": "^4.0.0",
     "typescript": "^4.9.3"
@@ -46,13 +40,14 @@
     "concurrently": "^9.2.1",
     "dotenv-cli": "^10.0.0"
   },
-  "resolutions": {
-    "@types/d3-dispatch": "3.0.6",
-    "@types/node": "^22.10.7",
-    "@types/chroma-js": "2.4.5",
-    "@apollo/protobufjs/@types/node": "^10.17.60",
-    "chroma-js": "2.4.2",
-    "fast-glob": "3.3.3"
+  "pnpm": {
+    "overrides": {
+      "@types/d3-dispatch": "3.0.6",
+      "@types/node": "^22.10.7",
+      "@types/chroma-js": "2.4.5",
+      "chroma-js": "2.4.2",
+      "fast-glob": "3.3.3"
+    }
   },
   "engines": {
     "node": ">=22"
