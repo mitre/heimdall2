@@ -69,3 +69,15 @@ certs/*.pem
 
 # Database Content
 data/*
+
+# AI-generated and AI-assistant files (do not commit)
+.claude/
+.cursor/
+.continue/
+.aider/
+session.md
+recovery-prompt.md
+pr-response.md
+*MIGRATION*.md
+*-ASSESSMENT.md
+.yarnrc
