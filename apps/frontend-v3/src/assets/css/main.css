@@ -1,0 +1,14 @@
+@import "tailwindcss" theme(static);
+@import "@nuxt/ui";
+
+@theme static {
+  --font-sans: 'Roboto', sans-serif;
+
+  /* MITRE brand colors */
+  --color-blue-500: #00B3DC;
+  --color-blue-700: #005B94;
+}
+
+.dark {
+  --ui-primary: var(--ui-color-primary-500);
+}
