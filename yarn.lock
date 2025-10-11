@@ -3243,11 +3243,11 @@
   integrity sha512-Zh1D2jRm736JeY9W+UyXGqHc7hfisl9232DY0//cbEGudom7s4LlJyWx+YP3n2GBS7z/G91+UFKPDq3UxttVpQ==
 
 "@nestjs/serve-static@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.npmjs.org/@nestjs/serve-static/-/serve-static-5.0.3.tgz#63d8021ce93ab91515fd7dfffaa71d734bddb3f8"
-  integrity sha512-0jFjTlSVSLrI+mot8lfm+h2laXtKzCvgsVStv9T1ZBZTDwS26gM5czIhIESmWAod0PfrbCDFiu9C1MglObL8VA==
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/serve-static/-/serve-static-5.0.4.tgz#cfad2607972de8af16286975714d3f1dc6c9bb3d"
+  integrity sha512-3kO1M9D3vsPyWPFardxIjUYeuolS58PnhCoBTkS7t3BrdZFZCKHnBZ15js+UOzOR2Q6HmD7ssGjLd0DVYVdvOw==
   dependencies:
-    path-to-regexp "8.2.0"
+    path-to-regexp "8.3.0"
 
 "@nestjs/testing@^11.0.1":
   version "11.1.6"
@@ -17287,17 +17287,17 @@ path-to-regexp@8.2.0:
   resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-8.2.0.tgz#73990cc29e57a3ff2a0d914095156df5db79e8b4"
   integrity sha512-TdrF7fW9Rphjq4RjrW0Kp2AW0Ahwu9sRGTkS6bvDi0SCwZlEZYmcfDbEsTz8RVk0EHIS/Vd1bv3JhG+1xZuAyQ==
 
+path-to-regexp@8.3.0, path-to-regexp@^8.0.0:
+  version "8.3.0"
+  resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-8.3.0.tgz#aa818a6981f99321003a08987d3cec9c3474cd1f"
+  integrity sha512-7jdwVIRtsP8MYpdXSwOS0YdD0Du+qOoF/AEPIt88PcCFrZCzx41oxku1jD88hZBwbNUIEfpqvuhjFaMAqMTWnA==
+
 path-to-regexp@^1.0.3:
   version "1.9.0"
   resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-1.9.0.tgz#5dc0753acbf8521ca2e0f137b4578b917b10cf24"
   integrity sha512-xIp7/apCFJuUHdDLWe8O1HIkb0kQrOMb/0u6FXQjemHn/ii5LrIzU6bdECnsiTF/GjZkMEKg1xdiZwNqDYlZ6g==
   dependencies:
     isarray "0.0.1"
-
-path-to-regexp@^8.0.0:
-  version "8.3.0"
-  resolved "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-8.3.0.tgz#aa818a6981f99321003a08987d3cec9c3474cd1f"
-  integrity sha512-7jdwVIRtsP8MYpdXSwOS0YdD0Du+qOoF/AEPIt88PcCFrZCzx41oxku1jD88hZBwbNUIEfpqvuhjFaMAqMTWnA==
 
 path-type@^3.0.0:
   version "3.0.0"
