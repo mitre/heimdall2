@@ -3485,9 +3485,9 @@
     pluralize "8.0.0"
 
 "@nestjs/sequelize@^11.0.0":
-  version "11.0.0"
-  resolved "https://registry.npmjs.org/@nestjs/sequelize/-/sequelize-11.0.0.tgz#a6c488caa5ed1c5a419269e7e22dbc73639e2cf6"
-  integrity sha512-Wb7uXPFjrHaDw4fugV6/TrKXBRP+tsKBxtqznvQMKXGBaTaw4eHw4obzWiQ90O63T1hZLksTKRK/6OuyBwvbaw==
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/sequelize/-/sequelize-11.0.1.tgz#894086326973a4fe2330f83f1f432bd8a9a2ce68"
+  integrity sha512-Zh1D2jRm736JeY9W+UyXGqHc7hfisl9232DY0//cbEGudom7s4LlJyWx+YP3n2GBS7z/G91+UFKPDq3UxttVpQ==
 
 "@nestjs/serve-static@^5.0.3":
   version "5.0.3"
