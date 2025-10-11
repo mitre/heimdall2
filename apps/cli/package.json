@@ -1,0 +1,33 @@
+{
+  "name": "@heimdall/cli",
+  "version": "3.0.0",
+  "description": "Heimdall CLI - Development and deployment tools",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "heimdall": "./bin/heimdall.js"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.tsx",
+    "build": "tsx src/index.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ink": "^5.0.0",
+    "react": "^18.0.0",
+    "commander": "^12.0.0",
+    "prompts": "^2.4.2",
+    "chalk": "^5.0.0",
+    "ora": "^8.0.0",
+    "execa": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/prompts": "^2.4.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
