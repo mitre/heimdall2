@@ -14,8 +14,8 @@ services:
       - POSTGRES_DB=heimdall-server-production
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - PGDATA=/var/lib/postgresql/data/pgdata
-    expose:
-      - "5432"
+    ports:
+      - "5433:5432"
 
   certs:
     image: registry.access.redhat.com/ubi9/ubi:latest

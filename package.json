@@ -12,6 +12,7 @@
     "common": "yarn workspace @heimdall/common",
     "cypress-test": "yarn workspace @heimdall/cypress-tests",
     "frontend": "yarn workspace @mitre/heimdall-lite",
+    "frontend-v3": "yarn workspace @mitre/heimdall-v3",
     "hdf-converters": "yarn workspace @mitre/hdf-converters",
     "inspecjs": "yarn workspace inspecjs",
     "lint": "lerna run lint",
@@ -19,21 +20,31 @@
     "pack:all": "lerna exec yarn pack --scope inspecjs --scope @mitre/heimdall-lite --scope @mitre/hdf-converters --parallel",
     "start": "yarn backend start",
     "start:dev": "./node_modules/.bin/dotenv -e ./apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/common --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
+    "docker:up": "docker compose up database -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f database",
+    "docker:ps": "docker compose ps",
+    "dev:backend": "./node_modules/.bin/dotenv -e ./apps/backend/.env -- yarn backend start:dev",
+    "dev:frontend-old": "yarn frontend serve",
+    "dev:frontend-v3": "yarn frontend-v3 dev",
+    "dev": "concurrently -n backend,frontend-v3 -c green,blue --kill-others \"yarn dev:backend\" \"yarn dev:frontend-v3\"",
+    "dev:compare": "concurrently -n backend,old,new -c green,yellow,blue --kill-others \"yarn dev:backend\" \"yarn dev:frontend-old\" \"yarn dev:frontend-v3\"",
     "test:ui": "cypress run",
     "test:ui:open": "cypress open"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
-    "lerna": "^9.0.0",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.0.0",
+    "lerna": "^9.0.0",
     "prettier": "^3.2.4",
     "prettier-plugin-organize-imports": "^4.0.0",
     "typescript": "^4.9.3"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "dotenv-cli": "^10.0.0"
   },
   "resolutions": {
