@@ -4064,12 +4064,12 @@
     "@sinonjs/commons" "^3.0.1"
     type-detect "^4.1.0"
 
-"@smithy/abort-controller@^4.2.0", "@smithy/abort-controller@^4.2.1":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@smithy/abort-controller/-/abort-controller-4.2.1.tgz#6e14bd7f30023dfd904758b552e5b88f687d0dd8"
-  integrity sha512-OvVe992TXYHR7QpYebmtw+/MF5AP9vU0fjfyfW1VmNYeA/dfibLhN13xrzIj+EO0HYMPur5lUIB9hRZ7IhjLDQ==
+"@smithy/abort-controller@^4.2.0", "@smithy/abort-controller@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@smithy/abort-controller/-/abort-controller-4.2.2.tgz#b8f20189bfd6d8489ff79aa2e40d44f0eab58d60"
+  integrity sha512-fPbcmEI+A6QiGOuumTpKSo7z+9VYr5DLN8d5/8jDJOwmt4HAKy/UGuRstCMpKbtr+FMaHH4pvFinSAbIAYCHZQ==
   dependencies:
-    "@smithy/types" "^4.7.0"
+    "@smithy/types" "^4.7.1"
     tslib "^2.6.2"
 
 "@smithy/chunked-blob-reader-native@^4.2.1":
@@ -4307,14 +4307,14 @@
     tslib "^2.6.2"
 
 "@smithy/node-http-handler@^4.0.0", "@smithy/node-http-handler@^4.3.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@smithy/node-http-handler/-/node-http-handler-4.4.0.tgz#e1f6ae4a90cd7257699263bf8e06e653ff0e5f83"
-  integrity sha512-E00fuesARqnmdc1vR4qurQjQH+QWcsKjmM6kYoJBWjxgqNfp1WHc1SwfC18EdVaYamgctxyXV6kWhHmanhYgCg==
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/@smithy/node-http-handler/-/node-http-handler-4.4.1.tgz#7fc69a36f7f0f20b2068d1addb30316d99f45365"
+  integrity sha512-9gKJoL45MNyOCGTG082nmx0A6KrbLVQ+5QSSKyzRi0AzL0R81u3wC1+nPvKXgTaBdAKM73fFPdCBHpmtipQwdQ==
   dependencies:
-    "@smithy/abort-controller" "^4.2.1"
-    "@smithy/protocol-http" "^5.3.1"
-    "@smithy/querystring-builder" "^4.2.1"
-    "@smithy/types" "^4.7.0"
+    "@smithy/abort-controller" "^4.2.2"
+    "@smithy/protocol-http" "^5.3.2"
+    "@smithy/querystring-builder" "^4.2.2"
+    "@smithy/types" "^4.7.1"
     tslib "^2.6.2"
 
 "@smithy/property-provider@^4.2.0":
@@ -4325,20 +4325,20 @@
     "@smithy/types" "^4.6.0"
     tslib "^2.6.2"
 
-"@smithy/protocol-http@^5.3.0", "@smithy/protocol-http@^5.3.1":
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/@smithy/protocol-http/-/protocol-http-5.3.1.tgz#add01f73290f1e8fd49d7102b63e3fe53a5e6e18"
-  integrity sha512-DqbfSgeZC0qo3/3fLgr5UEdOE7/o/VlVOt6LtpShwVcw3PIoqQMRCUTzMpJ0keAVb86Cl1w5YtW7uDUzeNMMLA==
+"@smithy/protocol-http@^5.3.0", "@smithy/protocol-http@^5.3.2":
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/@smithy/protocol-http/-/protocol-http-5.3.2.tgz#b24152e6077e923300a31a99a9d46d41d6ca83e8"
+  integrity sha512-nkKOI8xEkBXUmdxsFExomOb+wkU+Xgn0Fq2LMC7YIX5r4YPUg7PLayV/s/u3AtbyjWYlrvN7nAiDTLlqSdUjHw==
   dependencies:
-    "@smithy/types" "^4.7.0"
+    "@smithy/types" "^4.7.1"
     tslib "^2.6.2"
 
-"@smithy/querystring-builder@^4.2.0", "@smithy/querystring-builder@^4.2.1":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@smithy/querystring-builder/-/querystring-builder-4.2.1.tgz#1ef454874cb9da2295369ded8433d1de66498104"
-  integrity sha512-2Qf5x7Afn6ofV3XLYL9+oaOwWK2FUC/LLTarex0SaXEKctVdzCdOOzEfaAZJSwSSiYqFWF6e2r0m7PFDzA44fA==
+"@smithy/querystring-builder@^4.2.0", "@smithy/querystring-builder@^4.2.2":
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/@smithy/querystring-builder/-/querystring-builder-4.2.2.tgz#1fed7a26cc600215a5b412d3c2fc7a2b838e56dd"
+  integrity sha512-YgXvq89o+R/8zIoeuXYv8Ysrbwgjx+iVYu9QbseqZjMDAhIg/FRt7jis0KASYFtd/Cnsnz4/nYTJXkJDWe8wHg==
   dependencies:
-    "@smithy/types" "^4.7.0"
+    "@smithy/types" "^4.7.1"
     "@smithy/util-uri-escape" "^4.2.0"
     tslib "^2.6.2"
 
@@ -4392,10 +4392,10 @@
     "@smithy/util-stream" "^4.5.0"
     tslib "^2.6.2"
 
-"@smithy/types@^4.6.0", "@smithy/types@^4.7.0":
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/@smithy/types/-/types-4.7.0.tgz#42d707276d9184aef705f04e04615cd1979d044f"
-  integrity sha512-KM8Or+jCDCrUI3wYYhj7ehrC7aATB1NdJ1aFEE/YLKNLVH257k9RNeOqKdg0JOxjyEpVD7KKsmmob9mRy1Ho2g==
+"@smithy/types@^4.6.0", "@smithy/types@^4.7.1":
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/@smithy/types/-/types-4.7.1.tgz#9171d1bcfbbc4579d73d96cb9a7e1895b291e8e9"
+  integrity sha512-WwP7vzoDyzvIFLzF5UhLQ6AsEx/PvSObzlNtJNW3lLy+BaSvTqCU628QKVvcJI/dydlAS1mSHQP7anKcxDcOxA==
   dependencies:
     tslib "^2.6.2"
 
