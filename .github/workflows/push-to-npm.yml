@@ -1,17 +1,19 @@
 name: Push Heimdall-Lite to NPM and GitHub Packages and Push InspecJs to NPM
+
 on:
   release:
     types: [published]
 env:
   NODE_ENV: production
+
 jobs:
   build-deploy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           check-latest: true
@@ -43,7 +45,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Setup .npmrc file to publish to GitHub Packages
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: always()
         with:
           node-version: "22"
