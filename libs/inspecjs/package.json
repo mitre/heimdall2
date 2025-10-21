@@ -29,7 +29,7 @@
     "build": "tsc -p ./tsconfig.build.json",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
-    "validate-types": "git diff HEAD -- schemas/ src/generated_parsers/",
+    "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest --silent"
