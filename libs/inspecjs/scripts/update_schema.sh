@@ -19,7 +19,7 @@ do
     # Loosen the schema
     COMPAT="./scripts/schema_compat_patches"
     echo "Generating $SCHEMA"
-    bundle exec inspec schema $SCHEMA --chef-license=accept-silent | . "$COMPAT/generic.sh" | . "$COMPAT/$SCHEMA.sh" | . "./scripts/null_compat_schema.sh" > $SCHEMAFILE
+    bundle exec cinc-auditor schema $SCHEMA | . "$COMPAT/generic.sh" | . "$COMPAT/$SCHEMA.sh" | . "./scripts/null_compat_schema.sh" > $SCHEMAFILE
     # Generate the parser
     echo "Generating types"
     quicktype -l ts -s schema --src $SCHEMAFILE -o $OUTFILE --runtime-typecheck
