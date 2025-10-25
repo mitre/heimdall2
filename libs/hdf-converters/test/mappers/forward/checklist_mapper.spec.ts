@@ -51,6 +51,14 @@ const testCases = [
     expectedFile:
       'sample_jsons/checklist_mapper/multiple_mac_addresses_metadata.json',
     options: {includeRaw: false}
+  },
+  {
+    description: 'checklist_with_multiple_host_ip_addresses',
+    inputFile:
+      'sample_jsons/checklist_mapper/sample_input_report/multiple_ip_addresses_metadata.ckl',
+    expectedFile:
+      'sample_jsons/checklist_mapper/multiple_ip_addresses_metadata.json',
+    options: {includeRaw: false}
   }
 ];
 
