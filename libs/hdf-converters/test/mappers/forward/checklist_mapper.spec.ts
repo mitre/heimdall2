@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {omitVersions} from '../../utils';
 import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';
@@ -63,7 +63,7 @@ const testCases = [
 ];
 
 describe('Checklist Mapper Tests', () => {
-  testCases.forEach(({description, inputFile, expectedFile, options}) => {
+  for (const {description, inputFile, expectedFile, options} of testCases) {
     it(`Successfully converts Checklists for ${description}`, () => {
       const mapper = new ChecklistResults(
         readFile(inputFile),
@@ -74,7 +74,7 @@ describe('Checklist Mapper Tests', () => {
         omitVersions(parseJsonFile(expectedFile))
       );
     });
-  });
+  }
 
   it('Successfully creates jsonix object', () => {
     const mapper = new ChecklistResults(

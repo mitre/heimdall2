@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {Stigdata, Checklist} from '../../../src/ckl-mapper/checklistJsonix';
 import {replaceCKLVersion} from '../../utils';
