@@ -113,8 +113,7 @@ describe('hdf_profile_with_multiple_ip_host_addresses', () => {
     const mapper = new ChecklistResults(hdfData);
     const jsonixData = mapper.getJsonix();
     const hostip = (jsonixData?.value as Stigdata).asset?.hostip;
-    const expectedHostIP =
-      '10.1.11.12\n192.168.1.50\n172.16.0.23';
+    const expectedHostIP = '10.1.11.12\n192.168.1.50\n172.16.0.23';
     // Replacing newlines to avoid issues with different newline characters on different systems
     expect(hostip?.replace(/\n/g, '')).toEqual(
       expectedHostIP.replace(/\n/g, '')
