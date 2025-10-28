@@ -135,6 +135,7 @@ CA — Assessment, Authorization, and Monitoring
 CM — Configuration Management
 CP — Contingency Planning
 IA — Identification and Authentication
+IP — Individual Participation and Redress
 IR — Incident Response
 MA — Maintenance
 MP — Media Protection
@@ -146,8 +147,10 @@ PT — PII Processing and Transparency
 RA — Risk Assessment
 SA — System and Services Acquisition
 SC — System and Communications Protection
+SE — Security (privacy family)
 SI — System and Information Integrity
-SR — Supply Chain Risk Management
+TR — Transparency
+UL — Use Limitation
                   <br /><br />
                   <b>NOTE:</b>
 Control names and some details vary slightly between NIST SP 800-53 revisions (e.g., Rev. 4 vs Rev. 5), but the family prefixes remain the same.
