@@ -169,15 +169,15 @@
                       AC: Access Control<br />
                       AT: Awareness and Training<br />
                       AU: Audit and Accountability<br />
-                      *AP: Audit and Accountability<br />
-                      AR: Assessment, Authorization, and Monitoring<br />
+                      AP: Authority and Purpose<br />
+                      AR: Account, Audit, and Risk Management<br />
                       CA: Assessment, Authorization, and Monitoring<br />
                       CM: Configuration Management<br />
                       CP: Contingency Planning<br />
-                      *DI: Data Integrity<br />
-                      *DM: Data Management<br />
+                      DI: Data Quality and Integrity<br />
+                      DM: Data Minimization and Retention<br />
                       IA: Identification and Authentication<br />
-                      *IP: Incident Planning<br />
+                      IP: Individual Participation and Redress<br />
                       IR: Incident Response<br />
                       MA: Maintenance<br />
                       MP: Media Protection<br />
@@ -188,12 +188,14 @@
                       RA: Risk Assessment<br />
                       SA: System and Services Acquisition<br />
                       SC: System and Communications Protection<br />
-                      *SE: System and Information Integrity<br />
+                      SE: Security<br />
                       SI: System and Information Integrity<br />
-                      *TR: Threat and Risk Assessment<br />
-                      *UL: Supply Chain Risk Management<br />
-                      *UM: Configuration Management<br />
+                      TR: Transparency<br />
+                      UL: Use Limitation<br />
+                      UM: Unmapped<br />
                       <br />
+                      <b>NOTE:</b>
+                      The control families cover multiple revisions. Therefore the latest revision may not include all of the listed families.
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer />
