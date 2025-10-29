@@ -530,7 +530,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   get current_route_name(): string {
-    return this.$router.currentRoute.path.replace(/[^a-z]/gi, '');
+    return this.$router.currentRoute.path.replaceAll(/[^a-z]/gi, '');
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags
