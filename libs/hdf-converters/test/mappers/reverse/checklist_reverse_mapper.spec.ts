@@ -99,8 +99,8 @@ describe('hdf_profile_with_multiple_mac_host_addresses', () => {
     const expectedHostMac =
       '02:B9:78:82:FE:DE\nEE:EE:EE:EE:EE:EE\n6E:8D:55:AB:10:5F';
     // Replacing newlines to avoid issues with different newline characters on different systems
-    expect(hostmac?.replace(/\n/g, '')).toEqual(
-      expectedHostMac.replace(/\n/g, '')
+    expect(hostmac?.replaceAll('\n', '')).toEqual(
+      expectedHostMac.replaceAll('\n', '')
     );
   });
 });
@@ -115,8 +115,8 @@ describe('hdf_profile_with_multiple_ip_host_addresses', () => {
     const hostip = (jsonixData?.value as Stigdata).asset?.hostip;
     const expectedHostIP = '10.1.11.12\n192.168.1.50\n172.16.0.23';
     // Replacing newlines to avoid issues with different newline characters on different systems
-    expect(hostip?.replace(/\n/g, '')).toEqual(
-      expectedHostIP.replace(/\n/g, '')
+    expect(hostip?.replaceAll('\n', '')).toEqual(
+      expectedHostIP.replaceAll('\n', '')
     );
   });
 });
