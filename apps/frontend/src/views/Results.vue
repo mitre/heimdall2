@@ -195,7 +195,9 @@
                       UM: Unmapped<br />
                       <br />
                       <b>NOTE:</b>
-                      The control families cover multiple revisions. Therefore the latest revision may not include all of the listed families.
+                      The control families cover multiple revisions. Therefore
+                      the latest revision may not include all of the listed
+                      families.
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer />
