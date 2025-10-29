@@ -99,8 +99,24 @@ describe('hdf_profile_with_multiple_mac_host_addresses', () => {
     const expectedHostMac =
       '02:B9:78:82:FE:DE\nEE:EE:EE:EE:EE:EE\n6E:8D:55:AB:10:5F';
     // Replacing newlines to avoid issues with different newline characters on different systems
-    expect(hostmac?.replace(/\n/g, '')).toEqual(
-      expectedHostMac.replace(/\n/g, '')
+    expect(hostmac?.replaceAll('\n', '')).toEqual(
+      expectedHostMac.replaceAll('\n', '')
+    );
+  });
+});
+
+describe('hdf_profile_with_multiple_ip_host_addresses', () => {
+  it('can correctly provide multiple host ip host addresses for the checklist file', () => {
+    const hdfData = loadJsonFile(
+      'sample_jsons/checklist_mapper/multiple_ip_addresses_metadata.json'
+    );
+    const mapper = new ChecklistResults(hdfData);
+    const jsonixData = mapper.getJsonix();
+    const hostip = (jsonixData?.value as Stigdata).asset?.hostip;
+    const expectedHostIP = '10.1.11.12\n192.168.1.50\n172.16.0.23';
+    // Replacing newlines to avoid issues with different newline characters on different systems
+    expect(hostip?.replaceAll('\n', '')).toEqual(
+      expectedHostIP.replaceAll('\n', '')
     );
   });
 });
