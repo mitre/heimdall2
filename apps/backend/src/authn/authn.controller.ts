@@ -102,18 +102,18 @@ export class AuthnController {
     this.logger.debug('in the github login callback func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     const session = await this.authnService.login(req.user as User);
-    // const redirectTarget =
-    //   typeof req.session.redirectLogin === 'string' &&
-    //   req.session.redirectLogin.startsWith('/')
-    //     ? req.session.redirectLogin
-    //     : undefined;
+    const redirectTarget =
+      typeof req.session.redirectLogin === 'string' &&
+      req.session.redirectLogin.startsWith('/')
+        ? req.session.redirectLogin
+        : undefined;
 
-    // console.log('redirectTarget in github callback', redirectTarget);
+    console.log('redirectTarget in github callback', redirectTarget);
 
-    // delete req.session.redirectLogin;
+    delete req.session.redirectLogin;
 
-    // await this.setSessionCookies(req, session, redirectTarget);
-    await this.setSessionCookies(req, session);
+    await this.setSessionCookies(req, session, redirectTarget);
+    // await this.setSessionCookies(req, session);
   }
 
   @Get('gitlab')
@@ -205,8 +205,8 @@ export class AuthnController {
     session: {
       userID: string;
       accessToken: string;
-    }
-    // redirectTarget?: string
+    },
+    redirectTarget?: string
   ): Promise<void> {
     req.res?.cookie('userID', session.userID, {
       secure: this.configService.isInProductionMode()
@@ -214,7 +214,8 @@ export class AuthnController {
     req.res?.cookie('accessToken', session.accessToken, {
       secure: this.configService.isInProductionMode()
     });
+    this.logger.debug('in the setSessionCookies', redirectTarget);
     // console.log('redirectTarget in setSessionCookies', redirectTarget);
-    req.res?.redirect('/results/1');
+    req.res?.redirect(redirectTarget || '/');
   }
 }
