@@ -215,6 +215,6 @@ export class AuthnController {
       secure: this.configService.isInProductionMode()
     });
     // console.log('redirectTarget in setSessionCookies', redirectTarget);
-    req.res?.redirect('/');
+    req.res?.redirect('/results/1');
   }
 }
