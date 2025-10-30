@@ -83,8 +83,12 @@ export class AuthnController {
       req.query.redirect.startsWith('/')
         ? req.query.redirect
         : undefined;
-
+    console.log('redirectTarget in github', redirectTarget);
     req.session.redirectLogin = redirectTarget;
+    console.log(
+      'req.session.redirectlogin in github',
+      req.session.redirectLogin
+    );
 
     this.logger.debug('in the github login func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
@@ -103,6 +107,8 @@ export class AuthnController {
       req.session.redirectLogin.startsWith('/')
         ? req.session.redirectLogin
         : undefined;
+
+    console.log('redirectTarget in github callback', redirectTarget);
 
     delete req.session.redirectLogin;
 
@@ -207,6 +213,7 @@ export class AuthnController {
     req.res?.cookie('accessToken', session.accessToken, {
       secure: this.configService.isInProductionMode()
     });
+    console.log('redirectTarget in setSessionCookies', redirectTarget);
     req.res?.redirect(redirectTarget ?? '/');
   }
 }
