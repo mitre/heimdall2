@@ -55,7 +55,6 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       req.query.redirect.startsWith('/')
         ? req.query.redirect
         : undefined;
-    console.log('redirect in authenticate in github strategy', redirect);
     if (redirect) {
       super.authenticate(req, {
         ...options,
@@ -72,7 +71,6 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         ? decodeURIComponent(req.query.state as string)
         : undefined;
 
-    console.log('redirectlogin in validate in github strategy', redirectLogin);
     if (redirectLogin?.startsWith('/')) {
       req.session.redirectLogin = redirectLogin;
     }
