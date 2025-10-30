@@ -247,7 +247,6 @@ export default class LocalLogin extends Vue {
     console.log('[oauthLogin] destination:', destination);
     console.log('[oauthLogin] final URL:', url);
     window.location.href = url;
-    // window.location.href = `/authn/${site}`;
   }
 
   get oidcName() {
