@@ -7,7 +7,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   cacheDirectory: '<rootDir>/.cache/unit',
   transform: {
-    '.*\\.(vue)$': 'vue-jest',
+    '.*\\.(vue)$': '@vue/vue2-jest',
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.svg$': '<rootDir>/tests/util/svgTransform.js'
   },
