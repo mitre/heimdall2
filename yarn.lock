@@ -14379,9 +14379,9 @@ joi@^17.4.0:
     "@sideway/formula" "^3.0.1"
     "@sideway/pinpoint" "^2.0.0"
 
-jose@^6.0.11:
+jose@^6.1.0:
   version "6.1.0"
-  resolved "https://registry.npmjs.org/jose/-/jose-6.1.0.tgz#96285365689d16f2845a353964d2284bf19f464c"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-6.1.0.tgz#96285365689d16f2845a353964d2284bf19f464c"
   integrity sha512-TTQJyoEoKcC1lscpVDCSsVgYzUDg/0Bt3WE//WiTPK6uOCQC2KZS4MpugbMWt/zyjkopgZoXhZuCi00gLudfUA==
 
 js-base64@^2.4.3:
@@ -16505,15 +16505,15 @@ nwsapi@^2.2.0:
     "@nx/nx-win32-x64-msvc" "21.5.3"
 
 oauth2-mock-server@^8.0.0:
-  version "8.1.0"
-  resolved "https://registry.npmjs.org/oauth2-mock-server/-/oauth2-mock-server-8.1.0.tgz#1f8e08562b3b38fa731c16c09f3b4bda2874f1aa"
-  integrity sha512-Zi0VMDVCsavanLfW9X82uoniPS1kFGkOKFKKQF0NdrEwG4Uap/ylhYtRGPujZUJ0CmG3h73TsF/sefpCLTaKsQ==
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-8.2.0.tgz#f3a1bfe2d89b592ce93a5a185c0b62ae21b595b2"
+  integrity sha512-bXkYmOdsIEj9kAKzofd8UdnilFT25KwCNNz150SfqQQXgcMRzw0VB3J4WVUpkPlxA+7DzIBJJoeZHgR5ZZnNPg==
   dependencies:
     basic-auth "^2.0.1"
     cors "^2.8.5"
     express "^5.1.0"
     is-plain-obj "^4.1.0"
-    jose "^6.0.11"
+    jose "^6.1.0"
 
 oauth@0.10.x, oauth@^0.10.0:
   version "0.10.2"
