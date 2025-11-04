@@ -147,7 +147,68 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <v-card-title>Tree Map</v-card-title>
+              <v-card-title class="d-flex align-center">
+                <span>Tree Map</span>
+                <v-spacer />
+                <v-btn class="mr-2" icon small @click="isActiveDialog = true">
+                  <v-icon
+                    b-tooltip.hover
+                    title="Tree Map Legend"
+                    color="primary"
+                  >
+                    mdi-information-outline
+                  </v-icon>
+                </v-btn>
+                <v-dialog v-model="isActiveDialog" width="500">
+                  <v-card>
+                    <v-card-title>Tree Map Legend</v-card-title>
+                    <v-card-text class="text-h7">
+                      The NIST 800-53 Control Families have the following
+                      acronyms:
+                      <br /><br />
+                      AC: Access Control<br />
+                      AT: Awareness and Training<br />
+                      AU: Audit and Accountability<br />
+                      AP: Authority and Purpose<br />
+                      AR: Account, Audit, and Risk Management<br />
+                      CA: Assessment, Authorization, and Monitoring<br />
+                      CM: Configuration Management<br />
+                      CP: Contingency Planning<br />
+                      DI: Data Quality and Integrity<br />
+                      DM: Data Minimization and Retention<br />
+                      IA: Identification and Authentication<br />
+                      IP: Individual Participation and Redress<br />
+                      IR: Incident Response<br />
+                      MA: Maintenance<br />
+                      MP: Media Protection<br />
+                      PE: Physical and Environmental Protection<br />
+                      PL: Planning<br />
+                      PM: Program Management<br />
+                      PS: Personnel Security<br />
+                      RA: Risk Assessment<br />
+                      SA: System and Services Acquisition<br />
+                      SC: System and Communications Protection<br />
+                      SE: Security<br />
+                      SI: System and Information Integrity<br />
+                      TR: Transparency<br />
+                      UL: Use Limitation<br />
+                      UM: Unmapped<br />
+                      <br />
+                      <b>NOTE:</b>
+                      The control families cover multiple revisions. Therefore
+                      the latest revision may not include all of the listed
+                      families.
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer />
+                      <v-btn @click="isActiveDialog = false"
+                        >Close Dialog</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-card-title>
+
               <v-card-text>
                 <Treemap
                   v-model="treeFilters"
@@ -285,6 +346,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
+
+  isActiveDialog = false;
 
   evalInfo:
     | SourcedContextualizedEvaluation
@@ -467,7 +530,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   get current_route_name(): string {
-    return this.$router.currentRoute.path.replace(/[^a-z]/gi, '');
+    return this.$router.currentRoute.path.replaceAll(/[^a-z]/gi, '');
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags

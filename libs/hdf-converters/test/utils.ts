@@ -20,6 +20,20 @@ export function omitVersions(
   return output;
 }
 
+export function omitHDFTitle(
+  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+    profiles?: Partial<ExecJSONProfile>[];
+  }
+): Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+  profiles?: Partial<ExecJSONProfile>[];
+} {
+  input.profiles = _.map(input.profiles, (profile) => {
+    return _.omit(profile, ['title']);
+  });
+
+  return input;
+}
+
 // Profile information title contains a changing value
 export function omitASFFTitle(
   input: Partial<IFindingASFF>[]

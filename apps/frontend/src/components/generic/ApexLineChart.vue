@@ -15,6 +15,7 @@ import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {formatCompliance} from '@mitre/hdf-converters';
 import {Category} from './ApexPieChart.vue';
 
 export interface SeriesItem {
@@ -37,6 +38,8 @@ export default class ApexLineChart extends Vue {
   @Prop({type: Boolean}) readonly sevChart!: boolean; //identifies chart as severity chart
   @Prop({type: String}) readonly title!: string;
   @Prop({type: String}) readonly yTitle!: string;
+  @Prop({type: Number, default: undefined})
+  readonly tooltipMaxDisplayPrecision!: number | undefined;
 
   //gives apex charts the severity colors
   sevColors: string[] = ['#FFEB3B', '#FF9800', '#FF5722', '#F44336'];
@@ -75,6 +78,9 @@ export default class ApexLineChart extends Vue {
         type: 'line',
         zoom: {
           enabled: false
+        },
+        toolbar: {
+          show: false
         }
         //background: '#000'
       },
@@ -128,9 +134,16 @@ export default class ApexLineChart extends Vue {
           }
         },
         labels: {
+          formatter: (val) => formatCompliance(val, false, 0),
           style: {
             colors: '#FFFFFF'
           }
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: (val) =>
+            formatCompliance(val, false, this.tooltipMaxDisplayPrecision)
         }
       },
       grid: {

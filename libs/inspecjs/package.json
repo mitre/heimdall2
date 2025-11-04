@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "2.11.0",
+  "version": "2.12.3",
   "description": "Schema definitions, classes on top, and utilities to deal with HDF files",
   "files": [
     "lib"
@@ -10,9 +10,9 @@
     "main": "lib/index.js"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.3.1",
     "quicktype": "^15.0.260",
-    "typedoc": "^0.26.2",
+    "typedoc": "^0.28.12",
     "vitest": "^3.2.4"
   },
   "scripts": {
@@ -21,7 +21,7 @@
     "build": "tsc -p ./tsconfig.build.json",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
-    "validate-types": "git diff --quiet HEAD -- schemas/ src/generated_parsers/",
+    "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "vitest"

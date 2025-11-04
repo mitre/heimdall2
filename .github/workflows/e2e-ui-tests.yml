@@ -6,9 +6,12 @@ on:
   pull_request:
     branches: [master]
 
+permissions:
+  contents: read
+
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       CYPRESS_TESTING: true
       NODE_ENV: test
@@ -31,13 +34,14 @@ jobs:
           - 8089:8089
         env:
           SPLUNK_START_ARGS: --accept-license
+          SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22"
           check-latest: true

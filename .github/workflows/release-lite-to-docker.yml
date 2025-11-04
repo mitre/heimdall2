@@ -3,21 +3,31 @@ name: Push Heimdall Lite to docker on every release and tag as release-latest an
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'
+        required: true
+
+permissions:
+  contents: read
 
 jobs:
   docker:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - name: Run string replace # remove the v from the version number before using it in the docker tag
+      - name: Run string replace to remove the v from the version number before using it in the docker tag
         uses: frabert/replace-string-action@v2
         id: format-tag
         with:
           pattern: 'v'
-          string: '${{ github.event.release.tag_name }}'
+          string: '${{ github.event.release.tag_name || github.event.inputs.version}}'
           replace-with: ''
           flags: 'g'
       - name: Checkout the Heimdall Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to DockerHub
@@ -25,7 +35,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Build and push the container image to Dockerhub
         id: docker_build
         uses: docker/build-push-action@v6
         with:
@@ -34,3 +44,43 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: mitre/heimdall-lite:release-latest,mitre/heimdall-lite:${{ steps.format-tag.outputs.replaced }}
+      - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment
+        shell: bash
+        id: get-docker-sha
+        run: |
+          MAX_RETRIES=5
+          RETRY_DELAY=0.5 # in seconds
+          RETRY_COUNT=0
+          SUCCESS=false
+
+          while [ "$RETRY_COUNT" -lt "$MAX_RETRIES" ]; do
+            if docker pull mitre/heimdall-lite:${{ steps.format-tag.outputs.replaced }}; then
+              SUCCESS=true
+              break
+            else
+              RETRY_COUNT="$((RETRY_COUNT + 1))"
+              echo "Retry $RETRY_COUNT/$MAX_RETRIES: Docker pull failed.  Retrying in $RETRY_DELAY seconds..."
+              sleep "$RETRY_DELAY"
+            fi
+          done
+
+          if [ "$SUCCESS" = true ]; then
+            echo "DOCKER_SHA=$(docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2)" >> $GITHUB_ENV
+          else
+            echo "Docker pull failed after $MAX_RETRIES attempts."
+            exit 1
+          fi
+      - name: Upgrade Iron Bank
+        uses: mitre/ironbank_release_action@v1
+        with:
+          name: Heimdall-Lite
+          version: ${{ steps.format-tag.outputs.replaced }}
+          ironbank_pat: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}
+          ironbank_username: ${{ secrets.SAF_IRONBANK_REPO1_USERNAME }}
+          ironbank_project_id: 6139
+          ironbank_project_clone_url: repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall-lite.git
+          git_commit_author_name: "Automated Heimdall Release"
+          git_commit_author_email: "saf@mitre.org"
+          update_commands: |
+            yq e -i '.args.HEIMDALL_VERSION=\"${{ steps.format-tag.outputs.replaced }}\" | .tags[0]=\"${{ steps.format-tag.outputs.replaced }}\" | .labels.\"org.opencontainers.image.version\"=\"${{ steps.format-tag.outputs.replaced }}\" | .resources[0].tag=\"mitre/heimdall-lite:${{ steps.format-tag.outputs.replaced }}\" | .resources[0].url=\"docker://docker.io/mitre/heimdall-lite@${{ env.DOCKER_SHA }}\"' hardening_manifest.yaml
+            sed -i s/HEIMDALL_VERSION=\.\*/HEIMDALL_VERSION=${{ steps.format-tag.outputs.replaced }}/ Dockerfile

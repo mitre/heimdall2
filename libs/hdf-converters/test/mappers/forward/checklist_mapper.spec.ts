@@ -52,11 +52,19 @@ const testCases = [
     expectedFile:
       'sample_jsons/checklist_mapper/multiple_mac_addresses_metadata.json',
     options: {includeRaw: false}
+  },
+  {
+    description: 'checklist_with_multiple_host_ip_addresses',
+    inputFile:
+      'sample_jsons/checklist_mapper/sample_input_report/multiple_ip_addresses_metadata.ckl',
+    expectedFile:
+      'sample_jsons/checklist_mapper/multiple_ip_addresses_metadata.json',
+    options: {includeRaw: false}
   }
 ];
 
 describe('Checklist Mapper Tests', () => {
-  testCases.forEach(({description, inputFile, expectedFile, options}) => {
+  for (const {description, inputFile, expectedFile, options} of testCases) {
     it(`Successfully converts Checklists for ${description}`, () => {
       const mapper = new ChecklistResults(
         readFile(inputFile),
@@ -67,7 +75,7 @@ describe('Checklist Mapper Tests', () => {
         omitVersions(parseJsonFile(expectedFile))
       );
     });
-  });
+  }
 
   it('Successfully creates jsonix object', () => {
     const mapper = new ChecklistResults(
