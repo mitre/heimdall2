@@ -182,7 +182,15 @@ export class AuthnController {
     this.logger.debug('in the oidc login callback func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     const session = await this.authnService.login(req.user as User);
-    await this.setSessionCookies(req, session);
+    const redirectTarget =
+      typeof req.session.redirectLogin === 'string' &&
+      req.session.redirectLogin.startsWith('/')
+        ? req.session.redirectLogin
+        : undefined;
+
+    delete req.session.redirectLogin;
+
+    await this.setSessionCookies(req, session, redirectTarget);
   }
 
   async setSessionCookies(

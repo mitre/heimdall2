@@ -243,9 +243,6 @@ export default class LocalLogin extends Vue {
 
     const url = `/authn/${site}?redirect=${encodeURIComponent(destination)}`;
 
-    console.log('[oauthLogin] redirectQuery:', redirectQuery);
-    console.log('[oauthLogin] destination:', destination);
-    console.log('[oauthLogin] final URL:', url);
     window.location.href = url;
   }
 
