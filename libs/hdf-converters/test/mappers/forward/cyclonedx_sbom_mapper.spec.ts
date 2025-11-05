@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {CycloneDXSBOMResults} from '../../../src/cyclonedx-sbom-mapper';
 import {omitVersions} from '../../utils';
 

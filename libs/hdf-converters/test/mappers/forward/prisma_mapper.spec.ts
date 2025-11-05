@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {PrismaMapper} from '../../../src/prisma-mapper';
 import {omitVersions} from '../../utils';
 

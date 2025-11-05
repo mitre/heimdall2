@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {NiktoMapper} from '../../../src/nikto-mapper';
 import {omitVersions} from '../../utils';
 

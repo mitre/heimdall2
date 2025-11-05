@@ -10,18 +10,10 @@
     "main": "lib/index.js"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.0",
     "@types/node": "^24.3.1",
-    "jest": "^27.0.6",
     "quicktype": "^15.0.260",
-    "ts-jest": "^29.1.0",
-    "typedoc": "^0.28.12"
-  },
-  "jest": {
-    "rootDir": ".",
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    }
+    "typedoc": "^0.28.12",
+    "vitest": "^3.2.4"
   },
   "scripts": {
     "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
@@ -32,7 +24,7 @@
     "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest --silent"
+    "test": "vitest"
   },
   "repository": {
     "type": "git",

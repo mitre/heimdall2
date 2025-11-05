@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {VeracodeMapper} from '../../../src/veracode-mapper';
 import {omitVersions} from '../../utils';
 describe('veracode_mapper', () => {

@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import {expect, it} from 'vitest';
 import {ContextualizedEvaluation, ContextualizedProfile} from './context';
 import {
   ConversionResult,

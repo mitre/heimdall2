@@ -1,5 +1,5 @@
 import {BadRequestException, Injectable, PipeTransform} from '@nestjs/common';
-import levenshtein = require('js-levenshtein');
+import levenshtein from 'js-levenshtein';
 
 @Injectable()
 export class PasswordChangePipe implements PipeTransform {

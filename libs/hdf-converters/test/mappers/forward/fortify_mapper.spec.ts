@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {FortifyMapper} from '../../../src/fortify-mapper';
 import {omitVersions} from '../../utils';
 
