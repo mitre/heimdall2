@@ -48,128 +48,131 @@ function nistTag(text: string): string[] {
 
 export class SarifMapper extends BaseConverter {
   withRaw: boolean;
+  customToolName?: string;
 
-  mappings: MappedTransform<
+  mapping(): MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
-  > = {
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: 'Static Analysis Results Interchange Format'
-    },
-    version: HeimdallToolsVersion,
-    statistics: {},
-    profiles: [
-      {
-        path: 'runs',
-        name: 'SARIF',
-        version: {path: '$.version'},
-        title: 'Static Analysis Results Interchange Format',
-        supports: [],
-        attributes: [],
-        groups: [],
-        status: 'loaded',
-        controls: [
-          {
-            path: 'results',
-            key: 'id',
-            tags: {
-              cci: {
-                path: 'vulnerabilityClassifications',
-                transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
-              },
-              nist: {path: MESSAGE_TEXT, transformer: nistTag},
-              cwe: {
-                path: MESSAGE_TEXT,
-                transformer: extractCwe
-              }
-            },
-            refs: [],
-            source_location: {
-              transformer: (control: unknown) => {
-                return _.omitBy(
-                  {
-                    ref: _.get(
-                      control,
-                      'locations[0].physicalLocation.artifactLocation.uri'
-                    ),
-                    line: _.get(
-                      control,
-                      'locations[0].physicalLocation.region.startLine'
-                    )
-                  },
-                  (value) => value === ''
-                );
-              }
-            },
-            title: {
-              path: MESSAGE_TEXT,
-              transformer: (text: unknown): string => {
-                if (typeof text === 'string') {
-                  return text.split(': ')[0];
-                } else {
-                  return '';
-                }
-              }
-            },
-            id: {path: 'ruleId'},
-            desc: {
-              path: MESSAGE_TEXT,
-              transformer: (text: unknown): string => {
-                if (typeof text === 'string') {
-                  return text.split(': ')[1];
-                } else {
-                  return '';
-                }
-              }
-            },
-            impact: {path: 'level', transformer: impactMapping},
-            code: {
-              transformer: (vulnerability: Record<string, unknown>): string =>
-                JSON.stringify(vulnerability, null, 2)
-            },
-            results: [
-              {
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {
-                  path: 'locations[0].physicalLocation',
-                  transformer: formatCodeDesc
-                },
-
-                start_time: ''
-              }
-            ]
-          }
-        ],
-        sha256: ''
-      }
-    ],
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        let runsData = _.get(data, 'runs');
-        if (Array.isArray(runsData)) {
-          runsData = runsData.map((run: Record<string, unknown>) =>
-            _.omit(run, ['results'])
-          );
-        }
-        return {
-          auxiliary_data: [
+  > {
+    return {
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+      },
+      version: HeimdallToolsVersion,
+      statistics: {},
+      profiles: [
+        {
+          path: 'runs',
+          name: this.customToolName || 'Static Analysis Results Interchange Format (SARIF)',
+          version: {path: '$.version'},
+          supports: [],
+          attributes: [],
+          groups: [],
+          status: 'loaded',
+          controls: [
             {
-              name: 'SARIF',
-              data: {
-                $schema: _.get(data, '$schema'),
-                runs: runsData
-              }
+              path: 'results',
+              key: 'id',
+              tags: {
+                cci: {
+                  path: 'vulnerabilityClassifications',
+                  transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
+                },
+                nist: {path: MESSAGE_TEXT, transformer: nistTag},
+                cwe: {
+                  path: MESSAGE_TEXT,
+                  transformer: extractCwe
+                }
+              },
+              refs: [],
+              source_location: {
+                transformer: (control: unknown) => {
+                  return _.omitBy(
+                    {
+                      ref: _.get(
+                        control,
+                        'locations[0].physicalLocation.artifactLocation.uri'
+                      ),
+                      line: _.get(
+                        control,
+                        'locations[0].physicalLocation.region.startLine'
+                      )
+                    },
+                    (value) => value === ''
+                  );
+                }
+              },
+              title: {
+                path: MESSAGE_TEXT,
+                transformer: (text: unknown): string => {
+                  if (typeof text === 'string') {
+                    return text.split(': ')[0];
+                  } else {
+                    return '';
+                  }
+                }
+              },
+              id: {path: 'ruleId'},
+              desc: {
+                path: MESSAGE_TEXT,
+                transformer: (text: unknown): string => {
+                  if (typeof text === 'string') {
+                    return text.split(': ')[1];
+                  } else {
+                    return '';
+                  }
+                }
+              },
+              impact: {path: 'level', transformer: impactMapping},
+              code: {
+                transformer: (vulnerability: Record<string, unknown>): string =>
+                  JSON.stringify(vulnerability, null, 2)
+              },
+              results: [
+                {
+                  status: ExecJSON.ControlResultStatus.Failed,
+                  code_desc: {
+                    path: 'locations[0].physicalLocation',
+                    transformer: formatCodeDesc
+                  },
+
+                  start_time: ''
+                }
+              ]
             }
           ],
-          ...(this.withRaw && {raw: data})
-        };
+          sha256: ''
+        }
+      ],
+      passthrough: {
+        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+          let runsData = _.get(data, 'runs');
+          if (Array.isArray(runsData)) {
+            runsData = runsData.map((run: Record<string, unknown>) =>
+              _.omit(run, ['results'])
+            );
+          }
+          return {
+            auxiliary_data: [
+              {
+                name: 'SARIF',
+                data: {
+                  $schema: _.get(data, '$schema'),
+                  runs: runsData
+                }
+              }
+            ],
+            ...(this.withRaw && {raw: data})
+          };
+        }
       }
-    }
-  };
-  constructor(sarifJson: string, withRaw = false) {
+    };
+  }
+  constructor(sarifJson: string, withRaw = false, customToolName?: string) {
     super(JSON.parse(sarifJson));
     this.withRaw = withRaw;
+    this.customToolName = customToolName;
+    this.setMappings(this.mapping());
   }
 }
