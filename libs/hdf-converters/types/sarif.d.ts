@@ -963,7 +963,7 @@ export interface Invocation {
  * Information about how a specific rule or notification was reconfigured at runtime.
  */
 export interface ConfigurationOverride {
-  configuration: ReportingConfiguration1;
+  configuration: ReportingConfiguration;
   descriptor: ReportingDescriptorReference;
   /**
    * Key/value pairs that provide additional information about the configuration override.
