@@ -17,7 +17,12 @@ import {LocalAuthGuard} from '../guards/local-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
-
+import 'express-session';
+declare module 'express-session' {
+  interface SessionData {
+    redirectLogin?: string;
+  }
+}
 @UseInterceptors(LoggingInterceptor)
 @Controller('authn')
 export class AuthnController {
@@ -85,7 +90,15 @@ export class AuthnController {
     this.logger.debug('in the github login callback func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     const session = await this.authnService.login(req.user as User);
-    await this.setSessionCookies(req, session);
+    const redirectTarget =
+      typeof req.session.redirectLogin === 'string' &&
+      req.session.redirectLogin.startsWith('/')
+        ? req.session.redirectLogin
+        : undefined;
+
+    delete req.session.redirectLogin;
+
+    await this.setSessionCookies(req, session, redirectTarget);
   }
 
   @Get('gitlab')
@@ -169,7 +182,15 @@ export class AuthnController {
     this.logger.debug('in the oidc login callback func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     const session = await this.authnService.login(req.user as User);
-    await this.setSessionCookies(req, session);
+    const redirectTarget =
+      typeof req.session.redirectLogin === 'string' &&
+      req.session.redirectLogin.startsWith('/')
+        ? req.session.redirectLogin
+        : undefined;
+
+    delete req.session.redirectLogin;
+
+    await this.setSessionCookies(req, session, redirectTarget);
   }
 
   async setSessionCookies(
@@ -177,7 +198,8 @@ export class AuthnController {
     session: {
       userID: string;
       accessToken: string;
-    }
+    },
+    redirectTarget?: string
   ): Promise<void> {
     req.res?.cookie('userID', session.userID, {
       secure: this.configService.isInProductionMode()
@@ -185,6 +207,6 @@ export class AuthnController {
     req.res?.cookie('accessToken', session.accessToken, {
       secure: this.configService.isInProductionMode()
     });
-    req.res?.redirect('/');
+    req.res?.redirect(redirectTarget || '/');
   }
 }

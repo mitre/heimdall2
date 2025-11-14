@@ -5,7 +5,13 @@ import {Strategy} from 'passport-github';
 import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
-
+import {Request} from 'express';
+import 'express-session';
+declare module 'express-session' {
+  interface SessionData {
+    redirectLogin?: string;
+  }
+}
 interface GithubProfile {
   name: string | null;
   login: string;
@@ -43,10 +49,32 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     });
   }
 
-  async validate(
-    req: Record<string, unknown>,
-    accessToken: string
-  ): Promise<User> {
+  authenticate(req: Request, options: Record<string, unknown> = {}) {
+    const redirect =
+      typeof req.query?.redirect === 'string' &&
+      req.query.redirect.startsWith('/')
+        ? req.query.redirect
+        : undefined;
+    if (redirect) {
+      super.authenticate(req, {
+        ...options,
+        state: encodeURIComponent(redirect)
+      });
+      return;
+    }
+    super.authenticate(req);
+  }
+
+  async validate(req: Request, accessToken: string): Promise<User> {
+    const redirectLogin =
+      typeof req.query?.state === 'string'
+        ? decodeURIComponent(req.query.state as string)
+        : undefined;
+
+    if (redirectLogin?.startsWith('/')) {
+      req.session.redirectLogin = redirectLogin;
+    }
+
     // Get user's linked emails from Github
     const githubEmails = await axios
       .get<GithubEmail[]>(
