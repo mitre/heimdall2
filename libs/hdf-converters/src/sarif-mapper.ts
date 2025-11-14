@@ -57,14 +57,16 @@ export class SarifMapper extends BaseConverter {
     return {
       platform: {
         name: 'Heimdall Tools',
-        release: HeimdallToolsVersion,
+        release: HeimdallToolsVersion
       },
       version: HeimdallToolsVersion,
       statistics: {},
       profiles: [
         {
           path: 'runs',
-          name: this.customToolName || 'Static Analysis Results Interchange Format (SARIF)',
+          name:
+            this.customToolName ||
+            'Static Analysis Results Interchange Format (SARIF)',
           version: {path: '$.version'},
           supports: [],
           attributes: [],
@@ -77,7 +79,8 @@ export class SarifMapper extends BaseConverter {
               tags: {
                 cci: {
                   path: 'vulnerabilityClassifications',
-                  transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
+                  transformer: (data: string) =>
+                    getCCIsForNISTTags(nistTag(data))
                 },
                 nist: {path: MESSAGE_TEXT, transformer: nistTag},
                 cwe: {
@@ -146,7 +149,9 @@ export class SarifMapper extends BaseConverter {
         }
       ],
       passthrough: {
-        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        transformer: (
+          data: Record<string, unknown>
+        ): Record<string, unknown> => {
           let runsData = _.get(data, 'runs');
           if (Array.isArray(runsData)) {
             runsData = runsData.map((run: Record<string, unknown>) =>
