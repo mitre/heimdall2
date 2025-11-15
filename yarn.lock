@@ -11169,10 +11169,10 @@ fast-xml-parser@5.2.5:
   dependencies:
     strnum "^2.1.0"
 
-fast-xml-parser@5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.3.1.tgz#94055e8f53e471064e3e47ca4c441d1b46229c4b"
-  integrity sha512-jbNkWiv2Ec1A7wuuxk0br0d0aTMUtQ4IkL+l/i1r9PRf6pLXjDgsBsWwO+UyczmQlnehi4Tbc8/KIvxGQe+I/A==
+fast-xml-parser@5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.3.2.tgz#78a51945fbf7312e1ff6726cb173f515b4ea11d8"
+  integrity sha512-n8v8b6p4Z1sMgqRmqLJm3awW4NX7NkaKPfb3uJIBTSH7Pdvufi3PQ3/lJLQrvxcMYl7JI2jnDO90siPEpD8JBA==
   dependencies:
     strnum "^2.1.0"
 
