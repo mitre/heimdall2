@@ -7,7 +7,7 @@
   "statistics": {},
   "profiles": [
     {
-      "name": "Aqua Security Trivy",
+      "name": "Trivy - Static Analysis Results Interchange Format (SARIF)",
       "version": "2.1.0",
       "supports": [],
       "attributes": [],
@@ -47,7 +47,7 @@
           ]
         }
       ],
-      "sha256": "017842076142c8fc6a43f37777205e6dfdc411932fac60f2f148a52d491d5b0f"
+      "sha256": "b69707444b5f1a5d2aaabb4e2a0ed2a4af0705a96173b8ed24945e7ab0c64bf2"
     }
   ],
   "passthrough": {
