@@ -1,6 +1,7 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
+import {StaticAnalysisResultsFormatSARIFVersion210JSONSchema, Run} from '../types/sarif';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {
@@ -46,9 +47,9 @@ function nistTag(text: string): string[] {
   );
 }
 
-export class SarifMapper extends BaseConverter {
+export class SarifMapper extends BaseConverter<StaticAnalysisResultsFormatSARIFVersion210JSONSchema> {
+  index: number;
   withRaw: boolean;
-  customToolName?: string;
 
   mapping(): MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -63,10 +64,10 @@ export class SarifMapper extends BaseConverter {
       statistics: {},
       profiles: [
         {
-          path: 'runs',
-          name:
-            this.customToolName ||
-            'Static Analysis Results Interchange Format (SARIF)',
+          name: {
+            path: `runs[${this.index}]`,
+            transformer: (run: Run) => `${ run.tool.driver.name } - Static Analysis Results Interchange Format (SARIF)`,
+          },
           version: {path: '$.version'},
           supports: [],
           attributes: [],
@@ -74,7 +75,7 @@ export class SarifMapper extends BaseConverter {
           status: 'loaded',
           controls: [
             {
-              path: 'results',
+              path: `runs[${this.index}].results`,
               key: 'id',
               tags: {
                 cci: {
@@ -174,10 +175,48 @@ export class SarifMapper extends BaseConverter {
       }
     };
   }
-  constructor(sarifJson: string, withRaw = false, customToolName?: string) {
-    super(JSON.parse(sarifJson));
+  constructor(data: StaticAnalysisResultsFormatSARIFVersion210JSONSchema, index: number, withRaw = false) {
+    super(data);
+    this.index = index;
     this.withRaw = withRaw;
-    this.customToolName = customToolName;
     this.setMappings(this.mapping());
+  }
+}
+
+export class SarifResults {
+  data: StaticAnalysisResultsFormatSARIFVersion210JSONSchema;
+  filename: string;
+  withRaw: boolean;
+  // TODO: intentionally gonna push back on supporting the external properties stuff since it seems like a decent amount of work to handle it; if/when we get around to it probably gonna require another constructor param that is a Record<string, string> where the key=artifact location and value=the external sarif json as string; will also still not be handling it when we get a guid
+  constructor(sarifJSON: string, sarifFilename: string, withRaw = false) {
+    this.data = JSON.parse(sarifJSON);
+    this.filename = sarifFilename;
+    this.withRaw = withRaw;
+  }
+
+  toHdf(): Record<string, ExecJSON.Execution> {
+    // https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/sarif-v2.1.0-os.html#_Toc34317482 - when the SARIF producer either fails when trying to get data or has no data, then `runs` should be `null` or of 0-length, respectively
+    if (this.data.runs === null || this.data.runs.length === 0) {
+      return ({ [this.filename]: {
+        platform: {
+          name: 'Heimdall Tools',
+          release: HeimdallToolsVersion
+        },
+        version: HeimdallToolsVersion,
+        statistics: {},
+        profiles: [],
+        passthrough: {
+          auxiliary_data: [
+            {
+              name: 'SARIF',
+              data: this.data
+            }
+          ]
+        }
+      } as ExecJSON.Execution & {passthrough: unknown}
+      });
+    }
+    const sarifHDFs = this.data.runs.map((r: Run, i: number) => [`${this.filename}-${r.tool.driver.name}-${i}`, (new SarifMapper(this.data, i, this.withRaw)).toHdf()]);
+    return Object.fromEntries(sarifHDFs);
   }
 }
