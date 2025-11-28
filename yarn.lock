@@ -3373,10 +3373,10 @@
   resolved "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
   integrity sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==
 
-"@lerna/create@9.0.1":
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/@lerna/create/-/create-9.0.1.tgz#41446915ae312003e22cd981d71ef297fa51b944"
-  integrity sha512-xkZhQ+d7IsLzL5+1G+rKtH3b9aKRyBQ9yaz1VwPTfkD2nUAyaco97BRN9YRJgJrSHY/SI265RaD1D2rt00Jjkg==
+"@lerna/create@9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@lerna/create/-/create-9.0.3.tgz#3cbc02adc6a1d7d289764d9814825b105a3f7c79"
+  integrity sha512-hUTEWrR8zH+/Z3bp/R1aLm6DW8vB/BB7KH7Yeg4fMfrvSwxegiLVW9uJFAzWkK4mzEagmj/Dti85Yg9MN13t0g==
   dependencies:
     "@npmcli/arborist" "9.1.6"
     "@npmcli/package-json" "7.0.2"
@@ -3406,7 +3406,7 @@
     inquirer "12.9.6"
     is-ci "3.0.1"
     is-stream "2.0.0"
-    js-yaml "4.1.0"
+    js-yaml "4.1.1"
     libnpmpublish "11.1.2"
     load-json-file "6.2.0"
     make-dir "4.0.0"
@@ -14743,10 +14743,10 @@ js-tokens@^3.0.2:
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha512-RjTcuD4xjtthQkaWH7dFlH85L+QaVtSoOyGdZ3g6HFhS9dFNDfLyqgm2NFe2X6cQpeFmt0452FJjFG5UameExg==
 
-js-yaml@4.1.0, js-yaml@^4.0.0, js-yaml@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.npmjs.org/js-yaml/-/js-yaml-4.1.0.tgz#c1fb65f8f5017901cdd2c951864ba18458a10602"
-  integrity sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==
+js-yaml@4.1.1, js-yaml@^4.0.0, js-yaml@^4.1.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.1.tgz#854c292467705b699476e1a2decc0c8a3458806b"
+  integrity sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==
   dependencies:
     argparse "^2.0.1"
 
@@ -15140,11 +15140,11 @@ ldapjs@^2.2.1:
     verror "^1.8.1"
 
 lerna@^9.0.0:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/lerna/-/lerna-9.0.1.tgz#2a57edab330411a684e135d108abe28d32e099c9"
-  integrity sha512-sPfufYbSLisgi3mghbfOPxNL0Jhs4p6yCexXEdwgXITV5oKq6mdj2w5NQ32i6wMfSlEZFzIIV17ozdYsHavNhg==
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/lerna/-/lerna-9.0.3.tgz#6913f4306071953026f9660760c6d947a38f4c17"
+  integrity sha512-wCsJWKX8FaGJoWX2K5gL5q7ReqQNxNsS92AW5glBe/JzWEtoM/jgXXGrEzQzORMb8rTXYFjUjpn60et+i8XugA==
   dependencies:
-    "@lerna/create" "9.0.1"
+    "@lerna/create" "9.0.3"
     "@npmcli/arborist" "9.1.6"
     "@npmcli/package-json" "7.0.2"
     "@npmcli/run-script" "10.0.2"
@@ -15178,7 +15178,7 @@ lerna@^9.0.0:
     is-ci "3.0.1"
     is-stream "2.0.0"
     jest-diff ">=30.0.0 < 31"
-    js-yaml "4.1.0"
+    js-yaml "4.1.1"
     libnpmaccess "10.0.3"
     libnpmpublish "11.1.2"
     load-json-file "6.2.0"
@@ -16096,14 +16096,7 @@ minimatch@9.0.3:
   dependencies:
     brace-expansion "^2.0.1"
 
-minimatch@^10.0.3:
-  version "10.0.3"
-  resolved "https://registry.npmjs.org/minimatch/-/minimatch-10.0.3.tgz#cf7a0314a16c4d9ab73a7730a0e8e3c3502d47aa"
-  integrity sha512-IPZ167aShDZZUMdRk66cyQAW3qr0WzbHkPdMYa8bzZhlHhO3jALbKdxcaak7W9FfT2rZNpQuUu4Od7ILEpXSaw==
-  dependencies:
-    "@isaacs/brace-expansion" "^5.0.0"
-
-minimatch@^10.1.1:
+minimatch@^10.0.3, minimatch@^10.1.1:
   version "10.1.1"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-10.1.1.tgz#e6e61b9b0c1dcab116b5a7d1458e8b6ae9e73a55"
   integrity sha512-enIvLvRAFZYXJzkCYG5RKmPfrFArdLv+R+lbQ53BmIMLIry74bjKzX6iHAm8WYamJkhSSEabrWN5D97XnKObjQ==
