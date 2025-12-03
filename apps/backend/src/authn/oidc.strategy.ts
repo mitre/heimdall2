@@ -6,6 +6,13 @@ import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
+import {Request} from 'express';
+import 'express-session';
+declare module 'express-session' {
+  interface SessionData {
+    redirectLogin?: string;
+  }
+}
 
 interface OIDCProfile {
   id: string;
@@ -24,6 +31,22 @@ interface OIDCProfile {
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
+  authenticate(req: Request, options: Record<string, unknown> = {}) {
+    const redirect =
+      typeof req.query?.redirect === 'string' &&
+      req.query.redirect.startsWith('/')
+        ? req.query.redirect
+        : undefined;
+    if (redirect) {
+      super.authenticate(req, {
+        ...options,
+        state: encodeURIComponent(redirect)
+      });
+      return;
+    }
+    super.authenticate(req);
+  }
+
   private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   public logger = winston.createLogger({
@@ -73,6 +96,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       },
       // using the 9-arity function so that we can access the underlying JSON response and extract the 'email_verified' attribute
       async (
+        req: Request,
         _issuer: string,
         uiProfile: OIDCProfile,
         _idProfile: object,
@@ -84,6 +108,15 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) => {
+        const redirectLogin =
+          typeof req.query?.state === 'string'
+            ? decodeURIComponent(req.query.state as string)
+            : undefined;
+
+        if (redirectLogin?.startsWith('/')) {
+          req.session.redirectLogin = redirectLogin;
+        }
+
         this.logger.debug('in oidc strategy file');
         this.logger.debug(JSON.stringify(uiProfile, null, 2));
         const userData = uiProfile._json;
