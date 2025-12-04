@@ -62,16 +62,17 @@ interface Contains<Item> {
 // Create our three primary data types from the above mixins
 // Essentially this is just describing the parent/child relationships each type has
 export interface ContextualizedEvaluation
-  extends WrapsType<AnyEval>,
-    Contains<ContextualizedProfile[]> {}
+  extends WrapsType<AnyEval>, Contains<ContextualizedProfile[]> {}
 
 export interface ContextualizedProfile
-  extends WrapsType<AnyProfile>,
+  extends
+    WrapsType<AnyProfile>,
     Sourced<ContextualizedEvaluation | null>,
     Contains<ContextualizedControl[]>,
     Extendable<ContextualizedProfile> {}
 export interface ContextualizedControl
-  extends WrapsType<AnyControl>,
+  extends
+    WrapsType<AnyControl>,
     Sourced<ContextualizedProfile>,
     Extendable<ContextualizedControl> {
   /** The HDF version of this particular control */
