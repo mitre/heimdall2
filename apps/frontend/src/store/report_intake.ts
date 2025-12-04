@@ -77,8 +77,7 @@ export type InspecFile = {
 };
 
 /** Modify our contextual types to sort of have back-linking to sourced from files */
-export interface SourcedContextualizedEvaluation
-  extends ContextualizedEvaluation {
+export interface SourcedContextualizedEvaluation extends ContextualizedEvaluation {
   from_file: EvaluationFile;
 }
 
