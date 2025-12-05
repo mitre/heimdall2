@@ -23,6 +23,8 @@ describe('Config Service', () => {
 
   describe('Tests the get function when .env file does not exist', () => {
     it('should return undefined because env variable does not exist', () => {
+	    console.log("in test");
+	    console.log(process.env['DATABASE_NAME']);
       const configService = new ConfigService();
       expect(configService.get('DATABASE_NAME')).toBe(undefined);
     });
