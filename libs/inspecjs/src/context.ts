@@ -243,9 +243,7 @@ export function contextualizeEvaluation(
       );
 
       // If found a populated base, use that. If not, we substitute in the first found element in sameId. This is arbitrary.
-      if (!sameIdPopulated) {
-        sameIdPopulated = sameId[0];
-      }
+      sameIdPopulated ??= sameId[0];
 
       // If the object we end up with is "us", then just ignore
       if (Object.is(cc, sameIdPopulated)) {

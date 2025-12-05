@@ -144,7 +144,7 @@ export class InspecIntake extends VuexModule {
     } else if (options.data) {
       read = options.data;
     } else {
-      throw Error('No file or data passed to report intake');
+      throw new Error('No file or data passed to report intake');
     }
     if (await this.isHDF(read)) {
       return this.loadText({
@@ -167,12 +167,7 @@ export class InspecIntake extends VuexModule {
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: `${filename
-                .replace(/.json/gi, '')
-                .replace(/.nessus/gi, '')}-${_.get(
-                evaluation,
-                'platform.target_id'
-              )}.${originalFileType}`
+              filename: `${filename.replaceAll(/\.json/i, '').replaceAll(/\.nessus/i, '')}-${_.get(evaluation, 'platform.target_id')}.${originalFileType}`
             });
           })
         );
@@ -208,7 +203,7 @@ export class InspecIntake extends VuexModule {
         Array.isArray(data.profiles) || // Execution JSON
         (Boolean(data.controls) && Boolean(data.sha256)) // Profile JSON
       );
-    } else if (typeof data === 'undefined') {
+    } else if (data === undefined) {
       SnackbarModule.failure('Missing data to convert to validate HDF');
       return false;
     } else {
@@ -298,7 +293,7 @@ export class InspecIntake extends VuexModule {
   @Action
   async detectAndLoadPredefinedJSON() {
     // On page load, check for the flag to load the preloaded JSON file
-    const queryString = window.location.search;
+    const queryString = globalThis.location.search;
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.get('predefinedLoad')?.toLowerCase() === 'true') {
       return axios
