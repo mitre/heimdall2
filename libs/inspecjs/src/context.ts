@@ -62,16 +62,17 @@ interface Contains<Item> {
 // Create our three primary data types from the above mixins
 // Essentially this is just describing the parent/child relationships each type has
 export interface ContextualizedEvaluation
-  extends WrapsType<AnyEval>,
-    Contains<ContextualizedProfile[]> {}
+  extends WrapsType<AnyEval>, Contains<ContextualizedProfile[]> {}
 
 export interface ContextualizedProfile
-  extends WrapsType<AnyProfile>,
+  extends
+    WrapsType<AnyProfile>,
     Sourced<ContextualizedEvaluation | null>,
     Contains<ContextualizedControl[]>,
     Extendable<ContextualizedProfile> {}
 export interface ContextualizedControl
-  extends WrapsType<AnyControl>,
+  extends
+    WrapsType<AnyControl>,
     Sourced<ContextualizedProfile>,
     Extendable<ContextualizedControl> {
   /** The HDF version of this particular control */
@@ -242,9 +243,7 @@ export function contextualizeEvaluation(
       );
 
       // If found a populated base, use that. If not, we substitute in the first found element in sameId. This is arbitrary.
-      if (!sameIdPopulated) {
-        sameIdPopulated = sameId[0];
-      }
+      sameIdPopulated ??= sameId[0];
 
       // If the object we end up with is "us", then just ignore
       if (Object.is(cc, sameIdPopulated)) {
