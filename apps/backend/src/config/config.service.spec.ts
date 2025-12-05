@@ -18,11 +18,14 @@ describe('Config Service', () => {
     // Used as an empty file system
     mock({
       // No files created (.env file does not exist yet)
+      '.env': ''
     });
   });
 
   describe('Tests the get function when .env file does not exist', () => {
     it('should return undefined because env variable does not exist', () => {
+	    console.log("in test");
+	    console.log(process.env['DATABASE_NAME']);
       const configService = new ConfigService();
       expect(configService.get('DATABASE_NAME')).toBe(undefined);
     });
