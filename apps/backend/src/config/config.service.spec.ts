@@ -18,6 +18,7 @@ describe('Config Service', () => {
     // Used as an empty file system
     mock({
       // No files created (.env file does not exist yet)
+      [process.cwd()]: {}
     });
   });
 
