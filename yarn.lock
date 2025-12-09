@@ -5042,7 +5042,7 @@
 
 "@types/chroma-js@2.4.5", "@types/chroma-js@^3.1.2":
   version "2.4.5"
-  resolved "https://registry.npmjs.org/@types/chroma-js/-/chroma-js-2.4.5.tgz#483e08cdb1c400e8a9fb55b9c259caccb3e712f0"
+  resolved "https://registry.yarnpkg.com/@types/chroma-js/-/chroma-js-2.4.5.tgz#483e08cdb1c400e8a9fb55b9c259caccb3e712f0"
   integrity sha512-6ISjhzJViaPCy2q2e6PgK+8HcHQDQ0V2LDiKmYAh+jJlLqDa6HbwDh0wOevHY0kHHUx0iZwjSRbVD47WOUx5EQ==
 
 "@types/concat-stream@^2.0.0":
@@ -5137,7 +5137,7 @@
 
 "@types/d3-dispatch@*", "@types/d3-dispatch@3.0.6":
   version "3.0.6"
-  resolved "https://registry.npmjs.org/@types/d3-dispatch/-/d3-dispatch-3.0.6.tgz#096efdf55eb97480e3f5621ff9a8da552f0961e7"
+  resolved "https://registry.yarnpkg.com/@types/d3-dispatch/-/d3-dispatch-3.0.6.tgz#096efdf55eb97480e3f5621ff9a8da552f0961e7"
   integrity sha512-4fvZhzMeeuBJYZXRXrRIQnvUYfyXwYmLsdiN7XXmVNQKKw1cM8a5WdID0g1hVFZDqT9ZqZEY5pD44p24VS7iZQ==
 
 "@types/d3-drag@*":
@@ -5622,14 +5622,14 @@
 
 "@types/node@*", "@types/node@^10.1.0", "@types/node@^22.10.7", "@types/node@^24.3.1":
   version "22.19.2"
-  resolved "https://registry.npmjs.org/@types/node/-/node-22.19.2.tgz#2f0956fba46518aaf7578c84e37bddab55f85d01"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.19.2.tgz#2f0956fba46518aaf7578c84e37bddab55f85d01"
   integrity sha512-LPM2G3Syo1GLzXLGJAKdqoU35XvrWzGJ21/7sgZTUpbkBaOasTj8tjwn6w+hCkqaa1TfJ/w67rJSwYItlJ2mYw==
   dependencies:
     undici-types "~6.21.0"
 
 "@types/node@^10.17.60":
   version "10.17.60"
-  resolved "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
 "@types/normalize-package-data@^2.4.0":
@@ -8303,7 +8303,7 @@ chownr@^3.0.0:
 
 chroma-js@2.4.2, chroma-js@^3.1.4:
   version "2.4.2"
-  resolved "https://registry.npmjs.org/chroma-js/-/chroma-js-2.4.2.tgz#dffc214ed0c11fa8eefca2c36651d8e57cbfb2b0"
+  resolved "https://registry.yarnpkg.com/chroma-js/-/chroma-js-2.4.2.tgz#dffc214ed0c11fa8eefca2c36651d8e57cbfb2b0"
   integrity sha512-U9eDw6+wt7V8z5NncY2jJfZa+hUH8XEj8FQHgFJTrUFnJfXYf4Ml4adI2vXZOjqRDpFWtYVWypDfZwnJ+HIR4A==
 
 chrome-trace-event@^1.0.2:
@@ -11391,7 +11391,7 @@ fast-diff@^1.1.2:
 
 fast-glob@3.3.3, fast-glob@^3.2.12, fast-glob@^3.2.7, fast-glob@^3.2.9:
   version "3.3.3"
-  resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.3.tgz#d06d585ce8dba90a16b0505c543c3ccfb3aeb818"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.3.tgz#d06d585ce8dba90a16b0505c543c3ccfb3aeb818"
   integrity sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
