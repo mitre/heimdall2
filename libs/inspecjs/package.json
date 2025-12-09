@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "2.12.3",
+  "version": "2.12.4",
   "description": "Schema definitions, classes on top, and utilities to deal with HDF files",
   "files": [
     "lib"
