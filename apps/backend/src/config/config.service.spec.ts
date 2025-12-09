@@ -18,7 +18,7 @@ describe('Config Service', () => {
     // Used as an empty file system
     mock({
       // No files created (.env file does not exist yet), but pull through node_modules so the testing framework can run
-      'node_modules': mock.load('node_modules')
+      node_modules: mock.load('node_modules')
     });
   });
 
