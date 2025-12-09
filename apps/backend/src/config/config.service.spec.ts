@@ -17,16 +17,13 @@ describe('Config Service', () => {
     console.log();
     // Used as an empty file system
     mock({
-      // No files created (.env file does not exist yet)
-      // TODO: I think the configservice is somehow persisting between these runs maybe and that's why it contains all that jazz in there?  cause what these things are trying to test is if the .env never had anything in it nor should the appconfig, but they do because we set that .env file from the prior test which now has its data persist in the appconfig.  So what we actually need is to reset the appconfig... but i thought that that would get handled by the configservice constructor making a new appconfig?
+      // No files created (.env file does not exist yet), but pull through node_modules so the testing framework can run
       'node_modules': mock.load('node_modules')
     });
   });
 
   describe('Tests the get function when .env file does not exist', () => {
     it('should return undefined because env variable does not exist', () => {
-	    console.log("in test");
-	    console.log(process.env['DATABASE_NAME']);
       const configService = new ConfigService();
       expect(configService.get('DATABASE_NAME')).toBe(undefined);
     });

@@ -31,9 +31,6 @@ export default class AppConfig {
   }
 
   get(key: string): string | undefined {
-	  console.log('in appconfig');
-	  console.log(process.env[key]);
-	  console.log(this.envConfig[key]);
     return process.env[key] || this.envConfig[key];
   }
 

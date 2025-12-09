@@ -8,7 +8,6 @@ export class ConfigService {
   public defaultGithubAPIURL = 'https://api.github.com/';
 
   constructor() {
-    console.log('new configservice');
     this.appConfig = new AppConfig();
   }
 
@@ -87,8 +86,6 @@ export class ConfigService {
   }
 
   get(key: string): string | undefined {
-	  console.log('in service');
-	  console.log(process.env[key]);
     return this.appConfig.get(key);
   }
 }
