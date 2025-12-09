@@ -133,7 +133,7 @@ describe('Config Service', () => {
       });
       const configService = new ConfigService();
       jest.spyOn(configService, 'get').mockImplementationOnce(() => {
-        throw new Error('');
+        throw new Error('Test error');
       });
       expect(() => configService.get('DATABASE_NAME')).toThrowError();
     });
