@@ -8,6 +8,7 @@ export class ConfigService {
   public defaultGithubAPIURL = 'https://api.github.com/';
 
   constructor() {
+    console.log('new configservice');
     this.appConfig = new AppConfig();
   }
 
