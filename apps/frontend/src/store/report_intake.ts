@@ -167,7 +167,7 @@ export class InspecIntake extends VuexModule {
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: `${filename.replaceAll(/\.json/i, '').replaceAll(/\.nessus/i, '')}-${_.get(evaluation, 'platform.target_id')}.${originalFileType}`
+              filename: `${filename.replaceAll(/\.json/gi, '').replaceAll(/\.nessus/gi, '')}-${_.get(evaluation, 'platform.target_id')}.${originalFileType}`
             });
           })
         );
