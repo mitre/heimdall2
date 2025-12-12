@@ -621,7 +621,7 @@ export default class ExportCKLModal extends Vue {
       // Get the name value up to the index, replace dashes with spaces
       newName = name.substring(0, index).split('-').join(' ');
       // Convert the first letter of each word into uppercase
-      newName = newName.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word) {
+      newName = newName.replace(/^\w|[A-Z]|\b\w/gv, function (word) {
         return word.toUpperCase();
       });
       newName = newName + 'Security Technical Implementation Guide';

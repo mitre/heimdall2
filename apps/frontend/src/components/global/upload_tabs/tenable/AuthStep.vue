@@ -102,7 +102,7 @@ export default class AuthStep extends Vue {
     }
 
     // If the protocol (https) is missing add it
-    if (!/^https?:\/\//.test(this.hostname)) {
+    if (!/^https?:\/\//v.test(this.hostname)) {
       this.hostname = `https://${this.hostname}`;
     }
 
