@@ -3,12 +3,17 @@ module.exports = {
   parserOptions: {
     parser: '@typescript-eslint/parser'
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: ['@typescript-eslint/eslint-plugin', 'regexp'],
   root: true,
   env: {
     node: true
   },
-  extends: ['plugin:vue/recommended', '@vue/prettier', '@vue/typescript'],
+  extends: [
+    'plugin:vue/recommended',
+    '@vue/prettier',
+    '@vue/typescript',
+    'plugin:regexp/all'
+  ],
   rules: {
     'no-console': 'warn',
     'no-return-await': 'warn',
