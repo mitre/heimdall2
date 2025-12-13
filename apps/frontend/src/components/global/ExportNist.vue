@@ -47,7 +47,7 @@ export default class ExportNIST extends Vue {
   format_tag(control: NistControl): string | null {
     // For now just do raw text. Once Mo's nist work is done we can make sure these are well formed
     if (control.rawText) {
-      return control.rawText.replace(/\s/g, '');
+      return control.rawText.replace(/\s/gv, '');
     } else if (control.subSpecifiers.length < 2) {
       // Too short: abort
       return null;

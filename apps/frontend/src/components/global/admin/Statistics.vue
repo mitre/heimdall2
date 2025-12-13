@@ -49,7 +49,7 @@ export default class Statistics extends Vue {
   }
 
   toCapitalizedWords(variable: string) {
-    var words = variable.match(/[A-Za-z][a-z]*/g) || [];
+    var words = variable.match(/[A-Za-z][a-z]*/gv) || [];
     return words.map(this.capitalize).join(' ');
   }
 

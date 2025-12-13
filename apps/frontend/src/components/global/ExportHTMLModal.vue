@@ -163,7 +163,7 @@ export default class ExportHTMLModal extends Vue {
     saveAs(
       new Blob([s2ab(body)], {type: 'application/octet-stream'}),
       `${this.exportType}_Report_${new Date().toString()}.html`.replace(
-        /[ :]/g,
+        /[ :]/gv,
         '_'
       )
     );
