@@ -525,7 +525,7 @@ export default class ExportCKLModal extends Vue {
     const pattern =
       /Release: (?<release>\d+)\D+(?:\d.*?)?Date: (?<date>\d{1,2} \w{3} \d{4})/v;
     const matches = RegExp(pattern).exec(info);
-    if (matches) {
+    if (matches && matches.groups) {
       return [matches.groups.release, matches.groups.date];
     }
     return defaultReturn;
