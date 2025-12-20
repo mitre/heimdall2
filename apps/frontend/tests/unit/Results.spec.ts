@@ -43,7 +43,7 @@ const wrapper: Wrapper<Vue> = shallowMount(Results, {
 // loadSample('Acme Overlay Example');
 
 describe('Datatable', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     removeAllFiles();
   });
 
