@@ -40,11 +40,14 @@ const wrapper: Wrapper<Vue> = shallowMount(Results, {
   propsData: {}
 });
 
-loadSample('Acme Overlay Example');
+// loadSample('Acme Overlay Example');
 
 describe('Datatable', () => {
-  it('displays correct number of controls with many files', () => {
+  beforeAll(() => {
     removeAllFiles();
+  });
+
+  it('displays correct number of controls with many files', () => {
     loadAll();
     controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
@@ -72,6 +75,7 @@ describe('Datatable', () => {
   });
 
   it('control row and table data is correct', () => {
+    loadAll();
     expect(
       (
         controlTableWrapper.vm as Vue & {
@@ -92,7 +96,6 @@ describe('Datatable', () => {
   });
 
   it('it can properly filter overridden results', () => {
-    removeAllFiles();
     loadSample('Small Profile With Severity Overrides');
     controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
