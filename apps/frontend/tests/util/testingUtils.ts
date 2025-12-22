@@ -10,7 +10,10 @@ export enum DataLoadApproach {
   Text
 }
 
-export function loadSample(sampleName: string, dataLoadApproach: DataLoadApproach = DataLoadApproach.Text) {
+export function loadSample(
+  sampleName: string,
+  dataLoadApproach: DataLoadApproach = DataLoadApproach.Text
+) {
   const sample: Sample | undefined = samples.find(
     (samp) => samp.filename === sampleName
   );
@@ -18,16 +21,15 @@ export function loadSample(sampleName: string, dataLoadApproach: DataLoadApproac
     return null;
   }
   const data: string = require(`../../public${sample.path}`);
-  return dataLoadApproach === DataLoadApproach.Text ?
-    InspecIntakeModule.loadText({
-    filename: sampleName,
-    text: JSON.stringify(data)
-  })
-    :
-      InspecIntakeModule.loadFile({
-      filename: sampleName,
-      data: JSON.stringify(data)
-    });
+  return dataLoadApproach === DataLoadApproach.Text
+    ? InspecIntakeModule.loadText({
+        filename: sampleName,
+        text: JSON.stringify(data)
+      })
+    : InspecIntakeModule.loadFile({
+        filename: sampleName,
+        data: JSON.stringify(data)
+      });
 }
 
 export function loadAll(): void {
