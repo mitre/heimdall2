@@ -10,7 +10,8 @@ import {
   expectedCount,
   loadAll,
   loadSample,
-  removeAllFiles
+  removeAllFiles,
+  DataLoadApproach
 } from '../util/testingUtils';
 
 interface ListElt {
@@ -47,6 +48,33 @@ describe('Datatable', () => {
 
   it('displays correct number of controls with many files', () => {
     loadAll();
+    controlTableWrapper = shallowMount(ControlTable, {
+      vuetify,
+      mocks: {
+        $router
+      },
+      propsData: {
+        filter: (wrapper.vm as Vue & {all_filter: Filter}).all_filter
+      }
+    });
+    const expected =
+      expectedCount('passed') +
+      expectedCount('failed') +
+      expectedCount('notReviewed') +
+      expectedCount('notApplicable') +
+      expectedCount('profileError');
+    expect(
+      (
+        controlTableWrapper.vm as Vue & {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          items: Array<any>;
+        }
+      ).items.length
+    ).toBe(expected);
+  });
+
+  it('displays correct number of controls with many files generated from a single sample file while using the loadFile method', () => {
+    loadSample('Conveyor Sample', DataLoadApproach.File);
     controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
