@@ -40,8 +40,6 @@ const wrapper: Wrapper<Vue> = shallowMount(Results, {
   propsData: {}
 });
 
-// loadSample('Acme Overlay Example');
-
 describe('Datatable', () => {
   beforeEach(() => {
     removeAllFiles();
@@ -76,6 +74,15 @@ describe('Datatable', () => {
 
   it('control row and table data is correct', () => {
     loadAll();
+    controlTableWrapper = shallowMount(ControlTable, {
+      vuetify,
+      mocks: {
+        $router
+      },
+      propsData: {
+        filter: (wrapper.vm as Vue & {all_filter: Filter}).all_filter
+      }
+    });
     expect(
       (
         controlTableWrapper.vm as Vue & {
