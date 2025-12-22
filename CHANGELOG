@@ -1,3 +1,35 @@
+v2.12.5
+
+## What's New
+
+- String.replaceAll when used with a regex as the argument requires the global flag to be set @Amndeep7 (#7498)
+
+## Dependency Updates
+
+- Bump @aws-sdk/client-s3 from 3.955.0 to 3.956.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7527)
+- Bump sinon from 21.0.0 to 21.0.1 @[dependabot[bot]](https://github.com/apps/dependabot) (#7528)
+- Bump @aws-sdk/client-sts from 3.954.0 to 3.956.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7525)
+- Bump @aws-sdk/client-config-service from 3.955.0 to 3.956.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7526)
+- Bump @smithy/node-http-handler from 4.4.6 to 4.4.7 @[dependabot[bot]](https://github.com/apps/dependabot) (#7523)
+- Bump validator from 13.15.23 to 13.15.26 @[dependabot[bot]](https://github.com/apps/dependabot) (#7524)
+- Bump @aws-sdk/client-s3 from 3.954.0 to 3.955.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7521)
+- Bump cypress from 15.8.0 to 15.8.1 @[dependabot[bot]](https://github.com/apps/dependabot) (#7520)
+- Bump @aws-sdk/client-config-service from 3.934.0 to 3.955.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7519)
+- Bump @aws-sdk/client-sts from 3.953.0 to 3.954.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7517)
+- Bump @aws-sdk/client-s3 from 3.953.0 to 3.954.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7515)
+- Bump @aws-sdk/client-sts from 3.952.0 to 3.953.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7514)
+- Bump @aws-sdk/client-s3 from 3.952.0 to 3.953.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7511)
+- Bump cypress from 15.7.1 to 15.8.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7512)
+- Bump @aws-sdk/client-sts from 3.948.0 to 3.952.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7509)
+- Bump @aws-sdk/client-s3 from 3.948.0 to 3.952.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7508)
+- Bump @types/papaparse from 5.5.1 to 5.5.2 @[dependabot[bot]](https://github.com/apps/dependabot) (#7506)
+- Bump @smithy/node-http-handler from 4.4.5 to 4.4.6 @[dependabot[bot]](https://github.com/apps/dependabot) (#7505)
+- Bump chroma-js and @types/chroma-js @[dependabot[bot]](https://github.com/apps/dependabot) (#7504)
+- Bump fast-xml-parser from 5.3.2 to 5.3.3 @[dependabot[bot]](https://github.com/apps/dependabot) (#7502)
+- Bump @tailwindcss/cli from 4.1.17 to 4.1.18 @[dependabot[bot]](https://github.com/apps/dependabot) (#7500)
+- Bump tailwindcss from 4.1.17 to 4.1.18 @[dependabot[bot]](https://github.com/apps/dependabot) (#7499)
+- Bump @types/node from 22.19.2 to 25.0.0 @[dependabot[bot]](https://github.com/apps/dependabot) (#7497)
+
 v2.12.4
 
 ## What's New
