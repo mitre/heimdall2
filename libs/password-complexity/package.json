@@ -1,8 +1,14 @@
 {
   "name": "@heimdall/password-complexity",
   "version": "2.6.19",
+  "license": "Apache-2.0",
+  "description": "Common utilities for checking password complexity",
   "private": true,
-  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2",
+    "directory": "libs/password-complexity"
+  },
   "main": "index.js",
   "scripts": {
     "lint": "eslint \"**/*.js\" --fix",

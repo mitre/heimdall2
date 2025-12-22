@@ -1,11 +1,16 @@
 {
   "name": "root",
-  "private": true,
+  "version": "0.0.0",
   "workspaces": [
     "apps/*",
     "libs/*",
     "test"
   ],
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2",
+  },
   "scripts": {
     "backend": "yarn workspace heimdall-server",
     "build": "lerna run build",
@@ -46,6 +51,5 @@
   },
   "engines": {
     "node": ">=22"
-  },
-  "version": "0.0.0"
+  }
 }

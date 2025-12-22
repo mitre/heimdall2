@@ -1,15 +1,19 @@
 {
   "name": "heimdall-server",
   "version": "2.12.5",
-  "description": "",
   "license": "Apache-2.0",
-  "author": "",
-  "private": true,
+  "description": "Heimdall's backend which allows for data persistence, authentication, RBAC, and API access",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2",
+    "directory": "apps/backend"
+  },
   "workspaces": {
     "nohoist": [
       "**"
     ]
   },
+  "private": true,
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -27,21 +31,6 @@
     "test:e2e": "jest --runInBand --silent --config test/jest-e2e.json",
     "test:log": "jest",
     "test:watch": "jest --watch"
-  },
-  "jest": {
-    "coverageDirectory": "./coverage",
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testEnvironment": "node",
-    "testRegex": ".spec.ts$",
-    "testTimeout": 10000,
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    }
   },
   "dependencies": {
     "@casl/ability": "^6.0.0",
@@ -117,5 +106,20 @@
     "mock-fs": "^5.0.0",
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.0"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testEnvironment": "node",
+    "testRegex": ".spec.ts$",
+    "testTimeout": 10000,
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    }
   }
 }

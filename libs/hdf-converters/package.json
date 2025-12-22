@@ -3,13 +3,15 @@
   "version": "2.12.5",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2",
+    "directory": "libs/hdf-converters"
+  },
   "files": [
     "lib"
   ],
   "main": "src/index.ts",
-  "publishConfig": {
-    "main": "lib/index.js"
-  },
   "scripts": {
     "build": "run-script-os",
     "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
