@@ -1,13 +1,27 @@
 {
   "name": "inspecjs",
   "version": "2.12.5",
+  "license": "Apache-2.0",
   "description": "Schema definitions, classes on top, and utilities to deal with HDF files",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2",
+    "directory": "libs/inspecjs"
+  },
   "files": [
     "lib"
   ],
   "main": "src/index.ts",
-  "publishConfig": {
-    "main": "lib/index.js"
+  "scripts": {
+    "build": "tsc -p ./tsconfig.build.json",
+    "lint": "eslint \"**/*.ts\" --fix",
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = \"lib/index.js\"' > package.json",
+    "postpack": "mv package.json.orig package.json",
+    "test": "jest --silent",
+    "docs": "typedoc --out docs ./src",
+    "gen-types": "bash scripts/update_schema.sh",
+    "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/"
   },
   "devDependencies": {
     "@types/jest": "^27.0.0",
@@ -22,26 +36,5 @@
     "transform": {
       "^.+\\.ts$": "ts-jest"
     }
-  },
-  "scripts": {
-    "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
-    "postpack": "mv package.json.orig package.json",
-    "build": "tsc -p ./tsconfig.build.json",
-    "docs": "typedoc --out docs ./src",
-    "gen-types": "bash scripts/update_schema.sh",
-    "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/",
-    "lint": "eslint \"**/*.ts\" --fix",
-    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest --silent"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mitre/heimdall2.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/mitre/heimdall2/issues"
   }
 }
