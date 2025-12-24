@@ -13,7 +13,9 @@
         </div>
         <v-card v-else :key="profile.id" flat>
           <v-card-title>
-            <div class="mb-2">{{ profile.data.title }}</div>
+            <div class="mb-2">
+              {{ profile.data.title || profile.data.name }}
+            </div>
           </v-card-title>
           <v-divider />
           <v-row class="text-left pa-4" dense data-cy="profileInfoFields">
