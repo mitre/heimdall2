@@ -75,7 +75,19 @@ export default class LDAPLogin extends Vue {
       password: this.password
     };
     ServerModule.LoginLDAP(creds).then(() => {
-      this.$router.push('/');
+      if (ServerModule.token) {
+        const redirectQuery = this.$route.query.redirect;
+        const redirectTarget = Array.isArray(redirectQuery)
+          ? redirectQuery[0]
+          : redirectQuery;
+
+        const destination =
+          typeof redirectTarget === 'string' && redirectTarget.startsWith('/')
+            ? redirectTarget
+            : '/';
+
+        this.$router.push(destination);
+      }
       SnackbarModule.notify('You have successfully signed in.');
     });
   }
