@@ -3081,9 +3081,9 @@
     tslib "2.8.1"
 
 "@nestjs/core@^11.1.6":
-  version "11.1.10"
-  resolved "https://registry.npmjs.org/@nestjs/core/-/core-11.1.10.tgz#c07f602fe270a28a2a77cfc4c7a93badea582a70"
-  integrity sha512-LYpaacSb8X9dcRpeZxA7Mvi5Aozv11s6028ZNoVKY2j/fyThLd+xrkksg3u+sw7F8mipFaxS/LuVpoHQ/MrACg==
+  version "11.1.11"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-11.1.11.tgz#9eae7e488c45a443685567c1555ae3cd739d12fe"
+  integrity sha512-H9i+zT3RvHi7tDc+lCmWHJ3ustXveABCr+Vcpl96dNOxgmrx4elQSTC4W93Mlav2opfLV+p0UTHY6L+bpUA4zA==
   dependencies:
     uid "2.0.2"
     "@nuxt/opencollective" "0.4.1"
