@@ -3250,12 +3250,12 @@
     webpack-node-externals "3.0.0"
 
 "@nestjs/common@^11.0.16":
-  version "11.1.10"
-  resolved "https://registry.npmjs.org/@nestjs/common/-/common-11.1.10.tgz#c6cf6cc852fcb00bb4fc1e99cd7dc60358dd15e3"
-  integrity sha512-NoBzJFtq1bzHGia5Q5NO1pJNpx530nupbEu/auCWOFCGL5y8Zo8kiG28EXTCDfIhQgregEtn1Cs6H8WSLUC8kg==
+  version "11.1.11"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.1.11.tgz#7ab20a2c91c4c2c43794bfc92177121d0a946ce5"
+  integrity sha512-R/+A8XFqLgN8zNs2twhrOaE7dJbRQhdPX3g46am4RT/x8xGLqDphrXkUIno4cGUZHxbczChBAaAPTdPv73wDZA==
   dependencies:
     uid "2.0.2"
-    file-type "21.1.1"
+    file-type "21.2.0"
     iterare "1.2.1"
     load-esm "1.0.3"
     tslib "2.8.1"
@@ -11371,10 +11371,10 @@ file-saver@^2.0.2:
   resolved "https://registry.npmjs.org/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
   integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
 
-file-type@21.1.1:
-  version "21.1.1"
-  resolved "https://registry.npmjs.org/file-type/-/file-type-21.1.1.tgz#79be659d9a29e72bd32bdaf9ac2c83d203a58ca0"
-  integrity sha512-ifJXo8zUqbQ/bLbl9sFoqHNTNWbnPY1COImFfM6CCy7z+E+jC1eY9YfOKkx0fckIg+VljAy2/87T61fp0+eEkg==
+file-type@21.2.0:
+  version "21.2.0"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-21.2.0.tgz#153f7d7d4279ba440f84ae80fd99cdd27fba788c"
+  integrity sha512-vCYBgFOrJQLoTzDyAXAL/RFfKnXXpUYt4+tipVy26nJJhT7ftgGETf2tAQF59EEL61i3MrorV/PG6tf7LJK7eg==
   dependencies:
     "@tokenizer/inflate" "^0.4.1"
     strtok3 "^10.3.4"
