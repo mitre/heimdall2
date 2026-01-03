@@ -2,7 +2,7 @@ name: Push Heimdall Server to Docker Hub on every merge to master and tag as lat
 
 on:
   push:
-    branches: [master]
+    branches: [master, multi-platform-build]
 
 permissions:
   contents: read
@@ -28,8 +28,8 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64
-          tags: mitre/heimdall2:latest,mitre/heimdall2:${{ github.sha }}
+          platforms: linux/amd64,linux/arm64
+          tags: mitre/heimdall2:multi-platform-build,mitre/heimdall2:${{ github.sha }}
       - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment
         shell: bash
         id: get-docker-sha
