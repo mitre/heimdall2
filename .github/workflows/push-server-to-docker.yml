@@ -30,6 +30,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: mitre/heimdall2:multi-platform-build,mitre/heimdall2:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment
         shell: bash
         id: get-docker-sha
