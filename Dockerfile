@@ -23,7 +23,7 @@ COPY libs/common/package.json libs/common/tsconfig.json ./libs/common/
 COPY libs/password-complexity/package.json ./libs/password-complexity/
 
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
-RUN yarn install --frozen-lockfile --production --network-timeout 600000 --verbose
+RUN yarn install --frozen-lockfile --production --network-timeout 600000
 
 COPY apps ./apps
 COPY libs ./libs
