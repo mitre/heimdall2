@@ -1,11 +1,16 @@
 {
   "name": "root",
-  "private": true,
+  "version": "0.0.0",
   "workspaces": [
     "apps/*",
     "libs/*",
     "test"
   ],
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2"
+  },
   "scripts": {
     "backend": "yarn workspace heimdall-server",
     "build": "lerna run build",
@@ -25,11 +30,11 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
-    "lerna": "^9.0.0",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.2.4",
+    "lerna": "^9.0.0",
+    "prettier": "^3.7.4",
     "prettier-plugin-organize-imports": "^4.0.0",
     "typescript": "^4.9.3"
   },
@@ -46,6 +51,5 @@
   },
   "engines": {
     "node": ">=22"
-  },
-  "version": "0.0.0"
+  }
 }

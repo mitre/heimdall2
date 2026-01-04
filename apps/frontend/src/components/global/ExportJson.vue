@@ -56,7 +56,7 @@ export default class ExportJSON extends Vue {
   }
 
   cleanup_filename(filename: string): string {
-    filename = filename.replace(/\s+/g, '_');
+    filename = filename.replace(/\s+/gv, '_');
     if (filename.substring(filename.length - 6) !== '.json') {
       filename = filename + '.json';
     }
