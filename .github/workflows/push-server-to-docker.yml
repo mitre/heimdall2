@@ -2,7 +2,14 @@ name: Push Heimdall Server to Docker Hub on every merge to master and tag as lat
 
 on:
   push:
-    branches: [master, multi-platform-build]
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      use_build_cloud:
+        description: 'Use Docker Build Cloud (fast, uses minutes)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -22,11 +29,20 @@ jobs:
           username: ${{ vars.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PAT }}
 
-      - name: Set up Docker Buildx
+      - name: Set up QEMU (for emulated builds)
+        if: github.event.inputs.use_build_cloud != 'true'
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx (Build Cloud - Fast)
+        if: github.event.inputs.use_build_cloud == 'true'
         uses: docker/setup-buildx-action@v3
         with:
           driver: cloud
           endpoint: "mitre/mitre-builder"
+
+      - name: Set up Docker Buildx (Standard - Free)
+        if: github.event.inputs.use_build_cloud != 'true'
+        uses: docker/setup-buildx-action@v3
 
       - name: Build and push multi-platform server image
         uses: docker/bake-action@v5
@@ -36,12 +52,6 @@ jobs:
           files: docker-bake.hcl
           targets: server-ci
           push: true
-
-      - name: Create branch-specific tag
-        if: github.ref == 'refs/heads/multi-platform-build'
-        run: |
-          docker buildx imagetools create -t mitre/heimdall2:multi-platform-build \
-            mitre/heimdall2:${{ github.sha }}
 
       - name: Get Docker SHA for Iron Bank
         shell: bash
