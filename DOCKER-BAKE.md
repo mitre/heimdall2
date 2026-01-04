@@ -1,173 +1,228 @@
-# Docker Bake Usage Guide for Heimdall2
+# Building Heimdall Images Locally with Docker Bake
 
-Docker Bake provides a modern, declarative way to build Heimdall images consistently across local development and CI.
+This guide shows developers how to **build** Heimdall Server and Heimdall Lite Docker images from source using Docker Bake.
+
+> **Note:** This is for developers who want to build custom images or test changes. If you just want to **run** Heimdall using pre-built images, see the [README's Docker setup instructions](README.md#heimdall-server---docker) and use `./setup-docker-env.sh` instead.
+
+
+## Prerequisites
+
+1. **Docker Desktop** (macOS) or **Docker Engine** (Linux)
+   - Version 4.x or later (includes buildx)
+   - Docker Desktop on Mac: [Download here](https://www.docker.com/products/docker-desktop)
+
+2. **Verify buildx is available:**
+   ```bash
+   docker buildx version
+   # Should output: github.com/docker/buildx v0.x.x
+   ```
+
+3. **Check available builders:**
+   ```bash
+   docker buildx ls
+   ```
 
 ## Quick Start
 
+### Build Heimdall Server (Full Stack)
+
 ```bash
-# Build server image for local testing (your platform only)
+# Build for your local architecture (Mac M1/M2 = arm64, Intel = amd64)
 docker buildx bake server
-
-# Build lite image for local testing
-docker buildx bake lite
-
-# Build multi-platform server image (amd64 + arm64)
-docker buildx bake server-multiarch
-
-# Build all variants (server + lite)
-docker buildx bake all
 ```
 
-## Available Targets
-
-| Target | Description | Platforms | Tags |
-|--------|-------------|-----------|------|
-| `server` | Full Heimdall (backend + frontend) | Your platform | `:latest`, `:server` |
-| `server-multiarch` | Full Heimdall (multi-arch) | amd64, arm64 | `:latest`, `:${TAG_SUFFIX}` |
-| `lite` | Heimdall Lite (frontend-only) | Your platform | `:lite`, `:lite-latest` |
-| `lite-multiarch` | Heimdall Lite (multi-arch) | amd64, arm64 | `:latest`, `:${TAG_SUFFIX}` |
-| `server-dev` | Development build | Your platform | `:dev` |
-| `server-ci` | CI build with cache | amd64, arm64 | CI tags |
-| `lite-ci` | CI lite build with cache | amd64, arm64 | CI tags |
-
-## Groups
+### Build Heimdall Lite (Frontend Only)
 
 ```bash
-# Build all variants (local platform)
+# Build lite version for your local architecture
+docker buildx bake lite
+```
+
+### Build Everything
+
+```bash
+# Build both server and lite
 docker buildx bake default
 
-# Build all variants (multi-arch)
-docker buildx bake all
+# Or explicitly
+docker buildx bake server lite
 ```
 
-## Local Development
+## Available Build Targets
 
-### Test Changes Quickly
+| Target | What It Builds | Platforms | Use Case |
+|--------|---------------|-----------|----------|
+| `server` | Full Heimdall (backend + frontend) | Your machine only | Local development |
+| `lite` | Frontend-only static site | Your machine only | Local development |
+| `server-multiarch` | Full Heimdall | amd64 + arm64 | Testing multi-platform |
+| `lite-multiarch` | Frontend-only | amd64 + arm64 | Testing multi-platform |
+| `server-dev` | Development build | Your machine only | Development with NODE_ENV=development |
+| `server-ci` | CI build with caching | amd64 + arm64 | Same as CI |
+| `lite-ci` | CI lite with caching | amd64 + arm64 | Same as CI |
+
+## Common Development Workflows
+
+### 1. Quick Local Test (Fastest)
+
+Build for your Mac's architecture only:
+
 ```bash
-# Build server for your Mac (arm64) or Linux (amd64)
+# For M1/M2 Macs (arm64)
 docker buildx bake server
 
-# Run it
-docker run -p 3000:3000 heimdall2:latest
+# Verify the image
+docker images | grep heimdall2
 ```
 
-### Test Multi-Platform Build
+**Build time:** ~5-10 minutes (native build, no emulation)
+
+### 2. Test Multi-Platform Build (Before PR)
+
+Verify your changes work on both Intel and ARM:
+
 ```bash
-# Build for both amd64 and arm64 (slower, uses QEMU)
-docker buildx bake server-multiarch --load
+# Build for both amd64 and arm64
+docker buildx bake server-multiarch
+
+# Note: ARM build will be slower due to QEMU emulation
 ```
 
-### Development Mode
+**Build time:** ~60 minutes (ARM uses emulation)
+
+### 3. Development Mode Build
+
+Build with development settings:
+
 ```bash
-# Build with NODE_ENV=development
+# Uses NODE_ENV=development
 docker buildx bake server-dev
 ```
 
-## Customization
-
-Override variables using `--set`:
+### 4. Build Both Server and Lite
 
 ```bash
-# Use different base container
-docker buildx bake --set "*.args.BASE_CONTAINER=node:22-alpine" server
+# Build everything
+docker buildx bake all
 
-# Use custom yarn mirror
-docker buildx bake --set "*.args.YARNREPO_MIRROR=https://custom-mirror.com" server
-
-# Build with custom tag
-docker buildx bake --set TAG_PREFIX=myregistry/heimdall2 server
-
-# Development build with custom tag
-docker buildx bake --set TAG_PREFIX=test server-dev
+# This builds:
+# - server-multiarch (amd64 + arm64)
+# - lite-multiarch (amd64 + arm64)
 ```
 
-## Push to Registry
+### 5. Test the Exact CI Build
+
+Replicate what runs in GitHub Actions:
 
 ```bash
-# Build and push server image
-docker buildx bake --push server-multiarch
-
-# Build and push all variants
-docker buildx bake --push all
-```
-
-## CI Integration
-
-GitHub Actions uses the same `docker-bake.hcl` with Docker Build Cloud for fast builds:
-
-```yaml
-- uses: docker/bake-action@v5
-  env:
-    TAG_SUFFIX: ${{ github.sha }}
-  with:
-    files: docker-bake.hcl
-    targets: server-ci
-    push: true
-```
-
-This ensures your local builds match CI exactly.
-
-## Testing the Exact CI Build
-
-Replicate what CI runs (requires Docker Build Cloud access):
-
-```bash
+# Set the version tag like CI does
 export TAG_SUFFIX=$(git rev-parse HEAD)
-docker buildx bake server-ci --push
+
+# Build server like CI
+docker buildx bake server-ci
+
+# Build lite like CI
+docker buildx bake lite-ci
 ```
 
-Or test locally without Build Cloud:
+## Advanced Usage
+
+### Custom Base Container
+
+Override the Red Hat UBI base image:
 
 ```bash
-export TAG_SUFFIX=$(git rev-parse HEAD)
+docker buildx bake server \
+  --set "*.args.BASE_CONTAINER=node:22-alpine"
+```
+
+### Custom Yarn Mirror
+
+Use a different npm registry (useful behind corporate firewalls):
+
+```bash
+docker buildx bake server \
+  --set "*.args.YARNREPO_MIRROR=https://registry.your-company.com"
+```
+
+### Build with Custom Tags
+
+```bash
+# Custom tag prefix
+docker buildx bake server \
+  --set TAG_PREFIX=myname/heimdall2
+
+# Results in: myname/heimdall2:latest
+```
+
+### Build and Push to Your Registry
+
+```bash
+# Login first
+docker login
+
+# Build and push
+docker buildx bake server-multiarch --push
+
+# Or to a custom registry
+docker buildx bake server-multiarch \
+  --set DOCKER_HUB_REPO=your-registry.com/heimdall2 \
+  --push
+```
+
+### Inspect Build Configuration
+
+See what will be built without actually building:
+
+```bash
+# Show full config for server target
+docker buildx bake server --print
+
+# Show all targets
+docker buildx bake --print
+```
+
+## Using Docker Build Cloud (Fast Builds)
+
+If you have access to the MITRE Docker Build Cloud:
+
+### One-Time Setup
+
+```bash
+# Create a cloud builder
+docker buildx create --driver cloud mitre/mitre-builder --name cloud
+
+# Use it
+docker buildx use cloud
+```
+
+### Build with Build Cloud
+
+```bash
+# Now all builds use native ARM in the cloud (fast!)
+docker buildx bake server-multiarch
+
+# Build time: ~10 minutes instead of 60
+```
+
+### Switch Back to Local
+
+```bash
+# Use default builder (QEMU emulation)
+docker buildx use default
+
+# Builds use local QEMU again
 docker buildx bake server-multiarch
 ```
 
-## Advantages over Previous Workflow
+### One-Off Build Cloud Build
 
-| Feature | Old (3-job workflow) | Docker Bake |
-|---------|---------------------|-------------|
-| Multi-platform | Separate jobs + manual merge | **Single command** ✅ |
-| Build time | 60+ min (QEMU) | **5-10 min (Build Cloud)** ✅ |
-| Local/CI parity | Different approaches | **Same config** ✅ |
-| Configuration | Scattered in YAML | **Single HCL file** ✅ |
-| Maintainability | 3 jobs to manage | **1 job** ✅ |
-
-## Requirements
-
-- Docker Desktop 4.x+ (includes buildx)
-- OR Docker Engine with buildx plugin
-
-Check if available:
-```bash
-docker buildx version
-```
-
-## Troubleshooting
-
-### Multi-platform builds are slow
-If you don't have Docker Build Cloud access, multi-platform builds use QEMU emulation which is slow. Build for your local platform only:
+Without changing your default builder:
 
 ```bash
-docker buildx bake server
+# Just for this build, use cloud
+docker buildx bake --builder cloud server-multiarch
 ```
 
-### Can't push to registry
-Make sure you're logged in:
+## Build Configuration File
 
-```bash
-docker login
-```
-
-### Need to force rebuild
-Clear BuildKit cache:
-
-```bash
-docker buildx prune -af
-```
-
-## See Also
-
-- `docker-bake.hcl` - Build configuration
-- [Docker Bake Documentation](https://docs.docker.com/build/bake/)
-- [Docker Build Cloud](https://docs.docker.com/build/cloud/)
+All build targets are defined in `docker-bake.hcl` at the repository root. 
