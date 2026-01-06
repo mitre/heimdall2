@@ -19024,9 +19024,9 @@ send@~0.19.0, send@~0.19.1:
     statuses "~2.0.2"
 
 sequelize-cli@^6.2.0:
-  version "6.6.3"
-  resolved "https://registry.npmjs.org/sequelize-cli/-/sequelize-cli-6.6.3.tgz#faf041e009b6c0d30d84d290e6c4d485ac8cacbd"
-  integrity sha512-1YYPrcSRt/bpMDDSKM5ubY1mnJ2TEwIaGZcqITw4hLtGtE64nIqaBnLtMvH8VKHg6FbWpXTiFNc2mS/BtQCXZw==
+  version "6.6.5"
+  resolved "https://registry.yarnpkg.com/sequelize-cli/-/sequelize-cli-6.6.5.tgz#5377d42116f10c793780132f7423ffc5285711fb"
+  integrity sha512-DqyISCULOaEbTM+rRQH4YvcUWeOC1XDiSKcjsC6TfAnT7W837mNkChJhtB/Z4FdCFHRCojmiP7zsrA4pARmacA==
   dependencies:
     fs-extra "^9.1.0"
     js-beautify "1.15.4"
