@@ -1,6 +1,6 @@
 <template>
   <v-stepper v-model="step" vertical class="elevation-0">
-    <v-stepper-step :complete="!!assumedRole" step="1">
+    <v-stepper-step id="step-1" :complete="!!assumedRole" step="1">
       Account Credentials
     </v-stepper-step>
 
@@ -13,7 +13,11 @@
       @show-help="showHelp = true"
     />
 
-    <v-stepper-step :complete="!!assumedRole && assumedRole.from_mfa" step="2">
+    <v-stepper-step
+      id="step-2"
+      :complete="!!assumedRole && assumedRole.from_mfa"
+      step="2"
+    >
       MFA Authorization
     </v-stepper-step>
 
@@ -24,7 +28,7 @@
       @exit-mfa="handleCancelMfa"
     />
 
-    <v-stepper-step step="3"> Browse Bucket </v-stepper-step>
+    <v-stepper-step id="step-3" step="3"> Browse Bucket </v-stepper-step>
 
     <FileList
       :auth="assumedRole"
