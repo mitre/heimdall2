@@ -5312,9 +5312,9 @@
     "@types/node" "*"
 
 "@types/node@*", "@types/node@^10.1.0", "@types/node@^22.10.7", "@types/node@^25.0.0":
-  version "22.19.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.19.3.tgz#8dfde7630d7a8528dc9b34db23d34f764467c02c"
-  integrity sha512-1N9SBnWYOJTrNZCdh/yJE+t910Y128BoyY+zBLWhL3r0TYzlTmFdXrPwHL9DyFZmlEXNQQolTZh3KHV31QDhyA==
+  version "22.19.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.19.4.tgz#0bbddb9c5809cf67d66e2baeb64e0849ecb5f8a1"
+  integrity sha512-0yy7kLo3lc2S+O1wsTqWBjU8CX1OExoIdLWz0EM9i3Tqj9qXWG8yjDEN2ZB/coCHc0j/OQXc81gwJYHX7+uTMg==
   dependencies:
     undici-types "~6.21.0"
 
