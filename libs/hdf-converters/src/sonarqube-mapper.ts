@@ -88,6 +88,26 @@ type SonarqubeVersionMapping = {
   [SonarqubeVersion.Twenty_five]: {issue: Issue_10; ruleInformation: Rule_25};
 };
 
+function isBeforeSonarqubeVersion(
+  version: string,
+  comparisonVersion: string
+): boolean {
+  const v = coerce(version);
+  if (v === null) {
+    throw new Error(
+      `Was not able to coerce ${version} into a semver compatible version string`
+    );
+  }
+  const cv = coerce(comparisonVersion);
+  if (cv === null) {
+    throw new Error(
+      `Was not able to coerce ${comparisonVersion} into a semver compatible version string`
+    );
+  }
+  return lt(v, cv);
+}
+
+
 // many of these attributes show up in the API example responses, but not in our locally generated samples.
 // a few of them are mentioned in the changelog, but do not show up in samples or the examples
 // several of these attributes show up in sonarcloud (which is marked as major version 8) even though the documentation says that they should first only show up in latter versions.  to that end, I've marked them as optional for lack of any other action we can take.
@@ -822,7 +842,7 @@ export class SonarqubeResults {
     }
   }
 
-  async getSearchResults<T extends SonarqubeVersion>(): Promise<Search<T>> {
+  async getSearchResults<T extends SonarqubeVersion>(sonarqubeVersion: string): Promise<Search<T>> {
     let paging = true;
     let page = 1;
     const results: Search<T> = {
@@ -842,7 +862,7 @@ export class SonarqubeResults {
             headers: {Authorization: `Bearer ${this.userToken}`}
           }),
           params: {
-            componentKeys: this.projectKey,
+            [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0') ? 'componentKeys' : 'components']: this.projectKey,
             statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED',
             p: page,
             ...(this.branchName && {branch: this.branchName}),
@@ -1009,7 +1029,7 @@ export class SonarqubeResults {
   async generateHdf<T extends SonarqubeVersion>(
     sonarqubeVersion: string
   ): Promise<ExecJSON.Execution> {
-    const searchResults = await this.getSearchResults<T>();
+    const searchResults = await this.getSearchResults<T>(sonarqubeVersion);
     logger.debug(`Got ${searchResults.issues.length} issues`);
     const codeSnippets = await this.getCodeSnippets<T>(searchResults.issues);
     logger.debug(`Got ${codeSnippets.length} code snippets`);
