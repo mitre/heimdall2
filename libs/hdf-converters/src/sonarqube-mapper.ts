@@ -843,6 +843,28 @@ export class SonarqubeResults {
   }
 
   async getSearchResults<T extends SonarqubeVersion>(sonarqubeVersion: string): Promise<Search<T>> {
+    const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
+    const PAGE_SIZE = 100;
+    const createSearch = async (page: number) => {
+      return axios
+      .get<Search<T>>(`${this.sonarqubeHost}/api/issues/search`, {
+        ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
+          auth: {username: this.userToken, password: ''}
+        }),
+        ...(this.authMethod === AuthenticationMethod.BearerToken && {
+          headers: {Authorization: `Bearer ${this.userToken}`}
+        }),
+        params: {
+          [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0') ? 'componentKeys' : 'components']: this.projectKey,
+          statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED', // resolved is a manual designation implying that the user believes that the issue will be closed on next scan; however, for now it should still be considered an open finding for our purposes since at time of scan it was still a problem
+          p: page,
+          ps: PAGE_SIZE,
+          ...(this.branchName && {branch: this.branchName}),
+          ...(this.pullRequestID && {pullRequest: this.pullRequestID})
+        }
+      });
+    };
+
     let paging = true;
     let page = 1;
     const results: Search<T> = {
@@ -853,22 +875,7 @@ export class SonarqubeResults {
       paging: {pageIndex: 0, pageSize: 0, total: 0}
     };
     while (paging) {
-      await axios
-        .get<Search<T>>(`${this.sonarqubeHost}/api/issues/search`, {
-          ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
-            auth: {username: this.userToken, password: ''}
-          }),
-          ...(this.authMethod === AuthenticationMethod.BearerToken && {
-            headers: {Authorization: `Bearer ${this.userToken}`}
-          }),
-          params: {
-            [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0') ? 'componentKeys' : 'components']: this.projectKey,
-            statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED',
-            p: page,
-            ...(this.branchName && {branch: this.branchName}),
-            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
-          }
-        })
+      await createSearch(page)
         .then(({data}) => {
           _.mergeWith(results, data, (objValue, srcValue) =>
             _.isArray(objValue) ? objValue.concat(srcValue) : undefined
@@ -881,6 +888,10 @@ export class SonarqubeResults {
           this.logAxiosError(e);
           return Promise.reject(new Error('Failed at getting Sonarqube issue'));
         });
+      if (page * PAGE_SIZE > UPPER_LIMIT) {
+        logger.warn(`Exceeded SonarQube cap of ${UPPER_LIMIT} results for a given search.  Remaining findings have been truncated.`);
+        paging = false;
+      }
     }
     return results;
   }
