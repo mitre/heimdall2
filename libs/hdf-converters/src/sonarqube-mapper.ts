@@ -810,7 +810,7 @@ export class SonarqubeResults {
     if (e.response) {
       logger.debug('response');
       logger.debug(e.response.status);
-      logger.debug(e.response.data);
+      logger.debug(inspect(e.response.data, {depth: 3}));
     }
     if (e.request) {
       logger.debug('request');
