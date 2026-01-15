@@ -159,7 +159,7 @@ type Issue_8 = {
   severity: string;
   status: string;
   tags: string[];
-  textRange: {
+  textRange?: {
     endLine: number;
     endOffset: number;
     startLine: number;
@@ -969,9 +969,9 @@ export class SonarqubeResults {
     );
     const fullFiles = Object.fromEntries(_.zip(components, fullFilePromises));
 
-    const snippets = issues.map((issue) =>
-      issue.flows.length
-        ? issue.flows
+    const snippets = issues.map((issue) => {
+      if (issue.flows.length) {
+        return issue.flows
             .flatMap((flow) =>
               flow.locations.map((location) =>
                 getContextualizedSnippet(
@@ -984,12 +984,17 @@ export class SonarqubeResults {
               )
             )
             .join('\n')
-        : getContextualizedSnippet(
+      } else if (issue.textRange) {
+        return getContextualizedSnippet(
             fullFiles,
             issue.component,
             issue.textRange.startLine,
             issue.textRange.endLine
           )
+      } else {
+        return '';
+      }
+    }
     );
     return snippets;
   }
