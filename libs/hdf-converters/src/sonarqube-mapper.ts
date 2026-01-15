@@ -85,7 +85,7 @@ type SonarqubeVersionMapping = {
   [SonarqubeVersion.Eight]: {issue: Issue_8; ruleInformation: Rule_8};
   [SonarqubeVersion.Nine]: {issue: Issue_9; ruleInformation: Rule_9};
   [SonarqubeVersion.Ten]: {issue: Issue_10; ruleInformation: Rule_10};
-  [SonarqubeVersion.Twenty_five]: {issue: Issue_10; ruleInformation: Rule_25};
+  [SonarqubeVersion.Twenty_five]: {issue: Issue_25; ruleInformation: Rule_25};
 };
 
 function isBeforeSonarqubeVersion(
@@ -178,6 +178,12 @@ type Issue_9 = Omit<Issue_8, 'fromHotspot'> & {
 type Issue_10 = Issue_9 & {
   codeVariants: string[];
   prioritizedRule: boolean;
+};
+
+type Issue_25 = Issue_10 & {
+  fromSonarQubeUpdate: boolean;
+  internalTags: unknown[];
+  linkedTicketStatus: string;
 };
 
 type Search<T extends SonarqubeVersion> = {
