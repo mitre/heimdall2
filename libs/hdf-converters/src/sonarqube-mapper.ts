@@ -856,7 +856,8 @@ export class SonarqubeResults {
         }),
         params: {
           [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0') ? 'componentKeys' : 'components']: this.projectKey,
-          statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED', // resolved is a manual designation implying that the user believes that the issue will be closed on next scan; however, for now it should still be considered an open finding for our purposes since at time of scan it was still a problem
+          ...(isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED'}), // resolved is a manual designation implying that the user believes that the issue will be closed on next scan; however, for now it should still be considered an open finding for our purposes since at time of scan it was still a problem
+          ...(!isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {issueStatuses: 'OPEN,CONFIRMED,ACCEPTED,IN_SANDBOX'}),
           p: page,
           ps: PAGE_SIZE,
           ...(this.branchName && {branch: this.branchName}),
