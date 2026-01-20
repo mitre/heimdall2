@@ -9,7 +9,7 @@ export type SplunkControl = {
   descriptions: Record<string, string>[] | ILookupPathFH;
   id: string;
   impact: number;
-  refs: any[] | ILookupPathFH;
+  refs: any[];
   results?: HDFControlSegment[] | ILookupPathFH;
   source_location?: any;
   tags: Tags;
