@@ -672,3 +672,7 @@ export function setupControlStatus(control: SegmentedControl) {
   }
   return status;
 }
+
+export function setupWorkflow(control: SegmentedControl) {
+  return control.result.status === 'passed' ? 'RESOLVED' : 'NEW';
+}
