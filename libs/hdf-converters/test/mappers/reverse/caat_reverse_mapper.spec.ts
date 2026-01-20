@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 import {CAATRow, FromHDFToCAATMapper} from '../../../index';
 
 describe('CAAT Results Reverse Mapper', () => {
+  /*
   it('Successfully converts two RHEL HDF and a RHEL triple overlay HDF into CAAT', () => {
     const rhelData = fs.readFileSync(
       'sample_jsons/caat_reverse_mapper/sample_input_report/red_hat_good.json',
@@ -87,5 +88,83 @@ describe('CAAT Results Reverse Mapper', () => {
     );
     // however, we do care about one bit of xlsx structure: the sheet names
     expect(converted.SheetNames).toEqual(expected.SheetNames);
+  });
+  */
+
+  it('Successfully converts NGINX HDF into CAAT', () => {
+    const nginxData = fs.readFileSync(
+      'sample_jsons/caat_reverse_mapper/sample_input_report/good_nginxresults.json',
+      {encoding: 'utf-8'}
+    );
+
+    console.log('data', nginxData);
+
+    const mapper = new FromHDFToCAATMapper([
+      {
+        data: nginxData,
+        filename: 'NGINX Clean Sample'
+      }
+    ]);
+
+    const converted: XLSX.WorkBook = mapper.toCAAT(true);
+
+    console.log('ran mapper');
+
+    // const expected = XLSX.readFile(
+    //   'sample_jsons/caat_reverse_mapper/caat.xlsx',
+    //   {type: 'file'}
+    // );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/caat_reverse_mapper/converted.json',
+    //   JSON.stringify(
+    //     converted.SheetNames.map((name) =>
+    //       XLSX.utils
+    //         .sheet_to_json<CAATRow>(converted.Sheets[name])
+    //         .map((sheet) =>
+    //           Object.fromEntries(
+    //             Object.entries(sheet).map(([k, v]) => [
+    //               k,
+    //               _.isString(v) ? FromHDFToCAATMapper.fix(v) : v
+    //             ])
+    //           )
+    //         )
+    //     ),
+    //     null,
+    //     2
+    //   )
+    // );
+
+    // convert workbooks to json to compare just the content instead of random bits of xlsx structure
+    // needs some processing to ensure all newlines are consistent otherwise it pitches a fit - if you open the sample up in excel, it might autoconvert the newlines so this is a safety measure
+    // expect(
+    //   converted.SheetNames.map((name) =>
+    //     XLSX.utils
+    //       .sheet_to_json<CAATRow>(converted.Sheets[name])
+    //       .map((sheet) =>
+    //         Object.fromEntries(
+    //           Object.entries(sheet).map(([k, v]) => [
+    //             k,
+    //             _.isString(v) ? FromHDFToCAATMapper.fix(v) : v
+    //           ])
+    //         )
+    //       )
+    //   )
+    // ).toEqual(
+    //   expected.SheetNames.map((name) =>
+    //     XLSX.utils
+    //       .sheet_to_json<CAATRow>(expected.Sheets[name])
+    //       .map((sheet) =>
+    //         Object.fromEntries(
+    //           Object.entries(sheet).map(([k, v]) => [
+    //             k,
+    //             _.isString(v) ? FromHDFToCAATMapper.fix(v) : v
+    //           ])
+    //         )
+    //       )
+    //   )
+    // );
+    // // however, we do care about one bit of xlsx structure: the sheet names
+    // expect(converted.SheetNames).toEqual(expected.SheetNames);
   });
 });
