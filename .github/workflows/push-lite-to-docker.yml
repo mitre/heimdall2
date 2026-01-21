@@ -53,7 +53,7 @@ jobs:
           targets: lite-ci
           push: true
 
-      - name: Get Docker SHA for Iron Bank
+      - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment
         shell: bash
         id: get-docker-sha
         run: |
