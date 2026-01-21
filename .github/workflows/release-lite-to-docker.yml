@@ -20,7 +20,7 @@ permissions:
 jobs:
   docker:
     name: Build and Push Release to Docker Hub
-    runs-on: ubuntu-latest
+    runs-on: ubuntu:24.04
 
     steps:
       - name: Run string replace to remove the v from the version number before using it in the docker tag
