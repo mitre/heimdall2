@@ -26,10 +26,6 @@ variable "YARNREPO_MIRROR" {
   default = "https://registry.npmjs.org"
 }
 
-# Detect local platform (macOS needs linux override)
-variable "LOCAL_PLATFORM" {
-  default = regex_replace("${BAKE_LOCAL_PLATFORM}", "^(darwin)", "linux")
-}
 
 # Common configuration shared by all targets
 target "_common" {
@@ -64,28 +60,18 @@ target "_common_lite" {
   }
 }
 
-# Group: Build all variants (local platform)
+# Group: Build all variants (multi-arch)
 group "default" {
   targets = ["server", "lite"]
 }
 
-# Group: Build all with multi-arch
-group "all" {
-  targets = ["server-multiarch", "lite-multiarch"]
+# Group: Build single-arch variants for all platforms
+group "all-single-arch" {
+  targets = ["server-amd64", "server-arm64", "lite-amd64", "lite-arm64"]
 }
 
-# Heimdall Server (full) - Local platform only
+# Heimdall Server (full) - Multi-architecture (default)
 target "server" {
-  inherits = ["_common"]
-  tags = [
-    "${TAG_PREFIX}:latest",
-    "${TAG_PREFIX}:server"
-  ]
-  platforms = ["${LOCAL_PLATFORM}"]
-}
-
-# Heimdall Server (full) - Multi-architecture
-target "server-multiarch" {
   inherits = ["_common"]
   tags = concat(
     [
@@ -96,18 +82,28 @@ target "server-multiarch" {
   platforms = ["linux/amd64", "linux/arm64"]
 }
 
-# Heimdall Lite (frontend-only) - Local platform only
-target "lite" {
-  inherits = ["_common_lite"]
+# Heimdall Server (full) - AMD64 only
+target "server-amd64" {
+  inherits = ["_common"]
   tags = [
-    "${TAG_PREFIX}:lite",
-    "${TAG_PREFIX}:lite-latest"
+    "${TAG_PREFIX}:latest-amd64",
+    "${TAG_PREFIX}:server-amd64"
   ]
-  platforms = ["${LOCAL_PLATFORM}"]
+  platforms = ["linux/amd64"]
 }
 
-# Heimdall Lite (frontend-only) - Multi-architecture
-target "lite-multiarch" {
+# Heimdall Server (full) - ARM64 only
+target "server-arm64" {
+  inherits = ["_common"]
+  tags = [
+    "${TAG_PREFIX}:latest-arm64",
+    "${TAG_PREFIX}:server-arm64"
+  ]
+  platforms = ["linux/arm64"]
+}
+
+# Heimdall Lite (frontend-only) - Multi-architecture (default)
+target "lite" {
   inherits = ["_common_lite"]
   tags = concat(
     [
@@ -118,6 +114,26 @@ target "lite-multiarch" {
   platforms = ["linux/amd64", "linux/arm64"]
 }
 
+# Heimdall Lite (frontend-only) - AMD64 only
+target "lite-amd64" {
+  inherits = ["_common_lite"]
+  tags = [
+    "${TAG_PREFIX}:lite-amd64",
+    "${TAG_PREFIX}:lite-latest-amd64"
+  ]
+  platforms = ["linux/amd64"]
+}
+
+# Heimdall Lite (frontend-only) - ARM64 only
+target "lite-arm64" {
+  inherits = ["_common_lite"]
+  tags = [
+    "${TAG_PREFIX}:lite-arm64",
+    "${TAG_PREFIX}:lite-latest-arm64"
+  ]
+  platforms = ["linux/arm64"]
+}
+
 # Development target with custom NODE_ENV
 target "server-dev" {
   inherits = ["_common"]
@@ -125,19 +141,19 @@ target "server-dev" {
     NODE_ENV = "development"
   }
   tags = ["${TAG_PREFIX}:dev"]
-  platforms = ["${LOCAL_PLATFORM}"]
+  platforms = ["linux/amd64"]
 }
 
 # CI target for server with GitHub Actions cache
 target "server-ci" {
-  inherits = ["server-multiarch"]
+  inherits = ["server"]
   cache-from = ["type=gha,scope=server"]
   cache-to = ["type=gha,mode=max,scope=server"]
 }
 
 # CI target for lite with GitHub Actions cache
 target "lite-ci" {
-  inherits = ["lite-multiarch"]
+  inherits = ["lite"]
   cache-from = ["type=gha,scope=lite"]
   cache-to = ["type=gha,mode=max,scope=lite"]
 }
