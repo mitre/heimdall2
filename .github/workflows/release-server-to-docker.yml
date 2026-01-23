@@ -52,7 +52,7 @@ jobs:
           driver: cloud
           endpoint: "mitre/mitre-builder"
 
-      - name: Set up Docker Buildx (Standard - Free)
+      - name: Set up Docker Buildx (local on GitHub runner)
         if: github.event.inputs.use_build_cloud != 'true'
         uses: docker/setup-buildx-action@v3
 
