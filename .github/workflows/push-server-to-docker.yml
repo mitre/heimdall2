@@ -29,20 +29,20 @@ jobs:
           username: ${{ vars.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PAT }}
 
-      - name: Set up QEMU (for emulated builds)
+      - name: Set up QEMU
         if: github.event.inputs.use_build_cloud != 'true'
         uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx (Build Cloud - Fast)
+      - name: Set up Docker Buildx (Local)
+        if: github.event.inputs.use_build_cloud != 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up Docker Buildx (Docker Build Cloud)
         if: github.event.inputs.use_build_cloud == 'true'
         uses: docker/setup-buildx-action@v3
         with:
           driver: cloud
           endpoint: "mitre/mitre-builder"
-
-      - name: Set up Docker Buildx (local on GitHub runner)
-        if: github.event.inputs.use_build_cloud != 'true'
-        uses: docker/setup-buildx-action@v3
 
       - name: Build and push multi-platform server image
         uses: docker/bake-action@v5
@@ -50,7 +50,7 @@ jobs:
           TAG_SUFFIX: ${{ github.sha }}
         with:
           files: docker-bake.hcl
-          targets: server-ci
+          targets: server
           push: true
 
       - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment

@@ -38,7 +38,7 @@ target "_common" {
   labels = {
     "org.opencontainers.image.source" = "https://github.com/mitre/heimdall2"
     "org.opencontainers.image.licenses" = "Apache-2.0"
-    "org.opencontainers.image.description" = "Heimdall2 - Security Automation Framework"
+    "org.opencontainers.image.description" = "Heimdall - Security Automation Framework"
     "org.opencontainers.image.created" = "${timestamp()}"
   }
 }
@@ -85,20 +85,24 @@ target "server" {
 # Heimdall Server (full) - AMD64 only
 target "server-amd64" {
   inherits = ["_common"]
-  tags = [
-    "${TAG_PREFIX}:latest-amd64",
-    "${TAG_PREFIX}:server-amd64"
-  ]
+  tags = concat(
+    [
+      "${DOCKER_HUB_REPO}:amd64"
+    ],
+    TAG_SUFFIX != "" ? ["${DOCKER_HUB_REPO}:${TAG_SUFFIX}-amd64"] : []
+  )
   platforms = ["linux/amd64"]
 }
 
 # Heimdall Server (full) - ARM64 only
 target "server-arm64" {
   inherits = ["_common"]
-  tags = [
-    "${TAG_PREFIX}:latest-arm64",
-    "${TAG_PREFIX}:server-arm64"
-  ]
+  tags = concat(
+    [
+      "${DOCKER_HUB_REPO}:arm64"
+    ],
+    TAG_SUFFIX != "" ? ["${DOCKER_HUB_REPO}:${TAG_SUFFIX}-arm64"] : []
+  )
   platforms = ["linux/arm64"]
 }
 
@@ -117,43 +121,24 @@ target "lite" {
 # Heimdall Lite (frontend-only) - AMD64 only
 target "lite-amd64" {
   inherits = ["_common_lite"]
-  tags = [
-    "${TAG_PREFIX}:lite-amd64",
-    "${TAG_PREFIX}:lite-latest-amd64"
-  ]
+  tags = concat(
+    [
+      "mitre/heimdall-lite:amd64"
+    ],
+    TAG_SUFFIX != "" ? ["mitre/heimdall-lite:${TAG_SUFFIX}-amd64"] : []
+  )
   platforms = ["linux/amd64"]
 }
 
 # Heimdall Lite (frontend-only) - ARM64 only
 target "lite-arm64" {
   inherits = ["_common_lite"]
-  tags = [
-    "${TAG_PREFIX}:lite-arm64",
-    "${TAG_PREFIX}:lite-latest-arm64"
-  ]
+  tags = concat(
+    [
+      "mitre/heimdall-lite:arm64"
+    ],
+    TAG_SUFFIX != "" ? ["mitre/heimdall-lite:${TAG_SUFFIX}-arm64"] : []
+  )
   platforms = ["linux/arm64"]
 }
 
-# Development target with custom NODE_ENV
-target "server-dev" {
-  inherits = ["_common"]
-  args = {
-    NODE_ENV = "development"
-  }
-  tags = ["${TAG_PREFIX}:dev"]
-  platforms = ["linux/amd64"]
-}
-
-# CI target for server with GitHub Actions cache
-target "server-ci" {
-  inherits = ["server"]
-  cache-from = ["type=gha,scope=server"]
-  cache-to = ["type=gha,mode=max,scope=server"]
-}
-
-# CI target for lite with GitHub Actions cache
-target "lite-ci" {
-  inherits = ["lite"]
-  cache-from = ["type=gha,scope=lite"]
-  cache-to = ["type=gha,mode=max,scope=lite"]
-}
