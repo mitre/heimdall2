@@ -446,25 +446,14 @@
     "@smithy/util-utf8" "^4.2.0"
     tslib "^2.6.2"
 
-<<<<<<< HEAD
-"@aws-sdk/client-sts@^3.427.0":
-  version "3.947.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.947.0.tgz#6e04506d559f4b3356e6fd3675cf71c629af95ed"
-  integrity sha512-a3Uk6R4vJbTp0yYtU+9tqq+QljHnjpuQsesDyWB6GbSGpituuHupLJK695ex/lrMhB6gsOlfcJ92MVSZgJANWA==
-=======
 "@aws-sdk/client-sso@3.947.0":
   version "3.947.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-sso/-/client-sso-3.947.0.tgz#e14abf800090f47cb41a037a7a5e12dd93e16dd5"
   integrity sha512-sDwcO8SP290WSErY1S8pz8hTafeghKmmWjNVks86jDK30wx62CfazOTeU70IpWgrUBEygyXk/zPogHsUMbW2Rg==
->>>>>>> adb72f36 (Bump @aws-sdk/client-sts from 3.946.0 to 3.947.0)
   dependencies:
     "@aws-crypto/sha256-browser" "5.2.0"
     "@aws-crypto/sha256-js" "5.2.0"
     "@aws-sdk/core" "3.947.0"
-<<<<<<< HEAD
-    "@aws-sdk/credential-provider-node" "3.947.0"
-=======
->>>>>>> adb72f36 (Bump @aws-sdk/client-sts from 3.946.0 to 3.947.0)
     "@aws-sdk/middleware-host-header" "3.936.0"
     "@aws-sdk/middleware-logger" "3.936.0"
     "@aws-sdk/middleware-recursion-detection" "3.936.0"
