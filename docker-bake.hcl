@@ -55,7 +55,7 @@ target "_common_lite" {
   labels = {
     "org.opencontainers.image.source" = "https://github.com/mitre/heimdall2"
     "org.opencontainers.image.licenses" = "Apache-2.0"
-    "org.opencontainers.image.description" = "Heimdall Lite - Security Automation Framework (Frontend Only)"
+    "org.opencontainers.image.description" = "Heimdall Lite - Security Automation Framework"
     "org.opencontainers.image.created" = "${timestamp()}"
   }
 }
