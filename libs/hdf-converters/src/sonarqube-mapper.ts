@@ -1,4 +1,5 @@
-import axios, {AxiosError} from 'axios';
+import axios, {AxiosError, AxiosInstance} from 'axios';
+import * as rax from 'retry-axios';
 import * as _ from 'lodash';
 import {coerce, lt} from 'semver';
 import {ExecJSON} from 'inspecjs';
@@ -822,6 +823,7 @@ enum AuthenticationMethod {
 
 export class SonarqubeResults {
   authMethod?: AuthenticationMethod;
+  axiosClient: AxiosInstance;
   constructor(
     public readonly sonarqubeHost: string,
     public readonly projectKey: string,
@@ -830,7 +832,22 @@ export class SonarqubeResults {
     public readonly pullRequestID?: string,
     public readonly organization?: string, // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
     public readonly withRaw = false
-  ) {}
+  ) {
+    this.axiosClient = axios.create();
+    const MAX_RETRIES = 5;
+    this.axiosClient.defaults.raxConfig = {
+      retry: MAX_RETRIES,
+      onError: async (e) => {
+        const cfg = rax.getConfig(e);
+        if (cfg?.currentRetryAttempt !== null && cfg?.currentRetryAttempt !== undefined) {
+          logger.debug(`Error occurred: retry attempt #${cfg?.currentRetryAttempt + 1}/${MAX_RETRIES} will happen after backoff`);
+        } else {
+          this.logAxiosError(e);
+        }
+      },
+    };
+    const interceptorId = rax.attach(this.axiosClient);
+  }
 
   logAxiosError(e: AxiosError): void {
     if (e.response) {
@@ -852,7 +869,7 @@ export class SonarqubeResults {
     const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
     const PAGE_SIZE = 100;
     const createSearch = async (page: number) => {
-      return axios
+      return this.axiosClient
       .get<Search<T>>(`${this.sonarqubeHost}/api/issues/search`, {
         ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
           auth: {username: this.userToken, password: ''}
@@ -907,7 +924,7 @@ export class SonarqubeResults {
     issues: SonarqubeVersionMapping[T]['issue'][]
   ): Promise<string[]> {
     const getFullFile = async (component: string): Promise<string> => {
-      return axios
+      return this.axiosClient
         .get<string>(`${this.sonarqubeHost}/api/sources/raw`, {
           ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
             auth: {username: this.userToken, password: ''}
@@ -1006,7 +1023,7 @@ export class SonarqubeResults {
       rule: string,
       organization?: string
     ): Promise<Rule<T>> =>
-      axios
+      this.axiosClient
         .get<Rule<T>>(`${this.sonarqubeHost}/api/rules/show`, {
           ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
             auth: {username: this.userToken, password: ''}
@@ -1078,7 +1095,7 @@ export class SonarqubeResults {
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    const sonarqubeVersion = await axios
+    const sonarqubeVersion = await this.axiosClient
       .get<string>(`${this.sonarqubeHost}/api/server/version`)
       .then(({data}) => data);
     logger.debug(
