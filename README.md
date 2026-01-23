@@ -534,6 +534,10 @@ The first command will start an instance of Heimdall Server and exposes addition
 > [!NOTE] 
 > When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes.
 
+#### Building the Heimdall Docker containers locally
+
+See the [wiki](https://github.com/mitre/heimdall2/wiki/Docker-Bake).
+
 ### Creating a Release
 
 **Note:** This action requires appropriate privileges on the repository to perform.
