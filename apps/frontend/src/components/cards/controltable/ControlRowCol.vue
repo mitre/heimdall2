@@ -38,6 +38,10 @@
         class="pa-2 mono pre-formatted"
         v-html="sanitize_html(resultMessage.trim())"
       />
+      <v-chip v-if="componentRef" :to="{name: 'sbom', query: {componentRef}}">
+        See more component details
+        <v-icon right> mdi-view-list-outline </v-icon>
+      </v-chip>
       <!-- eslint-enable vue/no-v-html -->
     </v-col>
     <v-col v-if="result['backtrace'] !== undefined" cols="12" class="pa-2">
@@ -82,6 +86,16 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
     return this.result.skip_message && this.result.message
       ? `-Message-\n${this.result.message}\n\n-Skip Message-\n${this.result.skip_message}`
       : this.result.message || this.result.skip_message;
+  }
+
+  get componentRef(): string | null {
+    // Checks to see if the result represents a component
+    // from an SBOM and contains a bom-ref
+    const matches = this.result.message?.match(/- Bom-ref: (?<ref>.+)$/m);
+    if (matches && matches.groups?.ref) {
+      return matches.groups.ref;
+    }
+    return null;
   }
 }
 </script>

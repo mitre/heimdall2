@@ -4,6 +4,7 @@ import {EvaluationModule} from '@/store/evaluations';
 import {ServerModule} from '@/store/server';
 import Admin from '@/views/Admin.vue';
 import Compare from '@/views/Compare.vue';
+import Sbom from '@/views/Sbom.vue';
 import Groups from '@/views/Groups.vue';
 import Landing from '@/views/Landing.vue';
 import Login from '@/views/Login.vue';
@@ -43,6 +44,12 @@ const router = new Router({
           meta: {requiresAuth: true, hasIdParams: true}
         }
       ]
+    },
+    {
+      path: '/sbom-view',
+      name: 'sbom',
+      component: Sbom,
+      meta: {requiresAuth: true, hasIdParams: true}
     },
     {
       path: '/',
