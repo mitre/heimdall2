@@ -2,6 +2,7 @@
   <div>
     <v-form>
       <v-text-field
+        ref="access_Key"
         v-model="accesskey"
         label="Access Token (Key)"
         for="accesskey_field"
@@ -9,15 +10,19 @@
         data-cy="tenableaccesskey"
       />
       <v-text-field
+        ref="secret_Key"
         v-model="secretkey"
         label="Secret Token (Key)"
         for="secretkey_field"
-        type="password"
+        :type="showSecret ? 'text' : 'password'"
         lazy-validation="lazy"
+        :append-icon="showSecret ? 'mdi-eye' : 'mdi-eye-off'"
         :rules="[reqRule]"
         data-cy="tenablesecretkey"
+        @click:append="showSecret = !showSecret"
       />
       <v-text-field
+        ref="hostname_value"
         v-model="hostname"
         label="Hostname"
         for="hostname_field"
@@ -47,6 +52,7 @@
 
 <script lang="ts">
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {AuthInfo, TenableUtil} from '@/utilities/tenable_util';
@@ -69,13 +75,40 @@ export default class AuthStep extends Vue {
   accesskey = '';
   secretkey = '';
   hostname = '';
+  showSecret = false;
+
+  $refs!: {
+    access_Key: HTMLInputElement;
+    secret_Key: HTMLAnchorElement;
+    hostname_value: HTMLAnchorElement;
+  };
 
   // Form required field rule
   reqRule = requireFieldRule;
 
   async login(): Promise<void> {
-    if (!/^https?:\/\//.test(this.hostname)) {
+    if (!this.accesskey) {
+      SnackbarModule.failure('The Access Token (key) is required');
+      this.$refs.access_Key.focus();
+      return;
+    } else if (!this.secretkey) {
+      SnackbarModule.failure('The Secret Token (key) is required');
+      this.$refs.secret_Key.focus();
+      return;
+    } else if (!this.hostname) {
+      SnackbarModule.failure('The Tenable.Sc URL is required');
+      this.$refs.hostname_value.focus();
+      return;
+    }
+
+    // If the protocol (https) is missing add it
+    if (!/^https?:\/\//v.test(this.hostname)) {
       this.hostname = `https://${this.hostname}`;
+    }
+
+    // If the SSL/TLS port is missing add default 443
+    if (!this.hostname.split(':')[2]) {
+      this.hostname = `${this.hostname}:443`;
     }
 
     const config: AuthInfo = {
@@ -93,7 +126,7 @@ export default class AuthStep extends Vue {
         SnackbarModule.notify('You have successfully signed in');
         this.$emit('authenticated', config);
       })
-      .catch((error) => {
+      .catch((error: string) => {
         if (error !== 'Incorrect Access or Secret key') {
           this.$emit('error');
         }
@@ -105,7 +138,9 @@ export default class AuthStep extends Vue {
   mounted() {
     this.accesskey = localAccesskey.getDefault('');
     this.secretkey = localSecretkey.getDefault('');
-    this.hostname = localHostname.getDefault('');
+    // If the hostname is not set, use the default from the server module
+    // (if not running in server mode the default is empty)
+    this.hostname = localHostname.getDefault(ServerModule.tenableHostUrl);
   }
 }
 </script>

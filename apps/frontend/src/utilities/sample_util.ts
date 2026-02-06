@@ -22,6 +22,7 @@ const threeStigChecklistPath = '/static/samples/three_stig_checklist.ckl';
 const ubuntuProfile = '/static/samples/ubuntu_profile.json';
 const veracodeExecJson = '/static/samples/veracode.xml';
 const smallOverridesProfilePath = '/static/samples/small_overrides_hdf.json';
+const conveyorSamplePath = '/static/samples/conveyor-scan-206.json';
 
 import axios from 'axios';
 
@@ -116,5 +117,9 @@ export const samples: Sample[] = [
   {
     filename: 'Small Profile With Severity Overrides',
     path: smallOverridesProfilePath
+  },
+  {
+    filename: 'Conveyor Sample',
+    path: conveyorSamplePath
   }
 ];

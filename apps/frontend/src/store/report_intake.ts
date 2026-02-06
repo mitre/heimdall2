@@ -7,12 +7,14 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {readFileAsync} from '@/utilities/async_util';
 import {
+  AnchoreGrypeMapper,
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
   CycloneDXSBOMResults,
   DBProtectMapper,
+  DependencyTrackMapper,
   fingerprint,
   FortifyMapper,
   GosecMapper,
@@ -22,6 +24,7 @@ import {
   MsftSecureScoreResults,
   NessusResults,
   NetsparkerMapper,
+  NeuVectorMapper,
   NiktoMapper,
   PrismaMapper,
   SarifMapper,
@@ -75,8 +78,7 @@ export type InspecFile = {
 };
 
 /** Modify our contextual types to sort of have back-linking to sourced from files */
-export interface SourcedContextualizedEvaluation
-  extends ContextualizedEvaluation {
+export interface SourcedContextualizedEvaluation extends ContextualizedEvaluation {
   from_file: EvaluationFile;
 }
 
@@ -143,7 +145,7 @@ export class InspecIntake extends VuexModule {
     } else if (options.data) {
       read = options.data;
     } else {
-      throw Error('No file or data passed to report intake');
+      throw new Error('No file or data passed to report intake');
     }
     if (await this.isHDF(read)) {
       return this.loadText({
@@ -166,12 +168,7 @@ export class InspecIntake extends VuexModule {
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: `${filename
-                .replace(/.json/gi, '')
-                .replace(/.nessus/gi, '')}-${_.get(
-                evaluation,
-                'platform.target_id'
-              )}.${originalFileType}`
+              filename: `${filename.replaceAll(/\.json/giv, '').replaceAll(/\.nessus/giv, '')}-${_.get(evaluation, 'platform.target_id', _.get(evaluation, 'profiles[0].name'))}.${originalFileType}`
             });
           })
         );
@@ -207,7 +204,7 @@ export class InspecIntake extends VuexModule {
         Array.isArray(data.profiles) || // Execution JSON
         (Boolean(data.controls) && Boolean(data.sha256)) // Profile JSON
       );
-    } else if (typeof data === 'undefined') {
+    } else if (data === undefined) {
       SnackbarModule.failure('Missing data to convert to validate HDF');
       return false;
     } else {
@@ -281,6 +278,12 @@ export class InspecIntake extends VuexModule {
         return new CycloneDXSBOMResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
         return new TrufflehogResults(convertOptions.data).toHdf();
+      case INPUT_TYPES.GRYPE:
+        return new AnchoreGrypeMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.NEUVECTOR:
+        return new NeuVectorMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.DEPENDENCY_TRACK:
+        return new DependencyTrackMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
@@ -291,7 +294,7 @@ export class InspecIntake extends VuexModule {
   @Action
   async detectAndLoadPredefinedJSON() {
     // On page load, check for the flag to load the preloaded JSON file
-    const queryString = window.location.search;
+    const queryString = globalThis.location.search;
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.get('predefinedLoad')?.toLowerCase() === 'true') {
       return axios

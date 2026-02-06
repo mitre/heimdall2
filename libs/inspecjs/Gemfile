@@ -2,4 +2,6 @@
 
 source "https://rubygems.org"
 
-gem "inspec-bin", '~> 5.18.14'
+source "https://rubygems.cinc.sh" do
+  gem "cinc-auditor-bin", '~> 5.18.14'
+end

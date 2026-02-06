@@ -57,8 +57,20 @@ export class ConfigService {
       oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
       registrationEnabled: this.isRegistrationAllowed(),
-      localLoginEnabled: this.isLocalLoginAllowed()
+      localLoginEnabled: this.isLocalLoginAllowed(),
+      tenableHostUrl: this.getTenableHostUrl(),
+      forceTenableFrontend:
+        this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',
+      splunkHostUrl: this.getSplunkHostUrl()
     });
+  }
+
+  getSplunkHostUrl(): string {
+    return this.appConfig.getSplunkHostUrl();
+  }
+
+  getTenableHostUrl(): string {
+    return this.appConfig.getTenableHostUrl();
   }
 
   getDbConfig(): SequelizeOptions {

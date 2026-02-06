@@ -17,13 +17,27 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
     },
     hostip: {
       type: 'string',
-      conform: (ip: string) => !ip || isIP(ip),
-      message: 'Host IP'
+      conform: (ip: string) => {
+        if (!ip) return true; // Allow empty input
+        // Split the input string by newline, space, or comma
+        const ipAddresses = ip.split(/[\s,]+/);
+        // Check each IP address using the isIP function
+        return ipAddresses.every((address) => isIP(address));
+      },
+      message:
+        'Host IP addresses must be valid and separated by newline, space, or comma.'
     },
     hostmac: {
       type: 'string',
-      conform: (mac: string) => !mac || isMACAddress(mac),
-      message: 'Host MAC'
+      conform: (mac: string) => {
+        if (!mac) return true; // Allow empty input
+        // Split the input string by newline, space, or comma
+        const macAddresses = mac.split(/[\s,]+/);
+        // Check each MAC address using the isMACAddress function
+        return macAddresses.every((address) => isMACAddress(address));
+      },
+      message:
+        'Host MAC addresses must be valid and separated by newline, space, or comma.'
     },
     role: {
       type: 'string',

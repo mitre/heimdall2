@@ -41,7 +41,7 @@
           </span>
           <br />
           <span>
-            For connection instructions and further information, check here:
+            For connection instructions and further information, consult:
           </span>
           <v-btn
             target="_blank"

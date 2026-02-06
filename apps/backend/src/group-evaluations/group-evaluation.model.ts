@@ -19,23 +19,23 @@ export class GroupEvaluation extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @ForeignKey(() => Group)
   @Column(DataType.BIGINT)
-  groupId!: string;
+  declare groupId: string;
 
   @ForeignKey(() => Evaluation)
   @Column(DataType.BIGINT)
-  evaluationId!: string;
+  declare evaluationId: string;
 
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  updatedAt!: Date;
+  declare updatedAt: Date;
 }

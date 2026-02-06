@@ -102,5 +102,5 @@ export function ensureContextualizedEvaluation(
 
 // Return original string if it exists, else return undefined
 export function filterString(input: string): string | undefined {
-  return input ? input : undefined;
+  return input || undefined;
 }

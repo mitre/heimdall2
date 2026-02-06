@@ -5,8 +5,10 @@ export enum INPUT_TYPES {
   BURP = 'burp',
   CHECKLIST = 'checklist',
   CONVEYOR = 'conveyor',
+  DEPENDENCY_TRACK = 'dependencyTrack',
   FORTIFY = 'fortify',
   GOSEC = 'gosec',
+  GRYPE = 'grype',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
   MSFT_SEC_SCORE = 'msft_secure_score',
@@ -18,6 +20,7 @@ export enum INPUT_TYPES {
   TWISTLOCK = 'twistlock',
   ZAP = 'zap',
   NESSUS = 'nessus',
+  NEUVECTOR = 'neuvector',
   XCCDF = 'xccdf',
   NETSPARKER = 'netsparker',
   SCOUTSUITE = 'scoutsuite',
@@ -31,7 +34,18 @@ export enum INPUT_TYPES {
 const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ASFF]: ['Findings', 'AwsAccountId', 'ProductArn'],
   [INPUT_TYPES.CONVEYOR]: ['api_error_message', 'api_response'],
+  [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion'],
+  [INPUT_TYPES.DEPENDENCY_TRACK]: ['version', 'meta', 'project', 'findings'],
   [INPUT_TYPES.FORTIFY]: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
+  [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
+  [INPUT_TYPES.GRYPE]: [
+    'matches.vulnerability',
+    'matches.relatedVulnerabilities',
+    'matches.matchDetails',
+    'matches.artifact',
+    'distro',
+    'descriptor'
+  ],
   [INPUT_TYPES.IONCHANNEL]: [
     'analysis_id',
     'team_id',
@@ -40,6 +54,15 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   ],
   [INPUT_TYPES.JFROG]: ['total_count', 'data'],
   [INPUT_TYPES.MSFT_SEC_SCORE]: ['secureScore', 'profiles'],
+  [INPUT_TYPES.NEUVECTOR]: [
+    'report.base_os',
+    'report.cvedb_create_time',
+    'report.cvedb_version',
+    'report.modules',
+    'report.repository',
+    'report.signature_data',
+    'report.vulnerabilities'
+  ],
   [INPUT_TYPES.NIKTO]: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
   [INPUT_TYPES.SARIF]: ['$schema', 'version', 'runs'],
   [INPUT_TYPES.SNYK]: [
@@ -68,16 +91,14 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
 
   [INPUT_TYPES.BURP]: [],
   [INPUT_TYPES.CHECKLIST]: [],
-  [INPUT_TYPES.NESSUS]: [],
-  [INPUT_TYPES.PRISMA]: [],
   [INPUT_TYPES.DB_PROTECT]: [],
-  [INPUT_TYPES.XCCDF]: [],
+  [INPUT_TYPES.NESSUS]: [],
   [INPUT_TYPES.NETSPARKER]: [],
+  [INPUT_TYPES.PRISMA]: [],
   [INPUT_TYPES.SCOUTSUITE]: [],
-  [INPUT_TYPES.NOT_FOUND]: [],
   [INPUT_TYPES.VERACODE]: [],
-  [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
-  [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion']
+  [INPUT_TYPES.XCCDF]: [],
+  [INPUT_TYPES.NOT_FOUND]: []
 };
 
 export function fingerprint(guessOptions: {
@@ -145,6 +166,13 @@ export function fingerprint(guessOptions: {
       splitLines[0].includes('Severity')
     ) {
       return INPUT_TYPES.PRISMA;
+    } else if (
+      splitLines[0].includes('SourceName') &&
+      splitLines[0].includes('DetectorType') &&
+      splitLines[0].includes('DetectorName') &&
+      splitLines[0].includes('DecoderName')
+    ) {
+      return INPUT_TYPES.TRUFFLEHOG;
     } else if (
       guessOptions.data.indexOf('veracode') !== -1 &&
       guessOptions.data.indexOf('detailedreport') !== -1

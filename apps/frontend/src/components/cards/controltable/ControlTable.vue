@@ -207,15 +207,16 @@ export default class ControlTable extends Vue {
 
   get numOfViewed() {
     return this.raw_items.filter((elem) =>
-      this.viewedControlIds.some((id) => elem.control.data.id === id)
+      this.viewedControlIds.includes(elem.key)
     ).length;
   }
 
   toggleControlViewed(control: ContextualizedControl) {
-    const alreadyViewed = this.viewedControlIds.indexOf(control.data.id);
+    const key = control_unique_key(control);
+    const alreadyViewed = this.viewedControlIds.indexOf(key);
     // If the control hasn't been marked as viewed yet, mark it as viewed.
     if (alreadyViewed === -1) {
-      this.viewedControlIds.push(control.data.id);
+      this.viewedControlIds.push(key);
     }
     // Else, remove it from the view controls array.
     else {
@@ -339,7 +340,7 @@ export default class ControlTable extends Vue {
   }
 
   striptoChars(key: string) {
-    return key.replace(/[^a-z0-9]/gi, '');
+    return key.replace(/[^0-9a-z]/giv, '');
   }
 
   /** Return items as key, value pairs */
@@ -421,9 +422,7 @@ export default class ControlTable extends Vue {
 
     // Displays only unviewed controls.
     if (this.displayUnviewedControls) {
-      items = items.filter(
-        (val) => !this.viewedControlIds.includes(val.control.data.id)
-      );
+      items = items.filter((val) => !this.viewedControlIds.includes(val.key));
     }
 
     if (sort === true) {

@@ -17,24 +17,24 @@ export class EvaluationTag extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @AllowNull(false)
   @Column
-  value!: string;
+  declare value: string;
 
   @AllowNull(false)
   @Column
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @AllowNull(false)
   @Column
-  updatedAt!: Date;
+  declare updatedAt: Date;
 
   @ForeignKey(() => Evaluation)
   @Column(DataType.BIGINT)
-  evaluationId!: string;
+  declare evaluationId: string;
 
   @BelongsTo(() => Evaluation)
-  evaluation!: Evaluation;
+  declare evaluation: Evaluation;
 }

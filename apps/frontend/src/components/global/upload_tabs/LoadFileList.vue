@@ -273,7 +273,7 @@ import {
   IEvalPaginationParams,
   IEvaluation,
   IEvaluationTag
-} from '@heimdall/interfaces';
+} from '@heimdall/common/interfaces';
 import {Prop} from 'vue-property-decorator';
 import Component, {mixins} from 'vue-class-component';
 import {FilteredDataModule} from '../../../store/data_filters';
@@ -440,7 +440,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     const delimiterChr = searchValue.indexOf(',') > 0 ? ',' : ' ';
     if (delimiterChr == ',') {
       // Remove any blank spaces
-      searchValue = searchValue.replace(/\s/g, '');
+      searchValue = searchValue.replace(/\s/gv, '');
     }
     const searchParam = searchValue.split(delimiterChr).join('|');
     return `(${searchParam})`;

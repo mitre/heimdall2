@@ -7,10 +7,11 @@ import {
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
-import {FindOptions} from 'sequelize/types';
+import {FindOptions} from 'sequelize';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
+import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
@@ -22,6 +23,7 @@ export class UsersService {
   constructor(
     @InjectModel(User)
     private readonly userModel: typeof User,
+    private readonly configService: ConfigService,
     private readonly groupsService: GroupsService
   ) {}
 
@@ -77,7 +79,8 @@ export class UsersService {
       await AuthnService.prototype.testPassword(updateUserDto, userToUpdate);
     }
     if (
-      updateUserDto.password == null &&
+      (updateUserDto.password === undefined ||
+        updateUserDto.password === null) &&
       userToUpdate.forcePasswordChange &&
       !abac.can('skip-force-password-change', userToUpdate)
     ) {

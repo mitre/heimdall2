@@ -79,7 +79,10 @@ export class LoggingInterceptor implements NestInterceptor {
     }
   }
 
-  redact(obj: Record<string, unknown>): Record<string, unknown> {
+  redact(obj?: Record<string, unknown>): Record<string, unknown> | undefined {
+    if (!_.isObject(obj)) {
+      return undefined;
+    }
     return this.redactObject(_.cloneDeep(obj));
   }
 

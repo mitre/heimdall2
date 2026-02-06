@@ -1,9 +1,9 @@
-import ZipFile from 'adm-zip';
+import JSZip from 'jszip';
 import {saveAs} from 'file-saver';
 
 type File = {
   filename: string;
-  data: string;
+  data: ArrayBuffer | Uint8Array | Blob | string;
 };
 export async function saveSingleOrMultipleFiles(
   files: File[],
@@ -13,18 +13,35 @@ export async function saveSingleOrMultipleFiles(
     const blob = new Blob([files[0].data]);
     saveAs(blob, cleanUpFilename(`${files[0]?.filename}`));
   } else {
-    const zipfile = new ZipFile();
-    files.forEach((file) => {
-      const buffer = Buffer.from(file.data);
-      zipfile.addFile(file.filename, buffer);
-    });
-    const blob = new Blob([zipfile.toBuffer()]);
-    saveAs(blob, `exported_${filetype}s.zip`);
+    const zip = new JSZip();
+
+    for (const file of files) {
+      let binaryData: Uint8Array | ArrayBuffer;
+
+      if (file.data instanceof ArrayBuffer || file.data instanceof Uint8Array) {
+        binaryData = file.data;
+      } else if (typeof file.data === 'string') {
+        binaryData = new TextEncoder().encode(file.data); // Convert string to Uint8Array
+      } else if (file.data instanceof Blob) {
+        // Convert Blob to ArrayBuffer asynchronously
+        binaryData = await file.data.arrayBuffer();
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn(`Unsupported file type for ${file.filename}`);
+        continue;
+      }
+
+      zip.file(file.filename, binaryData);
+    }
+
+    // eslint-disable-next-line prettier/prettier
+    const content = await zip.generateAsync({type: 'blob'});
+    saveAs(content, `exported_${filetype}s.zip`);
   }
 }
 
 export function cleanUpFilename(filename: string): string {
-  return filename.replace(/\s+/g, '_');
+  return filename.replace(/\s+/gv, '_');
 }
 
 /** Converts a string to an array buffer */

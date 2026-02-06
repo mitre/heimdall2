@@ -1,57 +1,115 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.27",
-    "target_id": "xss"
+    "release": "2.11.5"
   },
-  "version": "2.6.27",
-  "statistics": {
-    "duration": null
-  },
+  "version": "2.11.5",
+  "statistics": {},
   "profiles": [
     {
-      "name": "Sonarqube Scan",
-      "version": null,
-      "title": "SonarQube Scan of Project xss",
-      "maintainer": null,
-      "summary": "SonarQube Scan of Project xss",
-      "license": null,
-      "copyright": null,
-      "copyright_email": null,
+      "name": "SonarQube Scan",
+      "version": "SonarQube v9.9.8.100196",
+      "title": "SonarQube Scan of project xss on http://127.0.0.1:3001 at 2025-08-07T03:11:35.773Z",
       "supports": [],
       "attributes": [],
-      "depends": [],
       "groups": [],
       "status": "loaded",
       "controls": [
         {
           "desc": "<p>Browsers <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">allow message exchanges</a> between Window objects of\ndifferent origins.</p>\n<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>\n<ul>\n  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be\n  used). </li>\n  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>\n</ul>\n<h2>Noncompliant Code Example</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testiframe\");\niframe.contentWindow.postMessage(\"secret\", \"*\"); // Noncompliant: * is used\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) { // Noncompliant: no checks are done on the origin property.\n      console.log(event.data);\n });\n</pre>\n<h2>Compliant Solution</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testsecureiframe\");\niframe.contentWindow.postMessage(\"hello\", \"https://secure.example.com\"); // Compliant\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) {\n\n  if (event.origin !== \"http://example.org\") // Compliant\n    return;\n\n  console.log(event.data)\n});\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=\"https://owasp.org/Top10/A01_2021-Broken_Access_Control/\">OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=\"https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management\">OWASP Top 10 2017 Category A3</a> -\n  Broken Authentication and Session Management </li>\n  <li> <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">developer.mozilla.org</a> - postMessage API </li>\n</ul>",
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "id": "javascript:S2819",
           "title": "Origins should be verified during cross-origin communications",
           "impact": 0.7,
-          "code": null,
           "tags": {
             "cci": [
               "CCI-001312"
             ],
             "nist": [
               "SI-11"
+            ],
+            "owasp": [
+              "Top 10 2021 Category A1",
+              "Top 10 2017 Category A3",
+              "A3"
+            ],
+            "createdAt": "2021-12-06T19:35:19+0000",
+            "debtRemFnType": "CONSTANT_ISSUE",
+            "defaultDebtRemFnType": "CONSTANT_ISSUE",
+            "isExternal": false,
+            "isTemplate": false,
+            "langName": "JavaScript",
+            "remFnBaseEffort": "10min",
+            "remFnOverloaded": false,
+            "remFnType": "CONSTANT_ISSUE",
+            "repo": "javascript",
+            "scope": "MAIN",
+            "ruleSeverity": "CRITICAL",
+            "status": "READY",
+            "Debt Overloaded": false,
+            "Debt Rem Fn Offset": "10min",
+            "Default Debt Rem Fn Offset": "10min",
+            "Issue Type Vulnerability": true,
+            "Sys Tags": [
+              "cwe",
+              "html5",
+              "owasp-a3"
             ]
           },
           "results": [
             {
               "status": "failed",
-              "code_desc": "Path:xss:packages/docs/src/service-worker.js:29:29 StartLine: 29, EndLine: 29<br>Code:<pre></pre>",
-              "run_time": 0,
-              "start_time": ""
+              "code_desc": "xss:packages/docs/src/service-worker.js:29-29\n<pre>\n27 })\n28 \n29 self.addEventListener('message', event => {\n30   if (event.data === 'sw:update') self.skipWaiting()\n31 })\n32\n</pre>",
+              "start_time": "2020-09-01T17:04:31+0000",
+              "message": "{\n  \"Message\": \"Verify the message's origin in this cross-origin communication.\",\n  \"Author\": \"example@example.com\",\n  \"Creation Date\": \"2020-09-01T17:04:31+0000\",\n  \"Debt\": \"10min\",\n  \"Effort\": \"10min\",\n  \"Status\": \"OPEN\",\n  \"Update Date\": \"2021-12-06T20:27:51+0000\",\n  \"Hash\": \"8be50716e6366451fef374e82fb66aca\",\n  \"Key\": \"AX2RcGnrl-KH7KTFNgLl\",\n  \"Quick Fix Available\": false,\n  \"Tags\": [\n    \"cwe\",\n    \"html5\",\n    \"owasp-a3\"\n  ]\n}"
             }
-          ]
+          ],
+          "descriptions": null
         }
       ],
-      "sha256": "a3274b3e5cb49da5936ddbcd0b9bbdc1c78923b3adb8e92d05ac9bf0d6e705b3"
+      "sha256": "877e835cb79dc934e87e5324b9cd4366d8e8197bc7d502901c7760b674b64542"
     }
-  ]
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "SonarQube",
+        "data": {
+          "sonarqubeVersion": "9.9.8.100196",
+          "sonarqubeHost": "http://127.0.0.1:3001",
+          "projectKey": "xss",
+          "search": {
+            "components": [
+              {
+                "key": "xss:packages/docs/src/service-worker.js",
+                "enabled": true,
+                "qualifier": "FIL",
+                "name": "service-worker.js",
+                "longName": "packages/docs/src/service-worker.js",
+                "path": "packages/docs/src/service-worker.js"
+              },
+              {
+                "key": "xss",
+                "enabled": true,
+                "qualifier": "TRK",
+                "name": "xss",
+                "longName": "xss"
+              }
+            ],
+            "effortTotal": 10,
+            "facets": [],
+            "paging": {
+              "pageIndex": 1,
+              "pageSize": 100,
+              "total": 1
+            },
+            "total": 1,
+            "p": 1,
+            "ps": 100
+          }
+        }
+      }
+    ]
+  }
 }

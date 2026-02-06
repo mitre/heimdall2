@@ -35,6 +35,7 @@ import {
 } from '../../test/constants/users-test.constant';
 import {AuthzModule} from '../authz/authz.module';
 import {AuthzService} from '../authz/authz.service';
+import {ConfigService} from '../config/config.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -70,9 +71,10 @@ describe('UsersService', () => {
         AuthzModule
       ],
       providers: [
-        UsersService,
-        DatabaseService,
         AuthzService,
+        ConfigService,
+        DatabaseService,
+        UsersService,
         {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
       ]
     }).compile();

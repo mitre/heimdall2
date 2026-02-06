@@ -1,0 +1,2333 @@
+{
+    "meta": {
+        "application": "Dependency-Track",
+        "version": "4.10.1",
+        "timestamp": "2024-04-04T03:32:17Z"
+    },
+    "findings": [
+        {
+            "component": {
+                "latestVersion": "33.1.0-jre",
+                "name": "guava",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.google.guava/guava@24.1.1-jre?type=jar",
+                "uuid": "adf3b141-216d-4134-938c-2cf712193921",
+                "version": "24.1.1-jre",
+                "group": "com.google.guava"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-2976",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:40.996",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-2976?component-type=maven&component-name=com.google.guava%2Fguava&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.1,
+                "vulnId": "CVE-2023-2976",
+                "aliases": [],
+                "cweId": 552,
+                "description": "Use of Java's default temporary directory for file creation in `FileBackedOutputStream` in Google Guava versions 1.0 to 31.1 on Unix systems and Android Ice Cream Sandwich allows other users and apps on the machine with access to the default Java temporary directory to be able to access the files created by the class.\n\nEven though the security vulnerability is fixed in version 32.0.0, we recommend using version 32.0.1 as version 32.0.0 breaks some functionality under Windows.\n\n",
+                "epssScore": 0.00045,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 552,
+                        "name": "Files or Directories Accessible to External Parties",
+                        "id": 0
+                    }
+                ],
+                "uuid": "bb2646ad-ce2f-4562-812d-2009fd43c772",
+                "severityRank": 1,
+                "cweName": "Files or Directories Accessible to External Parties",
+                "epssPercentile": 0.13314
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:adf3b141-216d-4134-938c-2cf712193921:bb2646ad-ce2f-4562-812d-2009fd43c772"
+        },
+        {
+            "component": {
+                "latestVersion": "33.1.0-jre",
+                "name": "guava",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.google.guava/guava@24.1.1-jre?type=jar",
+                "uuid": "adf3b141-216d-4134-938c-2cf712193921",
+                "version": "24.1.1-jre",
+                "group": "com.google.guava"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-8908",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.018",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-8908?component-type=maven&component-name=com.google.guava%2Fguava&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "LOW",
+                "cvssV3BaseScore": 3.3,
+                "vulnId": "CVE-2020-8908",
+                "aliases": [],
+                "cweId": 732,
+                "description": "A temp directory creation vulnerability exists in all versions of Guava, allowing an attacker with access to the machine to potentially access data in a temporary directory created by the Guava API com.google.common.io.Files.createTempDir(). By default, on unix-like systems, the created directory is world-readable (readable by an attacker with access to the system). The method in question has been marked @Deprecated in versions 30.0 and later and should not be used. For Android developers, we recommend choosing a temporary directory API provided by Android, such as context.getCacheDir(). For other Java developers, we recommend migrating to the Java 7 API java.nio.file.Files.createTempDirectory() which explicitly configures permissions of 700, or configuring the Java runtime's java.io.tmpdir system property to point to a location whose permissions are appropriately configured.\n\n",
+                "epssScore": 0.0006,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 732,
+                        "name": "Incorrect Permission Assignment for Critical Resource",
+                        "id": 0
+                    }
+                ],
+                "uuid": "c0892871-5e2b-4f83-95fd-52b9c762f23a",
+                "severityRank": 3,
+                "cweName": "Incorrect Permission Assignment for Critical Resource",
+                "epssPercentile": 0.237,
+                "cvssV2BaseScore": 2.1
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:adf3b141-216d-4134-938c-2cf712193921:c0892871-5e2b-4f83-95fd-52b9c762f23a"
+        },
+        {
+            "component": {
+                "latestVersion": "2.17.0",
+                "name": "jackson-databind",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.10?type=jar",
+                "uuid": "0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a",
+                "version": "2.9.10",
+                "group": "com.fasterxml.jackson.core"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2019-16942",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.047",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-16942?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "CRITICAL",
+                "cvssV3BaseScore": 9.8,
+                "vulnId": "CVE-2019-16942",
+                "aliases": [],
+                "cweId": 502,
+                "description": "A Polymorphic Typing issue was discovered in FasterXML jackson-databind 2.0.0 through 2.9.10. When Default Typing is enabled (either globally or for a specific property) for an externally exposed JSON endpoint and the service has the commons-dbcp (1.4) jar in the classpath, and an attacker can find an RMI service endpoint to access, it is possible to make the service execute a malicious payload. This issue exists because of org.apache.commons.dbcp.datasources.SharedPoolDataSource and org.apache.commons.dbcp.datasources.PerUserPoolDataSource mishandling.",
+                "epssScore": 0.00404,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "36fe1129-dd7a-472b-b532-c285fe194704",
+                "severityRank": 0,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.7328,
+                "cvssV2BaseScore": 7.5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a:36fe1129-dd7a-472b-b532-c285fe194704"
+        },
+        {
+            "component": {
+                "latestVersion": "2.17.0",
+                "name": "jackson-databind",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.10?type=jar",
+                "uuid": "0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a",
+                "version": "2.9.10",
+                "group": "com.fasterxml.jackson.core"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2019-16943",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.05",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-16943?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "CRITICAL",
+                "cvssV3BaseScore": 9.8,
+                "vulnId": "CVE-2019-16943",
+                "aliases": [],
+                "cweId": 502,
+                "description": "A Polymorphic Typing issue was discovered in FasterXML jackson-databind 2.0.0 through 2.9.10. When Default Typing is enabled (either globally or for a specific property) for an externally exposed JSON endpoint and the service has the p6spy (3.8.6) jar in the classpath, and an attacker can find an RMI service endpoint to access, it is possible to make the service execute a malicious payload. This issue exists because of com.p6spy.engine.spy.P6DataSource mishandling.",
+                "epssScore": 0.00404,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "27ab6cf4-3273-42b4-ae69-ef8a0ead5813",
+                "severityRank": 0,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.7328,
+                "cvssV2BaseScore": 6.8
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a:27ab6cf4-3273-42b4-ae69-ef8a0ead5813"
+        },
+        {
+            "component": {
+                "latestVersion": "2.17.0",
+                "name": "jackson-databind",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.10?type=jar",
+                "uuid": "0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a",
+                "version": "2.9.10",
+                "group": "com.fasterxml.jackson.core"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2019-17531",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.06",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-17531?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "CRITICAL",
+                "cvssV3BaseScore": 9.8,
+                "vulnId": "CVE-2019-17531",
+                "aliases": [],
+                "cweId": 502,
+                "description": "A Polymorphic Typing issue was discovered in FasterXML jackson-databind 2.0.0 through 2.9.10. When Default Typing is enabled (either globally or for a specific property) for an externally exposed JSON endpoint and the service has the apache-log4j-extra (version 1.2.x) jar in the classpath, and an attacker can provide a JNDI service to access, it is possible to make the service execute a malicious payload.",
+                "epssScore": 0.00784,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "357335a8-1f6f-4e1f-840b-cef1e1f4f029",
+                "severityRank": 0,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.81055,
+                "cvssV2BaseScore": 6.8
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a:357335a8-1f6f-4e1f-840b-cef1e1f4f029"
+        },
+        {
+            "component": {
+                "latestVersion": "2.17.0",
+                "name": "jackson-databind",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.10?type=jar",
+                "uuid": "0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a",
+                "version": "2.9.10",
+                "group": "com.fasterxml.jackson.core"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-25649",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.069",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-25649?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2020-25649",
+                "aliases": [],
+                "cweId": 611,
+                "description": "A flaw was found in FasterXML Jackson Databind, where it did not have entity expansion secured properly. This flaw allows vulnerability to XML external entity (XXE) attacks. The highest threat from this vulnerability is data integrity.",
+                "epssScore": 0.00359,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 611,
+                        "name": "Improper Restriction of XML External Entity Reference",
+                        "id": 0
+                    }
+                ],
+                "uuid": "5ded34b0-06d1-44da-b109-4bad4e98aa01",
+                "severityRank": 1,
+                "cweName": "Improper Restriction of XML External Entity Reference",
+                "epssPercentile": 0.71729,
+                "cvssV2BaseScore": 5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a:5ded34b0-06d1-44da-b109-4bad4e98aa01"
+        },
+        {
+            "component": {
+                "latestVersion": "2.17.0",
+                "name": "jackson-databind",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.10?type=jar",
+                "uuid": "0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a",
+                "version": "2.9.10",
+                "group": "com.fasterxml.jackson.core"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-36518",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.076",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-36518?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2020-36518",
+                "aliases": [],
+                "cweId": 787,
+                "description": "jackson-databind before 2.13.0 allows a Java StackOverflow exception and denial of service via a large depth of nested objects.",
+                "epssScore": 0.00218,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 787,
+                        "name": "Out-of-bounds Write",
+                        "id": 0
+                    }
+                ],
+                "uuid": "5eddfb79-9d3d-4c52-83f7-641004472d4f",
+                "severityRank": 1,
+                "cweName": "Out-of-bounds Write",
+                "epssPercentile": 0.5927,
+                "cvssV2BaseScore": 5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a:5eddfb79-9d3d-4c52-83f7-641004472d4f"
+        },
+        {
+            "component": {
+                "latestVersion": "2.17.0",
+                "name": "jackson-databind",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.10?type=jar",
+                "uuid": "0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a",
+                "version": "2.9.10",
+                "group": "com.fasterxml.jackson.core"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-42003",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.083",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-42003?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "severityRank": 1,
+                "cweName": "Deserialization of Untrusted Data",
+                "vulnId": "CVE-2022-42003",
+                "aliases": [],
+                "cweId": 502,
+                "description": "In FasterXML jackson-databind before versions 2.13.4.1 and 2.12.17.1, resource exhaustion can occur because of a lack of a check in primitive value deserializers to avoid deep wrapper array nesting, when the UNWRAP_SINGLE_VALUE_ARRAYS feature is enabled.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "96c8b7ec-6ebf-4bd9-98eb-6409629c5479"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a:96c8b7ec-6ebf-4bd9-98eb-6409629c5479"
+        },
+        {
+            "component": {
+                "latestVersion": "2.17.0",
+                "name": "jackson-databind",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.9.10?type=jar",
+                "uuid": "0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a",
+                "version": "2.9.10",
+                "group": "com.fasterxml.jackson.core"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-42004",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.086",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-42004?component-type=maven&component-name=com.fasterxml.jackson.core%2Fjackson-databind&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "severityRank": 1,
+                "cweName": "Deserialization of Untrusted Data",
+                "vulnId": "CVE-2022-42004",
+                "aliases": [],
+                "cweId": 502,
+                "description": "In FasterXML jackson-databind before 2.13.4, resource exhaustion can occur because of a lack of a check in BeanDeserializer._deserializeFromArray to prevent use of deeply nested arrays. An application is vulnerable only with certain customized choices for deserialization.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "652dbe30-f681-47a3-8d41-3f83c4a570a6"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:0ba815f6-1c3e-4b6b-a154-f4c6bdcca93a:652dbe30-f681-47a3-8d41-3f83c4a570a6"
+        },
+        {
+            "component": {
+                "latestVersion": "8.0.1.Final",
+                "name": "hibernate-validator",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.hibernate/hibernate-validator@5.4.3.Final?type=jar",
+                "uuid": "6f118da8-0dcd-41fd-9245-dee1f98c6376",
+                "version": "5.4.3.Final",
+                "group": "org.hibernate"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2019-10219",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.118",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-10219?component-type=maven&component-name=org.hibernate%2Fhibernate-validator&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.1,
+                "vulnId": "CVE-2019-10219",
+                "aliases": [],
+                "cweId": 79,
+                "description": "A vulnerability was found in Hibernate-Validator. The SafeHtml validator annotation fails to properly sanitize payloads consisting of potentially malicious code in HTML comments and instructions. This vulnerability can result in an XSS attack.",
+                "epssScore": 0.00232,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 79,
+                        "name": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "3d6b18a1-a9af-4f8a-81f9-298472b7fb06",
+                "severityRank": 2,
+                "cweName": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+                "epssPercentile": 0.60676,
+                "cvssV2BaseScore": 4.3
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:6f118da8-0dcd-41fd-9245-dee1f98c6376:3d6b18a1-a9af-4f8a-81f9-298472b7fb06"
+        },
+        {
+            "component": {
+                "latestVersion": "8.0.1.Final",
+                "name": "hibernate-validator",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.hibernate/hibernate-validator@5.4.3.Final?type=jar",
+                "uuid": "6f118da8-0dcd-41fd-9245-dee1f98c6376",
+                "version": "5.4.3.Final",
+                "group": "org.hibernate"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-10693",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.128",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-10693?component-type=maven&component-name=org.hibernate%2Fhibernate-validator&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "vulnId": "CVE-2020-10693",
+                "aliases": [],
+                "cweId": 20,
+                "description": "A flaw was found in Hibernate Validator version 6.1.2.Final. A bug in the message interpolation processor enables invalid EL expressions to be evaluated as if they were valid. This flaw allows attackers to bypass input sanitation (escaping, stripping) controls that developers may have put in place when handling user-controlled data in error messages.",
+                "epssScore": 0.00139,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 20,
+                        "name": "Improper Input Validation",
+                        "id": 0
+                    }
+                ],
+                "uuid": "931d9df5-6f46-4acd-bc13-e958b25573a2",
+                "severityRank": 2,
+                "cweName": "Improper Input Validation",
+                "epssPercentile": 0.48704,
+                "cvssV2BaseScore": 5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:6f118da8-0dcd-41fd-9245-dee1f98c6376:931d9df5-6f46-4acd-bc13-e958b25573a2"
+        },
+        {
+            "component": {
+                "latestVersion": "3.0.1-b12",
+                "name": "javax.el",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.glassfish/javax.el@3.0.0?type=jar",
+                "uuid": "293eb581-83c4-4bc6-acd6-2b6d35d8baee",
+                "version": "3.0.0",
+                "group": "org.glassfish"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2021-28170",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.145",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-28170?component-type=maven&component-name=org.glassfish%2Fjavax.el&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "vulnId": "CVE-2021-28170",
+                "aliases": [],
+                "cweId": 917,
+                "description": "In the Jakarta Expression Language implementation 3.0.3 and earlier, a bug in the ELParserTokenManager enables invalid EL expressions to be evaluated as if they were valid.",
+                "epssScore": 0.00089,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 917,
+                        "name": "Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "7e35cf80-119f-438b-b22d-402c939d8321",
+                "severityRank": 2,
+                "cweName": "Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection')",
+                "epssPercentile": 0.36785,
+                "cvssV2BaseScore": 5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:293eb581-83c4-4bc6-acd6-2b6d35d8baee:7e35cf80-119f-438b-b22d-402c939d8321"
+        },
+        {
+            "component": {
+                "latestVersion": "5.0.0-alpha.1",
+                "name": "dropwizard-validation",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/io.dropwizard/dropwizard-validation@1.3.15?type=jar",
+                "uuid": "ff810945-c556-480d-b11a-d2a6ea85ebc8",
+                "version": "1.3.15",
+                "group": "io.dropwizard"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-11002",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.16",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-11002?component-type=maven&component-name=io.dropwizard%2Fdropwizard-validation&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 8.8,
+                "vulnId": "CVE-2020-11002",
+                "aliases": [],
+                "cweId": 74,
+                "description": "dropwizard-validation before versions 2.0.3 and 1.3.21 has a remote code execution vulnerability. A server-side template injection was identified in the self-validating feature enabling attackers to inject arbitrary Java EL expressions, leading to Remote Code Execution (RCE) vulnerability. If you are using a self-validating bean an upgrade to Dropwizard 1.3.21/2.0.3 or later is strongly recommended. The changes introduced in Dropwizard 1.3.19 and 2.0.2 for CVE-2020-5245 unfortunately did not fix the underlying issue completely. The issue has been fixed in dropwizard-validation 1.3.21 and 2.0.3 or later. We strongly recommend upgrading to one of these versions.",
+                "epssScore": 0.04159,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 74,
+                        "name": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "4ace7186-9d12-446d-b742-92e9dfdfb3b2",
+                "severityRank": 1,
+                "cweName": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+                "epssPercentile": 0.9201,
+                "cvssV2BaseScore": 9
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:ff810945-c556-480d-b11a-d2a6ea85ebc8:4ace7186-9d12-446d-b742-92e9dfdfb3b2"
+        },
+        {
+            "component": {
+                "latestVersion": "5.0.0-alpha.1",
+                "name": "dropwizard-validation",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/io.dropwizard/dropwizard-validation@1.3.15?type=jar",
+                "uuid": "ff810945-c556-480d-b11a-d2a6ea85ebc8",
+                "version": "1.3.15",
+                "group": "io.dropwizard"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-5245",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.166",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-5245?component-type=maven&component-name=io.dropwizard%2Fdropwizard-validation&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 8.8,
+                "vulnId": "CVE-2020-5245",
+                "aliases": [],
+                "cweId": 74,
+                "description": "Dropwizard-Validation before 1.3.19, and 2.0.2 may allow arbitrary code execution on the host system, with the privileges of the Dropwizard service account, by injecting arbitrary Java Expression Language expressions when using the self-validating feature. The issue has been fixed in dropwizard-validation 1.3.19 and 2.0.2.",
+                "epssScore": 0.00432,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 74,
+                        "name": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "47855242-f7d3-4829-99f3-e0acf1ddf837",
+                "severityRank": 1,
+                "cweName": "Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+                "epssPercentile": 0.74082,
+                "cvssV2BaseScore": 9
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:ff810945-c556-480d-b11a-d2a6ea85ebc8:47855242-f7d3-4829-99f3-e0acf1ddf837"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2",
+                "name": "snakeyaml",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.yaml/snakeyaml@1.23?type=jar",
+                "uuid": "2b90f04e-c71b-4a10-a619-9bb98aaaa9ff",
+                "version": "1.23",
+                "group": "org.yaml"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2017-18640",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.18",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2017-18640?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2017-18640",
+                "aliases": [],
+                "cweId": 776,
+                "description": "The Alias feature in SnakeYAML before 1.26 allows entity expansion during a load operation, a related issue to CVE-2003-1564.",
+                "epssScore": 0.01874,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 776,
+                        "name": "Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "285cbd92-3f1b-4ef1-9044-a416276d0939",
+                "severityRank": 1,
+                "cweName": "Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion')",
+                "epssPercentile": 0.88163,
+                "cvssV2BaseScore": 5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2b90f04e-c71b-4a10-a619-9bb98aaaa9ff:285cbd92-3f1b-4ef1-9044-a416276d0939"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2",
+                "name": "snakeyaml",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.yaml/snakeyaml@1.23?type=jar",
+                "uuid": "2b90f04e-c71b-4a10-a619-9bb98aaaa9ff",
+                "version": "1.23",
+                "group": "org.yaml"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-1471",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.19",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-1471?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "CRITICAL",
+                "cvssV3BaseScore": 9.8,
+                "vulnId": "CVE-2022-1471",
+                "aliases": [],
+                "cweId": 502,
+                "description": "SnakeYaml's Constructor() class does not restrict types which can be instantiated during deserialization. Deserializing yaml content provided by an attacker can lead to remote code execution. We recommend using SnakeYaml's SafeConsturctor when parsing untrusted content to restrict deserialization. We recommend upgrading to version 2.0 and beyond.\n",
+                "epssScore": 0.00811,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "81e42aed-d565-40e2-9cb9-dc6ac823126e",
+                "severityRank": 0,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.81397
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2b90f04e-c71b-4a10-a619-9bb98aaaa9ff:81e42aed-d565-40e2-9cb9-dc6ac823126e"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2",
+                "name": "snakeyaml",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.yaml/snakeyaml@1.23?type=jar",
+                "uuid": "2b90f04e-c71b-4a10-a619-9bb98aaaa9ff",
+                "version": "1.23",
+                "group": "org.yaml"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-25857",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.194",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-25857?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "severityRank": 1,
+                "cweName": "Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion')",
+                "vulnId": "CVE-2022-25857",
+                "aliases": [],
+                "cweId": 776,
+                "description": "The package org.yaml:snakeyaml from 0 and before 1.31 are vulnerable to Denial of Service (DoS) due missing to nested depth limitation for collections.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 776,
+                        "name": "Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "6c9e13ea-74a0-44f8-b584-0c6b59330cf3"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2b90f04e-c71b-4a10-a619-9bb98aaaa9ff:6c9e13ea-74a0-44f8-b584-0c6b59330cf3"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2",
+                "name": "snakeyaml",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.yaml/snakeyaml@1.23?type=jar",
+                "uuid": "2b90f04e-c71b-4a10-a619-9bb98aaaa9ff",
+                "version": "1.23",
+                "group": "org.yaml"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-38749",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.205",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-38749?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.5,
+                "severityRank": 2,
+                "cweName": "Out-of-bounds Write",
+                "vulnId": "CVE-2022-38749",
+                "aliases": [],
+                "cweId": 787,
+                "description": "Using snakeYAML to parse untrusted YAML files may be vulnerable to Denial of Service attacks (DOS). If the parser is running on user supplied input, an attacker may supply content that causes the parser to crash by stackoverflow.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 787,
+                        "name": "Out-of-bounds Write",
+                        "id": 0
+                    }
+                ],
+                "uuid": "5e90220f-03a1-441b-a87b-3b3e2d3e9cdc"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2b90f04e-c71b-4a10-a619-9bb98aaaa9ff:5e90220f-03a1-441b-a87b-3b3e2d3e9cdc"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2",
+                "name": "snakeyaml",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.yaml/snakeyaml@1.23?type=jar",
+                "uuid": "2b90f04e-c71b-4a10-a619-9bb98aaaa9ff",
+                "version": "1.23",
+                "group": "org.yaml"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-38750",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.211",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-38750?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.5,
+                "severityRank": 2,
+                "cweName": "Out-of-bounds Write",
+                "vulnId": "CVE-2022-38750",
+                "aliases": [],
+                "cweId": 787,
+                "description": "Using snakeYAML to parse untrusted YAML files may be vulnerable to Denial of Service attacks (DOS). If the parser is running on user supplied input, an attacker may supply content that causes the parser to crash by stackoverflow.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 787,
+                        "name": "Out-of-bounds Write",
+                        "id": 0
+                    }
+                ],
+                "uuid": "ce8d331c-ec1b-4c54-be6e-9ce58cc3aa25"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2b90f04e-c71b-4a10-a619-9bb98aaaa9ff:ce8d331c-ec1b-4c54-be6e-9ce58cc3aa25"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2",
+                "name": "snakeyaml",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.yaml/snakeyaml@1.23?type=jar",
+                "uuid": "2b90f04e-c71b-4a10-a619-9bb98aaaa9ff",
+                "version": "1.23",
+                "group": "org.yaml"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-38751",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.214",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-38751?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.5,
+                "severityRank": 2,
+                "cweName": "Out-of-bounds Write",
+                "vulnId": "CVE-2022-38751",
+                "aliases": [],
+                "cweId": 787,
+                "description": "Using snakeYAML to parse untrusted YAML files may be vulnerable to Denial of Service attacks (DOS). If the parser is running on user supplied input, an attacker may supply content that causes the parser to crash by stackoverflow.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 787,
+                        "name": "Out-of-bounds Write",
+                        "id": 0
+                    }
+                ],
+                "uuid": "e90177c4-5913-4a33-bf02-b907372b5c5b"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2b90f04e-c71b-4a10-a619-9bb98aaaa9ff:e90177c4-5913-4a33-bf02-b907372b5c5b"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2",
+                "name": "snakeyaml",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.yaml/snakeyaml@1.23?type=jar",
+                "uuid": "2b90f04e-c71b-4a10-a619-9bb98aaaa9ff",
+                "version": "1.23",
+                "group": "org.yaml"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-38752",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.218",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-38752?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.5,
+                "severityRank": 2,
+                "cweName": "Out-of-bounds Write",
+                "vulnId": "CVE-2022-38752",
+                "aliases": [],
+                "cweId": 787,
+                "description": "Using snakeYAML to parse untrusted YAML files may be vulnerable to Denial of Service attacks (DOS). If the parser is running on user supplied input, an attacker may supply content that causes the parser to crash by stack-overflow.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 787,
+                        "name": "Out-of-bounds Write",
+                        "id": 0
+                    }
+                ],
+                "uuid": "dc1234ab-bb88-497e-bb3c-0d4f6fef97e7"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2b90f04e-c71b-4a10-a619-9bb98aaaa9ff:dc1234ab-bb88-497e-bb3c-0d4f6fef97e7"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2",
+                "name": "snakeyaml",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.yaml/snakeyaml@1.23?type=jar",
+                "uuid": "2b90f04e-c71b-4a10-a619-9bb98aaaa9ff",
+                "version": "1.23",
+                "group": "org.yaml"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-41854",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.224",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-41854?component-type=maven&component-name=org.yaml%2Fsnakeyaml&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.5,
+                "severityRank": 2,
+                "cweName": "Out-of-bounds Write",
+                "vulnId": "CVE-2022-41854",
+                "aliases": [],
+                "cweId": 787,
+                "description": "Those using Snakeyaml to parse untrusted YAML files may be vulnerable to Denial of Service attacks (DOS). If the parser is running on user supplied input, an attacker may supply content that causes the parser to crash by stack overflow. This effect may support a denial of service attack.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 787,
+                        "name": "Out-of-bounds Write",
+                        "id": 0
+                    }
+                ],
+                "uuid": "f2d2bd9a-0e2f-4107-a2d0-9372f50e2602"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2b90f04e-c71b-4a10-a619-9bb98aaaa9ff:f2d2bd9a-0e2f-4107-a2d0-9372f50e2602"
+        },
+        {
+            "component": {
+                "latestVersion": "1.5.3",
+                "name": "logback-core",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/ch.qos.logback/logback-core@1.2.3?type=jar",
+                "uuid": "7e2eaccb-70f1-4d52-b605-17b9c9049bf0",
+                "version": "1.2.3",
+                "group": "ch.qos.logback"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-6378",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.24",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-6378?component-type=maven&component-name=ch.qos.logback%2Flogback-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2023-6378",
+                "aliases": [],
+                "cweId": 502,
+                "description": "A serialization vulnerability in logback receiver component part of \nlogback version 1.4.11 allows an attacker to mount a Denial-Of-Service \nattack by sending poisoned data.\n\n",
+                "epssScore": 0.00046,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "2edf3945-6687-40b7-a389-a2c54fb35623",
+                "severityRank": 1,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.14827
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:7e2eaccb-70f1-4d52-b605-17b9c9049bf0:2edf3945-6687-40b7-a389-a2c54fb35623"
+        },
+        {
+            "component": {
+                "latestVersion": "1.5.3",
+                "name": "logback-core",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/ch.qos.logback/logback-core@1.2.3?type=jar",
+                "uuid": "7e2eaccb-70f1-4d52-b605-17b9c9049bf0",
+                "version": "1.2.3",
+                "group": "ch.qos.logback"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2021-42550",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.247",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-42550?component-type=maven&component-name=ch.qos.logback%2Flogback-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.6,
+                "vulnId": "CVE-2021-42550",
+                "aliases": [],
+                "cweId": 502,
+                "description": "In logback version 1.2.7 and prior versions, an attacker with the required privileges to edit configurations files could craft a malicious configuration allowing to execute arbitrary code loaded from LDAP servers.",
+                "epssScore": 0.01555,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "3ed852c3-4a25-480b-9f36-dbd8b75c8e28",
+                "severityRank": 2,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.86905,
+                "cvssV2BaseScore": 8.5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:7e2eaccb-70f1-4d52-b605-17b9c9049bf0:3ed852c3-4a25-480b-9f36-dbd8b75c8e28"
+        },
+        {
+            "component": {
+                "latestVersion": "1.5.3",
+                "name": "logback-classic",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/ch.qos.logback/logback-classic@1.2.3?type=jar",
+                "uuid": "e03a4b88-a83e-4558-8fe5-87f232d3ce08",
+                "version": "1.2.3",
+                "group": "ch.qos.logback"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-6378",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.251",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-6378?component-type=maven&component-name=ch.qos.logback%2Flogback-classic&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2023-6378",
+                "aliases": [],
+                "cweId": 502,
+                "description": "A serialization vulnerability in logback receiver component part of \nlogback version 1.4.11 allows an attacker to mount a Denial-Of-Service \nattack by sending poisoned data.\n\n",
+                "epssScore": 0.00046,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "2edf3945-6687-40b7-a389-a2c54fb35623",
+                "severityRank": 1,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.14827
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:e03a4b88-a83e-4558-8fe5-87f232d3ce08:2edf3945-6687-40b7-a389-a2c54fb35623"
+        },
+        {
+            "component": {
+                "latestVersion": "1.5.3",
+                "name": "logback-classic",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/ch.qos.logback/logback-classic@1.2.3?type=jar",
+                "uuid": "e03a4b88-a83e-4558-8fe5-87f232d3ce08",
+                "version": "1.2.3",
+                "group": "ch.qos.logback"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2021-42550",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.254",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-42550?component-type=maven&component-name=ch.qos.logback%2Flogback-classic&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.6,
+                "vulnId": "CVE-2021-42550",
+                "aliases": [],
+                "cweId": 502,
+                "description": "In logback version 1.2.7 and prior versions, an attacker with the required privileges to edit configurations files could craft a malicious configuration allowing to execute arbitrary code loaded from LDAP servers.",
+                "epssScore": 0.01555,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "3ed852c3-4a25-480b-9f36-dbd8b75c8e28",
+                "severityRank": 2,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.86905,
+                "cvssV2BaseScore": 8.5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:e03a4b88-a83e-4558-8fe5-87f232d3ce08:3ed852c3-4a25-480b-9f36-dbd8b75c8e28"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-util",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-util@9.4.18.v20190429?type=jar",
+                "uuid": "68ba06bb-e70e-4018-80bf-bdf3afe59942",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-26048",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.265",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26048?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-util&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "vulnId": "CVE-2023-26048",
+                "aliases": [],
+                "cweId": 400,
+                "description": "Jetty is a java based web server and servlet engine. In affected versions servlets with multipart support (e.g. annotated with `@MultipartConfig`) that call `HttpServletRequest.getParameter()` or `HttpServletRequest.getParts()` may cause `OutOfMemoryError` when the client sends a multipart request with a part that has a name but no filename and very large content. This happens even with the default settings of `fileSizeThreshold=0` which should stream the whole part content to disk. An attacker client may send a large multipart request and cause the server to throw `OutOfMemoryError`. However, the server may be able to recover after the `OutOfMemoryError` and continue its service -- although it may take some time. This issue has been patched in versions 9.4.51, 10.0.14, and 11.0.14. Users are advised to upgrade. Users unable to upgrade may set the multipart parameter `maxRequestSize` which must be set to a non-negative value, so the whole multipart content is limited (although still read into memory).",
+                "epssScore": 0.00132,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 400,
+                        "name": "Uncontrolled Resource Consumption",
+                        "id": 0
+                    }
+                ],
+                "uuid": "d794d36d-8d74-4e2c-b156-d8630443d3c4",
+                "severityRank": 2,
+                "cweName": "Uncontrolled Resource Consumption",
+                "epssPercentile": 0.47579
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:68ba06bb-e70e-4018-80bf-bdf3afe59942:d794d36d-8d74-4e2c-b156-d8630443d3c4"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-server",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-server@9.4.18.v20190429?type=jar",
+                "uuid": "2ab254c7-39a1-41d1-bea2-640994c7217b",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-27218",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.274",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-27218?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 4.8,
+                "severityRank": 2,
+                "vulnId": "CVE-2020-27218",
+                "aliases": [],
+                "epssPercentile": 0.84931,
+                "cvssV2BaseScore": 5.8,
+                "description": "In Eclipse Jetty version 9.4.0.RC0 to 9.4.34.v20201102, 10.0.0.alpha0 to 10.0.0.beta2, and 11.0.0.alpha0 to 11.0.0.beta2, if GZIP request body inflation is enabled and requests from different clients are multiplexed onto a single connection, and if an attacker can send a request with a body that is received entirely but not consumed by the application, then a subsequent request on the same connection will see that body prepended to its body. The attacker will not see any data but may inject data into the body of the subsequent request.",
+                "epssScore": 0.01203,
+                "source": "NVD",
+                "uuid": "9b3baefd-daa2-467d-b224-34b0f7789b94"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2ab254c7-39a1-41d1-bea2-640994c7217b:9b3baefd-daa2-467d-b224-34b0f7789b94"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-server",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-server@9.4.18.v20190429?type=jar",
+                "uuid": "2ab254c7-39a1-41d1-bea2-640994c7217b",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2021-34428",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.279",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-34428?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "LOW",
+                "cvssV3BaseScore": 3.5,
+                "vulnId": "CVE-2021-34428",
+                "aliases": [],
+                "cweId": 613,
+                "description": "For Eclipse Jetty versions <= 9.4.40, <= 10.0.2, <= 11.0.2, if an exception is thrown from the SessionListener#sessionDestroyed() method, then the session ID is not invalidated in the session ID manager. On deployments with clustered sessions and multiple contexts this can result in a session not being invalidated. This can result in an application used on a shared computer being left logged in.",
+                "epssScore": 0.00152,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 613,
+                        "name": "Insufficient Session Expiration",
+                        "id": 0
+                    }
+                ],
+                "uuid": "66ac5ee3-83f8-43cd-87c5-199689e32ac0",
+                "severityRank": 3,
+                "cweName": "Insufficient Session Expiration",
+                "epssPercentile": 0.50609,
+                "cvssV2BaseScore": 3.6
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2ab254c7-39a1-41d1-bea2-640994c7217b:66ac5ee3-83f8-43cd-87c5-199689e32ac0"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-server",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-server@9.4.18.v20190429?type=jar",
+                "uuid": "2ab254c7-39a1-41d1-bea2-640994c7217b",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-2047",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.284",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-2047?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "LOW",
+                "cvssV3BaseScore": 2.7,
+                "vulnId": "CVE-2022-2047",
+                "aliases": [],
+                "cweId": 20,
+                "description": "In Eclipse Jetty versions 9.4.0 thru 9.4.46, and 10.0.0 thru 10.0.9, and 11.0.0 thru 11.0.9 versions, the parsing of the authority segment of an http scheme URI, the Jetty HttpURI class improperly detects an invalid input as a hostname. This can lead to failures in a Proxy scenario.",
+                "epssScore": 0.00086,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 20,
+                        "name": "Improper Input Validation",
+                        "id": 0
+                    }
+                ],
+                "uuid": "5bdf735d-591e-484e-8f54-dcd220512734",
+                "severityRank": 3,
+                "cweName": "Improper Input Validation",
+                "epssPercentile": 0.35247,
+                "cvssV2BaseScore": 4
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2ab254c7-39a1-41d1-bea2-640994c7217b:5bdf735d-591e-484e-8f54-dcd220512734"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-server",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-server@9.4.18.v20190429?type=jar",
+                "uuid": "2ab254c7-39a1-41d1-bea2-640994c7217b",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-26048",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.288",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26048?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "vulnId": "CVE-2023-26048",
+                "aliases": [],
+                "cweId": 400,
+                "description": "Jetty is a java based web server and servlet engine. In affected versions servlets with multipart support (e.g. annotated with `@MultipartConfig`) that call `HttpServletRequest.getParameter()` or `HttpServletRequest.getParts()` may cause `OutOfMemoryError` when the client sends a multipart request with a part that has a name but no filename and very large content. This happens even with the default settings of `fileSizeThreshold=0` which should stream the whole part content to disk. An attacker client may send a large multipart request and cause the server to throw `OutOfMemoryError`. However, the server may be able to recover after the `OutOfMemoryError` and continue its service -- although it may take some time. This issue has been patched in versions 9.4.51, 10.0.14, and 11.0.14. Users are advised to upgrade. Users unable to upgrade may set the multipart parameter `maxRequestSize` which must be set to a non-negative value, so the whole multipart content is limited (although still read into memory).",
+                "epssScore": 0.00132,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 400,
+                        "name": "Uncontrolled Resource Consumption",
+                        "id": 0
+                    }
+                ],
+                "uuid": "d794d36d-8d74-4e2c-b156-d8630443d3c4",
+                "severityRank": 2,
+                "cweName": "Uncontrolled Resource Consumption",
+                "epssPercentile": 0.47579
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2ab254c7-39a1-41d1-bea2-640994c7217b:d794d36d-8d74-4e2c-b156-d8630443d3c4"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-server",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-server@9.4.18.v20190429?type=jar",
+                "uuid": "2ab254c7-39a1-41d1-bea2-640994c7217b",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-26049",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.291",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26049?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "vulnId": "CVE-2023-26049",
+                "aliases": [],
+                "cweId": 200,
+                "description": "Jetty is a java based web server and servlet engine. Nonstandard cookie parsing in Jetty may allow an attacker to smuggle cookies within other cookies, or otherwise perform unintended behavior by tampering with the cookie parsing mechanism. If Jetty sees a cookie VALUE that starts with `\"` (double quote), it will continue to read the cookie string until it sees a closing quote -- even if a semicolon is encountered. So, a cookie header such as: `DISPLAY_LANGUAGE=\"b; JSESSIONID=1337; c=d\"` will be parsed as one cookie, with the name DISPLAY_LANGUAGE and a value of b; JSESSIONID=1337; c=d instead of 3 separate cookies. This has security implications because if, say, JSESSIONID is an HttpOnly cookie, and the DISPLAY_LANGUAGE cookie value is rendered on the page, an attacker can smuggle the JSESSIONID cookie into the DISPLAY_LANGUAGE cookie and thereby exfiltrate it. This is significant when an intermediary is enacting some policy based on cookies, so a smuggled cookie can bypass that policy yet still be seen by the Jetty server or its logging system. This issue has been addressed in versions 9.4.51, 10.0.14, 11.0.14, and 12.0.0.beta0 and users are advised to upgrade. There are no known workarounds for this issue.",
+                "epssScore": 0.00118,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 200,
+                        "name": "Exposure of Sensitive Information to an Unauthorized Actor",
+                        "id": 0
+                    }
+                ],
+                "uuid": "4df611c8-45b5-4aa2-b179-8fd291b16bae",
+                "severityRank": 2,
+                "cweName": "Exposure of Sensitive Information to an Unauthorized Actor",
+                "epssPercentile": 0.4502
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:2ab254c7-39a1-41d1-bea2-640994c7217b:4df611c8-45b5-4aa2-b179-8fd291b16bae"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-http",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-http@9.4.18.v20190429?type=jar",
+                "uuid": "872abe6b-dbf9-46c6-8d80-8039c06d9c02",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-27223",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.299",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-27223?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-http&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "vulnId": "CVE-2020-27223",
+                "aliases": [],
+                "cweId": 400,
+                "description": "In Eclipse Jetty 9.4.6.v20170531 to 9.4.36.v20210114 (inclusive), 10.0.0, and 11.0.0 when Jetty handles a request containing multiple Accept headers with a large number of \u201cquality\u201d (i.e. q) parameters, the server may enter a denial of service (DoS) state due to high CPU usage processing those quality values, resulting in minutes of CPU time exhausted processing those quality values.",
+                "epssScore": 0.03039,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 400,
+                        "name": "Uncontrolled Resource Consumption",
+                        "id": 0
+                    }
+                ],
+                "uuid": "8f6feed0-346d-4c8f-933e-2554bd10d540",
+                "severityRank": 2,
+                "cweName": "Uncontrolled Resource Consumption",
+                "epssPercentile": 0.90774,
+                "cvssV2BaseScore": 4.3
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:872abe6b-dbf9-46c6-8d80-8039c06d9c02:8f6feed0-346d-4c8f-933e-2554bd10d540"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-http",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-http@9.4.18.v20190429?type=jar",
+                "uuid": "872abe6b-dbf9-46c6-8d80-8039c06d9c02",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-2047",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.301",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-2047?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-http&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "LOW",
+                "cvssV3BaseScore": 2.7,
+                "vulnId": "CVE-2022-2047",
+                "aliases": [],
+                "cweId": 20,
+                "description": "In Eclipse Jetty versions 9.4.0 thru 9.4.46, and 10.0.0 thru 10.0.9, and 11.0.0 thru 11.0.9 versions, the parsing of the authority segment of an http scheme URI, the Jetty HttpURI class improperly detects an invalid input as a hostname. This can lead to failures in a Proxy scenario.",
+                "epssScore": 0.00086,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 20,
+                        "name": "Improper Input Validation",
+                        "id": 0
+                    }
+                ],
+                "uuid": "5bdf735d-591e-484e-8f54-dcd220512734",
+                "severityRank": 3,
+                "cweName": "Improper Input Validation",
+                "epssPercentile": 0.35247,
+                "cvssV2BaseScore": 4
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:872abe6b-dbf9-46c6-8d80-8039c06d9c02:5bdf735d-591e-484e-8f54-dcd220512734"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-http",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-http@9.4.18.v20190429?type=jar",
+                "uuid": "872abe6b-dbf9-46c6-8d80-8039c06d9c02",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-26048",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.304",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-26048?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-http&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "vulnId": "CVE-2023-26048",
+                "aliases": [],
+                "cweId": 400,
+                "description": "Jetty is a java based web server and servlet engine. In affected versions servlets with multipart support (e.g. annotated with `@MultipartConfig`) that call `HttpServletRequest.getParameter()` or `HttpServletRequest.getParts()` may cause `OutOfMemoryError` when the client sends a multipart request with a part that has a name but no filename and very large content. This happens even with the default settings of `fileSizeThreshold=0` which should stream the whole part content to disk. An attacker client may send a large multipart request and cause the server to throw `OutOfMemoryError`. However, the server may be able to recover after the `OutOfMemoryError` and continue its service -- although it may take some time. This issue has been patched in versions 9.4.51, 10.0.14, and 11.0.14. Users are advised to upgrade. Users unable to upgrade may set the multipart parameter `maxRequestSize` which must be set to a non-negative value, so the whole multipart content is limited (although still read into memory).",
+                "epssScore": 0.00132,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 400,
+                        "name": "Uncontrolled Resource Consumption",
+                        "id": 0
+                    }
+                ],
+                "uuid": "d794d36d-8d74-4e2c-b156-d8630443d3c4",
+                "severityRank": 2,
+                "cweName": "Uncontrolled Resource Consumption",
+                "epssPercentile": 0.47579
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:872abe6b-dbf9-46c6-8d80-8039c06d9c02:d794d36d-8d74-4e2c-b156-d8630443d3c4"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-http",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-http@9.4.18.v20190429?type=jar",
+                "uuid": "872abe6b-dbf9-46c6-8d80-8039c06d9c02",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-40167",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.309",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-40167?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-http&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "vulnId": "CVE-2023-40167",
+                "aliases": [],
+                "cweId": 130,
+                "description": "Jetty is a Java based web server and servlet engine. Prior to versions 9.4.52, 10.0.16, 11.0.16, and 12.0.1, Jetty accepts the `+` character proceeding the content-length value in a HTTP/1 header field.  This is more permissive than allowed by the RFC and other servers routinely reject such requests with 400 responses.  There is no known exploit scenario, but it is conceivable that request smuggling could result if jetty is used in combination with a server that does not close the connection after sending such a 400 response. Versions 9.4.52, 10.0.16, 11.0.16, and 12.0.1 contain a patch for this issue. There is no workaround as there is no known exploit scenario.",
+                "epssScore": 0.0006,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 130,
+                        "name": "Improper Handling of Length Parameter Inconsistency",
+                        "id": 0
+                    }
+                ],
+                "uuid": "0850bfb8-26ab-4ae1-af47-83213b84f9b5",
+                "severityRank": 2,
+                "cweName": "Improper Handling of Length Parameter Inconsistency",
+                "epssPercentile": 0.24021
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:872abe6b-dbf9-46c6-8d80-8039c06d9c02:0850bfb8-26ab-4ae1-af47-83213b84f9b5"
+        },
+        {
+            "component": {
+                "latestVersion": "12.0.8",
+                "name": "jetty-io",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-io@9.4.18.v20190429?type=jar",
+                "uuid": "467cf79a-13c0-4eef-96b6-cc2d1315f973",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2021-28165",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.316",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-28165?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-io&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2021-28165",
+                "aliases": [],
+                "cweId": 755,
+                "description": "In Eclipse Jetty 7.2.2 to 9.4.38, 10.0.0.alpha0 to 10.0.1, and 11.0.0.alpha0 to 11.0.1, CPU usage can reach 100% upon receiving a large invalid TLS frame.",
+                "epssScore": 0.80243,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 755,
+                        "name": "Improper Handling of Exceptional Conditions",
+                        "id": 0
+                    }
+                ],
+                "uuid": "66011bff-4a77-444c-b067-85644c5521cd",
+                "severityRank": 1,
+                "cweName": "Improper Handling of Exceptional Conditions",
+                "epssPercentile": 0.98235,
+                "cvssV2BaseScore": 7.8
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:467cf79a-13c0-4eef-96b6-cc2d1315f973:66011bff-4a77-444c-b067-85644c5521cd"
+        },
+        {
+            "component": {
+                "latestVersion": "4.0.0-M1",
+                "name": "jersey-common",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.glassfish.jersey.core/jersey-common@2.25.1?type=jar",
+                "uuid": "bcc2a6bb-200d-486e-811f-4d966896fb3a",
+                "version": "2.25.1",
+                "group": "org.glassfish.jersey.core"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2021-28168",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.326",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-28168?component-type=maven&component-name=org.glassfish.jersey.core%2Fjersey-common&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.5,
+                "vulnId": "CVE-2021-28168",
+                "aliases": [],
+                "cweId": 668,
+                "description": "Eclipse Jersey 2.28 to 2.33 and Eclipse Jersey 3.0.0 to 3.0.1 contains a local information disclosure vulnerability. This is due to the use of the File.createTempFile which creates a file inside of the system temporary directory with the permissions: -rw-r--r--. Thus the contents of this file are viewable by all other users locally on the system. As such, if the contents written is security sensitive, it can be disclosed to other local users.",
+                "epssScore": 0.00044,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 668,
+                        "name": "Exposure of Resource to Wrong Sphere",
+                        "id": 0
+                    }
+                ],
+                "uuid": "828a8a71-23a5-430f-86ae-1fc62a565334",
+                "severityRank": 2,
+                "cweName": "Exposure of Resource to Wrong Sphere",
+                "epssPercentile": 0.08732,
+                "cvssV2BaseScore": 2.1
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:bcc2a6bb-200d-486e-811f-4d966896fb3a:828a8a71-23a5-430f-86ae-1fc62a565334"
+        },
+        {
+            "component": {
+                "latestVersion": "11.0.20",
+                "name": "jetty-webapp",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-webapp@9.4.18.v20190429?type=jar",
+                "uuid": "cd24dc97-3584-4218-a2e2-dc1628f18085",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-27216",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.364",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-27216?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-webapp&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7,
+                "severityRank": 1,
+                "vulnId": "CVE-2020-27216",
+                "aliases": [],
+                "epssPercentile": 0.29414,
+                "cvssV2BaseScore": 4.4,
+                "description": "In Eclipse Jetty versions 1.0 thru 9.4.32.v20200930, 10.0.0.alpha1 thru 10.0.0.beta2, and 11.0.0.alpha1 thru 11.0.0.beta2O, on Unix like systems, the system's temporary directory is shared between all users on that system. A collocated user can observe the process of creating a temporary sub directory in the shared temporary directory and race to complete the creation of the temporary subdirectory. If the attacker wins the race then they will have read and write permission to the subdirectory used to unpack web applications, including their WEB-INF/lib jar files and JSP files. If any code is ever executed out of this temporary directory, this can lead to a local privilege escalation vulnerability.",
+                "epssScore": 0.00072,
+                "source": "NVD",
+                "uuid": "963e49c3-78b1-4408-8462-df747f11cafd"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:cd24dc97-3584-4218-a2e2-dc1628f18085:963e49c3-78b1-4408-8462-df747f11cafd"
+        },
+        {
+            "component": {
+                "latestVersion": "11.0.20",
+                "name": "jetty-servlets",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-servlets@9.4.18.v20190429?type=jar",
+                "uuid": "d4ca5a6f-3a55-4f8d-8cdc-10c3b8f39fcd",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2021-28169",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.376",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-28169?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-servlets&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "severityRank": 2,
+                "vulnId": "CVE-2021-28169",
+                "aliases": [],
+                "epssPercentile": 0.74245,
+                "cvssV2BaseScore": 5,
+                "description": "For Eclipse Jetty versions <= 9.4.40, <= 10.0.2, <= 11.0.2, it is possible for requests to the ConcatServlet with a doubly encoded path to access protected resources within the WEB-INF directory. For example a request to `/concat?/%2557EB-INF/web.xml` can retrieve the web.xml file. This can reveal sensitive information regarding the implementation of a web application.",
+                "epssScore": 0.00436,
+                "source": "NVD",
+                "uuid": "ce3867a6-ce8b-4da6-bec1-c1257a0115c4"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:d4ca5a6f-3a55-4f8d-8cdc-10c3b8f39fcd:ce3867a6-ce8b-4da6-bec1-c1257a0115c4"
+        },
+        {
+            "component": {
+                "latestVersion": "11.0.20",
+                "name": "jetty-servlets",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty/jetty-servlets@9.4.18.v20190429?type=jar",
+                "uuid": "d4ca5a6f-3a55-4f8d-8cdc-10c3b8f39fcd",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-36479",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.382",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-36479?component-type=maven&component-name=org.eclipse.jetty%2Fjetty-servlets&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 4.3,
+                "vulnId": "CVE-2023-36479",
+                "aliases": [],
+                "cweId": 149,
+                "description": "Eclipse Jetty Canonical Repository is the canonical repository for the Jetty project. Users of the CgiServlet with a very specific command structure may have the wrong command executed. If a user sends a request to a org.eclipse.jetty.servlets.CGI Servlet for a binary with a space in its name, the servlet will escape the command by wrapping it in quotation marks. This wrapped command, plus an optional command prefix, will then be executed through a call to Runtime.exec. If the original binary name provided by the user contains a quotation mark followed by a space, the resulting command line will contain multiple tokens instead of one. This issue was patched in version 9.4.52, 10.0.16, 11.0.16 and 12.0.0-beta2.\n",
+                "epssScore": 0.00055,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 149,
+                        "name": "Improper Neutralization of Quoting Syntax",
+                        "id": 0
+                    }
+                ],
+                "uuid": "bed6cd7d-6f4e-4957-9703-5ccaa04997a8",
+                "severityRank": 2,
+                "cweName": "Improper Neutralization of Quoting Syntax",
+                "epssPercentile": 0.21067
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:d4ca5a6f-3a55-4f8d-8cdc-10c3b8f39fcd:bed6cd7d-6f4e-4957-9703-5ccaa04997a8"
+        },
+        {
+            "component": {
+                "latestVersion": "4.13.2",
+                "name": "junit",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/junit/junit@4.12?type=jar",
+                "uuid": "bee3b1ea-7a3e-49c1-bb38-07ba82da02a0",
+                "version": "4.12",
+                "group": "junit"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-15250",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.412",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-15250?component-type=maven&component-name=junit%2Fjunit&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.5,
+                "vulnId": "CVE-2020-15250",
+                "aliases": [],
+                "cweId": 732,
+                "description": "In JUnit4 from version 4.7 and before 4.13.1, the test rule TemporaryFolder contains a local information disclosure vulnerability. On Unix like systems, the system's temporary directory is shared between all users on that system. Because of this, when files and directories are written into this directory they are, by default, readable by other users on that same system. This vulnerability does not allow other users to overwrite the contents of these directories or files. This is purely an information disclosure vulnerability. This vulnerability impacts you if the JUnit tests write sensitive information, like API keys or passwords, into the temporary folder, and the JUnit tests execute in an environment where the OS has other untrusted users. Because certain JDK file system APIs were only added in JDK 1.7, this this fix is dependent upon the version of the JDK you are using. For Java 1.7 and higher users: this vulnerability is fixed in 4.13.1. For Java 1.6 and lower users: no patch is available, you must use the workaround below. If you are unable to patch, or are stuck running on Java 1.6, specifying the `java.io.tmpdir` system environment variable to a directory that is exclusively owned by the executing user will fix this vulnerability. For more information, including an example of vulnerable code, see the referenced GitHub Security Advisory.",
+                "epssScore": 0.00066,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 732,
+                        "name": "Incorrect Permission Assignment for Critical Resource",
+                        "id": 0
+                    }
+                ],
+                "uuid": "95e8cf75-7b31-43b6-af1c-bcf3a92dea3d",
+                "severityRank": 2,
+                "cweName": "Incorrect Permission Assignment for Critical Resource",
+                "epssPercentile": 0.27539,
+                "cvssV2BaseScore": 1.9
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:bee3b1ea-7a3e-49c1-bb38-07ba82da02a0:95e8cf75-7b31-43b6-af1c-bcf3a92dea3d"
+        },
+        {
+            "component": {
+                "latestVersion": "6.5.0.CR1",
+                "name": "hibernate-core",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.hibernate/hibernate-core@5.2.18.Final?type=jar",
+                "uuid": "9c322d19-384d-4260-a5ca-a40ff0ca0bfd",
+                "version": "5.2.18.Final",
+                "group": "org.hibernate"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2019-14900",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.441",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2019-14900?component-type=maven&component-name=org.hibernate%2Fhibernate-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.5,
+                "vulnId": "CVE-2019-14900",
+                "aliases": [],
+                "cweId": 89,
+                "description": "A flaw was found in Hibernate ORM in versions before 5.3.18, 5.4.18 and 5.5.0.Beta1. A SQL injection in the implementation of the JPA Criteria API can permit unsanitized literals when a literal is used in the SELECT or GROUP BY parts of the query. This flaw could allow an attacker to access unauthorized information or possibly conduct further attacks.",
+                "epssScore": 0.00104,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 89,
+                        "name": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "8d87b7c1-ea64-417b-a6c7-d358120ad29b",
+                "severityRank": 2,
+                "cweName": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+                "epssPercentile": 0.41338,
+                "cvssV2BaseScore": 4
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:9c322d19-384d-4260-a5ca-a40ff0ca0bfd:8d87b7c1-ea64-417b-a6c7-d358120ad29b"
+        },
+        {
+            "component": {
+                "latestVersion": "6.5.0.CR1",
+                "name": "hibernate-core",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.hibernate/hibernate-core@5.2.18.Final?type=jar",
+                "uuid": "9c322d19-384d-4260-a5ca-a40ff0ca0bfd",
+                "version": "5.2.18.Final",
+                "group": "org.hibernate"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-25638",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.445",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-25638?component-type=maven&component-name=org.hibernate%2Fhibernate-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.4,
+                "vulnId": "CVE-2020-25638",
+                "aliases": [],
+                "cweId": 89,
+                "description": "A flaw was found in hibernate-core in versions prior to and including 5.4.23.Final. A SQL injection in the implementation of the JPA Criteria API can permit unsanitized literals when a literal is used in the SQL comments of the query. This flaw could allow an attacker to access unauthorized information or possibly conduct further attacks. The highest threat from this vulnerability is to data confidentiality and integrity.",
+                "epssScore": 0.00352,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 89,
+                        "name": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "86ba00c8-42e0-4805-8a82-ff725a7b1501",
+                "severityRank": 1,
+                "cweName": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+                "epssPercentile": 0.71442,
+                "cvssV2BaseScore": 5.8
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:9c322d19-384d-4260-a5ca-a40ff0ca0bfd:86ba00c8-42e0-4805-8a82-ff725a7b1501"
+        },
+        {
+            "component": {
+                "latestVersion": "2.1.4",
+                "name": "dom4j",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.dom4j/dom4j@2.1.1?type=jar",
+                "uuid": "de708d9a-0b21-44f6-a3dc-caa1c3574daf",
+                "version": "2.1.1",
+                "group": "org.dom4j"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-10683",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.463",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-10683?component-type=maven&component-name=org.dom4j%2Fdom4j&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "CRITICAL",
+                "cvssV3BaseScore": 9.8,
+                "vulnId": "CVE-2020-10683",
+                "aliases": [],
+                "cweId": 611,
+                "description": "dom4j before 2.0.3 and 2.1.x before 2.1.3 allows external DTDs and External Entities by default, which might enable XXE attacks. However, there is popular external documentation from OWASP showing how to enable the safe, non-default behavior in any application that uses dom4j.",
+                "epssScore": 0.00664,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 611,
+                        "name": "Improper Restriction of XML External Entity Reference",
+                        "id": 0
+                    }
+                ],
+                "uuid": "c539c604-e519-428a-ab6b-126907da5962",
+                "severityRank": 0,
+                "cweName": "Improper Restriction of XML External Entity Reference",
+                "epssPercentile": 0.79249,
+                "cvssV2BaseScore": 7.5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:de708d9a-0b21-44f6-a3dc-caa1c3574daf:c539c604-e519-428a-ab6b-126907da5962"
+        },
+        {
+            "component": {
+                "latestVersion": "4.5.14",
+                "name": "httpclient",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.apache.httpcomponents/httpclient@4.5.7?type=jar",
+                "uuid": "893b55c6-8b80-4729-bb5d-dc95b1801691",
+                "version": "4.5.7",
+                "group": "org.apache.httpcomponents"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2020-13956",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.477",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2020-13956?component-type=maven&component-name=org.apache.httpcomponents%2Fhttpclient&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.3,
+                "severityRank": 2,
+                "vulnId": "CVE-2020-13956",
+                "aliases": [],
+                "epssPercentile": 0.5203,
+                "cvssV2BaseScore": 5,
+                "description": "Apache HttpClient versions prior to version 4.5.13 and 5.0.3 can misinterpret malformed authority component in request URIs passed to the library as java.net.URI object and pick the wrong target host for request execution.",
+                "epssScore": 0.00162,
+                "source": "NVD",
+                "uuid": "f14d3101-833f-4bc3-a8e8-6156582528f5"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:893b55c6-8b80-4729-bb5d-dc95b1801691:f14d3101-833f-4bc3-a8e8-6156582528f5"
+        },
+        {
+            "component": {
+                "latestVersion": "4.27.0",
+                "name": "liquibase-core",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.liquibase/liquibase-core@3.6.3?type=jar",
+                "uuid": "6dfcf1da-5ee2-487c-9440-74daac6a795d",
+                "version": "3.6.3",
+                "group": "org.liquibase"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-0839",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.901",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-0839?component-type=maven&component-name=org.liquibase%2Fliquibase-core&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "CRITICAL",
+                "cvssV3BaseScore": 9.8,
+                "vulnId": "CVE-2022-0839",
+                "aliases": [],
+                "cweId": 611,
+                "description": "Improper Restriction of XML External Entity Reference in GitHub repository liquibase/liquibase prior to 4.8.0.",
+                "epssScore": 0.00697,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 611,
+                        "name": "Improper Restriction of XML External Entity Reference",
+                        "id": 0
+                    }
+                ],
+                "uuid": "e5733c1d-c810-4577-91d5-fb9ce95469b6",
+                "severityRank": 0,
+                "cweName": "Improper Restriction of XML External Entity Reference",
+                "epssPercentile": 0.79842,
+                "cvssV2BaseScore": 7.5
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:6dfcf1da-5ee2-487c-9440-74daac6a795d:e5733c1d-c810-4577-91d5-fb9ce95469b6"
+        },
+        {
+            "component": {
+                "latestVersion": "11.0.20",
+                "name": "http2-server",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty.http2/http2-server@9.4.18.v20190429?type=jar",
+                "uuid": "6127f236-909c-484e-a729-23e518f727f5",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty.http2"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-2048",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.908",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-2048?component-type=maven&component-name=org.eclipse.jetty.http2%2Fhttp2-server&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "severityRank": 1,
+                "vulnId": "CVE-2022-2048",
+                "aliases": [],
+                "epssPercentile": 0.50077,
+                "cvssV2BaseScore": 5,
+                "description": "In Eclipse Jetty HTTP/2 server implementation, when encountering an invalid HTTP/2 request, the error handling has a bug that can wind up not properly cleaning up the active connections and associated resources. This can lead to a Denial of Service scenario where there are no enough resources left to process good requests.",
+                "epssScore": 0.00148,
+                "source": "NVD",
+                "uuid": "1e59666d-13cd-442a-931b-ef58ac4effe9"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:6127f236-909c-484e-a729-23e518f727f5:1e59666d-13cd-442a-931b-ef58ac4effe9"
+        },
+        {
+            "component": {
+                "latestVersion": "11.0.20",
+                "name": "http2-common",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty.http2/http2-common@9.4.18.v20190429?type=jar",
+                "uuid": "fd87ac06-8d4b-4aae-86fd-fcb94fa24d6f",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty.http2"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2024-22201",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.915",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2024-22201?component-type=maven&component-name=org.eclipse.jetty.http2%2Fhttp2-common&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "UNASSIGNED",
+                "severityRank": 5,
+                "vulnId": "CVE-2024-22201",
+                "aliases": [],
+                "epssPercentile": 0.13314,
+                "description": "Jetty is a Java based web server and servlet engine. An HTTP/2 SSL connection that is established and TCP congested will be leaked when it times out. An attacker can cause many connections to end up in this state, and the server may run out of file descriptors, eventually causing the server to stop accepting new connections from valid clients. The vulnerability is patched in 9.4.54, 10.0.20, 11.0.20, and 12.0.6.\n\n",
+                "epssScore": 0.00045,
+                "source": "NVD",
+                "uuid": "7a385896-242a-404e-86de-52c511dba9d3"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:fd87ac06-8d4b-4aae-86fd-fcb94fa24d6f:7a385896-242a-404e-86de-52c511dba9d3"
+        },
+        {
+            "component": {
+                "latestVersion": "11.0.20",
+                "name": "http2-common",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty.http2/http2-common@9.4.18.v20190429?type=jar",
+                "uuid": "fd87ac06-8d4b-4aae-86fd-fcb94fa24d6f",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty.http2"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-44487",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.921",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-44487?component-type=maven&component-name=org.eclipse.jetty.http2%2Fhttp2-common&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2023-44487",
+                "aliases": [],
+                "cweId": 400,
+                "description": "The HTTP/2 protocol allows a denial of service (server resource consumption) because request cancellation can reset many streams quickly, as exploited in the wild in August through October 2023.",
+                "epssScore": 0.70585,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 400,
+                        "name": "Uncontrolled Resource Consumption",
+                        "id": 0
+                    }
+                ],
+                "uuid": "6be8f767-ea9c-4360-8b50-9c0bd0e53291",
+                "severityRank": 1,
+                "cweName": "Uncontrolled Resource Consumption",
+                "epssPercentile": 0.97964
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:fd87ac06-8d4b-4aae-86fd-fcb94fa24d6f:6be8f767-ea9c-4360-8b50-9c0bd0e53291"
+        },
+        {
+            "component": {
+                "latestVersion": "11.0.20",
+                "name": "http2-hpack",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/org.eclipse.jetty.http2/http2-hpack@9.4.18.v20190429?type=jar",
+                "uuid": "c682c202-46f5-46c3-b640-94c7339a83cb",
+                "version": "9.4.18.v20190429",
+                "group": "org.eclipse.jetty.http2"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-36478",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.925",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-36478?component-type=maven&component-name=org.eclipse.jetty.http2%2Fhttp2-hpack&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2023-36478",
+                "aliases": [],
+                "cweId": 190,
+                "description": "Eclipse Jetty provides a web server and servlet container. In versions 11.0.0 through 11.0.15, 10.0.0 through 10.0.15, and 9.0.0 through 9.4.52, an integer overflow in `MetaDataBuilder.checkSize` allows for HTTP/2 HPACK header values to\nexceed their size limit. `MetaDataBuilder.java` determines if a header name or value exceeds the size limit, and throws an exception if the limit is exceeded. However, when length is very large and huffman is true, the multiplication by 4 in line 295\nwill overflow, and length will become negative. `(_size+length)` will now be negative, and the check on line 296 will not be triggered. Furthermore, `MetaDataBuilder.checkSize` allows for user-entered HPACK header value sizes to be negative, potentially leading to a very large buffer allocation later on when the user-entered size is multiplied by 2. This means that if a user provides a negative length value (or, more precisely, a length value which, when multiplied by the 4/3 fudge factor, is negative), and this length value is a very large positive number when multiplied by 2, then the user can cause a very large buffer to be allocated on the server. Users of HTTP/2 can be impacted by a remote denial of service attack. The issue has been fixed in versions 11.0.16, 10.0.16, and 9.4.53. There are no known workarounds.",
+                "epssScore": 0.00249,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 190,
+                        "name": "Integer Overflow or Wraparound",
+                        "id": 0
+                    },
+                    {
+                        "cweId": 400,
+                        "name": "Uncontrolled Resource Consumption",
+                        "id": 0
+                    }
+                ],
+                "uuid": "29a3411c-9db4-4246-8aa4-6926c518e7b8",
+                "severityRank": 1,
+                "cweName": "Integer Overflow or Wraparound",
+                "epssPercentile": 0.64302
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:c682c202-46f5-46c3-b640-94c7339a83cb:29a3411c-9db4-4246-8aa4-6926c518e7b8"
+        },
+        {
+            "component": {
+                "latestVersion": "5.20.0",
+                "name": "amqp-client",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.rabbitmq/amqp-client@4.4.1?type=jar",
+                "uuid": "935e5762-3d18-4d69-bd50-2c306f6bfeba",
+                "version": "4.4.1",
+                "group": "com.rabbitmq"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2018-11087",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.936",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2018-11087?component-type=maven&component-name=com.rabbitmq%2Famqp-client&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 5.9,
+                "vulnId": "CVE-2018-11087",
+                "aliases": [],
+                "cweId": 295,
+                "description": "Pivotal Spring AMQP, 1.x versions prior to 1.7.10 and 2.x versions prior to 2.0.6, expose a man-in-the-middle vulnerability due to lack of hostname validation. A malicious user that has the ability to intercept traffic would be able to view data in transit.",
+                "epssScore": 0.00128,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 295,
+                        "name": "Improper Certificate Validation",
+                        "id": 0
+                    }
+                ],
+                "uuid": "9cdbf741-6dc8-40c4-9c0e-368d0cb90e20",
+                "severityRank": 2,
+                "cweName": "Improper Certificate Validation",
+                "epssPercentile": 0.46815,
+                "cvssV2BaseScore": 4.3
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:935e5762-3d18-4d69-bd50-2c306f6bfeba:9cdbf741-6dc8-40c4-9c0e-368d0cb90e20"
+        },
+        {
+            "component": {
+                "latestVersion": "5.20.0",
+                "name": "amqp-client",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.rabbitmq/amqp-client@4.4.1?type=jar",
+                "uuid": "935e5762-3d18-4d69-bd50-2c306f6bfeba",
+                "version": "4.4.1",
+                "group": "com.rabbitmq"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2023-46120",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.942",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2023-46120?component-type=maven&component-name=com.rabbitmq%2Famqp-client&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "HIGH",
+                "cvssV3BaseScore": 7.5,
+                "vulnId": "CVE-2023-46120",
+                "aliases": [],
+                "cweId": 400,
+                "description": "The RabbitMQ Java client library allows Java and JVM-based applications to connect to and interact with RabbitMQ nodes. `maxBodyLebgth` was not used when receiving Message objects.  Attackers could send a very large Message causing a memory overflow and triggering an OOM Error. Users of RabbitMQ may suffer from  DoS attacks from RabbitMQ Java client which will ultimately exhaust the memory of the consumer. This vulnerability was patched in version 5.18.0.",
+                "epssScore": 0.00208,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 400,
+                        "name": "Uncontrolled Resource Consumption",
+                        "id": 0
+                    }
+                ],
+                "uuid": "acfb6a38-4676-4618-a04b-1b544d2da97f",
+                "severityRank": 1,
+                "cweName": "Uncontrolled Resource Consumption",
+                "epssPercentile": 0.58127
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:935e5762-3d18-4d69-bd50-2c306f6bfeba:acfb6a38-4676-4618-a04b-1b544d2da97f"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2.224",
+                "name": "h2",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.h2database/h2@1.4.197?type=jar",
+                "uuid": "c846ae6f-ffbd-4624-8285-a96b898cc3e0",
+                "version": "1.4.197",
+                "group": "com.h2database"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2021-42392",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.952",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2021-42392?component-type=maven&component-name=com.h2database%2Fh2&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "CRITICAL",
+                "cvssV3BaseScore": 9.8,
+                "vulnId": "CVE-2021-42392",
+                "aliases": [],
+                "cweId": 502,
+                "description": "The org.h2.util.JdbcUtils.getConnection method of the H2 database takes as parameters the class name of the driver and URL of the database. An attacker may pass a JNDI driver name and a URL leading to a LDAP or RMI servers, causing remote code execution. This can be exploited through various attack vectors, most notably through the H2 Console which leads to unauthenticated remote code execution.",
+                "epssScore": 0.5181,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 502,
+                        "name": "Deserialization of Untrusted Data",
+                        "id": 0
+                    }
+                ],
+                "uuid": "52af1744-fdc6-4bfc-a3e2-7dfbb491a39b",
+                "severityRank": 0,
+                "cweName": "Deserialization of Untrusted Data",
+                "epssPercentile": 0.97514,
+                "cvssV2BaseScore": 10
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:c846ae6f-ffbd-4624-8285-a96b898cc3e0:52af1744-fdc6-4bfc-a3e2-7dfbb491a39b"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2.224",
+                "name": "h2",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.h2database/h2@1.4.197?type=jar",
+                "uuid": "c846ae6f-ffbd-4624-8285-a96b898cc3e0",
+                "version": "1.4.197",
+                "group": "com.h2database"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2022-23221",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.957",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2022-23221?component-type=maven&component-name=com.h2database%2Fh2&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "CRITICAL",
+                "cvssV3BaseScore": 9.8,
+                "severityRank": 0,
+                "cweName": "Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')",
+                "vulnId": "CVE-2022-23221",
+                "aliases": [],
+                "cvssV2BaseScore": 10,
+                "cweId": 88,
+                "description": "H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.",
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 88,
+                        "name": "Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "043f6051-9c33-4b4e-8623-f27c794ea4eb"
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:c846ae6f-ffbd-4624-8285-a96b898cc3e0:043f6051-9c33-4b4e-8623-f27c794ea4eb"
+        },
+        {
+            "component": {
+                "latestVersion": "2.2.224",
+                "name": "h2",
+                "project": "5840398e-605b-4326-9184-74e0e7c2a081",
+                "purl": "pkg:maven/com.h2database/h2@1.4.197?type=jar",
+                "uuid": "c846ae6f-ffbd-4624-8285-a96b898cc3e0",
+                "version": "1.4.197",
+                "group": "com.h2database"
+            },
+            "attribution": {
+                "alternateIdentifier": "CVE-2018-14335",
+                "analyzerIdentity": "OSSINDEX_ANALYZER",
+                "attributedOn": "2024-04-04 03:29:41.962",
+                "referenceUrl": "https://ossindex.sonatype.org/vulnerability/CVE-2018-14335?component-type=maven&component-name=com.h2database%2Fh2&utm_source=dependency-track&utm_medium=integration&utm_content=v4.10.1"
+            },
+            "vulnerability": {
+                "severity": "MEDIUM",
+                "cvssV3BaseScore": 6.5,
+                "vulnId": "CVE-2018-14335",
+                "aliases": [],
+                "cweId": 59,
+                "description": "An issue was discovered in H2 1.4.197. Insecure handling of permissions in the backup function allows attackers to read sensitive files (outside of their permissions) via a symlink to a fake database file.",
+                "epssScore": 0.0121,
+                "source": "NVD",
+                "cwes": [
+                    {
+                        "cweId": 59,
+                        "name": "Improper Link Resolution Before File Access ('Link Following')",
+                        "id": 0
+                    }
+                ],
+                "uuid": "f1e79bb6-80d9-4696-bf11-9718862c2f0b",
+                "severityRank": 2,
+                "cweName": "Improper Link Resolution Before File Access ('Link Following')",
+                "epssPercentile": 0.84975,
+                "cvssV2BaseScore": 4
+            },
+            "analysis": {
+                "isSuppressed": false
+            },
+            "matrix": "5840398e-605b-4326-9184-74e0e7c2a081:c846ae6f-ffbd-4624-8285-a96b898cc3e0:f1e79bb6-80d9-4696-bf11-9718862c2f0b"
+        }
+    ],
+    "project": {
+        "name": "dropwizard",
+        "uuid": "5840398e-605b-4326-9184-74e0e7c2a081",
+        "version": "1.0"
+    },
+    "version": "1.2"
+}

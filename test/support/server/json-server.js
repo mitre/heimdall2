@@ -75,7 +75,7 @@ server.use((req, res, next) => {
       token_type: 'bearer'
     });
   } else if (req.originalUrl.startsWith('/api')) {
-    res.send(SonarQubeData[unescape(req.originalUrl)]);
+    res.send(SonarQubeData[req.originalUrl]);
   } else {
     next();
   }

@@ -17,17 +17,19 @@ import {GroupUsersModule} from './group-users/group-users.module';
 import {GroupsModule} from './groups/groups.module';
 import {StatisticsModule} from './statistics/statistics.module';
 import {UsersModule} from './users/users.module';
+import {TenableModule} from './tenable/tenable.module';
 
 @Module({
   controllers: [AppController],
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', '..', '..', 'dist', 'frontend')
+      rootPath: join(__dirname, '..', '..', '..', '..', 'dist', 'frontend'),
+      renderPath: '*splat'
     }),
+    ConfigModule,
     ApiKeyModule,
     UsersModule,
     DatabaseModule,
-    ConfigModule,
     AuthzModule,
     AuthnModule,
     EvaluationTagsModule,
@@ -35,7 +37,8 @@ import {UsersModule} from './users/users.module';
     GroupEvaluationsModule,
     GroupsModule,
     GroupUsersModule,
-    StatisticsModule
+    StatisticsModule,
+    TenableModule
   ],
   providers: [
     AppService,

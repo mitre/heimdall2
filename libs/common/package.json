@@ -1,0 +1,16 @@
+{
+  "name": "@heimdall/common",
+  "version": "2.12.6",
+  "description": "Common utilities and interfaces between the front and backends of Heimdall",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2",
+    "directory": "libs/common"
+  },
+  "main": "index.ts",
+  "scripts": {
+    "lint": "eslint \"**/*.ts\" --fix",
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0"
+  }
+}

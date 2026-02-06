@@ -178,7 +178,7 @@ import {
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
 import Base from '@/views/Base.vue';
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/common/interfaces';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';

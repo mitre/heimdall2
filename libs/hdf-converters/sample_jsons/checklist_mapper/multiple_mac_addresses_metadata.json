@@ -1,0 +1,287 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.11.3"
+  },
+  "version": "2.11.3",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Cisco_ASA_FW_STIG",
+      "version": "1",
+      "title": "Cisco ASA Firewall Security Technical Implementation Guide",
+      "summary": "This Security Technical Implementation Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
+      "license": "terms-of-use",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "gtitle": "SRG-NET-000019-FW-000003",
+            "rid": "SV-239852r665842_rule",
+            "gid": "V-239852",
+            "stig_id": "CASA-FW-000010",
+            "cci": [
+              "CCI-001414"
+            ],
+            "nist": [
+              "AC-4"
+            ],
+            "severity": "high",
+            "weight": "10.0",
+            "STIGRef": "Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The Cisco ASA must be configured to filter outbound traffic, allowing only authorized ports and services.",
+          "id": "V-239852",
+          "desc": "Information flow control regulates where information is allowed to travel within a network and between interconnected networks. Blocking or restricting detected harmful or suspicious communications between interconnected networks enforces approved authorizations for controlling the flow of traffic.\n\nThe firewall that filters traffic outbound to interconnected networks with different security policies must be configured to permit or block traffic based on organization-defined traffic authorizations.",
+          "descriptions": [
+            {
+              "data": "Review the ASA configuration to determine if it only permits outbound traffic using authorized ports and services.\n\nStep 1: Verify that an ingress ACL has been applied to all internal interfaces as shown in the example below.\n\n interface GigabitEthernet0/0\n nameif INSIDE\n security-level 100\n ip address 10.1.11.1 255.255.255.0\n…\n…\n…\naccess-group INSIDE _IN in interface INSIDE \n\nStep 2: Verify that the ingress ACL only allows outbound traffic using authorized ports and services as shown in the example below.\n\naccess-list INSIDE _IN extended permit tcp any any eq www \naccess-list INSIDE _IN extended permit tcp any any eq https \naccess-list INSIDE _IN extended permit tcp any any eq …\naccess-list INSIDE _IN extended deny ip any any log\n\nIf the ASA is not configured to only allow outbound traffic using authorized ports and services, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Step 1: Configure the ingress ACL similar to the example below.\n\nASA(config)# access-list INSIDE_INextended permit tcp any any eq https\nASA(config)# access-list INSIDE_INextended permit tcp any any eq http\nASA(config)# access-list INSIDE_INextended permit tcp any any eq …\nASA(config)# access-list INSIDE_INextended deny ip any any log      \n\nStep 2: Apply the ACL inbound on all internal interfaces as shown in the example below.\n\nASA(config)# access-group INSIDE_IN in interface INSIDE\nASA(config)# end",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.7,
+          "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-239852\",\n  \"severity\": \"high\",\n  \"groupTitle\": \"SRG-NET-000019-FW-000003\",\n  \"ruleId\": \"SV-239852r665842_rule\",\n  \"ruleVer\": \"CASA-FW-000010\",\n  \"ruleTitle\": \"The Cisco ASA must be configured to filter outbound traffic, allowing only authorized ports and services.\",\n  \"vulnDiscuss\": \"Information flow control regulates where information is allowed to travel within a network and between interconnected networks. Blocking or restricting detected harmful or suspicious communications between interconnected networks enforces approved authorizations for controlling the flow of traffic.\\n\\nThe firewall that filters traffic outbound to interconnected networks with different security policies must be configured to permit or block traffic based on organization-defined traffic authorizations.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Review the ASA configuration to determine if it only permits outbound traffic using authorized ports and services.\\n\\nStep 1: Verify that an ingress ACL has been applied to all internal interfaces as shown in the example below.\\n\\n interface GigabitEthernet0/0\\n nameif INSIDE\\n security-level 100\\n ip address 10.1.11.1 255.255.255.0\\n…\\n…\\n…\\naccess-group INSIDE _IN in interface INSIDE \\n\\nStep 2: Verify that the ingress ACL only allows outbound traffic using authorized ports and services as shown in the example below.\\n\\naccess-list INSIDE _IN extended permit tcp any any eq www \\naccess-list INSIDE _IN extended permit tcp any any eq https \\naccess-list INSIDE _IN extended permit tcp any any eq …\\naccess-list INSIDE _IN extended deny ip any any log\\n\\nIf the ASA is not configured to only allow outbound traffic using authorized ports and services, this is a finding.\",\n  \"fixText\": \"Step 1: Configure the ingress ACL similar to the example below.\\n\\nASA(config)# access-list INSIDE_INextended permit tcp any any eq https\\nASA(config)# access-list INSIDE_INextended permit tcp any any eq http\\nASA(config)# access-list INSIDE_INextended permit tcp any any eq …\\nASA(config)# access-list INSIDE_INextended deny ip any any log      \\n\\nStep 2: Apply the ACL inbound on all internal interfaces as shown in the example below.\\n\\nASA(config)# access-group INSIDE_IN in interface INSIDE\\nASA(config)# end\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023\",\n  \"targetKey\": \"5339\",\n  \"stigUuid\": \"54b4701f-19a1-4d5b-9497-5be85f995362\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001414\"\n}",
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-NET-000019-FW-000004",
+            "rid": "SV-239853r665845_rule",
+            "gid": "V-239853",
+            "stig_id": "CASA-FW-000020",
+            "cci": [
+              "CCI-001414"
+            ],
+            "nist": [
+              "AC-4"
+            ],
+            "severity": "medium",
+            "weight": "10.0",
+            "STIGRef": "Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The Cisco ASA must immediately use updates made to policy enforcement mechanisms such as firewall rules, security policies, and security zones.",
+          "id": "V-239853",
+          "desc": "Information flow policies regarding dynamic information flow control include, for example, allowing or disallowing information flows based on changes to the Ports, Protocols, Services Management (PPSM) Category Assurance Levels (CAL) list, vulnerability assessments, or mission conditions. Changing conditions include changes in the threat environment and detection of potentially harmful or adverse events.",
+          "descriptions": [
+            {
+              "data": "By default, when you change a rule-based policy such as access rules, the changes become effective immediately. With transactional model configured, the rules are not active until after compilation.\n\nReview the ASA configuration and verify that the following command is not configured.\n\nasp rule-engine transactional-commit access-group\n\nIf transactional-commit access-group has been configured, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Remove the command asp rule-engine transactional-commit access-group\n\nASA(config)# no asp rule-engine transactional-commit access-group",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.5,
+          "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-239853\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-NET-000019-FW-000004\",\n  \"ruleId\": \"SV-239853r665845_rule\",\n  \"ruleVer\": \"CASA-FW-000020\",\n  \"ruleTitle\": \"The Cisco ASA must immediately use updates made to policy enforcement mechanisms such as firewall rules, security policies, and security zones.\",\n  \"vulnDiscuss\": \"Information flow policies regarding dynamic information flow control include, for example, allowing or disallowing information flows based on changes to the Ports, Protocols, Services Management (PPSM) Category Assurance Levels (CAL) list, vulnerability assessments, or mission conditions. Changing conditions include changes in the threat environment and detection of potentially harmful or adverse events.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"By default, when you change a rule-based policy such as access rules, the changes become effective immediately. With transactional model configured, the rules are not active until after compilation.\\n\\nReview the ASA configuration and verify that the following command is not configured.\\n\\nasp rule-engine transactional-commit access-group\\n\\nIf transactional-commit access-group has been configured, this is a finding.\",\n  \"fixText\": \"Remove the command asp rule-engine transactional-commit access-group\\n\\nASA(config)# no asp rule-engine transactional-commit access-group\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023\",\n  \"targetKey\": \"5339\",\n  \"stigUuid\": \"54b4701f-19a1-4d5b-9497-5be85f995362\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001414\"\n}",
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-NET-000061-FW-000001",
+            "rid": "SV-239854r665848_rule",
+            "gid": "V-239854",
+            "stig_id": "CASA-FW-000030",
+            "cci": [
+              "CCI-000067"
+            ],
+            "nist": [
+              "AC-17 (1)"
+            ],
+            "severity": "medium",
+            "weight": "10.0",
+            "STIGRef": "Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The Cisco ASA must be configured to restrict VPN traffic according to organization-defined filtering rules.",
+          "id": "V-239854",
+          "desc": "Remote access devices (such as those providing remote access to network devices and information systems) that lack automated capabilities increase risk and make remote user access management difficult at best.\n\nRemote access is access to DoD non-public information systems by an authorized user (or an information system) communicating through an external, non-organization-controlled network.\n\nAutomated monitoring of remote access sessions allows organizations to detect cyberattacks and also ensure ongoing compliance with remote access policies by auditing connection activities of remote access capabilities from a variety of information system components (e.g., servers, workstations, notebook computers, smart phones, and tablets).",
+          "descriptions": [
+            {
+              "data": "Step 1: Verify that an ACL has been applied to the applicable VPN group policy via the vpn-filter attribute as shown in the example below.\n\ngroup-policy VPN_POLICY internal\ngroup-policy VPN_POLICY attributes\n …\n …\n …\n vpn-filter value RESTRICT_VPN\n\nStep 2: Verify that the filter restricts traffic according to organization-defined filtering rules as shown in the example below.\n\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0 host 192.168.1.12 eq http \naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.13 eq smtp \naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.14 eq ftp \naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0 host 192.168.1.14 eq ftp-data \naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.15 eq domain\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.16 eq sqlnet\naccess-list RESTRICT_VPN extended deny ip any any log\n\nNote: In the example above, assume that the client-assigned IP address pool is 10.10.10.0/24 and the local private network is 192.168.1.0/24.\n\nIf the ASA is not configured to restrict VPN traffic according to organization-defined filtering rules, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Step 1: Configure the ACL to restrict VPN traffic.\n\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.12 eq http\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.13 eq smtp\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.14 eq ftp\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.14 eq ftp-data\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.y host 192.168.1.15 eq domain\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.16 eq sqlnet\nASA(config)# access-list RESTRICT_VPN extended deny ip any any log\nASA(config)# exit \n\nStep 2: Apply the VPN filter to the applicable group policy as shown in the example below.\n\nASA(config)# group-policy VPN_POLICY attributes \nASA(config-group-policy)# vpn-filter value RESTRICT_VPN \nASA(config-group-policy)# end",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.5,
+          "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-239854\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-NET-000061-FW-000001\",\n  \"ruleId\": \"SV-239854r665848_rule\",\n  \"ruleVer\": \"CASA-FW-000030\",\n  \"ruleTitle\": \"The Cisco ASA must be configured to restrict VPN traffic according to organization-defined filtering rules.\",\n  \"vulnDiscuss\": \"Remote access devices (such as those providing remote access to network devices and information systems) that lack automated capabilities increase risk and make remote user access management difficult at best.\\n\\nRemote access is access to DoD non-public information systems by an authorized user (or an information system) communicating through an external, non-organization-controlled network.\\n\\nAutomated monitoring of remote access sessions allows organizations to detect cyberattacks and also ensure ongoing compliance with remote access policies by auditing connection activities of remote access capabilities from a variety of information system components (e.g., servers, workstations, notebook computers, smart phones, and tablets).\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Step 1: Verify that an ACL has been applied to the applicable VPN group policy via the vpn-filter attribute as shown in the example below.\\n\\ngroup-policy VPN_POLICY internal\\ngroup-policy VPN_POLICY attributes\\n …\\n …\\n …\\n vpn-filter value RESTRICT_VPN\\n\\nStep 2: Verify that the filter restricts traffic according to organization-defined filtering rules as shown in the example below.\\n\\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0 host 192.168.1.12 eq http \\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.13 eq smtp \\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.14 eq ftp \\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0 host 192.168.1.14 eq ftp-data \\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.15 eq domain\\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.16 eq sqlnet\\naccess-list RESTRICT_VPN extended deny ip any any log\\n\\nNote: In the example above, assume that the client-assigned IP address pool is 10.10.10.0/24 and the local private network is 192.168.1.0/24.\\n\\nIf the ASA is not configured to restrict VPN traffic according to organization-defined filtering rules, this is a finding.\",\n  \"fixText\": \"Step 1: Configure the ACL to restrict VPN traffic.\\n\\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.12 eq http\\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.13 eq smtp\\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.14 eq ftp\\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.14 eq ftp-data\\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.y host 192.168.1.15 eq domain\\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.16 eq sqlnet\\nASA(config)# access-list RESTRICT_VPN extended deny ip any any log\\nASA(config)# exit \\n\\nStep 2: Apply the VPN filter to the applicable group policy as shown in the example below.\\n\\nASA(config)# group-policy VPN_POLICY attributes \\nASA(config-group-policy)# vpn-filter value RESTRICT_VPN \\nASA(config-group-policy)# end\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023\",\n  \"targetKey\": \"5339\",\n  \"stigUuid\": \"54b4701f-19a1-4d5b-9497-5be85f995362\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000067\"\n}",
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "6c22e71efae78822d11742b8a72e8b8a1793076f3103e569319db612db7346ce"
+    }
+  ],
+  "passthrough": {
+    "checklist": {
+      "asset": {
+        "role": "Member Server",
+        "assettype": "Computing",
+        "hostname": "=",
+        "hostip": "",
+        "hostmac": "02:B9:78:82:FE:DE\nEE:EE:EE:EE:EE:EE\n6E:8D:55:AB:10:5F",
+        "hostfqdn": "",
+        "marking": "CUI",
+        "targetcomment": "",
+        "techarea": "Exchange Server",
+        "targetkey": "5339",
+        "webordatabase": false,
+        "webdbsite": "",
+        "webdbinstance": ""
+      },
+      "stigs": [
+        {
+          "header": {
+            "version": "1",
+            "classification": "UNCLASSIFIED",
+            "customname": "",
+            "stigid": "Cisco_ASA_FW_STIG",
+            "description": "This Security Technical Implementation Guide is published as a tool to improve the security of Department of Defense (DOD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
+            "filename": "U_Cisco_ASA_Firewall_STIG_V1R4_Manual-xccdf.xml",
+            "releaseinfo": "Release: 4 Benchmark Date: 27 Apr 2023",
+            "title": "Cisco ASA Firewall Security Technical Implementation Guide",
+            "uuid": "b6a7cb18-6ffe-4a6e-9f44-60d514c98db9",
+            "notice": "terms-of-use",
+            "source": "STIG.DOD.MIL"
+          },
+          "vulns": [
+            {
+              "status": "Not Reviewed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-239852",
+              "severity": "high",
+              "groupTitle": "SRG-NET-000019-FW-000003",
+              "ruleId": "SV-239852r665842_rule",
+              "ruleVer": "CASA-FW-000010",
+              "ruleTitle": "The Cisco ASA must be configured to filter outbound traffic, allowing only authorized ports and services.",
+              "vulnDiscuss": "Information flow control regulates where information is allowed to travel within a network and between interconnected networks. Blocking or restricting detected harmful or suspicious communications between interconnected networks enforces approved authorizations for controlling the flow of traffic.\n\nThe firewall that filters traffic outbound to interconnected networks with different security policies must be configured to permit or block traffic based on organization-defined traffic authorizations.",
+              "iaControls": "",
+              "checkContent": "Review the ASA configuration to determine if it only permits outbound traffic using authorized ports and services.\n\nStep 1: Verify that an ingress ACL has been applied to all internal interfaces as shown in the example below.\n\n interface GigabitEthernet0/0\n nameif INSIDE\n security-level 100\n ip address 10.1.11.1 255.255.255.0\n…\n…\n…\naccess-group INSIDE _IN in interface INSIDE \n\nStep 2: Verify that the ingress ACL only allows outbound traffic using authorized ports and services as shown in the example below.\n\naccess-list INSIDE _IN extended permit tcp any any eq www \naccess-list INSIDE _IN extended permit tcp any any eq https \naccess-list INSIDE _IN extended permit tcp any any eq …\naccess-list INSIDE _IN extended deny ip any any log\n\nIf the ASA is not configured to only allow outbound traffic using authorized ports and services, this is a finding.",
+              "fixText": "Step 1: Configure the ingress ACL similar to the example below.\n\nASA(config)# access-list INSIDE_INextended permit tcp any any eq https\nASA(config)# access-list INSIDE_INextended permit tcp any any eq http\nASA(config)# access-list INSIDE_INextended permit tcp any any eq …\nASA(config)# access-list INSIDE_INextended deny ip any any log      \n\nStep 2: Apply the ACL inbound on all internal interfaces as shown in the example below.\n\nASA(config)# access-group INSIDE_IN in interface INSIDE\nASA(config)# end",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023",
+              "targetKey": "5339",
+              "stigUuid": "54b4701f-19a1-4d5b-9497-5be85f995362",
+              "legacyId": "; ",
+              "cciRef": "CCI-001414"
+            },
+            {
+              "status": "Not Reviewed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-239853",
+              "severity": "medium",
+              "groupTitle": "SRG-NET-000019-FW-000004",
+              "ruleId": "SV-239853r665845_rule",
+              "ruleVer": "CASA-FW-000020",
+              "ruleTitle": "The Cisco ASA must immediately use updates made to policy enforcement mechanisms such as firewall rules, security policies, and security zones.",
+              "vulnDiscuss": "Information flow policies regarding dynamic information flow control include, for example, allowing or disallowing information flows based on changes to the Ports, Protocols, Services Management (PPSM) Category Assurance Levels (CAL) list, vulnerability assessments, or mission conditions. Changing conditions include changes in the threat environment and detection of potentially harmful or adverse events.",
+              "iaControls": "",
+              "checkContent": "By default, when you change a rule-based policy such as access rules, the changes become effective immediately. With transactional model configured, the rules are not active until after compilation.\n\nReview the ASA configuration and verify that the following command is not configured.\n\nasp rule-engine transactional-commit access-group\n\nIf transactional-commit access-group has been configured, this is a finding.",
+              "fixText": "Remove the command asp rule-engine transactional-commit access-group\n\nASA(config)# no asp rule-engine transactional-commit access-group",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023",
+              "targetKey": "5339",
+              "stigUuid": "54b4701f-19a1-4d5b-9497-5be85f995362",
+              "legacyId": "; ",
+              "cciRef": "CCI-001414"
+            },
+            {
+              "status": "Not Reviewed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-239854",
+              "severity": "medium",
+              "groupTitle": "SRG-NET-000061-FW-000001",
+              "ruleId": "SV-239854r665848_rule",
+              "ruleVer": "CASA-FW-000030",
+              "ruleTitle": "The Cisco ASA must be configured to restrict VPN traffic according to organization-defined filtering rules.",
+              "vulnDiscuss": "Remote access devices (such as those providing remote access to network devices and information systems) that lack automated capabilities increase risk and make remote user access management difficult at best.\n\nRemote access is access to DoD non-public information systems by an authorized user (or an information system) communicating through an external, non-organization-controlled network.\n\nAutomated monitoring of remote access sessions allows organizations to detect cyberattacks and also ensure ongoing compliance with remote access policies by auditing connection activities of remote access capabilities from a variety of information system components (e.g., servers, workstations, notebook computers, smart phones, and tablets).",
+              "iaControls": "",
+              "checkContent": "Step 1: Verify that an ACL has been applied to the applicable VPN group policy via the vpn-filter attribute as shown in the example below.\n\ngroup-policy VPN_POLICY internal\ngroup-policy VPN_POLICY attributes\n …\n …\n …\n vpn-filter value RESTRICT_VPN\n\nStep 2: Verify that the filter restricts traffic according to organization-defined filtering rules as shown in the example below.\n\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0 host 192.168.1.12 eq http \naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.13 eq smtp \naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.14 eq ftp \naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0 host 192.168.1.14 eq ftp-data \naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.15 eq domain\naccess-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.0  host 192.168.1.16 eq sqlnet\naccess-list RESTRICT_VPN extended deny ip any any log\n\nNote: In the example above, assume that the client-assigned IP address pool is 10.10.10.0/24 and the local private network is 192.168.1.0/24.\n\nIf the ASA is not configured to restrict VPN traffic according to organization-defined filtering rules, this is a finding.",
+              "fixText": "Step 1: Configure the ACL to restrict VPN traffic.\n\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.12 eq http\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.13 eq smtp\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.14 eq ftp\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.14 eq ftp-data\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255.y host 192.168.1.15 eq domain\nASA(config)# access-list RESTRICT_VPN extended permit tcp 10.0.0.0 255.255.255. host 192.168.1.16 eq sqlnet\nASA(config)# access-list RESTRICT_VPN extended deny ip any any log\nASA(config)# exit \n\nStep 2: Apply the VPN filter to the applicable group policy as shown in the example below.\n\nASA(config)# group-policy VPN_POLICY attributes \nASA(config-group-policy)# vpn-filter value RESTRICT_VPN \nASA(config-group-policy)# end",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Cisco ASA Firewall Security Technical Implementation Guide :: Version 1, Release: 4 Benchmark Date: 27 Apr 2023",
+              "targetKey": "5339",
+              "stigUuid": "54b4701f-19a1-4d5b-9497-5be85f995362",
+              "legacyId": "; ",
+              "cciRef": "CCI-000067"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

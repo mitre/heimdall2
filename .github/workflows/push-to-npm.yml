@@ -1,22 +1,33 @@
 name: Push Heimdall-Lite to NPM and GitHub Packages and Push InspecJs to NPM
+
 on:
   release:
     types: [published]
+
+permissions:
+  id-token: write # required for trusted publishing's use of OIDC
+  contents: read
+  packages: write
+
 env:
   NODE_ENV: production
+
 jobs:
   build-deploy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: "18"
+          node-version: "22"
           check-latest: true
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
+
+      - name: Manually update npm to 11.5.1 or later which is the required version for trusted publishing to work # this step can be removed after the ubuntu runner has the correct minimum version of npm installed
+        run: npm install -g npm@latest
 
       - name: Install project dependencies
         run: yarn install --frozen-lockfile --production
@@ -27,26 +38,20 @@ jobs:
       - name: Publish Heimdall Lite to NPM
         if: always()
         run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish InSpecJS to NPM
         if: always()
         run: npm publish --access public libs/inspecjs/inspecjs*.tgz
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish OHDF Converters to NPM
         if: always()
         run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Setup .npmrc file to publish to GitHub Packages
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: always()
         with:
-          node-version: "18"
+          node-version: "22"
           check-latest: true
           registry-url: 'https://npm.pkg.github.com'
           cache: 'yarn'

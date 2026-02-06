@@ -17,7 +17,8 @@ describe('Config Service', () => {
     console.log();
     // Used as an empty file system
     mock({
-      // No files created (.env file does not exist yet)
+      // No files created (.env file does not exist yet), but pull through node_modules so the testing framework can run
+      node_modules: mock.load('node_modules')
     });
   });
 
@@ -122,7 +123,7 @@ describe('Config Service', () => {
         })
       });
       expect(() => new ConfigService()).toThrowError(
-        "EACCES: permission denied, open '.env'"
+        "EACCES, permission denied '.env'"
       );
     });
 
@@ -132,7 +133,7 @@ describe('Config Service', () => {
       });
       const configService = new ConfigService();
       jest.spyOn(configService, 'get').mockImplementationOnce(() => {
-        throw new Error('');
+        throw new Error('Test error');
       });
       expect(() => configService.get('DATABASE_NAME')).toThrowError();
     });

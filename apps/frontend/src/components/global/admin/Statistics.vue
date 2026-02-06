@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import {IStatistics} from '@heimdall/interfaces';
+import {IStatistics} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
@@ -49,7 +49,7 @@ export default class Statistics extends Vue {
   }
 
   toCapitalizedWords(variable: string) {
-    var words = variable.match(/[A-Za-z][a-z]*/g) || [];
+    var words = variable.match(/[A-Za-z][a-z]*/gv) || [];
     return words.map(this.capitalize).join(' ');
   }
 
