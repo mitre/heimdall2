@@ -47,7 +47,7 @@ jobs:
       - name: Build and push multi-platform server image
         uses: docker/bake-action@v5
         env:
-          TAG_SUFFIX: ${{ github.sha }}
+          TAG_SUFFIXES: "${{ github.sha }},test"
         with:
           files: docker-bake.hcl
           targets: server

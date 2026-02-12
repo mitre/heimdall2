@@ -58,12 +58,12 @@ jobs:
 
       - name: Build and push multi-platform lite image
         uses: docker/bake-action@v5
+        env:
+          TAG_SUFFIXES: "${{ steps.format-tag.outputs.replaced }},release-latest"
         with:
           files: docker-bake.hcl
           targets: lite
           push: true
-          set: |
-            lite.tags=mitre/heimdall-lite:release-latest,mitre/heimdall-lite:${{ steps.format-tag.outputs.replaced }}
 
       - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment
         shell: bash
