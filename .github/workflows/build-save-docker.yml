@@ -3,6 +3,13 @@ name: Build the Heimdall container and save it as an artifact in every PR
 on:
   pull_request:
     branches: [master]
+  workflow_dispatch:
+    inputs:
+      use_build_cloud:
+        description: 'Use Docker Build Cloud (fast, uses minutes)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -36,21 +43,34 @@ jobs:
                   print out
               }'
           )" >> $GITHUB_ENV
-      - name: Set up Docker Buildx
+      - name: Set up QEMU
+        if: github.event.inputs.use_build_cloud != 'true'
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx (Local)
+        if: github.event.inputs.use_build_cloud != 'true'
         uses: docker/setup-buildx-action@v3
+
+      - name: Set up Docker Buildx (Docker Build Cloud)
+        if: github.event.inputs.use_build_cloud == 'true'
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: cloud
+          endpoint: "mitre/mitre-builder"
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Build and save
         id: docker_build
-        uses: docker/build-push-action@v6
+        uses: docker/bake-action@v5
+        env:
+          TAG_SUFFIXES: ${{ env.DOCKER_TAG }}
         with:
-          context: .
-          push: false
-          platforms: linux/amd64
-          tags: mitre/heimdall2:${{ env.DOCKER_TAG }}
-          outputs: type=docker,dest=${{ runner.temp }}/heimdall.tar
+          files: ./docker-bake.hcl
+          targets: server
+          set: |
+            *.output=type=docker,dest=${{ runner.temp }}/heimdall.tar
       - name: Upload docker tarball
         uses: actions/upload-artifact@v4
         with:
