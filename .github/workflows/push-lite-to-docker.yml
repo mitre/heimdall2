@@ -2,7 +2,7 @@ name: Push Heimdall Lite to Docker Hub on every merge to master and tag as lates
 
 on:
   push:
-    branches: [master]
+    branches: [master,multi-platform-build]
   workflow_dispatch:
     inputs:
       use_build_cloud:
