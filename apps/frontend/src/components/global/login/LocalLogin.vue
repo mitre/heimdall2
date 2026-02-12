@@ -192,7 +192,19 @@ export default class LocalLogin extends Vue {
     };
     ServerModule.Login(creds)
       .then(() => {
-        this.$router.push('/');
+        if (ServerModule.token) {
+          const redirectQuery = this.$route.query.redirect;
+          const redirectTarget = Array.isArray(redirectQuery)
+            ? redirectQuery[0]
+            : redirectQuery;
+
+          const destination =
+            typeof redirectTarget === 'string' && redirectTarget.startsWith('/')
+              ? redirectTarget
+              : '/';
+
+          this.$router.push(destination);
+        }
         SnackbarModule.notify('You have successfully signed in.');
       })
       .finally(() => {
@@ -219,7 +231,19 @@ export default class LocalLogin extends Vue {
   }
 
   oauthLogin(site: string) {
-    window.location.href = `/authn/${site}`;
+    const redirectQuery = this.$route.query.redirect;
+    const redirectTarget = Array.isArray(redirectQuery)
+      ? redirectQuery[0]
+      : redirectQuery;
+
+    const destination =
+      typeof redirectTarget === 'string' && redirectTarget.startsWith('/')
+        ? redirectTarget
+        : '/';
+
+    const url = `/authn/${site}?redirect=${encodeURIComponent(destination)}`;
+
+    window.location.href = url;
   }
 
   get oidcName() {

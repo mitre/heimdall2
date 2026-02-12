@@ -85,7 +85,7 @@ router.beforeEach((to, _, next) => {
     AppInfoModule.CheckForUpdates();
     if (to.matched.some((record) => record.meta.requiresAuth)) {
       if (ServerModule.serverMode && !ServerModule.token) {
-        next('/login');
+        next({path: '/login', query: {redirect: to.fullPath}});
         return;
       }
     }

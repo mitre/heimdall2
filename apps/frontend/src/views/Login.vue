@@ -82,7 +82,17 @@ export default class Login extends Vue {
 
   checkLoggedIn() {
     if (ServerModule.token) {
-      this.$router.push('/');
+      const redirectQuery = this.$route.query.redirect;
+      const redirectTarget = Array.isArray(redirectQuery)
+        ? redirectQuery[0]
+        : redirectQuery;
+
+      const destination =
+        typeof redirectTarget === 'string' && redirectTarget.startsWith('/')
+          ? redirectTarget
+          : '/';
+
+      this.$router.push(destination);
     }
   }
 
