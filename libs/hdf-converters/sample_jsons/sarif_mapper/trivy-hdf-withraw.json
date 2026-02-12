@@ -1,0 +1,210 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.12.3"
+  },
+  "version": "2.12.3",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Aqua Security Trivy",
+      "version": "2.1.0",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cwe": [
+              "https://avd.aquasec.com/nvd/cve-2025-886"
+            ]
+          },
+          "refs": [],
+          "source_location": {
+            "ref": "usr/local/lib/python3.14/site-packages/pip-25.2.dist-info/METADATA",
+            "line": 1
+          },
+          "title": "Package",
+          "id": "CVE-2025-8869",
+          "desc": "pip\nInstalled Version",
+          "impact": 0.5,
+          "code": "{\n  \"ruleId\": \"CVE-2025-8869\",\n  \"ruleIndex\": 0,\n  \"level\": \"warning\",\n  \"message\": {\n    \"text\": \"Package: pip\\nInstalled Version: 25.2\\nVulnerability CVE-2025-8869\\nSeverity: MEDIUM\\nFixed Version: 25.3\\nLink: [CVE-2025-8869](https://avd.aquasec.com/nvd/cve-2025-8869)\"\n  },\n  \"locations\": [\n    {\n      \"physicalLocation\": {\n        \"artifactLocation\": {\n          \"uri\": \"usr/local/lib/python3.14/site-packages/pip-25.2.dist-info/METADATA\",\n          \"uriBaseId\": \"ROOTPATH\"\n        },\n        \"region\": {\n          \"startLine\": 1,\n          \"startColumn\": 1,\n          \"endLine\": 1,\n          \"endColumn\": 1\n        }\n      },\n      \"message\": {\n        \"text\": \"usr/local/lib/python3.14/site-packages/pip-25.2.dist-info/METADATA: pip@25.2\"\n      }\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : usr/local/lib/python3.14/site-packages/pip-25.2.dist-info/METADATA LINE : 1 COLUMN : 1",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "017842076142c8fc6a43f37777205e6dfdc411932fac60f2f148a52d491d5b0f"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "SARIF",
+        "data": {
+          "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+          "runs": [
+            {
+              "tool": {
+                "driver": {
+                  "fullName": "Trivy Vulnerability Scanner",
+                  "informationUri": "https://github.com/aquasecurity/trivy",
+                  "name": "Trivy",
+                  "rules": [
+                    {
+                      "id": "CVE-2025-8869",
+                      "name": "LanguageSpecificPackageVulnerability",
+                      "shortDescription": {
+                        "text": "pip: pip missing checks on symbolic link extraction"
+                      },
+                      "fullDescription": {
+                        "text": "When extracting a tar archive pip may not check symbolic links point into the extraction directory if the tarfile module doesn't implement PEP 706.\nNote that upgrading pip to a \"fixed\" version for this vulnerability doesn't fix all known vulnerabilities that are remediated by using a Python version that implements PEP 706.\n\nNote that this is a vulnerability in pip's fallback implementation of tar extraction for Python versions that don't implement PEP 706\nand therefore are not secure to all vulnerabilities in the Python 'tarfile' module. If you're using a Python version that implements PEP 706\nthen pip doesn't use the \"vulnerable\" fallback code.\n\nMitigations include upgrading to a version of pip that includes the fix, upgrading to a Python version that implements PEP 706 (Python >=3.9.17, >=3.10.12, >=3.11.4, or >=3.12),\napplying the linked patch, or inspecting source distributions (sdists) before installation as is already a best-practice."
+                      },
+                      "defaultConfiguration": {
+                        "level": "warning"
+                      },
+                      "helpUri": "https://avd.aquasec.com/nvd/cve-2025-8869",
+                      "help": {
+                        "text": "Vulnerability CVE-2025-8869\nSeverity: MEDIUM\nPackage: pip\nFixed Version: 25.3\nLink: [CVE-2025-8869](https://avd.aquasec.com/nvd/cve-2025-8869)\nWhen extracting a tar archive pip may not check symbolic links point into the extraction directory if the tarfile module doesn't implement PEP 706.\nNote that upgrading pip to a \"fixed\" version for this vulnerability doesn't fix all known vulnerabilities that are remediated by using a Python version that implements PEP 706.\n\nNote that this is a vulnerability in pip's fallback implementation of tar extraction for Python versions that don't implement PEP 706\nand therefore are not secure to all vulnerabilities in the Python 'tarfile' module. If you're using a Python version that implements PEP 706\nthen pip doesn't use the \"vulnerable\" fallback code.\n\nMitigations include upgrading to a version of pip that includes the fix, upgrading to a Python version that implements PEP 706 (Python >=3.9.17, >=3.10.12, >=3.11.4, or >=3.12),\napplying the linked patch, or inspecting source distributions (sdists) before installation as is already a best-practice.",
+                        "markdown": "**Vulnerability CVE-2025-8869**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|pip|25.3|[CVE-2025-8869](https://avd.aquasec.com/nvd/cve-2025-8869)|\n\nWhen extracting a tar archive pip may not check symbolic links point into the extraction directory if the tarfile module doesn't implement PEP 706.\nNote that upgrading pip to a \"fixed\" version for this vulnerability doesn't fix all known vulnerabilities that are remediated by using a Python version that implements PEP 706.\n\nNote that this is a vulnerability in pip's fallback implementation of tar extraction for Python versions that don't implement PEP 706\nand therefore are not secure to all vulnerabilities in the Python 'tarfile' module. If you're using a Python version that implements PEP 706\nthen pip doesn't use the \"vulnerable\" fallback code.\n\nMitigations include upgrading to a version of pip that includes the fix, upgrading to a Python version that implements PEP 706 (Python >=3.9.17, >=3.10.12, >=3.11.4, or >=3.12),\napplying the linked patch, or inspecting source distributions (sdists) before installation as is already a best-practice."
+                      },
+                      "properties": {
+                        "precision": "very-high",
+                        "security-severity": "5.5",
+                        "tags": [
+                          "vulnerability",
+                          "security",
+                          "MEDIUM"
+                        ]
+                      }
+                    }
+                  ],
+                  "version": "0.66.0"
+                }
+              },
+              "columnKind": "utf16CodeUnits",
+              "originalUriBaseIds": {
+                "ROOTPATH": {
+                  "uri": "file:///"
+                }
+              },
+              "properties": {
+                "imageID": "sha256:24ef78ff5ffe3f0b75661012741566f58f76e8109513be875a237d0a7b19b073",
+                "imageName": "python:3-alpine",
+                "repoDigests": [
+                  "python@sha256:8373231e1e906ddfb457748bfc032c4c06ada8c759b7b62d9c73ec2a3c56e710"
+                ],
+                "repoTags": [
+                  "python:3-alpine"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "raw": {
+      "version": "2.1.0",
+      "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+      "runs": [
+        {
+          "tool": {
+            "driver": {
+              "fullName": "Trivy Vulnerability Scanner",
+              "informationUri": "https://github.com/aquasecurity/trivy",
+              "name": "Trivy",
+              "rules": [
+                {
+                  "id": "CVE-2025-8869",
+                  "name": "LanguageSpecificPackageVulnerability",
+                  "shortDescription": {
+                    "text": "pip: pip missing checks on symbolic link extraction"
+                  },
+                  "fullDescription": {
+                    "text": "When extracting a tar archive pip may not check symbolic links point into the extraction directory if the tarfile module doesn't implement PEP 706.\nNote that upgrading pip to a \"fixed\" version for this vulnerability doesn't fix all known vulnerabilities that are remediated by using a Python version that implements PEP 706.\n\nNote that this is a vulnerability in pip's fallback implementation of tar extraction for Python versions that don't implement PEP 706\nand therefore are not secure to all vulnerabilities in the Python 'tarfile' module. If you're using a Python version that implements PEP 706\nthen pip doesn't use the \"vulnerable\" fallback code.\n\nMitigations include upgrading to a version of pip that includes the fix, upgrading to a Python version that implements PEP 706 (Python >=3.9.17, >=3.10.12, >=3.11.4, or >=3.12),\napplying the linked patch, or inspecting source distributions (sdists) before installation as is already a best-practice."
+                  },
+                  "defaultConfiguration": {
+                    "level": "warning"
+                  },
+                  "helpUri": "https://avd.aquasec.com/nvd/cve-2025-8869",
+                  "help": {
+                    "text": "Vulnerability CVE-2025-8869\nSeverity: MEDIUM\nPackage: pip\nFixed Version: 25.3\nLink: [CVE-2025-8869](https://avd.aquasec.com/nvd/cve-2025-8869)\nWhen extracting a tar archive pip may not check symbolic links point into the extraction directory if the tarfile module doesn't implement PEP 706.\nNote that upgrading pip to a \"fixed\" version for this vulnerability doesn't fix all known vulnerabilities that are remediated by using a Python version that implements PEP 706.\n\nNote that this is a vulnerability in pip's fallback implementation of tar extraction for Python versions that don't implement PEP 706\nand therefore are not secure to all vulnerabilities in the Python 'tarfile' module. If you're using a Python version that implements PEP 706\nthen pip doesn't use the \"vulnerable\" fallback code.\n\nMitigations include upgrading to a version of pip that includes the fix, upgrading to a Python version that implements PEP 706 (Python >=3.9.17, >=3.10.12, >=3.11.4, or >=3.12),\napplying the linked patch, or inspecting source distributions (sdists) before installation as is already a best-practice.",
+                    "markdown": "**Vulnerability CVE-2025-8869**\n| Severity | Package | Fixed Version | Link |\n| --- | --- | --- | --- |\n|MEDIUM|pip|25.3|[CVE-2025-8869](https://avd.aquasec.com/nvd/cve-2025-8869)|\n\nWhen extracting a tar archive pip may not check symbolic links point into the extraction directory if the tarfile module doesn't implement PEP 706.\nNote that upgrading pip to a \"fixed\" version for this vulnerability doesn't fix all known vulnerabilities that are remediated by using a Python version that implements PEP 706.\n\nNote that this is a vulnerability in pip's fallback implementation of tar extraction for Python versions that don't implement PEP 706\nand therefore are not secure to all vulnerabilities in the Python 'tarfile' module. If you're using a Python version that implements PEP 706\nthen pip doesn't use the \"vulnerable\" fallback code.\n\nMitigations include upgrading to a version of pip that includes the fix, upgrading to a Python version that implements PEP 706 (Python >=3.9.17, >=3.10.12, >=3.11.4, or >=3.12),\napplying the linked patch, or inspecting source distributions (sdists) before installation as is already a best-practice."
+                  },
+                  "properties": {
+                    "precision": "very-high",
+                    "security-severity": "5.5",
+                    "tags": [
+                      "vulnerability",
+                      "security",
+                      "MEDIUM"
+                    ]
+                  }
+                }
+              ],
+              "version": "0.66.0"
+            }
+          },
+          "results": [
+            {
+              "ruleId": "CVE-2025-8869",
+              "ruleIndex": 0,
+              "level": "warning",
+              "message": {
+                "text": "Package: pip\nInstalled Version: 25.2\nVulnerability CVE-2025-8869\nSeverity: MEDIUM\nFixed Version: 25.3\nLink: [CVE-2025-8869](https://avd.aquasec.com/nvd/cve-2025-8869)"
+              },
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "usr/local/lib/python3.14/site-packages/pip-25.2.dist-info/METADATA",
+                      "uriBaseId": "ROOTPATH"
+                    },
+                    "region": {
+                      "startLine": 1,
+                      "startColumn": 1,
+                      "endLine": 1,
+                      "endColumn": 1
+                    }
+                  },
+                  "message": {
+                    "text": "usr/local/lib/python3.14/site-packages/pip-25.2.dist-info/METADATA: pip@25.2"
+                  }
+                }
+              ]
+            }
+          ],
+          "columnKind": "utf16CodeUnits",
+          "originalUriBaseIds": {
+            "ROOTPATH": {
+              "uri": "file:///"
+            }
+          },
+          "properties": {
+            "imageID": "sha256:24ef78ff5ffe3f0b75661012741566f58f76e8109513be875a237d0a7b19b073",
+            "imageName": "python:3-alpine",
+            "repoDigests": [
+              "python@sha256:8373231e1e906ddfb457748bfc032c4c06ada8c759b7b62d9c73ec2a3c56e710"
+            ],
+            "repoTags": [
+              "python:3-alpine"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
