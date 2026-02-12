@@ -70,7 +70,7 @@ jobs:
           files: ./docker-bake.hcl
           targets: server
           set: |
-            *.output=type=docker,dest=${{ runner.temp }}/heimdall.tar
+            *.output=type=oci,dest=${{ runner.temp }}/heimdall.tar
       - name: Upload docker tarball
         uses: actions/upload-artifact@v4
         with:
