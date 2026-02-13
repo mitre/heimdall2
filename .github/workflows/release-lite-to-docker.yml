@@ -41,7 +41,7 @@ jobs:
           username: ${{ vars.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PAT }}
 
-      - name: Set up QEMU
+      - name: Set up QEMU (for emulated builds)
         if: github.event.inputs.use_build_cloud != 'true'
         uses: docker/setup-qemu-action@v3
 

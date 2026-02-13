@@ -29,7 +29,7 @@ jobs:
           username: ${{ vars.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PAT }}
 
-      - name: Set up QEMU
+      - name: Set up QEMU (for emulated builds)
         if: github.event.inputs.use_build_cloud != 'true'
         uses: docker/setup-qemu-action@v3
 
@@ -47,7 +47,7 @@ jobs:
       - name: Build and push multi-platform server image
         uses: docker/bake-action@v5
         env:
-          TAG_SUFFIXES: "${{ github.sha }},test"
+          TAG_SUFFIXES: "${{ github.sha }},latest"
         with:
           files: docker-bake.hcl
           targets: server
