@@ -25,6 +25,7 @@ permissions:
 jobs:
   docker:
     runs-on: ubuntu-24.04
+    if: github.actor != 'dependabot[bot]'
     steps:
       - name: Convert branch name into a safe docker tag by replacing invalid characters with underscores
         # docker tags must match this regex: https://github.com/distribution/reference/blob/727f80d42224f6696b8e1ad16b06aadf2c6b833b/regexp.go#L68
@@ -51,7 +52,7 @@ jobs:
                   print out
               }'
           )" >> $GITHUB_ENV
-      - name: Set up QEMU
+      - name: Set up QEMU (for emulated builds)
         if: github.event.inputs.use_build_cloud != 'true'
         uses: docker/setup-qemu-action@v3
 
