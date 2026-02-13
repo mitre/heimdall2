@@ -51,7 +51,7 @@ target "_common" {
 # Common configuration for Lite variant
 target "_common_lite" {
   dockerfile = "Dockerfile.lite"
-  tags = concat([for suffix in split(",", TAG_SUFFIXES) : "${DOCKER_HUB_REPO_SERVER}:${trimspace(suffix)}"])
+  tags = concat([for suffix in split(",", TAG_SUFFIXES) : "${DOCKER_HUB_REPO_LITE}:${trimspace(suffix)}"])
   args = {
     BUILD_CONTAINER = "${BASE_CONTAINER}"
     BASE_CONTAINER = "nginx:alpine"
