@@ -146,7 +146,7 @@ const attestations_for_overlay: Attestation[] = [
       'Database Jobs are reviewed before they are put into production',
     frequency: 'daily',
     status: 'passed',
-    updated: '2026-01-02',
+    updated: '2099-01-02',
     updated_by: 'Alec Hardison, Security'
   }
 ];
