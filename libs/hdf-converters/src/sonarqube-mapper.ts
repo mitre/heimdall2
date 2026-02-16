@@ -108,7 +108,6 @@ function isBeforeSonarqubeVersion(
   return lt(v, cv);
 }
 
-
 // many of these attributes show up in the API example responses, but not in our locally generated samples.
 // a few of them are mentioned in the changelog, but do not show up in samples or the examples
 // several of these attributes show up in sonarcloud (which is marked as major version 8) even though the documentation says that they should first only show up in latter versions.  to that end, I've marked them as optional for lack of any other action we can take.
@@ -839,12 +838,17 @@ export class SonarqubeResults {
       retry: MAX_RETRIES,
       onError: async (e) => {
         const cfg = rax.getConfig(e);
-        if (cfg?.currentRetryAttempt !== null && cfg?.currentRetryAttempt !== undefined) {
-          logger.debug(`Error occurred: retry attempt #${cfg?.currentRetryAttempt + 1}/${MAX_RETRIES} will happen after backoff`);
+        if (
+          cfg?.currentRetryAttempt !== null &&
+          cfg?.currentRetryAttempt !== undefined
+        ) {
+          logger.debug(
+            `Error occurred: retry attempt #${cfg?.currentRetryAttempt + 1}/${MAX_RETRIES} will happen after backoff`
+          );
         } else {
           this.logAxiosError(e);
         }
-      },
+      }
     };
     const interceptorId = rax.attach(this.axiosClient);
   }
@@ -865,28 +869,38 @@ export class SonarqubeResults {
     }
   }
 
-  async getSearchResults<T extends SonarqubeVersion>(sonarqubeVersion: string): Promise<Search<T>> {
+  async getSearchResults<T extends SonarqubeVersion>(
+    sonarqubeVersion: string
+  ): Promise<Search<T>> {
     const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
     const PAGE_SIZE = 100;
     const createSearch = async (page: number) => {
-      return this.axiosClient
-      .get<Search<T>>(`${this.sonarqubeHost}/api/issues/search`, {
-        ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
-          auth: {username: this.userToken, password: ''}
-        }),
-        ...(this.authMethod === AuthenticationMethod.BearerToken && {
-          headers: {Authorization: `Bearer ${this.userToken}`}
-        }),
-        params: {
-          [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0') ? 'componentKeys' : 'components']: this.projectKey,
-          ...(isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED'}), // resolved is a manual designation implying that the user believes that the issue will be closed on next scan; however, for now it should still be considered an open finding for our purposes since at time of scan it was still a problem
-          ...(!isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {issueStatuses: 'OPEN,CONFIRMED,ACCEPTED,IN_SANDBOX'}),
-          p: page,
-          ps: PAGE_SIZE,
-          ...(this.branchName && {branch: this.branchName}),
-          ...(this.pullRequestID && {pullRequest: this.pullRequestID})
+      return this.axiosClient.get<Search<T>>(
+        `${this.sonarqubeHost}/api/issues/search`,
+        {
+          ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
+            auth: {username: this.userToken, password: ''}
+          }),
+          ...(this.authMethod === AuthenticationMethod.BearerToken && {
+            headers: {Authorization: `Bearer ${this.userToken}`}
+          }),
+          params: {
+            [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0')
+              ? 'componentKeys'
+              : 'components']: this.projectKey,
+            ...(isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {
+              statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED'
+            }), // resolved is a manual designation implying that the user believes that the issue will be closed on next scan; however, for now it should still be considered an open finding for our purposes since at time of scan it was still a problem
+            ...(!isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {
+              issueStatuses: 'OPEN,CONFIRMED,ACCEPTED,IN_SANDBOX'
+            }),
+            p: page,
+            ps: PAGE_SIZE,
+            ...(this.branchName && {branch: this.branchName}),
+            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
+          }
         }
-      });
+      );
     };
 
     let paging = true;
@@ -913,7 +927,9 @@ export class SonarqubeResults {
           return Promise.reject(new Error('Failed at getting Sonarqube issue'));
         });
       if (page * PAGE_SIZE > UPPER_LIMIT) {
-        logger.warn(`Exceeded SonarQube cap of ${UPPER_LIMIT} results for a given search.  Remaining findings have been truncated.`);
+        logger.warn(
+          `Exceeded SonarQube cap of ${UPPER_LIMIT} results for a given search.  Remaining findings have been truncated.`
+        );
         paging = false;
       }
     }
@@ -989,30 +1005,29 @@ export class SonarqubeResults {
     const snippets = issues.map((issue) => {
       if (issue.flows.length) {
         return issue.flows
-            .flatMap((flow) =>
-              flow.locations.map((location) =>
-                getContextualizedSnippet(
-                  fullFiles,
-                  location.component,
-                  location.textRange.startLine,
-                  location.textRange.endLine,
-                  location.msg
-                )
+          .flatMap((flow) =>
+            flow.locations.map((location) =>
+              getContextualizedSnippet(
+                fullFiles,
+                location.component,
+                location.textRange.startLine,
+                location.textRange.endLine,
+                location.msg
               )
             )
-            .join('\n')
+          )
+          .join('\n');
       } else if (issue.textRange) {
         return getContextualizedSnippet(
-            fullFiles,
-            issue.component,
-            issue.textRange.startLine,
-            issue.textRange.endLine
-          )
+          fullFiles,
+          issue.component,
+          issue.textRange.startLine,
+          issue.textRange.endLine
+        );
       } else {
         return '';
       }
-    }
-    );
+    });
     return snippets;
   }
 
