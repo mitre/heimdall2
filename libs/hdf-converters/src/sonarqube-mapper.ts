@@ -872,7 +872,7 @@ export class SonarqubeResults {
         }
       }
     };
-    const interceptorId = rax.attach(this.axiosClient);
+    rax.attach(this.axiosClient);
   }
 
   logAxiosError(e: AxiosError): void {
@@ -897,7 +897,11 @@ export class SonarqubeResults {
     const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
     const PAGE_SIZE = 100;
 
-    const createSearch = async (component: string, page: number, pageSize = PAGE_SIZE) => {
+    const createSearch = async (
+      component: string,
+      page: number,
+      pageSize = PAGE_SIZE
+    ) => {
       return this.axiosClient.get<Search<T>>(
         `${this.sonarqubeHost}/api/issues/search`,
         {
@@ -926,7 +930,11 @@ export class SonarqubeResults {
       );
     };
 
-    const createComponentSearch = async (component: string, page: number, pageSize = PAGE_SIZE) => {
+    const createComponentSearch = async (
+      component: string,
+      page: number,
+      pageSize = PAGE_SIZE
+    ) => {
       return this.axiosClient.get<Search<T>>(
         `${this.sonarqubeHost}/api/components/tree`,
         {
@@ -938,7 +946,7 @@ export class SonarqubeResults {
           }),
           params: {
             component: component,
-            strategy: "children",
+            strategy: 'children',
             p: page,
             ps: pageSize,
             ...(this.branchName && {branch: this.branchName}),
@@ -972,7 +980,9 @@ export class SonarqubeResults {
           })
           .catch((e) => {
             this.logAxiosError(e);
-            return Promise.reject(new Error('Failed at retrieving Sonarqube issues'));
+            return Promise.reject(
+              new Error('Failed at retrieving Sonarqube issues')
+            );
           });
         if (page * PAGE_SIZE > UPPER_LIMIT) {
           logger.warn(
@@ -990,7 +1000,13 @@ export class SonarqubeResults {
       let page = 1;
       const results: ComponentSearch = {
         paging: {pageIndex: 0, pageSize: 0, total: 0},
-        baseComponent: {key: "fake", description: "fake", qualifier: "fake", tags: [], visibility: "false"},
+        baseComponent: {
+          key: 'fake',
+          description: 'fake',
+          qualifier: 'fake',
+          tags: [],
+          visibility: 'false'
+        },
         components: []
       };
       while (paging) {
@@ -1005,7 +1021,9 @@ export class SonarqubeResults {
           })
           .catch((e) => {
             this.logAxiosError(e);
-            return Promise.reject(new Error('Failed at retrieving the list of components'));
+            return Promise.reject(
+              new Error('Failed at retrieving the list of components')
+            );
           });
         if (page * PAGE_SIZE > UPPER_LIMIT) {
           logger.warn(
@@ -1025,20 +1043,26 @@ export class SonarqubeResults {
       const sizeCheck = await collectPagedSearch(component, true);
       if (sizeCheck.paging.total > UPPER_LIMIT) {
         const componentSearch = await collectPagedComponentSearch(component);
-        queue.push(...componentSearch.components.map(c => c.key));
+        queue.push(...componentSearch.components.map((c) => c.key));
       }
 
       const componentResults = await collectPagedSearch(component);
-      _.mergeWith(results, componentResults, (objValue, srcValue) => _.isArray(objValue) ? objValue.concat(srcValue) : objValue);
+      _.mergeWith(results, componentResults, (objValue, srcValue) =>
+        _.isArray(objValue) ? objValue.concat(srcValue) : objValue
+      );
     }
 
     results.components = _.uniqBy(results.components, 'key');
     results.issues = _.uniqBy(results.issues, 'key');
 
     if (results.paging.total === results.issues.length) {
-      logger.warn('Alternative search queries were able to retrieve all findings.');
+      logger.warn(
+        'Alternative search queries were able to retrieve all findings.'
+      );
     } else {
-      logger.warn(`Alternative search queries were not able to retrieve all findings - ${results.paging.total - results.issues.length} findings were not retrieved.`);
+      logger.warn(
+        `Alternative search queries were not able to retrieve all findings - ${results.paging.total - results.issues.length} findings were not retrieved.`
+      );
     }
 
     return results;
