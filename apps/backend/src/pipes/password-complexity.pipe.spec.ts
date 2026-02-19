@@ -1,5 +1,6 @@
 import {validators} from '@heimdall/password-complexity';
 import {BadRequestException} from '@nestjs/common';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,

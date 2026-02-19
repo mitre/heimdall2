@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
+import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {ValidationError} from 'sequelize';
 import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
 import {

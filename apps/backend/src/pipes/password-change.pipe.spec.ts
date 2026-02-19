@@ -1,4 +1,5 @@
 import {BadRequestException} from '@nestjs/common';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {
   UPDATE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
