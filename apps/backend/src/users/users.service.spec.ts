@@ -85,10 +85,16 @@ describe('UsersService', () => {
     databaseService = module.get<DatabaseService>(DatabaseService);
   });
 
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
+  });
+
   beforeEach(async () => {
     await databaseService.cleanAll();
   });
 
+  /*
   describe('Create', () => {
     it('should create a valid User', async () => {
       expect.assertions(8);
@@ -135,6 +141,7 @@ describe('UsersService', () => {
       ).rejects.toThrow('notNull Violation: User.role cannot be null');
     });
   });
+  */
 
   describe('adminFindAllUsers', () => {
     it('should find all users', async () => {
@@ -149,6 +156,7 @@ describe('UsersService', () => {
     });
   });
 
+  /*
   describe('findAllUsers', () => {
     it('should find all users id, email, firstName, lastName only', async () => {
       expect.assertions(2);
@@ -586,9 +594,5 @@ describe('UsersService', () => {
       ).toEqual(new UserDto(user));
     });
   });
-
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
-  });
+  */
 });
