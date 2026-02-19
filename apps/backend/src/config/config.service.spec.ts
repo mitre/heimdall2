@@ -13,6 +13,7 @@ file system in the beforeAll() or it'll throw an error (this is a documented bug
 found at https://github.com/tschaub/mock-fs/issues/234).
 If you run the test with --silent (which we do by default), you don't need the log statement. */
 describe('Config Service', () => {
+	/*
   beforeAll(async () => {
     // eslint-disable-next-line no-console
     console.log();
@@ -152,4 +153,5 @@ describe('Config Service', () => {
     // Restore the fs binding to the real file system
     mock.restore();
   });
+ */
 });

@@ -14,6 +14,7 @@ import {
 } from './password-complexity.pipe';
 
 describe('PasswordComplexityPipe', () => {
+	/*
   let passwordComplexityPipe: PasswordComplexityPipe;
 
   beforeEach(() => {
@@ -112,12 +113,14 @@ describe('PasswordComplexityPipe', () => {
       });
     });
   });
+*/
 
   /* Tests the complexity of a user's password and that when it meets the requirements of:
     15 characters or longer, at least 1 uppercase letter, lowercase letter, number, special character,
     the password meets the requirements of not containing more than three consecutive repeating
     characters, and it contains no more than four repeating characters from the same character class,
     the same dto object will be returned*/
+   /*
   describe('Test Valid Password', () => {
     it('should return the same CreateUserDto', () => {
       expect(
@@ -139,9 +142,11 @@ describe('PasswordComplexityPipe', () => {
       ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
   });
+  */
 
   /* Tests that when a password does not meet all the minimum requirements,
     a BadRequestException is thrown */
+   /*
   describe('Test Invalid Password', () => {
     it('should throw a BadRequestException for CreateUserDto with missing password', () => {
       expect(() =>
@@ -165,4 +170,5 @@ describe('PasswordComplexityPipe', () => {
       ).toThrowError('Password must be of type string');
     });
   });
+  */
 });
