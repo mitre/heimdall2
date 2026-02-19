@@ -1,22 +1,26 @@
 {
   "name": "@mitre/hdf-converters",
-  "version": "2.12.3",
+  "version": "2.12.6",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2",
+    "directory": "libs/hdf-converters"
+  },
   "files": [
     "lib"
   ],
   "main": "src/index.ts",
-  "publishConfig": {
-    "main": "lib/index.js"
-  },
   "scripts": {
     "build": "run-script-os",
     "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
     "build:win32": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && xcopy data lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "prepack": "yarn build && node prepack.js",
+    "prepack": "run-script-os",
+    "prepack:darwin:linux": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = \"lib/index.js\"' > package.json",
+    "prepack:win32": "yarn build && copy package.json package.json.orig && type package.json.orig | jq \".main = \\\"lib/index.js\\\"\" > package.json",
     "postpack": "run-script-os",
     "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
@@ -25,7 +29,7 @@
     "xml2json": "tsx data/converters/xml2json.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-config-service": "3.922.0",
+    "@aws-sdk/client-config-service": "3.993.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
     "@microsoft/microsoft-graph-types": "^2.40.0",
@@ -43,10 +47,10 @@
     "axios": "^1.3.5",
     "compare-versions": "^6.0.0",
     "csv2json": "^2.0.2",
-    "fast-xml-parser": "5.3.0",
+    "fast-xml-parser": "5.3.6",
     "html-entities": "^2.3.2",
     "htmlparser2": "^10.0.0",
-    "inspecjs": "^2.12.3",
+    "inspecjs": "^2.12.6",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "ms": "^2.1.3",
@@ -64,7 +68,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.161",
-    "@types/node": "^24.3.1",
+    "@types/node": "^25.0.0",
     "quicktype": "^15.0.260",
     "tsx": "^4.7.1",
     "typedoc": "^0.28.12",

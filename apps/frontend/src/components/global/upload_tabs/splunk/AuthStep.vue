@@ -99,7 +99,7 @@ export default class AuthStep extends Vue {
     }
 
     // Check for scheme inclusion
-    if (!/^https?:\/\//.test(this.hostname)) {
+    if (!/^https?:\/\//v.test(this.hostname)) {
       this.hostname = `https://${this.hostname}`;
     }
 

@@ -3,6 +3,21 @@ name: Build the Heimdall container and save it as an artifact in every PR
 on:
   pull_request:
     branches: [master]
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to build (amd64 or arm64)'
+        required: false
+        type: choice
+        options:
+          - amd64
+          - arm64
+        default: amd64
+      use_build_cloud:
+        description: 'Use Docker Build Cloud (fast, uses minutes)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -10,6 +25,7 @@ permissions:
 jobs:
   docker:
     runs-on: ubuntu-24.04
+    if: github.actor != 'dependabot[bot]'
     steps:
       - name: Convert branch name into a safe docker tag by replacing invalid characters with underscores
         # docker tags must match this regex: https://github.com/distribution/reference/blob/727f80d42224f6696b8e1ad16b06aadf2c6b833b/regexp.go#L68
@@ -36,21 +52,39 @@ jobs:
                   print out
               }'
           )" >> $GITHUB_ENV
-      - name: Set up Docker Buildx
+      - name: Set up QEMU (for emulated builds)
+        if: github.event.inputs.use_build_cloud != 'true'
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx (Local)
+        if: github.event.inputs.use_build_cloud != 'true'
         uses: docker/setup-buildx-action@v3
+
+      - name: Set up Docker Buildx (Docker Build Cloud)
+        if: github.event.inputs.use_build_cloud == 'true'
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: cloud
+          endpoint: "mitre/mitre-builder"
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+      # Note: We build single-platform images only (server-amd64 or server-arm64) because
+      # the Docker exporter (type=docker) does not support exporting multi-platform manifest lists.
+      # Multi-platform builds would require type=oci export, but OCI archives cannot be loaded
+      # directly with 'docker load'. For local development/testing, single-platform Docker archives
+      # are more practical as they can be loaded with 'docker load -i heimdall.tar'.
       - name: Build and save
         id: docker_build
-        uses: docker/build-push-action@v6
+        uses: docker/bake-action@v5
+        env:
+          TAG_SUFFIXES: ${{ env.DOCKER_TAG }}
         with:
-          context: .
-          push: false
-          platforms: linux/amd64
-          tags: mitre/heimdall2:${{ env.DOCKER_TAG }}
-          outputs: type=docker,dest=${{ runner.temp }}/heimdall.tar
+          files: ./docker-bake.hcl
+          targets: server-${{ github.event.inputs.platform || 'amd64' }}
+          set: |
+            *.output=type=docker,dest=${{ runner.temp }}/heimdall.tar
       - name: Upload docker tarball
         uses: actions/upload-artifact@v4
         with:

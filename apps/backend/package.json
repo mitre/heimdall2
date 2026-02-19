@@ -1,15 +1,19 @@
 {
   "name": "heimdall-server",
-  "version": "2.12.2",
-  "description": "",
+  "version": "2.12.6",
   "license": "Apache-2.0",
-  "author": "",
-  "private": true,
+  "description": "Heimdall's backend which allows for data persistence, authentication, RBAC, and API access",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre/heimdall2",
+    "directory": "apps/backend"
+  },
   "workspaces": {
     "nohoist": [
       "**"
     ]
   },
+  "private": true,
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
@@ -25,8 +29,8 @@
   "dependencies": {
     "@casl/ability": "^6.0.0",
     "@govtechsg/passport-openidconnect": "^1.0.3",
-    "@heimdall/common": "^2.12.0",
-    "@heimdall/password-complexity": "^2.6.6",
+    "@heimdall/common": "^2.12.6",
+    "@heimdall/password-complexity": "^2.12.6",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/common": "^11.0.16",
     "@nestjs/core": "^11.1.6",
@@ -44,7 +48,7 @@
     "@types/js-levenshtein": "^1.1.0",
     "@types/ms": "^0.7.31",
     "@types/multer": "^2.0.0",
-    "@types/node": "^24.3.1",
+    "@types/node": "^25.0.0",
     "@types/passport-github": "^1.1.5",
     "@types/passport-jwt": "^4.0.0",
     "@types/passport-local": "^1.0.33",
