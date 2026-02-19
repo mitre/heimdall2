@@ -94,7 +94,6 @@ describe('UsersService', () => {
     await databaseService.cleanAll();
   });
 
-  /*
   describe('Create', () => {
     it('should create a valid User', async () => {
       expect.assertions(8);
@@ -141,7 +140,6 @@ describe('UsersService', () => {
       ).rejects.toThrow('notNull Violation: User.role cannot be null');
     });
   });
-  */
 
   describe('adminFindAllUsers', () => {
     it('should find all users', async () => {
