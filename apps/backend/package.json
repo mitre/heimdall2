@@ -24,7 +24,7 @@
     "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
-    "test": "vitest"
+    "test": "vitest -- users/users.service.spec.ts"
   },
   "dependencies": {
     "@casl/ability": "^6.0.0",
