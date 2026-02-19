@@ -154,7 +154,6 @@ describe('UsersService', () => {
     });
   });
 
-  /*
   describe('findAllUsers', () => {
     it('should find all users id, email, firstName, lastName only', async () => {
       expect.assertions(2);
@@ -592,5 +591,4 @@ describe('UsersService', () => {
       ).toEqual(new UserDto(user));
     });
   });
-  */
 });
