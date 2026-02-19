@@ -92,7 +92,7 @@
     "rootDir": ".",
     "testTimeout": 10000000,
     "transform": {
-      "^.+\\.ts$": "ts-jest"
+      "^.+\\.ts$": ["ts-jest", { "tsconfig": "tsconfig.build.json" }]
     }
   }
 }
