@@ -9,7 +9,6 @@ import {
 import {PasswordsMatchPipe} from './passwords-match.pipe';
 
 describe('PasswordsMatchPipe', () => {
-	/*
   let passwordsMatchPipe: PasswordsMatchPipe;
 
   beforeEach(() => {
@@ -19,11 +18,8 @@ describe('PasswordsMatchPipe', () => {
   it('should make sure that the passwords-match pipe is defined', () => {
     expect(passwordsMatchPipe).toBeDefined();
   });
-  */
 
-  /* Tests that when password and passwordConfirmation match,
-   the same CreateUserDto obj that is passed to the pipeline, is returned */
-  /*
+  // Tests that when password and passwordConfirmation match, the same CreateUserDto obj that is passed to the pipeline, is returned
   describe('Test Matching Passwords', () => {
     it('should return the same CreateUserDto', () => {
       expect(passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ)).toEqual(
@@ -43,11 +39,8 @@ describe('PasswordsMatchPipe', () => {
       ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
   });
-  */
 
-  /* Tests that when password and passwordConfirmation don't match,
-    a BadRequestException is thrown */
-   /*
+  // Tests that when password and passwordConfirmation don't match, a BadRequestException is thrown
   describe('Test Mismatching Passwords', () => {
     it('should throw a Bad Request Exception', () => {
       expect(() =>
@@ -62,5 +55,4 @@ describe('PasswordsMatchPipe', () => {
       ).toThrowError('Passwords do not match');
     });
   });
-  */
 });
