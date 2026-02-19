@@ -40,7 +40,6 @@ import {UsersService} from './users.service';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
-	/*
   let usersController: UsersController;
   let usersService: UsersService;
   let module: TestingModule;
@@ -271,5 +270,4 @@ describe('UsersController Unit Tests', () => {
     await databaseService.cleanAll();
     await databaseService.closeConnection();
   });
- */
 });
