@@ -26,7 +26,6 @@ import {EvaluationTagsController} from './evaluation-tags.controller';
 import {EvaluationTagsService} from './evaluation-tags.service';
 
 describe('EvaluationTagsController', () => {
-	/*
   let evaluationTagsController: EvaluationTagsController;
   let evaluationTagsService: EvaluationTagsService;
   let module: TestingModule;
@@ -73,13 +72,13 @@ describe('EvaluationTagsController', () => {
     groupsService = module.get<GroupsService>(GroupsService);
   });
 
+  afterAll(async () => {
+    await databaseService.closeConnection();
+  });
+
   beforeEach(async () => {
     await databaseService.cleanAll();
     user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-  });
-
-  afterAll(async () => {
-    await databaseService.closeConnection();
   });
 
   describe('index', () => {
@@ -334,5 +333,4 @@ describe('EvaluationTagsController', () => {
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
- */
 });
