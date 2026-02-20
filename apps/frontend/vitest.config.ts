@@ -20,7 +20,8 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: [path.resolve(__dirname, 'tests/setup.ts')],
     include: ['tests/unit/*.spec.ts'],
-    exclude: ['src/__mocks__/**', 'node_modules/**', 'dist/**']
+    exclude: ['src/__mocks__/**', 'node_modules/**', 'dist/**'],
+    root: '.'
     // deps: { inline: ['vuetify'] }
   }
 });
