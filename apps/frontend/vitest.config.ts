@@ -15,7 +15,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {find: /^@\//, replacement: path.resolve(rootDir, 'src') + '/'},
-      {find: '@mitre/hdf-converters', replacement: path.resolve(rootDir, '..', '..', 'libs/hdf-converters/src/index.ts')},
+      // {find: '@mitre/hdf-converters', replacement: path.resolve(rootDir, '..', '..', 'libs/hdf-converters/src/index.ts')},
       // {find: 'd3', replacement: path.resolve(rootDir, 'tests/util/d3.js')},
       {find: 'axios', replacement: 'axios/dist/node/axios.cjs'},
       {find: 'csv-stringify/sync', replacement: 'csv-stringify/dist/cjs/sync.cjs'}
