@@ -85,9 +85,7 @@ describe('PasswordChangePipe', () => {
   // Tests that when the user wants to update their password, the Levenshtein Distance of their new password and old password is > 8 and at least 4 character classes are changed (2nd part is mocked out due to the classesChanged function being tested above)
   describe('Test Valid Password Changes', () => {
     beforeEach(() => {
-      vi
-        .spyOn(passwordChangePipe, 'classesChanged')
-        .mockReturnValueOnce(true);
+      vi.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
     });
     it('should return the same UpdateUserDto', () => {
       expect(
