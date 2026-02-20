@@ -91,13 +91,12 @@
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {FileID} from '@/store/report_intake';
-import {FromHDFToSplunkMapper} from '@mitre/hdf-converters';
+import {FromHDFToSplunkMapper, SplunkConfig} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Logger} from 'winston';
 import {SnackbarModule} from '../../store/snackbar';
 import AuthStep from '../global/upload_tabs/splunk/AuthStep.vue';
-import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
 
 @Component({
   components: {

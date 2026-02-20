@@ -296,6 +296,7 @@ import {
   ChecklistMetadata,
   StigMetadata,
   Assettype,
+  Result,
   Role,
   Techarea,
   validateChecklistMetadata
@@ -311,7 +312,6 @@ import {coerce} from 'semver';
 import {validationMixin} from 'vuelidate';
 import {or, CustomRule} from 'vuelidate/lib/validators';
 import ValidationProperties from 'vue/types/vue';
-import {Result} from '@mitre/hdf-converters/src/utils/result';
 
 type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) &
   ChecklistMetadata & {
