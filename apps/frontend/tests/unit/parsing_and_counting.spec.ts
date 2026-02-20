@@ -1,16 +1,13 @@
+import {readFileSync} from 'fs';
+import * as _ from 'lodash';
+import {describe, expect, it} from 'vitest';
 import {InspecDataModule} from '@/store/data_store';
 import {InspecIntakeModule} from '@/store/report_intake';
 import {ControlStatusHash, StatusCountModule} from '@/store/status_counts';
-import chai from 'chai';
-import chai_as_promised from 'chai-as-promised';
-import {readFileSync} from 'fs';
-import * as _ from 'lodash';
 import {AllRaw} from '../util/fs';
-chai.use(chai_as_promised);
-const expect = chai.expect;
 
-describe('Parsing', () => {
-  it('Report intake can read every raw file in hdf_data', function () {
+describe('Parsing', async () => {
+  it('Report intake can read every raw file in hdf_data', () => {
     const raw = AllRaw();
 
     const promises = Object.values(raw).map((fileResult) => {
@@ -22,12 +19,12 @@ describe('Parsing', () => {
     });
 
     // Done!
-    return Promise.all(promises.map((p) => expect(p).to.eventually.be.string));
+    await Promise.all(promises.map((p) => expect(p).resolves.toBeTypeOf('string')));
   });
 
   // Note that the above side effect has LOADED THESE FILES! WE CAN USE THEM IN OTHER TESTS
 
-  it('Counts statuses correctly', function () {
+  it('Counts statuses correctly', () => {
     // Get the exec files
     const execFiles = InspecDataModule.executionFiles;
 
@@ -72,7 +69,7 @@ describe('Parsing', () => {
       );
 
       // Compare 'em
-      expect(strippedActualWithFilename).to.eql(expectedWithFilename);
+      expect(strippedActualWithFilename).toEqual(expectedWithFilename);
     });
   });
 });

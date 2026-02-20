@@ -2,7 +2,7 @@ import Sidebar from '@/components/global/Sidebar.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils';
-import 'jest';
+import {beforeAll, describe, expect, it} from 'vitest';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
@@ -22,8 +22,11 @@ const wrapper: Wrapper<Vue> = shallowMount(Sidebar, {
 });
 
 describe('Sidebar tests', () => {
-  it('has the correct number of sidebar links', () => {
+  beforeAll(() => {
     loadAll();
+  });
+
+  it('has the correct number of sidebar links', () => {
     expect(
       (
         wrapper.vm as Vue & {

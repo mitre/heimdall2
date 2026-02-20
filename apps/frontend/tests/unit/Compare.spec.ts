@@ -4,7 +4,7 @@ import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
-import 'jest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {loadSample, removeAllFiles} from '../util/testingUtils';
@@ -26,7 +26,11 @@ const nginxControlCount = 41;
 const nginxDelta = 3;
 
 describe('Compare table data', () => {
-  loadSample('NGINX With Failing Tests');
+  beforeEach(() => {
+    removeAllFiles();
+    loadSample('NGINX With Failing Tests');
+  });
+
   it('correctly counts controls with 1 file', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     expect(
@@ -45,6 +49,7 @@ describe('Compare table data', () => {
 
   it('does not recount same controls with 3 files', () => {
     loadSample('NGINX With Failing Tests');
+    loadSample('NGINX With Failing Tests');
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -52,6 +57,7 @@ describe('Compare table data', () => {
   });
 
   it('does not show any changed between two of the same', () => {
+    loadSample('NGINX With Failing Tests');
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -94,6 +100,7 @@ describe('Compare table data', () => {
   it('search status works', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
+    loadSample('NGINX Clean Sample');
     SearchModule.parseSearch();
     setTimeout(() => {
       expect(
@@ -104,6 +111,7 @@ describe('Compare table data', () => {
   });
 
   it('counts every unique control', () => {
+    loadSample('NGINX Clean Sample');
     loadSample('Red Hat With Failing Tests');
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
@@ -115,6 +123,8 @@ describe('Compare table data', () => {
   });
 
   it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
+    loadSample('NGINX Clean Sample');
+    loadSample('Red Hat With Failing Tests');
     loadSample('Red Hat Clean Sample');
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -123,6 +133,9 @@ describe('Compare table data', () => {
   });
 
   it('ComparisonContext counts status correctly', () => {
+    loadSample('NGINX Clean Sample');
+    loadSample('Red Hat With Failing Tests');
+    loadSample('Red Hat Clean Sample');
     let failed = 0;
     let passed = 0;
     let na = 0;
@@ -185,8 +198,11 @@ describe('Compare table data', () => {
 });
 
 describe('compare charts', () => {
-  it('sev chart gets correct data with 2 files', () => {
+  beforeEach(() => {
     removeAllFiles();
+  });
+
+  it('sev chart gets correct data with 2 files', () => {
     loadSample('NGINX With Failing Tests');
     loadSample('NGINX Clean Sample');
     //the values in expected are the correct data
@@ -199,7 +215,6 @@ describe('compare charts', () => {
   });
 
   it('sev chart gets correct data with 2 files with differing profiles', () => {
-    removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('Red Hat With Failing Tests');
     //the values in expected are the correct data
@@ -212,7 +227,6 @@ describe('compare charts', () => {
   });
 
   it('sev chart gets correct data with 2 files with overlayed profiles', () => {
-    removeAllFiles();
     loadSample('Three Layer RHEL7 Overlay Example');
     loadSample('Acme Overlay Example');
     //the values in expected are the correct data
@@ -225,7 +239,6 @@ describe('compare charts', () => {
   });
 
   it('compliance chart gets correct data with 2 files', () => {
-    removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('NGINX Clean Sample');
     expect(
@@ -249,7 +262,6 @@ describe('compare charts', () => {
   });
 
   it('compliance chart gets correct data with 2 files with differing profiles', () => {
-    removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('Red Hat With Failing Tests');
     expect(
@@ -273,7 +285,6 @@ describe('compare charts', () => {
   });
 
   it('compliance chart gets correct data with 2 files with overlayed profiles', () => {
-    removeAllFiles();
     loadSample('Three Layer RHEL7 Overlay Example');
     loadSample('Acme Overlay Example');
     expect(
