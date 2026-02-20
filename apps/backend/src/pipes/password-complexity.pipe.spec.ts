@@ -14,7 +14,6 @@ import {
 } from './password-complexity.pipe';
 
 describe('PasswordComplexityPipe', () => {
-	/*
   let passwordComplexityPipe: PasswordComplexityPipe;
 
   beforeEach(() => {
@@ -161,5 +160,4 @@ describe('PasswordComplexityPipe', () => {
       ).toThrowError('Password must be of type string');
     });
   });
-  */
 });
