@@ -53,7 +53,7 @@ jobs:
         run: yarn run cypress-test mock-json &
 
       - name: Run unit tests
-        run: yarn hdf-converters test
+        run: yarn hdf-converters test:ci
         env:
           SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
 

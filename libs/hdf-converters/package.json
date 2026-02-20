@@ -25,6 +25,7 @@
     "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
     "test": "vitest",
+    "test:ci": "vitest run",
     "csv2json": "tsx data/converters/csv2json.ts",
     "xml2json": "tsx data/converters/xml2json.ts"
   },
