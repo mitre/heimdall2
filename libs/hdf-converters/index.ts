@@ -43,6 +43,7 @@ export * from './src/twistlock-mapper';
 export * from './src/utils/attestations';
 export * from './src/utils/compliance';
 export * from './src/utils/fingerprinting';
+export * from './src/utils/splunk-tools';
 export * from './src/veracode-mapper';
 export * from './src/xccdf-results-mapper';
 export * from './src/zap-mapper';
