@@ -28,6 +28,6 @@ export default defineConfig({
     include: ['tests/unit/*.spec.ts'],
     exclude: ['src/__mocks__/**', 'node_modules/**', 'dist/**'],
     testTimeout: 15_000
-    // deps: { inline: ['vuetify'] }
+    deps: { inline: ['apexcharts'] }
   }
 });
