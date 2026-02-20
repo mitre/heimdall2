@@ -4,7 +4,7 @@ import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
-import {beforeAll, describe, expect, it, vi} from 'vitest';
+import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {loadSample, removeAllFiles} from '../util/testingUtils';
