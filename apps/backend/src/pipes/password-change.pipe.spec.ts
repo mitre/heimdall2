@@ -1,5 +1,5 @@
 import {BadRequestException} from '@nestjs/common';
-import {beforeEach, describe, expect, it} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   UPDATE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
@@ -9,7 +9,6 @@ import {
 import {PasswordChangePipe} from './password-change.pipe';
 
 describe('PasswordChangePipe', () => {
-	/*
   let passwordChangePipe: PasswordChangePipe;
 
   beforeEach(() => {
@@ -82,16 +81,11 @@ describe('PasswordChangePipe', () => {
       ).toBeFalsy();
     });
   });
-*/
 
-  /* Tests that when the user wants to update their password,
-    the Levenshtein Distance of their new password and old password is > 8
-    and at least 4 character classes are changed (2nd part is mocked out due
-    to the classesChanged function being tested above) */
-   /*
+  // Tests that when the user wants to update their password, the Levenshtein Distance of their new password and old password is > 8 and at least 4 character classes are changed (2nd part is mocked out due to the classesChanged function being tested above)
   describe('Test Valid Password Changes', () => {
     beforeEach(() => {
-      jest
+      vi
         .spyOn(passwordChangePipe, 'classesChanged')
         .mockReturnValueOnce(true);
     });
@@ -108,14 +102,8 @@ describe('PasswordChangePipe', () => {
         passwordChangePipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS)
       ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
-    */
 
-    /*
-     * The password-change pipe should not fail when the currentPassword
-     * is missing. That check is the responsibility of the users service.
-     * This allows admins to update a user without their current password.
-     */
-    /*
+    // The password-change pipe should not fail when the currentPassword is missing. That check is the responsibility of the users service. This allows admins to update a user without their current password.
     it('should should pass when the currentPassword is not provided and a valid new password is provided', () => {
       expect(
         passwordChangePipe.transform(
@@ -124,11 +112,8 @@ describe('PasswordChangePipe', () => {
       ).toEqual(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD);
     });
   });
-  */
 
-  /* Tests that when a user tries to update their password with a new password
-    that's Levenshtein Distance is < 8, it throws a BadRequestException */
-   /*
+  // Tests that when a user tries to update their password with a new password that's Levenshtein Distance is < 8, it throws a BadRequestException
   describe('Test Invalid Password Changes', () => {
     it('should throw a BadRequestException', () => {
       expect(() =>
@@ -137,10 +122,8 @@ describe('PasswordChangePipe', () => {
       expect(() =>
         passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ)
       ).toThrowError(
-        'A minimum of four character classes must be changed when updating a password.' +
-          ' A minimum of eight of the total number of characters must be changed when updating a password.'
+        'A minimum of four character classes must be changed when updating a password. A minimum of eight of the total number of characters must be changed when updating a password.'
       );
     });
   });
-  */
 });
