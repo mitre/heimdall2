@@ -28,7 +28,6 @@ import {Group} from './group.model';
 import {GroupsService} from './groups.service';
 
 describe('GroupsService', () => {
-	/*
   let groupsService: GroupsService;
   let databaseService: DatabaseService;
   let usersService: UsersService;
@@ -222,5 +221,4 @@ describe('GroupsService', () => {
       expect(group.createdAt).toBeDefined();
     });
   });
-  */
 });
