@@ -18,7 +18,7 @@
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = \"lib/index.js\"' > package.json",
     "postpack": "mv package.json.orig package.json",
-    "test": "jest --silent",
+    "test": "vitest",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
     "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/"
@@ -28,17 +28,6 @@
     "quicktype": "^15.0.260",
     "typedoc": "^0.28.12",
     "vitest": "^3.2.4"
-  },
-  "scripts": {
-    "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
-    "postpack": "mv package.json.orig package.json",
-    "build": "tsc -p ./tsconfig.build.json",
-    "docs": "typedoc --out docs ./src",
-    "gen-types": "bash scripts/update_schema.sh",
-    "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/",
-    "lint": "eslint \"**/*.ts\" --fix",
-    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "vitest"
   },
   "repository": {
     "type": "git",
