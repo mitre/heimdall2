@@ -28,7 +28,6 @@ import {Group} from './group.model';
 import {GroupsService} from './groups.service';
 
 describe('GroupsService', () => {
-	/*
   let groupsService: GroupsService;
   let databaseService: DatabaseService;
   let usersService: UsersService;
@@ -61,6 +60,11 @@ describe('GroupsService', () => {
     databaseService = module.get<DatabaseService>(DatabaseService);
     usersService = module.get<UsersService>(UsersService);
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   beforeEach(async () => {
@@ -217,10 +221,4 @@ describe('GroupsService', () => {
       expect(group.createdAt).toBeDefined();
     });
   });
-
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
-  });
- */
 });
