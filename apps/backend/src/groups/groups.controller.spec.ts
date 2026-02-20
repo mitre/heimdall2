@@ -29,7 +29,6 @@ import {GroupsController} from './groups.controller';
 import {GroupsService} from './groups.service';
 
 describe('GroupsController', () => {
-	/*
   let groupsController: GroupsController;
   let groupsService: GroupsService;
   let databaseService: DatabaseService;
@@ -395,5 +394,4 @@ describe('GroupsController', () => {
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
- */
 });
