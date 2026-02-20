@@ -17,9 +17,8 @@ export default defineConfig({
       {find: /^@\//, replacement: path.resolve(rootDir, 'src') + '/'},
       {find: '@mitre/hdf-converters', replacement: path.resolve(rootDir, '..', '..', 'libs/hdf-converters/index.ts')},
       // {find: 'd3', replacement: path.resolve(rootDir, 'tests/util/d3.js')},
-      {find: 'apexcharts/dist/apexcharts.min', replacement: 'apexcharts/dist/apexcharts.min.js'},
-      {find: 'axios', replacement: 'axios/dist/node/axios.cjs'},
-      {find: 'csv-stringify/sync', replacement: 'csv-stringify/dist/cjs/sync.cjs'}
+      // {find: 'axios', replacement: 'axios/dist/node/axios.cjs'},
+      // {find: 'csv-stringify/sync', replacement: 'csv-stringify/dist/cjs/sync.cjs'}
     ]
   },
   test: {
@@ -27,7 +26,6 @@ export default defineConfig({
     setupFiles: [path.resolve(rootDir, 'tests/setup.ts')],
     include: ['tests/unit/*.spec.ts'],
     exclude: ['src/__mocks__/**', 'node_modules/**', 'dist/**'],
-    testTimeout: 15_000,
-    deps: { inline: ['apexcharts'] }
+    testTimeout: 15_000
   }
 });
