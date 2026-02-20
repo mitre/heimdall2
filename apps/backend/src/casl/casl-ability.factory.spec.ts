@@ -8,12 +8,11 @@ import {User} from '../users/user.model';
 import {Action, CaslAbilityFactory} from './casl-ability.factory';
 
 describe('CaslAbilityFactory', () => {
-	/*
   let abilityFactory: CaslAbilityFactory;
   let userAbility: MongoAbility;
   let adminAbility: MongoAbility;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     abilityFactory = new CaslAbilityFactory();
     userAbility = abilityFactory.createForUser(TEST_USER_WITH_ID);
     adminAbility = abilityFactory.createForUser(ADMIN_WITH_ID);
@@ -139,5 +138,4 @@ describe('CaslAbilityFactory', () => {
       )
     ).toBeTruthy();
   });
-  */
 });
