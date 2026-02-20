@@ -26,7 +26,6 @@ import {EvaluationTag} from './evaluation-tag.model';
 import {EvaluationTagsService} from './evaluation-tags.service';
 
 describe('EvaluationTagsService', () => {
-	/*
   let evaluationTagsService: EvaluationTagsService;
   let evaluationsService: EvaluationsService;
   let databaseService: DatabaseService;
@@ -148,5 +147,4 @@ describe('EvaluationTagsService', () => {
       expect(foundEvaluationTag).toEqual(null);
     });
   });
- */
 });
