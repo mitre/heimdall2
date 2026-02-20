@@ -46,7 +46,6 @@ const secondMockFile: Express.Multer.File = {
 };
 
 describe('EvaluationsController', () => {
-	/*
   let evaluationsController: EvaluationsController;
   let evaluationsService: EvaluationsService;
   let module: TestingModule;
@@ -453,5 +452,4 @@ describe('EvaluationsController', () => {
       expect(foundGroups.length).toEqual(0);
     });
   });
- */
 });
