@@ -27,7 +27,7 @@ export default defineConfig({
     setupFiles: [path.resolve(rootDir, 'tests/setup.ts')],
     include: ['tests/unit/*.spec.ts'],
     exclude: ['src/__mocks__/**', 'node_modules/**', 'dist/**'],
-    testTimeout: 15_000
+    testTimeout: 15_000,
     deps: { inline: ['apexcharts'] }
   }
 });
