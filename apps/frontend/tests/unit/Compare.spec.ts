@@ -4,7 +4,7 @@ import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
-import {beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {loadSample, removeAllFiles} from '../util/testingUtils';
@@ -26,7 +26,7 @@ const nginxControlCount = 41;
 const nginxDelta = 3;
 
 describe('Compare table data', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     removeAllFiles();
     loadSample('NGINX With Failing Tests');
   });
@@ -49,6 +49,7 @@ describe('Compare table data', () => {
 
   it('does not recount same controls with 3 files', () => {
     loadSample('NGINX With Failing Tests');
+    loadSample('NGINX With Failing Tests');
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -56,6 +57,7 @@ describe('Compare table data', () => {
   });
 
   it('does not show any changed between two of the same', () => {
+    loadSample('NGINX With Failing Tests');
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -85,9 +87,9 @@ describe('Compare table data', () => {
   });
 
   it('shows differing delta data when "show only changed"', () => {
+    loadSample('NGINX Clean Sample');
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
-    loadSample('NGINX Clean Sample');
     SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -96,6 +98,7 @@ describe('Compare table data', () => {
   });
 
   it('search status works', () => {
+    loadSample('NGINX Clean Sample');
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
     SearchModule.parseSearch();
@@ -108,6 +111,7 @@ describe('Compare table data', () => {
   });
 
   it('counts every unique control', () => {
+    loadSample('NGINX Clean Sample');
     loadSample('Red Hat With Failing Tests');
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
@@ -119,6 +123,8 @@ describe('Compare table data', () => {
   });
 
   it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
+    loadSample('NGINX Clean Sample');
+    loadSample('Red Hat With Failing Tests');
     loadSample('Red Hat Clean Sample');
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -127,6 +133,9 @@ describe('Compare table data', () => {
   });
 
   it('ComparisonContext counts status correctly', () => {
+    loadSample('NGINX Clean Sample');
+    loadSample('Red Hat With Failing Tests');
+    loadSample('Red Hat Clean Sample');
     let failed = 0;
     let passed = 0;
     let na = 0;
