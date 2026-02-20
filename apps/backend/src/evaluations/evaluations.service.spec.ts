@@ -58,11 +58,11 @@ describe('EvaluationsService', () => {
       ]
     }).compile();
 
+    databaseService = module.get<DatabaseService>(DatabaseService);
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
     evaluationTagsService = module.get<EvaluationTagsService>(
       EvaluationTagsService
     );
-    databaseService = module.get<DatabaseService>(DatabaseService);
     usersService = module.get<UsersService>(UsersService);
     groupsService = module.get<GroupsService>(GroupsService);
   });
