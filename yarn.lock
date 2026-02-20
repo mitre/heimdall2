@@ -252,10 +252,10 @@
     "@smithy/util-utf8" "^2.0.0"
     tslib "^2.6.2"
 
-"@aws-sdk/client-config-service@3.993.0":
-  version "3.993.0"
-  resolved "https://registry.npmjs.org/@aws-sdk/client-config-service/-/client-config-service-3.993.0.tgz#62c9f80d85b82aa2ef7465f1fae8c48729751ccb"
-  integrity sha512-WZELDi8m40ip+SyijjlRA1YdCpL3QISJGrzRI7o7ZPQFqNEJFWW82mcabG+aNiveoRBsz11/OoBjXGuqrROOoA==
+"@aws-sdk/client-config-service@3.994.0":
+  version "3.994.0"
+  resolved "https://registry.npmjs.org/@aws-sdk/client-config-service/-/client-config-service-3.994.0.tgz#009f1f70ed00de02c29210606666d2d37a4a1d30"
+  integrity sha512-qr76kCynSmzpNAoRy/Vfe9nn/eJZ55BQVuny9Y8XPbiBSkp4fFtHDJRDHFoqFbZcj/7SzLdD7FA9c4JyOtieUg==
   dependencies:
     "@aws-crypto/sha256-browser" "5.2.0"
     "@aws-crypto/sha256-js" "5.2.0"
@@ -267,7 +267,7 @@
     "@aws-sdk/middleware-user-agent" "^3.972.11"
     "@aws-sdk/region-config-resolver" "^3.972.3"
     "@aws-sdk/types" "^3.973.1"
-    "@aws-sdk/util-endpoints" "3.993.0"
+    "@aws-sdk/util-endpoints" "3.994.0"
     "@aws-sdk/util-user-agent-browser" "^3.972.3"
     "@aws-sdk/util-user-agent-node" "^3.972.9"
     "@smithy/config-resolver" "^4.4.6"
