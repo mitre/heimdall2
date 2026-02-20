@@ -46,7 +46,6 @@ const secondMockFile: Express.Multer.File = {
 };
 
 describe('EvaluationsController', () => {
-	/*
   let evaluationsController: EvaluationsController;
   let evaluationsService: EvaluationsService;
   let module: TestingModule;
@@ -87,6 +86,11 @@ describe('EvaluationsController', () => {
     );
     usersService = module.get<UsersService>(UsersService);
     groupsService = module.get<GroupsService>(GroupsService);
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   beforeEach(async () => {
@@ -448,10 +452,4 @@ describe('EvaluationsController', () => {
       expect(foundGroups.length).toEqual(0);
     });
   });
-
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
-  });
-  */
 });
