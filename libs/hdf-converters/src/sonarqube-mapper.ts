@@ -865,7 +865,7 @@ export class SonarqubeResults {
           cfg?.currentRetryAttempt !== undefined
         ) {
           logger.debug(
-            `Error occurred: retry attempt #${cfg?.currentRetryAttempt + 1}/${MAX_RETRIES} will happen after backoff`
+            `Error occurred: retry attempt #${cfg?.currentRetryAttempt}/${MAX_RETRIES} will happen after backoff`
           );
         } else {
           this.logAxiosError(e);
@@ -968,6 +968,7 @@ export class SonarqubeResults {
         paging: {pageIndex: 0, pageSize: 0, total: 0}
       };
       while (sizeCheck ? page === 1 : paging) {
+        console.log(results);
         await createSearch(component, page)
           .then(({data}) => {
             _.mergeWith(results, data, (objValue, srcValue) =>
