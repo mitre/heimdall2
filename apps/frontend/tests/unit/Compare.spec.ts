@@ -25,6 +25,8 @@ describe('Compare table data', async () => {
   beforeEach(async () => {
     removeAllFiles();
 
+    SearchModule.updateSearch('');
+
     await loadSample('NGINX With Failing Tests');
   });
 
@@ -71,16 +73,12 @@ describe('Compare table data', async () => {
     ).toBe(0);
   });
 
-  it('search id works', () => {
-    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
-    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'v-13613';
+  it('search id works', async () => {
+    await wrapper.setData({ changedOnly: false});
+    SearchModule.updateSearch('v-13613');
     SearchModule.parseSearch();
-    setTimeout(() => {
-      expect(
-        (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
-          .length
-      ).toBe(1);
-    }, 1000);
+    await Vue.nextTick();
+    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(1);
   });
 
   it('shows differing delta data when "show only changed"', async () => {
@@ -96,15 +94,11 @@ describe('Compare table data', async () => {
 
   it('search status works', async () => {
     await loadSample('NGINX Clean Sample');
-    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
-    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
+    await wrapper.setData({ changedOnly: false});
+    SearchModule.updateSearch('failed');
     SearchModule.parseSearch();
-    setTimeout(() => {
-      expect(
-        (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
-          .length
-      ).toBe(nginxDelta);
-    }, 1000);
+    await Vue.nextTick();
+    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(nginxDelta);
   });
 
   it('counts every unique control', async () => {
