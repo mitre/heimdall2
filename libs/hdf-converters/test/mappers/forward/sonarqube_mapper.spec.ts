@@ -1,5 +1,6 @@
 import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
+import {describe, expect, it} from 'vitest';
 import {SonarqubeResults} from '../../../src/sonarqube-mapper';
 import {omitHDFTitle, omitVersions} from '../../utils';
 

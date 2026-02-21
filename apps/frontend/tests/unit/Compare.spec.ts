@@ -4,17 +4,13 @@ import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
-import 'jest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {loadSample, removeAllFiles} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
-
-const wrapper: Wrapper<Vue> = shallowMount(Compare, {
-  vuetify,
-  propsData: {}
-});
+const wrapper: Wrapper<Vue> = shallowMount(Compare, {vuetify, propsData: {}});
 
 export interface SeriesItem {
   name: string;
@@ -25,34 +21,43 @@ const redHatControlCount = 247;
 const nginxControlCount = 41;
 const nginxDelta = 3;
 
-describe('Compare table data', () => {
-  loadSample('NGINX With Failing Tests');
-  it('correctly counts controls with 1 file', () => {
-    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
+describe('Compare table data', async () => {
+  beforeEach(async () => {
+    removeAllFiles();
+
+    SearchModule.updateSearch('');
+
+    await loadSample('NGINX With Failing Tests');
+  });
+
+  it('correctly counts controls with 1 file', async () => {
+    await wrapper.setData({changedOnly: false});
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
     ).toBe(nginxControlCount);
   });
 
-  it('does not recount same controls with 2 files', () => {
-    loadSample('NGINX With Failing Tests');
+  it('does not recount same controls with 2 files', async () => {
+    await loadSample('NGINX With Failing Tests');
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
     ).toBe(nginxControlCount);
   });
 
-  it('does not recount same controls with 3 files', () => {
-    loadSample('NGINX With Failing Tests');
+  it('does not recount same controls with 3 files', async () => {
+    await loadSample('NGINX With Failing Tests');
+    await loadSample('NGINX With Failing Tests');
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
     ).toBe(nginxControlCount);
   });
 
-  it('does not show any changed between two of the same', () => {
-    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
+  it('does not show any changed between two of the same', async () => {
+    await loadSample('NGINX With Failing Tests');
+    await wrapper.setData({changedOnly: true});
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -60,7 +65,7 @@ describe('Compare table data', () => {
   });
 
   it('search works when nothing fits criteria', () => {
-    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
+    SearchModule.updateSearch('failed');
     SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -68,22 +73,19 @@ describe('Compare table data', () => {
     ).toBe(0);
   });
 
-  it('search id works', () => {
-    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
-    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'v-13613';
+  it('search id works', async () => {
+    await wrapper.setData({changedOnly: false});
+    SearchModule.updateSearch('v-13613');
     SearchModule.parseSearch();
-    setTimeout(() => {
-      expect(
-        (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
-          .length
-      ).toBe(1);
-    }, 1000);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(1);
   });
 
-  it('shows differing delta data when "show only changed"', () => {
-    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
-    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
-    loadSample('NGINX Clean Sample');
+  it('shows differing delta data when "show only changed"', async () => {
+    await loadSample('NGINX Clean Sample');
+    await wrapper.setData({changedOnly: true});
     SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -91,22 +93,21 @@ describe('Compare table data', () => {
     ).toBe(nginxDelta);
   });
 
-  it('search status works', () => {
-    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
-    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
+  it('search status works', async () => {
+    await loadSample('NGINX Clean Sample');
+    await wrapper.setData({changedOnly: false});
+    SearchModule.updateSearch('failed');
     SearchModule.parseSearch();
-    setTimeout(() => {
-      expect(
-        (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
-          .length
-      ).toBe(nginxDelta);
-    }, 1000);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxDelta);
   });
 
-  it('counts every unique control', () => {
-    loadSample('Red Hat With Failing Tests');
-    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
-    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
+  it('counts every unique control', async () => {
+    await loadSample('NGINX Clean Sample');
+    await loadSample('Red Hat With Failing Tests');
+    await wrapper.setData({changedOnly: true});
     SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -114,15 +115,22 @@ describe('Compare table data', () => {
     ).toBe(nginxControlCount + redHatControlCount);
   });
 
-  it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
-    loadSample('Red Hat Clean Sample');
+  it('shows all delta data of controls with multiple occurances when "show only changed"', async () => {
+    await loadSample('NGINX Clean Sample');
+    await loadSample('Red Hat With Failing Tests');
+    await loadSample('Red Hat Clean Sample');
+    await wrapper.setData({changedOnly: true});
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
     ).toBe(nginxControlCount + redHatControlCount);
   });
 
-  it('ComparisonContext counts status correctly', () => {
+  it('ComparisonContext counts status correctly', async () => {
+    await loadSample('NGINX Clean Sample');
+    await loadSample('Red Hat With Failing Tests');
+    await loadSample('Red Hat Clean Sample');
+    await wrapper.setData({changedOnly: true});
     let failed = 0;
     let passed = 0;
     let na = 0;
@@ -185,10 +193,13 @@ describe('Compare table data', () => {
 });
 
 describe('compare charts', () => {
-  it('sev chart gets correct data with 2 files', () => {
+  beforeEach(() => {
     removeAllFiles();
-    loadSample('NGINX With Failing Tests');
-    loadSample('NGINX Clean Sample');
+  });
+
+  it('sev chart gets correct data with 2 files', async () => {
+    await loadSample('NGINX With Failing Tests');
+    await loadSample('NGINX Clean Sample');
     //the values in expected are the correct data
     expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual([
       [0, 0],
@@ -198,10 +209,9 @@ describe('compare charts', () => {
     ]);
   });
 
-  it('sev chart gets correct data with 2 files with differing profiles', () => {
-    removeAllFiles();
-    loadSample('NGINX With Failing Tests');
-    loadSample('Red Hat With Failing Tests');
+  it('sev chart gets correct data with 2 files with differing profiles', async () => {
+    await loadSample('NGINX With Failing Tests');
+    await loadSample('Red Hat With Failing Tests');
     //the values in expected are the correct data
     expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual([
       [0, 6],
@@ -211,10 +221,9 @@ describe('compare charts', () => {
     ]);
   });
 
-  it('sev chart gets correct data with 2 files with overlayed profiles', () => {
-    removeAllFiles();
-    loadSample('Three Layer RHEL7 Overlay Example');
-    loadSample('Acme Overlay Example');
+  it('sev chart gets correct data with 2 files with overlayed profiles', async () => {
+    await loadSample('Three Layer RHEL7 Overlay Example');
+    await loadSample('Acme Overlay Example');
     //the values in expected are the correct data
     expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual([
       [0, 8],
@@ -224,10 +233,9 @@ describe('compare charts', () => {
     ]);
   });
 
-  it('compliance chart gets correct data with 2 files', () => {
-    removeAllFiles();
-    loadSample('NGINX With Failing Tests');
-    loadSample('NGINX Clean Sample');
+  it('compliance chart gets correct data with 2 files', async () => {
+    await loadSample('NGINX With Failing Tests');
+    await loadSample('NGINX Clean Sample');
     expect(
       new Set(
         (
@@ -248,10 +256,9 @@ describe('compare charts', () => {
     );
   });
 
-  it('compliance chart gets correct data with 2 files with differing profiles', () => {
-    removeAllFiles();
-    loadSample('NGINX With Failing Tests');
-    loadSample('Red Hat With Failing Tests');
+  it('compliance chart gets correct data with 2 files with differing profiles', async () => {
+    await loadSample('NGINX With Failing Tests');
+    await loadSample('Red Hat With Failing Tests');
     expect(
       new Set(
         (
@@ -272,10 +279,9 @@ describe('compare charts', () => {
     );
   });
 
-  it('compliance chart gets correct data with 2 files with overlayed profiles', () => {
-    removeAllFiles();
-    loadSample('Three Layer RHEL7 Overlay Example');
-    loadSample('Acme Overlay Example');
+  it('compliance chart gets correct data with 2 files with overlayed profiles', async () => {
+    await loadSample('Three Layer RHEL7 Overlay Example');
+    await loadSample('Acme Overlay Example');
     expect(
       new Set(
         (

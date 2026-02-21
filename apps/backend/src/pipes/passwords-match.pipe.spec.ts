@@ -1,4 +1,5 @@
 import {BadRequestException} from '@nestjs/common';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
@@ -18,8 +19,7 @@ describe('PasswordsMatchPipe', () => {
     expect(passwordsMatchPipe).toBeDefined();
   });
 
-  /* Tests that when password and passwordConfirmation match,
-   the same CreateUserDto obj that is passed to the pipeline, is returned */
+  // Tests that when password and passwordConfirmation match, the same CreateUserDto obj that is passed to the pipeline, is returned
   describe('Test Matching Passwords', () => {
     it('should return the same CreateUserDto', () => {
       expect(passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ)).toEqual(
@@ -40,8 +40,7 @@ describe('PasswordsMatchPipe', () => {
     });
   });
 
-  /* Tests that when password and passwordConfirmation don't match,
-    a BadRequestException is thrown */
+  // Tests that when password and passwordConfirmation don't match, a BadRequestException is thrown
   describe('Test Mismatching Passwords', () => {
     it('should throw a Bad Request Exception', () => {
       expect(() =>

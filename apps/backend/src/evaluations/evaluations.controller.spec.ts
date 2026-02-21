@@ -2,6 +2,7 @@ import {ForbiddenError} from '@casl/ability';
 import {NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
+import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   EVALUATION_1,
@@ -35,18 +36,14 @@ import {EvaluationsService} from './evaluations.service';
 
 // This allows basic testing of the evaluations controller
 // interface without having to construct a full File object
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-//@ts-ignore
 const mockFile: Express.Multer.File = {
   originalname: 'abc.json',
   buffer: Buffer.from('{}')
 };
-//@ts-ignore
 const secondMockFile: Express.Multer.File = {
   originalname: 'cda.json',
   buffer: Buffer.from('{}')
 };
-/* eslint-enable @typescript-eslint/ban-ts-comment */
 
 describe('EvaluationsController', () => {
   let evaluationsController: EvaluationsController;
@@ -89,6 +86,11 @@ describe('EvaluationsController', () => {
     );
     usersService = module.get<UsersService>(UsersService);
     groupsService = module.get<GroupsService>(GroupsService);
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   beforeEach(async () => {
@@ -449,10 +451,5 @@ describe('EvaluationsController', () => {
       );
       expect(foundGroups.length).toEqual(0);
     });
-  });
-
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
   });
 });

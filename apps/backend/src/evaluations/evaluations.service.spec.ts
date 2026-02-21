@@ -1,6 +1,7 @@
 import {NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
+import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
@@ -57,13 +58,18 @@ describe('EvaluationsService', () => {
       ]
     }).compile();
 
+    databaseService = module.get<DatabaseService>(DatabaseService);
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
     evaluationTagsService = module.get<EvaluationTagsService>(
       EvaluationTagsService
     );
-    databaseService = module.get<DatabaseService>(DatabaseService);
     usersService = module.get<UsersService>(UsersService);
     groupsService = module.get<GroupsService>(GroupsService);
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   beforeEach(async () => {
@@ -298,10 +304,5 @@ describe('EvaluationsService', () => {
         NotFoundException
       );
     });
-  });
-
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
   });
 });

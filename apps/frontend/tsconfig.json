@@ -10,7 +10,7 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "types": ["jest", "chai", "vuetify", "node"],
+    "types": ["vuetify", "node"],
     "paths": {
       "@/*": ["src/*"]
     },
