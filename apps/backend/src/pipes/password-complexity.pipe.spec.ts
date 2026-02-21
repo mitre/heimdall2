@@ -1,5 +1,6 @@
 import {validators} from '@heimdall/password-complexity';
 import {BadRequestException} from '@nestjs/common';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
@@ -112,11 +113,7 @@ describe('PasswordComplexityPipe', () => {
     });
   });
 
-  /* Tests the complexity of a user's password and that when it meets the requirements of:
-    15 characters or longer, at least 1 uppercase letter, lowercase letter, number, special character,
-    the password meets the requirements of not containing more than three consecutive repeating
-    characters, and it contains no more than four repeating characters from the same character class,
-    the same dto object will be returned*/
+  // Tests the complexity of a user's password and that when it meets the requirements of: 15 characters or longer, at least 1 uppercase letter, lowercase letter, number, special character, the password meets the requirements of not containing more than three consecutive repeating characters, and it contains no more than four repeating characters from the same character class, the same dto object will be returned
   describe('Test Valid Password', () => {
     it('should return the same CreateUserDto', () => {
       expect(
@@ -139,8 +136,7 @@ describe('PasswordComplexityPipe', () => {
     });
   });
 
-  /* Tests that when a password does not meet all the minimum requirements,
-    a BadRequestException is thrown */
+  // Tests that when a password does not meet all the minimum requirements, a BadRequestException is thrown
   describe('Test Invalid Password', () => {
     it('should throw a BadRequestException for CreateUserDto with missing password', () => {
       expect(() =>

@@ -37,7 +37,7 @@ jobs:
         run: yarn frontend install --frozen-lockfile
 
       - name: Run frontend tests
-        run: yarn frontend test
+        run: yarn frontend test:ci
 
       - name: Ensure the app builds cleanly without backend dependencies
         run: yarn frontend build

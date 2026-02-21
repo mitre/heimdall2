@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import {expect, test} from 'vitest';
 import {ConversionResult, convertFile} from '../src/fileparse';
 import {statusCounts} from './status_counts';
 

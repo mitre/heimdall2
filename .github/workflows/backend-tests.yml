@@ -45,7 +45,7 @@ jobs:
           yarn backend sequelize-cli db:migrate
 
       - name: Run unit tests
-        run: yarn backend test:ci-cov
+        run: yarn backend test:ci
 
       - name: Ensure the app builds cleanly without frontend dependencies
         run: yarn backend build

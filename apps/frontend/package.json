@@ -27,7 +27,8 @@
     "prepack": "vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
     "postpack": "mv package.json.orig package.json && rm README.md",
     "start:dev": "vue-cli-service serve & yarn build:tailwind --watch",
-    "test": "jest"
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.425.0",
@@ -55,7 +56,6 @@
     "@vue/cli": "^5.0.8",
     "@vue/cli-plugin-eslint": "^5.0.3",
     "@vue/cli-plugin-typescript": "^5.0.3",
-    "@vue/cli-plugin-unit-jest": "~5.0.3",
     "@vue/cli-service": "^5.0.8",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
@@ -86,7 +86,7 @@
     "rimraf": "^6.0.1",
     "roboto-fontface": "*",
     "sanitize-html": "~2.17.0",
-    "sass": "~1.32.6",
+    "sass": "^1.32.6",
     "sass-loader": "^16.0.0",
     "search-query-parser": "^1.5.5",
     "semver": "^7.6.0",
@@ -113,18 +113,13 @@
     "winston": "^3.6.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.5",
-    "@types/chai-as-promised": "^7.1.2",
-    "@types/jest": "^27.0.0",
     "@types/sinon": "^21.0.0",
+    "@vitejs/plugin-vue2": "^2.3.4",
     "@vue/test-utils": "^1.0.3",
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
-    "jest": "^27.0.6",
-    "jest-useragent-mock": "^0.1.1",
+    "jsdom": "^28.1.0",
     "sinon": "^21.0.0",
-    "ts-jest": "^29.1.0",
-    "vue-jest": "^3.0.7"
+    "vite-svg-loader": "^5.1.0",
+    "vitest": "^4.0.18"
   },
   "engines": {
     "node": ">=22"

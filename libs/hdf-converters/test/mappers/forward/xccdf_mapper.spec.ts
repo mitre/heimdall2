@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {XCCDFResultsMapper} from '../../../src/xccdf-results-mapper';
 import {omitVersions} from '../../utils';
 

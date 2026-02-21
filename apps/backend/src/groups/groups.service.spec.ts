@@ -1,6 +1,7 @@
 import {ForbiddenException, NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
+import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {
   EVALUATION_1,
   EVALUATION_WITH_TAGS_1
@@ -59,6 +60,11 @@ describe('GroupsService', () => {
     databaseService = module.get<DatabaseService>(DatabaseService);
     usersService = module.get<UsersService>(UsersService);
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   beforeEach(async () => {
@@ -214,10 +220,5 @@ describe('GroupsService', () => {
       expect(group.updatedAt).toBeDefined();
       expect(group.createdAt).toBeDefined();
     });
-  });
-
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
   });
 });

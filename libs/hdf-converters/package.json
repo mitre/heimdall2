@@ -24,12 +24,13 @@
     "postpack": "run-script-os",
     "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
-    "test": "jest",
+    "test": "vitest",
+    "test:ci": "vitest run",
     "csv2json": "tsx data/converters/csv2json.ts",
     "xml2json": "tsx data/converters/xml2json.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-config-service": "3.992.0",
+    "@aws-sdk/client-config-service": "3.994.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
     "@microsoft/microsoft-graph-types": "^2.40.0",
@@ -68,31 +69,12 @@
     "yaml": "^2.1.1"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.0",
     "@types/lodash": "^4.14.161",
     "@types/node": "^25.0.0",
-    "jest": "^27.0.6",
     "quicktype": "^15.0.260",
-    "ts-jest": "^29.1.0",
     "tsx": "^4.7.1",
     "typedoc": "^0.28.12",
+    "vitest": "^3.2.4",
     "xml2js": "^0.6.0"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts",
-      "d.ts",
-      "node"
-    ],
-    "moduleNameMapper": {
-      "axios": "axios/dist/node/axios.cjs"
-    },
-    "rootDir": ".",
-    "testTimeout": 10000000,
-    "transform": {
-      "^.+\\.ts$": ["ts-jest", { "tsconfig": "tsconfig.build.json" }]
-    }
   }
 }

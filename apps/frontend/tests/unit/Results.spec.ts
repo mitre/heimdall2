@@ -3,7 +3,7 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import Results from '@/views/Results.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import {ContextualizedControl} from 'inspecjs';
-import 'jest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {

@@ -35,7 +35,7 @@ jobs:
         run: yarn inspecjs install --frozen-lockfile
 
       - name: Run unit tests
-        run: yarn inspecjs test
+        run: yarn inspecjs test:ci
 
       - name: Validate there are no changes between the inspec schemas and generated parsers
         run: |

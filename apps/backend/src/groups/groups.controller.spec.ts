@@ -1,6 +1,7 @@
 import {ForbiddenError} from '@casl/ability';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
+import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {
   GROUP_1,
@@ -73,9 +74,8 @@ describe('GroupsController', () => {
     basicUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
   });
 
-  afterAll((done) => {
-    databaseService.closeConnection();
-    done();
+  afterAll(async () => {
+    await databaseService.closeConnection();
   });
 
   describe('Create', () => {

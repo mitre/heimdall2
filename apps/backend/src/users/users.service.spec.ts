@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
+import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
 import {
   CREATE_ADMIN_DTO,
@@ -84,8 +85,13 @@ describe('UsersService', () => {
     databaseService = module.get<DatabaseService>(DatabaseService);
   });
 
-  beforeEach(() => {
-    return databaseService.cleanAll();
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
+  });
+
+  beforeEach(async () => {
+    await databaseService.cleanAll();
   });
 
   describe('Create', () => {
@@ -584,10 +590,5 @@ describe('UsersService', () => {
         new UserDto(await usersService.remove(user, {}, adminAbacPolicy))
       ).toEqual(new UserDto(user));
     });
-  });
-
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
   });
 });

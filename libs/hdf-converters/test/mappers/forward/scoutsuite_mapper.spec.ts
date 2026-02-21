@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {ScoutsuiteMapper} from '../../../src/scoutsuite-mapper';
 import {omitVersions} from '../../utils';
 

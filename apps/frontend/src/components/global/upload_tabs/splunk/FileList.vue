@@ -55,13 +55,11 @@
 <script lang="ts">
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {FileMetaData} from '@mitre/hdf-converters';
-import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
+import {FileMetaData, SplunkConfig, SplunkMapper} from '@mitre/hdf-converters';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
-import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
 import {requireFieldRule} from '@/utilities/upload_util';
 
 @Component({})

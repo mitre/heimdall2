@@ -1,4 +1,5 @@
 import fs from 'fs';
+import {describe, expect, it} from 'vitest';
 import {AnchoreGrypeMapper} from '../../../src/anchore-grype-mapper';
 import {omitVersions} from '../../utils';
 

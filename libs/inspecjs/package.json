@@ -18,23 +18,16 @@
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = \"lib/index.js\"' > package.json",
     "postpack": "mv package.json.orig package.json",
-    "test": "jest --silent",
+    "test": "vitest",
+    "test:ci": "vitest run",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
     "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.0",
     "@types/node": "^25.0.0",
-    "jest": "^27.0.6",
     "quicktype": "^15.0.260",
-    "ts-jest": "^29.1.0",
-    "typedoc": "^0.28.12"
-  },
-  "jest": {
-    "rootDir": ".",
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    }
+    "typedoc": "^0.28.12",
+    "vitest": "^3.2.4"
   }
 }

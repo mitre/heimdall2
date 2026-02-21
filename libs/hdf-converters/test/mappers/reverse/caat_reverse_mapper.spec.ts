@@ -1,10 +1,13 @@
 import * as XLSX from '@e965/xlsx';
 import fs from 'fs';
 import * as _ from 'lodash';
+import {describe, expect, it} from 'vitest';
 import {CAATRow, FromHDFToCAATMapper} from '../../../index';
 
 describe('CAAT Results Reverse Mapper', () => {
   it('Successfully converts two RHEL HDF and a RHEL triple overlay HDF into CAAT', () => {
+    XLSX.set_fs(fs); // https://docs.sheetjs.com/docs/getting-started/installation/nodejs/#filesystem-operations
+
     const rhelData = fs.readFileSync(
       'sample_jsons/caat_reverse_mapper/sample_input_report/red_hat_good.json',
       {encoding: 'utf-8'}

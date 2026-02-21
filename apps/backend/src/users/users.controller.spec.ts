@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
+import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {ValidationError} from 'sequelize';
 import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
 import {
@@ -75,6 +76,11 @@ describe('UsersController Unit Tests', () => {
     usersController = module.get<UsersController>(UsersController);
     databaseService = module.get<DatabaseService>(DatabaseService);
     configService = module.get<ConfigService>(ConfigService);
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   beforeEach(async () => {
@@ -263,10 +269,5 @@ describe('UsersController Unit Tests', () => {
         );
       }).rejects.toThrow(ForbiddenException);
     });
-  });
-
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
   });
 });
