@@ -980,9 +980,7 @@ export class SonarqubeResults {
           })
           .catch((e) => {
             this.logAxiosError(e);
-            return Promise.reject(
-              new Error('Failed at retrieving Sonarqube issues')
-            );
+            throw new Error('Failed at retrieving Sonarqube issues');
           });
         if (page * PAGE_SIZE > UPPER_LIMIT) {
           logger.warn(
@@ -1021,9 +1019,7 @@ export class SonarqubeResults {
           })
           .catch((e) => {
             this.logAxiosError(e);
-            return Promise.reject(
-              new Error('Failed at retrieving the list of components')
-            );
+            throw new Error('Failed at retrieving the list of components');
           });
         if (page * PAGE_SIZE > UPPER_LIMIT) {
           logger.warn(
