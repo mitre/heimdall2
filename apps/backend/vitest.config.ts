@@ -13,9 +13,4 @@ export default defineConfig({
       module: {type: 'es6'},
     }),
   ],
-  // resolve: {
-  //   alias: {
-  //     'src': resolve(__dirname, './src')
-  //   }
-  // }
 });
