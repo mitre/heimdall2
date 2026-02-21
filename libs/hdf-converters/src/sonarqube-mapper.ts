@@ -1,4 +1,5 @@
-import axios, {AxiosError} from 'axios';
+import axios, {AxiosError, AxiosInstance} from 'axios';
+import * as rax from 'retry-axios';
 import * as _ from 'lodash';
 import {coerce, lt} from 'semver';
 import {ExecJSON} from 'inspecjs';
@@ -85,8 +86,27 @@ type SonarqubeVersionMapping = {
   [SonarqubeVersion.Eight]: {issue: Issue_8; ruleInformation: Rule_8};
   [SonarqubeVersion.Nine]: {issue: Issue_9; ruleInformation: Rule_9};
   [SonarqubeVersion.Ten]: {issue: Issue_10; ruleInformation: Rule_10};
-  [SonarqubeVersion.Twenty_five]: {issue: Issue_10; ruleInformation: Rule_25};
+  [SonarqubeVersion.Twenty_five]: {issue: Issue_25; ruleInformation: Rule_25};
 };
+
+function isBeforeSonarqubeVersion(
+  version: string,
+  comparisonVersion: string
+): boolean {
+  const v = coerce(version);
+  if (v === null) {
+    throw new Error(
+      `Was not able to coerce ${version} into a semver compatible version string`
+    );
+  }
+  const cv = coerce(comparisonVersion);
+  if (cv === null) {
+    throw new Error(
+      `Was not able to coerce ${comparisonVersion} into a semver compatible version string`
+    );
+  }
+  return lt(v, cv);
+}
 
 // many of these attributes show up in the API example responses, but not in our locally generated samples.
 // a few of them are mentioned in the changelog, but do not show up in samples or the examples
@@ -139,7 +159,7 @@ type Issue_8 = {
   severity: string;
   status: string;
   tags: string[];
-  textRange: {
+  textRange?: {
     endLine: number;
     endOffset: number;
     startLine: number;
@@ -158,6 +178,12 @@ type Issue_9 = Omit<Issue_8, 'fromHotspot'> & {
 type Issue_10 = Issue_9 & {
   codeVariants: string[];
   prioritizedRule: boolean;
+};
+
+type Issue_25 = Issue_10 & {
+  fromSonarQubeUpdate: boolean;
+  internalTags: unknown[];
+  linkedTicketStatus: string;
 };
 
 type Search<T extends SonarqubeVersion> = {
@@ -187,6 +213,28 @@ type Search<T extends SonarqubeVersion> = {
   }[];
   total?: number; // deprecated as of 9.8
   users?: {login: string; name: string; active: boolean; avatar: string}[];
+};
+
+type ComponentSearch = {
+  paging: {pageIndex: number; pageSize: number; total: number};
+  baseComponent: {
+    key: string;
+    description: string;
+    qualifier: string;
+    tags: string[];
+    visibility: string;
+    organization?: string;
+    isAiCodeFixEnabled?: boolean;
+    name?: string;
+  };
+  components: {
+    organization?: string;
+    key: string;
+    name: string;
+    qualifier: string;
+    path: string;
+    language: string;
+  }[];
 };
 
 type Rule_8 = {
@@ -796,6 +844,7 @@ enum AuthenticationMethod {
 
 export class SonarqubeResults {
   authMethod?: AuthenticationMethod;
+  axiosClient: AxiosInstance;
   constructor(
     public readonly sonarqubeHost: string,
     public readonly projectKey: string,
@@ -804,13 +853,33 @@ export class SonarqubeResults {
     public readonly pullRequestID?: string,
     public readonly organization?: string, // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
     public readonly withRaw = false
-  ) {}
+  ) {
+    this.axiosClient = axios.create();
+    const MAX_RETRIES = 5;
+    this.axiosClient.defaults.raxConfig = {
+      retry: MAX_RETRIES,
+      onError: async (e) => {
+        const cfg = rax.getConfig(e);
+        if (
+          cfg?.currentRetryAttempt !== null &&
+          cfg?.currentRetryAttempt !== undefined
+        ) {
+          logger.debug(
+            `Error occurred: retry attempt #${cfg?.currentRetryAttempt}/${MAX_RETRIES} will happen after backoff`
+          );
+        } else {
+          this.logAxiosError(e);
+        }
+      }
+    };
+    rax.attach(this.axiosClient);
+  }
 
   logAxiosError(e: AxiosError): void {
     if (e.response) {
       logger.debug('response');
       logger.debug(e.response.status);
-      logger.debug(e.response.data);
+      logger.debug(inspect(e.response.data, {depth: 3}));
     }
     if (e.request) {
       logger.debug('request');
@@ -822,19 +891,20 @@ export class SonarqubeResults {
     }
   }
 
-  async getSearchResults<T extends SonarqubeVersion>(): Promise<Search<T>> {
-    let paging = true;
-    let page = 1;
-    const results: Search<T> = {
-      components: [],
-      effortTotal: 0,
-      facets: [],
-      issues: [],
-      paging: {pageIndex: 0, pageSize: 0, total: 0}
-    };
-    while (paging) {
-      await axios
-        .get<Search<T>>(`${this.sonarqubeHost}/api/issues/search`, {
+  async getSearchResults<T extends SonarqubeVersion>(
+    sonarqubeVersion: string
+  ): Promise<Search<T>> {
+    const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
+    const PAGE_SIZE = 100;
+
+    const createSearch = async (
+      component: string,
+      page: number,
+      pageSize = PAGE_SIZE
+    ) => {
+      return this.axiosClient.get<Search<T>>(
+        `${this.sonarqubeHost}/api/issues/search`,
+        {
           ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
             auth: {username: this.userToken, password: ''}
           }),
@@ -842,26 +912,156 @@ export class SonarqubeResults {
             headers: {Authorization: `Bearer ${this.userToken}`}
           }),
           params: {
-            componentKeys: this.projectKey,
-            statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED',
+            [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0')
+              ? 'componentKeys'
+              : 'components']: component,
+            ...(isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {
+              statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED'
+            }), // resolved is a manual designation implying that the user believes that the issue will be closed on next scan; however, for now it should still be considered an open finding for our purposes since at time of scan it was still a problem
+            ...(!isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {
+              issueStatuses: 'OPEN,CONFIRMED,ACCEPTED,IN_SANDBOX'
+            }),
             p: page,
+            ps: pageSize,
             ...(this.branchName && {branch: this.branchName}),
             ...(this.pullRequestID && {pullRequest: this.pullRequestID})
           }
-        })
-        .then(({data}) => {
-          _.mergeWith(results, data, (objValue, srcValue) =>
-            _.isArray(objValue) ? objValue.concat(srcValue) : undefined
+        }
+      );
+    };
+
+    const createComponentSearch = async (
+      component: string,
+      page: number,
+      pageSize = PAGE_SIZE
+    ) => {
+      return this.axiosClient.get<Search<T>>(
+        `${this.sonarqubeHost}/api/components/tree`,
+        {
+          ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
+            auth: {username: this.userToken, password: ''}
+          }),
+          ...(this.authMethod === AuthenticationMethod.BearerToken && {
+            headers: {Authorization: `Bearer ${this.userToken}`}
+          }),
+          params: {
+            component: component,
+            strategy: 'children',
+            p: page,
+            ps: pageSize,
+            ...(this.branchName && {branch: this.branchName}),
+            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
+          }
+        }
+      );
+    };
+
+    // intentionally doing the await in a loop so as to slow down requests a tad bit in order to avoid any rate limit issues
+    const collectPagedSearch = async (component: string, sizeCheck = false) => {
+      let paging = true;
+      let page = 1;
+      const results: Search<T> = {
+        components: [],
+        effortTotal: 0,
+        facets: [],
+        issues: [],
+        paging: {pageIndex: 0, pageSize: 0, total: 0}
+      };
+      while (sizeCheck ? page === 1 : paging) {
+        console.log(results);
+        await createSearch(component, page)
+          .then(({data}) => {
+            _.mergeWith(results, data, (objValue, srcValue) =>
+              _.isArray(objValue) ? objValue.concat(srcValue) : undefined
+            );
+            // only need to check if it exceeds the upper limit, if it's less than the upper limit and we request a page that goes past the page total then it just returns fewer results without throwing an error
+            paging =
+              data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
+            page += 1;
+          })
+          .catch((e) => {
+            this.logAxiosError(e);
+            throw new Error('Failed at retrieving Sonarqube issues');
+          });
+        if (page * PAGE_SIZE > UPPER_LIMIT) {
+          logger.warn(
+            `Exceeded SonarQube cap of ${UPPER_LIMIT} results for findings of or under the ${component} component.  Remaining findings may be truncated.`
           );
-          paging =
-            data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
-          page += 1;
-        })
-        .catch((e) => {
-          this.logAxiosError(e);
-          return Promise.reject(new Error('Failed at getting Sonarqube issue'));
-        });
+          paging = false;
+        }
+      }
+      results.components = _.uniqBy(results.components, 'key'); // sometimes components will be duplicated if an issue on one page applies to the same component as an issue on another page.  additionally at minimum the top level project will show up in every search result
+      return results;
+    };
+
+    const collectPagedComponentSearch = async (component: string) => {
+      let paging = true;
+      let page = 1;
+      const results: ComponentSearch = {
+        paging: {pageIndex: 0, pageSize: 0, total: 0},
+        baseComponent: {
+          key: 'fake',
+          description: 'fake',
+          qualifier: 'fake',
+          tags: [],
+          visibility: 'false'
+        },
+        components: []
+      };
+      while (paging) {
+        await createComponentSearch(component, page)
+          .then(({data}) => {
+            _.mergeWith(results, data, (objValue, srcValue) =>
+              _.isArray(objValue) ? objValue.concat(srcValue) : undefined
+            );
+            paging =
+              data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
+            page += 1;
+          })
+          .catch((e) => {
+            this.logAxiosError(e);
+            throw new Error('Failed at retrieving the list of components');
+          });
+        if (page * PAGE_SIZE > UPPER_LIMIT) {
+          logger.warn(
+            `Exceeded SonarQube cap of ${UPPER_LIMIT} results for the search for children of the ${component} component.  Remaining set of components may be truncated.`
+          );
+          paging = false;
+        }
+      }
+      return results;
+    };
+
+    const results: Search<T> = await collectPagedSearch(this.projectKey, true);
+    const queue = [this.projectKey];
+    while (queue.length > 0) {
+      const component = queue.shift() as string; // will not be undefined since we check that there are items in the queue
+
+      const sizeCheck = await collectPagedSearch(component, true);
+      if (sizeCheck.paging.total > UPPER_LIMIT) {
+        const componentSearch = await collectPagedComponentSearch(component);
+        queue.push(...componentSearch.components.map((c) => c.key));
+      }
+
+      const componentResults = await collectPagedSearch(component);
+      _.mergeWith(results, componentResults, (objValue, srcValue) =>
+        _.isArray(objValue) ? objValue.concat(srcValue) : objValue
+      );
     }
+
+    results.components = _.uniqBy(results.components, 'key');
+    results.issues = _.uniqBy(results.issues, 'key');
+
+    if (results.paging.total === results.issues.length) {
+      logger.warn(
+        'Alternative search queries were able to retrieve all findings.'
+      );
+    } else {
+      logger.warn(
+        `Alternative search queries were not able to retrieve all findings - ${results.paging.total - results.issues.length} findings were not retrieved.`
+      );
+    }
+
     return results;
   }
 
@@ -869,7 +1069,7 @@ export class SonarqubeResults {
     issues: SonarqubeVersionMapping[T]['issue'][]
   ): Promise<string[]> {
     const getFullFile = async (component: string): Promise<string> => {
-      return axios
+      return this.axiosClient
         .get<string>(`${this.sonarqubeHost}/api/sources/raw`, {
           ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
             auth: {username: this.userToken, password: ''}
@@ -931,28 +1131,32 @@ export class SonarqubeResults {
     );
     const fullFiles = Object.fromEntries(_.zip(components, fullFilePromises));
 
-    const snippets = issues.map((issue) =>
-      issue.flows.length
-        ? issue.flows
-            .flatMap((flow) =>
-              flow.locations.map((location) =>
-                getContextualizedSnippet(
-                  fullFiles,
-                  location.component,
-                  location.textRange.startLine,
-                  location.textRange.endLine,
-                  location.msg
-                )
+    const snippets = issues.map((issue) => {
+      if (issue.flows.length) {
+        return issue.flows
+          .flatMap((flow) =>
+            flow.locations.map((location) =>
+              getContextualizedSnippet(
+                fullFiles,
+                location.component,
+                location.textRange.startLine,
+                location.textRange.endLine,
+                location.msg
               )
             )
-            .join('\n')
-        : getContextualizedSnippet(
-            fullFiles,
-            issue.component,
-            issue.textRange.startLine,
-            issue.textRange.endLine
           )
-    );
+          .join('\n');
+      } else if (issue.textRange) {
+        return getContextualizedSnippet(
+          fullFiles,
+          issue.component,
+          issue.textRange.startLine,
+          issue.textRange.endLine
+        );
+      } else {
+        return '';
+      }
+    });
     return snippets;
   }
 
@@ -963,7 +1167,7 @@ export class SonarqubeResults {
       rule: string,
       organization?: string
     ): Promise<Rule<T>> =>
-      axios
+      this.axiosClient
         .get<Rule<T>>(`${this.sonarqubeHost}/api/rules/show`, {
           ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
             auth: {username: this.userToken, password: ''}
@@ -1009,7 +1213,7 @@ export class SonarqubeResults {
   async generateHdf<T extends SonarqubeVersion>(
     sonarqubeVersion: string
   ): Promise<ExecJSON.Execution> {
-    const searchResults = await this.getSearchResults<T>();
+    const searchResults = await this.getSearchResults<T>(sonarqubeVersion);
     logger.debug(`Got ${searchResults.issues.length} issues`);
     const codeSnippets = await this.getCodeSnippets<T>(searchResults.issues);
     logger.debug(`Got ${codeSnippets.length} code snippets`);
@@ -1035,7 +1239,7 @@ export class SonarqubeResults {
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    const sonarqubeVersion = await axios
+    const sonarqubeVersion = await this.axiosClient
       .get<string>(`${this.sonarqubeHost}/api/server/version`)
       .then(({data}) => data);
     logger.debug(

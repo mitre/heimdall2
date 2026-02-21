@@ -16943,6 +16943,11 @@ retry-as-promised@^7.0.4:
   resolved "https://registry.npmjs.org/retry-as-promised/-/retry-as-promised-7.1.1.tgz#3626246f04c1941ff10cebcfa3df0577fd8ab2d7"
   integrity sha512-hMD7odLOt3LkTjcif8aRZqi/hybjpLNgSk5oF5FCowfCjok6LukpN2bDX7R5wDmbgBQFn7YoBxSagmtXHaJYJw==
 
+retry-axios@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/retry-axios/-/retry-axios-4.0.1.tgz#8f451bec02295eacf312338da5d80165c2de2934"
+  integrity sha512-IRU9UJ9P7BzW2tWGHT026I3GePfYQaJ6QAkC8QK1tum1BZyQ3LNeKihXKuqhv0eWaxJinXQ0PhfIX0aIj0b8Rw==
+
 retry@0.13.1, retry@^0.13.1:
   version "0.13.1"
   resolved "https://registry.npmjs.org/retry/-/retry-0.13.1.tgz#185b1587acf67919d63b357349e03537b2484658"
