@@ -4,7 +4,7 @@ import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {loadSample, removeAllFiles} from '../util/testingUtils';
@@ -31,76 +31,106 @@ describe('Compare table data', async () => {
   });
 
   it('correctly counts controls with 1 file', async () => {
-    await wrapper.setData({ changedOnly: false});
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(nginxControlCount);
+    await wrapper.setData({changedOnly: false});
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 2 files', async () => {
     await loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(nginxControlCount);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 3 files', async () => {
     await loadSample('NGINX With Failing Tests');
     await loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(nginxControlCount);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount);
   });
 
   it('does not show any changed between two of the same', async () => {
     await loadSample('NGINX With Failing Tests');
-    await wrapper.setData({ changedOnly: true});
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(0);
+    await wrapper.setData({changedOnly: true});
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(0);
   });
 
   it('search works when nothing fits criteria', () => {
     SearchModule.updateSearch('failed');
     SearchModule.parseSearch();
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(0);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(0);
   });
 
   it('search id works', async () => {
-    await wrapper.setData({ changedOnly: false});
+    await wrapper.setData({changedOnly: false});
     SearchModule.updateSearch('v-13613');
     SearchModule.parseSearch();
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(1);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(1);
   });
 
   it('shows differing delta data when "show only changed"', async () => {
     await loadSample('NGINX Clean Sample');
-    await wrapper.setData({ changedOnly: true});
+    await wrapper.setData({changedOnly: true});
     SearchModule.parseSearch();
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(nginxDelta);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxDelta);
   });
 
   it('search status works', async () => {
     await loadSample('NGINX Clean Sample');
-    await wrapper.setData({ changedOnly: false});
+    await wrapper.setData({changedOnly: false});
     SearchModule.updateSearch('failed');
     SearchModule.parseSearch();
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(nginxDelta);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxDelta);
   });
 
   it('counts every unique control', async () => {
     await loadSample('NGINX Clean Sample');
     await loadSample('Red Hat With Failing Tests');
-    await wrapper.setData({ changedOnly: true});
+    await wrapper.setData({changedOnly: true});
     SearchModule.parseSearch();
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(nginxControlCount + redHatControlCount);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount + redHatControlCount);
   });
 
   it('shows all delta data of controls with multiple occurances when "show only changed"', async () => {
     await loadSample('NGINX Clean Sample');
     await loadSample('Red Hat With Failing Tests');
     await loadSample('Red Hat Clean Sample');
-    await wrapper.setData({ changedOnly: true});
-    expect((wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets.length).toBe(nginxControlCount + redHatControlCount);
+    await wrapper.setData({changedOnly: true});
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount + redHatControlCount);
   });
 
   it('ComparisonContext counts status correctly', async () => {
     await loadSample('NGINX Clean Sample');
     await loadSample('Red Hat With Failing Tests');
     await loadSample('Red Hat Clean Sample');
-    await wrapper.setData({ changedOnly: true});
+    await wrapper.setData({changedOnly: true});
     let failed = 0;
     let passed = 0;
     let na = 0;

@@ -7,7 +7,7 @@ Vue.use(Vuetify);
 vi.mock('vue-apexcharts', () => ({
   default: {
     name: 'ApexChart',
-    render(h: any) {
+    render(h) {
       return h('div');
     }
   }

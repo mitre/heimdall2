@@ -19,7 +19,9 @@ describe('Parsing', async () => {
     });
 
     // Done!
-    await Promise.all(promises.map((p) => expect(p).resolves.toBeTypeOf('string')));
+    await Promise.all(
+      promises.map((p) => expect(p).resolves.toBeTypeOf('string'))
+    );
   });
 
   // Note that the above side effect has LOADED THESE FILES! WE CAN USE THEM IN OTHER TESTS
