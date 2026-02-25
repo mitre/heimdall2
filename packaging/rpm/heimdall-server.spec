@@ -12,6 +12,7 @@ Source3:        heimdall-server.sh
 Source4:        heimdall-db-setup.sh
 Source5:        heimdall-configure.sh
 Source6:        heimdall-postgres-setup.sh
+Source7:        heimdall-setup.sh
 
 # JS application package: disable auto debug/debuginfo subpackages.
 %global debug_package %{nil}
@@ -93,6 +94,7 @@ install -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 install -m 0640 %{SOURCE2} %{buildroot}%{_sysconfdir}/%{name}/backend.env
 install -m 0755 %{SOURCE3} %{buildroot}%{_bindir}/%{name}
 install -m 0755 %{SOURCE4} %{buildroot}%{_bindir}/%{name}-db-setup
+install -m 0755 %{SOURCE7} %{buildroot}%{_bindir}/%{name}-setup
 install -m 0755 %{SOURCE5} %{buildroot}%{_libexecdir}/%{name}/configure.sh
 install -m 0755 %{SOURCE6} %{buildroot}%{_libexecdir}/%{name}/postgres-setup.sh
 
@@ -108,11 +110,23 @@ getent passwd heimdall >/dev/null || \
 %post
 %systemd_post %{name}.service
 if [ "$1" -eq 1 ]; then
-  %{_libexecdir}/%{name}/configure.sh || exit 1
-  %{_libexecdir}/%{name}/postgres-setup.sh || exit 1
-  %{_bindir}/%{name}-db-setup || exit 1
-  if command -v systemctl >/dev/null 2>&1; then
-    systemctl enable --now %{name}.service >/dev/null 2>&1 || exit 1
+  if %{_libexecdir}/%{name}/configure.sh --non-interactive; then
+    %{_libexecdir}/%{name}/postgres-setup.sh || exit 1
+    %{_bindir}/%{name}-db-setup || exit 1
+    if command -v systemctl >/dev/null 2>&1; then
+      systemctl enable --now %{name}.service >/dev/null 2>&1 || exit 1
+    fi
+  else
+    rc="$?"
+    if [ "${rc}" -eq 2 ]; then
+      cat <<'EOM'
+heimdall-server installed, but required configuration values are missing.
+Run the interactive setup as root to complete database bootstrap and service start:
+  sudo /usr/bin/heimdall-server-setup
+EOM
+    else
+      exit "${rc}"
+    fi
   fi
 fi
 
@@ -128,6 +142,7 @@ fi
 %{_unitdir}/%{name}.service
 %{_bindir}/%{name}
 %{_bindir}/%{name}-db-setup
+%{_bindir}/%{name}-setup
 %dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/configure.sh
 %{_libexecdir}/%{name}/postgres-setup.sh

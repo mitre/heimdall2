@@ -5,6 +5,20 @@ ENV_FILE="/etc/heimdall-server/backend.env"
 TMP_FILE="$(mktemp)"
 trap 'rm -f "${TMP_FILE}"' EXIT
 
+MODE="auto"
+if [[ "${1:-}" == "--interactive" ]]; then
+  MODE="interactive"
+  shift
+elif [[ "${1:-}" == "--non-interactive" ]]; then
+  MODE="non-interactive"
+  shift
+fi
+
+if [[ $# -gt 0 ]]; then
+  echo "Usage: $0 [--interactive|--non-interactive]" >&2
+  exit 64
+fi
+
 # Load previously configured values if available.
 if [[ -f "${ENV_FILE}" ]]; then
   set -a
@@ -24,29 +38,51 @@ RAW_JWT_SECRET="${JWT_SECRET:-}"
 RAW_JWT_EXPIRE_TIME="${JWT_EXPIRE_TIME:-}"
 RAW_ADMIN_EMAIL="${ADMIN_EMAIL:-}"
 
-require_nonempty() {
+check_nonempty() {
   local key="$1"
   local value="$2"
   if [[ -z "${value}" ]]; then
-    echo "Missing required configuration for non-interactive install: ${key}" >&2
-    return 1
+    echo "Missing required configuration: ${key}" >&2
+    return 0
   fi
+  return 1
+}
+
+validate_required_config() {
+  local missing=0
+
+  check_nonempty NODE_ENV "${RAW_NODE_ENV}" && missing=1
+  check_nonempty PORT "${RAW_PORT}" && missing=1
+  check_nonempty DATABASE_HOST "${RAW_DATABASE_HOST}" && missing=1
+  check_nonempty DATABASE_PORT "${RAW_DATABASE_PORT}" && missing=1
+  check_nonempty DATABASE_USERNAME "${RAW_DATABASE_USERNAME}" && missing=1
+  check_nonempty DATABASE_PASSWORD "${RAW_DATABASE_PASSWORD}" && missing=1
+  check_nonempty DATABASE_NAME "${RAW_DATABASE_NAME}" && missing=1
+  check_nonempty JWT_SECRET "${RAW_JWT_SECRET}" && missing=1
+  check_nonempty JWT_EXPIRE_TIME "${RAW_JWT_EXPIRE_TIME}" && missing=1
+  check_nonempty ADMIN_EMAIL "${RAW_ADMIN_EMAIL}" && missing=1
+
+  if [[ "${missing}" -eq 1 ]]; then
+    echo "Provide these values in ${ENV_FILE} or run '$0 --interactive' as root." >&2
+    return 2
+  fi
+
   return 0
 }
 
-if [[ ! -e /dev/tty ]]; then
-  # Non-interactive mode: require all mandatory settings to be already present.
-  require_nonempty NODE_ENV "${RAW_NODE_ENV}" || exit 1
-  require_nonempty PORT "${RAW_PORT}" || exit 1
-  require_nonempty DATABASE_HOST "${RAW_DATABASE_HOST}" || exit 1
-  require_nonempty DATABASE_PORT "${RAW_DATABASE_PORT}" || exit 1
-  require_nonempty DATABASE_USERNAME "${RAW_DATABASE_USERNAME}" || exit 1
-  require_nonempty DATABASE_PASSWORD "${RAW_DATABASE_PASSWORD}" || exit 1
-  require_nonempty DATABASE_NAME "${RAW_DATABASE_NAME}" || exit 1
-  require_nonempty JWT_SECRET "${RAW_JWT_SECRET}" || exit 1
-  require_nonempty JWT_EXPIRE_TIME "${RAW_JWT_EXPIRE_TIME}" || exit 1
-  require_nonempty ADMIN_EMAIL "${RAW_ADMIN_EMAIL}" || exit 1
+if [[ "${MODE}" == "non-interactive" ]]; then
+  validate_required_config || exit $?
   exit 0
+fi
+
+if [[ "${MODE}" == "auto" && ! -e /dev/tty ]]; then
+  validate_required_config || exit $?
+  exit 0
+fi
+
+if [[ ! -e /dev/tty ]]; then
+  echo "Interactive mode requires a TTY. Re-run with --non-interactive or from a terminal." >&2
+  exit 1
 fi
 
 NODE_ENV="${NODE_ENV:-production}"

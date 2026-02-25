@@ -196,6 +196,7 @@ stage_rpm_inputs() {
   cp -f "${SCRIPT_DIR}/heimdall-db-setup.sh" "${TOPDIR}/SOURCES/"
   cp -f "${SCRIPT_DIR}/heimdall-configure.sh" "${TOPDIR}/SOURCES/"
   cp -f "${SCRIPT_DIR}/heimdall-postgres-setup.sh" "${TOPDIR}/SOURCES/"
+  cp -f "${SCRIPT_DIR}/heimdall-setup.sh" "${TOPDIR}/SOURCES/"
 
   local source_archive="${TOPDIR}/SOURCES/heimdall2-${version}.tar.gz"
   if command -v git >/dev/null 2>&1 && [[ -d "${REPO_ROOT}/.git" ]]; then

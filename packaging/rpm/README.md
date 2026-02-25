@@ -12,6 +12,7 @@ for Heimdall Server.
 - `heimdall-db-setup.sh`: Database create/migrate/seed helper.
 - `heimdall-configure.sh`: Interactive install-time configuration script.
 - `heimdall-postgres-setup.sh`: PostgreSQL init/start/user bootstrap helper.
+- `heimdall-setup.sh`: One-command post-install interactive setup helper.
 - `setup-rpm-build-env.sh`: One-command RPM build environment setup/staging helper.
 
 ## Build Notes
@@ -20,6 +21,7 @@ for Heimdall Server.
 - PostgreSQL packages are expected from PGDG (for `postgresql18` and `postgresql18-server`).
 - `Source0` is a local source archive (`heimdall2-<version>.tar.gz`).
 - The setup helper prefers `git archive` (tracked files only) when `.git` is available.
+- RPM `%post` scriptlets are non-interactive in this package; interactive setup is handled by `heimdall-server-setup`.
 
 ## Host Prerequisite (OL8/EL8)
 
@@ -72,6 +74,7 @@ cp packaging/rpm/heimdall-server.sh ~/rpmbuild/SOURCES/
 cp packaging/rpm/heimdall-db-setup.sh ~/rpmbuild/SOURCES/
 cp packaging/rpm/heimdall-configure.sh ~/rpmbuild/SOURCES/
 cp packaging/rpm/heimdall-postgres-setup.sh ~/rpmbuild/SOURCES/
+cp packaging/rpm/heimdall-setup.sh ~/rpmbuild/SOURCES/
 
 # Version must match the Version field in heimdall-server.spec.
 git archive --format=tar.gz --prefix=heimdall2-2.12.6/ HEAD \
@@ -89,8 +92,20 @@ RPM_PATH="$(ls -1t "${HOME}/rpmbuild/RPMS/$(uname -m)"/heimdall-server-*.rpm | h
 sudo dnf install -y "${RPM_PATH}"
 ```
 
-The first install is interactive and will prompt for required Heimdall settings.
-Once installation finishes, verify the service:
+If your environment file is pre-populated, install will auto-bootstrap PostgreSQL,
+run migrations/seeds, and start the service. Otherwise, complete setup with:
+
+```bash
+sudo heimdall-server-setup
+```
+
+For automation with pre-seeded config values:
+
+```bash
+sudo heimdall-server-setup --non-interactive
+```
+
+Once setup finishes, verify the service:
 
 ```bash
 sudo systemctl status heimdall-server
@@ -106,16 +121,15 @@ sudo systemctl restart heimdall-server
 
 On first install, the RPM will:
 
-1. Prompt for Heimdall environment variables interactively.
-2. Write `/etc/heimdall-server/backend.env`.
-3. Initialize/start PostgreSQL (local), force `password_encryption='scram-sha-256'`,
+1. Validate whether required values exist in `/etc/heimdall-server/backend.env`.
+2. If values exist, initialize/start PostgreSQL (local), force `password_encryption='scram-sha-256'`,
    create/update the configured DB role with `CREATEDB`, and verify login.
-4. Run database create/migrate/seed automatically.
-5. Enable and start `heimdall-server.service`.
+3. Run database create/migrate/seed automatically.
+4. Enable and start `heimdall-server.service`.
+5. If required values are missing, print instructions to run `heimdall-server-setup`.
 
-Note: first-time installation is interactive and requires a TTY.
 For non-interactive installs, pre-populate `/etc/heimdall-server/backend.env`
-with required values before package install.
+before package install.
 
 You should only need to verify status after installation:
 
