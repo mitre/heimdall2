@@ -80,6 +80,28 @@ git archive --format=tar.gz --prefix=heimdall2-2.12.6/ HEAD \
 rpmbuild --define "_topdir ${HOME}/rpmbuild" -ba ~/rpmbuild/SPECS/heimdall-server.spec
 ```
 
+## Install and Run the Built RPM
+
+After a successful build, install the newest RPM from your `rpmbuild` output:
+
+```bash
+RPM_PATH="$(ls -1t "${HOME}/rpmbuild/RPMS/$(uname -m)"/heimdall-server-*.rpm | head -n1)"
+sudo dnf install -y "${RPM_PATH}"
+```
+
+The first install is interactive and will prompt for required Heimdall settings.
+Once installation finishes, verify the service:
+
+```bash
+sudo systemctl status heimdall-server
+```
+
+If needed, start or restart it explicitly:
+
+```bash
+sudo systemctl restart heimdall-server
+```
+
 ## Install Behavior
 
 On first install, the RPM will:

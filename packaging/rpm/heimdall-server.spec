@@ -13,6 +13,10 @@ Source4:        heimdall-db-setup.sh
 Source5:        heimdall-configure.sh
 Source6:        heimdall-postgres-setup.sh
 
+# JS application package: disable auto debug/debuginfo subpackages.
+%global debug_package %{nil}
+%global _debugsource_packages 0
+
 ExclusiveArch:  aarch64 x86_64
 
 # Vendored backend node_modules are shipped with the application and should
@@ -70,6 +74,16 @@ cp -a apps/backend/config %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/migrations %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/seeders %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/dist %{buildroot}%{_datadir}/%{name}/apps/backend/
+
+# Keep executable bits only for JS files that are actual scripts with shebangs.
+find %{buildroot}%{_datadir}/%{name}/apps/backend/node_modules \
+  -type f \( -name '*.js' -o -name '*.cjs' -o -name '*.mjs' \) -perm /111 | \
+while IFS= read -r file; do
+  case "$(LC_ALL=C sed -n '1p' "${file}" 2>/dev/null || true)" in
+    '#!'*) ;;
+    *) chmod a-x "${file}" ;;
+  esac
+done
 
 cp -a libs/common %{buildroot}%{_datadir}/%{name}/libs/
 cp -a libs/password-complexity %{buildroot}%{_datadir}/%{name}/libs/
