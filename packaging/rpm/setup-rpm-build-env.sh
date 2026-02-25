@@ -90,6 +90,8 @@ if [[ "${EUID}" -ne 0 ]]; then
   SUDO="sudo"
 fi
 
+DNF_INSTALL_ARGS=(-y --nogpgcheck)
+
 install_build_deps() {
   require_cmd dnf
   require_cmd curl
@@ -120,11 +122,11 @@ install_build_deps() {
       exit 1
     fi
     local pgdg_repo_url="https://download.postgresql.org/pub/repos/yum/reporpms/EL-${el_major}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-    ${SUDO} dnf install -y "${pgdg_repo_url}"
+    ${SUDO} dnf install "${DNF_INSTALL_ARGS[@]}" "${pgdg_repo_url}"
     ${SUDO} dnf -qy module disable postgresql || true
   fi
 
-  ${SUDO} dnf install -y --nogpgcheck \
+  ${SUDO} dnf install "${DNF_INSTALL_ARGS[@]}" \
     gcc-c++ \
     git \
     make \
@@ -140,7 +142,7 @@ install_build_deps() {
     yarn
 
   if [[ "${ENABLE_PGDG}" -eq 1 ]]; then
-    ${SUDO} dnf install -y postgresql18 postgresql18-server
+    ${SUDO} dnf install "${DNF_INSTALL_ARGS[@]}" postgresql18 postgresql18-server
   fi
 }
 
