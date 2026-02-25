@@ -12,6 +12,7 @@ RUN_DNF_UPDATE=1
 ENABLE_NODESOURCE=1
 ENABLE_PGDG=1
 ENABLE_YARN_REPO=1
+NO_GPG_CHECK=0
 
 usage() {
   cat <<'EOF'
@@ -28,6 +29,7 @@ Options:
   --skip-nodesource       Skip NodeSource setup_22.x repo bootstrap
   --skip-pgdg             Skip PGDG repository setup
   --skip-yarn-repo        Skip Yarn repository setup
+  --no-gpg-check          Pass --nogpgcheck to dnf install commands
   -h, --help              Show this help
 EOF
 }
@@ -66,6 +68,10 @@ while [[ $# -gt 0 ]]; do
       ENABLE_YARN_REPO=0
       shift
       ;;
+    --no-gpg-check)
+      NO_GPG_CHECK=1
+      shift
+      ;;
     -h|--help)
       usage
       exit 0
@@ -90,7 +96,11 @@ if [[ "${EUID}" -ne 0 ]]; then
   SUDO="sudo"
 fi
 
-DNF_INSTALL_ARGS=(-y --nogpgcheck)
+if [[ "${NO_GPG_CHECK}" -eq 1 ]]; then
+  DNF_INSTALL_ARGS=(-y --nogpgcheck)
+else
+  DNF_INSTALL_ARGS=(-y)
+fi
 
 install_build_deps() {
   require_cmd dnf
