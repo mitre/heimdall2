@@ -1,0 +1,124 @@
+Name:           heimdall-server
+Version:        2.12.6
+Release:        1%{?dist}
+Summary:        Heimdall server for security result persistence and review
+
+License:        Apache-2.0
+URL:            https://github.com/mitre/heimdall2
+Source0:        heimdall2-%{version}.tar.gz
+Source1:        heimdall-server.service
+Source2:        heimdall-backend.env
+Source3:        heimdall-server.sh
+Source4:        heimdall-db-setup.sh
+Source5:        heimdall-configure.sh
+Source6:        heimdall-postgres-setup.sh
+
+BuildArch:      noarch
+
+BuildRequires:  gcc-c++
+BuildRequires:  make
+BuildRequires:  nodejs >= 22
+BuildRequires:  python3
+BuildRequires:  systemd-rpm-macros
+BuildRequires:  yarn
+
+Requires:       nodejs >= 22
+Requires:       openssl
+Requires(pre):  shadow-utils
+Requires(post): systemd
+Requires(post): postgresql18
+Requires(post): postgresql18-server
+Requires(post): util-linux
+Requires(preun): systemd
+Requires(postun): systemd
+
+%description
+Heimdall Server provides data persistence, authentication, RBAC, and API
+access for Heimdall evaluations.
+
+%prep
+%autosetup -n heimdall2-%{version}
+
+%build
+export NODE_ENV=production
+export YARN_CACHE_FOLDER="$(mktemp -d)"
+yarn install --frozen-lockfile --production --network-timeout 600000
+yarn frontend build
+yarn backend build
+rm -rf "${YARN_CACHE_FOLDER}"
+
+%install
+rm -rf %{buildroot}
+
+install -d %{buildroot}%{_datadir}/%{name}
+install -d %{buildroot}%{_datadir}/%{name}/apps/backend
+install -d %{buildroot}%{_datadir}/%{name}/libs
+install -d %{buildroot}%{_sysconfdir}/%{name}
+install -d %{buildroot}%{_unitdir}
+install -d %{buildroot}%{_bindir}
+install -d %{buildroot}%{_libexecdir}/%{name}
+
+cp -a apps/backend/package.json %{buildroot}%{_datadir}/%{name}/apps/backend/
+cp -a apps/backend/node_modules %{buildroot}%{_datadir}/%{name}/apps/backend/
+cp -a apps/backend/.sequelizerc %{buildroot}%{_datadir}/%{name}/apps/backend/
+cp -a apps/backend/db %{buildroot}%{_datadir}/%{name}/apps/backend/
+cp -a apps/backend/config %{buildroot}%{_datadir}/%{name}/apps/backend/
+cp -a apps/backend/migrations %{buildroot}%{_datadir}/%{name}/apps/backend/
+cp -a apps/backend/seeders %{buildroot}%{_datadir}/%{name}/apps/backend/
+cp -a apps/backend/dist %{buildroot}%{_datadir}/%{name}/apps/backend/
+
+cp -a libs/common %{buildroot}%{_datadir}/%{name}/libs/
+cp -a libs/password-complexity %{buildroot}%{_datadir}/%{name}/libs/
+cp -a dist %{buildroot}%{_datadir}/%{name}/
+
+install -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
+install -m 0640 %{SOURCE2} %{buildroot}%{_sysconfdir}/%{name}/backend.env
+install -m 0755 %{SOURCE3} %{buildroot}%{_bindir}/%{name}
+install -m 0755 %{SOURCE4} %{buildroot}%{_bindir}/%{name}-db-setup
+install -m 0755 %{SOURCE5} %{buildroot}%{_libexecdir}/%{name}/configure.sh
+install -m 0755 %{SOURCE6} %{buildroot}%{_libexecdir}/%{name}/postgres-setup.sh
+
+ln -s %{_sysconfdir}/%{name}/backend.env \
+  %{buildroot}%{_datadir}/%{name}/apps/backend/.env
+
+%pre
+getent group heimdall >/dev/null || groupadd -r heimdall
+getent passwd heimdall >/dev/null || \
+  useradd -r -g heimdall -d %{_datadir}/%{name} -s /sbin/nologin \
+  -c "Heimdall service user" heimdall
+
+%post
+%systemd_post %{name}.service
+if [ "$1" -eq 1 ]; then
+  %{_libexecdir}/%{name}/configure.sh || exit 1
+  %{_libexecdir}/%{name}/postgres-setup.sh || exit 1
+  %{_bindir}/%{name}-db-setup || exit 1
+  if command -v systemctl >/dev/null 2>&1; then
+    systemctl enable --now %{name}.service >/dev/null 2>&1 || exit 1
+  fi
+fi
+
+%preun
+%systemd_preun %{name}.service
+
+%postun
+%systemd_postun_with_restart %{name}.service
+
+%files
+%license LICENSE.md
+%doc README.md
+%{_unitdir}/%{name}.service
+%{_bindir}/%{name}
+%{_bindir}/%{name}-db-setup
+%{_libexecdir}/%{name}/configure.sh
+%{_libexecdir}/%{name}/postgres-setup.sh
+%dir %{_sysconfdir}/%{name}
+%attr(0640,root,heimdall) %config(noreplace) %{_sysconfdir}/%{name}/backend.env
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/apps
+%{_datadir}/%{name}/dist
+%{_datadir}/%{name}/libs
+
+%changelog
+* Wed Feb 25 2026 Heimdall Maintainers <opensource@mitre.org> - 2.12.6-1
+- Initial Oracle/RHEL style RPM packaging scaffold with interactive install

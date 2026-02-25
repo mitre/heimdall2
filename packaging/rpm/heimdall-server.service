@@ -1,0 +1,29 @@
+[Unit]
+Description=Heimdall Server
+Documentation=https://github.com/mitre/heimdall2
+Wants=network-online.target
+Wants=postgresql-18.service
+Wants=postgresql.service
+# Start after PostgreSQL so Heimdall is stopped first on shutdown.
+After=network-online.target postgresql-18.service postgresql.service
+
+[Service]
+Type=simple
+User=heimdall
+Group=heimdall
+WorkingDirectory=/usr/share/heimdall-server/apps/backend
+EnvironmentFile=-/etc/heimdall-server/backend.env
+ExecStart=/usr/bin/heimdall-server
+Restart=on-failure
+RestartSec=5
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+StateDirectory=heimdall-server
+LogsDirectory=heimdall-server
+ReadWritePaths=/var/lib/heimdall-server /var/log/heimdall-server
+
+[Install]
+WantedBy=multi-user.target
