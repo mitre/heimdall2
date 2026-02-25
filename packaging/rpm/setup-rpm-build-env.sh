@@ -29,7 +29,7 @@ Options:
   --skip-nodesource       Skip NodeSource setup_22.x repo bootstrap
   --skip-pgdg             Skip PGDG repository setup
   --skip-yarn-repo        Skip Yarn repository setup
-  --no-gpg-check          Pass --nogpgcheck to dnf install commands
+  --no-gpg-check          Disable package and repo metadata GPG checks in dnf
   -h, --help              Show this help
 EOF
 }
@@ -97,9 +97,13 @@ if [[ "${EUID}" -ne 0 ]]; then
 fi
 
 if [[ "${NO_GPG_CHECK}" -eq 1 ]]; then
-  DNF_INSTALL_ARGS=(-y --nogpgcheck)
+  DNF_INSTALL_ARGS=(-y --nogpgcheck --setopt=gpgcheck=0 --setopt=repo_gpgcheck=0)
+  DNF_UPDATE_ARGS=(-y --nogpgcheck --setopt=gpgcheck=0 --setopt=repo_gpgcheck=0)
+  DNF_MODULE_ARGS=(-qy --setopt=gpgcheck=0 --setopt=repo_gpgcheck=0)
 else
   DNF_INSTALL_ARGS=(-y)
+  DNF_UPDATE_ARGS=(-y)
+  DNF_MODULE_ARGS=(-qy)
 fi
 
 install_build_deps() {
@@ -107,7 +111,7 @@ install_build_deps() {
   require_cmd curl
 
   if [[ "${RUN_DNF_UPDATE}" -eq 1 ]]; then
-    ${SUDO} dnf -y update
+    ${SUDO} dnf "${DNF_UPDATE_ARGS[@]}" update
   fi
 
   if [[ "${ENABLE_NODESOURCE}" -eq 1 ]]; then
@@ -133,7 +137,7 @@ install_build_deps() {
     fi
     local pgdg_repo_url="https://download.postgresql.org/pub/repos/yum/reporpms/EL-${el_major}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
     ${SUDO} dnf install "${DNF_INSTALL_ARGS[@]}" "${pgdg_repo_url}"
-    ${SUDO} dnf -qy module disable postgresql || true
+    ${SUDO} dnf "${DNF_MODULE_ARGS[@]}" module disable postgresql || true
   fi
 
   ${SUDO} dnf install "${DNF_INSTALL_ARGS[@]}" \

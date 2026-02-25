@@ -35,6 +35,8 @@ If you need to bypass GPG checks during dependency installs, use:
 ./packaging/rpm/setup-rpm-build-env.sh --no-gpg-check
 ```
 
+This applies to both package signatures and repository metadata checks.
+
 ## Build Command
 
 From the repository root:
