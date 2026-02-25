@@ -97,9 +97,9 @@ if [[ "${EUID}" -ne 0 ]]; then
 fi
 
 if [[ "${NO_GPG_CHECK}" -eq 1 ]]; then
-  DNF_INSTALL_ARGS=(-y --nogpgcheck --setopt=gpgcheck=0 --setopt=repo_gpgcheck=0)
-  DNF_UPDATE_ARGS=(-y --nogpgcheck --setopt=gpgcheck=0 --setopt=repo_gpgcheck=0)
-  DNF_MODULE_ARGS=(-qy --setopt=gpgcheck=0 --setopt=repo_gpgcheck=0)
+  DNF_INSTALL_ARGS=(-y --nogpgcheck --setopt=*.gpgcheck=0 --setopt=*.repo_gpgcheck=0)
+  DNF_UPDATE_ARGS=(-y --nogpgcheck --setopt=*.gpgcheck=0 --setopt=*.repo_gpgcheck=0)
+  DNF_MODULE_ARGS=(-qy --setopt=*.gpgcheck=0 --setopt=*.repo_gpgcheck=0)
 else
   DNF_INSTALL_ARGS=(-y)
   DNF_UPDATE_ARGS=(-y)
