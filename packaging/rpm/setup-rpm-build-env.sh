@@ -13,8 +13,6 @@ ENABLE_NODESOURCE=1
 ENABLE_PGDG=1
 ENABLE_YARN_REPO=1
 NO_GPG_CHECK=0
-CA_FILE=""
-INSECURE_TLS=0
 
 usage() {
   cat <<'EOF'
@@ -32,8 +30,6 @@ Options:
   --skip-pgdg             Skip PGDG repository setup
   --skip-yarn-repo        Skip Yarn repository setup
   --no-gpg-check          Disable package and repo metadata GPG checks in dnf
-  --ca-file <path>        CA bundle PEM path for Yarn/NPM TLS during rpmbuild
-  --insecure-tls          Disable Yarn/NPM TLS verification during rpmbuild (last resort)
   -h, --help              Show this help
 EOF
 }
@@ -76,18 +72,6 @@ while [[ $# -gt 0 ]]; do
       NO_GPG_CHECK=1
       shift
       ;;
-    --ca-file)
-      if [[ $# -lt 2 ]]; then
-        echo "--ca-file requires a value" >&2
-        exit 1
-      fi
-      CA_FILE="$2"
-      shift 2
-      ;;
-    --insecure-tls)
-      INSECURE_TLS=1
-      shift
-      ;;
     -h|--help)
       usage
       exit 0
@@ -99,11 +83,6 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-
-if [[ -n "${CA_FILE}" && ! -f "${CA_FILE}" ]]; then
-  echo "CA file not found: ${CA_FILE}" >&2
-  exit 1
-fi
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
@@ -250,14 +229,7 @@ stage_rpm_inputs() {
 
 run_rpmbuild() {
   require_cmd rpmbuild
-  local rpmbuild_args=(--define "_topdir ${TOPDIR}")
-  if [[ -n "${CA_FILE}" ]]; then
-    rpmbuild_args+=(--define "_heimdall_ca_file ${CA_FILE}")
-  fi
-  if [[ "${INSECURE_TLS}" -eq 1 ]]; then
-    rpmbuild_args+=(--define "_heimdall_insecure_tls 1")
-  fi
-  rpmbuild "${rpmbuild_args[@]}" -ba "${TOPDIR}/SPECS/heimdall-server.spec"
+  rpmbuild --define "_topdir ${TOPDIR}" -ba "${TOPDIR}/SPECS/heimdall-server.spec"
 }
 
 if [[ "${INSTALL_DEPS}" -eq 1 ]]; then
@@ -269,16 +241,7 @@ stage_rpm_inputs
 if [[ "${RUN_BUILD}" -eq 1 ]]; then
   run_rpmbuild
 else
-  NEXT_CMD="rpmbuild --define \"_topdir ${TOPDIR}\""
-  if [[ -n "${CA_FILE}" ]]; then
-    NEXT_CMD="${NEXT_CMD} --define \"_heimdall_ca_file ${CA_FILE}\""
-  fi
-  if [[ "${INSECURE_TLS}" -eq 1 ]]; then
-    NEXT_CMD="${NEXT_CMD} --define \"_heimdall_insecure_tls 1\""
-  fi
-  NEXT_CMD="${NEXT_CMD} -ba ${TOPDIR}/SPECS/heimdall-server.spec"
-
   echo
   echo "Next step:"
-  echo "  ${NEXT_CMD}"
+  echo "  rpmbuild --define \"_topdir ${TOPDIR}\" -ba ${TOPDIR}/SPECS/heimdall-server.spec"
 fi

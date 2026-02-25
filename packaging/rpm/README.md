@@ -40,13 +40,6 @@ If you need to bypass GPG checks during dependency installs, use:
 
 This applies to both package signatures and repository metadata checks.
 
-If your build host uses a private/corporate CA for outbound TLS inspection,
-you can pass a CA bundle for Yarn/NPM during `%build`:
-
-```bash
-./packaging/rpm/setup-rpm-build-env.sh --ca-file /etc/pki/tls/certs/ca-bundle.crt --build
-```
-
 ## Build Command
 
 From the repository root:
@@ -61,35 +54,12 @@ To also run `rpmbuild` in the same command:
 ./packaging/rpm/setup-rpm-build-env.sh --build
 ```
 
-Last-resort (insecure) TLS bypass for package fetches during `%build`:
-
-```bash
-./packaging/rpm/setup-rpm-build-env.sh --build --insecure-tls
-```
-
 If you see `Arch dependent binaries in noarch package`, restage from the
 current workspace spec and rebuild:
 
 ```bash
 ./packaging/rpm/setup-rpm-build-env.sh --skip-deps
 rpmbuild --define "_topdir ${HOME}/rpmbuild" -ba "${HOME}/rpmbuild/SPECS/heimdall-server.spec"
-```
-
-If `%build` fails with `self-signed certificate in certificate chain`:
-
-```bash
-# Preferred: use trusted CA bundle
-./packaging/rpm/setup-rpm-build-env.sh --skip-deps --ca-file /etc/pki/tls/certs/ca-bundle.crt
-rpmbuild --define "_topdir ${HOME}/rpmbuild" \
-  --define "_heimdall_ca_file /etc/pki/tls/certs/ca-bundle.crt" \
-  -ba "${HOME}/rpmbuild/SPECS/heimdall-server.spec"
-```
-
-```bash
-# Last resort: disable Yarn/NPM TLS verification for build only
-rpmbuild --define "_topdir ${HOME}/rpmbuild" \
-  --define "_heimdall_insecure_tls 1" \
-  -ba "${HOME}/rpmbuild/SPECS/heimdall-server.spec"
 ```
 
 Manual equivalent:

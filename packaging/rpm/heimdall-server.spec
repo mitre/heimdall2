@@ -18,13 +18,6 @@ Source7:        heimdall-setup.sh
 %global debug_package %{nil}
 %global _debugsource_packages 0
 
-# TLS handling for Node/Yarn during %build:
-# - Default to the system CA bundle.
-# - Allow override via: --define "_heimdall_ca_file /path/to/ca.pem"
-# - Optional insecure fallback via: --define "_heimdall_insecure_tls 1"
-%{!?_heimdall_ca_file:%global _heimdall_ca_file /etc/pki/tls/certs/ca-bundle.crt}
-%{!?_heimdall_insecure_tls:%global _heimdall_insecure_tls 0}
-
 ExclusiveArch:  aarch64 x86_64
 
 # Vendored backend node_modules are shipped with the application and should
@@ -33,7 +26,6 @@ ExclusiveArch:  aarch64 x86_64
 %global __provides_exclude_from ^/usr/share/heimdall-server/apps/backend/node_modules/.*$
 
 BuildRequires:  gcc-c++
-BuildRequires:  ca-certificates
 BuildRequires:  make
 BuildRequires:  nodejs >= 22
 BuildRequires:  python3
@@ -59,19 +51,6 @@ access for Heimdall evaluations.
 %build
 export NODE_ENV=production
 export YARN_CACHE_FOLDER="$(mktemp -d)"
-CA_FILE="%{_heimdall_ca_file}"
-if [ -n "${CA_FILE}" ] && [ -f "${CA_FILE}" ]; then
-  export NODE_OPTIONS="${NODE_OPTIONS:+${NODE_OPTIONS} }--use-openssl-ca"
-  export NODE_EXTRA_CA_CERTS="${CA_FILE}"
-  export npm_config_cafile="${CA_FILE}"
-  yarn config set cafile "${CA_FILE}"
-fi
-if [ "%{_heimdall_insecure_tls}" = "1" ]; then
-  echo "WARNING: _heimdall_insecure_tls=1 disables TLS verification for yarn/npm during build." >&2
-  export NODE_TLS_REJECT_UNAUTHORIZED=0
-  export npm_config_strict_ssl=false
-  yarn config set strict-ssl false
-fi
 yarn install --frozen-lockfile --production --network-timeout 600000
 yarn frontend build
 yarn backend build
