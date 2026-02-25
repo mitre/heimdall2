@@ -124,7 +124,7 @@ install_build_deps() {
     ${SUDO} dnf -qy module disable postgresql || true
   fi
 
-  ${SUDO} dnf install -y \
+  ${SUDO} dnf install -y --nogpgcheck \
     gcc-c++ \
     git \
     make \
