@@ -13,7 +13,12 @@ Source4:        heimdall-db-setup.sh
 Source5:        heimdall-configure.sh
 Source6:        heimdall-postgres-setup.sh
 
-BuildArch:      noarch
+ExclusiveArch:  aarch64 x86_64
+
+# Vendored backend node_modules are shipped with the application and should
+# not drive automatic RPM dependency/provide generation.
+%global __requires_exclude_from ^/usr/share/heimdall-server/apps/backend/node_modules/.*$
+%global __provides_exclude_from ^/usr/share/heimdall-server/apps/backend/node_modules/.*$
 
 BuildRequires:  gcc-c++
 BuildRequires:  make
@@ -22,15 +27,14 @@ BuildRequires:  python3
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  yarn
 
+%{?systemd_requires}
+
 Requires:       nodejs >= 22
 Requires:       openssl
 Requires(pre):  shadow-utils
-Requires(post): systemd
 Requires(post): postgresql18
 Requires(post): postgresql18-server
 Requires(post): util-linux
-Requires(preun): systemd
-Requires(postun): systemd
 
 %description
 Heimdall Server provides data persistence, authentication, RBAC, and API
@@ -110,6 +114,7 @@ fi
 %{_unitdir}/%{name}.service
 %{_bindir}/%{name}
 %{_bindir}/%{name}-db-setup
+%dir %{_libexecdir}/%{name}
 %{_libexecdir}/%{name}/configure.sh
 %{_libexecdir}/%{name}/postgres-setup.sh
 %dir %{_sysconfdir}/%{name}

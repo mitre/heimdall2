@@ -91,6 +91,15 @@ require_cmd() {
   fi
 }
 
+ensure_arch_specific_spec() {
+  local spec_path="$1"
+  if grep -Eiq '^[[:space:]]*BuildArch:[[:space:]]*noarch([[:space:]]|$)' "${spec_path}"; then
+    echo "Refusing to stage a noarch spec for heimdall-server." >&2
+    echo "Remove 'BuildArch: noarch' from ${spec_path} and retry." >&2
+    exit 1
+  fi
+}
+
 SUDO=""
 if [[ "${EUID}" -ne 0 ]]; then
   SUDO="sudo"
@@ -169,6 +178,7 @@ stage_rpm_inputs() {
     echo "Spec file not found: ${SPEC_FILE}" >&2
     exit 1
   fi
+  ensure_arch_specific_spec "${SPEC_FILE}"
 
   local version
   version="$(awk '/^Version:/ {print $2; exit}' "${SPEC_FILE}")"
@@ -188,20 +198,31 @@ stage_rpm_inputs() {
   cp -f "${SCRIPT_DIR}/heimdall-postgres-setup.sh" "${TOPDIR}/SOURCES/"
 
   local source_archive="${TOPDIR}/SOURCES/heimdall2-${version}.tar.gz"
-  tar -C "${REPO_ROOT}" \
-    --exclude=".git" \
-    --exclude="node_modules" \
-    --exclude="apps/backend/node_modules" \
-    --exclude="apps/frontend/node_modules" \
-    --exclude="dist" \
-    --exclude="apps/backend/dist" \
-    --exclude="apps/frontend/dist" \
-    --transform "s|^|heimdall2-${version}/|" \
-    -czf "${source_archive}" \
-    .
+  if command -v git >/dev/null 2>&1 && [[ -d "${REPO_ROOT}/.git" ]]; then
+    git -C "${REPO_ROOT}" archive \
+      --format=tar.gz \
+      --prefix="heimdall2-${version}/" \
+      HEAD \
+      > "${source_archive}"
+  else
+    tar -C "${REPO_ROOT}" \
+      --exclude=".git" \
+      --exclude="node_modules" \
+      --exclude="apps/backend/node_modules" \
+      --exclude="apps/frontend/node_modules" \
+      --exclude="dist" \
+      --exclude="apps/backend/dist" \
+      --exclude="apps/frontend/dist" \
+      --transform "s|^|heimdall2-${version}/|" \
+      -czf "${source_archive}" \
+      .
+  fi
 
   echo "Staged rpmbuild inputs in ${TOPDIR}"
   echo "Spec: ${TOPDIR}/SPECS/heimdall-server.spec"
+  echo "Spec arch tags:"
+  grep -E '^(BuildArch|ExclusiveArch):' "${TOPDIR}/SPECS/heimdall-server.spec" \
+    || echo "  (BuildArch unset, package will be built for target CPU)"
   echo "Source: ${source_archive}"
 }
 

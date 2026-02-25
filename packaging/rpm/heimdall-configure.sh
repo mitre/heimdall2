@@ -5,17 +5,48 @@ ENV_FILE="/etc/heimdall-server/backend.env"
 TMP_FILE="$(mktemp)"
 trap 'rm -f "${TMP_FILE}"' EXIT
 
-if [[ ! -e /dev/tty ]]; then
-  echo "Interactive install requires a TTY to collect Heimdall configuration." >&2
-  exit 1
-fi
-
 # Load previously configured values if available.
 if [[ -f "${ENV_FILE}" ]]; then
   set -a
   # shellcheck disable=SC1090
   source "${ENV_FILE}" || true
   set +a
+fi
+
+RAW_NODE_ENV="${NODE_ENV:-}"
+RAW_PORT="${PORT:-}"
+RAW_DATABASE_HOST="${DATABASE_HOST:-}"
+RAW_DATABASE_PORT="${DATABASE_PORT:-}"
+RAW_DATABASE_USERNAME="${DATABASE_USERNAME:-}"
+RAW_DATABASE_PASSWORD="${DATABASE_PASSWORD:-}"
+RAW_DATABASE_NAME="${DATABASE_NAME:-}"
+RAW_JWT_SECRET="${JWT_SECRET:-}"
+RAW_JWT_EXPIRE_TIME="${JWT_EXPIRE_TIME:-}"
+RAW_ADMIN_EMAIL="${ADMIN_EMAIL:-}"
+
+require_nonempty() {
+  local key="$1"
+  local value="$2"
+  if [[ -z "${value}" ]]; then
+    echo "Missing required configuration for non-interactive install: ${key}" >&2
+    return 1
+  fi
+  return 0
+}
+
+if [[ ! -e /dev/tty ]]; then
+  # Non-interactive mode: require all mandatory settings to be already present.
+  require_nonempty NODE_ENV "${RAW_NODE_ENV}" || exit 1
+  require_nonempty PORT "${RAW_PORT}" || exit 1
+  require_nonempty DATABASE_HOST "${RAW_DATABASE_HOST}" || exit 1
+  require_nonempty DATABASE_PORT "${RAW_DATABASE_PORT}" || exit 1
+  require_nonempty DATABASE_USERNAME "${RAW_DATABASE_USERNAME}" || exit 1
+  require_nonempty DATABASE_PASSWORD "${RAW_DATABASE_PASSWORD}" || exit 1
+  require_nonempty DATABASE_NAME "${RAW_DATABASE_NAME}" || exit 1
+  require_nonempty JWT_SECRET "${RAW_JWT_SECRET}" || exit 1
+  require_nonempty JWT_EXPIRE_TIME "${RAW_JWT_EXPIRE_TIME}" || exit 1
+  require_nonempty ADMIN_EMAIL "${RAW_ADMIN_EMAIL}" || exit 1
+  exit 0
 fi
 
 NODE_ENV="${NODE_ENV:-production}"

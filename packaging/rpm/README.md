@@ -19,6 +19,7 @@ for Heimdall Server.
 - The spec expects Node.js 22 and Yarn on the build host.
 - PostgreSQL packages are expected from PGDG (for `postgresql18` and `postgresql18-server`).
 - `Source0` is a local source archive (`heimdall2-<version>.tar.gz`).
+- The setup helper prefers `git archive` (tracked files only) when `.git` is available.
 
 ## Host Prerequisite (OL8/EL8)
 
@@ -51,6 +52,14 @@ To also run `rpmbuild` in the same command:
 ./packaging/rpm/setup-rpm-build-env.sh --build
 ```
 
+If you see `Arch dependent binaries in noarch package`, restage from the
+current workspace spec and rebuild:
+
+```bash
+./packaging/rpm/setup-rpm-build-env.sh --skip-deps
+rpmbuild --define "_topdir ${HOME}/rpmbuild" -ba "${HOME}/rpmbuild/SPECS/heimdall-server.spec"
+```
+
 Manual equivalent:
 
 ```bash
@@ -68,7 +77,7 @@ cp packaging/rpm/heimdall-postgres-setup.sh ~/rpmbuild/SOURCES/
 git archive --format=tar.gz --prefix=heimdall2-2.12.6/ HEAD \
   > ~/rpmbuild/SOURCES/heimdall2-2.12.6.tar.gz
 
-rpmbuild -ba ~/rpmbuild/SPECS/heimdall-server.spec
+rpmbuild --define "_topdir ${HOME}/rpmbuild" -ba ~/rpmbuild/SPECS/heimdall-server.spec
 ```
 
 ## Install Behavior
@@ -83,6 +92,8 @@ On first install, the RPM will:
 5. Enable and start `heimdall-server.service`.
 
 Note: first-time installation is interactive and requires a TTY.
+For non-interactive installs, pre-populate `/etc/heimdall-server/backend.env`
+with required values before package install.
 
 You should only need to verify status after installation:
 

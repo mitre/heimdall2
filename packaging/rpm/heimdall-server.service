@@ -8,22 +8,34 @@ Wants=postgresql.service
 After=network-online.target postgresql-18.service postgresql.service
 
 [Service]
-Type=simple
+Type=exec
 User=heimdall
 Group=heimdall
 WorkingDirectory=/usr/share/heimdall-server/apps/backend
 EnvironmentFile=-/etc/heimdall-server/backend.env
+Environment=NODE_ENV=production
+ExecStartPre=/usr/bin/test -x /usr/bin/node
 ExecStart=/usr/bin/heimdall-server
+SyslogIdentifier=heimdall-server
 Restart=on-failure
 RestartSec=5
+TimeoutStopSec=30
 UMask=0027
 NoNewPrivileges=true
 PrivateTmp=true
+PrivateDevices=true
 ProtectSystem=full
 ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+LimitNOFILE=65536
 StateDirectory=heimdall-server
 LogsDirectory=heimdall-server
-ReadWritePaths=/var/lib/heimdall-server /var/log/heimdall-server
 
 [Install]
 WantedBy=multi-user.target
