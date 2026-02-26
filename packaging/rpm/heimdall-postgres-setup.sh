@@ -10,13 +10,13 @@ if [[ -f "${ENV_FILE}" ]]; then
   set +a
 fi
 
-DATABASE_HOST="${DATABASE_HOST:-127.0.0.1}"
+DATABASE_HOST="${DATABASE_HOST:-localhost}"
 DATABASE_PORT="${DATABASE_PORT:-5432}"
-DATABASE_USERNAME="${DATABASE_USERNAME:-heimdall}"
+DATABASE_USERNAME="${DATABASE_USERNAME:-postgres}"
 DATABASE_PASSWORD="${DATABASE_PASSWORD:-}"
 
-if [[ -z "${DATABASE_USERNAME}" || -z "${DATABASE_PASSWORD}" ]]; then
-  echo "DATABASE_USERNAME and DATABASE_PASSWORD are required." >&2
+if [[ -z "${DATABASE_USERNAME}" ]]; then
+  echo "DATABASE_USERNAME is required." >&2
   exit 1
 fi
 

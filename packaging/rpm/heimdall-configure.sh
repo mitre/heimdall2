@@ -27,49 +27,6 @@ if [[ -f "${ENV_FILE}" ]]; then
   set +a
 fi
 
-RAW_NODE_ENV="${NODE_ENV:-}"
-RAW_PORT="${PORT:-}"
-RAW_DATABASE_HOST="${DATABASE_HOST:-}"
-RAW_DATABASE_PORT="${DATABASE_PORT:-}"
-RAW_DATABASE_USERNAME="${DATABASE_USERNAME:-}"
-RAW_DATABASE_PASSWORD="${DATABASE_PASSWORD:-}"
-RAW_DATABASE_NAME="${DATABASE_NAME:-}"
-RAW_JWT_SECRET="${JWT_SECRET:-}"
-RAW_JWT_EXPIRE_TIME="${JWT_EXPIRE_TIME:-}"
-RAW_ADMIN_EMAIL="${ADMIN_EMAIL:-}"
-
-check_nonempty() {
-  local key="$1"
-  local value="$2"
-  if [[ -z "${value}" ]]; then
-    echo "Missing required configuration: ${key}" >&2
-    return 0
-  fi
-  return 1
-}
-
-validate_required_config() {
-  local missing=0
-
-  check_nonempty NODE_ENV "${RAW_NODE_ENV}" && missing=1
-  check_nonempty PORT "${RAW_PORT}" && missing=1
-  check_nonempty DATABASE_HOST "${RAW_DATABASE_HOST}" && missing=1
-  check_nonempty DATABASE_PORT "${RAW_DATABASE_PORT}" && missing=1
-  check_nonempty DATABASE_USERNAME "${RAW_DATABASE_USERNAME}" && missing=1
-  check_nonempty DATABASE_PASSWORD "${RAW_DATABASE_PASSWORD}" && missing=1
-  check_nonempty DATABASE_NAME "${RAW_DATABASE_NAME}" && missing=1
-  check_nonempty JWT_SECRET "${RAW_JWT_SECRET}" && missing=1
-  check_nonempty JWT_EXPIRE_TIME "${RAW_JWT_EXPIRE_TIME}" && missing=1
-  check_nonempty ADMIN_EMAIL "${RAW_ADMIN_EMAIL}" && missing=1
-
-  if [[ "${missing}" -eq 1 ]]; then
-    echo "Provide these values in ${ENV_FILE} or run '$0 --interactive' as root." >&2
-    return 2
-  fi
-
-  return 0
-}
-
 have_tty() {
   if [[ -t 0 || -t 1 || -t 2 ]]; then
     return 0
@@ -83,102 +40,33 @@ have_tty() {
   return 1
 }
 
-if [[ "${MODE}" == "non-interactive" ]]; then
-  validate_required_config || exit $?
-  exit 0
-fi
-
-if [[ "${MODE}" == "auto" ]] && ! have_tty; then
-  validate_required_config || exit $?
-  exit 0
-fi
-
-if ! have_tty; then
-  echo "Interactive mode requires a TTY. Re-run with --non-interactive or from a terminal." >&2
-  exit 1
-fi
-
 NODE_ENV="${NODE_ENV:-production}"
 PORT="${PORT:-3000}"
-DATABASE_HOST="${DATABASE_HOST:-127.0.0.1}"
+DATABASE_HOST="${DATABASE_HOST:-localhost}"
 DATABASE_PORT="${DATABASE_PORT:-5432}"
-DATABASE_USERNAME="${DATABASE_USERNAME:-heimdall}"
+DATABASE_USERNAME="${DATABASE_USERNAME:-postgres}"
 DATABASE_PASSWORD="${DATABASE_PASSWORD:-}"
-DATABASE_NAME="${DATABASE_NAME:-heimdall-server-production}"
+DATABASE_NAME="${DATABASE_NAME:-heimdall-server-${NODE_ENV}}"
 JWT_SECRET="${JWT_SECRET:-$(openssl rand -hex 64)}"
 JWT_EXPIRE_TIME="${JWT_EXPIRE_TIME:-1d}"
-API_KEY_SECRET="${API_KEY_SECRET:-}"
+API_KEY_SECRET="${API_KEY_SECRET:-$(openssl rand -hex 33)}"
+NGINX_HOST="${NGINX_HOST:-localhost}"
 ADMIN_EMAIL="${ADMIN_EMAIL:-admin@heimdall.local}"
 ADMIN_PASSWORD="${ADMIN_PASSWORD:-}"
 
-prompt_required() {
+prompt_with_default() {
   local var_name="$1"
-  local label="$2"
+  local prompt_text="$2"
   local default_value="$3"
-  local secret="${4:-0}"
   local user_input=""
-  local prompt_default="${default_value}"
-  local prompt_suffix=""
 
-  if [[ "${secret}" -eq 1 && -n "${default_value}" ]]; then
-    prompt_default="<hidden>"
-  fi
-
-  if [[ -n "${prompt_default}" ]]; then
-    prompt_suffix=" [${prompt_default}]"
-  fi
-
-  while true; do
-    if [[ "${secret}" -eq 1 ]]; then
-      printf "%s%s: " "${label}" "${prompt_suffix}" >/dev/tty
-      read -r -s user_input </dev/tty
-      echo >/dev/tty
-    else
-      printf "%s%s: " "${label}" "${prompt_suffix}" >/dev/tty
-      read -r user_input </dev/tty
-    fi
-
-    if [[ -z "${user_input}" ]]; then
-      user_input="${default_value}"
-    fi
-
-    if [[ -n "${user_input}" ]]; then
-      printf -v "${var_name}" "%s" "${user_input}"
-      return 0
-    fi
-    echo "Value is required." >/dev/tty
-  done
-}
-
-prompt_optional() {
-  local var_name="$1"
-  local label="$2"
-  local default_value="$3"
-  local secret="${4:-0}"
-  local user_input=""
-  local prompt_default="${default_value}"
-  local prompt_suffix=""
-
-  if [[ "${secret}" -eq 1 && -n "${default_value}" ]]; then
-    prompt_default="<hidden>"
-  fi
-
-  if [[ -n "${prompt_default}" ]]; then
-    prompt_suffix=" [${prompt_default}]"
-  fi
-
-  if [[ "${secret}" -eq 1 ]]; then
-    printf "%s%s: " "${label}" "${prompt_suffix}" >/dev/tty
-    read -r -s user_input </dev/tty
-    echo >/dev/tty
-  else
-    printf "%s%s: " "${label}" "${prompt_suffix}" >/dev/tty
-    read -r user_input </dev/tty
-  fi
+  printf "%s" "${prompt_text}" >/dev/tty
+  read -r user_input </dev/tty
 
   if [[ -z "${user_input}" ]]; then
     user_input="${default_value}"
   fi
+
   printf -v "${var_name}" "%s" "${user_input}"
 }
 
@@ -195,37 +83,26 @@ write_key() {
   printf '%s="%s"\n' "${key}" "${escaped}" >>"${TMP_FILE}"
 }
 
-echo "Heimdall server configuration" >/dev/tty
-echo "Press Enter to accept each default value." >/dev/tty
-echo >/dev/tty
-
-prompt_required NODE_ENV "NODE_ENV" "${NODE_ENV}" 0
-prompt_required PORT "PORT" "${PORT}" 0
-prompt_required DATABASE_HOST "DATABASE_HOST" "${DATABASE_HOST}" 0
-prompt_required DATABASE_PORT "DATABASE_PORT" "${DATABASE_PORT}" 0
-prompt_required DATABASE_USERNAME "DATABASE_USERNAME" "${DATABASE_USERNAME}" 0
-prompt_required DATABASE_PASSWORD "DATABASE_PASSWORD" "${DATABASE_PASSWORD}" 1
-prompt_required DATABASE_NAME "DATABASE_NAME" "${DATABASE_NAME}" 0
-prompt_required JWT_SECRET "JWT_SECRET" "${JWT_SECRET}" 1
-prompt_required JWT_EXPIRE_TIME "JWT_EXPIRE_TIME" "${JWT_EXPIRE_TIME}" 0
-
-local_enable_api_keys="n"
-if [[ -n "${API_KEY_SECRET}" ]]; then
-  local_enable_api_keys="y"
-fi
-read -r -p "Enable API keys? [y/N] (default: ${local_enable_api_keys}): " api_choice </dev/tty
-api_choice="${api_choice:-${local_enable_api_keys}}"
-if [[ "${api_choice,,}" == "y" ]]; then
-  if [[ -z "${API_KEY_SECRET}" ]]; then
-    API_KEY_SECRET="$(openssl rand -hex 33)"
-  fi
-  prompt_required API_KEY_SECRET "API_KEY_SECRET" "${API_KEY_SECRET}" 1
-else
-  API_KEY_SECRET=""
+SHOULD_PROMPT=1
+if [[ "${MODE}" == "non-interactive" ]]; then
+  SHOULD_PROMPT=0
+elif [[ "${MODE}" == "auto" ]] && ! have_tty; then
+  SHOULD_PROMPT=0
+elif ! have_tty; then
+  echo "Interactive mode requires a TTY. Re-run with --non-interactive or from a terminal." >&2
+  exit 1
 fi
 
-prompt_required ADMIN_EMAIL "ADMIN_EMAIL" "${ADMIN_EMAIL}" 0
-prompt_optional ADMIN_PASSWORD "ADMIN_PASSWORD (leave blank for auto-generated seed password)" "${ADMIN_PASSWORD}" 1
+if [[ "${SHOULD_PROMPT}" -eq 1 ]]; then
+  echo "Heimdall server configuration" >/dev/tty
+  echo "Press Enter to accept each default value." >/dev/tty
+  echo >/dev/tty
+
+  prompt_with_default DATABASE_USERNAME "Enter DATABASE_USERNAME (leave blank to use default 'postgres'): " "postgres"
+  prompt_with_default DATABASE_PASSWORD "Enter DATABASE_PASSWORD (leave blank to not set a password): " ""
+  prompt_with_default JWT_EXPIRE_TIME "Enter JWT_EXPIRE_TIME ex. 1d or 25m (leave blank to use default 1d): " "1d"
+  prompt_with_default NGINX_HOST "Enter your FQDN/Hostname/IP Address (leave blank to use default localhost): " "localhost"
+fi
 
 printf "# Generated during heimdall-server RPM installation\n" >>"${TMP_FILE}"
 write_key NODE_ENV "${NODE_ENV}"
@@ -238,6 +115,7 @@ write_key DATABASE_NAME "${DATABASE_NAME}"
 write_key JWT_SECRET "${JWT_SECRET}"
 write_key JWT_EXPIRE_TIME "${JWT_EXPIRE_TIME}"
 write_key API_KEY_SECRET "${API_KEY_SECRET}"
+write_key NGINX_HOST "${NGINX_HOST}"
 write_key ADMIN_EMAIL "${ADMIN_EMAIL}"
 write_key ADMIN_PASSWORD "${ADMIN_PASSWORD}"
 
@@ -245,5 +123,7 @@ mv "${TMP_FILE}" "${ENV_FILE}"
 chown root:heimdall "${ENV_FILE}"
 chmod 0640 "${ENV_FILE}"
 
-echo >/dev/tty
-echo "Saved configuration to ${ENV_FILE}" >/dev/tty
+if [[ "${SHOULD_PROMPT}" -eq 1 ]]; then
+  echo >/dev/tty
+  echo "Saved configuration to ${ENV_FILE}" >/dev/tty
+fi

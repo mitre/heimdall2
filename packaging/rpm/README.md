@@ -92,18 +92,19 @@ RPM_PATH="$(ls -1t "${HOME}/rpmbuild/RPMS/$(uname -m)"/heimdall-server-*.rpm | h
 sudo dnf install -y "${RPM_PATH}"
 ```
 
-If install is run from an interactive terminal, `%post` prompts for required
-values (including `DATABASE_PASSWORD` and `JWT_SECRET`), then auto-bootstraps
+If install is run from an interactive terminal, `%post` prompts with the same
+four setup questions used by `setup-dev-env.sh`:
+
+- `DATABASE_USERNAME` (default `postgres`)
+- `DATABASE_PASSWORD` (default empty)
+- `JWT_EXPIRE_TIME` (default `1d`)
+- `NGINX_HOST` (default `localhost`)
+
+It then auto-generates `JWT_SECRET` and `API_KEY_SECRET`, bootstraps
 PostgreSQL, runs migrations/seeds, and starts the service.
 
-If install runs without a TTY (for example automation), pre-populate
-`/etc/heimdall-server/backend.env` or complete setup with:
-
-```bash
-sudo heimdall-server-setup
-```
-
-For automation with pre-seeded config values:
+For automation (no TTY), defaults are applied automatically. To rerun setup
+without prompts:
 
 ```bash
 sudo heimdall-server-setup --non-interactive
@@ -125,15 +126,11 @@ sudo systemctl restart heimdall-server
 
 On first install, the RPM will:
 
-1. Prompt for required values when a TTY is available; otherwise validate whether required values exist in `/etc/heimdall-server/backend.env`.
-2. If values exist, initialize/start PostgreSQL (local), force `password_encryption='scram-sha-256'`,
+1. Prompt for the four setup-dev values above when a TTY is available; otherwise apply defaults non-interactively.
+2. Initialize/start PostgreSQL (local), force `password_encryption='scram-sha-256'`,
    create/update the configured DB role with `CREATEDB`, and verify login.
 3. Run database create/migrate/seed automatically.
 4. Enable and start `heimdall-server.service`.
-5. If required values are missing in non-TTY installs, print instructions to run `heimdall-server-setup`.
-
-For non-interactive installs, pre-populate `/etc/heimdall-server/backend.env`
-before package install.
 
 You should only need to verify status after installation:
 
