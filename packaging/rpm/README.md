@@ -21,7 +21,7 @@ for Heimdall Server.
 - PostgreSQL packages are expected from PGDG (for `postgresql18` and `postgresql18-server`).
 - `Source0` is a local source archive (`heimdall2-<version>.tar.gz`).
 - The setup helper prefers `git archive` (tracked files only) when `.git` is available.
-- RPM `%post` scriptlets are non-interactive in this package; interactive setup is handled by `heimdall-server-setup`.
+- RPM `%post` runs interactive configuration when a TTY is available; otherwise it validates existing settings and prints next steps.
 
 ## Host Prerequisite (OL8/EL8)
 
@@ -92,8 +92,12 @@ RPM_PATH="$(ls -1t "${HOME}/rpmbuild/RPMS/$(uname -m)"/heimdall-server-*.rpm | h
 sudo dnf install -y "${RPM_PATH}"
 ```
 
-If your environment file is pre-populated, install will auto-bootstrap PostgreSQL,
-run migrations/seeds, and start the service. Otherwise, complete setup with:
+If install is run from an interactive terminal, `%post` prompts for required
+values (including `DATABASE_PASSWORD` and `JWT_SECRET`), then auto-bootstraps
+PostgreSQL, runs migrations/seeds, and starts the service.
+
+If install runs without a TTY (for example automation), pre-populate
+`/etc/heimdall-server/backend.env` or complete setup with:
 
 ```bash
 sudo heimdall-server-setup
@@ -121,12 +125,12 @@ sudo systemctl restart heimdall-server
 
 On first install, the RPM will:
 
-1. Validate whether required values exist in `/etc/heimdall-server/backend.env`.
+1. Prompt for required values when a TTY is available; otherwise validate whether required values exist in `/etc/heimdall-server/backend.env`.
 2. If values exist, initialize/start PostgreSQL (local), force `password_encryption='scram-sha-256'`,
    create/update the configured DB role with `CREATEDB`, and verify login.
 3. Run database create/migrate/seed automatically.
 4. Enable and start `heimdall-server.service`.
-5. If required values are missing, print instructions to run `heimdall-server-setup`.
+5. If required values are missing in non-TTY installs, print instructions to run `heimdall-server-setup`.
 
 For non-interactive installs, pre-populate `/etc/heimdall-server/backend.env`
 before package install.

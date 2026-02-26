@@ -70,17 +70,30 @@ validate_required_config() {
   return 0
 }
 
+have_tty() {
+  if [[ -t 0 || -t 1 || -t 2 ]]; then
+    return 0
+  fi
+
+  if exec 3<>/dev/tty 2>/dev/null; then
+    exec 3>&-
+    return 0
+  fi
+
+  return 1
+}
+
 if [[ "${MODE}" == "non-interactive" ]]; then
   validate_required_config || exit $?
   exit 0
 fi
 
-if [[ "${MODE}" == "auto" && ! -e /dev/tty ]]; then
+if [[ "${MODE}" == "auto" ]] && ! have_tty; then
   validate_required_config || exit $?
   exit 0
 fi
 
-if [[ ! -e /dev/tty ]]; then
+if ! have_tty; then
   echo "Interactive mode requires a TTY. Re-run with --non-interactive or from a terminal." >&2
   exit 1
 fi
