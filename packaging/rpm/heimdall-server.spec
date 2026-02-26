@@ -51,24 +51,10 @@ access for Heimdall evaluations.
 %build
 export NODE_ENV=production
 export YARN_CACHE_FOLDER="$(mktemp -d)"
-trap 'rm -rf "${YARN_CACHE_FOLDER}"' EXIT
-
-# Respect enterprise CA bundles for Yarn/npm fetches in rpmbuild.
-CAFILE=""
-if [ -n "${NODE_EXTRA_CA_CERTS:-}" ] && [ -r "${NODE_EXTRA_CA_CERTS}" ]; then
-  CAFILE="${NODE_EXTRA_CA_CERTS}"
-elif [ -n "${SSL_CERT_FILE:-}" ] && [ -r "${SSL_CERT_FILE}" ]; then
-  CAFILE="${SSL_CERT_FILE}"
-  export NODE_EXTRA_CA_CERTS="${CAFILE}"
-fi
-
-if [ -n "${CAFILE}" ]; then
-  export npm_config_cafile="${CAFILE}"
-fi
-
 yarn install --frozen-lockfile --production --network-timeout 600000
 yarn frontend build
 yarn backend build
+rm -rf "${YARN_CACHE_FOLDER}"
 
 %install
 rm -rf %{buildroot}
