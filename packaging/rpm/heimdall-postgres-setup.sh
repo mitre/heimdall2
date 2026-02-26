@@ -3,10 +3,32 @@ set -euo pipefail
 
 ENV_FILE="/etc/heimdall-server/backend.env"
 
+usage() {
+  echo "Usage: $0" >&2
+}
+
+if [[ $# -gt 0 ]]; then
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage
+      exit 64
+      ;;
+  esac
+fi
+
 if [[ -f "${ENV_FILE}" ]]; then
   set -a
   # shellcheck disable=SC1090
-  source "${ENV_FILE}"
+  if ! source "${ENV_FILE}"; then
+    set +a
+    echo "Failed to parse ${ENV_FILE}" >&2
+    exit 1
+  fi
   set +a
 fi
 
@@ -46,6 +68,11 @@ else
 fi
 
 PG_MAJOR="$("${PSQL_BIN}" --version | awk '{print $3}' | cut -d. -f1)"
+if [[ ! "${PG_MAJOR}" =~ ^[0-9]+$ ]]; then
+  echo "Unable to determine PostgreSQL major version from: $("${PSQL_BIN}" --version)" >&2
+  exit 1
+fi
+
 if [[ "${PG_MAJOR}" -le 10 ]]; then
   echo "PostgreSQL version must be > 10 (detected: ${PG_MAJOR})." >&2
   exit 1

@@ -5,17 +5,39 @@ CONFIGURE_BIN="/usr/libexec/heimdall-server/configure.sh"
 POSTGRES_SETUP_BIN="/usr/libexec/heimdall-server/postgres-setup.sh"
 DB_SETUP_BIN="/usr/bin/heimdall-server-db-setup"
 SERVICE_NAME="heimdall-server.service"
-SETUP_MODE="interactive"
+SETUP_MODE="auto"
 
-if [[ "${1:-}" == "--non-interactive" ]]; then
-  SETUP_MODE="non-interactive"
-  shift
-elif [[ "${1:-}" == "--interactive" ]]; then
-  shift
-fi
+usage() {
+  echo "Usage: $0 [--auto|--interactive|--non-interactive]" >&2
+}
+
+case "${1:-}" in
+  "")
+    ;;
+  --auto)
+    shift
+    ;;
+  --interactive)
+    SETUP_MODE="interactive"
+    shift
+    ;;
+  --non-interactive)
+    SETUP_MODE="non-interactive"
+    shift
+    ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown option: $1" >&2
+    usage
+    exit 64
+    ;;
+esac
 
 if [[ $# -gt 0 ]]; then
-  echo "Usage: $0 [--interactive|--non-interactive]" >&2
+  usage
   exit 64
 fi
 
@@ -24,11 +46,18 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
-if [[ "${SETUP_MODE}" == "interactive" ]]; then
-  "${CONFIGURE_BIN}" --interactive
-else
-  "${CONFIGURE_BIN}" --non-interactive
-fi
+case "${SETUP_MODE}" in
+  interactive)
+    "${CONFIGURE_BIN}" --interactive
+    ;;
+  non-interactive)
+    "${CONFIGURE_BIN}" --non-interactive
+    ;;
+  auto)
+    "${CONFIGURE_BIN}"
+    ;;
+esac
+
 "${POSTGRES_SETUP_BIN}"
 "${DB_SETUP_BIN}"
 

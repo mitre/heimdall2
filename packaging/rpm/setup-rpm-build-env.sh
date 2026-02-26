@@ -134,8 +134,10 @@ install_build_deps() {
 
   if [[ "${ENABLE_PGDG}" -eq 1 ]]; then
     local el_major=""
+    local rpm_arch=""
     if command -v rpm >/dev/null 2>&1; then
       el_major="$(rpm -E '%{?rhel}')"
+      rpm_arch="$(rpm -E '%{_arch}')"
     fi
     if [[ -z "${el_major}" ]]; then
       el_major="$(. /etc/os-release && printf '%s' "${VERSION_ID%%.*}")"
@@ -144,7 +146,23 @@ install_build_deps() {
       echo "Unable to determine EL major version for PGDG repo URL." >&2
       exit 1
     fi
-    local pgdg_repo_url="https://download.postgresql.org/pub/repos/yum/reporpms/EL-${el_major}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+
+    if [[ -z "${rpm_arch}" || "${rpm_arch}" == "%{_arch}" ]]; then
+      rpm_arch="$(uname -m)"
+    fi
+
+    local pgdg_arch=""
+    case "${rpm_arch}" in
+      x86_64|aarch64|ppc64le|s390x)
+        pgdg_arch="${rpm_arch}"
+        ;;
+      *)
+        echo "Unsupported architecture '${rpm_arch}' for PGDG repo bootstrap." >&2
+        exit 1
+        ;;
+    esac
+
+    local pgdg_repo_url="https://download.postgresql.org/pub/repos/yum/reporpms/EL-${el_major}-${pgdg_arch}/pgdg-redhat-repo-latest.noarch.rpm"
     ${SUDO} dnf install "${DNF_INSTALL_ARGS[@]}" "${pgdg_repo_url}"
     ${SUDO} dnf "${DNF_MODULE_ARGS[@]}" module disable postgresql || true
   fi
@@ -190,13 +208,19 @@ stage_rpm_inputs() {
   mkdir -p "${TOPDIR}"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 
   cp -f "${SPEC_FILE}" "${TOPDIR}/SPECS/heimdall-server.spec"
-  cp -f "${SCRIPT_DIR}/heimdall-server.service" "${TOPDIR}/SOURCES/"
-  cp -f "${SCRIPT_DIR}/heimdall-backend.env" "${TOPDIR}/SOURCES/"
-  cp -f "${SCRIPT_DIR}/heimdall-server.sh" "${TOPDIR}/SOURCES/"
-  cp -f "${SCRIPT_DIR}/heimdall-db-setup.sh" "${TOPDIR}/SOURCES/"
-  cp -f "${SCRIPT_DIR}/heimdall-configure.sh" "${TOPDIR}/SOURCES/"
-  cp -f "${SCRIPT_DIR}/heimdall-postgres-setup.sh" "${TOPDIR}/SOURCES/"
-  cp -f "${SCRIPT_DIR}/heimdall-setup.sh" "${TOPDIR}/SOURCES/"
+  local source_files=(
+    heimdall-server.service
+    heimdall-backend.env
+    heimdall-server.sh
+    heimdall-db-setup.sh
+    heimdall-configure.sh
+    heimdall-postgres-setup.sh
+    heimdall-setup.sh
+  )
+  local source_file=""
+  for source_file in "${source_files[@]}"; do
+    cp -f "${SCRIPT_DIR}/${source_file}" "${TOPDIR}/SOURCES/"
+  done
 
   local source_archive="${TOPDIR}/SOURCES/heimdall2-${version}.tar.gz"
   if command -v git >/dev/null 2>&1 && [[ -d "${REPO_ROOT}/.git" ]]; then

@@ -110,23 +110,11 @@ getent passwd heimdall >/dev/null || \
 %post
 %systemd_post %{name}.service
 if [ "$1" -eq 1 ]; then
-  if %{_libexecdir}/%{name}/configure.sh; then
-    %{_libexecdir}/%{name}/postgres-setup.sh || exit 1
-    %{_bindir}/%{name}-db-setup || exit 1
-    if command -v systemctl >/dev/null 2>&1; then
-      systemctl enable --now %{name}.service >/dev/null 2>&1 || exit 1
-    fi
-  else
-    rc="$?"
-    if [ "${rc}" -eq 2 ]; then
-      cat <<'EOM'
-heimdall-server installed, but required configuration values are missing.
-Run setup as root to complete database bootstrap and service start:
-  sudo /usr/bin/heimdall-server-setup
-EOM
-    else
-      exit "${rc}"
-    fi
+  %{_libexecdir}/%{name}/configure.sh || exit $?
+  %{_libexecdir}/%{name}/postgres-setup.sh || exit $?
+  %{_bindir}/%{name}-db-setup || exit $?
+  if command -v systemctl >/dev/null 2>&1; then
+    systemctl enable --now %{name}.service >/dev/null 2>&1 || exit 1
   fi
 fi
 

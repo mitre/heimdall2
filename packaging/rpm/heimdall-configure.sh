@@ -5,17 +5,35 @@ ENV_FILE="/etc/heimdall-server/backend.env"
 TMP_FILE="$(mktemp)"
 trap 'rm -f "${TMP_FILE}"' EXIT
 
+usage() {
+  echo "Usage: $0 [--interactive|--non-interactive]" >&2
+}
+
 MODE="auto"
-if [[ "${1:-}" == "--interactive" ]]; then
-  MODE="interactive"
-  shift
-elif [[ "${1:-}" == "--non-interactive" ]]; then
-  MODE="non-interactive"
-  shift
-fi
+case "${1:-}" in
+  "")
+    ;;
+  --interactive)
+    MODE="interactive"
+    shift
+    ;;
+  --non-interactive)
+    MODE="non-interactive"
+    shift
+    ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown option: $1" >&2
+    usage
+    exit 64
+    ;;
+esac
 
 if [[ $# -gt 0 ]]; then
-  echo "Usage: $0 [--interactive|--non-interactive]" >&2
+  usage
   exit 64
 fi
 
@@ -23,7 +41,11 @@ fi
 if [[ -f "${ENV_FILE}" ]]; then
   set -a
   # shellcheck disable=SC1090
-  source "${ENV_FILE}" || true
+  if ! source "${ENV_FILE}"; then
+    set +a
+    echo "Failed to parse ${ENV_FILE}" >&2
+    exit 1
+  fi
   set +a
 fi
 
@@ -39,6 +61,11 @@ have_tty() {
 
   return 1
 }
+
+TTY_AVAILABLE=0
+if have_tty; then
+  TTY_AVAILABLE=1
+fi
 
 NODE_ENV="${NODE_ENV:-production}"
 PORT="${PORT:-3000}"
@@ -83,15 +110,24 @@ write_key() {
   printf '%s="%s"\n' "${key}" "${escaped}" >>"${TMP_FILE}"
 }
 
-SHOULD_PROMPT=1
-if [[ "${MODE}" == "non-interactive" ]]; then
-  SHOULD_PROMPT=0
-elif [[ "${MODE}" == "auto" ]] && ! have_tty; then
-  SHOULD_PROMPT=0
-elif ! have_tty; then
-  echo "Interactive mode requires a TTY. Re-run with --non-interactive or from a terminal." >&2
-  exit 1
-fi
+SHOULD_PROMPT=0
+case "${MODE}" in
+  non-interactive)
+    SHOULD_PROMPT=0
+    ;;
+  interactive)
+    if [[ "${TTY_AVAILABLE}" -eq 0 ]]; then
+      echo "Interactive mode requires a TTY. Re-run with --non-interactive or from a terminal." >&2
+      exit 1
+    fi
+    SHOULD_PROMPT=1
+    ;;
+  auto)
+    if [[ "${TTY_AVAILABLE}" -eq 1 ]]; then
+      SHOULD_PROMPT=1
+    fi
+    ;;
+esac
 
 if [[ "${SHOULD_PROMPT}" -eq 1 ]]; then
   echo "Heimdall server configuration" >/dev/tty
@@ -104,6 +140,7 @@ if [[ "${SHOULD_PROMPT}" -eq 1 ]]; then
   prompt_with_default NGINX_HOST "Enter your FQDN/Hostname/IP Address (leave blank to use default localhost): " "localhost"
 fi
 
+: >"${TMP_FILE}"
 printf "# Generated during heimdall-server RPM installation\n" >>"${TMP_FILE}"
 write_key NODE_ENV "${NODE_ENV}"
 write_key PORT "${PORT}"
