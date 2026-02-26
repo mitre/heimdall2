@@ -24,6 +24,7 @@ ExclusiveArch:  aarch64 x86_64
 # not drive automatic RPM dependency/provide generation.
 %global __requires_exclude_from ^/usr/share/heimdall-server/apps/backend/node_modules/.*$
 %global __provides_exclude_from ^/usr/share/heimdall-server/apps/backend/node_modules/.*$
+%{!?_heimdall_cafile:%global _heimdall_cafile /etc/pki/tls/certs/ca-bundle.crt}
 
 BuildRequires:  gcc-c++
 BuildRequires:  make
@@ -50,11 +51,20 @@ access for Heimdall evaluations.
 
 %build
 export NODE_ENV=production
+export NODE_OPTIONS=--use-openssl-ca
 export YARN_CACHE_FOLDER="$(mktemp -d)"
-yarn install --frozen-lockfile --production --network-timeout 600000
+trap 'rm -rf "${YARN_CACHE_FOLDER}"' EXIT
+if [ -r "%{_heimdall_cafile}" ]; then
+  export NODE_EXTRA_CA_CERTS="%{_heimdall_cafile}"
+  export npm_config_cafile="%{_heimdall_cafile}"
+fi
+export npm_config_strict_ssl=true
+
+# Avoid TLS breakage on environments that intercept registry.yarnpkg.com.
+sed -i 's#https://registry\.yarnpkg\.com/#https://registry.npmjs.org/#g' yarn.lock
+yarn install --frozen-lockfile --production --network-timeout 600000 --registry https://registry.npmjs.org
 yarn frontend build
 yarn backend build
-rm -rf "${YARN_CACHE_FOLDER}"
 
 %install
 rm -rf %{buildroot}
