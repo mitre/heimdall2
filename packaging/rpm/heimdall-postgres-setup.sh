@@ -83,9 +83,9 @@ SQL
 
 PASSWORD_FORMAT="$(
   runuser -u postgres -- "${PSQL_BIN}" -tA -v ON_ERROR_STOP=1 -d postgres \
-    -v db_user="${DATABASE_USERNAME}" \
-    -c "SELECT rolpassword FROM pg_authid WHERE rolname = :'db_user';" \
-    | tr -d '[:space:]'
+    -v db_user="${DATABASE_USERNAME}" <<'SQL' | tr -d '[:space:]'
+SELECT rolpassword FROM pg_authid WHERE rolname = :'db_user';
+SQL
 )"
 
 if [[ "${PASSWORD_FORMAT}" != SCRAM-SHA-256* ]]; then
