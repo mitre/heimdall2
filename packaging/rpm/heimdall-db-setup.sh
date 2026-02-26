@@ -57,9 +57,29 @@ run_sequelize() {
   "${TSX_BIN}" "${SEQUELIZE_BIN}" "$@"
 }
 
+run_db_create() {
+  local output=""
+
+  if output="$(run_sequelize db:create 2>&1)"; then
+    if [[ -n "${output}" ]]; then
+      echo "${output}"
+    fi
+    return 0
+  fi
+
+  if [[ "${output}" == *"already exists"* ]]; then
+    echo "${output}" >&2
+    echo "Database already exists. Continuing with migrations." >&2
+    return 0
+  fi
+
+  echo "${output}" >&2
+  return 1
+}
+
 cd "${APP_DIR}"
 
-run_sequelize db:create
+run_db_create
 run_sequelize db:migrate
 
 if [[ "${SKIP_SEED}" -eq 0 ]]; then

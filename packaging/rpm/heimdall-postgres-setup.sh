@@ -36,12 +36,12 @@ DATABASE_PORT="${DATABASE_PORT:-5432}"
 DATABASE_USERNAME="${DATABASE_USERNAME:-postgres}"
 DATABASE_PASSWORD="${DATABASE_PASSWORD:-}"
 
-if [[ -z "${DATABASE_USERNAME}" ]]; then
+if [[ -z "${DATABASE_USERNAME//[[:space:]]/}" ]]; then
   echo "DATABASE_USERNAME is required." >&2
   exit 1
 fi
 
-if [[ -z "${DATABASE_PASSWORD}" ]]; then
+if [[ -z "${DATABASE_PASSWORD//[[:space:]]/}" ]]; then
   echo "DATABASE_PASSWORD is required." >&2
   echo "Run /usr/bin/heimdall-server-setup to regenerate configuration with a secure password." >&2
   exit 1

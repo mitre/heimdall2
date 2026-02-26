@@ -141,7 +141,11 @@ if [[ "${SHOULD_PROMPT}" -eq 1 ]]; then
 fi
 
 PASSWORD_AUTO_GENERATED=0
-if [[ -z "${DATABASE_PASSWORD}" ]]; then
+if [[ -z "${DATABASE_USERNAME//[[:space:]]/}" ]]; then
+  DATABASE_USERNAME="postgres"
+fi
+
+if [[ -z "${DATABASE_PASSWORD//[[:space:]]/}" ]]; then
   DATABASE_PASSWORD="$(openssl rand -hex 33)"
   PASSWORD_AUTO_GENERATED=1
 fi

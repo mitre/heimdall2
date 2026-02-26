@@ -1,4 +1,4 @@
-# Heimdall2 Production Install on Oracle Linux 8 (OL8)
+# Heimdall2 Production Install on Oracle Linux
 
 ## 1. Set up system dependencies
 
@@ -112,7 +112,7 @@ yarn start
 
 ## 8. Troubleshooting: verify password format (optional)
 
-If login fails, follow this sequence.
+If PostgreSQL database creation fails, or login is unsuccessful, follow this sequence.
 
 1. Check how PostgreSQL stored the role password.
 

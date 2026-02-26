@@ -1,6 +1,6 @@
 Name:           heimdall-server
 Version:        2.12.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Heimdall server for security result persistence and review
 
 License:        Apache-2.0
@@ -109,12 +109,35 @@ getent passwd heimdall >/dev/null || \
 
 %post
 %systemd_post %{name}.service
-if [ "$1" -eq 1 ]; then
-  %{_libexecdir}/%{name}/configure.sh || exit
-  %{_libexecdir}/%{name}/postgres-setup.sh || exit
-  %{_bindir}/%{name}-db-setup || exit
-  if command -v systemctl >/dev/null 2>&1; then
-    systemctl enable --now %{name}.service >/dev/null 2>&1 || exit 1
+SETUP_FAILED=0
+
+if ! %{_libexecdir}/%{name}/configure.sh; then
+  echo "heimdall-server: configuration step failed." >&2
+  echo "Run /usr/bin/heimdall-server-setup --non-interactive after fixing the issue." >&2
+  SETUP_FAILED=1
+fi
+
+if [ "${SETUP_FAILED}" -eq 0 ]; then
+  if ! %{_libexecdir}/%{name}/postgres-setup.sh; then
+    echo "heimdall-server: PostgreSQL bootstrap step failed." >&2
+    echo "Run /usr/bin/heimdall-server-setup --non-interactive after fixing the issue." >&2
+    SETUP_FAILED=1
+  fi
+fi
+
+if [ "${SETUP_FAILED}" -eq 0 ]; then
+  if ! %{_bindir}/%{name}-db-setup; then
+    echo "heimdall-server: database migration/seed step failed." >&2
+    echo "Run /usr/bin/heimdall-server-setup --non-interactive after fixing the issue." >&2
+    SETUP_FAILED=1
+  fi
+fi
+
+if command -v systemctl >/dev/null 2>&1; then
+  systemctl enable %{name}.service >/dev/null 2>&1 || true
+  if [ "${SETUP_FAILED}" -eq 0 ]; then
+    systemctl restart %{name}.service >/dev/null 2>&1 || \
+      systemctl start %{name}.service >/dev/null 2>&1 || true
   fi
 fi
 
@@ -142,5 +165,11 @@ fi
 %{_datadir}/%{name}/libs
 
 %changelog
+* Thu Feb 26 2026 Heimdall Maintainers <opensource@mitre.org> - 2.12.6-2
+- Run post-install setup in auto mode (interactive when TTY is available).
+- Avoid RPM post scriptlet hard-fail for recoverable setup/startup issues.
+- Treat existing database as idempotent during db:create.
+- Validate DATABASE_PASSWORD at service startup with clear remediation guidance.
+
 * Wed Feb 25 2026 Heimdall Maintainers <opensource@mitre.org> - 2.12.6-1
 - Initial Oracle/RHEL style RPM packaging scaffold with interactive install

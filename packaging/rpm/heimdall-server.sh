@@ -12,5 +12,11 @@ if [[ -f "${ENV_FILE}" ]]; then
   set +a
 fi
 
+if [[ -z "${DATABASE_PASSWORD:-}" ]]; then
+  echo "DATABASE_PASSWORD is not set in ${ENV_FILE}." >&2
+  echo "Run /usr/bin/heimdall-server-setup --non-interactive to generate and apply a secure password." >&2
+  exit 1
+fi
+
 cd "${APP_DIR}"
 exec /usr/bin/node dist/src/main.js

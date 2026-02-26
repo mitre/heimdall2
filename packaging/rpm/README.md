@@ -21,7 +21,7 @@ for Heimdall Server.
 - PostgreSQL packages are expected from PGDG (for `postgresql18` and `postgresql18-server`).
 - `Source0` is a local source archive (`heimdall2-<version>.tar.gz`).
 - The setup helper prefers `git archive` (tracked files only) when `.git` is available.
-- RPM `%post` runs interactive configuration when a TTY is available; otherwise it validates existing settings and prints next steps.
+- RPM `%post` runs setup in auto mode: interactive when a TTY is available, otherwise non-interactive. Missing secrets (including `DATABASE_PASSWORD`) are generated automatically.
 
 ## Host Prerequisite (OL8/EL8)
 
@@ -92,20 +92,19 @@ RPM_PATH="$(ls -1t "${HOME}/rpmbuild/RPMS/$(uname -m)"/heimdall-server-*.rpm | h
 sudo dnf install -y "${RPM_PATH}"
 ```
 
-If install is run from an interactive terminal, `%post` prompts with the same
-four setup questions used by `setup-dev-env.sh`:
+If install runs from an interactive terminal, `%post` prompts for setup values.
+Without a TTY, it runs non-interactively.
 
-- `DATABASE_USERNAME` (default `postgres`)
-- `DATABASE_PASSWORD` (auto-generated if left blank)
-- `JWT_EXPIRE_TIME` (default `1d`)
-- `NGINX_HOST` (default `localhost`)
+`%post` auto-generates missing secrets (`DATABASE_PASSWORD`, `JWT_SECRET`,
+`API_KEY_SECRET`), bootstraps PostgreSQL, runs migrations/seeds, and starts the service.
 
-It then auto-generates `DATABASE_PASSWORD` (when blank), `JWT_SECRET`, and
-`API_KEY_SECRET`, bootstraps
-PostgreSQL, runs migrations/seeds, and starts the service.
+To review or override values interactively, run:
 
-For automation (no TTY), defaults are applied automatically. To rerun setup
-without prompts:
+```bash
+sudo heimdall-server-setup --interactive
+```
+
+To rerun setup without prompts:
 
 ```bash
 sudo heimdall-server-setup --non-interactive
@@ -125,9 +124,9 @@ sudo systemctl restart heimdall-server
 
 ## Install Behavior
 
-On first install, the RPM will:
+On install or upgrade, the RPM will:
 
-1. Prompt for the four setup-dev values above when a TTY is available; otherwise apply defaults non-interactively.
+1. Run setup in auto mode (interactive when TTY is available) and generate missing secrets.
 2. Initialize/start PostgreSQL (local), force `password_encryption='scram-sha-256'`,
    create/update the configured DB role with `CREATEDB`, and verify password login.
 3. Run database create/migrate/seed automatically.
