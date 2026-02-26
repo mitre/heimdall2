@@ -118,17 +118,24 @@ prompt_required() {
   local secret="${4:-0}"
   local user_input=""
   local prompt_default="${default_value}"
+  local prompt_suffix=""
 
   if [[ "${secret}" -eq 1 && -n "${default_value}" ]]; then
     prompt_default="<hidden>"
   fi
 
+  if [[ -n "${prompt_default}" ]]; then
+    prompt_suffix=" [${prompt_default}]"
+  fi
+
   while true; do
     if [[ "${secret}" -eq 1 ]]; then
-      read -r -s -p "${label} [${prompt_default}]: " user_input </dev/tty
+      printf "%s%s: " "${label}" "${prompt_suffix}" >/dev/tty
+      read -r -s user_input </dev/tty
       echo >/dev/tty
     else
-      read -r -p "${label} [${prompt_default}]: " user_input </dev/tty
+      printf "%s%s: " "${label}" "${prompt_suffix}" >/dev/tty
+      read -r user_input </dev/tty
     fi
 
     if [[ -z "${user_input}" ]]; then
@@ -150,16 +157,23 @@ prompt_optional() {
   local secret="${4:-0}"
   local user_input=""
   local prompt_default="${default_value}"
+  local prompt_suffix=""
 
   if [[ "${secret}" -eq 1 && -n "${default_value}" ]]; then
     prompt_default="<hidden>"
   fi
 
+  if [[ -n "${prompt_default}" ]]; then
+    prompt_suffix=" [${prompt_default}]"
+  fi
+
   if [[ "${secret}" -eq 1 ]]; then
-    read -r -s -p "${label} [${prompt_default}]: " user_input </dev/tty
+    printf "%s%s: " "${label}" "${prompt_suffix}" >/dev/tty
+    read -r -s user_input </dev/tty
     echo >/dev/tty
   else
-    read -r -p "${label} [${prompt_default}]: " user_input </dev/tty
+    printf "%s%s: " "${label}" "${prompt_suffix}" >/dev/tty
+    read -r user_input </dev/tty
   fi
 
   if [[ -z "${user_input}" ]]; then
