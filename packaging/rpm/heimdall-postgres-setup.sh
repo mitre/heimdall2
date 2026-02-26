@@ -8,17 +8,16 @@ usage() {
 }
 
 if [[ $# -gt 0 ]]; then
-  case "$1" in
-    -h|--help)
+  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    if [[ $# -eq 1 ]]; then
       usage
       exit 0
-      ;;
-    *)
-      echo "Unknown option: $1" >&2
-      usage
-      exit 64
-      ;;
-  esac
+    fi
+  fi
+
+  echo "Unknown option: $1" >&2
+  usage
+  exit 64
 fi
 
 if [[ -f "${ENV_FILE}" ]]; then
@@ -39,6 +38,12 @@ DATABASE_PASSWORD="${DATABASE_PASSWORD:-}"
 
 if [[ -z "${DATABASE_USERNAME}" ]]; then
   echo "DATABASE_USERNAME is required." >&2
+  exit 1
+fi
+
+if [[ -z "${DATABASE_PASSWORD}" ]]; then
+  echo "DATABASE_PASSWORD is required." >&2
+  echo "Run /usr/bin/heimdall-server-setup to regenerate configuration with a secure password." >&2
   exit 1
 fi
 
@@ -96,7 +101,11 @@ if command -v systemctl >/dev/null 2>&1; then
   systemctl start "${PG_SERVICE}" >/dev/null 2>&1 || true
 fi
 
-runuser -u postgres -- "${PSQL_BIN}" -v ON_ERROR_STOP=1 -d postgres \
+run_psql_as_postgres() {
+  runuser -u postgres -- "${PSQL_BIN}" -v ON_ERROR_STOP=1 -d postgres "$@"
+}
+
+run_psql_as_postgres \
   -v db_user="${DATABASE_USERNAME}" \
   -v db_pass="${DATABASE_PASSWORD}" <<'SQL'
 ALTER SYSTEM SET password_encryption = 'scram-sha-256';
@@ -109,8 +118,7 @@ SELECT format('ALTER ROLE %I CREATEDB', :'db_user') \gexec
 SQL
 
 PASSWORD_FORMAT="$(
-  runuser -u postgres -- "${PSQL_BIN}" -tA -v ON_ERROR_STOP=1 -d postgres \
-    -v db_user="${DATABASE_USERNAME}" <<'SQL' | tr -d '[:space:]'
+  run_psql_as_postgres -tA -v db_user="${DATABASE_USERNAME}" <<'SQL' | tr -d '[:space:]'
 SELECT rolpassword FROM pg_authid WHERE rolname = :'db_user';
 SQL
 )"

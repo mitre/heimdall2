@@ -96,11 +96,12 @@ If install is run from an interactive terminal, `%post` prompts with the same
 four setup questions used by `setup-dev-env.sh`:
 
 - `DATABASE_USERNAME` (default `postgres`)
-- `DATABASE_PASSWORD` (default empty)
+- `DATABASE_PASSWORD` (auto-generated if left blank)
 - `JWT_EXPIRE_TIME` (default `1d`)
 - `NGINX_HOST` (default `localhost`)
 
-It then auto-generates `JWT_SECRET` and `API_KEY_SECRET`, bootstraps
+It then auto-generates `DATABASE_PASSWORD` (when blank), `JWT_SECRET`, and
+`API_KEY_SECRET`, bootstraps
 PostgreSQL, runs migrations/seeds, and starts the service.
 
 For automation (no TTY), defaults are applied automatically. To rerun setup
@@ -128,7 +129,7 @@ On first install, the RPM will:
 
 1. Prompt for the four setup-dev values above when a TTY is available; otherwise apply defaults non-interactively.
 2. Initialize/start PostgreSQL (local), force `password_encryption='scram-sha-256'`,
-   create/update the configured DB role with `CREATEDB`, and verify login.
+   create/update the configured DB role with `CREATEDB`, and verify password login.
 3. Run database create/migrate/seed automatically.
 4. Enable and start `heimdall-server.service`.
 

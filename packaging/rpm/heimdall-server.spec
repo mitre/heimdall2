@@ -110,9 +110,9 @@ getent passwd heimdall >/dev/null || \
 %post
 %systemd_post %{name}.service
 if [ "$1" -eq 1 ]; then
-  %{_libexecdir}/%{name}/configure.sh || exit $?
-  %{_libexecdir}/%{name}/postgres-setup.sh || exit $?
-  %{_bindir}/%{name}-db-setup || exit $?
+  %{_libexecdir}/%{name}/configure.sh || exit
+  %{_libexecdir}/%{name}/postgres-setup.sh || exit
+  %{_bindir}/%{name}-db-setup || exit
   if command -v systemctl >/dev/null 2>&1; then
     systemctl enable --now %{name}.service >/dev/null 2>&1 || exit 1
   fi

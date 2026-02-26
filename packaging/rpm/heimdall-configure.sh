@@ -135,12 +135,17 @@ if [[ "${SHOULD_PROMPT}" -eq 1 ]]; then
   echo >/dev/tty
 
   prompt_with_default DATABASE_USERNAME "Enter DATABASE_USERNAME (leave blank to use default 'postgres'): " "postgres"
-  prompt_with_default DATABASE_PASSWORD "Enter DATABASE_PASSWORD (leave blank to not set a password): " ""
+  prompt_with_default DATABASE_PASSWORD "Enter DATABASE_PASSWORD (leave blank to auto-generate a secure password): " ""
   prompt_with_default JWT_EXPIRE_TIME "Enter JWT_EXPIRE_TIME ex. 1d or 25m (leave blank to use default 1d): " "1d"
   prompt_with_default NGINX_HOST "Enter your FQDN/Hostname/IP Address (leave blank to use default localhost): " "localhost"
 fi
 
-: >"${TMP_FILE}"
+PASSWORD_AUTO_GENERATED=0
+if [[ -z "${DATABASE_PASSWORD}" ]]; then
+  DATABASE_PASSWORD="$(openssl rand -hex 33)"
+  PASSWORD_AUTO_GENERATED=1
+fi
+
 printf "# Generated during heimdall-server RPM installation\n" >>"${TMP_FILE}"
 write_key NODE_ENV "${NODE_ENV}"
 write_key PORT "${PORT}"
@@ -163,4 +168,7 @@ chmod 0640 "${ENV_FILE}"
 if [[ "${SHOULD_PROMPT}" -eq 1 ]]; then
   echo >/dev/tty
   echo "Saved configuration to ${ENV_FILE}" >/dev/tty
+  if [[ "${PASSWORD_AUTO_GENERATED}" -eq 1 ]]; then
+    echo "DATABASE_PASSWORD was blank, so a secure random password was generated." >/dev/tty
+  fi
 fi
