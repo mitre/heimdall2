@@ -75,16 +75,10 @@ runuser -u postgres -- "${PSQL_BIN}" -v ON_ERROR_STOP=1 -d postgres \
 ALTER SYSTEM SET password_encryption = 'scram-sha-256';
 SELECT pg_reload_conf();
 
-DO $do$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = :'db_user') THEN
-    EXECUTE format('CREATE ROLE %I LOGIN PASSWORD %L', :'db_user', :'db_pass');
-  ELSE
-    EXECUTE format('ALTER ROLE %I LOGIN PASSWORD %L', :'db_user', :'db_pass');
-  END IF;
-  EXECUTE format('ALTER ROLE %I CREATEDB', :'db_user');
-END
-$do$;
+SELECT format('CREATE ROLE %I LOGIN PASSWORD %L', :'db_user', :'db_pass')
+WHERE NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = :'db_user') \gexec
+SELECT format('ALTER ROLE %I LOGIN PASSWORD %L', :'db_user', :'db_pass') \gexec
+SELECT format('ALTER ROLE %I CREATEDB', :'db_user') \gexec
 SQL
 
 PASSWORD_FORMAT="$(
