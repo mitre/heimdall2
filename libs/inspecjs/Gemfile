@@ -3,5 +3,5 @@
 source "https://rubygems.org"
 
 source "https://rubygems.cinc.sh" do
-  gem "cinc-auditor-bin", '~> 5.18.14'
+  gem "cinc-auditor-bin", '~> 7.0.95'
 end
