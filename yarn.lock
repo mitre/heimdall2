@@ -6175,9 +6175,9 @@ anymatch@~3.1.2:
     picomatch "^2.0.4"
 
 apexcharts@^5.3.5:
-  version "5.6.0"
-  resolved "https://registry.npmjs.org/apexcharts/-/apexcharts-5.6.0.tgz#b23720264f206211246f88f014c9da6395523bce"
-  integrity sha512-BZua59yedRsaDfnxkzNrkyLCvluq2c3ZDBIz4joxSKtgr0xDQXQ5dzceMhf/TpTbAjaF+2NYIpLP3BEEIG2s/w==
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-5.8.1.tgz#f5d06d4eeb0233424ee075c38b964e42eb8ad246"
+  integrity sha512-um96vx+E4mNvUXU+zaikJybU6z6IO6nM2Tt6ulJGsgXtmxlWmOX94J0kukD+NJTrNR+AL1IFtNnM4yELWwpqqQ==
   dependencies:
     "@yr/monotone-cubic-spline" "^1.0.3"
 
