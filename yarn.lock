@@ -5032,11 +5032,11 @@
   integrity sha512-DsA2jHfz73JaIROVoMDd/x7nVWXBmEdDSoXB4yQlDzv/NCBkFY2fMHkyE6DGrvooLDAFe5QI6l9Wq0TgdopMtg==
 
 "@types/sanitize-html@^2.3.1":
-  version "2.16.0"
-  resolved "https://registry.npmjs.org/@types/sanitize-html/-/sanitize-html-2.16.0.tgz#860d72c1ba8a5d044946f37559cc359c0a13b24e"
-  integrity sha512-l6rX1MUXje5ztPT0cAFtUayXF06DqPhRyfVXareEN5gGCFaP/iwsxIyKODr9XDhfxPpN6vXUFNfo5kZMXCxBtw==
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/@types/sanitize-html/-/sanitize-html-2.16.1.tgz#27b9ac6cc29838f7a048bfec0113e8ad00918d0a"
+  integrity sha512-n9wjs8bCOTyN/ynwD8s/nTcTreIHB1vf31vhLMGqUPNHaweKC4/fAl4Dj+hUlCTKYgm4P3k83fmiFfzkZ6sgMA==
   dependencies:
-    htmlparser2 "^8.0.0"
+    htmlparser2 "^10.1"
 
 "@types/semver@^7.3.12", "@types/semver@^7.7.0":
   version "7.7.1"
@@ -11558,7 +11558,7 @@ html-webpack-plugin@^5.1.0:
     pretty-error "^4.0.0"
     tapable "^2.0.0"
 
-htmlparser2@^10.0.0:
+htmlparser2@^10.0.0, htmlparser2@^10.1:
   version "10.1.0"
   resolved "https://registry.npmjs.org/htmlparser2/-/htmlparser2-10.1.0.tgz#fe3f2e12c73b6e462d4e10395db9c1119e4d6ae4"
   integrity sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==
