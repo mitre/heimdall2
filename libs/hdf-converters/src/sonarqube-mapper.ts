@@ -852,7 +852,8 @@ export class SonarqubeResults {
     public readonly branchName?: string, // if branch/pr are not specified, then sonarqube uses the default branch
     public readonly pullRequestID?: string,
     public readonly organization?: string, // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
-    public readonly withRaw = false
+    public readonly withRaw = false,
+    public readonly issueStatuses?: string // user-supplied override for issue statuses filter -- bypasses automatic discovery
   ) {
     this.axiosClient = axios.create();
     const MAX_RETRIES = 5;
@@ -891,10 +892,80 @@ export class SonarqubeResults {
     }
   }
 
+  async discoverIssueStatuses(
+    sonarqubeVersion: string
+  ): Promise<string> {
+    // Priority 1: User-supplied override
+    if (this.issueStatuses) {
+      logger.info(`Using user-supplied issue statuses: ${this.issueStatuses}`);
+      return this.issueStatuses;
+    }
+    // Priority 2: Discover from server via facets probe
+    const isLegacy = isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0');
+    const facetParam = isLegacy ? 'statuses' : 'issueStatuses';
+    const componentParam = isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0')
+      ? 'componentKeys' : 'components';
+    try {
+      const response = await this.axiosClient.get(
+        `${this.sonarqubeHost}/api/issues/search`,
+        {
+          ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
+            auth: {username: this.userToken, password: ''}
+          }),
+          ...(this.authMethod === AuthenticationMethod.BearerToken && {
+            headers: {Authorization: `Bearer ${this.userToken}`}
+          }),
+          params: {
+            [componentParam]: this.projectKey,
+            facets: facetParam,
+            ps: 1,
+            ...(this.branchName && {branch: this.branchName}),
+            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
+          }
+        }
+      );
+      const facet = response.data.facets?.find(
+        (f: {property: string; values: {val: string; count: number}[]}) =>
+          f.property === facetParam
+      );
+      if (facet?.values?.length) {
+        const RESOLVED_STATUSES = isLegacy
+          ? ['CLOSED']
+          : ['FIXED'];
+        const activeStatuses = facet.values
+          .map((v: {val: string; count: number}) => v.val)
+          .filter((s: string) => !RESOLVED_STATUSES.includes(s));
+        if (activeStatuses.length) {
+          logger.info(
+            `Discovered issue statuses from server: ${activeStatuses.join(',')}`
+          );
+          return activeStatuses.join(',');
+        }
+      }
+      logger.warn(
+        `Facet probe returned no usable statuses. ` +
+        `Raw facet data: ${JSON.stringify(facet)}. ` +
+        `Falling back to defaults.`
+      );
+    } catch (e) {
+      logger.warn(
+        `Failed to discover issue statuses via facets, falling back to defaults`
+      );
+      logger.debug(inspect(e, {depth: 3}));
+    }
+    // Priority 3: Fallback defaults
+    const fallback = isLegacy
+      ? 'OPEN,REOPENED,CONFIRMED,RESOLVED'
+      : 'OPEN,CONFIRMED,ACCEPTED';
+    logger.info(`Using fallback issue statuses: ${fallback}`);
+    return fallback;
+  }
+
   async getSearchResults<T extends SonarqubeVersion>(
     sonarqubeVersion: string
   ): Promise<Search<T>> {
     const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
+    const discoveredStatuses = await this.discoverIssueStatuses(sonarqubeVersion)
     const PAGE_SIZE = 100;
 
     const createSearch = async (
@@ -915,12 +986,9 @@ export class SonarqubeResults {
             [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0')
               ? 'componentKeys'
               : 'components']: component,
-            ...(isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {
-              statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED'
-            }), // resolved is a manual designation implying that the user believes that the issue will be closed on next scan; however, for now it should still be considered an open finding for our purposes since at time of scan it was still a problem
-            ...(!isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {
-              issueStatuses: 'OPEN,CONFIRMED,ACCEPTED,IN_SANDBOX'
-            }),
+            ...(isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0')
+              ? {statuses: discoveredStatuses}
+              : {issueStatuses: discoveredStatuses}),
             p: page,
             ps: pageSize,
             ...(this.branchName && {branch: this.branchName}),
