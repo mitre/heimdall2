@@ -897,66 +897,62 @@ export class SonarqubeResults {
   ): Promise<string> {
     // Priority 1: User-supplied override
     if (this.issueStatuses) {
-      logger.info(`Using user-supplied issue statuses: ${this.issueStatuses}`);
-      return this.issueStatuses;
+      const normalized = this.issueStatuses.toUpperCase();
+      logger.info(`Using user-supplied issue statuses: ${normalized}`);
+      return normalized;
     }
-    // Priority 2: Discover from server via facets probe
+
+    // Priority 2: Discover valid statuses from server via /api/webservices/list
     const isLegacy = isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0');
-    const facetParam = isLegacy ? 'statuses' : 'issueStatuses';
-    const componentParam = isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0')
-      ? 'componentKeys' : 'components';
+    const statusParamKey = isLegacy ? 'statuses' : 'issueStatuses';
+
     try {
       const response = await this.axiosClient.get(
-        `${this.sonarqubeHost}/api/issues/search`,
+        `${this.sonarqubeHost}/api/webservices/list`,
         {
           ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
             auth: {username: this.userToken, password: ''}
           }),
           ...(this.authMethod === AuthenticationMethod.BearerToken && {
             headers: {Authorization: `Bearer ${this.userToken}`}
-          }),
-          params: {
-            [componentParam]: this.projectKey,
-            facets: facetParam,
-            ps: 1,
-            ...(this.branchName && {branch: this.branchName}),
-            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
-          }
+          })
         }
       );
-      const facet = response.data.facets?.find(
-        (f: {property: string; values: {val: string; count: number}[]}) =>
-          f.property === facetParam
+
+      const issuesService = response.data.webServices?.find(
+        (ws: {path: string}) => ws.path === 'api/issues'
       );
-      if (facet?.values?.length) {
-        const RESOLVED_STATUSES = isLegacy
-          ? ['CLOSED']
-          : ['FIXED'];
-        const activeStatuses = facet.values
-          .map((v: {val: string; count: number}) => v.val)
-          .filter((s: string) => !RESOLVED_STATUSES.includes(s));
-        if (activeStatuses.length) {
-          logger.info(
-            `Discovered issue statuses from server: ${activeStatuses.join(',')}`
-          );
-          return activeStatuses.join(',');
-        }
+      const searchAction = issuesService?.actions?.find(
+        (a: {key: string}) => a.key === 'search'
+      );
+      const statusParam = searchAction?.params?.find(
+        (p: {key: string}) => p.key === statusParamKey
+      );
+
+      if (statusParam?.possibleValues?.length) {
+        const statuses = statusParam.possibleValues.join(',');
+        logger.info(
+          `Discovered issue statuses from server: ${statuses}`
+        );
+        return statuses;
       }
+
       logger.warn(
-        `Facet probe returned no usable statuses. ` +
-        `Raw facet data: ${JSON.stringify(facet)}. ` +
+        `Webservices list returned no possibleValues for ${statusParamKey}. ` +
+        `Raw param data: ${JSON.stringify(statusParam)}. ` +
         `Falling back to defaults.`
       );
     } catch (e) {
       logger.warn(
-        `Failed to discover issue statuses via facets, falling back to defaults`
+        `Failed to discover issue statuses via /api/webservices/list, falling back to defaults`
       );
       logger.debug(inspect(e, {depth: 3}));
     }
+
     // Priority 3: Fallback defaults
     const fallback = isLegacy
       ? 'OPEN,REOPENED,CONFIRMED,RESOLVED'
-      : 'OPEN,CONFIRMED,ACCEPTED';
+      : 'OPEN,CONFIRMED,FALSE_POSITIVE,ACCEPTED,FIXED';
     logger.info(`Using fallback issue statuses: ${fallback}`);
     return fallback;
   }
