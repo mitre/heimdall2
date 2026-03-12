@@ -69,3 +69,10 @@ certs/*.pem
 
 # Database Content
 data/*
+
+# RPM build artifacts
+packaging/rpm/dist/
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db
