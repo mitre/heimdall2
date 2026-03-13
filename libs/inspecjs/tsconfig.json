@@ -1,5 +1,12 @@
 {
   "extends": "../../tsconfig.json",
+
+  "target": "esnext",
+  "lib": ["esnext"],
+
+  "module": "nodenext",
+  "moduleResolution": "nodenext",
+
   "include": ["*.ts", "**/*.ts"],
   "exclude": ["lib"],
   "compilerOptions": {
