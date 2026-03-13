@@ -202,42 +202,36 @@ describe.sequential('Compare', async () => {
       await loadSample('NGINX With Failing Tests');
       await loadSample('NGINX Clean Sample');
       //the values in expected are the correct data
-      expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual(
-        [
-          [0, 0],
-          [3, 0],
-          [0, 0],
-          [0, 0]
-        ]
-      );
+      expect(wrapper.vm.sev_series).toEqual([
+        [0, 0],
+        [3, 0],
+        [0, 0],
+        [0, 0]
+      ]);
     });
 
     it('sev chart gets correct data with 2 files with differing profiles', async () => {
       await loadSample('NGINX With Failing Tests');
       await loadSample('Red Hat With Failing Tests');
       //the values in expected are the correct data
-      expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual(
-        [
-          [0, 6],
-          [3, 18],
-          [0, 3],
-          [0, 0]
-        ]
-      );
+      expect(wrapper.vm.sev_series).toEqual([
+        [0, 6],
+        [3, 18],
+        [0, 3],
+        [0, 0]
+      ]);
     });
 
     it('sev chart gets correct data with 2 files with overlayed profiles', async () => {
       await loadSample('Three Layer RHEL7 Overlay Example');
       await loadSample('Acme Overlay Example');
       //the values in expected are the correct data
-      expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual(
-        [
-          [0, 8],
-          [0, 126],
-          [0, 4],
-          [60, 0]
-        ]
-      );
+      expect(wrapper.vm.sev_series).toEqual([
+        [0, 8],
+        [0, 126],
+        [0, 4],
+        [60, 0]
+      ]);
     });
 
     it('compliance chart gets correct data with 2 files', async () => {
