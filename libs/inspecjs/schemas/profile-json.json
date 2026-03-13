@@ -280,8 +280,8 @@
         },
         "impact": {
           "type": "number",
-          "minimum": 0,
-          "maximum": 1,
+          "minimum": 0.0,
+          "maximum": 1.0,
           "description": "The impactfulness or severity."
         },
         "refs": {
