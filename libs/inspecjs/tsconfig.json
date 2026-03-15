@@ -29,6 +29,6 @@
     "types": ["node"]
   },
 
-  "include": ["*.ts", "**/*.ts"],
+  "include": ["**/*.ts"],
   "exclude": ["lib"]
 }

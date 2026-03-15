@@ -1,15 +1,16 @@
 {
   "extends": "../../tsconfig.json",
-  "include": [
-    "*.ts",
-    "**/*.ts",
-    "types/*.d.ts"
-  ],
-  "exclude": ["lib"],
+
   "compilerOptions": {
     "outDir": "./lib",
     "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true
-  }
+  },
+
+  "include": [
+    "**/*.ts",
+    "types/**/*.d.ts"
+  ],
+  "exclude": ["lib"]
 }
