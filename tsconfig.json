@@ -1,16 +1,21 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
     "target": "ES2021",
-    "esModuleInterop": true,
+
+    "module": "commonjs",
+    "moduleResolution": "node",
+
     "noImplicitAny": true,
+    "useUnknownInCatchVariables": false,
+
+    "declaration": true,
+    "sourceMap": true,
+
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false
+    "esModuleInterop": true,
+
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
   "include": [
     "types/**/*.d.ts"
