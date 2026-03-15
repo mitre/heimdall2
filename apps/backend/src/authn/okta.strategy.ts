@@ -19,7 +19,8 @@ type Profile = {
 };
 
 @Injectable()
-export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
+//eslint-disable-next-line @typescript-eslint/no-explicit-any -- Passport v11 changed their types and many 3rd party strategies are not compatible with the types despite actually still working just fine
+export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
   private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   public logger = winston.createLogger({
@@ -75,21 +76,28 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) => {
-        this.logger.debug('in okta strategy file');
-        this.logger.debug(JSON.stringify(profile, null, 2));
-        if (profile.emails.length > 0 && profile.emails[0].value) {
-          const user = await authnService.validateOrCreateUser(
-            profile.emails[0].value,
-            profile.name.givenName,
-            profile.name.familyName,
-            'okta'
-          );
-          return done(null, user);
-        }
-        return done(
-          new UnauthorizedException('Incorrect Username or Password')
-        );
+        return this.validate(_issuer, profile, done);
       }
     );
+  }
+
+  async validate(
+    _issuer: string,
+    profile: Profile,
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    done: any
+  ) {
+    this.logger.debug('in okta strategy file');
+    this.logger.debug(JSON.stringify(profile, null, 2));
+    if (profile.emails.length > 0 && profile.emails[0].value) {
+      const user = await this.authnService.validateOrCreateUser(
+        profile.emails[0].value,
+        profile.name.givenName,
+        profile.name.familyName,
+        'okta'
+      );
+      return done(null, user);
+    }
+    return done(new UnauthorizedException('Incorrect Username or Password'));
   }
 }
