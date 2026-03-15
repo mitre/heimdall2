@@ -93,7 +93,12 @@ export default class ApexPieChart extends Vue {
 
       // Format the data label to show the actual value instead of percentage
       dataLabels: {
-        formatter: (val, opts) => opts.w.config.series[opts.seriesIndex]
+        formatter: (val, opts) => {
+          if (!opts) {
+            throw new Error('Missing configuration options for dataLabels');
+          }
+          return opts.w.globals.series[opts.seriesIndex];
+        }
       },
 
       // Enable bottom-positioned legend with clickable toggles and series color usage
@@ -137,6 +142,11 @@ export default class ApexPieChart extends Vue {
         events: {
           // Emit selected category when a chart segment is clicked
           dataPointSelection: (_event, _chartContext, config) => {
+            if (!config) {
+              throw new Error(
+                'Missing configuration options for dataPointSelection'
+              );
+            }
             this.$emit(
               'category-selected',
               this.categories[config.dataPointIndex]
