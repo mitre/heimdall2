@@ -16684,9 +16684,9 @@ retry-as-promised@^7.0.4:
   resolved "https://registry.npmjs.org/retry-as-promised/-/retry-as-promised-7.1.1.tgz#3626246f04c1941ff10cebcfa3df0577fd8ab2d7"
   integrity sha512-hMD7odLOt3LkTjcif8aRZqi/hybjpLNgSk5oF5FCowfCjok6LukpN2bDX7R5wDmbgBQFn7YoBxSagmtXHaJYJw==
 
-retry-axios@amndeep7/retry-axios#add_d_cts_file:
+retry-axios@amndeep7/retry-axios#add_d_cts_file_packagejsonfork:
   version "4.0.1"
-  resolved "https://codeload.github.com/amndeep7/retry-axios/tar.gz/0351a4c8ddabb8312e493a42974c210b54e451f4"
+  resolved "https://codeload.github.com/amndeep7/retry-axios/tar.gz/2b6d3d91416390ea2a78b1320c75aa6f1b914605"
 
 retry@0.13.1, retry@^0.13.1:
   version "0.13.1"
