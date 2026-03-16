@@ -4,8 +4,8 @@
   "private": true,
   "description": "",
   "scripts": {
-    "lint": "eslint \"**/*.ts\" --fix",
-    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "lint": "eslint --fix",
+    "lint:ci": "eslint --max-warnings 0",
     "mock-json": "node support/server/json-server.js",
     "mock-openid": "node support/server/oidc-server.js"
   },
