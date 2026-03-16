@@ -1,8 +1,33 @@
 {
   "extends": "../../tsconfig.json",
-  "baseUrl": ".",
-  "include": ["*.ts", "**/*.ts"],
+
   "compilerOptions": {
-    "strict": true
-  }
+    "target": "esnext",
+    "lib": ["esnext"],
+
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+
+    "rootDir": ".",
+    "outDir": "lib",
+
+    "strict": true,
+    "noImplicitAny": true,
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "inlineSources": true,
+
+    "incremental": true,
+
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+
+    "skipLibCheck": true,
+
+    "types": ["node"]
+  },
+
+  "include": ["**/*.ts"]
 }
