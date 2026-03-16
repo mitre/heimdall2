@@ -1,25 +1,35 @@
 {
   "extends": "../../tsconfig.json",
+
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "strict": true,
+    "target": "esnext",
     "lib": [
       "es2020",
       "DOM"
     ],
-    "paths": {}
+
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+
+    "rootDir": ".",
+    "outDir": "./dist",
+
+    "strict": true,
+    "noImplicitAny": true,
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "inlineSources": true,
+
+    "incremental": true,
+
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+
+    "skipLibCheck": true
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ]
+
+  "include": ["**/*.ts"],
+  "exclude": ["dist"]
 }
