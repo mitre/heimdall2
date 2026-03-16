@@ -853,7 +853,7 @@ export class SonarqubeResults {
     public readonly pullRequestID?: string,
     public readonly organization?: string, // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
     public readonly withRaw = false,
-    public readonly issueStatuses?: string // user-supplied override for issue statuses filter -- bypasses automatic discovery
+    public readonly excludeIssueStatuses?: string // user-supplied comma-separated list of additional issue statuses to EXCLUDE from results
   ) {
     this.axiosClient = axios.create();
     const MAX_RETRIES = 5;
@@ -892,19 +892,20 @@ export class SonarqubeResults {
     }
   }
 
+  // Default statuses to exclude from results (deny-list approach)
+  // Pre-10.4 legacy: CLOSED issues are end-of-life (rule deleted/disabled or component removed)
+  // 10.4+: FALSE_POSITIVE (user says not real), FIXED (no longer in code), IN_SANDBOX (not available on all servers)
+  static readonly DEFAULT_DENY_LIST_LEGACY = ['CLOSED'];
+  static readonly DEFAULT_DENY_LIST_MODERN = ['FALSE_POSITIVE', 'FIXED', 'IN_SANDBOX'];
+
   async discoverIssueStatuses(
     sonarqubeVersion: string
   ): Promise<string> {
-    // Priority 1: User-supplied override
-    if (this.issueStatuses) {
-      const normalized = this.issueStatuses.toUpperCase();
-      logger.info(`Using user-supplied issue statuses: ${normalized}`);
-      return normalized;
-    }
-
-    // Priority 2: Discover valid statuses from server via /api/webservices/list
     const isLegacy = isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0');
     const statusParamKey = isLegacy ? 'statuses' : 'issueStatuses';
+
+    // Step 1: Discover all valid statuses from the server via /api/webservices/list
+    let allStatuses: string[];
 
     try {
       const response = await this.axiosClient.get(
@@ -930,31 +931,62 @@ export class SonarqubeResults {
       );
 
       if (statusParam?.possibleValues?.length) {
-        const statuses = statusParam.possibleValues.join(',');
+        allStatuses = statusParam.possibleValues.map((s: string) => s.toUpperCase());
         logger.info(
-          `Discovered issue statuses from server: ${statuses}`
+          `Available issue statuses from server: ${allStatuses.join(',')}`
         );
-        return statuses;
+      } else {
+        throw new Error(
+          `Webservices list returned no possibleValues for ${statusParamKey}. ` +
+          `Raw param data: ${JSON.stringify(statusParam)}`
+        );
       }
-
-      logger.warn(
-        `Webservices list returned no possibleValues for ${statusParamKey}. ` +
-        `Raw param data: ${JSON.stringify(statusParam)}. ` +
-        `Falling back to defaults.`
-      );
     } catch (e) {
+      // Step 2: Fallback to hardcoded full status list if discovery fails
+      allStatuses = isLegacy
+        ? ['OPEN', 'REOPENED', 'CONFIRMED', 'RESOLVED', 'CLOSED']
+        : ['OPEN', 'CONFIRMED', 'FALSE_POSITIVE', 'ACCEPTED', 'FIXED', 'IN_SANDBOX'];
       logger.warn(
-        `Failed to discover issue statuses via /api/webservices/list, falling back to defaults`
+        `Could not discover statuses from server, using fallback: ${allStatuses.join(',')}`
       );
       logger.debug(inspect(e, {depth: 3}));
     }
 
-    // Priority 3: Fallback defaults
-    const fallback = isLegacy
-      ? 'OPEN,REOPENED,CONFIRMED,RESOLVED'
-      : 'OPEN,CONFIRMED,FALSE_POSITIVE,ACCEPTED,FIXED';
-    logger.info(`Using fallback issue statuses: ${fallback}`);
-    return fallback;
+    // Step 3: Build deny-list from defaults
+    const defaultDenyList = isLegacy
+      ? SonarqubeResults.DEFAULT_DENY_LIST_LEGACY
+      : SonarqubeResults.DEFAULT_DENY_LIST_MODERN;
+    const denySet = new Set(defaultDenyList.map(s => s.toUpperCase()));
+
+    // Step 4: Apply user-supplied additional exclusions
+    if (this.excludeIssueStatuses) {
+      const userExclusions = this.excludeIssueStatuses
+        .split(',')
+        .map(s => s.trim().toUpperCase())
+        .filter(s => s.length > 0);
+      userExclusions.forEach(s => denySet.add(s));
+      logger.warn(
+        `Custom status exclusions applied: ${userExclusions.join(',')}. ` +
+        `If this exclusion should be a default, please consider filing an issue at ` +
+        `https://github.com/mitre/heimdall2/issues`
+      );
+    }
+
+    // Step 5: Filter statuses and log the result
+    const excluded = allStatuses.filter(s => denySet.has(s));
+    const result = allStatuses.filter(s => !denySet.has(s));
+
+    if (result.length === 0) {
+      logger.warn(
+        `All statuses were excluded by the deny-list. This will likely return no results. ` +
+        `Available: ${allStatuses.join(',')} | Excluded: ${excluded.join(',')}`
+      );
+    }
+
+    logger.info(
+      `Querying with issue statuses: ${result.join(',')} (excluded: ${excluded.join(',')})`
+    );
+    return result.join(',');
   }
 
   async getSearchResults<T extends SonarqubeVersion>(
