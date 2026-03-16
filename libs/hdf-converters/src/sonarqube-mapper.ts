@@ -898,9 +898,7 @@ export class SonarqubeResults {
   static readonly DEFAULT_DENY_LIST_LEGACY = ['CLOSED'];
   static readonly DEFAULT_DENY_LIST_MODERN = ['FALSE_POSITIVE', 'FIXED'];
 
-  async discoverIssueStatuses(
-    sonarqubeVersion: string
-  ): Promise<string> {
+  async discoverIssueStatuses(sonarqubeVersion: string): Promise<string> {
     const isLegacy = isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0');
     const statusParamKey = isLegacy ? 'statuses' : 'issueStatuses';
 
@@ -931,21 +929,30 @@ export class SonarqubeResults {
       );
 
       if (statusParam?.possibleValues?.length) {
-        allStatuses = statusParam.possibleValues.map((s: string) => s.toUpperCase());
+        allStatuses = statusParam.possibleValues.map((s: string) =>
+          s.toUpperCase()
+        );
         logger.info(
           `Available issue statuses from server: ${allStatuses.join(',')}`
         );
       } else {
         throw new Error(
           `Webservices list returned no possibleValues for ${statusParamKey}. ` +
-          `Raw param data: ${JSON.stringify(statusParam)}`
+            `Raw param data: ${JSON.stringify(statusParam)}`
         );
       }
     } catch (e) {
       // Step 2: Fallback to hardcoded full status list if discovery fails
       allStatuses = isLegacy
         ? ['OPEN', 'REOPENED', 'CONFIRMED', 'RESOLVED', 'CLOSED']
-        : ['OPEN', 'CONFIRMED', 'FALSE_POSITIVE', 'ACCEPTED', 'FIXED', 'IN_SANDBOX'];
+        : [
+            'OPEN',
+            'CONFIRMED',
+            'FALSE_POSITIVE',
+            'ACCEPTED',
+            'FIXED',
+            'IN_SANDBOX'
+          ];
       logger.warn(
         `Could not discover statuses from server, using fallback: ${allStatuses.join(',')}`
       );
@@ -962,41 +969,45 @@ export class SonarqubeResults {
       // User-supplied deny-list REPLACES the defaults entirely
       const userExclusions = this.excludeIssueStatuses
         .split(',')
-        .map(s => s.trim().toUpperCase())
-        .filter(s => s.length > 0);
+        .map((s) => s.trim().toUpperCase())
+        .filter((s) => s.length > 0);
       denySet = new Set(userExclusions);
 
       // Smart nag: compare user list against defaults
       const defaultSet = new Set(defaultDenyList);
-      const sameAsDefault = defaultSet.symmetricDifference(denySet).size === 0;
+      const sameAsDefault =
+        defaultSet.size === denySet.size &&
+        [...defaultSet].every((s) => denySet.has(s));
 
       if (sameAsDefault) {
         logger.info(
           `Exclusion list matches the defaults (${[...defaultSet].join(',')}). ` +
-          `You can omit --excludeIssueStatuses unless you want to be explicit.`
+            `You can omit --excludeIssueStatuses unless you want to be explicit.`
         );
       } else {
         logger.warn(
           `Custom status exclusions applied: ${userExclusions.join(',')} ` +
-          `(replaces defaults: ${defaultDenyList.join(',')}). ` +
-          `If this exclusion should be a default, please consider filing an issue at ` +
-          `https://github.com/mitre/heimdall2/issues`
+            `(replaces defaults: ${defaultDenyList.join(',')}). ` +
+            `If this exclusion should be a default, please consider filing an issue at ` +
+            `https://github.com/mitre/heimdall2/issues`
         );
       }
     } else {
       // No user override — use defaults
       denySet = new Set(defaultDenyList);
-      logger.info(`Using default status exclusions: ${defaultDenyList.join(',')}`);
+      logger.info(
+        `Using default status exclusions: ${defaultDenyList.join(',')}`
+      );
     }
 
     // Step 4: Filter statuses and log the result
-    const excluded = allStatuses.filter(s => denySet.has(s));
-    const result = allStatuses.filter(s => !denySet.has(s));
+    const excluded = allStatuses.filter((s) => denySet.has(s));
+    const result = allStatuses.filter((s) => !denySet.has(s));
 
     if (result.length === 0) {
       logger.warn(
         `All statuses were excluded by the deny-list. This will likely return no results. ` +
-        `Available: ${allStatuses.join(',')} | Excluded: ${excluded.join(',')}`
+          `Available: ${allStatuses.join(',')} | Excluded: ${excluded.join(',')}`
       );
     }
 
@@ -1010,7 +1021,8 @@ export class SonarqubeResults {
     sonarqubeVersion: string
   ): Promise<Search<T>> {
     const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
-    const discoveredStatuses = await this.discoverIssueStatuses(sonarqubeVersion)
+    const discoveredStatuses =
+      await this.discoverIssueStatuses(sonarqubeVersion);
     const PAGE_SIZE = 100;
 
     const createSearch = async (
