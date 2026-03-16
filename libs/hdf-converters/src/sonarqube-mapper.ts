@@ -967,10 +967,8 @@ export class SonarqubeResults {
       denySet = new Set(userExclusions);
 
       // Smart nag: compare user list against defaults
-      const defaultSet = new Set(defaultDenyList.map(s => s.toUpperCase()));
-      const userSet = new Set(userExclusions);
-      const sameAsDefault = defaultSet.size === userSet.size &&
-        [...defaultSet].every(s => userSet.has(s));
+      const defaultSet = new Set(defaultDenyList);
+      const sameAsDefault = defaultSet.symmetricDifference(denySet).size === 0;
 
       if (sameAsDefault) {
         logger.info(
@@ -987,7 +985,7 @@ export class SonarqubeResults {
       }
     } else {
       // No user override — use defaults
-      denySet = new Set(defaultDenyList.map(s => s.toUpperCase()));
+      denySet = new Set(defaultDenyList);
       logger.info(`Using default status exclusions: ${defaultDenyList.join(',')}`);
     }
 
