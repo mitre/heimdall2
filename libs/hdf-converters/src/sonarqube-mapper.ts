@@ -894,9 +894,9 @@ export class SonarqubeResults {
 
   // Default statuses to exclude from results (deny-list approach)
   // Pre-10.4 legacy: CLOSED issues are end-of-life (rule deleted/disabled or component removed)
-  // 10.4+: FALSE_POSITIVE (user says not real), FIXED (no longer in code), IN_SANDBOX (not available on all servers)
+  // 10.4+: FALSE_POSITIVE (user says not real), FIXED (no longer in code, purged after 30 days)
   static readonly DEFAULT_DENY_LIST_LEGACY = ['CLOSED'];
-  static readonly DEFAULT_DENY_LIST_MODERN = ['FALSE_POSITIVE', 'FIXED', 'IN_SANDBOX'];
+  static readonly DEFAULT_DENY_LIST_MODERN = ['FALSE_POSITIVE', 'FIXED'];
 
   async discoverIssueStatuses(
     sonarqubeVersion: string
@@ -952,27 +952,46 @@ export class SonarqubeResults {
       logger.debug(inspect(e, {depth: 3}));
     }
 
-    // Step 3: Build deny-list from defaults
+    // Step 3: Determine which deny-list to use
     const defaultDenyList = isLegacy
       ? SonarqubeResults.DEFAULT_DENY_LIST_LEGACY
       : SonarqubeResults.DEFAULT_DENY_LIST_MODERN;
-    const denySet = new Set(defaultDenyList.map(s => s.toUpperCase()));
+    let denySet: Set<string>;
 
-    // Step 4: Apply user-supplied additional exclusions
     if (this.excludeIssueStatuses) {
+      // User-supplied deny-list REPLACES the defaults entirely
       const userExclusions = this.excludeIssueStatuses
         .split(',')
         .map(s => s.trim().toUpperCase())
         .filter(s => s.length > 0);
-      userExclusions.forEach(s => denySet.add(s));
-      logger.warn(
-        `Custom status exclusions applied: ${userExclusions.join(',')}. ` +
-        `If this exclusion should be a default, please consider filing an issue at ` +
-        `https://github.com/mitre/heimdall2/issues`
-      );
+      denySet = new Set(userExclusions);
+
+      // Smart nag: compare user list against defaults
+      const defaultSet = new Set(defaultDenyList.map(s => s.toUpperCase()));
+      const userSet = new Set(userExclusions);
+      const sameAsDefault = defaultSet.size === userSet.size &&
+        [...defaultSet].every(s => userSet.has(s));
+
+      if (sameAsDefault) {
+        logger.info(
+          `Exclusion list matches the defaults (${[...defaultSet].join(',')}). ` +
+          `You can omit --excludeIssueStatuses unless you want to be explicit.`
+        );
+      } else {
+        logger.warn(
+          `Custom status exclusions applied: ${userExclusions.join(',')} ` +
+          `(replaces defaults: ${defaultDenyList.join(',')}). ` +
+          `If this exclusion should be a default, please consider filing an issue at ` +
+          `https://github.com/mitre/heimdall2/issues`
+        );
+      }
+    } else {
+      // No user override — use defaults
+      denySet = new Set(defaultDenyList.map(s => s.toUpperCase()));
+      logger.info(`Using default status exclusions: ${defaultDenyList.join(',')}`);
     }
 
-    // Step 5: Filter statuses and log the result
+    // Step 4: Filter statuses and log the result
     const excluded = allStatuses.filter(s => denySet.has(s));
     const result = allStatuses.filter(s => !denySet.has(s));
 
