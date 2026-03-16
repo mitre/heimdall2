@@ -1,13 +1,14 @@
 {
   "extends": "../tsconfig.json",
+
   "compilerOptions": {
     "noEmit": false,
     "sourceMap": false,
     "types": ["cypress", "cypress-wait-until"]
   },
+
   "include": [
     "../node_modules/cypress",
-    "./**/*.ts",
-    "types/**/*.d.ts"
+    "**/*.ts"
   ]
 }
