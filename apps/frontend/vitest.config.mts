@@ -2,8 +2,9 @@ import {defineConfig} from 'vitest/config';
 import vue2 from '@vitejs/plugin-vue2';
 import path from 'path';
 import svgLoader from 'vite-svg-loader';
+import {fileURLToPath} from 'url';
 
-const rootDir = __dirname;
+const rootDir = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
   plugins: [
@@ -12,8 +13,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: [
-      {find: /^@\//, replacement: path.resolve(rootDir, 'src') + '/'},
-      {find: '@mitre/hdf-converters', replacement: path.resolve(rootDir, '..', '..', 'libs/hdf-converters/index.ts')},
+      {find: /^@\//, replacement: path.resolve(rootDir, 'src') + '/'}
     ]
   },
   test: {
