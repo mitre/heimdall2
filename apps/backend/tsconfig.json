@@ -3,7 +3,7 @@
 
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["esnext", "DOM"],
+    "lib": ["esnext"],
 
     "module": "nodenext",
     "moduleResolution": "nodenext",
