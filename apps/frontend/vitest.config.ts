@@ -2,9 +2,8 @@ import {defineConfig} from 'vitest/config';
 import vue2 from '@vitejs/plugin-vue2';
 import path from 'path';
 import svgLoader from 'vite-svg-loader';
-import {fileURLToPath} from 'url';
 
-const rootDir = fileURLToPath(new URL('.', import.meta.url));
+const rootDir = __dirname;
 
 export default defineConfig({
   plugins: [
