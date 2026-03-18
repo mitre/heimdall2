@@ -116,7 +116,7 @@
     "@types/sinon": "^21.0.0",
     "@vitejs/plugin-vue2": "^2.3.4",
     "@vue/test-utils": "^1.0.3",
-    "jsdom": "^28.1.0",
+    "jsdom": "^29.0.0",
     "sinon": "^21.0.0",
     "vite-svg-loader": "^5.1.0",
     "vitest": "^4.0.18"

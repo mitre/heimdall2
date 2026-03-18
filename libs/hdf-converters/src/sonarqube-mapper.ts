@@ -852,7 +852,8 @@ export class SonarqubeResults {
     public readonly branchName?: string, // if branch/pr are not specified, then sonarqube uses the default branch
     public readonly pullRequestID?: string,
     public readonly organization?: string, // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
-    public readonly withRaw = false
+    public readonly withRaw = false,
+    public readonly excludeIssueStatuses?: string // user-supplied comma-separated list of additional issue statuses to EXCLUDE from results
   ) {
     this.axiosClient = axios.create();
     const MAX_RETRIES = 5;
@@ -891,10 +892,137 @@ export class SonarqubeResults {
     }
   }
 
+  // Default statuses to exclude from results (deny-list approach)
+  // Pre-10.4 legacy: CLOSED issues are end-of-life (rule deleted/disabled or component removed)
+  // 10.4+: FALSE_POSITIVE (user says not real), FIXED (no longer in code, purged after 30 days)
+  static readonly DEFAULT_DENY_LIST_LEGACY = ['CLOSED'];
+  static readonly DEFAULT_DENY_LIST_MODERN = ['FALSE_POSITIVE', 'FIXED'];
+
+  async discoverIssueStatuses(sonarqubeVersion: string): Promise<string> {
+    const isLegacy = isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0');
+    const statusParamKey = isLegacy ? 'statuses' : 'issueStatuses';
+
+    // Step 1: Discover all valid statuses from the server via /api/webservices/list
+    let allStatuses: string[];
+
+    try {
+      const response = await this.axiosClient.get(
+        `${this.sonarqubeHost}/api/webservices/list`,
+        {
+          ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
+            auth: {username: this.userToken, password: ''}
+          }),
+          ...(this.authMethod === AuthenticationMethod.BearerToken && {
+            headers: {Authorization: `Bearer ${this.userToken}`}
+          })
+        }
+      );
+
+      const issuesService = response.data.webServices?.find(
+        (ws: {path: string}) => ws.path === 'api/issues'
+      );
+      const searchAction = issuesService?.actions?.find(
+        (a: {key: string}) => a.key === 'search'
+      );
+      const statusParam = searchAction?.params?.find(
+        (p: {key: string}) => p.key === statusParamKey
+      );
+
+      if (statusParam?.possibleValues?.length) {
+        allStatuses = statusParam.possibleValues.map((s: string) =>
+          s.toUpperCase()
+        );
+        logger.info(
+          `Available issue statuses from server: ${allStatuses.join(',')}`
+        );
+      } else {
+        throw new Error(
+          `Webservices list returned no possibleValues for ${statusParamKey}. ` +
+            `Raw param data: ${JSON.stringify(statusParam)}`
+        );
+      }
+    } catch (e) {
+      // Step 2: Fallback to hardcoded full status list if discovery fails
+      allStatuses = isLegacy
+        ? ['OPEN', 'REOPENED', 'CONFIRMED', 'RESOLVED', 'CLOSED']
+        : [
+            'OPEN',
+            'CONFIRMED',
+            'FALSE_POSITIVE',
+            'ACCEPTED',
+            'FIXED',
+            'IN_SANDBOX'
+          ];
+      logger.warn(
+        `Could not discover statuses from server, using fallback: ${allStatuses.join(',')}`
+      );
+      logger.debug(inspect(e, {depth: 3}));
+    }
+
+    // Step 3: Determine which deny-list to use
+    const defaultDenyList = isLegacy
+      ? SonarqubeResults.DEFAULT_DENY_LIST_LEGACY
+      : SonarqubeResults.DEFAULT_DENY_LIST_MODERN;
+    let denySet: Set<string>;
+
+    if (this.excludeIssueStatuses) {
+      // User-supplied deny-list REPLACES the defaults entirely
+      const userExclusions = this.excludeIssueStatuses
+        .split(',')
+        .map((s) => s.trim().toUpperCase())
+        .filter((s) => s.length > 0);
+      denySet = new Set(userExclusions);
+
+      // Smart nag: compare user list against defaults
+      const defaultSet = new Set(defaultDenyList);
+      const sameAsDefault =
+        defaultSet.size === denySet.size &&
+        [...defaultSet].every((s) => denySet.has(s));
+
+      if (sameAsDefault) {
+        logger.info(
+          `Exclusion list matches the defaults (${[...defaultSet].join(',')}). ` +
+            `You can omit --excludeIssueStatuses unless you want to be explicit.`
+        );
+      } else {
+        logger.warn(
+          `Custom status exclusions applied: ${userExclusions.join(',')} ` +
+            `(replaces defaults: ${defaultDenyList.join(',')}). ` +
+            `If this exclusion should be a default, please consider filing an issue at ` +
+            `https://github.com/mitre/heimdall2/issues`
+        );
+      }
+    } else {
+      // No user override — use defaults
+      denySet = new Set(defaultDenyList);
+      logger.info(
+        `Using default status exclusions: ${defaultDenyList.join(',')}`
+      );
+    }
+
+    // Step 4: Filter statuses and log the result
+    const excluded = allStatuses.filter((s) => denySet.has(s));
+    const result = allStatuses.filter((s) => !denySet.has(s));
+
+    if (result.length === 0) {
+      logger.warn(
+        `All statuses were excluded by the deny-list. This will likely return no results. ` +
+          `Available: ${allStatuses.join(',')} | Excluded: ${excluded.join(',')}`
+      );
+    }
+
+    logger.info(
+      `Querying with issue statuses: ${result.join(',')} (excluded: ${excluded.join(',')})`
+    );
+    return result.join(',');
+  }
+
   async getSearchResults<T extends SonarqubeVersion>(
     sonarqubeVersion: string
   ): Promise<Search<T>> {
     const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
+    const discoveredStatuses =
+      await this.discoverIssueStatuses(sonarqubeVersion);
     const PAGE_SIZE = 100;
 
     const createSearch = async (
@@ -915,12 +1043,9 @@ export class SonarqubeResults {
             [isBeforeSonarqubeVersion(sonarqubeVersion, '10.2.0')
               ? 'componentKeys'
               : 'components']: component,
-            ...(isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {
-              statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED'
-            }), // resolved is a manual designation implying that the user believes that the issue will be closed on next scan; however, for now it should still be considered an open finding for our purposes since at time of scan it was still a problem
-            ...(!isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0') && {
-              issueStatuses: 'OPEN,CONFIRMED,ACCEPTED,IN_SANDBOX'
-            }),
+            ...(isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0')
+              ? {statuses: discoveredStatuses}
+              : {issueStatuses: discoveredStatuses}),
             p: page,
             ps: pageSize,
             ...(this.branchName && {branch: this.branchName}),
