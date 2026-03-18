@@ -11,7 +11,7 @@ export function generateHostname(config: SplunkConfig): string {
 
 // Parse through valid Splunk HTTP errors and report failed request cause
 // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing#HTTP_Status_Codes
-export function handleSplunkErrorResponse(error: AxiosResponse): string {
+export function handleSplunkErrorResponse(error: AxiosResponse | unknown): string {
   switch (_.get(error, ['response', 'status'])) {
     case 400:
       return 'Malformed request received';
