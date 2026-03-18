@@ -140,42 +140,56 @@ export async function getSessionToken(
   };
 }
 
+function isAWSError(e: unknown): e is {name: string; message: string} {
+  return (
+    typeof e === 'object' &&
+    e !== null &&
+    'name' in e &&
+    'message' in e &&
+    typeof e.name === 'string' &&
+    typeof e.message === 'string'
+  );
+}
+
 /** Generates human readable versions of common AWS error codes.
  * The error class is untyped since they've distributed their error/exception classes all over.
  * If the code is not recognized, coughs it back up as an erroname
  */
-export function transcribeError(error: {
-  name: string;
-  message: string;
-}): string {
-  const {name, message} = error;
-  switch (name) {
-    case 'TokenRefreshRequired':
-    case 'ExpiredToken':
-      return 'Authorization expired. Please log back in.';
-    case 'InvalidAccessKeyId':
-      return 'Provided access key is invalid.';
-    case 'AccessDenied':
-      return `Access denied. This likely means that your account does not have access to the specified bucket, or that it requires MFA authentication.`;
-    case 'AccountProblem':
-      return `Account problem detected: ${message}`;
-    case 'CredentialsNotSupported':
-      return 'Provided credentials not supported.';
-    case 'InvalidBucketName':
-      return 'Invalid bucket name! Please ensure you spelled it correctly.';
-    case 'NetworkingError':
-      return 'Networking error. This may be because the provided bucket name does not exist. Please ensure you have spelled it correctly.';
-    case 'InvalidBucketState':
-      return 'Invalid bucket state! Contact your AWS administrator.';
-    case 'ValidationError':
-      return `Further validation required: ${message}`;
-    case 'SignatureDoesNotMatch':
-      return 'The provided secret token does not match access token. Please ensure that it is correct.';
-    case 'InvalidToken':
-      return 'Your session token has expired. Please log back in and try again.';
-    case 'InvalidClientTokenId':
-      return 'The provided access token is invalid. Please ensure that it is correct.';
-    default:
-      return `Unknown error ${name}. Message: ${message}`;
+export function transcribeError(
+  error: {name: string; message: string} | unknown
+): string {
+  if (isAWSError(error)) {
+    const {name, message} = error;
+    switch (name) {
+      case 'TokenRefreshRequired':
+      case 'ExpiredToken':
+        return 'Authorization expired. Please log back in.';
+      case 'InvalidAccessKeyId':
+        return 'Provided access key is invalid.';
+      case 'AccessDenied':
+        return `Access denied. This likely means that your account does not have access to the specified bucket, or that it requires MFA authentication.`;
+      case 'AccountProblem':
+        return `Account problem detected: ${message}`;
+      case 'CredentialsNotSupported':
+        return 'Provided credentials not supported.';
+      case 'InvalidBucketName':
+        return 'Invalid bucket name! Please ensure you spelled it correctly.';
+      case 'NetworkingError':
+        return 'Networking error. This may be because the provided bucket name does not exist. Please ensure you have spelled it correctly.';
+      case 'InvalidBucketState':
+        return 'Invalid bucket state! Contact your AWS administrator.';
+      case 'ValidationError':
+        return `Further validation required: ${message}`;
+      case 'SignatureDoesNotMatch':
+        return 'The provided secret token does not match access token. Please ensure that it is correct.';
+      case 'InvalidToken':
+        return 'Your session token has expired. Please log back in and try again.';
+      case 'InvalidClientTokenId':
+        return 'The provided access token is invalid. Please ensure that it is correct.';
+      default:
+        return `Unknown error ${name}. Message: ${message}`;
+    }
+  } else {
+    return `Unknown error: ${error instanceof Error ? error.message : JSON.stringify(error, null, 2)}`;
   }
 }
