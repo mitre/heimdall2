@@ -124,7 +124,11 @@ export default class AuthStep extends Vue {
       if (error !== 'Failed to login - Incorrect username or password') {
         this.$emit('error');
       }
-      SnackbarModule.failure(error);
+      SnackbarModule.failure(
+        typeof error === 'string'
+          ? error
+          : (JSON.stringify(error, null, 2) ?? String(error))
+      );
     }
   }
 
