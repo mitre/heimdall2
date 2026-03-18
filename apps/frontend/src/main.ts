@@ -1,9 +1,3 @@
-import App from '@/App.vue';
-import vuetify from '@/plugins/vuetify';
-import router from '@/router';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
-import store from '@/store/store';
 import axios from 'axios';
 import 'core-js/stable';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
@@ -11,6 +5,12 @@ import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import Vuetify from 'vuetify/lib';
 import {Resize} from 'vuetify/lib/directives';
+import App from '@/App.vue';
+import vuetify from '@/plugins/vuetify';
+import router from '@/router';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
+import store from '@/store/store';
 
 Vue.config.productionTip = false;
 
