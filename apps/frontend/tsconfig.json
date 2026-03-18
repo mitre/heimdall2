@@ -2,12 +2,25 @@
   "extends": "../../tsconfig.json",
 
   "compilerOptions": {
-    "module": "es2020",
+    "target": "esnext",
+    "lib": ["esnext", "dom", "dom.iterable"],
+
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    "rootDir": ".",
+
     "strict": true,
+    "noImplicitAny": true,
+
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+
+    "skipLibCheck": true,
+
     "paths": {
       "@/*": ["src/*"]
-    },
-    "lib": ["ES2021", "dom", "dom.iterable"]
+    }
   },
 
   "include": ["**/*.ts", "**/*.vue"]
