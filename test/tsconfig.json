@@ -3,9 +3,7 @@
 
   "compilerOptions": {
     "rootDir": ".",
-    "types": ["cypress", "cypress-wait-until"],
-
-    "outDir": "lib"
+    "types": ["cypress", "cypress-wait-until"]
   },
 
   "include": [

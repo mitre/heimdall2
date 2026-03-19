@@ -8,5 +8,5 @@
   },
 
   "include": ["**/*.ts"],
-  "exclude": ["lib"]
+  "exclude": ["lib", "node_modules"]
 }
