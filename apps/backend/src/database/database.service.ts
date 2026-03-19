@@ -12,11 +12,7 @@ export class DatabaseService {
   }
 
   async cleanAll(): Promise<void> {
-    await Promise.all(
-      Object.values(this.sequelize.models).map((model) =>
-        model.destroy({where: {}})
-      )
-    );
+    await this.sequelize.truncate({cascade: true, restartIdentity: true});
   }
 
   getDelta<T extends DeltaArgs>(
