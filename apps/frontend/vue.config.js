@@ -72,17 +72,7 @@ module.exports = {
         'process.env.ISSUES': `"${issues}"`
       }),
       new NodePolyfillPlugin({
-        includeAliases: [
-          'crypto',
-          'path',
-          'http',
-          'https',
-          'os',
-          'zlib',
-          'process',
-          'Buffer',
-          'stream'
-        ]
+        additionalAliases: ['process']
       })
     ]
   },

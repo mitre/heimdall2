@@ -434,7 +434,7 @@ GEM
     inifile (3.0.0)
     io-console (0.8.2)
     jmespath (1.6.2)
-    json (2.19.1)
+    json (2.19.2)
     jwt (2.10.2)
       base64
     language_server-protocol (3.17.0.5)
