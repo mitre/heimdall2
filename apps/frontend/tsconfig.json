@@ -4,11 +4,10 @@
   "compilerOptions": {
     "lib": ["esnext", "dom", "dom.iterable"],
 
+    "baseUrl": "./",
     "module": "esnext",
     "moduleResolution": "node",
-
     "rootDir": ".",
-
     "paths": {
       "@/*": ["src/*"]
     }
