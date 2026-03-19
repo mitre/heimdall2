@@ -22,8 +22,7 @@ import {OidcStrategy} from './oidc.strategy';
 import {OktaStrategy} from './okta.strategy';
 
 async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
-  const {HttpsProxyAgent} =
-    (await import('https-proxy-agent')) as typeof import('https-proxy-agent');
+  const {HttpsProxyAgent} = await import('https-proxy-agent');
   return new HttpsProxyAgent(proxyUrl);
 }
 
