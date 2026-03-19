@@ -1,7 +1,7 @@
+import type {Agent} from 'http';
 import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from '@govtechsg/passport-openidconnect';
-import {HttpsProxyAgent} from 'https-proxy-agent';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
@@ -43,7 +43,8 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
-    private readonly groupsService: GroupsService
+    private readonly groupsService: GroupsService,
+    private readonly httpsAgent?: Agent
   ) {
     super(
       {
@@ -67,10 +68,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
           configService.get('OIDC_USE_HTTPS_PROXY') === 'true'
             ? true
             : undefined,
-        agent:
-          configService.get('OIDC_USE_HTTPS_PROXY') === 'true'
-            ? new HttpsProxyAgent(configService.get('HTTPS_PROXY') ?? '')
-            : undefined
+        agent: httpsAgent
       },
       // using the 9-arity function so that we can access the underlying JSON response and extract the 'email_verified' attribute
       async (

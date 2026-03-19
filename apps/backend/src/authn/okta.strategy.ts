@@ -1,7 +1,7 @@
+import type {Agent} from 'http';
 import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from '@govtechsg/passport-openidconnect';
-import {HttpsProxyAgent} from 'https-proxy-agent';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
@@ -38,7 +38,8 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
 
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly httpsAgent?: Agent
   ) {
     super(
       {
@@ -64,10 +65,7 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
           configService.get('OKTA_USE_HTTPS_PROXY') === 'true'
             ? true
             : undefined,
-        agent:
-          configService.get('OKTA_USE_HTTPS_PROXY') === 'true'
-            ? new HttpsProxyAgent(configService.get('HTTPS_PROXY') ?? '')
-            : undefined
+        agent: httpsAgent
       },
       // Okta has no concept of a 'verified' email - the account has to have an email address associated with it - which is why we can use the 3-arity function since we don't need access to the underlying JSON response
       async (
