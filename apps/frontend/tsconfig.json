@@ -3,6 +3,7 @@
 
   "compilerOptions": {
     "lib": ["esnext", "dom", "dom.iterable"],
+    "useDefineForClassFields": false,
 
     "baseUrl": "./",
     "module": "esnext",
