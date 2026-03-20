@@ -279,24 +279,24 @@
     "@smithy/util-utf8" "^2.0.0"
     tslib "^2.6.2"
 
-"@aws-sdk/client-config-service@3.1012.0":
-  version "3.1012.0"
-  resolved "https://registry.npmjs.org/@aws-sdk/client-config-service/-/client-config-service-3.1012.0.tgz#c071478beeb0f074b83ee1107fe9dc39c580f404"
-  integrity sha512-/Vc7g4FON0nwoUFqzXD84QB3VGs+oAnoIXPibzHiRVzkflsIb6l3R3aQO6jZ+YUuiZ3xV3qup+HTq9UWFw/5jg==
+"@aws-sdk/client-config-service@3.1013.0":
+  version "3.1013.0"
+  resolved "https://registry.npmjs.org/@aws-sdk/client-config-service/-/client-config-service-3.1013.0.tgz#63a7240da6934d94ababc5e04179a4a7a6fc5b5b"
+  integrity sha512-3wTqmxoou0Ga2zL74zqQBfT0WszN1Nf9amQ16gwE0/3WpiQbnlCuOGkvj2GGpS/txvnnOL5VjOCPIGCgV3haDA==
   dependencies:
     "@aws-crypto/sha256-browser" "5.2.0"
     "@aws-crypto/sha256-js" "5.2.0"
-    "@aws-sdk/core" "^3.973.21"
-    "@aws-sdk/credential-provider-node" "^3.972.22"
+    "@aws-sdk/core" "^3.973.22"
+    "@aws-sdk/credential-provider-node" "^3.972.23"
     "@aws-sdk/middleware-host-header" "^3.972.8"
     "@aws-sdk/middleware-logger" "^3.972.8"
     "@aws-sdk/middleware-recursion-detection" "^3.972.8"
-    "@aws-sdk/middleware-user-agent" "^3.972.22"
+    "@aws-sdk/middleware-user-agent" "^3.972.23"
     "@aws-sdk/region-config-resolver" "^3.972.8"
     "@aws-sdk/types" "^3.973.6"
     "@aws-sdk/util-endpoints" "^3.996.5"
     "@aws-sdk/util-user-agent-browser" "^3.972.8"
-    "@aws-sdk/util-user-agent-node" "^3.973.8"
+    "@aws-sdk/util-user-agent-node" "^3.973.9"
     "@smithy/config-resolver" "^4.4.11"
     "@smithy/core" "^3.23.12"
     "@smithy/fetch-http-handler" "^5.3.15"
@@ -430,7 +430,7 @@
     "@smithy/util-utf8" "^4.2.2"
     tslib "^2.6.2"
 
-"@aws-sdk/core@^3.973.21", "@aws-sdk/core@^3.973.22":
+"@aws-sdk/core@^3.973.22":
   version "3.973.22"
   resolved "https://registry.npmjs.org/@aws-sdk/core/-/core-3.973.22.tgz#61b09e0ec965b071991b92d31ca463cad2db5ad9"
   integrity sha512-lY6g5L95jBNgOUitUhfV2N/W+i08jHEl3xuLODYSQH5Sf50V+LkVYBSyZRLtv2RyuXZXiV7yQ+acpswK1tlrOA==
@@ -518,7 +518,7 @@
     "@smithy/types" "^4.13.1"
     tslib "^2.6.2"
 
-"@aws-sdk/credential-provider-node@^3.972.22", "@aws-sdk/credential-provider-node@^3.972.23":
+"@aws-sdk/credential-provider-node@^3.972.23":
   version "3.972.23"
   resolved "https://registry.npmjs.org/@aws-sdk/credential-provider-node/-/credential-provider-node-3.972.23.tgz#25948c43ca8e369263a8e7508362b25003bcc6fc"
   integrity sha512-U8tyLbLOZItuVWTH0ay9gWo4xMqZwqQbg1oMzdU4FQSkTpqXemm4X0uoKBR6llqAStgBp30ziKFJHTA43l4qMw==
@@ -686,7 +686,7 @@
     "@smithy/types" "^4.13.1"
     tslib "^2.6.2"
 
-"@aws-sdk/middleware-user-agent@^3.972.22", "@aws-sdk/middleware-user-agent@^3.972.23":
+"@aws-sdk/middleware-user-agent@^3.972.23":
   version "3.972.23"
   resolved "https://registry.npmjs.org/@aws-sdk/middleware-user-agent/-/middleware-user-agent-3.972.23.tgz#c6fc3993b11bbd7c5c45e164004baf5de545909d"
   integrity sha512-HQu8QoqGZZTvg0Spl9H39QTsSMFwgu+8yz/QGKndXFLk9FZMiCiIgBCVlTVKMDvVbgqIzD9ig+/HmXsIL2Rb+g==
@@ -823,7 +823,7 @@
     bowser "^2.11.0"
     tslib "^2.6.2"
 
-"@aws-sdk/util-user-agent-node@^3.973.8", "@aws-sdk/util-user-agent-node@^3.973.9":
+"@aws-sdk/util-user-agent-node@^3.973.9":
   version "3.973.9"
   resolved "https://registry.npmjs.org/@aws-sdk/util-user-agent-node/-/util-user-agent-node-3.973.9.tgz#413471396678a9a3b4f723d7f300718b519c02dc"
   integrity sha512-jeFqqp8KD/P5O+qeKxyGeu7WEVIZFNprnkaDjGmBOjwxYwafCBhpxTgV1TlW6L8e76Vh/siNylNmN/OmSIFBUQ==
@@ -8939,6 +8939,15 @@ dom-serializer@^2.0.0:
     domhandler "^5.0.2"
     entities "^4.2.0"
 
+dom-serializer@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/dom-serializer/-/dom-serializer-3.0.0.tgz#adbe9af1f2734d4123a29c87e510c63ba37772c5"
+  integrity sha512-x+9D6nkC8tdXOQUS32egtZpZFLP90+HBZmWjuT920srbJvD/zPgFB9t4k3pEhlw5BQrXStQtRc1Y1zuriXk+Nw==
+  dependencies:
+    domelementtype "^3.0.0"
+    domhandler "^6.0.0"
+    entities "^8.0.0"
+
 domain-browser@4.22.0:
   version "4.22.0"
   resolved "https://registry.npmjs.org/domain-browser/-/domain-browser-4.22.0.tgz#6ddd34220ec281f9a65d3386d267ddd35c491f9f"
@@ -8954,6 +8963,11 @@ domelementtype@^2.0.1, domelementtype@^2.2.0, domelementtype@^2.3.0:
   resolved "https://registry.npmjs.org/domelementtype/-/domelementtype-2.3.0.tgz#5c45e8e869952626331d7aab326d01daf65d589d"
   integrity sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==
 
+domelementtype@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/domelementtype/-/domelementtype-3.0.0.tgz#e6c0a24bd39ca5eb7ea67a98d2f699497d7bcc55"
+  integrity sha512-umCQid3jKbDmVjx8jGaW7uUykm4DEUeyV21hPxNMo2nV955DhUThwqyOIDtreepP31hl84X7G5U9ZfsWvIB3Pg==
+
 domhandler@^4.0.0, domhandler@^4.2.0, domhandler@^4.3.1:
   version "4.3.1"
   resolved "https://registry.npmjs.org/domhandler/-/domhandler-4.3.1.tgz#8d792033416f59d68bc03a5aa7b018c1ca89279c"
@@ -8967,6 +8981,13 @@ domhandler@^5.0.2, domhandler@^5.0.3:
   integrity sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==
   dependencies:
     domelementtype "^2.3.0"
+
+domhandler@^6.0.0:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/domhandler/-/domhandler-6.0.1.tgz#75f351a03a6e10c35e08418f9cf0d287e00797cf"
+  integrity sha512-gYzvtM72ZtxQO0T048kd6HWSbbGCNOUwcnfQ01cqIJ4X2IYKFFHZ5mKvrQETcFXxsRObZulDaKmy//R7TPtsBg==
+  dependencies:
+    domelementtype "^3.0.0"
 
 domutils@^1.7.0:
   version "1.7.0"
@@ -8993,6 +9014,15 @@ domutils@^3.0.1, domutils@^3.2.2:
     dom-serializer "^2.0.0"
     domelementtype "^2.3.0"
     domhandler "^5.0.3"
+
+domutils@^4.0.0:
+  version "4.0.2"
+  resolved "https://registry.npmjs.org/domutils/-/domutils-4.0.2.tgz#0c1ac1fdbe8f554a60a6f5eb143ee85630327c94"
+  integrity sha512-qI4JLRKnSzqFqr7hAlS5xQDusBCjKSEG4t4+7aNrIQMHBcsC2TGEhuyABJdYkgSewL57PNLYEiibY2iPKhKpaA==
+  dependencies:
+    dom-serializer "^3.0.0"
+    domelementtype "^3.0.0"
+    domhandler "^6.0.0"
 
 dot-case@^3.0.4:
   version "3.0.4"
@@ -9277,6 +9307,11 @@ entities@^7.0.1:
   version "7.0.1"
   resolved "https://registry.npmjs.org/entities/-/entities-7.0.1.tgz#26e8a88889db63417dcb9a1e79a3f1bc92b5976b"
   integrity sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==
+
+entities@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.npmjs.org/entities/-/entities-8.0.0.tgz#c1df5fe3602429747fa233d0dd26f142f0ce4743"
+  integrity sha512-zwfzJecQ/Uej6tusMqwAqU/6KL2XaB2VZ2Jg54Je6ahNBGNH6Ek6g3jjNCF0fG9EWQKGZNddNjU5F1ZQn/sBnA==
 
 env-paths@^2.2.0, env-paths@^2.2.1:
   version "2.2.1"
@@ -10147,6 +10182,15 @@ fast-xml-parser@5.5.6:
     fast-xml-builder "^1.1.4"
     path-expression-matcher "^1.1.3"
     strnum "^2.1.2"
+
+fast-xml-parser@5.5.7:
+  version "5.5.7"
+  resolved "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-5.5.7.tgz#e1ddc86662d808450a19cf2fb6ccc9c3c9933c5d"
+  integrity sha512-LteOsISQ2GEiDHZch6L9hB0+MLoYVLToR7xotrzU0opCICBkxOPgHAy1HxAvtxfJNXDJpgAsQN30mkrfpO2Prg==
+  dependencies:
+    fast-xml-builder "^1.1.4"
+    path-expression-matcher "^1.1.3"
+    strnum "^2.2.0"
 
 fastq@^1.6.0:
   version "1.20.1"
@@ -11332,7 +11376,7 @@ html-webpack-plugin@^5.1.0:
     pretty-error "^4.0.0"
     tapable "^2.0.0"
 
-htmlparser2@^10.0.0, htmlparser2@^10.1, htmlparser2@^10.1.0:
+htmlparser2@^10.1, htmlparser2@^10.1.0:
   version "10.1.0"
   resolved "https://registry.npmjs.org/htmlparser2/-/htmlparser2-10.1.0.tgz#fe3f2e12c73b6e462d4e10395db9c1119e4d6ae4"
   integrity sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==
@@ -11341,6 +11385,16 @@ htmlparser2@^10.0.0, htmlparser2@^10.1, htmlparser2@^10.1.0:
     domhandler "^5.0.3"
     domutils "^3.2.2"
     entities "^7.0.1"
+
+htmlparser2@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.npmjs.org/htmlparser2/-/htmlparser2-11.0.0.tgz#eae6059a5e6913a16164bc63c518a097c4d070ca"
+  integrity sha512-dhrUOrq2hZwr75OOIEXskUwOI9+EOkYc7BE+DlPvNuku2nuICjppK4nJc9O5Dv4N1+SEHmrYFCaZ/tAiCWWfFQ==
+  dependencies:
+    domelementtype "^3.0.0"
+    domhandler "^6.0.0"
+    domutils "^4.0.0"
+    entities "^8.0.0"
 
 htmlparser2@^6.1.0:
   version "6.1.0"
@@ -17822,7 +17876,7 @@ strip-outer@^1.0.0:
   dependencies:
     escape-string-regexp "^1.0.2"
 
-strnum@^2.1.2:
+strnum@^2.1.2, strnum@^2.2.0:
   version "2.2.1"
   resolved "https://registry.npmjs.org/strnum/-/strnum-2.2.1.tgz#d28f896b4ef9985212494ce8bcf7ca304fad8368"
   integrity sha512-BwRvNd5/QoAtyW1na1y1LsJGQNvRlkde6Q/ipqqEaivoMdV+B1OMOTVdwR+N/cwVUcIt9PYyHmV8HyexCZSupg==
