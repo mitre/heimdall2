@@ -125,9 +125,11 @@ export default class AuthStep extends Vue {
         this.$emit('error');
       }
       SnackbarModule.failure(
-        typeof error === 'string'
-          ? error
-          : (JSON.stringify(error, null, 2) ?? String(error))
+        error instanceof Error
+          ? error.message
+          : typeof error === 'string'
+            ? error
+            : String(error)
       );
     }
   }
