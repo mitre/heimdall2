@@ -34,6 +34,15 @@ export default class AppConfig {
     return process.env[key] || this.envConfig[key];
   }
 
+  getExternalUrl(): string {
+    const external_url = this.get('EXTERNAL_URL');
+    if (external_url !== undefined) {
+      return external_url;
+    } else {
+      return '';
+    }
+  }
+
   getSplunkHostUrl(): string {
     const splunk_host_url = this.get('SPLUNK_HOST_URL');
     if (splunk_host_url !== undefined) {

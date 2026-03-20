@@ -5,6 +5,7 @@ export interface IStartupSettings {
   readonly classificationBannerText: string;
   readonly classificationBannerTextColor: string;
   readonly enabledOAuth: string[];
+  readonly externalUrl: string;
   readonly oidcName: string;
   readonly ldap: boolean;
   readonly registrationEnabled: boolean;

@@ -7,6 +7,7 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly classificationBannerText: string;
   readonly classificationBannerTextColor: string;
   readonly enabledOAuth: string[];
+  readonly externalUrl: string;
   readonly oidcName: string;
   readonly ldap: boolean;
   readonly registrationEnabled: boolean;
@@ -22,6 +23,7 @@ export class StartupSettingsDto implements IStartupSettings {
     this.classificationBannerText = settings.classificationBannerText;
     this.classificationBannerTextColor = settings.classificationBannerTextColor;
     this.enabledOAuth = settings.enabledOAuth;
+    this.externalUrl = settings.externalUrl;
     this.oidcName = settings.oidcName;
     this.ldap = settings.ldap;
     this.registrationEnabled = settings.registrationEnabled;

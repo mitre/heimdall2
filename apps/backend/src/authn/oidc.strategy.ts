@@ -55,7 +55,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
         userInfoURL: configService.get('OIDC_USER_INFO_URL') || 'disabled',
         clientID: configService.get('OIDC_CLIENTID') || 'disabled',
         clientSecret: configService.get('OIDC_CLIENT_SECRET') || 'disabled',
-        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc_callback`,
+        callbackURL: `${configService.getExternalUrl()}/authn/oidc_callback`,
         pkce:
           configService.get('OIDC_USES_PKCE_S256') === 'true'
             ? 'S256'
