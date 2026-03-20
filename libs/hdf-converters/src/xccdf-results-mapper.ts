@@ -6,7 +6,7 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml,
+  buildParseHtmlFunc,
   parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
@@ -23,6 +23,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 const CCI_NIST_MAPPING = new CciNistMapping();
+
+let parseHtml: (input: unknown) => string;
 
 function asArray<T>(arg: T | T[]): T[] {
   if (Array.isArray(arg)) {
@@ -223,6 +225,16 @@ function getRulesInBenchmark(input: unknown): Record<string, unknown>[] {
     getRulesInGroup(allRules, benchmark, group);
   }
   return allRules;
+}
+
+export class XCCDFResultsResults {
+  constructor(readonly scapXml: string, readonly withRaw = false) {}
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    parseHtml = await buildParseHtmlFunc();
+
+    return (new XCCDFResultsMapper(this.scapXml, this.withRaw)).toHdf();
+  }
 }
 
 export class XCCDFResultsMapper extends BaseConverter {

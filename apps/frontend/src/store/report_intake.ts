@@ -9,21 +9,21 @@ import {readFileAsync} from '@/utilities/async_util';
 import {
   AnchoreGrypeMapper,
   ASFFResults as ASFFResultsMapper,
-  BurpSuiteMapper,
+  BurpSuiteResults,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
   CycloneDXSBOMResults,
   DBProtectMapper,
   DependencyTrackMapper,
   fingerprint,
-  FortifyMapper,
+  FortifyResults,
   GosecMapper,
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
   MsftSecureScoreResults,
   NessusResults,
-  NetsparkerMapper,
+  NetsparkerResults,
   NeuVectorMapper,
   NiktoMapper,
   PrismaMapper,
@@ -33,8 +33,8 @@ import {
   TrufflehogResults,
   TwistlockResults,
   VeracodeMapper,
-  XCCDFResultsMapper,
-  ZapMapper
+  XCCDFResultsResults,
+  ZapResults
 } from '@mitre/hdf-converters';
 import axios from 'axios';
 import {
@@ -240,7 +240,7 @@ export class InspecIntake extends VuexModule {
           new ConveyorResultsMapper(convertOptions.data).toHdf()
         );
       case INPUT_TYPES.ZAP:
-        return new ZapMapper(convertOptions.data).toHdf();
+        return new ZapResults(convertOptions.data).toHdf();
       case INPUT_TYPES.NIKTO:
         return new NiktoMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.SARIF:
@@ -252,9 +252,9 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.NESSUS:
         return new NessusResults(convertOptions.data).toHdf();
       case INPUT_TYPES.XCCDF:
-        return new XCCDFResultsMapper(convertOptions.data).toHdf();
+        return new XCCDFResultsResults(convertOptions.data).toHdf();
       case INPUT_TYPES.BURP:
-        return new BurpSuiteMapper(convertOptions.data).toHdf();
+        return new BurpSuiteResults(convertOptions.data).toHdf();
       case INPUT_TYPES.IONCHANNEL:
         return new IonChannelMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.SCOUTSUITE:
@@ -262,13 +262,13 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.DB_PROTECT:
         return new DBProtectMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.NETSPARKER:
-        return new NetsparkerMapper(convertOptions.data).toHdf();
+        return new NetsparkerResults(convertOptions.data).toHdf();
       case INPUT_TYPES.PRISMA:
         return new PrismaMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.VERACODE:
         return new VeracodeMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.FORTIFY:
-        return new FortifyMapper(convertOptions.data).toHdf();
+        return new FortifyResults(convertOptions.data).toHdf();
       case INPUT_TYPES.CHECKLIST:
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:

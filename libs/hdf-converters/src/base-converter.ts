@@ -1,6 +1,5 @@
 import {createHash} from 'crypto';
 import {XMLParser} from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import Papa from 'papaparse';
@@ -40,18 +39,22 @@ export function generateHash(data: string, algorithm = 'sha256'): string {
   return hash.update(data).digest('hex');
 }
 
-export function parseHtml(input: unknown): string {
-  const textData: string[] = [];
-  const myParser = new htmlparser.Parser({
-    ontext(text: string) {
-      textData.push(text);
+export async function buildParseHtmlFunc(): Promise<(input: unknown) => string> {
+  const htmlparser = await import('htmlparser2');
+  return (input: unknown): string => {
+    if (!_.isString(input)) {
+      return '';
     }
-  });
-  if (typeof input === 'string') {
-    myParser.write(input);
-    myParser.end();
-  }
-  return textData.join('');
+    const data: string[] = [];
+    const parser = new htmlparser.Parser({
+      ontext(text: string) {
+        data.push(text);
+      }
+    });
+    parser.write(String(input));
+    parser.end();
+    return data.join('');
+  };
 }
 
 export function parseXml(

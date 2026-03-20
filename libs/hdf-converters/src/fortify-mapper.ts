@@ -5,7 +5,7 @@ import {
   BaseConverter,
   ILookupPath,
   MappedTransform,
-  parseHtml,
+  buildParseHtmlFunc,
   parseXml
 } from './base-converter';
 import {getCCIsForNISTTags} from './utils/global';
@@ -13,6 +13,8 @@ import {getCCIsForNISTTags} from './utils/global';
 const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';
 const DEFAULT_NIST_TAG: string[] = [];
+
+let parseHtml: (input: unknown) => string;
 
 function impactMapping(input: Record<string, unknown>, id: string): number {
   if (Array.isArray(input)) {
@@ -115,6 +117,16 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
     return element;
   });
   return input as ExecJSON.Control[];
+}
+
+export class FortifyResults {
+  constructor(readonly fvdl: string, readonly withRaw = false) {}
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    parseHtml = await buildParseHtmlFunc();
+
+    return (new FortifyMapper(this.fvdl, this.withRaw)).toHdf();
+  }
 }
 
 export class FortifyMapper extends BaseConverter {

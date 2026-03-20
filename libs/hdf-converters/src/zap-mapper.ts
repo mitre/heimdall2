@@ -5,7 +5,7 @@ import {
   BaseConverter,
   ILookupPath,
   MappedTransform,
-  parseHtml
+  buildParseHtmlFunc,
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {
@@ -14,6 +14,8 @@ import {
 } from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
+
+let parseHtml: (input: unknown) => string;
 
 function filterSite<T>(input: Array<T>, name?: string) {
   // Choose passed site if provided
@@ -93,6 +95,16 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
       });
   });
   return input as ExecJSON.Control[];
+}
+
+export class ZapResults {
+  constructor(readonly zapJson: string, readonly name?: string, readonly withRaw = false) {}
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    parseHtml = await buildParseHtmlFunc();
+
+    return (new ZapMapper(this.zapJson, this.name, this.withRaw)).toHdf();
+  }
 }
 
 export class ZapMapper extends BaseConverter {

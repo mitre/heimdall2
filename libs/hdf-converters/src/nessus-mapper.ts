@@ -6,7 +6,7 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml,
+  buildParseHtmlFunc,
   parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
@@ -33,6 +33,8 @@ const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG: string[] = [];
+
+let parseHtml: (input: unknown) => string;
 
 let policyName: string;
 let version: string;
@@ -216,7 +218,9 @@ export class NessusResults {
     this.withRaw = withRaw;
   }
 
-  toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
+  async toHdf(): Promise<ExecJSON.Execution[] | ExecJSON.Execution> {
+    parseHtml = await buildParseHtmlFunc();
+
     const results: ExecJSON.Execution[] = [];
     policyName = _.get(
       this.data,
