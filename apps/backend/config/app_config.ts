@@ -36,10 +36,10 @@ export default class AppConfig {
 
   getExternalUrl(): string {
     const external_url = this.get('EXTERNAL_URL');
-    if (external_url !== undefined) {
-      return external_url;
-    } else {
+    if (external_url === undefined) {
       return '';
+    } else {
+      return external_url;
     }
   }
 

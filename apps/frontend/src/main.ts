@@ -31,7 +31,7 @@ new Vue({
       (error) => {
         let origin = '';
         try {
-          origin = new URL(error?.config?.url, window.location.origin).origin;
+          origin = new URL(error?.config?.url, globalThis.location.origin).origin;
         } catch {
           origin = '';
         }
