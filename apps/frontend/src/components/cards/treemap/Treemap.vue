@@ -167,7 +167,7 @@ export default class Treemap extends Vue {
   up(): void {
     if (this.value.length) {
       // Slice and dice, baybee
-      this.set_path(this.value.slice(0, this.value.length - 1));
+      this.set_path(this.value.slice(0, -1));
 
       // Also clear selected
       this.syncedSelectedControl = null;
