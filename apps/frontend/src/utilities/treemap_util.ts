@@ -4,7 +4,7 @@
 
 import {ColorHack} from '@/store/color_hack';
 import Chroma from 'chroma-js';
-import {hierarchy, HierarchyNode} from 'd3';
+import {hierarchy, HierarchyNode} from 'd3-hierarchy';
 import {
   ContextualizedControl,
   FULL_NIST_HIERARCHY,
