@@ -15150,7 +15150,7 @@ passport-oauth1@1.x.x:
     passport-strategy "1.x.x"
     utils-merge "1.x.x"
 
-passport-oauth2@1.x.x, passport-oauth2@^1.4.0, passport-oauth2@^1.5.0:
+passport-oauth2@1.x.x, passport-oauth2@^1.4.0:
   version "1.8.0"
   resolved "https://registry.npmjs.org/passport-oauth2/-/passport-oauth2-1.8.0.tgz#55725771d160f09bbb191828d5e3d559eee079c8"
   integrity sha512-cjsQbOrXIDE4P8nNb3FQRCCmJJ/utnFKEz2NX209f7KOHPoX18gF7gBzBbLLsj2/je4KrgiwLLGjf0lm9rtTBA==
