@@ -4546,13 +4546,6 @@
   resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.8.tgz#958b91c991b1867ced318bedea0e215ee050726e"
   integrity sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==
 
-"@types/express-rate-limit@^6.0.0":
-  version "6.0.2"
-  resolved "https://registry.npmjs.org/@types/express-rate-limit/-/express-rate-limit-6.0.2.tgz#88c2d577cf8463568986e888b9697d82d6a69a88"
-  integrity sha512-e1xZLOOlxCDvplAGq7rDcXtbdBu2CWRsMjaIu1LVqGxWtKvwr884YE5mPs3IvHeG/OMDhf24oTaqG5T1bV3rBQ==
-  dependencies:
-    express-rate-limit "*"
-
 "@types/express-serve-static-core@*", "@types/express-serve-static-core@^5.0.0":
   version "5.1.1"
   resolved "https://registry.npmjs.org/@types/express-serve-static-core/-/express-serve-static-core-5.1.1.tgz#1a77faffee9572d39124933259be2523837d7eaa"
@@ -9944,7 +9937,7 @@ express-history-api-fallback@^2.2.1:
   resolved "https://registry.npmjs.org/express-history-api-fallback/-/express-history-api-fallback-2.2.1.tgz#3a2ad27f7bebc90fc533d110d7c6d83097bcd057"
   integrity sha512-swxwm3aP8vrOOvlzOdZvHlSZtJGwHKaY94J6AkrAgCTmcbko3IRwbkhLv2wKV1WeZhjxX58aLMpP3atDBnKuZg==
 
-express-rate-limit@*, express-rate-limit@^8.0.0:
+express-rate-limit@^8.0.0:
   version "8.3.1"
   resolved "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-8.3.1.tgz#0aaba098eadd40f6737f30a98e6b16fa1a29edfb"
   integrity sha512-D1dKN+cmyPWuvB+G2SREQDzPY1agpBIcTa9sJxOPMCNeH3gwzhqJRDWCXW3gg0y//+LQ/8j52JbMROWyrKdMdw==
