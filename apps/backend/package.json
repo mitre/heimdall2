@@ -82,7 +82,6 @@
     "sequelize": "^6.31.0",
     "sequelize-cli": "^6.2.0",
     "sequelize-typescript": "^2.0.0",
-    "ts-loader": "^9.1.0",
     "tsx": "^4.7.1",
     "uuid": "^11.0.2",
     "winston": "^3.3.3"
