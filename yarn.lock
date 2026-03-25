@@ -4733,7 +4733,7 @@
   dependencies:
     "@types/express" "*"
 
-"@types/mustache@^4.1.1", "@types/mustache@^4.1.2":
+"@types/mustache@^4.1.2":
   version "4.2.6"
   resolved "https://registry.npmjs.org/@types/mustache/-/mustache-4.2.6.tgz#9d4f903f4ad373699b253aa1369727bc5042811f"
   integrity sha512-t+8/QWTAhOFlrF1IVZqKnMRJi84EgkIK5Kh0p2JV4OLywUvCwJPFxbJAl7XAow7DVIHsF+xW9f1MVzg0L6Szjw==
