@@ -975,9 +975,7 @@ export class SonarqubeResults {
 
       // Smart nag: compare user list against defaults
       const defaultSet = new Set(defaultDenyList);
-      const sameAsDefault =
-        defaultSet.size === denySet.size &&
-        [...defaultSet].every((s) => denySet.has(s));
+      const sameAsDefault = defaultSet.symmetricDifference(denySet).size === 0;
 
       if (sameAsDefault) {
         logger.info(
