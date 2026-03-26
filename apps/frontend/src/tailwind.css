@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@plugin 'tw-elements/dist/plugin.cjs';
+@plugin 'tw-elements/plugin.cjs';
 
 @source '../public/static/export/template.html';
 
