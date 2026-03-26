@@ -84,7 +84,7 @@
     "sequelize-cli": "^6.2.0",
     "sequelize-typescript": "^2.0.0",
     "tsx": "^4.7.1",
-    "uuid": "^11.0.2",
+    "uuid": "^13.0.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
