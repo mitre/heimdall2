@@ -281,7 +281,7 @@
 
 "@aws-sdk/client-config-service@3.1017.0":
   version "3.1017.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1017.0.tgz#cc0b5f2af4769d1f985aa63821cca2c553c93dbb"
+  resolved "https://registry.npmjs.org/@aws-sdk/client-config-service/-/client-config-service-3.1017.0.tgz#cc0b5f2af4769d1f985aa63821cca2c553c93dbb"
   integrity sha512-bIjlyXtMH35xH+cXR50Sl1nfUoe9bPfJ1ofjoy3uzgobKmDS7o6zDLLe9iSO8ujdimddYTyHD5GH7TXbxrLVrA==
   dependencies:
     "@aws-crypto/sha256-browser" "5.2.0"
@@ -9563,7 +9563,7 @@ fast-diff@^1.1.2:
 
 fast-glob@3.3.3, fast-glob@^3.2.7, fast-glob@^3.2.9:
   version "3.3.3"
-  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.3.tgz#d06d585ce8dba90a16b0505c543c3ccfb3aeb818"
+  resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.3.tgz#d06d585ce8dba90a16b0505c543c3ccfb3aeb818"
   integrity sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
@@ -17765,7 +17765,7 @@ tunnel-agent@^0.6.0:
 
 tw-elements@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/tw-elements/-/tw-elements-2.0.0.tgz#9f9d91d8e140e0643ecbbeee287e72dab8e31dec"
+  resolved "https://registry.npmjs.org/tw-elements/-/tw-elements-2.0.0.tgz#9f9d91d8e140e0643ecbbeee287e72dab8e31dec"
   integrity sha512-aiitkqzmCZIZ9zJr3V6ErVzU/CrKoAkptpv94t0pEKnVn2Ah4jOplXOO/v6Fo9jr3PoTA5dxvlyS4w8rnW/iag==
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
@@ -17889,10 +17889,10 @@ typescript@5.9.3, "typescript@>=3 < 6":
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz#5b4f59e15310ab17a216f5d6cf53ee476ede670f"
   integrity sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==
 
-typescript@^4.9.3:
-  version "4.9.5"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
-  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
+typescript@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-6.0.2.tgz#0b1bfb15f68c64b97032f3d78abbf98bdbba501f"
+  integrity sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==
 
 typescript@~3.2.1:
   version "3.2.4"
@@ -18159,7 +18159,7 @@ utils-merge@1.0.1, utils-merge@1.x.x, utils-merge@^1.0.1:
 
 uuid@^13.0.0:
   version "13.0.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-13.0.0.tgz#263dc341b19b4d755eb8fe36b78d95a6b65707e8"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-13.0.0.tgz#263dc341b19b4d755eb8fe36b78d95a6b65707e8"
   integrity sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==
 
 uuid@^3.2.1:
