@@ -20,14 +20,12 @@
     "postpack": "mv package.json.orig package.json",
     "test": "vitest",
     "test:ci": "vitest run",
-    "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
     "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/"
   },
   "devDependencies": {
     "@types/node": "^25.0.0",
     "quicktype": "^15.0.260",
-    "typedoc": "^0.28.12",
     "vitest": "^4.0.18"
   }
 }
