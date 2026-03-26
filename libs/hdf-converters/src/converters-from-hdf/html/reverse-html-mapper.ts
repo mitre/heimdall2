@@ -1,3 +1,4 @@
+import fs from 'fs/promises';
 import {
   mdiAlert,
   mdiAlertCircle,
@@ -15,7 +16,7 @@ import {
   HDFControlSegment,
   isContextualizedEvaluation
 } from 'inspecjs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Mustache from 'mustache';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
 import {
@@ -40,7 +41,7 @@ type ProcessedData = {
 };
 
 // All selectable export types for an HTML export
-enum FileExportTypes {
+export enum FileExportTypes {
   Executive = 'Executive',
   Manager = 'Manager',
   Administrator = 'Administrator'
@@ -407,10 +408,7 @@ export class FromHDFToHTMLMapper {
     }
 
     // Grab NIST & CCI controls
-    const allControls = _.filter(
-      [result.hdf.rawNistTags, result.hdf.wraps.tags.cci],
-      Boolean
-    ).flat();
+    const allControls = [result.hdf.rawNistTags, result.hdf.wraps.tags.cci].filter(Boolean).flat();
     // Remove `Rev_4` item and replace `unmapped` with proper `UM-1` naming
     const filteredControls = allControls
       .map((control) => (control === 'unmapped' ? 'UM-1' : control))
@@ -519,23 +517,33 @@ export class FromHDFToHTMLMapper {
 
   // Prompt HTML generation from data pulled from file during constructor initialization
   // Requires path to prompt location of needed files relative to function call location
-  async toHTML(path: string): Promise<string> {
+  async toHTML(path: string, pathIsUrl = true): Promise<string> {
     // Pull export template + styles and create outputData object containing data to fill template with
+    let responses: string[];
+
+    if(pathIsUrl) {
     const templateRequest = axios.get<string>(`${path}template.html`);
     const tailwindStylesRequest = axios.get<string>(`${path}style.css`);
     const tailwindElementsRequest = axios.get<string>(
       `${path}tw-elements.min.js`
     );
-    const responses = await axios.all([
+    responses = (await axios.all([
       templateRequest,
       tailwindStylesRequest,
       tailwindElementsRequest
-    ]);
+    ])).map((r) => r.data);
+    } else {
+      responses = await Promise.all([
+        fs.readFile(`${path}template.html`, 'utf-8'),
+        fs.readFile(`${path}style.css`, 'utf-8'),
+        fs.readFile(`${path}tw-elements.min.js`, 'utf-8')
+      ]);
+    }
 
-    const template = responses[0].data;
-    this.outputData.tailwindStyles = responses[1].data;
+    const template = responses[0];
+    this.outputData.tailwindStyles = responses[1];
     // Remove source map reference in TW Elements library
-    this.outputData.tailwindElements = responses[2].data.replace(
+    this.outputData.tailwindElements = responses[2].replace(
       '//# sourceMappingURL=tw-elements.umd.min.js.map',
       ''
     );
