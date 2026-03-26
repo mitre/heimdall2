@@ -9,6 +9,7 @@ describe('HTML Results Reverse Mapper', () => {
       'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
       {encoding: 'utf-8'}
     );
+
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
       FileExportTypes.Administrator
