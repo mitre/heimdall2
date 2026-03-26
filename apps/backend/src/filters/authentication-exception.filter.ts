@@ -1,5 +1,5 @@
 import {ArgumentsHost, Catch, ExceptionFilter} from '@nestjs/common';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 
