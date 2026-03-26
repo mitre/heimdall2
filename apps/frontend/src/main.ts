@@ -29,7 +29,9 @@ new Vue({
     axios.interceptors.response.use(
       (response) => response, // simply return the response
       (error) => {
-        const origin = URL.parse(error?.config?.url, globalThis.location.origin)?.origin ?? '';
+        const origin =
+          URL.parse(error?.config?.url, globalThis.location.origin)?.origin ??
+          '';
         // If there is no backend token then it is safe to assume this request
         // originated from the login page and should not perform the logout action.
         if (
