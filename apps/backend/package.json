@@ -51,7 +51,6 @@
     "@types/passport-github": "^1.1.5",
     "@types/passport-jwt": "^4.0.0",
     "@types/passport-local": "^1.0.33",
-    "@types/uuid": "^10.0.0",
     "@types/validator": "^13.0.0",
     "axios": "^1.4.0",
     "bcryptjs": "^3.0.0",
