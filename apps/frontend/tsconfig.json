@@ -9,7 +9,7 @@
     "moduleResolution": "node",
     "rootDir": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
 
