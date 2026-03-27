@@ -1,4 +1,3 @@
-import fs from 'fs/promises';
 import {
   mdiAlert,
   mdiAlertCircle,
@@ -8,7 +7,6 @@ import {
   mdiEqualBox,
   mdiMinusCircle
 } from '@mdi/js';
-import axios from 'axios';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -19,6 +17,7 @@ import {
 import _ from 'lodash';
 import Mustache from 'mustache';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
+import {html, js, css} from './embedded-assets';
 import {
   IDetail,
   IOutputData,
@@ -516,34 +515,12 @@ export class FromHDFToHTMLMapper {
   }
 
   // Prompt HTML generation from data pulled from file during constructor initialization
-  // Requires path to prompt location of needed files relative to function call location
-  async toHTML(path: string, pathIsUrl = true): Promise<string> {
+  async toHTML(): Promise<string> {
     // Pull export template + styles and create outputData object containing data to fill template with
-    let responses: string[];
-
-    if(pathIsUrl) {
-    const templateRequest = axios.get<string>(`${path}template.html`);
-    const tailwindStylesRequest = axios.get<string>(`${path}style.css`);
-    const tailwindElementsRequest = axios.get<string>(
-      `${path}tw-elements.min.js`
-    );
-    responses = (await axios.all([
-      templateRequest,
-      tailwindStylesRequest,
-      tailwindElementsRequest
-    ])).map((r) => r.data);
-    } else {
-      responses = await Promise.all([
-        fs.readFile(`${path}template.html`, 'utf-8'),
-        fs.readFile(`${path}style.css`, 'utf-8'),
-        fs.readFile(`${path}tw-elements.min.js`, 'utf-8')
-      ]);
-    }
-
-    const template = responses[0];
-    this.outputData.tailwindStyles = responses[1];
+    const template = html;
+    this.outputData.tailwindStyles = css;
     // Remove source map reference in TW Elements library
-    this.outputData.tailwindElements = responses[2].replace(
+    this.outputData.tailwindElements = js.replace(
       '//# sourceMappingURL=tw-elements.umd.min.js.map',
       ''
     );

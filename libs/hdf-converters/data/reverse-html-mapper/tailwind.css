@@ -2,7 +2,7 @@
 
 @plugin 'tw-elements/plugin.cjs';
 
-@source '../public/static/export/template.html';
+@source 'template.html';
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,

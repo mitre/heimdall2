@@ -13,6 +13,7 @@
   ],
   "main": "src/index.ts",
   "scripts": {
+    "prebuild": "tailwindcss -i data/reverse-html-mapper/tailwind.css -o data/reverse-html-mapper/style.css --minify && node data/reverse-html-mapper/convert-to-embedded-strings.ts",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0",
@@ -34,6 +35,7 @@
     "@microsoft/microsoft-graph-types": "^2.40.0",
     "@mitre/jsonix": "^3.0.7",
     "@smithy/node-http-handler": "^4.0.0",
+    "@tailwindcss/cli": "^4.0.6",
     "@types/csv2json": "^1.4.2",
     "@types/mustache": "^4.1.2",
     "@types/papaparse": "^5.3.2",

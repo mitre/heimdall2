@@ -1,7 +1,7 @@
 import fs from 'fs';
-import path from 'path';
 import {describe, expect, it} from 'vitest';
 import {FileExportTypes, FromHDFToHTMLMapper} from '../../../index';
+import {omitHTMLStyleTag} from '../../utils';
 
 describe('HTML Results Reverse Mapper', () => {
   it('Successfully converts RHEL7 HDF into HTML', async () => {
@@ -15,7 +15,7 @@ describe('HTML Results Reverse Mapper', () => {
       FileExportTypes.Administrator
     );
 
-    const converted = await mapper.toHTML(path.resolve(__dirname, '../../../../../apps/frontend/public/static/export') + path.sep, false);
+    const converted = await mapper.toHTML();
 
     // fs.writeFileSync(
     //   'sample_jsons/html_reverse_mapper/rhel7.html',
@@ -27,6 +27,6 @@ describe('HTML Results Reverse Mapper', () => {
       'utf-8'
     );
 
-    expect(converted).toEqual(expected);
+    expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
   });
 });
