@@ -39,13 +39,13 @@ jobs:
       - name: Copy .env-ci to .env
         run: cp apps/backend/test/.env-ci apps/backend/.env
 
+      - name: Ensure the app builds cleanly without frontend dependencies
+        run: yarn backend build
+
       - name: Create/migrate db
         run: |
-          yarn backend sequelize-cli db:create
-          yarn backend sequelize-cli db:migrate
+          yarn backend sequelize db:create
+          yarn backend sequelize db:migrate
 
       - name: Run unit tests
         run: yarn backend test:ci
-
-      - name: Ensure the app builds cleanly without frontend dependencies
-        run: yarn backend build

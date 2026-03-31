@@ -460,21 +460,21 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 > [!NOTE]
 > The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations.
 
-6. Create and seed the database:
+6. Build the project:
 
    - ```bash
-     # Windows
-     yarn backend sequelize-cli-windows db:create
-     yarn backend sequelize-cli-windows db:migrate
-     yarn backend sequelize-cli-windows db:seed:all
-
-     # All other OSs
-     yarn backend sequelize-cli db:create
-     yarn backend sequelize-cli db:migrate
-     yarn backend sequelize-cli db:seed:all
+     yarn build
      ```
 
-7. Start Heimdall:
+7. Create and seed the database:
+
+   - ```bash
+     yarn backend sequelize db:create
+     yarn backend sequelize db:migrate
+     yarn backend sequelize db:seed:all
+     ```
+
+8. Start Heimdall:
 
    - ```bash
      yarn start:dev
