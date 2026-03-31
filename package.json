@@ -42,7 +42,8 @@
     "dotenv-cli": "^11.0.0"
   },
   "resolutions": {
-    "fast-glob": "3.3.3"
+    "fast-glob": "3.3.3",
+    "axios": "<=1.14.0"
   },
   "engines": {
     "node": ">=22"
