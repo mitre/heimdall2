@@ -57,6 +57,7 @@
     "retry-axios": "amndeep7/retry-axios#add_d_cts_file_packagejsonfork",
     "revalidator": "^0.3.1",
     "run-script-os": "^1.1.6",
+    "sanitize-html": "^2.17.2",
     "semver": "^7.6.0",
     "tailwindcss": "^4.0.6",
     "tw-elements": "^2.0.0",
