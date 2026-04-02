@@ -25,9 +25,7 @@
   <body>
     <!-- Navbar -->
     <!-- WARNING: Tailwind Elements interactive components get disabled on Android's HTML viewer; use a browser instead -->
-    <nav
-      class="relative top-0 z-10 min-w-full border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden lg:sticky"
-    >
+    <nav class="relative top-0 z-10 min-w-full border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden lg:sticky">
       <!-- Heimdall report -->
       <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
       <!-- Profile info link -->
@@ -38,12 +36,12 @@
       </button>
       <!-- Result sets dropdown menu -->
       {{#showResultSets}}
-      <div class="inline-block" data-twe-dropdown-ref>
+      <div class="inline-block" data-te-dropdown-ref>
         <!-- Button def -->
         <button
           type="button"
           class="inline-flex px-3 py-2 text-sm"
-          data-twe-dropdown-toggle-ref
+          data-te-dropdown-toggle-ref
           href="#resultSetsList"
           role="button"
           aria-controls="resultSetsList"
@@ -67,17 +65,15 @@
         </button>
         <!-- Menu def -->
         <div
-          class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 data-twe-dropdown-show:grid"
+          class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 data-te-dropdown-show:grid"
           id="resultSetsList"
-          data-twe-dropdown-menu-ref
+          data-te-dropdown-menu-ref
           aria-labelledby="resultSetsList"
         >
           <!-- Generate links for every result set -->
           {{#resultSets}}
-          <div
-            class="block w-56 break-words border border-gray-300 bg-white px-4 py-3 text-sm shadow-lg"
-          >
-            <a href="#{{fileID}}" data-twe-dropdown-item-ref>{{filename}}</a>
+          <div class="block w-56 break-words border border-gray-300 bg-white px-4 py-3 text-sm shadow-lg">
+            <a href="#{{fileID}}" data-te-dropdown-item-ref>{{filename}}</a>
           </div>
           {{/resultSets}}
         </div>
@@ -86,8 +82,8 @@
       <button
         class="px-3 py-2 text-sm"
         type="button"
-        data-twe-collapse-init
-        data-twe-target=".multi-collapse-outer"
+        data-te-collapse-init
+        data-te-target=".multi-collapse-outer"
         aria-expanded="true"
         aria-controls="result-accordion-body"
       >
@@ -97,8 +93,8 @@
       <button
         class="px-3 py-2 text-sm"
         type="button"
-        data-twe-collapse-init
-        data-twe-target=".multi-collapse-inner"
+        data-te-collapse-init
+        data-te-target=".multi-collapse-inner"
         aria-expanded="true"
         aria-controls="result-accordion-body"
       >
@@ -112,9 +108,7 @@
 
     <!-- Profile status card -->
     <div class="px-4 py-6">
-      <div
-        class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
-      >
+      <div class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white">
         <h5 class="mb-2 text-xl font-bold">Profile Status</h5>
         <div class="grid grid-flow-row justify-between xl:grid-flow-col">
           <!-- Status counts -->
@@ -122,32 +116,22 @@
             <div class="font-bold">Count</div>
             <div class="pt-1">
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleCheck}}}</span>
-                Passed: {{statistics.passed}} ({{statistics.passedTests}}
-                individual checks passed)
+                <span class="pr-1 print:hidden">{{{icons.circleCheck}}}</span> Passed: {{statistics.passed}} ({{statistics.passedTests}} individual checks passed)
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleCross}}}</span>
-                Failed: {{statistics.failed}}
-                ({{statistics.passingTestsFailedResult}} individual checks
-                passed, {{statistics.failedTests}} failed out of
-                {{statistics.totalTests}} total checks)
+                <span class="pr-1 print:hidden">{{{icons.circleCross}}}</span> Failed: {{statistics.failed}} ({{statistics.passingTestsFailedResult}} individual checks passed, {{statistics.failedTests}} failed out of {{statistics.totalTests}} total checks)
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleMinus}}}</span>
-                Not Applicable: {{statistics.notApplicable}}
+                <span class="pr-1 print:hidden">{{{icons.circleMinus}}}</span> Not Applicable: {{statistics.notApplicable}}
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleAlert}}}</span>
-                Not Reviewed: {{statistics.notReviewed}}
+                <span class="pr-1 print:hidden">{{{icons.circleAlert}}}</span> Not Reviewed: {{statistics.notReviewed}}
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.triangleAlert}}}</span>
-                Profile Error: {{statistics.profileError}}
+                <span class="pr-1 print:hidden">{{{icons.triangleAlert}}}</span> Profile Error: {{statistics.profileError}}
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.squareEqual}}}</span>
-                Total: {{statistics.totalResults}}
+                <span class="pr-1 print:hidden">{{{icons.squareEqual}}}</span> Total: {{statistics.totalResults}}
               </div>
             </div>
           </div>
@@ -157,26 +141,19 @@
             <div class="font-bold">Severity</div>
             <div class="pt-1">
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleNone}}}</span>
-                None: {{severity.none}}
+                <span class="pr-1 print:hidden">{{{icons.circleNone}}}</span> None: {{severity.none}}
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleLow}}}</span>
-                Low: {{severity.low}}
+                <span class="pr-1 print:hidden">{{{icons.circleLow}}}</span> Low: {{severity.low}}
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleMedium}}}</span>
-                Medium: {{severity.medium}}
+                <span class="pr-1 print:hidden">{{{icons.circleMedium}}}</span> Medium: {{severity.medium}}
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleHigh}}}</span>
-                High: {{severity.high}}
+                <span class="pr-1 print:hidden">{{{icons.circleHigh}}}</span> High: {{severity.high}}
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden">
-                  {{{icons.circleCritical}}}
-                </span>
-                Critical: {{severity.critical}}
+                <span class="pr-1 print:hidden">{{{icons.circleCritical}}}</span> Critical: {{severity.critical}}
               </div>
             </div>
           </div>
@@ -185,9 +162,7 @@
           <div class="w-64 px-2 py-2">
             <div class="font-bold">Compliance</div>
             <div>
-              <div
-                class="my-1 rounded-full border-4 border-{{compliance.color}} text-center text-4xl print:border-none print:text-left print:text-2xl"
-              >
+              <div class="my-1 rounded-full border-4 border-{{compliance.color}} text-center text-4xl print:border-none print:text-left print:text-2xl">
                 {{compliance.level}}
               </div>
               [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
@@ -199,9 +174,7 @@
 
     <!-- Profile info card -->
     <div class="px-4 pb-6" id="profileInfo">
-      <div
-        class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
-      >
+      <div class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white">
         <h5 class="mb-2 text-xl font-bold">Profile Info</h5>
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           <!-- Generate an info report for every profile -->
@@ -232,17 +205,15 @@
         <div class="mb-0">
           <!-- Button def -->
           <button
-            class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-2 focus:z-3 focus:outline-hidden [&:not([data-twe-collapse-collapsed])]:bg-blue-200 [&:not([data-twe-collapse-collapsed])]:text-blue-900 [&:not([data-twe-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+            class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-2 focus:z-3 focus:outline-hidden [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
             type="button"
-            data-twe-collapse-init
-            data-twe-target="#collapseable-{{fileID}}"
+            data-te-collapse-init
+            data-te-target="#collapseable-{{fileID}}"
             aria-expanded="true"
             aria-controls="collapseable-{{fileID}}"
           >
             {{filename}}
-            <span
-              class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-data-twe-collapse-collapsed:mr-0 group-data-twe-collapse-collapsed:rotate-0 group-data-twe-collapse-collapsed:fill-[#212529] motion-reduce:transition-none"
-            >
+            <span class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-data-te-collapse-collapsed:mr-0 group-data-te-collapse-collapsed:rotate-0 group-data-te-collapse-collapsed:fill-[#212529] motion-reduce:transition-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -268,8 +239,8 @@
         <div
           id="collapseable-{{fileID}}"
           class="multi-collapse-outer my-4"
-          data-twe-collapse-item
-          data-twe-collapse-show
+          data-te-collapse-item
+          data-te-collapse-show
         >
           <!-- Result header -->
           <div class="mx-4 rounded-t-xl border border-gray-300 bg-gray-100">
@@ -296,9 +267,7 @@
               <!-- Title -->
               <span class="w-1/2 pl-8 sm:block lg:pl-9">Title</span>
               <!-- Control tags -->
-              <span class="hidden lg:block lg:w-36 xl:w-52">
-                800-53 Controls & CCIs
-              </span>
+              <span class="hidden lg:block lg:w-36 xl:w-52">800-53 Controls & CCIs</span>
             </div>
           </div>
 
@@ -308,10 +277,10 @@
             <div class="mb-0">
               <!-- Button def -->
               <button
-                class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-2 focus:z-3 focus:outline-hidden [&:not([data-twe-collapse-collapsed])]:bg-blue-200 [&:not([data-twe-collapse-collapsed])]:text-blue-900 [&:not([data-twe-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+                class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-2 focus:z-3 focus:outline-hidden [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
                 type="button"
-                data-twe-collapse-init
-                data-twe-target="#result-accordion-body-{{resultID}}"
+                data-te-collapse-init
+                data-te-target="#result-accordion-body-{{resultID}}"
                 aria-expanded="true"
                 aria-controls="result-accordion-body-{{resultID}}"
               >
@@ -323,65 +292,49 @@
                     <span>{{hdf.wraps.id}}</span>
                   </div>
                   <!-- Result status indicator -->
-                  <div
-                    class="grid w-40 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                  >
+                  <div class="grid w-40 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black">
                     <span>{{{resultStatus.icon}}}</span>
                     <span>{{resultStatus.status}}</span>
                   </div>
                   <!-- Result severity indicator -->
-                  <div
-                    class="grid w-28 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:hidden"
-                  >
+                  <div class="grid w-28 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:hidden">
                     <span>{{{resultSeverity.icon}}}</span>
                     <span>{{resultSeverity.severity}}</span>
                   </div>
                   <!-- Control tags -->
                   {{#controlTags}}
                   <div class="w-24 lg:hidden">
-                    <span
-                      class="rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                    >
+                    <span class="rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black">
                       {{.}}
                     </span>
                   </div>
                   {{/controlTags}}
                 </div>
                 <!-- Result ID -->
-                <span
-                  class="hidden w-32 grid-cols-1 gap-y-2 break-all px-6 sm:grid lg:w-36"
-                >
+                <span class="hidden w-32 grid-cols-1 gap-y-2 break-all px-6 sm:grid lg:w-36">
                   {{hdf.wraps.id}}
                 </span>
                 <!-- Result severity indicator -->
-                <div
-                  class="hidden w-28 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:grid"
-                >
+                <div class="hidden w-28 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:grid">
                   <span>{{{resultSeverity.icon}}}</span>
                   <span>{{resultSeverity.severity}}</span>
                 </div>
                 <!-- Result title -->
                 <span class="w-1/2 break-all px-6 sm:break-words">
-                  {{hdf.wraps.title}}
+                  {{{hdf.wraps.title}}}
                 </span>
                 <!-- Control tags -->
-                <div
-                  class="hidden grid-cols-1 gap-x-6 gap-y-2 lg:grid xl:grid-cols-2"
-                >
+                <div class="hidden grid-cols-1 gap-x-6 gap-y-2 lg:grid xl:grid-cols-2">
                   {{#controlTags}}
                   <div class="w-24">
-                    <span
-                      class="rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                    >
+                    <span class="rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black">
                       {{.}}
                     </span>
                   </div>
                   {{/controlTags}}
                 </div>
 
-                <span
-                  class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-data-twe-collapse-collapsed:mr-0 group-data-twe-collapse-collapsed:rotate-0 group-data-twe-collapse-collapsed:fill-[#212529] motion-reduce:transition-none"
-                >
+                <span class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-data-te-collapse-collapsed:mr-0 group-data-te-collapse-collapsed:rotate-0 group-data-te-collapse-collapsed:fill-[#212529] motion-reduce:transition-none">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -406,12 +359,12 @@
             <div
               class="multi-collapse-inner px-5 py-4"
               id="result-accordion-body-{{resultID}}"
-              data-twe-collapse-item
-              data-twe-collapse-show
+              data-te-collapse-item
+              data-te-collapse-show
               aria-labelledby="result-accordion-header-{{resultID}}"
             >
               <!-- Result description -->
-              {{data.desc}}
+              {{{data.desc}}}
               <hr class="my-3" />
 
               <!-- Result tables -->
@@ -423,36 +376,17 @@
                 <div class="min-w-full border border-gray-300">
                   <!-- Generate all available test results -->
                   {{#hdf.segments}}
-                  <div
-                    class="bg-gray-100 grid grid-cols-1 sm:grid-cols-[10%_90%]"
-                  >
-                    <span
-                      class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal"
-                      >Status</span
-                    >
-                    <span class="whitespace-pre-line break-all lg:break-normal"
-                      >{{status}}</span
-                    >
+                  <div class="bg-gray-100 grid grid-cols-1 sm:grid-cols-[10%_90%]">
+                    <span class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal">Status</span>
+                    <span class="whitespace-pre-line break-all lg:break-normal">{{status}}</span>
                   </div>
                   <div class="grid grid-cols-1 sm:grid-cols-[10%_90%]">
-                    <span
-                      class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal"
-                      >Test</span
-                    >
-                    <span class="whitespace-pre-line break-all lg:break-normal"
-                      >{{code_desc}}</span
-                    >
+                    <span class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal">Test</span>
+                    <span class="whitespace-pre-line break-all lg:break-normal">{{{code_desc}}}</span>
                   </div>
-                  <div
-                    class="bg-gray-100 grid grid-cols-1 sm:grid-cols-[10%_90%]"
-                  >
-                    <span
-                      class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal"
-                      >Result</span
-                    >
-                    <span class="whitespace-pre-line break-all lg:break-normal"
-                      >{{message}}</span
-                    >
+                  <div class="bg-gray-100 grid grid-cols-1 sm:grid-cols-[10%_90%]">
+                    <span class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal">Result</span>
+                    <span class="whitespace-pre-line break-all lg:break-normal">{{message}}</span>
                   </div>
                   {{/hdf.segments}}
                 </div>
@@ -464,17 +398,9 @@
                 <div class="min-w-full border border-gray-300">
                   <!-- Generate all result details -->
                   {{#details}}
-                  <div
-                    class="odd:bg-gray-100 even:bg-white grid grid-cols-1 sm:grid-cols-[10%_90%]"
-                  >
-                    <span
-                      class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal"
-                      >{{name}}</span
-                    >
-                    <span
-                      class="whitespace-pre-line break-all sm:break-words lg:break-normal"
-                      >{{value}}</span
-                    >
+                  <div class="odd:bg-gray-100 even:bg-white grid grid-cols-1 sm:grid-cols-[10%_90%]">
+                    <span class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal">{{name}}</span>
+                    <span class="whitespace-pre-line break-all sm:break-words lg:break-normal">{{{value}}}</span>
                   </div>
                   {{/details}}
                 </div>
@@ -484,9 +410,7 @@
               <!-- Sensitive to whitespace, requires awkward tag placement -->
               {{#showCode}}
               <hr class="my-3" />
-              <code class="whitespace-pre-wrap break-words text-sm text-red-700"
-                >{{full_code}}</code
-              >
+              <code class="whitespace-pre-wrap break-words text-sm text-red-700">{{full_code}}</code>
               {{/showCode}}
             </div>
           </div>
@@ -535,7 +459,7 @@
                   </div>
                 </td>
                 <!-- Result title -->
-                <td>{{hdf.wraps.title}}</td>
+                <td>{{{hdf.wraps.title}}}</td>
               </tr>
             </tbody>
           </table>
@@ -568,7 +492,7 @@
           <hr class="my-1 h-1" />
 
           <!-- Result description -->
-          {{data.desc}}
+          {{{data.desc}}}
           <hr class="my-1 h-1" />
 
           <!-- Result tables -->
@@ -593,7 +517,7 @@
                 </tr>
                 <tr class="border-b odd:bg-gray-100 even:bg-white">
                   <td class="border-r border-gray-300">Test</td>
-                  <td class="whitespace-pre-line break-all">{{code_desc}}</td>
+                  <td class="whitespace-pre-line break-all">{{{code_desc}}}</td>
                 </tr>
                 <tr class="border-b odd:bg-gray-100 even:bg-white">
                   <td class="border-r border-gray-300">Result</td>
@@ -619,7 +543,7 @@
                 {{#details}}
                 <tr class="border-b odd:bg-gray-100 even:bg-white">
                   <td class="border-r border-gray-300">{{name}}</td>
-                  <td class="whitespace-pre-line">{{value}}</td>
+                  <td class="whitespace-pre-line">{{{value}}}</td>
                 </tr>
                 {{/details}}
               </tbody>
@@ -630,9 +554,7 @@
           <!-- Sensitive to whitespace, requires awkward tag placement -->
           {{#showCode}}
           <hr class="my-1 h-1" />
-          <code class="whitespace-pre-wrap text-sm text-black"
-            >{{full_code}}</code
-          >
+          <code class="whitespace-pre-wrap text-sm text-black">{{full_code}}</code>
           {{/showCode}}
         </div>
         {{/results}}
