@@ -60,12 +60,12 @@ jobs:
       - name: Check RHEL7 XCCDF Results has a valid schema
         uses: mitre/xccdf-validate-action@main
         with:
-          input: libs/hdf-converters/sample_jsons/xccdf_reverse_mapper/output_report/rhel7-xccdf-results.xml
+          input: libs/hdf-converters/sample_jsons/xccdf_reverse_mapper/rhel7-xccdf-results.xml
 
       - name: Check Example 3 Layer XCCDF Results has a valid schema
         uses: mitre/xccdf-validate-action@main
         with:
-          input: libs/hdf-converters/sample_jsons/xccdf_reverse_mapper/output_report/example-3-layer-overlay-xccdf-results.xml
+          input: libs/hdf-converters/sample_jsons/xccdf_reverse_mapper/example-3-layer-overlay-xccdf-results.xml
 
       - name: Ensure the hdf-converters builds cleanly
         run: yarn hdf-converters build
