@@ -17,10 +17,10 @@ describe('HTML Results Reverse Mapper', () => {
 
     const converted = await mapper.toHTML();
 
-    fs.writeFileSync(
-      'sample_jsons/html_reverse_mapper/rhel7.html',
-      converted
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/html_reverse_mapper/rhel7.html',
+    //   converted
+    // );
 
     const expected = fs.readFileSync(
       'sample_jsons/html_reverse_mapper/rhel7.html',
@@ -29,6 +29,7 @@ describe('HTML Results Reverse Mapper', () => {
 
     expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
   });
+
   it('Successfully converts SonarQube HDF into HTML', async () => {
     const inputData = fs.readFileSync(
       'sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json',
@@ -42,10 +43,10 @@ describe('HTML Results Reverse Mapper', () => {
 
     const converted = await mapper.toHTML();
 
-    fs.writeFileSync(
-      'sample_jsons/html_reverse_mapper/sonarqube.html',
-      converted
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/html_reverse_mapper/sonarqube.html',
+    //   converted
+    // );
 
     const expected = fs.readFileSync(
       'sample_jsons/html_reverse_mapper/sonarqube.html',
