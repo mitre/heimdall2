@@ -4,7 +4,7 @@ export default class ResultsPage {
   }
 
   openFirstResultCodeTab(): void {
-    cy.get('div.v-card__text.pa-2.font-weight-bold').click();
+    cy.get('div.v-card__text.pa-2.font-weight-bold').first().click();
     cy.get('a[href="#tab-code"]').click();
   }
 }
