@@ -279,10 +279,10 @@
     "@smithy/util-utf8" "^2.0.0"
     tslib "^2.6.2"
 
-"@aws-sdk/client-config-service@3.1021.0":
-  version "3.1021.0"
-  resolved "https://registry.npmjs.org/@aws-sdk/client-config-service/-/client-config-service-3.1021.0.tgz#9cb53eedc611bbd03ff7ece103efa9a3f2054cfc"
-  integrity sha512-pwiHSv0C5n9tZLODfp5U5n4CPtvNh2Wyno4JTpXhTRbZFHh9RjHj/ej4pi+zD2AykKDIm5T0bBa45t5rlj8w/w==
+"@aws-sdk/client-config-service@3.1023.0":
+  version "3.1023.0"
+  resolved "https://registry.npmjs.org/@aws-sdk/client-config-service/-/client-config-service-3.1023.0.tgz#085a55e45fc0d4ab079df7ccda072e75719520ac"
+  integrity sha512-33+EGnXaVUkppNlf77ge34mHKiwyAzP9hTtLiQsVLpcSZnRlE/j55zVyxm5I+yrZ8O9BRG8DShg6s1ZEVTQdGg==
   dependencies:
     "@aws-crypto/sha256-browser" "5.2.0"
     "@aws-crypto/sha256-js" "5.2.0"
@@ -325,9 +325,9 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.1022.0"
-  resolved "https://registry.npmjs.org/@aws-sdk/client-s3/-/client-s3-3.1022.0.tgz#6516615831e0a34406994729a49e2fdfda4bd49d"
-  integrity sha512-PhdIW0LxjzcMlBiCldRefnyZk84wtYGnEV0sNGOD55DZTvZsibG2XHvQiL1aFliKugfAhuIpNmFkctI2n2I3Dg==
+  version "3.1023.0"
+  resolved "https://registry.npmjs.org/@aws-sdk/client-s3/-/client-s3-3.1023.0.tgz#2d23522b0635942d3653d0c290ed1fc7e7a7621a"
+  integrity sha512-IvNy49sdoCWd3fgHQxail3y0UQdfKj1Xk0VPu9HTwlog60o9Lmp5ykjZ2LlIuHEPaxq4Siih707GB/ulUWgetw==
   dependencies:
     "@aws-crypto/sha1-browser" "5.2.0"
     "@aws-crypto/sha256-browser" "5.2.0"
@@ -386,9 +386,9 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-sts@^3.427.0":
-  version "3.1022.0"
-  resolved "https://registry.npmjs.org/@aws-sdk/client-sts/-/client-sts-3.1022.0.tgz#c52af6679859ddc1e2937649024b164ad6a740cd"
-  integrity sha512-9GD0OAWcPXwx+MgP3PbgDQ3P1ZML3/gDdDpnuB3l6iStJd74qMhtz0mOPEsyJiFq2RPgHhq1DEtnd1aDXvj15w==
+  version "3.1023.0"
+  resolved "https://registry.npmjs.org/@aws-sdk/client-sts/-/client-sts-3.1023.0.tgz#cbbeb7aaed06d91fbb694ba8c81c7fb9c5f63a41"
+  integrity sha512-5ERoqfMPotFE1Co2HKfCxNrf5yd2oMn7DzRlFnTYk14FTetO8iqy3bfK9foUoqDgdIdYoEChwgguGJsmI8FRBQ==
   dependencies:
     "@aws-crypto/sha256-browser" "5.2.0"
     "@aws-crypto/sha256-js" "5.2.0"
@@ -1855,24 +1855,24 @@
   integrity sha512-703RN/3OdsRD5mtse2HBX7Um7xwaP9tlswEG6svOtjqokXoX7rJdQj7DyabD2I+xk22RgaIIU+R6BHgkpZGB/w==
 
 "@emnapi/core@^1.1.0", "@emnapi/core@^1.8.1":
-  version "1.9.1"
-  resolved "https://registry.npmjs.org/@emnapi/core/-/core-1.9.1.tgz#2143069c744ca2442074f8078462e51edd63c7bd"
-  integrity sha512-mukuNALVsoix/w1BJwFzwXBN/dHeejQtuVzcDsfOEsdpCumXb/E9j8w11h5S54tT1xhifGfbbSm/ICrObRb3KA==
+  version "1.9.2"
+  resolved "https://registry.npmjs.org/@emnapi/core/-/core-1.9.2.tgz#3870265ecffc7352d01ead62d8d83d8358a2d034"
+  integrity sha512-UC+ZhH3XtczQYfOlu3lNEkdW/p4dsJ1r/bP7H8+rhao3TTTMO1ATq/4DdIi23XuGoFY+Cz0JmCbdVl0hz9jZcA==
   dependencies:
-    "@emnapi/wasi-threads" "1.2.0"
+    "@emnapi/wasi-threads" "1.2.1"
     tslib "^2.4.0"
 
 "@emnapi/runtime@^1.1.0", "@emnapi/runtime@^1.8.1":
-  version "1.9.1"
-  resolved "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.9.1.tgz#115ff2a0d589865be6bd8e9d701e499c473f2a8d"
-  integrity sha512-VYi5+ZVLhpgK4hQ0TAjiQiZ6ol0oe4mBx7mVv7IflsiEp0OWoVsp/+f9Vc1hOhE0TtkORVrI1GvzyreqpgWtkA==
+  version "1.9.2"
+  resolved "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.9.2.tgz#8b469a3db160817cadb1de9050211a9d1ea84fa2"
+  integrity sha512-3U4+MIWHImeyu1wnmVygh5WlgfYDtyf0k8AbLhMFxOipihf6nrWC4syIm/SwEeec0mNSafiiNnMJwbza/Is6Lw==
   dependencies:
     tslib "^2.4.0"
 
-"@emnapi/wasi-threads@1.2.0", "@emnapi/wasi-threads@^1.1.0":
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.0.tgz#a19d9772cc3d195370bf6e2a805eec40aa75e18e"
-  integrity sha512-N10dEJNSsUx41Z6pZsXU8FjPjpBEplgH24sfkmITrBED1/U2Esum9F3lfLrMjKHHjmi557zQn7kR9R+XWXu5Rg==
+"@emnapi/wasi-threads@1.2.1", "@emnapi/wasi-threads@^1.1.0":
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/@emnapi/wasi-threads/-/wasi-threads-1.2.1.tgz#28fed21a1ba1ce797c44a070abc94d42f3ae8548"
+  integrity sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==
   dependencies:
     tslib "^2.4.0"
 
@@ -17509,9 +17509,9 @@ ts-api-utils@^1.3.0:
   integrity sha512-i3eMG77UTMD0hZhgRS562pv83RC6ukSAC2GMNWc+9dieh/+jDM5u5YG+NHX6VNDRHQcHwmsTHctP9LhbC3WxVw==
 
 ts-loader@^9.2.5:
-  version "9.5.4"
-  resolved "https://registry.npmjs.org/ts-loader/-/ts-loader-9.5.4.tgz#44b571165c10fb5a90744aa5b7e119233c4f4585"
-  integrity sha512-nCz0rEwunlTZiy6rXFByQU1kVVpCIgUpc/psFiKVrUwrizdnIbRFu8w7bxhUF0X613DYwT4XzrZHpVyMe758hQ==
+  version "9.5.7"
+  resolved "https://registry.npmjs.org/ts-loader/-/ts-loader-9.5.7.tgz#582663e853646e18506cd5cc79feb354952731c0"
+  integrity sha512-/ZNrKgA3K3PtpMYOC71EeMWIloGw3IYEa5/t1cyz2r5/PyUwTXGzYJvcD3kfUvmhlfpz1rhV8B2O6IVTQ0avsg==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.0.0"
@@ -18026,9 +18026,9 @@ validate-npm-package-name@^7.0.0:
   integrity sha512-hVDIBwsRruT73PbK7uP5ebUt+ezEtCmzZz3F59BSr2F6OVFnJ/6h8liuvdLrQ88Xmnk6/+xGGuq+pG9WwTuy3A==
 
 validator@^13.12.0, validator@^13.15.22, validator@^13.9.0:
-  version "13.15.26"
-  resolved "https://registry.npmjs.org/validator/-/validator-13.15.26.tgz#36c3deeab30e97806a658728a155c66fcaa5b944"
-  integrity sha512-spH26xU080ydGggxRyR1Yhcbgx+j3y5jbNXk/8L+iRvdIEQ4uTRH2Sgf2dokud6Q4oAtsbNvJ1Ft+9xmm6IZcA==
+  version "13.15.35"
+  resolved "https://registry.npmjs.org/validator/-/validator-13.15.35.tgz#81cf455c51f15b69d8d340be5914f3fab00dbf7f"
+  integrity sha512-TQ5pAGhd5whStmqWvYF4OjQROlmv9SMFVt37qoCBdqRffuuklWYQlCNnEs2ZaIBD1kZRNnikiZOS1eqgkar0iw==
 
 value-or-promise@1.0.11:
   version "1.0.11"
