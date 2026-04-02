@@ -87,7 +87,7 @@
     "vue-cli-plugin-vuetify": "~2.5.0",
     "vue-cookies": "^1.7.4",
     "vue-file-agent": "^1.7.3",
-    "vue-prism-component": "~2.0.0",
+    "vue-prism-component": "^1.2.0",
     "vue-property-decorator": "^9.0.0",
     "vue-router": "~3.6.5",
     "vue-svg-inline-loader": "^2.0.0",
