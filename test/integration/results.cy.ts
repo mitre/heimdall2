@@ -43,9 +43,9 @@ context('Results', () => {
 
     it('displays code tab contents for the Acme Overlay Example sample', () => {
       uploadModal.loadSample('Acme Overlay Example');
+      cy.scrollTo('bottom');
       resultsPage.openFirstResultCodeTab();
       resultsPageVerifier.resultsCodeTabCorrect();
-      cy.scrollTo('bottom');
     });
 
     it('it displays severity override indicators when present', () => {
