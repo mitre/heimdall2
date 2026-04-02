@@ -8,7 +8,6 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
 
-    "strict": true,
     "noImplicitAny": true,
 
     "declaration": true,
