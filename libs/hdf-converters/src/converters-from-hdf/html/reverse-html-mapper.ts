@@ -216,8 +216,7 @@ export class FromHDFToHTMLMapper {
     } else {
       file.data.contains.flatMap((profile) => {
         profile.contains.flatMap((result) => {
-          // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-          for (const element of file.filteredControls!) {
+          for (const element of (file.filteredControls ?? [])) {
             if (element === result.data.id) {
               allResultLevels.push(result);
             }
