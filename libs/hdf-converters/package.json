@@ -13,9 +13,8 @@
   ],
   "main": "src/index.ts",
   "scripts": {
-    "build": "run-script-os",
-    "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
-    "build:win32": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && xcopy data lib",
+    "prebuild": "tailwindcss -i data/reverse-html-mapper/tailwind.css -o data/reverse-html-mapper/style.css --minify && node data/reverse-html-mapper/convert-to-embedded-strings.ts",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0",
     "prepack": "run-script-os",
@@ -26,20 +25,22 @@
     "postpack:win32": "move package.json.orig package.json",
     "test": "vitest",
     "test:ci": "vitest run",
-    "csv2json": "tsx data/converters/csv2json.ts",
-    "xml2json": "tsx data/converters/xml2json.ts"
+    "csv2json": "node data/converters/csv2json.ts",
+    "xml2json": "node data/converters/xml2json.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-config-service": "3.1019.0",
+    "@aws-sdk/client-config-service": "3.1023.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
     "@microsoft/microsoft-graph-types": "^2.40.0",
     "@mitre/jsonix": "^3.0.7",
     "@smithy/node-http-handler": "^4.0.0",
+    "@tailwindcss/cli": "^4.0.6",
     "@types/csv2json": "^1.4.2",
     "@types/mustache": "^4.1.2",
     "@types/papaparse": "^5.3.2",
     "@types/revalidator": "^0.3.12",
+    "@types/sanitize-html": "^2.3.1",
     "@types/semver": "^7.7.0",
     "@types/validator": "^13.12.0",
     "@types/xml2js": "^0.4.9",
@@ -57,6 +58,7 @@
     "retry-axios": "amndeep7/retry-axios#add_d_cts_file_packagejsonfork",
     "revalidator": "^0.3.1",
     "run-script-os": "^1.1.6",
+    "sanitize-html": "^2.17.2",
     "semver": "^7.6.0",
     "tailwindcss": "^4.0.6",
     "tw-elements": "^2.0.0",
@@ -68,7 +70,6 @@
   "devDependencies": {
     "@types/lodash": "^4.14.161",
     "@types/node": "^25.0.0",
-    "tsx": "^4.7.1",
     "vitest": "^4.0.18",
     "xml2js": "^0.6.0"
   }

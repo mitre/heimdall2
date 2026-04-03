@@ -36,15 +36,16 @@
     "lerna": "^9.0.0",
     "prettier": "^3.7.4",
     "prettier-plugin-organize-imports": "^4.0.0",
-    "typescript": "^4.9.3"
+    "typescript": "^6.0.2"
   },
   "devDependencies": {
     "dotenv-cli": "^11.0.0"
   },
   "resolutions": {
-    "fast-glob": "3.3.3"
+    "fast-glob": "3.3.3",
+    "axios": "<=1.14.0"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18.0"
   }
 }

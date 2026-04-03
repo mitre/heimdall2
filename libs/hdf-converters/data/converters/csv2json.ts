@@ -1,6 +1,6 @@
-import csv2json from 'csv2json';
 import {createReadStream, createWriteStream} from 'fs';
 import path from 'path';
+import csv2json from 'csv2json';
 
 const files = [
   'aws-config-mapping.csv',

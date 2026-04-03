@@ -975,9 +975,7 @@ export class SonarqubeResults {
 
       // Smart nag: compare user list against defaults
       const defaultSet = new Set(defaultDenyList);
-      const sameAsDefault =
-        defaultSet.size === denySet.size &&
-        [...defaultSet].every((s) => denySet.has(s));
+      const sameAsDefault = defaultSet.symmetricDifference(denySet).size === 0;
 
       if (sameAsDefault) {
         logger.info(
@@ -1160,7 +1158,11 @@ export class SonarqubeResults {
     const results: Search<T> = await collectPagedSearch(this.projectKey, true);
     const queue = [this.projectKey];
     while (queue.length > 0) {
-      const component = queue.shift() as string; // will not be undefined since we check that there are items in the queue
+      const component = queue.shift(); 
+      if (component === undefined) {
+        // unreachable code since we check that there are items in the queue; however, it helps typescript narrow the type properly
+        continue;
+      }
 
       const sizeCheck = await collectPagedSearch(component, true);
       if (sizeCheck.paging.total > UPPER_LIMIT) {

@@ -7,7 +7,6 @@ import {
   mdiEqualBox,
   mdiMinusCircle
 } from '@mdi/js';
-import axios from 'axios';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -15,9 +14,11 @@ import {
   HDFControlSegment,
   isContextualizedEvaluation
 } from 'inspecjs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Mustache from 'mustache';
+import sanitize from 'sanitize-html';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
+import {html, js, css} from './embedded-assets';
 import {
   IDetail,
   IOutputData,
@@ -40,7 +41,7 @@ type ProcessedData = {
 };
 
 // All selectable export types for an HTML export
-enum FileExportTypes {
+export enum FileExportTypes {
   Executive = 'Executive',
   Manager = 'Manager',
   Administrator = 'Administrator'
@@ -215,8 +216,7 @@ export class FromHDFToHTMLMapper {
     } else {
       file.data.contains.flatMap((profile) => {
         profile.contains.flatMap((result) => {
-          // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
-          for (const element of file.filteredControls!) {
+          for (const element of (file.filteredControls ?? [])) {
             if (element === result.data.id) {
               allResultLevels.push(result);
             }
@@ -407,10 +407,7 @@ export class FromHDFToHTMLMapper {
     }
 
     // Grab NIST & CCI controls
-    const allControls = _.filter(
-      [result.hdf.rawNistTags, result.hdf.wraps.tags.cci],
-      Boolean
-    ).flat();
+    const allControls = [result.hdf.rawNistTags, result.hdf.wraps.tags.cci].filter(Boolean).flat();
     // Remove `Rev_4` item and replace `unmapped` with proper `UM-1` naming
     const filteredControls = allControls
       .map((control) => (control === 'unmapped' ? 'UM-1' : control))
@@ -472,7 +469,7 @@ export class FromHDFToHTMLMapper {
           name: 'Fix Text',
           value: result.hdf.descriptions.fix || result.data.tags.fix
         }
-      ].filter((v) => v.value),
+      ].filter((v) => v.value).map((s) => ({...s, value: sanitize(s.value, {disallowedTagsMode: "escape"})})),
       resultID: this.replaceIllegalCharacters(result.hdf.wraps.id),
       resultStatus: {
         status: result.root.hdf.status,
@@ -518,24 +515,12 @@ export class FromHDFToHTMLMapper {
   }
 
   // Prompt HTML generation from data pulled from file during constructor initialization
-  // Requires path to prompt location of needed files relative to function call location
-  async toHTML(path: string): Promise<string> {
+  async toHTML(): Promise<string> {
     // Pull export template + styles and create outputData object containing data to fill template with
-    const templateRequest = axios.get<string>(`${path}template.html`);
-    const tailwindStylesRequest = axios.get<string>(`${path}style.css`);
-    const tailwindElementsRequest = axios.get<string>(
-      `${path}tw-elements.min.js`
-    );
-    const responses = await axios.all([
-      templateRequest,
-      tailwindStylesRequest,
-      tailwindElementsRequest
-    ]);
-
-    const template = responses[0].data;
-    this.outputData.tailwindStyles = responses[1].data;
+    const template = html;
+    this.outputData.tailwindStyles = css;
     // Remove source map reference in TW Elements library
-    this.outputData.tailwindElements = responses[2].data.replace(
+    this.outputData.tailwindElements = js.replace(
       '//# sourceMappingURL=tw-elements.umd.min.js.map',
       ''
     );

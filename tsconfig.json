@@ -8,7 +8,6 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
 
-    "strict": true,
     "noImplicitAny": true,
 
     "declaration": true,
@@ -23,7 +22,5 @@
 
     "skipLibCheck": true
   },
-  "exclude": [
-    "**/node_modules"
-  ]
+  "exclude": ["**/node_modules"]
 }
