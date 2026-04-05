@@ -7,7 +7,7 @@ import {EvaluationTag} from '../../src/evaluation-tags/evaluation-tag.model';
 // @ts-ignore
 export const EVALUATION_TAG_1: EvaluationTag = {
   value: 'value string',
-  evaluationId: '1'
+  evaluationId: '1',
 };
 
 export const EVALUATION_TAG_DTO: EvaluationTagDto = {
@@ -15,16 +15,16 @@ export const EVALUATION_TAG_DTO: EvaluationTagDto = {
   value: 'value string',
   evaluationId: '1',
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 export const CREATE_EVALUATION_TAG_DTO: CreateEvaluationTagDto = {
-  value: 'value string'
+  value: 'value string',
 };
 
 // @ts-ignore
 export const CREATE_EVALUATION_TAG_DTO_MISSING_KEY: CreateEvaluationTagDto = {
-  value: 'value string'
+  value: 'value string',
 };
 
 // @ts-ignore

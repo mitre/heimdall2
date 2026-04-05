@@ -19,7 +19,7 @@ export class ConfigService {
     /secret/i,
     /token/i,
     /api[-._]?key/i,
-    /data/i
+    /data/i,
   ];
 
   isRegistrationAllowed(): boolean {
@@ -62,7 +62,7 @@ export class ConfigService {
       tenableHostUrl: this.getTenableHostUrl(),
       forceTenableFrontend:
         this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',
-      splunkHostUrl: this.getSplunkHostUrl()
+      splunkHostUrl: this.getSplunkHostUrl(),
     });
   }
 
@@ -99,5 +99,5 @@ export const supportedOauth: string[] = [
   'gitlab',
   'google',
   'okta',
-  'oidc'
+  'oidc',
 ];

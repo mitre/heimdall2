@@ -20,7 +20,7 @@ interface GithubEmail {
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {
     super({
       clientID: configService.get('GITHUB_CLIENTID') || 'disabled',
@@ -39,13 +39,13 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         configService.defaultGithubAPIURL
       }user`,
       scope: 'user:email',
-      passReqToCallback: true
+      passReqToCallback: true,
     });
   }
 
   async validate(
     req: Record<string, unknown>,
-    accessToken: string
+    accessToken: string,
   ): Promise<User> {
     // Get user's linked emails from Github
     const githubEmails = await axios
@@ -55,8 +55,8 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
           this.configService.defaultGithubAPIURL
         }user/emails`,
         {
-          headers: {Authorization: `token ${accessToken}`}
-        }
+          headers: {Authorization: `token ${accessToken}`},
+        },
       )
       .then(({data}) => {
         return data;
@@ -69,8 +69,8 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
           this.configService.defaultGithubAPIURL
         }user`,
         {
-          headers: {Authorization: `token ${accessToken}`}
-        }
+          headers: {Authorization: `token ${accessToken}`},
+        },
       )
       .then(({data}) => {
         return data;
@@ -91,11 +91,11 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         primaryEmail.email,
         firstName,
         lastName,
-        'github'
+        'github',
       );
     } else {
       throw new UnauthorizedException(
-        'Please verify your email with Github before logging into Heimdall.'
+        'Please verify your email with Github before logging into Heimdall.',
       );
     }
   }

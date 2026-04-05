@@ -4,7 +4,7 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsOptional,
-  IsString
+  IsString,
 } from 'class-validator';
 import {CreateEvaluationTagDto} from '../../evaluation-tags/dto/create-evaluation-tag.dto';
 

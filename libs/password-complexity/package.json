@@ -11,7 +11,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "lint": "eslint \"**/*.js\" --fix",
-    "lint:ci": "eslint \"**/*.js\" --max-warnings 0"
+    "lint": "eslint --fix",
+    "lint:ci": "eslint --max-warnings 0"
   }
 }

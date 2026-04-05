@@ -13,13 +13,13 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
-        format: this.loggingTimeFormat
+        format: this.loggingTimeFormat,
       }),
       winston.format.printf(
         (info) =>
-          `${this.line}[${[info.timestamp]}] (Authentication Exception Filter): ${info.message}`
-      )
-    )
+          `${this.line}[${[info.timestamp]}] (Authentication Exception Filter): ${info.message}`,
+      ),
+    ),
   });
 
   catch(exception: Error, host: ArgumentsHost): void {
@@ -31,15 +31,15 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       stack: exception.stack,
       authInfo: _.get(request, 'authInfo'),
       query: request.query,
-      headers: request.headers
+      headers: request.headers,
     };
     this.logger.warn(
-      `Authentication Error\n${JSON.stringify(errInfo, null, 2)}`
+      `Authentication Error\n${JSON.stringify(errInfo, null, 2)}`,
     );
     const authError =
       `${_.has(request, 'authInfo.message') ? _.get(request, 'authInfo.message') : ''}\n${exception.message}`.trim();
     response.cookie('authenticationError', authError, {
-      secure: this.configService.isInProductionMode()
+      secure: this.configService.isInProductionMode(),
     });
     response.redirect(302, '/');
   }

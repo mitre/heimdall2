@@ -3,7 +3,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
@@ -24,7 +24,7 @@ export class UsersService {
     @InjectModel(User)
     private readonly userModel: typeof User,
     private readonly configService: ConfigService,
-    private readonly groupsService: GroupsService
+    private readonly groupsService: GroupsService,
   ) {}
 
   async adminFindAllUsers(): Promise<User[]> {
@@ -33,7 +33,7 @@ export class UsersService {
 
   async findAllUsers(): Promise<User[]> {
     return this.userModel.findAll<User>({
-      attributes: ['id', 'email', 'title', 'firstName', 'lastName']
+      attributes: ['id', 'email', 'title', 'firstName', 'lastName'],
     });
   }
 
@@ -48,8 +48,8 @@ export class UsersService {
   async findByEmail(email: string): Promise<User> {
     return this.findOneBang({
       where: {
-        email
-      }
+        email,
+      },
     });
   }
 
@@ -73,7 +73,7 @@ export class UsersService {
   async update(
     userToUpdate: User,
     updateUserDto: UpdateUserDto,
-    abac: Ability
+    abac: Ability,
   ): Promise<User> {
     if (!abac.can('update-no-password', userToUpdate)) {
       await AuthnService.prototype.testPassword(updateUserDto, userToUpdate);
@@ -119,17 +119,17 @@ export class UsersService {
   async remove(
     userToDelete: User,
     deleteUserDto: DeleteUserDto,
-    abac: Ability
+    abac: Ability,
   ): Promise<User> {
     if (
       abac.cannot(Action.DeleteNoPassword, userToDelete) &&
       !(await compare(
         deleteUserDto.password || '',
-        userToDelete.encryptedPassword
+        userToDelete.encryptedPassword,
       ))
     ) {
       throw new ForbiddenException(
-        'Password was incorrect, could not delete account'
+        'Password was incorrect, could not delete account',
       );
     }
 
@@ -138,7 +138,7 @@ export class UsersService {
     // administrator account
     if (userToDelete.role === 'admin' && adminCount < 2) {
       throw new ForbiddenException(
-        'Cannot destroy only administrator account, please promote another user to administrator first'
+        'Cannot destroy only administrator account, please promote another user to administrator first',
       );
     }
     // Clean up groups owned by user
@@ -147,14 +147,14 @@ export class UsersService {
         if (group.users.some((user) => user.id === userToDelete.id)) {
           await this.groupsService.ensureGroupHasOwner(group, userToDelete);
         }
-      })
+      }),
     );
     await userToDelete.destroy();
     return userToDelete;
   }
 
   async findByPkBang(
-    identifier: string | number | Buffer | undefined
+    identifier: string | number | Buffer | undefined,
   ): Promise<User> {
     const user = await this.userModel.findByPk<User>(identifier);
     if (user === null) {

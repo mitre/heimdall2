@@ -31,9 +31,9 @@ export const tokenProviders = [
       signOptions: {
         expiresIn: limitJWTTime(
           configService.get('JWT_EXPIRE_TIME') || '60s',
-          true
-        )
-      }
-    })
-  })
+          true,
+        ),
+      },
+    }),
+  }),
 ];

@@ -17,7 +17,7 @@
     "prebuild": "rimraf ../../dist/frontend",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lint:ci": "vue-cli-service lint --no-fix  --maxWarnings 0",
+    "lint:ci": "vue-cli-service lint --no-fix --maxWarnings 0",
     "make:component": "vue-cli-service make:component",
     "make:directive": "vue-cli-service make:directive",
     "make:layout": "vue-cli-service make:layout",

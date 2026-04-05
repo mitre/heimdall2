@@ -19,12 +19,12 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
   format: winston.format.combine(
     winston.format.timestamp({
-      format: loggingTimeFormat
+      format: loggingTimeFormat,
     }),
     winston.format.printf(
-      (info) => `${line}[${[info.timestamp]}] (Authn Service): ${info.message}`
-    )
-  )
+      (info) => `${line}[${[info.timestamp]}] (Authn Service): ${info.message}`,
+    ),
+  ),
 });
 
 async function bootstrap() {
@@ -59,10 +59,10 @@ async function bootstrap() {
           'https://api.github.com',
           'https://sts.amazonaws.com',
           configService.getTenableHostUrl(),
-          configService.getSplunkHostUrl()
-        ].filter((source) => source)
-      }
-    })
+          configService.getSplunkHostUrl(),
+        ].filter((source) => source),
+      },
+    }),
   );
   app.use(json({limit: '50mb'}));
   app.use(passport.initialize());
@@ -80,18 +80,18 @@ async function bootstrap() {
             ...configService.getDbConfig(),
             /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
           those are equal to the dialectOptions passed to sequelize */
-            ssl: configService.getSSLConfig()
+            ssl: configService.getSSLConfig(),
           },
-          tableName: 'session'
+          tableName: 'session',
         }),
         proxy: configService.isInProductionMode() ? true : undefined,
         cookie: {
           maxAge: 60 * 60 * 1000, // 1 hour
-          secure: configService.isInProductionMode()
+          secure: configService.isInProductionMode(),
         },
         saveUninitialized: false,
-        resave: false
-      })
+        resave: false,
+      }),
     );
     if (configService.isInProductionMode()) {
       app.getHttpAdapter().getInstance().set('trust proxy', true);
@@ -106,9 +106,9 @@ async function bootstrap() {
       message: {
         status: 429,
         message: 'Too Many Requests',
-        error: 'Ratelimited'
-      }
-    })
+        error: 'Ratelimited',
+      },
+    }),
   );
   // Allow for file uploads up to 50 mb
   multer({
@@ -116,15 +116,15 @@ async function bootstrap() {
       fieldSize:
         parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') || '50') *
         1024 *
-        1024
-    }
+        1024,
+    },
   });
 
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      whitelist: true
-    })
+      whitelist: true,
+    }),
   );
 
   //eslint-disable-next-line @typescript-eslint/no-explicit-any

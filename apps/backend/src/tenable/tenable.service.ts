@@ -16,8 +16,8 @@ export class TenableService {
       baseURL: creds.host_url,
       headers: {
         'x-apikey': `accesskey=${creds.accesskey}; secretkey=${creds.secretkey}`,
-        'Content-Type': req.get('content-type') || 'application/json'
-      }
+        'Content-Type': req.get('content-type') || 'application/json',
+      },
     });
 
     const method = req.method;
@@ -33,7 +33,7 @@ export class TenableService {
       responseType:
         method === 'POST' && req.get('content-type')?.includes('zip')
           ? 'arraybuffer'
-          : 'json'
+          : 'json',
     });
   }
 }

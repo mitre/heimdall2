@@ -11,7 +11,7 @@ import {
   PrimaryKey,
   Table,
   Unique,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
@@ -91,5 +91,5 @@ export class User extends Model {
   declare updatedAt: Date;
 
   @BelongsToMany(() => Group, () => GroupUser)
-  declare groups: Array<Group & {GroupUser: GroupUser}>;
+  declare groups: Array<Group & { GroupUser: GroupUser }>;
 }

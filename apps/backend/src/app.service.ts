@@ -2,7 +2,7 @@ import {
   BeforeApplicationShutdown,
   Injectable,
   OnApplicationBootstrap,
-  OnApplicationShutdown
+  OnApplicationShutdown,
 } from '@nestjs/common';
 import os from 'os';
 import winston from 'winston';
@@ -19,7 +19,7 @@ export class AppService
     info: 'cyan',
     warn: 'yellow',
     error: 'red',
-    verbose: 'blue'
+    verbose: 'blue',
   });
 
   public logger = winston.createLogger({
@@ -27,33 +27,33 @@ export class AppService
     format: winston.format.combine(
       winston.format.colorize({all: true}),
       winston.format.timestamp({
-        format: 'MMM-DD-YYYY HH:mm:ss Z'
+        format: 'MMM-DD-YYYY HH:mm:ss Z',
       }),
       winston.format.errors({stack: true}),
       winston.format.align(),
       winston.format.printf(
         (info) =>
-          `${this.line}[${[info.timestamp]}] (App Service): ${info.message}`
-      )
-    )
+          `${this.line}[${[info.timestamp]}] (App Service): ${info.message}`,
+      ),
+    ),
   });
 
   onApplicationBootstrap(): void {
     this.logger.info({
       message: `Started Heimdall Enterprise Server on ${os.hostname()} (${os.platform()} ${os.release()}) with PID ${
         process.pid
-      } and UID ${process.getuid?.()}`
+      } and UID ${process.getuid?.()}`,
     });
   }
 
   beforeApplicationShutdown(signal: string): void {
     this.logger.info({
-      message: `Received ${signal}, starting shutdown for PID ${process.pid}`
+      message: `Received ${signal}, starting shutdown for PID ${process.pid}`,
     });
   }
   onApplicationShutdown(signal: string): void {
     this.logger.info({
-      message: `Finished shutdown for ${signal} for PID ${process.pid}`
+      message: `Finished shutdown for ${signal} for PID ${process.pid}`,
     });
   }
 }

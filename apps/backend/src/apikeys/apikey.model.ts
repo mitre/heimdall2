@@ -9,7 +9,7 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
@@ -31,12 +31,12 @@ export class ApiKey extends Model {
   declare groupId: string;
 
   @BelongsTo(() => User, {
-    constraints: false
+    constraints: false,
   })
   declare user: User;
 
   @BelongsTo(() => Group, {
-    constraints: false
+    constraints: false,
   })
   declare group: Group;
 

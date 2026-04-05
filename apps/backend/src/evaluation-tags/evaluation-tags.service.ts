@@ -11,7 +11,7 @@ import {EvaluationTag} from './evaluation-tag.model';
 export class EvaluationTagsService {
   constructor(
     @InjectModel(EvaluationTag)
-    private readonly evaluationTagModel: typeof EvaluationTag
+    private readonly evaluationTagModel: typeof EvaluationTag,
   ) {}
 
   async findAll(): Promise<EvaluationTag[]> {
@@ -22,11 +22,11 @@ export class EvaluationTagsService {
           include: [
             {
               model: Group,
-              include: [User]
-            }
-          ]
-        }
-      ]
+              include: [User],
+            },
+          ],
+        },
+      ],
     });
   }
 
@@ -42,17 +42,17 @@ export class EvaluationTagsService {
           include: [
             {
               model: Group,
-              include: [User]
-            }
-          ]
-        }
-      ]
+              include: [User],
+            },
+          ],
+        },
+      ],
     });
   }
 
   async create(
     evaluationId: string,
-    createEvaluationTagDto: CreateEvaluationTagDto
+    createEvaluationTagDto: CreateEvaluationTagDto,
   ): Promise<EvaluationTag> {
     const evaluationTag = new EvaluationTag();
     evaluationTag.value = createEvaluationTagDto.value;
@@ -68,11 +68,11 @@ export class EvaluationTagsService {
           include: [
             {
               model: Group,
-              include: [User]
-            }
-          ]
-        }
-      ]
+              include: [User],
+            },
+          ],
+        },
+      ],
     });
     await evaluationTag.destroy();
     return evaluationTag;
@@ -80,11 +80,11 @@ export class EvaluationTagsService {
 
   async findByPkBang(
     identifier: string | number | Buffer | undefined,
-    options: Pick<FindOptions, 'include'>
+    options: Pick<FindOptions, 'include'>,
   ): Promise<EvaluationTag> {
     const evaluationTag = await this.evaluationTagModel.findByPk<EvaluationTag>(
       identifier,
-      options
+      options,
     );
     if (evaluationTag === null) {
       throw new NotFoundException('EvaluationTag with given id not found');

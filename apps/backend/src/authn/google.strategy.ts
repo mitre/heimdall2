@@ -22,38 +22,38 @@ interface GoogleProfile {
 export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {
     super({
       clientID: configService.get('GOOGLE_CLIENTID') || 'disabled',
       clientSecret: configService.get('GOOGLE_CLIENTSECRET') || 'disabled',
       callbackURL:
         `${configService.getExternalUrl()}/authn/google/callback` || 'disabled',
-      scope: ['email', 'profile']
+      scope: ['email', 'profile'],
     });
   }
 
   async validate(
     accessToken: string,
     refreshToken: string,
-    profile: GoogleProfile
+    profile: GoogleProfile,
   ): Promise<User> {
     const {name, emails} = profile;
     const user = {
       email: emails[0],
       firstName: name.givenName,
-      lastName: name.familyName
+      lastName: name.familyName,
     };
     if (user.email.verified) {
       return this.authnService.validateOrCreateUser(
         user.email.value,
         user.firstName,
         user.lastName,
-        'google'
+        'google',
       );
     } else {
       throw new UnauthorizedException(
-        'Please verify your email with Google before logging into Heimdall.'
+        'Please verify your email with Google before logging into Heimdall.',
       );
     }
   }

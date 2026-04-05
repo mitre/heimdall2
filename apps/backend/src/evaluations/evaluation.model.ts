@@ -12,7 +12,7 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
@@ -49,7 +49,7 @@ export class Evaluation extends Model {
   declare groupId: string;
 
   @BelongsTo(() => User, {
-    constraints: false
+    constraints: false,
   })
   declare user: User;
 
@@ -67,5 +67,5 @@ export class Evaluation extends Model {
   declare evaluationTags: EvaluationTag[];
 
   @BelongsToMany(() => Group, () => GroupEvaluation)
-  declare groups: Array<Group & {GroupEvaluation: GroupEvaluation}>;
+  declare groups: Array<Group & { GroupEvaluation: GroupEvaluation }>;
 }

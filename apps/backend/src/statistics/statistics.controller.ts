@@ -4,7 +4,7 @@ import {
   Get,
   Request,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -19,13 +19,13 @@ import {StatisticsService} from './statistics.service';
 export class StatisticsController {
   constructor(
     private readonly statisticsService: StatisticsService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
   ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
   async getHeimdallStatistics(
-    @Request() request: {user: User}
+    @Request() request: { user: User },
   ): Promise<StatisticsDTO> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ViewStatistics, User);

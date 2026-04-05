@@ -17,36 +17,36 @@ export class DatabaseService {
 
   getDelta<T extends DeltaArgs>(
     source: Array<T>,
-    updated: Array<T>
+    updated: Array<T>,
   ): IDelta<T> {
     if (source === undefined || updated === undefined) {
       return {
         added: [],
         changed: [],
-        deleted: []
+        deleted: [],
       };
     }
 
     const added = updated.filter(
       (updatedItem) =>
         source.find((sourceItem) => sourceItem.id === updatedItem.id) ===
-        undefined
+        undefined,
     );
     const changed = updated.filter(
       (updatedItem) =>
         source.find((sourceItem) => sourceItem.id === updatedItem.id) !==
-        undefined
+        undefined,
     );
     const deleted = source.filter(
       (sourceItem) =>
         updated.find((updatedItem) => updatedItem.id === sourceItem.id) ===
-        undefined
+        undefined,
     );
 
     return {
       added: added,
       changed: changed,
-      deleted: deleted
+      deleted: deleted,
     };
   }
 }

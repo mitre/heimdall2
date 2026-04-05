@@ -19,16 +19,16 @@ import {ApiKeyService} from './apikey.service';
     AuthzModule,
     ConfigModule,
     ApiKeyModule,
-    TokenModule
+    TokenModule,
   ],
   providers: [
     ConfigService,
     AuthnService,
     UsersService,
     GroupsService,
-    ApiKeyService
+    ApiKeyService,
   ],
   exports: [SequelizeModule, ApiKeyService],
-  controllers: [ApiKeyController]
+  controllers: [ApiKeyController],
 })
 export class ApiKeyModule {}

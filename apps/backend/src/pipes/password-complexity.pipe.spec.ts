@@ -6,11 +6,11 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
   UPDATE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD,
-  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
 } from '../../test/constants/users-test.constant';
 import {
   PasswordComplexityPipe,
-  validatePassword
+  validatePassword,
 } from './password-complexity.pipe';
 
 describe('PasswordComplexityPipe', () => {
@@ -31,7 +31,7 @@ describe('PasswordComplexityPipe', () => {
       });
       it('should pass because the password has more than 15 characters', () => {
         expect(validatePassword('NotAShortPassword')).not.toContain(
-          validators[0].name
+          validators[0].name,
         );
       });
     });
@@ -39,31 +39,31 @@ describe('PasswordComplexityPipe', () => {
     describe('hasClasses', () => {
       it('should fail because the password does not contain a special character', () => {
         expect(validatePassword('Testpasswordwithoutspecialchar7')).toContain(
-          validators[1].name
+          validators[1].name,
         );
       });
 
       it('should fail because the password does not contain a number', () => {
         expect(validatePassword('Testpasswordwithoutanumber')).toContain(
-          validators[1].name
+          validators[1].name,
         );
       });
 
       it('should fail because the password does not contain an uppercase letter', () => {
         expect(validatePassword('testpasswordwithoutuppercase7$')).toContain(
-          validators[1].name
+          validators[1].name,
         );
       });
 
       it('should fail because the password does not contain a lowercase letter', () => {
         expect(validatePassword('TESTPASSWORDWITHOUTLOWERCASE7$')).toContain(
-          validators[1].name
+          validators[1].name,
         );
       });
 
       it('should pass because the password has all character classes and is at least 15 characters', () => {
         expect(validatePassword('Atestpassword7$')).not.toContain(
-          validators[1].name
+          validators[1].name,
         );
       });
     });
@@ -107,7 +107,7 @@ describe('PasswordComplexityPipe', () => {
 
       it('should pass because the password meets all the minimum requirements', () => {
         expect(validatePassword('aaaBBB111$$$')).not.toContain(
-          validators[2].name
+          validators[2].name,
         );
       });
     });
@@ -117,21 +117,21 @@ describe('PasswordComplexityPipe', () => {
   describe('Test Valid Password', () => {
     it('should return the same CreateUserDto', () => {
       expect(
-        passwordComplexityPipe.transform(CREATE_USER_DTO_TEST_OBJ)
+        passwordComplexityPipe.transform(CREATE_USER_DTO_TEST_OBJ),
       ).toEqual(CREATE_USER_DTO_TEST_OBJ);
     });
 
     it('should return the same UpdateUserDto', () => {
       expect(
-        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_OBJ)
+        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_OBJ),
       ).toEqual(UPDATE_USER_DTO_TEST_OBJ);
     });
 
     it('should return UpdateUserDto if password fields are null', () => {
       expect(
         passwordComplexityPipe.transform(
-          UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
-        )
+          UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+        ),
       ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
   });
@@ -141,22 +141,22 @@ describe('PasswordComplexityPipe', () => {
     it('should throw a BadRequestException for CreateUserDto with missing password', () => {
       expect(() =>
         passwordComplexityPipe.transform(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
-        )
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
+        ),
       ).toThrowError(BadRequestException);
       expect(() =>
         passwordComplexityPipe.transform(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
-        )
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
+        ),
       ).toThrowError('Password must be of type string');
     });
 
     it('should throw a BadRequestException for UpdateUserDto with missing password', () => {
       expect(() =>
-        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD)
+        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD),
       ).toThrowError(BadRequestException);
       expect(() =>
-        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD)
+        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD),
       ).toThrowError('Password must be of type string');
     });
   });

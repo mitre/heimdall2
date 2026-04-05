@@ -33,7 +33,7 @@ async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
     PassportModule,
     TokenModule,
     ConfigModule,
-    GroupsModule
+    GroupsModule,
   ],
   providers: [
     AuthnService,
@@ -50,7 +50,7 @@ async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
       useFactory: async (
         authn: AuthnService,
         config: ConfigService,
-        groups: GroupsService
+        groups: GroupsService,
       ) =>
         new OidcStrategy(
           authn,
@@ -58,9 +58,9 @@ async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
           groups,
           config.get('OIDC_USE_HTTPS_PROXY') === 'true'
             ? await buildHttpsProxyAgent(config.get('HTTPS_PROXY') ?? '')
-            : undefined
+            : undefined,
         ),
-      inject: [AuthnService, ConfigService, GroupsService]
+      inject: [AuthnService, ConfigService, GroupsService],
     },
     {
       provide: OktaStrategy,
@@ -70,11 +70,11 @@ async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
           config,
           config.get('OKTA_USE_HTTPS_PROXY') === 'true'
             ? await buildHttpsProxyAgent(config.get('HTTPS_PROXY') ?? '')
-            : undefined
+            : undefined,
         ),
-      inject: [AuthnService, ConfigService]
-    }
+      inject: [AuthnService, ConfigService],
+    },
   ],
-  controllers: [AuthnController]
+  controllers: [AuthnController],
 })
 export class AuthnModule {}

@@ -6,7 +6,7 @@ import {
   Req,
   UseFilters,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {Request} from 'express';
@@ -27,30 +27,30 @@ export class AuthnController {
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
-        format: this.loggingTimeFormat
+        format: this.loggingTimeFormat,
       }),
       winston.format.printf(
         (info) =>
-          `${this.line}[${[info.timestamp]}] (Authn Controller): ${info.message}`
-      )
-    )
+          `${this.line}[${[info.timestamp]}] (Authn Controller): ${info.message}`,
+      ),
+    ),
   });
 
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
-    @Req() req: Request
-  ): Promise<{userID: string; accessToken: string}> {
+    @Req() req: Request,
+  ): Promise<{ userID: string; accessToken: string }> {
     this.logger.debug('in the local login func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     if (!this.configService.isLocalLoginAllowed()) {
       throw new ForbiddenException(
-        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
+        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.',
       );
     } else {
       return this.authnService.login(req.user as User);
@@ -60,8 +60,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('ldap'))
   @Post('login/ldap')
   async loginToLDAP(
-    @Req() req: Request
-  ): Promise<{userID: string; accessToken: string}> {
+    @Req() req: Request,
+  ): Promise<{ userID: string; accessToken: string }> {
     this.logger.debug('in the ldap login func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     return this.authnService.login(req.user as User);
@@ -71,8 +71,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('github'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToGithub(
-    @Req() req: Request
-  ): Promise<{userID: string; accessToken: string}> {
+    @Req() req: Request,
+  ): Promise<{ userID: string; accessToken: string }> {
     this.logger.debug('in the github login func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     return this.authnService.login(req.user as User);
@@ -92,8 +92,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('gitlab'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToGitlab(
-    @Req() req: Request
-  ): Promise<{userID: string; accessToken: string}> {
+    @Req() req: Request,
+  ): Promise<{ userID: string; accessToken: string }> {
     this.logger.debug('in the gitlab login func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     return this.authnService.login(req.user as User);
@@ -113,8 +113,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('google'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToGoogle(
-    @Req() req: Request
-  ): Promise<{userID: string; accessToken: string}> {
+    @Req() req: Request,
+  ): Promise<{ userID: string; accessToken: string }> {
     this.logger.debug('in the google login func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     return this.authnService.login(req.user as User);
@@ -134,8 +134,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('okta'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToOkta(
-    @Req() req: Request
-  ): Promise<{userID: string; accessToken: string}> {
+    @Req() req: Request,
+  ): Promise<{ userID: string; accessToken: string }> {
     this.logger.debug('in the okta login func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     return this.authnService.login(req.user as User);
@@ -155,8 +155,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('oidc'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToOIDC(
-    @Req() req: Request
-  ): Promise<{userID: string; accessToken: string}> {
+    @Req() req: Request,
+  ): Promise<{ userID: string; accessToken: string }> {
     this.logger.debug('in the oidc login func');
     this.logger.debug(JSON.stringify(req.session, null, 2));
     return this.authnService.login(req.user as User);
@@ -177,13 +177,13 @@ export class AuthnController {
     session: {
       userID: string;
       accessToken: string;
-    }
+    },
   ): Promise<void> {
     req.res?.cookie('userID', session.userID, {
-      secure: this.configService.isInProductionMode()
+      secure: this.configService.isInProductionMode(),
     });
     req.res?.cookie('accessToken', session.accessToken, {
-      secure: this.configService.isInProductionMode()
+      secure: this.configService.isInProductionMode(),
     });
     req.res?.redirect('/');
   }

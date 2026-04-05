@@ -14,39 +14,39 @@ export const MINUTE_IN_MILLISECONDS = 60000;
 
 export const LOGIN_AUTHENTICATION = {
   email: 'abc@yahoo.com',
-  password: 'LETmeiN123$$$tP'
+  password: 'LETmeiN123$$$tP',
 };
 
 export const LDAP_AUTHENTICATION = {
   username: 'fry',
-  password: 'fry'
+  password: 'fry',
 };
 
 export const ADMIN_LOGIN_AUTHENTICATION = {
   email: 'admin@yahoo.com',
-  password: 'LETmeiN123$$$tP'
+  password: 'LETmeiN123$$$tP',
 };
 
 export const BAD_LOGIN_AUTHENTICATION = {
   email: 'abc@yahoo.com',
-  password: 'Invalid_password'
+  password: 'Invalid_password',
 };
 
 export const BAD_LDAP_AUTHENTICATION = {
   username: 'fry',
-  password: 'zoiderg'
+  password: 'zoiderg',
 };
 
 export const SPLUNK_AUTHENTICATION = {
   username: 'admin',
   password: 'Valid_password!',
-  hostname: 'https://localhost:8089'
+  hostname: 'https://localhost:8089',
 };
 
 export const BAD_SPLUNK_AUTHENTICATION = {
   username: 'admin',
   password: 'Invalid_password!',
-  hostname: 'https://localhost:8089'
+  hostname: 'https://localhost:8089',
 };
 
 // @ts-ignore
@@ -63,13 +63,13 @@ export const TEST_USER: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
 export const TEST_USER_WITH_ID: User = {
   ...TEST_USER,
-  id: '1'
+  id: '1',
 };
 
 // @ts-ignore
@@ -86,13 +86,13 @@ export const ADMIN: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
 export const ADMIN_WITH_ID: User = {
   ...ADMIN,
-  id: '2'
+  id: '2',
 };
 
 // @ts-ignore
@@ -108,7 +108,7 @@ export const UPDATED_TEST_USER: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
@@ -124,7 +124,7 @@ export const TEST_USER_WITHOUT_EMAIL: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
@@ -140,7 +140,7 @@ export const TEST_USER_WITHOUT_FIRST_NAME: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
@@ -156,7 +156,7 @@ export const TEST_USER_WITHOUT_LAST_NAME: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
@@ -172,7 +172,7 @@ export const TEST_USER_WITHOUT_ORGANIZATION: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
@@ -188,7 +188,7 @@ export const TEST_USER_WITHOUT_TITLE: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
@@ -204,7 +204,7 @@ export const TEST_USER_WITH_INVALID_ROLE: User = {
   loginCount: 0,
   lastLogin: new Date(),
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 // @ts-ignore
@@ -214,7 +214,7 @@ export const USER_ARRAY: User[] = [
   // @ts-ignore
   TEST_USER_WITHOUT_FIRST_NAME,
   // @ts-ignore
-  UPDATED_TEST_USER
+  UPDATED_TEST_USER,
 ];
 
 export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
@@ -226,7 +226,7 @@ export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
   title: 'fake title',
   organization: 'Fake Org',
   role: 'user',
-  creationMethod: 'local'
+  creationMethod: 'local',
 };
 
 export const CREATE_ADMIN_DTO: CreateUserDto = {
@@ -238,12 +238,12 @@ export const CREATE_ADMIN_DTO: CreateUserDto = {
   title: 'Admin',
   organization: 'Fake Org',
   role: 'admin',
-  creationMethod: 'local'
+  creationMethod: 'local',
 };
 
 export const CREATE_SECOND_ADMIN_DTO: CreateUserDto = {
   ...CREATE_ADMIN_DTO,
-  email: 'admin2@yahoo.com'
+  email: 'admin2@yahoo.com',
 };
 
 export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
@@ -255,7 +255,7 @@ export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
   title: 'fake title',
   organization: 'Fake Org',
   role: 'user',
-  creationMethod: 'local'
+  creationMethod: 'local',
 };
 
 export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto =
@@ -268,7 +268,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto =
     title: 'fake title',
     organization: 'Fake Org',
     role: 'user',
-    creationMethod: 'local'
+    creationMethod: 'local',
   };
 
 // @ts-ignore
@@ -280,7 +280,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_FIRST_NAME: CreateUserDto = {
   title: 'fake title',
   organization: 'Fake Org',
   role: 'user',
-  creationMethod: 'local'
+  creationMethod: 'local',
 };
 
 // @ts-ignore
@@ -292,7 +292,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_LAST_NAME: CreateUserDto = {
   title: 'fake title',
   organization: 'Fake Org',
   role: 'user',
-  creationMethod: 'local'
+  creationMethod: 'local',
 };
 
 // @ts-ignore
@@ -305,7 +305,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ORGANIZATION: CreateUserDto =
     lastName: 'Dummy',
     title: 'fake title',
     role: 'user',
-    creationMethod: 'local'
+    creationMethod: 'local',
   };
 
 // @ts-ignore
@@ -317,7 +317,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_TITLE: CreateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   role: 'user',
-  creationMethod: 'local'
+  creationMethod: 'local',
 };
 
 // @ts-ignore
@@ -330,7 +330,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD: CreateUserDto =
     title: 'fake title',
     organization: 'Fake Org',
     role: 'user',
-    creationMethod: 'local'
+    creationMethod: 'local',
   };
 
 // @ts-ignore
@@ -344,7 +344,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD: CreateUserDto =
     title: 'fake title',
     organization: 'Fake Org',
     role: 'user',
-    creationMethod: 'local'
+    creationMethod: 'local',
   };
 
 // @ts-ignore
@@ -357,7 +357,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD: CreateUserDto
     title: 'fake title',
     organization: 'Fake Org',
     role: 'user',
-    creationMethod: 'local'
+    creationMethod: 'local',
   };
 
 // @ts-ignore
@@ -370,7 +370,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: 
     title: 'fake title',
     organization: 'Fake Org',
     role: 'user',
-    creationMethod: 'local'
+    creationMethod: 'local',
   };
 
 // @ts-ignore
@@ -382,7 +382,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  creationMethod: 'local'
+  creationMethod: 'local',
 };
 
 // @ts-ignore
@@ -395,7 +395,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD: CreateUserDto = {
   title: 'fake title',
   organization: 'Fake Org',
   role: 'user',
-  creationMethod: 'local'
+  creationMethod: 'local',
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
@@ -408,7 +408,7 @@ export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP',
-  forcePasswordChange: true
+  forcePasswordChange: true,
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD: UpdateUserDto = {
@@ -421,7 +421,7 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD: UpdateUserDto = {
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP',
-  forcePasswordChange: false
+  forcePasswordChange: false,
 };
 
 // @ts-ignore
@@ -433,7 +433,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_EMAIL: UpdateUserDto = {
   role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -446,7 +446,7 @@ export const UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL: UpdateUserDto = {
   role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -458,7 +458,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME: UpdateUserDto = {
   role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -470,7 +470,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME: UpdateUserDto = {
   role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -482,7 +482,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION: UpdateUserDto = {
   role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -494,7 +494,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_TITLE: UpdateUserDto = {
   role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -506,7 +506,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD: UpdateUserDto = {
   title: 'fake title',
   role: 'user',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -517,7 +517,7 @@ export const UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS: UpdateUserDto = {
   organization: 'Updated',
   title: 'Updated',
   role: 'user',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -529,19 +529,19 @@ export const UPDATE_USER_DTO_WITH_NO_CURRENT_PASSWORD: UpdateUserDto = {
   title: 'fake title',
   role: 'user',
   password: 'ABCdefG456!@#pT',
-  passwordConfirmation: 'ABCdefG456!@#pT'
+  passwordConfirmation: 'ABCdefG456!@#pT',
 };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD: UpdateUserDto = {
   ...UPDATE_USER_DTO_WITH_NO_CURRENT_PASSWORD,
-  currentPassword: 'invalid_password'
+  currentPassword: 'invalid_password',
 };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_WITH_ADMIN_ROLE: UpdateUserDto = {
   role: 'admin',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -554,7 +554,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto =
     title: 'fake title',
     role: 'user',
     password: 'ABCdefG456!@#pT',
-    currentPassword: 'LETmeiN123$$$tP'
+    currentPassword: 'LETmeiN123$$$tP',
   };
 
 // @ts-ignore
@@ -566,20 +566,20 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
   title: 'fake title',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE: UpdateUserDto =
   {
     email: 'changed@yahoo.com',
-    currentPassword: 'LETmeiN123$$$tP'
+    currentPassword: 'LETmeiN123$$$tP',
   };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE: UpdateUserDto = {
   forcePasswordChange: true,
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 // @ts-ignore
@@ -591,7 +591,7 @@ export const UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD: UpdateUserDto = {
   title: 'fake title',
   password: 'Invalidpass1',
   passwordConfirmation: 'Invalidpass1',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS: UpdateUserDto =
@@ -605,7 +605,7 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS: UpdateUserDto
     password: 'ABCdefG456!@#pT',
     passwordConfirmation: 'defABCg789*(%Pt',
     currentPassword: 'LETmeiN123$$$tP',
-    forcePasswordChange: false
+    forcePasswordChange: false,
   };
 
 // @ts-ignore
@@ -618,15 +618,15 @@ export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto 
     title: 'fake title',
     role: 'user',
     password: 'ABCdefG456!@#pT',
-    passwordConfirmation: 'ABCdefG456!@#pT'
+    passwordConfirmation: 'ABCdefG456!@#pT',
   };
 
 export const DELETE_USER_DTO_TEST_OBJ: DeleteUserDto = {
-  password: 'LETmeiN123$$$tP'
+  password: 'LETmeiN123$$$tP',
 };
 
 export const DELETE_FAILURE_USER_DTO_TEST_OBJ: DeleteUserDto = {
-  password: 'Invalid_password'
+  password: 'Invalid_password',
 };
 
 // @ts-ignore
@@ -645,15 +645,15 @@ export const UPDATED_USER_DTO = new UserDto(USER_ARRAY[2]);
 export const USER_DTO_WITHOUT_EMAIL = new UserDto(TEST_USER_WITHOUT_EMAIL);
 
 export const USER_DTO_WITHOUT_FIRST_NAME = new UserDto(
-  TEST_USER_WITHOUT_FIRST_NAME
+  TEST_USER_WITHOUT_FIRST_NAME,
 );
 
 export const USER_DTO_WITHOUT_LAST_NAME = new UserDto(
-  TEST_USER_WITHOUT_LAST_NAME
+  TEST_USER_WITHOUT_LAST_NAME,
 );
 
 export const USER_DTO_WITHOUT_ORGANIZATION = new UserDto(
-  TEST_USER_WITHOUT_ORGANIZATION
+  TEST_USER_WITHOUT_ORGANIZATION,
 );
 
 export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
@@ -682,7 +682,7 @@ export const USERS_SERVICE_MOCK = {
   async update(
     _userToUpdate: User,
     _updateUserDto: UpdateUserDto,
-    _abac: MongoAbility
+    _abac: MongoAbility,
   ): Promise<User> {
     return new User();
   },
@@ -695,18 +695,18 @@ export const USERS_SERVICE_MOCK = {
   async remove(
     _userToDelete: User,
     _deleteUserDto: DeleteUserDto,
-    _abac: MongoAbility
+    _abac: MongoAbility,
   ): Promise<User> {
     return new User();
   },
   async findByPkBang(
-    _identifier: string | number | Buffer | undefined
+    _identifier: string | number | Buffer | undefined,
   ): Promise<User> {
     return new User();
   },
   async findOneBang(_options: FindOptions | undefined): Promise<User> {
     return new User();
-  }
+  },
 };
 
 /* eslint-enable @typescript-eslint/ban-ts-comment */

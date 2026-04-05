@@ -1,5 +1,11 @@
 import {IUpdateUser} from '@heimdall/common/interfaces';
-import {IsBoolean, IsEmail, IsIn, IsOptional, IsString} from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsIn,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UpdateUserDto implements IUpdateUser {
   @IsEmail()

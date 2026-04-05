@@ -27,7 +27,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
         }
       } else {
         throw new Error(
-          'SSL CA file is neither a certificate nor is it a path to one'
+          'SSL CA file is neither a certificate nor is it a path to one',
         );
       }
     }
@@ -37,19 +37,19 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
 
     return {
       rejectUnauthorized: !sslInsecure,
-      ca: sslCA
+      ca: sslCA,
     };
   }
 
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {
     const sslConfig = LDAPStrategy.getSSLConfig(configService);
     super({
       server: {
         url: `${sslConfig ? 'ldaps' : 'ldap'}://${configService.get(
-          'LDAP_HOST'
+          'LDAP_HOST',
         )}:${configService.get('LDAP_PORT') || '389'}`,
         bindDN: configService.get('LDAP_BINDDN'),
         bindCredentials: configService.get('LDAP_PASSWORD'),
@@ -60,27 +60,27 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
         ...(sslConfig && {
           tlsOptions: {
             rejectUnauthorized: sslConfig.rejectUnauthorized,
-            ca: sslConfig.ca
-          }
-        })
-      }
+            ca: sslConfig.ca,
+          },
+        }),
+      },
     });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async validate(user: unknown, done: any) {
     const {firstName, lastName} = this.authnService.splitName(
-      _.get(user, this.configService.get('LDAP_NAMEFIELD') || 'name')
+      _.get(user, this.configService.get('LDAP_NAMEFIELD') || 'name'),
     );
     const email: string = _.get(
       user,
-      this.configService.get('LDAP_MAILFIELD') || 'mail'
+      this.configService.get('LDAP_MAILFIELD') || 'mail',
     );
     const validatedUser = this.authnService.validateOrCreateUser(
       Array.isArray(email) ? email[0] : email,
       firstName,
       lastName,
-      'ldap'
+      'ldap',
     );
     return done(null, validatedUser);
   }

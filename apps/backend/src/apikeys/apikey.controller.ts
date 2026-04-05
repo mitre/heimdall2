@@ -11,7 +11,7 @@ import {
   Query,
   Request,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import {AuthnService} from '../authn/authn.service';
 import {AuthzService} from '../authz/authz.service';
@@ -37,15 +37,15 @@ export class ApiKeyController {
     private readonly apiKeyService: ApiKeyService,
     private readonly authz: AuthzService,
     private readonly usersService: UsersService,
-    private readonly groupsService: GroupsService
+    private readonly groupsService: GroupsService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAPIKeys(
-    @Request() request: {user: User},
+    @Request() request: { user: User },
     @Query('userId') userId: string,
-    @Query('groupId') groupId: string
+    @Query('groupId') groupId: string,
   ): Promise<APIKeyDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
 
@@ -69,9 +69,9 @@ export class ApiKeyController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createAPIKey(
-    @Request() request: {user: User},
-    @Body() createApiKeyDto: CreateApiKeyDto
-  ): Promise<{id: string; apiKey: string}> {
+    @Request() request: { user: User },
+    @Body() createApiKeyDto: CreateApiKeyDto,
+  ): Promise<{ id: string; apiKey: string }> {
     const abac = this.authz.abac.createForUser(request.user);
 
     let target;
@@ -97,9 +97,9 @@ export class ApiKeyController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteAPIKey(
-    @Request() request: {user: User},
+    @Request() request: { user: User },
     @Param('id') id: string,
-    @Body() deleteApiKeyDto: DeleteAPIKeyDto
+    @Body() deleteApiKeyDto: DeleteAPIKeyDto,
   ): Promise<APIKeyDto> {
     const apiKeyToDelete = await this.apiKeyService.findById(id);
     const abac = this.authz.abac.createForUser(request.user);
@@ -107,11 +107,11 @@ export class ApiKeyController {
     if (apiKeyToDelete.type === 'user') {
       ForbiddenError.from(abac).throwUnlessCan(
         Action.Update,
-        apiKeyToDelete.user
+        apiKeyToDelete.user,
       );
     } else if (apiKeyToDelete.type === 'group') {
       const group = await this.groupsService.findByPkBang(
-        apiKeyToDelete.groupId
+        apiKeyToDelete.groupId,
       );
       ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
     } else {
@@ -127,21 +127,21 @@ export class ApiKeyController {
   @UseGuards(JwtAuthGuard)
   @Put('/:id')
   async updateAPIKey(
-    @Request() request: {user: User},
+    @Request() request: { user: User },
     @Param('id') id: string,
-    @Body() updateApiKeyDto: UpdateAPIKeyDto
+    @Body() updateApiKeyDto: UpdateAPIKeyDto,
   ): Promise<APIKeyDto> {
     const apiKeyToUpdate = await this.apiKeyService.findById(id);
     const abac = this.authz.abac.createForUser(request.user);
     if (apiKeyToUpdate.type === 'group') {
       const group = await this.groupsService.findByPkBang(
-        apiKeyToUpdate.groupId
+        apiKeyToUpdate.groupId,
       );
       ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
     } else if (apiKeyToUpdate.type === 'user') {
       ForbiddenError.from(abac).throwUnlessCan(
         Action.Update,
-        apiKeyToUpdate.user
+        apiKeyToUpdate.user,
       );
     } else {
       throw new BadRequestException('Unknown API key type');

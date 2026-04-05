@@ -8,7 +8,7 @@ import {AuthnService} from './authn.service';
 @Injectable()
 export class APIKeyStrategy extends PassportStrategy(
   HeaderAPIKeyStrategy,
-  'apikey'
+  'apikey',
 ) {
   constructor(private readonly authnService: AuthnService) {
     super({header: 'Authorization', prefix: 'Api-Key '}, false);
@@ -18,8 +18,8 @@ export class APIKeyStrategy extends PassportStrategy(
     apikey: string,
     done: (
       exception: null | ForbiddenException,
-      user: Promise<User | Group | null> | boolean
-    ) => unknown
+      user: Promise<User | Group | null> | boolean,
+    ) => unknown,
   ) {
     const auth = this.authnService.validateApiKey(apikey);
     if (await auth) {

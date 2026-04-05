@@ -8,7 +8,7 @@ import {
   Post,
   Request,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -27,31 +27,31 @@ export class EvaluationTagsController {
   constructor(
     private readonly evaluationTagsService: EvaluationTagsService,
     private readonly evaluationsService: EvaluationsService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
   ) {}
 
   @Get()
-  async index(@Request() request: {user: User}): Promise<EvaluationTagDto[]> {
+  async index(@Request() request: { user: User }): Promise<EvaluationTagDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluationTags = await this.evaluationTagsService.findAll();
     evaluationTags = evaluationTags.filter((evaluationTag) =>
-      abac.can(Action.Read, evaluationTag.evaluation)
+      abac.can(Action.Read, evaluationTag.evaluation),
     );
     return evaluationTags.map(
-      (evaluationTag) => new EvaluationTagDto(evaluationTag)
+      (evaluationTag) => new EvaluationTagDto(evaluationTag),
     );
   }
 
   @Get(':id')
   async findById(
     @Param('id') id: string,
-    @Request() request: {user: User}
+    @Request() request: { user: User },
   ): Promise<EvaluationTagDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationTag = await this.evaluationTagsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(
       Action.Read,
-      evaluationTag.evaluation
+      evaluationTag.evaluation,
     );
     return new EvaluationTagDto(evaluationTag);
   }
@@ -60,7 +60,7 @@ export class EvaluationTagsController {
   async create(
     @Param('evaluationId') evaluationId: string,
     @Body() createEvaluationTagDto: CreateEvaluationTagDto,
-    @Request() request: {user: User}
+    @Request() request: { user: User },
   ): Promise<EvaluationTagDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluation = await this.evaluationsService.findById(evaluationId);
@@ -71,21 +71,21 @@ export class EvaluationTagsController {
     return new EvaluationTagDto(
       await this.evaluationTagsService.create(
         evaluationId,
-        createEvaluationTagDto
-      )
+        createEvaluationTagDto,
+      ),
     );
   }
 
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: {user: User}
+    @Request() request: { user: User },
   ): Promise<EvaluationTagDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationTag = await this.evaluationTagsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(
       Action.Delete,
-      evaluationTag.evaluation
+      evaluationTag.evaluation,
     );
     return new EvaluationTagDto(await this.evaluationTagsService.remove(id));
   }

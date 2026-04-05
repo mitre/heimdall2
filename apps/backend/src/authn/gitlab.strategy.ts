@@ -19,31 +19,31 @@ interface GitlabProfile {
 export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {
     super({
       clientID: configService.get('GITLAB_CLIENTID') || 'disabled',
       clientSecret: configService.get('GITLAB_SECRET') || 'disabled',
       baseURL: configService.get('GITLAB_BASEURL'),
       callbackURL:
-        `${configService.getExternalUrl()}/authn/gitlab/callback` || 'disabled'
+        `${configService.getExternalUrl()}/authn/gitlab/callback` || 'disabled',
     });
   }
 
   async validate(
     accessToken: string,
     refreshToken: string,
-    profile: GitlabProfile
+    profile: GitlabProfile,
   ): Promise<User> {
     const email = profile.emails[0].value;
     const {firstName, lastName} = this.authnService.splitName(
-      profile.displayName
+      profile.displayName,
     );
     return this.authnService.validateOrCreateUser(
       email,
       firstName,
       lastName,
-      'gitlab'
+      'gitlab',
     );
   }
 }

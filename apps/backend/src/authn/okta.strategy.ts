@@ -15,7 +15,7 @@ type Profile = {
     givenName: string;
     middleName: string;
   };
-  emails: {value: string}[];
+  emails: { value: string }[];
 };
 
 @Injectable()
@@ -27,19 +27,19 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
-        format: this.loggingTimeFormat
+        format: this.loggingTimeFormat,
       }),
       winston.format.printf(
         (info) =>
-          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
-      )
-    )
+          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`,
+      ),
+    ),
   });
 
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
-    private readonly httpsAgent?: Agent
+    private readonly httpsAgent?: Agent,
   ) {
     super(
       {
@@ -65,17 +65,17 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
           configService.get('OKTA_USE_HTTPS_PROXY') === 'true'
             ? true
             : undefined,
-        agent: httpsAgent
+        agent: httpsAgent,
       },
       // Okta has no concept of a 'verified' email - the account has to have an email address associated with it - which is why we can use the 3-arity function since we don't need access to the underlying JSON response
       async (
         _issuer: string,
         profile: Profile,
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        done: any
+        done: any,
       ) => {
         return this.validate(_issuer, profile, done);
-      }
+      },
     );
   }
 
@@ -83,7 +83,7 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
     _issuer: string,
     profile: Profile,
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    done: any
+    done: any,
   ) {
     this.logger.debug('in okta strategy file');
     this.logger.debug(JSON.stringify(profile, null, 2));
@@ -92,7 +92,7 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
         profile.emails[0].value,
         profile.name.givenName,
         profile.name.familyName,
-        'okta'
+        'okta',
       );
       return done(null, user);
     }

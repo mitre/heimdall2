@@ -10,8 +10,8 @@ import {AuthnService} from './authn.service';
 interface OIDCProfile {
   id: string;
   displayName: string;
-  name: {familyName: string; givenName: string};
-  emails: [{value: string}];
+  name: { familyName: string; givenName: string };
+  emails: [{ value: string }];
   _raw: string;
   _json: {
     given_name: string;
@@ -31,20 +31,20 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
-        format: this.loggingTimeFormat
+        format: this.loggingTimeFormat,
       }),
       winston.format.printf(
         (info) =>
-          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
-      )
-    )
+          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`,
+      ),
+    ),
   });
 
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
     private readonly groupsService: GroupsService,
-    private readonly httpsAgent?: Agent
+    private readonly httpsAgent?: Agent,
   ) {
     super(
       {
@@ -68,7 +68,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
           configService.get('OIDC_USE_HTTPS_PROXY') === 'true'
             ? true
             : undefined,
-        agent: httpsAgent
+        agent: httpsAgent,
       },
       // using the 9-arity function so that we can access the underlying JSON response and extract the 'email_verified' attribute
       async (
@@ -81,7 +81,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
         _refreshToken: string,
         _params: object,
         //eslint-disable-next-line @typescript-eslint/no-explicit-any
-        done: any
+        done: any,
       ) => {
         return this.validate(
           _issuer,
@@ -92,9 +92,9 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
           _accessToken,
           _refreshToken,
           _params,
-          done
+          done,
         );
-      }
+      },
     );
   }
 
@@ -108,7 +108,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
     _refreshToken: string,
     _params: object,
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    done: any
+    done: any,
   ) {
     this.logger.debug('in oidc strategy file');
     this.logger.debug(JSON.stringify(uiProfile, null, 2));
@@ -122,7 +122,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
         email,
         given_name,
         family_name,
-        'oidc'
+        'oidc',
       );
 
       if (
@@ -136,8 +136,8 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
     }
     return done(
       new UnauthorizedException(
-        'Please verify your name and email with your identity provider before logging into Heimdall.'
-      )
+        'Please verify your name and email with your identity provider before logging into Heimdall.',
+      ),
     );
   }
 }

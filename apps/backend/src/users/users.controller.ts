@@ -12,7 +12,7 @@ import {
   UseFilters,
   UseGuards,
   UseInterceptors,
-  UsePipes
+  UsePipes,
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -39,12 +39,14 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
   ) {}
 
   @Get('/user-find-all')
   @UseGuards(JwtAuthGuard)
-  async findAllUsers(@Request() request: {user: User}): Promise<SlimUserDto[]> {
+  async findAllUsers(
+    @Request() request: { user: User },
+  ): Promise<SlimUserDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ReadSlim, User);
     const users = await this.usersService.findAllUsers();
@@ -55,7 +57,7 @@ export class UsersController {
   @Get(':id')
   async findUserById(
     @Param('id') id: string,
-    @Request() request: {user: User}
+    @Request() request: { user: User },
   ): Promise<UserDto> {
     const user = await this.usersService.findById(id);
 
@@ -68,7 +70,7 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async adminFindAllUsers(
-    @Request() request: {user: User}
+    @Request() request: { user: User },
   ): Promise<UserDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, User);
@@ -83,7 +85,7 @@ export class UsersController {
   @UseGuards(ImplicitAllowJwtAuthGuard)
   async create(
     @Body() createUserDto: CreateUserDto,
-    @Request() request: {user?: User}
+    @Request() request: { user?: User },
   ): Promise<UserDto> {
     const abac = request.user
       ? this.authz.abac.createForUser(request.user)
@@ -91,14 +93,14 @@ export class UsersController {
     // There should be no need to create users if user login is disabled
     if (!this.configService.isLocalLoginAllowed()) {
       throw new ForbiddenException(
-        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
+        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.',
       );
     }
     // If registration is not allowed then validate the current user has the permission to bypass this check
     if (!this.configService.isRegistrationAllowed()) {
       ForbiddenError.from(abac)
         .setMessage(
-          'User registration is disabled. Please ask your system administrator to create the account.'
+          'User registration is disabled. Please ask your system administrator to create the account.',
         )
         .throwUnlessCan(Action.ForceRegistration, User);
     }
@@ -109,20 +111,20 @@ export class UsersController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Request() request: {user: User},
+    @Request() request: { user: User },
     @Body(
       new PasswordsMatchPipe(),
       new PasswordChangePipe(),
-      new PasswordComplexityPipe()
+      new PasswordComplexityPipe(),
     )
-    updateUserDto: UpdateUserDto
+    updateUserDto: UpdateUserDto,
   ): Promise<UserDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const userToUpdate = await this.usersService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, userToUpdate);
 
     return new UserDto(
-      await this.usersService.update(userToUpdate, updateUserDto, abac)
+      await this.usersService.update(userToUpdate, updateUserDto, abac),
     );
   }
 
@@ -130,21 +132,21 @@ export class UsersController {
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: {user: User},
-    @Body() deleteUserDto: DeleteUserDto
+    @Request() request: { user: User },
+    @Body() deleteUserDto: DeleteUserDto,
   ): Promise<UserDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const userToDelete = await this.usersService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, userToDelete);
 
     return new UserDto(
-      await this.usersService.remove(userToDelete, deleteUserDto, abac)
+      await this.usersService.remove(userToDelete, deleteUserDto, abac),
     );
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/logout')
-  async logOut(@Request() request: {user: User}): Promise<void> {
+  async logOut(@Request() request: { user: User }): Promise<void> {
     return this.usersService.updateUserSecret(request.user);
   }
 

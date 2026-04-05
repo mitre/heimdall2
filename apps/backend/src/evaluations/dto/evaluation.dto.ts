@@ -21,7 +21,7 @@ export class EvaluationDto implements IEvaluation {
   constructor(
     evaluation: Evaluation,
     editable = false,
-    shareURL: string | undefined = undefined
+    shareURL: string | undefined = undefined,
   ) {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
@@ -33,14 +33,14 @@ export class EvaluationDto implements IEvaluation {
       this.evaluationTags = [];
     } else {
       this.evaluationTags = evaluation.evaluationTags.map(
-        (tag) => new EvaluationTagDto(tag)
+        (tag) => new EvaluationTagDto(tag),
       );
     }
     if (evaluation.groups === null || evaluation.groups === undefined) {
       this.groups = [];
     } else {
       this.groups = evaluation.groups.map(
-        (group) => new GroupDto(group as Group)
+        (group) => new GroupDto(group as Group),
       );
     }
     this.userId = evaluation.userId;

@@ -9,6 +9,6 @@ import {TenableService} from './tenable.service';
   // Handles HTTP requests related to Tenable
   controllers: [TenableController],
   // Provides logic for proxying and interacting with Tenable API
-  providers: [TenableService]
+  providers: [TenableService],
 })
 export class TenableModule {}
