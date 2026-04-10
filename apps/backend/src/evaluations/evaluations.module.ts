@@ -20,13 +20,13 @@ import {EvaluationsService} from './evaluations.service';
       User,
       Group,
       GroupUser,
-      GroupEvaluation,
+      GroupEvaluation
     ]),
     ConfigModule,
-    DatabaseModule,
+    DatabaseModule
   ],
   providers: [EvaluationsService, UsersService, GroupsService],
   controllers: [EvaluationsController],
-  exports: [EvaluationsService],
+  exports: [EvaluationsService]
 })
 export class EvaluationsModule {}

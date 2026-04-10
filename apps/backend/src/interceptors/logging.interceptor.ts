@@ -2,7 +2,7 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  NestInterceptor,
+  NestInterceptor
 } from '@nestjs/common';
 import {Request} from 'express';
 import _ from 'lodash';
@@ -25,19 +25,19 @@ export class LoggingInterceptor implements NestInterceptor {
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
-        format: 'MMM-DD-YYYY HH:mm:ss Z',
+        format: 'MMM-DD-YYYY HH:mm:ss Z'
       }),
       winston.format.printf(
         (info) =>
           `${this.line}[${[info.timestamp]}] (Interceptor): ${info.ip} ${
             info.referer
-          } ${info.userAgent} ${info.user} ${info.message}`,
-      ),
-    ),
+          } ${info.userAgent} ${info.user} ${info.message}`
+      )
+    )
   });
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<void> {
-    const request: Request & { user?: User } = context
+    const request: Request & {user?: User} = context
       .switchToHttp()
       .getRequest();
     const method = request.method;
@@ -53,8 +53,8 @@ export class LoggingInterceptor implements NestInterceptor {
       referer: referer,
       userAgent: userAgent,
       message: `${_.startCase(
-        calledMethod,
-      )} (${method}) ${requestParams} ${endpoint}`,
+        calledMethod
+      )} (${method}) ${requestParams} ${endpoint}`
     });
     return next.handle();
   }
@@ -70,7 +70,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const realIP = Object.keys(request.headers).find(
       (header) =>
         header.toLowerCase() === 'x-forwarded-for' ||
-        header.toLowerCase() === 'x-real-ip',
+        header.toLowerCase() === 'x-real-ip'
     );
     if (realIP) {
       return `${request.headers[realIP]} -> ${request.ip}`;

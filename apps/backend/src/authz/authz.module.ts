@@ -4,6 +4,6 @@ import {AuthzService} from './authz.service';
 @Global()
 @Module({
   providers: [AuthzService],
-  exports: [AuthzService],
+  exports: [AuthzService]
 })
 export class AuthzModule {}

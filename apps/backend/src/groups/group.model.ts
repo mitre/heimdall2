@@ -10,7 +10,7 @@ import {
   PrimaryKey,
   Table,
   Unique,
-  UpdatedAt,
+  UpdatedAt
 } from 'sequelize-typescript';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
@@ -51,8 +51,8 @@ export class Group extends Model {
   declare updatedAt: Date;
 
   @BelongsToMany(() => User, () => GroupUser)
-  declare users: Array<User & { GroupUser: GroupUser }>;
+  declare users: Array<User & {GroupUser: GroupUser}>;
 
   @BelongsToMany(() => Evaluation, () => GroupEvaluation)
-  declare evaluations: Array<Evaluation & { GroupEvaluation: GroupEvaluation }>;
+  declare evaluations: Array<Evaluation & {GroupEvaluation: GroupEvaluation}>;
 }

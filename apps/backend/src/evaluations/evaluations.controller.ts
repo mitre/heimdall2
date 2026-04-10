@@ -13,7 +13,7 @@ import {
   Request,
   UploadedFiles,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import {AnyFilesInterceptor} from '@nestjs/platform-express';
 import _ from 'lodash';
@@ -41,14 +41,14 @@ export class EvaluationsController {
     private readonly evaluationsService: EvaluationsService,
     private readonly groupsService: GroupsService,
     private readonly configService: ConfigService,
-    private readonly authz: AuthzService,
+    private readonly authz: AuthzService
   ) {}
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Get(':id')
   async findById(
     @Param('id') id: string,
-    @Request() request: { user: User },
+    @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluation = await this.evaluationsService.findById(id);
@@ -60,31 +60,31 @@ export class EvaluationsController {
   @Get(':id/groups')
   async groupsForEvaluation(
     @Param('id') id: string,
-    @Request() request: { user: User },
+    @Request() request: {user: User}
   ): Promise<GroupDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluationGroups = await this.evaluationsService.groups(id);
     evaluationGroups = evaluationGroups.filter(
       (group) =>
         abac.can(Action.AddEvaluation, group) &&
-        abac.can(Action.RemoveEvaluation, group),
+        abac.can(Action.RemoveEvaluation, group)
     );
     return evaluationGroups.map((group) => new GroupDto(group));
   }
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Get('e2e')
-  async findAll(@Request() request: { user: User }): Promise<EvaluationDto[]> {
+  async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluations = await this.evaluationsService.findAll();
 
     evaluations = evaluations.filter((evaluation) =>
-      abac.can(Action.Read, evaluation),
+      abac.can(Action.Read, evaluation)
     );
 
     return evaluations.map(
       (evaluation) =>
-        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation)),
+        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
     );
   }
 
@@ -92,7 +92,7 @@ export class EvaluationsController {
   @Get()
   async findAndCountAll(
     @Query() params: IEvalPaginationParams,
-    @Request() request: { user: User },
+    @Request() request: {user: User}
   ): Promise<IEvaluationResponse> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluations: Evaluation[] = [];
@@ -102,7 +102,7 @@ export class EvaluationsController {
       const response = await this.evaluationsService.getEvaluationsWithClause(
         params,
         request.user.email,
-        request.user.role,
+        request.user.role
       );
       evaluations = response.evaluations;
       totalItems = response.totalItems;
@@ -110,7 +110,7 @@ export class EvaluationsController {
       const response = await this.evaluationsService.getAllEvaluations(
         params,
         request.user.email,
-        request.user.role,
+        request.user.role
       );
       evaluations = response.evaluations;
       totalItems = response.totalItems;
@@ -120,15 +120,15 @@ export class EvaluationsController {
     // Show public evaluations, evaluations that belong to a group the logged-in user
     // belongs too, or those created by logged-in user.
     evaluations = evaluations.filter((evaluation: Subject) =>
-      abac.can(Action.Read, evaluation),
+      abac.can(Action.Read, evaluation)
     );
 
     return {
       evaluations: evaluations.map(
         (evaluation: Evaluation) =>
-          new EvaluationDto(evaluation, abac.can(Action.Update, evaluation)),
+          new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
       ),
-      totalCount: totalItems,
+      totalCount: totalItems
     };
   }
 
@@ -136,12 +136,12 @@ export class EvaluationsController {
   @Post()
   @UseInterceptors(
     AnyFilesInterceptor({limits: {files: 100}}),
-    CreateEvaluationInterceptor,
+    CreateEvaluationInterceptor
   )
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto,
     @UploadedFiles() data: Express.Multer.File[],
-    @Request() request: { user: User | Group },
+    @Request() request: {user: User | Group}
   ): Promise<EvaluationDto | EvaluationDto[]> {
     const uploadedFiles = data.map(async (file) => {
       let serializedDta: Record<string, unknown>;
@@ -163,11 +163,11 @@ export class EvaluationsController {
             evaluationTags: createEvaluationDto.evaluationTags || [],
             public: createEvaluationDto.public,
             data: serializedDta,
-            groupId: request.user.id,
+            groupId: request.user.id
           })
           .then(async (evaluation) => {
             const group = await this.groupsService.findByPkBang(
-              request.user.id,
+              request.user.id
             );
             this.groupsService.addEvaluationToGroup(group, evaluation);
             return evaluation;
@@ -198,18 +198,18 @@ export class EvaluationsController {
             evaluationTags: createEvaluationDto.evaluationTags || [],
             public: createEvaluationDto.public,
             data: serializedDta,
-            userId: request.user.id, // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+            userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
           })
           .then((createdEvaluation) => {
             groups.forEach((group) =>
-              this.groupsService.addEvaluationToGroup(group, createdEvaluation),
+              this.groupsService.addEvaluationToGroup(group, createdEvaluation)
             );
             return createdEvaluation;
           });
         const createdDto: EvaluationDto = new EvaluationDto(
           evaluation,
           true,
-          `${this.configService.getExternalUrl()}/results/${evaluation.id}`,
+          `${this.configService.getExternalUrl()}/results/${evaluation.id}`
         );
         return _.omit(createdDto, 'data');
       }
@@ -224,8 +224,8 @@ export class EvaluationsController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Request() request: { user: User },
-    @Body() updateEvaluationDto: UpdateEvaluationDto,
+    @Request() request: {user: User},
+    @Body() updateEvaluationDto: UpdateEvaluationDto
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationToUpdate = await this.evaluationsService.findById(id);
@@ -233,12 +233,12 @@ export class EvaluationsController {
 
     const updatedEvaluation = await this.evaluationsService.update(
       id,
-      updateEvaluationDto,
+      updateEvaluationDto
     );
 
     return new EvaluationDto(
       updatedEvaluation,
-      abac.can(Action.Update, updatedEvaluation),
+      abac.can(Action.Update, updatedEvaluation)
     );
   }
 
@@ -246,7 +246,7 @@ export class EvaluationsController {
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: { user: User },
+    @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationToDelete = await this.evaluationsService.findById(id);

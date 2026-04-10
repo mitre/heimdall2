@@ -8,7 +8,7 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
+  UpdatedAt
 } from 'sequelize-typescript';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {Group} from '../groups/group.model';

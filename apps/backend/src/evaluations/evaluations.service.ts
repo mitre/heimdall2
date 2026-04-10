@@ -27,13 +27,13 @@ export class EvaluationsService {
   constructor(
     @InjectModel(Evaluation)
     private readonly evaluationModel: typeof Evaluation,
-    private readonly databaseService: DatabaseService,
+    private readonly databaseService: DatabaseService
   ) {}
 
   async findAll(): Promise<Evaluation[]> {
     return this.evaluationModel.findAll<Evaluation>({
       attributes: {exclude: ['data']},
-      include: [EvaluationTag, User, {model: Group, include: [User]}],
+      include: [EvaluationTag, User, {model: Group, include: [User]}]
     });
   }
 
@@ -99,11 +99,11 @@ export class EvaluationsService {
   async getAllEvaluations(
     params: IEvalPaginationParams,
     email: string,
-    role: string,
+    role: string
   ): Promise<EvaluationsResponse> {
     const queryResponse: EvaluationsResponse = {
       totalItems: 0,
-      evaluations: [],
+      evaluations: []
     };
     const whereClause = this.getWhereClauseAll(role, email);
 
@@ -118,7 +118,7 @@ export class EvaluationsService {
             ? [[params.order[0], params.order[1]]]
             : [[params.order[0], params.order[1], params.order[2]]],
         subQuery: false, // enable where clause to reference attributes from the included models
-        where: whereClause,
+        where: whereClause
       })
       .then(async (data) => {
         const totalItems = await this.evaluationCount(email, role);
@@ -126,7 +126,7 @@ export class EvaluationsService {
         const totalPages = Math.ceil(totalItems / params.limit);
         const totalReturned = Number(params.offset) + Number(params.limit);
         const onPage = Math.ceil(
-          totalReturned / 100 / (Number(params.limit) / 100),
+          totalReturned / 100 / (Number(params.limit) / 100)
         );
         if (onPage == totalPages) {
           const returnCnt = totalItems - Number(params.offset);
@@ -143,11 +143,11 @@ export class EvaluationsService {
   async getEvaluationsWithClause(
     params: IEvalPaginationParams,
     email: string,
-    role: string,
+    role: string
   ): Promise<EvaluationsResponse> {
     const queryResponse: EvaluationsResponse = {
       totalItems: 0,
-      evaluations: [],
+      evaluations: []
     };
 
     const whereClauseParams: WhereClauseParams = {
@@ -156,7 +156,7 @@ export class EvaluationsService {
       operator: params.operator === undefined ? 'OR' : params.operator,
       email: email,
       role: role,
-      action: 'search',
+      action: 'search'
     };
 
     const whereClause = await this.getWhereClauseSearch(
@@ -164,7 +164,7 @@ export class EvaluationsService {
       whereClauseParams.operator,
       whereClauseParams.email,
       whereClauseParams.role,
-      whereClauseParams.action,
+      whereClauseParams.action
     );
     await this.evaluationModel
       .findAll<Evaluation>({
@@ -177,7 +177,7 @@ export class EvaluationsService {
             ? [[params.order[0], params.order[1]]]
             : [[params.order[0], params.order[1], params.order[2]]],
         subQuery: false,
-        where: whereClause,
+        where: whereClause
       })
       .then(async (data) => {
         const totalItems = await this.searchItemsCount(whereClauseParams);
@@ -185,7 +185,7 @@ export class EvaluationsService {
         const totalPages = Math.ceil(totalItems / params.limit);
         const totalReturned = Number(params.offset) + Number(params.limit);
         const onPage = Math.ceil(
-          totalReturned / 100 / (Number(params.limit) / 100),
+          totalReturned / 100 / (Number(params.limit) / 100)
         );
         if (onPage === totalPages) {
           const returnCnt = totalItems - Number(params.offset);
@@ -216,10 +216,10 @@ export class EvaluationsService {
         [Op.and]: {
           '$groups->users.id$': {
             [Op.eq]: Sequelize.literal(
-              `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`,
-            ),
-          },
-        },
+              `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`
+            )
+          }
+        }
       });
     }
     return baseCriteria;
@@ -230,7 +230,7 @@ export class EvaluationsService {
     operation: string,
     email: string,
     role: string,
-    action: string,
+    action: string
   ): Promise<WhereOptions> {
     const searchFields = [];
     const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
@@ -244,7 +244,7 @@ export class EvaluationsService {
     if (fields[2] !== '()') {
       if (action === 'count') {
         searchFields.push({
-          '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`},
+          '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
         });
       } else {
         const evaluationIds = await this.getEvaluationIdsForTagName(fields[2]);
@@ -252,8 +252,8 @@ export class EvaluationsService {
         searchFields.push({
           [Op.or]: [
             {id: {[Op.in]: evaluationIds}},
-            {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}},
-          ],
+            {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}}
+          ]
         });
       }
     }
@@ -264,10 +264,7 @@ export class EvaluationsService {
     } else {
       // Expected outcome: an OR baseCriteria AND an OR searchFields
       return {
-        [Op.and]: [
-          {[Op.or]: baseCriteria},
-          {[Op.and]: {[Op.or]: searchFields}},
-        ],
+        [Op.and]: [{[Op.or]: baseCriteria}, {[Op.and]: {[Op.or]: searchFields}}]
       };
     }
   }
@@ -277,7 +274,7 @@ export class EvaluationsService {
     await EvaluationTag.findAll({
       attributes: ['evaluationId'],
       where: {value: {[Op.iRegexp]: tagValue}},
-      raw: true,
+      raw: true
     }).then(async (evalIds) => {
       evaluationIds = evalIds.map((evalIds) => evalIds.evaluationId);
     });
@@ -298,34 +295,34 @@ export class EvaluationsService {
               [Op.and]: {
                 '$groups->users.id$': {
                   [Op.eq]: Sequelize.literal(
-                    `(SELECT id FROM "Users" WHERE "email" LIKE '${userEmail}')`,
-                  ),
-                },
-              },
-            },
-          ],
+                    `(SELECT id FROM "Users" WHERE "email" LIKE '${userEmail}')`
+                  )
+                }
+              }
+            }
+          ]
         },
         distinct: true,
-        col: 'id',
+        col: 'id'
       });
     }
   }
 
   async searchItemsCount(
-    whereClauseParams: WhereClauseParams,
+    whereClauseParams: WhereClauseParams
   ): Promise<number> {
     const whereClause = await this.getWhereClauseSearch(
       whereClauseParams.searchFields,
       whereClauseParams.operator,
       whereClauseParams.email,
       whereClauseParams.role,
-      'count',
+      'count'
     );
     return this.evaluationModel.count({
       include: [EvaluationTag, User, {model: Group, include: [User]}],
       where: whereClause,
       distinct: true,
-      col: 'id',
+      col: 'id'
     });
   }
 
@@ -343,34 +340,34 @@ export class EvaluationsService {
   }): Promise<Evaluation> {
     return Evaluation.create<Evaluation>(
       {
-        ...evaluation,
+        ...evaluation
       },
       {
-        include: [EvaluationTag],
-      },
+        include: [EvaluationTag]
+      }
     );
   }
 
   async update(
     id: string,
-    updateEvaluationDto: UpdateEvaluationDto,
+    updateEvaluationDto: UpdateEvaluationDto
   ): Promise<Evaluation> {
     const evaluation = await this.findByPkBang(id, {
-      include: [EvaluationTag],
+      include: [EvaluationTag]
     });
     return evaluation.update(updateEvaluationDto);
   }
 
   async remove(id: string): Promise<Evaluation> {
     const evaluation = await this.findByPkBang(id, {
-      include: [EvaluationTag],
+      include: [EvaluationTag]
     });
     await this.databaseService.sequelize.transaction(async (transaction) => {
       if (evaluation.evaluationTags !== null) {
         await Promise.all([
           evaluation.evaluationTags.map(async (evaluationTag) => {
             await evaluationTag.destroy({transaction});
-          }),
+          })
         ]);
       }
       return evaluation.destroy({transaction});
@@ -380,25 +377,23 @@ export class EvaluationsService {
 
   async findById(id: string): Promise<Evaluation> {
     return this.findByPkBang(id, {
-      include: [EvaluationTag, User, Group, {model: Group, include: [User]}],
+      include: [EvaluationTag, User, Group, {model: Group, include: [User]}]
     });
   }
 
   async groups(id: string): Promise<Group[]> {
     return (
-      await this.findByPkBang(id, {
-        include: {model: Group, include: [User]},
-      })
+      await this.findByPkBang(id, {include: {model: Group, include: [User]}})
     ).groups;
   }
 
   async findByPkBang(
     identifier: string | number | Buffer | undefined,
-    options: Pick<FindOptions, 'include'>,
+    options: Pick<FindOptions, 'include'>
   ): Promise<Evaluation> {
     const evaluation = await this.evaluationModel.findByPk<Evaluation>(
       identifier,
-      options,
+      options
     );
     if (evaluation === null) {
       throw new NotFoundException('Evaluation with given id not found');

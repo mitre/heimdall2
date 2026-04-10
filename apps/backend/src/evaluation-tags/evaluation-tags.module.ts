@@ -14,10 +14,10 @@ import {EvaluationTagsService} from './evaluation-tags.service';
   imports: [
     SequelizeModule.forFeature([Evaluation, Group, User, EvaluationTag]),
     ConfigModule,
-    DatabaseModule,
+    DatabaseModule
   ],
   providers: [EvaluationsService, EvaluationTagsService],
   controllers: [EvaluationTagsController],
-  exports: [EvaluationTagsService],
+  exports: [EvaluationTagsService]
 })
 export class EvaluationTagsModule {}

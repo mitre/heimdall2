@@ -12,10 +12,10 @@ import {UsersService} from './users.service';
     SequelizeModule.forFeature([User]),
     AuthzModule,
     ConfigModule,
-    forwardRef(() => GroupsModule),
+    forwardRef(() => GroupsModule)
   ],
   providers: [UsersService],
   controllers: [UsersController],
-  exports: [SequelizeModule, UsersService],
+  exports: [SequelizeModule, UsersService]
 })
 export class UsersModule {}

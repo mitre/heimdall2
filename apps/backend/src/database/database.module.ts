@@ -10,18 +10,18 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
   format: winston.format.combine(
     winston.format.colorize({
-      all: true,
+      all: true
     }),
     winston.format.timestamp({
-      format: 'MMM-DD-YYYY HH:mm:ss Z',
+      format: 'MMM-DD-YYYY HH:mm:ss Z'
     }),
     winston.format.errors({stack: true}),
     winston.format.align(),
     winston.format.printf(
       (info) =>
-        `${line}[${info.timestamp}] Query(${info.queryType}): ${info.message}`,
-    ),
-  ),
+        `${line}[${info.timestamp}] Query(${info.queryType}): ${info.message}`
+    )
+  )
 });
 
 const localConfigService = new ConfigService();
@@ -40,7 +40,7 @@ function sanitize(fields: string[], values?: string[]): string[] {
     values?.map((value, index) => {
       if (
         localConfigService.sensitiveKeys.some((regex) =>
-          regex.test(fields[index + 1]),
+          regex.test(fields[index + 1])
         )
       ) {
         return 'REDACTED';
@@ -53,13 +53,13 @@ function sanitize(fields: string[], values?: string[]): string[] {
 
 function logQuery(
   sql: string,
-  connection: { fields: string[]; bind: string[]; type: string },
+  connection: {fields: string[]; bind: string[]; type: string}
 ) {
   logger.info({
     message: `${sql} [${sanitize(connection.fields, connection.bind).join(
-      ', ',
+      ', '
     )}]`,
-    queryType: connection.type,
+    queryType: connection.type
   });
 }
 
@@ -80,19 +80,19 @@ function logQuery(
               fields: string[];
               bind: string[];
               type: string;
-            },
+            }
           );
         },
         pool: {
           max: 5,
           min: 0,
           acquire: 30000,
-          idle: 10000,
-        },
-      }),
-    }),
+          idle: 10000
+        }
+      })
+    })
   ],
   providers: [DatabaseService],
-  exports: [DatabaseService],
+  exports: [DatabaseService]
 })
 export class DatabaseModule {}

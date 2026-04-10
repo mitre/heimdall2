@@ -24,7 +24,7 @@ import {TenableModule} from './tenable/tenable.module';
   imports: [
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', '..', '..', 'dist', 'frontend'),
-      renderPath: '*splat',
+      renderPath: '*splat'
     }),
     ConfigModule,
     ApiKeyModule,
@@ -38,14 +38,14 @@ import {TenableModule} from './tenable/tenable.module';
     GroupsModule,
     GroupUsersModule,
     StatisticsModule,
-    TenableModule,
+    TenableModule
   ],
   providers: [
     AppService,
     {
       provide: APP_FILTER,
-      useClass: CaslExceptionFilter,
-    },
-  ],
+      useClass: CaslExceptionFilter
+    }
+  ]
 })
 export class AppModule {}

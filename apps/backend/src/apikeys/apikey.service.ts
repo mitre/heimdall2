@@ -15,7 +15,7 @@ export class ApiKeyService {
   constructor(
     @InjectModel(ApiKey)
     private readonly apiKeyModel: typeof ApiKey,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {}
 
   async count(): Promise<number> {
@@ -24,19 +24,19 @@ export class ApiKeyService {
 
   async create(
     target: User | Group,
-    createApiKeyDto: CreateApiKeyDto,
-  ): Promise<{ id: string; name: string; apiKey: string }> {
+    createApiKeyDto: CreateApiKeyDto
+  ): Promise<{id: string; name: string; apiKey: string}> {
     const APIKeySecret = this.configService.get('API_KEY_SECRET') || '';
     const newApiKey = new ApiKey({
       userId: target instanceof User ? target.id : undefined,
       groupId: target instanceof Group ? target.id : undefined,
       name: createApiKeyDto.name,
-      type: target instanceof User ? 'user' : 'group',
+      type: target instanceof User ? 'user' : 'group'
     });
     await newApiKey.save();
     const newJWT = jwt.sign(
       {keyId: newApiKey.id, createdAt: new Date()},
-      APIKeySecret,
+      APIKeySecret
     );
     // Since BCrypt has a 72 byte limit only hash the JWT signature
     const JWTSignature = newJWT.split('.')[2];
@@ -47,7 +47,7 @@ export class ApiKeyService {
 
   async update(
     id: string,
-    updateAPIKeyDto: UpdateAPIKeyDto,
+    updateAPIKeyDto: UpdateAPIKeyDto
   ): Promise<APIKeyDto> {
     const apiKey = await this.findById(id);
     apiKey.name = updateAPIKeyDto.name;
@@ -62,7 +62,7 @@ export class ApiKeyService {
 
   async findById(id: string): Promise<ApiKey> {
     const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, {
-      include: [User, Group],
+      include: [User, Group]
     });
     if (apiKey === null) {
       throw new NotFoundException('API key with given id not found');
@@ -73,14 +73,14 @@ export class ApiKeyService {
 
   async findAllForUser(user: User): Promise<APIKeyDto[]> {
     const apiKeys = await this.apiKeyModel.findAll({
-      where: {userId: user.id},
+      where: {userId: user.id}
     });
     return apiKeys.map((key) => new APIKeyDto(key));
   }
 
   async findAllForGroup(group: Group): Promise<APIKeyDto[]> {
     const apiKeys = await this.apiKeyModel.findAll({
-      where: {groupId: group.id},
+      where: {groupId: group.id}
     });
     return apiKeys.map((key) => new APIKeyDto(key));
   }

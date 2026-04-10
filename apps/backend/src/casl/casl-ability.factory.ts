@@ -3,7 +3,7 @@ import {
   createMongoAbility,
   ExtractSubjectType,
   InferSubjects,
-  MongoAbility,
+  MongoAbility
 } from '@casl/ability';
 import {Injectable} from '@nestjs/common';
 import {Evaluation} from '../evaluations/evaluation.model';
@@ -31,7 +31,7 @@ export enum Action {
   AddEvaluation = 'add-evaluation',
   RemoveEvaluation = 'remove-evaluation',
   ViewStatistics = 'view-statistics',
-  ForceRegistration = 'force-registration',
+  ForceRegistration = 'force-registration'
 }
 
 interface UserQuery extends User {
@@ -79,14 +79,14 @@ export class CaslAbilityFactory {
       [Action.Read, Action.AddEvaluation, Action.RemoveEvaluation],
       Group,
       {
-        'users.id': user.id,
-      },
+        'users.id': user.id
+      }
     );
 
     can<GroupQuery>([Action.Manage], Group, {
       users: {
-        $elemMatch: {id: user.id, 'GroupUser.role': 'owner'},
-      },
+        $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
+      }
     });
 
     // This really isn't the best method to do this since
@@ -96,22 +96,22 @@ export class CaslAbilityFactory {
     can(Action.Read, Evaluation, {public: true});
 
     can([Action.Manage], Evaluation, {
-      userId: user.id,
+      userId: user.id
     });
 
     can<EvaluationQuery>([Action.Read], Evaluation, {
-      'groups.users.id': user.id,
+      'groups.users.id': user.id
     });
 
     can<EvaluationQuery>([Action.Manage], Evaluation, {
       'groups.users': {
-        $elemMatch: {id: user.id, 'GroupUser.role': 'owner'},
-      },
+        $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
+      }
     });
 
     return build({
       detectSubjectType: (object) =>
-        object.constructor as ExtractSubjectType<Subjects>,
+        object.constructor as ExtractSubjectType<Subjects>
     });
   }
 

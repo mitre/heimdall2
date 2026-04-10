@@ -27,7 +27,7 @@ export class PasswordComplexityPipe implements PipeTransform {
       return value;
     } else {
       throw new BadRequestException(
-        validatePassword(value.password).join(', '),
+        validatePassword(value.password).join(', ')
       );
     }
   }

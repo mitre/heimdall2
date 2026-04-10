@@ -13,7 +13,7 @@ export class StatisticsService {
     private readonly evaluationsService: EvaluationsService,
     private readonly evaluationTagsService: EvaluationTagsService,
     private readonly groupsService: GroupsService,
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersService
   ) {}
 
   async getHeimdallStatistics(): Promise<StatisticsDTO> {
@@ -22,7 +22,7 @@ export class StatisticsService {
       userCount: await this.usersService.count(),
       evaluationCount: await this.evaluationsService.count(),
       evaluationTagCount: await this.evaluationTagsService.count(),
-      groupCount: await this.groupsService.count(),
+      groupCount: await this.groupsService.count()
     });
   }
 }

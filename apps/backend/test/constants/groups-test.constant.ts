@@ -8,19 +8,19 @@ import {User} from '../../src/users/user.model';
 export const GROUP_1 = {
   name: 'Heimdall Group',
   public: true,
-  desc: '',
+  desc: ''
 };
 
 export const PRIVATE_GROUP = {
   name: 'Private Heimdall Group',
   public: false,
-  desc: 'Test description',
+  desc: 'Test description'
 };
 
 export const UPDATE_GROUP: CreateGroupDto = {
   name: 'Updated Group',
   public: true,
-  desc: 'Updated test description',
+  desc: 'Updated test description'
 };
 
 export const GROUPS_SERVICE_MOCK = {
@@ -39,13 +39,13 @@ export const GROUPS_SERVICE_MOCK = {
   async addUserToGroup(
     _group: Group,
     _user: User,
-    _role: string,
+    _role: string
   ): Promise<void> {
     return;
   },
   async updateGroupUserRole(
     _group: Group,
-    _updateGroupUser: UpdateGroupUserRoleDto,
+    _updateGroupUser: UpdateGroupUserRoleDto
   ): Promise<GroupUser | undefined> {
     return undefined;
   },
@@ -57,13 +57,13 @@ export const GROUPS_SERVICE_MOCK = {
   },
   async addEvaluationToGroup(
     _group: Group,
-    _evaluation: Evaluation,
+    _evaluation: Evaluation
   ): Promise<void> {
     return;
   },
   async removeEvaluationFromGroup(
     _group: Group,
-    _evaluation: Evaluation,
+    _evaluation: Evaluation
   ): Promise<Group> {
     return new Group();
   },
@@ -72,11 +72,11 @@ export const GROUPS_SERVICE_MOCK = {
   },
   async update(
     _groupToUpdate: Group,
-    _groupDto: CreateGroupDto,
+    _groupDto: CreateGroupDto
   ): Promise<Group> {
     return new Group();
   },
   async remove(_groupToDelete: Group): Promise<Group> {
     return new Group();
-  },
+  }
 };

@@ -2,7 +2,7 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
-  HttpStatus,
+  HttpStatus
 } from '@nestjs/common';
 import {Response} from 'express';
 import {UniqueConstraintError, ValidationErrorItem} from 'sequelize';
@@ -18,7 +18,7 @@ export class UniqueConstraintErrorFilter implements ExceptionFilter {
     response.status(status).json({
       statusCode: status,
       error: 'Internal Server Error',
-      message: message,
+      message: message
     });
   }
 

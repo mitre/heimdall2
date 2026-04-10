@@ -2,7 +2,7 @@ import {ForbiddenError} from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
@@ -20,7 +20,7 @@ import {
   DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
   ID,
   UPDATE_USER_DTO_TEST_OBJ,
-  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
+  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
 } from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
 import {ConfigModule} from '../config/config.module';
@@ -61,15 +61,15 @@ describe('UsersController Unit Tests', () => {
           Group,
           GroupEvaluation,
           Evaluation,
-          EvaluationTag,
-        ]),
+          EvaluationTag
+        ])
       ],
       providers: [
         AuthzService,
         DatabaseService,
         UsersService,
-        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK},
-      ],
+        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
+      ]
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
@@ -97,7 +97,7 @@ describe('UsersController Unit Tests', () => {
       expect.assertions(1);
 
       expect(
-        await usersController.findUserById(basicUser.id, {user: basicUser}),
+        await usersController.findUserById(basicUser.id, {user: basicUser})
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
     });
 
@@ -116,10 +116,10 @@ describe('UsersController Unit Tests', () => {
     it('should list all users for an admin', async () => {
       expect.assertions(1);
       const serviceFoundUsers = (await usersService.adminFindAllUsers()).map(
-        (user) => new UserDto(user),
+        (user) => new UserDto(user)
       );
       const controllerFoundUsers = await usersController.adminFindAllUsers({
-        user: adminUser,
+        user: adminUser
       });
       // In the case of admin, they should be equal becuase admin can see all
       expect(controllerFoundUsers).toEqual(serviceFoundUsers);
@@ -133,10 +133,10 @@ describe('UsersController Unit Tests', () => {
 
       const createdUser = await usersController.create(
         CREATE_USER_DTO_TEST_OBJ_2,
-        {},
+        {}
       );
       expect(createdUser).toEqual(
-        new UserDto(await usersService.findById(createdUser.id)),
+        new UserDto(await usersService.findById(createdUser.id))
       );
     });
 
@@ -147,7 +147,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
-          {},
+          {}
         );
       }).rejects.toThrow(ValidationError);
     });
@@ -159,7 +159,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-          {},
+          {}
         );
       }).rejects.toThrow(BadRequestException);
     });
@@ -171,7 +171,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
-          {},
+          {}
         );
       }).rejects.toThrow(ValidationError);
     });
@@ -184,7 +184,7 @@ describe('UsersController Unit Tests', () => {
       configService.set('REGISTRATION_DISABLED', 'true');
 
       await expect(
-        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {}),
+        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
@@ -198,8 +198,8 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           basicUser.id,
           {user: basicUser},
-          UPDATE_USER_DTO_TEST_OBJ,
-        ),
+          UPDATE_USER_DTO_TEST_OBJ
+        )
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
     });
 
@@ -211,7 +211,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           ID,
           {user: basicUser},
-          UPDATE_USER_DTO_TEST_OBJ,
+          UPDATE_USER_DTO_TEST_OBJ
         );
       }).rejects.toThrow(NotFoundException);
     });
@@ -224,7 +224,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           basicUser.id,
           {user: basicUser},
-          UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
+          UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
         );
       }).rejects.toThrow(ForbiddenException);
     });
@@ -239,8 +239,8 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           basicUser.id,
           {user: basicUser},
-          DELETE_USER_DTO_TEST_OBJ,
-        ),
+          DELETE_USER_DTO_TEST_OBJ
+        )
       ).toEqual(new UserDto(basicUser));
     });
 
@@ -252,7 +252,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           ID,
           {user: adminUser},
-          DELETE_USER_DTO_TEST_OBJ,
+          DELETE_USER_DTO_TEST_OBJ
         );
       }).rejects.toThrow(NotFoundException);
     });
@@ -265,7 +265,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           basicUser.id,
           {user: basicUser},
-          DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
+          DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
         );
       }).rejects.toThrow(ForbiddenException);
     });

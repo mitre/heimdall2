@@ -23,9 +23,9 @@ import {StatisticsService} from './statistics.service';
       Evaluation,
       EvaluationTag,
       User,
-      Group,
+      Group
     ]),
-    ConfigModule,
+    ConfigModule
   ],
   providers: [
     StatisticsService,
@@ -35,8 +35,8 @@ import {StatisticsService} from './statistics.service';
     EvaluationsService,
     EvaluationTagsService,
     UsersService,
-    GroupsService,
+    GroupsService
   ],
-  controllers: [StatisticsController],
+  controllers: [StatisticsController]
 })
 export class StatisticsModule {}

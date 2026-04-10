@@ -9,7 +9,7 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
+  UpdatedAt
 } from 'sequelize-typescript';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';

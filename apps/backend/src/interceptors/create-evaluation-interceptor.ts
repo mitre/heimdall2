@@ -3,7 +3,7 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  NestInterceptor,
+  NestInterceptor
 } from '@nestjs/common';
 import {Observable} from 'rxjs';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
@@ -18,7 +18,7 @@ export class CreateEvaluationInterceptor implements NestInterceptor {
 
   public intercept(
     _context: ExecutionContext,
-    next: CallHandler,
+    next: CallHandler
   ): Observable<ICreateEvaluation> {
     // changing request
     const request = _context.switchToHttp().getRequest();
@@ -32,7 +32,7 @@ export class CreateEvaluationInterceptor implements NestInterceptor {
       request.body.evaluationTags = request.body.evaluationTags
         .split(',')
         .map(
-          (evaluationTag: string) => new CreateEvaluationTagDto(evaluationTag),
+          (evaluationTag: string) => new CreateEvaluationTagDto(evaluationTag)
         );
     } else {
       request.body.evaluationTags = [];

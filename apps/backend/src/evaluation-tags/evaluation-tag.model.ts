@@ -7,7 +7,7 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
-  Table,
+  Table
 } from 'sequelize-typescript';
 import {Evaluation} from '../evaluations/evaluation.model';
 

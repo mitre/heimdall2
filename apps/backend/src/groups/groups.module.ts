@@ -18,10 +18,10 @@ import {GroupsService} from './groups.service';
     ConfigModule,
     forwardRef(() => UsersModule),
     EvaluationsModule,
-    EvaluationTagsModule,
+    EvaluationTagsModule
   ],
   providers: [GroupsService],
   controllers: [GroupsController],
-  exports: [GroupsService],
+  exports: [GroupsService]
 })
 export class GroupsModule {}

@@ -9,7 +9,7 @@ export class APIKeysEnabled implements CanActivate {
     this.configService = configService;
   }
   canActivate(
-    _context: ExecutionContext,
+    _context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
     return Boolean(this.configService.get('API_KEY_SECRET'));
   }

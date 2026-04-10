@@ -23,7 +23,7 @@ export class PasswordChangePipe implements PipeTransform {
     } else {
       throw new BadRequestException(
         'A minimum of four character classes must be changed when updating a password.' +
-          ' A minimum of eight of the total number of characters must be changed when updating a password.',
+          ' A minimum of eight of the total number of characters must be changed when updating a password.'
       );
     }
   }
@@ -33,7 +33,7 @@ export class PasswordChangePipe implements PipeTransform {
       RegExp('[a-z]', 'g'),
       RegExp('[A-Z]', 'g'),
       RegExp('[0-9]', 'g'),
-      RegExp(/[^\w\s]/, 'g'),
+      RegExp(/[^\w\s]/, 'g')
     ];
 
     for (const validator of validators) {

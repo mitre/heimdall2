@@ -3,13 +3,13 @@ import {Test} from '@nestjs/testing';
 import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {
   CREATE_EVALUATION_TAG_DTO,
-  CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
+  CREATE_EVALUATION_TAG_DTO_MISSING_VALUE
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  USERS_SERVICE_MOCK,
+  USERS_SERVICE_MOCK
 } from '../../test/constants/users-test.constant';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
@@ -42,20 +42,20 @@ describe('EvaluationTagsService', () => {
           User,
           GroupEvaluation,
           Group,
-          GroupUser,
-        ]),
+          GroupUser
+        ])
       ],
       providers: [
         DatabaseService,
         EvaluationTagsService,
         EvaluationsService,
         {provide: UsersService, useValue: USERS_SERVICE_MOCK},
-        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK},
-      ],
+        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
+      ]
     }).compile();
 
     evaluationTagsService = module.get<EvaluationTagsService>(
-      EvaluationTagsService,
+      EvaluationTagsService
     );
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
     databaseService = module.get<DatabaseService>(DatabaseService);
@@ -74,8 +74,8 @@ describe('EvaluationTagsService', () => {
       await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: user.id,
-      }),
+        userId: user.id
+      })
     );
   });
 
@@ -83,7 +83,7 @@ describe('EvaluationTagsService', () => {
     it('should create a valid EvaluationTag', async () => {
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
-        CREATE_EVALUATION_TAG_DTO,
+        CREATE_EVALUATION_TAG_DTO
       );
       expect(evaluationTag.id).toBeDefined();
       expect(evaluationTag.evaluationId).toEqual(evaluation.id);
@@ -98,10 +98,10 @@ describe('EvaluationTagsService', () => {
         await expect(
           evaluationTagsService.create(
             evaluation.id,
-            CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
-          ),
+            CREATE_EVALUATION_TAG_DTO_MISSING_VALUE
+          )
         ).rejects.toThrow(
-          'notNull Violation: EvaluationTag.value cannot be null',
+          'notNull Violation: EvaluationTag.value cannot be null'
         );
       });
     });
@@ -116,14 +116,14 @@ describe('EvaluationTagsService', () => {
       // One existing tag
       await evaluationTagsService.create(
         evaluation.id,
-        CREATE_EVALUATION_TAG_DTO,
+        CREATE_EVALUATION_TAG_DTO
       );
       foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toEqual(1);
       // Multiple existing tags
       await evaluationTagsService.create(
         evaluation.id,
-        CREATE_EVALUATION_TAG_DTO,
+        CREATE_EVALUATION_TAG_DTO
       );
       foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toBeGreaterThan(1);
@@ -134,15 +134,15 @@ describe('EvaluationTagsService', () => {
     it('should remove an existing tag', async () => {
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
-        CREATE_EVALUATION_TAG_DTO,
+        CREATE_EVALUATION_TAG_DTO
       );
       expect(evaluationTag).toBeDefined();
       const removedEvaluationTag = await evaluationTagsService.remove(
-        evaluationTag.id,
+        evaluationTag.id
       );
       expect(removedEvaluationTag.value).toEqual(evaluationTag.value);
       const foundEvaluationTag = await EvaluationTag.findByPk<EvaluationTag>(
-        evaluationTag.id,
+        evaluationTag.id
       );
       expect(foundEvaluationTag).toEqual(null);
     });

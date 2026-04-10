@@ -1,7 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
-  UnauthorizedException,
+  UnauthorizedException
 } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcryptjs';
@@ -27,20 +27,20 @@ export class AuthnService {
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
-        format: this.loggingTimeFormat,
+        format: this.loggingTimeFormat
       }),
       winston.format.printf(
         (info) =>
-          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`,
-      ),
-    ),
+          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
+      )
+    )
   });
 
   constructor(
     private readonly apiKeyService: ApiKeyService,
     private readonly configService: ConfigService,
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
@@ -70,7 +70,7 @@ export class AuthnService {
         const JWTSignature = apikey.split('.')[2];
         if (_.has(jwtPayload, 'keyId')) {
           const matchingKey = await this.apiKeyService.findById(
-            jwtPayload.keyId,
+            jwtPayload.keyId
           );
           if (await compare(JWTSignature, matchingKey.apiKey)) {
             if (matchingKey.type === 'user') {
@@ -91,7 +91,7 @@ export class AuthnService {
       }
     } else {
       throw new ForbiddenException(
-        'API Keys have been disabled as the API-Key secret is not set',
+        'API Keys have been disabled as the API-Key secret is not set'
       );
     }
   }
@@ -100,7 +100,7 @@ export class AuthnService {
     email: string,
     firstName: string,
     lastName: string,
-    creationMethod: string,
+    creationMethod: string
   ): Promise<User> {
     let user: User;
     try {
@@ -116,7 +116,7 @@ export class AuthnService {
         organization: '',
         title: '',
         role: 'user',
-        creationMethod: creationMethod,
+        creationMethod: creationMethod
       };
       await this.usersService.create(createUser);
       user = await this.usersService.findByEmail(email);
@@ -141,12 +141,12 @@ export class AuthnService {
     email: string;
     role: string;
     forcePasswordChange: boolean | undefined;
-  }): Promise<{ userID: string; accessToken: string }> {
+  }): Promise<{userID: string; accessToken: string}> {
     const payload = {
       email: user.email,
       sub: user.id,
       role: user.role,
-      forcePasswordChange: user.forcePasswordChange,
+      forcePasswordChange: user.forcePasswordChange
     };
     // Users have their own JWT Secret to allow for session invalidation on sign out
     const loginUser = await this.usersService.findById(user.id);
@@ -159,55 +159,55 @@ export class AuthnService {
     if (payload.forcePasswordChange || user.role === 'admin') {
       // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.
       const expireTime = moment(new Date(Date.now() + ms('600s'))).format(
-        this.loggingTimeFormat,
+        this.loggingTimeFormat
       );
       this.logger.info({
-        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`,
+        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
       });
       return {
         userID: user.id,
         accessToken: this.jwtService.sign(payload, {
           expiresIn: '600s',
-          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret,
-        }),
+          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
+        })
       };
     } else {
       const expiresIn = limitJWTTime(
         this.configService.get('JWT_EXPIRE_TIME') || '60s',
-        false,
+        false
       );
       const expireTime = moment(new Date(Date.now() + expiresIn)).format(
-        this.loggingTimeFormat,
+        this.loggingTimeFormat
       );
       this.logger.info({
-        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`,
+        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
       });
       return {
         userID: user.id,
         accessToken: this.jwtService.sign(payload, {
-          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret,
-        }),
+          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
+        })
       };
     }
   }
 
-  splitName(fullName: string): { firstName: string; lastName: string } {
+  splitName(fullName: string): {firstName: string; lastName: string} {
     const nameArray = fullName.split(' ');
     return {
       firstName: nameArray[0],
-      lastName: nameArray.slice(1).join(' '),
+      lastName: nameArray.slice(1).join(' ')
     };
   }
 
   async testPassword(
-    updateUserDto: { currentPassword?: string },
-    user: User,
+    updateUserDto: {currentPassword?: string},
+    user: User
   ): Promise<void> {
     try {
       if (
         !(await compare(
           updateUserDto.currentPassword || '',
-          user.encryptedPassword,
+          user.encryptedPassword
         ))
       ) {
         throw new ForbiddenException('Current password is incorrect');

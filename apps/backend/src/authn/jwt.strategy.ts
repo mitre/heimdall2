@@ -1,9 +1,5 @@
 import {IUser} from '@heimdall/common/interfaces';
-import {
-  HttpException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import {HttpException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import jwt from 'jsonwebtoken';
 import {ExtractJwt, Strategy} from 'passport-jwt';
@@ -14,14 +10,14 @@ import {UsersService} from '../users/users.service';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly configService: ConfigService,
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKeyProvider: async (
         _request: Express.Request,
         jwtToken: string,
-        done: (exception: null | HttpException, secret?: string) => unknown,
+        done: (exception: null | HttpException, secret?: string) => unknown
       ) => {
         const decodedToken = jwt.decode(jwtToken) as {
           sub: string;
@@ -32,12 +28,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         } catch {
           done(
             new UnauthorizedException(
-              'An exception occurred while validating your session',
-            ),
+              'An exception occurred while validating your session'
+            )
           );
         }
       },
-      ignoreExpiration: false,
+      ignoreExpiration: false
     });
   }
 
