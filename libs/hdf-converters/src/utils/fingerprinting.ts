@@ -4,6 +4,7 @@ export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
   CHECKLIST = 'checklist',
+  CHECKOV = 'checkov',
   CONVEYOR = 'conveyor',
   DEPENDENCY_TRACK = 'dependencyTrack',
   FORTIFY = 'fortify',
@@ -33,6 +34,9 @@ export enum INPUT_TYPES {
 // Fields to look for inside of JSON structures to determine type before passing to hdf-converters
 const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ASFF]: ['Findings', 'AwsAccountId', 'ProductArn'],
+  [INPUT_TYPES.CHECKOV]: ["check_type", "results", "results.passed_checks",
+    "results.failed_checks", "results.skipped_checks", "results.parsing_errors",
+     "summary", "url"],
   [INPUT_TYPES.CONVEYOR]: ['api_error_message', 'api_response'],
   [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion'],
   [INPUT_TYPES.DEPENDENCY_TRACK]: ['version', 'meta', 'project', 'findings'],

@@ -19,8 +19,8 @@
     "frontend": "yarn workspace @mitre/heimdall-lite",
     "hdf-converters": "yarn workspace @mitre/hdf-converters",
     "inspecjs": "yarn workspace inspecjs",
-    "lint": "lerna run lint",
-    "lint:ci": "lerna run lint:ci",
+    "lint": "eslint --fix",
+    "lint:ci": "eslint --max-warnings 0 || true",
     "pack:all": "lerna exec yarn pack --scope inspecjs --scope @mitre/heimdall-lite --scope @mitre/hdf-converters --parallel",
     "start": "yarn backend start",
     "start:dev": "./node_modules/.bin/dotenv -e ./apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/common --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
@@ -28,22 +28,37 @@
     "test:ui:open": "cypress open"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "eslint": "^8.9.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.0.0",
     "lerna": "^9.0.0",
-    "prettier": "^3.7.4",
-    "prettier-plugin-organize-imports": "^4.0.0",
     "typescript": "^6.0.2"
   },
   "devDependencies": {
-    "dotenv-cli": "^11.0.0"
+    "@e18e/eslint-plugin": "^0.3.0",
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^1.2.0",
+    "@eslint/markdown": "^8.0.1",
+    "@stylistic/eslint-plugin": "^5.9.0",
+    "@vitest/eslint-plugin": "^1.6.14",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^10.2.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-cypress": "^6.3.0",
+    "eslint-plugin-import-x": "^4.16.2",
+    "eslint-plugin-markdown-links": "^0.8.1",
+    "eslint-plugin-markdown-preferences": "^0.41.1",
+    "eslint-plugin-n": "^17.24.0",
+    "eslint-plugin-perfectionist": "^5.8.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-regexp": "^3.1.0",
+    "eslint-plugin-security": "^4.0.0",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "eslint-plugin-vue": "^10.8.0",
+    "eslint-plugin-yml": "^3.3.1",
+    "typescript-eslint": "^8.56.1",
+    "vue-eslint-parser": "^10.4.0"
   },
   "resolutions": {
-    "fast-glob": "3.3.3",
-    "axios": "<=1.14.0"
+    "fast-glob": "3.3.3"
   },
   "engines": {
     "node": ">=22.18.0"

@@ -1,0 +1,155 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.12.6"
+  },
+  "version": "2.12.6",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Checkov",
+      "version": "3.2.506",
+      "title": "Bridgecrew (by Prisma Cloud) Checkov terraform Security Scan",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "cci": [
+              "CCI-000190",
+              "CCI-001515"
+            ],
+            "nist": [
+              "IA-5(7)",
+              "CM-6(1)"
+            ],
+            "severity": "",
+            "checkov_id": "CKV_AWS_41",
+            "check_class": "checkov.terraform.checks.provider.credentials",
+            "resource": "aws_provider.default"
+          },
+          "refs": [
+            {
+              "url": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-secrets-5"
+            }
+          ],
+          "title": "Ensure no hard coded AWS access key and secret key exists in provider",
+          "desc": "",
+          "id": "CKV_AWS_41\naws_provider.default",
+          "impact": 0.6,
+          "code": "{\n  \"bc_check_id\": \"BC_AWS_SECRETS_5\",\n  \"resource_address\": null,\n  \"entity_tags\": null,\n  \"caller_file_path\": null,\n  \"caller_file_line_range\": null,\n  \"benchmarks\": null,\n  \"definition_context_file_path\": \"/main.tf\",\n  \"details\": [],\n  \"bc_category\": null,\n  \"connected_node\": null,\n  \"evaluations\": null,\n  \"check_len\": null\n}",
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "Resource: aws_provider.default\nFile: /main.tf:1-10\n<pre>1: provider \"aws\" {\n2:   region = \"us-east-1\"\n3: }</pre>",
+              "message": "Evaluated Keys: [\n  \"access_key\",\n  \"secret_key\"\n]\nEntity: {}\nRepo File Path: /main.tf\nFile Abs Path: /src/main.tf",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "cci": [
+              "CCI-000366"
+            ],
+            "nist": [
+              "CM-6"
+            ],
+            "severity": "HIGH",
+            "checkov_id": "CKV_AWS_150",
+            "check_class": "checkov.terraform.checks.resource.aws.ALBDeletionProtection",
+            "resource": "module.alb.aws_lb.main"
+          },
+          "refs": [
+            {
+              "url": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-150"
+            }
+          ],
+          "title": "Ensure that Load Balancer has deletion protection enabled",
+          "desc": "",
+          "id": "CKV_AWS_150\nmodule.alb.aws_lb.main",
+          "impact": 0.8,
+          "code": "{\n  \"resource_address\": \"module.alb.aws_lb.main\",\n  \"bc_check_id\": \"BC_AWS_NETWORKING_62\",\n  \"entity_tags\": {\n    \"Name\": \"test-alb\"\n  },\n  \"caller_file_path\": \"/main.tf\",\n  \"caller_file_line_range\": [\n    5,\n    10\n  ],\n  \"benchmarks\": {\n    \"CIS AWS\": [\n      \"2.1.1\"\n    ]\n  },\n  \"definition_context_file_path\": \"/alb/main.tf\",\n  \"details\": [],\n  \"bc_category\": null,\n  \"connected_node\": null,\n  \"evaluations\": null,\n  \"check_len\": null\n}",
+          "source_location": {},
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resource: module.alb.aws_lb.main\nFile: /alb/main.tf:1-8\n<pre>1: resource \"aws_lb\" \"main\" {\n2:   name = \"test-alb\"\n3: }</pre>",
+              "message": "Evaluated Keys: [\n  \"enable_deletion_protection\"\n]\nEntity: {}\nRepo File Path: /alb/main.tf\nFile Abs Path: /src/alb/main.tf",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "cci": [
+              "CCI-000130",
+              "CCI-000169"
+            ],
+            "nist": [
+              "AU-2",
+              "AU-12"
+            ],
+            "severity": "",
+            "checkov_id": "CKV_AWS_18",
+            "check_class": "checkov.terraform.checks.resource.aws.S3AccessLogs",
+            "resource": "aws_s3_bucket.example"
+          },
+          "refs": [
+            {}
+          ],
+          "title": "Ensure the S3 bucket has access logging enabled",
+          "desc": "",
+          "id": "CKV_AWS_18\naws_s3_bucket.example",
+          "impact": 0.6,
+          "code": "{\n  \"bc_check_id\": \"BC_AWS_S3_13\",\n  \"resource_address\": null,\n  \"entity_tags\": null,\n  \"caller_file_path\": null,\n  \"caller_file_line_range\": null,\n  \"benchmarks\": null,\n  \"definition_context_file_path\": \"/s3/main.tf\",\n  \"details\": [],\n  \"bc_category\": null,\n  \"connected_node\": null,\n  \"evaluations\": null,\n  \"check_len\": null\n}",
+          "source_location": {},
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "Resource: aws_s3_bucket.example\nFile: /s3/main.tf:1-5\n<pre>1: resource \"aws_s3_bucket\" \"example\" {\n2:   bucket = \"test\"\n3: }</pre>",
+              "message": "Evaluated Keys: [\n  \"logging\"\n]\nEntity: {}\nSuppress Comment: Logging handled externally\nRepo File Path: /s3/main.tf\nFile Abs Path: /src/s3/main.tf",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "Parsing Errors",
+          "impact": 0.6,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "/broken.tf",
+              "start_time": "",
+              "status": "error"
+            }
+          ],
+          "source_location": {},
+          "tags": {}
+        }
+      ],
+      "sha256": "7eed4268b356320945927e0df11a24c980cafd63f87e4038c7fbac3c96091ff2"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "Checkov",
+        "data": {
+          "summary": {
+            "passed": 1,
+            "failed": 1,
+            "skipped": 1,
+            "parsing_errors": 1,
+            "resource_count": 3,
+            "checkov_version": "3.2.506"
+          },
+          "url": "Add an API key --bc-api-key to see more detailed insights"
+        }
+      }
+    ]
+  }
+}
