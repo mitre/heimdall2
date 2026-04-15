@@ -206,24 +206,18 @@ export class FromHDFToHTMLMapper {
     this.outputData.exportType = exportType;
 
     // Pull out results from file
-    const allResultLevels: ContextualizedControl[] = [];
-    if (file.filteredControls === undefined) {
-      file.data.contains.map((profile) => {
-        profile.contains.map((result) => {
-          allResultLevels.push(result);
-        });
-      });
-    } else {
-      file.data.contains.flatMap((profile) => {
-        profile.contains.flatMap((result) => {
-          for (const element of (file.filteredControls ?? [])) {
-            if (element === result.data.id) {
-              allResultLevels.push(result);
-            }
-          }
-        });
-      });
-    }
+    const filteredControlsSet = file.filteredControls ? new Set(file.filteredControls) : null;
+    const allResultLevels = file.data.contains.reduce<ContextualizedControl[]>(
+      (acc, profile) => {
+        const matchingResults = profile.contains.filter(
+          (result) => !filteredControlsSet || filteredControlsSet.has(result.data.id)
+        );
+
+        acc.push(...matchingResults);
+        return acc;
+      },
+      []
+    );
 
     // Begin filling out outpuData object to pass into HTML template
     // Set high level generalized profile details

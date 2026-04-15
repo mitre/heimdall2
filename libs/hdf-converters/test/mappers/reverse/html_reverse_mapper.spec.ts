@@ -55,4 +55,30 @@ describe('HTML Results Reverse Mapper', () => {
 
     expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
   });
+
+  it('Successfully converts SonarQube HDF into HTML with filtered controls', async () => {
+    const inputData = fs.readFileSync(
+      'sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json',
+      {encoding: 'utf-8'}
+    );
+
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'sonarqube-hdf.json', fileID: '1', filteredControls: ['javascript:S2819'] }],
+      FileExportTypes.Administrator
+    );
+
+    const converted = await mapper.toHTML();
+
+    // fs.writeFileSync(
+    //   'sample_jsons/html_reverse_mapper/sonarqube.html',
+    //   converted
+    // );
+
+    const expected = fs.readFileSync(
+      'sample_jsons/html_reverse_mapper/sonarqube.html',
+      'utf-8'
+    );
+
+    expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
+  });
 });
