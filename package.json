@@ -58,8 +58,7 @@
     "vue-eslint-parser": "^10.4.0"
   },
   "resolutions": {
-    "fast-glob": "3.3.3",
-    "webpack": "5.105.4"
+    "fast-glob": "3.3.3"
   },
   "engines": {
     "node": ">=22.18.0"
