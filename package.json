@@ -32,7 +32,7 @@
     "typescript": "^6.0.2"
   },
   "devDependencies": {
-    "@e18e/eslint-plugin": "^0.3.0",
+    "@e18e/eslint-plugin": "^0.4.1",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
     "@eslint/js": "^10.0.1",
     "@eslint/json": "^1.2.0",

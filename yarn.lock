@@ -1835,12 +1835,14 @@
   resolved "https://registry.npmjs.org/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@e18e/eslint-plugin@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/@e18e/eslint-plugin/-/eslint-plugin-0.3.0.tgz#8ab0703bfbe4b75ad3b9fb7efc4fceb886de9a4f"
-  integrity sha512-hHgfpxsrZ2UYHcicA+tGZnmk19uJTaye9VH79O+XS8R4ona2Hx3xjhXghclNW58uXMk3xXlbYEOMr8thsoBmWg==
+"@e18e/eslint-plugin@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@e18e/eslint-plugin/-/eslint-plugin-0.4.1.tgz#350667be7b5a2c36ba4a14e85d9df0b4b2d31007"
+  integrity sha512-Re00N8ad1HsNrzpuIX7Bhdr8RSaFWp6VgwJUEJF+47+D1CMcXoS7VNRkIG23e46pddhgxWU0cWk4wYiQIuMHqQ==
   dependencies:
-    eslint-plugin-depend "^1.5.0"
+    empathic "^2.0.0"
+    module-replacements "^3.0.0-beta.7"
+    semver "^7.7.4"
 
 "@e965/xlsx@^0.20.0":
   version "0.20.3"
@@ -9221,20 +9223,11 @@ eslint-module-utils@^2.12.1:
     debug "^3.2.7"
 
 eslint-plugin-cypress@^6.3.0:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-cypress/-/eslint-plugin-cypress-6.3.1.tgz#b0a4ce9073f39412c3f2b5b8b452a75c1885fec1"
-  integrity sha512-iTJtdIZbyCUlagEI4YlVcwgPFV7X379Qi/upujaD4kvOaQkMvzmpt90vfSnaqgqprp/HPIvhnzv3fdI7mYV4QQ==
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-cypress/-/eslint-plugin-cypress-6.4.0.tgz#50ed33b4e18d9910ae34fffc9411a6f1690a380a"
+  integrity sha512-zdGXFSmTH4w2A+2aU/Abna2s8Vcz5mDxDsnAXP5Vl+pERWRQxlSE2qrrmriNUEKZ62tlOA87b9AOnJX49tOhAQ==
   dependencies:
     globals "^17.5.0"
-
-eslint-plugin-depend@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-depend/-/eslint-plugin-depend-1.5.0.tgz#3bed81d2326b0c5a7f40a8146ae6eee8bdd74095"
-  integrity sha512-i3UeLYmclf1Icp35+6W7CR4Bp2PIpDgBuf/mpmXK5UeLkZlvYJ21VuQKKHHAIBKRTPivPGX/gZl5JGno1o9Y0A==
-  dependencies:
-    empathic "^2.0.0"
-    module-replacements "^2.10.1"
-    semver "^7.6.3"
 
 eslint-plugin-es-x@^7.8.0:
   version "7.8.0"
@@ -14092,10 +14085,10 @@ module-alias@^2.2.2:
   resolved "https://registry.npmjs.org/module-alias/-/module-alias-2.3.4.tgz#7c2b0442ba1114744e97288963db637859db4094"
   integrity sha512-bOclZt8hkpuGgSSoG07PKmvzTizROilUTvLNyrMqvlC9snhs7y7GzjNWAVbISIOlhCP1T14rH1PDAV9iNyBq/w==
 
-module-replacements@^2.10.1:
-  version "2.11.0"
-  resolved "https://registry.npmjs.org/module-replacements/-/module-replacements-2.11.0.tgz#947ecd7a866301f3272f1a1649dd2607bb520dcc"
-  integrity sha512-j5sNQm3VCpQQ7nTqGeOZtoJtV3uKERgCBm9QRhmGRiXiqkf7iRFOkfxdJRZWLkqYY8PNf4cDQF/WfXUYLENrRA==
+module-replacements@^3.0.0-beta.7:
+  version "3.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/module-replacements/-/module-replacements-3.0.0-beta.7.tgz#318882c0eca57d688c3f5f6d6f0e03381aa4b0e9"
+  integrity sha512-n1F9l3gF1wNh13xmnXS2JU7P9c3DlzCgVEyLKrVN0U37RwrXyYoePMMvYvs/6aUONAxbnscphzESZTCorXFh7Q==
 
 moment-timezone@^0.5.43:
   version "0.5.48"
