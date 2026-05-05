@@ -1,0 +1,14 @@
+services:
+  keycloak:
+    build:
+      context: .
+    image: heimdall-saml-keycloak:26.6.1-local
+    container_name: heimdall-saml-idp
+    command:
+      - start-dev
+      - --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "127.0.0.1:8080:8080"
