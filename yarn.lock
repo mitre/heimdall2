@@ -9729,11 +9729,11 @@ express-history-api-fallback@^2.2.1:
   integrity sha512-swxwm3aP8vrOOvlzOdZvHlSZtJGwHKaY94J6AkrAgCTmcbko3IRwbkhLv2wKV1WeZhjxX58aLMpP3atDBnKuZg==
 
 express-rate-limit@^8.0.0:
-  version "8.4.1"
-  resolved "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-8.4.1.tgz#15a769dbe7b97f94581ed0db2bcead644753574f"
-  integrity sha512-NGVYwQSAyEQgzxX1iCM978PP9AdO/hW93gMcF6ZwQCm+rFvLsBH6w4xcXWTcliS8La5EPRN3p9wzItqBwJrfNw==
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-8.5.1.tgz#ee62473d7b3bdf3b27b7be3d7f25c6d13308479a"
+  integrity sha512-5O6KYmyJEpuPJV5hNTXKbAHWRqrzyu+OI3vUnSd2kXFubIVpG7ezpgxQy76Zo5GQZtrQBg86hF+CM/NX+cioiQ==
   dependencies:
-    ip-address "10.1.0"
+    ip-address "^10.2.0"
 
 express-session@^1.17.1:
   version "1.19.0"
@@ -11525,15 +11525,10 @@ invert-kv@^2.0.0:
   resolved "https://registry.npmjs.org/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
-ip-address@10.1.0:
-  version "10.1.0"
-  resolved "https://registry.npmjs.org/ip-address/-/ip-address-10.1.0.tgz#d8dcffb34d0e02eb241427444a6e23f5b0595aa4"
-  integrity sha512-XXADHxXmvT9+CRxhXg56LJovE+bmWnEWB78LB83VZTprKTmaC5QfruXocxzTZ2Kl0DNwKuBdlIhjL8LeY8Sf8Q==
-
-ip-address@^10.1.1:
-  version "10.1.1"
-  resolved "https://registry.npmjs.org/ip-address/-/ip-address-10.1.1.tgz#a7614252413e3751b841aaffba939090d2c4c37b"
-  integrity sha512-1FMu8/N15Ck1BL551Jf42NYIoin2unWjLQ2Fze/DXryJRl5twqtwNHlO39qERGbIOcKYWHdgRryhOC+NG4eaLw==
+ip-address@^10.1.1, ip-address@^10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/ip-address/-/ip-address-10.2.0.tgz#805fc178b20c518bd4c8548b24fe30892d7f3206"
+  integrity sha512-/+S6j4E9AHvW9SWMSEY9Xfy66O5PWvVEJ08O0y5JGyEKQpojb0K0GKpz/v5HJ/G0vi3D2sjGK78119oXZeE0qA==
 
 ipaddr.js@1.9.1:
   version "1.9.1"
