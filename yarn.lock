@@ -3514,20 +3514,13 @@
     "@smithy/util-middleware" "^4.2.14"
     tslib "^2.6.2"
 
-"@smithy/core@^3.23.17":
-  version "3.23.17"
-  resolved "https://registry.npmjs.org/@smithy/core/-/core-3.23.17.tgz#23d02277c8d6d30a1605afd756696265e48ed67e"
-  integrity sha512-x7BlLbUFL8NWCGjMF9C+1N5cVCxcPa7g6Tv9B4A2luWx3be3oU8hQ96wIwxe/s7OhIzvoJH73HAUSg5JXVlEtQ==
+"@smithy/core@^3.23.17", "@smithy/core@^3.24.0":
+  version "3.24.0"
+  resolved "https://registry.yarnpkg.com/@smithy/core/-/core-3.24.0.tgz#cd59f342c3124bc623c90e2e93c9dd7b30c53c4a"
+  integrity sha512-rZ5YfycIXX6puoGjthnDiMpUgtKNOq3c7CndQYkCNYQTv26AiCrZQOJPy7ANSfZ6Okk3UvCRnmO1OYWlLnYZgg==
   dependencies:
-    "@smithy/protocol-http" "^5.3.14"
+    "@aws-crypto/crc32" "5.2.0"
     "@smithy/types" "^4.14.1"
-    "@smithy/url-parser" "^4.2.14"
-    "@smithy/util-base64" "^4.3.2"
-    "@smithy/util-body-length-browser" "^4.2.2"
-    "@smithy/util-middleware" "^4.2.14"
-    "@smithy/util-stream" "^4.5.25"
-    "@smithy/util-utf8" "^4.2.2"
-    "@smithy/uuid" "^1.1.2"
     tslib "^2.6.2"
 
 "@smithy/credential-provider-imds@^4.2.14":
@@ -3725,12 +3718,11 @@
     tslib "^2.6.2"
 
 "@smithy/node-http-handler@^4.0.0", "@smithy/node-http-handler@^4.6.1":
-  version "4.6.1"
-  resolved "https://registry.npmjs.org/@smithy/node-http-handler/-/node-http-handler-4.6.1.tgz#cb25b9445e46294a6f0dfb1566dbf2a1a19510af"
-  integrity sha512-iB+orM4x3xrr57X3YaXazfKnntl0LHlZB1kcXSGzMV1Tt0+YwEjGlbjk/44qEGtBzXAz6yFDzkYTKSV6Pj2HUg==
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@smithy/node-http-handler/-/node-http-handler-4.7.0.tgz#4bee8cc79848a499b1a78686b4b878bab0c39a1f"
+  integrity sha512-PxF57Jr3dPm+RgZWekOL+o96FPdaT62xZUyDfi47uMRFi5rHpwO/ewFbrztrASQ/7H8moNi1sspIHihHpfoKsQ==
   dependencies:
-    "@smithy/protocol-http" "^5.3.14"
-    "@smithy/querystring-builder" "^4.2.14"
+    "@smithy/core" "^3.24.0"
     "@smithy/types" "^4.14.1"
     tslib "^2.6.2"
 
