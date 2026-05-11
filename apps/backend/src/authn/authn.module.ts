@@ -47,6 +47,7 @@ async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
     GoogleStrategy,
     LDAPStrategy,
     ApiKeyService,
+    SAMLStrategy,
     {
       inject: [AuthnService, ConfigService, GroupsService],
       provide: OidcStrategy,
