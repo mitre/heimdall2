@@ -3348,13 +3348,13 @@
   resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
   integrity sha512-ONhaKPIufzzrlNbqtWFFd+jlnemX6lJAgq9ZeiZtS7I1PIf/la7CW4m83rTXRnVnsMbW2k56pGYu7AUFJD9Pow==
 
-"@smithy/core@^3.24.1", "@smithy/core@^3.24.2":
-  version "3.24.2"
-  resolved "https://registry.yarnpkg.com/@smithy/core/-/core-3.24.2.tgz#38ae63b029ac5afa156ebd0bfd203bdc3966dd9f"
-  integrity sha512-IKS7qX59fAGCYBmt5JChcDswQDupZqT2Yn2ZBA3UgTlsjRNNkQzZobbn95xoAAdtTyJmBiJB3Y02qR3rgy3Zog==
+"@smithy/core@^3.24.1", "@smithy/core@^3.24.2", "@smithy/core@^3.24.3":
+  version "3.24.3"
+  resolved "https://registry.yarnpkg.com/@smithy/core/-/core-3.24.3.tgz#c9689ce6d64b40eee594a259b4504f1a357f6a54"
+  integrity sha512-Ep/7tPamGY8mgESE3LyLKtxJyy6U52WWAqr/3wial47Sj4u3PiIF73AOGI27UyLy9duTkhZbgzodOfLV4TduZg==
   dependencies:
     "@aws-crypto/crc32" "5.2.0"
-    "@smithy/types" "^4.14.1"
+    "@smithy/types" "^4.14.2"
     tslib "^2.6.2"
 
 "@smithy/credential-provider-imds@^4.3.1":
@@ -3383,12 +3383,12 @@
     tslib "^2.6.2"
 
 "@smithy/node-http-handler@^4.0.0", "@smithy/node-http-handler@^4.7.1":
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/@smithy/node-http-handler/-/node-http-handler-4.7.2.tgz#94be0d5b2d4cd1398456a889f3ae8af429c33e92"
-  integrity sha512-EdksTZ8UXYxGUgQ4mpIKrHoaj9WVGsp66TpZuixLAz1Jex8YDLnS4RH9ktGED5aOpN0OJlEtrsC9IGt76go1eA==
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/@smithy/node-http-handler/-/node-http-handler-4.7.3.tgz#ebdfaad62fe4e5bde19824490f9f590d446b746a"
+  integrity sha512-/jPhevcTFPMVl6KNjbaI47iOg1zxC7IsnX4PQDGVZKMFceOXtB8IEYaB7a9VvkP/3oC60WzTeKocvSI7vLT0vA==
   dependencies:
-    "@smithy/core" "^3.24.2"
-    "@smithy/types" "^4.14.1"
+    "@smithy/core" "^3.24.3"
+    "@smithy/types" "^4.14.2"
     tslib "^2.6.2"
 
 "@smithy/signature-v4@^5.4.1":
@@ -3400,10 +3400,10 @@
     "@smithy/types" "^4.14.1"
     tslib "^2.6.2"
 
-"@smithy/types@^4.14.1":
-  version "4.14.1"
-  resolved "https://registry.npmjs.org/@smithy/types/-/types-4.14.1.tgz#aba92b4cdb406f2a2b062e82f1e3728d809a7c23"
-  integrity sha512-59b5HtSVrVR/eYNei3BUj3DCPKD/G7EtDDe7OEJE7i7FtQFugYo6MxbotS8mVJkLNVf8gYaAlEBwwtJ9HzhWSg==
+"@smithy/types@^4.14.1", "@smithy/types@^4.14.2":
+  version "4.14.2"
+  resolved "https://registry.yarnpkg.com/@smithy/types/-/types-4.14.2.tgz#6034ff1e0e52bfb7d744ac371b651a8bf21f30f1"
+  integrity sha512-P+otAxbV4CqBybp7EkcJCrig63yE2E7PuNVOmilVMRcx/O+QDzGULTrKsq4DV13gSfak9ObPrWaHl/9bL5YcWw==
   dependencies:
     tslib "^2.6.2"
 
