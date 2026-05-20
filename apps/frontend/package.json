@@ -68,7 +68,7 @@
     "roboto-fontface": "*",
     "sanitize-html": "~2.17.0",
     "sass": "^1.32.6",
-    "sass-loader": "^16.0.0",
+    "sass-loader": "^17.0.0",
     "search-query-parser": "^1.5.5",
     "semver": "^7.6.0",
     "uuid": "^14.0.0",
