@@ -23,7 +23,6 @@ type OIDCProfile = {
 };
 
 @Injectable()
-
 export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   private readonly line = '_______________________________________________\n';

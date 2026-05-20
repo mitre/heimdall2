@@ -148,6 +148,20 @@
               />
               <div class="pl-2">Login with Okta</div>
             </v-btn>
+            <v-btn
+              v-show="authStrategySupported('saml')"
+              id="oauth-saml"
+              class="mt-5 flex-fill"
+              plain
+              @click="oauthLogin('saml')"
+            >
+              <v-img
+                max-width="32"
+                max-height="32"
+                :src="require('@/assets/okta_mark.png')"
+              />
+              <div class="pl-2">Login with SAML</div>
+            </v-btn>
           </div>
         </div>
       </v-container>

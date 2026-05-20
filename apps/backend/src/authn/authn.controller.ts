@@ -89,7 +89,7 @@ export class AuthnController {
     await this.setSessionCookies(req, session);
   }
 
-  @Get('saml/callback')
+  @Post('saml/callback')
   @UseFilters(new AuthenticationExceptionFilter())
   @UseGuards(AuthGuard('saml'))
   async getUserFromSAML(@Req() req: Request): Promise<void> {
