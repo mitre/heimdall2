@@ -1830,12 +1830,12 @@
     natural-compare "^1.4.0"
 
 "@eslint/markdown@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.npmjs.org/@eslint/markdown/-/markdown-8.0.1.tgz#48a1fd05ecc480fff60128a9b50694e9ce02d192"
-  integrity sha512-WWKmld/EyNdEB8GMq7JMPX1SDWgyJAM1uhtCi5ySrqYQM4HQjmg11EX/q3ZpnpRXHfdccFtli3NBvvGaYjWyQw==
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/@eslint/markdown/-/markdown-8.0.2.tgz#8454aacacbd05b411680ac3d184f4d11bbe36e4a"
+  integrity sha512-W+/0qHp0WbvFEljUvvECNpSWrUHpBWIWwp7F3QqEwQKmaRCmfEWvk6VfUia9pTQ0th6HyBGBsPfg/kG3/aQxLA==
   dependencies:
-    "@eslint/core" "^1.1.1"
-    "@eslint/plugin-kit" "^0.6.1"
+    "@eslint/core" "^1.2.1"
+    "@eslint/plugin-kit" "^0.7.1"
     github-slugger "^2.0.0"
     mdast-util-from-markdown "^2.0.2"
     mdast-util-frontmatter "^2.0.1"
