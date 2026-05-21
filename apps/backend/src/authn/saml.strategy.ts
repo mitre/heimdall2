@@ -4,11 +4,14 @@ import type { Profile } from '@node-saml/passport-saml';
 import { Strategy } from '@node-saml/passport-saml';
 import winston from 'winston';
 import { ConfigService } from '../config/config.service';
-import { GroupsService } from '../groups/groups.service';
 import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
 
-type SAMLProfile = Profile & { attributes?: Record<string, unknown> };
+type SAMLProfile = Profile & {
+  email: string;
+  firstName: string;
+  lastName: string;
+};
 
 // dependency injection makes it modular so that it is recyclable and we can pass in fake data for testing along with real data
 @Injectable()
@@ -32,7 +35,6 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
     // need authn for turning profile into heimdall user, config for reading config, the rest are added as developed
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
-    private readonly groupsService: GroupsService,
   ) {
     // super calls the contructor of the parent class and gives parent its config
     // set to undefined to library default can apply, we set disabled for required vars to avoid crashing from missing env vars
@@ -51,9 +53,17 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
   }
 
   async validate(profile: SAMLProfile): Promise<User> {
-    this.logger.info('in saml strategy file');
-    this.logger.info(JSON.stringify(profile, null, 2));
-
-    throw new UnauthorizedException('Inspect SAML profile attributes first.');
+    this.logger.debug('in saml strategy file');
+    this.logger.debug(JSON.stringify(profile, null, 2));
+    const { email, firstName, lastName } = profile;
+    if (email.length > 0) {
+      return this.authnService.validateOrCreateUser(
+        email,
+        firstName,
+        lastName,
+        'saml',
+      );
+    }
+    throw new UnauthorizedException('Incorrect Username or Password');
   }
 }
