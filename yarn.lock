@@ -302,9 +302,9 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-sts@^3.427.0":
-  version "3.1052.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.1052.0.tgz#3e3f66db80a37f23d5d7f2f3cc3800ebf45a0fd6"
-  integrity sha512-3AWMsvWKi8ZvQU5EC/oBb6R5EKgjj715fK44ElZ/9l34tNuSubobb8IMMXkHE9nmo4qTv6Ca77hvaDIjK9qBBw==
+  version "3.1053.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.1053.0.tgz#664df3acffd097b74730df19e8114663d3be43a1"
+  integrity sha512-0lkXV/by8oHnKjScVfWoZsvyalkV3iiMobDYDS/vmtXnmnpHoi2jlo8Jo51vYaqTGPbI1IJ2jtHj5cLsmB7Qkg==
   dependencies:
     "@aws-crypto/sha256-browser" "5.2.0"
     "@aws-crypto/sha256-js" "5.2.0"
