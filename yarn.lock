@@ -1769,9 +1769,9 @@
   integrity sha512-pEl1bO9mfAmIC+tW5btTmrKaujg3zGtUmWNdCw/xs70FBjwAL3o9OEKNHvNmnyylD6ubxUERiEhdsL0xBQ9efw==
 
 "@eslint-community/eslint-plugin-eslint-comments@^4.7.1":
-  version "4.7.1"
-  resolved "https://registry.npmjs.org/@eslint-community/eslint-plugin-eslint-comments/-/eslint-plugin-eslint-comments-4.7.1.tgz#503fc7ee16390a4720b1bc14be27b546b68e9cb2"
-  integrity sha512-Ql2nJFwA8wUGpILYGOQaT1glPsmvEwE0d+a+l7AALLzQvInqdbXJdx7aSu0DpUX9dB1wMVBMhm99/++S3MdEtQ==
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/@eslint-community/eslint-plugin-eslint-comments/-/eslint-plugin-eslint-comments-4.7.2.tgz#1e6582d517847a589f11c7f2fbba1fde765cd127"
+  integrity sha512-LF03qURSwEWm2dz5wtdDCzNk+7Opl0X7q6I3undsaIuNsEiNvRV3BCtqu14Q/6Pzg1tBj44LcxpW2EpSLZStZw==
   dependencies:
     escape-string-regexp "^4.0.0"
     ignore "^7.0.5"
