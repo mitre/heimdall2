@@ -169,12 +169,12 @@
   </v-card>
 </template>
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { email, required } from 'vuelidate/lib/validators';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { email, required } from "vuelidate/lib/validators";
 import UserValidatorMixin from "@/mixins/UserValidatorMixin";
-import {  ServerModul e } from "@/store/server";
-import {  SnackbarModul e } from "@/store/snackbar";
+import { ServerModule } from "@/store/server";
+import { SnackbarModule } from "@/store/snackbar";
 
 type LoginHash = {
   email: string;
@@ -185,10 +185,10 @@ type LoginHash = {
   validations: {
     email: {
       email,
-      required,,
+      required,
     },
-    password: { required },,
-  },,
+    password: { required },
+  },
 })
 export default class LocalLogin extends Vue {
   buttonLoading = false;
@@ -220,7 +220,7 @@ export default class LocalLogin extends Vue {
     this.buttonLoading = true;
     const creds: LoginHash = {
       email: this.email,
-      password: this.password,,
+      password: this.password,
     };
     ServerModule.Login(creds)
       .then(() => {
