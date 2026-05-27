@@ -34,7 +34,7 @@
         >
           <template #append>
             <v-icon @click="showPassword = !showPassword">
-              {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
+              {{ showPassword ? "mdi-eye" : "mdi-eye-off" }}
             </v-icon>
           </template>
         </v-text-field>
@@ -57,9 +57,9 @@
         <v-layout>
           NOTE: This Heimdall instance is in an external-authentication only
           mode.
-          <v-icon class="mr-3" @click="openExternalAuthModeDocumentation"
-            >mdi-help-circle-outline</v-icon
-          >
+          <v-icon class="mr-3" @click="openExternalAuthModeDocumentation">
+            mdi-help-circle-outline
+          </v-icon>
         </v-layout>
       </v-banner>
     </v-card-text>
@@ -158,7 +158,7 @@
               <v-img
                 max-width="32"
                 max-height="32"
-                :src="require('@/assets/okta_mark.png')"
+                :src="require('@/assets/saml.svg')"
               />
               <div class="pl-2">Login with SAML</div>
             </v-btn>
@@ -169,71 +169,35 @@
   </v-card>
 </template>
 <script lang="ts">
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {email, required} from 'vuelidate/lib/validators';
+import { email, required } from 'vuelidate/lib/validators';
+import UserValidatorMixin from "@/mixins/UserValidatorMixin";
+import {  ServerModul e } from "@/store/server";
+import {  SnackbarModul e } from "@/store/snackbar";
 
-interface LoginHash {
+type LoginHash = {
   email: string;
   password: string;
-}
+};
 @Component({
   mixins: [UserValidatorMixin],
   validations: {
     email: {
-      required,
-      email
+      email,
+      required,,
     },
-    password: {
-      required
-    }
-  }
+    password: { required },,
+  },,
 })
 export default class LocalLogin extends Vue {
-  email = '';
-  password = '';
   buttonLoading = false;
+  email = "";
+  password = "";
   showPassword = false;
-
-  login() {
-    this.buttonLoading = true;
-    const creds: LoginHash = {
-      email: this.email,
-      password: this.password
-    };
-    ServerModule.Login(creds)
-      .then(() => {
-        this.$router.push('/');
-        SnackbarModule.notify('You have successfully signed in.');
-      })
-      .finally(() => {
-        this.buttonLoading = false;
-      });
-  }
-
-  get showAlternateAuth() {
-    return ServerModule.enabledOAuth.length !== 0;
-  }
 
   get localLoginEnabled() {
     return ServerModule.localLoginEnabled;
-  }
-
-  openExternalAuthModeDocumentation() {
-    window.open(
-      'https://github.com/mitre/heimdall2/wiki/Heimdall-Authentication-Methods#external-authentication-only'
-    );
-  }
-
-  authStrategySupported(strategy: string) {
-    return ServerModule.enabledOAuth.includes(strategy);
-  }
-
-  oauthLogin(site: string) {
-    window.location.href = `/authn/${site}`;
   }
 
   get oidcName() {
@@ -242,6 +206,40 @@ export default class LocalLogin extends Vue {
 
   get registrationEnabled() {
     return ServerModule.registrationEnabled;
+  }
+
+  get showAlternateAuth() {
+    return ServerModule.enabledOAuth.length > 0;
+  }
+
+  authStrategySupported(strategy: string) {
+    return ServerModule.enabledOAuth.includes(strategy);
+  }
+
+  login() {
+    this.buttonLoading = true;
+    const creds: LoginHash = {
+      email: this.email,
+      password: this.password,,
+    };
+    ServerModule.Login(creds)
+      .then(() => {
+        this.$router.push("/");
+        SnackbarModule.notify("You have successfully signed in.");
+      })
+      .finally(() => {
+        this.buttonLoading = false;
+      });
+  }
+
+  oauthLogin(site: string) {
+    globalThis.location.href = `/authn/${site}`;
+  }
+
+  openExternalAuthModeDocumentation() {
+    window.open(
+      "https://github.com/mitre/heimdall2/wiki/Heimdall-Authentication-Methods#external-authentication-only",
+    );
   }
 }
 </script>
