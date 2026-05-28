@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@casl/ability": "^6.0.0",
-    "@govtechsg/passport-openidconnect": "^1.0.3",
+    "@govtechsg/passport-openidconnect": "github:Amndeep7/passport-openidconnect#logging",
     "@heimdall/common": "^2.13.0",
     "@heimdall/password-complexity": "^2.13.0",
     "@nestjs/cli": "^11.0.0",
