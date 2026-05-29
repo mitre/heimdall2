@@ -35,7 +35,7 @@
     "@e18e/eslint-plugin": "^0.5.0",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.7.1",
     "@eslint/js": "^10.0.1",
-    "@eslint/json": "^1.2.0",
+    "@eslint/json": "^2.0.0",
     "@eslint/markdown": "^8.0.1",
     "@stylistic/eslint-plugin": "^5.9.0",
     "@vitest/eslint-plugin": "^1.6.14",
