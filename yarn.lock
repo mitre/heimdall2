@@ -8765,9 +8765,9 @@ eslint-plugin-vue@^10.8.0:
     xml-name-validator "^4.0.0"
 
 eslint-plugin-yml@^3.3.1:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-yml/-/eslint-plugin-yml-3.3.2.tgz#b73907959518118498c9f7aee913dfa229cae6af"
-  integrity sha512-XjmOB/fLBwYHqevnpclPL938V+9ExX7xw1hPaM3IPePGyMFRV1giS16RjSTNhIyCv/Oh0G0PEdmmZPATJ02YCw==
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-yml/-/eslint-plugin-yml-3.4.0.tgz#e3b484bf74634ada2a307ebf01983e4f231c1db1"
+  integrity sha512-j6U3ESrAkidkvNb3HFN2UMxke46GNp6bsJokabXCICcgomSy3YU4oED9cjzkZ58nYxWD5qnWV1b/2YlqyWMOxA==
   dependencies:
     "@eslint/core" "^1.0.1"
     "@eslint/plugin-kit" "^0.7.0"
