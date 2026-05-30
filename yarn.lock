@@ -261,15 +261,15 @@
     "@smithy/util-utf8" "^2.0.0"
     tslib "^2.6.2"
 
-"@aws-sdk/client-config-service@3.1056.0":
-  version "3.1056.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1056.0.tgz#5de75ce07b3c60bd619be69f23af2a40b336f90e"
-  integrity sha512-AEB6j6SG/pBKg7wEty4u0Y91urIPHGyJ5dXjeZQmdJVQMq+I/5qBaYRV8+bzlaeCupeS5RIoq2ukKxQHHTGLlg==
+"@aws-sdk/client-config-service@3.1057.0":
+  version "3.1057.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1057.0.tgz#05599f3513d0a41958087c4c14c715299f6eb2f4"
+  integrity sha512-tUzmBEvl0RBQsakktImBhAz0AYj1srdQjEQVKgbFziEZySi0iFuP1ASUdLLjU6CF5j3xJMp4uiBD8g7V+Xp+Mw==
   dependencies:
     "@aws-crypto/sha256-browser" "5.2.0"
     "@aws-crypto/sha256-js" "5.2.0"
     "@aws-sdk/core" "^3.974.15"
-    "@aws-sdk/credential-provider-node" "^3.972.46"
+    "@aws-sdk/credential-provider-node" "^3.972.47"
     "@aws-sdk/types" "^3.973.9"
     "@smithy/core" "^3.24.5"
     "@smithy/fetch-http-handler" "^5.4.5"
@@ -364,10 +364,10 @@
     "@smithy/types" "^4.14.2"
     tslib "^2.6.2"
 
-"@aws-sdk/credential-provider-ini@^3.972.45":
-  version "3.972.45"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.972.45.tgz#db58a8a940dabbb3583e6664ff3c39dc4cee1b0f"
-  integrity sha512-sJe5ZWibO4s7RWjFQ8Zol76KxoJcIYyEZH1/wxQSBMSIAAxzaJ8cS/ITAaIHWUQvDKQdt18+cJAHKWB7n1Jmrg==
+"@aws-sdk/credential-provider-ini@^3.972.46":
+  version "3.972.46"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.972.46.tgz#3fea86be2fb9593ac7d339cb4c6ff78e9f69df30"
+  integrity sha512-hvcgcwOiS0nb2XFb5Op1Pz/vYaWz5K8kKullziGpdNRuG0NwzRXseuPt2CoBqknHGaSPVesu1aOn2OcctEYdCA==
   dependencies:
     "@aws-sdk/core" "^3.974.15"
     "@aws-sdk/credential-provider-env" "^3.972.41"
@@ -379,7 +379,7 @@
     "@aws-sdk/nested-clients" "^3.997.13"
     "@aws-sdk/types" "^3.973.9"
     "@smithy/core" "^3.24.5"
-    "@smithy/credential-provider-imds" "^4.3.5"
+    "@smithy/credential-provider-imds" "^4.3.6"
     "@smithy/types" "^4.14.2"
     tslib "^2.6.2"
 
@@ -395,20 +395,20 @@
     "@smithy/types" "^4.14.2"
     tslib "^2.6.2"
 
-"@aws-sdk/credential-provider-node@^3.972.46":
-  version "3.972.46"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.972.46.tgz#6afa92d695a97f01bc1baa0b32902c9c826af8a1"
-  integrity sha512-cS4w0jzDRb1jOlkiJS3y80OxddHzkky/MN9k3NYs5jganNKVLjF0lpvjlwS118oGMr3cdAfOlVdo8gLurTSE7w==
+"@aws-sdk/credential-provider-node@^3.972.46", "@aws-sdk/credential-provider-node@^3.972.47":
+  version "3.972.47"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.972.47.tgz#f25a77bce8924688bb581e87f8d7ef1477eab9a0"
+  integrity sha512-HrId+C0DWA5qDIyLG64/kjUB2RNtPypxmABnIctK+TA1P1kHlOYoE/Wf5T5tKOMKgb08P7k/zNyhvfJ3lh5Oag==
   dependencies:
     "@aws-sdk/credential-provider-env" "^3.972.41"
     "@aws-sdk/credential-provider-http" "^3.972.43"
-    "@aws-sdk/credential-provider-ini" "^3.972.45"
+    "@aws-sdk/credential-provider-ini" "^3.972.46"
     "@aws-sdk/credential-provider-process" "^3.972.41"
     "@aws-sdk/credential-provider-sso" "^3.972.45"
     "@aws-sdk/credential-provider-web-identity" "^3.972.45"
     "@aws-sdk/types" "^3.973.9"
     "@smithy/core" "^3.24.5"
-    "@smithy/credential-provider-imds" "^4.3.5"
+    "@smithy/credential-provider-imds" "^4.3.6"
     "@smithy/types" "^4.14.2"
     tslib "^2.6.2"
 
@@ -3233,10 +3233,10 @@
     "@smithy/types" "^4.14.2"
     tslib "^2.6.2"
 
-"@smithy/credential-provider-imds@^4.3.5":
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/@smithy/credential-provider-imds/-/credential-provider-imds-4.3.5.tgz#d42e9787561517d0c0d662ebe1db35eada28d1a7"
-  integrity sha512-yiF8xHpdkaTfzLVqFzsP6WvNghEK+qZzLYWFD13L2SsFhbXwBGlxdocKF95qjr7s5lE5NRage+EJFK4mAsx88Q==
+"@smithy/credential-provider-imds@^4.3.6":
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/@smithy/credential-provider-imds/-/credential-provider-imds-4.3.6.tgz#dc1d06447b3208987489133923bcb6bbdd114cc6"
+  integrity sha512-tHhdiWZfG1ZIh2YcRfPJmY2gHcBmqbAzqm3ER4TIDFYsSEqTD5tICT7cgQ/kI8LRakxp12myOYyK68XPn7MnHw==
   dependencies:
     "@smithy/core" "^3.24.5"
     "@smithy/types" "^4.14.2"
