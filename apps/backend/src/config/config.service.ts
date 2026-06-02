@@ -37,7 +37,10 @@ export class ConfigService {
   enabledOauthStrategies() {
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
-      if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
+      if (oauthStrategy == 'saml'&& this.get('SAML_ENTRY_POINT') && this.get('SAML_ISSUER') && this.get('SAML_IDP_CERT')) {
+        enabledOauth.push(oauthStrategy);
+      }
+      else if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)){
         enabledOauth.push(oauthStrategy);
       }
     });
@@ -99,5 +102,6 @@ export const supportedOauth: string[] = [
   'gitlab',
   'google',
   'okta',
-  'oidc'
+  'oidc',
+  'saml'
 ];
