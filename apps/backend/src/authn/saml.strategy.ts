@@ -13,6 +13,19 @@ type SAMLProfile = Profile & {
   lastName: string;
 };
 
+function samlBooleanConfigValue(value: string | undefined): boolean | undefined {
+  const normalizedValue = value?.trim().toLowerCase();
+  if (!normalizedValue) {
+    return undefined;
+  }
+
+  if (normalizedValue !== 'true' && normalizedValue !== 'false') {
+    throw new TypeError('SAML boolean config values must be "true" or "false"');
+  }
+
+  return normalizedValue === 'true';
+}
+
 // dependency injection makes it modular so that it is recyclable and we can pass in fake data for testing along with real data
 @Injectable()
 // basic logging stolen from other strategies
@@ -49,6 +62,8 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
       idpCert: configService.get('SAML_IDP_CERT') || 'disabled',
       idpIssuer: configService.get('SAML_IDP_ISSUER'),
       issuer: configService.get('SAML_ISSUER') || 'disabled',
+      wantAssertionsSigned: samlBooleanConfigValue(configService.get('SAML_WANT_ASSERTIONS_SIGNED')),
+      wantAuthnResponseSigned: samlBooleanConfigValue(configService.get('SAML_WANT_AUTHN_RESPONSE_SIGNED')),
     });
   }
 
