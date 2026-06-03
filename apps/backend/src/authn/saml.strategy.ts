@@ -26,9 +26,7 @@ function samlBooleanConfigValue(value: string | undefined): boolean | undefined 
   return normalizedValue === 'true';
 }
 
-// dependency injection makes it modular so that it is recyclable and we can pass in fake data for testing along with real data
 @Injectable()
-// basic logging stolen from other strategies
 export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   private readonly line = '_______________________________________________\n';
@@ -43,14 +41,10 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
     transports: [new winston.transports.Console()],
   });
 
-  // the constructor runs when a new object gets created
   constructor(
-    // need authn for turning profile into heimdall user, config for reading config, the rest are added as developed
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
   ) {
-    // super calls the contructor of the parent class and gives parent its config
-    // set to undefined to library default can apply, we set disabled for required vars to avoid crashing from missing env vars
     super({
       audience:
         configService.get('SAML_AUDIENCE')
