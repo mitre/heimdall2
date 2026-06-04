@@ -26,6 +26,11 @@ function samlBooleanConfigValue(value: string | undefined): boolean | undefined 
   return normalizedValue === 'true';
 }
 
+function samlClaimAttribute(profile: SAMLProfile, attributeName: string): string | undefined {
+  const attributeValue = Reflect.get(profile, attributeName);
+  return typeof attributeValue === 'string' ? attributeValue : undefined;
+}
+
 @Injectable()
 export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
@@ -64,8 +69,13 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
   async validate(profile: SAMLProfile): Promise<User> {
     this.logger.debug('in saml strategy file');
     this.logger.debug(JSON.stringify(profile, null, 2));
-    const { email, firstName, lastName } = profile;
-    if (email.length > 0) {
+    const emailAttribute = this.configService.get('SAML_EMAIL_ATTRIBUTE') || 'email';
+    const firstNameAttribute = this.configService.get('SAML_FIRST_NAME_ATTRIBUTE') || 'firstName';
+    const lastNameAttribute = this.configService.get('SAML_LAST_NAME_ATTRIBUTE') || 'lastName';
+    const email = samlClaimAttribute(profile, emailAttribute);
+    const firstName = samlClaimAttribute(profile, firstNameAttribute);
+    const lastName = samlClaimAttribute(profile, lastNameAttribute);
+    if (email && email.length > 0) {
       return this.authnService.validateOrCreateUser(
         email,
         firstName,
