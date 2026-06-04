@@ -18818,9 +18818,9 @@ vue-cookies@^1.7.4:
   integrity sha512-e2kYaHj1Y/zVsBSM3KWlOoVJ5o3l4QZjytNU7xdCgmkw3521CMUerqHekBGZKXXC1oRxYljBeeOK2SCel6cKuw==
 
 vue-eslint-parser@^10.4.0:
-  version "10.4.0"
-  resolved "https://registry.npmjs.org/vue-eslint-parser/-/vue-eslint-parser-10.4.0.tgz#fd7251d0e710a88a6618f50e8a27973bc3c8d69c"
-  integrity sha512-Vxi9pJdbN3ZnVGLODVtZ7y4Y2kzAAE2Cm0CZ3ZDRvydVYxZ6VrnBhLikBsRS+dpwj4Jv4UCv21PTEwF5rQ9WXg==
+  version "10.4.1"
+  resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-10.4.1.tgz#3d0aabb6604dac3fcd94f893291cb9e754cc392c"
+  integrity sha512-Gk6gRDj0n/fkRa3C3l0bBheoBckUq/Rs0F/TvMWIS6nzzx67amAViMe9CkNgsP2tXyQONvGiHQESHwFtZ3aYDA==
   dependencies:
     debug "^4.4.0"
     eslint-scope "^8.2.0 || ^9.0.0"
