@@ -1,14 +1,10 @@
-import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {FileExportTypes, FromHDFToHTMLMapper} from '../../../index';
-import {omitHTMLStyleTag} from '../../utils';
+import {omitHTMLStyleTag, readSample} from '../../utils';
 
 describe('HTML Results Reverse Mapper', () => {
   it('Successfully converts RHEL7 HDF into HTML', async () => {
-    const inputData = fs.readFileSync(
-      'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
-      {encoding: 'utf-8'}
-    );
+    const inputData = readSample('html_reverse_mapper', 'sample_input_report', 'rhel7-results.json');
 
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
@@ -22,19 +18,13 @@ describe('HTML Results Reverse Mapper', () => {
     //   converted
     // );
 
-    const expected = fs.readFileSync(
-      'sample_jsons/html_reverse_mapper/rhel7.html',
-      'utf-8'
-    );
+    const expected = readSample('html_reverse_mapper', 'rhel7.html');
 
     expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
   });
 
   it('Successfully converts SonarQube HDF into HTML', async () => {
-    const inputData = fs.readFileSync(
-      'sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json',
-      {encoding: 'utf-8'}
-    );
+    const inputData = readSample('html_reverse_mapper', 'sample_input_report', 'sonarqube-hdf.json');
 
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'sonarqube-hdf.json', fileID: '1'}],
@@ -48,19 +38,13 @@ describe('HTML Results Reverse Mapper', () => {
     //   converted
     // );
 
-    const expected = fs.readFileSync(
-      'sample_jsons/html_reverse_mapper/sonarqube.html',
-      'utf-8'
-    );
+    const expected = readSample('html_reverse_mapper', 'sonarqube.html');
 
     expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
   });
 
   it('Successfully converts SonarQube HDF into HTML with filtered controls', async () => {
-    const inputData = fs.readFileSync(
-      'sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json',
-      {encoding: 'utf-8'}
-    );
+    const inputData = readSample('html_reverse_mapper', 'sample_input_report', 'sonarqube-hdf.json');
 
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'sonarqube-hdf.json', fileID: '1', filteredControls: ['javascript:S2819'] }],
@@ -74,10 +58,7 @@ describe('HTML Results Reverse Mapper', () => {
     //   converted
     // );
 
-    const expected = fs.readFileSync(
-      'sample_jsons/html_reverse_mapper/sonarqube.html',
-      'utf-8'
-    );
+    const expected = readSample('html_reverse_mapper', 'sonarqube.html');
 
     expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
   });

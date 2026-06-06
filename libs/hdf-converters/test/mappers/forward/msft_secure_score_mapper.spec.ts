@@ -1,18 +1,14 @@
-import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {
   MsftSecureScoreResults,
   CombinedResponse
 } from '../../../src/msft-secure-score-mapper';
-import {omitVersions} from '../../utils';
+import {omitVersions, readSample} from '../../utils';
 
 describe('msft_secure_score_mapper', () => {
   it('Successfully converts Microsoft Secure Score reports', () => {
     const mapper = new MsftSecureScoreResults(
-      fs.readFileSync(
-        'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('msft_secure_score_mapper/sample_input_report/combined.json')
     );
 
     // fs.writeFileSync(
@@ -21,10 +17,7 @@ describe('msft_secure_score_mapper', () => {
     // );
 
     const expectedHdfReports = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/msft_secure_score_mapper/secure_score-hdfs.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('msft_secure_score_mapper/secure_score-hdfs.json')
     );
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {
@@ -38,10 +31,7 @@ describe('msft_secure_score_mapper', () => {
 describe('msft_secure_score_mapper_withraw', () => {
   it('Successfully converts withRaw flagged Microsoft Secure Score reports', () => {
     const mapper = new MsftSecureScoreResults(
-      fs.readFileSync(
-        'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
-        {encoding: 'utf-8'}
-      ),
+      readSample('msft_secure_score_mapper/sample_input_report/combined.json'),
       true
     );
 
@@ -51,10 +41,7 @@ describe('msft_secure_score_mapper_withraw', () => {
     // );
 
     const expectedHdfReports = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/msft_secure_score_mapper/secure_score-hdf-withraws.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('msft_secure_score_mapper/secure_score-hdf-withraws.json')
     );
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {
@@ -69,16 +56,10 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
   it('Successfully converts multiple Microsoft Secure Score reports into multiple ohdf files', () => {
     const input_data: CombinedResponse = {
       profiles: JSON.parse(
-        fs.readFileSync(
-          'sample_jsons/msft_secure_score_mapper/sample_input_report/profiles.json',
-          {encoding: 'utf-8'}
-        )
+        readSample('msft_secure_score_mapper/sample_input_report/profiles.json')
       ),
       secureScore: JSON.parse(
-        fs.readFileSync(
-          'sample_jsons/msft_secure_score_mapper/sample_input_report/secureScore-multiple.json',
-          {encoding: 'utf-8'}
-        )
+        readSample('msft_secure_score_mapper/sample_input_report/secureScore-multiple.json')
       )
     };
 
@@ -90,10 +71,7 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
     // );
 
     const expectedHdfReports = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/msft_secure_score_mapper/secure_score-hdf-multi.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('msft_secure_score_mapper/secure_score-hdf-multi.json')
     );
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {

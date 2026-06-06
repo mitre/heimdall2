@@ -1,15 +1,11 @@
-import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {SarifMapper} from '../../../src/sarif-mapper';
-import {omitVersions} from '../../utils';
+import {omitVersions, readSample} from '../../utils';
 
 describe('sarif_mapper', () => {
   it('Successfully converts Sarif data', () => {
     const mapper = new SarifMapper(
-      fs.readFileSync(
-        'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
-        {encoding: 'utf-8'}
-      )
+      readSample('sarif_mapper/sample_input_report/sarif_input.sarif')
     );
 
     // fs.writeFileSync(
@@ -20,9 +16,7 @@ describe('sarif_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/sarif_mapper/sarif-hdf.json', {
-            encoding: 'utf-8'
-          })
+          readSample('sarif_mapper/sarif-hdf.json')
         )
       )
     );
@@ -31,10 +25,7 @@ describe('sarif_mapper', () => {
 describe('sarif_mapper_withraw', () => {
   it('Successfully converts withRaw flagged Sarif data', () => {
     const mapper = new SarifMapper(
-      fs.readFileSync(
-        'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
-        {encoding: 'utf-8'}
-      ),
+      readSample('sarif_mapper/sample_input_report/sarif_input.sarif'),
       true
     );
 
@@ -46,9 +37,7 @@ describe('sarif_mapper_withraw', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/sarif_mapper/sarif-hdf-withraw.json', {
-            encoding: 'utf-8'
-          })
+          readSample('sarif_mapper/sarif-hdf-withraw.json')
         )
       )
     );

@@ -1,8 +1,8 @@
-import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import moment from 'moment';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import yaml from 'yaml';
+import {readSample, readSampleBuffer} from '../utils';
 import {
   addAttestationToHDF,
   advanceDate,
@@ -268,10 +268,7 @@ describe.sequential('addAttestationToHDF', () => {
   // Reset inputData and error console for each test
   beforeEach(() => {
     inputData = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json',
-        'utf-8'
-      )
+      readSample('attestations/rhel8_sample_oneOfEachControlStatus.json')
     ) as ExecJSON.Execution;
 
     console.error = vi.fn();
@@ -420,10 +417,7 @@ describe.sequential('addAttestationToHDF', () => {
 
 describe('addAttestationToHDF - Overlay Empty Results Case', () => {
   const inputDataWithEmptyResults = JSON.parse(
-    fs.readFileSync(
-      'sample_jsons/attestations/triple_overlay_profile_sample.json',
-      'utf-8'
-    )
+    readSample('attestations/triple_overlay_profile_sample.json')
   ) as ExecJSON.Execution;
 
   it('Should add a valid attestation to a skipped control', () => {
@@ -454,9 +448,8 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
 });
 
 describe('parseXLSXAttestations', () => {
-  const xlsxInputFile: Buffer = fs.readFileSync(
-    'sample_jsons/attestations/attestations_xlsxInputFormat.xlsx',
-    null
+  const xlsxInputFile: Buffer = readSampleBuffer(
+    'attestations/attestations_xlsxInputFormat.xlsx'
   );
 
   it('Should successfully parse XLSX attestations', async () => {
@@ -488,9 +481,8 @@ describe('parseXLSXAttestations', () => {
 });
 
 describe('parseXLSXAttestations', () => {
-  const yamlInputFile = fs.readFileSync(
-    'sample_jsons/attestations/attestations_yamlFormat.yaml',
-    'utf8'
+  const yamlInputFile = readSample(
+    'attestations/attestations_yamlFormat.yaml'
   );
 
   const parsed_attestations_yaml: Attestation[] = [];

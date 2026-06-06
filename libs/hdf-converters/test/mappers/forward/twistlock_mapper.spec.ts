@@ -1,14 +1,12 @@
-import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {TwistlockResults} from '../../../src/twistlock-mapper';
-import {omitVersions} from '../../utils';
+import {omitVersions, readSample} from '../../utils';
 
 describe('twistlock_mapper', () => {
   it('Successfully converts Twistlock docker image scan targeted at a local/cloned repository data', () => {
     const mapper = new TwistlockResults(
-      fs.readFileSync(
-        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
-        {encoding: 'utf-8'}
+      readSample(
+        'twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json'
       )
     );
 
@@ -20,9 +18,7 @@ describe('twistlock_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/twistlock_mapper/twistlock-hdf.json', {
-            encoding: 'utf-8'
-          })
+          readSample('twistlock_mapper/twistlock-hdf.json')
         )
       )
     );
@@ -32,9 +28,8 @@ describe('twistlock_mapper', () => {
 describe('twistlock_mapper_code_repo', () => {
   it('Successfully converts Twistlock code repo scan targeted at a local/cloned repository data', () => {
     const mapper = new TwistlockResults(
-      fs.readFileSync(
-        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-coderepo-scan-sample.json',
-        {encoding: 'utf-8'}
+      readSample(
+        'twistlock_mapper/sample_input_report/twistlock-twistcli-coderepo-scan-sample.json'
       )
     );
 
@@ -46,12 +41,7 @@ describe('twistlock_mapper_code_repo', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/twistlock_mapper/twistlock-coderepo-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          readSample('twistlock_mapper/twistlock-coderepo-hdf.json')
         )
       )
     );
@@ -61,9 +51,8 @@ describe('twistlock_mapper_code_repo', () => {
 describe('twistlock_mapper_withraw', () => {
   it('Successfully converts withRaw flagged Twistlock docker image scan', () => {
     const mapper = new TwistlockResults(
-      fs.readFileSync(
-        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
-        {encoding: 'utf-8'}
+      readSample(
+        'twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json'
       ),
       true
     );
@@ -76,12 +65,7 @@ describe('twistlock_mapper_withraw', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/twistlock_mapper/twistlock-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          readSample('twistlock_mapper/twistlock-hdf-withraw.json')
         )
       )
     );
@@ -91,9 +75,8 @@ describe('twistlock_mapper_withraw', () => {
 describe('twistlock_mapper_withraw', () => {
   it('Successfully converts withRaw flagged Twistlock code repo scan', () => {
     const mapper = new TwistlockResults(
-      fs.readFileSync(
-        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-coderepo-scan-sample.json',
-        {encoding: 'utf-8'}
+      readSample(
+        'twistlock_mapper/sample_input_report/twistlock-twistcli-coderepo-scan-sample.json'
       ),
       true
     );
@@ -106,12 +89,7 @@ describe('twistlock_mapper_withraw', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/twistlock_mapper/twistlock-coderepo-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          readSample('twistlock_mapper/twistlock-coderepo-hdf-withraw.json')
         )
       )
     );

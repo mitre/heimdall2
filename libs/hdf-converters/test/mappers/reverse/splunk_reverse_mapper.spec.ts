@@ -1,6 +1,6 @@
-import fs from 'fs';
 import {describe, it} from 'vitest';
 import {FromHDFToSplunkMapper} from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
+import {readSample} from '../../utils';
 
 export function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -10,10 +10,7 @@ describe('Describe Splunk Reverse Mapper', () => {
   it('Successfully converts HDF into Splunk', async () => {
     // The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
     const inputData = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper', 'sample_input_report', 'rhel7-results.json')
     );
 
     // Currently tests are to make sure there are no errors during upload to Splunk

@@ -1,16 +1,12 @@
-import fs from 'fs';
 import * as _ from 'lodash';
 import {describe, expect, it} from 'vitest';
 import {ASFFResults as Mapper} from '../../../src/asff-mapper/asff-mapper';
-import {omitVersions} from '../../utils';
+import {omitVersions, readSample} from '../../utils';
 
 describe('ASFF Mapper', () => {
   it('Successfully converts SecurityHub benchmark ASFFs', () => {
     const mapper = new Mapper(
-      fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/asff_sample.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_mapper/sample_input_report/asff_sample.json')
     );
 
     // fs.writeFileSync(
@@ -34,22 +30,12 @@ describe('ASFF Mapper', () => {
     expect(_.mapValues(mapper.toHdf(), omitVersions)).toEqual({
       'CIS AWS Foundations Benchmark v1.2.0.json': omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/asff_mapper/asff-cis_aws-foundations_benchmark_v1.2.0-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          readSample('asff_mapper/asff-cis_aws-foundations_benchmark_v1.2.0-hdf.json')
         )
       ),
       'AWS Foundational Security Best Practices v1.0.0.json': omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          readSample('asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json')
         )
       )
     });
@@ -57,10 +43,7 @@ describe('ASFF Mapper', () => {
 
   it('Successfully converts Prowler ASFF as Array', () => {
     const mapper = new Mapper(
-      fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/prowler_sample.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_mapper/sample_input_report/prowler_sample.json')
     );
 
     // fs.writeFileSync(
@@ -71,9 +54,7 @@ describe('ASFF Mapper', () => {
     expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/asff_mapper/prowler-hdf.json', {
-            encoding: 'utf-8'
-          })
+          readSample('asff_mapper/prowler-hdf.json')
         )
       )
     );
@@ -81,10 +62,7 @@ describe('ASFF Mapper', () => {
 
   it('Successfully converts Prowler ASFF as Objects delimited by newline', () => {
     const mapper = new Mapper(
-      fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/prowler-sample.asff-json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_mapper/sample_input_report/prowler-sample.asff-json')
     );
 
     // fs.writeFileSync(
@@ -95,9 +73,7 @@ describe('ASFF Mapper', () => {
     expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/asff_mapper/prowler-hdf.json', {
-            encoding: 'utf-8'
-          })
+          readSample('asff_mapper/prowler-hdf.json')
         )
       )
     );
@@ -105,10 +81,7 @@ describe('ASFF Mapper', () => {
 
   it('Successfully converts Trivy ASFF as Array', () => {
     const mapper = new Mapper(
-      fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/trivy-image_golang-1.12-alpine_sample.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_mapper/sample_input_report/trivy-image_golang-1.12-alpine_sample.json')
     );
 
     // fs.writeFileSync(
@@ -119,10 +92,7 @@ describe('ASFF Mapper', () => {
     expect(omitVersions(mapper.toHdf()['Aqua Security - Trivy.json'])).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/asff_mapper/trivy-image_golang-1.12-alpine-hdf.json',
-            {encoding: 'utf-8'}
-          )
+          readSample('asff_mapper/trivy-image_golang-1.12-alpine-hdf.json')
         )
       )
     );
@@ -130,10 +100,7 @@ describe('ASFF Mapper', () => {
 
   it('Successfully converts HDF2ASFF / Previously HDF', () => {
     let mapper = new Mapper(
-      fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/rhel7_V-71931_asff.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_mapper/sample_input_report/rhel7_V-71931_asff.json')
     );
 
     // fs.writeFileSync(
@@ -150,19 +117,12 @@ describe('ASFF Mapper', () => {
     ).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/asff_mapper/rhel7_V-71931-hdf.json', {
-            encoding: 'utf-8'
-          })
+          readSample('asff_mapper/rhel7_V-71931-hdf.json')
         )
       )
     );
     mapper = new Mapper(
-      fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/example-3-layer-overlay_asff.json',
-        {
-          encoding: 'utf-8'
-        }
-      )
+      readSample('asff_mapper/sample_input_report/example-3-layer-overlay_asff.json')
     );
 
     // fs.writeFileSync(
@@ -185,12 +145,7 @@ describe('ASFF Mapper', () => {
     ).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/asff_mapper/example-3-layer-overlay_hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          readSample('asff_mapper/example-3-layer-overlay_hdf.json')
         )
       )
     );

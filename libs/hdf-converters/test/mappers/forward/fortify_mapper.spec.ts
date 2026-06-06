@@ -1,14 +1,12 @@
-import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {FortifyResults} from '../../../src/fortify-mapper';
-import {omitVersions} from '../../utils';
+import {omitVersions, readSample} from '../../utils';
 
 describe('fortify_mapper', () => {
   it('Successfully converts Fortify reports', async () => {
     const mapper = new FortifyResults(
-      fs.readFileSync(
-        'sample_jsons/fortify_mapper/sample_input_report/fortify_webgoat_results.fvdl',
-        {encoding: 'utf-8'}
+      readSample(
+        'fortify_mapper/sample_input_report/fortify_webgoat_results.fvdl'
       )
     );
 
@@ -21,9 +19,7 @@ describe('fortify_mapper', () => {
       JSON.stringify(
         omitVersions(
           JSON.parse(
-            fs.readFileSync('sample_jsons/fortify_mapper/fortify-hdf.json', {
-              encoding: 'utf-8'
-            })
+            readSample('fortify_mapper/fortify-hdf.json')
           )
         )
       )
@@ -34,9 +30,8 @@ describe('fortify_mapper', () => {
 describe('fortify_mapper_withraw', () => {
   it('Successfully converts withRaw flagged Fortify reports', async () => {
     const mapper = new FortifyResults(
-      fs.readFileSync(
-        'sample_jsons/fortify_mapper/sample_input_report/fortify_webgoat_results.fvdl',
-        {encoding: 'utf-8'}
+      readSample(
+        'fortify_mapper/sample_input_report/fortify_webgoat_results.fvdl'
       ),
       true
     );
@@ -50,12 +45,7 @@ describe('fortify_mapper_withraw', () => {
       JSON.stringify(
         omitVersions(
           JSON.parse(
-            fs.readFileSync(
-              'sample_jsons/fortify_mapper/fortify-hdf-withraw.json',
-              {
-                encoding: 'utf-8'
-              }
-            )
+            readSample('fortify_mapper/fortify-hdf-withraw.json')
           )
         )
       )

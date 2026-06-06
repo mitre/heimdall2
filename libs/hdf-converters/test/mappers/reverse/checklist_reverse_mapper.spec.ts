@@ -2,7 +2,7 @@ import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {Stigdata, Checklist} from '../../../src/ckl-mapper/checklistJsonix';
-import {replaceCKLVersion} from '../../utils';
+import {replaceCKLVersion, readSample} from '../../utils';
 import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
@@ -11,10 +11,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
       'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json'
     );
     const mapper = new ChecklistResults(hdfData);
-    const expected = fs.readFileSync(
-      'sample_jsons/checklist_mapper/converted-RHEL8V1R3.ckl',
-      'utf-8'
-    );
+    const expected = readSample('checklist_mapper/converted-RHEL8V1R3.ckl');
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
@@ -24,10 +21,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
       'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json'
     );
     const mapper = new ChecklistResults(hdfData);
-    const expected = fs.readFileSync(
-      'sample_jsons/checklist_mapper/converted-three-stig-checklist.ckl',
-      'utf-8'
-    );
+    const expected = readSample('checklist_mapper/converted-three-stig-checklist.ckl');
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
@@ -39,10 +33,7 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
       'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json'
     );
     const mapper = new ChecklistResults(hdfData);
-    const expected = fs.readFileSync(
-      'sample_jsons/checklist_mapper/converted-nessus.ckl',
-      'utf-8'
-    );
+    const expected = readSample('checklist_mapper/converted-nessus.ckl');
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
@@ -54,10 +45,7 @@ describe('Small RHEL8 HDF file', () => {
       'sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json'
     );
     const mapper = new ChecklistResults(hdfData);
-    const expected = fs.readFileSync(
-      'sample_jsons/checklist_mapper/converted-rhel8_sample_oneOfEachControlStatus.ckl',
-      'utf-8'
-    );
+    const expected = readSample('checklist_mapper/converted-rhel8_sample_oneOfEachControlStatus.ckl');
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
@@ -69,10 +57,7 @@ describe('Small RHEL 7 with severity and severity override tags', () => {
       'sample_jsons/checklist_mapper/sample_input_report/RHEL7_overrides_hdf.json'
     );
     const mapper = new ChecklistResults(hdfData);
-    const expected = fs.readFileSync(
-      'sample_jsons/checklist_mapper/converted-rhel7_overrides.ckl',
-      'utf-8'
-    );
+    const expected = readSample('checklist_mapper/converted-rhel7_overrides.ckl');
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
@@ -142,7 +127,8 @@ describe('checklist_mapper_severity_mapping', () => {
  * @returns Parsed data.
  */
 function loadJsonFile(filePath: string): any {
-  return JSON.parse(fs.readFileSync(filePath, {encoding: 'utf-8'}));
+  const relativePath = filePath.replace(/^sample_jsons\//, '');
+  return JSON.parse(readSample(relativePath));
 }
 /**
  * Extract the severity string for a specific control from the mapper.

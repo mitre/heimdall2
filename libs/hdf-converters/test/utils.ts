@@ -1,8 +1,26 @@
+import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import path from 'path';
+import {fileURLToPath} from 'url';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import {version as hdfConvertersVersion} from '../package.json';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SAMPLE_ROOT = path.resolve(__dirname, '..', 'sample_jsons');
+
+export function samplePath(...segments: string[]): string {
+  return path.join(SAMPLE_ROOT, ...segments);
+}
+
+export function readSample(...segments: string[]): string {
+  return fs.readFileSync(samplePath(...segments), {encoding: 'utf-8'});
+}
+
+export function readSampleBuffer(...segments: string[]): Buffer {
+  return fs.readFileSync(samplePath(...segments));
+}
 
 export function omitVersions(
   input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {

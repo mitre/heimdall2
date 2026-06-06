@@ -1,15 +1,11 @@
-import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {FromHdfToAsffMapper} from '../../../src/converters-from-hdf/asff/reverse-asff-mapper';
-import {omitASFFTimes, omitASFFTitle, omitASFFVersions} from '../../utils';
+import {omitASFFTimes, omitASFFTitle, omitASFFVersions, readSample} from '../../utils';
 
 describe('ASFF Reverse Mapper', () => {
   it('Successfully converts a one-layer HDF into ASFF', () => {
     const inputData = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/sample_input_report/rhel7-results.json')
     );
 
     //The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
@@ -32,17 +28,11 @@ describe('ASFF Reverse Mapper', () => {
     // );
 
     const expectedJSON = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/rhel7-results.asff.json')
     );
 
     const expectedProfileInfo = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/rhel7-results.asff.json.p0.json')
     );
 
     expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
@@ -57,10 +47,7 @@ describe('ASFF Reverse Mapper', () => {
 
   it('Successfully converts a three-layer HDF into ASFF', () => {
     const inputData = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/sample_input_report/example-3-layer-overlay_03062022.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/sample_input_report/example-3-layer-overlay_03062022.json')
     );
 
     //The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
@@ -83,17 +70,11 @@ describe('ASFF Reverse Mapper', () => {
     // );
 
     const expectedJSON = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json')
     );
 
     const expectedProfileInfo = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json.p0.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json.p0.json')
     );
 
     expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
@@ -108,10 +89,7 @@ describe('ASFF Reverse Mapper', () => {
 
   it('Successfully processes HDF files with no controls', () => {
     const inputData = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/sample_input_report/snyk-no-results.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/sample_input_report/snyk-no-results.json')
     );
 
     const converted = new FromHdfToAsffMapper(inputData, {
@@ -127,10 +105,7 @@ describe('ASFF Reverse Mapper', () => {
     // );
 
     const expectedJSON = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/snyk-no-results.asff.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/snyk-no-results.asff.json')
     );
 
     expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
@@ -140,10 +115,7 @@ describe('ASFF Reverse Mapper', () => {
 
   it('Successfully processes and modifies HDF files to meet certain ASFF / AWS SecurityHub restrictions', () => {
     const inputData = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/sample_input_report/restrictions-test-rhel7-results.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/sample_input_report/restrictions-test-rhel7-results.json')
     );
 
     const converted = new FromHdfToAsffMapper(inputData, {
@@ -159,10 +131,7 @@ describe('ASFF Reverse Mapper', () => {
     // );
 
     const expectedJSON = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/restrictions-test-results.asff.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('asff_reverse_mapper/restrictions-test-results.asff.json')
     );
 
     expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(

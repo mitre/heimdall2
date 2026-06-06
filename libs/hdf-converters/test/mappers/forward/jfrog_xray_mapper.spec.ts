@@ -1,15 +1,11 @@
-import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {JfrogXrayMapper} from '../../../src/jfrog-xray-mapper';
-import {omitVersions} from '../../utils';
+import {omitVersions, readSample} from '../../utils';
 
 describe('jfrog_xray_mapper', () => {
   it('Successfully converts JFrog Xray data', () => {
     const mapper = new JfrogXrayMapper(
-      fs.readFileSync(
-        'sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
-        {encoding: 'utf-8'}
-      )
+      readSample('jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json')
     );
 
     // fs.writeFileSync(
@@ -20,9 +16,7 @@ describe('jfrog_xray_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/jfrog_xray_mapper/jfrog-hdf.json', {
-            encoding: 'utf-8'
-          })
+          readSample('jfrog_xray_mapper/jfrog-hdf.json')
         )
       )
     );
@@ -32,10 +26,7 @@ describe('jfrog_xray_mapper', () => {
 describe('jfrog_xray_mapper_withraw', () => {
   it('Successfully converts withRaw flagged JFrog Xray data', () => {
     const mapper = new JfrogXrayMapper(
-      fs.readFileSync(
-        'sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
-        {encoding: 'utf-8'}
-      ),
+      readSample('jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json'),
       true
     );
 
@@ -47,12 +38,7 @@ describe('jfrog_xray_mapper_withraw', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/jfrog_xray_mapper/jfrog-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          readSample('jfrog_xray_mapper/jfrog-hdf-withraw.json')
         )
       )
     );

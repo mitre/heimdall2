@@ -1,8 +1,7 @@
-import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import {describe, expect, it} from 'vitest';
 import {SonarqubeResults} from '../../../src/sonarqube-mapper';
-import {omitHDFTitle, omitVersions} from '../../utils';
+import {omitHDFTitle, omitVersions, readSample} from '../../utils';
 
 const testURL = 'http://127.0.0.1:3001';
 
@@ -20,12 +19,7 @@ describe('sonarqube_mapper', () => {
       omitHDFTitle(
         omitVersions(
           JSON.parse(
-            fs.readFileSync(
-              'sample_jsons/sonarqube_mapper/sonarqube-hdf.json',
-              {
-                encoding: 'utf-8'
-              }
-            )
+            readSample('sonarqube_mapper', 'sonarqube-hdf.json')
           )
         )
       )
@@ -49,12 +43,7 @@ describe('sonarqube_mapper', () => {
       omitHDFTitle(
         omitVersions(
           JSON.parse(
-            fs.readFileSync(
-              'sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json',
-              {
-                encoding: 'utf-8'
-              }
-            )
+            readSample('sonarqube_mapper', 'sonarqube-branch-hdf.json')
           )
         )
       )
@@ -79,12 +68,7 @@ describe('sonarqube_mapper', () => {
       omitHDFTitle(
         omitVersions(
           JSON.parse(
-            fs.readFileSync(
-              'sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json',
-              {
-                encoding: 'utf-8'
-              }
-            )
+            readSample('sonarqube_mapper', 'sonarqube-pull-request-hdf.json')
           )
         )
       )
