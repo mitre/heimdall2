@@ -2,6 +2,7 @@ import {describe, expect} from 'vitest';
 import {NotFoundException} from '@nestjs/common';
 import {eq} from 'drizzle-orm';
 import {test} from '../db/test-fixture';
+import type {TestDb} from '../db/test-fixture';
 import {legacyUserFactory} from '../db/factories/legacy-user.factory';
 import {evaluationFactory} from '../db/factories/evaluation.factory';
 import {groupFactory} from '../db/factories/group.factory';
@@ -10,6 +11,13 @@ import {evaluations, evaluationTags, groupEvaluations} from '../db/schema';
 import {EvaluationsService} from './evaluations.service';
 
 describe('EvaluationsService (Drizzle)', () => {
+  let filenameCounter = 0;
+
+  function uniqueFilenamePrefix(label: string): string {
+    filenameCounter += 1;
+    return `${label}-${Date.now()}-${filenameCounter}`;
+  }
+
   describe('create', () => {
     test('creates an evaluation via Drizzle and returns typed result', async ({db}) => {
       const service = new EvaluationsService(db);
@@ -224,18 +232,23 @@ describe('EvaluationsService (Drizzle)', () => {
   });
 
   describe('findPaginated', () => {
-    async function seedEvaluations(db: Parameters<typeof test>[1] extends (ctx: infer C) => unknown ? C extends {db: infer D} ? D : never : never, count: number, userId?: number) {
+    async function seedEvaluations(
+      db: TestDb,
+      count: number,
+      options: {prefix?: string; userId?: number} = {},
+    ) {
+      const prefix = options.prefix ?? uniqueFilenamePrefix('eval');
       const evals = [];
       for (let i = 0; i < count; i++) {
         evals.push(
-          await db.insert(evaluations).values({
-            filename: `eval-${String(i).padStart(3, '0')}.json`,
+          await evaluationFactory.create(db, {
+            filename: `${prefix}-${String(i).padStart(3, '0')}.json`,
             public: true,
             data: {},
-            userId: userId ?? null,
-            createdAt: new Date(Date.now() - (count - i) * 60000).toISOString(),
-            updatedAt: new Date(Date.now() - (count - i) * 60000).toISOString(),
-          }).returning().then(([r]) => r),
+            userId: options.userId ?? null,
+            createdAt: new Date(Date.UTC(2026, 0, 1, 0, i)).toISOString(),
+            updatedAt: new Date(Date.UTC(2026, 0, 1, 0, i)).toISOString(),
+          }),
         );
       }
       return evals;
@@ -243,11 +256,12 @@ describe('EvaluationsService (Drizzle)', () => {
 
     test('returns correct page with SQL LIMIT/OFFSET', async ({db}) => {
       const service = new EvaluationsService(db);
-      const seeded = await seedEvaluations(db, 5);
+      const prefix = uniqueFilenamePrefix('page-limit');
+      await seedEvaluations(db, 5, {prefix});
 
       const result = await service.findPaginated({
         page: 1, perPage: 2, sort: 'createdAt', order: 'desc',
-        userId: '1', role: 'admin',
+        q: prefix, userId: '1', role: 'admin',
       });
 
       expect(result.data).toHaveLength(2);
@@ -259,15 +273,16 @@ describe('EvaluationsService (Drizzle)', () => {
 
     test('returns second page correctly', async ({db}) => {
       const service = new EvaluationsService(db);
-      await seedEvaluations(db, 5);
+      const prefix = uniqueFilenamePrefix('page-two');
+      await seedEvaluations(db, 5, {prefix});
 
       const page1 = await service.findPaginated({
         page: 1, perPage: 2, sort: 'createdAt', order: 'desc',
-        userId: '1', role: 'admin',
+        q: prefix, userId: '1', role: 'admin',
       });
       const page2 = await service.findPaginated({
         page: 2, perPage: 2, sort: 'createdAt', order: 'desc',
-        userId: '1', role: 'admin',
+        q: prefix, userId: '1', role: 'admin',
       });
 
       expect(page2.data).toHaveLength(2);
@@ -278,28 +293,30 @@ describe('EvaluationsService (Drizzle)', () => {
 
     test('sorts by filename ascending', async ({db}) => {
       const service = new EvaluationsService(db);
-      await seedEvaluations(db, 5);
+      const prefix = uniqueFilenamePrefix('filename-sort');
+      const seeded = await seedEvaluations(db, 5, {prefix});
 
       const result = await service.findPaginated({
         page: 1, perPage: 10, sort: 'filename', order: 'asc',
-        userId: '1', role: 'admin',
+        q: prefix, userId: '1', role: 'admin',
       });
 
       const filenames = result.data.map((e) => e.filename);
-      expect(filenames).toEqual([...filenames].sort());
+      expect(filenames).toEqual(seeded.map((e) => e.filename).sort());
     });
 
     test('sorts by createdAt descending by default', async ({db}) => {
       const service = new EvaluationsService(db);
-      await seedEvaluations(db, 3);
+      const prefix = uniqueFilenamePrefix('created-sort');
+      const seeded = await seedEvaluations(db, 3, {prefix});
 
       const result = await service.findPaginated({
         page: 1, perPage: 10, sort: 'createdAt', order: 'desc',
-        userId: '1', role: 'admin',
+        q: prefix, userId: '1', role: 'admin',
       });
 
       const dates = result.data.map((e) => e.createdAt);
-      expect(dates).toEqual([...dates].sort().reverse());
+      expect(dates).toEqual(seeded.map((e) => e.createdAt).sort().reverse());
     });
 
     test('filters by filename search via SQL ILIKE', async ({db}) => {
@@ -358,14 +375,15 @@ describe('EvaluationsService (Drizzle)', () => {
       const service = new EvaluationsService(db);
       const user = await legacyUserFactory.create(db, {email: 'vis@test.com'});
       const otherUser = await legacyUserFactory.create(db, {email: 'other@test.com'});
+      const prefix = uniqueFilenamePrefix('visibility');
 
-      await service.create({filename: 'my-private.json', public: false, data: {}, userId: user.id});
-      await service.create({filename: 'public.json', public: true, data: {}});
-      await service.create({filename: 'other-private.json', public: false, data: {}, userId: otherUser.id});
+      await service.create({filename: `${prefix}-my-private.json`, public: false, data: {}, userId: user.id});
+      await service.create({filename: `${prefix}-public.json`, public: true, data: {}});
+      await service.create({filename: `${prefix}-other-private.json`, public: false, data: {}, userId: otherUser.id});
 
       const group = await groupFactory.create(db, {name: 'My Group'});
       await groupMemberFactory.create(db, {userId: user.id, groupId: group.id});
-      const groupEval = await service.create({filename: 'group-shared.json', public: false, data: {}});
+      const groupEval = await service.create({filename: `${prefix}-group-shared.json`, public: false, data: {}});
       const now = new Date().toISOString();
       await db.insert(groupEvaluations).values({
         groupId: group.id, evaluationId: groupEval.id, createdAt: now, updatedAt: now,
@@ -373,12 +391,16 @@ describe('EvaluationsService (Drizzle)', () => {
 
       const result = await service.findPaginated({
         page: 1, perPage: 100, sort: 'filename', order: 'asc',
-        userId: String(user.id), role: 'user',
+        q: prefix, userId: String(user.id), role: 'user',
       });
 
       const filenames = result.data.map((e) => e.filename).sort();
-      expect(filenames).toEqual(['group-shared.json', 'my-private.json', 'public.json']);
-      expect(filenames).not.toContain('other-private.json');
+      expect(filenames).toEqual([
+        `${prefix}-group-shared.json`,
+        `${prefix}-my-private.json`,
+        `${prefix}-public.json`,
+      ]);
+      expect(filenames).not.toContain(`${prefix}-other-private.json`);
     });
 
     test('admin sees all evaluations regardless of ownership', async ({db}) => {
@@ -400,11 +422,12 @@ describe('EvaluationsService (Drizzle)', () => {
 
     test('returns empty result for page beyond total', async ({db}) => {
       const service = new EvaluationsService(db);
-      await seedEvaluations(db, 3);
+      const prefix = uniqueFilenamePrefix('empty-page');
+      await seedEvaluations(db, 3, {prefix});
 
       const result = await service.findPaginated({
         page: 99, perPage: 10, sort: 'createdAt', order: 'desc',
-        userId: '1', role: 'admin',
+        q: prefix, userId: '1', role: 'admin',
       });
 
       expect(result.data).toHaveLength(0);

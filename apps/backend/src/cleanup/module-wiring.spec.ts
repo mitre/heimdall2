@@ -1,36 +1,28 @@
+import {readFileSync} from 'node:fs';
 import {describe, it, expect} from 'vitest';
-import {execSync} from 'child_process';
+
+function readSource(relativePath: string): string {
+  return readFileSync(new URL(relativePath, import.meta.url), 'utf-8');
+}
 
 describe('Module wiring cleanup', () => {
   it('ApiKeysModule has no SequelizeModule imports', () => {
-    const result = execSync(
-      'grep -n "SequelizeModule" apps/backend/src/apikeys/apikeys.module.ts || true',
-      {encoding: 'utf-8'},
-    );
-    expect(result.trim()).toBe('');
+    const source = readSource('../apikeys/apikeys.module.ts');
+    expect(source).not.toContain('SequelizeModule');
   });
 
   it('APIKeyDto does not import Sequelize ApiKey model', () => {
-    const result = execSync(
-      'grep -n "apikey.model" apps/backend/src/apikeys/dto/apikey.dto.ts || true',
-      {encoding: 'utf-8'},
-    );
-    expect(result.trim()).toBe('');
+    const source = readSource('../apikeys/dto/apikey.dto.ts');
+    expect(source).not.toContain('apikey.model');
   });
 
   it('EvaluationsModule imports AuthzModule', () => {
-    const result = execSync(
-      'grep -n "AuthzModule" apps/backend/src/evaluations/evaluations.module.ts || true',
-      {encoding: 'utf-8'},
-    );
-    expect(result.trim()).not.toBe('');
+    const source = readSource('../evaluations/evaluations.module.ts');
+    expect(source).toContain('AuthzModule');
   });
 
   it('EvaluationTagsModule has no SequelizeModule imports', () => {
-    const result = execSync(
-      'grep -n "SequelizeModule" apps/backend/src/evaluation-tags/evaluation-tags.module.ts || true',
-      {encoding: 'utf-8'},
-    );
-    expect(result.trim()).toBe('');
+    const source = readSource('../evaluation-tags/evaluation-tags.module.ts');
+    expect(source).not.toContain('SequelizeModule');
   });
 });

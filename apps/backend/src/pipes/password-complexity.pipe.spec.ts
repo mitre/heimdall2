@@ -1,17 +1,47 @@
 import {validators} from '@heimdall/password-complexity';
 import {BadRequestException} from '@nestjs/common';
 import {beforeEach, describe, expect, it} from 'vitest';
-import {
-  CREATE_USER_DTO_TEST_OBJ,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-  UPDATE_USER_DTO_TEST_OBJ,
-  UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD,
-  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
-} from '../../test/constants/users-test.constant';
+import type {CreateUserDto} from '../users/dto/create-user.dto';
+import type {UpdateUserDto} from '../users/dto/update-user.dto';
 import {
   PasswordComplexityPipe,
   validatePassword
 } from './password-complexity.pipe';
+
+function buildCreateUserDto(
+  overrides: Partial<CreateUserDto> = {}
+): CreateUserDto {
+  return {
+    email: `complexity-${Date.now()}@pipe.test`,
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local',
+    ...overrides
+  };
+}
+
+function buildUpdateUserDto(
+  overrides: Partial<UpdateUserDto> = {}
+): UpdateUserDto {
+  return {
+    email: `complexity-update-${Date.now()}@pipe.test`,
+    firstName: 'Updated',
+    lastName: 'Name',
+    organization: 'Updated Org',
+    title: 'updated title',
+    role: 'user',
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    currentPassword: 'LETmeiN123$$$tP',
+    forcePasswordChange: true,
+    ...overrides
+  };
+}
 
 describe('PasswordComplexityPipe', () => {
   let passwordComplexityPipe: PasswordComplexityPipe;
@@ -116,47 +146,48 @@ describe('PasswordComplexityPipe', () => {
   // Tests the complexity of a user's password and that when it meets the requirements of: 15 characters or longer, at least 1 uppercase letter, lowercase letter, number, special character, the password meets the requirements of not containing more than three consecutive repeating characters, and it contains no more than four repeating characters from the same character class, the same dto object will be returned
   describe('Test Valid Password', () => {
     it('should return the same CreateUserDto', () => {
-      expect(
-        passwordComplexityPipe.transform(CREATE_USER_DTO_TEST_OBJ)
-      ).toEqual(CREATE_USER_DTO_TEST_OBJ);
+      const dto = buildCreateUserDto();
+
+      expect(passwordComplexityPipe.transform(dto)).toEqual(dto);
     });
 
     it('should return the same UpdateUserDto', () => {
-      expect(
-        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_OBJ)
-      ).toEqual(UPDATE_USER_DTO_TEST_OBJ);
+      const dto = buildUpdateUserDto();
+
+      expect(passwordComplexityPipe.transform(dto)).toEqual(dto);
     });
 
     it('should return UpdateUserDto if password fields are null', () => {
-      expect(
-        passwordComplexityPipe.transform(
-          UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
-        )
-      ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
+      const dto = buildUpdateUserDto({
+        password: undefined,
+        passwordConfirmation: undefined
+      });
+
+      expect(passwordComplexityPipe.transform(dto)).toEqual(dto);
     });
   });
 
   // Tests that when a password does not meet all the minimum requirements, a BadRequestException is thrown
   describe('Test Invalid Password', () => {
     it('should throw a BadRequestException for CreateUserDto with missing password', () => {
+      const dto = buildCreateUserDto({password: undefined});
+
       expect(() =>
-        passwordComplexityPipe.transform(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
-        )
+        passwordComplexityPipe.transform(dto)
       ).toThrowError(BadRequestException);
       expect(() =>
-        passwordComplexityPipe.transform(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
-        )
+        passwordComplexityPipe.transform(dto)
       ).toThrowError('Password must be of type string');
     });
 
     it('should throw a BadRequestException for UpdateUserDto with missing password', () => {
+      const dto = buildUpdateUserDto({password: undefined});
+
       expect(() =>
-        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD)
+        passwordComplexityPipe.transform(dto)
       ).toThrowError(BadRequestException);
       expect(() =>
-        passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD)
+        passwordComplexityPipe.transform(dto)
       ).toThrowError('Password must be of type string');
     });
   });

@@ -1,12 +1,25 @@
 import {BadRequestException} from '@nestjs/common';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {
-  UPDATE_USER_DTO_TEST_OBJ,
-  UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
-  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-  UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
-} from '../../test/constants/users-test.constant';
+import type {UpdateUserDto} from '../users/dto/update-user.dto';
 import {PasswordChangePipe} from './password-change.pipe';
+
+function buildUpdateUserDto(
+  overrides: Partial<UpdateUserDto> = {}
+): UpdateUserDto {
+  return {
+    email: `change-${Date.now()}@pipe.test`,
+    firstName: 'Updated',
+    lastName: 'Name',
+    organization: 'Updated Org',
+    title: 'updated title',
+    role: 'user',
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    currentPassword: 'LETmeiN123$$$tP',
+    forcePasswordChange: true,
+    ...overrides
+  };
+}
 
 describe('PasswordChangePipe', () => {
   let passwordChangePipe: PasswordChangePipe;
@@ -88,37 +101,44 @@ describe('PasswordChangePipe', () => {
       vi.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
     });
     it('should return the same UpdateUserDto', () => {
-      expect(
-        passwordChangePipe.transform(
-          UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD
-        )
-      ).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
+      const dto = buildUpdateUserDto({
+        password: 'ABCdefG456!@#pT',
+        passwordConfirmation: 'ABCdefG456!@#pT',
+        forcePasswordChange: false
+      });
+
+      expect(passwordChangePipe.transform(dto)).toEqual(dto);
     });
 
     it('should return UpdateUserDto if password fields are null', () => {
-      expect(
-        passwordChangePipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS)
-      ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
+      const dto = buildUpdateUserDto({
+        password: undefined,
+        passwordConfirmation: undefined
+      });
+
+      expect(passwordChangePipe.transform(dto)).toEqual(dto);
     });
 
     // The password-change pipe should not fail when the currentPassword is missing. That check is the responsibility of the users service. This allows admins to update a user without their current password.
     it('should should pass when the currentPassword is not provided and a valid new password is provided', () => {
-      expect(
-        passwordChangePipe.transform(
-          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
-        )
-      ).toEqual(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD);
+      const dto = buildUpdateUserDto({
+        currentPassword: 'invalid_password'
+      });
+
+      expect(passwordChangePipe.transform(dto)).toEqual(dto);
     });
   });
 
   // Tests that when a user tries to update their password with a new password that's Levenshtein Distance is < 8, it throws a BadRequestException
   describe('Test Invalid Password Changes', () => {
     it('should throw a BadRequestException', () => {
+      const dto = buildUpdateUserDto();
+
       expect(() =>
-        passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ)
+        passwordChangePipe.transform(dto)
       ).toThrowError(BadRequestException);
       expect(() =>
-        passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ)
+        passwordChangePipe.transform(dto)
       ).toThrowError(
         'A minimum of four character classes must be changed when updating a password. A minimum of eight of the total number of characters must be changed when updating a password.'
       );
