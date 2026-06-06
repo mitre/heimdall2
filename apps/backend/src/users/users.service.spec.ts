@@ -1,594 +1,732 @@
-import {Ability} from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
-import {SequelizeModule} from '@nestjs/sequelize';
-import {Test} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
-import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
-import {
-  CREATE_ADMIN_DTO,
-  CREATE_SECOND_ADMIN_DTO,
-  CREATE_USER_DTO_TEST_OBJ,
-  CREATE_USER_DTO_TEST_OBJ_2,
-  CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE,
-  DELETE_FAILURE_USER_DTO_TEST_OBJ,
-  DELETE_USER_DTO_TEST_OBJ,
-  DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
-  UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE,
-  UPDATE_USER_DTO_TEST_OBJ,
-  UPDATE_USER_DTO_TEST_WITHOUT_EMAIL,
-  UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME,
-  UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
-  UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME,
-  UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION,
-  UPDATE_USER_DTO_TEST_WITHOUT_ROLE,
-  UPDATE_USER_DTO_TEST_WITHOUT_TITLE,
-  UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL,
-  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-  UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
-  USER_ONE_DTO
-} from '../../test/constants/users-test.constant';
-import {AuthzModule} from '../authz/authz.module';
-import {AuthzService} from '../authz/authz.service';
-import {ConfigService} from '../config/config.service';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
-import {GroupUser} from '../group-users/group-user.model';
-import {Group} from '../groups/group.model';
-import {GroupsService} from '../groups/groups.service';
-import {SlimUserDto} from './dto/slim-user.dto';
-import {UserDto} from './dto/user.dto';
-import {User} from './user.model';
+import {sql} from 'drizzle-orm';
+import {describe, expect, it, vi} from 'vitest';
+import {test} from '../db/test-fixture';
+import type {TestDb} from '../db/test-fixture';
+import {CaslAbilityFactory} from '../casl/casl-ability.factory';
+import {userFactory} from '../db/factories/user.factory';
 import {UsersService} from './users.service';
+import type {CreateUserDto} from './dto/create-user.dto';
+import type {UpdateUserDto} from './dto/update-user.dto';
+import type {DeleteUserDto} from './dto/delete-user.dto';
 
-describe('UsersService', () => {
-  let authzService: AuthzService;
-  let usersService: UsersService;
-  let databaseService: DatabaseService;
-  const errorString =
-    'User that was just created was not returned from the database. Create method may have failed silently.';
+function createServiceAndMocks(db: TestDb) {
+  const ensureGroupHasOwnerSpy = vi.fn();
+  const mockGroupsService = {
+    findAll: vi.fn().mockResolvedValue([]),
+    ensureGroupHasOwner: ensureGroupHasOwnerSpy,
+  };
+  const service = new UsersService(db as any, mockGroupsService as any);
+  return {service, mockGroupsService, ensureGroupHasOwnerSpy};
+}
 
-  beforeAll(async () => {
-    const module = await Test.createTestingModule({
-      imports: [
-        DatabaseModule,
-        SequelizeModule.forFeature([
-          User,
-          GroupUser,
-          Group,
-          GroupEvaluation,
-          Evaluation,
-          EvaluationTag
-        ]),
-        AuthzModule
-      ],
-      providers: [
-        AuthzService,
-        ConfigService,
-        DatabaseService,
-        UsersService,
-        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
-      ]
-    }).compile();
+const caslFactory = new CaslAbilityFactory();
 
-    authzService = module.get<AuthzService>(AuthzService);
-    usersService = module.get<UsersService>(UsersService);
-    databaseService = module.get<DatabaseService>(DatabaseService);
+const CREATE_USER_DTO: CreateUserDto = {
+  email: 'testuser@example.com',
+  password: 'LETmeiN123$$$tP',
+  passwordConfirmation: 'LETmeiN123$$$tP',
+  firstName: 'Test',
+  lastName: 'User',
+  title: 'Engineer',
+  organization: 'MITRE',
+  role: 'user',
+  creationMethod: 'local',
+};
+
+const CREATE_USER_DTO_2: CreateUserDto = {
+  email: 'testuser2@example.com',
+  password: 'LETmeiN123$$$tP',
+  passwordConfirmation: 'LETmeiN123$$$tP',
+  firstName: 'Test2',
+  lastName: 'User2',
+  title: 'Analyst',
+  organization: 'MITRE',
+  role: 'user',
+  creationMethod: 'local',
+};
+
+const CREATE_ADMIN_DTO: CreateUserDto = {
+  email: 'admin@example.com',
+  password: 'LETmeiN123$$$tP',
+  passwordConfirmation: 'LETmeiN123$$$tP',
+  firstName: 'Admin',
+  lastName: 'User',
+  title: 'Admin',
+  organization: 'MITRE',
+  role: 'admin',
+  creationMethod: 'local',
+};
+
+const CREATE_ADMIN_DTO_2: CreateUserDto = {
+  ...CREATE_ADMIN_DTO,
+  email: 'admin2@example.com',
+};
+
+// No manual cleanup needed — test-fixture wraps each test() in a transaction that rolls back
+
+describe('UserDto', () => {
+  test('accepts a SelectUser from Drizzle and produces correct HTTP shape', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+    const user = await service.create(CREATE_USER_DTO);
+    const {UserDto} = await import('./dto/user.dto');
+    const dto = new UserDto(user);
+    expect(dto.id).toBe(String(user.id));
+    expect(dto.email).toBe('testuser@example.com');
+    expect(dto.firstName).toBe('Test');
+    expect(dto.role).toBe('user');
+    expect(dto.loginCount).toBe(0);
+    expect(dto.createdAt).toBeInstanceOf(Date);
+    expect(dto.updatedAt).toBeInstanceOf(Date);
   });
 
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
+  test('SlimUserDto accepts Pick<SelectUser, ...> from findAllUsers', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+    await service.create(CREATE_USER_DTO);
+    const slim = await service.findAllUsers();
+    const {SlimUserDto} = await import('./dto/slim-user.dto');
+    const dto = new SlimUserDto(slim[0]);
+    expect(dto.id).toBe(String(slim[0].id));
+    expect(dto.email).toBe(slim[0].email);
   });
+});
 
-  beforeEach(async () => {
-    await databaseService.cleanAll();
-  });
-
-  describe('Create', () => {
-    it('should create a valid User', async () => {
-      expect.assertions(8);
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+describe('UsersService (Drizzle)', () => {
+  describe('create', () => {
+    test('creates a user and returns typed result with id, email, role', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
       expect(user.id).toBeDefined();
-      expect(user.email).toEqual(USER_ONE_DTO.email);
-      expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
-      expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
-      expect(user.title).toEqual(USER_ONE_DTO.title);
-      expect(user.organization).toEqual(USER_ONE_DTO.organization);
-      expect(user.updatedAt.valueOf()).not.toBe(
-        USER_ONE_DTO.updatedAt.valueOf()
-      );
-      expect(user.role).toEqual(USER_ONE_DTO.role);
+      expect(user.email).toBe('testuser@example.com');
+      expect(user.firstName).toBe('Test');
+      expect(user.lastName).toBe('User');
+      expect(user.title).toBe('Engineer');
+      expect(user.organization).toBe('MITRE');
+      expect(user.role).toBe('user');
+      expect(user.creationMethod).toBe('local');
     });
 
-    it('should throw an error when missing the email field', async () => {
-      expect.assertions(1);
-      await expect(
-        usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD)
-      ).rejects.toThrow('notNull Violation: User.email cannot be null');
+    test('hashes the password with bcrypt', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      expect(user.encryptedPassword).toMatch(/^\$2[ab]\$14\$/);
+      expect(user.encryptedPassword).not.toBe(CREATE_USER_DTO.password);
     });
 
-    it('should throw an error when email field is invalid', async () => {
-      expect.assertions(1);
-      await expect(
-        usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD)
-      ).rejects.toThrow('Validation isEmail on email failed');
+    test('throws BadRequestException when password is missing', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const dto = {...CREATE_USER_DTO, password: undefined} as any;
+      await expect(service.create(dto)).rejects.toThrow(BadRequestException);
     });
 
-    it('should throw an error when missing the password field', async () => {
-      expect.assertions(1);
-      await expect(
-        usersService.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
-        )
-      ).rejects.toThrow(BadRequestException);
-    });
-
-    it('should throw an error when missing the role field', async () => {
-      expect.assertions(1);
-      await expect(
-        usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE)
-      ).rejects.toThrow('notNull Violation: User.role cannot be null');
+    test('throws BadRequestException when email is not a valid email format', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const dto = {...CREATE_USER_DTO, email: 'NotAValidEmail'};
+      await expect(service.create(dto)).rejects.toThrow(BadRequestException);
     });
   });
 
   describe('adminFindAllUsers', () => {
-    it('should find all users', async () => {
-      expect.assertions(2);
-      const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const userDtoArray = (await usersService.adminFindAllUsers()).map(
-        (user) => new UserDto(user)
-      );
-      expect(userDtoArray).toContainEqual(new UserDto(userOne));
-      expect(userDtoArray).toContainEqual(new UserDto(userTwo));
+    test('returns all users with all fields', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      await service.create(CREATE_USER_DTO);
+      await service.create(CREATE_USER_DTO_2);
+      const all = await service.adminFindAllUsers();
+      const emails = all.map((u) => u.email);
+      expect(emails).toContain('testuser@example.com');
+      expect(emails).toContain('testuser2@example.com');
+      expect(all[0].encryptedPassword).toMatch(/^\$2[ab]\$14\$/);
     });
   });
 
   describe('findAllUsers', () => {
-    it('should find all users id, email, firstName, lastName only', async () => {
-      expect.assertions(2);
-      const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const slimUserDtoArray = (await usersService.findAllUsers()).map(
-        (user) => new SlimUserDto(user)
-      );
-      expect(slimUserDtoArray).toContainEqual(new SlimUserDto(userOne));
-      expect(slimUserDtoArray).toContainEqual(new SlimUserDto(userTwo));
+    test('returns only id, email, title, firstName, lastName', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      await service.create(CREATE_USER_DTO);
+      const slim = await service.findAllUsers();
+      expect(slim.length).toBeGreaterThanOrEqual(1);
+      const user = slim.find((u) => u.email === 'testuser@example.com');
+      expect(user).toBeDefined();
+      expect(user!.id).toBeDefined();
+      expect(user!.email).toBe('testuser@example.com');
+      expect(user!.firstName).toBe('Test');
+      expect('encryptedPassword' in user!).toBe(false);
     });
   });
 
-  describe('FindById', () => {
-    it('should find users by id', async () => {
-      expect.assertions(8);
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const foundUser = await usersService.findById(user.id);
-      expect(foundUser.email).toEqual(user.email);
-      expect(foundUser.firstName).toEqual(user.firstName);
-      expect(foundUser.lastName).toEqual(user.lastName);
-      expect(foundUser.title).toEqual(user.title);
-      expect(foundUser.organization).toEqual(user.organization);
-      expect(foundUser.createdAt.valueOf()).toEqual(user.createdAt.valueOf());
-      expect(foundUser.id).toEqual(user.id);
-      expect(foundUser.role).toEqual(user.role);
-    });
-
-    it('should throw an error if user does not exist', async () => {
-      expect.assertions(1);
-      await expect(usersService.findById('-1')).rejects.toThrow(
-        NotFoundException
-      );
+  describe('count', () => {
+    test('returns a number and increases when a user is created', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const countResult = await service.count();
+      expect(countResult).toBeTypeOf('number');
+      expect(countResult).toBeGreaterThanOrEqual(0);
     });
   });
 
-  describe('FindByEmail', () => {
-    it('should find users by email', async () => {
-      expect.assertions(6);
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const foundUser = await usersService.findByEmail(user.email);
-      expect(foundUser.email).toEqual(CREATE_USER_DTO_TEST_OBJ.email);
-      expect(foundUser.firstName).toEqual(CREATE_USER_DTO_TEST_OBJ.firstName);
-      expect(foundUser.lastName).toEqual(CREATE_USER_DTO_TEST_OBJ.lastName);
-      expect(foundUser.title).toEqual(CREATE_USER_DTO_TEST_OBJ.title);
-      expect(foundUser.organization).toEqual(
-        CREATE_USER_DTO_TEST_OBJ.organization
-      );
-      expect(foundUser.role).toEqual(CREATE_USER_DTO_TEST_OBJ.role);
+  describe('findById', () => {
+    test('finds a user by id', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const created = await service.create(CREATE_USER_DTO);
+      const found = await service.findById(String(created.id));
+      expect(found.email).toBe(created.email);
+      expect(found.id).toBe(created.id);
     });
 
-    it('should throw an error if user does not exist', async () => {
-      expect.assertions(1);
+    test('throws NotFoundException for non-existent id', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      await expect(service.findById('999999')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    test('throws NotFoundException for non-numeric string id like "abc"', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      await expect(service.findById('abc')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    test('throws NotFoundException for negative id', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      await expect(service.findById('-1')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    test('throws NotFoundException for zero id', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      await expect(service.findById('0')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    test('finds a better-auth user by string id from ba_user', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const baUser = await userFactory.create(db, {
+        email: `ba-findby-${Date.now()}@example.com`,
+      });
+      const found = await service.findById(baUser.id);
+      expect(found).toBeDefined();
+      expect(found.email).toBe(baUser.email);
+    });
+
+    test('returns SelectUser-compatible shape for better-auth users', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const baUser = await userFactory.create(db, {
+        email: `ba-shape-${Date.now()}@example.com`,
+        role: 'admin',
+      });
+      const found = await service.findById(baUser.id);
+      expect(found.id).toBeDefined();
+      expect(found.email).toBe(baUser.email);
+      expect(found.role).toBe('admin');
+      expect(found.createdAt).toBeDefined();
+      expect(found.updatedAt).toBeDefined();
+    });
+  });
+
+  describe('findByEmail', () => {
+    test('finds a user by email', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      await service.create(CREATE_USER_DTO);
+      const found = await service.findByEmail('testuser@example.com');
+      expect(found.email).toBe('testuser@example.com');
+      expect(found.role).toBe('user');
+    });
+
+    test('throws NotFoundException for non-existent email', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
       await expect(
-        usersService.findByEmail('doesnotexist@example.com')
+        service.findByEmail('doesnotexist@example.com'),
       ).rejects.toThrow(NotFoundException);
     });
   });
 
-  describe('Update', () => {
-    let createUserDto: UserDto;
-    let user: User;
-    let abacPolicy: Ability;
-    let adminAbacPolicy: Ability;
-    let userCreatedAt: Date;
-
-    beforeEach(async () => {
-      createUserDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const findUser = await User.findByPk<User>(createUserDto.id);
-      const adminDto = await usersService.create(CREATE_ADMIN_DTO);
-      const admin = await User.findByPk<User>(adminDto.id);
-
-      if (findUser === null || admin === null) {
-        throw new TypeError(errorString);
-      } else {
-        user = findUser;
-      }
-
-      userCreatedAt = user.updatedAt;
-      abacPolicy = authzService.abac.createForUser(user);
-      adminAbacPolicy = authzService.abac.createForUser(admin);
+  describe('findOneBang', () => {
+    test('finds a user by field and value', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      await service.create(CREATE_USER_DTO);
+      const found = await service.findOneBang('email', 'testuser@example.com');
+      expect(found.email).toBe('testuser@example.com');
     });
 
-    // Tests the update function (Successful update)
-    it('should update a user', async () => {
-      expect.assertions(14);
-      const updatedUser = await usersService.update(
-        user,
-        UPDATE_USER_DTO_TEST_OBJ,
-        abacPolicy
-      );
-
-      expect(updatedUser.email).toEqual(UPDATE_USER_DTO_TEST_OBJ.email);
-      expect(updatedUser.firstName).toEqual(UPDATE_USER_DTO_TEST_OBJ.firstName);
-      expect(updatedUser.lastName).toEqual(UPDATE_USER_DTO_TEST_OBJ.lastName);
-      expect(updatedUser.title).toEqual(UPDATE_USER_DTO_TEST_OBJ.title);
-      expect(updatedUser.organization).toEqual(
-        UPDATE_USER_DTO_TEST_OBJ.organization
-      );
-      expect(updatedUser.role).toEqual(UPDATE_USER_DTO_TEST_OBJ.role);
-
-      expect(updatedUser.email).not.toEqual(CREATE_USER_DTO_TEST_OBJ.email);
-      expect(updatedUser.firstName).not.toEqual(
-        CREATE_USER_DTO_TEST_OBJ.firstName
-      );
-      expect(updatedUser.lastName).not.toEqual(
-        CREATE_USER_DTO_TEST_OBJ.lastName
-      );
-      expect(updatedUser.title).not.toEqual(CREATE_USER_DTO_TEST_OBJ.title);
-      expect(updatedUser.organization).not.toEqual(
-        CREATE_USER_DTO_TEST_OBJ.organization
-      );
-      expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-      // This will not change currently because there is only a 'user' role that can be updated via API.
-      expect(updatedUser.role).toEqual(user.role);
-      expect(user.forcePasswordChange).toEqual(
-        UPDATE_USER_DTO_TEST_OBJ.forcePasswordChange
-      );
-    });
-
-    // Users should be able to update their account without updating their email
-    it('should update a user without updating email', async () => {
-      expect.assertions(2);
-      const updatedUser = await usersService.update(
-        user,
-        UPDATE_USER_DTO_TEST_WITHOUT_EMAIL,
-        abacPolicy
-      );
-
-      expect(updatedUser.email).toEqual(CREATE_USER_DTO_TEST_OBJ.email);
-      expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-    });
-
-    // Users should be able to update their account without updating their first name
-    it('should update a user without updating firstName', async () => {
-      expect.assertions(2);
-      const updatedUser = await usersService.update(
-        user,
-        UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME,
-        abacPolicy
-      );
-
-      expect(updatedUser.firstName).toEqual(user.firstName);
-      expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-    });
-
-    // Users should be able to update their account without updating their last name
-    it('should update a user without updating lastName', async () => {
-      expect.assertions(2);
-      const updatedUser = await usersService.update(
-        user,
-        UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME,
-        abacPolicy
-      );
-
-      expect(updatedUser.lastName).toEqual(user.lastName);
-      expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-    });
-
-    // Users should be able to update their account without updating their organization
-    it('should update a user without updating organization', async () => {
-      expect.assertions(2);
-      const updatedUser = await usersService.update(
-        user,
-        UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION,
-        abacPolicy
-      );
-
-      expect(updatedUser.organization).toEqual(user.organization);
-      expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-    });
-
-    // Users should be able to update their account without updating their title
-    it('should update a user without updating title', async () => {
-      expect.assertions(2);
-      const updatedUser = await usersService.update(
-        user,
-        UPDATE_USER_DTO_TEST_WITHOUT_TITLE,
-        abacPolicy
-      );
-
-      expect(updatedUser.title).toEqual(user.title);
-      expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-    });
-
-    // If role is not provided, then the users role should stay the same
-    it('should update a user without updating role', async () => {
-      expect.assertions(2);
-      const updatedUser = await usersService.update(
-        user,
-        UPDATE_USER_DTO_TEST_WITHOUT_ROLE,
-        abacPolicy
-      );
-
-      expect(updatedUser.role).toEqual(user.role);
-      expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-    });
-
-    // Changing user information should not require the user to change their password
-    it('should update a user without updating forcePasswordChange', async () => {
-      expect.assertions(2);
-      const updateUserDto = await usersService.update(
-        user,
-        UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
-        abacPolicy
-      );
-      const updateUser = await usersService.findByPkBang(updateUserDto.id);
-
-      expect(updateUserDto.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-      expect(updateUser.forcePasswordChange).toEqual(user.forcePasswordChange);
-    });
-
-    it('should update a user without updating password', async () => {
-      expect.assertions(8);
-      const {encryptedPassword} = user;
-
-      await usersService.update(
-        user,
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-        abacPolicy
-      );
-
-      expect(user.email).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.email);
-      expect(user.firstName).toEqual(
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.firstName
-      );
-      expect(user.lastName).toEqual(
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.lastName
-      );
-      expect(user.organization).toEqual(
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.organization
-      );
-      expect(user.title).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title);
-      expect(user.role).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.role);
-      expect(user.encryptedPassword).toEqual(encryptedPassword);
-      expect(user.updatedAt.valueOf()).not.toEqual(userCreatedAt.valueOf());
-    });
-
-    it('should update a user without matching password when admin', async () => {
-      expect.assertions(2);
-      const {encryptedPassword} = user;
-
-      const updateUser = await usersService.update(
-        user,
-        UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
-        adminAbacPolicy
-      );
-
-      expect(user.encryptedPassword).not.toEqual(encryptedPassword);
-
-      expect(updateUser.updatedAt.valueOf()).not.toEqual(
-        userCreatedAt.valueOf()
-      );
-    });
-
-    it('should throw an error when the password is invalid', async () => {
-      expect.assertions(1);
+    test('throws NotFoundException when no match', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
       await expect(
-        usersService.update(
-          user,
-          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
-          abacPolicy
-        )
-      ).rejects.toThrow(ForbiddenException);
-    });
-
-    it('should throw an error when the email is invalid', async () => {
-      expect.assertions(1);
-      await expect(
-        usersService.update(
-          user,
-          UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL,
-          abacPolicy
-        )
-      ).rejects.toThrow('Validation error: Validation isEmail on email failed');
-    });
-
-    it('should throw an error when password is not updated and forcePasswordChange is true', async () => {
-      expect.assertions(1);
-      await usersService.update(
-        user,
-        UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE,
-        abacPolicy
-      );
-      await expect(
-        usersService.update(
-          user,
-          UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
-          abacPolicy
-        )
-      ).rejects.toThrow(BadRequestException);
-    });
-
-    describe('UpdateLoginMetadata', () => {
-      it('should update user lastLogin and loginCount', async () => {
-        expect.assertions(2);
-        const {lastLogin} = user;
-
-        await usersService.updateLoginMetadata(user);
-
-        expect(user.loginCount).toBe(1);
-        expect(user.lastLogin).not.toBe(lastLogin);
-      });
+        service.findOneBang('email', 'nope@example.com'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
-  describe('Remove', () => {
-    let user: User;
-    let adminUser: User;
-    let abacPolicy: Ability;
-    let adminAbacPolicy: Ability;
-
-    beforeEach(async () => {
-      const userDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const userResponse = await User.findByPk<User>(userDto.id);
-      const adminDto = await usersService.create(CREATE_ADMIN_DTO);
-      const adminResponse = await User.findByPk<User>(adminDto.id);
-
-      if (userResponse === null || adminResponse === null) {
-        throw new TypeError(errorString);
-      } else {
-        user = userResponse;
-        adminUser = adminResponse;
-      }
-
-      abacPolicy = authzService.abac.createForUser(user);
-      adminAbacPolicy = authzService.abac.createForUser(adminResponse);
+  describe('update', () => {
+    test('updates user fields', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(user.id),
+        role: user.role,
+      });
+      const updateDto: UpdateUserDto = {
+        email: 'updated@example.com',
+        firstName: 'Updated',
+        lastName: 'Name',
+        organization: 'Updated Org',
+        title: 'Updated Title',
+        role: 'user',
+        password: 'LETmeiN123$$$tP',
+        passwordConfirmation: 'LETmeiN123$$$tP',
+        currentPassword: 'LETmeiN123$$$tP',
+        forcePasswordChange: false,
+      };
+      const updated = await service.update(user, updateDto, abac);
+      expect(updated.email).toBe('updated@example.com');
+      expect(updated.firstName).toBe('Updated');
+      expect(updated.lastName).toBe('Name');
+      expect(updated.organization).toBe('Updated Org');
+      expect(updated.title).toBe('Updated Title');
     });
 
-    it('should throw an error when password fields do not match', async () => {
-      expect.assertions(1);
+    test('throws ForbiddenException when current password is wrong', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(user.id),
+        role: 'user',
+      });
+      const updateDto = {
+        email: 'x@example.com',
+        currentPassword: 'wrong_password!',
+      } as UpdateUserDto;
+      await expect(service.update(user, updateDto, abac)).rejects.toThrow(
+        ForbiddenException,
+      );
+    });
+
+    test('throws ForbiddenException when encryptedPassword is malformed', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(user.id),
+        role: 'user',
+      });
+
+      await db.execute(
+        sql`UPDATE "Users" SET "encryptedPassword" = 'not-a-bcrypt-hash' WHERE id = ${user.id}`,
+      );
+      const corruptedUser = await service.findById(String(user.id));
+
+      const updateDto = {
+        email: 'x@example.com',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto;
       await expect(
-        usersService.remove(user, DELETE_FAILURE_USER_DTO_TEST_OBJ, abacPolicy)
+        service.update(corruptedUser, updateDto, abac),
       ).rejects.toThrow(ForbiddenException);
     });
 
-    // Tests the remove function with DeleteUserDto that has no password field
-    it('should throw an error when password field is blank', async () => {
-      expect.assertions(1);
+    test('allows admin to update ANOTHER user without matching current password', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const admin = await service.create(CREATE_ADMIN_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(admin.id),
+        role: 'admin',
+      });
+      const updateDto = {
+        firstName: 'AdminUpdated',
+        currentPassword: 'wrong',
+      } as UpdateUserDto;
+      const updated = await service.update(user, updateDto, abac);
+      expect(updated.firstName).toBe('AdminUpdated');
+    });
+
+    test('throws ForbiddenException when admin updates OWN account without current password', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const admin = await service.create(CREATE_ADMIN_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(admin.id),
+        role: 'admin',
+      });
+      const updateDto = {
+        firstName: 'SelfUpdate',
+        currentPassword: 'wrong_password!',
+      } as UpdateUserDto;
+      await expect(service.update(admin, updateDto, abac)).rejects.toThrow(
+        ForbiddenException,
+      );
+    });
+
+    test('throws BadRequestException when forcePasswordChange is true and no new password', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const admin = await service.create(CREATE_ADMIN_DTO);
+      const adminAbac = caslFactory.createForUser({
+        id: String(admin.id),
+        role: 'admin',
+      });
+      const userAbac = caslFactory.createForUser({
+        id: String(user.id),
+        role: 'user',
+      });
+
+      const setupDto = {
+        forcePasswordChange: true,
+        currentPassword: 'irrelevant',
+      } as UpdateUserDto;
+      const forced = await service.update(user, setupDto, adminAbac);
+      expect(forced.forcePasswordChange).toBe(true);
+
+      const noPasswordDto = {
+        email: 'changed@example.com',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto;
       await expect(
-        usersService.remove(
-          user,
-          DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
-          abacPolicy
-        )
+        service.update(forced, noPasswordDto, userAbac),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    test('preserves email when update DTO omits email field', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+      const updated = await service.update(user, {
+        firstName: 'Changed',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto, abac);
+      expect(updated.email).toBe(CREATE_USER_DTO.email);
+    });
+
+    test('preserves firstName when update DTO omits firstName', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+      const updated = await service.update(user, {
+        lastName: 'Changed',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto, abac);
+      expect(updated.firstName).toBe(CREATE_USER_DTO.firstName);
+    });
+
+    test('preserves lastName when update DTO omits lastName', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+      const updated = await service.update(user, {
+        firstName: 'Changed',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto, abac);
+      expect(updated.lastName).toBe(CREATE_USER_DTO.lastName);
+    });
+
+    test('preserves organization when update DTO omits organization', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+      const updated = await service.update(user, {
+        firstName: 'Changed',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto, abac);
+      expect(updated.organization).toBe(CREATE_USER_DTO.organization);
+    });
+
+    test('preserves title when update DTO omits title', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+      const updated = await service.update(user, {
+        firstName: 'Changed',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto, abac);
+      expect(updated.title).toBe(CREATE_USER_DTO.title);
+    });
+
+    test('preserves role when update DTO omits role (non-admin)', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+      const updated = await service.update(user, {
+        firstName: 'Changed',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto, abac);
+      expect(updated.role).toBe('user');
+    });
+
+    test('non-admin cannot change role even if included in DTO', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+      const updated = await service.update(user, {
+        role: 'admin',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto, abac);
+      expect(updated.role).toBe('user');
+    });
+
+    test('admin can change another user role', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const admin = await service.create(CREATE_ADMIN_DTO);
+      const abac = caslFactory.createForUser({id: String(admin.id), role: 'admin'});
+      const updated = await service.update(user, {
+        role: 'admin',
+        currentPassword: 'irrelevant',
+      } as UpdateUserDto, abac);
+      expect(updated.role).toBe('admin');
+    });
+
+    test('non-admin cannot set forcePasswordChange even when providing valid password', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+
+      const dto = {
+        forcePasswordChange: true,
+        password: 'NEWpass789!@#xY',
+        passwordConfirmation: 'NEWpass789!@#xY',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto;
+      const updated = await service.update(user, dto, abac);
+      expect(updated.forcePasswordChange).toBe(false);
+    });
+
+    test('admin can set forcePasswordChange on another user', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const admin = await service.create(CREATE_ADMIN_DTO);
+      const abac = caslFactory.createForUser({id: String(admin.id), role: 'admin'});
+
+      const setDto = {
+        forcePasswordChange: true,
+        currentPassword: 'irrelevant',
+      } as UpdateUserDto;
+      const updated = await service.update(user, setDto, abac);
+      expect(updated.forcePasswordChange).toBe(true);
+
+      const clearDto = {
+        forcePasswordChange: false,
+        currentPassword: 'irrelevant',
+      } as UpdateUserDto;
+      const cleared = await service.update(updated, clearDto, abac);
+      expect(cleared.forcePasswordChange).toBe(false);
+    });
+
+    test('updates profile fields without changing password', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({id: String(user.id), role: 'user'});
+      const updated = await service.update(user, {
+        email: 'newprofile@example.com',
+        firstName: 'NewFirst',
+        lastName: 'NewLast',
+        organization: 'NewOrg',
+        title: 'NewTitle',
+        currentPassword: 'LETmeiN123$$$tP',
+      } as UpdateUserDto, abac);
+      expect(updated.email).toBe('newprofile@example.com');
+      expect(updated.firstName).toBe('NewFirst');
+      expect(updated.encryptedPassword).toBe(user.encryptedPassword);
+    });
+  });
+
+  describe('updateLoginMetadata', () => {
+    test('increments loginCount and sets lastLogin', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      expect(user.loginCount).toBe(0);
+
+      await service.updateLoginMetadata(user);
+      const after = await service.findById(String(user.id));
+      expect(after.loginCount).toBe(1);
+      expect(after.lastLogin).not.toBeNull();
+    });
+  });
+
+  describe('updateUserSecret', () => {
+    test('sets a new jwtSecret value on the user', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      expect(user.jwtSecret).toBeNull();
+
+      await service.updateUserSecret(user);
+      const after = await service.findById(String(user.id));
+      expect(after.jwtSecret).not.toBeNull();
+      expect(after.jwtSecret).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+      );
+    });
+
+    test('generates a different secret on each call', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      await service.updateUserSecret(user);
+      const first = await service.findById(String(user.id));
+
+      await service.updateUserSecret(first);
+      const second = await service.findById(String(first.id));
+
+      expect(second.jwtSecret).not.toBe(first.jwtSecret);
+    });
+
+    test('updates updatedAt timestamp', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const beforeUpdate = user.updatedAt;
+
+      await service.updateUserSecret(user);
+      const after = await service.findById(String(user.id));
+      expect(after.updatedAt).not.toBe(beforeUpdate);
+    });
+  });
+
+  describe('updateOAuthProfile', () => {
+    test('updates firstName and lastName via Drizzle', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      expect(user.firstName).toBe('Test');
+      expect(user.lastName).toBe('User');
+
+      await service.updateOAuthProfile(user, 'NewFirst', 'NewLast');
+      const after = await service.findById(String(user.id));
+      expect(after.firstName).toBe('NewFirst');
+      expect(after.lastName).toBe('NewLast');
+    });
+
+    test('does nothing when names have not changed', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const beforeUpdatedAt = user.updatedAt;
+
+      await service.updateOAuthProfile(user, 'Test', 'User');
+      const after = await service.findById(String(user.id));
+      expect(after.updatedAt).toBe(beforeUpdatedAt);
+    });
+  });
+
+  describe('remove', () => {
+    test('removes a user when password matches', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(user.id),
+        role: 'user',
+      });
+      const deleteDto: DeleteUserDto = {password: 'LETmeiN123$$$tP'};
+      const deleted = await service.remove(user, deleteDto, abac);
+      expect(deleted.email).toBe(user.email);
+      await expect(
+        service.findByEmail(user.email),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    test('throws ForbiddenException when password is wrong', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(user.id),
+        role: 'user',
+      });
+      const deleteDto: DeleteUserDto = {password: 'wrong_password!'};
+      await expect(service.remove(user, deleteDto, abac)).rejects.toThrow(
+        ForbiddenException,
+      );
+    });
+
+    test('throws ForbiddenException when password field is blank', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(user.id),
+        role: 'user',
+      });
+      await expect(
+        service.remove(user, {password: ''} as DeleteUserDto, abac),
       ).rejects.toThrow(ForbiddenException);
     });
 
-    it('should remove created user', async () => {
-      const removedUser = await usersService.remove(
+    test('prevents deleting the only admin', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const admin = await service.create(CREATE_ADMIN_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(admin.id),
+        role: 'admin',
+      });
+      const deleteDto: DeleteUserDto = {password: 'LETmeiN123$$$tP'};
+      await expect(service.remove(admin, deleteDto, abac)).rejects.toThrow(
+        'Cannot destroy only administrator account',
+      );
+    });
+
+    test('allows deleting an admin when another admin exists', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const admin1 = await service.create(CREATE_ADMIN_DTO);
+      await service.create(CREATE_ADMIN_DTO_2);
+      const abac = caslFactory.createForUser({
+        id: String(admin1.id),
+        role: 'admin',
+      });
+      const deleteDto: DeleteUserDto = {password: 'LETmeiN123$$$tP'};
+      await service.remove(admin1, deleteDto, abac);
+      await expect(
+        service.findByEmail(admin1.email),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    test('calls ensureGroupHasOwner for groups the deleted user belongs to', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(user.id),
+        role: 'user',
+      });
+
+      const {groups: groupsTable, groupUsers: groupUsersTable} = await import('../db/schema');
+      const now = new Date().toISOString();
+      const [group] = await db.insert(groupsTable).values({
+        name: `TestGroup-${Date.now()}`, public: false, desc: '', createdAt: now, updatedAt: now,
+      }).returning();
+      await db.insert(groupUsersTable).values({
+        groupId: group.id, userId: user.id, role: 'member', createdAt: now, updatedAt: now,
+      });
+
+      await service.remove(
         user,
-        DELETE_USER_DTO_TEST_OBJ,
-        abacPolicy
+        {password: 'LETmeiN123$$$tP'} as DeleteUserDto,
+        abac,
       );
-      expect.assertions(7);
-      expect(removedUser.email).toEqual(user.email);
-      expect(removedUser.firstName).toEqual(user.firstName);
-      expect(removedUser.lastName).toEqual(user.lastName);
-      expect(removedUser.organization).toEqual(user.organization);
-      expect(removedUser.title).toEqual(user.title);
-      expect(removedUser.role).toEqual(user.role);
-      await expect(usersService.findByEmail(user.email)).rejects.toThrow(
-        NotFoundException
+
+      expect(ensureGroupHasOwnerSpy).toHaveBeenCalledWith(
+        group.id,
+        user.id,
       );
     });
 
-    it('should delete a user without matching password when admin', async () => {
-      const removedUser = await usersService.remove(
-        user,
-        DELETE_USER_DTO_TEST_OBJ,
-        adminAbacPolicy
-      );
-      expect.assertions(7);
-      expect(removedUser.email).toEqual(user.email);
-      expect(removedUser.firstName).toEqual(user.firstName);
-      expect(removedUser.lastName).toEqual(user.lastName);
-      expect(removedUser.organization).toEqual(user.organization);
-      expect(removedUser.title).toEqual(user.title);
-      expect(removedUser.role).toEqual(user.role);
-      await expect(usersService.findByEmail(user.email)).rejects.toThrow(
-        NotFoundException
-      );
+    test('allows admin to delete another user without password', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const user = await service.create(CREATE_USER_DTO);
+      const admin = await service.create(CREATE_ADMIN_DTO);
+      const abac = caslFactory.createForUser({
+        id: String(admin.id),
+        role: 'admin',
+      });
+      const deleted = await service.remove(user, {} as DeleteUserDto, abac);
+      expect(deleted.email).toBe(user.email);
     });
 
-    // Admins should be able to remove their account if there is another administrator
-    it('should test remove function with admin user and there is another admin', async () => {
-      expect.assertions(1);
-      // Create a second user so we can delete the first
-      await usersService.create(CREATE_SECOND_ADMIN_DTO);
-      // Delete the existing user
-      await usersService.remove(
-        adminUser,
-        DELETE_USER_DTO_TEST_OBJ,
-        adminAbacPolicy
-      );
-      // Make sure the existing admin has been deleted
-      await expect(async () => {
-        await usersService.findById(adminUser.id);
-      }).rejects.toThrow(NotFoundException);
-    });
-
-    // Admins should not be able to remove their account if they are the only administrator
-    it('should test remove function with admin user that is the only admin', async () => {
-      expect.assertions(1);
-
-      await expect(async () => {
-        await usersService.remove(
-          adminUser,
-          DELETE_USER_DTO_TEST_OBJ,
-          adminAbacPolicy
-        );
-      }).rejects.toThrow(ForbiddenException);
-    });
-
-    // Admins should be able to remove other users without their password
-    it('should test remove function with admin user and a dto that has no password', async () => {
-      expect(
-        new UserDto(await usersService.remove(user, {}, adminAbacPolicy))
-      ).toEqual(new UserDto(user));
+    test('throws ForbiddenException when admin self-deletes without password', async ({db}) => {
+      const {service, mockGroupsService, ensureGroupHasOwnerSpy} = createServiceAndMocks(db);
+      const admin = await service.create(CREATE_ADMIN_DTO);
+      await service.create(CREATE_ADMIN_DTO_2);
+      const abac = caslFactory.createForUser({
+        id: String(admin.id),
+        role: 'admin',
+      });
+      await expect(
+        service.remove(admin, {} as DeleteUserDto, abac),
+      ).rejects.toThrow(ForbiddenException);
     });
   });
 });

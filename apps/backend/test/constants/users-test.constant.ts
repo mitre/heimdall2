@@ -1,10 +1,9 @@
 import {MongoAbility} from '@casl/ability';
-import {FindOptions} from 'sequelize';
+import type {SelectUser} from '../../src/db/zod-schemas';
 import {CreateUserDto} from '../../src/users/dto/create-user.dto';
 import {DeleteUserDto} from '../../src/users/dto/delete-user.dto';
 import {UpdateUserDto} from '../../src/users/dto/update-user.dto';
 import {UserDto} from '../../src/users/dto/user.dto';
-import {User} from '../../src/users/user.model';
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
@@ -50,7 +49,7 @@ export const BAD_SPLUNK_AUTHENTICATION = {
 };
 
 // @ts-ignore
-export const TEST_USER: User = {
+export const TEST_USER: SelectUser = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
   lastName: 'Dummy',
@@ -67,13 +66,13 @@ export const TEST_USER: User = {
 };
 
 // @ts-ignore
-export const TEST_USER_WITH_ID: User = {
+export const TEST_USER_WITH_ID: SelectUser = {
   ...TEST_USER,
   id: '1'
 };
 
 // @ts-ignore
-export const ADMIN: User = {
+export const ADMIN: SelectUser = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
   lastName: 'Dummy',
@@ -90,13 +89,13 @@ export const ADMIN: User = {
 };
 
 // @ts-ignore
-export const ADMIN_WITH_ID: User = {
+export const ADMIN_WITH_ID: SelectUser = {
   ...ADMIN,
   id: '2'
 };
 
 // @ts-ignore
-export const UPDATED_TEST_USER: User = {
+export const UPDATED_TEST_USER: SelectUser = {
   email: 'updatedemail@yahoo.com',
   firstName: 'Updated',
   lastName: 'Name',
@@ -112,7 +111,7 @@ export const UPDATED_TEST_USER: User = {
 };
 
 // @ts-ignore
-export const TEST_USER_WITHOUT_EMAIL: User = {
+export const TEST_USER_WITHOUT_EMAIL: SelectUser = {
   firstName: 'Test',
   lastName: 'Dummy',
   role: 'user',
@@ -128,7 +127,7 @@ export const TEST_USER_WITHOUT_EMAIL: User = {
 };
 
 // @ts-ignore
-export const TEST_USER_WITHOUT_FIRST_NAME: User = {
+export const TEST_USER_WITHOUT_FIRST_NAME: SelectUser = {
   email: 'abc@yahoo.com',
   lastName: 'Dummy',
   role: 'user',
@@ -144,7 +143,7 @@ export const TEST_USER_WITHOUT_FIRST_NAME: User = {
 };
 
 // @ts-ignore
-export const TEST_USER_WITHOUT_LAST_NAME: User = {
+export const TEST_USER_WITHOUT_LAST_NAME: SelectUser = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
   role: 'user',
@@ -160,7 +159,7 @@ export const TEST_USER_WITHOUT_LAST_NAME: User = {
 };
 
 // @ts-ignore
-export const TEST_USER_WITHOUT_ORGANIZATION: User = {
+export const TEST_USER_WITHOUT_ORGANIZATION: SelectUser = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
   lastName: 'Dummy',
@@ -176,7 +175,7 @@ export const TEST_USER_WITHOUT_ORGANIZATION: User = {
 };
 
 // @ts-ignore
-export const TEST_USER_WITHOUT_TITLE: User = {
+export const TEST_USER_WITHOUT_TITLE: SelectUser = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
   lastName: 'Dummy',
@@ -192,7 +191,7 @@ export const TEST_USER_WITHOUT_TITLE: User = {
 };
 
 // @ts-ignore
-export const TEST_USER_WITH_INVALID_ROLE: User = {
+export const TEST_USER_WITH_INVALID_ROLE: SelectUser = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
   lastName: 'Dummy',
@@ -208,7 +207,7 @@ export const TEST_USER_WITH_INVALID_ROLE: User = {
 };
 
 // @ts-ignore
-export const USER_ARRAY: User[] = [
+export const USER_ARRAY: SelectUser[] = [
   // @ts-ignore
   TEST_USER,
   // @ts-ignore
@@ -658,55 +657,6 @@ export const USER_DTO_WITHOUT_ORGANIZATION = new UserDto(
 
 export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
 
-export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
-
-export const USERS_SERVICE_MOCK = {
-  async adminFindAllUsers(): Promise<User[]> {
-    return [];
-  },
-  async findAllUsers(): Promise<User[]> {
-    return [];
-  },
-  async count(): Promise<number> {
-    return 1;
-  },
-  async findById(_id: string): Promise<User> {
-    return new User();
-  },
-  async findByEmail(_email: string): Promise<User> {
-    return new User();
-  },
-  async create(_createUserDto: CreateUserDto): Promise<User> {
-    return new User();
-  },
-  async update(
-    _userToUpdate: User,
-    _updateUserDto: UpdateUserDto,
-    _abac: MongoAbility
-  ): Promise<User> {
-    return new User();
-  },
-  async updateLoginMetadata(_user: User): Promise<void> {
-    return;
-  },
-  async updateUserSecret(_user: User): Promise<void> {
-    return;
-  },
-  async remove(
-    _userToDelete: User,
-    _deleteUserDto: DeleteUserDto,
-    _abac: MongoAbility
-  ): Promise<User> {
-    return new User();
-  },
-  async findByPkBang(
-    _identifier: string | number | Buffer | undefined
-  ): Promise<User> {
-    return new User();
-  },
-  async findOneBang(_options: FindOptions | undefined): Promise<User> {
-    return new User();
-  }
-};
+export const USER_DTO_ARRAY: SelectUserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
 
 /* eslint-enable @typescript-eslint/ban-ts-comment */
