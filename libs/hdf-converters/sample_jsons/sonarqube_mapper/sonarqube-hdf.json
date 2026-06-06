@@ -1,15 +1,15 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.11.5"
+    "release": "2.13.0"
   },
-  "version": "2.11.5",
+  "version": "2.13.0",
   "statistics": {},
   "profiles": [
     {
       "name": "SonarQube Scan",
       "version": "SonarQube v9.9.8.100196",
-      "title": "SonarQube Scan of project xss on http://127.0.0.1:3001 at 2025-08-07T03:11:35.773Z",
+      "title": "SonarQube Scan of project xss on http://127.0.0.1:3001 at 2026-06-06T22:03:48.348Z",
       "supports": [],
       "attributes": [],
       "groups": [],
@@ -68,7 +68,7 @@
           "descriptions": null
         }
       ],
-      "sha256": "877e835cb79dc934e87e5324b9cd4366d8e8197bc7d502901c7760b674b64542"
+      "sha256": "89cb61198421b5605da982de98b1e9b6d2be54f8e97d7b7fd713ae4d9c7ed134"
     }
   ],
   "passthrough": {
@@ -104,9 +104,9 @@
               "pageSize": 100,
               "total": 1
             },
-            "total": 1,
             "p": 1,
-            "ps": 100
+            "ps": 100,
+            "total": 1
           }
         }
       }

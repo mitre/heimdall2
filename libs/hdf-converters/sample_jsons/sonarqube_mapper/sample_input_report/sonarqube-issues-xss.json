@@ -1,0 +1,49 @@
+{
+  "p": 1,
+  "ps": 100,
+  "total": 1,
+  "paging": {"pageIndex": 1, "pageSize": 100, "total": 1},
+  "effortTotal": 10,
+  "issues": [
+    {
+      "key": "AX2RcGnrl-KH7KTFNgLl",
+      "rule": "javascript:S2819",
+      "severity": "CRITICAL",
+      "component": "xss:packages/docs/src/service-worker.js",
+      "project": "xss",
+      "line": 29,
+      "hash": "8be50716e6366451fef374e82fb66aca",
+      "textRange": {"startLine": 29, "endLine": 29, "startOffset": 0, "endOffset": 50},
+      "flows": [],
+      "status": "OPEN",
+      "message": "Verify the message's origin in this cross-origin communication.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "example@example.com",
+      "tags": ["cwe", "html5", "owasp-a3"],
+      "creationDate": "2020-09-01T17:04:31+0000",
+      "updateDate": "2021-12-06T20:27:51+0000",
+      "type": "VULNERABILITY",
+      "scope": "MAIN",
+      "quickFixAvailable": false
+    }
+  ],
+  "components": [
+    {
+      "key": "xss:packages/docs/src/service-worker.js",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "service-worker.js",
+      "longName": "packages/docs/src/service-worker.js",
+      "path": "packages/docs/src/service-worker.js"
+    },
+    {
+      "key": "xss",
+      "enabled": true,
+      "qualifier": "TRK",
+      "name": "xss",
+      "longName": "xss"
+    }
+  ],
+  "facets": []
+}
