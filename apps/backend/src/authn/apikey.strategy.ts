@@ -1,14 +1,13 @@
 import {ForbiddenException, Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import HeaderAPIKeyStrategy from 'passport-headerapikey';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
+import type {SelectGroup, SelectUser} from '../db/zod-schemas';
 import {AuthnService} from './authn.service';
 
 @Injectable()
 export class APIKeyStrategy extends PassportStrategy(
   HeaderAPIKeyStrategy,
-  'apikey'
+  'apikey',
 ) {
   constructor(private readonly authnService: AuthnService) {
     super({header: 'Authorization', prefix: 'Api-Key '}, false);
@@ -18,8 +17,8 @@ export class APIKeyStrategy extends PassportStrategy(
     apikey: string,
     done: (
       exception: null | ForbiddenException,
-      user: Promise<User | Group | null> | boolean
-    ) => unknown
+      user: Promise<SelectUser | SelectGroup | null> | boolean,
+    ) => unknown,
   ) {
     const auth = this.authnService.validateApiKey(apikey);
     if (await auth) {

@@ -1,9 +1,10 @@
-import {IUser} from '@heimdall/common/interfaces';
+import {createHmac} from 'crypto';
 import {HttpException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import jwt from 'jsonwebtoken';
 import {ExtractJwt, Strategy} from 'passport-jwt';
 import {ConfigService} from '../config/config.service';
+import type {SelectUser} from '../db/zod-schemas';
 import {UsersService} from '../users/users.service';
 
 @Injectable()
@@ -24,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         };
         try {
           const user = await usersService.findById(decodedToken.sub);
-          done(null, configService.get('JWT_SECRET') + user.jwtSecret);
+          done(null, createHmac('sha256', configService.get('JWT_SECRET') || '').update(user.jwtSecret ?? '').digest('hex'));
         } catch {
           done(
             new UnauthorizedException(
@@ -41,7 +42,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     sub: string;
     email: string;
     role: string;
-  }): Promise<IUser> {
+  }): Promise<SelectUser> {
     return this.usersService.findById(payload.sub);
   }
 }

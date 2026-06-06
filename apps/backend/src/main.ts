@@ -1,7 +1,9 @@
-import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {NestExpressApplication} from '@nestjs/platform-express';
-import {json} from 'express';
+import {SwaggerModule} from '@nestjs/swagger';
+import {apiReference} from '@scalar/nestjs-api-reference';
+import {cleanupOpenApiDoc} from 'nestjs-zod';
+import {json, type Request, type Response, type NextFunction} from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import multer from 'multer';
@@ -11,6 +13,7 @@ import postgresSessionStore = require('connect-pg-simple');
 import session = require('express-session');
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
+import {buildSwaggerConfig} from './openapi/swagger.config';
 import {generateDefault} from './token/token.providers';
 
 const line = '_______________________________________________\n';
@@ -28,13 +31,14 @@ const logger = winston.createLogger({
 });
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false,
+  });
   const configService = app.get<ConfigService>(ConfigService);
   app.set('query parser', 'extended');
   app.enableShutdownHooks();
-  app.use(helmet());
-  app.use(
-    helmet.contentSecurityPolicy({
+  const helmetMiddleware = helmet();
+  const cspMiddleware = helmet.contentSecurityPolicy({
       directives: {
         // These are the defaults from helmet, except upgrade-insecure-requests
         // is removed since it causes issues for users trying to run over http
@@ -62,9 +66,20 @@ async function bootstrap() {
           configService.getSplunkHostUrl()
         ].filter((source) => source)
       }
-    })
-  );
-  app.use(json({limit: '50mb'}));
+    });
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api/docs')) {
+      return next();
+    }
+    helmetMiddleware(req, res, () => cspMiddleware(req, res, next));
+  });
+  // Apply JSON body parsing to all routes EXCEPT /api/auth (better-auth handles its own parsing)
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.originalUrl?.startsWith('/api/auth')) {
+      return next();
+    }
+    return json({limit: '50mb'})(req, res, next);
+  });
   app.use(passport.initialize());
   // Sessions was previously set to only be used for oauth callbacks
   // but now is used for Tenable authentication as well.
@@ -87,14 +102,16 @@ async function bootstrap() {
         proxy: configService.isInProductionMode() ? true : undefined,
         cookie: {
           maxAge: 60 * 60 * 1000, // 1 hour
-          secure: configService.isInProductionMode()
+          secure: configService.isInProductionMode(),
+          httpOnly: true,
+          sameSite: 'lax',
         },
         saveUninitialized: false,
         resave: false
       })
     );
     if (configService.isInProductionMode()) {
-      app.getHttpAdapter().getInstance().set('trust proxy', true);
+      app.getHttpAdapter().getInstance().set('trust proxy', 1);
     }
     app.use(passport.session());
   }
@@ -120,17 +137,34 @@ async function bootstrap() {
     }
   });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true
-    })
-  );
+  if (!configService.isInProductionMode()) {
+    const swaggerConfig = buildSwaggerConfig();
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('api/docs/swagger', app, cleanupOpenApiDoc(document));
+    app.use(
+      '/api/docs/scalar.js',
+      (_req: Request, res: Response) => {
+        const path = require('path');
+        res.sendFile(
+          path.join(path.dirname(require.resolve('@scalar/api-reference')), 'browser', 'standalone.js')
+        );
+      }
+    );
+    app.use(
+      '/api/docs',
+      apiReference({
+        spec: {content: cleanupOpenApiDoc(document)},
+        theme: 'kepler',
+        cdn: '/api/docs/scalar.js',
+      })
+    );
+  }
 
-  //eslint-disable-next-line @typescript-eslint/no-explicit-any
-  app.use((req: any, res: any, next: any) => {
+  app.use((req: Request, _res: Response, next: NextFunction) => {
     logger.debug('Url:', req.url);
-    logger.debug('Session:', JSON.stringify(req.session, null, 2));
+    if ('session' in req) {
+      logger.debug('Session:', JSON.stringify(req.session, null, 2));
+    }
     next();
   });
 

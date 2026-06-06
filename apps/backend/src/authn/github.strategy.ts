@@ -3,7 +3,7 @@ import {PassportStrategy} from '@nestjs/passport';
 import axios from 'axios';
 import {Strategy} from 'passport-github';
 import {ConfigService} from '../config/config.service';
-import {User} from '../users/user.model';
+import type {SelectUser} from '../db/zod-schemas';
 import {AuthnService} from './authn.service';
 
 interface GithubProfile {
@@ -46,7 +46,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   async validate(
     req: Record<string, unknown>,
     accessToken: string
-  ): Promise<User> {
+  ): Promise<SelectUser> {
     // Get user's linked emails from Github
     const githubEmails = await axios
       .get<GithubEmail[]>(

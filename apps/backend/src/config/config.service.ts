@@ -1,4 +1,3 @@
-import {SequelizeOptions} from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
 import {StartupSettingsDto} from './dto/startup-settings.dto';
 
@@ -78,7 +77,7 @@ export class ConfigService {
     return this.appConfig.getTenableHostUrl();
   }
 
-  getDbConfig(): SequelizeOptions {
+  getDbConfig() {
     return this.appConfig.getDbConfig();
   }
 

@@ -76,7 +76,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       user,
       this.configService.get('LDAP_MAILFIELD') || 'mail'
     );
-    const validatedUser = this.authnService.validateOrCreateUser(
+    const validatedUser = await this.authnService.validateOrCreateUser(
       Array.isArray(email) ? email[0] : email,
       firstName,
       lastName,

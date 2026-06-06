@@ -110,8 +110,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
     done: any
   ) {
-    this.logger.debug('in oidc strategy file');
-    this.logger.debug(JSON.stringify(uiProfile, null, 2));
+    this.logger.debug(`OIDC validate for email: ${uiProfile._json?.email ?? 'unknown'}`);
     const userData = uiProfile._json;
     const {given_name, family_name, email, email_verified, groups} = userData;
     if (
@@ -129,7 +128,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
         this.configService.get('OIDC_EXTERNAL_GROUPS') === 'true' &&
         groups !== undefined
       ) {
-        await this.groupsService.syncUserGroups(user, groups);
+        await this.groupsService.syncUserGroups(user.id, groups);
       }
 
       return done(null, user);

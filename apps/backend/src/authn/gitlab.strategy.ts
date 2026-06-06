@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from 'passport-gitlab2';
 import {ConfigService} from '../config/config.service';
-import {User} from '../users/user.model';
+import type {SelectUser} from '../db/zod-schemas';
 import {AuthnService} from './authn.service';
 
 interface UserEmail {
@@ -23,7 +23,7 @@ export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
   ) {
     super({
       clientID: configService.get('GITLAB_CLIENTID') || 'disabled',
-      clientSecret: configService.get('GITLAB_SECRET') || 'disabled',
+      clientSecret: configService.get('GITLAB_CLIENTSECRET') || 'disabled',
       baseURL: configService.get('GITLAB_BASEURL'),
       callbackURL:
         `${configService.getExternalUrl()}/authn/gitlab/callback` || 'disabled'
@@ -34,7 +34,7 @@ export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
     accessToken: string,
     refreshToken: string,
     profile: GitlabProfile
-  ): Promise<User> {
+  ): Promise<SelectUser> {
     const email = profile.emails[0].value;
     const {firstName, lastName} = this.authnService.splitName(
       profile.displayName

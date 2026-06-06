@@ -2,7 +2,7 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {OAuth2Strategy} from 'passport-google-oauth';
 import {ConfigService} from '../config/config.service';
-import {User} from '../users/user.model';
+import type {SelectUser} from '../db/zod-schemas';
 import {AuthnService} from './authn.service';
 
 interface UserEmail {
@@ -37,7 +37,7 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
     accessToken: string,
     refreshToken: string,
     profile: GoogleProfile
-  ): Promise<User> {
+  ): Promise<SelectUser> {
     const {name, emails} = profile;
     const user = {
       email: emails[0],

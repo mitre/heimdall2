@@ -4,21 +4,22 @@ import {
   Get,
   Post,
   Req,
+  UnauthorizedException,
   UseFilters,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
+import {AllowAnonymous} from '@thallesp/nestjs-better-auth';
 import {Request} from 'express';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
-import {LocalAuthGuard} from '../guards/local-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
-import {User} from '../users/user.model';
-import {AuthnService} from './authn.service';
+import {AuthnService, type LoginUser} from './authn.service';
 
 @UseInterceptors(LoggingInterceptor)
+@AllowAnonymous()
 @Controller('authn')
 export class AuthnController {
   private readonly line = '_______________________________________________\n';
@@ -41,20 +42,36 @@ export class AuthnController {
     private readonly configService: ConfigService
   ) {}
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.debug('in the local login func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
     if (!this.configService.isLocalLoginAllowed()) {
       throw new ForbiddenException(
         'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
       );
-    } else {
-      return this.authnService.login(req.user as User);
     }
+    const body = req.body as Record<string, unknown>;
+    const email = typeof body.email === 'string' ? body.email.trim() : '';
+    const password = typeof body.password === 'string' ? body.password : '';
+    if (!email || !password) {
+      throw new UnauthorizedException('Email and password are required');
+    }
+    const user = await this.authnService.validateUser(email, password);
+    if (!user) {
+      throw new UnauthorizedException('Incorrect Username or Password');
+    }
+    const baResponse = await this.authnService.createBetterAuthSession(email, password);
+    if (baResponse) {
+      return {userID: user.id, accessToken: baResponse.token};
+    }
+    return this.authnService.login({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      forcePasswordChange: user.forcePasswordChange ?? undefined,
+    });
   }
 
   @UseGuards(AuthGuard('ldap'))
@@ -63,8 +80,7 @@ export class AuthnController {
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.debug('in the ldap login func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    return this.authnService.login(req.user as User);
+    return this.authnService.login(req.user as LoginUser);
   }
 
   @Get('github')
@@ -74,8 +90,7 @@ export class AuthnController {
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.debug('in the github login func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    return this.authnService.login(req.user as User);
+    return this.authnService.login(req.user as LoginUser);
   }
 
   @Get('github/callback')
@@ -83,8 +98,7 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromGithubLogin(@Req() req: Request): Promise<void> {
     this.logger.debug('in the github login callback func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    const session = await this.authnService.login(req.user as User);
+    const session = await this.authnService.login(req.user as LoginUser);
     await this.setSessionCookies(req, session);
   }
 
@@ -95,8 +109,7 @@ export class AuthnController {
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.debug('in the gitlab login func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    return this.authnService.login(req.user as User);
+    return this.authnService.login(req.user as LoginUser);
   }
 
   @Get('gitlab/callback')
@@ -104,8 +117,7 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromGitlabLogin(@Req() req: Request): Promise<void> {
     this.logger.debug('in the gitlab login callback func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    const session = await this.authnService.login(req.user as User);
+    const session = await this.authnService.login(req.user as LoginUser);
     await this.setSessionCookies(req, session);
   }
 
@@ -116,8 +128,7 @@ export class AuthnController {
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.debug('in the google login func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    return this.authnService.login(req.user as User);
+    return this.authnService.login(req.user as LoginUser);
   }
 
   @Get('google/callback')
@@ -125,8 +136,7 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromGoogle(@Req() req: Request): Promise<void> {
     this.logger.debug('in the google login callback func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    const session = await this.authnService.login(req.user as User);
+    const session = await this.authnService.login(req.user as LoginUser);
     await this.setSessionCookies(req, session);
   }
 
@@ -137,8 +147,7 @@ export class AuthnController {
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.debug('in the okta login func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    return this.authnService.login(req.user as User);
+    return this.authnService.login(req.user as LoginUser);
   }
 
   @Get('okta_callback')
@@ -146,8 +155,7 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromOkta(@Req() req: Request): Promise<void> {
     this.logger.debug('in the okta login callback func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    const session = await this.authnService.login(req.user as User);
+    const session = await this.authnService.login(req.user as LoginUser);
     await this.setSessionCookies(req, session);
   }
 
@@ -158,8 +166,7 @@ export class AuthnController {
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     this.logger.debug('in the oidc login func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    return this.authnService.login(req.user as User);
+    return this.authnService.login(req.user as LoginUser);
   }
 
   @Get('oidc_callback')
@@ -167,8 +174,7 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromOIDC(@Req() req: Request): Promise<void> {
     this.logger.debug('in the oidc login callback func');
-    this.logger.debug(JSON.stringify(req.session, null, 2));
-    const session = await this.authnService.login(req.user as User);
+    const session = await this.authnService.login(req.user as LoginUser);
     await this.setSessionCookies(req, session);
   }
 
@@ -179,12 +185,13 @@ export class AuthnController {
       accessToken: string;
     }
   ): Promise<void> {
-    req.res?.cookie('userID', session.userID, {
-      secure: this.configService.isInProductionMode()
-    });
-    req.res?.cookie('accessToken', session.accessToken, {
-      secure: this.configService.isInProductionMode()
-    });
+    const cookieOpts = {
+      secure: this.configService.isInProductionMode(),
+      sameSite: 'lax' as const,
+      httpOnly: true,
+    };
+    req.res?.cookie('userID', session.userID, cookieOpts);
+    req.res?.cookie('accessToken', session.accessToken, cookieOpts);
     req.res?.redirect('/');
   }
 }

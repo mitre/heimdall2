@@ -85,8 +85,7 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
     done: any
   ) {
-    this.logger.debug('in okta strategy file');
-    this.logger.debug(JSON.stringify(profile, null, 2));
+    this.logger.debug(`Okta validate for email: ${profile.emails?.[0]?.value ?? 'unknown'}`);
     if (profile.emails.length > 0 && profile.emails[0].value) {
       const user = await this.authnService.validateOrCreateUser(
         profile.emails[0].value,

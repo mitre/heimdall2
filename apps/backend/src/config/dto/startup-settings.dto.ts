@@ -1,6 +1,4 @@
-import {IStartupSettings} from '@heimdall/common/interfaces';
-
-export class StartupSettingsDto implements IStartupSettings {
+export class StartupSettingsDto {
   readonly apiKeysEnabled: boolean;
   readonly banner: string;
   readonly classificationBannerColor: string;
@@ -16,7 +14,7 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly forceTenableFrontend: boolean;
   readonly splunkHostUrl: string;
 
-  constructor(settings: IStartupSettings) {
+  constructor(settings: Omit<StartupSettingsDto, never>) {
     this.apiKeysEnabled = settings.apiKeysEnabled;
     this.banner = settings.banner;
     this.classificationBannerColor = settings.classificationBannerColor;
