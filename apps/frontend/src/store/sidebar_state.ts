@@ -18,6 +18,7 @@ export interface ISidebarState {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['SidebarState'] !== undefined,
   store: Store,
   name: 'SidebarState'
 })

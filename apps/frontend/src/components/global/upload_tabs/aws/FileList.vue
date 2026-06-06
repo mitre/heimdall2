@@ -1,5 +1,5 @@
 <template>
-  <v-stepper-content step="3">
+  <div>
     <div class="d-flex flex-column">
       <div class="d-flex justify-space-between">
         <v-text-field
@@ -42,7 +42,7 @@
         Cancel
       </v-btn>
     </div>
-  </v-stepper-content>
+  </div>
 </template>
 
 <script lang="ts">
@@ -63,7 +63,7 @@ const localBucketName = new LocalStorageVal<string>('aws_bucket_name');
 })
 export default class FileList extends Vue {
   @Prop({type: Object}) readonly auth!: Auth;
-  @Prop({type: Array}) readonly files!: _Object[];
+  @Prop({type: Array, default: () => []}) readonly files!: _Object[];
 
   /** The name written in the form */
   formBucketName = '';

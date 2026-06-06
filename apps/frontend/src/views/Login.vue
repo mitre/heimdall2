@@ -103,7 +103,7 @@ export default class Login extends Vue {
 
   get anyAuthProvidersAvailable() {
     return (
-      ServerModule.localLoginEnabled || ServerModule.enabledOAuth.length !== 0
+      ServerModule.localLoginEnabled || (ServerModule.enabledOAuth?.length ?? 0) !== 0
     );
   }
 

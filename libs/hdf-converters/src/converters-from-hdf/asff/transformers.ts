@@ -1,4 +1,4 @@
-import {createHash} from 'crypto';
+import {sha256} from 'js-sha256';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -269,9 +269,7 @@ export function setupId(
   const target = context?.ioptions.target;
   const name = context?.data.profiles[0].name;
 
-  return `${target}/${name}/${control.id}/finding/${createHash('sha256')
-    .update(control.id + control.result.code_desc)
-    .digest('hex')}`;
+  return `${target}/${name}/${control.id}/finding/${sha256(control.id + control.result.code_desc)}`;
 }
 
 export function setupProductARN(

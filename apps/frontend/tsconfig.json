@@ -11,7 +11,8 @@
       "@/*": ["./src/*"]
     },
 
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "6.0",
+    "isolatedModules": true
   },
 
   "include": ["**/*.ts", "**/*.vue"]

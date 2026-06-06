@@ -4,7 +4,6 @@ import {
   ExecJSON
 } from 'inspecjs';
 import * as _ from 'lodash';
-import {createLogger, format, transports} from 'winston';
 import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
 
 // DEFAULT_NIST_TAG is applicable to all automated configuration tests.
@@ -26,19 +25,22 @@ export const DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS = [
 // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
 export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi;
 
-export function createWinstonLogger(mapperName: string, level = 'debug') {
-  return createLogger({
-    transports: [new transports.Console()],
-    level: level,
-    format: format.combine(
-      format.timestamp({
-        format: 'MMM-DD-YYYY HH:mm:ss Z'
-      }),
-      format.printf(
-        (info) => `[${[info.timestamp]}] ${mapperName} ${info.message}`
-      )
-    )
-  });
+export interface SimpleLogger {
+  info(msg: unknown): void;
+  warn(msg: unknown): void;
+  error(msg: unknown): void;
+  debug(msg: unknown): void;
+  verbose(msg: unknown): void;
+}
+
+export function createWinstonLogger(mapperName: string, _level = 'debug'): SimpleLogger {
+  return {
+    info: (msg: unknown) => console.info(`[${mapperName}] ${msg}`),
+    warn: (msg: unknown) => console.warn(`[${mapperName}] ${msg}`),
+    error: (msg: unknown) => console.error(`[${mapperName}] ${msg}`),
+    debug: (msg: unknown) => console.debug(`[${mapperName}] ${msg}`),
+    verbose: (msg: unknown) => console.debug(`[${mapperName}] ${msg}`),
+  };
 }
 
 /** Get description from Array of descriptions or Key/Value pairs */

@@ -1,4 +1,4 @@
-const validators = [
+export const validators = [
   {
     name: 'Password must be at least 15 characters',
     check: function checkLength(password) {
@@ -35,7 +35,6 @@ const validators = [
   }
 ]
 
-exports.validatePasswordBoolean = (password) =>  {
+export const validatePasswordBoolean = (password) => {
   return validators.every((validator) => validator.check(password))
 }
-exports.validators = validators

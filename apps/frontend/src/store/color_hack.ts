@@ -34,6 +34,7 @@ function calculateColor(colorName: string): string {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['colorHack'] !== undefined,
   store: Store,
   name: 'colorHack'
 })

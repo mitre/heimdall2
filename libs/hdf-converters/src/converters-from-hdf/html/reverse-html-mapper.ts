@@ -16,7 +16,7 @@ import {
 } from 'inspecjs';
 import _ from 'lodash';
 import Mustache from 'mustache';
-import sanitize from 'sanitize-html';
+import DOMPurify from 'isomorphic-dompurify';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
 import {html, js, css} from './embedded-assets';
 import {
@@ -463,7 +463,7 @@ export class FromHDFToHTMLMapper {
           name: 'Fix Text',
           value: result.hdf.descriptions.fix || result.data.tags.fix
         }
-      ].filter((v) => v.value).map((s) => ({...s, value: sanitize(s.value, {disallowedTagsMode: "escape"})})),
+      ].filter((v) => v.value).map((s) => ({...s, value: DOMPurify.sanitize(s.value)})),
       resultID: this.replaceIllegalCharacters(result.hdf.wraps.id),
       resultStatus: {
         status: result.root.hdf.status,

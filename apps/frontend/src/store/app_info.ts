@@ -29,6 +29,7 @@ export interface IAppInfoState {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['info'] !== undefined,
   store: Store,
   name: 'info'
 })

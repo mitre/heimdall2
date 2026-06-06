@@ -59,6 +59,7 @@ export function valueToSeverity(severity: string): Severity {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['SearchModule'] !== undefined,
   store: Store,
   name: 'SearchModule'
 })

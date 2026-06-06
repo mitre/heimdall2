@@ -73,128 +73,58 @@
 
     <LoadFileList
       :headers="headers"
-      :evaluations-loaded="pagedEvaluations"
-      :loading="queryingRecords"
-      :total-items-per-page="itemsPerPage"
-      :evaluations-count="evaluationsCount"
       @load-selected="load_results($event)"
     />
   </v-container>
 </template>
 
 <script lang="ts">
-import RefreshButton from '@/components/generic/RefreshButton.vue';
+import {defineComponent, ref} from 'vue';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
-import RouteMixin from '@/mixins/RouteMixin';
-import ServerMixin from '@/mixins/ServerMixin';
-import {FileID} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
 import {SpinnerModule} from '@/store/spinner';
-import {IEvalPaginationParams, IEvaluation} from '@heimdall/common/interfaces';
-import {Prop, Watch} from 'vue-property-decorator';
-import Component, {mixins} from 'vue-class-component';
+import {SnackbarModule} from '@/store/snackbar';
+import type {FileID} from '@/store/report_intake';
+import type {IEvaluation} from '@heimdall/common/interfaces';
 
-/**
- * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
- * Emits "got-files" with a list of the unique_ids of the loaded files.
- */
-@Component({
-  components: {
-    LoadFileList,
-    RefreshButton
-  }
-})
-export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
-  @Prop({default: false}) readonly refresh!: boolean;
+export default defineComponent({
+  name: 'DatabaseReader',
+  components: {LoadFileList},
+  props: {
+    refresh: {type: Boolean, default: false},
+  },
+  emits: ['got-files'],
+  setup(props, {emit}) {
+    const isActiveDialog = ref(false);
 
-  isActiveDialog = false;
+    const headers = [
+      {text: 'Filename', value: 'filename', align: 'left', sortable: true},
+      {text: 'Groups', value: 'groups', sortable: true},
+      {text: 'Tags', value: 'evaluationTags', sortable: true},
+      {text: 'Uploaded', value: 'createdAt', sortable: true},
+      {text: 'Actions', value: 'actions', align: 'end', sortable: false},
+    ];
 
-  headers: Object[] = [
-    {
-      text: 'Filename',
-      value: 'filename',
-      align: 'left',
-      sortable: true
-    },
-    {
-      text: 'Groups',
-      value: 'groups',
-      sortable: true
-    },
-    {
-      text: 'Tags',
-      value: 'evaluationTags',
-      sortable: true
-    },
-    {text: 'Uploaded', value: 'createdAt', sortable: true},
-    {
-      text: 'Actions',
-      value: 'actions',
-      align: 'end',
-      sortable: false
-    }
-  ];
-
-  itemsPerPage = EvaluationModule.limit;
-
-  @Watch('refresh')
-  onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
-    if (newRefreshValue === true) {
-      // Whenever refresh is set to true, call refresh on the database results
-      this.get_all_results();
-    }
-  }
-
-  mounted() {
-    this.get_all_results();
-  }
-
-  async get_all_results(): Promise<void> {
-    // Cursor is set back to default when the query finishes
-    document.body.style.cursor = 'wait';
-    const params: IEvalPaginationParams = {
-      offset: EvaluationModule.offset,
-      limit: this.itemsPerPage,
-      order: EvaluationModule.order
-    };
-    // Stores results in the Evaluation class field pagedEvaluations
-    EvaluationModule.getAllEvaluations(params);
-  }
-
-  // Loading is initially set to true in Evaluation class.
-  // When getAllEvaluations(params) finishes it sets it to false.
-  get queryingRecords() {
-    return EvaluationModule.loading;
-  }
-
-  get pagedEvaluations() {
-    return EvaluationModule.pagedEvaluations;
-  }
-
-  get evaluationsCount() {
-    return EvaluationModule.evaluationsCount;
-  }
-
-  // Fires when user selects entries and loads them into the visualization panel
-  async load_results(evaluations: IEvaluation[]): Promise<void> {
-    if (evaluations.length != 0) {
+    async function load_results(evaluations: IEvaluation[]) {
+      if (evaluations.length === 0) {
+        SnackbarModule.notify(
+          'Please select an entry for viewing in the visualization panel',
+        );
+        return;
+      }
       SpinnerModule.reset();
       SpinnerModule.visibility(true);
-      EvaluationModule.load_results(
-        evaluations.map((evaluation) => evaluation.id)
-      )
-        .then((fileIds: (FileID | void)[]) => {
-          this.$emit('got-files', fileIds.filter(Boolean));
-        })
-        .finally(() => {
-          SpinnerModule.visibility(false);
-        });
-    } else {
-      SnackbarModule.notify(
-        'Please select an entry for viewing in the visualization panel'
-      );
+      try {
+        const fileIds: (FileID | void)[] = await EvaluationModule.load_results(
+          evaluations.map((evaluation) => evaluation.id),
+        );
+        emit('got-files', fileIds.filter(Boolean));
+      } finally {
+        SpinnerModule.visibility(false);
+      }
     }
-  }
-}
+
+    return {isActiveDialog, headers, load_results};
+  },
+});
 </script>

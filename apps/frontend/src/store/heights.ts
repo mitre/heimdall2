@@ -15,6 +15,7 @@ export interface IHeightsState {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['Heights'] !== undefined,
   store: Store,
   name: 'Heights'
 })

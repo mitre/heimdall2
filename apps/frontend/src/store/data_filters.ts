@@ -111,6 +111,7 @@ function contains_term(
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['filteredData'] !== undefined,
   store: Store,
   name: 'filteredData'
 })

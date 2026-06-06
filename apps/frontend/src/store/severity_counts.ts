@@ -36,6 +36,7 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
     critical: 0
   };
   controls.forEach((c) => {
+    if (!c.root?.hdf) return;
     const severity: Severity = c.root.hdf.severity;
     hash[severity] += 1;
   });
@@ -47,6 +48,7 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['severityCounts'] !== undefined,
   store: Store,
   name: 'severityCounts'
 })

@@ -16,14 +16,24 @@ export interface IEvaluation {
 }
 
 export interface IEvaluationResponse {
-  totalCount: number;
   evaluations: IEvaluation[];
+  totalCount: number;
+  meta?: {
+    total: number;
+    page: number;
+    perPage: number;
+    totalPages: number;
+  };
 }
 
 export interface IEvalPaginationParams {
-  offset: number;
-  limit: number;
-  order: Array<string>;
+  page?: number;
+  per_page?: number;
+  sort?: string;
+  order?: string | Array<string>;
+  q?: string;
+  offset?: number;
+  limit?: number;
   useClause?: boolean;
   operator?: string;
   searchFields?: Array<string>;

@@ -1,4 +1,4 @@
-import {createHash} from 'crypto';
+import {sha256} from 'js-sha256';
 import {XMLParser} from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
@@ -34,9 +34,8 @@ export type MappedReform<T, U> = {
 /* eslint-enable @typescript-eslint/ban-types */
 
 // Hashing Function
-export function generateHash(data: string, algorithm = 'sha256'): string {
-  const hash = createHash(algorithm);
-  return hash.update(data).digest('hex');
+export function generateHash(data: string, _algorithm = 'sha256'): string {
+  return sha256(data);
 }
 
 export async function buildParseHtmlFunc(): Promise<(input: unknown) => string> {

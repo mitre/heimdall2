@@ -17,6 +17,7 @@ export interface ISnackbarState {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['SnackbarModule'] !== undefined,
   store: Store,
   name: 'SnackbarModule'
 })

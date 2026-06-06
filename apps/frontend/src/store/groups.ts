@@ -17,6 +17,7 @@ export interface IGroupState {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['GroupsModule'] !== undefined,
   store: Store,
   name: 'GroupsModule'
 })

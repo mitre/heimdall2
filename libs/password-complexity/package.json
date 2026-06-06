@@ -10,6 +10,7 @@
     "directory": "libs/password-complexity"
   },
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0"

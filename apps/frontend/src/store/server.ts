@@ -49,6 +49,7 @@ interface LoginData {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['ServerModule'] !== undefined,
   store: Store,
   name: 'ServerModule'
 })

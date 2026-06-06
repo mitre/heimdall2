@@ -94,7 +94,7 @@ import {FileID} from '@/store/report_intake';
 import {FromHDFToSplunkMapper, SplunkConfig} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Logger} from 'winston';
+import type {Logger} from 'winston';
 import {SnackbarModule} from '../../store/snackbar';
 import AuthStep from '../global/upload_tabs/splunk/AuthStep.vue';
 

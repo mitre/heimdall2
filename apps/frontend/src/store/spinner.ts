@@ -16,6 +16,7 @@ export interface ISpinnerState {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['SpinnerModule'] !== undefined,
   store: Store,
   name: 'SpinnerModule'
 })

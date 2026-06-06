@@ -3,6 +3,7 @@ import 'core-js/stable';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
+import 'vuetify/src/styles/main.sass';
 import Vuetify from 'vuetify/lib';
 import {Resize} from 'vuetify/lib/directives';
 import App from '@/App.vue';

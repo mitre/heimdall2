@@ -50,6 +50,10 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   };
   controls.forEach((c) => {
     c = c.root;
+    if (!c?.hdf) {
+      console.warn('[status_counts] Control missing .hdf:', c?.data?.id, 'from profile:', c?.sourcedFrom?.data?.name);
+      return;
+    }
     const status: ControlStatus = c.hdf.status;
     ++hash[status];
     if (status === 'Passed') {
@@ -85,6 +89,7 @@ export function calculateCompliance(filter: Filter) {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['statusCounts'] !== undefined,
   store: Store,
   name: 'statusCounts'
 })
@@ -110,7 +115,10 @@ export class StatusCount extends VuexModule {
   }
 
   get countOf(): (filter: Filter, category: keyof StatusHash) => number {
-    return (filter, category) => this.hash(filter)[category];
+    return (filter, category) => {
+      const h = this.hash(filter);
+      return h ? h[category] : 0;
+    };
   }
 }
 

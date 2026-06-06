@@ -22,7 +22,7 @@
     >
       <h3 class="pa-2">Test</h3>
       <v-divider />
-      <!-- HTML is sanitized with sanitize-html -->
+      <!-- HTML is sanitized with DOMPurify -->
       <!-- eslint-disable vue/no-v-html -->
       <div
         class="pa-2 mono pre-formatted"

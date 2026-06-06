@@ -128,6 +128,7 @@ export type ExecJSONLoadOptions = {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['intake'] !== undefined,
   store: Store,
   name: 'intake'
 })

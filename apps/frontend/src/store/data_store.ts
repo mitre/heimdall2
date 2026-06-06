@@ -27,6 +27,7 @@ export function isFromProfileFile(p: SourcedContextualizedProfile) {
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['data'] !== undefined,
   store: Store,
   name: 'data'
 })

@@ -29,6 +29,7 @@ import {SnackbarModule} from './snackbar';
 @Module({
   namespaced: true,
   dynamic: true,
+  preserveState: (Store.state as Record<string, unknown>)['EvaluationModule'] !== undefined,
   store: Store,
   name: 'EvaluationModule'
 })
@@ -111,6 +112,7 @@ export class Evaluation extends VuexModule {
               })
                 .then((fileId) => loadedIds.push(fileId))
                 .catch((err) => {
+                  console.error('[load_results] Failed to load:', evaluation.filename, err);
                   SnackbarModule.failure(err);
                 });
             } else if (evaluation.data) {
@@ -210,7 +212,7 @@ export class Evaluation extends VuexModule {
     this.page = onPage;
     this.offset = Number(params.offset);
     this.limit = Number(params.limit);
-    this.order = params.order;
+    this.order = Array.isArray(params.order) ? params.order : params.order ? [params.order] : this.order;
   }
 
   @Mutation
