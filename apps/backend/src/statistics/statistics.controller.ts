@@ -1,16 +1,8 @@
 import {ForbiddenError} from '@casl/ability';
-import {
-  Controller,
-  Get,
-  Request,
-  UseGuards,
-  UseInterceptors
-} from '@nestjs/common';
+import {Controller, Get, Request, UseInterceptors} from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
-import {Action} from '../casl/casl-ability.factory';
-import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {Action, type AuthUser} from '../casl/casl-ability.factory';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
-import {User} from '../users/user.model';
 import {StatisticsDTO} from './dto/statistics.dto';
 import {StatisticsService} from './statistics.service';
 
@@ -19,16 +11,18 @@ import {StatisticsService} from './statistics.service';
 export class StatisticsController {
   constructor(
     private readonly statisticsService: StatisticsService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
   ) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async getHeimdallStatistics(
-    @Request() request: {user: User}
+    @Request() request: {user: {id: string | number; role: string}},
   ): Promise<StatisticsDTO> {
-    const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.ViewStatistics, User);
+    const abac = this.authz.abac.createForUser({
+      id: String(request.user.id),
+      role: request.user.role,
+    });
+    ForbiddenError.from(abac).throwUnlessCan(Action.ViewStatistics, 'all');
     return this.statisticsService.getHeimdallStatistics();
   }
 }

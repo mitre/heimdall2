@@ -1,9 +1,4 @@
-import {IDeleteUser} from '@heimdall/common/interfaces';
-import {IsOptional, IsString, MinLength} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {DeleteUserSchema} from './delete-user.schema';
 
-export class DeleteUserDto implements IDeleteUser {
-  @IsOptional()
-  @IsString()
-  @MinLength(15)
-  readonly password?: string;
-}
+export class DeleteUserDto extends createZodDto(DeleteUserSchema) {}

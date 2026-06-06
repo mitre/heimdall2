@@ -1,13 +1,30 @@
-import {IEvaluation} from '@heimdall/common/interfaces';
 import {EvaluationTagDto} from '../../evaluation-tags/dto/evaluation-tag.dto';
 import {GroupDto} from '../../groups/dto/group.dto';
-import {Group} from '../../groups/group.model';
-import {Evaluation} from '../evaluation.model';
 
-export class EvaluationDto implements IEvaluation {
+interface EvaluationWithRelations {
+  id: number;
+  filename: string;
+  data?: unknown;
+  public: boolean;
+  userId?: number | null;
+  groupId?: number | null;
+  createdAt: string;
+  updatedAt: string;
+  evaluationTags?: Array<{id: number; value: string | null; evaluationId: number | null; createdAt: string; updatedAt: string}>;
+  user?: {id: number; email: string} | null;
+  groupEvaluations?: Array<{
+    group: {
+      id: number; name: string; public: boolean; desc: string | null;
+      createdAt: string; updatedAt: string;
+      groupUsers: Array<{role: string | null; user: {id: number; email: string; title?: string | null; firstName?: string | null; lastName?: string | null} | null}>;
+    } | null;
+  }>;
+}
+
+export class EvaluationDto {
   readonly id: string;
   filename: string;
-  readonly data?: Record<string, unknown>;
+  readonly data?: unknown;
   readonly evaluationTags: EvaluationTagDto[];
   readonly groups: GroupDto[];
   readonly userId?: string;
@@ -19,35 +36,24 @@ export class EvaluationDto implements IEvaluation {
   readonly shareURL?: string;
 
   constructor(
-    evaluation: Evaluation,
+    evaluation: EvaluationWithRelations,
     editable = false,
-    shareURL: string | undefined = undefined
+    shareURL?: string,
   ) {
-    this.id = evaluation.id;
+    this.id = String(evaluation.id);
     this.filename = evaluation.filename;
     this.data = evaluation.data;
-    if (
-      evaluation.evaluationTags === null ||
-      evaluation.evaluationTags === undefined
-    ) {
-      this.evaluationTags = [];
-    } else {
-      this.evaluationTags = evaluation.evaluationTags.map(
-        (tag) => new EvaluationTagDto(tag)
-      );
-    }
-    if (evaluation.groups === null || evaluation.groups === undefined) {
-      this.groups = [];
-    } else {
-      this.groups = evaluation.groups.map(
-        (group) => new GroupDto(group as Group)
-      );
-    }
-    this.userId = evaluation.userId;
-    this.groupId = evaluation.groupId;
+    this.evaluationTags = (evaluation.evaluationTags ?? []).map(
+      (tag) => new EvaluationTagDto(tag),
+    );
+    this.groups = (evaluation.groupEvaluations ?? [])
+      .filter((ge): ge is typeof ge & {group: NonNullable<typeof ge.group>} => ge.group != null)
+      .map((ge) => new GroupDto(ge.group));
+    this.userId = evaluation.userId != null ? String(evaluation.userId) : undefined;
+    this.groupId = evaluation.groupId != null ? String(evaluation.groupId) : undefined;
     this.public = evaluation.public;
-    this.createdAt = evaluation.createdAt;
-    this.updatedAt = evaluation.updatedAt;
+    this.createdAt = new Date(evaluation.createdAt);
+    this.updatedAt = new Date(evaluation.updatedAt);
     this.editable = editable;
     this.shareURL = shareURL;
   }
@@ -56,4 +62,10 @@ export class EvaluationDto implements IEvaluation {
 export interface IEvaluationResponse {
   evaluations: EvaluationDto[];
   totalCount: number;
+  meta?: {
+    total: number;
+    page: number;
+    perPage: number;
+    totalPages: number;
+  };
 }

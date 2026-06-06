@@ -1,9 +1,19 @@
-import {IGroup} from '@heimdall/common/interfaces';
-import {GroupUser} from '../../group-users/group-user.model';
 import {SlimUserDto} from '../../users/dto/slim-user.dto';
-import {Group} from '../group.model';
 
-export class GroupDto implements IGroup {
+interface GroupWithUsers {
+  id: number;
+  name: string;
+  public: boolean;
+  desc: string | null;
+  createdAt: string;
+  updatedAt: string;
+  groupUsers?: Array<{
+    role: string | null;
+    user: {id: number; email: string; title?: string | null; firstName?: string | null; lastName?: string | null} | null;
+  }>;
+}
+
+export class GroupDto {
   readonly id: string;
   readonly name: string;
   readonly public: boolean;
@@ -13,19 +23,16 @@ export class GroupDto implements IGroup {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
-  constructor(group: Group & {GroupUser?: GroupUser}, role?: string) {
-    this.id = group.id;
+  constructor(group: GroupWithUsers, role?: string) {
+    this.id = String(group.id);
     this.name = group.name;
-    this.role = role || group?.GroupUser?.role;
+    this.role = role;
     this.public = group.public;
-    this.users =
-      group.users === undefined
-        ? []
-        : group.users.map((user) => {
-            return new SlimUserDto(user, user.GroupUser.role);
-          });
-    this.desc = group.desc;
-    this.createdAt = group.createdAt;
-    this.updatedAt = group.updatedAt;
+    this.users = (group.groupUsers ?? [])
+      .filter((gu): gu is typeof gu & {user: NonNullable<typeof gu.user>} => gu.user != null)
+      .map((gu) => new SlimUserDto(gu.user, gu.role ?? undefined));
+    this.desc = group.desc ?? '';
+    this.createdAt = new Date(group.createdAt);
+    this.updatedAt = new Date(group.updatedAt);
   }
 }

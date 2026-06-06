@@ -1,11 +1,4 @@
-import {IUpdateAPIKey} from '@heimdall/common/interfaces';
-import {IsOptional, IsString} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {updateApiKeySchema} from './update-apikey.schema';
 
-export class UpdateAPIKeyDto implements IUpdateAPIKey {
-  @IsString()
-  readonly name!: string;
-
-  @IsString()
-  @IsOptional()
-  readonly currentPassword!: string;
-}
+export class UpdateAPIKeyDto extends createZodDto(updateApiKeySchema) {}

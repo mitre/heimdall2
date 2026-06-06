@@ -1,16 +1,4 @@
-import {ICreateGroup} from '@heimdall/common/interfaces';
-import {IsBoolean, IsNotEmpty, IsOptional, IsString} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {createGroupSchema} from './create-group.schema';
 
-export class CreateGroupDto implements ICreateGroup {
-  @IsNotEmpty()
-  @IsString()
-  readonly name!: string;
-
-  @IsOptional()
-  @IsBoolean()
-  readonly public!: boolean;
-
-  @IsOptional()
-  @IsString()
-  readonly desc!: string;
-}
+export class CreateGroupDto extends createZodDto(createGroupSchema) {}

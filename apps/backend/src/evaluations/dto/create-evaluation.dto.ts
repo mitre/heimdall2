@@ -1,27 +1,4 @@
-import {ICreateEvaluation} from '@heimdall/common/interfaces';
-import {
-  IsArray,
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-  IsString
-} from 'class-validator';
-import {CreateEvaluationTagDto} from '../../evaluation-tags/dto/create-evaluation-tag.dto';
+import {createZodDto} from 'nestjs-zod';
+import {createEvaluationSchema} from './create-evaluation.schema';
 
-export class CreateEvaluationDto implements ICreateEvaluation {
-  @IsNotEmpty()
-  @IsString()
-  readonly filename!: string;
-
-  @IsNotEmpty()
-  @IsBoolean()
-  readonly public!: boolean;
-
-  @IsOptional()
-  @IsArray()
-  readonly evaluationTags: CreateEvaluationTagDto[] | undefined;
-
-  @IsOptional()
-  @IsArray()
-  readonly groups: string[] | undefined;
-}
+export class CreateEvaluationDto extends createZodDto(createEvaluationSchema) {}

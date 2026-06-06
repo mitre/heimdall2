@@ -1,12 +1,4 @@
-import {ICreateEvaluationTag} from '@heimdall/common/interfaces';
-import {IsNotEmpty, IsString} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {CreateEvaluationTagSchema} from './create-evaluation-tag.schema';
 
-export class CreateEvaluationTagDto implements ICreateEvaluationTag {
-  @IsNotEmpty()
-  @IsString()
-  readonly value!: string;
-
-  constructor(evaluationTag: string) {
-    this.value = evaluationTag;
-  }
-}
+export class CreateEvaluationTagDto extends createZodDto(CreateEvaluationTagSchema) {}

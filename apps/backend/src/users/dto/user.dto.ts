@@ -1,7 +1,6 @@
-import {IUser} from '@heimdall/common/interfaces';
-import {User} from '../user.model';
+import type {SelectUser} from '../../db/zod-schemas';
 
-export class UserDto implements IUser {
+export class UserDto {
   id: string;
   readonly email: string;
   readonly firstName: string | undefined;
@@ -15,18 +14,18 @@ export class UserDto implements IUser {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
-  constructor(user: User) {
-    this.id = user.id;
+  constructor(user: SelectUser) {
+    this.id = String(user.id);
     this.email = user.email;
-    this.firstName = user.firstName;
-    this.lastName = user.lastName;
-    this.title = user.title;
+    this.firstName = user.firstName ?? undefined;
+    this.lastName = user.lastName ?? undefined;
+    this.title = user.title ?? undefined;
     this.role = user.role;
-    this.organization = user.organization;
+    this.organization = user.organization ?? undefined;
     this.loginCount = user.loginCount;
-    this.lastLogin = user.lastLogin;
+    this.lastLogin = user.lastLogin ? new Date(user.lastLogin) : undefined;
     this.creationMethod = user.creationMethod;
-    this.createdAt = user.createdAt;
-    this.updatedAt = user.updatedAt;
+    this.createdAt = new Date(user.createdAt);
+    this.updatedAt = new Date(user.updatedAt);
   }
 }

@@ -1,95 +1,98 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions} from 'sequelize';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
+import {Inject, Injectable, NotFoundException} from '@nestjs/common';
+import {count, eq} from 'drizzle-orm';
+import type {NodePgDatabase} from 'drizzle-orm/node-postgres';
+import {DRIZZLE} from '../db/drizzle.module';
+import {evaluationTags} from '../db/schema';
+import type {DbSchema} from '../db/types';
+import type {SelectEvaluationTag} from '../db/zod-schemas';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
-import {EvaluationTag} from './evaluation-tag.model';
 
 @Injectable()
 export class EvaluationTagsService {
   constructor(
-    @InjectModel(EvaluationTag)
-    private readonly evaluationTagModel: typeof EvaluationTag
+    @Inject(DRIZZLE) private readonly db: NodePgDatabase<DbSchema>,
   ) {}
 
-  async findAll(): Promise<EvaluationTag[]> {
-    return this.evaluationTagModel.findAll<EvaluationTag>({
-      include: [
-        {
-          model: Evaluation,
-          include: [
-            {
-              model: Group,
-              include: [User]
-            }
-          ]
-        }
-      ]
+  async findAll() {
+    return this.db.query.evaluationTags.findMany({
+      with: {
+        evaluation: {
+          with: {
+            groupEvaluations: {
+              with: {
+                group: {
+                  with: {
+                    groupUsers: {
+                      with: {
+                        user: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
   }
 
   async count(): Promise<number> {
-    return this.evaluationTagModel.count();
+    const [{total}] = await this.db
+      .select({total: count()})
+      .from(evaluationTags);
+    return total;
   }
 
-  async findById(id: string): Promise<EvaluationTag> {
-    return this.findByPkBang(id, {
-      include: [
-        {
-          model: Evaluation,
-          include: [
-            {
-              model: Group,
-              include: [User]
-            }
-          ]
-        }
-      ]
+  async findById(id: number) {
+    const tag = await this.db.query.evaluationTags.findFirst({
+      where: eq(evaluationTags.id, id),
+      with: {
+        evaluation: {
+          with: {
+            groupEvaluations: {
+              with: {
+                group: {
+                  with: {
+                    groupUsers: {
+                      with: {
+                        user: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
+    if (!tag) {
+      throw new NotFoundException('EvaluationTag with given id not found');
+    }
+    return tag;
   }
 
   async create(
-    evaluationId: string,
-    createEvaluationTagDto: CreateEvaluationTagDto
-  ): Promise<EvaluationTag> {
-    const evaluationTag = new EvaluationTag();
-    evaluationTag.value = createEvaluationTagDto.value;
-    evaluationTag.evaluationId = evaluationId;
-    return evaluationTag.save();
+    evaluationId: number,
+    createEvaluationTagDto: CreateEvaluationTagDto,
+  ): Promise<SelectEvaluationTag> {
+    const now = new Date().toISOString();
+    const [tag] = await this.db
+      .insert(evaluationTags)
+      .values({
+        value: createEvaluationTagDto.value,
+        evaluationId,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .returning();
+    return tag;
   }
 
-  async remove(id: string): Promise<EvaluationTag> {
-    const evaluationTag = await this.findByPkBang(id, {
-      include: [
-        {
-          model: Evaluation,
-          include: [
-            {
-              model: Group,
-              include: [User]
-            }
-          ]
-        }
-      ]
-    });
-    await evaluationTag.destroy();
-    return evaluationTag;
-  }
-
-  async findByPkBang(
-    identifier: string | number | Buffer | undefined,
-    options: Pick<FindOptions, 'include'>
-  ): Promise<EvaluationTag> {
-    const evaluationTag = await this.evaluationTagModel.findByPk<EvaluationTag>(
-      identifier,
-      options
-    );
-    if (evaluationTag === null) {
-      throw new NotFoundException('EvaluationTag with given id not found');
-    } else {
-      return evaluationTag;
-    }
+  async remove(id: number) {
+    const tag = await this.findById(id);
+    await this.db.delete(evaluationTags).where(eq(evaluationTags.id, id));
+    return tag;
   }
 }

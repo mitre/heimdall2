@@ -1,404 +1,257 @@
-import {IEvalPaginationParams} from '@heimdall/common/interfaces';
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions, Op, WhereOptions, Sequelize} from 'sequelize';
-import {DatabaseService} from '../database/database.service';
-import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
-import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
-import {Evaluation} from './evaluation.model';
+import {Inject, Injectable, NotFoundException} from '@nestjs/common';
+import {and, asc, count, desc, eq, ilike, inArray, or, type AnyColumn, type SQL} from 'drizzle-orm';
+import {DRIZZLE} from '../db/drizzle.module';
+import {evaluations, evaluationTags, groupEvaluations, groupUsers, groups} from '../db/schema';
+import type {DbSchema} from '../db/types';
+import type {NodePgDatabase} from 'drizzle-orm/node-postgres';
 
-interface EvaluationsResponse {
-  totalItems: number;
-  evaluations: Evaluation[];
+interface PaginationMeta {
+  total: number;
+  page: number;
+  perPage: number;
+  totalPages: number;
 }
 
-interface WhereClauseParams {
-  searchFields: string[];
-  operator: string;
-  email: string;
+interface PaginatedResult {
+  data: Array<Awaited<ReturnType<EvaluationsService['findAll']>>[number]>;
+  meta: PaginationMeta;
+}
+
+interface FindPaginatedParams {
+  page: number;
+  perPage: number;
+  sort: string;
+  order: 'asc' | 'desc';
+  q?: string;
+  userId: string;
   role: string;
-  action: string;
 }
+
+const SORT_COLUMNS: Record<string, AnyColumn> = {
+  filename: evaluations.filename,
+  createdAt: evaluations.createdAt,
+  updatedAt: evaluations.updatedAt,
+};
+
 @Injectable()
 export class EvaluationsService {
+  static escapeForLike(input: string): string {
+    return input.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_');
+  }
+
   constructor(
-    @InjectModel(Evaluation)
-    private readonly evaluationModel: typeof Evaluation,
-    private readonly databaseService: DatabaseService
+    @Inject(DRIZZLE) private readonly db: NodePgDatabase<DbSchema>,
   ) {}
 
-  async findAll(): Promise<Evaluation[]> {
-    return this.evaluationModel.findAll<Evaluation>({
-      attributes: {exclude: ['data']},
-      include: [EvaluationTag, User, {model: Group, include: [User]}]
-    });
-  }
-
-  /*
-    NOTES: These notes are about the getAllEvaluations() and the 
-           getEvaluationsWithClause() methods
-
-    1: The sequelize model is using eager loading, at the SQL level, this is a
-       query with one or more joins. This is done by using the include option
-       on a model finder query (findAll). Given that we are using multiple JOIN
-       operations, particularly the ones on the Tags and Groups, if a record has
-       multiple Tags or a Group with multiple members, the query will return
-       a json object where each evaluation may contain multiple rows one per
-       Tag or group. This offsets the LIMIT because the return data is in JSON
-       format where the tags and groups are objects within the scan id, but are
-       processed as individual SQL records, resulting in an inaccurate number
-       of records returned.
-
-       For this reason the pagination is not done where query the records but
-       rather by getting all records and slicing the appropriate number of
-       records based on the pagination parameters (LIMIT and OFFSET)
-
-    2: TypeScript is not able to infer OrderItem[].
-
-       The 'order' option in sequelize is defined as type OrderItem like: 
-         string | fn | col | literal | [string | col | fn | literal, string] |
-         [Model<any, any> | { model: Model<any, any>, as: string }, string, string] |
-         [Model<any, any>, Model<any, any>, string, string]
-
-       When using TypeScript the order variable is of type string[], which is not
-       supported by OrderItem. The only way to avoid a type error is to add string[]
-       to the list of accepted types in OrderItem.
-
-       Hence the reason the order option is being initialized with array indices.
-
-    3: Not using sequelize findAndCountAll method because the count returned is
-       for all records found which includes multiple entries (due to JOIN) for
-       each record if evaluations have multiple Groups that belong to different
-       users.
-
-       Using the findAll and calling specific queries to determine the total records.
-
-    4: Using ORDER BY on top-level and nested columns, for that reason we need 
-       to reference nested columns by utilizing the '$nested.column$' syntax.
-       For that reason the params.order array can have 2 or 3 indices as
-       listed bellow.
-
-       params.order values are as follows () represent index):
-       length       (0)           (1)               (2)
-         2      field name  order (asc/desc)
-         3      table name  field name         order (asc/desc)
-
-  */
-
-  /*
-    NOTE: Hack to overcome the inability to retrieve the desire
-          number of evaluation (see note 1 above). Pad the 
-          requested number of records by an estimated number of
-          group members (20 per group).
-  */
-  totalGroupMembers = 20;
-
-  async getAllEvaluations(
-    params: IEvalPaginationParams,
-    email: string,
-    role: string
-  ): Promise<EvaluationsResponse> {
-    const queryResponse: EvaluationsResponse = {
-      totalItems: 0,
-      evaluations: []
-    };
-    const whereClause = this.getWhereClauseAll(role, email);
-
-    await this.evaluationModel
-      .findAll<Evaluation>({
-        attributes: {exclude: ['data']},
-        include: [EvaluationTag, User, {model: Group, include: [User]}],
-        offset: params.offset,
-        limit: Number(params.limit) * this.totalGroupMembers,
-        order:
-          params.order.length === 2
-            ? [[params.order[0], params.order[1]]]
-            : [[params.order[0], params.order[1], params.order[2]]],
-        subQuery: false, // enable where clause to reference attributes from the included models
-        where: whereClause
-      })
-      .then(async (data) => {
-        const totalItems = await this.evaluationCount(email, role);
-
-        const totalPages = Math.ceil(totalItems / params.limit);
-        const totalReturned = Number(params.offset) + Number(params.limit);
-        const onPage = Math.ceil(
-          totalReturned / 100 / (Number(params.limit) / 100)
-        );
-        if (onPage == totalPages) {
-          const returnCnt = totalItems - Number(params.offset);
-          // Return from the back of the array
-          queryResponse.evaluations = data.slice(-returnCnt);
-        } else {
-          queryResponse.evaluations = data.slice(0, params.limit);
-        }
-        queryResponse.totalItems = totalItems;
-      });
-    return queryResponse;
-  }
-
-  async getEvaluationsWithClause(
-    params: IEvalPaginationParams,
-    email: string,
-    role: string
-  ): Promise<EvaluationsResponse> {
-    const queryResponse: EvaluationsResponse = {
-      totalItems: 0,
-      evaluations: []
-    };
-
-    const whereClauseParams: WhereClauseParams = {
-      searchFields:
-        params.searchFields === undefined ? [''] : params.searchFields,
-      operator: params.operator === undefined ? 'OR' : params.operator,
-      email: email,
-      role: role,
-      action: 'search'
-    };
-
-    const whereClause = await this.getWhereClauseSearch(
-      whereClauseParams.searchFields,
-      whereClauseParams.operator,
-      whereClauseParams.email,
-      whereClauseParams.role,
-      whereClauseParams.action
-    );
-    await this.evaluationModel
-      .findAll<Evaluation>({
-        attributes: {exclude: ['data']},
-        include: [EvaluationTag, User, {model: Group, include: [User]}],
-        offset: params.offset,
-        limit: Number(params.limit) * this.totalGroupMembers,
-        order:
-          params.order.length === 2
-            ? [[params.order[0], params.order[1]]]
-            : [[params.order[0], params.order[1], params.order[2]]],
-        subQuery: false,
-        where: whereClause
-      })
-      .then(async (data) => {
-        const totalItems = await this.searchItemsCount(whereClauseParams);
-
-        const totalPages = Math.ceil(totalItems / params.limit);
-        const totalReturned = Number(params.offset) + Number(params.limit);
-        const onPage = Math.ceil(
-          totalReturned / 100 / (Number(params.limit) / 100)
-        );
-        if (onPage === totalPages) {
-          const returnCnt = totalItems - Number(params.offset);
-          // Return from the back of the array
-          queryResponse.evaluations = data.slice(-returnCnt);
-        } else {
-          queryResponse.evaluations = data.slice(0, params.limit);
-        }
-        queryResponse.totalItems = totalItems;
-      });
-
-    return queryResponse;
-  }
-
-  getWhereClauseAll(role: string, email: string): WhereOptions {
-    const whereClause = this.getWhereClauseBaseCriteria(role, email);
-    return {[Op.or]: whereClause};
-  }
-
-  getWhereClauseBaseCriteria(role: string, email: string): WhereOptions {
-    const baseCriteria = [];
-    baseCriteria.push({public: {[Op.eq]: 'true'}});
-    if (role === 'admin') {
-      baseCriteria.push({public: {[Op.eq]: 'false'}});
-    } else {
-      baseCriteria.push({'$user.email$': {[Op.like]: `${email}`}});
-      baseCriteria.push({
-        [Op.and]: {
-          '$groups->users.id$': {
-            [Op.eq]: Sequelize.literal(
-              `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`
-            )
-          }
-        }
-      });
-    }
-    return baseCriteria;
-  }
-
-  async getWhereClauseSearch(
-    fields: string[],
-    operation: string,
-    email: string,
-    role: string,
-    action: string
-  ): Promise<WhereOptions> {
-    const searchFields = [];
-    const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
-
-    if (fields[0] !== '()') {
-      searchFields.push({filename: {[Op.iRegexp]: `${fields[0]}`}});
-    }
-    if (fields[1] !== '()') {
-      searchFields.push({'$groups.name$': {[Op.iRegexp]: `${fields[1]}`}});
-    }
-    if (fields[2] !== '()') {
-      if (action === 'count') {
-        searchFields.push({
-          '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
-        });
-      } else {
-        const evaluationIds = await this.getEvaluationIdsForTagName(fields[2]);
-
-        searchFields.push({
-          [Op.or]: [
-            {id: {[Op.in]: evaluationIds}},
-            {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}}
-          ]
-        });
-      }
-    }
-
-    if (operation === 'AND') {
-      // Expected outcome: an OR baseCriteria AND an AND searchFields
-      return {[Op.or]: baseCriteria, [Op.and]: searchFields};
-    } else {
-      // Expected outcome: an OR baseCriteria AND an OR searchFields
-      return {
-        [Op.and]: [{[Op.or]: baseCriteria}, {[Op.and]: {[Op.or]: searchFields}}]
-      };
-    }
-  }
-
-  async getEvaluationIdsForTagName(tagValue: string): Promise<string[]> {
-    let evaluationIds: string[] = [];
-    await EvaluationTag.findAll({
-      attributes: ['evaluationId'],
-      where: {value: {[Op.iRegexp]: tagValue}},
-      raw: true
-    }).then(async (evalIds) => {
-      evaluationIds = evalIds.map((evalIds) => evalIds.evaluationId);
-    });
-    return evaluationIds;
-  }
-
-  async evaluationCount(userEmail: string, role: string): Promise<number> {
-    if (role === 'admin') {
-      return this.evaluationModel.count();
-    } else {
-      return this.evaluationModel.count({
-        include: [User, {model: Group, include: [User]}],
-        where: {
-          [Op.or]: [
-            {public: {[Op.eq]: 'true'}},
-            {'$user.email$': {[Op.like]: `${userEmail}`}},
-            {
-              [Op.and]: {
-                '$groups->users.id$': {
-                  [Op.eq]: Sequelize.literal(
-                    `(SELECT id FROM "Users" WHERE "email" LIKE '${userEmail}')`
-                  )
-                }
-              }
-            }
-          ]
-        },
-        distinct: true,
-        col: 'id'
-      });
-    }
-  }
-
-  async searchItemsCount(
-    whereClauseParams: WhereClauseParams
-  ): Promise<number> {
-    const whereClause = await this.getWhereClauseSearch(
-      whereClauseParams.searchFields,
-      whereClauseParams.operator,
-      whereClauseParams.email,
-      whereClauseParams.role,
-      'count'
-    );
-    return this.evaluationModel.count({
-      include: [EvaluationTag, User, {model: Group, include: [User]}],
-      where: whereClause,
-      distinct: true,
-      col: 'id'
+  async findAll() {
+    return this.db.query.evaluations.findMany({
+      columns: {data: false},
+      with: {
+        evaluationTags: true,
+        user: true,
+        groupEvaluations: {with: {group: {with: {groupUsers: {with: {user: true}}}}}},
+      },
     });
   }
 
   async count(): Promise<number> {
-    return this.evaluationModel.count();
+    const [{value}] = await this.db.select({value: count()}).from(evaluations);
+    return value;
   }
 
-  async create(evaluation: {
+  async findById(id: string) {
+    const numId = Number(id);
+    if (!Number.isFinite(numId) || numId < 1) {
+      throw new NotFoundException('Evaluation with given id not found');
+    }
+    const evaluation = await this.db.query.evaluations.findFirst({
+      where: eq(evaluations.id, numId),
+      with: {
+        evaluationTags: true,
+        user: true,
+        groupEvaluations: {with: {group: {with: {groupUsers: {with: {user: true}}}}}},
+      },
+    });
+    if (!evaluation) {
+      throw new NotFoundException('Evaluation with given id not found');
+    }
+    return evaluation;
+  }
+
+  async findByPkBang(id: string) {
+    return this.findById(id);
+  }
+
+  async groups(id: string) {
+    const evaluation = await this.findById(id);
+    return (evaluation.groupEvaluations ?? [])
+      .filter((ge) => ge.group != null)
+      .map((ge) => ge.group!);
+  }
+
+  async create(input: {
     filename: string;
-    evaluationTags: CreateEvaluationTagDto[] | undefined;
     public: boolean;
     data: unknown;
-    userId?: string;
-    groupId?: string;
-  }): Promise<Evaluation> {
-    return Evaluation.create<Evaluation>(
-      {
-        ...evaluation
-      },
-      {
-        include: [EvaluationTag]
-      }
-    );
+    userId?: number;
+    groupId?: number;
+    evaluationTags?: Array<{value: string}>;
+  }) {
+    const now = new Date().toISOString();
+    const [evaluation] = await this.db
+      .insert(evaluations)
+      .values({
+        filename: input.filename,
+        public: input.public,
+        data: input.data,
+        userId: input.userId ?? null,
+        groupId: input.groupId ?? null,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .returning();
+
+    if (input.evaluationTags && input.evaluationTags.length > 0) {
+      await this.db.insert(evaluationTags).values(
+        input.evaluationTags.map((tag) => ({
+          value: tag.value,
+          evaluationId: evaluation.id,
+          createdAt: now,
+          updatedAt: now,
+        })),
+      );
+    }
+
+    return evaluation;
   }
 
   async update(
     id: string,
-    updateEvaluationDto: UpdateEvaluationDto
-  ): Promise<Evaluation> {
-    const evaluation = await this.findByPkBang(id, {
-      include: [EvaluationTag]
-    });
-    return evaluation.update(updateEvaluationDto);
+    updateDto: {filename?: string; data?: unknown; public?: boolean},
+  ) {
+    const existing = await this.findById(id);
+    const updates: Partial<typeof evaluations.$inferInsert> = {
+      updatedAt: new Date().toISOString(),
+    };
+    if (updateDto.filename !== undefined) updates.filename = updateDto.filename;
+    if (updateDto.data !== undefined) updates.data = updateDto.data;
+    if (updateDto.public !== undefined) updates.public = updateDto.public;
+
+    await this.db
+      .update(evaluations)
+      .set(updates)
+      .where(eq(evaluations.id, existing.id));
+    return this.findById(id);
   }
 
-  async remove(id: string): Promise<Evaluation> {
-    const evaluation = await this.findByPkBang(id, {
-      include: [EvaluationTag]
+  async remove(id: string) {
+    const evaluation = await this.findById(id);
+
+    await this.db.transaction(async (tx) => {
+      await tx
+        .delete(evaluationTags)
+        .where(eq(evaluationTags.evaluationId, evaluation.id));
+      await tx
+        .delete(evaluations)
+        .where(eq(evaluations.id, evaluation.id));
     });
-    await this.databaseService.sequelize.transaction(async (transaction) => {
-      if (evaluation.evaluationTags !== null) {
-        await Promise.all([
-          evaluation.evaluationTags.map(async (evaluationTag) => {
-            await evaluationTag.destroy({transaction});
-          })
-        ]);
-      }
-      return evaluation.destroy({transaction});
-    });
+
     return evaluation;
   }
 
-  async findById(id: string): Promise<Evaluation> {
-    return this.findByPkBang(id, {
-      include: [EvaluationTag, User, Group, {model: Group, include: [User]}]
-    });
+  async evaluationCount(userId: string, role: string): Promise<number> {
+    const [{value}] = await this.db
+      .select({value: count()})
+      .from(evaluations)
+      .where(this.visibilityCondition(userId, role));
+    return value;
   }
 
-  async groups(id: string): Promise<Group[]> {
-    return (
-      await this.findByPkBang(id, {include: {model: Group, include: [User]}})
-    ).groups;
-  }
+  private visibilityCondition(userId: string, role: string): SQL | undefined {
+    if (role === 'admin') return undefined;
 
-  async findByPkBang(
-    identifier: string | number | Buffer | undefined,
-    options: Pick<FindOptions, 'include'>
-  ): Promise<Evaluation> {
-    const evaluation = await this.evaluationModel.findByPk<Evaluation>(
-      identifier,
-      options
+    const numUserId = Number(userId);
+    const groupEvalSubquery = this.db
+      .selectDistinct({id: groupEvaluations.evaluationId})
+      .from(groupEvaluations)
+      .innerJoin(groupUsers, eq(groupEvaluations.groupId, groupUsers.groupId))
+      .where(eq(groupUsers.userId, numUserId));
+
+    return or(
+      eq(evaluations.public, true),
+      eq(evaluations.userId, numUserId),
+      inArray(evaluations.id, groupEvalSubquery),
     );
-    if (evaluation === null) {
-      throw new NotFoundException('Evaluation with given id not found');
-    } else {
-      return evaluation;
+  }
+
+  private searchCondition(q: string): SQL | undefined {
+    if (!q || q.trim().length === 0) return undefined;
+
+    const escaped = `%${EvaluationsService.escapeForLike(q.trim())}%`;
+
+    const tagSubquery = this.db
+      .selectDistinct({id: evaluationTags.evaluationId})
+      .from(evaluationTags)
+      .where(ilike(evaluationTags.value, escaped));
+
+    const groupSubquery = this.db
+      .selectDistinct({id: groupEvaluations.evaluationId})
+      .from(groupEvaluations)
+      .innerJoin(groups, eq(groupEvaluations.groupId, groups.id))
+      .where(ilike(groups.name, escaped));
+
+    return or(
+      ilike(evaluations.filename, escaped),
+      inArray(evaluations.id, tagSubquery),
+      inArray(evaluations.id, groupSubquery),
+    );
+  }
+
+  async findPaginated(params: FindPaginatedParams): Promise<PaginatedResult> {
+    const where = and(
+      this.visibilityCondition(params.userId, params.role),
+      params.q ? this.searchCondition(params.q) : undefined,
+    );
+
+    const [{value: total}] = await this.db
+      .select({value: count()})
+      .from(evaluations)
+      .where(where);
+
+    const totalPages = Math.ceil(total / params.perPage) || 1;
+    const offset = (params.page - 1) * params.perPage;
+
+    const sortCol = SORT_COLUMNS[params.sort] ?? evaluations.createdAt;
+    const orderFn = params.order === 'asc' ? asc : desc;
+
+    const pageIds = await this.db
+      .select({id: evaluations.id})
+      .from(evaluations)
+      .where(where)
+      .orderBy(orderFn(sortCol))
+      .limit(params.perPage)
+      .offset(offset);
+
+    if (pageIds.length === 0) {
+      return {data: [], meta: {total, page: params.page, perPage: params.perPage, totalPages}};
     }
+
+    const data = await this.db.query.evaluations.findMany({
+      where: inArray(evaluations.id, pageIds.map((r) => r.id)),
+      columns: {data: false},
+      with: {
+        evaluationTags: true,
+        user: true,
+        groupEvaluations: {with: {group: {with: {groupUsers: {with: {user: true}}}}}},
+      },
+    });
+
+    const idOrder = pageIds.map((r) => r.id);
+    const sorted = data.sort((a, b) => idOrder.indexOf(a.id) - idOrder.indexOf(b.id));
+
+    return {
+      data: sorted,
+      meta: {total, page: params.page, perPage: params.perPage, totalPages},
+    };
   }
 }

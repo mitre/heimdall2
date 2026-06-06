@@ -1,12 +1,4 @@
-import {IAddUserToGroup} from '@heimdall/common/interfaces';
-import {IsNotEmpty, IsString} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {addUserToGroupSchema} from './add-user-to-group.schema';
 
-export class AddUserToGroupDto implements IAddUserToGroup {
-  @IsNotEmpty()
-  @IsString()
-  readonly userId!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly groupRole!: string;
-}
+export class AddUserToGroupDto extends createZodDto(addUserToGroupSchema) {}

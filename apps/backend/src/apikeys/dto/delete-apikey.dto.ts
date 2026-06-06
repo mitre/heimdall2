@@ -1,8 +1,4 @@
-import {IDeleteApiKey} from '@heimdall/common/interfaces';
-import {IsOptional, IsString} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {deleteApiKeySchema} from './delete-apikey.schema';
 
-export class DeleteAPIKeyDto implements IDeleteApiKey {
-  @IsString()
-  @IsOptional()
-  readonly currentPassword!: string;
-}
+export class DeleteAPIKeyDto extends createZodDto(deleteApiKeySchema) {}

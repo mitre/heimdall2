@@ -1,16 +1,4 @@
-import {IUpdateEvaluation} from '@heimdall/common/interfaces';
-import {IsBoolean, IsObject, IsOptional, IsString} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {updateEvaluationSchema} from './update-evaluation.schema';
 
-export class UpdateEvaluationDto implements IUpdateEvaluation {
-  @IsOptional()
-  @IsString()
-  readonly filename: string | undefined;
-
-  @IsOptional()
-  @IsObject()
-  readonly data: Record<string, unknown> | undefined;
-
-  @IsOptional()
-  @IsBoolean()
-  readonly public: boolean | undefined;
-}
+export class UpdateEvaluationDto extends createZodDto(updateEvaluationSchema) {}

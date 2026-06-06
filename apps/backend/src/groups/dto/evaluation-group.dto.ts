@@ -1,8 +1,4 @@
-import {IEvaluationGroup} from '@heimdall/common/interfaces';
-import {IsNotEmpty, IsString} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {evaluationGroupSchema} from './evaluation-group.schema';
 
-export class EvaluationGroupDto implements IEvaluationGroup {
-  @IsNotEmpty()
-  @IsString()
-  readonly id!: string;
-}
+export class EvaluationGroupDto extends createZodDto(evaluationGroupSchema) {}

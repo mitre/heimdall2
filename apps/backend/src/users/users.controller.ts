@@ -5,6 +5,7 @@ import {
   Delete,
   ForbiddenException,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -12,14 +13,18 @@ import {
   UseFilters,
   UseGuards,
   UseInterceptors,
-  UsePipes
+  UsePipes,
 } from '@nestjs/common';
+import {AllowAnonymous} from '@thallesp/nestjs-better-auth';
+import {sql} from 'drizzle-orm';
+import type {NodePgDatabase} from 'drizzle-orm/node-postgres';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
-import {ConfigService} from '../config/config.service';
-import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
-import {ImplicitAllowJwtAuthGuard} from '../guards/implicit-allow-jwt-auth.guard';
-import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {asAuthUser, caslSubject} from '../common/auth-helpers';
+import {isLocalLoginAllowed, isRegistrationAllowed} from '../env';
+import {DRIZZLE} from '../db/drizzle.module';
+import {users} from '../db/schema';
+import type {SelectUser} from '../db/zod-schemas';
 import {TestGuard} from '../guards/test.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
@@ -30,7 +35,6 @@ import {DeleteUserDto} from './dto/delete-user.dto';
 import {SlimUserDto} from './dto/slim-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {UserDto} from './dto/user.dto';
-import {User} from './user.model';
 import {UsersService} from './users.service';
 
 @UseInterceptors(LoggingInterceptor)
@@ -38,119 +42,118 @@ import {UsersService} from './users.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
+    @Inject(DRIZZLE) private readonly db: NodePgDatabase,
   ) {}
 
   @Get('/user-find-all')
-  @UseGuards(JwtAuthGuard)
-  async findAllUsers(@Request() request: {user: User}): Promise<SlimUserDto[]> {
-    const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.ReadSlim, User);
-    const users = await this.usersService.findAllUsers();
-    return users.map((user) => new SlimUserDto(user));
+  async findAllUsers(
+    @Request() request: {user: SelectUser},
+  ): Promise<SlimUserDto[]> {
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
+    ForbiddenError.from(abac).throwUnlessCan(Action.ReadSlim, 'User');
+    const foundUsers = await this.usersService.findAllUsers();
+    return foundUsers.map((user) => new SlimUserDto(user));
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findUserById(
     @Param('id') id: string,
-    @Request() request: {user: User}
+    @Request() request: {user: SelectUser},
   ): Promise<UserDto> {
     const user = await this.usersService.findById(id);
 
-    const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Read, user);
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, caslSubject('User', user));
 
     return new UserDto(user);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async adminFindAllUsers(
-    @Request() request: {user: User}
+    @Request() request: {user: SelectUser},
   ): Promise<UserDto[]> {
-    const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, User);
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
+    ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, 'User');
 
-    const users = await this.usersService.adminFindAllUsers();
-    return users.map((user) => new UserDto(user));
+    const foundUsers = await this.usersService.adminFindAllUsers();
+    return foundUsers.map((user) => new UserDto(user));
   }
 
   @Post()
   @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe())
-  @UseFilters(new UniqueConstraintErrorFilter())
-  @UseGuards(ImplicitAllowJwtAuthGuard)
+  @AllowAnonymous()
   async create(
     @Body() createUserDto: CreateUserDto,
-    @Request() request: {user?: User}
+    @Request() request: {user?: SelectUser},
   ): Promise<UserDto> {
     const abac = request.user
-      ? this.authz.abac.createForUser(request.user)
+      ? this.authz.abac.createForUser(asAuthUser(request.user))
       : this.authz.abac.createForAnonymous();
-    // There should be no need to create users if user login is disabled
-    if (!this.configService.isLocalLoginAllowed()) {
+    if (!isLocalLoginAllowed()) {
       throw new ForbiddenException(
-        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
+        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.',
       );
     }
-    // If registration is not allowed then validate the current user has the permission to bypass this check
-    if (!this.configService.isRegistrationAllowed()) {
+    if (!isRegistrationAllowed()) {
       ForbiddenError.from(abac)
         .setMessage(
-          'User registration is disabled. Please ask your system administrator to create the account.'
+          'User registration is disabled. Please ask your system administrator to create the account.',
         )
-        .throwUnlessCan(Action.ForceRegistration, User);
+        .throwUnlessCan(Action.ForceRegistration, 'User');
     }
     return new UserDto(await this.usersService.create(createUserDto));
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Request() request: {user: User},
+    @Request() request: {user: SelectUser},
     @Body(
       new PasswordsMatchPipe(),
       new PasswordChangePipe(),
-      new PasswordComplexityPipe()
+      new PasswordComplexityPipe(),
     )
-    updateUserDto: UpdateUserDto
+    updateUserDto: UpdateUserDto,
   ): Promise<UserDto> {
-    const abac = this.authz.abac.createForUser(request.user);
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
     const userToUpdate = await this.usersService.findByPkBang(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, userToUpdate);
+    ForbiddenError.from(abac).throwUnlessCan(
+      Action.Update,
+      caslSubject('User', userToUpdate),
+    );
 
     return new UserDto(
-      await this.usersService.update(userToUpdate, updateUserDto, abac)
+      await this.usersService.update(userToUpdate, updateUserDto, abac),
     );
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: {user: User},
-    @Body() deleteUserDto: DeleteUserDto
+    @Request() request: {user: SelectUser},
+    @Body() deleteUserDto: DeleteUserDto,
   ): Promise<UserDto> {
-    const abac = this.authz.abac.createForUser(request.user);
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
     const userToDelete = await this.usersService.findByPkBang(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Delete, userToDelete);
+    ForbiddenError.from(abac).throwUnlessCan(
+      Action.Delete,
+      caslSubject('User', userToDelete),
+    );
 
     return new UserDto(
-      await this.usersService.remove(userToDelete, deleteUserDto, abac)
+      await this.usersService.remove(userToDelete, deleteUserDto, abac),
     );
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post('/logout')
-  async logOut(@Request() request: {user: User}): Promise<void> {
+  async logOut(@Request() request: {user: SelectUser}): Promise<void> {
     return this.usersService.updateUserSecret(request.user);
   }
 
   @UseGuards(TestGuard)
   @Post('/clear')
   async clear(): Promise<void> {
-    User.truncate({cascade: true});
+    await this.db.delete(users);
   }
 }

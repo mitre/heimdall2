@@ -1,87 +1,123 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
+import {BadRequestException, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import {hash} from 'bcryptjs';
+import {count, eq} from 'drizzle-orm';
+import type {NodePgDatabase} from 'drizzle-orm/node-postgres';
 import jwt from 'jsonwebtoken';
-import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
-import {ConfigService} from '../config/config.service';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
-import {ApiKey} from './apikey.model';
+import {DRIZZLE} from '../db/drizzle.module';
+import {apiKeys} from '../db/schema';
+import type {DbSchema} from '../db/types';
+import type {SelectApiKey} from '../db/zod-schemas';
+import env from '../env';
 import {APIKeyDto} from './dto/apikey.dto';
-import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
 
 @Injectable()
 export class ApiKeyService {
   constructor(
-    @InjectModel(ApiKey)
-    private readonly apiKeyModel: typeof ApiKey,
-    private readonly configService: ConfigService
+    @Inject(DRIZZLE) private readonly db: NodePgDatabase<DbSchema>,
   ) {}
 
   async count(): Promise<number> {
-    return this.apiKeyModel.count();
+    const [{value}] = await this.db.select({value: count()}).from(apiKeys);
+    return value;
   }
 
   async create(
-    target: User | Group,
-    createApiKeyDto: CreateApiKeyDto
+    target: {id: string | number; email?: string},
+    createApiKeyDto: {name?: string},
   ): Promise<{id: string; name: string; apiKey: string}> {
-    const APIKeySecret = this.configService.get('API_KEY_SECRET') || '';
-    const newApiKey = new ApiKey({
-      userId: target instanceof User ? target.id : undefined,
-      groupId: target instanceof Group ? target.id : undefined,
-      name: createApiKeyDto.name,
-      type: target instanceof User ? 'user' : 'group'
+    const isUser = 'email' in target;
+    const APIKeySecret = env.API_KEY_SECRET;
+    if (!APIKeySecret) {
+      throw new BadRequestException(
+        'API_KEY_SECRET is not configured. Cannot create API keys.',
+      );
+    }
+    const now = new Date().toISOString();
+
+    return this.db.transaction(async (tx) => {
+      const [newApiKey] = await tx
+        .insert(apiKeys)
+        .values({
+          userId: isUser ? Number(target.id) : null,
+          groupId: isUser ? null : Number(target.id),
+          name: createApiKeyDto.name ?? null,
+          type: isUser ? 'user' : 'group',
+          apiKey: '',
+          createdAt: now,
+          updatedAt: now,
+        })
+        .returning();
+
+      const newJWT = jwt.sign(
+        {keyId: newApiKey.id, createdAt: new Date()},
+        APIKeySecret,
+        {expiresIn: `${env.API_KEY_DEFAULT_EXPIRY_DAYS}d`},
+      );
+      const JWTSignature = newJWT.split('.')[2];
+      const hashedKey = await hash(JWTSignature, env.BCRYPT_COST);
+
+      await tx
+        .update(apiKeys)
+        .set({apiKey: hashedKey, updatedAt: new Date().toISOString()})
+        .where(eq(apiKeys.id, newApiKey.id));
+
+      return {
+        id: String(newApiKey.id),
+        name: newApiKey.name ?? '',
+        apiKey: newJWT,
+      };
     });
-    await newApiKey.save();
-    const newJWT = jwt.sign(
-      {keyId: newApiKey.id, createdAt: new Date()},
-      APIKeySecret
-    );
-    // Since BCrypt has a 72 byte limit only hash the JWT signature
-    const JWTSignature = newJWT.split('.')[2];
-    newApiKey.apiKey = await hash(JWTSignature, 14);
-    newApiKey.save();
-    return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
   }
 
   async update(
     id: string,
-    updateAPIKeyDto: UpdateAPIKeyDto
+    updateAPIKeyDto: {name: string; currentPassword?: string},
   ): Promise<APIKeyDto> {
-    const apiKey = await this.findById(id);
-    apiKey.name = updateAPIKeyDto.name;
-    return new APIKeyDto(await apiKey.save());
+    const existing = await this.findById(id);
+    const [updated] = await this.db
+      .update(apiKeys)
+      .set({name: updateAPIKeyDto.name, updatedAt: new Date().toISOString()})
+      .where(eq(apiKeys.id, existing.id))
+      .returning();
+    return new APIKeyDto(updated);
   }
 
   async remove(id: string): Promise<APIKeyDto> {
-    const apiKeyToDestroy = await this.findById(id);
-    await apiKeyToDestroy.destroy();
-    return new APIKeyDto(apiKeyToDestroy);
+    const existing = await this.findById(id);
+    await this.db.delete(apiKeys).where(eq(apiKeys.id, existing.id));
+    return new APIKeyDto(existing);
   }
 
-  async findById(id: string): Promise<ApiKey> {
-    const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, {
-      include: [User, Group]
-    });
-    if (apiKey === null) {
+  async findById(id: string) {
+    const numId = Number(id);
+    if (!Number.isFinite(numId) || numId < 1) {
       throw new NotFoundException('API key with given id not found');
-    } else {
-      return apiKey;
     }
+    const result = await this.db.query.apiKeys.findFirst({
+      where: eq(apiKeys.id, numId),
+      with: {user: true, group: true},
+    });
+    if (!result) {
+      throw new NotFoundException('API key with given id not found');
+    }
+    return result;
   }
 
-  async findAllForUser(user: User): Promise<APIKeyDto[]> {
-    const apiKeys = await this.apiKeyModel.findAll({
-      where: {userId: user.id}
-    });
-    return apiKeys.map((key) => new APIKeyDto(key));
+  async findAllForUser(user: {id: string | number}): Promise<APIKeyDto[]> {
+    const userId = Number(user.id);
+    const keys = await this.db
+      .select()
+      .from(apiKeys)
+      .where(eq(apiKeys.userId, Number.isFinite(userId) ? userId : -1));
+    return keys.map((key) => new APIKeyDto(key));
   }
 
-  async findAllForGroup(group: Group): Promise<APIKeyDto[]> {
-    const apiKeys = await this.apiKeyModel.findAll({
-      where: {groupId: group.id}
-    });
-    return apiKeys.map((key) => new APIKeyDto(key));
+  async findAllForGroup(group: {id: string | number}): Promise<APIKeyDto[]> {
+    const groupId = Number(group.id);
+    const keys = await this.db
+      .select()
+      .from(apiKeys)
+      .where(eq(apiKeys.groupId, Number.isFinite(groupId) ? groupId : -1));
+    return keys.map((key) => new APIKeyDto(key));
   }
 }

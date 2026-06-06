@@ -1,8 +1,4 @@
-import {IRemoveUserFromGroup} from '@heimdall/common/interfaces';
-import {IsNotEmpty, IsString} from 'class-validator';
+import {createZodDto} from 'nestjs-zod';
+import {removeUserFromGroupSchema} from './remove-user-from-group.schema';
 
-export class RemoveUserFromGroupDto implements IRemoveUserFromGroup {
-  @IsNotEmpty()
-  @IsString()
-  readonly userId!: string;
-}
+export class RemoveUserFromGroupDto extends createZodDto(removeUserFromGroupSchema) {}

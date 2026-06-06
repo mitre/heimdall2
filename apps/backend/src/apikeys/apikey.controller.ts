@@ -1,4 +1,5 @@
 import {ForbiddenError} from '@casl/ability';
+import {subject} from '@casl/ability';
 import {
   BadRequestException,
   Body,
@@ -11,17 +12,19 @@ import {
   Query,
   Request,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
 import {AuthnService} from '../authn/authn.service';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
+import {asAuthUser} from '../common/auth-helpers';
+import type {SelectUser} from '../db/zod-schemas';
 import {GroupsService} from '../groups/groups.service';
 import {APIKeysEnabled} from '../guards/api-keys-enabled.guard';
-import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
-import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
+
+type ApiKeyRequestUser = SelectUser & {creationMethod?: string | null};
 import {ApiKeyService} from './apikey.service';
 import {APIKeyDto} from './dto/apikey.dto';
 import {CreateApiKeyDto} from './dto/create-apikey.dto';
@@ -37,17 +40,16 @@ export class ApiKeyController {
     private readonly apiKeyService: ApiKeyService,
     private readonly authz: AuthzService,
     private readonly usersService: UsersService,
-    private readonly groupsService: GroupsService
+    private readonly groupsService: GroupsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   async findAPIKeys(
-    @Request() request: {user: User},
+    @Request() request: {user: ApiKeyRequestUser},
     @Query('userId') userId: string,
-    @Query('groupId') groupId: string
+    @Query('groupId') groupId: string,
   ): Promise<APIKeyDto[]> {
-    const abac = this.authz.abac.createForUser(request.user);
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
 
     if (userId && groupId) {
       throw new BadRequestException('Cannot specify both userId and groupId');
@@ -61,20 +63,22 @@ export class ApiKeyController {
       const user = userId
         ? await this.usersService.findById(userId)
         : request.user;
-      ForbiddenError.from(abac).throwUnlessCan(Action.Read, user);
+      ForbiddenError.from(abac).throwUnlessCan(
+        Action.Read,
+        subject('User', {...user, id: String(user.id)}),
+      );
       return this.apiKeyService.findAllForUser(user);
     }
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   async createAPIKey(
-    @Request() request: {user: User},
-    @Body() createApiKeyDto: CreateApiKeyDto
+    @Request() request: {user: ApiKeyRequestUser},
+    @Body() createApiKeyDto: CreateApiKeyDto,
   ): Promise<{id: string; apiKey: string}> {
-    const abac = this.authz.abac.createForUser(request.user);
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
 
-    let target;
+    let target: {id: string | number; email?: string};
 
     if (createApiKeyDto.userId) {
       target = await this.usersService.findById(createApiKeyDto.userId);
@@ -86,7 +90,18 @@ export class ApiKeyController {
       target = request.user;
     }
 
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, target);
+    if ('email' in target) {
+      ForbiddenError.from(abac).throwUnlessCan(
+        Action.Update,
+        subject('User', {...target, id: String(target.id)}),
+      );
+    } else {
+      ForbiddenError.from(abac).throwUnlessCan(
+        Action.Update,
+        subject('Group', {...target, id: String(target.id)}),
+      );
+    }
+
     if (request.user.creationMethod === 'local') {
       await this.authnService.testPassword(createApiKeyDto, request.user);
     }
@@ -94,26 +109,31 @@ export class ApiKeyController {
     return this.apiKeyService.create(target, createApiKeyDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteAPIKey(
-    @Request() request: {user: User},
+    @Request() request: {user: ApiKeyRequestUser},
     @Param('id') id: string,
-    @Body() deleteApiKeyDto: DeleteAPIKeyDto
+    @Body() deleteApiKeyDto: DeleteAPIKeyDto,
   ): Promise<APIKeyDto> {
     const apiKeyToDelete = await this.apiKeyService.findById(id);
-    const abac = this.authz.abac.createForUser(request.user);
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
 
-    if (apiKeyToDelete.type === 'user') {
+    if (apiKeyToDelete.type === 'user' && apiKeyToDelete.user) {
       ForbiddenError.from(abac).throwUnlessCan(
         Action.Update,
-        apiKeyToDelete.user
+        subject('User', {
+          ...apiKeyToDelete.user,
+          id: String(apiKeyToDelete.user.id),
+        }),
       );
-    } else if (apiKeyToDelete.type === 'group') {
+    } else if (apiKeyToDelete.type === 'group' && apiKeyToDelete.groupId) {
       const group = await this.groupsService.findByPkBang(
-        apiKeyToDelete.groupId
+        String(apiKeyToDelete.groupId),
       );
-      ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+      ForbiddenError.from(abac).throwUnlessCan(
+        Action.Update,
+        subject('Group', {...group, id: String(group.id)}),
+      );
     } else {
       throw new BadRequestException('Unknown API key type');
     }
@@ -124,24 +144,30 @@ export class ApiKeyController {
     return this.apiKeyService.remove(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Put('/:id')
   async updateAPIKey(
-    @Request() request: {user: User},
+    @Request() request: {user: ApiKeyRequestUser},
     @Param('id') id: string,
-    @Body() updateApiKeyDto: UpdateAPIKeyDto
+    @Body() updateApiKeyDto: UpdateAPIKeyDto,
   ): Promise<APIKeyDto> {
     const apiKeyToUpdate = await this.apiKeyService.findById(id);
-    const abac = this.authz.abac.createForUser(request.user);
-    if (apiKeyToUpdate.type === 'group') {
+    const abac = this.authz.abac.createForUser(asAuthUser(request.user));
+
+    if (apiKeyToUpdate.type === 'group' && apiKeyToUpdate.groupId) {
       const group = await this.groupsService.findByPkBang(
-        apiKeyToUpdate.groupId
+        String(apiKeyToUpdate.groupId),
       );
-      ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
-    } else if (apiKeyToUpdate.type === 'user') {
       ForbiddenError.from(abac).throwUnlessCan(
         Action.Update,
-        apiKeyToUpdate.user
+        subject('Group', {...group, id: String(group.id)}),
+      );
+    } else if (apiKeyToUpdate.type === 'user' && apiKeyToUpdate.user) {
+      ForbiddenError.from(abac).throwUnlessCan(
+        Action.Update,
+        subject('User', {
+          ...apiKeyToUpdate.user,
+          id: String(apiKeyToUpdate.user.id),
+        }),
       );
     } else {
       throw new BadRequestException('Unknown API key type');
@@ -150,6 +176,6 @@ export class ApiKeyController {
     if (request.user.creationMethod === 'local') {
       await this.authnService.testPassword(updateApiKeyDto, request.user);
     }
-    return this.apiKeyService.update(apiKeyToUpdate.id, updateApiKeyDto);
+    return this.apiKeyService.update(String(apiKeyToUpdate.id), updateApiKeyDto);
   }
 }
