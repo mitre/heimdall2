@@ -20,6 +20,7 @@ import yml from 'eslint-plugin-yml';
 import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import cypress from 'eslint-plugin-cypress';
+import drizzle from 'eslint-plugin-drizzle';
 import vue from 'eslint-plugin-vue';
 
 /* eslint-enable n/no-extraneous-import */
@@ -118,6 +119,11 @@ export default defineConfig([
       'unicorn/no-process-exit': 'off',
       'unicorn/prefer-node-protocol': 'off',
       'unicorn/prevent-abbreviations': 'off',
+      'drizzle/enforce-delete-with-where': ['error', { drizzleObjectName: ['db'] }],
+      'drizzle/enforce-update-with-where': ['error', { drizzleObjectName: ['db'] }],
+    },
+    plugins: {
+      drizzle,
     },
   },
   {

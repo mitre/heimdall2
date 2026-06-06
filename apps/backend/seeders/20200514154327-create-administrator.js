@@ -4,6 +4,21 @@ const crypto = require('crypto');
 const dotenv = require('dotenv');
 const fs = require('fs');
 
+function generateSTIGCompliantPassword() {
+  const classes = [
+    'abcdefghijklmnopqrstuvwxyz',
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    '0123456789',
+    '!@#$%^&*()-_=+',
+  ];
+  const chars = [];
+  for (let i = 0; i < 20; i++) {
+    const cls = classes[i % 4];
+    chars.push(cls[crypto.randomInt(cls.length)]);
+  }
+  return chars.join('');
+}
+
 module.exports = {
   up: async (queryInterface, _Sequelize) => {
     const result = await queryInterface.sequelize.query(
@@ -38,7 +53,7 @@ module.exports = {
           envConfig.ADMIN_USES_EXTERNAL_AUTH.toLowerCase() === 'true';
       }
       const password =
-        envConfig.ADMIN_PASSWORD || crypto.randomBytes(16).toString('hex');
+        envConfig.ADMIN_PASSWORD || generateSTIGCompliantPassword();
 
       console.log(`New administrator email is: ${email}`);
       if (!adminUsesExternalAuth) {

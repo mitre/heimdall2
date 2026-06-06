@@ -51,6 +51,9 @@ test/videos
 .env-prod
 .env-dev
 
+# Docker Compose local dev override (auto-merged by docker compose)
+docker-compose.override.yml
+
 # Ignore cloud.gov manifest
 manifest.yml
 
@@ -72,3 +75,23 @@ certs/*.pem
 
 # Database Content
 data/*
+
+# Beads / Dolt files (local workflow, not tracked upstream)
+.beads/
+.dolt/
+*.db
+.beads-credential-key
+
+# AI agent state (local, not tracked)
+.claude/
+.gemini/
+.playwright-mcp/
+AGENTS.md
+CODEX-REVIEW-CONTEXT.md
+CODEX-REVIEW-PROMPT.md
+
+# Session artifacts
+session.md
+recovery-prompt.md
+RECOVERY_STATUS.md
+test.md

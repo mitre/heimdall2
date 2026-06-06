@@ -24,10 +24,12 @@
     "pack:all": "lerna exec yarn pack --scope inspecjs --scope @mitre/heimdall-lite --scope @mitre/hdf-converters --parallel",
     "start": "yarn backend start",
     "start:dev": "./node_modules/.bin/dotenv -e ./apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/common --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
+    "dev": "yarn frontend start:dev",
     "test:ui": "cypress run",
     "test:ui:open": "cypress open"
   },
   "dependencies": {
+    "js-sha256": "^0.11.0",
     "lerna": "^9.0.0",
     "typescript": "^6.0.2"
   },
@@ -40,6 +42,7 @@
     "@stylistic/eslint-plugin": "^5.9.0",
     "@vitest/eslint-plugin": "^1.6.14",
     "dotenv-cli": "^11.0.0",
+    "vue": "~2.7.16",
     "eslint": "^10.2.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-cypress": "^6.3.0",
@@ -58,7 +61,8 @@
     "vue-eslint-parser": "^10.4.0"
   },
   "resolutions": {
-    "fast-glob": "3.3.3"
+    "fast-glob": "3.3.3",
+    "@better-auth/core": "1.6.13"
   },
   "engines": {
     "node": ">=22.18.0"
