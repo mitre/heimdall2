@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Profile } from '@node-saml/passport-saml';
 import { Strategy } from '@node-saml/passport-saml';
@@ -6,6 +6,7 @@ import winston from 'winston';
 import { ConfigService } from '../config/config.service';
 import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
+import { getRequiredClaim } from './resolve-claim';
 
 function samlBooleanConfigValue(value: string | undefined): boolean | undefined {
   const normalizedValue = value?.trim().toLowerCase();
@@ -18,11 +19,6 @@ function samlBooleanConfigValue(value: string | undefined): boolean | undefined 
   }
 
   return normalizedValue === 'true';
-}
-
-function samlClaimAttribute(profile: Profile, attributeName: string): string | undefined {
-  const attributeValue = Reflect.get(profile, attributeName);
-  return typeof attributeValue === 'string' ? attributeValue : undefined;
 }
 
 @Injectable()
@@ -63,20 +59,23 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
   async validate(profile: Profile): Promise<User> {
     this.logger.debug('in saml strategy file');
     this.logger.debug(JSON.stringify(profile, null, 2));
-    const emailAttribute = this.configService.get('SAML_EMAIL_ATTRIBUTE') || 'email';
-    const firstNameAttribute = this.configService.get('SAML_FIRST_NAME_ATTRIBUTE') || 'firstName';
-    const lastNameAttribute = this.configService.get('SAML_LAST_NAME_ATTRIBUTE') || 'lastName';
-    const email = samlClaimAttribute(profile, emailAttribute);
-    const firstName = samlClaimAttribute(profile, firstNameAttribute);
-    const lastName = samlClaimAttribute(profile, lastNameAttribute);
-    if (email && email.length > 0) {
-      return this.authnService.validateOrCreateUser(
-        email,
-        firstName,
-        lastName,
-        'saml',
-      );
-    }
-    throw new UnauthorizedException('Incorrect Username or Password');
+    return this.authnService.validateOrCreateUser(
+      getRequiredClaim(
+        profile,
+        'email',
+        this.configService.get('SAML_EMAIL_ATTRIBUTE'),
+      ),
+      getRequiredClaim(
+        profile,
+        'firstName',
+        this.configService.get('SAML_FIRST_NAME_ATTRIBUTE'),
+      ),
+      getRequiredClaim(
+        profile,
+        'lastName',
+        this.configService.get('SAML_LAST_NAME_ATTRIBUTE'),
+      ),
+      'saml',
+    );
   }
 }
