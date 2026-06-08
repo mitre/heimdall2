@@ -7,12 +7,6 @@ import { ConfigService } from '../config/config.service';
 import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
 
-type SAMLProfile = Profile & {
-  email: string;
-  firstName: string;
-  lastName: string;
-};
-
 function samlBooleanConfigValue(value: string | undefined): boolean | undefined {
   const normalizedValue = value?.trim().toLowerCase();
   if (!normalizedValue) {
@@ -26,7 +20,7 @@ function samlBooleanConfigValue(value: string | undefined): boolean | undefined 
   return normalizedValue === 'true';
 }
 
-function samlClaimAttribute(profile: SAMLProfile, attributeName: string): string | undefined {
+function samlClaimAttribute(profile: Profile, attributeName: string): string | undefined {
   const attributeValue = Reflect.get(profile, attributeName);
   return typeof attributeValue === 'string' ? attributeValue : undefined;
 }
@@ -66,7 +60,7 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
     });
   }
 
-  async validate(profile: SAMLProfile): Promise<User> {
+  async validate(profile: Profile): Promise<User> {
     this.logger.debug('in saml strategy file');
     this.logger.debug(JSON.stringify(profile, null, 2));
     const emailAttribute = this.configService.get('SAML_EMAIL_ATTRIBUTE') || 'email';
