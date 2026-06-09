@@ -80,7 +80,7 @@
     "vue-file-agent": "^1.7.3",
     "vue-prism-component": "^1.2.0",
     "vue-property-decorator": "^9.0.0",
-    "vue-router": "~3.6.5",
+    "vue-router": "~5.1.0",
     "vue-svg-inline-loader": "^2.0.0",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "~2.7.16",
