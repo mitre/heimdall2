@@ -5272,9 +5272,9 @@ anymatch@~3.1.2:
     picomatch "^2.0.4"
 
 apexcharts@^5.3.5:
-  version "5.12.0"
-  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-5.12.0.tgz#3dd77e797c895a2dcd7f1eb078de815d7f19cefb"
-  integrity sha512-vNCw62M5rhVg09FHFCL/ztpH7VlTOF8/+lWLUVjBdQffIAgQaxtyDGfojCyYoZHM3Hh17srWwz6rrD/XzblRSw==
+  version "5.15.0"
+  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-5.15.0.tgz#18e682b87923ae277a545169ee97fa675d7a9124"
+  integrity sha512-ATswoiZi8wynKcwqf0eyE0Is5mBQoDpxZN3PlSVy41OrD+9GMBp2kZQRjyGK+5/j0GFjHkuAd7GKOrt5VMoPrw==
 
 apollo-datasource@^3.3.2:
   version "3.3.2"
