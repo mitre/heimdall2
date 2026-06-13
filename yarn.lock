@@ -8768,9 +8768,9 @@ eslint-plugin-regexp@^3.1.0:
     scslre "^0.3.0"
 
 eslint-plugin-security@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-security/-/eslint-plugin-security-4.0.0.tgz#f6ffde295d8911f032d0e460bc3a9ec47ed68fa6"
-  integrity sha512-tfuQT8K/Li1ZxhFzyD8wPIKtlzZxqBcPr9q0jFMQ77wWAbKBVEhaMPVQRTMTvCMUDhwBe5vPVqQPwAGk/ASfxQ==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-security/-/eslint-plugin-security-4.0.1.tgz#e54202ab678f6c456efdd11b222db1d70842728c"
+  integrity sha512-/lZCkOxPOWaf1jXAqgICrS8St3BMBccIPvhOSUYuV6VCr1o5nFVG998FnTLt6w2Nxb8Uo0nM8fzmnhp+GY/aEg==
   dependencies:
     safe-regex "^2.1.1"
 
