@@ -15,7 +15,7 @@
                   caveat ||
                   justification ||
                   rationale ||
-                  comments ||
+                  localComments ||
                   errorMessage
                 "
               >
@@ -38,7 +38,10 @@
                   <br />
                 </span>
                 <span v-if="rationale">Rationale: {{ rationale }}<br /></span>
-                <span v-if="comments">Comments: {{ comments }}<br /></span>
+                <span v-if="localComments">
+                  Comments: {{ localComments }}
+                  <br />
+                </span>
                 <v-divider />
                 <br />
               </div>
@@ -61,7 +64,17 @@
                 <v-row :key="'tab' + index" :class="zebra(index)">
                   <v-col cols="12" :class="detail.class">
                     <h3>{{ detail.name }}:</h3>
-                    <h4>
+                    <v-textarea
+                      v-if="detail.editable"
+                      v-model="localComments"
+                      auto-grow
+                      dense
+                      hide-details
+                      outlined
+                      rows="3"
+                      @input="updateComments"
+                    />
+                    <h4 v-else>
                       <!-- eslint-disable vue/no-v-html -->
                       <pre class="mono" v-html="sanitize_html(detail.value)" />
                       <!-- eslint-enable vue/no-v-html -->
@@ -91,6 +104,7 @@
 <script lang="ts">
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
+import {InspecDataModule} from '@/store/data_store';
 import {ContextualizedControl} from 'inspecjs';
 import * as _ from 'lodash';
 //TODO: add line numbers
@@ -108,7 +122,15 @@ interface Detail {
   name: string;
   value: string;
   class?: string;
+  editable?: boolean;
 }
+
+type EditableDetail = {
+  value: string;
+  editable: true;
+};
+
+type DetailValue = string | number | null | undefined | EditableDetail;
 
 @Component({
   components: {
@@ -122,6 +144,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   readonly control!: ContextualizedControl;
 
   localTab = this.tab;
+  localComments = this.comments;
 
   @Watch('tab')
   onTabChanged(newTab?: string, _oldVal?: string) {
@@ -195,8 +218,13 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     return this.control.hdf.descriptions.justification;
   }
 
-  get comments(): string | undefined {
-    return this.control.hdf.descriptions.comments;
+  get comments(): string {
+    return this.control.hdf.descriptions.comments ?? '';
+  }
+
+  updateComments(comments: string) {
+    this.localComments = comments;
+    InspecDataModule.updateControlComments({comments, control: this.control});
   }
 
   get errorMessage(): string {
@@ -206,13 +234,17 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   get details(): Detail[] {
-    const detailsMap = new Map();
+    const detailsMap = new Map<string, DetailValue>();
 
     detailsMap.set('Control', this.control.data.id);
     detailsMap.set('Title', this.control.data.title);
     detailsMap.set('Caveat', this.control.hdf.descriptions.caveat);
     detailsMap.set('Desc', this.control.data.desc);
     detailsMap.set('Rationale', this.control.hdf.descriptions.rationale);
+    detailsMap.set('Comments', {
+      editable: true,
+      value: this.localComments
+    });
     // default to showing severity tag, otherwise show the computed severity (based on impact or severityoverride)
     detailsMap.set(
       'Severity',
@@ -270,7 +302,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     });
 
     for (const prop in this.control.hdf.descriptions) {
-      if (!detailsMap.has(_.capitalize(prop))) {
+      if (prop !== 'comments' && !detailsMap.has(_.capitalize(prop))) {
         detailsMap.set(_.startCase(prop), this.control.hdf.descriptions[prop]);
       }
     }
@@ -285,9 +317,15 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       );
     }
 
-    return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
-      (v) => v.value !== undefined
-    );
+    return Array.from(detailsMap, ([name, value]) => ({name, value}))
+      .filter((detail) => detail.value !== undefined)
+      .map((detail): Detail => {
+        const {name, value} = detail;
+        if (typeof value === 'object' && value !== null && 'value' in value) {
+          return {editable: value.editable, name, value: value.value};
+        }
+        return {name, value: value === null ? '' : String(value)};
+      });
   }
 
   //for zebra background
