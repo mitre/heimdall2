@@ -127,7 +127,8 @@
 <script lang="ts">
 import ServerMixin from '@/mixins/ServerMixin';
 import {AppInfoModule} from '@/store/app_info';
-import {FileID, InspecIntakeModule} from '@/store/report_intake';
+import type {FileID} from '@/store/report_intake';
+import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';

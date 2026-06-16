@@ -90,8 +90,9 @@
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {FilteredDataModule} from '@/store/data_filters';
-import {FileID} from '@/store/report_intake';
-import {FromHDFToSplunkMapper, SplunkConfig} from '@mitre/hdf-converters';
+import type {FileID} from '@/store/report_intake';
+import type {SplunkConfig} from '@mitre/hdf-converters';
+import {FromHDFToSplunkMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Logger} from 'winston';

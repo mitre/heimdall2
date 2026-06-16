@@ -52,7 +52,8 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {Auth, fetchS3File} from '@/utilities/aws_util';
+import type {Auth} from '@/utilities/aws_util';
+import {fetchS3File} from '@/utilities/aws_util';
 import {LocalStorageVal} from '@/utilities/helper_util';
 
 // Caches the bucket name

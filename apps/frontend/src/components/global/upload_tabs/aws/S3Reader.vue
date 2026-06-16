@@ -63,7 +63,7 @@ import Component from 'vue-class-component';
 import AuthStepBasic from '@/components/global/upload_tabs/aws/AuthStepBasic.vue';
 import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {FileID} from '@/store/report_intake';
+import type {FileID} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {
   Auth,

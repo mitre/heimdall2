@@ -1,5 +1,6 @@
 import Store from '@/store/store';
-import {Severity, severities} from 'inspecjs';
+import type {Severity} from 'inspecjs';
+import {severities} from 'inspecjs';
 import {parse} from 'search-query-parser';
 import {
   Action,
@@ -8,7 +9,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {ExtendedControlStatus} from './data_filters';
+import type {ExtendedControlStatus} from './data_filters';
 
 export interface ISearchState {
   searchTerm: string;

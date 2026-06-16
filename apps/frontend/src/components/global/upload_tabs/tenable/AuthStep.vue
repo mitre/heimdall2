@@ -55,7 +55,8 @@ import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {AuthInfo, TenableUtil} from '@/utilities/tenable_util';
+import type {AuthInfo} from '@/utilities/tenable_util';
+import {TenableUtil} from '@/utilities/tenable_util';
 import {requireFieldRule} from '@/utilities/upload_util';
 
 import Vue from 'vue';

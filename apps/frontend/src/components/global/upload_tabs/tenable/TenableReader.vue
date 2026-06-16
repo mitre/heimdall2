@@ -68,12 +68,12 @@
   </v-stepper>
 </template>
 <script lang="ts">
-import {FileID} from '@/store/report_intake';
+import type {FileID} from '@/store/report_intake';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
-import {AuthInfo} from '@/utilities/tenable_util';
+import type {AuthInfo} from '@/utilities/tenable_util';
 
 @Component({
   components: {

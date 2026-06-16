@@ -107,7 +107,7 @@ import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import {
+import type {
   IAddUserToGroup,
   ICreateGroup,
   IGroup,

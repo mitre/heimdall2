@@ -212,7 +212,8 @@ import UploadButton from '@/components/generic/UploadButton.vue';
 import Modal from '@/components/global/Modal.vue';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import type {Filter} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
@@ -232,7 +233,7 @@ import {
   get_eval_start_time
 } from '@/utilities/delta_util';
 import Base from '@/views/Base.vue';
-import {IEvaluation} from '@heimdall/common/interfaces';
+import type {IEvaluation} from '@heimdall/common/interfaces';
 import {ControlStatus} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';

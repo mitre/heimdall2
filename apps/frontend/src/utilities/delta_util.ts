@@ -2,9 +2,9 @@
  * Provides utlities for comparing executions
  */
 
-import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import type {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {calculateCompliance} from '@/store/status_counts';
-import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
+import type {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
 import {DateTime} from 'luxon';
 
 export const NOT_SELECTED = 'not selected';

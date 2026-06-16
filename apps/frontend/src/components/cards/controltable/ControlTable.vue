@@ -148,11 +148,13 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import type {Filter} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {HeightsModule} from '@/store/heights';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {control_unique_key} from '@/utilities/format_util';
-import {ContextualizedControl, severities} from 'inspecjs';
+import type {ContextualizedControl} from 'inspecjs';
+import {severities} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';

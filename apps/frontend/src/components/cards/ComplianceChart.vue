@@ -25,7 +25,7 @@ import {ApexOptions} from 'apexcharts';
 import VueApexCharts from 'vue-apexcharts';
 
 import {ColorHackModule} from '@/store/color_hack';
-import {Filter} from '@/store/data_filters';
+import type {Filter} from '@/store/data_filters';
 import {calculateCompliance} from '@/store/status_counts';
 import {formatCompliance} from '@mitre/hdf-converters';
 

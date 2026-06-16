@@ -55,7 +55,8 @@
 <script lang="ts">
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {FileMetaData, SplunkConfig, SplunkMapper} from '@mitre/hdf-converters';
+import type {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
+import {SplunkMapper} from '@mitre/hdf-converters';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';

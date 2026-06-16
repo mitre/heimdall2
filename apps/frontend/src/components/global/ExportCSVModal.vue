@@ -57,15 +57,17 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import type {Filter} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
-import {ContextualizedControl, ExecJSON, HDFControlSegment} from 'inspecjs';
+import type {ContextualizedControl, HDFControlSegment} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
-import {EvaluationFile, ProfileFile} from '../../store/report_intake';
+import type {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {getDescription} from '../../utilities/helper_util';
 import {stringify} from 'csv-stringify/sync';
 

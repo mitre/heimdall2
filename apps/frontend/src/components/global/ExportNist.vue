@@ -15,9 +15,10 @@
 
 <script lang="ts">
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import type {Filter} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
-import {FileID} from '@/store/report_intake';
+import type {FileID} from '@/store/report_intake';
 import {s2ab} from '@/utilities/export_util';
 import {saveAs} from 'file-saver';
 import {NistControl} from 'inspecjs';

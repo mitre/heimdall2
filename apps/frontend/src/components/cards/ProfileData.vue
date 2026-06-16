@@ -56,7 +56,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import {profile_unique_key} from '@/utilities/format_util';
-import {ContextualizedProfile} from 'inspecjs';
+import type {ContextualizedProfile} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';

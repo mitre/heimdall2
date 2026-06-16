@@ -87,11 +87,11 @@ import RefreshButton from '@/components/generic/RefreshButton.vue';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import {FileID} from '@/store/report_intake';
+import type {FileID} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
 import {SpinnerModule} from '@/store/spinner';
-import {IEvalPaginationParams, IEvaluation} from '@heimdall/common/interfaces';
+import type {IEvalPaginationParams, IEvaluation} from '@heimdall/common/interfaces';
 import {Prop, Watch} from 'vue-property-decorator';
 import Component, {mixins} from 'vue-class-component';
 

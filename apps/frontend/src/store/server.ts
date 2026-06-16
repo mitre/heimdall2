@@ -1,6 +1,6 @@
 import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {
+import type {
   ISlimUser,
   IStartupSettings,
   IUpdateUser,

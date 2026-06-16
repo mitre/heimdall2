@@ -1,6 +1,6 @@
 import {SpinnerModule} from '@/store/spinner';
 import Store from '@/store/store';
-import {
+import type {
   ICreateEvaluationTag,
   IEvalPaginationParams,
   IEvaluation,
@@ -17,13 +17,13 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {InspecDataModule} from './data_store';
-import {
+import type {
   EvaluationFile,
   FileID,
   FileLoadOptions,
-  InspecIntakeModule,
   ProfileFile
 } from './report_intake';
+import {InspecIntakeModule} from './report_intake';
 import {SnackbarModule} from './snackbar';
 
 @Module({

@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {IGroup} from '@heimdall/common/interfaces';
+import type {IGroup} from '@heimdall/common/interfaces';
 import axios, {AxiosResponse} from 'axios';
 import {
   Action,

@@ -4,7 +4,7 @@
 
 import {Trinary} from '@/enums/Trinary';
 import {InspecDataModule} from '@/store/data_store';
-import {
+import type {
   FileID,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile

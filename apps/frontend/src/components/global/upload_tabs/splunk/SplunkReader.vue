@@ -71,8 +71,8 @@
 </template>
 
 <script lang="ts">
-import {FileID} from '@/store/report_intake';
-import {SplunkConfigNoIndex} from '@mitre/hdf-converters';
+import type {FileID} from '@/store/report_intake';
+import type {SplunkConfigNoIndex} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import AuthStep from './AuthStep.vue';

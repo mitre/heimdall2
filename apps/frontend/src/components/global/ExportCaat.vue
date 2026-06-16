@@ -21,9 +21,10 @@ import {FromHDFToCAATMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {Filter, FilteredDataModule} from '../../store/data_filters';
+import type {Filter} from '../../store/data_filters';
+import {FilteredDataModule} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
-import {EvaluationFile} from '../../store/report_intake';
+import type {EvaluationFile} from '../../store/report_intake';
 
 @Component({
   components: {

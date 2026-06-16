@@ -34,7 +34,8 @@
 </template>
 
 <script lang="ts">
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import type {Filter} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';

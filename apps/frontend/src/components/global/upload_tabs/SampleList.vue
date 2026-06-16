@@ -126,7 +126,8 @@
 <script lang="ts">
 import {SnackbarModule} from '@/store/snackbar';
 import {SpinnerModule} from '@/store/spinner';
-import {FileID, InspecIntakeModule} from '@/store/report_intake';
+import type {FileID} from '@/store/report_intake';
+import {InspecIntakeModule} from '@/store/report_intake';
 import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';

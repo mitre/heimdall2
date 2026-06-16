@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {ExtendedControlStatus, Filter} from '@/store/data_filters';
+import type {ExtendedControlStatus, Filter} from '@/store/data_filters';
 import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
 import Vue from 'vue';

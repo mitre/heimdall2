@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import {is_leaf, TreemapNode, TreemapNodeLeaf} from '@/utilities/treemap_util';
-import {HierarchyRectangularNode} from 'd3-hierarchy';
+import type {HierarchyRectangularNode} from 'd3-hierarchy';
 import {ScaleLinear} from 'd3-scale';
 import Vue from 'vue';
 import Component from 'vue-class-component';

@@ -299,8 +299,8 @@ import {
 import {SearchModule} from '@/store/search';
 import {ServerModule} from '@/store/server';
 import Base from '@/views/Base.vue';
-import {IEvaluation} from '@heimdall/common/interfaces';
-import {Severity} from 'inspecjs';
+import type {IEvaluation} from '@heimdall/common/interfaces';
+import type {Severity} from 'inspecjs';
 import {capitalize} from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';

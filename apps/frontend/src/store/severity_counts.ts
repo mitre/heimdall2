@@ -9,7 +9,7 @@ import {
   filter_cache_key
 } from '@/store/data_filters';
 import Store from '@/store/store';
-import {Severity} from 'inspecjs';
+import type {Severity} from 'inspecjs';
 import {LRUCache} from 'lru-cache';
 import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 

@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import {ExtendedControlStatus, Filter} from '@/store/data_filters';
+import type {ExtendedControlStatus, Filter} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import Vue from 'vue';
 import Component from 'vue-class-component';

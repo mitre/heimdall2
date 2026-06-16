@@ -84,7 +84,8 @@
 import {InspecIntakeModule, FileLoadOptions} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {FileMetaData} from '@mitre/hdf-converters';
-import {AuthInfo, ScanResults, TenableUtil} from '@/utilities/tenable_util';
+import type {AuthInfo, ScanResults} from '@/utilities/tenable_util';
+import {TenableUtil} from '@/utilities/tenable_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';

@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import {IStatistics} from '@heimdall/common/interfaces';
+import type {IStatistics} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import {Component} from 'vue-property-decorator';

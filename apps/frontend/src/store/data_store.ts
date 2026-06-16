@@ -2,7 +2,7 @@
  * Tracks uploaded files, and their parsed contents
  */
 
-import {
+import type {
   EvaluationFile,
   FileID,
   ProfileFile,

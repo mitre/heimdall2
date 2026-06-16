@@ -73,7 +73,7 @@
 <script lang="ts">
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
 import {Trinary} from '@/enums/Trinary';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import type {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component({

@@ -7,7 +7,7 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {ContextualizedControl} from 'inspecjs';
+import type {ContextualizedControl} from 'inspecjs';
 
 export function execution_unique_key(
   exec: Readonly<SourcedContextualizedEvaluation>

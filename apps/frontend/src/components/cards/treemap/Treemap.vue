@@ -36,7 +36,8 @@
 <script lang="ts">
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 import {ColorHackModule} from '@/store/color_hack';
-import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
+import type {Filter, TreeMapState} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {compareArrays} from '@/utilities/helper_util';
 import {
   build_nist_tree_map,
@@ -44,7 +45,8 @@ import {
   is_parent,
   TreemapNode
 } from '@/utilities/treemap_util';
-import {HierarchyRectangularNode, treemap} from 'd3-hierarchy';
+import type {HierarchyRectangularNode} from 'd3-hierarchy';
+import {treemap} from 'd3-hierarchy';
 import {scaleLinear} from 'd3-scale';
 import Vue from 'vue';
 import Component from 'vue-class-component';

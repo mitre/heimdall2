@@ -44,9 +44,10 @@
 <script lang="ts">
 import DeltaView from '@/components/cards/comparison/DeltaView.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import {FileID} from '@/store/report_intake';
-import {ControlDelta, ControlSeries} from '@/utilities/delta_util';
-import {ContextualizedControl, HDFControl} from 'inspecjs';
+import type {FileID} from '@/store/report_intake';
+import type {ControlSeries} from '@/utilities/delta_util';
+import {ControlDelta} from '@/utilities/delta_util';
+import type {ContextualizedControl, HDFControl} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
