@@ -653,11 +653,10 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   }
 
   async deleteItemConfirm(): Promise<void> {
-    EvaluationModule.deleteEvaluation(this.activeItem).then(async () => {
+    EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
       SnackbarModule.notify('Deleted evaluation successfully.');
       this.updateEvaluations();
-      // Remove the file from the visualization panel if it is loaded.
-      const fileId = await InspecDataModule.loadedFileIsForDatabaseIds(
+      const fileId = InspecDataModule.fileIdForDatabaseId(
         Number(this.activeItem.id)
       );
       if (FilteredDataModule.selected_file_ids.includes(fileId)) {

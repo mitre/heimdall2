@@ -175,7 +175,7 @@ export class Evaluation extends VuexModule {
 
   @Action
   async removeEvaluation(fileId: FileID) {
-    const dbId = await InspecDataModule.loadedDatabaseIdsForFileId(fileId);
+    const dbId = InspecDataModule.databaseIdForFile(fileId);
     const evaluation = this.allEvaluations.find((obj) => {
       return obj.id === dbId;
     });
