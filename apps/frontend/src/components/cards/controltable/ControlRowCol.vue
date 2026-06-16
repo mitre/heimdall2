@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import {HDFControlSegment} from 'inspecjs';
+import type {HDFControlSegment} from 'inspecjs';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 

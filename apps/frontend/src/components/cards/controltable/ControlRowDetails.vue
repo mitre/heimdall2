@@ -91,7 +91,7 @@
 <script lang="ts">
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import {ContextualizedControl} from 'inspecjs';
+import type {ContextualizedControl} from 'inspecjs';
 import * as _ from 'lodash';
 //TODO: add line numbers
 import 'prismjs';

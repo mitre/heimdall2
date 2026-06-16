@@ -1,9 +1,7 @@
-export {
+export type {
   ControlDescription,
   ControlGroup,
   ControlResult,
-  ControlResultStatus,
-  Convert,
   Dependency as ProfileDependency,
   ExecJSON as Execution,
   ExecJSONControl as Control,
@@ -16,4 +14,9 @@ export {
   Statistics,
   SupportedPlatform,
   WaiverData as ControlWaiverData
+} from '../../generated_parsers/v_1_0/exec-json';
+
+export {
+  ControlResultStatus,
+  Convert
 } from '../../generated_parsers/v_1_0/exec-json';

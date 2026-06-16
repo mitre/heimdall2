@@ -25,6 +25,36 @@ const TSCONFIG_PATH = path.resolve(
 module.exports = {
   lintOnSave: 'warning',
   publicPath: '/',
+  css: {
+    loaderOptions: {
+      sass: {
+        sassOptions: {
+          silenceDeprecations: [
+            'import',
+            'global-builtin',
+            'slash-div',
+            'legacy-js-api',
+            'color-functions',
+            'if-function',
+            'mixed-decls'
+          ]
+        }
+      },
+      scss: {
+        sassOptions: {
+          silenceDeprecations: [
+            'import',
+            'global-builtin',
+            'slash-div',
+            'legacy-js-api',
+            'color-functions',
+            'if-function',
+            'mixed-decls'
+          ]
+        }
+      }
+    }
+  },
   devServer: {
     // JWT_SECRET is a required secret for the backend. If it is sourced
     // then it is safe to assume the app is in server mode in development.
