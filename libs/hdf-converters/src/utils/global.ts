@@ -5,7 +5,10 @@ import {
 } from 'inspecjs';
 import * as _ from 'lodash';
 import {createLogger, format, transports} from 'winston';
+import packageJson from '../../package.json';
 import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
+
+export const HeimdallToolsVersion: string = packageJson.version;
 
 // DEFAULT_NIST_TAG is applicable to all automated configuration tests.
 // SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)

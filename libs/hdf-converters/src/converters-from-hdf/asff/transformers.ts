@@ -8,8 +8,7 @@ import {
 } from 'inspecjs';
 import * as _ from 'lodash';
 import moment from 'moment';
-import {version as HeimdallToolsVersion} from '../../../package.json';
-import {getDescription} from '../../utils/global';
+import {getDescription, HeimdallToolsVersion} from '../../utils/global';
 import {IFindingASFF, IOptions} from './asff-types';
 import {
   escapeForwardSlashes,

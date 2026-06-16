@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import {coerce, lt} from 'semver';
 import {ExecJSON} from 'inspecjs';
 import {inspect} from 'util';
-import {version as HeimdallToolsVersion} from '../package.json';
+import {HeimdallToolsVersion} from './utils/global';
 import {
   BaseConverter,
   ILookupPath,

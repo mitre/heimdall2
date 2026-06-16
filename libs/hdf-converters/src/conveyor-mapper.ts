@@ -1,6 +1,6 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../package.json';
+import {HeimdallToolsVersion} from './utils/global';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,

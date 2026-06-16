@@ -5,7 +5,7 @@ import {compare, validate} from 'compare-versions';
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../../package.json';
+import {HeimdallToolsVersion} from '../utils/global';
 import {BaseConverter, ILookupPath, MappedTransform} from '../base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,

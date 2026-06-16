@@ -1,6 +1,6 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../package.json';
+import {HeimdallToolsVersion} from './utils/global';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 
 export class TrufflehogResults {

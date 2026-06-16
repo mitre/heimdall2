@@ -12,7 +12,7 @@ import {NodeHttpHandler} from '@smithy/node-http-handler';
 import https from 'https';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../package.json';
+import {HeimdallToolsVersion} from './utils/global';
 import {AwsConfigMapping} from './mappings/AwsConfigMapping';
 
 const NOT_APPLICABLE_MSG =

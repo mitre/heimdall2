@@ -1,7 +1,7 @@
 import {ExecJSON, severities} from 'inspecjs';
 import _ from 'lodash';
 import xmlFormat from 'xml-formatter';
-import {version as HeimdallToolsVersion} from '../../package.json';
+import {HeimdallToolsVersion} from '../utils/global';
 import {
   BaseConverter,
   generateHash,

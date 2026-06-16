@@ -4,7 +4,7 @@ import {
   SecureScoreControlProfile
 } from '@microsoft/microsoft-graph-types';
 import {ExecJSON} from 'inspecjs';
-import {version as HeimdallToolsVersion} from '../package.json';
+import {HeimdallToolsVersion} from './utils/global';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import * as _ from 'lodash';
 import {
