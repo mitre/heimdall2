@@ -22,36 +22,25 @@ const TSCONFIG_PATH = path.resolve(
     : './tsconfig.json'
 );
 
+const sassSilenceDeprecations = [
+  'import',
+  'global-builtin',
+  'slash-div',
+  'legacy-js-api',
+  'color-functions',
+  'if-function'
+];
+
 module.exports = {
   lintOnSave: 'warning',
   publicPath: '/',
   css: {
     loaderOptions: {
       sass: {
-        sassOptions: {
-          silenceDeprecations: [
-            'import',
-            'global-builtin',
-            'slash-div',
-            'legacy-js-api',
-            'color-functions',
-            'if-function',
-            'mixed-decls'
-          ]
-        }
+        sassOptions: {silenceDeprecations: sassSilenceDeprecations}
       },
       scss: {
-        sassOptions: {
-          silenceDeprecations: [
-            'import',
-            'global-builtin',
-            'slash-div',
-            'legacy-js-api',
-            'color-functions',
-            'if-function',
-            'mixed-decls'
-          ]
-        }
+        sassOptions: {silenceDeprecations: sassSilenceDeprecations}
       }
     }
   },
@@ -63,7 +52,10 @@ module.exports = {
     // is used here if JWT_SECRET is applied but PORT is undefined
     proxy: process.env.JWT_SECRET
       ? `http://127.0.0.1:${process.env.PORT || 3000}`
-      : ''
+      : '',
+    client: {
+      progress: false
+    }
   },
   outputDir: '../../dist/frontend',
   configureWebpack: {
