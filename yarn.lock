@@ -2416,9 +2416,9 @@
     path-to-regexp "8.4.2"
 
 "@nestjs/testing@^11.0.1":
-  version "11.1.26"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-11.1.26.tgz#f83f9c7a2606db452a12f8cc30f5a554a62556d4"
-  integrity sha512-PNf/TSIoF525pb3O9bu06S5QFWl4gArngbjI6yRFKZrF7d85vGjleVkgVVbw879Y95EYDzIS3eel6YlaY4TGFw==
+  version "11.1.27"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-11.1.27.tgz#1aeb3535d8965753b42e9d931848456f70f51e5d"
+  integrity sha512-I35po13UHZZeGenLWJ3QYwh77RsLau5RcFKWBZ4waVHeARpwjtC7v7n7lGh98swLQdGmZgTnbvKaZ0B5dsUIKA==
   dependencies:
     tslib "2.8.1"
 
