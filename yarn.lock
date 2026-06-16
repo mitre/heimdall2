@@ -2432,10 +2432,10 @@
   dependencies:
     tslib "2.8.1"
 
-"@nodable/entities@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.npmjs.org/@nodable/entities/-/entities-2.1.0.tgz#f543e5c6446720d4cf9e498a83019dd159973bc2"
-  integrity sha512-nyT7T3nbMyBI/lvr6L5TyWbFJAI9FTgVRakNoBqCD+PmID8DzFrrNdLLtHMwMszOtqZa8PAOV24ZqDnQrhQINA==
+"@nodable/entities@^2.1.0", "@nodable/entities@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@nodable/entities/-/entities-2.2.0.tgz#a1d45a992b022591b1c2b03a77935c939375b642"
+  integrity sha512-9uGyhaQavEUMC8AIddIjau4NsnsXhou+j5sBAGojCM1oxmQpVKTWR/9JxABD6UAv12vpIms55fPZKFQEhG6uBg==
 
 "@node-ipc/js-queue@2.0.3":
   version "2.0.3"
@@ -5301,6 +5301,11 @@ anymatch@~3.1.2:
   dependencies:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
+
+anynum@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/anynum/-/anynum-1.0.0.tgz#afe3f3a78c6621fbdf1e107154fac01eef711cc5"
+  integrity sha512-xjR9/zBVnUOP6ztMIIgShjsxui80nQUQH+5xJnvrYLs+90bF25/KJqaAi8mk+B4RDtX1Nspi6fmp4YTEts8SfA==
 
 apexcharts@^5.3.5:
   version "5.12.0"
@@ -9383,15 +9388,16 @@ fast-xml-parser@5.7.3:
     path-expression-matcher "^1.5.0"
     strnum "^2.2.3"
 
-fast-xml-parser@5.8.0:
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.8.0.tgz#64d71f0f8d4bf23621dffd762aef7e98c1884fc1"
-  integrity sha512-6bIM7fsJxeo3uXv7OncQYsBAMPJ7V16Slahl/6M98C/i2q+vB1+4a0MtrvYwDFEUrwDSbAmeLDRXsOBwrL7yAg==
+fast-xml-parser@5.9.0:
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.9.0.tgz#25d54dbb841ad630e8810b343a6ce76d6044c04d"
+  integrity sha512-duBuXbyIhEeNO4GjFuVqr0nF047oNwr18aum+zJyqo0MUG/n7Afgs3Qv3D6VN3ONedUKxiuFlPiMGIa0Z11chA==
   dependencies:
-    "@nodable/entities" "^2.1.0"
+    "@nodable/entities" "^2.2.0"
     fast-xml-builder "^1.2.0"
+    is-unsafe "^1.0.1"
     path-expression-matcher "^1.5.0"
-    strnum "^2.3.0"
+    strnum "^2.4.0"
     xml-naming "^0.1.0"
 
 fastq@^1.6.0:
@@ -11375,6 +11381,11 @@ is-unicode-supported@0.1.0, is-unicode-supported@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/is-unicode-supported/-/is-unicode-supported-0.1.0.tgz#3f26c76a809593b52bfa2ecb5710ed2779b522a7"
   integrity sha512-knxG2q4UC3u8stRGyAVJCOdxFmv5DZiRcdlIaAQXAbSfJya+OhopNotLQrstBhququ4ZpuKbDc/8S6mgXgPFPw==
+
+is-unsafe@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/is-unsafe/-/is-unsafe-1.0.1.tgz#ce89b55dec0034364f5beda41e10481efa8fa317"
+  integrity sha512-CLK2+VdgERgD96EYm5lUQssZYlRg2tkZnbsxZoacmSiRxiFJ4Nk4SzjCl+Ur+v3kXIY9dTIdb3IH22y1mZ56LA==
 
 is-url@^1.2.4:
   version "1.2.4"
@@ -17615,10 +17626,12 @@ strip-outer@^1.0.0:
   dependencies:
     escape-string-regexp "^1.0.2"
 
-strnum@^2.2.3, strnum@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/strnum/-/strnum-2.3.0.tgz#81bfbfef53db8c3217ea62a98c026886ec4a2761"
-  integrity sha512-ums3KNd42PGyx5xaoVTO1mjU1bH3NpY4vsrVlnv9PNGqQj8wd7rJ6nEypLrJ7z5vxK5RP0yMLo6J/Gsm62DI5Q==
+strnum@^2.2.3, strnum@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/strnum/-/strnum-2.4.0.tgz#304881c3299b017855f1934a4ce85bfb60b1ca2a"
+  integrity sha512-sHrVyWWdq28RbhjuJdZsA1SnGRJV6NiXbk6AXBxDOsgAcA+lmpUZCYjOdLBxkXMwis6RRe7dlZt4VlIWFVzkmg==
+  dependencies:
+    anynum "^1.0.0"
 
 strtok3@^10.3.4:
   version "10.3.5"
