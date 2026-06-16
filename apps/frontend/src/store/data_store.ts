@@ -22,8 +22,9 @@ import {
 import {FilteredDataModule} from './data_filters';
 
 export const UNSAVED_CHANGES_MESSAGE =
-  'This file has unsaved comments edits. Export or save the file before ' +
-  'removing it from the loaded results.';
+  'This file has unsaved comments edits. Export the file or save a reviewed ' +
+  'copy where available before removing it from the loaded results or leaving ' +
+  'this page.';
 
 type UpdateControlCommentsPayload = {
   control: ContextualizedControl;

@@ -15,7 +15,6 @@
                   caveat ||
                   justification ||
                   rationale ||
-                  localComments ||
                   errorMessage
                 "
               >
@@ -38,13 +37,20 @@
                   <br />
                 </span>
                 <span v-if="rationale">Rationale: {{ rationale }}<br /></span>
-                <span v-if="localComments">
-                  Comments: {{ localComments }}
-                  <br />
-                </span>
                 <v-divider />
                 <br />
               </div>
+              <h3>Comments:</h3>
+              <v-textarea
+                v-model="localComments"
+                auto-grow
+                class="mb-4"
+                dense
+                hide-details
+                outlined
+                rows="3"
+                @input="updateComments"
+              />
               <!-- eslint-disable-next-line vue/no-v-html -->
               <div v-html="sanitize_html(main_desc)" />
             </div>
