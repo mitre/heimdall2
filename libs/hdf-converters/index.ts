@@ -43,6 +43,7 @@ export * from './src/splunk-mapper';
 export * from './src/trufflehog-mapper';
 export * from './src/twistlock-mapper';
 export * from './src/utils/attestations';
+export * from './src/utils/description-editing';
 export * from './src/utils/compliance';
 export * from './src/utils/fingerprinting';
 export * from './src/utils/result';
