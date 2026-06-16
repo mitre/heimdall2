@@ -7130,7 +7130,7 @@ core-util-is@~1.0.0:
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
   integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
 
-cors@2.8.6, cors@^2.8.5, cors@^2.8.6:
+cors@2.8.6, cors@^2.8.5:
   version "2.8.6"
   resolved "https://registry.npmjs.org/cors/-/cors-2.8.6.tgz#ff5dd69bd95e547503820d29aba4f8faf8dfec96"
   integrity sha512-tJtZBBHA6vjIAaF6EnIaq6laBBP9aq/Y3ouVJjEfoHbRBcHBAHYcMh/w8LDrk2PvIMMq8gmopa5D4V8RmbrxGw==
@@ -9167,7 +9167,7 @@ express-urlrewrite@^1.4.0:
     debug "*"
     path-to-regexp "^1.0.3"
 
-express@5.2.1, express@^5.1.0, express@^5.2.1:
+express@5.2.1, express@^5.1.0:
   version "5.2.1"
   resolved "https://registry.npmjs.org/express/-/express-5.2.1.tgz#8f21d15b6d327f92b4794ecf8cb08a72f956ac04"
   integrity sha512-hIS4idWWai69NezIdRt2xFVofaF4j+6INOpJlVOLDO8zXGpUVEVzIYk12UUi2JzjEzWL3IOAxcTubgz9Po0yXw==
@@ -14195,14 +14195,12 @@ number-is-nan@^1.0.0:
     "@nx/nx-win32-arm64-msvc" "22.7.1"
     "@nx/nx-win32-x64-msvc" "22.7.1"
 
-oauth2-mock-server@^8.0.0:
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-8.2.3.tgz#0e23e51aa5aff737cbc7fdd19e74f4ed6a0c90eb"
-  integrity sha512-Lgem1ZjVYG6NuzJ7J6MC2OchMkJWzwb1SFvwuGunQ1VPmQIU+/ydG3LzgBu/cnFWriYD8ZTd2CQpjHtvcVZy3A==
+oauth2-mock-server@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-9.0.0.tgz#d495785856ae13c579fd357a3c84c8976003418f"
+  integrity sha512-fLOtud91LgWzKkx/vQY9DF6C0YPFdQFfPrpUKK4Czl44+BLA8i9bEBQElsFuOItmYKg15cEem1vUiWGBMSXo/g==
   dependencies:
     basic-auth "^2.0.1"
-    cors "^2.8.6"
-    express "^5.2.1"
     is-plain-obj "^4.1.0"
     jose "^6.2.3"
 
