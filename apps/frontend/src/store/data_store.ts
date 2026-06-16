@@ -94,6 +94,8 @@ export class InspecData extends VuexModule {
    * held in the data store
    */
   get contextualExecutionProfiles(): readonly SourcedContextualizedProfile[] {
+    // Cast is safe: report_intake creates all evaluation profiles as SourcedContextualizedProfile.
+    // Narrowing SourcedContextualizedEvaluation.contains causes circular type reference that breaks module loading.
     return this.contextualExecutions.flatMap(
       (evaluation) => evaluation.contains
     ) as SourcedContextualizedProfile[];
