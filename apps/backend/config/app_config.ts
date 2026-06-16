@@ -1,29 +1,31 @@
+import {Logger} from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 
 export default class AppConfig {
+  private static instance: AppConfig;
+  private readonly logger = new Logger(AppConfig.name);
   private envConfig: {[key: string]: string | undefined};
 
-  constructor() {
-    console.log('Attempting to read configuration file `.env`!');
+  private constructor() {
     try {
       this.envConfig = dotenv.parse(fs.readFileSync('.env'));
-      console.log('Read config!');
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
         this.envConfig = {};
-        // File probably does not exist
-        console.log('Unable to read configuration file `.env`!');
-        console.log('Falling back to environment or undefined values!');
+        this.logger.warn('.env not found, using environment variables only');
       } else {
         throw error;
       }
     }
-    if (this.parseDatabaseUrl()) {
-      console.log(
-        'DATABASE_URL parsed into smaller components (i.e. DATABASE_USER)'
-      );
+    this.parseDatabaseUrl();
+  }
+
+  static getInstance(): AppConfig {
+    if (!AppConfig.instance) {
+      AppConfig.instance = new AppConfig();
     }
+    return AppConfig.instance;
   }
 
   set(key: string, value: string | undefined): void {

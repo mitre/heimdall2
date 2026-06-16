@@ -8,7 +8,7 @@ export class ConfigService {
   public defaultGithubAPIURL = 'https://api.github.com/';
 
   constructor() {
-    this.appConfig = new AppConfig();
+    this.appConfig = AppConfig.getInstance();
   }
 
   public sensitiveKeys = [

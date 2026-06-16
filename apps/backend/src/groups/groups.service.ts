@@ -101,7 +101,7 @@ export class GroupsService {
         )) ||
       owners.length === 0
     ) {
-      const appConfig = new AppConfig();
+      const appConfig = AppConfig.getInstance();
       // If default admin is not found, use admin with lowest ID
       const admin =
         (await this.userModel.findOne({

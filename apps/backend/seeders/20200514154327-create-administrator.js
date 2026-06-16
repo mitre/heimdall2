@@ -14,12 +14,9 @@ module.exports = {
     let envConfig = {};
     try {
       envConfig = dotenv.parse(fs.readFileSync('.env'));
-      console.log('Read config!');
     } catch (error) {
       if (error.code === 'ENOENT') {
-        // File probably does not exist
-        console.log('Unable to read configuration file `.env`!');
-        console.log('Falling back to environment or undefined values!');
+        console.warn('Seeder: .env not found, using environment variables only');
       } else {
         throw error;
       }
