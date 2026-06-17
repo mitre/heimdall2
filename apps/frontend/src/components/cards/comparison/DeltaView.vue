@@ -1,7 +1,10 @@
 <!-- Visualizes a delta between two controls -->
 <template>
   <v-container fluid>
-    <v-row v-if="head_changes" justify="center">
+    <v-row
+      v-if="head_changes"
+      justify="center"
+    >
       <v-col cols="12">
         <span class="font-weight-black"> Metadata changes: </span>
       </v-col>
@@ -16,23 +19,19 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import ChangeItem from '@/components/cards/comparison/ChangeItem.vue';
 import {
   ControlChangeGroup,
   ControlDelta,
-  NOT_SELECTED
+  NOT_SELECTED,
 } from '@/utilities/delta_util';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
 
-@Component({
-  components: {
-    ChangeItem
-  }
-})
+@Component({ components: { ChangeItem } })
 export default class DeltaView extends Vue {
-  @Prop({required: true}) readonly delta!: ControlDelta;
+  @Prop({ required: true }) readonly delta!: ControlDelta;
 
   get head_changes(): boolean {
     for (const change of this.headerChanges.changes) {

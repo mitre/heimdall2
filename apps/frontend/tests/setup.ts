@@ -1,5 +1,6 @@
-import {vi} from 'vitest';
-import Vue, {CreateElement} from 'vue';
+import { vi } from 'vitest';
+import type { CreateElement } from 'vue';
+import Vue from 'vue';
 import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
@@ -9,6 +10,6 @@ vi.mock('vue-apexcharts', () => ({
     name: 'ApexChart',
     render(h: CreateElement) {
       return h('div');
-    }
-  }
+    },
+  },
 }));

@@ -1,5 +1,5 @@
 /** does what is says on the tin */
-export const ALL_NIST_FAMILIES: Readonly<string[]> = [
+export const ALL_NIST_FAMILIES: readonly string[] = [
   'AC',
   'AP',
   'AR',
@@ -26,10 +26,10 @@ export const ALL_NIST_FAMILIES: Readonly<string[]> = [
   'SI',
   'TR',
   'UL',
-  'UM' // We added this - it is not official
+  'UM', // We added this - it is not official
 ];
 
-export const ALL_NIST_CONTROL_NUMBERS: Readonly<string[]> = [
+export const ALL_NIST_CONTROL_NUMBERS: readonly string[] = [
   'UM-1', // We added this - it is not official
   'AC-1',
   'AC-10',
@@ -1806,5 +1806,5 @@ export const ALL_NIST_CONTROL_NUMBERS: Readonly<string[]> = [
   'UL-2a.',
   'UL-2b.',
   'UL-2c.',
-  'UL-2d.'
+  'UL-2d.',
 ];

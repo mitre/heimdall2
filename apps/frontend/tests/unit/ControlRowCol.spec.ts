@@ -1,9 +1,10 @@
-import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
-import {mount, Wrapper} from '@vue/test-utils';
-import {beforeEach, describe, expect, it} from 'vitest';
-import Vue from 'vue';
+import type { Wrapper } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it } from 'vitest';
+import type Vue from 'vue';
 import Vuetify from 'vuetify';
-import {addElemWithDataAppToBody} from '../util/testingUtils';
+import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
+import { addElemWithDataAppToBody } from '../util/testingUtils';
 
 addElemWithDataAppToBody();
 
@@ -13,16 +14,16 @@ describe('The Topbar', () => {
 
   beforeEach(() => {
     wrapper = mount(ControlRowCol, {
-      vuetify,
       propsData: {
-        statusCode: 'passed',
         result: {
-          status: 'passed',
-          message: 'This is the message',
           code_desc: 'This is the code description',
-          startTime: '2020-01-01T12:12:12+05:00'
-        }
-      }
+          message: 'This is the message',
+          startTime: '2020-01-01T12:12:12+05:00',
+          status: 'passed',
+        },
+        statusCode: 'passed',
+      },
+      vuetify,
     });
   });
 

@@ -9,7 +9,7 @@
         />
         <v-btn
           title="Query the S3 bucket"
-          :disabled="formBucketName.length < 1"
+          :disabled="formBucketName.length === 0"
           class="fill-height pa-0"
           @click="load"
         >
@@ -18,10 +18,13 @@
       </div>
 
       <v-list :two-line="true">
-        <v-list-item v-if="files.length === 0"
-          >No items found! Try different terms?</v-list-item
+        <v-list-item v-if="files.length === 0">
+          No items found! Try different terms?
+        </v-list-item>
+        <v-list-item
+          v-for="(val, index) in files"
+          :key="val.Key"
         >
-        <v-list-item v-for="(val, index) in files" :key="val.Key">
           <v-list-item-content>
             <!-- Title: The item key -->
             <v-list-item-title>{{ val.Key }}</v-list-item-title>
@@ -32,13 +35,21 @@
           </v-list-item-content>
           <!-- Action: Click to add -->
           <v-list-item-action>
-            <v-btn title="Load into Heimdall" icon @click="loadFile(index)">
+            <v-btn
+              title="Load into Heimdall"
+              icon
+              @click="loadFile(index)"
+            >
               <v-icon>mdi-plus-circle</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
       </v-list>
-      <v-btn color="red" class="my-2 mr-3" @click="$emit('exit-list')">
+      <v-btn
+        color="red"
+        class="my-2 mr-3"
+        @click="$emit('exit-list')"
+      >
         Cancel
       </v-btn>
     </div>
@@ -46,28 +57,32 @@
 </template>
 
 <script lang="ts">
-import {_Object} from '@aws-sdk/client-s3';
+import { _Object } from '@aws-sdk/client-s3';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {InspecIntakeModule} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
-import type {Auth} from '@/utilities/aws_util';
-import {fetchS3File} from '@/utilities/aws_util';
-import {LocalStorageVal} from '@/utilities/helper_util';
+import { Prop } from 'vue-property-decorator';
+import { InspecIntakeModule } from '@/store/report_intake';
+import { SnackbarModule } from '@/store/snackbar';
+import type { Auth } from '@/utilities/aws_util';
+import { fetchS3File } from '@/utilities/aws_util';
+import { LocalStorageVal } from '@/utilities/helper_util';
 
 // Caches the bucket name
 const localBucketName = new LocalStorageVal<string>('aws_bucket_name');
 
-@Component({
-  components: {}
-})
+@Component({ components: {} })
 export default class FileList extends Vue {
-  @Prop({type: Object}) readonly auth!: Auth;
-  @Prop({type: Array}) readonly files!: _Object[];
+  @Prop({ type: Object }) readonly auth!: Auth;
+  @Prop({ type: Array }) readonly files!: _Object[];
 
   /** The name written in the form */
   formBucketName = '';
+
+  /** Handles when load button clicked */
+  load() {
+    localBucketName.set(this.formBucketName);
+    this.$emit('load-bucket', this.formBucketName);
+  }
 
   /** On mount, try to look up stored auth info */
   /** Callback for when user selects a file.
@@ -82,29 +97,23 @@ export default class FileList extends Vue {
       (content) => {
         try {
           JSON.parse(content);
-        } catch (parseError) {
+        } catch {
           SnackbarModule.failure(
-            `Selected file: ${file.Key} is not a valid formatted json file.`
+            `Selected file: ${file.Key} is not a valid formatted json file.`,
           );
           return;
         }
         InspecIntakeModule.loadText({
+          filename: file.Key!,
           text: content,
-          filename: file.Key!
-        }).then((uniqueId) => this.$emit('got-files', [uniqueId]));
-      }
+        }).then(uniqueId => this.$emit('got-files', [uniqueId]));
+      },
     );
   }
 
   /** Recalls the last entered bucket name.  */
   mounted() {
     this.formBucketName = localBucketName.getDefault('');
-  }
-
-  /** Handles when load button clicked */
-  load() {
-    localBucketName.set(this.formBucketName);
-    this.$emit('load-bucket', this.formBucketName);
   }
 }
 </script>

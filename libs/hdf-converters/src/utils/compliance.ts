@@ -7,11 +7,11 @@ export const MAX_DECIMAL_PRECISION = 2;
 export function formatCompliance(
   rawCompliance: number,
   showAsPercentage = true,
-  maxDisplayPrecision = MAX_DECIMAL_PRECISION
+  maxDisplayPrecision = MAX_DECIMAL_PRECISION,
 ): string {
-  let truncatedCompliance =
-    Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * rawCompliance) /
-    Math.pow(10, MAX_DECIMAL_PRECISION);
+  let truncatedCompliance
+    = Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * rawCompliance)
+      / Math.pow(10, MAX_DECIMAL_PRECISION);
 
   // Check if calculated compliance is valid
   if (truncatedCompliance < 0) {

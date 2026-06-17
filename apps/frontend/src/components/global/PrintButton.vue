@@ -9,9 +9,14 @@
       <span class="d-none d-md-inline pr-2"> Print </span>
       <v-icon> mdi-printer </v-icon>
     </v-btn>
-    <v-dialog v-model="showingModal" width="580">
+    <v-dialog
+      v-model="showingModal"
+      width="580"
+    >
       <v-card>
-        <v-card-title class="headline"> Print </v-card-title>
+        <v-card-title class="headline">
+          Print
+        </v-card-title>
         <v-card-text>
           <p>
             To print, select Export | Export to HTML. Open the HTML and print.
@@ -20,7 +25,12 @@
         <v-divider />
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="closeModal"> Close </v-btn>
+          <v-btn
+            text
+            @click="closeModal"
+          >
+            Close
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -31,9 +41,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-@Component({
-  components: {}
-})
+@Component({ components: {} })
 export default class PrintButton extends Vue {
   showingModal = false;
   /**

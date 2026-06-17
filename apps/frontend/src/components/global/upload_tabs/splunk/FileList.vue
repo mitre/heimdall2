@@ -11,18 +11,28 @@
         />
       </v-form>
       <div class="d-flex">
-        <v-btn class="ml-5" icon style="cursor: pointer" @click="logout">
-          <v-icon b-tooltip.hover title="Return to login page" color="red"
-            >mdi-logout</v-icon
-          >
+        <v-btn
+          class="ml-5"
+          icon
+          style="cursor: pointer"
+          @click="logout"
+        >
+          <v-icon
+            b-tooltip.hover
+            title="Return to login page"
+            color="red"
+          >mdi-logout</v-icon>
         </v-btn>
-        <v-btn icon style="cursor: pointer" @click="updateSearch">
+        <v-btn
+          icon
+          style="cursor: pointer"
+          @click="updateSearch"
+        >
           <v-icon
             b-tooltip.hover
             title="Request content from the server"
             color="blue"
-            >mdi-refresh</v-icon
-          >
+          >mdi-refresh</v-icon>
         </v-btn>
       </div>
     </div>
@@ -44,7 +54,11 @@
           range.
         </template>
       </v-data-table>
-      <v-btn block class="card-outter" @click="loadResults">
+      <v-btn
+        block
+        class="card-outter"
+        @click="loadResults"
+      >
         Load Selected
         <v-icon class="pl-2"> mdi-file-download</v-icon>
       </v-btn>
@@ -53,48 +67,87 @@
 </template>
 
 <script lang="ts">
-import {InspecIntakeModule} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
-import type {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
-import {SplunkMapper} from '@mitre/hdf-converters';
+import type { FileMetaData, SplunkConfig } from '@mitre/hdf-converters';
+import { SplunkMapper } from '@mitre/hdf-converters';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, Watch} from 'vue-property-decorator';
-import {requireFieldRule} from '@/utilities/upload_util';
+import { Prop, Watch } from 'vue-property-decorator';
+import { InspecIntakeModule } from '@/store/report_intake';
+import { SnackbarModule } from '@/store/snackbar';
+import { requireFieldRule } from '@/utilities/upload_util';
 
 @Component({})
 export default class FileList extends Vue {
-  @Prop({type: Object, required: true}) readonly splunkConfig!: SplunkConfig;
-
-  splunkConverter?: SplunkMapper;
+  awaitingSearch = false;
 
   executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
-  selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
-
-  search = '';
-  awaitingSearch = false;
-  initalSearchDone = false;
-  loading = false;
 
   /** Table info */
   headers = [
     {
+      align: 'start',
+      filterable: true,
       text: 'Filename',
       value: 'filename',
-      filterable: true,
-      align: 'start'
     },
     {
       text: 'Time',
-      value: 'parse_time'
-    }
+      value: 'parse_time',
+    },
   ];
 
   index = '';
 
+  initalSearchDone = false;
+  loading = false;
   // Form required field rules
   reqRule = requireFieldRule;
+  search = '';
+
+  selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+
+  @Prop({ required: true, type: Object }) readonly splunkConfig!: SplunkConfig;
+
+  splunkConverter?: SplunkMapper;
+
+  async loadResults() {
+    this.loading = true;
+    const files = this.selectedExecutions.map(
+      async (execution: Partial<FileMetaData>) => {
+        const hdf = await this.splunkConverter
+          ?.toHdf(execution.guid || '')
+          .catch((error) => {
+            SnackbarModule.failure(error);
+            this.loading = false;
+            throw error;
+          });
+        if (hdf) {
+          return InspecIntakeModule.loadText({
+            filename: _.get(hdf, 'meta.filename') as unknown as string,
+            text: JSON.stringify(hdf),
+          }).catch((error) => {
+            SnackbarModule.failure(String(error));
+          });
+        } else {
+          SnackbarModule.failure('Attempted to load an undefined execution');
+          throw new Error('Attempted to load an undefined execution');
+        }
+      },
+    );
+    await Promise.all(files);
+    this.loading = false;
+    this.$emit('got-files', files);
+  }
+
+  logout() {
+    this.$emit('signOut');
+  }
+
+  async mounted() {
+    this.search = `search index="${this.splunkConfig.index}" meta.subtype="header"`;
+    this.index = this.splunkConfig.index;
+  }
 
   @Watch('search')
   async onUpdateSearch() {
@@ -132,44 +185,6 @@ export default class FileList extends Vue {
       }
     }
     this.loading = false;
-  }
-
-  async mounted() {
-    this.search = `search index="${this.splunkConfig.index}" meta.subtype="header"`;
-    this.index = this.splunkConfig.index;
-  }
-
-  async loadResults() {
-    this.loading = true;
-    const files = this.selectedExecutions.map(
-      async (execution: Partial<FileMetaData>) => {
-        const hdf = await this.splunkConverter
-          ?.toHdf(execution.guid || '')
-          .catch((error) => {
-            SnackbarModule.failure(error);
-            this.loading = false;
-            throw error;
-          });
-        if (hdf) {
-          return InspecIntakeModule.loadText({
-            text: JSON.stringify(hdf),
-            filename: _.get(hdf, 'meta.filename') as unknown as string
-          }).catch((err) => {
-            SnackbarModule.failure(String(err));
-          });
-        } else {
-          SnackbarModule.failure('Attempted to load an undefined execution');
-          throw new Error('Attempted to load an undefined execution');
-        }
-      }
-    );
-    await Promise.all(files);
-    this.loading = false;
-    this.$emit('got-files', files);
-  }
-
-  logout() {
-    this.$emit('signOut');
   }
 }
 </script>

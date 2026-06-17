@@ -16,8 +16,15 @@
         :rules="[reqRule]"
         data-cy="splunkpassword"
       />
-      <v-container style="margin: 0; padding: 0" grid-list-md text-xs-center>
-        <v-layout row wrap>
+      <v-container
+        style="margin: 0; padding: 0"
+        grid-list-md
+        text-xs-center
+      >
+        <v-layout
+          row
+          wrap
+        >
           <v-flex xs10>
             <v-text-field
               v-model="hostname"
@@ -50,24 +57,29 @@
         Login
       </v-btn>
       <v-spacer />
-      <v-btn class="mt-4" @click="$emit('show-help')">
+      <v-btn
+        class="mt-4"
+        @click="$emit('show-help')"
+      >
         Help
-        <v-icon class="ml-2"> mdi-help-circle </v-icon>
+        <v-icon class="ml-2">
+          mdi-help-circle
+        </v-icon>
       </v-btn>
     </v-row>
   </div>
 </template>
 
 <script lang="ts">
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {SnackbarModule} from '@/store/snackbar';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {requireFieldRule} from '@/utilities/upload_util';
-import type {SplunkConfig} from '@mitre/hdf-converters';
-import {checkSplunkCredentials} from '@mitre/hdf-converters';
+import type { SplunkConfig } from '@mitre/hdf-converters';
+import { checkSplunkCredentials } from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import { SnackbarModule } from '@/store/snackbar';
+import { LocalStorageVal } from '@/utilities/helper_util';
+import { requireFieldRule } from '@/utilities/upload_util';
 
 // Our saved fields
 const localUsername = new LocalStorageVal<string>('splunk_username');
@@ -76,20 +88,16 @@ const localSplunk2HDFIndex = new LocalStorageVal<string>('splunk2hdf_index');
 const localHDF2SplunkIndex = new LocalStorageVal<string>('hdf2splunk_index');
 const localHostname = new LocalStorageVal<string>('splunk_hostname');
 
-@Component({
-  components: {
-    FileList
-  }
-})
+@Component({ components: { FileList } })
 export default class AuthStep extends Vue {
-  @Prop({type: String, required: false}) indexToShow?: string;
-  username = '';
-  password = '';
   hostname = '';
   index = '';
-
+  @Prop({ required: false, type: String }) indexToShow?: string;
+  password = '';
   // Form required field rule
   reqRule = requireFieldRule;
+
+  username = '';
 
   async login(): Promise<void> {
     // Check if user has inputted an index
@@ -106,11 +114,11 @@ export default class AuthStep extends Vue {
     const parsedURL = new URL(this.hostname);
     const config: SplunkConfig = {
       host: parsedURL.hostname,
-      username: this.username,
-      password: this.password,
-      port: parseInt(parsedURL.port) || 8089,
       index: this.index,
-      scheme: parsedURL.protocol.split(':')[0] || 'https'
+      password: this.password,
+      port: Number.parseInt(parsedURL.port) || 8089,
+      scheme: parsedURL.protocol.split(':')[0] || 'https',
+      username: this.username,
     };
 
     try {
@@ -128,9 +136,9 @@ export default class AuthStep extends Vue {
       SnackbarModule.failure(
         error instanceof Error
           ? error.message
-          : typeof error === 'string'
+          : (typeof error === 'string'
             ? error
-            : String(error)
+            : String(error)),
       );
     }
   }
@@ -140,11 +148,7 @@ export default class AuthStep extends Vue {
     this.username = localUsername.getDefault('');
     this.password = localPassword.getDefault('');
     this.hostname = localHostname.getDefault('');
-    if (this.indexToShow === undefined) {
-      this.index = localSplunk2HDFIndex.getDefault('*');
-    } else {
-      this.index = localSplunk2HDFIndex.getDefault(this.indexToShow);
-    }
+    this.index = this.indexToShow === undefined ? localSplunk2HDFIndex.getDefault('*') : localSplunk2HDFIndex.getDefault(this.indexToShow);
   }
 }
 </script>

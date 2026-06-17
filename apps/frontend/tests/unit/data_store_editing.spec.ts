@@ -1,5 +1,5 @@
-import {describe, expect, it} from 'vitest';
-import {InspecDataModule, UNSAVED_CHANGES_MESSAGE} from '@/store/data_store';
+import { describe, expect, it } from 'vitest';
+import { InspecDataModule, UNSAVED_CHANGES_MESSAGE } from '@/store/data_store';
 
 describe('data_store editing', () => {
   describe('dirty tracking', () => {
@@ -60,9 +60,7 @@ describe('data_store editing', () => {
     });
 
     it('returns undefined for a control with no associated file', () => {
-      const fakeControl = {
-        sourcedFrom: {sourcedFrom: null, from_file: undefined}
-      } as any;
+      const fakeControl = { sourcedFrom: { from_file: undefined, sourcedFrom: null } } as any;
       expect(InspecDataModule.fileIdForControl(fakeControl)).toBeUndefined();
     });
   });

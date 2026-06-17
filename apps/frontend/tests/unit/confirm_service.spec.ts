@@ -1,11 +1,11 @@
-import {describe, expect, it} from 'vitest';
-import {confirm, resolve, confirmDialogState} from '@/utilities/confirm_service';
+import { describe, expect, it } from 'vitest';
+import { confirm, confirmDialogState, resolve } from '@/utilities/confirm_service';
 
 describe('confirm_service', () => {
   it('confirm() sets visible state and returns a Promise', () => {
     const promise = confirm({
+      message: 'Test message',
       title: 'Test Title',
-      message: 'Test message'
     });
 
     expect(confirmDialogState.visible).toBe(true);
@@ -18,8 +18,8 @@ describe('confirm_service', () => {
 
   it('resolve(true) resolves the promise with true and hides dialog', async () => {
     const promise = confirm({
+      message: 'Are you sure?',
       title: 'Confirm',
-      message: 'Are you sure?'
     });
 
     expect(confirmDialogState.visible).toBe(true);
@@ -33,8 +33,8 @@ describe('confirm_service', () => {
 
   it('resolve(false) resolves the promise with false', async () => {
     const promise = confirm({
+      message: 'Will cancel',
       title: 'Cancel test',
-      message: 'Will cancel'
     });
 
     resolve(false);
@@ -46,10 +46,10 @@ describe('confirm_service', () => {
 
   it('uses custom button text when provided', () => {
     confirm({
-      title: 'Custom',
-      message: 'Custom buttons',
+      cancelText: 'Stay',
       confirmText: 'Discard',
-      cancelText: 'Stay'
+      message: 'Custom buttons',
+      title: 'Custom',
     });
 
     expect(confirmDialogState.confirmText).toBe('Discard');
@@ -60,8 +60,8 @@ describe('confirm_service', () => {
 
   it('defaults button text when not provided', () => {
     confirm({
+      message: 'Default buttons',
       title: 'Defaults',
-      message: 'Default buttons'
     });
 
     expect(confirmDialogState.confirmText).toBe('Confirm');
@@ -71,8 +71,8 @@ describe('confirm_service', () => {
   });
 
   it('second confirm() call supersedes the first (latest wins)', async () => {
-    const first = confirm({title: 'First', message: 'First'});
-    const second = confirm({title: 'Second', message: 'Second'});
+    const first = confirm({ message: 'First', title: 'First' });
+    const second = confirm({ message: 'Second', title: 'Second' });
 
     expect(confirmDialogState.title).toBe('Second');
 

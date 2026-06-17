@@ -40,9 +40,14 @@
         MFA Login
       </v-btn>
       <v-spacer />
-      <v-btn class="my-2" @click="$emit('show-help')">
+      <v-btn
+        class="my-2"
+        @click="$emit('show-help')"
+      >
         Help
-        <v-icon class="ml-2"> mdi-help-circle </v-icon>
+        <v-icon class="ml-2">
+          mdi-help-circle
+        </v-icon>
       </v-btn>
     </v-row>
   </v-stepper-content>
@@ -51,10 +56,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {requireFieldRule} from '@/utilities/upload_util';
+import { LocalStorageVal } from '@/utilities/helper_util';
+import { requireFieldRule } from '@/utilities/upload_util';
 
 /** Localstorage keys */
 const localAccessToken = new LocalStorageVal<string>('aws_s3_access_token');
@@ -66,23 +71,19 @@ const localRegion = new LocalStorageVal<string>('aws_s3_region');
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
  * Emits "got-files" with a list of the unique_ids of the loaded files.
  */
-@Component({
-  components: {
-    FileList
-  }
-})
+@Component({ components: { FileList } })
 export default class S3Reader extends Vue {
-  @Prop({type: String}) readonly accessToken!: string;
-  @Prop({type: String}) readonly secretToken!: string;
-  @Prop({type: String}) readonly region!: string;
+  @Prop({ type: String }) readonly accessToken!: string;
+  @Prop({ type: String }) readonly region!: string;
+  // Form required field rule
+  reqRule = requireFieldRule;
+
+  @Prop({ type: String }) readonly secretToken!: string;
 
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
   valid = false;
-
-  // Form required field rule
-  reqRule = requireFieldRule;
 
   // Callback for change in access token
   change_access_token(token: string) {
@@ -90,15 +91,15 @@ export default class S3Reader extends Vue {
     this.$emit('update:accessToken', token);
   }
 
+  change_region(region: string) {
+    localRegion.set(region);
+    this.$emit('update:region', region);
+  }
+
   // Callback for change in secret token
   change_secret_token(token: string) {
     localSecretToken.set(token);
     this.$emit('update:secretToken', token);
-  }
-
-  change_region(region: string) {
-    localRegion.set(region);
-    this.$emit('update:region', region);
   }
 
   /** On mount, try to look up stored auth info */

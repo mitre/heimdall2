@@ -1,11 +1,11 @@
-import {IUpdateAPIKey} from '@heimdall/common/interfaces';
-import {IsOptional, IsString} from 'class-validator';
+import { IUpdateAPIKey } from '@heimdall/common/interfaces';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateAPIKeyDto implements IUpdateAPIKey {
+  @IsOptional()
   @IsString()
-  readonly name!: string;
+  readonly currentPassword!: string;
 
   @IsString()
-  @IsOptional()
-  readonly currentPassword!: string;
+  readonly name!: string;
 }

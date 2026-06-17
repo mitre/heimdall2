@@ -6,7 +6,10 @@
   >
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-      <v-btn :disabled="!can_clear" @click="clear">
+      <v-btn
+        :disabled="!can_clear"
+        @click="clear"
+      >
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
@@ -14,40 +17,68 @@
       <div class="text-center">
         <v-menu>
           <template #activator="{on, attrs}">
-            <v-btn v-bind="attrs" class="mr-2" v-on="on">
+            <v-btn
+              v-bind="attrs"
+              class="mr-2"
+              v-on="on"
+            >
               <span class="d-none d-md-inline mr-2"> Export </span>
               <v-icon> mdi-file-export </v-icon>
             </v-btn>
           </template>
           <v-list class="py-0">
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item
+              v-if="is_result_view"
+              class="px-0"
+            >
               <ExportCaat :filter="all_filter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item
+              v-if="is_result_view"
+              class="px-0"
+            >
               <ExportNist :filter="all_filter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item
+              v-if="is_result_view"
+              class="px-0"
+            >
               <ExportASFFModal :filter="all_filter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item
+              v-if="is_result_view"
+              class="px-0"
+            >
               <ExportCKLModal :filter="all_filter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item
+              v-if="is_result_view"
+              class="px-0"
+            >
               <ExportCSVModal :filter="all_filter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item
+              v-if="is_result_view"
+              class="px-0"
+            >
               <ExportHTMLModal
                 :filter="all_filter"
                 :file-type="current_route_name"
               />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item
+              v-if="is_result_view"
+              class="px-0"
+            >
               <ExportSplunkModal />
             </v-list-item>
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item
+              v-if="is_result_view"
+              class="px-0"
+            >
               <ExportXCCDFResults
                 :filter="all_filter"
                 :is-result-view="is_result_view"
@@ -61,13 +92,32 @@
 
     <!-- The main content: cards, etc -->
     <template #main-content>
-      <v-container fluid grid-list-md pt-0 pa-2>
-        <v-container id="fileCards" mx-0 px-0 fluid>
+      <v-container
+        fluid
+        grid-list-md
+        pt-0
+        pa-2
+      >
+        <v-container
+          id="fileCards"
+          mx-0
+          px-0
+          fluid
+        >
           <!-- Evaluation Info -->
-          <v-row no-gutters class="mx-n3 mb-3">
+          <v-row
+            no-gutters
+            class="mx-n3 mb-3"
+          >
             <v-col>
-              <v-slide-group v-model="evalInfo" show-arrows>
-                <v-slide-item v-for="(file, i) in activeFiles" :key="i">
+              <v-slide-group
+                v-model="evalInfo"
+                show-arrows
+              >
+                <v-slide-item
+                  v-for="(file, i) in activeFiles"
+                  :key="i"
+                >
                   <v-card
                     width="100%"
                     max-width="100%"
@@ -105,40 +155,59 @@
           @add-filter="addStatusSearch"
         />
         <!-- Compliance Cards -->
-        <v-row id="complianceCards" justify="space-around">
+        <v-row
+          id="complianceCards"
+          justify="space-around"
+        >
           <v-col xs="4">
-            <v-card id="statusCounts" class="fill-height">
-              <v-card-title class="justify-center">Status Counts</v-card-title>
+            <v-card
+              id="statusCounts"
+              class="fill-height"
+            >
+              <v-card-title class="justify-center">
+                Status Counts
+              </v-card-title>
               <v-card-actions class="justify-center">
-                <StatusChart v-model="statusFilter" :filter="all_filter" />
+                <StatusChart
+                  v-model="statusFilter"
+                  :filter="all_filter"
+                />
               </v-card-actions>
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card id="severityCounts" class="fill-height">
-              <v-card-title class="justify-center"
-                >Severity Counts</v-card-title
-              >
+            <v-card
+              id="severityCounts"
+              class="fill-height"
+            >
+              <v-card-title class="justify-center">
+                Severity Counts
+              </v-card-title>
               <v-card-actions class="justify-center">
-                <SeverityChart v-model="severityFilter" :filter="all_filter" />
+                <SeverityChart
+                  v-model="severityFilter"
+                  :filter="all_filter"
+                />
               </v-card-actions>
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card id="complianceLevel" class="fill-height">
-              <v-card-title class="justify-center"
-                >Compliance Level</v-card-title
-              >
+            <v-card
+              id="complianceLevel"
+              class="fill-height"
+            >
+              <v-card-title class="justify-center">
+                Compliance Level
+              </v-card-title>
               <v-card-actions class="justify-center">
                 <ComplianceChart :filter="all_filter" />
               </v-card-actions>
-              <v-card-text style="text-align: center"
-                >[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
+              <v-card-text style="text-align: center">
+                [Passed/(Passed + Failed + Not Reviewed + Profile Error<span
                   v-if="waivedProfilesExist"
                 >
-                  + Waived</span
-                >) * 100]</v-card-text
-              >
+                  + Waived</span>) * 100]
+              </v-card-text>
             </v-card>
           </v-col>
         </v-row>
@@ -150,7 +219,12 @@
               <v-card-title class="d-flex align-center">
                 <span>Tree Map</span>
                 <v-spacer />
-                <v-btn class="mr-2" icon small @click="isActiveDialog = true">
+                <v-btn
+                  class="mr-2"
+                  icon
+                  small
+                  @click="isActiveDialog = true"
+                >
                   <v-icon
                     b-tooltip.hover
                     title="Tree Map Legend"
@@ -159,41 +233,44 @@
                     mdi-information-outline
                   </v-icon>
                 </v-btn>
-                <v-dialog v-model="isActiveDialog" width="500">
+                <v-dialog
+                  v-model="isActiveDialog"
+                  width="500"
+                >
                   <v-card>
                     <v-card-title>Tree Map Legend</v-card-title>
                     <v-card-text class="text-h7">
                       The NIST 800-53 Control Families have the following
                       acronyms:
-                      <br /><br />
-                      AC: Access Control<br />
-                      AT: Awareness and Training<br />
-                      AU: Audit and Accountability<br />
-                      AP: Authority and Purpose<br />
-                      AR: Account, Audit, and Risk Management<br />
-                      CA: Assessment, Authorization, and Monitoring<br />
-                      CM: Configuration Management<br />
-                      CP: Contingency Planning<br />
-                      DI: Data Quality and Integrity<br />
-                      DM: Data Minimization and Retention<br />
-                      IA: Identification and Authentication<br />
-                      IP: Individual Participation and Redress<br />
-                      IR: Incident Response<br />
-                      MA: Maintenance<br />
-                      MP: Media Protection<br />
-                      PE: Physical and Environmental Protection<br />
-                      PL: Planning<br />
-                      PM: Program Management<br />
-                      PS: Personnel Security<br />
-                      RA: Risk Assessment<br />
-                      SA: System and Services Acquisition<br />
-                      SC: System and Communications Protection<br />
-                      SE: Security<br />
-                      SI: System and Information Integrity<br />
-                      TR: Transparency<br />
-                      UL: Use Limitation<br />
-                      UM: Unmapped<br />
-                      <br />
+                      <br><br>
+                      AC: Access Control<br>
+                      AT: Awareness and Training<br>
+                      AU: Audit and Accountability<br>
+                      AP: Authority and Purpose<br>
+                      AR: Account, Audit, and Risk Management<br>
+                      CA: Assessment, Authorization, and Monitoring<br>
+                      CM: Configuration Management<br>
+                      CP: Contingency Planning<br>
+                      DI: Data Quality and Integrity<br>
+                      DM: Data Minimization and Retention<br>
+                      IA: Identification and Authentication<br>
+                      IP: Individual Participation and Redress<br>
+                      IR: Incident Response<br>
+                      MA: Maintenance<br>
+                      MP: Media Protection<br>
+                      PE: Physical and Environmental Protection<br>
+                      PL: Planning<br>
+                      PM: Program Management<br>
+                      PS: Personnel Security<br>
+                      RA: Risk Assessment<br>
+                      SA: System and Services Acquisition<br>
+                      SC: System and Communications Protection<br>
+                      SE: Security<br>
+                      SI: System and Information Integrity<br>
+                      TR: Transparency<br>
+                      UL: Use Limitation<br>
+                      UM: Unmapped<br>
+                      <br>
                       <b>NOTE:</b>
                       The control families cover multiple revisions. Therefore
                       the latest revision may not include all of the listed
@@ -201,9 +278,9 @@
                     </v-card-text>
                     <v-card-actions>
                       <v-spacer />
-                      <v-btn @click="isActiveDialog = false"
-                        >Close Dialog</v-btn
-                      >
+                      <v-btn @click="isActiveDialog = false">
+                        Close Dialog
+                      </v-btn>
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -240,17 +317,26 @@
       color="warning"
       top
     >
-      <span v-if="file_filter.length" class="subtitle-2">
+      <span
+        v-if="file_filter.length > 0"
+        class="subtitle-2"
+      >
         All results are filtered out. Use the
         <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
         filters and show all.
       </span>
-      <span v-else-if="no_files" class="subtitle-2">
+      <span
+        v-else-if="no_files"
+        class="subtitle-2"
+      >
         No files are currently loaded. Press the <strong>LOAD</strong>
         <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
         some.
       </span>
-      <span v-else class="subtitle-2">
+      <span
+        v-else
+        class="subtitle-2"
+      >
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and ensure that the
         file(s) you wish to view are
@@ -261,13 +347,17 @@
 </template>
 
 <script lang="ts">
+import type { IEvaluation } from '@heimdall/common/interfaces';
+import type { Severity } from 'inspecjs';
+import { capitalize } from 'lodash';
+import Component, { mixins } from 'vue-class-component';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
+import InfoCardRow from '@/components/cards/InfoCardRow.vue';
 import ProfileData from '@/components/cards/ProfileData.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
-import InfoCardRow from '@/components/cards/InfoCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
@@ -278,81 +368,179 @@ import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
-import PrintButton from '@/components/global/PrintButton.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
+import PrintButton from '@/components/global/PrintButton.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import {
   ExtendedControlStatus,
   Filter,
   FilteredDataModule,
-  TreeMapState
+  TreeMapState,
 } from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
+import { InspecDataModule } from '@/store/data_store';
 import {
   EvaluationFile,
   FileID,
   ProfileFile,
   SourcedContextualizedEvaluation,
-  SourcedContextualizedProfile
+  SourcedContextualizedProfile,
 } from '@/store/report_intake';
-import {SearchModule} from '@/store/search';
-import {ServerModule} from '@/store/server';
+import { SearchModule } from '@/store/search';
+import { ServerModule } from '@/store/server';
 import Base from '@/views/Base.vue';
-import type {IEvaluation} from '@heimdall/common/interfaces';
-import type {Severity} from 'inspecjs';
-import {capitalize} from 'lodash';
-import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';
-import {EvaluationModule} from '../store/evaluations';
-import {StatusCountModule} from '../store/status_counts';
-import {compare_times} from '../utilities/delta_util';
+import { EvaluationModule } from '../store/evaluations';
+import { StatusCountModule } from '../store/status_counts';
+import { compare_times } from '../utilities/delta_util';
 
 @Component({
   components: {
     Base,
-    StatusCardRow,
-    InfoCardRow,
-    Treemap,
-    ControlTable,
-    StatusChart,
-    SeverityChart,
     ComplianceChart,
+    ControlTable,
+    EvaluationInfo,
     ExportASFFModal,
     ExportCaat,
-    ExportCSVModal,
-    ExportNist,
-    ExportJson,
-    ExportXCCDFResults,
     ExportCKLModal,
+    ExportCSVModal,
     ExportHTMLModal,
-    PrintButton,
-    EvaluationInfo,
+    ExportJson,
+    ExportNist,
     ExportSplunkModal,
+    ExportXCCDFResults,
+    InfoCardRow,
+    PrintButton,
     ProfileData,
-    UploadButton
-  }
+    SeverityChart,
+    StatusCardRow,
+    StatusChart,
+    Treemap,
+    UploadButton,
+  },
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
+  controlSelection: null | string = null;
+  evalInfo:
+    | null
+    | SourcedContextualizedEvaluation
+    | SourcedContextualizedProfile = null;
+
+  /** Model for if all-filtered snackbar should be showing */
+  filterSnackbar = false;
+  gotSeverity = false;
+
+  gotStatus = false;
+
+  isActiveDialog = false;
+
   /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
    */
   treeFilters: TreeMapState = [];
-  controlSelection: string | null = null;
 
-  gotStatus: boolean = false;
-  gotSeverity: boolean = false;
+  get activeFiles(): SourcedContextualizedEvaluation[] {
+    return this.evaluationFiles;
+  }
 
-  /** Model for if all-filtered snackbar should be showing */
-  filterSnackbar = false;
+  /**
+   * The filter for charts. Contains all of our filter stuff
+   */
+  get all_filter(): Filter {
+    return {
+      codeSearchTerms: SearchModule.codeSearchTerms,
+      control_id: this.controlSelection || undefined,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      fromFile: this.file_filter,
+      ids: SearchModule.controlIdSearchTerms,
+      nistIdFilter: SearchModule.NISTIdFilter,
+      omit_overlayed_controls: true,
+      searchTerm: SearchModule.freeSearch || '',
+      severity: SearchModule.severityFilter,
+      status: SearchModule.statusFilter,
+      tagFilter: SearchModule.tagFilter,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      treeFilters: this.treeFilters,
+    };
+  }
 
-  isActiveDialog = false;
+  /**
+   * Returns true if we can currently clear.
+   * Essentially, just controls whether the button is available
+   */
+  get can_clear(): boolean {
+    // Return if any params not null/empty
+    let result: boolean;
+    result = SearchModule.severityFilter.length > 0
+      || SearchModule.statusFilter.length > 0
+      || SearchModule.controlIdSearchTerms.length > 0
+      || SearchModule.codeSearchTerms.length > 0
+      || SearchModule.tagFilter.length > 0
+      || this.searchTerm
+      || this.treeFilters.length > 0
+      ? true
+      : false;
 
-  evalInfo:
-    | SourcedContextualizedEvaluation
-    | SourcedContextualizedProfile
-    | null = null;
+    // Logic to check: are any files actually visible?
+    this.filterSnackbar = FilteredDataModule.controls(this.all_filter).length === 0 ? true : false;
+
+    // Finally, return our result
+    return result;
+  }
+
+  /**
+   * The title to override with
+   */
+  get curr_title(): string {
+    let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
+    if (this.file_filter.length === 1) {
+      const file = this.getFile(this.file_filter[0]);
+      if (file) {
+        const dbFile = this.getDbFile(file);
+        returnText += ` (${dbFile?.filename || file.filename} selected)`;
+      }
+    } else {
+      returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
+    }
+    return returnText;
+  }
+
+  get current_route_name(): string {
+    return this.$router.currentRoute.path.replaceAll(/[^a-z]/giv, '');
+  }
+
+  get evaluationFiles(): SourcedContextualizedEvaluation[] {
+    return FilteredDataModule.evaluations(this.file_filter).toSorted(compare_times);
+  }
+
+  /**
+   * The currently selected file, if one exists.
+   * Controlled by router.
+   */
+  get file_filter(): FileID[] {
+    return this.is_result_view ? FilteredDataModule.selectedEvaluationIds : FilteredDataModule.selectedProfileIds;
+  }
+
+  // changes width of eval info if it is in server mode and needs more room for tags
+  get info_width(): number {
+    if (ServerModule.serverMode) {
+      return 500;
+    }
+    return 300;
+  }
+
+  /**
+   * Returns true if we're showing results
+   */
+  get is_result_view(): boolean {
+    return this.current_route === 'results';
+  }
+
+  // Returns true if no files are uploaded
+  get no_files(): boolean {
+    return InspecDataModule.allFiles.length === 0;
+  }
 
   /**
    * The current search terms, as modeled by the search bar
@@ -382,85 +570,34 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   /**
-   * The currently selected file, if one exists.
-   * Controlled by router.
-   */
-  get file_filter(): FileID[] {
-    if (this.is_result_view) {
-      return FilteredDataModule.selectedEvaluationIds;
-    } else {
-      return FilteredDataModule.selectedProfileIds;
-    }
-  }
-
-  get evaluationFiles(): SourcedContextualizedEvaluation[] {
-    return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(
-      compare_times
-    );
-  }
-
-  get activeFiles(): SourcedContextualizedEvaluation[] {
-    return this.evaluationFiles;
-  }
-
-  getFile(fileID: FileID) {
-    return InspecDataModule.allFiles.find((f) => f.uniqueId === fileID);
-  }
-
-  getDbFile(file: EvaluationFile | ProfileFile): IEvaluation | undefined {
-    return EvaluationModule.evaluationForFile(file);
-  }
-
-  /**
-   * Returns true if we're showing results
-   */
-  get is_result_view(): boolean {
-    return this.current_route === 'results';
-  }
-
-  // Returns true if no files are uploaded
-  get no_files(): boolean {
-    return InspecDataModule.allFiles.length === 0;
-  }
-
-  /**
-   * The filter for charts. Contains all of our filter stuff
-   */
-  get all_filter(): Filter {
-    return {
-      status: SearchModule.statusFilter,
-      severity: SearchModule.severityFilter,
-      fromFile: this.file_filter,
-      ids: SearchModule.controlIdSearchTerms,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      searchTerm: SearchModule.freeSearch || '',
-      codeSearchTerms: SearchModule.codeSearchTerms,
-      tagFilter: SearchModule.tagFilter,
-      treeFilters: this.treeFilters,
-      omit_overlayed_controls: true,
-      control_id: this.controlSelection || undefined
-    };
-  }
-
-  /**
    * The filter for treemap. Omits its own stuff
    */
   get treemap_full_filter(): Filter {
     return {
-      status: SearchModule.statusFilter || [],
-      severity: SearchModule.severityFilter,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
       codeSearchTerms: SearchModule.codeSearchTerms,
-      tagFilter: SearchModule.tagFilter,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      ids: SearchModule.controlIdSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
       fromFile: this.file_filter,
+      ids: SearchModule.controlIdSearchTerms,
+      nistIdFilter: SearchModule.NISTIdFilter,
+      omit_overlayed_controls: true,
       searchTerm: SearchModule.freeSearch,
-      omit_overlayed_controls: true
+      severity: SearchModule.severityFilter,
+      status: SearchModule.statusFilter || [],
+      tagFilter: SearchModule.tagFilter,
+      titleSearchTerms: SearchModule.titleSearchTerms,
     };
+  }
+
+  get waivedProfilesExist(): boolean {
+    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1;
+  }
+
+  addStatusSearch(status: ExtendedControlStatus) {
+    SearchModule.addSearchFilter({
+      field: 'status',
+      previousValues: this.statusFilter,
+      value: status,
+    });
   }
 
   /**
@@ -476,108 +613,39 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     }
   }
 
-  /**
-   * Returns true if we can currently clear.
-   * Essentially, just controls whether the button is available
-   */
-  get can_clear(): boolean {
-    // Return if any params not null/empty
-    let result: boolean;
-    if (
-      SearchModule.severityFilter.length !== 0 ||
-      SearchModule.statusFilter.length !== 0 ||
-      SearchModule.controlIdSearchTerms.length !== 0 ||
-      SearchModule.codeSearchTerms.length !== 0 ||
-      SearchModule.tagFilter.length !== 0 ||
-      this.searchTerm ||
-      this.treeFilters.length
-    ) {
-      result = true;
-    } else {
-      result = false;
-    }
-
-    // Logic to check: are any files actually visible?
-    if (FilteredDataModule.controls(this.all_filter).length === 0) {
-      this.filterSnackbar = true;
-    } else {
-      this.filterSnackbar = false;
-    }
-
-    // Finally, return our result
-    return result;
+  getDbFile(file: EvaluationFile | ProfileFile): IEvaluation | undefined {
+    return EvaluationModule.evaluationForFile(file);
   }
 
-  get waivedProfilesExist(): boolean {
-    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1;
+  getFile(fileID: FileID) {
+    return InspecDataModule.allFiles.find(f => f.uniqueId === fileID);
   }
 
-  /**
-   * The title to override with
-   */
-  get curr_title(): string {
-    let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
-    if (this.file_filter.length === 1) {
-      const file = this.getFile(this.file_filter[0]);
-      if (file) {
-        const dbFile = this.getDbFile(file);
-        returnText += ` (${dbFile?.filename || file.filename} selected)`;
-      }
-    } else {
-      returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
-    }
-    return returnText;
-  }
-
-  get current_route_name(): string {
-    return this.$router.currentRoute.path.replaceAll(/[^a-z]/giv, '');
-  }
-
-  //changes width of eval info if it is in server mode and needs more room for tags
-  get info_width(): number {
-    if (ServerModule.serverMode) {
-      return 500;
-    }
-    return 300;
-  }
-
-  //basically a v-model for the eval info cards when there is no slide group
-  toggle_profile(
-    file: SourcedContextualizedEvaluation | SourcedContextualizedProfile
-  ) {
-    if (file === this.evalInfo) {
-      this.evalInfo = null;
-    } else {
-      this.evalInfo = file;
-    }
+  removeStatusFilter(status: ExtendedControlStatus) {
+    SearchModule.removeSearchFilter({
+      field: 'status',
+      previousValues: this.statusFilter,
+      value: status,
+    });
   }
 
   showErrors() {
     this.searchTerm = 'status:"Profile Error"';
   }
 
-  showWaived() {
-    this.searchTerm = 'status:"Waived"';
-  }
-
   showSeverityOverrides() {
     this.searchTerm = 'tags:"severityoverride"';
   }
 
-  addStatusSearch(status: ExtendedControlStatus) {
-    SearchModule.addSearchFilter({
-      field: 'status',
-      value: status,
-      previousValues: this.statusFilter
-    });
+  showWaived() {
+    this.searchTerm = 'status:"Waived"';
   }
 
-  removeStatusFilter(status: ExtendedControlStatus) {
-    SearchModule.removeSearchFilter({
-      field: 'status',
-      value: status,
-      previousValues: this.statusFilter
-    });
+  // basically a v-model for the eval info cards when there is no slide group
+  toggle_profile(
+    file: SourcedContextualizedEvaluation | SourcedContextualizedProfile,
+  ) {
+    this.evalInfo = file === this.evalInfo ? null : file;
   }
 }
 </script>

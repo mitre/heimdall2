@@ -1,28 +1,28 @@
 import Vue from 'vue';
 
-interface ConfirmDialogState {
-  visible: boolean;
-  title: string;
-  message: string;
-  confirmText: string;
+type ConfirmDialogState = {
   cancelText: string;
-}
+  confirmText: string;
+  message: string;
+  title: string;
+  visible: boolean;
+};
 
 const state: ConfirmDialogState = Vue.observable({
-  visible: false,
-  title: '',
-  message: '',
+  cancelText: 'Cancel',
   confirmText: 'Confirm',
-  cancelText: 'Cancel'
+  message: '',
+  title: '',
+  visible: false,
 });
 
 let activeResolver: ((value: boolean) => void) | null = null;
 
 export function confirm(options: {
-  title: string;
-  message: string;
-  confirmText?: string;
   cancelText?: string;
+  confirmText?: string;
+  message: string;
+  title: string;
 }): Promise<boolean> {
   if (activeResolver) {
     activeResolver(false);
@@ -48,4 +48,4 @@ export function resolve(confirmed: boolean): void {
   }
 }
 
-export {state as confirmDialogState};
+export { state as confirmDialogState };

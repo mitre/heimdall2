@@ -1,7 +1,7 @@
-import {Controller, Get, UseInterceptors} from '@nestjs/common';
-import {ConfigService} from './config/config.service';
-import {StartupSettingsDto} from './config/dto/startup-settings.dto';
-import {LoggingInterceptor} from './interceptors/logging.interceptor';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { ConfigService } from './config/config.service';
+import { StartupSettingsDto } from './config/dto/startup-settings.dto';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
 
 @Controller()
 @UseInterceptors(LoggingInterceptor)

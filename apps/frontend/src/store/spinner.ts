@@ -1,48 +1,33 @@
-import Store from '@/store/store';
 import {
   Action,
   getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
 } from 'vuex-module-decorators';
+import Store from '@/store/store';
 
-export interface ISpinnerState {
+export type ISpinnerState = {
   message: string;
-  value: number;
   show: boolean;
-}
+  value: number;
+};
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'SpinnerModule',
+  namespaced: true,
   store: Store,
-  name: 'SpinnerModule'
 })
 export class Spinner extends VuexModule implements ISpinnerState {
   message = 'Loading...';
-  value = 0;
   show = false;
+  value = 0;
 
   @Action
   reset() {
     this.context.commit('SET_MESSAGE', 'Loading...');
     this.context.commit('SET_VALUE', 0);
-  }
-
-  @Action
-  visibility(visibility: boolean) {
-    this.context.commit('SET_VISIBILITY', visibility);
-  }
-
-  @Action
-  setMessage(msg: string) {
-    this.context.commit('SET_MESSAGE', msg);
-  }
-
-  @Action
-  setValue(value: number) {
-    this.context.commit('SET_VALUE', value);
   }
 
   @Mutation
@@ -58,6 +43,21 @@ export class Spinner extends VuexModule implements ISpinnerState {
   @Mutation
   SET_VISIBILITY(visibility: boolean) {
     this.show = visibility;
+  }
+
+  @Action
+  setMessage(msg: string) {
+    this.context.commit('SET_MESSAGE', msg);
+  }
+
+  @Action
+  setValue(value: number) {
+    this.context.commit('SET_VALUE', value);
+  }
+
+  @Action
+  visibility(visibility: boolean) {
+    this.context.commit('SET_VISIBILITY', visibility);
   }
 }
 

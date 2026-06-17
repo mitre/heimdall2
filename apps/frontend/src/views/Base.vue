@@ -2,15 +2,17 @@
         Saves us the trouble of messing around with sidebar functionality
         in every view. "Subclass" by utilizing the slots. -->
 <template>
-  <div @drop.prevent="addFile" @dragover.prevent>
+  <div
+    @drop.prevent="addFile"
+    @dragover.prevent
+  >
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
     <span
       v-if="classification"
       height="1.5em"
       :style="classificationStyle"
       class="classification-footer"
-      >{{ classification }}</span
-    >
+    >{{ classification }}</span>
     <Topbar
       v-if="showTopbar"
       :title="title"
@@ -29,7 +31,10 @@
     </Topbar>
 
     <!-- Sidebar to navigate between different views -->
-    <Sidebar v-model="drawer" @changed-files="$emit('changed-files')" />
+    <Sidebar
+      v-model="drawer"
+      @changed-files="$emit('changed-files')"
+    />
 
     <!-- The actual content. Slotted by our "descendants" -->
     <v-main>
@@ -43,18 +48,18 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import SearchBar from '@/components/global/SearchBar.vue';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
 import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
 import UpdateNotification from '@/components/global/UpdateNotification.vue';
-import {SidebarModule} from '@/store/sidebar_state';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {InspecIntakeModule} from '../store/report_intake';
-import {ServerModule} from '../store/server';
-import {SnackbarModule} from '../store/snackbar';
+import { SidebarModule } from '@/store/sidebar_state';
+import { InspecIntakeModule } from '../store/report_intake';
+import { ServerModule } from '../store/server';
+import { SnackbarModule } from '../store/snackbar';
 
 @Component({
   components: {
@@ -62,16 +67,27 @@ import {SnackbarModule} from '../store/snackbar';
     SearchHelpModal,
     Sidebar,
     Topbar,
-    UpdateNotification
-  }
+    UpdateNotification,
+  },
 })
 export default class Base extends Vue {
-  @Prop({default: 'Heimdall'}) readonly title!: string;
-  @Prop({default: 11}) readonly topbarZIndex!: number;
-  @Prop({default: false}) readonly minimalTopbar!: boolean;
-  @Prop({default: false}) readonly showBackButton!: boolean;
-  @Prop({default: true}) readonly showTopbar!: boolean;
-  @Prop({default: false}) readonly showSearch!: boolean;
+  @Prop({ default: false }) readonly minimalTopbar!: boolean;
+  @Prop({ default: false }) readonly showBackButton!: boolean;
+  @Prop({ default: false }) readonly showSearch!: boolean;
+  @Prop({ default: true }) readonly showTopbar!: boolean;
+  @Prop({ default: 'Heimdall' }) readonly title!: string;
+  @Prop({ default: 11 }) readonly topbarZIndex!: number;
+
+  get classification(): string {
+    return ServerModule.classificationBannerText;
+  }
+
+  get classificationStyle() {
+    return {
+      background: ServerModule.classificationBannerColor,
+      color: `${ServerModule.classificationBannerTextColor} !important`,
+    };
+  }
 
   /** Models if the drawer is open */
   get drawer(): boolean {
@@ -82,23 +98,12 @@ export default class Base extends Vue {
     SidebarModule.UpdateActive(state);
   }
 
-  get classificationStyle() {
-    return {
-      background: ServerModule.classificationBannerColor,
-      color: `${ServerModule.classificationBannerTextColor} !important`
-    };
-  }
-
-  get classification(): string {
-    return ServerModule.classificationBannerText;
-  }
-
   addFile(event: DragEvent) {
     const droppedFiles = event.dataTransfer?.files;
     if (droppedFiles) {
       [...droppedFiles].forEach(async (file) => {
-        return InspecIntakeModule.loadFile({file}).catch((err) => {
-          SnackbarModule.failure(String(err));
+        return InspecIntakeModule.loadFile({ file }).catch((error) => {
+          SnackbarModule.failure(String(error));
         });
       });
     }

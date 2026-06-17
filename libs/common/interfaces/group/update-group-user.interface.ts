@@ -1,4 +1,4 @@
-export interface IUpdateGroupUser {
-  readonly userId: string;
+export type IUpdateGroupUser = {
   readonly groupRole: string;
-}
+  readonly userId: string;
+};

@@ -1,3 +1,1 @@
-export interface IRegenerateAPIKey {
-  readonly currentPassword: string;
-}
+export type IRegenerateAPIKey = { readonly currentPassword: string };

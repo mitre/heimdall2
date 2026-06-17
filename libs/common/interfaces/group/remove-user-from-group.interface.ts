@@ -1,3 +1,1 @@
-export interface IRemoveUserFromGroup {
-  readonly userId: string;
-}
+export type IRemoveUserFromGroup = { readonly userId: string };

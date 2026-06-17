@@ -1,141 +1,87 @@
-import {ExecJSON} from 'inspecjs';
+import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import {HeimdallToolsVersion} from './utils/global';
-import {
-  BaseConverter,
+import type {
   ILookupPath,
   MappedTransform,
-  parseCsv
+} from './base-converter';
+import {
+  BaseConverter,
+  parseCsv,
 } from './base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   DEFAULT_UPDATE_REMEDIATION_NIST_TAGS,
-  getCCIsForNISTTags
+  getCCIsForNISTTags,
+  HeimdallToolsVersion,
 } from './utils/global';
 
 export type PrismaControl = {
-  Packages: string;
+  Cause?: string;
+  'Compliance ID': string;
+  'CVE ID': string;
   Description: string;
   Distro: string;
-  Type: string;
-  Hostname: string;
-  'Compliance ID': string;
   'Fix Status'?: string;
-  'CVE ID': string;
+  Hostname: string;
+  Packages: string;
   Severity: string;
-  Cause?: string;
+  Type: string;
 };
 
 const SEVERITY_LOOKUP: Record<string, number> = {
-  low: 0.3,
-  moderate: 0.5,
+  critical: 1,
   high: 0.7,
   important: 0.9,
-  critical: 1
+  low: 0.3,
+  moderate: 0.5,
 };
-
-export function nistTag(cveTag: string | undefined) {
-  if (!cveTag) {
-    return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
-  } else {
-    return DEFAULT_UPDATE_REMEDIATION_NIST_TAGS;
-  }
-}
 
 export class PrismaControlMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: 'Prisma Cloud Scan Report'
-    },
-    version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
+      target_id: 'Prisma Cloud Scan Report',
     },
     profiles: [
       {
-        name: 'Palo Alto Prisma Cloud Tool',
-        version: '',
-        title: 'Prisma Cloud Scan Report',
-        maintainer: null,
-        summary: '',
-        license: null,
-        copyright: null,
-        copyright_email: null,
-        supports: [],
         attributes: [],
-        depends: [],
-        groups: [],
-        status: 'loaded',
         controls: [
           {
-            path: 'records',
-            key: 'id',
-            desc: {path: 'Description'},
-            tags: {
-              cci: {
-                path: 'CVE ID',
-                transformer: (cve: string) => getCCIsForNISTTags(nistTag(cve))
-              },
-              nist: {
-                path: 'CVE ID',
-                transformer: nistTag
-              },
-              cve: {path: 'CVE ID'},
-              cvss: {path: 'cssv'}
-            },
+            code: { transformer: (obj: PrismaControl) => JSON.stringify(obj, null, 2) },
+            desc: { path: 'Description' },
             descriptions: [],
-            refs: [{url: {path: 'Vulnerability Link'}}],
-            source_location: {path: 'Hostname'},
             id: {
               transformer: (item: PrismaControl) => {
-                if (item['CVE ID']) {
-                  return `${item['Compliance ID']}-${item['CVE ID']}`;
-                } else {
-                  return `${item['Compliance ID']}-${item.Distro}-${item.Severity}`;
-                }
-              }
-            },
-            title: {
-              transformer: (item: PrismaControl) =>
-                `${item.Hostname}-${item.Distro}-${item.Type}`
+                return item['CVE ID'] ? `${item['Compliance ID']}-${item['CVE ID']}` : `${item['Compliance ID']}-${item.Distro}-${item.Severity}`;
+              },
             },
             impact: {
               path: 'Severity',
               transformer: (severity: string) => {
-                if (severity) {
-                  return SEVERITY_LOOKUP[severity];
-                } else {
-                  return 0.5;
-                }
-              }
+                return severity ? SEVERITY_LOOKUP[severity] : 0.5;
+              },
             },
-            code: {
-              transformer: (obj: PrismaControl) => JSON.stringify(obj, null, 2)
-            },
+            key: 'id',
+            path: 'records',
+            refs: [{ url: { path: 'Vulnerability Link' } }],
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
                   transformer: (obj: PrismaControl) => {
                     let result = '';
                     if (obj.Type === 'image') {
-                      if (obj['Packages'] !== '') {
-                        result += `Version check of package: ${obj['Packages']}`;
+                      if (obj.Packages !== '') {
+                        result += `Version check of package: ${obj.Packages}`;
                       }
                     } else if (obj.Type === 'linux') {
-                      if (obj.Distro !== '') {
-                        result += `Configuration check for ${obj.Distro}`;
-                      } else {
-                        result += ``;
-                      }
+                      result += obj.Distro === '' ? '' : `Configuration check for ${obj.Distro}`;
                     } else {
                       result += `${obj.Type} check for ${obj.Hostname}`;
                     }
                     result += `\n\n${obj.Description}`;
                     return result;
-                  }
+                  },
                 },
                 message: {
                   transformer: (obj: PrismaControl) => {
@@ -144,49 +90,85 @@ export class PrismaControlMapper extends BaseConverter {
                       result += `Fix Status: ${obj['Fix Status']}\n\n${obj.Cause}`;
                     } else if (obj['Fix Status'] !== '') {
                       result += `Fix Status: ${obj['Fix Status']}`;
-                    } else if (obj.Cause !== '') {
-                      result += `Cause: ${obj.Cause}`;
-                    } else {
+                    } else if (obj.Cause === '') {
                       result += 'Unknown';
+                    } else {
+                      result += `Cause: ${obj.Cause}`;
                     }
                     return result;
-                  }
+                  },
                 },
-                start_time: {path: 'Published'}
-              }
-            ]
-          }
+                start_time: { path: 'Published' },
+                status: ExecJSON.ControlResultStatus.Failed,
+              },
+            ],
+            source_location: { path: 'Hostname' },
+            tags: {
+              cci: {
+                path: 'CVE ID',
+                transformer: (cve: string) => getCCIsForNISTTags(nistTag(cve)),
+              },
+              cve: { path: 'CVE ID' },
+              cvss: { path: 'cssv' },
+              nist: {
+                path: 'CVE ID',
+                transformer: nistTag,
+              },
+            },
+            title: {
+              transformer: (item: PrismaControl) =>
+                `${item.Hostname}-${item.Distro}-${item.Type}`,
+            },
+          },
         ],
-        sha256: ''
-      }
-    ]
+        copyright: null,
+        copyright_email: null,
+        depends: [],
+        groups: [],
+        license: null,
+        maintainer: null,
+        name: 'Palo Alto Prisma Cloud Tool',
+        sha256: '',
+        status: 'loaded',
+        summary: '',
+        supports: [],
+        title: 'Prisma Cloud Scan Report',
+        version: '',
+      },
+    ],
+    statistics: { duration: null },
+    version: HeimdallToolsVersion,
   };
 
   constructor(prismaControls: PrismaControl[]) {
-    super({records: prismaControls});
+    super({ records: prismaControls });
   }
 }
 
 export class PrismaMapper {
   data: PrismaControl[] = [];
 
+  constructor(prismaCsv: string) {
+    this.data = parseCsv(prismaCsv) as PrismaControl[];
+  }
+
   toHdf(): ExecJSON.Execution[] {
     const executions: ExecJSON.Execution[] = [];
     const hostnameToControls: Record<string, PrismaControl[]> = {};
     this.data.forEach((record: PrismaControl) => {
-      hostnameToControls[record['Hostname']] =
-        hostnameToControls[record['Hostname']] || [];
-      hostnameToControls[record['Hostname']].push(record);
+      hostnameToControls[record.Hostname]
+        = hostnameToControls[record.Hostname] || [];
+      hostnameToControls[record.Hostname].push(record);
     });
-    Object.entries(hostnameToControls).forEach(([hostname, controls]) => {
+    for (const [hostname, controls] of Object.entries(hostnameToControls)) {
       const converted = new PrismaControlMapper(controls).toHdf();
       _.set(converted, 'platform.target_id', hostname);
       executions.push(converted);
-    });
+    }
     return executions;
   }
+}
 
-  constructor(prismaCsv: string) {
-    this.data = parseCsv(prismaCsv) as PrismaControl[];
-  }
+export function nistTag(cveTag: string | undefined) {
+  return cveTag ? DEFAULT_UPDATE_REMEDIATION_NIST_TAGS : DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
 }

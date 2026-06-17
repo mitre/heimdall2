@@ -1,27 +1,96 @@
-import {ExecJSON} from 'inspecjs';
+import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import {HeimdallToolsVersion} from './utils/global';
+import type {
+  ILookupPath,
+  MappedTransform,
+} from './base-converter';
 import {
   BaseConverter,
-  ILookupPath,
   impactMapping,
-  MappedTransform,
-  parseXml
+  parseXml,
 } from './base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
+  getCCIsForNISTTags,
+  HeimdallToolsVersion,
 } from './utils/global';
 
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['high', 0.7],
-  ['medium', 0.5],
+  ['informational', 0],
   ['low', 0.3],
-  ['informational', 0]
+  ['medium', 0.5],
 ]);
 
+export class DBProtectMapper extends BaseConverter {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & { passthrough: unknown },
+    ILookupPath
+  > = {
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return { ...(this.withRaw && { raw: data }) };
+      },
+    },
+    platform: {
+      name: 'Heimdall Tools',
+      release: HeimdallToolsVersion,
+    },
+    profiles: [
+      {
+        attributes: [],
+        controls: [
+          {
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2),
+            },
+            desc: { transformer: formatDesc },
+            id: { path: 'Check ID', transformer: idToString },
+            impact: {
+              path: 'Risk DV',
+              transformer: impactMapping(IMPACT_MAPPING),
+            },
+            key: 'id',
+            path: 'data',
+            refs: [],
+            results: [
+              {
+                code_desc: { path: 'Details' },
+                start_time: { path: 'Date' },
+                status: { path: 'Result Status', transformer: getStatus },
+              },
+            ],
+            source_location: {},
+            tags: {
+              cci: getCCIsForNISTTags(DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS),
+              nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+            },
+            title: { path: 'Check' },
+          },
+        ],
+        groups: [],
+        name: { path: 'data.[0].Policy' },
+        sha256: '',
+        status: 'loaded',
+        summary: { path: 'data.[0]', transformer: formatSummary },
+        supports: [],
+        title: { path: 'data.[0].Job Name' },
+      },
+    ],
+    statistics: {},
+    version: HeimdallToolsVersion,
+  };
+
+  constructor(dbProtectXml: string, withRaw = false) {
+    super(compileFindings(parseXml(dbProtectXml)));
+    this.withRaw = withRaw;
+  }
+}
 function compileFindings(
-  input: Record<string, unknown>
+  input: Record<string, unknown>,
 ): Record<string, unknown> {
   const keys = _.get(input, 'dataset.metadata.item');
   const findings = _.get(input, 'dataset.data.row');
@@ -36,11 +105,17 @@ function compileFindings(
       return Object.fromEntries(
         keyNames.map(function (name: string, i: number) {
           return [name, _.get(element, `value[${i}]`)];
-        })
+        }),
       );
     });
   }
   return Object.fromEntries([['data', output]]);
+}
+function formatDesc(entry: unknown): string {
+  const text = [];
+  text.push(`Task : ${_.get(entry, 'Task')}`);
+  text.push(`Check Category : ${_.get(entry, 'Check Category')}`);
+  return text.join('; ');
 }
 function formatSummary(entry: unknown): string {
   const text = [];
@@ -51,101 +126,29 @@ function formatSummary(entry: unknown): string {
   text.push(
     `IP Address, Port, Instance : ${_.get(
       entry,
-      'IP Address, Port, Instance'
-    )} `
+      'IP Address, Port, Instance',
+    )} `,
   );
   return text.join('\n');
 }
-function formatDesc(entry: unknown): string {
-  const text = [];
-  text.push(`Task : ${_.get(entry, 'Task')}`);
-  text.push(`Check Category : ${_.get(entry, 'Check Category')}`);
-  return text.join('; ');
-}
 function getStatus(input: unknown): ExecJSON.ControlResultStatus {
   switch (input) {
-    case 'Fact':
+    case 'Fact': {
       return ExecJSON.ControlResultStatus.Skipped;
-    case 'Failed':
+    }
+    case 'Failed': {
       return ExecJSON.ControlResultStatus.Failed;
-    case 'Finding':
+    }
+    case 'Finding': {
       return ExecJSON.ControlResultStatus.Failed;
-    case 'Not A Finding':
+    }
+    case 'Not A Finding': {
       return ExecJSON.ControlResultStatus.Passed;
+    }
   }
   return ExecJSON.ControlResultStatus.Skipped;
 }
+
 function idToString(id: unknown): string {
-  if (typeof id === 'string' || typeof id === 'number') {
-    return id.toString();
-  } else {
-    return '';
-  }
-}
-
-export class DBProtectMapper extends BaseConverter {
-  withRaw: boolean;
-
-  mappings: MappedTransform<
-    ExecJSON.Execution & {passthrough: unknown},
-    ILookupPath
-  > = {
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion
-    },
-    version: HeimdallToolsVersion,
-    statistics: {},
-    profiles: [
-      {
-        name: {path: 'data.[0].Policy'},
-        title: {path: 'data.[0].Job Name'},
-        summary: {path: 'data.[0]', transformer: formatSummary},
-        supports: [],
-        attributes: [],
-        groups: [],
-        status: 'loaded',
-        controls: [
-          {
-            path: 'data',
-            key: 'id',
-            tags: {
-              nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-              cci: getCCIsForNISTTags(DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS)
-            },
-            refs: [],
-            source_location: {},
-            title: {path: 'Check'},
-            id: {path: 'Check ID', transformer: idToString},
-            desc: {transformer: formatDesc},
-            impact: {
-              path: 'Risk DV',
-              transformer: impactMapping(IMPACT_MAPPING)
-            },
-            code: {
-              transformer: (vulnerability: Record<string, unknown>): string =>
-                JSON.stringify(vulnerability, null, 2)
-            },
-            results: [
-              {
-                status: {path: 'Result Status', transformer: getStatus},
-                code_desc: {path: 'Details'},
-                start_time: {path: 'Date'},
-              }
-            ]
-          }
-        ],
-        sha256: ''
-      }
-    ],
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {...(this.withRaw && {raw: data})};
-      }
-    }
-  };
-  constructor(dbProtectXml: string, withRaw = false) {
-    super(compileFindings(parseXml(dbProtectXml)));
-    this.withRaw = withRaw;
-  }
+  return typeof id === 'string' || typeof id === 'number' ? id.toString() : '';
 }

@@ -1,3 +1,1 @@
-export interface IEvaluationGroup {
-  readonly id: string;
-}
+export type IEvaluationGroup = { readonly id: string };

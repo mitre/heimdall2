@@ -1,96 +1,21 @@
-import {ExecJSON} from 'inspecjs';
+import type { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import {ChecklistVuln} from '../ckl-mapper/checklist-jsonix-converter';
-import {addAttestationToHDF, Attestation} from './attestations';
+import type { ChecklistVuln } from '../ckl-mapper/checklist-jsonix-converter';
+import type { Attestation } from './attestations';
+import { addAttestationToHDF } from './attestations';
 
-type DescriptionsInput =
-  | ExecJSON.ControlDescription[]
-  | Record<string, string>;
+type DescriptionsInput
+  = | ExecJSON.ControlDescription[]
+    | Record<string, string>;
 
-const CKL_SECTION_MARKER_RE = /^(CAVEAT|JUSTIFICATION|RATIONALE|COMMENTS) ::/;
-
-/**
- * Write-side complement to getDescription (read-side) in global.ts.
- * Handles both array-form (evaluation controls) and object-form (profile controls).
- */
-export function setControlDescription(
-  descriptions: DescriptionsInput,
-  label: string,
-  value: string
-): void {
-  if (Array.isArray(descriptions)) {
-    const existing = descriptions.find(
-      (d: ExecJSON.ControlDescription) =>
-        d.label.toLowerCase() === label.toLowerCase()
-    );
-    if (existing) {
-      existing.data = value;
-    } else {
-      descriptions.push({label, data: value});
-    }
-  } else {
-    descriptions[label] = value;
-  }
-}
-
-/**
- * Sanitize user text to prevent CKL section marker injection.
- * Replaces newline-prefixed section markers (e.g. "\nCAVEAT ::") with
- * escaped versions that won't be parsed as structured sections on re-import.
- */
-export function sanitizeCklSectionMarkers(text: string): string {
-  if (!text) {
-    return text;
-  }
-  return text.replace(
-    /\n(CAVEAT|JUSTIFICATION|RATIONALE|COMMENTS) ::/g,
-    '\n[$1] ::'
-  );
-}
+const CKL_SECTION_MARKER_RE = /^(CAVEAT|COMMENTS|JUSTIFICATION|RATIONALE) ::/v;
 
 export type DescriptionEdits = {
-  comments?: string;
   caveat?: string;
+  comments?: string;
   justification?: string;
   rationale?: string;
 };
-
-/**
- * Sync edited description fields back into CKL passthrough vuln comments
- * at export time. Uses the same structured comment format as getComments()
- * in checklist-jsonix-converter.ts.
- *
- * @param vulns - The ChecklistVuln array from passthrough.checklist.stigs[].vulns
- * @param edits - Map of controlId → description field edits
- */
-export function syncChecklistVulnComments(
-  vulns: ChecklistVuln[],
-  edits: Map<string, DescriptionEdits>
-): void {
-  for (const vuln of vulns) {
-    const controlEdits = edits.get(vuln.vulnNum);
-    if (!controlEdits) {
-      continue;
-    }
-
-    const currentComments =
-      typeof vuln.comments === 'string' ? vuln.comments : '';
-    const sections = parseStructuredComments(currentComments);
-
-    for (const [field, value] of Object.entries(controlEdits)) {
-      const sanitized = sanitizeCklSectionMarkers(value ?? '');
-      const sectionLabel = field.toUpperCase();
-
-      if (sanitized) {
-        sections.set(sectionLabel, sanitized);
-      } else {
-        sections.delete(sectionLabel);
-      }
-    }
-
-    vuln.comments = serializeStructuredComments(sections);
-  }
-}
 
 /**
  * Build a description-edits map from evaluation profiles for CKL export sync.
@@ -104,35 +29,35 @@ export function syncChecklistVulnComments(
  */
 export function buildEditsMapFromProfiles(
   profiles: ExecJSON.Profile[],
-  vulnNums: string[]
+  vulnNums: string[],
 ): Map<string, DescriptionEdits> {
   const edits = new Map<string, DescriptionEdits>();
 
   for (const vulnNum of vulnNums) {
     for (const profile of profiles) {
       const control = profile.controls.find(
-        (c) => c.id.toLowerCase() === vulnNum.toLowerCase()
+        c => c.id.toLowerCase() === vulnNum.toLowerCase(),
       );
-      if (!control) continue;
+      if (!control) { continue; }
 
       const descriptions: Record<string, string> = {};
       if (Array.isArray(control.descriptions)) {
-        for (const desc of control.descriptions as ExecJSON.ControlDescription[]) {
+        for (const desc of control.descriptions) {
           descriptions[desc.label.toLowerCase()] = desc.data;
         }
       }
 
       if (
-        descriptions.comments ||
-        descriptions.caveat ||
-        descriptions.justification ||
-        descriptions.rationale
+        descriptions.comments
+        || descriptions.caveat
+        || descriptions.justification
+        || descriptions.rationale
       ) {
         edits.set(vulnNum, {
-          comments: descriptions.comments,
           caveat: descriptions.caveat,
+          comments: descriptions.comments,
           justification: descriptions.justification,
-          rationale: descriptions.rationale
+          rationale: descriptions.rationale,
         });
       }
       break;
@@ -152,7 +77,7 @@ export function buildEditsMapFromProfiles(
  */
 export function prepareEvaluationForCklExport(
   evaluationData: ExecJSON.Execution,
-  attestations: Attestation[]
+  attestations: Attestation[],
 ): ExecJSON.Execution {
   const clone: ExecJSON.Execution = _.cloneDeep(evaluationData);
 
@@ -160,11 +85,11 @@ export function prepareEvaluationForCklExport(
     addAttestationToHDF(clone, attestations);
   }
 
-  const passthrough = (clone as ExecJSON.Execution & {passthrough?: {checklist?: {stigs?: {vulns: ChecklistVuln[]}[]}}}).passthrough;
+  const passthrough = (clone as ExecJSON.Execution & { passthrough?: { checklist?: { stigs?: { vulns: ChecklistVuln[] }[] } } }).passthrough;
   const stigs = passthrough?.checklist?.stigs;
   if (stigs) {
     for (const stig of stigs) {
-      const vulnNums = stig.vulns.map((v) => v.vulnNum);
+      const vulnNums = stig.vulns.map(v => v.vulnNum);
       const edits = buildEditsMapFromProfiles(clone.profiles, vulnNums);
       if (edits.size > 0) {
         syncChecklistVulnComments(stig.vulns, edits);
@@ -175,21 +100,97 @@ export function prepareEvaluationForCklExport(
   return clone;
 }
 
+/**
+ * Sanitize user text to prevent CKL section marker injection.
+ * Replaces newline-prefixed section markers (e.g. "\nCAVEAT ::") with
+ * escaped versions that won't be parsed as structured sections on re-import.
+ */
+export function sanitizeCklSectionMarkers(text: string): string {
+  if (!text) {
+    return text;
+  }
+  return text.replaceAll(
+    /\n(CAVEAT|COMMENTS|JUSTIFICATION|RATIONALE) ::/gv,
+    '\n[$1] ::',
+  );
+}
+
+/**
+ * Write-side complement to getDescription (read-side) in global.ts.
+ * Handles both array-form (evaluation controls) and object-form (profile controls).
+ */
+export function setControlDescription(
+  descriptions: DescriptionsInput,
+  label: string,
+  value: string,
+): void {
+  if (Array.isArray(descriptions)) {
+    const existing = descriptions.find(
+      (d: ExecJSON.ControlDescription) =>
+        d.label.toLowerCase() === label.toLowerCase(),
+    );
+    if (existing) {
+      existing.data = value;
+    } else {
+      descriptions.push({ data: value, label });
+    }
+  } else {
+    descriptions[label] = value;
+  }
+}
+
+/**
+ * Sync edited description fields back into CKL passthrough vuln comments
+ * at export time. Uses the same structured comment format as getComments()
+ * in checklist-jsonix-converter.ts.
+ *
+ * @param vulns - The ChecklistVuln array from passthrough.checklist.stigs[].vulns
+ * @param edits - Map of controlId → description field edits
+ */
+export function syncChecklistVulnComments(
+  vulns: ChecklistVuln[],
+  edits: Map<string, DescriptionEdits>,
+): void {
+  for (const vuln of vulns) {
+    const controlEdits = edits.get(vuln.vulnNum);
+    if (!controlEdits) {
+      continue;
+    }
+
+    const currentComments
+      = typeof vuln.comments === 'string' ? vuln.comments : '';
+    const sections = parseStructuredComments(currentComments);
+
+    for (const [field, value] of Object.entries(controlEdits)) {
+      const sanitized = sanitizeCklSectionMarkers(value ?? '');
+      const sectionLabel = field.toUpperCase();
+
+      if (sanitized) {
+        sections.set(sectionLabel, sanitized);
+      } else {
+        sections.delete(sectionLabel);
+      }
+    }
+
+    vuln.comments = serializeStructuredComments(sections);
+  }
+}
+
 const SECTION_ORDER = ['CAVEAT', 'JUSTIFICATION', 'RATIONALE', 'COMMENTS'];
 
 function parseStructuredComments(
-  commentString: string
+  commentString: string,
 ): Map<string, string> {
   const sections = new Map<string, string>();
 
-  if (!commentString || !commentString.includes(' :: ')) {
+  if (!commentString?.includes(' :: ')) {
     if (commentString.trim()) {
       sections.set('_plain', commentString);
     }
     return sections;
   }
 
-  for (const section of commentString.split(/\n(?=[A-Z]+ ::)/)) {
+  for (const section of commentString.split(/\n(?=[A-Z]+ ::)/v)) {
     const match = CKL_SECTION_MARKER_RE.exec(section);
     if (match) {
       const label = match[1];
@@ -204,7 +205,7 @@ function parseStructuredComments(
 }
 
 function serializeStructuredComments(
-  sections: Map<string, string>
+  sections: Map<string, string>,
 ): string {
   if (sections.size === 0) {
     return '';

@@ -1,6 +1,12 @@
 <template>
-  <v-container class="mx-0 px-0" fluid>
-    <v-row class="pt-2" justify="space-between">
+  <v-container
+    class="mx-0 px-0"
+    fluid
+  >
+    <v-row
+      class="pt-2"
+      justify="space-between"
+    >
       <v-card-subtitle>
         View files maintained (stored) in the Heimdall Server backend database.
       </v-card-subtitle>
@@ -12,12 +18,20 @@
         style="cursor: pointer"
         @click="isActiveDialog = true"
       >
-        <v-icon b-tooltip.hover title="Search Instructions" color="primary">
+        <v-icon
+          b-tooltip.hover
+          title="Search Instructions"
+          color="primary"
+        >
           mdi-information-outline
         </v-icon>
       </v-btn>
 
-      <v-dialog v-model="isActiveDialog" persistent width="500">
+      <v-dialog
+        v-model="isActiveDialog"
+        persistent
+        width="500"
+      >
         <v-card>
           <v-card-title>Search Instructions</v-card-title>
           <v-card-text>
@@ -32,8 +46,12 @@
               <template #default>
                 <thead>
                   <tr>
-                    <th class="text-left text-h6">Logic</th>
-                    <th class="text-left text-h6">Outcome</th>
+                    <th class="text-left text-h6">
+                      Logic
+                    </th>
+                    <th class="text-left text-h6">
+                      Outcome
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -58,14 +76,16 @@
                 </tbody>
               </template>
             </v-simple-table>
-            <br />
+            <br>
             <b>NOTE:</b>
             To clear the search fields, either click the clear icon (X) or
             delete any value(s) and press the enter (return) key.
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="isActiveDialog = false">Close Dialog</v-btn>
+            <v-btn @click="isActiveDialog = false">
+              Close Dialog
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -83,17 +103,17 @@
 </template>
 
 <script lang="ts">
+import type { IEvalPaginationParams, IEvaluation } from '@heimdall/common/interfaces';
+import Component, { mixins } from 'vue-class-component';
+import { Prop, Watch } from 'vue-property-decorator';
 import RefreshButton from '@/components/generic/RefreshButton.vue';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import type {FileID} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
-import {EvaluationModule} from '@/store/evaluations';
-import {SpinnerModule} from '@/store/spinner';
-import type {IEvalPaginationParams, IEvaluation} from '@heimdall/common/interfaces';
-import {Prop, Watch} from 'vue-property-decorator';
-import Component, {mixins} from 'vue-class-component';
+import { EvaluationModule } from '@/store/evaluations';
+import type { FileID } from '@/store/report_intake';
+import { SnackbarModule } from '@/store/snackbar';
+import { SpinnerModule } from '@/store/spinner';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -102,64 +122,48 @@ import Component, {mixins} from 'vue-class-component';
 @Component({
   components: {
     LoadFileList,
-    RefreshButton
-  }
+    RefreshButton,
+  },
 })
 export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
-  @Prop({default: false}) readonly refresh!: boolean;
+  headers: object[] = [
+    {
+      align: 'left',
+      sortable: true,
+      text: 'Filename',
+      value: 'filename',
+    },
+    {
+      sortable: true,
+      text: 'Groups',
+      value: 'groups',
+    },
+    {
+      sortable: true,
+      text: 'Tags',
+      value: 'evaluationTags',
+    },
+    { sortable: true, text: 'Uploaded', value: 'createdAt' },
+    {
+      align: 'end',
+      sortable: false,
+      text: 'Actions',
+      value: 'actions',
+    },
+  ];
 
   isActiveDialog = false;
 
-  headers: Object[] = [
-    {
-      text: 'Filename',
-      value: 'filename',
-      align: 'left',
-      sortable: true
-    },
-    {
-      text: 'Groups',
-      value: 'groups',
-      sortable: true
-    },
-    {
-      text: 'Tags',
-      value: 'evaluationTags',
-      sortable: true
-    },
-    {text: 'Uploaded', value: 'createdAt', sortable: true},
-    {
-      text: 'Actions',
-      value: 'actions',
-      align: 'end',
-      sortable: false
-    }
-  ];
-
   itemsPerPage = EvaluationModule.limit;
 
-  @Watch('refresh')
-  onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
-    if (newRefreshValue === true) {
-      // Whenever refresh is set to true, call refresh on the database results
-      this.get_all_results();
-    }
+  @Prop({ default: false }) readonly refresh!: boolean;
+
+  get evaluationsCount() {
+    return EvaluationModule.evaluationsCount;
   }
 
-  mounted() {
-    this.get_all_results();
-  }
-
-  async get_all_results(): Promise<void> {
-    // Cursor is set back to default when the query finishes
-    document.body.style.cursor = 'wait';
-    const params: IEvalPaginationParams = {
-      offset: EvaluationModule.offset,
-      limit: this.itemsPerPage,
-      order: EvaluationModule.order
-    };
-    // Stores results in the Evaluation class field pagedEvaluations
-    EvaluationModule.getAllEvaluations(params);
+  get pagedEvaluations() {
+    return EvaluationModule.pagedEvaluations;
   }
 
   // Loading is initially set to true in Evaluation class.
@@ -168,21 +172,25 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     return EvaluationModule.loading;
   }
 
-  get pagedEvaluations() {
-    return EvaluationModule.pagedEvaluations;
-  }
-
-  get evaluationsCount() {
-    return EvaluationModule.evaluationsCount;
+  async get_all_results(): Promise<void> {
+    // Cursor is set back to default when the query finishes
+    document.body.style.cursor = 'wait';
+    const params: IEvalPaginationParams = {
+      limit: this.itemsPerPage,
+      offset: EvaluationModule.offset,
+      order: EvaluationModule.order,
+    };
+    // Stores results in the Evaluation class field pagedEvaluations
+    EvaluationModule.getAllEvaluations(params);
   }
 
   // Fires when user selects entries and loads them into the visualization panel
   async load_results(evaluations: IEvaluation[]): Promise<void> {
-    if (evaluations.length != 0) {
+    if (evaluations.length > 0) {
       SpinnerModule.reset();
       SpinnerModule.visibility(true);
       EvaluationModule.load_results(
-        evaluations.map((evaluation) => evaluation.id)
+        evaluations.map(evaluation => evaluation.id),
       )
         .then((fileIds: (FileID | void)[]) => {
           this.$emit('got-files', fileIds.filter(Boolean));
@@ -192,8 +200,20 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
         });
     } else {
       SnackbarModule.notify(
-        'Please select an entry for viewing in the visualization panel'
+        'Please select an entry for viewing in the visualization panel',
       );
+    }
+  }
+
+  mounted() {
+    this.get_all_results();
+  }
+
+  @Watch('refresh')
+  onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
+    if (newRefreshValue === true) {
+      // Whenever refresh is set to true, call refresh on the database results
+      this.get_all_results();
     }
   }
 }

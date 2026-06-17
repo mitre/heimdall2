@@ -1,30 +1,30 @@
 import {
-  Controller,
-  Req,
-  Res,
-  Post,
+  All,
   Body,
+  Controller,
   HttpException,
   HttpStatus,
-  All
+  Post,
+  Req,
+  Res,
 } from '@nestjs/common';
-import {TenableService} from './tenable.service';
 import axios from 'axios';
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
+import { TenableService } from './tenable.service';
 
 // Extend express-session types to include 'tenable'
 declare module 'express-session' {
-  interface SessionData {
+  type SessionData = {
     tenable?: {
-      host_url: string;
       accesskey: string;
+      host_url: string;
       secretkey: string;
     };
-  }
+  };
 }
 
-const TENABLE_CSP_NOT_SET =
-  "Cannot set properties of undefined (setting 'tenable')";
+const TENABLE_CSP_NOT_SET
+  = "Cannot set properties of undefined (setting 'tenable')";
 
 // NestJS controller that handles Tenable authentication and proxying requests to Tenable
 // It allows users to log in with their Tenable credentials and then proxies all subsequent requests
@@ -44,9 +44,9 @@ export class TenableController {
    */
   async login(
     @Req() req: Request,
-    @Body() body: {host_url: string; accesskey: string; secretkey: string}
+    @Body() body: { accesskey: string; host_url: string; secretkey: string },
   ) {
-    const {host_url, accesskey, secretkey} = body;
+    const { accesskey, host_url, secretkey } = body;
 
     if (!host_url || !accesskey || !secretkey) {
       throw new HttpException('Missing credentials', HttpStatus.BAD_REQUEST);
@@ -54,110 +54,114 @@ export class TenableController {
 
     try {
       // This helps prevent double slashes in the resulting URL if host_url ends with a slash.
-      const fullUrl = `${host_url.replace(/\/$/, '')}/rest/currentUser`;
-      const result = await axios.get(fullUrl, {
-        headers: {
-          'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}`
-        }
-      });
+      const fullUrl = `${host_url.replace(/\/$/v, '')}/rest/currentUser`;
+      const result = await axios.get(fullUrl, { headers: { 'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}` } });
 
       // Assign the Tenable credentials to the session
-      req.session.tenable = {host_url, accesskey, secretkey};
+      req.session.tenable = { accesskey, host_url, secretkey };
 
       // Return the authenticated user data
       // Note: result.data is already a plain object, no need to convert it.
-      return {success: true, user: result.data}; // Return plain object
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        if (err.message.includes(TENABLE_CSP_NOT_SET)) {
+      return { success: true, user: result.data }; // Return plain object
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.message.includes(TENABLE_CSP_NOT_SET)) {
           throw new HttpException(
             {
-              status: HttpStatus.NOT_FOUND,
+              code: 'ERR_NETWORK', // custom application error code (optional)
               message: 'Tenable CSP not set',
-              code: 'ERR_NETWORK' // custom application error code (optional)
+              status: HttpStatus.NOT_FOUND,
             },
-            HttpStatus.NOT_FOUND
+            HttpStatus.NOT_FOUND,
           );
-        } else if (err.response?.status === HttpStatus.UNAUTHORIZED) {
+        } else if (error.response?.status === HttpStatus.UNAUTHORIZED) {
           throw new HttpException(
             {
-              status: HttpStatus.UNAUTHORIZED,
+              code: 'INVALID_CREDENTIALS', // custom application error code (optional)
               message: 'Invalid Tenable credentials',
-              code: 'INVALID_CREDENTIALS' // custom application error code (optional)
+              status: HttpStatus.UNAUTHORIZED,
             },
-            HttpStatus.UNAUTHORIZED
-          );
-        } else if (err.code === 'ECONNREFUSED') {
-          throw new HttpException(
-            {
-              status: HttpStatus.BAD_GATEWAY,
-              message: 'Tenable server is unreachable',
-              code: 'SERVER_UNREACHABLE' // custom app code
-            },
-            HttpStatus.BAD_GATEWAY
-          );
-        } else if (err.code === 'ENOTFOUND') {
-          throw new HttpException(
-            {
-              status: HttpStatus.BAD_REQUEST,
-              message:
-                'Unable to resolve Tenable host URL to an IP address (possible DNS resolution on the hosting platform).',
-              code: 'INVALID_HOST_URL' // custom app code
-            },
-            HttpStatus.BAD_REQUEST
-          );
-        } else if (err.code === 'ETIMEDOUT') {
-          throw new HttpException(
-            {
-              status: HttpStatus.REQUEST_TIMEOUT,
-              message: 'Tenable server took too long to respond',
-              code: 'CONNECTION_TIMEOUT' // custom application error code (optional)
-            },
-            HttpStatus.REQUEST_TIMEOUT
-          );
-        } else if (err.code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
-          throw new HttpException(
-            {
-              status: HttpStatus.BAD_GATEWAY,
-              message:
-                'SSL certificate verification failed while connecting to Tenable ' +
-                `(${host_url}). This may be due to an untrusted or incomplete TLS ` +
-                'certificate chain.',
-              code: 'UNABLE_TO_VERIFY_LEAF_SIGNATURE'
-            },
-            HttpStatus.BAD_GATEWAY
+            HttpStatus.UNAUTHORIZED,
           );
         } else {
-          throw new HttpException(
-            {
-              status: err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
-              message:
-                err.response?.data?.message ||
-                `Unexpected error connecting to Tenable ${host_url}`,
-              code: 'TENABLE_PROXY_ERROR' // Optional custom app code
-            },
-            err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR
-          );
+          switch (error.code) {
+            case 'ECONNREFUSED': {
+              throw new HttpException(
+                {
+                  code: 'SERVER_UNREACHABLE', // custom app code
+                  message: 'Tenable server is unreachable',
+                  status: HttpStatus.BAD_GATEWAY,
+                },
+                HttpStatus.BAD_GATEWAY,
+              );
+            }
+            case 'ENOTFOUND': {
+              throw new HttpException(
+                {
+                  code: 'INVALID_HOST_URL', // custom app code
+                  message:
+                'Unable to resolve Tenable host URL to an IP address (possible DNS resolution on the hosting platform).',
+                  status: HttpStatus.BAD_REQUEST,
+                },
+                HttpStatus.BAD_REQUEST,
+              );
+            }
+            case 'ETIMEDOUT': {
+              throw new HttpException(
+                {
+                  code: 'CONNECTION_TIMEOUT', // custom application error code (optional)
+                  message: 'Tenable server took too long to respond',
+                  status: HttpStatus.REQUEST_TIMEOUT,
+                },
+                HttpStatus.REQUEST_TIMEOUT,
+              );
+            }
+            case 'UNABLE_TO_VERIFY_LEAF_SIGNATURE': {
+              throw new HttpException(
+                {
+                  code: 'UNABLE_TO_VERIFY_LEAF_SIGNATURE',
+                  message:
+                'SSL certificate verification failed while connecting to Tenable '
+                + `(${host_url}). This may be due to an untrusted or incomplete TLS `
+                + 'certificate chain.',
+                  status: HttpStatus.BAD_GATEWAY,
+                },
+                HttpStatus.BAD_GATEWAY,
+              );
+            }
+            default: {
+              throw new HttpException(
+                {
+                  code: 'TENABLE_PROXY_ERROR', // Optional custom app code
+                  message:
+                error.response?.data?.message
+                || `Unexpected error connecting to Tenable ${host_url}`,
+                  status: error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+                },
+                error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+              );
+            }
+          }
         }
-      } else if (err instanceof Error) {
+      } else if (error instanceof Error) {
         throw new HttpException(
           {
-            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            code: 'TENABLE_PROXY_ERROR',
             message:
-              err.message ||
-              `Unexpected error connecting to Tenable ${host_url}`,
-            code: 'TENABLE_PROXY_ERROR'
+              error.message
+              || `Unexpected error connecting to Tenable ${host_url}`,
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
           },
-          HttpStatus.INTERNAL_SERVER_ERROR
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       } else {
         throw new HttpException(
           {
+            code: 'TENABLE_PROXY_ERROR',
+            message: `Unexpected error connecting to Tenable ${host_url}: ${JSON.stringify(error, null, 2)}`,
             status: HttpStatus.INTERNAL_SERVER_ERROR,
-            message: `Unexpected error connecting to Tenable ${host_url}: ${JSON.stringify(err, null, 2)}`,
-            code: 'TENABLE_PROXY_ERROR'
           },
-          HttpStatus.INTERNAL_SERVER_ERROR
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
     }
@@ -181,7 +185,7 @@ export class TenableController {
 
       // If credentials are missing, user is not authenticated, send 401 Unauthorized.
       if (!creds) {
-        return res.status(401).json({error: 'Not authenticated with Tenable'});
+        return res.status(401).json({ error: 'Not authenticated with Tenable' });
       }
 
       // Forward the incoming request to the Tenable API using stored credentials.
@@ -189,46 +193,46 @@ export class TenableController {
       // handle any errors that occur during the proxy request.
       const result = await this.tenableService.proxyRequest(req, creds);
       res.status(result.status).send(result.data);
-    } catch (err) {
+    } catch (error) {
       const cspMsg = TENABLE_CSP_NOT_SET.replace('set', 'read').replace(
         'setting',
-        'reading'
+        'reading',
       );
 
-      if (axios.isAxiosError(err)) {
-        if (err.message.includes(cspMsg)) {
+      if (axios.isAxiosError(error)) {
+        if (error.message.includes(cspMsg)) {
           throw new HttpException(
             {
-              status: HttpStatus.NOT_FOUND,
+              code: 'ERR_NETWORK', // custom application error code (optional)
               message: 'Tenable CSP not set',
-              code: 'ERR_NETWORK' // custom application error code (optional)
+              status: HttpStatus.NOT_FOUND,
             },
-            HttpStatus.NOT_FOUND
+            HttpStatus.NOT_FOUND,
           );
         } else {
-          const status =
-            err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
-          const message = err.response?.data || 'Proxy error';
+          const status
+            = error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
+          const message = error.response?.data || 'Proxy error';
           res.status(status).send(message);
         }
-      } else if (err instanceof Error) {
-        if (err.message.includes(cspMsg)) {
+      } else if (error instanceof Error) {
+        if (error.message.includes(cspMsg)) {
           throw new HttpException(
             {
-              status: HttpStatus.NOT_FOUND,
+              code: 'ERR_NETWORK',
               message: 'Tenable CSP not set',
-              code: 'ERR_NETWORK'
+              status: HttpStatus.NOT_FOUND,
             },
-            HttpStatus.NOT_FOUND
+            HttpStatus.NOT_FOUND,
           );
         } else {
           const status = HttpStatus.INTERNAL_SERVER_ERROR;
-          const message = err.message || 'Proxy error';
+          const message = error.message || 'Proxy error';
           res.status(status).send(message);
         }
       } else {
         const status = HttpStatus.INTERNAL_SERVER_ERROR;
-        const message = `Proxy error: ${JSON.stringify(err, null, 2)}`;
+        const message = `Proxy error: ${JSON.stringify(error, null, 2)}`;
         res.status(status).send(message);
       }
     }

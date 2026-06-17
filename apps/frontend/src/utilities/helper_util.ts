@@ -1,7 +1,66 @@
 /** For helper functions that don't belong anywhere else */
 
-import {ExecJSON} from 'inspecjs';
+import type { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
+
+/** A useful shorthand */
+export type Hash<T> = Record<string, T>;
+
+export type IVuetifyItems = {
+  disabled?: boolean;
+  text: number | string;
+  value: boolean | number | string;
+};
+
+/** Stores/retrieves a simple JSON object from localstorage.
+ * Will not store/retrieve methods - be advised! It won't work with class types!
+ */
+export class LocalStorageVal<T> {
+  private readonly storageKey: string;
+
+  constructor(storageKey: string) {
+    this.storageKey = storageKey;
+  }
+
+  /** Clears the local storage value */
+  clear(): void {
+    globalThis.localStorage.removeItem(this.storageKey);
+  }
+
+  /** Retrieves the currently held item, as resolved by JSON.parse */
+  get(): null | T {
+    // Fetch the string, failing early if not set
+    const s = globalThis.localStorage.getItem(this.storageKey);
+    if (!s) {
+      return null;
+    }
+
+    // Then try parsing. On fail, clear and go null
+    try {
+      return JSON.parse(s);
+    } catch {
+      this.clear();
+      return null;
+    }
+  }
+
+  /** Wraps get, providing the provided default if necessary */
+  getDefault(_default: T): T {
+    const v = this.get();
+    return v === null ? _default : v;
+  }
+
+  /** Sets the local storage value to the given value, stringified */
+  set(val: T): void {
+    const nv = JSON.stringify(val);
+    globalThis.localStorage.setItem(this.storageKey, nv);
+  }
+}
+
+/** Generate a basic authentication string for http requests */
+export function basicAuth(username: string, password: string): string {
+  return 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64');
+}
 
 /** Compares arrays a and b, returning a number indicating their lexicographic ordering
  * with the same output semantics.
@@ -11,9 +70,9 @@ import * as _ from 'lodash';
  * if a is lexicographically after  b, return > 1
  */
 export function compareArrays<T>(
-  a: Array<T>,
-  b: Array<T>,
-  comparator: (a: T, b: T) => number
+  a: T[],
+  b: T[],
+  comparator: (a: T, b: T) => number,
 ) {
   // Compare element-wise
   for (let i = 0; i < a.length && i < b.length; i++) {
@@ -36,95 +95,28 @@ export function compareArrays<T>(
   }
 }
 
-/** Stores/retrieves a simple JSON object from localstorage.
- * Will not store/retrieve methods - be advised! It won't work with class types!
- */
-export class LocalStorageVal<T> {
-  private readonly storageKey: string;
-
-  constructor(storageKey: string) {
-    this.storageKey = storageKey;
-  }
-
-  /** Retrieves the currently held item, as resolved by JSON.parse */
-  get(): T | null {
-    // Fetch the string, failing early if not set
-    const s = window.localStorage.getItem(this.storageKey);
-    if (!s) {
-      return null;
-    }
-
-    // Then try parsing. On fail, clear and go null
-    try {
-      return JSON.parse(s);
-    } catch (error) {
-      this.clear();
-      return null;
-    }
-  }
-
-  /** Wraps get, providing the provided default if necessary */
-  getDefault(_default: T): T {
-    const v = this.get();
-    if (v === null) {
-      return _default;
-    } else {
-      return v;
-    }
-  }
-
-  /** Sets the local storage value to the given value, stringified */
-  set(val: T): void {
-    const nv = JSON.stringify(val);
-    window.localStorage.setItem(this.storageKey, nv);
-  }
-
-  /** Clears the local storage value */
-  clear(): void {
-    window.localStorage.removeItem(this.storageKey);
-  }
-}
-
 /** Get description from Array of descriptions or Key/String pair */
 export function getDescription(
   descriptions:
-    | {
-        [key: string]: string;
-      }
-    | ExecJSON.ControlDescription[],
-  key: string
+    | ExecJSON.ControlDescription[]
+    | Record<string, string>,
+  key: string,
 ): string | undefined {
   let found: string | undefined;
-  if (Array.isArray(descriptions)) {
-    found = descriptions.find(
+  found = Array.isArray(descriptions)
+    ? descriptions.find(
       (description: ExecJSON.ControlDescription) =>
-        description.label.toLowerCase() === key
-    )?.data;
-  } else {
-    found = _.get(descriptions, key);
-  }
+        description.label.toLowerCase() === key,
+    )?.data
+    : _.get(descriptions, key);
 
   return found;
 }
 
-/** A useful shorthand */
-export type Hash<T> = {[key: string]: T};
-
 /** Converts a simple, single level json dict into uri params */
-export function toURIParams(params: Hash<string | number | boolean>) {
+export function toURIParams(params: Hash<boolean | number | string>) {
   const esc = encodeURIComponent;
   return Object.keys(params)
-    .map((k) => `${esc(k)}=${esc(params[k])}`)
+    .map(k => `${esc(k)}=${esc(params[k])}`)
     .join('&');
-}
-
-/** Generate a basic authentication string for http requests */
-export function basicAuth(username: string, password: string): string {
-  return 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64');
-}
-
-export interface IVuetifyItems {
-  text: string | number;
-  value: string | number | boolean;
-  disabled?: boolean;
 }

@@ -1,13 +1,25 @@
 <template>
-  <v-dialog v-model="showModal" max-width="550px">
+  <v-dialog
+    v-model="showModal"
+    max-width="550px"
+  >
     <template #activator="{on, attrs}">
-      <slot name="clickable" :on="on" :attrs="attrs" />
+      <slot
+        name="clickable"
+        :on="on"
+        :attrs="attrs"
+      />
     </template>
 
     <v-card>
-      <v-card-title class="headline" style="word-break: break-word">{{
-        title
-      }}</v-card-title>
+      <v-card-title
+        class="headline"
+        style="word-break: break-word"
+      >
+        {{
+          title
+        }}
+      </v-card-title>
       <v-card-text>
         <v-text-field
           v-model="value"
@@ -18,7 +30,11 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="blue darken-1" text @click="$emit('cancel')">
+        <v-btn
+          color="blue darken-1"
+          text
+          @click="$emit('cancel')"
+        >
           Cancel
         </v-btn>
         <v-btn
@@ -26,8 +42,9 @@
           data-cy="deleteConfirm"
           text
           @click="$emit('confirm')"
-          >OK</v-btn
         >
+          OK
+        </v-btn>
         <v-spacer />
       </v-card-actions>
     </v-card>
@@ -37,19 +54,19 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
 
 @Component({})
 export default class InputDialog extends Vue {
-  @Prop({required: false, type: Boolean, default: false})
-  readonly isPassword!: boolean;
-
-  @Prop({required: false, type: String, default: 'delete'})
+  @Prop({ default: 'delete', required: false, type: String })
   readonly action!: string;
 
-  @Prop({required: true, type: String}) readonly title!: string;
-  @Prop({required: true, type: String}) readonly textFieldLabel!: string;
-  @Prop({type: Boolean, required: true, default: false}) showModal!: boolean;
+  @Prop({ default: false, required: false, type: Boolean })
+  readonly isPassword!: boolean;
+
+  @Prop({ default: false, required: true, type: Boolean }) showModal!: boolean;
+  @Prop({ required: true, type: String }) readonly textFieldLabel!: string;
+  @Prop({ required: true, type: String }) readonly title!: string;
 
   value = '';
 }

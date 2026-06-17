@@ -46,41 +46,41 @@ export enum LocalPartEnum {
   VulnAttribute = 'VULN_ATTRIBUTE',
   WebDBInstance = 'WEB_DB_INSTANCE',
   WebDBSite = 'WEB_DB_SITE',
-  WebOrDatabase = 'WEB_OR_DATABASE'
+  WebOrDatabase = 'WEB_OR_DATABASE',
 }
 
 export type Stigdata = {
+  asset?: Asset;
+  assettype?: Assettype;
   attributedata?: null | string;
-  vulnattribute?: Vulnattribute;
   comments?: null | string;
   findingdetails?: null | string;
-  severityjustification?: null | string;
-  severityoverride?: Severityoverride;
-  status?: Status;
-  stigdata?: StigdatumElement[];
-  sidata?: Sidata[];
-  assettype?: Assettype;
   hostfqdn?: null | string;
   hostguid?: null | string;
   hostip?: null | string;
   hostmac?: null | string;
   hostname?: null | string;
+  istig?: Istig[];
   marking?: null | string;
   role?: Role;
+  severityjustification?: null | string;
+  severityoverride?: Severityoverride;
+  sidata?: Sidata[];
+  siddata?: null | string;
+  sidname?: Sidname;
+  status?: Status;
+  stigdata?: StigdatumElement[];
   stigguid?: null | string;
+  stiginfo?: Stiginfo;
+  stigs?: Stigs;
   targetcomment?: null | string;
   targetkey?: null | string;
   techarea?: Techarea;
+  vuln?: Vuln[];
+  vulnattribute?: Vulnattribute;
   webdbinstance?: null | string;
   webdbsite?: null | string;
   webordatabase?: boolean | null;
-  asset?: Asset;
-  stigs?: Stigs;
-  stiginfo?: Stiginfo;
-  vuln?: Vuln[];
-  siddata?: null | string;
-  sidname?: Sidname;
-  istig?: Istig[];
 };
 
 export type Asset = {
@@ -103,24 +103,24 @@ export type Asset = {
 
 export enum Assettype {
   Computing = 'Computing',
-  NonComputing = 'Non-Computing'
+  NonComputing = 'Non-Computing',
 }
 
 export enum Role {
   DomainController = 'Domain Controller',
   MemberServer = 'Member Server',
   None = 'None',
-  Workstation = 'Workstation'
+  Workstation = 'Workstation',
 }
 
 export enum Techarea {
-  Empty = '',
   ApplicationReview = 'Application Review',
   BoundarySecurity = 'Boundary Security',
   CDSAdminReview = 'CDS Admin Review',
   CDSTechnicalReview = 'CDS Technical Review',
   DatabaseReview = 'Database Review',
   DomainNameSystemDNS = 'Domain Name System (DNS)',
+  Empty = '',
   ExchangeServer = 'Exchange Server',
   HostBasedSystemSecurityHBSS = 'Host Based System Security (HBSS)',
   InternalNetwork = 'Internal Network',
@@ -132,7 +132,7 @@ export enum Techarea {
   UnixOS = 'UNIX OS',
   VVOIPReview = 'VVOIP Review',
   WebReview = 'Web Review',
-  WindowsOS = 'Windows OS'
+  WindowsOS = 'Windows OS',
 }
 
 export type Istig = {
@@ -140,9 +140,7 @@ export type Istig = {
   vuln: Vuln[];
 };
 
-export type Stiginfo = {
-  sidata: Sidata[];
-};
+export type Stiginfo = { sidata: Sidata[] };
 
 export type Sidata = {
   siddata?: null | string;
@@ -160,7 +158,7 @@ export enum Sidname {
   Stigid = 'stigid',
   Title = 'title',
   UUID = 'uuid',
-  Version = 'version'
+  Version = 'version',
 }
 
 export type Vuln = {
@@ -176,14 +174,14 @@ export enum Severityoverride {
   Empty = '',
   High = 'high',
   Low = 'low',
-  Medium = 'medium'
+  Medium = 'medium',
 }
 
 export enum Status {
   NotAFinding = 'NotAFinding',
   NotApplicable = 'Not_Applicable',
   NotReviewed = 'Not_Reviewed',
-  Open = 'Open'
+  Open = 'Open',
 }
 
 export type StigdatumElement = {
@@ -210,17 +208,15 @@ export enum Vulnattribute {
   RuleID = 'Rule_ID',
   RuleTitle = 'Rule_Title',
   RuleVer = 'Rule_Ver',
-  STIGRef = 'STIGRef',
   SecurityOverrideGuidance = 'Security_Override_Guidance',
   Severity = 'Severity',
+  STIGRef = 'STIGRef',
   StigUUID = 'STIG_UUID',
   TargetKey = 'TargetKey',
   ThirdPartyTools = 'Third_Party_Tools',
   VulnDiscuss = 'Vuln_Discuss',
   VulnNum = 'Vuln_Num',
-  Weight = 'Weight'
+  Weight = 'Weight',
 }
 
-export type Stigs = {
-  istig: Istig[];
-};
+export type Stigs = { istig: Istig[] };

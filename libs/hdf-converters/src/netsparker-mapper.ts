@@ -1,28 +1,30 @@
-import {ExecJSON} from 'inspecjs';
+import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import {HeimdallToolsVersion} from './utils/global';
+import type {
+  ILookupPath,
+  MappedTransform,
+} from './base-converter';
 import {
   BaseConverter,
-  ILookupPath,
-  impactMapping,
-  MappedTransform,
   buildParseHtmlFunc,
-  parseXml
+  impactMapping,
+  parseXml,
 } from './base-converter';
-import {CweNistMapping} from './mappings/CweNistMapping';
-import {OwaspNistMapping} from './mappings/OwaspNistMapping';
+import { CweNistMapping } from './mappings/CweNistMapping';
+import { OwaspNistMapping } from './mappings/OwaspNistMapping';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
+  getCCIsForNISTTags,
+  HeimdallToolsVersion,
 } from './utils/global';
 
-const IMPACT_MAPPING: Map<string, number> = new Map([
-  ['critical', 1.0],
+const IMPACT_MAPPING = new Map<string, number>([
+  ['best_practice', 0],
+  ['critical', 1],
   ['high', 0.7],
-  ['medium', 0.5],
+  ['information', 0],
   ['low', 0.3],
-  ['best_practice', 0.0],
-  ['information', 0.0]
+  ['medium', 0.5],
 ]);
 
 const CWE_NIST_MAPPING = new CweNistMapping();
@@ -30,23 +32,161 @@ const OWASP_NIST_MAPPING = new OwaspNistMapping();
 
 let parseHtml: (input: unknown) => string;
 
-function nistTag(classification: Record<string, unknown>): string[] {
-  let cweTag = _.get(classification, 'cwe');
-  if (!Array.isArray(cweTag)) {
-    cweTag = [cweTag];
+export class NetsparkerMapper extends BaseConverter {
+  withRaw: boolean;
+
+  constructor(netsparkerXml: string, withRaw = false) {
+    super(parseXml(netsparkerXml));
+    this.withRaw = withRaw;
+    this.setMappings(
+      this.defineMappings(
+        Object.keys(this.data).some(k => k.includes('netsparker'))
+          ? 'netsparker'
+          : 'invicti',
+      ),
+    );
   }
-  let owaspTag = _.get(classification, 'owasp');
-  if (!Array.isArray(owaspTag)) {
-    owaspTag = [owaspTag];
+
+  defineMappings(
+    toolname: string,
+  ): MappedTransform<ExecJSON.Execution & { passthrough: unknown }, ILookupPath> {
+    const capitalizedToolname = toolname.replace(/^./, firstLetter =>
+      firstLetter.toUpperCase(),
+    );
+    return {
+      passthrough: {
+        transformer: (
+          data: Record<string, unknown>,
+        ): Record<string, unknown> => {
+          const auxData = _.get(data, 'netsparker-enterprise');
+          const genData = _.get(auxData, 'generated');
+          const targetData = _.omit(_.get(auxData, 'target'), [
+            'scan-id',
+            'url',
+            'initiated',
+          ]);
+          return {
+            auxiliary_data: [
+              {
+                data: {
+                  'netsparker-enterprise': {
+                    generated: genData,
+                    target: targetData,
+                  },
+                },
+                name: 'Netsparker',
+              },
+            ],
+            ...(this.withRaw && { raw: data }),
+          };
+        },
+      },
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+        target_id: { path: `${toolname}-enterprise.target.url` },
+      },
+      profiles: [
+        {
+          attributes: [],
+          controls: [
+            {
+              code: {
+                transformer: (vulnerability: Record<string, unknown>): string =>
+                  JSON.stringify(vulnerability, null, 2),
+              },
+              desc: { transformer: formatControlDesc },
+              descriptions: [
+                {
+                  data: { transformer: formatCheck },
+                  label: 'check',
+                },
+                {
+                  data: { transformer: formatFix },
+                  label: 'fix',
+                },
+              ],
+              id: { path: 'LookupId' },
+              impact: {
+                path: 'severity',
+                transformer: impactMapping(IMPACT_MAPPING),
+              },
+              key: 'id',
+              path: `${toolname}-enterprise.vulnerabilities.vulnerability`,
+              refs: [],
+              results: [
+                {
+                  code_desc: {
+                    path: 'http-request',
+                    transformer: formatCodeDesc,
+                  },
+                  message: { path: 'http-response', transformer: formatMessage },
+                  start_time: { path: `$.${toolname}-enterprise.target.initiated` },
+                  status: ExecJSON.ControlResultStatus.Failed,
+                },
+              ],
+              source_location: {},
+              tags: {
+                cci: {
+                  path: 'classification',
+                  transformer: (data: Record<string, unknown>) =>
+                    getCCIsForNISTTags(nistTag(data)),
+                },
+                nist: { path: 'classification', transformer: nistTag },
+              },
+              title: { path: 'name' },
+            },
+          ],
+          groups: [],
+          name: `${capitalizedToolname} Enterprise Scan`,
+          sha256: '',
+          status: 'loaded',
+          summary: `${capitalizedToolname} Enterprise Scan`,
+          supports: [],
+          title: {
+            path: `${toolname}-enterprise.target`,
+            transformer: (input: unknown): string => {
+              return `${toolname.replace(/^./, firstLetter =>
+                firstLetter.toUpperCase(),
+              )} Enterprise Scan ID: ${_.get(input, 'scan-id')} URL: ${_.get(
+                input,
+                'url',
+              )}`;
+            },
+          },
+        },
+      ],
+      statistics: {},
+      version: HeimdallToolsVersion,
+    };
   }
-  const cwe = CWE_NIST_MAPPING.nistFilter(cweTag as string[]);
-  const owasp = OWASP_NIST_MAPPING.nistFilterNoDefault(owaspTag as string[]);
-  const result = cwe.concat(owasp);
-  if (result.length !== 0) {
-    return result;
-  } else {
-    return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
+}
+export class NetsparkerResults {
+  constructor(readonly netsparkerXml: string, readonly withRaw = false) {}
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    parseHtml = await buildParseHtmlFunc();
+
+    return (new NetsparkerMapper(this.netsparkerXml, this.withRaw)).toHdf();
   }
+}
+function formatCheck(vulnerability: unknown): string {
+  const text: string[] = [];
+  const exploitationSkills = _.get(vulnerability, 'exploitation-skills');
+  if (exploitationSkills) {
+    text.push(`Exploitation-skills: ${exploitationSkills}`);
+  }
+  const proofOfConcept = _.get(vulnerability, 'proof-of-concept');
+  if (proofOfConcept) {
+    text.push(`Proof-of-concept: ${proofOfConcept}`);
+  }
+  return parseHtml(text.join('<br>'));
+}
+function formatCodeDesc(request: unknown): string {
+  const text: string[] = [];
+  text.push(`http-request : ${_.get(request, 'content')}`);
+  text.push(`method : ${_.get(request, 'method')}`);
+  return text.join('\n');
 }
 function formatControlDesc(vulnerability: unknown): string {
   const text: string[] = [];
@@ -61,16 +201,16 @@ function formatControlDesc(vulnerability: unknown): string {
   const extraInformation = _.get(vulnerability, 'extra-information');
   if (extraInformation) {
     text.push(
-      `Extra-information: ${JSON.stringify(extraInformation).replace(
-        /:/gi,
-        '=>'
-      )}`
+      `Extra-information: ${JSON.stringify(extraInformation).replaceAll(
+        ':',
+        '=>',
+      )}`,
     );
   }
   const classification = _.get(vulnerability, 'classification');
   if (classification) {
     text.push(
-      `Classification: ${JSON.stringify(classification).replace(/:/gi, '=>')}`
+      `Classification: ${JSON.stringify(classification).replaceAll(':', '=>')}`,
     );
   }
   const impact = _.get(vulnerability, 'impact');
@@ -99,18 +239,6 @@ function formatControlDesc(vulnerability: unknown): string {
   }
   return text.join('<br>');
 }
-function formatCheck(vulnerability: unknown): string {
-  const text: string[] = [];
-  const exploitationSkills = _.get(vulnerability, 'exploitation-skills');
-  if (exploitationSkills) {
-    text.push(`Exploitation-skills: ${exploitationSkills}`);
-  }
-  const proofOfConcept = _.get(vulnerability, 'proof-of-concept');
-  if (proofOfConcept) {
-    text.push(`Proof-of-concept: ${proofOfConcept}`);
-  }
-  return parseHtml(text.join('<br>'));
-}
 function formatFix(vulnerability: unknown): string {
   const text: string[] = [];
   const remedialActions = _.get(vulnerability, 'remedial-actions');
@@ -127,12 +255,7 @@ function formatFix(vulnerability: unknown): string {
   }
   return text.join('<br>');
 }
-function formatCodeDesc(request: unknown): string {
-  const text: string[] = [];
-  text.push(`http-request : ${_.get(request, 'content')}`);
-  text.push(`method : ${_.get(request, 'method')}`);
-  return text.join('\n');
-}
+
 function formatMessage(response: unknown): string {
   const text: string[] = [];
   text.push(`http-response : ${_.get(response, 'content')}`);
@@ -141,143 +264,17 @@ function formatMessage(response: unknown): string {
   return text.join('\n');
 }
 
-export class NetsparkerResults {
-  constructor(readonly netsparkerXml: string, readonly withRaw = false) {}
-
-  async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
-
-    return (new NetsparkerMapper(this.netsparkerXml, this.withRaw)).toHdf();
+function nistTag(classification: Record<string, unknown>): string[] {
+  let cweTag = _.get(classification, 'cwe');
+  if (!Array.isArray(cweTag)) {
+    cweTag = [cweTag];
   }
-}
-
-export class NetsparkerMapper extends BaseConverter {
-  withRaw: boolean;
-
-  defineMappings(
-    toolname: string
-  ): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
-    const capitalizedToolname = toolname.replace(/^./, (firstLetter) =>
-      firstLetter.toUpperCase()
-    );
-    return {
-      platform: {
-        name: 'Heimdall Tools',
-        release: HeimdallToolsVersion,
-        target_id: {path: `${toolname}-enterprise.target.url`}
-      },
-      version: HeimdallToolsVersion,
-      statistics: {},
-      profiles: [
-        {
-          name: `${capitalizedToolname} Enterprise Scan`,
-          title: {
-            path: `${toolname}-enterprise.target`,
-            transformer: (input: unknown): string => {
-              return `${toolname.replace(/^./, (firstLetter) =>
-                firstLetter.toUpperCase()
-              )} Enterprise Scan ID: ${_.get(input, 'scan-id')} URL: ${_.get(
-                input,
-                'url'
-              )}`;
-            }
-          },
-          summary: `${capitalizedToolname} Enterprise Scan`,
-          supports: [],
-          attributes: [],
-          groups: [],
-          status: 'loaded',
-          controls: [
-            {
-              path: `${toolname}-enterprise.vulnerabilities.vulnerability`,
-              key: 'id',
-              tags: {
-                cci: {
-                  path: 'classification',
-                  transformer: (data: Record<string, unknown>) =>
-                    getCCIsForNISTTags(nistTag(data))
-                },
-                nist: {path: 'classification', transformer: nistTag}
-              },
-              refs: [],
-              source_location: {},
-              title: {path: 'name'},
-              id: {path: 'LookupId'},
-              desc: {transformer: formatControlDesc},
-              descriptions: [
-                {
-                  data: {transformer: formatCheck},
-                  label: 'check'
-                },
-                {
-                  data: {transformer: formatFix},
-                  label: 'fix'
-                }
-              ],
-              impact: {
-                path: 'severity',
-                transformer: impactMapping(IMPACT_MAPPING)
-              },
-              code: {
-                transformer: (vulnerability: Record<string, unknown>): string =>
-                  JSON.stringify(vulnerability, null, 2)
-              },
-              results: [
-                {
-                  status: ExecJSON.ControlResultStatus.Failed,
-                  code_desc: {
-                    path: 'http-request',
-                    transformer: formatCodeDesc
-                  },
-                  message: {path: 'http-response', transformer: formatMessage},
-                  start_time: {
-                    path: `$.${toolname}-enterprise.target.initiated`
-                  }
-                }
-              ]
-            }
-          ],
-          sha256: ''
-        }
-      ],
-      passthrough: {
-        transformer: (
-          data: Record<string, unknown>
-        ): Record<string, unknown> => {
-          const auxData = _.get(data, 'netsparker-enterprise');
-          const genData = _.get(auxData, 'generated');
-          const targetData = _.omit(_.get(auxData, 'target'), [
-            'scan-id',
-            'url',
-            'initiated'
-          ]);
-          return {
-            auxiliary_data: [
-              {
-                name: 'Netsparker',
-                data: {
-                  'netsparker-enterprise': {
-                    generated: genData,
-                    target: targetData
-                  }
-                }
-              }
-            ],
-            ...(this.withRaw && {raw: data})
-          };
-        }
-      }
-    };
+  let owaspTag = _.get(classification, 'owasp');
+  if (!Array.isArray(owaspTag)) {
+    owaspTag = [owaspTag];
   }
-  constructor(netsparkerXml: string, withRaw = false) {
-    super(parseXml(netsparkerXml));
-    this.withRaw = withRaw;
-    this.setMappings(
-      this.defineMappings(
-        Object.keys(this.data).some((k) => k.includes('netsparker'))
-          ? 'netsparker'
-          : 'invicti'
-      )
-    );
-  }
+  const cwe = CWE_NIST_MAPPING.nistFilter(cweTag as string[]);
+  const owasp = OWASP_NIST_MAPPING.nistFilterNoDefault(owaspTag as string[]);
+  const result = [...cwe, ...owasp];
+  return result.length > 0 ? result : DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
 }

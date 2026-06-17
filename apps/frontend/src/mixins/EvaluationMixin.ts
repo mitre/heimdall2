@@ -1,8 +1,8 @@
-import {GroupsModule} from '@/store/groups';
-import type {IGroup} from '@heimdall/common/interfaces';
-import {intersectionBy} from 'lodash';
-import {Component, Vue} from 'vue-property-decorator';
-import {IVuetifyItems} from '../utilities/helper_util';
+import type { IGroup } from '@heimdall/common/interfaces';
+import { intersectionBy } from 'lodash';
+import { Component, Vue } from 'vue-property-decorator';
+import { GroupsModule } from '@/store/groups';
+import { IVuetifyItems } from '../utilities/helper_util';
 
 @Component({})
 export default class EvaluationMixin extends Vue {
@@ -14,7 +14,7 @@ export default class EvaluationMixin extends Vue {
     return intersectionBy(groups, GroupsModule.myGroups, 'id').map((group) => {
       return {
         text: group.name,
-        value: group.id
+        value: group.id,
       };
     });
   }

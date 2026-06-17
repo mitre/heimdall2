@@ -1,14 +1,15 @@
-import {ForbiddenError} from '@casl/ability';
+import { ForbiddenError } from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
-import {SequelizeModule} from '@nestjs/sequelize';
-import {Test, TestingModule} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
-import {ValidationError} from 'sequelize';
-import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
+import { SequelizeModule } from '@nestjs/sequelize';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { ValidationError } from 'sequelize';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { GROUPS_SERVICE_MOCK } from '../../test/constants/groups-test.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -20,23 +21,23 @@ import {
   DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
   ID,
   UPDATE_USER_DTO_TEST_OBJ,
-  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
+  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
 } from '../../test/constants/users-test.constant';
-import {AuthzService} from '../authz/authz.service';
-import {ConfigModule} from '../config/config.module';
-import {ConfigService} from '../config/config.service';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
-import {GroupUser} from '../group-users/group-user.model';
-import {Group} from '../groups/group.model';
-import {GroupsService} from '../groups/groups.service';
-import {UserDto} from './dto/user.dto';
-import {User} from './user.model';
-import {UsersController} from './users.controller';
-import {UsersService} from './users.service';
+import { AuthzService } from '../authz/authz.service';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
+import { DatabaseModule } from '../database/database.module';
+import { DatabaseService } from '../database/database.service';
+import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
+import { Evaluation } from '../evaluations/evaluation.model';
+import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { Group } from '../groups/group.model';
+import { GroupsService } from '../groups/groups.service';
+import { UserDto } from './dto/user.dto';
+import { User } from './user.model';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
@@ -61,15 +62,15 @@ describe('UsersController Unit Tests', () => {
           Group,
           GroupEvaluation,
           Evaluation,
-          EvaluationTag
-        ])
+          EvaluationTag,
+        ]),
       ],
       providers: [
         AuthzService,
         DatabaseService,
         UsersService,
-        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
-      ]
+        { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK },
+      ],
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
@@ -97,7 +98,7 @@ describe('UsersController Unit Tests', () => {
       expect.assertions(1);
 
       expect(
-        await usersController.findUserById(basicUser.id, {user: basicUser})
+        await usersController.findUserById(basicUser.id, { user: basicUser }),
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
     });
 
@@ -105,9 +106,7 @@ describe('UsersController Unit Tests', () => {
     it('should test findById with invalid ID', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.findUserById(ID, {user: basicUser});
-      }).rejects.toThrow(NotFoundException);
+      await expect(usersController.findUserById(ID, { user: basicUser })).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -116,11 +115,9 @@ describe('UsersController Unit Tests', () => {
     it('should list all users for an admin', async () => {
       expect.assertions(1);
       const serviceFoundUsers = (await usersService.adminFindAllUsers()).map(
-        (user) => new UserDto(user)
+        user => new UserDto(user),
       );
-      const controllerFoundUsers = await usersController.adminFindAllUsers({
-        user: adminUser
-      });
+      const controllerFoundUsers = await usersController.adminFindAllUsers({ user: adminUser });
       // In the case of admin, they should be equal becuase admin can see all
       expect(controllerFoundUsers).toEqual(serviceFoundUsers);
     });
@@ -133,10 +130,10 @@ describe('UsersController Unit Tests', () => {
 
       const createdUser = await usersController.create(
         CREATE_USER_DTO_TEST_OBJ_2,
-        {}
+        {},
       );
       expect(createdUser).toEqual(
-        new UserDto(await usersService.findById(createdUser.id))
+        new UserDto(await usersService.findById(createdUser.id)),
       );
     });
 
@@ -144,36 +141,30 @@ describe('UsersController Unit Tests', () => {
     it('should test the create function with missing email field', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
-          {}
-        );
-      }).rejects.toThrow(ValidationError);
+      await expect(usersController.create(
+        CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
+        {},
+      )).rejects.toThrow(ValidationError);
     });
 
     // Tests the create function with dto that is missing password
     it('should test the create function with missing password field', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-          {}
-        );
-      }).rejects.toThrow(BadRequestException);
+      await expect(usersController.create(
+        CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
+        {},
+      )).rejects.toThrow(BadRequestException);
     });
 
     // Tests the create function with dto that is missing passwordConfirmation
     it('should test the create function with missing password confirmation field', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
-          {}
-        );
-      }).rejects.toThrow(ValidationError);
+      await expect(usersController.create(
+        CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
+        {},
+      )).rejects.toThrow(ValidationError);
     });
   });
 
@@ -184,7 +175,7 @@ describe('UsersController Unit Tests', () => {
       configService.set('REGISTRATION_DISABLED', 'true');
 
       await expect(
-        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
+        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {}),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
@@ -197,9 +188,9 @@ describe('UsersController Unit Tests', () => {
       expect(
         await usersController.update(
           basicUser.id,
-          {user: basicUser},
-          UPDATE_USER_DTO_TEST_OBJ
-        )
+          { user: basicUser },
+          UPDATE_USER_DTO_TEST_OBJ,
+        ),
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
     });
 
@@ -207,26 +198,22 @@ describe('UsersController Unit Tests', () => {
     it('should test update function with invalid ID', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.update(
-          ID,
-          {user: basicUser},
-          UPDATE_USER_DTO_TEST_OBJ
-        );
-      }).rejects.toThrow(NotFoundException);
+      await expect(usersController.update(
+        ID,
+        { user: basicUser },
+        UPDATE_USER_DTO_TEST_OBJ,
+      )).rejects.toThrow(NotFoundException);
     });
 
     // Tests the update function with dto that is missing currentPassword
     it('should test the update function with a dto that is missing currentPassword field', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.update(
-          basicUser.id,
-          {user: basicUser},
-          UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
-        );
-      }).rejects.toThrow(ForbiddenException);
+      await expect(usersController.update(
+        basicUser.id,
+        { user: basicUser },
+        UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
+      )).rejects.toThrow(ForbiddenException);
     });
   });
 
@@ -238,9 +225,9 @@ describe('UsersController Unit Tests', () => {
       expect(
         await usersController.remove(
           basicUser.id,
-          {user: basicUser},
-          DELETE_USER_DTO_TEST_OBJ
-        )
+          { user: basicUser },
+          DELETE_USER_DTO_TEST_OBJ,
+        ),
       ).toEqual(new UserDto(basicUser));
     });
 
@@ -248,26 +235,22 @@ describe('UsersController Unit Tests', () => {
     it('should test remove function with invalid ID', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.remove(
-          ID,
-          {user: adminUser},
-          DELETE_USER_DTO_TEST_OBJ
-        );
-      }).rejects.toThrow(NotFoundException);
+      await expect(usersController.remove(
+        ID,
+        { user: adminUser },
+        DELETE_USER_DTO_TEST_OBJ,
+      )).rejects.toThrow(NotFoundException);
     });
 
     // Tests the remove function with dto that is missing password
     it('should test remove function with a dto that is missing password field', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.remove(
-          basicUser.id,
-          {user: basicUser},
-          DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
-        );
-      }).rejects.toThrow(ForbiddenException);
+      await expect(usersController.remove(
+        basicUser.id,
+        { user: basicUser },
+        DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
+      )).rejects.toThrow(ForbiddenException);
     });
   });
 });

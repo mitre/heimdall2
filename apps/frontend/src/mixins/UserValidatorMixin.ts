@@ -1,11 +1,9 @@
 import * as _ from 'lodash';
-import {Component, Vue} from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import ValidationProperties from 'vue/types/vue';
-import {validationMixin} from 'vuelidate';
+import { validationMixin } from 'vuelidate';
 
-@Component({
-  mixins: [validationMixin]
-})
+@Component({ mixins: [validationMixin] })
 export default class UserValidatorMixin extends Vue {
   emailErrors(field: typeof ValidationProperties) {
     const errors: string[] = [];

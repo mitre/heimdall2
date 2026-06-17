@@ -1,9 +1,16 @@
 <template>
-  <v-dialog v-model="dialog" max-width="700px">
+  <v-dialog
+    v-model="dialog"
+    max-width="700px"
+  >
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
     <template #activator="{on, attrs}">
-      <slot name="clickable" :on="on" :attrs="attrs" />
+      <slot
+        name="clickable"
+        :on="on"
+        :attrs="attrs"
+      />
     </template>
     <v-card
       class="rounded-t-0"
@@ -13,10 +20,11 @@
         data-cy="groupModalTitle"
         class="headline mitreSecondaryBlue"
         primary-title
-        >{{ title }}</v-card-title
       >
+        {{ title }}
+      </v-card-title>
       <v-card-text>
-        <br />
+        <br>
         <v-form @submit.prevent>
           <v-row>
             <v-col cols="8">
@@ -64,7 +72,10 @@
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <GroupAPIKeysModal v-if="!create && apiKeysEnabled" :group="group">
+        <GroupAPIKeysModal
+          v-if="!create && apiKeysEnabled"
+          :group="group"
+        >
           <template #clickable="{on, attrs}">
             <v-btn
               data-cy="groupAPIKeys"
@@ -101,36 +112,36 @@
 </template>
 
 <script lang="ts">
-import ActionDialog from '@/components/generic/ActionDialog.vue';
-import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue';
-import Users from '@/components/global/groups/Users.vue';
-import {GroupsModule} from '@/store/groups';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
 import type {
   IAddUserToGroup,
   ICreateGroup,
   IGroup,
   IRemoveUserFromGroup,
   ISlimUser,
-  IUpdateGroupUser
+  IUpdateGroupUser,
 } from '@heimdall/common/interfaces';
-import axios, {AxiosResponse} from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue';
+import Users from '@/components/global/groups/Users.vue';
+import { GroupsModule } from '@/store/groups';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
 
 function newGroup(): IGroup {
   return {
+    createdAt: new Date(),
+    desc: '',
     id: '-1',
     name: '',
-    role: '',
     public: false,
-    createdAt: new Date(),
+    role: '',
     updatedAt: new Date(),
-    desc: '',
-    users: []
+    users: [],
   };
 }
 
@@ -138,64 +149,63 @@ function newGroup(): IGroup {
   components: {
     ActionDialog,
     GroupAPIKeysModal,
-    Users
-  }
+    Users,
+  },
 })
 export default class GroupModal extends Vue {
+  @Prop({ default: false, type: Boolean }) readonly admin!: boolean;
+
+  changePassword = false;
+  @Prop({ default: false, type: Boolean }) readonly create!: boolean;
+  currentPassword = '';
+  dialog = false;
+  // Upon group name change, the component will detect whether the current state is acceptable
+  duplicateName = false;
+
   @Prop({
-    type: Object,
-    required: false,
     default: () => {
       return newGroup();
-    }
+    },
+    required: false,
+    type: Object,
   })
   readonly group!: IGroup;
 
-  @Prop({type: Boolean, default: false}) readonly admin!: boolean;
-  @Prop({type: Boolean, default: false}) readonly create!: boolean;
-  dialog = false;
-  changePassword = false;
   groupInfo: IGroup = _.cloneDeep(this.group);
-
-  currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
-  get title(): string {
-    if (this.create) {
-      return 'Create a New Group';
-    } else {
-      return 'Update Group';
-    }
-  }
+
+  // Upon user role update, the child component will emit whether the current state is acceptable
+  saveable = true;
 
   get apiKeysEnabled(): boolean {
     return ServerModule.apiKeysEnabled;
   }
 
-  // Upon user role update, the child component will emit whether the current state is acceptable
-  saveable = true;
-  updateSaveState(saveable: boolean) {
-    if (!this.create) {
-      if (!saveable) SnackbarModule.failure(`Must have at least 1 owner`);
-      this.saveable = saveable;
+  get title(): string {
+    return this.create ? 'Create a New Group' : 'Update Group';
+  }
+
+  async cancel(): Promise<void> {
+    this.dialog = false;
+    this.groupInfo = _.cloneDeep(this.group); // Reset the working state of the edit operation
+  }
+
+  checkUniqueName(name: string) {
+    this.duplicateName = GroupsModule.allGroups.some(
+      group => group.name === name && group.id !== this.groupInfo.id,
+    );
+    if (this.duplicateName) {
+      SnackbarModule.failure('Group names must be unique.');
     }
   }
 
-  // Upon group name change, the component will detect whether the current state is acceptable
-  duplicateName = false;
-  checkUniqueName(name: string) {
-    this.duplicateName = GroupsModule.allGroups.some(
-      (group) => group.name === name && group.id !== this.groupInfo.id
-    );
-    if (this.duplicateName) {
-      SnackbarModule.failure(`Group names must be unique.`);
-    }
+  async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {
+    return axios.post<IGroup>('/groups', createGroup);
   }
 
   async save(): Promise<void> {
-    const groupInfo: ICreateGroup = {
-      ...this.groupInfo
-    };
+    const groupInfo: ICreateGroup = { ...this.groupInfo };
 
     try {
       const response = await (this.create
@@ -213,69 +223,65 @@ export default class GroupModal extends Vue {
       // This updates the store after the change propagates through the database
       // Not calling this would result in reactivity delays on the frontend
       await GroupsModule.FetchGroupData();
-      SnackbarModule.notify(`Group Successfully Saved`);
-    } catch (err) {
-      SnackbarModule.failure(`Failed to Save Group: ${err}`);
+      SnackbarModule.notify('Group Successfully Saved');
+    } catch (error) {
+      SnackbarModule.failure(`Failed to Save Group: ${error}`);
     }
   }
 
-  async cancel(): Promise<void> {
-    this.dialog = false;
-    this.groupInfo = _.cloneDeep(this.group); // Reset the working state of the edit operation
-  }
-
-  async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {
-    return axios.post<IGroup>('/groups', createGroup);
-  }
-
-  async updateExistingGroup(
-    groupToUpdate: ICreateGroup
-  ): Promise<AxiosResponse<IGroup>> {
-    return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
-  }
-
   async syncUsersWithGroup(group: IGroup) {
-    const originalIds = this.group.users.map((user) => user.id);
-    const changedIds = this.groupInfo.users.map((user) => user.id);
+    const originalIds = new Set(this.group.users.map(user => user.id));
+    const changedIds = new Set(this.groupInfo.users.map(user => user.id));
     const toAdd: ISlimUser[] = this.groupInfo.users.filter(
-      (user) => !originalIds.includes(user.id)
+      user => !originalIds.has(user.id),
     );
     const toRemove: ISlimUser[] = this.group.users.filter(
-      (user) => !changedIds.includes(user.id)
+      user => !changedIds.has(user.id),
     );
-    const toUpdate: ISlimUser[] = this.groupInfo.users.filter((newUser) =>
+    const toUpdate: ISlimUser[] = this.groupInfo.users.filter(newUser =>
       this.group.users.some(
-        (user) => user.id === newUser.id && user.groupRole !== newUser.groupRole
-      )
+        user => user.id === newUser.id && user.groupRole !== newUser.groupRole,
+      ),
     );
     const addedUserPromises = toAdd.map((user) => {
       const addUserDto: IAddUserToGroup = {
+        groupRole: user.groupRole || 'member',
         userId: user.id,
-        groupRole: user.groupRole || 'member'
       };
       return axios.post(`/groups/${group.id}/user`, addUserDto);
     });
     const updatedUserPromises = toUpdate.map((user) => {
       const updateGroupUserRole: IUpdateGroupUser = {
+        groupRole: user.groupRole || 'member',
         userId: user.id,
-        groupRole: user.groupRole || 'member'
       };
       return axios.put(
         `/groups/${group.id}/updateGroupUserRole`,
-        updateGroupUserRole
+        updateGroupUserRole,
       );
     });
     const removedUserPromises = toRemove.map((user) => {
-      const removeUserDto: IRemoveUserFromGroup = {
-        userId: user.id
-      };
-      return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
+      const removeUserDto: IRemoveUserFromGroup = { userId: user.id };
+      return axios.delete(`/groups/${group.id}/user`, { data: removeUserDto });
     });
     return Promise.all([...addedUserPromises, ...updatedUserPromises]).then(
       () => {
         return Promise.all(removedUserPromises);
-      }
+      },
     );
+  }
+
+  async updateExistingGroup(
+    groupToUpdate: ICreateGroup,
+  ): Promise<AxiosResponse<IGroup>> {
+    return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
+  }
+
+  updateSaveState(saveable: boolean) {
+    if (!this.create) {
+      if (!saveable) { SnackbarModule.failure('Must have at least 1 owner'); }
+      this.saveable = saveable;
+    }
   }
 }
 </script>

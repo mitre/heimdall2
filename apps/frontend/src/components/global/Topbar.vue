@@ -7,8 +7,14 @@
     dense
   >
     <!-- The title and nav bar -->
-    <v-toolbar-title id="toolbar_title" class="pr-2">
-      <v-app-bar-nav-icon v-if="showBackButton" @click.stop="goBack">
+    <v-toolbar-title
+      id="toolbar_title"
+      class="pr-2"
+    >
+      <v-app-bar-nav-icon
+        v-if="showBackButton"
+        @click.stop="goBack"
+      >
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
       <v-app-bar-nav-icon
@@ -16,7 +22,9 @@
         data-cy="openSidebar"
         @click.stop="$emit('toggle-drawer')"
       >
-        <v-icon color="bar-visible">mdi-menu</v-icon>
+        <v-icon color="bar-visible">
+          mdi-menu
+        </v-icon>
       </v-app-bar-nav-icon>
       <span class="hidden-sm-and-down bar-visible--text">{{
         elipsisTitle
@@ -31,21 +39,32 @@
 </template>
 
 <script lang="ts">
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import TopbarDropdown from '@/components/global/TopbarDropdown.vue';
 import ServerMixin from '@/mixins/ServerMixin';
-import {HeightsModule} from '@/store/heights';
-import Component, {mixins} from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { HeightsModule } from '@/store/heights';
 
-@Component({
-  components: {
-    TopbarDropdown
-  }
-})
+@Component({ components: { TopbarDropdown } })
 export default class Topbar extends mixins(ServerMixin) {
-  @Prop({type: String, required: true}) readonly title!: string;
-  @Prop({default: false}) readonly minimalTopbar!: boolean;
-  @Prop({default: false}) readonly showBackButton!: boolean;
+  @Prop({ default: false }) readonly minimalTopbar!: boolean;
+  @Prop({ default: false }) readonly showBackButton!: boolean;
+  @Prop({ required: true, type: String }) readonly title!: string;
+
+  get elipsisTitle() {
+    return this.title.length > 50
+      ? `${this.title.slice(0, 50)}...`
+      : this.title;
+  }
+
+  /** Submits an event to clear all filters */
+  clear(): void {
+    this.$emit('clear');
+  }
+
+  goBack() {
+    this.$router.go(-1);
+  }
 
   mounted() {
     this.onResize();
@@ -59,21 +78,6 @@ export default class Topbar extends mixins(ServerMixin) {
         HeightsModule.setTopbarHeight(this.$el.clientHeight);
       }, 2000);
     });
-  }
-
-  goBack() {
-    this.$router.go(-1);
-  }
-
-  /** Submits an event to clear all filters */
-  clear(): void {
-    this.$emit('clear');
-  }
-
-  get elipsisTitle() {
-    return this.title.length > 50
-      ? `${this.title.substring(0, 50)}...`
-      : this.title;
   }
 }
 </script>

@@ -2,81 +2,68 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  NestInterceptor
+  NestInterceptor,
 } from '@nestjs/common';
-import {Request} from 'express';
+import { Request } from 'express';
 import _ from 'lodash';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import winston from 'winston';
-import {ConfigService} from '../config/config.service';
-import {SlimUserDto} from '../users/dto/slim-user.dto';
-import {UserDto} from '../users/dto/user.dto';
-import {User} from '../users/user.model';
+import { ConfigService } from '../config/config.service';
+import { SlimUserDto } from '../users/dto/slim-user.dto';
+import { UserDto } from '../users/dto/user.dto';
+import { User } from '../users/user.model';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  private readonly configService: ConfigService;
   private readonly line = '___________________________________________\n';
-
-  constructor(configService: ConfigService) {
-    this.configService = configService;
-  }
   public logger = winston.createLogger({
-    transports: [new winston.transports.Console()],
     format: winston.format.combine(
-      winston.format.timestamp({
-        format: 'MMM-DD-YYYY HH:mm:ss Z'
-      }),
+      winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
       winston.format.printf(
-        (info) =>
+        info =>
           `${this.line}[${[info.timestamp]}] (Interceptor): ${info.ip} ${
             info.referer
-          } ${info.userAgent} ${info.user} ${info.message}`
-      )
-    )
+          } ${info.userAgent} ${info.user} ${info.message}`,
+      ),
+    ),
+    transports: [new winston.transports.Console()],
   });
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<void> {
-    const request: Request & {user?: User} = context
-      .switchToHttp()
-      .getRequest();
-    const method = request.method;
-    const endpoint = request.originalUrl;
-    const callingUser: User | undefined = request.user;
-    const calledMethod = context.getHandler().name;
-    const requestParams = JSON.stringify(this.redact(request.body));
-    const referer = request.headers['referer'];
-    const userAgent = request.headers['user-agent'];
-    this.logger.info({
-      ip: this.getRealIP(request),
-      user: this.userToString(callingUser),
-      referer: referer,
-      userAgent: userAgent,
-      message: `${_.startCase(
-        calledMethod
-      )} (${method}) ${requestParams} ${endpoint}`
-    });
-    return next.handle();
-  }
-
-  userToString(user?: User | UserDto | SlimUserDto): string {
-    if (user) {
-      return `User<ID: ${user.id}>`;
-    }
-    return `User<Unknown>`;
+  private readonly configService: ConfigService;
+  constructor(configService: ConfigService) {
+    this.configService = configService;
   }
 
   getRealIP(request: Request): string | unknown {
     const realIP = Object.keys(request.headers).find(
-      (header) =>
-        header.toLowerCase() === 'x-forwarded-for' ||
-        header.toLowerCase() === 'x-real-ip'
+      header =>
+        header.toLowerCase() === 'x-forwarded-for'
+        || header.toLowerCase() === 'x-real-ip',
     );
-    if (realIP) {
-      return `${request.headers[realIP]} -> ${request.ip}`;
-    } else {
-      return request.ip;
-    }
+    return realIP ? `${request.headers[realIP]} -> ${request.ip}` : request.ip;
+  }
+
+  intercept(context: ExecutionContext, next: CallHandler): Observable<void> {
+    const request: Request & { user?: User } = context
+      .switchToHttp()
+      .getRequest();
+    const method = request.method;
+    const endpoint = request.originalUrl;
+    const callingUser: undefined | User = request.user;
+    const calledMethod = context.getHandler().name;
+    const requestParams = JSON.stringify(this.redact(request.body));
+    const referer = request.headers.referer;
+    const userAgent = request.headers['user-agent'];
+    this.logger.info({
+      ip: this.getRealIP(request),
+      message: `${_.startCase(
+        calledMethod,
+      )} (${method}) ${requestParams} ${endpoint}`,
+      referer: referer,
+      user: this.userToString(callingUser),
+      userAgent: userAgent,
+    });
+    return next.handle();
   }
 
   redact(obj?: Record<string, unknown>): Record<string, unknown> | undefined {
@@ -87,11 +74,18 @@ export class LoggingInterceptor implements NestInterceptor {
   }
 
   redactObject(obj: Record<string, unknown>): Record<string, unknown> {
-    Object.keys(obj).forEach((key) => {
-      if (this.configService.sensitiveKeys.some((regex) => regex.test(key))) {
+    for (const key of Object.keys(obj)) {
+      if (this.configService.sensitiveKeys.some(regex => regex.test(key))) {
         obj[key] = '[REDACTED]';
       }
-    });
+    }
     return obj;
+  }
+
+  userToString(user?: SlimUserDto | User | UserDto): string {
+    if (user) {
+      return `User<ID: ${user.id}>`;
+    }
+    return 'User<Unknown>';
   }
 }

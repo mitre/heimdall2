@@ -1,11 +1,11 @@
-import {IOWASPJSONID} from './OwaspNistMapping';
+import type { IOWASPJSONID } from './OwaspNistMapping';
 
 export class OwaspNistMappingItem {
   id: string;
   name: string;
   nistId: string;
-  rev: number;
   nistName: string;
+  rev: number;
 
   constructor(values: IOWASPJSONID) {
     if (values['OWASP-ID'] === undefined) {
@@ -18,12 +18,8 @@ export class OwaspNistMappingItem {
     } else {
       this.name = values['OWASP Name'];
     }
-    if (values['NIST-ID'] === undefined) {
-      this.nistId = '';
-    } else {
-      this.nistId = values['NIST-ID'];
-    }
-    this.rev = values['Rev'];
+    this.nistId = values['NIST-ID'] === undefined ? '' : values['NIST-ID'];
+    this.rev = values.Rev;
     if (values['NIST Name'] === undefined) {
       throw new Error('OWASP Nist Mapping Data must contain a nist name.');
     } else {

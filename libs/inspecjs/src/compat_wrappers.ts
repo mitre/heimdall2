@@ -1,11 +1,11 @@
 import {
   ExecControl as HDFExecControl_1_0,
-  ProfileControl as HDFProfileControl_1_0
+  ProfileControl as HDFProfileControl_1_0,
 } from './compat_impl/compat_inspec_1_0';
-import * as parse from './fileparse';
-import {ExecJSONControl as ResultControl_1_0} from './generated_parsers/v_1_0/exec-json';
-import {ProfileJSONControl as ProfileControl_1_0} from './generated_parsers/v_1_0/profile-json';
-import {CanonizationConfig, NistControl, NistRevision} from './nist';
+import type * as parse from './fileparse';
+import type { ExecJSONControl as ResultControl_1_0 } from './generated_parsers/v_1_0/exec-json';
+import type { ProfileJSONControl as ProfileControl_1_0 } from './generated_parsers/v_1_0/profile-json';
+import type { CanonizationConfig, NistControl, NistRevision } from './nist';
 
 // These types are used throughout for control/result status and impact
 
@@ -29,7 +29,7 @@ export const controlStatuses = [
   'Profile Error',
   'Passed',
   'Failed',
-  'Not Reviewed'
+  'Not Reviewed',
 ] as const;
 export type ControlStatus = (typeof controlStatuses)[number];
 export const lowercasedControlStatuses = [
@@ -38,10 +38,10 @@ export const lowercasedControlStatuses = [
   'profile error',
   'passed',
   'failed',
-  'not reviewed'
+  'not reviewed',
 ] as const;
-export type LowercasedControlStatus =
-  (typeof lowercasedControlStatuses)[number];
+export type LowercasedControlStatus
+  = (typeof lowercasedControlStatuses)[number];
 
 /** The severities a control can have. These map numeric impact values to No/Low/Medium/High/Crtiical impact
  * [0, 0.01) => No impact
@@ -55,7 +55,7 @@ export const severities = [
   'low',
   'medium',
   'high',
-  'critical'
+  'critical',
 ] as const;
 export type Severity = (typeof severities)[number];
 export const titleCasedSeverities = [
@@ -63,17 +63,148 @@ export const titleCasedSeverities = [
   'Low',
   'Medium',
   'High',
-  'Critical'
+  'Critical',
 ] as const;
-export type TitleCasedSeverity = (typeof titleCasedSeverities)[number];
+/**
+ * This interface acts as a polyfill on controls for our HDF "guaranteed" derived types, to provide a stable
+ * method for acessing their properties across different schemas.
+ */
+export type HDFControl = {
+  /**
+   * Processes all of this controls nist tags to the given spec.
+   * Since this is derived from parsedNistTags, this will also be
+   * lexicographically sorted.
+   * It is also deduplicated!
+   */
+  canonized_nist(config: CanonizationConfig): string[];
+
+  /** Maps string labels to description items. */
+  descriptions: Record<string, string>;
+
+  /**
+   * Returns a user-facing representation of the result of this status, consisting of a message explaining
+   * this controls status, followed by the contents of this.message.
+   */
+  finding_details: string;
+
+  /** Easy check if this is a profile */
+  isProfile: boolean;
+
+  /**
+   * A string that essentially acts as a user-facing log of the results of the success/failure of each
+   * part of the control's code.
+   * This variable is UNSTABLE and should not be used as a ground-truth for testing, as it's format may be changed
+   * in the future.
+   */
+  message: string;
+
+  /**
+   * Returns the revision of the nist tags, if it was found.
+   */
+  parsedNistRevision: NistRevision | null;
+
+  /**
+   * Returns the nist tags parsed and filtered to only include valid tags.
+   * If unmapped, will be effectively UM-1.
+   * Sorted lexicographically, first by family, then by corresponding sub-specifiers.
+   */
+  parsedNistTags: NistControl[];
+
+  // May be present depending on type of input
+  /**
+   * Returns the nist tags if they exist.
+   * If they don't, simply returns empty array.
+   * If you want auto resolving, use fixed_nist_tags
+   */
+  rawNistTags: string[];
+
+  /**
+   * Access the segments of this control in HDF format.
+   * If no tests were run, (this is a profile-json) returns undefined.
+   */
+  segments?: HDFControlSegment[];
+
+  severity: Severity;
+
+  /**
+   * Get the start time of this control's run, as determined by the time of the first test.
+   * If no tests were run, (it is a profile-json or has no tests) returns undefined
+   */
+  start_time?: string;
+
+  /**
+   * Get the control status as computed for the entire control.
+   * See the below for discussion of how this should be computed.
+   * https://github.com/mitre/heimdall-vuetify/issues/57
+   */
+  status: ControlStatus;
+
+  /**
+   * Get the results of this control's control segments  as a list.
+   * If no tests were run, (this is a profile-json) returns undefined.
+   * Can be empty in the rare case that no control segments exist/were run.
+   */
+  status_list?: SegmentStatus[];
+
+  /** Returns whether this control was waived. */
+  waived: boolean;
+
+  /**
+   * The control that this interface wraps
+   */
+  wraps: parse.AnyControl;
+};
+
+/**
+ * Represents a single describe blocks execution in our test,
+ * and data related to its execution
+ */
+export type HDFControlSegment = {
+  /** A line by line trace of where this.exception occurred */
+  backtrace?: string[];
+
+  /** The description of this particular segment */
+  code_desc: string;
+
+  /** A string describing the error/exception this segment encountered (if one was encountered) */
+  exception?: string;
+
+  /** The message that inspec produced describing this segment's result */
+  message?: string;
+
+  /** Which inspec resource this control used, if one could be determined */
+  resource?: string;
+
+  /** The run time of this segment, in seconds */
+  run_time?: number;
+
+  /** A message describing why this segment was skipped (if it was skipped) */
+  skip_message?: string;
+
+  /** The start time of this segment, which is typically in the format.
+   *
+   * yyyy-mm-ddThh:mm:ss+|-HH:MM
+   *
+   * Where yyyy is year, mm d=month, dd day, hh hour, mm minute, ss second,
+   * plus or minus HH:MM s the time zone offset.
+   *
+   * However, this isn't guaranteed
+   */
+  start_time: string;
+
+  /** The result of this particular segment */
+  status: SegmentStatus;
+};
 
 /** The statuses that a segment of a control (IE a describe block) might have. */
-export type SegmentStatus =
-  | 'passed'
-  | 'failed'
-  | 'skipped'
-  | 'error'
-  | 'no_status';
+export type SegmentStatus
+  = | 'error'
+    | 'failed'
+    | 'no_status'
+    | 'passed'
+    | 'skipped';
+
+export type TitleCasedSeverity = (typeof titleCasedSeverities)[number];
 
 export function convertImpactToSeverity(impact: number): Severity {
   if (impact < 0.1) {
@@ -87,137 +218,6 @@ export function convertImpactToSeverity(impact: number): Severity {
   } else {
     return 'critical';
   }
-}
-
-/**
- * This interface acts as a polyfill on controls for our HDF "guaranteed" derived types, to provide a stable
- * method for acessing their properties across different schemas.
- */
-export interface HDFControl {
-  /**
-   * The control that this interface wraps
-   */
-  wraps: parse.AnyControl;
-
-  /**
-   * Get the control status as computed for the entire control.
-   * See the below for discussion of how this should be computed.
-   * https://github.com/mitre/heimdall-vuetify/issues/57
-   */
-  status: ControlStatus;
-
-  severity: Severity;
-
-  /**
-   * A string that essentially acts as a user-facing log of the results of the success/failure of each
-   * part of the control's code.
-   * This variable is UNSTABLE and should not be used as a ground-truth for testing, as it's format may be changed
-   * in the future.
-   */
-  message: string;
-
-  // May be present depending on type of input
-  /**
-   * Returns the nist tags if they exist.
-   * If they don't, simply returns empty array.
-   * If you want auto resolving, use fixed_nist_tags
-   */
-  rawNistTags: string[];
-
-  /**
-   * Returns a user-facing representation of the result of this status, consisting of a message explaining
-   * this controls status, followed by the contents of this.message.
-   */
-  finding_details: string;
-
-  /**
-   * Returns the nist tags parsed and filtered to only include valid tags.
-   * If unmapped, will be effectively UM-1.
-   * Sorted lexicographically, first by family, then by corresponding sub-specifiers.
-   */
-  parsedNistTags: NistControl[];
-
-  /**
-   * Processes all of this controls nist tags to the given spec.
-   * Since this is derived from parsedNistTags, this will also be
-   * lexicographically sorted.
-   * It is also deduplicated!
-   */
-  canonized_nist(config: CanonizationConfig): string[];
-
-  /**
-   * Returns the revision of the nist tags, if it was found.
-   */
-  parsedNistRevision: NistRevision | null;
-
-  /**
-   * Get the start time of this control's run, as determined by the time of the first test.
-   * If no tests were run, (it is a profile-json or has no tests) returns undefined
-   */
-  start_time?: string;
-
-  /**
-   * Get the results of this control's control segments  as a list.
-   * If no tests were run, (this is a profile-json) returns undefined.
-   * Can be empty in the rare case that no control segments exist/were run.
-   */
-  status_list?: SegmentStatus[];
-
-  /**
-   * Access the segments of this control in HDF format.
-   * If no tests were run, (this is a profile-json) returns undefined.
-   */
-  segments?: HDFControlSegment[];
-
-  /** Easy check if this is a profile */
-  isProfile: boolean;
-
-  /** Maps string labels to description items. */
-  descriptions: {[key: string]: string};
-
-  /** Returns whether this control was waived. */
-  waived: boolean;
-}
-
-/**
- * Represents a single describe blocks execution in our test,
- * and data related to its execution
- */
-export interface HDFControlSegment {
-  /** The result of this particular segment */
-  status: SegmentStatus;
-
-  /** The message that inspec produced describing this segment's result */
-  message?: string;
-
-  /** The description of this particular segment */
-  code_desc: string;
-
-  /** A message describing why this segment was skipped (if it was skipped) */
-  skip_message?: string;
-
-  /** A string describing the error/exception this segment encountered (if one was encountered) */
-  exception?: string;
-
-  /** A line by line trace of where this.exception occurred */
-  backtrace?: string[];
-
-  /** The start time of this segment, which is typically in the format.
-   *
-   * yyyy-mm-ddThh:mm:ss+|-HH:MM
-   *
-   * Where yyyy is year, mm d=month, dd day, hh hour, mm minute, ss second,
-   * plus or minus HH:MM s the time zone offset.
-   *
-   * However, this isn't guaranteed
-   */
-  start_time: string;
-
-  /** The run time of this segment, in seconds */
-  run_time?: number;
-
-  /** Which inspec resource this control used, if one could be determined */
-  resource?: string;
 }
 
 /**

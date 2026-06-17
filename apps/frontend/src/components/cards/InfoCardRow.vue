@@ -1,6 +1,9 @@
 <template>
   <v-row>
-    <v-col v-if="severityOverrideProps.number" cols="12">
+    <v-col
+      v-if="severityOverrideProps.number"
+      cols="12"
+    >
       <v-card
         :color="severityOverrideProps.color"
         class="d-flex flex-no-wrap justify-space-between"
@@ -8,7 +11,10 @@
       >
         <div>
           <v-card-title>
-            <v-icon class="pr-3" large>
+            <v-icon
+              class="pr-3"
+              large
+            >
               mdi-{{ severityOverrideProps.icon }}
             </v-icon>
             <span class="title">{{
@@ -21,7 +27,7 @@
           <v-btn
             :disabled="
               filter.tagFilter &&
-              filter.tagFilter.indexOf('severityoverride') !== -1
+                filter.tagFilter.includes('severityoverride')
             "
             @click="$emit('show-severity-overrides')"
           >
@@ -34,35 +40,35 @@
 </template>
 
 <script lang="ts">
-import type {Filter} from '@/store/data_filters';
-import {FilteredDataModule} from '@/store/data_filters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
+import type { Filter } from '@/store/data_filters';
+import { FilteredDataModule } from '@/store/data_filters';
 
-interface CardProps {
+type CardProps = {
+  color: string;
   icon: string;
-  title: string;
   number: number;
   subtitle: string;
-  color: string;
-}
+  title: string;
+};
 
 @Component
 export default class InfoCardRow extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({ required: true, type: Object }) readonly filter!: Filter;
 
   get severityOverrideProps(): CardProps {
     const filter = {
       ...this.filter,
-      tagFilter: ['severityoverride']
+      tagFilter: ['severityoverride'],
     };
     return {
-      icon: 'delta',
-      title: 'Severity Overrides',
-      subtitle: 'Some controls have overridden severities',
       color: 'cyan',
-      number: FilteredDataModule.controls(filter).length
+      icon: 'delta',
+      number: FilteredDataModule.controls(filter).length,
+      subtitle: 'Some controls have overridden severities',
+      title: 'Severity Overrides',
     };
   }
 }

@@ -40,7 +40,11 @@
             <span v-else> {{ item.groupRole }} </span>
           </template>
           <template #[`item.actions`]="{item}">
-            <v-icon small title="Delete" @click="deleteUserDialog(item)">
+            <v-icon
+              small
+              title="Delete"
+              @click="deleteUserDialog(item)"
+            >
               mdi-delete
             </v-icon>
           </template>
@@ -60,112 +64,102 @@
 </template>
 
 <script lang="ts">
-import ActionDialog from '@/components/generic/ActionDialog.vue';
-import type {ISlimUser} from '@heimdall/common/interfaces';
-import Component from 'vue-class-component';
-import {Emit, Prop, VModel} from 'vue-property-decorator';
-import {ServerModule} from '@/store/server';
-import {IVuetifyItems} from '@/utilities/helper_util';
-import {DataTableHeader} from 'vuetify';
+import type { ISlimUser } from '@heimdall/common/interfaces';
 import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Emit, Prop, VModel } from 'vue-property-decorator';
+import { DataTableHeader } from 'vuetify';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import { ServerModule } from '@/store/server';
+import { IVuetifyItems } from '@/utilities/helper_util';
 
-@Component({
-  components: {
-    ActionDialog
-  }
-})
+@Component({ components: { ActionDialog } })
 export default class Users extends Vue {
+  @Prop({ default: false, required: false, type: Boolean })
+  readonly admin!: boolean;
+
+  @Prop({ default: false, required: false, type: Boolean })
+  readonly create!: boolean;
+
   @VModel({
-    type: Array,
-    required: false,
     default(): ISlimUser[] {
       return [];
-    }
+    },
+    required: false,
+    type: Array,
   })
   currentUsers!: ISlimUser[];
 
-  @Prop({type: Boolean, required: false, default: true})
+  dialogDelete = false;
+
+  @Prop({ default: true, required: false, type: Boolean })
   readonly editable!: boolean;
 
-  @Prop({type: Boolean, required: false, default: false})
-  readonly create!: boolean;
+  editedUserID = '0'; // Default to '0', as the id indices start at '1'
 
-  @Prop({type: Boolean, required: false, default: false})
-  readonly admin!: boolean;
-
-  editedUserID: string = '0'; // Default to '0', as the id indices start at '1'
-  usersToAdd: string[] = [];
-
-  dialogDelete = false;
   headers: DataTableHeader[] = [
     {
       text: 'Name',
-      value: 'full-name'
+      value: 'full-name',
     },
     {
       text: 'Email',
-      value: 'email'
+      value: 'email',
     },
     {
       text: 'Title',
-      value: 'title'
+      value: 'title',
     },
     {
       text: 'Role',
-      value: 'groupRole'
-    }
+      value: 'groupRole',
+    },
   ];
+
+  usersToAdd: string[] = [];
+
+  // Filter out users that are already in the group from the user search
+  get availableUsers(): IVuetifyItems[] {
+    const currentUserIds: string[] = this.currentUsers.map(user => user.id);
+    const users: IVuetifyItems[] = [];
+    for (const user of ServerModule.allUsers) {
+      if (
+        !currentUserIds.includes(user.id)
+        && (user.id !== ServerModule.userInfo.id || this.admin || !this.create)
+      ) {
+        users.push({
+          text: `${user.firstName || ''} ${user.lastName || ''} (${
+            user.email
+          })`,
+          value: user.id,
+        });
+      }
+    }
+    return users;
+  }
 
   get displayedHeaders() {
     // If the user is editing the group, then display the actions column.
     if (this.editable) {
       this.headers.push({
+        sortable: false,
         text: 'Actions',
         value: 'actions',
-        sortable: false
       });
     }
     return this.headers;
   }
 
   addUsers() {
-    ServerModule.allUsers.forEach((user) => {
+    for (const user of ServerModule.allUsers) {
       if (this.usersToAdd.includes(user.id)) {
         this.currentUsers.push({
           ...user,
-          groupRole: 'member'
+          groupRole: 'member',
         });
       }
-    });
-    this.usersToAdd = [];
-  }
-
-  @Emit()
-  onUpdateGroupUserRole(newRole: string) {
-    let saveable = true;
-    // If a role is being changed to member, check that there is at least 1 owner.
-    const editedUser = this.getEditedUser();
-    const userToUpdate = this.currentUsers.indexOf(editedUser);
-    const updatedGroupUser: ISlimUser = {
-      ...editedUser,
-      groupRole: newRole
-    };
-    this.currentUsers[userToUpdate] = updatedGroupUser;
-
-    if (this.numberOfOwners() < 1) {
-      saveable = false;
     }
-    return saveable;
-  }
-
-  numberOfOwners(): number {
-    return this.currentUsers.filter((user) => user.groupRole === 'owner')
-      .length;
-  }
-
-  deleteUserDialog(user: ISlimUser): void {
-    this.editedUserID = user.id;
-    this.dialogDelete = true;
+    this.usersToAdd = [];
   }
 
   closeActionDialog() {
@@ -178,8 +172,8 @@ export default class Users extends Vue {
     let saveable = true;
     const userToDelete = this.currentUsers.indexOf(this.getEditedUser());
     if (
-      this.currentUsers[userToDelete].groupRole === 'owner' &&
-      this.numberOfOwners() < 2
+      this.currentUsers[userToDelete].groupRole === 'owner'
+      && this.numberOfOwners() < 2
     ) {
       saveable = false;
     }
@@ -191,33 +185,41 @@ export default class Users extends Vue {
     return saveable;
   }
 
+  deleteUserDialog(user: ISlimUser): void {
+    this.editedUserID = user.id;
+    this.dialogDelete = true;
+  }
+
   getEditedUser(): ISlimUser {
     return (
-      this.currentUsers.find((user) => user.id === this.editedUserID) || {
+      this.currentUsers.find(user => user.id === this.editedUserID) || {
+        email: '',
         id: '0',
-        email: ''
       }
     );
   }
 
-  // Filter out users that are already in the group from the user search
-  get availableUsers(): IVuetifyItems[] {
-    const currentUserIds: string[] = this.currentUsers.map((user) => user.id);
-    const users: IVuetifyItems[] = [];
-    for (const user of ServerModule.allUsers) {
-      if (
-        !currentUserIds.includes(user.id) &&
-        (user.id !== ServerModule.userInfo.id || this.admin || !this.create)
-      ) {
-        users.push({
-          text: `${user.firstName || ''} ${user.lastName || ''} (${
-            user.email
-          })`,
-          value: user.id
-        });
-      }
+  numberOfOwners(): number {
+    return this.currentUsers.filter(user => user.groupRole === 'owner')
+      .length;
+  }
+
+  @Emit()
+  onUpdateGroupUserRole(newRole: string) {
+    let saveable = true;
+    // If a role is being changed to member, check that there is at least 1 owner.
+    const editedUser = this.getEditedUser();
+    const userToUpdate = this.currentUsers.indexOf(editedUser);
+    const updatedGroupUser: ISlimUser = {
+      ...editedUser,
+      groupRole: newRole,
+    };
+    this.currentUsers[userToUpdate] = updatedGroupUser;
+
+    if (this.numberOfOwners() < 1) {
+      saveable = false;
     }
-    return users;
+    return saveable;
   }
 }
 </script>

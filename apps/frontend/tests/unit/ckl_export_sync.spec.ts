@@ -1,9 +1,9 @@
-import {describe, expect, it} from 'vitest';
 import {
+  buildEditsMapFromProfiles,
   syncChecklistVulnComments,
-  buildEditsMapFromProfiles
 } from '@mitre/hdf-converters';
-import type {ExecJSON} from 'inspecjs';
+import type { ExecJSON } from 'inspecjs';
+import { describe, expect, it } from 'vitest';
 
 /**
  * Frontend integration tests for CKL export-time sync (ADR §5.4.2).
@@ -16,26 +16,26 @@ describe('CKL export sync — frontend integration (ADR §5.4.2)', () => {
   it('buildEditsMapFromProfiles is importable and returns correct map', () => {
     const profiles: ExecJSON.Profile[] = [
       {
-        name: 'test',
-        version: '1.0',
-        sha256: 'abc',
-        supports: [],
         attributes: [],
-        groups: [],
         controls: [
           {
-            id: 'V-2255',
-            title: 'Test',
             desc: '',
+            descriptions: [{ data: 'reviewer note', label: 'comments' }],
+            id: 'V-2255',
             impact: 0.5,
-            tags: {},
-            descriptions: [{label: 'comments', data: 'reviewer note'}],
             refs: [],
+            results: [],
             source_location: {},
-            results: []
-          }
-        ]
-      }
+            tags: {},
+            title: 'Test',
+          },
+        ],
+        groups: [],
+        name: 'test',
+        sha256: 'abc',
+        supports: [],
+        version: '1.0',
+      },
     ];
 
     const edits = buildEditsMapFromProfiles(profiles, ['V-2255']);
@@ -46,29 +46,29 @@ describe('CKL export sync — frontend integration (ADR §5.4.2)', () => {
   it('end-to-end: build edits → sync to vuln comments', () => {
     const profiles: ExecJSON.Profile[] = [
       {
-        name: 'test',
-        version: '1.0',
-        sha256: 'abc',
-        supports: [],
         attributes: [],
-        groups: [],
         controls: [
           {
-            id: 'V-2255',
-            title: 'Test',
             desc: '',
+            descriptions: [{ data: 'edited comment', label: 'comments' }],
+            id: 'V-2255',
             impact: 0.5,
-            tags: {},
-            descriptions: [{label: 'comments', data: 'edited comment'}],
             refs: [],
+            results: [],
             source_location: {},
-            results: []
-          }
-        ]
-      }
+            tags: {},
+            title: 'Test',
+          },
+        ],
+        groups: [],
+        name: 'test',
+        sha256: 'abc',
+        supports: [],
+        version: '1.0',
+      },
     ];
 
-    const vulns = [{vulnNum: 'V-2255', comments: ''}];
+    const vulns = [{ comments: '', vulnNum: 'V-2255' }];
     const edits = buildEditsMapFromProfiles(profiles, ['V-2255']);
 
     syncChecklistVulnComments(vulns as any, edits);

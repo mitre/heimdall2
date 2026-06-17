@@ -1,3 +1,1 @@
-export interface DeltaArgs {
-  id: number;
-}
+export type DeltaArgs = { id: number };

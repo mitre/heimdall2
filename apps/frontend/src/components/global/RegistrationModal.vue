@@ -7,14 +7,22 @@
     @update-user-table="$emit('update-user-table')"
   >
     <v-card class="elevation-12">
-      <v-toolbar color="primary" dark flat>
+      <v-toolbar
+        color="primary"
+        dark
+        flat
+      >
         <v-toolbar-title id="registration_form_title">
           Register to Heimdall Server
         </v-toolbar-title>
         <v-spacer />
       </v-toolbar>
       <v-card-text>
-        <v-form ref="form" name="signup_form" @submit.prevent="register">
+        <v-form
+          ref="form"
+          name="signup_form"
+          @submit.prevent="register"
+        >
           <v-row>
             <v-col>
               <v-text-field
@@ -53,7 +61,7 @@
             tabindex="3"
             @blur="$v.email.$touch()"
           />
-          <br />
+          <br>
           <v-text-field
             id="password"
             v-model="password"
@@ -65,9 +73,11 @@
             @blur="$v.password.$touch()"
           >
             <template #append>
-              <v-icon @click="showPassword = !showPassword">{{
-                showPassword ? 'mdi-eye' : 'mdi-eye-off'
-              }}</v-icon>
+              <v-icon @click="showPassword = !showPassword">
+                {{
+                  showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                }}
+              </v-icon>
             </template>
           </v-text-field>
           <v-row
@@ -83,13 +93,17 @@
               class="pl-9"
               :color="validator.check(password) ? 'success' : 'error'"
               small
-              >{{
-                validator.check(password) ? 'mdi-check' : 'mdi-close'
-              }}</v-icon
             >
-            <small class="pl-1" color="red">{{ validator.name }}</small>
+              {{
+                validator.check(password) ? 'mdi-check' : 'mdi-close'
+              }}
+            </v-icon>
+            <small
+              class="pl-1"
+              color="red"
+            >{{ validator.name }}</small>
           </v-row>
-          <br />
+          <br>
           <v-text-field
             id="passwordConfirmation"
             v-model="passwordConfirmation"
@@ -105,7 +119,7 @@
             type="password"
             @blur="$v.passwordConfirmation.$touch()"
           />
-          <br />
+          <br>
           <v-btn
             id="register"
             depressed
@@ -124,7 +138,13 @@
 
         <div class="my-2">
           <router-link to="/login">
-            <v-btn id="login_button" depressed small>Login</v-btn>
+            <v-btn
+              id="login_button"
+              depressed
+              small
+            >
+              Login
+            </v-btn>
           </router-link>
         </div>
       </v-card-actions>
@@ -133,64 +153,73 @@
 </template>
 
 <script lang="ts">
-import Modal from '@/components/global/Modal.vue';
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
 import {
   validatePasswordBoolean,
-  validators
+  validators,
 } from '@heimdall/password-complexity';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {email, required, sameAs} from 'vuelidate/lib/validators';
+import { Prop } from 'vue-property-decorator';
+import { email, required, sameAs } from 'vuelidate/lib/validators';
+import Modal from '@/components/global/Modal.vue';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
 
-export interface SignupHash {
+export type SignupHash = {
+  creationMethod: string;
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
   password: string;
   passwordConfirmation: string;
   role: string;
-  creationMethod: string;
-}
+};
 
 @Component({
+  components: { Modal },
   mixins: [UserValidatorMixin],
-  components: {Modal},
   validations: {
-    firstName: {
-      required
-    },
-    lastName: {
-      required
-    },
     email: {
+      email,
       required,
-      email
     },
-    password: {
-      required
-    },
+    firstName: { required },
+    lastName: { required },
+    password: { required },
     passwordConfirmation: {
       required,
-      sameAsPassword: sameAs('password')
-    }
-  }
+      sameAsPassword: sameAs('password'),
+    },
+  },
 })
 export default class RegistrationModal extends Vue {
+  @Prop({ default: false, type: Boolean }) readonly adminRegisterMode!: boolean;
+  buttonLoading = false;
+  email = '';
   firstName = '';
   lastName = '';
-  email = '';
   password = '';
   passwordConfirmation = '';
   showPassword = false;
-  validatorList = validators;
-  buttonLoading = false;
 
-  @Prop({type: Boolean, default: false}) readonly adminRegisterMode!: boolean;
-  @Prop({default: false}) readonly visible!: boolean;
+  validatorList = validators;
+  @Prop({ default: false }) readonly visible!: boolean;
+
+  get passwordConfirmationErrors() {
+    const errors: string[] = [];
+    if (!this.$v.passwordConfirmation.$dirty) {
+      return errors;
+    }
+    if (!this.$v.passwordConfirmation.sameAsPassword) {
+      errors.push('Password and password confirmation must match.');
+    }
+    return errors;
+  }
+
+  get registrationDisabled(): boolean {
+    return this.$v.$invalid || !validatePasswordBoolean(this.password);
+  }
 
   login() {
     this.$router.push('/login');
@@ -201,13 +230,13 @@ export default class RegistrationModal extends Vue {
     // checking if the input is valid
     if ((this.$refs.form as HTMLFormElement).validate()) {
       const creds: SignupHash = {
+        creationMethod: 'local',
+        email: this.email,
         firstName: this.firstName,
         lastName: this.lastName,
-        email: this.email,
         password: this.password,
         passwordConfirmation: this.passwordConfirmation,
         role: 'user',
-        creationMethod: 'local'
       };
 
       await ServerModule.Register(creds);
@@ -220,26 +249,11 @@ export default class RegistrationModal extends Vue {
       } else {
         this.$router.push('/login');
         SnackbarModule.notify(
-          'You have successfully registered, please sign in'
+          'You have successfully registered, please sign in',
         );
       }
       this.buttonLoading = false;
     }
-  }
-
-  get registrationDisabled(): boolean {
-    return this.$v.$invalid || !validatePasswordBoolean(this.password);
-  }
-
-  get passwordConfirmationErrors() {
-    const errors: string[] = [];
-    if (!this.$v.passwordConfirmation.$dirty) {
-      return errors;
-    }
-    if (!this.$v.passwordConfirmation.sameAsPassword) {
-      errors.push('Password and password confirmation must match.');
-    }
-    return errors;
   }
 }
 </script>

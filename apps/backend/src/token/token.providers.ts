@@ -1,9 +1,9 @@
-import {Logger} from '@nestjs/common';
-import {JwtModule} from '@nestjs/jwt';
 import * as crypto from 'crypto';
+import { Logger } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import ms from 'ms';
-import {ConfigModule} from '../config/config.module';
-import {ConfigService} from '../config/config.service';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
 
 const logger = new Logger('TokenProviders');
 
@@ -33,9 +33,9 @@ export const tokenProviders = [
       signOptions: {
         expiresIn: limitJWTTime(
           configService.get('JWT_EXPIRE_TIME') || '60s',
-          true
-        )
-      }
-    })
-  })
+          true,
+        ),
+      },
+    }),
+  }),
 ];

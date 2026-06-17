@@ -1,46 +1,34 @@
-import {SequelizeOptions} from 'sequelize-typescript';
+import type { SequelizeOptions } from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
-import {StartupSettingsDto} from './dto/startup-settings.dto';
+import { StartupSettingsDto } from './dto/startup-settings.dto';
 
 export class ConfigService {
-  private readonly appConfig: AppConfig;
-  public defaultGithubBaseURL = 'https://github.com/';
   public defaultGithubAPIURL = 'https://api.github.com/';
+  public defaultGithubBaseURL = 'https://github.com/';
+  public sensitiveKeys = [
+    /cookie/i,
+    /passw(or)?d/i,
+    /^pw$/v,
+    /^pass$/i,
+    /secret/i,
+    /token/i,
+    /api[-._]?key/i,
+    /data/iv,
+  ];
+
+  private readonly appConfig: AppConfig;
 
   constructor() {
     this.appConfig = AppConfig.getInstance();
   }
 
-  public sensitiveKeys = [
-    /cookie/i,
-    /passw(or)?d/i,
-    /^pw$/,
-    /^pass$/i,
-    /secret/i,
-    /token/i,
-    /api[-._]?key/i,
-    /data/i
-  ];
-
-  isRegistrationAllowed(): boolean {
-    return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
-  }
-
-  isLocalLoginAllowed(): boolean {
-    return this.get('LOCAL_LOGIN_DISABLED')?.toLowerCase() !== 'true';
-  }
-
-  isInProductionMode(): boolean {
-    return this.get('NODE_ENV')?.toLowerCase() === 'production';
-  }
-
   enabledOauthStrategies() {
     const enabledOauth: string[] = [];
-    supportedOauth.forEach((oauthStrategy) => {
+    for (const oauthStrategy of supportedOauth) {
       if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
         enabledOauth.push(oauthStrategy);
       }
-    });
+    }
     return enabledOauth;
   }
 
@@ -55,15 +43,23 @@ export class ConfigService {
         this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
       enabledOAuth: this.enabledOauthStrategies(),
       externalUrl: this.getExternalUrl(),
-      oidcName: this.get('OIDC_NAME') || '',
-      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
-      registrationEnabled: this.isRegistrationAllowed(),
-      localLoginEnabled: this.isLocalLoginAllowed(),
-      tenableHostUrl: this.getTenableHostUrl(),
       forceTenableFrontend:
         this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',
-      splunkHostUrl: this.getSplunkHostUrl()
+      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
+      localLoginEnabled: this.isLocalLoginAllowed(),
+      oidcName: this.get('OIDC_NAME') || '',
+      registrationEnabled: this.isRegistrationAllowed(),
+      splunkHostUrl: this.getSplunkHostUrl(),
+      tenableHostUrl: this.getTenableHostUrl(),
     });
+  }
+
+  get(key: string): string | undefined {
+    return this.appConfig.get(key);
+  }
+
+  getDbConfig(): SequelizeOptions {
+    return this.appConfig.getDbConfig();
   }
 
   getExternalUrl(): string {
@@ -74,24 +70,28 @@ export class ConfigService {
     return this.appConfig.getSplunkHostUrl();
   }
 
-  getTenableHostUrl(): string {
-    return this.appConfig.getTenableHostUrl();
-  }
-
-  getDbConfig(): SequelizeOptions {
-    return this.appConfig.getDbConfig();
-  }
-
   getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
   }
 
-  set(key: string, value: string | undefined): void {
-    this.appConfig.set(key, value);
+  getTenableHostUrl(): string {
+    return this.appConfig.getTenableHostUrl();
   }
 
-  get(key: string): string | undefined {
-    return this.appConfig.get(key);
+  isInProductionMode(): boolean {
+    return this.get('NODE_ENV')?.toLowerCase() === 'production';
+  }
+
+  isLocalLoginAllowed(): boolean {
+    return this.get('LOCAL_LOGIN_DISABLED')?.toLowerCase() !== 'true';
+  }
+
+  isRegistrationAllowed(): boolean {
+    return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
+  }
+
+  set(key: string, value: string | undefined): void {
+    this.appConfig.set(key, value);
   }
 }
 export const supportedOauth: string[] = [
@@ -99,5 +99,5 @@ export const supportedOauth: string[] = [
   'gitlab',
   'google',
   'okta',
-  'oidc'
+  'oidc',
 ];

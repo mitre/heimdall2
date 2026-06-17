@@ -1,40 +1,35 @@
-import Store from '@/store/store';
 import {
   Action,
   getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
 } from 'vuex-module-decorators';
+import Store from '@/store/store';
 
-export interface IHeightsState {
-  topbarHeight: number;
+export type IHeightsState = {
   controlTableHeaderHeight: number;
-}
+  topbarHeight: number;
+};
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'Heights',
+  namespaced: true,
   store: Store,
-  name: 'Heights'
 })
 export class Heights extends VuexModule implements IHeightsState {
-  topbarHeight = 0;
   controlTableHeaderHeight = 0;
-
-  @Mutation
-  SET_TOPBAR_HEIGHT(value: number) {
-    this.topbarHeight = value;
-  }
+  topbarHeight = 0;
 
   @Mutation
   SET_CONTROL_TABLE_HEADER_HEIGHT(value: number) {
     this.controlTableHeaderHeight = value;
   }
 
-  @Action
-  public setTopbarHeight(value: number) {
-    this.context.commit('SET_TOPBAR_HEIGHT', value);
+  @Mutation
+  SET_TOPBAR_HEIGHT(value: number) {
+    this.topbarHeight = value;
   }
 
   @Action
@@ -42,6 +37,11 @@ export class Heights extends VuexModule implements IHeightsState {
     if (value) {
       this.context.commit('SET_CONTROL_TABLE_HEADER_HEIGHT', value);
     }
+  }
+
+  @Action
+  public setTopbarHeight(value: number) {
+    this.context.commit('SET_TOPBAR_HEIGHT', value);
   }
 }
 

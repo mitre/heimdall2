@@ -14,21 +14,18 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {SnackbarModule} from '@/store/snackbar';
+import { Prop } from 'vue-property-decorator';
+import { SnackbarModule } from '@/store/snackbar';
 
 @Component({})
 export default class CopyButton extends Vue {
-  @Prop({required: true}) readonly text!: string;
-  @Prop({required: false, default: 'mdi-clipboard-outline'})
+  @Prop({ default: 'mdi-clipboard-outline', required: false })
   readonly icon!: string;
 
-  @Prop({required: false, type: String, default: 'Copy content to clipboard'})
-  readonly tooltip!: string;
+  @Prop({ required: true }) readonly text!: string;
 
-  getTooltipTitle() {
-    return this.tooltip;
-  }
+  @Prop({ default: 'Copy content to clipboard', required: false, type: String })
+  readonly tooltip!: string;
 
   async copy() {
     try {
@@ -40,9 +37,13 @@ export default class CopyButton extends Vue {
         this.unsecuredCopyToClipboard(this.text);
       }
       SnackbarModule.notify('Text copied to your clipboard');
-    } catch (e) {
-      SnackbarModule.failure(`Failed to copy to your clipboard: ${e}`);
+    } catch (error) {
+      SnackbarModule.failure(`Failed to copy to your clipboard: ${error}`);
     }
+  }
+
+  getTooltipTitle() {
+    return this.tooltip;
   }
 
   unsecuredCopyToClipboard(text: string) {
@@ -55,16 +56,16 @@ export default class CopyButton extends Vue {
     tempTextArea.style.position = 'absolute';
     tempTextArea.style.left = '-9999px';
 
-    document.body.appendChild(tempTextArea);
+    document.body.append(tempTextArea);
     tempTextArea.focus();
     tempTextArea.select();
     const successfulReturn = document.execCommand('copy');
     if (!successfulReturn) {
       throw new Error(
-        'The execCommand returned false, meaning the command is unsupported or disabled'
+        'The execCommand returned false, meaning the command is unsupported or disabled',
       );
     }
-    document.body.removeChild(tempTextArea);
+    tempTextArea.remove();
   }
 }
 </script>
