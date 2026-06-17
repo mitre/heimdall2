@@ -1,14 +1,29 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
 
-const html = readFileSync('data/reverse-html-mapper/template.html', 'utf8');
-const js = readFileSync('data/reverse-html-mapper/tw-elements.min.js', 'utf8');
-const css = readFileSync('data/reverse-html-mapper/style.css', 'utf8');
+const cssFile = 'node_modules/@anyblades/pico/css/pico.blades.min.css';
+const cssPath = existsSync(cssFile) ? cssFile : `../../${cssFile}`;
+const templatesDir = 'data/reverse-html-mapper/templates';
+
+const css = readFileSync(cssPath, 'utf8');
+const reportCss = readFileSync('data/reverse-html-mapper/report.css', 'utf8');
+
+const templates: Record<string, string> = {};
+const entries = readdirSync(templatesDir, { recursive: true }) as string[];
+for (const entry of entries) {
+  if (typeof entry === 'string' && entry.endsWith('.liquid')) {
+    const key = entry.replace(/\.liquid$/, '');
+    templates[key] = readFileSync(join(templatesDir, entry), 'utf8');
+  }
+}
 
 const out = `/* AUTO-GENERATED.  DO NOT EDIT. */
-export const html = ${JSON.stringify(html)} as const;
-export const js = ${JSON.stringify(js)} as const;
-export const css = ${JSON.stringify(css)} as const;`;
+export const templates: Record<string, string> = ${JSON.stringify(templates, null, 2)};
+export const css = ${JSON.stringify(css)} as const;
+export const reportCss = ${JSON.stringify(reportCss)} as const;`;
 
 writeFileSync('src/converters-from-hdf/html/embedded-assets.ts', out, 'utf8');
 
-console.log('Successfully generated the embedded assets file');
+const count = Object.keys(templates).length;
+const sizeKB = Math.round(css.length / 1024);
+console.log('Successfully generated embedded assets: ' + count + ' templates, ' + sizeKB + 'KB CSS');

@@ -76,8 +76,7 @@ export interface IIcons {
 
 // Top level interface; lvl 0
 export interface IOutputData {
-  tailwindStyles: string;
-  tailwindElements: string;
+  frameworkStyles: string;
   files: IFileInfo[];
   statistics: IStatistics;
   severity: ISeverity;
