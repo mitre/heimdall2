@@ -58,6 +58,7 @@
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {saveAs} from 'file-saver';
+import {cleanUpFilename} from '@/utilities/export_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
@@ -159,10 +160,7 @@ export default class ExportHTMLModal extends Vue {
 
     saveAs(
       new Blob([body], {type: 'text/html;charset=utf-8'}),
-      `${this.exportType}_Report_${new Date().toString()}.html`.replace(
-        /[ :]/gv,
-        '_'
-      )
+      cleanUpFilename(`${this.exportType}_Report_${new Date().toString()}`, '.html')
     );
 
     document.body.style.cursor = 'default';

@@ -22,7 +22,7 @@ import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {saveSingleOrMultipleFiles} from '../../utilities/export_util';
+import {cleanUpFilename, saveSingleOrMultipleFiles} from '../../utilities/export_util';
 export type FileData = {
   filename: string;
   data: string;
@@ -51,7 +51,7 @@ export default class ExportXCCDF extends Vue {
             template
           ).toXCCDF();
           convertedFiles.push({
-            filename: evaluation.from_file.filename + '.xml',
+            filename: cleanUpFilename(evaluation.from_file.filename, '.xml'),
             data: convertedData
           });
         }
@@ -62,7 +62,7 @@ export default class ExportXCCDF extends Vue {
             template
           ).toXCCDF();
           convertedFiles.push({
-            filename: profile.from_file.filename + '.xml',
+            filename: cleanUpFilename(profile.from_file.filename, '.xml'),
             data: convertedData
           });
         }

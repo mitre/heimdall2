@@ -48,8 +48,22 @@ export async function saveSingleOrMultipleFiles(
   }
 }
 
-export function cleanUpFilename(filename: string): string {
-  return filename.replace(/\s+/gv, '_');
+export function cleanUpFilename(
+  filename: string,
+  targetExtension?: string
+): string {
+  let cleaned = filename.replace(/[\s:]+/gv, '_');
+
+  if (targetExtension) {
+    const extPattern = new RegExp(
+      `${targetExtension.replace('.', '\\.')}$`,
+      'i'
+    );
+    cleaned = cleaned.replace(extPattern, '');
+    cleaned = cleaned + targetExtension;
+  }
+
+  return cleaned;
 }
 
 /** Converts a string to an array buffer */

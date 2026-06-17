@@ -59,7 +59,7 @@
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import type {Filter} from '@/store/data_filters';
 import {FilteredDataModule} from '@/store/data_filters';
-import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
+import {cleanUpFilename, saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import type {ContextualizedControl, HDFControlSegment} from 'inspecjs';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
@@ -331,7 +331,7 @@ export default class ExportCSVModal extends Vue {
     const csv = [csvHeader, csvBody].join('');
     // If we only have one file we can save just one csv file
     this.files.push({
-      filename: this.cleanUpFilename(`${file.filename}.csv`),
+      filename: cleanUpFilename(file.filename, '.csv'),
       data: csv
     });
   }
@@ -352,8 +352,5 @@ export default class ExportCSVModal extends Vue {
       });
   }
 
-  cleanUpFilename(filename: string): string {
-    return filename.replace(/\s+/gv, '_');
-  }
 }
 </script>

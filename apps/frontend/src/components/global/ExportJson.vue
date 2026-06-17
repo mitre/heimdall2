@@ -18,7 +18,7 @@ import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {SnackbarModule} from '@/store/snackbar';
-import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
+import {cleanUpFilename, saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -65,11 +65,7 @@ export default class ExportJSON extends Vue {
   }
 
   cleanup_filename(filename: string): string {
-    filename = filename.replace(/\s+/gv, '_');
-    if (filename.substring(filename.length - 6) !== '.json') {
-      filename = filename + '.json';
-    }
-    return filename;
+    return cleanUpFilename(filename, '.json');
   }
 }
 </script>

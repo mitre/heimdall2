@@ -77,7 +77,7 @@
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import type {Filter} from '@/store/data_filters';
 import {FilteredDataModule} from '@/store/data_filters';
-import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
+import {cleanUpFilename, saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import {FromHdfToAsffMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -144,7 +144,7 @@ export default class ExportASFFModal extends Vue {
       }).toAsff() as unknown as Record<string, unknown>[];
       this.sliceIntoChunks(findings, 100).forEach(async (chunk, index) => {
         fileData.push({
-          filename: `${evaluation.from_file.filename}.p${index}.json`,
+          filename: cleanUpFilename(`${evaluation.from_file.filename}.p${index}`, '.json'),
           data: JSON.stringify(chunk)
         });
       });
