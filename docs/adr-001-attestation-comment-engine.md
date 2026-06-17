@@ -652,6 +652,12 @@ interface FileAnnotationState {
   originalStatuses: Record<string, string>;  // control_id → original status at load time
     // Captured once when file is first annotated. Used by CKL round-trip detection (§5.6)
     // to distinguish "status changed by attestation" from "status changed externally."
+  severityOverrides: Record<string, {severity: string; justification: string}>;
+    // control_id → override. Maps to CKL SEVERITY_OVERRIDE + SEVERITY_JUSTIFICATION
+    // and control.data.tags.severityoverride / severityjustification (§3.1.3 #2)
+  findingDetails: Record<string, string>;
+    // control_id → evidence text. Maps to CKL findingdetails vuln field
+    // and control.hdf.finding_details (§3.1.3 #3)
 }
 ```
 
@@ -915,11 +921,13 @@ User imports a CKL file that was previously exported and edited in STIG Viewer:
 | F | Wire dirty tracking to UI | 2 | 9go.2 | Commit uncommitted App.vue/SidebarFileList/ExportJson wiring. Verify + test. |
 | G | CKL export-time sync | 3 | 9go.1, A | Modify: `ExportCKLModal.vue`. `syncChecklistVulnComments` + markSaved + `.catch`. |
 | H | Export attestation files (MUST-HAVE) | 3 | A | SAF CLI JSON/YAML + Heimdall annotation bundle + XLSX. Only Phase 1 persistence — without this, refresh = total loss. |
-| I | Import attestation files | 5 | A | Create: `upload_tabs/AttestationImport.vue`. Modify: `UploadNexus.vue`. Bundle/array/comment-only format detection. Eligibility preview. |
+| G2 | HDF/JSON/CSV export with attestations | 3 | A | Modify: `ExportJson.vue`. Deep-clone + `addAttestationToHDF` before serialization. The PRIMARY export format — without this, attestations don't appear in HDF output. |
+| G3 | Severity override + finding details pipeline | 5 | A, B1 | Extend `FileAnnotationState` with `severityOverrides` + `findingDetails` records. Add `updateControlTag` mutation. Wire through CKL + HDF export. Fixes §3.1.3 data model gap. |
+| I | Import attestation files | 5 | A | Create: `upload_tabs/AttestationImport.vue`. Modify: `UploadNexus.vue`. Bundle/array/comment-only format detection. Eligibility preview. Mark affected files dirty. |
 | J | CKL round-trip detection (DEFERRED) | — | — | Moved to Phase 2. Requires baseline snapshot + file identity matching that benefits from DB persistence. Complex, edge-case-heavy, low frequency. |
 | K | Integration tests + fixtures + CI | 5 | All above | Adapt existing CKL/HDF fixtures. Fixtures from `libs/hdf-converters/sample_jsons/` and `apps/frontend/tests/hdf_data/`. |
 
-**Total Phase 1:** ~42 sp, ~200 min Claude-pace
+**Total Phase 1:** ~50 sp, ~230 min Claude-pace
 
 **Implementation strategy: store → export/import → UI → integration.**
 
@@ -939,7 +947,7 @@ Layer 4 — Integration (end-to-end verification):
   K (integration tests + fixtures + CI)
 ```
 
-**Critical path:** A → A2 → B1 → B2/C/E. D/F/G/H/I parallel off A.
+**Critical path:** A → A2 → B1 → B2/C/E. D/F/G/G2/G3/H/I parallel off A. G3 also depends on B1.
 
 **Build order (dependency graph):**
 ```
@@ -948,9 +956,11 @@ Layer 4 — Integration (end-to-end verification):
                     │              │             │── E (NR card)
                     │              │             │
                     ├── D (notif bar)            │
+                    ├── G2 (HDF/JSON export)     │
                     ├── H (export attestations)  │
                     ├── I (import attestations)  │
-                    ├── J (CKL round-trip)       │
+                    │              │             │
+                    │         G3 (severity+FD) ──┤ (depends on A + B1)
                     │                            │
                     F (dirty wiring) ────────────┤
                     G (CKL sync) ────────────────┤

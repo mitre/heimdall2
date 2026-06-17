@@ -21,7 +21,7 @@
     "lint:ci": "eslint --max-warnings 0",
     "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
-    "start:dev": "nest start --watch",
+    "start:dev": "dotenv -e .env -- nest start --watch",
     "test": "vitest",
     "test:ci": "vitest run"
   },

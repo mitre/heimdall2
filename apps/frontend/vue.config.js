@@ -45,13 +45,14 @@ module.exports = {
     }
   },
   devServer: {
-    // JWT_SECRET is a required secret for the backend. If it is sourced
-    // then it is safe to assume the app is in server mode in development.
-    //
-    // PORT is not required so use the default backend port value
-    // is used here if JWT_SECRET is applied but PORT is undefined
-    proxy: process.env.JWT_SECRET
-      ? `http://127.0.0.1:${process.env.PORT || 3000}`
+    // HEIMDALL_FRONTEND_PORT sets the dev server listen port (default 8080).
+    // HEIMDALL_BACKEND_PORT sets the API proxy target (default 3000).
+    // HEIMDALL_SERVER_MODE enables the API proxy to the backend.
+    // All set in .env.development.local — no backend secrets needed.
+    // Legacy: JWT_SECRET also enables server mode for backward compatibility.
+    port: parseInt(process.env.HEIMDALL_FRONTEND_PORT || '8080', 10),
+    proxy: (process.env.HEIMDALL_SERVER_MODE || process.env.JWT_SECRET)
+      ? `http://127.0.0.1:${process.env.HEIMDALL_BACKEND_PORT || process.env.PORT || 3000}`
       : '',
     client: {
       progress: false

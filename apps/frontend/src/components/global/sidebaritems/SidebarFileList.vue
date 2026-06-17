@@ -29,7 +29,7 @@
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
       <v-btn data-cy="saveFile" icon small :disabled="disable_saving">
-        <v-icon title="Save entry to the database"> mdi-content-save </v-icon>
+        <v-icon title="Save entry to the database"> mdi-database-arrow-up </v-icon>
       </v-btn>
     </v-list-item-action>
 

@@ -2,6 +2,7 @@ import {AppInfoModule} from '@/store/app_info';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
 import {ServerModule} from '@/store/server';
+import {confirm} from '@/utilities/confirm_service';
 import Admin from '@/views/Admin.vue';
 import Compare from '@/views/Compare.vue';
 import Groups from '@/views/Groups.vue';
@@ -80,8 +81,8 @@ const router = new Router({
   ]
 });
 
-router.beforeEach((to, _, next) => {
-  ServerModule.CheckForServer().then(() => {
+router.beforeEach((to, from, next) => {
+  ServerModule.CheckForServer().then(async () => {
     AppInfoModule.CheckForUpdates();
     if (to.matched.some((record) => record.meta.requiresAuth)) {
       if (ServerModule.serverMode && !ServerModule.token) {
@@ -95,13 +96,30 @@ router.beforeEach((to, _, next) => {
         return;
       }
     }
+
+    if (
+      InspecDataModule.hasUnsavedFiles &&
+      from.path !== to.path
+    ) {
+      const discard = await confirm({
+        title: 'Unsaved Changes',
+        message:
+          'You have unsaved attestations or comments. ' +
+          'Leaving this page will discard them.',
+        confirmText: 'Discard',
+        cancelText: 'Stay'
+      });
+      if (!discard) {
+        next(false);
+        return;
+      }
+      InspecDataModule.clearDirtyFiles();
+    }
+
     if (to.params.id && to.params.id !== 'all') {
       EvaluationModule.load_results(to.params.id.split(','));
     }
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-    // For any URL that displays IDs of the currently loaded database files at the end of it
-    // ensure that the URL bar is up to date with what files are currently loaded into the database
-    // Don't try to add IDs to the URL when there are no files loaded from the database (for example: samples or local files)
     if (
       to.matched.some((record) => record.meta.hasIdParams) &&
       loadedDatabaseIds &&

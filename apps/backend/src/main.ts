@@ -134,6 +134,10 @@ async function bootstrap() {
     next();
   });
 
-  await app.listen(configService.get('PORT') || 3000);
+  if (!configService.get('HEIMDALL_BACKEND_PORT') && configService.get('PORT')) {
+    logger.warn('DEPRECATED: PORT env var is deprecated. Use HEIMDALL_BACKEND_PORT instead. PORT will be removed in the next minor release.');
+  }
+  const port = configService.get('HEIMDALL_BACKEND_PORT') || configService.get('PORT') || 3000;
+  await app.listen(port);
 }
 bootstrap();
