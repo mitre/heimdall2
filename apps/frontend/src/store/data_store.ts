@@ -75,6 +75,13 @@ export class InspecData extends VuexModule {
     return (fileId: FileID) => this.dirtyFileIds.includes(fileId);
   }
 
+  get fileIdForControl(): (
+    control: ContextualizedControl
+  ) => FileID | undefined {
+    return (control: ContextualizedControl) =>
+      getFileForControl(control)?.uniqueId;
+  }
+
   /**
    * Returns a readonly list of all executions currently held in the data store
    * including associated context
@@ -150,8 +157,8 @@ export class InspecData extends VuexModule {
     control.hdf.descriptions[label] = value;
 
     const file = getFileForControl(control);
-    if (file) {
-      this.MARK_FILE_DIRTY(file.uniqueId);
+    if (file && !this.dirtyFileIds.includes(file.uniqueId)) {
+      this.dirtyFileIds = [...this.dirtyFileIds, file.uniqueId];
     }
   }
 

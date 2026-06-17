@@ -53,4 +53,17 @@ describe('data_store editing', () => {
       expect(UNSAVED_CHANGES_MESSAGE.length).toBeGreaterThan(0);
     });
   });
+
+  describe('fileIdForControl', () => {
+    it('is a getter that returns a function', () => {
+      expect(typeof InspecDataModule.fileIdForControl).toBe('function');
+    });
+
+    it('returns undefined for a control with no associated file', () => {
+      const fakeControl = {
+        sourcedFrom: {sourcedFrom: null, from_file: undefined}
+      } as any;
+      expect(InspecDataModule.fileIdForControl(fakeControl)).toBeUndefined();
+    });
+  });
 });
