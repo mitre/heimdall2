@@ -2,52 +2,104 @@
  * A lot of information/behaviour is shared between the profile and result version so we use a single abstract superclass
  */
 
-import {
+import type {
   ControlStatus,
   HDFControl,
   HDFControlSegment,
   SegmentStatus,
   Severity,
-  convertImpactToSeverity,
-  severities
 } from '../compat_wrappers';
 import {
-  ControlResult as ControlResult_1_0,
-  ExecJSONControl as ResultControl_1_0
-} from '../generated_parsers/v_1_0/exec-json';
-import {ProfileJSONControl as ProfileControl_1_0} from '../generated_parsers/v_1_0/profile-json';
+  convertImpactToSeverity,
+  severities,
+} from '../compat_wrappers';
 import {
+  ControlResultStatus,
+} from '../generated_parsers/v_1_0/exec-json';
+import type {
+  ControlResult as ControlResult_1_0,
+  ExecJSONControl as ResultControl_1_0,
+} from '../generated_parsers/v_1_0/exec-json';
+import type { ProfileJSONControl as ProfileControl_1_0 } from '../generated_parsers/v_1_0/profile-json';
+import type {
   CanonizationConfig,
-  is_control,
   NistControl,
   NistRevision,
-  parse_nist
+} from '../nist';
+import {
+  is_control,
+  parse_nist,
 } from '../nist';
 
 const profileError = 'Profile Error';
 
 abstract class HDFControl10 implements HDFControl {
+  readonly attestationStatus?: 'failed' | 'passed';
+  readonly attested: boolean;
+  readonly descriptions: Record<string, string> = {};
+  readonly isProfile: boolean;
+  readonly parsedNistRevision: NistRevision | null;
+  readonly parsedNistTags: NistControl[];
   // Declare all properties expected
   readonly rawNistTags: string[];
-  readonly parsedNistTags: NistControl[];
-  readonly parsedNistRevision: NistRevision | null;
   readonly severity: Severity;
   readonly waived: boolean;
-  readonly attested: boolean;
-  readonly attestationStatus?: 'passed' | 'failed';
-  readonly descriptions: {[key: string]: string} = {};
-  readonly isProfile: boolean;
 
   // We use this as a reference
-  wraps: ResultControl_1_0 | ProfileControl_1_0;
+  wraps: ProfileControl_1_0 | ResultControl_1_0;
+
+  // We leave this as a getter because its computation is trivial, and saving it would result in vast data duplication
+  get finding_details(): string {
+    switch (this.status) {
+      case 'Failed': {
+        return `One or more of the automated tests failed or was inconclusive for the control:\n\n${this.message}\n`;
+      }
+      case 'Not Applicable': {
+        return `Justification:\n\n${this.message}\n`;
+      }
+      case 'Not Reviewed': {
+        return `Automated test skipped due to known accepted condition in the control:\n\n${this.message}\n`;
+      }
+      case 'Passed': {
+        return `All Automated tests passed for the control:\n\n${this.message}\n`;
+      }
+      case profileError: {
+        if (!this.status_list || this.status_list.length === 0) {
+          return 'No describe blocks were run in this control';
+        } else if (this.message === undefined) {
+          return 'No details available for this control.';
+        } else {
+          return `Exception:\n\n${this.message}\n`;
+        }
+      }
+      case 'From Profile': {
+        return 'No tests are run in a profile json.';
+      }
+      default: {
+        throw new Error('Error: invalid status generated');
+      }
+    }
+  }
+
+  // Abstracts - implemented more specifically below
+  abstract get message(): string;
+  abstract get segments(): HDFControlSegment[] | undefined;
+  abstract get status(): ControlStatus;
+
+  // Also leave this as a getter because it's trivial and there's no sense duplicating this data
+  get status_list(): SegmentStatus[] | undefined {
+    if (this.segments !== undefined) {
+      return this.segments.map(s => s.status);
+    }
+  }
 
   // We ask that the child compute waived for us, to ease discrimination thereof
   constructor(
-    forControl: ResultControl_1_0 | ProfileControl_1_0,
+    forControl: ProfileControl_1_0 | ResultControl_1_0,
     isProfile: boolean,
     waived: boolean,
     attested: boolean,
-    attestationStatus?: 'passed' | 'failed'
+    attestationStatus?: 'failed' | 'passed',
   ) {
     this.wraps = forControl;
     this.waived = waived;
@@ -66,60 +118,11 @@ abstract class HDFControl10 implements HDFControl {
     this.severity = HDFControl10.compute_severity(this.wraps);
   }
 
-  // Abstracts - implemented more specifically below
-  abstract get message(): string;
-  abstract get segments(): HDFControlSegment[] | undefined;
-  abstract get status(): ControlStatus;
-
-  // We leave this as a getter because its computation is trivial, and saving it would result in vast data duplication
-  get finding_details(): string {
-    switch (this.status) {
-      case 'Failed':
-        return `One or more of the automated tests failed or was inconclusive for the control:\n\n${this.message}\n`;
-      case 'Passed':
-        return `All Automated tests passed for the control:\n\n${this.message}\n`;
-      case 'Not Reviewed':
-        return `Automated test skipped due to known accepted condition in the control:\n\n${this.message}\n`;
-      case 'Not Applicable':
-        return `Justification:\n\n${this.message}\n`;
-      case profileError:
-        if (!this.status_list || this.status_list.length === 0) {
-          return 'No describe blocks were run in this control';
-        } else if (this.message !== undefined) {
-          return `Exception:\n\n${this.message}\n`;
-        } else {
-          return `No details available for this control.`;
-        }
-      case 'From Profile':
-        return 'No tests are run in a profile json.';
-      default:
-        throw new Error('Error: invalid status generated');
-    }
-  }
-
-  // Also leave this as a getter because it's trivial and there's no sense duplicating this data
-  get status_list(): SegmentStatus[] | undefined {
-    if (this.segments !== undefined) {
-      return this.segments.map((s) => s.status);
-    }
-  }
-
   // Everything below here are helpers for computing our properties
-
-  private static compute_raw_nist_tags(
-    raw: ResultControl_1_0 | ProfileControl_1_0
-  ): string[] | string {
-    const fetched: string[] | string | undefined | null = raw.tags['nist'];
-    if (!fetched) {
-      return ['UM-1'];
-    } else {
-      return fetched;
-    }
-  }
 
   /** Generates the nist tags, as needed. */
   private static compute_proper_nist_tags(
-    raw: string[] | string
+    raw: string | string[],
   ): [NistControl[], NistRevision | null] {
     // Initialize
     let parsedNistTags: NistControl[] = [];
@@ -127,9 +130,9 @@ abstract class HDFControl10 implements HDFControl {
     const seenSpecs = new Set<string>(); // Used to track duplication
 
     // Process item by item
-    (Array.isArray(raw) ? raw : [raw]).map(parse_nist).forEach((x) => {
+    for (const x of (Array.isArray(raw) ? raw : [raw]).map(parse_nist)) {
       if (!x) {
-        return;
+        continue;
       } else if (is_control(x)) {
         const specChain = x.subSpecifiers.join('-');
         if (!seenSpecs.has(specChain)) {
@@ -139,7 +142,7 @@ abstract class HDFControl10 implements HDFControl {
       } else {
         parsedNistRevision = x;
       }
-    });
+    }
 
     // Sort the tags
     parsedNistTags = parsedNistTags.sort((a, b) => a.localCompare(b));
@@ -152,6 +155,26 @@ abstract class HDFControl10 implements HDFControl {
     return [parsedNistTags, parsedNistRevision];
   }
 
+  private static compute_raw_nist_tags(
+    raw: ProfileControl_1_0 | ResultControl_1_0,
+  ): string | string[] {
+    const fetched: null | string | string[] | undefined = raw.tags.nist;
+    return fetched ? fetched : ['UM-1'];
+  }
+
+  private static compute_severity(
+    raw: ProfileControl_1_0 | ResultControl_1_0,
+  ): Severity {
+    // use severity override tag if it exists
+    if (severities.includes(raw.tags.severityoverride?.toLowerCase())) { return raw.tags.severityoverride; }
+
+    // use severity tag if it exists
+    if (severities.includes(raw.tags.severity?.toLowerCase())) { return raw.tags.severity; }
+
+    // otherwise, compute severity with impact
+    return convertImpactToSeverity(raw.impact);
+  }
+
   canonized_nist(config: CanonizationConfig): string[] {
     const result: string[] = [];
     for (const v of this.parsedNistTags) {
@@ -162,21 +185,6 @@ abstract class HDFControl10 implements HDFControl {
     }
     return result;
   }
-
-  private static compute_severity(
-    raw: ResultControl_1_0 | ProfileControl_1_0
-  ): Severity {
-    // use severity override tag if it exists
-    if (severities.includes(raw.tags['severityoverride']?.toLowerCase()))
-      return raw.tags['severityoverride'];
-
-    // use severity tag if it exists
-    if (severities.includes(raw.tags['severity']?.toLowerCase()))
-      return raw.tags['severity'];
-
-    // otherwise, compute severity with impact
-    return convertImpactToSeverity(raw.impact);
-  }
 }
 
 export class ExecControl extends HDFControl10 implements HDFControl {
@@ -186,6 +194,13 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   readonly segments: HDFControlSegment[];
   readonly status: ControlStatus;
 
+  get start_time(): string | undefined {
+    if (this.segments && this.segments.length > 0) {
+      return this.segments[0].start_time;
+    }
+    return undefined;
+  }
+
   constructor(control: ResultControl_1_0) {
     // Waived is true if skipped_due_to_waiver is true
     super(
@@ -193,14 +208,15 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       false,
       Boolean(control.waiver_data?.skipped_due_to_waiver),
       Boolean(control.attestation_data),
-      control.attestation_data?.status
+      control.attestation_data?.status,
     );
 
     // Build descriptions
     if (control.descriptions) {
-      control.descriptions.forEach(
-        (x) => (this.descriptions[x.label] = x.data)
-      );
+      for (const x of control.descriptions) {
+        (this.descriptions[x.label] = x.data)
+        ;
+      }
     }
 
     // Build message
@@ -213,20 +229,55 @@ export class ExecControl extends HDFControl10 implements HDFControl {
     this.status = this.compute_status();
   }
 
-  get start_time(): string | undefined {
-    if (this.segments && this.segments.length) {
-      return this.segments[0].start_time;
-    }
-    return undefined;
-  }
-
   private static compute_message(control: ResultControl_1_0): string {
-    if (control.impact !== 0) {
-      // If it has any impact, convert each result to a message line and chain them all together
-      return control.results.map(ExecControl.to_message_line).join('');
-    } else {
+    if (control.impact === 0) {
       // If it's no impact, just post the description (if it exists)
       return control.desc || 'No message found.';
+    } else {
+      // If it has any impact, convert each result to a message line and chain them all together
+      return control.results.map(ExecControl.to_message_line).join('');
+    }
+  }
+
+  private static compute_segments(
+    control: ResultControl_1_0,
+  ): HDFControlSegment[] {
+    return control.results.map((result) => {
+      // Set status to error if backtrace is not found. Also, default no_status
+      const status: SegmentStatus = result.backtrace
+        ? 'error'
+        : result.status || 'no_status';
+      return {
+        backtrace: result.backtrace || undefined,
+        code_desc: result.code_desc,
+        exception: result.exception || undefined,
+        message: result.message || undefined,
+        resource: result.resource || undefined,
+        run_time: result.run_time || undefined,
+        skip_message: result.skip_message || undefined,
+        start_time: result.start_time,
+        status: status,
+      };
+    });
+  }
+
+  private static to_message_line(r: ControlResult_1_0): string {
+    switch (r.status) {
+      case ControlResultStatus.Error: {
+        return `ERROR -- Test: ${r.code_desc}\nMessage: ${r.message}`;
+      }
+      case ControlResultStatus.Failed: {
+        return `FAILED -- Test: ${r.code_desc}\nMessage: ${r.message}\n`;
+      }
+      case ControlResultStatus.Passed: {
+        return `PASSED -- ${r.code_desc}\n"`;
+      }
+      case ControlResultStatus.Skipped: {
+        return `SKIPPED -- ${r.skip_message}\n`;
+      }
+      default: {
+        return `Exception: ${r.exception}\n`;
+      }
     }
   }
 
@@ -234,12 +285,12 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   // Just do it last
   private compute_status(): ControlStatus {
     if (
-      this.attested &&
-      this.attestationStatus &&
-      !['failed', 'passed'].includes(this.attestationStatus)
+      this.attested
+      && this.attestationStatus
+      && !['failed', 'passed'].includes(this.attestationStatus)
     ) {
       throw new Error(
-        `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`
+        `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`,
       );
     }
 
@@ -260,49 +311,22 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       return profileError; // Shouldn't get here, but might as well have fallback
     }
   }
-
-  private static to_message_line(r: ControlResult_1_0): string {
-    switch (r.status) {
-      case 'skipped':
-        return `SKIPPED -- ${r.skip_message}\n`;
-      case 'failed':
-        return `FAILED -- Test: ${r.code_desc}\nMessage: ${r.message}\n`;
-      case 'passed':
-        return `PASSED -- ${r.code_desc}\n"`;
-      case 'error':
-        return `ERROR -- Test: ${r.code_desc}\nMessage: ${r.message}`;
-      default:
-        return `Exception: ${r.exception}\n`;
-    }
-  }
-
-  private static compute_segments(
-    control: ResultControl_1_0
-  ): HDFControlSegment[] {
-    return control.results.map((result) => {
-      // Set status to error if backtrace is not found. Also, default no_status
-      const status: SegmentStatus = result.backtrace
-        ? 'error'
-        : result.status || 'no_status';
-      return {
-        status: status,
-        message: result.message || undefined,
-        code_desc: result.code_desc,
-        skip_message: result.skip_message || undefined,
-        exception: result.exception || undefined,
-        backtrace: result.backtrace || undefined,
-        start_time: result.start_time,
-        run_time: result.run_time || undefined,
-        resource: result.resource || undefined
-      };
-    });
-  }
 }
 
 export class ProfileControl extends HDFControl10 implements HDFControl {
   // Establish our data
   readonly segments = undefined;
   readonly status = 'From Profile';
+
+  get message(): string {
+    // If it's no impact, just post the description (if it exists)
+    return this.typed_wrap.desc || 'No message found.';
+  }
+
+  // Helper to save us having to do (this.wraps as ProfileControl) everywehre. We know the type
+  private get typed_wrap(): ProfileControl_1_0 {
+    return this.wraps as ProfileControl_1_0;
+  }
 
   constructor(control: ProfileControl_1_0) {
     super(control, true, false, false);
@@ -314,15 +338,5 @@ export class ProfileControl extends HDFControl10 implements HDFControl {
         }
       }
     }
-  }
-
-  // Helper to save us having to do (this.wraps as ProfileControl) everywehre. We know the type
-  private get typed_wrap(): ProfileControl_1_0 {
-    return this.wraps as ProfileControl_1_0;
-  }
-
-  get message(): string {
-    // If it's no impact, just post the description (if it exists)
-    return this.typed_wrap.desc || 'No message found.';
   }
 }

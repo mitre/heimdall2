@@ -8,7 +8,7 @@ export type {
   LowercasedControlStatus,
   SegmentStatus,
   Severity,
-  TitleCasedSeverity
+  TitleCasedSeverity,
 } from './compat_wrappers';
 
 // Export values and functions
@@ -18,7 +18,7 @@ export {
   hdfWrapControl,
   lowercasedControlStatuses,
   severities,
-  titleCasedSeverities
+  titleCasedSeverities,
 } from './compat_wrappers';
 
 // Export Conversion functions
