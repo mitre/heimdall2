@@ -21,6 +21,10 @@
 import Footer from '@/components/global/Footer.vue';
 import Snackbar from '@/components/global/Snackbar.vue';
 import Spinner from '@/components/global/Spinner.vue';
+import {
+  InspecDataModule,
+  UNSAVED_CHANGES_MESSAGE
+} from '@/store/data_store';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {ServerModule} from './store/server';
@@ -33,6 +37,23 @@ import {ServerModule} from './store/server';
   }
 })
 export default class App extends Vue {
+  mounted() {
+    window.addEventListener('beforeunload', this.confirmBeforeUnload);
+  }
+
+  beforeDestroy() {
+    window.removeEventListener('beforeunload', this.confirmBeforeUnload);
+  }
+
+  confirmBeforeUnload(event: BeforeUnloadEvent) {
+    if (!InspecDataModule.hasUnsavedFiles) {
+      return;
+    }
+    event.preventDefault();
+    event.returnValue = UNSAVED_CHANGES_MESSAGE;
+    return UNSAVED_CHANGES_MESSAGE;
+  }
+
   get classificationStyle() {
     return {
       background: ServerModule.classificationBannerColor,

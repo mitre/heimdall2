@@ -16,6 +16,8 @@
 <script lang="ts">
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {SnackbarModule} from '@/store/snackbar';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -51,8 +53,15 @@ export default class ExportJSON extends Vue {
 
   //exports .zip of jsons if multiple are selected, if one is selected it will export that .json file
   export_json() {
+    const ids = FilteredDataModule.selected_file_ids;
     const files = this.populate_files();
-    saveSingleOrMultipleFiles(files, 'json');
+    saveSingleOrMultipleFiles(files, 'json')
+      .then(() => {
+        InspecDataModule.markFileSaved(ids);
+      })
+      .catch((error) => {
+        SnackbarModule.failure(`Export failed: ${error.message || error}`);
+      });
   }
 
   cleanup_filename(filename: string): string {

@@ -13,7 +13,18 @@
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title>{{ file.filename }}</v-list-item-title>
+      <v-list-item-title>
+        {{ file.filename }}
+        <v-icon
+          v-if="isDirty"
+          class="ml-2"
+          color="warning"
+          small
+          title="Unsaved edits"
+        >
+          mdi-content-save-alert
+        </v-icon>
+      </v-list-item-title>
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
@@ -73,28 +84,63 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
   }
 
-  //removes uploaded file from the currently observed files
+  get isDirty(): boolean {
+    return InspecDataModule.isFileDirty(this.file.uniqueId);
+  }
+
+  file_data(file: EvaluationFile | ProfileFile): unknown {
+    if ('evaluation' in file) {
+      return file.evaluation.data;
+    }
+    return file.profile.data;
+  }
+
   remove_file() {
     EvaluationModule.removeEvaluation(this.file.uniqueId);
     InspecDataModule.removeFile(this.file.uniqueId);
-    // Remove any database files that may have been in the URL
-    // by calling the router and causing it to write the appropriate
-    // route to the URL bar
     this.navigateWithNoErrors(`/${this.current_route}`);
   }
 
-  //saves file to database
   save_file() {
-    if (this.file?.database_id) {
+    if (this.file?.database_id && this.isDirty) {
+      this.update_database_file(this.file);
+    } else if (this.file?.database_id) {
       SnackbarModule.failure('This file is already in the database.');
     } else if (this.file) {
       this.save_to_database(this.file);
     }
   }
 
-  //determines if the use can save the file
-  get disable_saving() {
-    return typeof this.file?.database_id !== 'undefined' || this.saving;
+  get disable_saving(): boolean {
+    return (
+      this.saving ||
+      (this.file?.database_id !== undefined && !this.isDirty)
+    );
+  }
+
+  update_database_file(file: EvaluationFile | ProfileFile) {
+    const evaluation = EvaluationModule.evaluationForFile(file) as
+      | IEvaluation
+      | undefined;
+    if (!evaluation) {
+      SnackbarModule.failure('Could not find the database entry for this file.');
+      return;
+    }
+    this.saving = true;
+    EvaluationModule.updateEvaluation({
+      ...evaluation,
+      data: this.file_data(file)
+    } as IEvaluation)
+      .then(() => {
+        SnackbarModule.notify('File saved successfully');
+        InspecDataModule.markFileSaved([file.uniqueId]);
+      })
+      .catch((error) => {
+        SnackbarModule.HTTPFailure(error);
+      })
+      .finally(() => {
+        this.saving = false;
+      });
   }
 
   save_to_database(file: EvaluationFile | ProfileFile) {
@@ -115,27 +161,18 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
         formData.append(key, value);
       }
     }
-    // Add evaluation data to the form
-    if (file.hasOwnProperty('evaluation')) {
-      formData.append(
-        'data',
-        new Blob([JSON.stringify(_.get(file, 'evaluation.data'))], {
-          type: 'text/plain'
-        })
-      );
-    } else {
-      formData.append(
-        'data',
-        new Blob([JSON.stringify(_.get(file, 'profile.data'))], {
-          type: 'text/plain'
-        })
-      );
-    }
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(this.file_data(file))], {
+        type: 'text/plain'
+      })
+    );
     axios
       .post<IEvaluation>('/evaluations', formData)
       .then((response) => {
         SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
+        InspecDataModule.markFileSaved([file.uniqueId]);
         EvaluationModule.loadEvaluation(response.data.id);
         const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
         this.navigateWithNoErrors(
