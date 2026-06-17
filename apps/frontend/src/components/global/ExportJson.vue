@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {AnnotationModule} from '@/store/annotation_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {SnackbarModule} from '@/store/snackbar';
@@ -33,13 +34,15 @@ export type FileData = {
   }
 })
 export default class ExportJSON extends Vue {
-  populate_files(): FileData[] {
+  async populate_files(): Promise<FileData[]> {
     const ids = FilteredDataModule.selected_file_ids;
     const fileData: FileData[] = [];
     for (const evaluation of FilteredDataModule.evaluations(ids)) {
+      const fileId = evaluation.from_file.uniqueId;
+      const clone = await AnnotationModule.applyAttestationsToHdf({fileId});
       fileData.push({
         filename: this.cleanup_filename(evaluation.from_file.filename),
-        data: JSON.stringify(evaluation.data)
+        data: JSON.stringify(clone ?? evaluation.data)
       });
     }
     for (const prof of FilteredDataModule.profiles(ids)) {
@@ -51,10 +54,9 @@ export default class ExportJSON extends Vue {
     return fileData;
   }
 
-  //exports .zip of jsons if multiple are selected, if one is selected it will export that .json file
-  export_json() {
+  async export_json() {
     const ids = FilteredDataModule.selected_file_ids;
-    const files = this.populate_files();
+    const files = await this.populate_files();
     saveSingleOrMultipleFiles(files, 'json')
       .then(() => {
         InspecDataModule.markFileSaved(ids);

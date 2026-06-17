@@ -75,8 +75,11 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {AnnotationModule} from '@/store/annotation_store';
 import type {Filter} from '@/store/data_filters';
 import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {SnackbarModule} from '@/store/snackbar';
 import {cleanUpFilename, saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import {FromHdfToAsffMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
@@ -132,28 +135,34 @@ export default class ExportASFFModal extends Vue {
     return res;
   }
 
-  exportASFF() {
+  async exportASFF() {
     const ids = FilteredDataModule.selected_file_ids;
     const fileData: FileData[] = [];
-    FilteredDataModule.evaluations(ids).forEach(async (evaluation) => {
-      const findings = new FromHdfToAsffMapper(evaluation.data, {
+    for (const evaluation of FilteredDataModule.evaluations(ids)) {
+      const fileId = evaluation.from_file.uniqueId;
+      const clone = await AnnotationModule.applyAttestationsToHdf({fileId});
+      const findings = new FromHdfToAsffMapper(clone ?? evaluation.data, {
         input: evaluation.from_file.filename,
         awsAccountId: this.awsAccountId,
         target: this.target,
         region: this.region
       }).toAsff() as unknown as Record<string, unknown>[];
-      this.sliceIntoChunks(findings, 100).forEach(async (chunk, index) => {
+      for (const [index, chunk] of this.sliceIntoChunks(findings, 100).entries()) {
         fileData.push({
           filename: cleanUpFilename(`${evaluation.from_file.filename}.p${index}`, '.json'),
           data: JSON.stringify(chunk)
         });
+      }
+    }
+    saveSingleOrMultipleFiles(fileData, 'ASFF')
+      .then(() => {
+        InspecDataModule.markFileSaved(ids);
+        this.target = '';
+        this.closeModal();
+      })
+      .catch((error) => {
+        SnackbarModule.failure(`Export failed: ${error.message || error}`);
       });
-    });
-    saveSingleOrMultipleFiles(fileData, 'ASFF').then(() => {
-      // Preserve AWS Account ID and Region across exports
-      this.target = '';
-      this.closeModal();
-    });
   }
 }
 </script>

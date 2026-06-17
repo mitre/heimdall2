@@ -57,6 +57,7 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {AnnotationModule} from '@/store/annotation_store';
 import type {Filter} from '@/store/data_filters';
 import {FilteredDataModule} from '@/store/data_filters';
 import {cleanUpFilename, saveSingleOrMultipleFiles} from '@/utilities/export_util';
@@ -87,7 +88,9 @@ const fieldNames = [
   'CCI IDs',
   'Results',
   'Waived',
-  'Waiver Data'
+  'Waiver Data',
+  'Attestation Status',
+  'Attestation Explanation'
 ];
 
 type ControlSetRow = {
@@ -209,75 +212,75 @@ export default class ExportCSVModal extends Vue {
     } else if (control.data.descriptions) {
       fix = getDescription(control.data.descriptions, 'fix') || '';
     }
+
+    const attestation = AnnotationModule.hasAttestation(
+      file.uniqueId,
+      control.data.id
+    )
+      ? AnnotationModule.attestationsForFile(file.uniqueId).find(
+          (a) => a.control_id === control.data.id
+        )
+      : undefined;
+
     this.fieldsToAdd.forEach((field) => {
       switch (field) {
-        // Results Set
         case fieldNames[0]:
           result[fieldNames[0]] = file.filename;
           break;
-        // Status
         case fieldNames[1]:
           result[fieldNames[1]] = control.hdf.status;
           break;
-        // ID
         case fieldNames[2]:
           result[fieldNames[2]] = control.data.id;
           break;
-        // Title
         case fieldNames[3]:
           result[fieldNames[3]] = control.data.title;
           break;
-        //Description
         case fieldNames[4]:
           result[fieldNames[4]] = control.data.desc;
           break;
-        // Descriptions
         case fieldNames[5]:
           result[fieldNames[5]] = this.descriptionsToString(
             control.data.descriptions
           );
           break;
-        // Impact
         case fieldNames[6]:
           result[fieldNames[6]] = control.data.impact;
           break;
-        // Severity
         case fieldNames[7]:
           result[fieldNames[7]] = control.hdf.severity;
           break;
-        // Code
         case fieldNames[8]:
           result[fieldNames[8]] = this.createOverlaidCode(file, control);
           break;
-        // Check
         case fieldNames[9]:
           result[fieldNames[9]] = check;
           break;
-        // Fix
         case fieldNames[10]:
           result[fieldNames[10]] = fix;
           break;
-        // NIST IDs
         case fieldNames[11]:
           result[fieldNames[11]] = control.hdf.rawNistTags.join(', ');
           break;
-        // CCI IDs
         case fieldNames[12]:
           result[fieldNames[12]] = (control.data.tags.cci || []).join(', ');
           break;
-        // Results
         case fieldNames[13]:
           result[fieldNames[13]] = this.segmentsToString(control.hdf.segments);
           break;
-        // Is Waived
         case fieldNames[14]:
           result[fieldNames[14]] = control.hdf.waived ? 'True' : 'False';
           break;
-        // Waiver Data (JSON)
         case fieldNames[15]:
           result[fieldNames[15]] = JSON.stringify(
             _.get(control, 'hdf.wraps.waiver_data')
           );
+          break;
+        case fieldNames[16]:
+          result[fieldNames[16]] = attestation?.status ?? '';
+          break;
+        case fieldNames[17]:
+          result[fieldNames[17]] = attestation?.explanation ?? '';
           break;
       }
     });

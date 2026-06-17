@@ -752,6 +752,51 @@ User clicks EXPORT → Export as CKL
   5. .then/.catch (same as above)
 ```
 
+#### 5.4.2a XCCDF/ASFF Export (same clone pattern as HDF/JSON)
+
+```
+XCCDF and ASFF exports use the same clone-and-apply pattern as HDF/JSON:
+  1. Get evaluation data for selected files
+  2. For each file with annotations:
+     a. Deep clone evaluation.data
+     b. Apply attestations: addAttestationToHDF(clone, attestations)
+  3. Serialize clone through format-specific mapper:
+     - XCCDF: new FromHDFToXCCDFMapper(JSON.stringify(clone), template).toXCCDF()
+     - ASFF:  new FromHdfToAsffMapper(clone, options).toAsff()
+  4. saveSingleOrMultipleFiles()
+  5. .then/.catch as §5.4.1
+```
+
+#### 5.4.2b CSV Export (attestation columns)
+
+```
+CSV export reads from the contextualized layer (FilteredDataModule.controls()),
+not raw evaluation.data. Re-contextualization after clone+apply is complex.
+Approach: add Attestation Status and Attestation Explanation columns to CSV output.
+
+  1. For each control row, look up attestation from AnnotationModule
+  2. If attestation exists:
+     - "Attestation Status" column = attestation.status
+     - "Attestation Explanation" column = attestation.explanation
+  3. Original Status column retains the contextualized value
+  4. Consumers (spreadsheet reviewers, compliance tools) see both original
+     and attested status side by side
+```
+
+#### 5.4.2c Export Attestation Coverage Matrix
+
+| Export Format | Data Source | Attestation Strategy | Card |
+|--------------|-------------|---------------------|------|
+| HDF/JSON (ExportJson) | `evaluation.data` (raw) | Clone → apply → serialize | 9go.43 |
+| CKL (ExportCKLModal) | `evaluation.data` (raw) | `prepareEvaluationForCklExport` | 9go.27 ✓ |
+| XCCDF (ExportXCCDFResults) | `evaluation.data` (raw) | Clone → apply → mapper | 9go.43 |
+| ASFF (ExportASFFModal) | `evaluation.data` (raw) | Clone → apply → mapper | 9go.43 |
+| CSV (ExportCSVModal) | `FilteredDataModule.controls()` | Add attestation columns | 9go.43 |
+| HTML (ExportHTMLModal) | contextualized evaluation | Clone → apply → mapper | TBD |
+| CAAT (ExportCaat) | contextualized + controls | Clone → apply → mapper | TBD |
+| NIST (ExportNist) | NIST tags only | N/A — no status in output | — |
+| Attestation File | annotation store | Direct export (no clone) | 9go.28 ✓ |
+
 #### 5.4.3 Attestation/Comment File Export
 
 ```
