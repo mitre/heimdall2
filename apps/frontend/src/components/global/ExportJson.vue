@@ -14,44 +14,24 @@
 </template>
 
 <script lang="ts">
-import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {AnnotationModule} from '@/store/annotation_store';
-import {FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
-import {SnackbarModule} from '@/store/snackbar';
-import {cleanUpFilename, saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import { AnnotationModule } from '@/store/annotation_store';
+import { FilteredDataModule } from '@/store/data_filters';
+import { InspecDataModule } from '@/store/data_store';
+import { SnackbarModule } from '@/store/snackbar';
+import { cleanUpFilename, saveSingleOrMultipleFiles } from '@/utilities/export_util';
 
 export type FileData = {
-  filename: string;
   data: string;
+  filename: string;
 };
 
-@Component({
-  components: {
-    IconLinkItem
-  }
-})
+@Component({ components: { IconLinkItem } })
 export default class ExportJSON extends Vue {
-  async populate_files(): Promise<FileData[]> {
-    const ids = FilteredDataModule.selected_file_ids;
-    const fileData: FileData[] = [];
-    for (const evaluation of FilteredDataModule.evaluations(ids)) {
-      const fileId = evaluation.from_file.uniqueId;
-      const clone = await AnnotationModule.applyAttestationsToHdf({fileId});
-      fileData.push({
-        filename: this.cleanup_filename(evaluation.from_file.filename),
-        data: JSON.stringify(clone ?? evaluation.data)
-      });
-    }
-    for (const prof of FilteredDataModule.profiles(ids)) {
-      fileData.push({
-        filename: prof.from_file.filename,
-        data: JSON.stringify(prof.from_file.profile.data)
-      });
-    }
-    return fileData;
+  cleanup_filename(filename: string): string {
+    return cleanUpFilename(filename, '.json');
   }
 
   async export_json() {
@@ -66,8 +46,24 @@ export default class ExportJSON extends Vue {
       });
   }
 
-  cleanup_filename(filename: string): string {
-    return cleanUpFilename(filename, '.json');
+  async populate_files(): Promise<FileData[]> {
+    const ids = FilteredDataModule.selected_file_ids;
+    const fileData: FileData[] = [];
+    for (const evaluation of FilteredDataModule.evaluations(ids)) {
+      const fileId = evaluation.from_file.uniqueId;
+      const clone = await AnnotationModule.applyAttestationsToHdf({ fileId });
+      fileData.push({
+        data: JSON.stringify(clone ?? evaluation.data),
+        filename: this.cleanup_filename(evaluation.from_file.filename),
+      });
+    }
+    for (const prof of FilteredDataModule.profiles(ids)) {
+      fileData.push({
+        data: JSON.stringify(prof.from_file.profile.data),
+        filename: prof.from_file.filename,
+      });
+    }
+    return fileData;
   }
 }
 </script>

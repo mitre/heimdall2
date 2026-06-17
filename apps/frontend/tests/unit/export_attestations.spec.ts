@@ -1,32 +1,32 @@
-import {describe, expect, it} from 'vitest';
+import * as XLSX from '@e965/xlsx';
+import { ControlAttestationStatus } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import type { AttestationData } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import { describe, expect, it } from 'vitest';
+import type { CommentEntry } from '@/store/annotation_store';
 import {
   toAttestationJson,
+  toAttestationXlsx,
   toAttestationYaml,
   toHeimdallBundle,
-  toAttestationXlsx
 } from '@/utilities/export_attestations';
-import {ControlAttestationStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
-import type {CommentEntry} from '@/store/annotation_store';
-import type {AttestationData} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
-import * as XLSX from '@e965/xlsx';
 
 const sampleAttestations: AttestationData[] = [
   {
     control_id: 'V-2255',
-    status: ControlAttestationStatus.Passed,
     explanation: 'Verified manually',
     frequency: 'annually',
+    status: ControlAttestationStatus.Passed,
     updated: '2026-06-16T21:00:00Z',
-    updated_by: 'isso@example.com'
+    updated_by: 'isso@example.com',
   },
   {
     control_id: 'V-2260',
-    status: ControlAttestationStatus.Failed,
     explanation: 'Still failing after remediation',
     frequency: 'quarterly',
+    status: ControlAttestationStatus.Failed,
     updated: '2026-06-16T22:00:00Z',
-    updated_by: 'isso@example.com'
-  }
+    updated_by: 'isso@example.com',
+  },
 ];
 
 const sampleComments: CommentEntry[] = [
@@ -34,8 +34,8 @@ const sampleComments: CommentEntry[] = [
     control_id: 'V-2256',
     text: 'See JIRA-1234 for remediation plan',
     updated: '2026-06-16T21:05:00Z',
-    updated_by: 'reviewer@example.com'
-  }
+    updated_by: 'reviewer@example.com',
+  },
 ];
 
 describe('export_attestations', () => {
@@ -62,7 +62,7 @@ describe('export_attestations', () => {
         'frequency',
         'status',
         'updated',
-        'updated_by'
+        'updated_by',
       ]);
     });
 
@@ -89,7 +89,7 @@ describe('export_attestations', () => {
       expect(parsed.attestations[0].control_id).toBe('V-2255');
       expect(parsed.comments[0].control_id).toBe('V-2256');
       expect(parsed.comments[0].text).toBe(
-        'See JIRA-1234 for remediation plan'
+        'See JIRA-1234 for remediation plan',
       );
     });
 
@@ -151,7 +151,7 @@ describe('export_attestations', () => {
         'frequency',
         'status',
         'updated',
-        'updated_by'
+        'updated_by',
       ]);
     });
   });
@@ -172,7 +172,7 @@ describe('export_attestations', () => {
     it('has correct columns for round-trip with parseXLSXAttestations', () => {
       const xlsxData = toAttestationXlsx(sampleAttestations, sampleComments);
       const workbook = XLSX.read(xlsxData);
-      const sheet = workbook.Sheets['attestations'];
+      const sheet = workbook.Sheets.attestations;
       const rows: Record<string, string>[] = XLSX.utils.sheet_to_json(sheet);
 
       expect(rows.length).toBeGreaterThan(0);
@@ -188,7 +188,7 @@ describe('export_attestations', () => {
     it('attestation rows have correct values', () => {
       const xlsxData = toAttestationXlsx(sampleAttestations, []);
       const workbook = XLSX.read(xlsxData);
-      const sheet = workbook.Sheets['attestations'];
+      const sheet = workbook.Sheets.attestations;
       const rows: Record<string, string>[] = XLSX.utils.sheet_to_json(sheet);
 
       expect(rows).toHaveLength(2);
@@ -202,14 +202,14 @@ describe('export_attestations', () => {
     it('includes comment rows with type column for human review', () => {
       const xlsxData = toAttestationXlsx(sampleAttestations, sampleComments);
       const workbook = XLSX.read(xlsxData);
-      const sheet = workbook.Sheets['attestations'];
+      const sheet = workbook.Sheets.attestations;
       const rows: Record<string, string>[] = XLSX.utils.sheet_to_json(sheet);
 
-      const commentRows = rows.filter((r) => r.type === 'comment');
+      const commentRows = rows.filter(r => r.type === 'comment');
       expect(commentRows).toHaveLength(1);
       expect(commentRows[0].control_id).toBe('V-2256');
       expect(commentRows[0].explanation).toBe(
-        'See JIRA-1234 for remediation plan'
+        'See JIRA-1234 for remediation plan',
       );
     });
   });

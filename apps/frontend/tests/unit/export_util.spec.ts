@@ -1,17 +1,17 @@
-import {describe, expect, it} from 'vitest';
-import {cleanUpFilename} from '@/utilities/export_util';
+import { describe, expect, it } from 'vitest';
+import { cleanUpFilename } from '@/utilities/export_util';
 
 describe('cleanUpFilename', () => {
   describe('whitespace normalization', () => {
     it('replaces spaces with underscores', () => {
       expect(cleanUpFilename('AWS CIS Foundations Baseline', '.ckl')).toBe(
-        'AWS_CIS_Foundations_Baseline.ckl'
+        'AWS_CIS_Foundations_Baseline.ckl',
       );
     });
 
     it('replaces multiple spaces with single underscore', () => {
       expect(cleanUpFilename('file  with   spaces', '.json')).toBe(
-        'file_with_spaces.json'
+        'file_with_spaces.json',
       );
     });
   });
@@ -19,7 +19,7 @@ describe('cleanUpFilename', () => {
   describe('extension normalization — prevents double extensions', () => {
     it('strips .ckl before appending .ckl', () => {
       expect(cleanUpFilename('AWS-CIS-Foundations-Baseline.ckl', '.ckl')).toBe(
-        'AWS-CIS-Foundations-Baseline.ckl'
+        'AWS-CIS-Foundations-Baseline.ckl',
       );
     });
 
@@ -29,7 +29,7 @@ describe('cleanUpFilename', () => {
 
     it('strips .json before appending .json', () => {
       expect(cleanUpFilename('evaluation.json', '.json')).toBe(
-        'evaluation.json'
+        'evaluation.json',
       );
     });
 
@@ -43,7 +43,7 @@ describe('cleanUpFilename', () => {
 
     it('does NOT strip non-matching extensions', () => {
       expect(cleanUpFilename('evaluation.json', '.ckl')).toBe(
-        'evaluation.json.ckl'
+        'evaluation.json.ckl',
       );
     });
 
@@ -65,7 +65,7 @@ describe('cleanUpFilename', () => {
   describe('special characters', () => {
     it('replaces colons with underscores (invalid on Windows)', () => {
       expect(cleanUpFilename('Report:2026-06-17:10:00', '.html')).toBe(
-        'Report_2026-06-17_10_00.html'
+        'Report_2026-06-17_10_00.html',
       );
     });
   });
@@ -73,13 +73,13 @@ describe('cleanUpFilename', () => {
   describe('edge cases', () => {
     it('handles filenames with no extension', () => {
       expect(cleanUpFilename('plain-filename', '.json')).toBe(
-        'plain-filename.json'
+        'plain-filename.json',
       );
     });
 
     it('handles filenames with dots that are not extensions', () => {
       expect(cleanUpFilename('v1.2.3-report', '.json')).toBe(
-        'v1.2.3-report.json'
+        'v1.2.3-report.json',
       );
     });
 

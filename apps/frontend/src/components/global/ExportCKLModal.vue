@@ -29,7 +29,11 @@
 
       <v-card-text>
         <v-row>
-          <v-col v-for="(file, index) in files" :key="index" cols="12">
+          <v-col
+            v-for="(file, index) in files"
+            :key="index"
+            cols="12"
+          >
             <v-card>
               <v-hover v-slot="{hover}">
                 <v-card-title
@@ -41,7 +45,11 @@
                   }"
                   @click.stop="toggleSelectFile(file)"
                 >
-                  <v-checkbox v-model="file.selected" read-only disabled />
+                  <v-checkbox
+                    v-model="file.selected"
+                    read-only
+                    disabled
+                  />
                   {{ file.filename }}
                 </v-card-title>
               </v-hover>
@@ -124,31 +132,37 @@
                       label="Vul ID Mapping"
                       class="pr-2"
                     >
-                      <v-tooltip slot="prepend-inner" color="#332E2E" bottom>
+                      <v-tooltip
+                        slot="prepend-inner"
+                        color="#332E2E"
+                        bottom
+                      >
                         <template #activator="{on}">
-                          <v-icon color="primary" v-on="on"
-                            >mdi-information-variant-circle</v-icon
+                          <v-icon
+                            color="primary"
+                            v-on="on"
                           >
+                            mdi-information-variant-circle
+                          </v-icon>
                         </template>
-                        <span
-                          >This is what appears in the 'Vul ID' section for
-                          each<br />
+                        <span>This is what appears in the 'Vul ID' section for
+                          each<br>
                           control. By default, the Vul ID is set to the Control
-                          ID<br />
+                          ID<br>
                           value as understood in the OHDF schema. If desired,
-                          this<br />
+                          this<br>
                           can be changed to reflect the GID of the control,
-                          i.e.<br />
+                          i.e.<br>
                           the Group ID, which may exist in the Control's tags.
-                          If<br />
+                          If<br>
                           the ID is the same as the GID or the GID does not
-                          appear<br />
+                          appear<br>
                           in the tags, the examples listed here may be the
-                          same.<br />
+                          same.<br>
                           You can select either field in that case. For this
-                          file:<br />
-                          Example Control ID: {{ file.idexample }}<br />
-                          Example GID: {{ file.gidexample }}<br />
+                          file:<br>
+                          Example Control ID: {{ file.idexample }}<br>
+                          Example GID: {{ file.gidexample }}<br>
                         </span>
                       </v-tooltip>
                     </v-select>
@@ -266,11 +280,16 @@
       <v-divider />
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click="closeModal"> Cancel </v-btn>
+        <v-btn
+          text
+          @click="closeModal"
+        >
+          Cancel
+        </v-btn>
         <v-btn
           color="primary"
           text
-          :disabled="!selected.length || $v.$invalid"
+          :disabled="selected.length === 0 || $v.$invalid"
           @click="exportCKL"
         >
           Export
@@ -281,50 +300,50 @@
 </template>
 
 <script lang="ts">
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import type {Filter} from '@/store/data_filters';
-import {AnnotationModule} from '@/store/annotation_store';
-import {InspecDataModule} from '@/store/data_store';
-import type {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
 import {
-  cleanUpFilename,
-  saveSingleOrMultipleFiles
-} from '@/utilities/export_util';
-import {
+  Assettype,
+  ChecklistMetadata,
   ChecklistResults,
   ChecklistVuln,
-  ChecklistMetadata,
-  StigMetadata,
-  Assettype,
+  prepareEvaluationForCklExport,
   Result,
   Role,
+  StigMetadata,
   Techarea,
   validateChecklistMetadata,
-  prepareEvaluationForCklExport
 } from '@mitre/hdf-converters';
-import {ExecJSON} from 'inspecjs';
-import {Dependency} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import { ExecJSON } from 'inspecjs';
+import { Dependency } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
+import { DateTime } from 'luxon';
+import { coerce } from 'semver';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, Watch} from 'vue-property-decorator';
-import {DateTime} from 'luxon';
-import {coerce} from 'semver';
-import {validationMixin} from 'vuelidate';
-import {or, CustomRule} from 'vuelidate/lib/validators';
+import { Prop, Watch } from 'vue-property-decorator';
 import ValidationProperties from 'vue/types/vue';
+import { validationMixin } from 'vuelidate';
+import { CustomRule, or } from 'vuelidate/lib/validators';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import { AnnotationModule } from '@/store/annotation_store';
+import type { Filter } from '@/store/data_filters';
+import { InspecDataModule } from '@/store/data_store';
+import type { EvaluationFile, ProfileFile } from '@/store/report_intake';
+import { SnackbarModule } from '@/store/snackbar';
+import {
+  cleanUpFilename,
+  saveSingleOrMultipleFiles,
+} from '@/utilities/export_util';
 
-type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) &
-  ChecklistMetadata & {
-    selected: boolean;
-    idexample: string;
+type ExtendedEvaluationFile = ChecklistMetadata
+  & (EvaluationFile | ProfileFile) & {
     gidexample: string;
+    idexample: string;
+    selected: boolean;
   };
 
 type FileData = {
-  filename: string;
   data: string;
+  filename: string;
 };
 
 const isNotSelected: CustomRule = (_, file) => !file.selected;
@@ -336,59 +355,93 @@ function validateField(prop: string): CustomRule {
 }
 
 @Component({
+  components: { LinkItem },
   mixins: [validationMixin],
-  components: {LinkItem},
   validations: {
     files: {
       $each: {
-        hostip: {
-          ipAddress: or(validateField('hostip'), isNotSelected)
-        },
-        hostmac: {
-          macAddress: or(validateField('hostmac'), isNotSelected)
-        },
-        hostfqdn: {
-          fqdn: or(validateField('hostfqdn'), isNotSelected)
-        }
-      }
-    }
-  }
+        hostfqdn: { fqdn: or(validateField('hostfqdn'), isNotSelected) },
+        hostip: { ipAddress: or(validateField('hostip'), isNotSelected) },
+        hostmac: { macAddress: or(validateField('hostmac'), isNotSelected) },
+      },
+    },
+  },
 })
 export default class ExportCKLModal extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({ required: true, type: Object }) readonly filter!: Filter;
 
-  showingModal = false;
+  files: ExtendedEvaluationFile[] = this.evaluations(this.filter.fromFile);
   formatProfileTitle = false;
   originalProfileTitle = new Map<number, string>();
   roles = Object.values(Role);
-  types = Object.values(Assettype);
-  techareas = Object.values(Techarea);
-  files: ExtendedEvaluationFile[] = this.evaluations(this.filter.fromFile);
-
-  @Watch('showingModal')
-  onModalChange(newState: boolean) {
-    if (newState === false) {
-      this.closeModal();
-    }
-  }
-
-  @Watch('filter')
-  onFilterChange(newFilter: Filter) {
-    this.files = this.evaluations(newFilter.fromFile);
-  }
-
   selected: ExtendedEvaluationFile[] = [];
+  showingModal = false;
+  techareas = Object.values(Techarea);
 
-  /**
-   * Invoked when file(s) are loaded.
-   */
-  closeModal() {
-    this.clearSelection();
-    this.showingModal = false;
+  types = Object.values(Assettype);
+
+  addMetadataToPassthrough(file: ExtendedEvaluationFile) {
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.vulidmapping',
+      file.vulidmapping,
+    );
+    _.set(file, 'evaluation.data.passthrough.metadata.marking', file.marking);
+    _.set(file, 'evaluation.data.passthrough.metadata.hostname', file.hostname);
+    _.set(file, 'evaluation.data.passthrough.metadata.hostfqdn', file.hostfqdn);
+    _.set(file, 'evaluation.data.passthrough.metadata.hostmac', file.hostmac);
+    _.set(file, 'evaluation.data.passthrough.metadata.hostip', file.hostip);
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.targetcomment',
+      file.targetcomment,
+    );
+    _.set(file, 'evaluation.data.passthrough.metadata.role', file.role);
+    _.set(file, 'evaluation.data.passthrough.metadata.techarea', file.techarea);
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.assettype',
+      file.assettype,
+    );
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.webordatabase',
+      file.webordatabase,
+    );
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.webdbsite',
+      file.webdbsite,
+    );
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.webdbinstance',
+      file.webdbinstance,
+    );
+    const profileMetadata: StigMetadata[] = [];
+    for (const profile of file.profiles) {
+      const releasedate = DateTime.fromISO(profile.releasedate);
+      profileMetadata.push({
+        name: profile.name,
+        releasedate: releasedate.isValid
+          ? releasedate.toFormat('dd LLL yyyy')
+          : '',
+        releasenumber: profile.releasenumber,
+        showCalendar: false,
+        title: profile.title,
+        version: profile.version,
+      });
+    }
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.profiles',
+      profileMetadata,
+    );
   }
 
-  showModal() {
-    this.showingModal = true;
+  clearDateSelection(fileIndex: number, profileIndex: number) {
+    this.files[fileIndex].profiles[profileIndex].releasedate = '';
+    this.files[fileIndex].profiles[profileIndex].showCalendar = false;
   }
 
   clearSelection() {
@@ -398,14 +451,12 @@ export default class ExportCKLModal extends Vue {
     this.selected = [];
   }
 
-  setDateSelection(fileIndex: number, profileIndex: number, date: string) {
-    this.files[fileIndex].profiles[profileIndex].releasedate = date;
-    this.files[fileIndex].profiles[profileIndex].showCalendar = false;
-  }
-
-  clearDateSelection(fileIndex: number, profileIndex: number) {
-    this.files[fileIndex].profiles[profileIndex].releasedate = '';
-    this.files[fileIndex].profiles[profileIndex].showCalendar = false;
+  /**
+   * Invoked when file(s) are loaded.
+   */
+  closeModal() {
+    this.clearSelection();
+    this.showingModal = false;
   }
 
   // Get our evaluation info for our export table
@@ -413,47 +464,66 @@ export default class ExportCKLModal extends Vue {
     const files: ExtendedEvaluationFile[] = [];
     for (const fileId of fileIds) {
       const file = InspecDataModule.allFiles.find(
-        (f) => f.uniqueId === fileId
+        f => f.uniqueId === fileId,
       ) as EvaluationFile;
       if (file) {
         files.push({
           ...file,
-          vulidmapping: 'id',
-          idexample: _.get(
+          assettype: _.get(
             file,
-            'evaluation.data.profiles[0].controls[0].id',
-            ''
+            'evaluation.data.passthrough.checklist.asset.assettype',
+            _.get(
+              file,
+              'evaluation.data.passthrough.metadata.assettype',
+              Assettype.Computing,
+            ),
           ),
           gidexample: _.get(
             file,
             'evaluation.data.profiles[0].controls[0].tags.gid',
-            ''
-          ),
-          marking:
-            _.get(
-              file,
-              'evaluation.data.passthrough.checklist.asset.marking'
-            ) ??
-            _.get(file, 'evaluation.data.passthrough.metadata.marking', 'CUI'),
-          hostname: _.get(
-            file,
-            'evaluation.data.passthrough.checklist.asset.hostname',
-            _.get(file, 'evaluation.data.passthrough.metadata.hostname', '')
+            '',
           ),
           hostfqdn: _.get(
             file,
             'evaluation.data.passthrough.checklist.asset.hostfqdn',
-            _.get(file, 'evaluation.data.passthrough.metadata.hostfqdn', '')
-          ),
-          hostmac: _.get(
-            file,
-            'evaluation.data.passthrough.checklist.asset.hostmac',
-            _.get(file, 'evaluation.data.passthrough.metadata.hostmac', '')
+            _.get(file, 'evaluation.data.passthrough.metadata.hostfqdn', ''),
           ),
           hostip: _.get(
             file,
             'evaluation.data.passthrough.checklist.asset.hostip',
-            _.get(file, 'evaluation.data.passthrough.metadata.hostip', '')
+            _.get(file, 'evaluation.data.passthrough.metadata.hostip', ''),
+          ),
+          hostmac: _.get(
+            file,
+            'evaluation.data.passthrough.checklist.asset.hostmac',
+            _.get(file, 'evaluation.data.passthrough.metadata.hostmac', ''),
+          ),
+          hostname: _.get(
+            file,
+            'evaluation.data.passthrough.checklist.asset.hostname',
+            _.get(file, 'evaluation.data.passthrough.metadata.hostname', ''),
+          ),
+          idexample: _.get(
+            file,
+            'evaluation.data.profiles[0].controls[0].id',
+            '',
+          ),
+          marking:
+            _.get(
+              file,
+              'evaluation.data.passthrough.checklist.asset.marking',
+            )
+            ?? _.get(file, 'evaluation.data.passthrough.metadata.marking', 'CUI'),
+          profiles: this.profileStigs(file),
+          role: _.get(
+            file,
+            'evaluation.data.passthrough.checklist.asset.role',
+            _.get(file, 'evaluation.data.passthrough.metadata.role', Role.None),
+          ),
+          selected: _.get(
+            file,
+            'evaluation.data.passthrough.metadata.selected',
+            false,
           ),
           targetcomment: _.get(
             file,
@@ -461,22 +531,8 @@ export default class ExportCKLModal extends Vue {
             _.get(
               file,
               'evaluation.data.passthrough.metadata.targetcomment',
-              ''
-            )
-          ),
-          role: _.get(
-            file,
-            'evaluation.data.passthrough.checklist.asset.role',
-            _.get(file, 'evaluation.data.passthrough.metadata.role', Role.None)
-          ),
-          assettype: _.get(
-            file,
-            'evaluation.data.passthrough.checklist.asset.assettype',
-            _.get(
-              file,
-              'evaluation.data.passthrough.metadata.assettype',
-              Assettype.Computing
-            )
+              '',
+            ),
           ),
           techarea: _.get(
             file,
@@ -484,8 +540,23 @@ export default class ExportCKLModal extends Vue {
             _.get(
               file,
               'evaluation.data.passthrough.metadata.techarea',
-              Techarea.Empty
-            )
+              Techarea.Empty,
+            ),
+          ),
+          vulidmapping: 'id',
+          webdbinstance: _.get(
+            file,
+            'evaluation.data.passthrough.checklist.asset.webdbinstance',
+            _.get(
+              file,
+              'evaluation.data.passthrough.metadata.webdbinstance',
+              '',
+            ),
+          ),
+          webdbsite: _.get(
+            file,
+            'evaluation.data.passthrough.checklist.asset.webdbsite',
+            _.get(file, 'evaluation.data.passthrough.metadata.webdbsite', ''),
           ),
           webordatabase: _.get(
             file,
@@ -493,111 +564,141 @@ export default class ExportCKLModal extends Vue {
             _.get(
               file,
               'evaluation.data.passthrough.metadata.webordatabase',
-              'false'
-            )
+              'false',
+            ),
           ).toString(),
-          webdbsite: _.get(
-            file,
-            'evaluation.data.passthrough.checklist.asset.webdbsite',
-            _.get(file, 'evaluation.data.passthrough.metadata.webdbsite', '')
-          ),
-          webdbinstance: _.get(
-            file,
-            'evaluation.data.passthrough.checklist.asset.webdbinstance',
-            _.get(
-              file,
-              'evaluation.data.passthrough.metadata.webdbinstance',
-              ''
-            )
-          ),
-          selected: _.get(
-            file,
-            'evaluation.data.passthrough.metadata.selected',
-            false
-          ),
-          profiles: this.profileStigs(file)
         });
       }
     }
     return files;
   }
 
-  splitReleaseInfo(info: string): string[] {
-    const defaultReturn = ['', ''];
-    const pattern =
-      /Release: (?<release>\d+)\D+(?:\d.*?)?Date: (?<date>\d{1,2} \w{3} \d{4})/v;
-    const matches = RegExp(pattern).exec(info);
-    if (matches && matches.groups) {
-      return [matches.groups.release, matches.groups.date];
+  exportCKL(): void {
+    if (this.selected.length === 0) {
+      return SnackbarModule.failure('No files have been loaded.');
     }
-    return defaultReturn;
+    const fileData: FileData[] = [];
+    const exportedFileIds: string[] = [];
+
+    for (const selected of this.selected) {
+      this.addMetadataToPassthrough(selected);
+      if ('evaluation' in selected) {
+        const result = this.validateInputMetadata(selected);
+        if (!result.ok) {
+          SnackbarModule.failure(result.error);
+          return;
+        }
+
+        // §5.4.2 steps 2a-2c: clone, apply attestations, sync CKL passthrough
+        const fileAnnotations
+          = AnnotationModule.annotationsForFile(selected.uniqueId);
+        const attestations = fileAnnotations?.attestations ?? [];
+        const clone = prepareEvaluationForCklExport(
+          selected.evaluation.data,
+          attestations,
+        );
+
+        // §5.4.2 step 3: serialize the clone as CKL
+        const data = new ChecklistResults(clone).toCkl();
+        const filename = cleanUpFilename(selected.filename, '.ckl');
+        fileData.push({ data, filename });
+        exportedFileIds.push(selected.uniqueId);
+      }
+    }
+
+    saveSingleOrMultipleFiles(fileData, 'ckl')
+      .then(() => {
+        InspecDataModule.markFileSaved(exportedFileIds);
+      })
+      .catch((error: Error) => {
+        SnackbarModule.failure(
+          `CKL export failed: ${error.message || error}`,
+        );
+      })
+      .finally(() => {
+        this.closeModal();
+      });
+  }
+
+  @Watch('filter')
+  onFilterChange(newFilter: Filter) {
+    this.files = this.evaluations(newFilter.fromFile);
+  }
+
+  @Watch('showingModal')
+  onModalChange(newState: boolean) {
+    if (newState === false) {
+      this.closeModal();
+    }
   }
 
   profileStigs(file: EvaluationFile): StigMetadata[] {
     const results: (StigMetadata & {
+      releasenumberplaceholder: string;
       titleplaceholder: string;
       versionplaceholder: string;
-      releasenumberplaceholder: string;
     })[] = [];
-    const profileOrStigs: ExecJSON.Profile[] | ChecklistVuln[] = _.get(
+    const profileOrStigs: ChecklistVuln[] | ExecJSON.Profile[] = _.get(
       file,
       'evaluation.data.passthrough.checklist.stigs',
-      _.get(file, 'evaluation.data.profiles', [])
+      _.get(file, 'evaluation.data.profiles', []),
     );
     for (const profileStig of profileOrStigs) {
       const depends = _.get(profileStig, 'depends') as unknown as Dependency[];
-      if (Array.isArray(depends) && depends.length !== 0) {
+      if (Array.isArray(depends) && depends.length > 0) {
         continue;
       }
       const [releasenumber, releasedate] = this.splitReleaseInfo(
-        _.get(profileStig, 'header.releaseinfo', '')
+        _.get(profileStig, 'header.releaseinfo', ''),
       );
       const version = coerce(
-        _.get(profileStig, 'header.version', _.get(profileStig, 'version', ''))
+        _.get(profileStig, 'header.version', _.get(profileStig, 'version', '')),
       );
       results.push({
         name: _.get(
           profileStig,
           'header.title',
-          _.get(profileStig, 'name', '')
+          _.get(profileStig, 'name', ''),
         ),
+        releasedate:
+          DateTime.fromFormat(releasedate, 'dd LLL yyyy').toISODate() || '',
+        releasenumber: Number.parseInt(releasenumber, 10) || version?.minor || 0,
+        releasenumberplaceholder: (
+          Number.parseInt(releasenumber, 10)
+          || version?.minor
+          || 0
+        ).toString(),
+        showCalendar: false,
         title: _.get(
           profileStig,
           'header.title',
-          _.get(profileStig, 'title', _.get(profileStig, 'name', ''))
+          _.get(profileStig, 'title', _.get(profileStig, 'name', '')),
         ),
         titleplaceholder: _.get(
           profileStig,
           'header.title',
-          _.get(profileStig, 'title', _.get(profileStig, 'name', ''))
+          _.get(profileStig, 'title', _.get(profileStig, 'name', '')),
         ),
         version: version?.major ?? 0,
         versionplaceholder: (version?.major ?? 0).toString(),
-        releasenumber: parseInt(releasenumber, 10) || version?.minor || 0,
-        releasenumberplaceholder: (
-          parseInt(releasenumber, 10) ||
-          version?.minor ||
-          0
-        ).toString(),
-        releasedate:
-          DateTime.fromFormat(releasedate, 'dd LLL yyyy').toISODate() || '',
-        showCalendar: false
       });
     }
     return results;
   }
 
-  /**
-   * Checks the input field and generates a formatted error message if necessary
-   *
-   * @param field the validation state of the input field
-   * @param name name of the field that will show up in error message
-   */
-  validateFormat(field: typeof ValidationProperties, hint: string): string[] {
-    if (_.get(field, '$invalid')) {
-      return [hint];
+  resetProfileName(name: string, fileIndex: number, profileIndex: number) {
+    let newName = name;
+    const index = fileIndex + profileIndex;
+    if (this.originalProfileTitle.has(index)) {
+      newName = this.originalProfileTitle.get(index)!;
+      this.files[fileIndex].profiles[profileIndex].title = newName;
     }
-    return [];
+    return newName;
+  }
+
+  setDateSelection(fileIndex: number, profileIndex: number, date: string) {
+    this.files[fileIndex].profiles[profileIndex].releasedate = date;
+    this.files[fileIndex].profiles[profileIndex].showCalendar = false;
   }
 
   setProperName(name: string, fileIndex: number, profileIndex: number): string {
@@ -622,7 +723,7 @@ export default class ExportCKLModal extends Vue {
         this.originalProfileTitle.set(originalTitleIndex, name);
       }
       // Get the name value up to the index, replace dashes with spaces
-      newName = name.substring(0, index).split('-').join(' ');
+      newName = name.slice(0, Math.max(0, index)).split('-').join(' ');
       // Convert the first letter of each word into uppercase
       newName = newName.replaceAll(/^\w|[A-Z]|\b\w/gv, function (word) {
         return word.toUpperCase();
@@ -636,14 +737,19 @@ export default class ExportCKLModal extends Vue {
     return newName;
   }
 
-  resetProfileName(name: string, fileIndex: number, profileIndex: number) {
-    let newName = name;
-    const index = fileIndex + profileIndex;
-    if (this.originalProfileTitle.has(index)) {
-      newName = this.originalProfileTitle.get(index)!;
-      this.files[fileIndex].profiles[profileIndex].title = newName;
+  showModal() {
+    this.showingModal = true;
+  }
+
+  splitReleaseInfo(info: string): string[] {
+    const defaultReturn = ['', ''];
+    const pattern
+      = /Release: (?<release>\d+)\D+(?:\d.*?)?Date: (?<date>\d{1,2} \w{3} \d{4})/v;
+    const matches = new RegExp(pattern).exec(info);
+    if (matches?.groups) {
+      return [matches.groups.release, matches.groups.date];
     }
-    return newName;
+    return defaultReturn;
   }
 
   toggleSelectFile(file: ExtendedEvaluationFile) {
@@ -656,116 +762,23 @@ export default class ExportCKLModal extends Vue {
     file.selected = !file.selected;
   }
 
-  addMetadataToPassthrough(file: ExtendedEvaluationFile) {
-    _.set(
-      file,
-      'evaluation.data.passthrough.metadata.vulidmapping',
-      file.vulidmapping
-    );
-    _.set(file, 'evaluation.data.passthrough.metadata.marking', file.marking);
-    _.set(file, 'evaluation.data.passthrough.metadata.hostname', file.hostname);
-    _.set(file, 'evaluation.data.passthrough.metadata.hostfqdn', file.hostfqdn);
-    _.set(file, 'evaluation.data.passthrough.metadata.hostmac', file.hostmac);
-    _.set(file, 'evaluation.data.passthrough.metadata.hostip', file.hostip);
-    _.set(
-      file,
-      'evaluation.data.passthrough.metadata.targetcomment',
-      file.targetcomment
-    );
-    _.set(file, 'evaluation.data.passthrough.metadata.role', file.role);
-    _.set(file, 'evaluation.data.passthrough.metadata.techarea', file.techarea);
-    _.set(
-      file,
-      'evaluation.data.passthrough.metadata.assettype',
-      file.assettype
-    );
-    _.set(
-      file,
-      'evaluation.data.passthrough.metadata.webordatabase',
-      file.webordatabase
-    );
-    _.set(
-      file,
-      'evaluation.data.passthrough.metadata.webdbsite',
-      file.webdbsite
-    );
-    _.set(
-      file,
-      'evaluation.data.passthrough.metadata.webdbinstance',
-      file.webdbinstance
-    );
-    const profileMetadata: StigMetadata[] = [];
-    for (const profile of file.profiles) {
-      const releasedate = DateTime.fromISO(profile.releasedate);
-      profileMetadata.push({
-        name: profile.name,
-        title: profile.title,
-        version: profile.version,
-        releasenumber: profile.releasenumber,
-        releasedate: releasedate.isValid
-          ? releasedate.toFormat('dd LLL yyyy')
-          : '',
-        showCalendar: false
-      });
+  /**
+   * Checks the input field and generates a formatted error message if necessary
+   *
+   * @param field the validation state of the input field
+   * @param name name of the field that will show up in error message
+   */
+  validateFormat(field: typeof ValidationProperties, hint: string): string[] {
+    if (_.get(field, '$invalid')) {
+      return [hint];
     }
-    _.set(
-      file,
-      'evaluation.data.passthrough.metadata.profiles',
-      profileMetadata
-    );
-  }
-
-  exportCKL(): void {
-    if (this.selected.length === 0) {
-      return SnackbarModule.failure('No files have been loaded.');
-    }
-    const fileData: FileData[] = [];
-    const exportedFileIds: string[] = [];
-
-    for (const selected of this.selected) {
-      this.addMetadataToPassthrough(selected);
-      if ('evaluation' in selected) {
-        const result = this.validateInputMetadata(selected);
-        if (!result.ok) {
-          SnackbarModule.failure(result.error);
-          return;
-        }
-
-        // §5.4.2 steps 2a-2c: clone, apply attestations, sync CKL passthrough
-        const fileAnnotations =
-          AnnotationModule.annotationsForFile(selected.uniqueId);
-        const attestations = fileAnnotations?.attestations ?? [];
-        const clone = prepareEvaluationForCklExport(
-          selected.evaluation.data,
-          attestations
-        );
-
-        // §5.4.2 step 3: serialize the clone as CKL
-        const data = new ChecklistResults(clone).toCkl();
-        const filename = cleanUpFilename(selected.filename, '.ckl');
-        fileData.push({data, filename});
-        exportedFileIds.push(selected.uniqueId);
-      }
-    }
-
-    saveSingleOrMultipleFiles(fileData, 'ckl')
-      .then(() => {
-        InspecDataModule.markFileSaved(exportedFileIds);
-      })
-      .catch((error: Error) => {
-        SnackbarModule.failure(
-          `CKL export failed: ${error.message || error}`
-        );
-      })
-      .finally(() => {
-        this.closeModal();
-      });
+    return [];
   }
 
   validateInputMetadata(metadata: ChecklistMetadata): Result<true, string> {
     const result = validateChecklistMetadata(metadata);
-    if (result.ok) return {ok: true, value: true};
-    return {ok: false, error: result.error.message};
+    if (result.ok) { return { ok: true, value: true }; }
+    return { error: result.error.message, ok: false };
   }
 }
 </script>

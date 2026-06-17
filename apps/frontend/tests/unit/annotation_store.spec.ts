@@ -1,37 +1,35 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {InspecDataModule} from '@/store/data_store';
-import {AnnotationModule} from '@/store/annotation_store';
-import {ControlAttestationStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import { ControlAttestationStatus } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { AnnotationModule } from '@/store/annotation_store';
+import { InspecDataModule } from '@/store/data_store';
 
 const mockSaveAs = vi.fn();
-vi.mock('file-saver', () => ({
-  saveAs: (...args: unknown[]) => mockSaveAs(...args)
-}));
-
-function uniqueFileId(suffix: string): string {
-  return `test-file-${Date.now()}-${suffix}`;
-}
+vi.mock('file-saver', () => ({ saveAs: (...args: unknown[]) => mockSaveAs(...args) }));
 
 function addTestAttestation(
   fileId: string,
   controlId: string,
   overrides?: Partial<{
-    status: 'passed' | 'failed';
     explanation: string;
     frequency: string;
-    updatedBy: string;
     originalStatuses: Record<string, string>;
-  }>
+    status: 'failed' | 'passed';
+    updatedBy: string;
+  }>,
 ) {
   return AnnotationModule.addAttestation({
-    fileId,
     controlId,
-    status: overrides?.status ?? 'passed',
     explanation: overrides?.explanation ?? 'Test attestation',
+    fileId,
     frequency: overrides?.frequency ?? 'annually',
+    originalStatuses: overrides?.originalStatuses,
+    status: overrides?.status ?? 'passed',
     updatedBy: overrides?.updatedBy ?? 'test@example.com',
-    originalStatuses: overrides?.originalStatuses
   });
+}
+
+function uniqueFileId(suffix: string): string {
+  return `test-file-${Date.now()}-${suffix}`;
 }
 
 describe('annotation_store', () => {
@@ -44,7 +42,7 @@ describe('annotation_store', () => {
       const fileId = uniqueFileId('attest-1');
       const controlId = 'V-2255';
 
-      addTestAttestation(fileId, controlId, {explanation: 'Verified manually'});
+      addTestAttestation(fileId, controlId, { explanation: 'Verified manually' });
 
       expect(AnnotationModule.hasAttestation(fileId, controlId)).toBe(true);
       expect(AnnotationModule.hasAttestation(fileId, 'V-9999')).toBe(false);
@@ -54,12 +52,12 @@ describe('annotation_store', () => {
       const fileId = uniqueFileId('attest-upsert');
       const controlId = 'V-2256';
 
-      addTestAttestation(fileId, controlId, {explanation: 'First attestation'});
+      addTestAttestation(fileId, controlId, { explanation: 'First attestation' });
 
       addTestAttestation(fileId, controlId, {
-        status: 'failed',
         explanation: 'Updated attestation',
-        frequency: 'quarterly'
+        frequency: 'quarterly',
+        status: 'failed',
       });
 
       const attestations = AnnotationModule.attestationsForFile(fileId);
@@ -72,11 +70,11 @@ describe('annotation_store', () => {
       const fileId = uniqueFileId('attest-remove');
       const controlId = 'V-2257';
 
-      addTestAttestation(fileId, controlId, {explanation: 'Will be removed'});
+      addTestAttestation(fileId, controlId, { explanation: 'Will be removed' });
 
       expect(AnnotationModule.hasAttestation(fileId, controlId)).toBe(true);
 
-      AnnotationModule.removeAttestation({fileId, controlId});
+      AnnotationModule.removeAttestation({ controlId, fileId });
 
       expect(AnnotationModule.hasAttestation(fileId, controlId)).toBe(false);
       expect(AnnotationModule.attestationsForFile(fileId)).toHaveLength(0);
@@ -87,15 +85,15 @@ describe('annotation_store', () => {
       const fileB = uniqueFileId('count-b');
       const baseCount = AnnotationModule.attestationCount;
 
-      addTestAttestation(fileA, 'V-1001', {explanation: 'Test A'});
-      addTestAttestation(fileB, 'V-1002', {status: 'failed', explanation: 'Test B', frequency: 'quarterly'});
+      addTestAttestation(fileA, 'V-1001', { explanation: 'Test A' });
+      addTestAttestation(fileB, 'V-1002', { explanation: 'Test B', frequency: 'quarterly', status: 'failed' });
 
       expect(AnnotationModule.attestationCount).toBe(baseCount + 2);
     });
 
     it('attestationsForFile returns empty array for unknown file', () => {
       expect(AnnotationModule.attestationsForFile('nonexistent-file')).toEqual(
-        []
+        [],
       );
     });
   });
@@ -106,13 +104,13 @@ describe('annotation_store', () => {
       const controlId = 'V-3001';
 
       AnnotationModule.addComment({
-        fileId,
         comment: {
           control_id: controlId,
           text: 'Needs documentation',
           updated: '2026-06-16T21:00:00Z',
-          updated_by: 'reviewer@example.com'
-        }
+          updated_by: 'reviewer@example.com',
+        },
+        fileId,
       });
 
       expect(AnnotationModule.hasComments(fileId, controlId)).toBe(true);
@@ -124,23 +122,23 @@ describe('annotation_store', () => {
       const controlId = 'V-3002';
 
       AnnotationModule.addComment({
-        fileId,
         comment: {
           control_id: controlId,
           text: 'First comment',
           updated: '2026-06-16T21:00:00Z',
-          updated_by: 'reviewer1@example.com'
-        }
+          updated_by: 'reviewer1@example.com',
+        },
+        fileId,
       });
 
       AnnotationModule.addComment({
-        fileId,
         comment: {
           control_id: controlId,
           text: 'Second comment',
           updated: '2026-06-16T22:00:00Z',
-          updated_by: 'reviewer2@example.com'
-        }
+          updated_by: 'reviewer2@example.com',
+        },
+        fileId,
       });
 
       const comments = AnnotationModule.commentsForControl(fileId, controlId);
@@ -151,7 +149,7 @@ describe('annotation_store', () => {
 
     it('hasComments returns false for unknown control', () => {
       expect(AnnotationModule.hasComments('unknown-file', 'V-0000')).toBe(
-        false
+        false,
       );
     });
 
@@ -161,23 +159,23 @@ describe('annotation_store', () => {
       const baseCount = AnnotationModule.commentCount;
 
       AnnotationModule.addComment({
-        fileId: fileA,
         comment: {
           control_id: 'V-4001',
           text: 'Comment A',
           updated: '2026-06-16T21:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
+        fileId: fileA,
       });
 
       AnnotationModule.addComment({
-        fileId: fileB,
         comment: {
           control_id: 'V-4002',
           text: 'Comment B',
           updated: '2026-06-16T22:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
+        fileId: fileB,
       });
 
       expect(AnnotationModule.commentCount).toBe(baseCount + 2);
@@ -185,7 +183,7 @@ describe('annotation_store', () => {
 
     it('commentsForControl returns empty array for unknown control', () => {
       expect(
-        AnnotationModule.commentsForControl('unknown-file', 'V-0000')
+        AnnotationModule.commentsForControl('unknown-file', 'V-0000'),
       ).toEqual([]);
     });
   });
@@ -194,7 +192,7 @@ describe('annotation_store', () => {
     it('pendingFiles returns FileIDs with any annotations', () => {
       const fileId = uniqueFileId('pending');
 
-      addTestAttestation(fileId, 'V-5001', {explanation: 'Pending test'});
+      addTestAttestation(fileId, 'V-5001', { explanation: 'Pending test' });
 
       expect(AnnotationModule.pendingFiles).toContain(fileId);
     });
@@ -202,16 +200,16 @@ describe('annotation_store', () => {
     it('clearFileAnnotations removes all data for a file', () => {
       const fileId = uniqueFileId('clear');
 
-      addTestAttestation(fileId, 'V-6001', {explanation: 'Will be cleared'});
+      addTestAttestation(fileId, 'V-6001', { explanation: 'Will be cleared' });
 
       AnnotationModule.addComment({
-        fileId,
         comment: {
           control_id: 'V-6002',
           text: 'Will be cleared',
           updated: '2026-06-16T21:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
+        fileId,
       });
 
       expect(AnnotationModule.hasAttestation(fileId, 'V-6001')).toBe(true);
@@ -227,7 +225,7 @@ describe('annotation_store', () => {
 
     it('annotationsForFile returns undefined for unknown file', () => {
       expect(
-        AnnotationModule.annotationsForFile('nonexistent-file-id')
+        AnnotationModule.annotationsForFile('nonexistent-file-id'),
       ).toBeUndefined();
     });
   });
@@ -238,7 +236,7 @@ describe('annotation_store', () => {
 
       addTestAttestation(fileId, 'V-7001', {
         explanation: 'First annotation',
-        originalStatuses: {'V-7001': 'Not Reviewed', 'V-7002': 'Passed'}
+        originalStatuses: { 'V-7001': 'Not Reviewed', 'V-7002': 'Passed' },
       });
 
       const state = AnnotationModule.annotationsForFile(fileId);
@@ -252,14 +250,14 @@ describe('annotation_store', () => {
 
       addTestAttestation(fileId, 'V-8001', {
         explanation: 'First',
-        originalStatuses: {'V-8001': 'Not Reviewed'}
+        originalStatuses: { 'V-8001': 'Not Reviewed' },
       });
 
       addTestAttestation(fileId, 'V-8002', {
-        status: 'failed',
         explanation: 'Second',
         frequency: 'quarterly',
-        originalStatuses: {'V-8001': 'TAMPERED', 'V-8002': 'Failed'}
+        originalStatuses: { 'V-8001': 'TAMPERED', 'V-8002': 'Failed' },
+        status: 'failed',
       });
 
       const state = AnnotationModule.annotationsForFile(fileId);
@@ -274,34 +272,34 @@ describe('annotation_store', () => {
       AnnotationModule.importAnnotations({
         fileId,
         state: {
-          fileId,
           attestations: [
             {
               control_id: 'V-9001',
-              status: ControlAttestationStatus.Passed,
               explanation: 'Imported',
               frequency: 'annually',
+              status: ControlAttestationStatus.Passed,
               updated: '2026-06-16T21:00:00Z',
-              updated_by: 'import@example.com'
-            }
+              updated_by: 'import@example.com',
+            },
           ],
           commentLog: [
             {
               control_id: 'V-9002',
               text: 'Imported comment',
               updated: '2026-06-16T21:00:00Z',
-              updated_by: 'import@example.com'
-            }
+              updated_by: 'import@example.com',
+            },
           ],
-          originalStatuses: {'V-9001': 'Not Reviewed', 'V-9002': 'Passed'}
-        }
+          fileId,
+          originalStatuses: { 'V-9001': 'Not Reviewed', 'V-9002': 'Passed' },
+        },
       });
 
       expect(AnnotationModule.hasAttestation(fileId, 'V-9001')).toBe(true);
       expect(AnnotationModule.hasComments(fileId, 'V-9002')).toBe(true);
       expect(AnnotationModule.attestationsForFile(fileId)).toHaveLength(1);
       expect(
-        AnnotationModule.commentsForControl(fileId, 'V-9002')
+        AnnotationModule.commentsForControl(fileId, 'V-9002'),
       ).toHaveLength(1);
     });
   });
@@ -313,20 +311,18 @@ describe('annotation_store', () => {
 
       const mockControl = {
         data: {
+          descriptions: [{ data: 'original', label: 'comments' }],
           id: controlId,
-          descriptions: [{label: 'comments', data: 'original'}]
         },
-        hdf: {
-          descriptions: {comments: 'original'}
-        },
-        sourcedFrom: {sourcedFrom: null, from_file: {uniqueId: fileId}}
+        hdf: { descriptions: { comments: 'original' } },
+        sourcedFrom: { from_file: { uniqueId: fileId }, sourcedFrom: null },
       };
 
       await AnnotationModule.addCommentWithControl({
-        fileId,
         control: mockControl as any,
+        fileId,
         text: 'New reviewer comment',
-        updatedBy: 'reviewer@example.com'
+        updatedBy: 'reviewer@example.com',
       });
 
       expect(AnnotationModule.hasComments(fileId, controlId)).toBe(true);
@@ -344,24 +340,22 @@ describe('annotation_store', () => {
 
       const mockControl = {
         data: {
+          descriptions: [{ data: 'old text', label: 'comments' }],
           id: controlId,
-          descriptions: [{label: 'comments', data: 'old text'}]
         },
-        hdf: {
-          descriptions: {comments: 'old text'}
-        },
-        sourcedFrom: {sourcedFrom: null, from_file: {uniqueId: fileId}}
+        hdf: { descriptions: { comments: 'old text' } },
+        sourcedFrom: { from_file: { uniqueId: fileId }, sourcedFrom: null },
       };
 
       await AnnotationModule.addCommentWithControl({
-        fileId,
         control: mockControl as any,
+        fileId,
         text: 'updated by reviewer',
-        updatedBy: 'test@example.com'
+        updatedBy: 'test@example.com',
       });
 
       expect(mockControl.hdf.descriptions.comments).toBe(
-        'updated by reviewer'
+        'updated by reviewer',
       );
     });
 
@@ -371,24 +365,22 @@ describe('annotation_store', () => {
 
       const mockControl = {
         data: {
+          descriptions: [{ data: 'array-form original', label: 'comments' }],
           id: controlId,
-          descriptions: [{label: 'comments', data: 'array-form original'}]
         },
-        hdf: {
-          descriptions: {comments: 'array-form original'}
-        },
-        sourcedFrom: {sourcedFrom: null, from_file: {uniqueId: fileId}}
+        hdf: { descriptions: { comments: 'array-form original' } },
+        sourcedFrom: { from_file: { uniqueId: fileId }, sourcedFrom: null },
       };
 
       await AnnotationModule.addCommentWithControl({
-        fileId,
         control: mockControl as any,
+        fileId,
         text: 'array-form updated',
-        updatedBy: 'test@example.com'
+        updatedBy: 'test@example.com',
       });
 
       const desc = mockControl.data.descriptions.find(
-        (d) => d.label === 'comments'
+        d => d.label === 'comments',
       );
       expect(desc?.data).toBe('array-form updated');
     });
@@ -399,20 +391,18 @@ describe('annotation_store', () => {
 
       const mockControl = {
         data: {
+          descriptions: [{ data: '', label: 'comments' }],
           id: controlId,
-          descriptions: [{label: 'comments', data: ''}]
         },
-        hdf: {
-          descriptions: {comments: ''}
-        },
-        sourcedFrom: {sourcedFrom: null, from_file: {uniqueId: fileId}}
+        hdf: { descriptions: { comments: '' } },
+        sourcedFrom: { from_file: { uniqueId: fileId }, sourcedFrom: null },
       };
 
       await AnnotationModule.addCommentWithControl({
-        fileId,
         control: mockControl as any,
+        fileId,
         text: 'should dirty the file',
-        updatedBy: 'test@example.com'
+        updatedBy: 'test@example.com',
       });
 
       expect(InspecDataModule.isFileDirty(fileId)).toBe(true);
@@ -427,12 +417,12 @@ describe('annotation_store', () => {
       const beforeTime = new Date().toISOString();
 
       await AnnotationModule.addAttestation({
-        fileId,
         controlId,
-        status: ControlAttestationStatus.Passed,
         explanation: 'Verified manually',
+        fileId,
         frequency: 'annually',
-        updatedBy: 'isso@example.com'
+        status: ControlAttestationStatus.Passed,
+        updatedBy: 'isso@example.com',
       });
 
       const attestations = AnnotationModule.attestationsForFile(fileId);
@@ -449,69 +439,69 @@ describe('annotation_store', () => {
   });
 
   describe('exportAttestations store action (ADR §5.4.3)', () => {
-    function findCall(filenamePattern: string | RegExp): [Blob, string] | undefined {
+    function findCall(filenamePattern: RegExp | string): [Blob, string] | undefined {
       return (mockSaveAs.mock.calls as [Blob, string][]).find(
         ([, fn]) =>
           typeof filenamePattern === 'string'
             ? fn === filenamePattern
-            : filenamePattern.test(fn)
+            : filenamePattern.test(fn),
       );
     }
 
     it('exports JSON with correct filename and content type', async () => {
       const fileId = uniqueFileId('export-json');
-      addTestAttestation(fileId, 'V-EX001', {explanation: 'JSON test'});
+      addTestAttestation(fileId, 'V-EX001', { explanation: 'JSON test' });
 
       await AnnotationModule.exportAttestations({
         fileId,
+        filename: 'exp-json',
         format: 'json',
-        filename: 'exp-json'
       });
 
       const call = findCall('exp-json.json');
       expect(call).toBeDefined();
       const [blob] = call!;
       expect(blob).toBeInstanceOf(Blob);
-      expect((blob as Blob).type).toBe('application/json');
+      expect((blob).type).toBe('application/json');
     });
 
     it('exports YAML with .yaml extension', async () => {
       const fileId = uniqueFileId('export-yaml');
-      addTestAttestation(fileId, 'V-EX002', {explanation: 'YAML test'});
+      addTestAttestation(fileId, 'V-EX002', { explanation: 'YAML test' });
 
       await AnnotationModule.exportAttestations({
         fileId,
+        filename: 'exp-yaml',
         format: 'yaml',
-        filename: 'exp-yaml'
       });
 
       const call = findCall('exp-yaml.yaml');
       expect(call).toBeDefined();
-      expect((call![0] as Blob).type).toBe('text/yaml');
+      expect((call![0]).type).toBe('text/yaml');
     });
 
     it('exports bundle with .heimdall.json extension', async () => {
       const fileId = uniqueFileId('export-bundle');
       addTestAttestation(fileId, 'V-EX003');
       AnnotationModule.addComment({
-        fileId,
         comment: {
           control_id: 'V-EX004',
           text: 'Bundle comment',
           updated: '2026-06-17T00:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
+        fileId,
       });
 
       await AnnotationModule.exportAttestations({
         fileId,
+        filename: 'exp-bundle',
         format: 'bundle',
-        filename: 'exp-bundle'
       });
 
       const call = findCall('exp-bundle.heimdall.json');
       expect(call).toBeDefined();
-      expect((call![0] as Blob).type).toBe('application/json');
+      expect((call![0]).type).toBe('application/json');
     });
 
     it('exports XLSX with .xlsx extension', async () => {
@@ -520,22 +510,22 @@ describe('annotation_store', () => {
 
       await AnnotationModule.exportAttestations({
         fileId,
+        filename: 'exp-xlsx',
         format: 'xlsx',
-        filename: 'exp-xlsx'
       });
 
       const call = findCall('exp-xlsx.xlsx');
       expect(call).toBeDefined();
-      expect((call![0] as Blob).type).toBe('application/vnd.ms-excel');
+      expect((call![0]).type).toBe('application/vnd.ms-excel');
     });
 
     it('uses default filename when none provided', async () => {
       const fileId = uniqueFileId('export-default');
       addTestAttestation(fileId, 'V-EX006');
 
-      await AnnotationModule.exportAttestations({fileId, format: 'json'});
+      await AnnotationModule.exportAttestations({ fileId, format: 'json' });
 
-      const call = findCall(/^attestations-.*\.json$/);
+      const call = findCall(/^attestations-.*\.json$/v);
       expect(call).toBeDefined();
     });
 
@@ -543,7 +533,7 @@ describe('annotation_store', () => {
       const callsBefore = mockSaveAs.mock.calls.length;
       const fileId = uniqueFileId('export-empty');
 
-      await AnnotationModule.exportAttestations({fileId, format: 'json'});
+      await AnnotationModule.exportAttestations({ fileId, format: 'json' });
 
       expect(mockSaveAs.mock.calls.length).toBe(callsBefore);
     });
@@ -552,7 +542,7 @@ describe('annotation_store', () => {
   describe('applyAttestationsToHdf (ADR §5.4.1)', () => {
     it('returns undefined when no attestations exist for file', async () => {
       const fileId = uniqueFileId('apply-none');
-      const result = await AnnotationModule.applyAttestationsToHdf({fileId});
+      const result = await AnnotationModule.applyAttestationsToHdf({ fileId });
       expect(result).toBeUndefined();
     });
 
@@ -560,7 +550,7 @@ describe('annotation_store', () => {
       const fileId = uniqueFileId('apply-nofile');
       addTestAttestation(fileId, 'V-11001');
 
-      const result = await AnnotationModule.applyAttestationsToHdf({fileId});
+      const result = await AnnotationModule.applyAttestationsToHdf({ fileId });
       expect(result).toBeUndefined();
     });
   });

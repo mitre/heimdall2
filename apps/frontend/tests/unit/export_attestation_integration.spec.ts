@@ -1,75 +1,73 @@
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {AnnotationModule} from '@/store/annotation_store';
-import type {ExecJSON} from 'inspecjs';
+import { addAttestationToHDF } from '@mitre/hdf-converters';
+import type { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import {addAttestationToHDF} from '@mitre/hdf-converters';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { AnnotationModule } from '@/store/annotation_store';
 
-vi.mock('file-saver', () => ({
-  saveAs: vi.fn()
-}));
+vi.mock('file-saver', () => ({ saveAs: vi.fn() }));
 
 function makeMinimalEvaluation(): ExecJSON.Execution {
   return {
-    platform: {name: 'test', release: '1.0', target_id: ''},
-    version: '4.0.0',
-    statistics: {duration: 0},
+    platform: { name: 'test', release: '1.0', target_id: '' },
     profiles: [
       {
-        name: 'test-profile',
-        version: '1.0.0',
-        sha256: 'abc123',
-        title: 'Test Profile',
-        maintainer: 'Test',
-        summary: 'Test profile',
-        license: 'Apache-2.0',
-        copyright: 'Test',
-        copyright_email: 'test@test.com',
-        supports: [],
         attributes: [],
-        groups: [],
         controls: [
           {
-            id: 'V-2255',
-            title: 'Test Control',
+            code: '',
             desc: 'A test control',
-            descriptions: [{label: 'default', data: 'Test description'}],
+            descriptions: [{ data: 'Test description', label: 'default' }],
+            id: 'V-2255',
             impact: 0.5,
             refs: [],
-            tags: {},
-            code: '',
-            source_location: {ref: '', line: 0},
             results: [
               {
-                status: 'skipped' as ExecJSON.ControlResultStatus,
                 code_desc: 'This control must be manually reviewed',
                 run_time: 0,
+                skip_message: 'Not Reviewed',
                 start_time: '2026-01-01T00:00:00Z',
-                skip_message: 'Not Reviewed'
-              }
-            ]
+                status: 'skipped' as ExecJSON.ControlResultStatus,
+              },
+            ],
+            source_location: { line: 0, ref: '' },
+            tags: {},
+            title: 'Test Control',
           },
           {
-            id: 'V-2256',
-            title: 'Another Control',
+            code: '',
             desc: 'Another test control',
             descriptions: [],
+            id: 'V-2256',
             impact: 0.7,
             refs: [],
-            tags: {},
-            code: '',
-            source_location: {ref: '', line: 0},
             results: [
               {
-                status: 'passed' as ExecJSON.ControlResultStatus,
                 code_desc: 'Test passed',
                 run_time: 0,
-                start_time: '2026-01-01T00:00:00Z'
-              }
-            ]
-          }
-        ]
-      }
-    ]
+                start_time: '2026-01-01T00:00:00Z',
+                status: 'passed' as ExecJSON.ControlResultStatus,
+              },
+            ],
+            source_location: { line: 0, ref: '' },
+            tags: {},
+            title: 'Another Control',
+          },
+        ],
+        copyright: 'Test',
+        copyright_email: 'test@test.com',
+        groups: [],
+        license: 'Apache-2.0',
+        maintainer: 'Test',
+        name: 'test-profile',
+        sha256: 'abc123',
+        summary: 'Test profile',
+        supports: [],
+        title: 'Test Profile',
+        version: '1.0.0',
+      },
+    ],
+    statistics: { duration: 0 },
+    version: '4.0.0',
   };
 }
 
@@ -82,23 +80,23 @@ describe('Export attestation integration', () => {
       const attestations = [
         {
           control_id: 'V-2255',
-          status: 'passed' as const,
           explanation: 'Verified manually',
           frequency: 'annually',
+          status: 'passed' as const,
           updated: '2026-06-01T00:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
       ];
 
       addAttestationToHDF(clone, attestations);
 
       const attestedControl = clone.profiles[0].controls.find(
-        (c) => c.id === 'V-2255'
+        c => c.id === 'V-2255',
       );
       expect(attestedControl?.attestation_data).toBeDefined();
       expect(attestedControl?.attestation_data?.status).toBe('passed');
       expect(attestedControl?.attestation_data?.explanation).toBe(
-        'Verified manually'
+        'Verified manually',
       );
     });
 
@@ -109,18 +107,18 @@ describe('Export attestation integration', () => {
       const attestations = [
         {
           control_id: 'V-2255',
-          status: 'passed' as const,
           explanation: 'Verified manually',
           frequency: 'annually',
+          status: 'passed' as const,
           updated: '2026-06-01T00:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
       ];
 
       addAttestationToHDF(clone, attestations);
 
       const attestedControl = clone.profiles[0].controls.find(
-        (c) => c.id === 'V-2255'
+        c => c.id === 'V-2255',
       );
       expect(attestedControl?.results.length).toBe(2);
       expect(attestedControl?.results[1].status).toBe('passed');
@@ -133,18 +131,18 @@ describe('Export attestation integration', () => {
       const attestations = [
         {
           control_id: 'V-2255',
-          status: 'passed' as const,
           explanation: 'Verified manually',
           frequency: 'annually',
+          status: 'passed' as const,
           updated: '2026-06-01T00:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
       ];
 
       addAttestationToHDF(clone, attestations);
 
       const unmodifiedControl = clone.profiles[0].controls.find(
-        (c) => c.id === 'V-2256'
+        c => c.id === 'V-2256',
       );
       expect(unmodifiedControl?.attestation_data).toBeUndefined();
       expect(unmodifiedControl?.results.length).toBe(1);
@@ -157,16 +155,16 @@ describe('Export attestation integration', () => {
       addAttestationToHDF(clone, [
         {
           control_id: 'V-2255',
-          status: 'passed' as const,
           explanation: 'Verified',
           frequency: 'annually',
+          status: 'passed' as const,
           updated: '2026-06-01T00:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
       ]);
 
       const originalControl = original.profiles[0].controls.find(
-        (c) => c.id === 'V-2255'
+        c => c.id === 'V-2255',
       );
       expect(originalControl?.attestation_data).toBeUndefined();
       expect(originalControl?.results.length).toBe(1);
@@ -175,15 +173,13 @@ describe('Export attestation integration', () => {
 
   describe('AnnotationModule.applyAttestationsToHdf', () => {
     beforeEach(() => {
-      AnnotationModule.fileAnnotations.forEach((fa) => {
+      for (const fa of AnnotationModule.fileAnnotations) {
         AnnotationModule.clearFileAnnotations(fa.fileId);
-      });
+      }
     });
 
     it('returns undefined when no attestations exist for file', async () => {
-      const result = await AnnotationModule.applyAttestationsToHdf({
-        fileId: 'nonexistent-file'
-      });
+      const result = await AnnotationModule.applyAttestationsToHdf({ fileId: 'nonexistent-file' });
       expect(result).toBeUndefined();
     });
   });
@@ -196,18 +192,18 @@ describe('Export attestation integration', () => {
       addAttestationToHDF(clone, [
         {
           control_id: 'V-2255',
-          status: 'passed' as const,
           explanation: 'Verified manually',
           frequency: 'annually',
+          status: 'passed' as const,
           updated: '2026-06-01T00:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
       ]);
 
       const json = JSON.stringify(clone);
       const parsed = JSON.parse(json);
       const control = parsed.profiles[0].controls.find(
-        (c: {id: string}) => c.id === 'V-2255'
+        (c: { id: string }) => c.id === 'V-2255',
       );
 
       expect(control.attestation_data).toBeDefined();
@@ -223,18 +219,18 @@ describe('Export attestation integration', () => {
       addAttestationToHDF(clone, [
         {
           control_id: 'V-2255',
-          status: 'passed' as const,
           explanation: 'Verified',
           frequency: 'annually',
+          status: 'passed' as const,
           updated: '2026-06-01T00:00:00Z',
-          updated_by: 'test@example.com'
-        }
+          updated_by: 'test@example.com',
+        },
       ]);
 
       const json = JSON.stringify(clone);
       const parsed = JSON.parse(json);
       const unattested = parsed.profiles[0].controls.find(
-        (c: {id: string}) => c.id === 'V-2256'
+        (c: { id: string }) => c.id === 'V-2256',
       );
 
       expect(unattested.attestation_data).toBeUndefined();
@@ -247,18 +243,18 @@ describe('Export attestation integration', () => {
       const controlId = 'V-2255';
 
       AnnotationModule.addAttestation({
-        fileId,
         controlId,
-        status: 'passed',
         explanation: 'Manually verified in lab',
+        fileId,
         frequency: 'annually',
-        updatedBy: 'auditor@example.com'
+        status: 'passed',
+        updatedBy: 'auditor@example.com',
       });
 
       expect(AnnotationModule.hasAttestation(fileId, controlId)).toBe(true);
 
       const attestations = AnnotationModule.attestationsForFile(fileId);
-      const match = attestations.find((a) => a.control_id === controlId);
+      const match = attestations.find(a => a.control_id === controlId);
 
       expect(match).toBeDefined();
       expect(match?.status).toBe('passed');

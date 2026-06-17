@@ -14,43 +14,39 @@
 </template>
 
 <script lang="ts">
-import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {s2ab} from '@/utilities/export_util';
-import {saveAs} from 'file-saver';
-import {FromHDFToCAATMapper} from '@mitre/hdf-converters';
+import { FromHDFToCAATMapper } from '@mitre/hdf-converters';
+import { saveAs } from 'file-saver';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import type {Filter} from '../../store/data_filters';
-import {FilteredDataModule} from '../../store/data_filters';
-import {InspecDataModule} from '../../store/data_store';
-import type {EvaluationFile} from '../../store/report_intake';
+import { Prop } from 'vue-property-decorator';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import { s2ab } from '@/utilities/export_util';
+import type { Filter } from '../../store/data_filters';
+import { FilteredDataModule } from '../../store/data_filters';
+import { InspecDataModule } from '../../store/data_store';
+import type { EvaluationFile } from '../../store/report_intake';
 
-@Component({
-  components: {
-    IconLinkItem
-  }
-})
+@Component({ components: { IconLinkItem } })
 export default class ExportCaat extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({ required: true, type: Object }) readonly filter!: Filter;
 
   exportCaat() {
     const inputData = this.filter.fromFile.map((fileId: string) => {
       const file = (
-        InspecDataModule.allEvaluationFiles as EvaluationFile[]
-      ).find((f) => f.uniqueId === fileId);
+        InspecDataModule.allEvaluationFiles
+      ).find(f => f.uniqueId === fileId);
       const data = file?.evaluation ?? '';
       const filename = file?.filename || fileId;
-      const controls = FilteredDataModule.controls({
+      const controls = [...FilteredDataModule.controls({
         ...this.filter,
-        fromFile: [fileId]
-      }).slice();
-      return {data, filename, controls};
+        fromFile: [fileId],
+      })];
+      return { controls, data, filename };
     });
     const caat = new FromHDFToCAATMapper(inputData).toCAAT(false);
     saveAs(
-      new Blob([s2ab(caat)], {type: 'application/octet-stream'}),
-      `CAAT-${FromHDFToCAATMapper.formatDate(new Date(), '-')}.xlsx`
+      new Blob([s2ab(caat)], { type: 'application/octet-stream' }),
+      `CAAT-${FromHDFToCAATMapper.formatDate(new Date(), '-')}.xlsx`,
     );
   }
 }
