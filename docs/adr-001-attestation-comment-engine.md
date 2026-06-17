@@ -921,6 +921,24 @@ User imports a CKL file that was previously exported and edited in STIG Viewer:
 
 **Total Phase 1:** ~42 sp, ~200 min Claude-pace
 
+**Implementation strategy: store → export/import → UI → integration.**
+
+Each layer is fully testable before the next starts. The store works without the UI. The export works without the side panel. The side panel consumes what's already tested. This is the opposite of PR #8278 (UI first, store bolted on) and the checklistView branch (everything at once, nothing working).
+
+```
+Layer 1 — Store (pure TypeScript, vitest only, zero UI):
+  A (annotation store) → A2 (fileIdForControl getter)
+
+Layer 2 — Export/Import + Wiring (store consumers, no new UI components):
+  F (dirty tracking wiring) | G (CKL sync) | H (export attestations) | I (import)
+
+Layer 3 — UI Components (side panel, row actions, notification bar):
+  B1 (panel forms) → B2 (history + nav + a11y) | C (row actions) | D (notif bar) | E (NR card)
+
+Layer 4 — Integration (end-to-end verification):
+  K (integration tests + fixtures + CI)
+```
+
 **Critical path:** A → A2 → B1 → B2/C/E. D/F/G/H/I parallel off A.
 
 **Build order (dependency graph):**
