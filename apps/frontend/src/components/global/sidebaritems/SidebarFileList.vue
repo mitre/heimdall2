@@ -51,16 +51,15 @@ import {InspecDataModule, UNSAVED_CHANGES_MESSAGE} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
+import {
+  reviewedCopyTags,
+  reviewCopyFilename
+} from '@/utilities/review_copy_util';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-
-const REVIEW_TAG = 'heimdall:review';
-const REVIEW_ROOT_TAG_PREFIX = 'heimdall:review-root:';
-const REVIEW_PARENT_TAG_PREFIX = 'heimdall:review-parent:';
-const REVIEW_FILENAME_SUFFIX = /\s+- review \d{4}-\d{2}-\d{2} \d{2}-\d{2}$/u;
 
 type SaveToDatabaseOptions = {
   filename?: string;
@@ -151,52 +150,13 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     return _.get(file, 'profile.data');
   }
 
-  review_timestamp(): string {
-    const now = new Date();
-    const pad = (value: number) => String(value).padStart(2, '0');
-    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
-      now.getDate()
-    )} ${pad(now.getHours())}-${pad(now.getMinutes())}`;
-  }
-
-  review_copy_filename(filename: string): string {
-    return `${filename.replace(
-      REVIEW_FILENAME_SUFFIX,
-      ''
-    )} - review ${this.review_timestamp()}`;
-  }
-
-  review_root_id(evaluation: IEvaluation | undefined): string | undefined {
-    const tagValues = evaluation?.evaluationTags?.map((tag) => tag.value) ?? [];
-    return tagValues
-      .find((tag) => tag.startsWith(REVIEW_ROOT_TAG_PREFIX))
-      ?.slice(REVIEW_ROOT_TAG_PREFIX.length);
-  }
-
   reviewed_copy_tags(
     sourceEvaluation: IEvaluation | undefined,
     sourceDatabaseId: string
   ): string[] {
     const sourceTags =
       sourceEvaluation?.evaluationTags?.map((tag) => tag.value) ?? [];
-    const rootId = this.review_root_id(sourceEvaluation) ?? sourceDatabaseId;
-    const reviewTags = [
-      REVIEW_TAG,
-      `${REVIEW_ROOT_TAG_PREFIX}${rootId}`,
-      `${REVIEW_PARENT_TAG_PREFIX}${sourceDatabaseId}`
-    ];
-    return [
-      ...new Set(
-        sourceTags
-          .filter(
-            (tag) =>
-              tag !== REVIEW_TAG &&
-              !tag.startsWith(REVIEW_ROOT_TAG_PREFIX) &&
-              !tag.startsWith(REVIEW_PARENT_TAG_PREFIX)
-          )
-          .concat(reviewTags)
-      )
-    ];
+    return reviewedCopyTags(sourceTags, sourceDatabaseId);
   }
 
   save_reviewed_copy(file: EvaluationFile | ProfileFile) {
@@ -210,7 +170,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       | IEvaluation
       | undefined;
     this.save_to_database(file, {
-      filename: this.review_copy_filename(file.filename),
+      filename: reviewCopyFilename(file.filename),
       successMessage: 'Reviewed copy saved successfully',
       tagValues: this.reviewed_copy_tags(sourceEvaluation, sourceDatabaseId)
     });

@@ -64,7 +64,7 @@ function getFileForControl(
   return evaluation?.from_file ?? profile.from_file;
 }
 
-function updateDescriptionArray(
+export function updateDescriptionArray(
   control: ContextualizedControl,
   comments: string
 ) {
@@ -96,7 +96,7 @@ function updateDescriptionArray(
   }
 }
 
-function updateStructuredChecklistComments(
+export function updateStructuredChecklistComments(
   currentComments: unknown,
   comments: string
 ): string {
@@ -128,7 +128,7 @@ function updateStructuredChecklistComments(
   return sections.join('\n');
 }
 
-function updateChecklistPassthroughComments(
+export function updateChecklistPassthroughComments(
   file: EvaluationFile | ProfileFile,
   control: ContextualizedControl,
   comments: string
