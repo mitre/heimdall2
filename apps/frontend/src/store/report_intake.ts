@@ -68,6 +68,8 @@ export type InspecFile = {
   uniqueId: FileID;
   /** The filename that this file was uploaded under. */
   filename: string;
+  /** The detected source format when this file was loaded (e.g., INPUT_TYPES value, 'inspec-json', 'inspec-profile'). */
+  sourceFormat?: string;
 
   database_id?: number;
 
@@ -110,6 +112,7 @@ export type TextLoadOptions = {
   createdAt?: Date;
   updatedAt?: Date;
   tags?: Tag[];
+  sourceFormat?: string;
 
   /** The text to use for it. */
   text: string;
@@ -122,6 +125,7 @@ export type ExecJSONLoadOptions = {
   createdAt?: Date;
   updatedAt?: Date;
   tags?: Tag[];
+  sourceFormat?: string;
   data: ExecJSON.Execution;
 };
 
@@ -150,9 +154,11 @@ export class InspecIntake extends VuexModule {
     if (await this.isHDF(read)) {
       return this.loadText({
         text: read,
-        filename: filename
+        filename: filename,
+        sourceFormat: 'inspec-json'
       });
     } else {
+      const typeGuess = fingerprint({data: read, filename});
       const converted = await this.convertToHdf({
         fileOptions: options,
         data: read
@@ -168,14 +174,16 @@ export class InspecIntake extends VuexModule {
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: `${filename.replaceAll(/\.json/giv, '').replaceAll(/\.nessus/giv, '')}-${_.get(evaluation, 'platform.target_id', _.get(evaluation, 'profiles[0].name'))}.${originalFileType}`
+              filename: `${filename.replaceAll(/\.json/giv, '').replaceAll(/\.nessus/giv, '')}-${_.get(evaluation, 'platform.target_id', _.get(evaluation, 'profiles[0].name'))}.${originalFileType}`,
+              sourceFormat: typeGuess
             });
           })
         );
       } else if (converted) {
         return this.loadExecJson({
           data: converted,
-          filename: filename
+          filename: filename,
+          sourceFormat: typeGuess
         });
       } else {
         return [];
@@ -335,6 +343,7 @@ export class InspecIntake extends VuexModule {
       const evalFile = {
         uniqueId: fileID,
         filename: options.filename,
+        sourceFormat: options.sourceFormat ?? 'inspec-json',
         database_id: options.database_id,
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
@@ -357,7 +366,8 @@ export class InspecIntake extends VuexModule {
       // Handle as profile
       const profileFile = {
         uniqueId: fileID,
-        filename: options.filename
+        filename: options.filename,
+        sourceFormat: options.sourceFormat ?? 'inspec-profile'
       } as ProfileFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
@@ -390,6 +400,7 @@ export class InspecIntake extends VuexModule {
     const evalFile = {
       uniqueId: fileID,
       filename: options.filename,
+      sourceFormat: options.sourceFormat,
       database_id: options.database_id,
       createdAt: options.createdAt,
       updatedAt: options.updatedAt,
