@@ -8,18 +8,9 @@ import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
 import { getRequiredClaim } from './resolve-claim';
 
-function samlBooleanConfigValue(value: string | undefined): boolean | undefined {
-  const normalizedValue = value?.trim().toLowerCase();
-  if (!normalizedValue) {
-    return undefined;
-  }
-
-  if (normalizedValue !== 'true' && normalizedValue !== 'false') {
-    throw new TypeError('SAML boolean config values must be "true" or "false"');
-  }
-
-  return normalizedValue === 'true';
-}
+//function samlBooleanConfigValue(value: string | undefined): boolean{
+//  return (value ?? '').toLowerCase() === 'true';
+//}
 
 @Injectable()
 export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
@@ -46,13 +37,37 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
         || configService.get('SAML_ISSUER'),
       callbackUrl: `${configService.getExternalUrl()}/authn/saml/callback`,
       entryPoint: configService.get('SAML_ENTRY_POINT') || 'disabled',
-      identifierFormat:
-        configService.get('SAML_IDENTIFIER_FORMAT'),
+      identifierFormat: configService.get('SAML_IDENTIFIER_FORMAT'),
       idpCert: configService.get('SAML_IDP_CERT') || 'disabled',
       idpIssuer: configService.get('SAML_IDP_ISSUER'),
       issuer: configService.get('SAML_ISSUER') || 'disabled',
-      wantAssertionsSigned: samlBooleanConfigValue(configService.get('SAML_WANT_ASSERTIONS_SIGNED')),
-      wantAuthnResponseSigned: samlBooleanConfigValue(configService.get('SAML_WANT_AUTHN_RESPONSE_SIGNED')),
+      privateKey: configService.get('SAML_PRIVATE_KEY'),
+      publicCert: configService.get('SAML_PUBLIC_CERT'),
+      decryptionPvk: configService.get('SAML_DECRYPTION_PVK'),
+      wantAssertionsSigned: /*samlBooleanConfigValue*/(configService.get('SAML_WANT_ASSERTIONS_SIGNED')??"").toLowerCase() === 'true',
+      wantAuthnResponseSigned: /*samlBooleanConfigValue*/(configService.get('SAML_WANT_AUTHN_RESPONSE_SIGNED')??"").toLowerCase() === 'true',
+      signMetadata: (configService.get('SAML_SIGN_METADATA') ?? '').toLowerCase() === 'true',
+      forceAuthn: (configService.get('SAML_FORCE_AUTHN') ?? '').toLowerCase() === 'true',
+      passive: (configService.get('SAML_PASSIVE') ?? '').toLowerCase() === 'true',
+      allowCreate: (configService.get('SAML_ALLOW_CREATE') ?? '').toLowerCase() === 'true',
+      disableRequestedAuthnContext: (configService.get('SAML_DISABLE_REQUESTED_AUTHN_CONTEXT') ?? '').toLowerCase() === 'true',
+      skipRequestCompression: (configService.get('SAML_SKIP_REQUEST_COMPRESSION') ?? '').toLowerCase() === 'true',
+      disableRequestAcsUrl: (configService.get('SAML_DISABLE_REQUEST_ACS_URL') ?? '').toLowerCase() === 'true',
+      acceptedClockSkewMs: Number(configService.get('SAML_ACCEPTED_CLOCK_SKEW_MS') ?? 0),
+      maxAssertionAgeMs: Number(configService.get('SAML_MAX_ASSERTION_AGE_MS') ?? 0),
+      requestIdExpirationPeriodMs: Number(configService.get('SAML_REQUEST_ID_EXPIRATION_PERIOD_MS') ?? 28800000),
+      signatureAlgorithm: configService.get('SAML_SIGNATURE_ALGORITHM') as 'sha1' | 'sha256' | 'sha512' | undefined,
+      digestAlgorithm: configService.get('SAML_DIGEST_ALGORITHM'),
+      authnRequestBinding: configService.get('SAML_AUTHN_REQUEST_BINDING'),
+      logoutUrl: configService.get('SAML_LOGOUT_URL'),
+      logoutCallbackUrl: configService.get('SAML_LOGOUT_CALLBACK_URL'),
+      validateInResponseTo:
+      configService.get('SAML_VALIDATE_IN_RESPONSE_TO') as 'never' | 'ifPresent' | 'always' | undefined,
+      scoping: configService.get('SAML_SCOPING_PROXY_COUNT') 
+        ? {
+          proxyCount: Number(configService.get('SAML_SCOPING_PROXY_COUNT')),
+          }
+        : undefined,
     });
   }
 
