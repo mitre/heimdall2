@@ -4,24 +4,24 @@ import {FileExportTypes, FromHDFToHTMLMapper} from '../../../index';
 import {omitHTMLStyleTag} from '../../utils';
 
 describe('Liquid partial templates', () => {
-  it('html.liquid renders a valid HTML5 shell with color-scheme meta', async () => {
+  it('html.liquid layout renders with child block overrides', async () => {
     const {Liquid} = await import('liquidjs');
     const {templates} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
+    const childTemplate = `{% layout 'html', title: 'Test Report' %}
+{% block styles %}<style>body { color: red; }</style>{% endblock %}
+{% block body %}<main>content</main>{% endblock %}
+{% block scripts %}<script>console.log("test")</script>{% endblock %}`;
     const engine = new Liquid({templates, outputEscape: 'escape'});
-    const out = engine.parseAndRenderSync(templates['html'], {
-      title: 'Test Report',
-      body: '<main>content</main>',
-      inline_styles: ['body { color: red; }'],
-      inline_scripts: ['console.log("test")']
-    });
+    const out = await engine.parseAndRender(childTemplate, {});
     expect(out).toContain('<!doctype html>');
     expect(out).toContain('<meta name="color-scheme" content="light dark"');
     expect(out).toContain('<meta name="generator" content="Heimdall"');
     expect(out).toContain('Test Report');
     expect(out).toContain('<main>content</main>');
     expect(out).toContain('body { color: red; }');
+    expect(out).toContain('console.log("test")');
   });
 
   it('partials/summary.liquid renders status counts table with icon+text', async () => {
@@ -41,6 +41,35 @@ describe('Liquid partial templates', () => {
     expect(out).toContain('<svg>pass</svg>');
     expect(out).toContain('<meter');
     expect(out).toContain('55.55%');
+  });
+
+  it('report.liquid uses {% layout %} not {% capture body %}', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const reportSrc = templates['report'];
+    expect(reportSrc).toContain('layout');
+    expect(reportSrc).not.toContain('capture body');
+    expect(reportSrc).not.toContain("include 'html'");
+  });
+
+  it('html.liquid has named blocks for styles, body, and scripts', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const htmlSrc = templates['html'];
+    expect(htmlSrc).toContain('block styles');
+    expect(htmlSrc).toContain('block body');
+    expect(htmlSrc).toContain('block scripts');
+  });
+
+  it('mapper does not assemble inline_styles or inline_scripts arrays', async () => {
+    const mapperSrc = fs.readFileSync(
+      'src/converters-from-hdf/html/reverse-html-mapper.ts',
+      {encoding: 'utf-8'}
+    );
+    expect(mapperSrc).not.toContain('inline_styles');
+    expect(mapperSrc).not.toContain('inline_scripts');
   });
 
   it('SVG icons use fill="currentColor" not hardcoded rgb()', async () => {

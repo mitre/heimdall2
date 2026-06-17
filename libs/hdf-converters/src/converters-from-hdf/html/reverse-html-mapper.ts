@@ -509,8 +509,8 @@ export class FromHDFToHTMLMapper {
     return engine.parseAndRender(templates['report'], {
       ...this.outputData,
       title: 'Heimdall ' + this.outputData.exportType + ' Report',
-      inline_styles: [css, reportCss],
-      inline_scripts: [templates['partials/scripts'] || '']
+      css,
+      reportCss
     });
   }
 }
