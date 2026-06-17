@@ -109,7 +109,7 @@ export function updateStructuredChecklistComments(
 
   let commentsSectionUpdated = false;
   const sections = existingComments
-    .split(/\n(?=[A-Z]+ ::)/gv)
+    .split(/\n(?=[A-Z_]+ ::)/gv)
     .map((section) => section.trimEnd())
     .filter((section) => section.length > 0)
     .flatMap((section) => {
