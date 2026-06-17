@@ -1,5 +1,7 @@
 import {ExecJSON} from 'inspecjs';
+import * as _ from 'lodash';
 import {ChecklistVuln} from '../ckl-mapper/checklist-jsonix-converter';
+import {addAttestationToHDF, Attestation} from './attestations';
 
 type DescriptionsInput =
   | ExecJSON.ControlDescription[]
@@ -46,7 +48,7 @@ export function sanitizeCklSectionMarkers(text: string): string {
   );
 }
 
-type DescriptionEdits = {
+export type DescriptionEdits = {
   comments?: string;
   caveat?: string;
   justification?: string;
@@ -88,6 +90,89 @@ export function syncChecklistVulnComments(
 
     vuln.comments = serializeStructuredComments(sections);
   }
+}
+
+/**
+ * Build a description-edits map from evaluation profiles for CKL export sync.
+ * Matches controls by ID (case-insensitive) against the given vuln IDs,
+ * extracting comments/caveat/justification/rationale from array-form descriptions.
+ *
+ * This is the input for syncChecklistVulnComments — call this to build the edits
+ * map, then pass it to syncChecklistVulnComments with the passthrough vulns.
+ *
+ * Format-agnostic: works for CKL and will work for CKLB JSON when added.
+ */
+export function buildEditsMapFromProfiles(
+  profiles: ExecJSON.Profile[],
+  vulnNums: string[]
+): Map<string, DescriptionEdits> {
+  const edits = new Map<string, DescriptionEdits>();
+
+  for (const vulnNum of vulnNums) {
+    for (const profile of profiles) {
+      const control = profile.controls.find(
+        (c) => c.id.toLowerCase() === vulnNum.toLowerCase()
+      );
+      if (!control) continue;
+
+      const descriptions: Record<string, string> = {};
+      if (Array.isArray(control.descriptions)) {
+        for (const desc of control.descriptions as ExecJSON.ControlDescription[]) {
+          descriptions[desc.label.toLowerCase()] = desc.data;
+        }
+      }
+
+      if (
+        descriptions.comments ||
+        descriptions.caveat ||
+        descriptions.justification ||
+        descriptions.rationale
+      ) {
+        edits.set(vulnNum, {
+          comments: descriptions.comments,
+          caveat: descriptions.caveat,
+          justification: descriptions.justification,
+          rationale: descriptions.rationale
+        });
+      }
+      break;
+    }
+  }
+
+  return edits;
+}
+
+/**
+ * Prepare evaluation data for CKL (or CKLB) export.
+ * Deep-clones the evaluation, applies attestations, and syncs description edits
+ * to CKL passthrough vuln comments. The original evaluation data is never modified.
+ *
+ * This is the single entry point for ADR §5.4.2 steps 2a-2c.
+ * Format-agnostic: the clone is suitable for toCkl() or future toCklb().
+ */
+export function prepareEvaluationForCklExport(
+  evaluationData: ExecJSON.Execution,
+  attestations: Attestation[]
+): ExecJSON.Execution {
+  const clone: ExecJSON.Execution = _.cloneDeep(evaluationData);
+
+  if (attestations.length > 0) {
+    addAttestationToHDF(clone, attestations);
+  }
+
+  const passthrough = (clone as ExecJSON.Execution & {passthrough?: {checklist?: {stigs?: {vulns: ChecklistVuln[]}[]}}}).passthrough;
+  const stigs = passthrough?.checklist?.stigs;
+  if (stigs) {
+    for (const stig of stigs) {
+      const vulnNums = stig.vulns.map((v) => v.vulnNum);
+      const edits = buildEditsMapFromProfiles(clone.profiles, vulnNums);
+      if (edits.size > 0) {
+        syncChecklistVulnComments(stig.vulns, edits);
+      }
+    }
+  }
+
+  return clone;
 }
 
 const SECTION_ORDER = ['CAVEAT', 'JUSTIFICATION', 'RATIONALE', 'COMMENTS'];

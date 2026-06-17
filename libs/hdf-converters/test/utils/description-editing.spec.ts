@@ -8,7 +8,9 @@ import {
 import {
   setControlDescription,
   sanitizeCklSectionMarkers,
-  syncChecklistVulnComments
+  syncChecklistVulnComments,
+  buildEditsMapFromProfiles,
+  prepareEvaluationForCklExport
 } from '../../src/utils/description-editing';
 
 describe('setControlDescription', () => {
@@ -240,6 +242,221 @@ describe('syncChecklistVulnComments', () => {
     expect(vulns[0].comments).toContain('CAVEAT :: new caveat');
     expect(vulns[0].comments).toContain('COMMENTS :: new comment');
     expect(vulns[0].comments).not.toContain('old');
+  });
+});
+
+describe('buildEditsMapFromProfiles', () => {
+  it('extracts description fields from profiles for matching vulns', () => {
+    const profiles: ExecJSON.Profile[] = [
+      {
+        name: 'test',
+        version: '1.0',
+        sha256: 'abc',
+        supports: [],
+        attributes: [],
+        groups: [],
+        controls: [
+          {
+            id: 'V-2255',
+            title: 'Test',
+            desc: '',
+            impact: 0.5,
+            tags: {},
+            descriptions: [
+              {label: 'comments', data: 'reviewer note'},
+              {label: 'caveat', data: 'applies only to prod'}
+            ],
+            refs: [],
+            source_location: {},
+            results: []
+          }
+        ]
+      }
+    ];
+    const vulnNums = ['V-2255', 'V-9999'];
+
+    const edits = buildEditsMapFromProfiles(profiles, vulnNums);
+
+    expect(edits.size).toBe(1);
+    expect(edits.has('V-2255')).toBe(true);
+    expect(edits.get('V-2255')?.comments).toBe('reviewer note');
+    expect(edits.get('V-2255')?.caveat).toBe('applies only to prod');
+    expect(edits.has('V-9999')).toBe(false);
+  });
+
+  it('skips controls with no edited description fields', () => {
+    const profiles: ExecJSON.Profile[] = [
+      {
+        name: 'test',
+        version: '1.0',
+        sha256: 'abc',
+        supports: [],
+        attributes: [],
+        groups: [],
+        controls: [
+          {
+            id: 'V-2255',
+            title: 'Test',
+            desc: '',
+            impact: 0.5,
+            tags: {},
+            descriptions: [],
+            refs: [],
+            source_location: {},
+            results: []
+          }
+        ]
+      }
+    ];
+
+    const edits = buildEditsMapFromProfiles(profiles, ['V-2255']);
+    expect(edits.size).toBe(0);
+  });
+
+  it('handles case-insensitive control ID matching', () => {
+    const profiles: ExecJSON.Profile[] = [
+      {
+        name: 'test',
+        version: '1.0',
+        sha256: 'abc',
+        supports: [],
+        attributes: [],
+        groups: [],
+        controls: [
+          {
+            id: 'v-2255',
+            title: 'Test',
+            desc: '',
+            impact: 0.5,
+            tags: {},
+            descriptions: [{label: 'comments', data: 'test'}],
+            refs: [],
+            source_location: {},
+            results: []
+          }
+        ]
+      }
+    ];
+
+    const edits = buildEditsMapFromProfiles(profiles, ['V-2255']);
+    expect(edits.size).toBe(1);
+    expect(edits.has('V-2255')).toBe(true);
+  });
+});
+
+describe('prepareEvaluationForCklExport', () => {
+  it('returns a deep clone — original is NOT mutated', () => {
+    const original: ExecJSON.Execution = {
+      platform: {name: 'test', release: '1.0'},
+      profiles: [{
+        name: 'test-profile',
+        version: '1.0',
+        sha256: 'abc',
+        supports: [],
+        attributes: [],
+        groups: [],
+        controls: [{
+          id: 'V-2255',
+          title: 'Test',
+          desc: '',
+          impact: 0.5,
+          tags: {},
+          descriptions: [{label: 'comments', data: 'original comment'}],
+          refs: [],
+          source_location: {},
+          results: [{status: 'skipped', code_desc: 'Manual review'}]
+        }]
+      }],
+      statistics: {duration: 0},
+      version: '4.0'
+    };
+
+    const snapshot = JSON.parse(JSON.stringify(original));
+
+    const clone = prepareEvaluationForCklExport(original, []);
+    expect(JSON.parse(JSON.stringify(original))).toEqual(snapshot);
+    expect(clone).not.toBe(original);
+  });
+
+  it('applies attestations to the clone', () => {
+    const original: ExecJSON.Execution = {
+      platform: {name: 'test', release: '1.0'},
+      profiles: [{
+        name: 'test-profile',
+        version: '1.0',
+        sha256: 'abc',
+        supports: [],
+        attributes: [],
+        groups: [],
+        controls: [{
+          id: 'V-2255',
+          title: 'Test',
+          desc: '',
+          impact: 0.5,
+          tags: {},
+          descriptions: [],
+          refs: [],
+          source_location: {},
+          results: [{status: 'skipped', code_desc: 'Manual review'}]
+        }]
+      }],
+      statistics: {duration: 0},
+      version: '4.0'
+    };
+
+    const attestations = [{
+      control_id: 'V-2255',
+      status: 'passed' as const,
+      explanation: 'Verified',
+      frequency: 'annually',
+      updated: '2026-06-17T00:00:00Z',
+      updated_by: 'test@example.com'
+    }];
+
+    const clone = prepareEvaluationForCklExport(original, attestations);
+    const control = clone.profiles[0].controls[0];
+    expect(control.attestation_data).toBeDefined();
+    expect(control.results.length).toBe(2);
+  });
+
+  it('syncs passthrough vuln comments from description edits', () => {
+    const original: ExecJSON.Execution = {
+      platform: {name: 'test', release: '1.0'},
+      profiles: [{
+        name: 'test-profile',
+        version: '1.0',
+        sha256: 'abc',
+        supports: [],
+        attributes: [],
+        groups: [],
+        controls: [{
+          id: 'V-2255',
+          title: 'Test',
+          desc: '',
+          impact: 0.5,
+          tags: {},
+          descriptions: [{label: 'comments', data: 'edited comment'}],
+          refs: [],
+          source_location: {},
+          results: [{status: 'skipped', code_desc: 'Manual review'}]
+        }]
+      }],
+      statistics: {duration: 0},
+      version: '4.0',
+      passthrough: {
+        checklist: {
+          stigs: [{
+            vulns: [makeVuln({vulnNum: 'V-2255', comments: ''})]
+          }]
+        }
+      }
+    } as ExecJSON.Execution & {passthrough: unknown};
+
+    const clone = prepareEvaluationForCklExport(original, []);
+    const passthrough = (clone as any).passthrough;
+    expect(passthrough.checklist.stigs[0].vulns[0].comments).toContain(
+      'COMMENTS :: edited comment'
+    );
   });
 });
 

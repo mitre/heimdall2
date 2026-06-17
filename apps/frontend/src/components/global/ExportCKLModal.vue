@@ -283,6 +283,7 @@
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import type {Filter} from '@/store/data_filters';
+import {AnnotationModule} from '@/store/annotation_store';
 import {InspecDataModule} from '@/store/data_store';
 import type {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
@@ -299,7 +300,8 @@ import {
   Result,
   Role,
   Techarea,
-  validateChecklistMetadata
+  validateChecklistMetadata,
+  prepareEvaluationForCklExport
 } from '@mitre/hdf-converters';
 import {ExecJSON} from 'inspecjs';
 import {Dependency} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
@@ -718,28 +720,46 @@ export default class ExportCKLModal extends Vue {
       return SnackbarModule.failure('No files have been loaded.');
     }
     const fileData: FileData[] = [];
+    const exportedFileIds: string[] = [];
+
     for (const selected of this.selected) {
       this.addMetadataToPassthrough(selected);
       if ('evaluation' in selected) {
-        // validate checklist metadata input from user
         const result = this.validateInputMetadata(selected);
-
-        // display error message upon any invalid user inputs
         if (!result.ok) {
           SnackbarModule.failure(result.error);
           return;
         }
 
-        const data = new ChecklistResults(selected.evaluation.data).toCkl();
-        const filename = `${cleanUpFilename(selected.filename)}.ckl`;
-        fileData.push({
-          data,
-          filename
-        });
+        // §5.4.2 steps 2a-2c: clone, apply attestations, sync CKL passthrough
+        const fileAnnotations =
+          AnnotationModule.annotationsForFile(selected.uniqueId);
+        const attestations = fileAnnotations?.attestations ?? [];
+        const clone = prepareEvaluationForCklExport(
+          selected.evaluation.data,
+          attestations
+        );
+
+        // §5.4.2 step 3: serialize the clone as CKL
+        const data = new ChecklistResults(clone).toCkl();
+        const filename = cleanUpFilename(selected.filename, '.ckl');
+        fileData.push({data, filename});
+        exportedFileIds.push(selected.uniqueId);
       }
     }
-    saveSingleOrMultipleFiles(fileData, 'ckl');
-    this.closeModal();
+
+    saveSingleOrMultipleFiles(fileData, 'ckl')
+      .then(() => {
+        InspecDataModule.markFileSaved(exportedFileIds);
+      })
+      .catch((error: Error) => {
+        SnackbarModule.failure(
+          `CKL export failed: ${error.message || error}`
+        );
+      })
+      .finally(() => {
+        this.closeModal();
+      });
   }
 
   validateInputMetadata(metadata: ChecklistMetadata): Result<true, string> {
