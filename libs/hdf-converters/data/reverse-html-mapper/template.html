@@ -1,568 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{exportType}} Report</title>
-    <style>
-      {{{tailwindStyles}}}
-    </style>
-    <style>
-      .border-low {
-        --tw-border-opacity: 1;
-        border-color: rgb(243 67 53 / var(--tw-border-opacity));
-      }
-      .border-medium {
-        --tw-border-opacity: 1;
-        border-color: rgb(255 235 59 / var(--tw-border-opacity));
-      }
-      .border-high {
-        --tw-border-opacity: 1;
-        border-color: rgb(76 176 79 / var(--tw-border-opacity));
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="generator" content="Heimdall">
+  <title>Heimdall {{exportType}} Report</title>
+  <style>{{{frameworkStyles}}}</style>
+  <style>
+    .compliance-{{compliance.color}} { border-color: var(--compliance-color); }
+    :root {
+      --compliance-low: rgb(243, 67, 53);
+      --compliance-medium: rgb(255, 235, 59);
+      --compliance-high: rgb(76, 176, 79);
+      /* Status color tokens — Primer-anchored, WCAG AA, light+dark via light-dark() */
+      --st-pass-fg:   light-dark(#1a7f37, #3fb950);
+      --st-pass-bg:   light-dark(#dafbe1, #132d1c);
+      --st-fail-fg:   light-dark(#b3202a, #f85149);
+      --st-fail-bg:   light-dark(#ffebe9, #3a1517);
+      --st-na-fg:     light-dark(#59636e, #8b949e);
+      --st-na-bg:     light-dark(#eef1f4, #21262d);
+      --st-nr-fg:     light-dark(#9a4d00, #db8a30);
+      --st-nr-bg:     light-dark(#fff1e5, #2a1a0a);
+      --st-error-fg:  light-dark(#6639ba, #a371f7);
+      --st-error-bg:  light-dark(#fbefff, #2a1a44);
+      /* Severity color tokens — cool-to-warm ramp */
+      --sv-none-fg:     light-dark(#59636e, #8b949e);  --sv-none-bg:     light-dark(#eef1f4, #21262d);
+      --sv-low-fg:      light-dark(#1a5fb4, #58a6ff);  --sv-low-bg:      light-dark(#ddf4ff, #0d2b45);
+      --sv-medium-fg:   light-dark(#9a6700, #d29922);  --sv-medium-bg:   light-dark(#fff8c5, #2e2410);
+      --sv-high-fg:     light-dark(#bc4c00, #db8a30);  --sv-high-bg:     light-dark(#fff1e5, #3a2410);
+      --sv-critical-fg: light-dark(#b3202a, #f85149);  --sv-critical-bg: light-dark(#ffebe9, #3a1517);
+    }
+    .compliance-low { --compliance-color: var(--compliance-low); }
+    .compliance-medium { --compliance-color: var(--compliance-medium); }
+    .compliance-high { --compliance-color: var(--compliance-high); }
+    .skip-link { position: absolute; left: -9999px; top: 0; background: #000; color: #fff; padding: .5rem 1rem; z-index: 100; }
+    .skip-link:focus { left: 0; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+    .no-print { }
+    .badge { display: inline-flex; align-items: center; gap: .25em; padding: .15em .5em; border-radius: var(--pico-border-radius, .25rem); font-size: .8rem; font-weight: 600; border: 1px solid currentColor; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .badge.status--pass  { color: var(--st-pass-fg);  background: var(--st-pass-bg);  border-color: var(--st-pass-fg); }
+    .badge.status--fail  { color: var(--st-fail-fg);  background: var(--st-fail-bg);  border-color: var(--st-fail-fg); }
+    .badge.status--na    { color: var(--st-na-fg);    background: var(--st-na-bg); }
+    .badge.status--nr    { color: var(--st-nr-fg);    background: var(--st-nr-bg); }
+    .badge.status--error { color: var(--st-error-fg); background: var(--st-error-bg); }
+    .badge.sev--none     { color: var(--sv-none-fg);     background: var(--sv-none-bg); }
+    .badge.sev--low      { color: var(--sv-low-fg);      background: var(--sv-low-bg); }
+    .badge.sev--medium   { color: var(--sv-medium-fg);   background: var(--sv-medium-bg); }
+    .badge.sev--high     { color: var(--sv-high-fg);     background: var(--sv-high-bg); }
+    .badge.sev--critical { color: var(--sv-critical-fg); background: var(--sv-critical-bg); }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+    .tag { display: inline-block; padding: .1em .4em; border-radius: var(--pico-border-radius, .25rem); font-size: .75rem; border: 1px solid var(--pico-muted-border-color, #ccc); margin: .15em; }
+    article.control { content-visibility: auto; contain-intrinsic-size: auto 200px; }
+    details > summary { cursor: pointer; }
+    .compliance-ring { display: inline-block; border: 4px solid var(--compliance-color, #ccc); border-radius: 50%; width: 5rem; height: 5rem; line-height: 5rem; text-align: center; font-size: 1.25rem; font-weight: 700; }
+    table.test-results { width: 100%; }
+    table.test-results th { width: 6rem; white-space: nowrap; vertical-align: top; }
+    table.test-results td { white-space: pre-line; overflow-wrap: anywhere; }
+    .filtered-out { display: none; }
+    [data-filter-status].active, [data-filter-severity].active { font-weight: 700; outline: 2px solid var(--pico-primary, #0172ad); outline-offset: 2px; }
+    #filter-bar [role="group"] { display: inline-flex; flex-wrap: wrap; gap: .25rem; margin-right: 1rem; margin-bottom: .5rem; }
+    #filter-bar button { margin: 0; padding: .25rem .6rem; font-size: .8rem; }
 
-  <body>
-    <!-- Navbar -->
-    <!-- WARNING: Tailwind Elements interactive components get disabled on Android's HTML viewer; use a browser instead -->
-    <nav class="relative top-0 z-10 min-w-full border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden lg:sticky">
-      <!-- Heimdall report -->
-      <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
-      <!-- Profile info link -->
-      <button aria-label="Jump to profile info card">
-        <a href="#profileInfo" class="px-3 py-2 text-sm" aria-current="page">
-          Profile Info
-        </a>
-      </button>
-      <!-- Result sets dropdown menu -->
+    @media print {
+      :root { color-scheme: light; }
+      body { background: #fff !important; color: #000 !important; }
+      :root { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      details { display: block; }
+      details > *:not(summary) { display: revert !important; }
+      summary { list-style: none; cursor: default; }
+      summary::-webkit-details-marker { display: none; }
+      summary::marker { content: ""; }
+      thead { display: table-header-group; }
+      tr, article, pre, figure { break-inside: avoid; page-break-inside: avoid; }
+      h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
+      p, li { orphans: 3; widows: 3; }
+      nav, .no-print, #filter-bar, button, [role="button"] { display: none !important; }
+      .filtered-out { display: block !important; }
+      a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 90%; color: #555; word-break: break-all; }
+      a[href^="#"]::after, a[href^="mailto:"]::after { content: ""; }
+      article { box-shadow: none !important; border: 1px solid #ccc; }
+      @page { size: letter; margin: .75in; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to report content</a>
+
+  <header class="container-fluid no-print">
+    <hgroup>
+      <h1>Heimdall {{exportType}} Report</h1>
+      <p>Self-contained security compliance report</p>
+    </hgroup>
+  </header>
+
+  <nav class="container-fluid no-print" aria-label="Report contents">
+    <ul>
+      <li><a href="#summary"><strong>Summary</strong></a></li>
+      <li><a href="#profile-info">Profile Info</a></li>
       {{#showResultSets}}
-      <div class="inline-block" data-te-dropdown-ref>
-        <!-- Button def -->
-        <button
-          type="button"
-          class="inline-flex px-3 py-2 text-sm"
-          data-te-dropdown-toggle-ref
-          href="#resultSetsList"
-          aria-controls="resultSetsList"
-          aria-expanded="false"
-          aria-label="Toggle navigation dropdown for result sets"
-        >
-          Result Sets
-          <svg
-            class="-mr-1 h-5 w-5 text-gray-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            role="img"
-            aria-hidden="true"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </button>
-        <!-- Menu def -->
-        <div
-          class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 data-te-dropdown-show:grid"
-          id="resultSetsList"
-          data-te-dropdown-menu-ref
-          aria-labelledby="resultSetsList"
-        >
-          <!-- Generate links for every result set -->
-          {{#resultSets}}
-          <div class="block w-56 break-words border border-gray-300 bg-white px-4 py-3 text-sm shadow-lg">
-            <a href="#{{fileID}}" data-te-dropdown-item-ref>{{filename}}</a>
-          </div>
-          {{/resultSets}}
-        </div>
-      </div>
-      <!-- Toggle result set accordion collapse state -->
-      <button
-        class="px-3 py-2 text-sm"
-        type="button"
-        data-te-collapse-init
-        data-te-target=".multi-collapse-outer"
-        aria-expanded="true"
-        aria-controls="result-accordion-body"
-      >
-        Toggle Result Sets Expansion
-      </button>
-      <!-- Toggle result accordion collapse state -->
-      <button
-        class="px-3 py-2 text-sm"
-        type="button"
-        data-te-collapse-init
-        data-te-target=".multi-collapse-inner"
-        aria-expanded="true"
-        aria-controls="result-accordion-body"
-      >
-        Toggle Results Expansion
-      </button>
-      <span class="px-3 py-2 text-sm">
-        (To Expand All, Refresh Browser Page)
-      </span>
+      {{#resultSets}}
+      <li><a href="#file-{{fileID}}">{{filename}}</a></li>
+      {{/resultSets}}
       {{/showResultSets}}
-    </nav>
+    </ul>
+    <ul>
+      {{#showResultSets}}
+      <li><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title" style="width:14rem;margin:0;"></li>
+      <li><button type="button" id="btn-expand-all">Expand All</button></li>
+      <li><button type="button" id="btn-collapse-all">Collapse All</button></li>
+      <li><button type="button" id="btn-clear-filters" class="secondary">Clear Filters</button></li>
+      {{/showResultSets}}
+      <li><button type="button" id="theme-toggle" class="contrast" aria-label="Toggle light/dark theme">&#9788;/&#9790;</button></li>
+    </ul>
+  </nav>
 
-    <!-- Profile status card -->
-    <div class="px-4 py-6">
-      <div class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white">
-        <h5 class="mb-2 text-xl font-bold">Profile Status</h5>
-        <div class="grid grid-flow-row justify-between xl:grid-flow-col">
-          <!-- Status counts -->
-          <div class="px-2 py-2">
-            <div class="font-bold">Count</div>
-            <div class="pt-1">
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleCheck}}}</span> Passed: {{statistics.passed}} ({{statistics.passedTests}} individual checks passed)
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleCross}}}</span> Failed: {{statistics.failed}} ({{statistics.passingTestsFailedResult}} individual checks passed, {{statistics.failedTests}} failed out of {{statistics.totalTests}} total checks)
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleMinus}}}</span> Not Applicable: {{statistics.notApplicable}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleAlert}}}</span> Not Reviewed: {{statistics.notReviewed}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.triangleAlert}}}</span> Profile Error: {{statistics.profileError}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.squareEqual}}}</span> Total: {{statistics.totalResults}}
-              </div>
-            </div>
-          </div>
-
-          <!-- Severity report -->
-          <div class="px-2 py-2">
-            <div class="font-bold">Severity</div>
-            <div class="pt-1">
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleNone}}}</span> None: {{severity.none}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleLow}}}</span> Low: {{severity.low}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleMedium}}}</span> Medium: {{severity.medium}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleHigh}}}</span> High: {{severity.high}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleCritical}}}</span> Critical: {{severity.critical}}
-              </div>
-            </div>
-          </div>
-
-          <!-- Compliance level -->
-          <div class="w-64 px-2 py-2">
-            <div class="font-bold">Compliance</div>
-            <div>
-              <div class="my-1 rounded-full border-4 border-{{compliance.color}} text-center text-4xl print:border-none print:text-left print:text-2xl">
-                {{compliance.level}}
-              </div>
-              [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
-            </div>
-          </div>
-        </div>
-      </div>
+  {{#showResultSets}}
+  <div class="container-fluid no-print" id="filter-bar" role="toolbar" aria-label="Control filters">
+    <div role="group" aria-label="Filter by status">
+      <button type="button" class="outline" data-filter-status="Passed">&#10003; Passed <small>({{statistics.passed}})</small></button>
+      <button type="button" class="outline" data-filter-status="Failed">&#10007; Failed <small>({{statistics.failed}})</small></button>
+      <button type="button" class="outline" data-filter-status="Not Applicable">&#8854; N/A <small>({{statistics.notApplicable}})</small></button>
+      <button type="button" class="outline" data-filter-status="Not Reviewed">&#9888; NR <small>({{statistics.notReviewed}})</small></button>
+      <button type="button" class="outline" data-filter-status="Profile Error">&#9651; Error <small>({{statistics.profileError}})</small></button>
     </div>
-
-    <!-- Profile info card -->
-    <div class="px-4 pb-6" id="profileInfo">
-      <div class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white">
-        <h5 class="mb-2 text-xl font-bold">Profile Info</h5>
-        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          <!-- Generate an info report for every profile -->
-          {{#files}}
-          <div class="mx-2 my-2 break-words">
-            <div><strong>Filename:</strong> {{filename}}</div>
-            <div><strong>Tool Version:</strong> {{toolVersion}}</div>
-            <div><strong>Platform:</strong> {{platform}}</div>
-            <div><strong>Duration:</strong> {{duration}}</div>
-          </div>
-          {{/files}}
-        </div>
-      </div>
+    <div role="group" aria-label="Filter by severity">
+      <button type="button" class="outline" data-filter-severity="none">None</button>
+      <button type="button" class="outline" data-filter-severity="low">Low</button>
+      <button type="button" class="outline" data-filter-severity="medium">Medium</button>
+      <button type="button" class="outline" data-filter-severity="high">High</button>
+      <button type="button" class="outline" data-filter-severity="critical">Critical</button>
     </div>
+    <div role="group" aria-label="Filter by NIST 800-53 family">
+      <select id="nist-family-filter" aria-label="NIST 800-53 family"><option value="">All NIST Families</option></select>
+    </div>
+    <div><small id="filter-count"></small></div>
+  </div>
+  {{/showResultSets}}
 
-    <div class="overflow-hidden">
-      <!-- Result section -->
-      <!-- If empty, then this should be an executive report HTML export type -->
-      <!-- If not such export type, error has occurred -->
-      {{#showResultSets}} {{#resultSets}}
-      <!-- Result set accordion -->
-      <!-- Generate a result set accordion for every result set -->
-      <!-- Outer accordion -->
-      <div
-        class="mx-2 rounded-t-xl border border-gray-300 bg-white print:hidden"
-        id="{{fileID}}"
-      >
-        <div class="mb-0">
-          <!-- Button def -->
-          <button
-            class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-2 focus:z-3 focus:outline-hidden [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
-            type="button"
-            data-te-collapse-init
-            data-te-target="#collapseable-{{fileID}}"
-            aria-expanded="true"
-            aria-controls="collapseable-{{fileID}}"
-          >
-            {{filename}}
-            <span class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-data-te-collapse-collapsed:mr-0 group-data-te-collapse-collapsed:rotate-0 group-data-te-collapse-collapsed:fill-[#212529] motion-reduce:transition-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6"
-                role="img"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                />
-              </svg>
-            </span>
-          </button>
-        </div>
+  <main id="main" class="container-fluid">
 
-        <!-- Inner accordion -->
-        <!-- Accordion body def -->
-        <div
-          id="collapseable-{{fileID}}"
-          class="multi-collapse-outer my-4"
-          data-te-collapse-item
-          data-te-collapse-show
-        >
-          <!-- Result header -->
-          <div class="mx-4 rounded-t-xl border border-gray-300 bg-gray-100">
-            <div class="mx-6 my-4 flex w-full shrink">
-              <!-- Status indicator -->
-              <!-- Headers eventually collapse under status column -->
-              <span class="grid w-36 grid-cols-1 sm:w-40">
-                <!-- ID -->
-                <span class="sm:hidden">ID</span>
-                <hr class="h-1 w-32 bg-gray-300 sm:hidden" />
-                <!-- Status indicator -->
-                <span>Status</span>
-                <hr class="h-1 w-32 bg-gray-300 lg:hidden" />
-                <!-- Severity indicator -->
-                <span class="lg:hidden">Severity</span>
-                <hr class="h-1 w-32 bg-gray-300 lg:hidden" />
-                <!-- Control tags -->
-                <span class="lg:hidden">800-53 Controls & CCIs</span>
-              </span>
-              <!-- ID -->
-              <span class="hidden w-28 pl-4 sm:block lg:w-32">ID</span>
-              <!-- Severity indicator -->
-              <span class="hidden w-28 pl-3 lg:block">Severity</span>
-              <!-- Title -->
-              <span class="w-1/2 pl-8 sm:block lg:pl-9">Title</span>
-              <!-- Control tags -->
-              <span class="hidden lg:block lg:w-36 xl:w-52">800-53 Controls & CCIs</span>
-            </div>
-          </div>
+    <section id="summary" aria-labelledby="summary-h">
+      <h2 id="summary-h">Executive Summary</h2>
 
-          <!-- Generate a result accordion for every result -->
-          {{#results}}
-          <div class="mx-4 rounded-t-xl border border-gray-300">
-            <div class="mb-0">
-              <!-- Button def -->
-              <button
-                class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-2 focus:z-3 focus:outline-hidden [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
-                type="button"
-                data-te-collapse-init
-                data-te-target="#result-accordion-body-{{resultID}}"
-                aria-expanded="true"
-                aria-controls="result-accordion-body-{{resultID}}"
-              >
-                <!-- Result status indicator wrapper -->
-                <!-- All headers eventually collapse under status column -->
-                <div class="grid grid-cols-1 gap-y-2">
-                  <!-- Result ID -->
-                  <div class="w-36 sm:hidden">
-                    <span>{{hdf.wraps.id}}</span>
-                  </div>
-                  <!-- Result status indicator -->
-                  <div class="grid w-40 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black">
-                    <span>{{{resultStatus.icon}}}</span>
-                    <span>{{resultStatus.status}}</span>
-                  </div>
-                  <!-- Result severity indicator -->
-                  <div class="grid w-28 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:hidden">
-                    <span>{{{resultSeverity.icon}}}</span>
-                    <span>{{resultSeverity.severity}}</span>
-                  </div>
-                  <!-- Control tags -->
-                  {{#controlTags}}
-                  <div class="w-24 lg:hidden">
-                    <span class="rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black">
-                      {{.}}
-                    </span>
-                  </div>
-                  {{/controlTags}}
-                </div>
-                <!-- Result ID -->
-                <span class="hidden w-32 grid-cols-1 gap-y-2 break-all px-6 sm:grid lg:w-36">
-                  {{hdf.wraps.id}}
-                </span>
-                <!-- Result severity indicator -->
-                <div class="hidden w-28 grid-flow-col items-center rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:grid">
-                  <span>{{{resultSeverity.icon}}}</span>
-                  <span>{{resultSeverity.severity}}</span>
-                </div>
-                <!-- Result title -->
-                <span class="w-1/2 break-all px-6 sm:break-words">
-                  {{{hdf.wraps.title}}}
-                </span>
-                <!-- Control tags -->
-                <div class="hidden grid-cols-1 gap-x-6 gap-y-2 lg:grid xl:grid-cols-2">
-                  {{#controlTags}}
-                  <div class="w-24">
-                    <span class="rounded-sm border border-gray-300 bg-gray-100 px-2 py-1 text-black">
-                      {{.}}
-                    </span>
-                  </div>
-                  {{/controlTags}}
-                </div>
-
-                <span class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-data-te-collapse-collapsed:mr-0 group-data-te-collapse-collapsed:rotate-0 group-data-te-collapse-collapsed:fill-[#212529] motion-reduce:transition-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="h-6 w-6"
-                    role="img"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                    />
-                  </svg>
-                </span>
-              </button>
-            </div>
-
-            <!-- Accordion body def -->
-            <div
-              class="multi-collapse-inner px-5 py-4"
-              id="result-accordion-body-{{resultID}}"
-              data-te-collapse-item
-              data-te-collapse-show
-              aria-labelledby="result-accordion-header-{{resultID}}"
-            >
-              <!-- Result description -->
-              {{{data.desc}}}
-              <hr class="my-3" />
-
-              <!-- Result tables -->
-              <div>
-                <!-- Tests -->
-                <h5 class="text-lg font-bold">Test Results</h5>
-                <hr class="h-1 w-28 bg-gray-300 mb-2" />
-                <!-- Sensitive to whitespace, requires awkward tag placement -->
-                <div class="min-w-full border border-gray-300">
-                  <!-- Generate all available test results -->
-                  {{#hdf.segments}}
-                  <div class="bg-gray-100 grid grid-cols-1 sm:grid-cols-[10%_90%]">
-                    <span class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal">Status</span>
-                    <span class="whitespace-pre-line break-all lg:break-normal">{{status}}</span>
-                  </div>
-                  <div class="grid grid-cols-1 sm:grid-cols-[10%_90%]">
-                    <span class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal">Test</span>
-                    <span class="whitespace-pre-line break-all lg:break-normal">{{{code_desc}}}</span>
-                  </div>
-                  <div class="bg-gray-100 grid grid-cols-1 sm:grid-cols-[10%_90%]">
-                    <span class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal">Result</span>
-                    <span class="whitespace-pre-line break-all lg:break-normal">{{message}}</span>
-                  </div>
-                  {{/hdf.segments}}
-                </div>
-
-                <!-- Details -->
-                <h5 class="text-lg font-bold mt-3">Result Details</h5>
-                <hr class="h-1 w-32 bg-gray-300 mb-2" />
-                <!-- Sensitive to whitespace, requires awkward tag placement -->
-                <div class="min-w-full border border-gray-300">
-                  <!-- Generate all result details -->
-                  {{#details}}
-                  <div class="odd:bg-gray-100 even:bg-white grid grid-cols-1 sm:grid-cols-[10%_90%]">
-                    <span class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal">{{name}}</span>
-                    <span class="whitespace-pre-line break-all sm:break-words lg:break-normal">{{{value}}}</span>
-                  </div>
-                  {{/details}}
-                </div>
-              </div>
-
-              <!-- Result code block -->
-              <!-- Sensitive to whitespace, requires awkward tag placement -->
-              {{#showCode}}
-              <hr class="my-3" />
-              <code class="whitespace-pre-wrap break-words text-sm text-red-700">{{full_code}}</code>
-              {{/showCode}}
-            </div>
-          </div>
-          {{/results}}
-        </div>
-      </div>
-
-      <!-- Result set print report -->
-      <div class="hidden print:block">
-        <!-- File name -->
-        <div class="rounded-t-xl border border-black px-3 py-2">
-          {{filename}}
-        </div>
-        <!-- Generate a result report for every result -->
-        {{#results}}
-        <div class="border border-black px-2 py-2">
-          <!-- Result header -->
-          <table
-            class="border-separate border-spacing-x-2"
-            aria-labelledby="Result header"
-          >
-            <thead>
-              <tr class="text-left">
-                <th>Status</th>
-                <th>ID</th>
-                <th>Severity</th>
-                <th>Title</th>
-              </tr>
-            </thead>
+      <div class="summary-grid">
+        <article>
+          <header><strong>Status Counts</strong></header>
+          <table class="striped">
             <tbody>
-              <tr>
-                <td>
-                  <!-- Result status indicator -->
-                  <div class="rounded-sm border border-black px-2 py-1">
-                    {{resultStatus.status}}
-                  </div>
-                </td>
-                <td>
-                  <!-- Result ID -->
-                  <div class="break-all">{{hdf.wraps.id}}</div>
-                </td>
-                <td>
-                  <!-- Result severity indicator -->
-                  <div class="rounded-sm border border-black px-2 py-1">
-                    {{resultSeverity.severity}}
-                  </div>
-                </td>
-                <!-- Result title -->
-                <td>{{{hdf.wraps.title}}}</td>
-              </tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleCheck}}}</span> Passed</th><td>{{statistics.passed}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleCross}}}</span> Failed</th><td>{{statistics.failed}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleMinus}}}</span> Not Applicable</th><td>{{statistics.notApplicable}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleAlert}}}</span> Not Reviewed</th><td>{{statistics.notReviewed}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.triangleAlert}}}</span> Profile Error</th><td>{{statistics.profileError}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.squareEqual}}}</span> Total</th><td>{{statistics.totalResults}}</td></tr>
             </tbody>
           </table>
-          <hr class="my-1 h-1" />
-          <!-- Secondary result header -->
-          <table
-            class="border-separate border-spacing-x-2"
-            aria-labelledby="800-53 controls and CCIs"
-          >
-            <thead>
-              <tr class="text-left">
-                <th>800-53 Controls & CCIs</th>
-              </tr>
-            </thead>
+          <footer>
+            <small>{{statistics.passedTests}} checks passed, {{statistics.failedTests}} failed of {{statistics.totalTests}} total</small>
+          </footer>
+        </article>
+
+        <article>
+          <header><strong>Severity Breakdown</strong></header>
+          <table class="striped">
             <tbody>
-              <tr>
-                <td>
-                  <!-- Control tags -->
-                  <div class="flex flex-wrap gap-x-2 gap-y-1">
-                    {{#controlTags}}
-                    <div class="rounded-sm border border-black px-2 py-1">
-                      {{.}}
-                    </div>
-                    {{/controlTags}}
-                  </div>
-                </td>
-              </tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleNone}}}</span> None</th><td>{{severity.none}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleLow}}}</span> Low</th><td>{{severity.low}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleMedium}}}</span> Medium</th><td>{{severity.medium}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleHigh}}}</span> High</th><td>{{severity.high}}</td></tr>
+              <tr><th scope="row"><span aria-hidden="true">{{{icons.circleCritical}}}</span> Critical</th><td>{{severity.critical}}</td></tr>
             </tbody>
           </table>
-          <hr class="my-1 h-1" />
+        </article>
 
-          <!-- Result description -->
+        <article>
+          <header><strong>Compliance</strong></header>
+          <div style="text-align:center;">
+            <meter min="0" max="100" low="50" high="80" optimum="100"
+                   value="{{compliance.level}}" aria-label="Compliance percentage"
+                   style="width:100%;height:1.5rem;">{{compliance.level}}</meter>
+            <div class="compliance-ring compliance-{{compliance.color}}">{{compliance.level}}</div>
+          </div>
+          <footer>
+            <small>Passed / (Passed + Failed + Not Reviewed + Profile Error) &times; 100</small>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+    <section id="profile-info" aria-labelledby="profile-info-h">
+      <h2 id="profile-info-h">Profile Info</h2>
+      <div class="grid">
+        {{#files}}
+        <article>
+          <dl>
+            <dt>Filename</dt><dd>{{filename}}</dd>
+            <dt>Tool Version</dt><dd>{{toolVersion}}</dd>
+            <dt>Platform</dt><dd>{{platform}}</dd>
+            <dt>Duration</dt><dd>{{duration}}</dd>
+          </dl>
+        </article>
+        {{/files}}
+      </div>
+    </section>
+
+    {{#showResultSets}}
+    {{#resultSets}}
+    <section id="file-{{fileID}}" aria-labelledby="file-{{fileID}}-h">
+      <h2 id="file-{{fileID}}-h">{{filename}}</h2>
+
+      {{#results}}
+      <article class="control" id="{{resultID}}" data-status="{{resultStatus.status}}" data-severity="{{resultSeverity.severity}}">
+        <details>
+          <summary>
+            <span class="badge">{{{resultStatus.icon}}} {{resultStatus.status}}</span>
+            <span class="badge">{{{resultSeverity.icon}}} {{resultSeverity.severity}}</span>
+            <strong>{{hdf.wraps.id}}</strong> &mdash; {{{hdf.wraps.title}}}
+            {{#controlTags}}<span class="tag">{{.}}</span>{{/controlTags}}
+          </summary>
+
           {{{data.desc}}}
-          <hr class="my-1 h-1" />
 
-          <!-- Result tables -->
-          <div>
-            <!-- Tests -->
-            <h5 class="text-lg font-bold">Test Results</h5>
-            <hr class="h-1 w-28 bg-gray-300 mb-2" />
-            <table
-              class="table min-w-full text-left"
-              aria-describedby="Test description and results"
-            >
-              <thead class="hidden">
-                <th>Name</th>
-                <th>Value</th>
-              </thead>
-              <!-- Generate all available test results -->
-              {{#hdf.segments}}
-              <tbody class="border border-gray-300">
-                <tr class="border-b odd:bg-gray-100 even:bg-white">
-                  <td class="border-r border-gray-300">Status</td>
-                  <td class="whitespace-pre-line break-all">{{status}}</td>
-                </tr>
-                <tr class="border-b odd:bg-gray-100 even:bg-white">
-                  <td class="border-r border-gray-300">Test</td>
-                  <td class="whitespace-pre-line break-all">{{{code_desc}}}</td>
-                </tr>
-                <tr class="border-b odd:bg-gray-100 even:bg-white">
-                  <td class="border-r border-gray-300">Result</td>
-                  <td class="whitespace-pre-line break-all">{{message}}</td>
-                </tr>
-              </tbody>
-              {{/hdf.segments}}
-            </table>
+          <h4>Test Results</h4>
+          {{#hdf.segments}}
+          <table class="striped test-results">
+            <tbody>
+              <tr><th scope="row">Status</th><td>{{status}}</td></tr>
+              <tr><th scope="row">Test</th><td>{{{code_desc}}}</td></tr>
+              <tr><th scope="row">Result</th><td>{{message}}</td></tr>
+            </tbody>
+          </table>
+          {{/hdf.segments}}
 
-            <!-- Details -->
-            <h5 class="text-lg font-bold mt-3">Result Details</h5>
-            <hr class="h-1 w-32 bg-gray-300 mb-2" />
-            <table
-              class="table min-w-full text-left"
-              aria-describedby="Result details"
-            >
-              <thead class="hidden">
-                <th>Name</th>
-                <th>Value</th>
-              </thead>
-              <tbody class="border border-gray-300">
-                <!-- Generate all result details -->
-                {{#details}}
-                <tr class="border-b odd:bg-gray-100 even:bg-white">
-                  <td class="border-r border-gray-300">{{name}}</td>
-                  <td class="whitespace-pre-line">{{{value}}}</td>
-                </tr>
-                {{/details}}
-              </tbody>
-            </table>
-          </div>
+          <h4>Details</h4>
+          <dl>
+            {{#details}}
+            <dt>{{name}}</dt>
+            <dd>{{{value}}}</dd>
+            {{/details}}
+          </dl>
 
-          <!-- Result code block -->
-          <!-- Sensitive to whitespace, requires awkward tag placement -->
           {{#showCode}}
-          <hr class="my-1 h-1" />
-          <code class="whitespace-pre-wrap text-sm text-black">{{full_code}}</code>
+          <figure>
+            <figcaption>Source Code</figcaption>
+            <pre><code>{{full_code}}</code></pre>
+          </figure>
           {{/showCode}}
-        </div>
-        {{/results}}
-      </div>
-      {{/resultSets}} {{/showResultSets}}
-    </div>
-    <script type="text/javascript">
-      {{{tailwindElements}}}
-    </script>
-  </body>
+        </details>
+      </article>
+      {{/results}}
+    </section>
+    {{/resultSets}}
+    {{/showResultSets}}
+
+  </main>
+
+  <footer class="container-fluid">
+    <p><small>Generated by Heimdall &middot; {{exportType}} Report &middot; Self-contained export</small></p>
+  </footer>
+
+  <script>
+  (function() {
+    var controls = document.querySelectorAll('article.control');
+    var total = controls.length;
+    if (!total) return;
+
+    var activeStatuses = new Set();
+    var activeSeverities = new Set();
+    var activeFamily = '';
+    var searchText = '';
+
+    var countEl = document.getElementById('filter-count');
+    var searchEl = document.getElementById('control-search');
+    var familyEl = document.getElementById('nist-family-filter');
+
+    // Build NIST family dropdown from control tags
+    var families = new Set();
+    controls.forEach(function(c) {
+      c.querySelectorAll('.tag').forEach(function(t) {
+        var m = t.textContent.trim().match(/^([A-Z]{2})-/);
+        if (m) families.add(m[1]);
+      });
+    });
+    Array.from(families).sort().forEach(function(f) {
+      var opt = document.createElement('option');
+      opt.value = f;
+      opt.textContent = f;
+      if (familyEl) familyEl.appendChild(opt);
+    });
+
+    function applyFilters() {
+      var visible = 0;
+      controls.forEach(function(c) {
+        var statusMatch = activeStatuses.size === 0 || activeStatuses.has(c.dataset.status);
+        var sevMatch = activeSeverities.size === 0 || activeSeverities.has(c.dataset.severity);
+        var familyMatch = !activeFamily || Array.from(c.querySelectorAll('.tag')).some(function(t) {
+          return t.textContent.trim().indexOf(activeFamily + '-') === 0;
+        });
+        var textMatch = !searchText || c.textContent.toLowerCase().indexOf(searchText) !== -1;
+        var show = statusMatch && sevMatch && familyMatch && textMatch;
+        c.classList.toggle('filtered-out', !show);
+        if (show) visible++;
+      });
+      if (countEl) countEl.textContent = 'Showing ' + visible + ' of ' + total + ' controls';
+    }
+
+    // Status filter buttons
+    document.querySelectorAll('[data-filter-status]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var val = btn.dataset.filterStatus;
+        if (activeStatuses.has(val)) { activeStatuses.delete(val); btn.classList.remove('active'); }
+        else { activeStatuses.add(val); btn.classList.add('active'); }
+        applyFilters();
+      });
+    });
+
+    // Severity filter buttons
+    document.querySelectorAll('[data-filter-severity]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var val = btn.dataset.filterSeverity;
+        if (activeSeverities.has(val)) { activeSeverities.delete(val); btn.classList.remove('active'); }
+        else { activeSeverities.add(val); btn.classList.add('active'); }
+        applyFilters();
+      });
+    });
+
+    // NIST family dropdown
+    if (familyEl) familyEl.addEventListener('change', function() {
+      activeFamily = familyEl.value;
+      applyFilters();
+    });
+
+    // Text search with debounce
+    var searchTimer;
+    if (searchEl) searchEl.addEventListener('input', function() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(function() {
+        searchText = searchEl.value.toLowerCase().trim();
+        applyFilters();
+      }, 200);
+    });
+
+    // Clear filters
+    var clearBtn = document.getElementById('btn-clear-filters');
+    if (clearBtn) clearBtn.addEventListener('click', function() {
+      activeStatuses.clear();
+      activeSeverities.clear();
+      activeFamily = '';
+      searchText = '';
+      document.querySelectorAll('[data-filter-status].active, [data-filter-severity].active').forEach(function(b) { b.classList.remove('active'); });
+      if (searchEl) searchEl.value = '';
+      if (familyEl) familyEl.value = '';
+      applyFilters();
+    });
+
+    // Expand / Collapse all
+    var expandBtn = document.getElementById('btn-expand-all');
+    var collapseBtn = document.getElementById('btn-collapse-all');
+    if (expandBtn) expandBtn.addEventListener('click', function() {
+      controls.forEach(function(c) { if (!c.classList.contains('filtered-out')) { var d = c.querySelector('details'); if (d) d.open = true; } });
+    });
+    if (collapseBtn) collapseBtn.addEventListener('click', function() {
+      controls.forEach(function(c) { var d = c.querySelector('details'); if (d) d.open = false; });
+    });
+
+    // Theme toggle
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) themeBtn.addEventListener('click', function() {
+      var html = document.documentElement;
+      var current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Initial count
+    applyFilters();
+  })();
+  </script>
+</body>
 </html>
