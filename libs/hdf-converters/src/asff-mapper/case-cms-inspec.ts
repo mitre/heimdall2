@@ -1,14 +1,14 @@
-import {encode} from 'html-entities';
+import { encode } from 'html-entities';
 import * as _ from 'lodash';
 
 function findingId(finding: Record<string, unknown>): string {
   return encode(
-    (_.get(finding, 'ProductFields.aws/securityhub/FindingId') as string)
+    ((_.get(finding, 'ProductFields.aws/securityhub/FindingId') as string)
       .split('/')
-      .slice(-1)[0]
+      .at(-1) ?? '')
       .split('-')
       .slice(0, -1)
-      .join('-')
+      .join('-'),
   );
 }
 
@@ -16,7 +16,7 @@ function findingTitle(finding: Record<string, unknown>): string {
   return encode(
     (_.get(finding, 'Description') as string)
       .slice(`${_.get(finding, 'Title') as string} titled `.length)
-      .split(' : ')[0]
+      .split(' : ')[0],
   );
 }
 
@@ -28,7 +28,7 @@ function subfindingsCodeDesc(finding: Record<string, unknown>): string {
   return encode(
     (_.get(finding, 'Description') as string)
       .slice(`${_.get(finding, 'Title') as string} titled `.length)
-      .split(' : ')[1]
+      .split(' : ')[1],
   );
 }
 
@@ -37,30 +37,30 @@ function titlePrefix(): string {
 }
 
 function productName(
-  findings: Record<string, unknown> | Record<string, unknown>[]
+  findings: Record<string, unknown> | Record<string, unknown>[],
 ): string {
   const finding = Array.isArray(findings) ? findings[0] : findings;
   return `cms_chef_inspec-${encode(
     (_.get(finding, 'ProductFields.aws/securityhub/FindingId') as string)
       .split('/')
-      .slice(-2)[0]
+      .slice(-2)[0],
   )}`;
 }
 
 function filename(
-  findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
+  findingInfo: [Record<string, unknown>, Record<string, unknown>[]],
 ): string {
   return `${productName(findingInfo[0])}.json`;
 }
 
 export function getCMSInSpec(): Record<string, (...inputs: any) => any> {
   return {
+    filename,
+    findingDescription,
     findingId,
     findingTitle,
-    findingDescription,
+    productName,
     subfindingsCodeDesc,
     titlePrefix,
-    productName,
-    filename
   };
 }

@@ -1,8 +1,9 @@
-import {contextualizeEvaluation, ExecJSON} from 'inspecjs';
+import type { ExecJSON } from 'inspecjs';
+import { contextualizeEvaluation } from 'inspecjs';
 import * as _ from 'lodash';
-import {MappedTransform} from '../../base-converter';
-import {FromHdfBaseConverter} from '../reverse-base-converter';
-import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
+import type { MappedTransform } from '../../base-converter';
+import { FromHdfBaseConverter } from '../reverse-base-converter';
+import type { IExecJSONASFF, IFindingASFF, IOptions } from './asff-types';
 import {
   createProfileInfoFinding,
   getAllLayers,
@@ -24,125 +25,53 @@ import {
   setupSevOriginal,
   setupTitle,
   setupUpdated,
-  statusCount
+  statusCount,
 } from './transformers';
 
 export const TO_ASFF_TYPES_SLASH_REPLACEMENT = '{{{SLASH}}}'; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
 
 export function escapeForwardSlashes<T>(s: T): T {
   return _.isString(s)
-    ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
-    : (JSON.stringify(s).replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      ) as unknown as T);
+    ? (s.replaceAll('/', TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
+    : (JSON.stringify(s).replaceAll(
+      '/',
+      TO_ASFF_TYPES_SLASH_REPLACEMENT,
+    ) as unknown as T);
 }
 
 export type SegmentedControl = ExecJSON.Control & {
-  result: ExecJSON.ControlResult;
   layersOfControl: (ExecJSON.Control & {
     fix?: string;
     profileInfo?: Record<string, unknown>;
   })[];
+  result: ExecJSON.ControlResult;
 };
 
-export interface ILookupPathASFF {
-  path?: string;
-  transformer?: (
-    value: SegmentedControl,
-    context?: FromHdfToAsffMapper
-  ) => unknown;
+export type ILookupPathASFF = {
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
-}
+  path?: string;
+  transformer?: (
+    value: SegmentedControl,
+    context?: FromHdfToAsffMapper,
+  ) => unknown;
+};
 
 export class FromHdfToAsffMapper extends FromHdfBaseConverter {
-  mappings: () => MappedTransform<IExecJSONASFF, ILookupPathASFF> = () => ({
-    Findings: [
-      {
-        SchemaVersion: '2018-10-08',
-        Id: {path: '', transformer: setupId, passParent: true},
-        ProductArn: {path: '', transformer: setupProductARN, passParent: true},
-        AwsAccountId: {path: '', transformer: setupAwsAcct, passParent: true},
-        Types: {
-          transformer: () => ['Software and Configuration Checks']
-        },
-        CreatedAt: {path: '', transformer: setupCreated},
-        UpdatedAt: {path: '', transformer: setupUpdated, passParent: true},
-        ...(this.ioptions.regionAttribute && {
-          Region: {path: '', transformer: setupRegion, passParent: true}
-        }),
-        GeneratorId: {
-          path: '',
-          transformer: setupGeneratorId,
-          passParent: true
-        },
-        Title: {path: '', transformer: setupTitle},
-        Description: {path: '', transformer: setupDescr},
-        FindingProviderFields: {
-          Severity: {
-            Label: {path: '', transformer: setupSevLabel, passParent: true},
-            Original: {path: '', transformer: setupSevLabel, passParent: true}
-          },
-          Types: {path: '', transformer: setupFindingType, passParent: true}
-        },
-        Remediation: {
-          Recommendation: {
-            Text: {path: '', transformer: setupRemRec}
-          }
-        },
-        ProductFields: {
-          Check: {path: '', transformer: setupProdFieldCheck}
-        },
-        Severity: {
-          Label: {path: '', transformer: setupSevLabel, passParent: true},
-          Original: {path: '', transformer: setupSevOriginal}
-        },
-        Resources: [
-          {
-            Type: 'AwsAccount',
-            Id: {path: '', transformer: setupResourcesID, passParent: true},
-            Partition: 'aws',
-            Region: {path: '', transformer: setupRegion, passParent: true}
-          },
-          {
-            Id: {path: '', transformer: setupResourcesID2},
-            Type: 'AwsIamRole',
-            Details: {
-              AwsIamRole: {
-                AssumeRolePolicyDocument: {
-                  path: '',
-                  transformer: setupDetailsAssume
-                }
-              }
-            }
-          }
-        ],
-        Compliance: {
-          RelatedRequirements: {
-            transformer: () => [
-              'SEE REMEDIATION FIELD FOR RESULTS AND RECOMMENDED ACTION(S)'
-            ]
-          },
-          Status: {path: '', transformer: setupControlStatus}
-        }
-      }
-    ]
-  });
-
   contextProfiles: any;
-  counts: any;
-  ioptions: IOptions;
-  index?: number;
 
-  impactMapping: Map<number, string> = new Map([
-    [0.9, 'CRITICAL'],
-    [0.7, 'HIGH'],
-    [0.5, 'MEDIUM'],
+  counts: any;
+  impactMapping = new Map<number, string>([
+    [0, 'INFORMATIONAL'],
     [0.3, 'LOW'],
-    [0.0, 'INFORMATIONAL']
+    [0.5, 'MEDIUM'],
+    [0.7, 'HIGH'],
+    [0.9, 'CRITICAL'],
   ]);
+
+  index?: number;
+  ioptions: IOptions;
 
   constructor(hdfObj: ExecJSON.Execution, options: IOptions | undefined) {
     super(hdfObj);
@@ -150,44 +79,101 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     this.counts = statusCount(contextualizeEvaluation(hdfObj));
   }
 
-  defaultOptions(): IOptions {
-    return {
-      input: '',
-      awsAccountId: '',
-      target: 'default',
-      region: '',
-      regionAttribute: false
-    };
-  }
-
-  setMappings(
-    customMappings: MappedTransform<IExecJSONASFF, ILookupPathASFF>
-  ): void {
-    super.setMappings(customMappings);
-  }
-
   // Security hub currently works at the sub-control level, meaning we need to create our mapped data based off control.results
   controlsToSegments() {
     const segments: SegmentedControl[] = [];
-    this.data.profiles.forEach((profile) => {
-      profile.controls.reverse().forEach((control) => {
-        control.results.forEach((segment) => {
+    for (const profile of this.data.profiles) {
+      for (const control of profile.controls.reverse()) {
+        for (const segment of control.results) {
           // Ensure that the UpdatedAt time is different across findings (to match the order in HDF)
           segments.push({
             ...control,
+            layersOfControl: getAllLayers(this.data, control),
             result: segment,
-            layersOfControl: getAllLayers(this.data, control)
           });
-        });
-      });
-    });
+        }
+      }
+    }
 
     return segments;
   }
 
+  defaultOptions(): IOptions {
+    return {
+      awsAccountId: '',
+      input: '',
+      region: '',
+      regionAttribute: false,
+      target: 'default',
+    };
+  }
+
+  mappings: () => MappedTransform<IExecJSONASFF, ILookupPathASFF> = () => ({
+    Findings: [
+      {
+        AwsAccountId: { passParent: true, path: '', transformer: setupAwsAcct },
+        CreatedAt: { path: '', transformer: setupCreated },
+        Id: { passParent: true, path: '', transformer: setupId },
+        ProductArn: { passParent: true, path: '', transformer: setupProductARN },
+        SchemaVersion: '2018-10-08',
+        Types: { transformer: () => ['Software and Configuration Checks'] },
+        UpdatedAt: { passParent: true, path: '', transformer: setupUpdated },
+        ...(this.ioptions.regionAttribute && { Region: { passParent: true, path: '', transformer: setupRegion } }),
+        Compliance: {
+          RelatedRequirements: {
+            transformer: () => [
+              'SEE REMEDIATION FIELD FOR RESULTS AND RECOMMENDED ACTION(S)',
+            ],
+          },
+          Status: { path: '', transformer: setupControlStatus },
+        },
+        Description: { path: '', transformer: setupDescr },
+        FindingProviderFields: {
+          Severity: {
+            Label: { passParent: true, path: '', transformer: setupSevLabel },
+            Original: { passParent: true, path: '', transformer: setupSevLabel },
+          },
+          Types: { passParent: true, path: '', transformer: setupFindingType },
+        },
+        GeneratorId: {
+          passParent: true,
+          path: '',
+          transformer: setupGeneratorId,
+        },
+        ProductFields: { Check: { path: '', transformer: setupProdFieldCheck } },
+        Remediation: { Recommendation: { Text: { path: '', transformer: setupRemRec } } },
+        Resources: [
+          {
+            Id: { passParent: true, path: '', transformer: setupResourcesID },
+            Partition: 'aws',
+            Region: { passParent: true, path: '', transformer: setupRegion },
+            Type: 'AwsAccount',
+          },
+          {
+            Details: {
+              AwsIamRole: {
+                AssumeRolePolicyDocument: {
+                  path: '',
+                  transformer: setupDetailsAssume,
+                },
+              },
+            },
+            Id: { path: '', transformer: setupResourcesID2 },
+            Type: 'AwsIamRole',
+          },
+        ],
+        Severity: {
+          Label: { passParent: true, path: '', transformer: setupSevLabel },
+          Original: { path: '', transformer: setupSevOriginal },
+        },
+        Title: { path: '', transformer: setupTitle },
+      },
+    ],
+  });
+
   // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in AssumeRolePolicyDocument and FindingProviderFields.Types for now.
   restrictionAttributesLessThan32KiB(finding: IFindingASFF): IFindingASFF {
-    const ATTRIBUTE_CHARACTER_LIMIT = 30000;
+    const ATTRIBUTE_CHARACTER_LIMIT = 30_000;
     if (finding.Resources.length > 1) {
       _.set(
         finding,
@@ -196,27 +182,26 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
           _.get(
             finding,
             'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
-            ''
+            '',
           ) as unknown as string
-        ).slice(0, ATTRIBUTE_CHARACTER_LIMIT)
+        ).slice(0, ATTRIBUTE_CHARACTER_LIMIT),
       );
       // no need for truncation warning since AssumeRolePolicyDocument is only used to look nice in the GUI - FindingProviderFields.Types contains all the information
     }
     finding.FindingProviderFields.Types = (
       finding.FindingProviderFields.Types as string[]
     )
-      .map((typeString) => {
+      .flatMap((typeString) => {
         if (typeString.length <= ATTRIBUTE_CHARACTER_LIMIT) {
           return typeString;
         }
         const [type, attribute, value] = typeString.split('/');
         return _.chunk(
           value,
-          ATTRIBUTE_CHARACTER_LIMIT -
-            (type.length + attribute.length + 2) /*the slashes*/
-        ).map((chunk) => `${type}/${attribute}/${chunk.join('')}`);
-      })
-      .flat();
+          ATTRIBUTE_CHARACTER_LIMIT
+          - (type.length + attribute.length + 2), /* the slashes */
+        ).map(chunk => `${type}/${attribute}/${chunk.join('')}`);
+      });
     return finding;
   }
 
@@ -225,17 +210,17 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     profileInfoFindingId: string,
     finding: IFindingASFF,
     numRemoved: number,
-    numTruncated: number
+    numTruncated: number,
   ): [IFindingASFF | undefined, number, number] {
-    const SIZE_CAP = 200000;
+    const SIZE_CAP = 200_000;
     const originalSize = new TextEncoder().encode(
-      JSON.stringify(finding)
+      JSON.stringify(finding),
     ).length;
     let size = originalSize;
     let popped;
     while (
-      size > SIZE_CAP &&
-      (finding.FindingProviderFields.Types as string[]).length > 0
+      size > SIZE_CAP
+      && (finding.FindingProviderFields.Types as string[]).length > 0
     ) {
       popped = (finding.FindingProviderFields.Types as string[]).pop();
       size = new TextEncoder().encode(JSON.stringify(finding)).length;
@@ -243,11 +228,11 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     if (size > SIZE_CAP) {
       console.error(
         `Warning: Normalized entry could not be sufficiently reduced in size to meet AWS Security Hub requirements and so will not be provided in the results set.  Entry could not be minimized more than as follows:
-            ${finding}`
+            ${finding}`,
       );
       if (finding.Id === profileInfoFindingId) {
         console.error(
-          'Warning: This was the informational entry that contains the scan/execution level information.'
+          'Warning: This was the informational entry that contains the scan/execution level information.',
         );
       }
       if (finding.Id !== profileInfoFindingId) {
@@ -259,14 +244,12 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     if (originalSize !== size) {
       (finding.FindingProviderFields.Types as string[]).push(
         new TextDecoder().decode(
-          new TextEncoder().encode(popped).subarray(0, SIZE_CAP - size)
-        )
-      );
-      (finding.FindingProviderFields.Types as string[]).push(
-        'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
+          new TextEncoder().encode(popped).subarray(0, SIZE_CAP - size),
+        ),
+        'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.',
       );
       console.error(
-        `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`
+        `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`,
       );
       if (finding.Id !== profileInfoFindingId) {
         numTruncated++;
@@ -279,19 +262,19 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   restrictionTypesArrayLengthLessThan50(
     profileInfoFindingId: string,
     finding: IFindingASFF,
-    numTruncated: number
+    numTruncated: number,
   ): [IFindingASFF, number] {
     const cutoff = (finding.FindingProviderFields.Types as string[]).splice(
       50,
-      (finding.FindingProviderFields.Types as string[]).length - 50
+      (finding.FindingProviderFields.Types as string[]).length - 50,
     );
     if (cutoff.length > 0) {
       (finding.FindingProviderFields.Types as string[]).pop();
       (finding.FindingProviderFields.Types as string[]).push(
-        `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.`
+        'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.',
       );
       console.error(
-        `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`
+        `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`,
       );
       if (finding.Id !== profileInfoFindingId) {
         numTruncated++;
@@ -304,19 +287,19 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   restrictionTypesArrayMustBeUnique(
     profileInfoFindingId: string,
     finding: IFindingASFF,
-    numRemoved: number
+    numRemoved: number,
   ): [IFindingASFF | undefined, number] {
     if (
-      (finding.FindingProviderFields.Types as string[]).length !==
-      new Set(finding.FindingProviderFields.Types as string[]).size
+      (finding.FindingProviderFields.Types as string[]).length
+      !== new Set(finding.FindingProviderFields.Types as string[]).size
     ) {
       console.error(
         `Warning: Normalized entry contained data that is duplicated (i.e. a subsection of a string by happenstance has the same values) which means this entry does not meet AWS Security Hub requirements and so will not be provided in the results set.  Entry that contains duplicate data is as follows:
-            ${finding}`
+            ${finding}`,
       );
       if (finding.Id === profileInfoFindingId) {
         console.error(
-          'Warning: This was the informational entry that contains the scan/execution level information.'
+          'Warning: This was the informational entry that contains the scan/execution level information.',
         );
       }
       if (finding.Id !== profileInfoFindingId) {
@@ -329,19 +312,19 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
   // ASFF has several written and unwritten restrictions that cap how much information can be put into a finding
   restrictToSchemaSizes(resList: IFindingASFF[]): IFindingASFF[] {
-    const profileInfoFindingId = resList.slice(-1)[0].Id;
+    const profileInfoFindingId = resList.at(-1)?.Id ?? '';
     let numRemoved = 0;
     let numTruncated = 0;
     const restrictedResults: IFindingASFF[] = [];
     for (const f of resList) {
       let finding: IFindingASFF | undefined = f;
       finding = this.restrictionAttributesLessThan32KiB(finding);
-      [finding, numRemoved, numTruncated] =
-        this.restrictionFindingLessThan240KB(
+      [finding, numRemoved, numTruncated]
+        = this.restrictionFindingLessThan240KB(
           profileInfoFindingId,
           finding,
           numRemoved,
-          numTruncated
+          numTruncated,
         );
       if (!finding) {
         continue;
@@ -349,12 +332,12 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       [finding, numTruncated] = this.restrictionTypesArrayLengthLessThan50(
         profileInfoFindingId,
         finding,
-        numTruncated
+        numTruncated,
       );
       [finding, numRemoved] = this.restrictionTypesArrayMustBeUnique(
         profileInfoFindingId,
         finding,
-        numRemoved
+        numRemoved,
       );
       if (!finding) {
         continue;
@@ -363,31 +346,35 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     }
 
     if (
-      (numRemoved > 0 || numTruncated > 0) &&
-      restrictedResults.slice(-1)[0].Id === profileInfoFindingId
+      (numRemoved > 0 || numTruncated > 0)
     ) {
-      restrictedResults.slice(-1)[0].Description = `${
-        restrictedResults.slice(-1)[0].Description
-      } ---- MITRE SAF HDF2ASFF converter warnings -- Entries truncated: ${numTruncated} (Truncated to fit AWS Security Hub restrictions) --- Entries removed: ${numRemoved} (Could not fit due to AWS Security Hub restrictions)`;
+      const lastResult = restrictedResults.at(-1);
+      if (lastResult?.Id === profileInfoFindingId) {
+        lastResult.Description = `${lastResult.Description} ---- MITRE SAF HDF2ASFF converter warnings -- Entries truncated: ${numTruncated} (Truncated to fit AWS Security Hub restrictions) --- Entries removed: ${numRemoved} (Could not fit due to AWS Security Hub restrictions)`;
+      }
     }
 
     return restrictedResults;
   }
 
-  //Convert from HDF to ASFF
+  setMappings(
+    customMappings: MappedTransform<IExecJSONASFF, ILookupPathASFF>,
+  ): void {
+    super.setMappings(customMappings);
+  }
+
+  // Convert from HDF to ASFF
   toAsff(): IFindingASFF[] {
     if (this.mappings() === undefined) {
       throw new Error('Mappings must be provided');
     } else {
-      //Recursively transform the data into ASFF format
-      //Returns an array of the findings
+      // Recursively transform the data into ASFF format
+      // Returns an array of the findings
       let resList: IFindingASFF[] = this.controlsToSegments().map(
         (segment, index) => {
           this.index = index;
-          return this.convertInternal(segment, this.mappings())[
-            'Findings'
-          ][0] as IFindingASFF;
-        }
+          return this.convertInternal(segment, this.mappings()).Findings[0];
+        },
       );
       resList.push(createProfileInfoFinding(this.data, this.ioptions));
 
