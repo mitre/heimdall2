@@ -1,33 +1,58 @@
 <template>
-  <v-row class="pa-4" dense justify="space-between">
-    <v-col data-cy="fileinfo" cols="11">
-      <strong>Filename:</strong> {{ filename }}<br />
+  <v-row
+    class="pa-4"
+    dense
+    justify="space-between"
+  >
+    <v-col
+      data-cy="fileinfo"
+      cols="11"
+    >
+      <strong>Filename:</strong> {{ filename }}<br>
       <div v-if="inspec_version">
         <strong>Tool Version:</strong> {{ inspec_version }}
       </div>
-      <div v-if="platform"><strong>Platform:</strong> {{ platform }}</div>
+      <div v-if="platform">
+        <strong>Platform:</strong> {{ platform }}
+      </div>
       <div v-if="duration">
         <strong>Duration:</strong> {{ duration }} Seconds
       </div>
-      <div v-if="startTime"><strong>Start Time:</strong> {{ startTime }}</div>
-      <div v-if="evaluation" class="d-flex flex-nowrap">
-        <strong class="pt-2 pr-1">Tags:</strong>
-        <TagRow v-if="evaluation.id" :evaluation="evaluation" />
+      <div v-if="startTime">
+        <strong>Start Time:</strong> {{ startTime }}
       </div>
       <div
-        v-if="evaluation && evaluation.groups.length !== 0"
+        v-if="evaluation"
+        class="d-flex flex-nowrap"
+      >
+        <strong class="pt-2 pr-1">Tags:</strong>
+        <TagRow
+          v-if="evaluation.id"
+          :evaluation="evaluation"
+        />
+      </div>
+      <div
+        v-if="evaluation && evaluation.groups.length > 0"
         class="d-flex flex-nowrap"
       >
         <strong class="pt-2 pr-1">Groups:</strong>
         <GroupRow :evaluation="evaluation" />
       </div>
+      <v-chip
+        v-if="sourceFormatLabel"
+        :color="sourceFormatColor"
+        small
+        label
+        dark
+        class="mt-2"
+      >
+        {{ sourceFormatLabel }}
+      </v-chip>
     </v-col>
     <v-col cols="1">
-      <div
-        v-if="file.from_file.database_id && evaluation && evaluation.editable"
-        class="top-right"
-      >
+      <div class="top-right">
         <v-icon
+          v-if="file.from_file.database_id && evaluation && evaluation.editable"
           data-cy="edit"
           title="Edit"
           class="mr-3 mt-3"
@@ -48,6 +73,12 @@
 </template>
 
 <script lang="ts">
+import type { IEvaluation } from '@heimdall/common/interfaces';
+import type { ContextualizedEvaluation } from 'inspecjs';
+import * as _ from 'lodash';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import GroupRow from '@/components/global/groups/GroupRow.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
@@ -55,30 +86,42 @@ import {
   EvaluationFile,
   ProfileFile,
   SourcedContextualizedEvaluation,
-  SourcedContextualizedProfile
+  SourcedContextualizedProfile,
 } from '@/store/report_intake';
-import type {IEvaluation} from '@heimdall/common/interfaces';
-import type {ContextualizedEvaluation} from 'inspecjs';
-import * as _ from 'lodash';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {EvaluationModule} from '../../store/evaluations';
-import {get_eval_start_time} from '../../utilities/delta_util';
+import {
+  getSourceFormatColor,
+  getSourceFormatLabel,
+} from '@/utilities/source_format_util';
+import { EvaluationModule } from '../../store/evaluations';
+import { get_eval_start_time } from '../../utilities/delta_util';
 
 @Component({
   components: {
     EditEvaluationModal,
     GroupRow,
-    TagRow
-  }
+    TagRow,
+  },
 })
 export default class EvaluationInfo extends Vue {
-  @Prop({required: true}) readonly file!:
+  @Prop({ required: true }) readonly file!:
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile;
 
   showEditEvaluationModal = false;
+
+  get duration(): string | undefined {
+    const duration = _.get(
+      this.file_object,
+      'evaluation.data.statistics.duration',
+    );
+    return duration === null || duration === undefined
+      ? undefined
+      : duration.toString();
+  }
+
+  get evaluation(): IEvaluation | undefined {
+    return EvaluationModule.evaluationForFile(this.file_object);
+  }
 
   get file_object(): EvaluationFile | ProfileFile {
     return this.file.from_file;
@@ -97,25 +140,19 @@ export default class EvaluationInfo extends Vue {
   get platform(): string | undefined {
     return `${_.get(this.file_object, 'evaluation.data.platform.name')}${_.get(
       this.file_object,
-      'evaluation.data.platform.release'
+      'evaluation.data.platform.release',
     )}`;
   }
 
-  get duration(): string | undefined {
-    const duration = _.get(
-      this.file_object,
-      'evaluation.data.statistics.duration'
-    );
-    return duration === null || duration === undefined
-      ? undefined
-      : duration.toString();
+  get sourceFormatColor(): string {
+    return getSourceFormatColor(this.file_object.sourceFormat);
   }
 
-  get evaluation(): IEvaluation | undefined {
-    return EvaluationModule.evaluationForFile(this.file_object);
+  get sourceFormatLabel(): string {
+    return getSourceFormatLabel(this.file_object.sourceFormat);
   }
 
-  get startTime(): string | null {
+  get startTime(): null | string {
     return get_eval_start_time(this.file as ContextualizedEvaluation);
   }
 }

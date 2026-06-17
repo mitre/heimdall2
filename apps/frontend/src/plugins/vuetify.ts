@@ -1,24 +1,24 @@
-import {gen_variants, gen_visibilities} from '@/utilities/color_util';
+import Vuetify, { colors } from 'vuetify/lib';
 import '@mdi/font/css/materialdesignicons.css';
-import Vuetify, {colors} from 'vuetify/lib';
+import { gen_variants, gen_visibilities } from '@/utilities/color_util';
 
 const statuses = {
-  statusPassed: colors.green.base,
   statusFailed: colors.red.base,
-  statusNotApplicable: colors.lightBlue.base,
-  statusNoData: colors.orange.lighten1,
-  statusNotReviewed: colors.orange.base,
-  statusProfileError: colors.indigo.lighten2,
-  statusNotRun: colors.teal.darken2,
-  statusFromProfile: colors.teal.base,
-  statuspassed: colors.green.base,
   statusfailed: colors.red.base,
+  statusFromProfile: colors.teal.base,
+  statusfromprofile: colors.teal.base,
+  statusNoData: colors.orange.lighten1,
   statusnodata: colors.orange.lighten1,
+  statusNotApplicable: colors.lightBlue.base,
+  statusNotReviewed: colors.orange.base,
   statusnotreviewed: colors.orange.base,
-  statusskipped: colors.orange.base,
-  statusprofileerror: colors.indigo.lighten2,
+  statusNotRun: colors.teal.darken2,
   statusnotrun: colors.teal.darken2,
-  statusfromprofile: colors.teal.base
+  statusPassed: colors.green.base,
+  statuspassed: colors.green.base,
+  statusProfileError: colors.indigo.lighten2,
+  statusprofileerror: colors.indigo.lighten2,
+  statusskipped: colors.orange.base,
 };
 
 // Get colors generated from base mitre using UtilColorGenerator.
@@ -30,61 +30,66 @@ const mitreSecondaryBlue = gen_variants('#00b3dc');
 const darkBackground = gen_variants('#303030');
 
 const branding = {
+  mitreCardShadow: '#d6d6d6',
   mitrePrimaryBlue,
   mitrePrimaryGrey,
-  mitreSecondaryGrey,
   mitreSecondaryBlue,
   mitreSecondaryGreen: '#BFD228',
-  mitreSecondaryYellow: '#FFE23C',
+  mitreSecondaryGrey,
   mitreSecondaryOrange: '#F7901E',
   mitreSecondaryRed: '#C6401D',
-  mitreSectionBackground: '#f3f2f2', //#eff3f5;
-  mitreSectionBorder: '#cfcfcf', //#b4bfae
-  mitreCardShadow: '#d6d6d6'
+  mitreSecondaryYellow: '#FFE23C',
+  mitreSectionBackground: '#f3f2f2', // #eff3f5;
+  mitreSectionBorder: '#cfcfcf', // #b4bfae
 };
 
 const severities = {
-  severityNone: colors.lightBlue.base,
+  severityCritical: colors.red.base,
+  severityHigh: colors.deepOrange.base,
   severityLow: colors.yellow.base,
   severityMedium: colors.orange.base,
-  severityHigh: colors.deepOrange.base,
-  severityCritical: colors.red.base
+  severityNone: colors.lightBlue.base,
 };
 
 const compliances = {
+  complianceHigh: colors.green.base,
   complianceLow: colors.red.base,
   complianceMedium: colors.yellow.base,
-  complianceHigh: colors.green.base
+};
+
+const formats = {
+  formatCode: colors.orange.base,
+  formatInspec: colors.green.base,
+  formatScanner: colors.teal.base,
+  formatStig: colors.blue.base,
+  formatUnknown: colors.grey.base,
 };
 
 const vuetify = new Vuetify({
-  icons: {
-    iconfont: 'mdi'
-  },
+  icons: { iconfont: 'mdi' },
   theme: {
     dark: true,
+    options: { customProperties: true },
     themes: {
       dark: {
         ...statuses,
         ...severities,
         ...compliances,
+        ...formats,
         ...branding,
-        primary: mitreSecondaryBlue,
-        'primary-visible': gen_visibilities(mitreSecondaryBlue),
         bar: darkBackground,
         'bar-visible': gen_visibilities(darkBackground),
+        primary: mitreSecondaryBlue,
+        'primary-visible': gen_visibilities(mitreSecondaryBlue),
         secondary: darkBackground,
-        'secondary-visible': gen_visibilities(darkBackground)
-      }
+        'secondary-visible': gen_visibilities(darkBackground),
+      },
     },
-    options: {
-      customProperties: true
-    }
-  }
+  },
 });
 export default vuetify;
 
-/*** colors from new MII homepage ***/
+/** * colors from new MII homepage ***/
 /*
 @highlightGrey: #999999;
 @cardLabelIcons: #aaaaaa;
@@ -100,7 +105,7 @@ export default vuetify;
 @link-color: @fontLink;         //#0015E8;
 @sectionBackground: #f3f2f2;    //#eff3f5;
 @sectionBorder: #cfcfcf;        //#b4bfae
-/*outlook chart states*/
+/*outlook chart states */
 /*
 @outlookBusy: #9698ce;
 @outlookOut: #a96ead;
