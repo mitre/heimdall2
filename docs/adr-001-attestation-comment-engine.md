@@ -79,7 +79,27 @@ The `remotes/origin/checklistView` branch contains substantial prior work (~3,88
 
 This branch also significantly extended `data_filters.ts` (749 lines added) and `search.ts` (911 lines). The branch was never merged (has known bugs per commit messages) but contains proven UX patterns for checklist editing — severity override, rule editing, and table-based review — that should be evaluated before building new components.
 
-**Action:** Before implementing cards B1/B2 (Review Side Panel), read the `checklistView` branch components to identify reusable patterns and avoid reinventing what was already designed.
+**Why the branch was never merged:**
+1. Saving bug was never fixed (commit `0abfafb` — "Add TODO comment for found saving bug")
+2. Filtering remained broken (commit `b802140` — "try to fix ID filtering, but still broken")
+3. Scope creep — 54 files changed, 3,881 lines. Grew from checklist view into search engine rewrite + sidebar overhaul + filter system redesign
+4. CKL-only data model — everything typed against `ChecklistVuln`, incompatible with non-CKL files
+5. Direct mutation via `v-model` on CKL vuln objects — same antipattern as PR #8278 (no records, no audit trail)
+
+**What to reuse (widgets, not data model):**
+- `ChecklistRuleEdit.vue` — status dropdown, Finding Details + Comments textareas, severity override flow (adapt for B1)
+- `ChecklistSeverityOverride.vue` — justification-gate pattern (adapt for B1)
+- `ChecklistRulesTable.vue` — selectable v-data-table with status chips, column picker (pattern reference for C)
+- `SearchEntry<T>` with negation from `search.ts` — "filter to NR controls" is already built
+- `controlStatusSwitches` — NR filter toggle for card E
+
+**What to avoid:**
+- Don't rewrite search/filters as part of the attestation engine — that's scope creep
+- Don't type against `ChecklistVuln` — use `ContextualizedControl` (format-agnostic)
+- Don't use `v-model` two-way binding on data objects — use store records
+- Don't import CKL types into the store layer — keep store format-agnostic
+
+**Action:** Before implementing cards B1/B2, read `ChecklistRuleEdit.vue` and `ChecklistSeverityOverride.vue` from this branch to adapt the form widgets. Discard the data model entirely.
 
 ### 1.4 What We Learned
 
