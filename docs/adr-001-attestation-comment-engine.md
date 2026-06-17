@@ -960,7 +960,7 @@ User imports a CKL file that was previously exported and edited in STIG Viewer:
 | ID | Title | Depends On |
 |----|-------|-----------|
 | R | Approval workflows (reviewed_by, review_status distinct from updated_by) | Phase 2 |
-| S1 | Build FromHDFToPOAMMapper in hdf-converters — HDF + attestations → POA&M XLSX (adapts mitre/ckl2POAM severity/status mappings) | Phase 1 H (export infra) |
+| S1 | Build FromHDFToPOAMMapper in hdf-converters — HDF + attestations → POA&M XLSX (adapts mitre/ckl2POAM severity/status mappings). **RESEARCH REQUIRED:** verify against NIST 800-37 / eMASS POA&M requirements which control dispositions are POA&M items: Open (Failed) = yes; Risk Accepted = yes (with AO justification); Not Applicable = probably NOT a POA&M item (dispositioned). The ckl2POAM code maps CKL statuses but doesn't account for attestation dispositions. | Phase 1 H (export infra) |
 | S2 | POA&M export in Heimdall GUI — "Export as POA&M" button using S1 mapper | S1 |
 | T | Bulk attestation (select multiple NR controls, attest all with same explanation) | Phase 1 B |
 | U | Expiring attestation dashboard (controls nearing re-review) | Phase 1 A |
