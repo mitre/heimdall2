@@ -3,6 +3,7 @@
   "version": "2.13.0",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
+  "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/mitre/heimdall2",
@@ -13,7 +14,7 @@
   ],
   "main": "src/index.ts",
   "scripts": {
-    "prebuild": "tailwindcss -i data/reverse-html-mapper/tailwind.css -o data/reverse-html-mapper/style.css --minify && node data/reverse-html-mapper/convert-to-embedded-strings.ts",
+    "prebuild": "tailwindcss -i data/reverse-html-mapper/tailwind.css -o data/reverse-html-mapper/style.css --minify && node data/reverse-html-mapper/convert-to-embedded-strings.mts",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0",

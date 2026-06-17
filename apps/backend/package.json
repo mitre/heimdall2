@@ -3,6 +3,7 @@
   "version": "2.13.0",
   "license": "Apache-2.0",
   "description": "Heimdall's backend which allows for data persistence, authentication, RBAC, and API access",
+  "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "https://github.com/mitre/heimdall2",
