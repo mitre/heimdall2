@@ -1,0 +1,12 @@
+{% comment %}Renders test segments for a single control.
+Variables: segments (array of {status, code_desc, message}).
+Raw HTML justification: code_desc may contain sanitized HTML from the mapper.{% endcomment -%}
+{%- for segment in segments %}
+<table class="striped test-results">
+  <tbody>
+    <tr><th scope="row">Status</th><td><samp>{{ segment.status | default: '' }}</samp></td></tr>
+    <tr><th scope="row">Test</th><td>{{ segment.code_desc | default: '' | raw }}</td></tr>
+    <tr><th scope="row">Result</th><td><samp>{{ segment.message | default: '' }}</samp></td></tr>
+  </tbody>
+</table>
+{%- endfor %}

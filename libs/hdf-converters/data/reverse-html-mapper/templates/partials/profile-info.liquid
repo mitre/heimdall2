@@ -1,0 +1,15 @@
+<section id="profile-info" aria-labelledby="profile-info-h">
+  <h2 id="profile-info-h">Profile Info</h2>
+  <div class="grid">
+    {%- for file in files %}
+    <article>
+      <dl>
+        <dt>Filename</dt><dd>{{ file.filename | default: '' }}</dd>
+        <dt>Tool Version</dt><dd>{{ file.toolVersion | default: '' }}</dd>
+        <dt>Platform</dt><dd>{{ file.platform | default: '' }}</dd>
+        <dt>Duration</dt><dd>{{ file.duration | default: '' }}</dd>
+      </dl>
+    </article>
+    {%- endfor %}
+  </div>
+</section>

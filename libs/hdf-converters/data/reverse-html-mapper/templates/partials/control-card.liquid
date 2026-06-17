@@ -1,0 +1,49 @@
+{% comment %}Renders a single control as an article with details/summary for progressive disclosure.
+Variables: result (control object), showCode (boolean).
+Raw HTML justification: result.resultStatus.icon and result.resultSeverity.icon are SVG strings built by the mapper.
+result.hdf.wraps.title may contain sanitized HTML. result.data.desc is sanitized by sanitize-html in the mapper.
+segment.code_desc may contain sanitized HTML. detail.value is sanitized by sanitize-html in the mapper.{% endcomment -%}
+<article class="control" id="{{ result.resultID }}" data-status="{{ result.resultStatus.status }}" data-severity="{{ result.resultSeverity.severity }}">
+  <details>
+    <summary>
+      {%- assign status_class = result.resultStatus.status | downcase | replace: ' ', '-' -%}
+      {%- assign sev_class = result.resultSeverity.severity | downcase | replace: ' ', '-' -%}
+      <span class="badge status--{{ status_class }}">{{ result.resultStatus.icon | raw }} {{ result.resultStatus.status }}</span>
+      <span class="badge sev--{{ sev_class }}">{{ result.resultSeverity.icon | raw }} {{ result.resultSeverity.severity }}</span>
+      <code class="control-id">{{ result.hdf.wraps.id }}</code>
+      <span class="control-title" title="{{ result.hdf.wraps.title | strip_html }}">{{ result.hdf.wraps.title | raw }}</span>
+    </summary>
+
+    {%- if result.controlTags.size > 0 %}
+    <div class="control-tags" aria-label="Control tags">{%- for tag in result.controlTags %}<span class="tag">{{ tag }}</span>{%- endfor %}</div>
+    {%- endif %}
+
+    {{ result.data.desc | raw }}
+
+    <h4>Test Results</h4>
+    {%- for segment in result.hdf.segments %}
+    <table class="striped test-results">
+      <tbody>
+        <tr><th scope="row">Status</th><td><samp>{{ segment.status | default: '' }}</samp></td></tr>
+        <tr><th scope="row">Test</th><td>{{ segment.code_desc | default: '' | raw }}</td></tr>
+        <tr><th scope="row">Result</th><td><samp>{{ segment.message | default: '' }}</samp></td></tr>
+      </tbody>
+    </table>
+    {%- endfor %}
+
+    <h4>Details</h4>
+    <dl>
+      {%- for detail in result.details %}
+      <dt>{{ detail.name }}</dt>
+      <dd>{{ detail.value | raw }}</dd>
+      {%- endfor %}
+    </dl>
+
+    {%- if showCode %}
+    <figure>
+      <figcaption>Source Code</figcaption>
+      <pre><code>{{ result.full_code }}</code></pre>
+    </figure>
+    {%- endif %}
+  </details>
+</article>

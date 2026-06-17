@@ -1,0 +1,12 @@
+{% comment %}Inline JavaScript for interactive features.
+Runs after DOM is ready (placed at end of <body> by html.liquid).
+Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
+(function() {
+  var themeBtn = document.getElementById('theme-toggle');
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function() {
+      var h = document.documentElement;
+      h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+  }
+})();

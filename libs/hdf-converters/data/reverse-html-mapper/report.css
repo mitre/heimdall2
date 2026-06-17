@@ -1,0 +1,188 @@
+/* Heimdall HTML Report — custom CSS layer on top of Blades/Pico.
+   Pattern: append after Blades, override via --pico-* vars, add new tokens.
+   Dark mode follows Blades' own pattern: @media + [data-theme]. */
+
+/* === Status color tokens (light default) === */
+:root {
+  --st-pass-fg: #1a7f37;   --st-pass-bg: #dafbe1;
+  --st-fail-fg: #b3202a;   --st-fail-bg: #ffebe9;
+  --st-na-fg: #59636e;     --st-na-bg: #eef1f4;
+  --st-nr-fg: #9a4d00;     --st-nr-bg: #fff1e5;
+  --st-error-fg: #6639ba;  --st-error-bg: #fbefff;
+
+  --sv-none-fg: #59636e;     --sv-none-bg: #eef1f4;
+  --sv-low-fg: #1a5fb4;      --sv-low-bg: #ddf4ff;
+  --sv-medium-fg: #9a6700;   --sv-medium-bg: #fff8c5;
+  --sv-high-fg: #bc4c00;     --sv-high-bg: #fff1e5;
+  --sv-critical-fg: #b3202a; --sv-critical-bg: #ffebe9;
+
+  --compliance-low: rgb(243, 67, 53);
+  --compliance-medium: rgb(255, 235, 59);
+  --compliance-high: rgb(76, 176, 79);
+
+  /* Control card zebra — Bootstrap-proven 5%/7.5% overlay approach.
+     Uses Pico's own stripe gray (111, 120, 135) at 6% for card-sized elements
+     (stronger than Pico's 3.75% table stripe — cards need more differentiation).
+     Transparent overlay adapts to light/dark automatically — no separate dark values needed. */
+  --control-stripe-bg: rgba(111, 120, 135, 0.06);
+  --control-hover-bg: rgba(111, 120, 135, 0.09);
+
+  --print-muted: #555;
+  --print-border: #ccc;
+}
+
+/* Dark mode: Blades-idiomatic scoping — @media + [data-theme="dark"] */
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --st-pass-fg: #3fb950;   --st-pass-bg: #132d1c;
+    --st-fail-fg: #f85149;   --st-fail-bg: #3a1517;
+    --st-na-fg: #8b949e;     --st-na-bg: #21262d;
+    --st-nr-fg: #db8a30;     --st-nr-bg: #2a1a0a;
+    --st-error-fg: #a371f7;  --st-error-bg: #2a1a44;
+
+    --sv-none-fg: #8b949e;     --sv-none-bg: #21262d;
+    --sv-low-fg: #58a6ff;      --sv-low-bg: #0d2b45;
+    --sv-medium-fg: #d29922;   --sv-medium-bg: #2e2410;
+    --sv-high-fg: #db8a30;     --sv-high-bg: #3a2410;
+    --sv-critical-fg: #f85149; --sv-critical-bg: #3a1517;
+
+    --compliance-low: #f87171;
+    --compliance-medium: #fbbf24;
+    --compliance-high: #4ade80;
+  }
+}
+[data-theme="dark"] {
+  --st-pass-fg: #3fb950;   --st-pass-bg: #132d1c;
+  --st-fail-fg: #f85149;   --st-fail-bg: #3a1517;
+  --st-na-fg: #8b949e;     --st-na-bg: #21262d;
+  --st-nr-fg: #db8a30;     --st-nr-bg: #2a1a0a;
+  --st-error-fg: #a371f7;  --st-error-bg: #2a1a44;
+
+  --sv-none-fg: #8b949e;     --sv-none-bg: #21262d;
+  --sv-low-fg: #58a6ff;      --sv-low-bg: #0d2b45;
+  --sv-medium-fg: #d29922;   --sv-medium-bg: #2e2410;
+  --sv-high-fg: #db8a30;     --sv-high-bg: #3a2410;
+  --sv-critical-fg: #f85149; --sv-critical-bg: #3a1517;
+
+  --compliance-low: #f87171;
+  --compliance-medium: #fbbf24;
+  --compliance-high: #4ade80;
+}
+
+/* Compliance ring colors */
+.compliance-low { --compliance-color: var(--compliance-low); }
+.compliance-medium { --compliance-color: var(--compliance-medium); }
+.compliance-high { --compliance-color: var(--compliance-high); }
+
+/* === Accessibility === */
+.skip-link { position: absolute; left: -9999px; top: 0; background: var(--pico-contrast, #000); color: var(--pico-contrast-inverse, #fff); padding: .5rem 1rem; z-index: 100; }
+.skip-link:focus { left: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+/* === Badges — no Blades equivalent (verified in source) === */
+.badge { display: inline-flex; align-items: center; gap: .2em; padding: .1em .45em; border-radius: 9999px; font-size: .7rem; font-weight: 600; border: 1px solid transparent; white-space: nowrap; -webkit-print-color-adjust: exact; print-color-adjust: exact; line-height: 1.4; flex: none; }
+.badge[class*="sev--"] { border-radius: 4px; }
+.badge.status--passed         { color: var(--st-pass-fg);  background: var(--st-pass-bg);  border-color: var(--st-pass-fg); }
+.badge.status--failed         { color: var(--st-fail-fg);  background: var(--st-fail-bg);  border-color: var(--st-fail-fg); }
+.badge.status--not-applicable { color: var(--st-na-fg);    background: var(--st-na-bg);    border-color: var(--st-na-fg); }
+.badge.status--not-reviewed   { color: var(--st-nr-fg);    background: var(--st-nr-bg);    border-color: var(--st-nr-fg); }
+.badge.status--profile-error  { color: var(--st-error-fg); background: var(--st-error-bg); border-color: var(--st-error-fg); }
+.badge.sev--none     { color: var(--sv-none-fg);     background: var(--sv-none-bg);     border-color: var(--sv-none-fg); }
+.badge.sev--low      { color: var(--sv-low-fg);      background: var(--sv-low-bg);      border-color: var(--sv-low-fg); }
+.badge.sev--medium   { color: var(--sv-medium-fg);   background: var(--sv-medium-bg);   border-color: var(--sv-medium-fg); }
+.badge.sev--high     { color: var(--sv-high-fg);     background: var(--sv-high-bg);     border-color: var(--sv-high-fg); }
+.badge.sev--critical { color: var(--sv-critical-fg); background: var(--sv-critical-bg); border-color: var(--sv-critical-fg); }
+
+/* === Layout === */
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+.tag { display: inline-block; padding: .05em .35em; border-radius: 1em; font-size: .65rem; border: 1px solid var(--pico-muted-border-color, #ccc); color: var(--pico-muted-color, #666); }
+/* Control cards — expandable cards with zebra striping (Bootstrap 5% overlay pattern) */
+article.control {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 200px;
+  border-left: 4px solid var(--pico-muted-border-color);
+  margin-bottom: .5rem;
+  --pico-accordion-border-color: transparent;
+}
+article.control:nth-child(odd) {
+  background: var(--control-stripe-bg);
+}
+article.control:hover {
+  background: var(--control-hover-bg);
+}
+article.control > details { border: none; margin: 0; }
+article.control > details > summary::after { display: none; }
+article.control[data-status="Passed"]        { border-left-color: var(--st-pass-fg); }
+article.control[data-status="Failed"]        { border-left-color: var(--st-fail-fg); }
+article.control[data-status="Not Applicable"]{ border-left-color: var(--st-na-fg); }
+article.control[data-status="Not Reviewed"]  { border-left-color: var(--st-nr-fg); }
+article.control[data-status="Profile Error"] { border-left-color: var(--st-error-fg); }
+article.control > details > summary { display: grid; grid-template-columns: auto auto auto auto 1fr; align-items: center; gap: .35rem .5rem; padding: .5rem .6rem; list-style: none; cursor: pointer; }
+article.control > details > summary::-webkit-details-marker { display: none; }
+article.control > details > summary::before { content: ""; width: .45em; height: .45em; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); transition: transform .15s ease; opacity: .5; }
+article.control > details[open] > summary::before { transform: rotate(45deg); }
+@media (prefers-reduced-motion: reduce) { article.control > details > summary::before { transition: none; } }
+.control-id { font-family: var(--pico-font-family-monospace, ui-monospace, monospace); font-size: .8rem; font-weight: 600; white-space: nowrap; }
+.control-title { grid-column: 1 / -1; font-size: .9rem; line-height: 1.4; }
+.control-tags { display: flex; flex-wrap: wrap; gap: .25rem; margin: .5rem 0; }
+.compliance-ring { display: inline-block; border: 4px solid var(--compliance-color, #ccc); border-radius: 50%; width: 5rem; height: 5rem; line-height: 5rem; text-align: center; font-size: 1.25rem; font-weight: 700; }
+table.test-results { width: 100%; }
+table.test-results th { width: 6rem; white-space: nowrap; vertical-align: top; }
+table.test-results td { white-space: pre-line; overflow-wrap: anywhere; }
+
+/* === Filtering === */
+.filtered-out { display: none; }
+#filter-bar [role="group"] { display: inline-flex; flex-wrap: wrap; gap: .25rem; margin-right: 1rem; margin-bottom: .5rem; }
+#filter-bar button { margin: 0; padding: .25rem .6rem; font-size: .8rem; }
+
+/* === Corrected @media print — ADR §9.2 === */
+@media print {
+  /* Force light — beats Blades data-theme dark specificity */
+  :root, :root[data-theme="dark"], :root[data-theme="light"] { color-scheme: light !important; }
+  html, body { background: var(--pico-contrast-inverse, #fff) !important; color: var(--pico-contrast, #000) !important; }
+
+  /* Print backgrounds (inherited from :root) */
+  :root { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Reveal closed <details> — CSS fallback; JS beforeprint handler is primary (n3v.12) */
+  details::details-content { content-visibility: visible !important; }
+  summary { list-style: none; cursor: default; }
+  summary::-webkit-details-marker { display: none; }
+  summary::marker { content: ""; }
+
+  /* Un-defer lazy controls */
+  article.control { content-visibility: visible !important; contain-intrinsic-size: auto !important; }
+
+  /* Repeat table headers */
+  thead { display: table-header-group; }
+
+  /* Only page-safe elements avoid breaks — NOT article.control or pre */
+  tr, figure, .badge, .summary-grid > article { break-inside: avoid; page-break-inside: avoid; }
+  h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
+  p, li { orphans: 3; widows: 3; }
+
+  /* Long code wraps instead of clipping */
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; break-inside: auto; }
+  article.control { break-inside: auto; }
+
+  /* Hide interactive chrome */
+  nav, .no-print, #filter-bar, button, [role="button"] { display: none !important; }
+
+  /* Expand link URLs */
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 90%; color: var(--print-muted); word-break: break-all; }
+  a[href^="#"]::after, a[href^="mailto:"]::after { content: ""; }
+
+  /* Cards */
+  article { box-shadow: none !important; border: 1px solid var(--print-border); }
+
+  /* Hide <meter> — native widget prints unreliably */
+  meter { display: none; }
+
+  /* Page setup + page numbers (Chrome/Edge 131+, Safari 18.2+; NOT Firefox) */
+  @page {
+    size: letter;
+    margin: 0.75in;
+    @top-left { content: "Heimdall Compliance Report"; font-size: 9pt; color: var(--print-muted); }
+    @bottom-right { content: "Page " counter(page) " of " counter(pages); font-size: 9pt; color: var(--print-muted); }
+  }
+}

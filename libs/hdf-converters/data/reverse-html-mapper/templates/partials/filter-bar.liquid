@@ -1,0 +1,25 @@
+{% comment %}Renders the ISSO-workflow filter toolbar.
+Variables: statistics (status counts), showResultSets (boolean).
+No raw HTML — all content is plain text/numbers.{% endcomment -%}
+{%- if showResultSets %}
+<div class="container-fluid no-print" id="filter-bar" role="toolbar" aria-label="Control filters">
+  <div role="group" aria-label="Filter by status">
+    <button type="button" class="outline" data-filter-status="Passed">&#10003; Passed <small>({{ statistics.passed }})</small></button>
+    <button type="button" class="outline" data-filter-status="Failed">&#10007; Failed <small>({{ statistics.failed }})</small></button>
+    <button type="button" class="outline" data-filter-status="Not Applicable">&#8854; N/A <small>({{ statistics.notApplicable }})</small></button>
+    <button type="button" class="outline" data-filter-status="Not Reviewed">&#9888; NR <small>({{ statistics.notReviewed }})</small></button>
+    <button type="button" class="outline" data-filter-status="Profile Error">&#9651; Error <small>({{ statistics.profileError }})</small></button>
+  </div>
+  <div role="group" aria-label="Filter by severity">
+    <button type="button" class="outline" data-filter-severity="none">None</button>
+    <button type="button" class="outline" data-filter-severity="low">Low</button>
+    <button type="button" class="outline" data-filter-severity="medium">Medium</button>
+    <button type="button" class="outline" data-filter-severity="high">High</button>
+    <button type="button" class="outline" data-filter-severity="critical">Critical</button>
+  </div>
+  <div role="group" aria-label="Filter by NIST 800-53 family">
+    <select id="nist-family-filter" aria-label="NIST 800-53 family"><option value="">All NIST Families</option></select>
+  </div>
+  <div><small id="filter-count"></small></div>
+</div>
+{%- endif %}
