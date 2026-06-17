@@ -15,10 +15,10 @@ import {
   isContextualizedEvaluation
 } from 'inspecjs';
 import _ from 'lodash';
-import Mustache from 'mustache';
+import {Liquid} from 'liquidjs';
 import sanitize from 'sanitize-html';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
-import {html, js, css} from './embedded-assets';
+import {templates, css, reportCss} from './embedded-assets';
 import {
   IDetail,
   IOutputData,
@@ -57,36 +57,23 @@ export class FromHDFToHTMLMapper {
   // NOTE: Icons colors should align with Vue colors used in general dashboard from apps/frontend/src/store/color_hack.ts
   // ARIA NOTE: Since icons are supplementary, descriptions are not required
   private iconHTMLStore = {
-    // Passed; green
-    circleCheck: this.iconDataToSVG(mdiCheckCircle, 'rgb(76, 176, 79)'),
-    // Failed; red
-    circleCross: this.iconDataToSVG(mdiCloseCircle, 'rgb(243, 67, 53)'),
-    // Not applicable; blue
-    circleMinus: this.iconDataToSVG(mdiMinusCircle, 'rgb(3, 169, 244)'),
-    // Not reviewed; yellow
-    circleAlert: this.iconDataToSVG(mdiAlertCircle, 'rgb(254, 153, 0)'),
-    // Profile error; purple
-    triangleAlert: this.iconDataToSVG(mdiAlert, 'rgb(121, 134, 203)'),
-    // Total count; black
-    squareEqual: this.iconDataToSVG(mdiEqualBox, 'black'),
-    // No severity; blue
-    circleNone: this.iconDataToSVG(mdiCircle, 'rgb(3, 169, 244)'),
-    // Low severity; yellow
-    circleLow: this.iconDataToSVG(mdiCircle, 'rgb(255, 235, 59)'),
-    // Medium severity; orange
-    circleMedium: this.iconDataToSVG(mdiCircle, 'rgb(255, 152, 0)'),
-    // High severity; deep orange
-    circleHigh: this.iconDataToSVG(mdiCircle, 'rgb(255, 87, 34)'),
-    // Critical severity; red
-    circleCritical: this.iconDataToSVG(mdiCircle, 'rgb(244, 67, 54)'),
-    // Generic circle
-    circleWhite: this.iconDataToSVG(mdiCircle, 'rgb(0, 0, 0)')
+    circleCheck: this.iconDataToSVG(mdiCheckCircle, 'currentColor'),
+    circleCross: this.iconDataToSVG(mdiCloseCircle, 'currentColor'),
+    circleMinus: this.iconDataToSVG(mdiMinusCircle, 'currentColor'),
+    circleAlert: this.iconDataToSVG(mdiAlertCircle, 'currentColor'),
+    triangleAlert: this.iconDataToSVG(mdiAlert, 'currentColor'),
+    squareEqual: this.iconDataToSVG(mdiEqualBox, 'currentColor'),
+    circleNone: this.iconDataToSVG(mdiCircle, 'currentColor'),
+    circleLow: this.iconDataToSVG(mdiCircle, 'currentColor'),
+    circleMedium: this.iconDataToSVG(mdiCircle, 'currentColor'),
+    circleHigh: this.iconDataToSVG(mdiCircle, 'currentColor'),
+    circleCritical: this.iconDataToSVG(mdiCircle, 'currentColor'),
+    circleWhite: this.iconDataToSVG(mdiCircle, 'currentColor')
   };
 
   // Default attributes
   outputData: IOutputData = {
-    tailwindStyles: '',
-    tailwindElements: '',
+    frameworkStyles: '',
     // Used for profile status reporting
     statistics: {
       passed: 0,
@@ -510,15 +497,20 @@ export class FromHDFToHTMLMapper {
 
   // Prompt HTML generation from data pulled from file during constructor initialization
   async toHTML(): Promise<string> {
-    // Pull export template + styles and create outputData object containing data to fill template with
-    const template = html;
-    this.outputData.tailwindStyles = css;
-    // Remove source map reference in TW Elements library
-    this.outputData.tailwindElements = js.replace(
-      '//# sourceMappingURL=tw-elements.umd.min.js.map',
-      ''
-    );
-    // Render template and return generated HTML file
-    return Mustache.render(template, this.outputData);
+    const engine = new Liquid({
+      templates,
+      outputEscape: 'escape',
+      strictVariables: true,
+      strictFilters: true,
+      lenientIf: true,
+      jsTruthy: true
+    });
+
+    return engine.parseAndRender(templates['report'], {
+      ...this.outputData,
+      title: 'Heimdall ' + this.outputData.exportType + ' Report',
+      inline_styles: [css, reportCss],
+      inline_scripts: [templates['partials/scripts'] || '']
+    });
   }
 }
