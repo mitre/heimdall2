@@ -353,13 +353,18 @@ export class ChecklistResults extends ChecklistJsonixConverter {
    * @method toCkl
    * @returns {string} - Converts JSON data in jsonix format to CKL (Checklist) XML format.
    */
-  toCkl(): string {
-    return xmlFormat(
-      `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
-        this.jsonixData
-      )}`,
-      {lineSeparator: '\n', collapseContent: true, indentation: '\t'}
-    );
+  toCkl(options?: {prettyPrint?: boolean}): string {
+    const raw = `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
+      this.jsonixData
+    )}`;
+    if (options?.prettyPrint) {
+      return xmlFormat(raw, {
+        lineSeparator: '\n',
+        collapseContent: true,
+        indentation: '\t'
+      });
+    }
+    return raw;
   }
 
   /**

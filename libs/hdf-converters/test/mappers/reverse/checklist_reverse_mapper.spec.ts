@@ -15,7 +15,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
       'sample_jsons/checklist_mapper/converted-RHEL8V1R3.ckl',
       'utf-8'
     );
-    const converted = mapper.toCkl();
+    const converted = mapper.toCkl({prettyPrint: true});
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
 
@@ -28,7 +28,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
       'sample_jsons/checklist_mapper/converted-three-stig-checklist.ckl',
       'utf-8'
     );
-    const converted = mapper.toCkl();
+    const converted = mapper.toCkl({prettyPrint: true});
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
@@ -43,7 +43,7 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
       'sample_jsons/checklist_mapper/converted-nessus.ckl',
       'utf-8'
     );
-    const converted = mapper.toCkl();
+    const converted = mapper.toCkl({prettyPrint: true});
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
@@ -58,7 +58,7 @@ describe('Small RHEL8 HDF file', () => {
       'sample_jsons/checklist_mapper/converted-rhel8_sample_oneOfEachControlStatus.ckl',
       'utf-8'
     );
-    const converted = mapper.toCkl();
+    const converted = mapper.toCkl({prettyPrint: true});
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
@@ -73,7 +73,7 @@ describe('Small RHEL 7 with severity and severity override tags', () => {
       'sample_jsons/checklist_mapper/converted-rhel7_overrides.ckl',
       'utf-8'
     );
-    const converted = mapper.toCkl();
+    const converted = mapper.toCkl({prettyPrint: true});
     expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
@@ -186,6 +186,6 @@ function extractStatus(
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function saveCklOutput(mapper: ChecklistResults, outputPath: string): void {
-  const cklOutput = mapper.toCkl();
+  const cklOutput = mapper.toCkl({prettyPrint: true});
   fs.writeFileSync(outputPath, cklOutput);
 }
