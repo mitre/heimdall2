@@ -30,7 +30,6 @@ function meta(): Record<string, string> {
   return { name: 'Prowler', title: 'Prowler Findings' };
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function getProwler(): Record<string, (...inputs: any) => any> {
   return {
     desc,

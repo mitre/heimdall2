@@ -5,7 +5,6 @@ import { compare, validate } from 'compare-versions';
 import { encode } from 'html-entities';
 import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import type { ILookupPath, MappedTransform } from '../base-converter';
 import { BaseConverter } from '../base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
@@ -28,6 +27,13 @@ const IMPACT_MAPPING = new Map<string, number>([
   ['LOW', 0.3],
   ['MEDIUM', 0.5],
 ]);
+
+const ARN_FIREWALL_MANAGER_RE = /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/v;
+const ARN_GUARDDUTY_RE = /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/guardduty$/v;
+const ARN_INSPECTOR_RE = /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/v;
+const ARN_PROWLER_RE = /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/v;
+const ARN_SECURITYHUB_RE = /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/v;
+const ARN_TRIVY_RE = /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/v;
 
 const SEVERITY_LABEL = 'Severity.Label';
 const COMPLIANCE_STATUS = 'Compliance.Status';
@@ -54,15 +60,11 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   ) {
     return SpecialCasing.CMSInSpec;
   } else if (
-    /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/v.test(
-      productArn,
-    )
+    ARN_FIREWALL_MANAGER_RE.test(productArn)
   ) {
     return SpecialCasing.FirewallManager;
   } else if (
-    /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/guardduty$/v.test(
-      productArn,
-    )
+    ARN_GUARDDUTY_RE.test(productArn)
   ) {
     return SpecialCasing.GuardDuty;
   } else if (
@@ -80,27 +82,19 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   ) {
     return SpecialCasing.PreviouslyHDF;
   } else if (
-    /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/v.test(
-      productArn,
-    )
+    ARN_INSPECTOR_RE.test(productArn)
   ) {
     return SpecialCasing.Inspector;
   } else if (
-    /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/v.test(
-      productArn,
-    )
+    ARN_PROWLER_RE.test(productArn)
   ) {
     return SpecialCasing.Prowler;
   } else if (
-    /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/v.test(
-      productArn,
-    )
+    ARN_SECURITYHUB_RE.test(productArn)
   ) {
     return SpecialCasing.SecurityHub;
   } else if (
-    /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/v.test(
-      productArn,
-    )
+    ARN_TRIVY_RE.test(productArn)
   ) {
     return SpecialCasing.Trivy;
   } else {
@@ -110,8 +104,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
 
 const SPECIAL_CASE_MAPPING = new Map<
   SpecialCasing,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  Record<string, Function>
+  Record<string, (...args: any[]) => any>
 >([
   [SpecialCasing.CMSInSpec, getCMSInSpec()],
   [SpecialCasing.FirewallManager, getFirewallManager()],
@@ -295,7 +288,7 @@ function wrapWithFindingsObject(
 function fixFileInput(
   asffJson: string,
 ): Record<string, Record<string, unknown>[]> {
-  let output = {};
+  let output;
   try {
     output = JSON.parse(asffJson);
   } catch {

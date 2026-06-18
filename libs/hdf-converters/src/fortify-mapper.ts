@@ -14,6 +14,7 @@ import { getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
 const NIST_REFERENCE_NAME
   = 'Standards Mapping - NIST Special Publication 800-53 Revision 4';
 const DEFAULT_NIST_TAG: string[] = [];
+const NIST_CONTROL_PATTERN_RE = /[A-Za-z][A-Za-z]-\d{1,2}/v;
 
 let parseHtml: (input: unknown) => string;
 
@@ -151,26 +152,26 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
             ).filter((subElement: Record<string, unknown>) => {
               return _.get(subElement, 'ClassInfo.ClassID') === classid;
             });
-            matches.forEach((match: Record<string, unknown>) => {
+            for (const match of matches) {
               const traces: unknown[] = makeArray(
                 _.get(match, 'AnalysisInfo.Unified.Trace'),
               );
-              traces.forEach((trace: unknown) => {
+              for (const trace of traces) {
                 const entries: unknown[] = makeArray(
                   _.get(trace, 'Primary.Entry'),
                 );
                 const filteredEntries = entries.filter((entry: unknown) => {
                   return _.has(entry, 'Node.SourceLocation.snippet');
                 });
-                filteredEntries.forEach((entry: unknown) => {
+                for (const entry of filteredEntries) {
                   if (
                     _.get(entry, 'Node.SourceLocation.snippet') === snippetid
                   ) {
                     isMatch = true;
                   }
-                });
-              });
-            });
+                }
+              }
+            }
             return isMatch;
           },
         ),
@@ -184,7 +185,7 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
         ),
       );
     }
-    element; continue;
+    continue;
   }
   return input as ExecJSON.Control[];
 }
@@ -211,18 +212,19 @@ function nistTag(rule: Record<string, unknown>): string[] {
     const tag = references.find((element: Record<string, unknown>) => {
       return _.get(element, 'Author') === NIST_REFERENCE_NAME;
     });
-    return tag === null || tag === undefined ? DEFAULT_NIST_TAG : _.get(tag, 'Title').match(/[A-Za-z][A-Za-z]-\d{1,2}/v);
+    return tag === null || tag === undefined ? DEFAULT_NIST_TAG : _.get(tag, 'Title').match(NIST_CONTROL_PATTERN_RE);
   }
   return [];
 }
 
 function processEntry(input: unknown): string {
-  const output = [];
-  output.push(`${_.get(input, 'id')}<=SNIPPET`);
-  output.push(`\nPath: ${_.get(input, 'File')}\n`);
-  output.push(`StartLine: ${_.get(input, 'StartLine')}, `);
-  output.push(`EndLine: ${_.get(input, 'EndLine')}\n`);
-  output.push(`Code:\n${(_.get(input, 'Text') as unknown as string).trim()}`);
+  const output = [
+    `${_.get(input, 'id')}<=SNIPPET`,
+    `\nPath: ${_.get(input, 'File')}\n`,
+    `StartLine: ${_.get(input, 'StartLine')}, `,
+    `EndLine: ${_.get(input, 'EndLine')}\n`,
+    `Code:\n${(_.get(input, 'Text') as unknown as string).trim()}`,
+  ];
 
   return output.join('');
 }

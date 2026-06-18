@@ -1,5 +1,4 @@
 import type { ExecJSON } from 'inspecjs';
-import * as _ from 'lodash';
 import type { ChecklistVuln } from '../ckl-mapper/checklist-jsonix-converter';
 import type { Attestation } from './attestations';
 import { addAttestationToHDF } from './attestations';
@@ -8,7 +7,8 @@ type DescriptionsInput
   = | ExecJSON.ControlDescription[]
     | Record<string, string>;
 
-const CKL_SECTION_MARKER_RE = /^(CAVEAT|COMMENTS|JUSTIFICATION|RATIONALE) ::/v;
+const CKL_SECTION_MARKER_RE = /^(?:CAVEAT|COMMENTS|JUSTIFICATION|RATIONALE) ::/v;
+const CKL_SECTION_SPLIT_RE = /\n(?=[A-Z]+ ::)/v;
 
 export type DescriptionEdits = {
   caveat?: string;
@@ -38,7 +38,9 @@ export function buildEditsMapFromProfiles(
       const control = profile.controls.find(
         c => c.id.toLowerCase() === vulnNum.toLowerCase(),
       );
-      if (!control) { continue; }
+      if (!control) {
+        continue;
+      }
 
       const descriptions: Record<string, string> = {};
       if (Array.isArray(control.descriptions)) {
@@ -79,7 +81,7 @@ export function prepareEvaluationForCklExport(
   evaluationData: ExecJSON.Execution,
   attestations: Attestation[],
 ): ExecJSON.Execution {
-  const clone: ExecJSON.Execution = _.cloneDeep(evaluationData);
+  const clone: ExecJSON.Execution = structuredClone(evaluationData);
 
   if (attestations.length > 0) {
     addAttestationToHDF(clone, attestations);
@@ -110,8 +112,8 @@ export function sanitizeCklSectionMarkers(text: string): string {
     return text;
   }
   return text.replaceAll(
-    /\n(CAVEAT|COMMENTS|JUSTIFICATION|RATIONALE) ::/gv,
-    '\n[$1] ::',
+    /\n(?<section>CAVEAT|COMMENTS|JUSTIFICATION|RATIONALE) ::/gv,
+    '\n[$<section>] ::',
   );
 }
 
@@ -190,7 +192,7 @@ function parseStructuredComments(
     return sections;
   }
 
-  for (const section of commentString.split(/\n(?=[A-Z]+ ::)/v)) {
+  for (const section of commentString.split(CKL_SECTION_SPLIT_RE)) {
     const match = CKL_SECTION_MARKER_RE.exec(section);
     if (match) {
       const label = match[1];

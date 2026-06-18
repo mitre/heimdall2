@@ -6,7 +6,6 @@ import type {
   ContextualizedDependency,
   Dependency,
   IonChannelAnalysisResponse,
-  ScanSummary,
 } from '../types/ionchannelAnalysis';
 import type { Project } from '../types/ionchannelProjects';
 import type { Team } from '../types/ionchannelTeams';
@@ -287,7 +286,7 @@ function preprocessIonChannelData(ionchannelData: string) {
     );
   }
 
-  scanSummaries.forEach((scanSummary: ScanSummary) => {
+  for (const scanSummary of scanSummaries) {
     switch (scanSummary.name) {
       case 'dependency': {
         if (!scanSummary.results.data.dependencies) {
@@ -302,7 +301,7 @@ function preprocessIonChannelData(ionchannelData: string) {
         break;
       }
     }
-  });
+  }
 
   const dependencyGraph: Record<string, ContextualizedDependency> = {};
 

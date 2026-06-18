@@ -1,8 +1,10 @@
 import { XMLParser } from 'fast-xml-parser';
 import _ from 'lodash';
-import { CCI_List } from '../utils/CCI_List';
+import { CCI_List } from '../utils/cci_list';
 import { data } from './CciNistMappingData';
 import { CciNistMappingItem } from './CciNistMappingItem';
+
+const NIST_FAMILY_NUM_RE = /\w{2}-\d{1,3}/v;
 
 type CciItem = {
   '@_id': string;
@@ -164,7 +166,7 @@ export class CciNistTwoWayMapper {
         // if there were no matches using the original pattern, try using only 2 letters hyphen followed by one or two numbers
         if (matchingIds.length === 0) {
           const regexEditedPattern = new RegExp(
-            `${/\w{2}-\d{1,3}/v.exec(pattern)}`,
+            `${NIST_FAMILY_NUM_RE.exec(pattern)}`,
           );
           if (
             new RegExp(regexEditedPattern).test(reference['@_index'])

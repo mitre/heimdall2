@@ -48,7 +48,7 @@ export class SplunkMapper {
     this.config = config;
     this.axiosInstance = axios.create({ params: { output_mode: 'json' } });
     this.hostname = generateHostname(config);
-    logger = logService ? logService : createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
+    logger = logService || createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
@@ -63,7 +63,7 @@ export class SplunkMapper {
       );
     } catch (error) {
       const errorCode = handleSplunkErrorResponse(error);
-      throw new Error(`Failed to create search job - ${errorCode}`);
+      throw new Error(`Failed to create search job - ${errorCode}`, { cause: error });
     }
 
     // Return unique search ID (SID) assigned to that search job for future reference
@@ -163,6 +163,7 @@ export class SplunkMapper {
     } catch (error) {
       throw new Error(
         `Failed search job - ${handleSplunkErrorResponse(error)}`,
+        { cause: error },
       );
     }
 
@@ -231,6 +232,7 @@ export class SplunkMapper {
         clearInterval(awaitJob);
         throw new Error(
           `Failed search job - ${handleSplunkErrorResponse(error)}`,
+          { cause: error },
         );
       }
 

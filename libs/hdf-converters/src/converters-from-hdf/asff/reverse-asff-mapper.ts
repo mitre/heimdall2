@@ -83,7 +83,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   controlsToSegments() {
     const segments: SegmentedControl[] = [];
     for (const profile of this.data.profiles) {
-      for (const control of profile.controls.reverse()) {
+      for (const control of profile.controls.toReversed()) {
         for (const segment of control.results) {
           // Ensure that the UpdatedAt time is different across findings (to match the order in HDF)
           segments.push({
@@ -228,7 +228,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     if (size > SIZE_CAP) {
       console.error(
         `Warning: Normalized entry could not be sufficiently reduced in size to meet AWS Security Hub requirements and so will not be provided in the results set.  Entry could not be minimized more than as follows:
-            ${finding}`,
+            ${JSON.stringify(finding, null, 2)}`,
       );
       if (finding.Id === profileInfoFindingId) {
         console.error(
@@ -295,7 +295,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     ) {
       console.error(
         `Warning: Normalized entry contained data that is duplicated (i.e. a subsection of a string by happenstance has the same values) which means this entry does not meet AWS Security Hub requirements and so will not be provided in the results set.  Entry that contains duplicate data is as follows:
-            ${finding}`,
+            ${JSON.stringify(finding, null, 2)}`,
       );
       if (finding.Id === profileInfoFindingId) {
         console.error(

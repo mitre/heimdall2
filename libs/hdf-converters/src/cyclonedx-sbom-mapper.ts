@@ -49,6 +49,7 @@ type IntermediaryVulnerability = (
 ) & { affectedComponents?: number[] };
 
 const CWE_NIST_MAPPING = new CweNistMapping();
+const RATINGS_SEPARATOR_RE = / - |, /v;
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 1],
@@ -377,8 +378,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             return input.licenses
               ?.map(license =>
                 license?.license?.name
-                  ? license.license.name
-                  : license?.license?.id,
+                || license?.license?.id,
               )
               .filter(Boolean)
               .join(', ');
@@ -487,7 +487,7 @@ export class CycloneDXSBOMResults {
   // Flatten any arbitrarily nested components list
   flattenComponents(data: DataStorage) {
     // Pull components from raw data
-    data.components = _.cloneDeep(
+    data.components = structuredClone(
       data.raw.components,
     ) as IntermediaryComponent[];
 
@@ -507,7 +507,7 @@ export class CycloneDXSBOMResults {
   formatVEX(data: DataStorage) {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
-      ...(_.cloneDeep(data.raw.vulnerabilities) as
+      ...(structuredClone(data.raw.vulnerabilities) as
       | CycloneDXBillOfMaterialsStandardVulnerability[]
       | CycloneDXSoftwareBillOfMaterialsStandardVulnerability[]),
     ];
@@ -561,7 +561,7 @@ export class CycloneDXSBOMResults {
   */
   generateIntermediary(data: DataStorage) {
     // Pull vulnerabilities from raw data
-    data.vulnerabilities = _.cloneDeep(
+    data.vulnerabilities = structuredClone(
       data.raw.vulnerabilities,
     ) as IntermediaryVulnerability[];
 
@@ -623,22 +623,14 @@ function getNISTTags(
 // A single SBOM vulnerability can contain multiple security ratings
 // Find the max of any existing ratings and then pass to `impact`
 function maxImpact(ratings: FluffyRating[] | PurpleRating[]): number {
-  return ratings
-    .map(rating =>
-      rating.score
-      && rating.method
-      && cvssMethods.includes(rating.method as CVSSMethodEnum) // cast required since .includes expects the parameter to be a subtype
-        ? // Prefer to use CVSS-based `score` field when possible
-        rating.score / 10
-        : // Else interpret it from `severity` field, defaulting to medium/0.5
-        (IMPACT_MAPPING.get(rating.severity?.toLowerCase() ?? '') ?? 0.5),
-    )
-    .reduce(
-      (maxValue, newValue) =>
-        // Find max of existing ratings
-        Math.max(maxValue, newValue),
-      0,
-    );
+  const impacts = ratings.map(rating =>
+    rating.score
+    && rating.method
+    && cvssMethods.includes(rating.method as CVSSMethodEnum)
+      ? rating.score / 10
+      : (IMPACT_MAPPING.get(rating.severity?.toLowerCase() ?? '') ?? 0.5),
+  );
+  return impacts.length > 0 ? Math.max(...impacts) : 0;
 }
 
 // If the highest rating severity for a control is `info` or `unknown`, set the results to skipped and request a manual review
@@ -648,7 +640,7 @@ function skipSeverityInfoOrUnknown(controls: unknown[]): unknown[] {
       // Filter to controls whose highest rating severity is either `info` or `unknown`
       .filter((control) => {
         const ratings = new Set((_.get(control, 'tags.ratings', '') as string).split(
-          / - |, /v,
+          RATINGS_SEPARATOR_RE,
         ));
         return (
           (ratings.has('info') || ratings.has('unknown'))

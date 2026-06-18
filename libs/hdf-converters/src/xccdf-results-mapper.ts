@@ -25,6 +25,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 ]);
 
 const CCI_NIST_MAPPING = new CciNistMapping();
+const CCI_REGEX = /CCI-\d*/v;
 
 let parseHtml: (input: unknown) => string;
 
@@ -121,7 +122,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[],
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(parseHtml).join('\n'),
+                  data: asArray(data).map(item => parseHtml(item)).join('\n'),
                   label: 'fix',
                 }),
               } as unknown as ExecJSON.ControlDescription,
@@ -130,7 +131,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[],
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(parseHtml).join('\n'),
+                  data: asArray(data).map(item => parseHtml(item)).join('\n'),
                   label: 'rationale',
                 }),
               } as unknown as ExecJSON.ControlDescription,
@@ -139,7 +140,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[],
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(parseHtml).join('\n'),
+                  data: asArray(data).map(item => parseHtml(item)).join('\n'),
                   label: 'warning',
                 }),
               } as unknown as ExecJSON.ControlDescription,
@@ -451,8 +452,6 @@ function asArray<T>(arg: T | T[]): T[] {
 function extractCci(input: IIdent | IIdent[]): string[] {
   const inputArray = asArray(input);
 
-  const CCI_REGEX = /CCI-(\d*)/v;
-
   const output: string[] = [];
   for (const element of inputArray) {
     const text = _.get(element, 'text');
@@ -633,9 +632,9 @@ function nistTag(input: IIdent | IIdent[]): string[] {
     ), ...asArray(input)
       .filter(x => !!x)
       .map(x => x.text)
-      .map(parse_nist)
+      .map(x => parse_nist(x))
       .filter(x => !!x)
-      .filter(is_control)
+      .filter(x => is_control(x))
       .map(x => x.canonize())],
   );
 }

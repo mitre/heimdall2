@@ -67,8 +67,9 @@ export class FromHDFToCAATMapper {
     pad_zeros: true,
   };
 
-  static readonly SheetOptions: XLSX.JSON2SheetOpts = { header: [...CAATHeaders], // CAATHeaders is immutable but the type expects a mutable string
-  };
+  static readonly DefaultWritingOptions: XLSX.WritingOptions = { bookType: 'xlsx', type: 'binary' };
+
+  static readonly SheetOptions: XLSX.JSON2SheetOpts = { header: [...CAATHeaders] };
 
   data: Data[];
 
@@ -105,7 +106,7 @@ export class FromHDFToCAATMapper {
   // ensure we're using Windows style newlines and fit within the maximum length
   static fix(str?: null | string): string {
     return (str ?? '')
-      .replaceAll(/(\r\n|\n|\r)/gv, '\r\n')
+      .replaceAll(/\r\n|\n|\r/gv, '\r\n')
       .slice(0, FromHDFToCAATMapper.MaxCellSize);
   }
 
@@ -131,10 +132,10 @@ export class FromHDFToCAATMapper {
             return;
           }
 
-          const row: CAATRow = { ['Control Number']: formattedNistTag };
-          row['Finding Title'] = `Test ${FromHDFToCAATMapper.fix(
-            hdf.wraps.id,
-          )} - ${FromHDFToCAATMapper.fix(hdf.wraps.title)}`;
+          const row: CAATRow = {
+            ['Control Number']: formattedNistTag,
+            ['Finding Title']: `Test ${FromHDFToCAATMapper.fix(hdf.wraps.id)} - ${FromHDFToCAATMapper.fix(hdf.wraps.title)}`,
+          };
           if (hdf.start_time) {
             row['Date Identified'] = FromHDFToCAATMapper.formatDate(
               new Date(hdf.start_time),
@@ -203,10 +204,9 @@ export class FromHDFToCAATMapper {
   }
 
   // returnWorkBook: true -> raw workbook class
-  // returnWorkBook: false | undefined -> binary string by default otherwise whatever is specified in the options parameter
   toCAAT(
     returnWorkBook = false,
-    options: XLSX.WritingOptions = { bookType: 'xlsx', type: 'binary' },
+    options: XLSX.WritingOptions = FromHDFToCAATMapper.DefaultWritingOptions,
   ) {
     // Sheet names must be unique across the workbook
     const takenSheetNames: string[] = [];

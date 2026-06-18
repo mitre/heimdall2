@@ -24,6 +24,7 @@ const INSUFFICIENT_DATA_MSG
 const NAME = 'AWS Config';
 
 const AWS_CONFIG_MAPPING = new AwsConfigMapping();
+const ACCOUNT_ID_RE = /:(?<accountId>\d{12}):config-rule/v;
 
 export class AwsConfigMapper {
   configService: ConfigService;
@@ -85,7 +86,7 @@ export class AwsConfigMapper {
     return hdf;
   }
 
-  private async appendResourceNamesToResults(
+  private appendResourceNamesToResults(
     completedControlResults: ExecJSON.ControlResult[][],
     extractedResourceNames: Record<string, string>,
   ) {
@@ -208,7 +209,7 @@ export class AwsConfigMapper {
   }
 
   private getAccountId(arn: string): string {
-    const matches = /:(\d{12}):config-rule/v.exec(arn);
+    const matches = ACCOUNT_ID_RE.exec(arn);
     return matches === null ? 'no-account-id' : matches[0];
   }
 
@@ -262,7 +263,8 @@ export class AwsConfigMapper {
 
   private async getControls(): Promise<ExecJSON.Control[]> {
     let index = 0;
-    return (await this.issues).map((issue: ConfigRule) => {
+    const issues = await this.issues;
+    return issues.map((issue: ConfigRule) => {
       const control: ExecJSON.Control = {
         code: '',
         desc: issue.Description || null,
@@ -348,7 +350,7 @@ export class AwsConfigMapper {
             )?.Compliance?.ComplianceType
           ) {
             case 'NOT_APPLICABLE': {
-              [
+              ruleData.push([
                 {
                   code_desc: NOT_APPLICABLE_MSG,
                   run_time: 0,
@@ -356,10 +358,11 @@ export class AwsConfigMapper {
                   start_time: currentDate,
                   status: ExecJSON.ControlResultStatus.Skipped,
                 },
-              ]; continue;
+              ]);
+              continue;
             }
             case 'INSUFFICIENT_DATA': {
-              [
+              ruleData.push([
                 {
                   code_desc: INSUFFICIENT_DATA_MSG,
                   run_time: 0,
@@ -367,20 +370,22 @@ export class AwsConfigMapper {
                   start_time: currentDate,
                   status: ExecJSON.ControlResultStatus.Skipped,
                 },
-              ]; continue;
+              ]);
+              continue;
             }
             default: {
-              []; continue;
+              continue;
             }
           }
         } else {
-          ruleData.push(result); continue;
+          ruleData.push(result);
+          continue;
         }
       }
     }
 
     return this.appendResourceNamesToResults(
-      await Promise.all(ruleData),
+      ruleData,
       await this.extractResourceNamesFromIds(allRulesResolved),
     );
   }
@@ -418,7 +423,6 @@ export class AwsConfigMapper {
     ];
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
   private hdfTags(configRule: ConfigRule): Record<string, unknown> {
     let result = {};
     const sourceIdentifier = configRule.Source?.SourceIdentifier;

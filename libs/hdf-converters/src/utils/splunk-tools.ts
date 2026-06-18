@@ -44,6 +44,7 @@ export async function checkSplunkCredentials(
       // Fail query if request takes too long to respond
       throw new Error(
         'Login timed out - Please check your CORS configuration or validate that you have inputted the correct domain',
+        { cause: error },
       );
     }
 
@@ -54,9 +55,10 @@ export async function checkSplunkCredentials(
     if (errorCode === 'Unexpected error') {
       throw new Error(
         `Failed to login - Please check your CORS configuration and validate that your input has the correct domain: ${error}`,
+        { cause: error },
       );
     }
-    throw new Error(`Failed to login - ${errorCode}`);
+    throw new Error(`Failed to login - ${errorCode}`, { cause: error });
   } finally {
     // Kill timer since request has failed
     clearTimeout(timeoutId);

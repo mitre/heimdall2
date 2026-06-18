@@ -172,7 +172,7 @@ function getCweNames(cwes: ICweEntry[] | undefined) {
 
 function getTitle(finding: unknown) {
   const title = _.get(finding, 'vulnerability.title');
-  return `${_.get(finding, 'component.purl')}${title ? ' - ' + title : ''}`;
+  return `${_.get(finding, 'component.purl')}${title ? ` - ${title}` : ''}`;
 }
 
 function getVersion(file: unknown): string {

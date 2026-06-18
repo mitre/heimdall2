@@ -96,6 +96,8 @@ export enum StatusMapping {
   Open = 'Failed',
 }
 
+const SEPARATOR_RE = /[,;\|]/v;
+
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
   ['high', 0.7],
@@ -262,9 +264,13 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
     // if severity or severity override don't fit into low, medium, high
     // denote them in the control specific data
-    if (severityTag === 'none' || severityTag === 'critical') { hdfSpecificData.severity = severityTag; }
+    if (severityTag === 'none' || severityTag === 'critical') {
+      hdfSpecificData.severity = severityTag;
+    }
 
-    if (severityOverrideTag === 'none' || severityOverrideTag === 'critical') { hdfSpecificData.severityoverride = severityOverrideTag; }
+    if (severityOverrideTag === 'none' || severityOverrideTag === 'critical') {
+      hdfSpecificData.severityoverride = severityOverrideTag;
+    }
 
     // if impact does not align with what would be computed from the checklist
     // store it in the hdfSpecificData
@@ -284,7 +290,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     // this must be represented in hdfSpecificData when impact needs to
     // map to severity none or critical
     if (severityTag === null) {
-      if (impact < 0.1) { hdfSpecificData.severity = 'none'; } else if (impact >= 0.9) { hdfSpecificData.severity = 'critical'; }
+      if (impact < 0.1) {
+        hdfSpecificData.severity = 'none';
+      } else if (impact >= 0.9) {
+        hdfSpecificData.severity = 'critical';
+      }
     }
 
     if (control.code?.startsWith('control')) {
@@ -326,9 +336,13 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     severityOverrideTag: null | string,
   ): number | undefined {
     let computedSeverity = severityTag;
-    if (severityOverrideTag) { computedSeverity = severityOverrideTag; }
+    if (severityOverrideTag) {
+      computedSeverity = severityOverrideTag;
+    }
     computedSeverity = computedSeverity?.toLowerCase() ?? null;
-    if (computedSeverity) { return IMPACT_MAPPING.get(computedSeverity); }
+    if (computedSeverity) {
+      return IMPACT_MAPPING.get(computedSeverity);
+    }
   }
 
   controlsToVulns(
@@ -447,15 +461,15 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   expandVulns(checklistVuln: ChecklistVuln): StigdatumElement[] {
-    const separateElementNames: string[] = ['CciRef', 'IAControls', 'LegacyID'];
+    const separateElementNames = new Set(['CciRef', 'IAControls', 'LegacyID']);
     const stigdata: StigdatumElement[] = [];
     for (const [attributeName, data] of Object.entries(checklistVuln)) {
       const keyFoundInVulnattribute: string | undefined = Object.keys(
         Vulnattribute,
       ).find(key => key.toLowerCase() === attributeName.toLowerCase());
       if (keyFoundInVulnattribute) {
-        if (separateElementNames.includes(keyFoundInVulnattribute)) {
-          const dataStrings = data?.toString().split(/[,;|]/u) ?? [];
+        if (separateElementNames.has(keyFoundInVulnattribute)) {
+          const dataStrings = data?.toString().split(SEPARATOR_RE) ?? [];
           for (const dataString of dataStrings) {
             stigdata.push({
               attributedata: dataString.trim(),
@@ -684,7 +698,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         return Severity.High;
       }
       case 'low':
-      // if none, it will be added to Checklist's thirdPartyTools section
+      // falls through — if none, it will be added to Checklist's thirdPartyTools section
       case 'none': {
         return Severity.Low;
       }

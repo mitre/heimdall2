@@ -12,15 +12,15 @@ import {
 import { CciNistTwoWayMapper } from '../mappings/CciNistMapping';
 import { DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS, HeimdallToolsVersion } from '../utils/global';
 import { parseJson } from '../utils/parseJson';
-import { StatusMapping } from './checklist-jsonix-converter';
-import type {
-  ChecklistObject,
-  ChecklistVuln,
-} from './checklist-jsonix-converter';
 import {
   ChecklistJsonixConverter,
   EmptyChecklistObject,
+  StatusMapping,
   updateChecklistWithMetadata,
+} from './checklist-jsonix-converter';
+import type {
+  ChecklistObject,
+  ChecklistVuln,
 } from './checklist-jsonix-converter';
 import { throwIfInvalidAssetMetadata } from './checklist-metadata-utils';
 import type { Checklist } from './checklistJsonix';
@@ -33,6 +33,9 @@ enum ImpactMapping {
 }
 
 const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
+const FINDING_DETAILS_RE = /^(?<status>error|failed|passed|skipped) :: TEST (?<codeDesc>.*?)(?: :: (?<messageType>MESSAGE|SKIP_MESSAGE) (?<message>.*))?$/sv;
+const COMMENT_SECTION_SPLIT_RE = /\n(?=[A-Z]+ ::)/v;
+const COMMENT_SECTION_PARSE_RE = /(?<label>[A-Z]+) :: (?<data>.+)/sv;
 
 /**
  * Tranformer function that splits a string and return array
@@ -112,7 +115,9 @@ function computeSeverity(vuln: ChecklistVuln): string {
   const severityOverride = findSeverityOverride(vuln);
 
   let computed = severity;
-  if (severityOverride) { computed = severityOverride; }
+  if (severityOverride) {
+    computed = severityOverride;
+  }
 
   if (!(severities as readonly string[]).includes(computed)) {
     throw new Error(
@@ -131,7 +136,9 @@ function computeSeverity(vuln: ChecklistVuln): string {
  * @returns impact - number
  */
 function transformImpact(vuln: ChecklistVuln): number {
-  if (vuln.status === StatusMapping.Not_Applicable) { return 0; }
+  if (vuln.status === StatusMapping.Not_Applicable) {
+    return 0;
+  }
   const severity = computeSeverity(vuln);
   let impact: number = ImpactMapping[severity as keyof typeof ImpactMapping];
   const hdfExistingData = parseJson(vuln.thirdPartyTools);
@@ -141,7 +148,9 @@ function transformImpact(vuln: ChecklistVuln): number {
       'hdfSpecificData.impact',
       impact,
     );
-    if (typeof maybeImpact === 'number') { impact = maybeImpact; }
+    if (typeof maybeImpact === 'number') {
+      impact = maybeImpact;
+    }
   }
   if (!impact) {
     throw new Error(
@@ -199,11 +208,10 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const findings = input as unknown as ExecJSON.ControlResult[];
   const results: ExecJSON.ControlResult[] = [];
   const findingDetails = findings[0].code_desc;
-  const regex
-    = /^(error|failed|passed|skipped) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*))?$/sv;
+  const regex = FINDING_DETAILS_RE;
 
   // check if code_desc is empty or does not match the above regular expression
-  if (new RegExp(regex).test(findingDetails)) {
+  if (regex.test(findingDetails)) {
     // split into multiple findings details using heimdall2 CKLExport functionality
     for (const details of findingDetails.split(
       '\n--------------------------------\n',
@@ -214,10 +222,10 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
       // followed by any number of characters representing the message
       // split details for status
       const match = regex.exec(details.trim());
-      if (match) {
-        const [, mStatus, mCode_dec, messageType, mMessage] = match;
+      if (match?.groups) {
+        const { codeDesc, message: mMessage, messageType, status: mStatus } = match.groups;
         results.push({
-          code_desc: mCode_dec,
+          code_desc: codeDesc,
           message: checkMessage('MESSAGE', messageType, mMessage),
           skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage),
           start_time: '',
@@ -244,10 +252,10 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   if (!commentString) {
     return results;
   } else if (commentString.includes(' :: ')) {
-    for (const section of commentString.split(/\n(?=[A-Z]+ ::)/v)) {
-      const matches = new RegExp(/([A-Z]+) :: (.+)/s).exec(section);
-      if (matches) {
-        const [, label, data] = matches;
+    for (const section of commentString.split(COMMENT_SECTION_SPLIT_RE)) {
+      const matches = COMMENT_SECTION_PARSE_RE.exec(section);
+      if (matches?.groups) {
+        const { data, label } = matches.groups;
         if (data) {
           results.push({ data, label: label.toLowerCase() });
         }
@@ -291,9 +299,13 @@ function getHdfSpecificDataAttribute(
   input: string,
 ): Record<string, any>[] | string | undefined {
   const data = parseJson(input);
-  if (!data.ok) { return undefined; }
+  if (!data.ok) {
+    return undefined;
+  }
   const hdfSpecificData = _.get(data.value, 'hdfSpecificData');
-  if (!_.isObject(hdfSpecificData)) { return undefined; }
+  if (!_.isObject(hdfSpecificData)) {
+    return undefined;
+  }
   return _.get(hdfSpecificData, attribute);
 }
 
@@ -448,7 +460,9 @@ export class ChecklistMapper extends BaseConverter {
                     data.value,
                     'hdfSpecificData.code',
                   ) as unknown as string;
-                  if (code) { return code; }
+                  if (code) {
+                    return code;
+                  }
                 }
                 return JSON.stringify(vulnerability, null, 2);
               },

@@ -14,9 +14,9 @@ export class NessusPluginsNistMapping {
     this.data = [];
 
     if (Array.isArray(data)) {
-      data.forEach((line: INESSUSJSONID) => {
+      for (const line of data) {
         this.data.push(new NessusPluginsNistMappingItem(line));
-      });
+      }
     }
   }
 

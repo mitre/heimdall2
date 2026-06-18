@@ -24,6 +24,13 @@ import {
 
 const logger = createWinstonLogger('SonarQube2HDF');
 
+function applyLineNumber(snippet: string): string {
+  return snippet
+    .split('\n')
+    .map((l, i) => `${i + 1} ${l}`)
+    .join('\n');
+}
+
 // the Sonarqube schema typings are meant to support the four versions out right now (8, 9, 10, and 2025/25).  9 and 25 are supposed to be LTS releases.  8 is currently used by the Sonarcloud deployment though Sonarqube POCs say that it is no longer supported / they do not see many deployments of it.
 enum SonarqubeVersion {
   Eight = '8.0.0',
@@ -787,7 +794,7 @@ export class SonarqubeResults {
     this.axiosClient = axios.create();
     const MAX_RETRIES = 5;
     this.axiosClient.defaults.raxConfig = {
-      onError: async (e) => {
+      onError: (e) => {
         const cfg = rax.getConfig(e);
         if (
           cfg?.currentRetryAttempt !== null
@@ -969,11 +976,6 @@ export class SonarqubeResults {
           );
         });
     };
-    const applyLineNumber = (snippet: string): string =>
-      snippet
-        .split('\n')
-        .map((l, i) => `${i + 1} ${l}`)
-        .join('\n');
     const getContextualizedSnippet = (
       fullFiles: Record<string, string>,
       component: string,
@@ -1346,7 +1348,7 @@ function parseOwaspTags<T extends SonarqubeVersion>(
   if (rule.descriptionSections) {
     searchSpace += rule.descriptionSections.map(s => s.content).join('');
   }
-  const searchSpaceMatches = Array.from(searchSpace.matchAll(/> ?OWASP.*?(Top .*?A\d\d?)/gv), m => m[1]); // get the capture group which looks like 'Top 10 2021 Category A1'
+  const searchSpaceMatches = Array.from(searchSpace.matchAll(/> ?OWASP.*?(?<topCategory>Top .*?A\d\d?)/gv), m => m.groups!.topCategory);
   const sysTagMatches = parseOwaspInSysTags<T>(issue);
   const totalMatches = [...searchSpaceMatches, ...sysTagMatches];
 

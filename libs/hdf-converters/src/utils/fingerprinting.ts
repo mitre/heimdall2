@@ -1,5 +1,9 @@
 import * as _ from 'lodash';
 
+const XCCDF_XMLNS_RE = /xmlns.*http.*\/xccdf/v;
+const NETSPARKER_RE = /<netsparker-.*generated.*>/v;
+const INVICTI_RE = /<invicti-.*generated.*>/v;
+
 export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
@@ -112,20 +116,18 @@ export function fingerprint(guessOptions: {
   try {
     const parsed = JSON.parse(guessOptions.data);
     const object = Array.isArray(parsed) ? parsed[0] : parsed;
-    // Find the fingerprints that have the most matches
-    const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
-      (a, b) => {
-        return a[1].filter(value => _.get(object, value)).length
-          > b[1].filter(value => _.get(object, value)).length
-          ? { ...a, count: a[1].filter(value => _.get(object, value)).length }
-          : {
-            ...b,
-            count: b[1].filter(value => _.get(object, value)).length,
-          };
-      },
-    ) as unknown as INPUT_TYPES[] & { count: number };
-    const result = fingerprinted[0];
-    if (fingerprinted.count !== 0) {
+    // Find the fingerprint with the most matches
+    let bestType: INPUT_TYPES = INPUT_TYPES.NOT_FOUND;
+    let bestCount = 0;
+    for (const [type, keys] of Object.entries(fileTypeFingerprints) as [INPUT_TYPES, string[]][]) {
+      const matchCount = keys.filter(value => _.get(object, value)).length;
+      if (matchCount > bestCount) {
+        bestType = type;
+        bestCount = matchCount;
+      }
+    }
+    const result = bestType;
+    if (bestCount !== 0) {
       return result;
     }
   } catch {
@@ -134,13 +136,13 @@ export function fingerprint(guessOptions: {
     if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
       return INPUT_TYPES.NESSUS;
     } else if (
-      /xmlns.*http.*\/xccdf/v.test(guessOptions.data) // Keys matching (hopefully) all xccdf formats
+      XCCDF_XMLNS_RE.test(guessOptions.data)
       || guessOptions.filename.toLowerCase().includes('xccdf')
     ) {
       return INPUT_TYPES.XCCDF;
     } else if (
-      /<netsparker-.*generated.*>/v.test(guessOptions.data)
-      || /<invicti-.*generated.*>/v.test(guessOptions.data)
+      NETSPARKER_RE.test(guessOptions.data)
+      || INVICTI_RE.test(guessOptions.data)
     ) {
       return INPUT_TYPES.NETSPARKER;
     } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {

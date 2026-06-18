@@ -10,6 +10,8 @@ import { data as NistCciMappingData } from '../mappings/NistCciMappingData';
 
 export const HeimdallToolsVersion: string = packageJson.version;
 
+const NIST_BASE_TAG_RE = /\w{2}-\d{1,3}/v;
+
 // DEFAULT_NIST_TAG is applicable to all automated configuration tests.
 // SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
 export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
@@ -18,7 +20,7 @@ export const DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS
   = DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS.flatMap(tag => NistCciMappingData[tag]);
 
 // REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
-// SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
+// SI-2 (FLAW REMEDIATION) - RA-5 (VULNERABILITY SCANNING)
 export const DEFAULT_UPDATE_REMEDIATION_NIST_TAGS = ['SI-2', 'RA-5'];
 
 // Applicable to dependency management
@@ -27,7 +29,7 @@ export const DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS = [
 ];
 
 // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
-export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /\{\{\{slash\}\}\}/gi;
+export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /\{\{\{slash\}\}\}/giv;
 
 // Using the spread operator on a falsy value within an object does nothing.  It is possible to use that syntactic behavior to conditionally add attributes to an object by writing something as follows: {...(condition && {attributeName: attribute})} which returns {} if condition is falsy and {attributeName: attribute} otherwise.  Use this function to replace the stuff in the parentheses to save cognitive complexity marks when sonarqube complains.
 export function conditionallyProvideAttribute(
@@ -68,7 +70,7 @@ export function filterString(input: string): string | undefined {
 export function getCCIsForNISTTags(nistTags: string[]): string[] {
   const cciTags: string[] = [];
   for (const nistTag of nistTags) {
-    const baseTag = /\w{2}-\d{1,3}/v.exec(nistTag);
+    const baseTag = NIST_BASE_TAG_RE.exec(nistTag);
     if (
       Array.isArray(baseTag)
       && baseTag.length > 0
@@ -87,8 +89,7 @@ export function getDescription(
     | Record<string, string>,
   key: string,
 ): string | undefined {
-  let found: string | undefined;
-  found = Array.isArray(descriptions)
+  const found: string | undefined = Array.isArray(descriptions)
     ? descriptions.find(
       (description: ExecJSON.ControlDescription) =>
         description.label.toLowerCase() === key,

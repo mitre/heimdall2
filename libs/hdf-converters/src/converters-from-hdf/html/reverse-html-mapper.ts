@@ -510,15 +510,9 @@ export class FromHDFToHTMLMapper {
     heightPx = 24,
     description?: string,
   ): string {
-    let imgLabel;
-    // Check if description is included in function call
-    // If so, include description as title/aria-label
-    if (description) {
-      imgLabel = `title="${description}" aria-label="${description}"`;
-      // Else hide aria
-    } else {
-      imgLabel = 'aria-hidden="true"';
-    }
+    const imgLabel = description
+      ? `title="${description}" aria-label="${description}"`
+      : 'aria-hidden="true"';
     return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" ${imgLabel}><path fill="${fill}" d="${iconData}"/></svg>`;
   }
 
@@ -534,7 +528,7 @@ export class FromHDFToHTMLMapper {
   }
 
   // Prompt HTML generation from data pulled from file during constructor initialization
-  async toHTML(): Promise<string> {
+  toHTML(): string {
     // Pull export template + styles and create outputData object containing data to fill template with
     const template = html;
     this.outputData.tailwindStyles = css;

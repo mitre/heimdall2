@@ -16,9 +16,9 @@ export class CweNistMapping {
     this.data = [];
 
     if (Array.isArray(data)) {
-      data.forEach((line: ICWEJSONID) => {
+      for (const line of data) {
         this.data.push(new CweNistMappingItem(line));
-      });
+      }
     }
   }
 

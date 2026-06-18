@@ -29,6 +29,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING = new OwaspNistMapping();
+const FIRST_CHAR_RE = /^./v;
 
 let parseHtml: (input: unknown) => string;
 
@@ -50,7 +51,7 @@ export class NetsparkerMapper extends BaseConverter {
   defineMappings(
     toolname: string,
   ): MappedTransform<ExecJSON.Execution & { passthrough: unknown }, ILookupPath> {
-    const capitalizedToolname = toolname.replace(/^./, firstLetter =>
+    const capitalizedToolname = toolname.replace(FIRST_CHAR_RE, firstLetter =>
       firstLetter.toUpperCase(),
     );
     return {
@@ -146,7 +147,7 @@ export class NetsparkerMapper extends BaseConverter {
           title: {
             path: `${toolname}-enterprise.target`,
             transformer: (input: unknown): string => {
-              return `${toolname.replace(/^./, firstLetter =>
+              return `${toolname.replace(FIRST_CHAR_RE, firstLetter =>
                 firstLetter.toUpperCase(),
               )} Enterprise Scan ID: ${_.get(input, 'scan-id')} URL: ${_.get(
                 input,
@@ -183,9 +184,10 @@ function formatCheck(vulnerability: unknown): string {
   return parseHtml(text.join('<br>'));
 }
 function formatCodeDesc(request: unknown): string {
-  const text: string[] = [];
-  text.push(`http-request : ${_.get(request, 'content')}`);
-  text.push(`method : ${_.get(request, 'method')}`);
+  const text: string[] = [
+    `http-request : ${_.get(request, 'content')}`,
+    `method : ${_.get(request, 'method')}`,
+  ];
   return text.join('\n');
 }
 function formatControlDesc(vulnerability: unknown): string {
@@ -257,10 +259,11 @@ function formatFix(vulnerability: unknown): string {
 }
 
 function formatMessage(response: unknown): string {
-  const text: string[] = [];
-  text.push(`http-response : ${_.get(response, 'content')}`);
-  text.push(`duration : ${_.get(response, 'duration')}`);
-  text.push(`status-code  : ${_.get(response, 'status-code')}`);
+  const text: string[] = [
+    `http-response : ${_.get(response, 'content')}`,
+    `duration : ${_.get(response, 'duration')}`,
+    `status-code  : ${_.get(response, 'status-code')}`,
+  ];
   return text.join('\n');
 }
 

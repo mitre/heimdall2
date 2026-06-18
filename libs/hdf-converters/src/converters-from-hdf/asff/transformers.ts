@@ -124,7 +124,9 @@ export function createProfileInfoFinding(
 export function statusCount(evaluation: ContextualizedEvaluation): Counts {
   let controls: ContextualizedControl[] = [];
   // Get all controls
-  for (const p of evaluation.contains) { controls.push(...p.contains); }
+  for (const p of evaluation.contains) {
+    controls.push(...p.contains);
+  }
   controls = filter_overlays(controls);
   const statusCounts: Counts = {
     Failed: 0,
@@ -573,14 +575,10 @@ export function setupFindingType(
   const typesArr = [
     `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
     `File/Input/${getFilename(context?.ioptions)}`,
+    ...createControlMetadata(control),
+    ...createSegmentInfo(control.result),
+    ...createTagInfo(control),
   ];
-
-  // Add control metadata to the Finding Provider Fields
-  typesArr.push(...createControlMetadata(control));
-  // Add segment/result information to Finding Provider Fields
-  typesArr.push(...createSegmentInfo(control.result));
-  // Add Tags to Finding Provider Fields
-  typesArr.push(...createTagInfo(control));
 
   // nist tag, then subdescriptions, then remaining tags
   const nistTagIndex = typesArr.findIndex(typeString =>

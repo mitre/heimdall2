@@ -155,11 +155,11 @@ export class PrismaMapper {
   toHdf(): ExecJSON.Execution[] {
     const executions: ExecJSON.Execution[] = [];
     const hostnameToControls: Record<string, PrismaControl[]> = {};
-    this.data.forEach((record: PrismaControl) => {
+    for (const record of this.data) {
       hostnameToControls[record.Hostname]
         = hostnameToControls[record.Hostname] || [];
       hostnameToControls[record.Hostname].push(record);
-    });
+    }
     for (const [hostname, controls] of Object.entries(hostnameToControls)) {
       const converted = new PrismaControlMapper(controls).toHdf();
       _.set(converted, 'platform.target_id', hostname);

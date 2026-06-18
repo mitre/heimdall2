@@ -20,18 +20,18 @@ export type MappedReform<T, U> = {
       ? MappedReform<T[K] & U, U>
       : Exclude<T[K], U>;
 };
-/* eslint-disable @typescript-eslint/ban-types */
 export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], null | undefined> extends any[]
     ? MappedTransform<T[K], U>
-    : T[K] extends Function
+    : T[K] extends (...args: any[]) => any
       ? T[K]
       : T[K] extends object
         ? MappedTransform<T[K] & U, U>
         : T[K] | U;
 };
 export type ObjectEntryValue<T> = { [K in keyof T]: readonly [K, T[K]] }[keyof T];
-/* eslint-enable @typescript-eslint/ban-types */
+
+const identityTransformer = (val: unknown) => val;
 
 export class BaseConverter<D = Record<string, unknown>> {
   collapseResults: boolean;
@@ -75,7 +75,7 @@ export class BaseConverter<D = Record<string, unknown>> {
 
     const hasTransformer
       = _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
-    let transformer = (val: unknown) => val;
+    let transformer = identityTransformer;
     if (hasTransformer) {
       transformer = _.get(v, 'transformer') as any;
       v = _.omit(v as object, 'transformer') as T;
@@ -162,8 +162,7 @@ export class BaseConverter<D = Record<string, unknown>> {
             ? (_.omit(element, ['arrayTransformer']) as ILookupPath & T)
             : element;
         });
-        let output: T[] = [];
-        output.push(this.evaluate(file, lookupPath) as T);
+        let output: T[] = [this.evaluate(file, lookupPath) as T];
         if (arrayTransformer !== undefined) {
           output = Array.isArray(arrayTransformer)
             ? arrayTransformer[0].apply(arrayTransformer[1], [
@@ -249,8 +248,7 @@ export class BaseConverter<D = Record<string, unknown>> {
   }
 
   hasPath(file: Record<string, unknown>, path: string | string[]): boolean {
-    let pathArray;
-    pathArray = typeof path === 'string' ? [path] : path;
+    const pathArray = typeof path === 'string' ? [path] : path;
 
     return _.some(pathArray, (p) => {
       return p.startsWith('$.') ? _.has(this.data, p.slice(2)) : _.has(file, p);
@@ -324,7 +322,7 @@ export function parseCsv(csv: string): unknown[] {
   const result = Papa.parse(csv.trim(), { header: true });
 
   if (result.errors.length > 0) {
-    throw result.errors;
+    throw new Error(`CSV parse errors: ${JSON.stringify(result.errors)}`);
   }
 
   return result.data;
@@ -348,7 +346,6 @@ export function parseXml(
   return parser.parse(xml);
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 function collapseDuplicates<T extends object>(
   array: T[],
   key: string,
@@ -357,7 +354,7 @@ function collapseDuplicates<T extends object>(
   const seen = new Map<string, number>();
   const newArray: T[] = [];
   let counter = 0;
-  array.forEach((item: T) => {
+  for (const item of array) {
     const propertyValue = _.get(item, key);
     if (typeof propertyValue === 'string') {
       const index = seen.get(propertyValue) || 0;
@@ -392,6 +389,6 @@ function collapseDuplicates<T extends object>(
         counter++;
       }
     }
-  });
+  }
   return newArray;
 }

@@ -20,8 +20,7 @@ export class OwaspNistMapping {
   }
 
   nistFilterNoDefault(identifiers: string | string[]): string[] {
-    let ids: string[] = [];
-    ids = Array.isArray(identifiers) ? identifiers : [identifiers];
+    const ids: string[] = Array.isArray(identifiers) ? identifiers : [identifiers];
 
     return _.uniq(
       _.compact(

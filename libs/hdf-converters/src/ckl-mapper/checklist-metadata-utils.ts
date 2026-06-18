@@ -3,6 +3,8 @@ import * as Revalidator from 'revalidator';
 import { isFQDN, isIP, isMACAddress } from 'validator';
 import type { Result } from '../utils/result';
 import type { ChecklistMetadata, StigMetadata } from './checklist-jsonix-converter';
+
+const WHITESPACE_OR_COMMA_RE = /[\s,]+/v;
 import type { Asset } from './checklistJsonix';
 import { Assettype, Role, Techarea } from './checklistJsonix';
 
@@ -23,9 +25,11 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
     },
     hostip: {
       conform: (ip: string) => {
-        if (!ip) { return true; } // Allow empty input
+        if (!ip) {
+          return true;
+        } // Allow empty input
         // Split the input string by newline, space, or comma
-        const ipAddresses = ip.split(/[\s,]+/v);
+        const ipAddresses = ip.split(WHITESPACE_OR_COMMA_RE);
         // Check each IP address using the isIP function
         return ipAddresses.every(address => isIP(address));
       },
@@ -35,9 +39,11 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
     },
     hostmac: {
       conform: (mac: string) => {
-        if (!mac) { return true; } // Allow empty input
+        if (!mac) {
+          return true;
+        } // Allow empty input
         // Split the input string by newline, space, or comma
-        const macAddresses = mac.split(/[\s,]+/v);
+        const macAddresses = mac.split(WHITESPACE_OR_COMMA_RE);
         // Check each MAC address using the isMACAddress function
         return macAddresses.every(address => isMACAddress(address));
       },
@@ -87,7 +93,9 @@ export function validateChecklistAssetMetadata(
 ): Result<true, { invalid: string[]; message: string }> {
   const errors = Revalidator.validate(asset, assetMetadataSchema).errors;
 
-  if (errors.length === 0) { return { ok: true, value: true }; }
+  if (errors.length === 0) {
+    return { ok: true, value: true };
+  }
   // formats errors as: invalidField (invalidValue), otherInvalidField (otherValue), ...
   const invalidFields = errors.map(
     e => `${e.message} (${_.get(asset, e.property)})`,
@@ -101,7 +109,9 @@ export function validateChecklistProfileMetadata(
 ): Result<true, { invalid: string[]; message: string }> {
   const errors = Revalidator.validate(metadata, { ...profileMetadataSchema }).errors;
 
-  if (errors.length === 0) { return { ok: true, value: true }; }
+  if (errors.length === 0) {
+    return { ok: true, value: true };
+  }
   // formats errors as: invalidField (invalidValue), otherInvalidField (otherValue), ...
   const invalidFields = errors.map(
     e => `${e.message} (${_.get(metadata, e.property)})`,
@@ -135,7 +145,9 @@ export function validateChecklistMetadata(
     }
   }
 
-  if (invalid.length === 0) { return { ok: true, value: true }; }
+  if (invalid.length === 0) {
+    return { ok: true, value: true };
+  }
 
   const message = messages.join('\n');
   return { error: { invalid, message }, ok: false };
@@ -152,5 +164,7 @@ export function throwIfInvalidProfileMetadata(profileMetadata?: StigMetadata) {
 
 export function throwIfInvalidAssetMetadata(metadata: Asset) {
   const result = validateChecklistAssetMetadata(metadata);
-  if (!result.ok) { throw new InvalidChecklistMetadataException(result.error.message); }
+  if (!result.ok) {
+    throw new InvalidChecklistMetadataException(result.error.message);
+  }
 }

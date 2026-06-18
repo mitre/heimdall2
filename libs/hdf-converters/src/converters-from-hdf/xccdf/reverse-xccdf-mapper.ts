@@ -84,7 +84,7 @@ function toMessageLine(segment: ExecJSON.ControlResult): string {
 }
 
 function getMessages(segments: ExecJSON.ControlResult[]) {
-  return segments.map(toMessageLine).join('\n\n');
+  return segments.map(segment => toMessageLine(segment)).join('\n\n');
 }
 
 export class FromHDFToXCCDFMapper {
@@ -140,12 +140,12 @@ export class FromHDFToXCCDFMapper {
         'xccdf_hdf_group_'
         + control.id
           .replaceAll('_', '-') // Prevents STIG Viewer from parsing IDs incorrectly when there is underscores after group_
-          .replaceAll(/[^\w-.]/g, '_'), // Change everything that isn't a word, underscore, or dash into an underscore
+          .replaceAll(/[^\w\-.]/gv, '_'), // Change everything that isn't a word, underscore, or dash into an underscore
       gtitle: control.tags.gtitle || control.title,
       id:
         'xccdf_hdf_rule_'
         + (control.tags.rid
-          || control.id.replaceAll('_', '-').replaceAll(/[^\w-.]/g, '_') + '_rule'),
+          || control.id.replaceAll('_', '-').replaceAll(/[^\w\-.]/gv, '_') + '_rule'),
       severity: this.getSeverity(control),
       tags: Object.entries(control.tags)
         .filter(([key]) => !knownDescriptions.has(key))
@@ -164,7 +164,7 @@ export class FromHDFToXCCDFMapper {
         + (control.tags.rid
           || control.id
             .replaceAll('_', '-') // Prevent STIG Viewer from parsing IDs incorrectly when there is underscores after rule_
-            .replaceAll(/[^\w-.]/g, '_') + '_rule'),
+            .replaceAll(/[^\w\-.]/gv, '_') + '_rule'),
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
       result: getXCCDFResult(control),
@@ -258,13 +258,13 @@ export class FromHDFToXCCDFMapper {
         id:
           'xccdf_mitre.hdf-converters_profile_hdf2xccdf_'
           // Replace all non-word characters and spaces with underscores
-          + (profile.title?.replaceAll(/[^\w-.]/g, '_') || 'profile_missing_title'),
+          + (profile.title?.replaceAll(/[^\w\-.]/gv, '_') || 'profile_missing_title'),
         // All control IDs
         select: profile.controls.map(
           control =>
             'xccdf_hdf_rule_'
             + (control.tags.rid
-              || control.id.replaceAll('_', '-').replaceAll(/[^\w-.]/g, '_') + '_rule'),
+              || control.id.replaceAll('_', '-').replaceAll(/[^\w\-.]/gv, '_') + '_rule'),
         ),
         title: profile.title || '',
       });

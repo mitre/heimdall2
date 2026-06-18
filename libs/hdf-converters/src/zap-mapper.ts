@@ -154,10 +154,11 @@ export class ZapResults {
   }
 }
 function checkText(input: Record<string, unknown>): string {
-  const text = [];
-  text.push(_.get(input, 'solution'));
-  text.push(_.get(input, 'otherinfo'));
-  text.push(_.get(input, 'otherinfo'));
+  const text = [
+    _.get(input, 'solution'),
+    _.get(input, 'otherinfo'),
+    _.get(input, 'otherinfo'),
+  ];
   return text.join('\n');
 }
 function deduplicateId(input: unknown[]): ExecJSON.Control[] {
@@ -187,15 +188,16 @@ function filterSite<T>(input: T[], name?: string) {
     return input.find(
       element => (_.get(element, '@name') as unknown as string) === name,
     );
-  }
-  // Otherwise choose the site with the most alerts
-  else {
-    return input.reduce((a, b) =>
-      (_.get(a, 'alerts') as unknown as Record<string, unknown>[]).length
-      > (_.get(b, 'alerts') as unknown as Record<string, unknown>[]).length
-        ? a
-        : b,
-    );
+  } else {
+    // Otherwise choose the site with the most alerts
+    let best = input[0];
+    for (const item of input) {
+      if ((_.get(item, 'alerts') as unknown as Record<string, unknown>[]).length
+        > (_.get(best, 'alerts') as unknown as Record<string, unknown>[]).length) {
+        best = item;
+      }
+    }
+    return best;
   }
 }
 function formatCodeDesc(input: unknown): string {

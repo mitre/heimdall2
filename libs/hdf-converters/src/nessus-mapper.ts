@@ -100,10 +100,10 @@ export class NessusMapper extends BaseConverter {
                 message: {
                   path: ['plugin_output', COMPLIANCE_ACTUAL_VALUE],
                   transformer: (value: unknown) => {
-                    if (value === null || value === undefined) {
+                    if (value == null) {
                       return value;
                     }
-                    return String(value);
+                    return typeof value === 'string' ? value : JSON.stringify(value);
                   },
                 },
                 start_time: {
@@ -183,13 +183,13 @@ export class NessusResults {
       'NessusClientData_v2.Report.ReportHost',
     );
     if (Array.isArray(reportHost)) {
-      reportHost.forEach((element: Record<string, unknown>) => {
+      for (const element of reportHost) {
         const entry = new NessusMapper(element, this.withRaw);
         if (this.customMapping !== undefined) {
           entry.setMappings(this.customMapping);
         }
         results.push(entry.toHdf());
-      });
+      }
       return results;
     } else {
       const result = new NessusMapper(
@@ -222,9 +222,9 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
         element.tags = _.omit(element.tags, 'stig_id');
       }
       element.refs = element.refs.filter(ref => ref.url);
-      if (element.descriptions !== undefined && element.descriptions !== null) {
+      if (element.descriptions != null) {
         element.descriptions = element.descriptions.filter(
-          description => description && description.data,
+          description => description?.data,
         );
       }
     }
@@ -235,11 +235,12 @@ function formatCodeDesc(item: unknown): string {
   return _.has(item, 'description') ? parseHtml(_.get(item, 'description') || NA_PLUGIN_OUTPUT) : parseHtml(_.get(item, 'plugin_output') || NA_PLUGIN_OUTPUT);
 }
 function formatDesc(issue: unknown): string {
-  const desc = [];
-  desc.push(`Plugin Family: ${_.get(issue, 'pluginFamily')}`);
-  desc.push(`Port: ${_.get(issue, 'port')}`);
-  desc.push(`Protocol: ${_.get(issue, 'protocol')}`);
-  return desc.join('; ') + ';';
+  const desc = [
+    `Plugin Family: ${_.get(issue, 'pluginFamily')}`,
+    `Port: ${_.get(issue, 'port')}`,
+    `Protocol: ${_.get(issue, 'protocol')}`,
+  ];
+  return `${desc.join('; ')};`;
 }
 function getCci(item: unknown): string[] {
   return _.has(item, COMPLIANCE_PATH) ? parseRef(_.get(item, COMPLIANCE_PATH), 'CCI') : [];

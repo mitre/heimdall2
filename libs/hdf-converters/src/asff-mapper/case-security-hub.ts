@@ -2,6 +2,7 @@ import { encode } from 'html-entities';
 import * as _ from 'lodash';
 import { AwsConfigMapping } from '../mappings/AwsConfigMapping';
 const FINDING_STANDARDS_CONTROL_ARN = 'ProductFields.StandardsControlArn';
+const WHITESPACE_RE = /\s+/v;
 
 function correspondingControl(controls: unknown[], finding: unknown) {
   return controls.find(
@@ -21,6 +22,7 @@ function securityhubSupportingDocs(standards: string[] | undefined) {
   } catch (error) {
     throw new Error(
       `Invalid supporting docs for Security Hub:\nException: ${error}`,
+      { cause: error },
     );
   }
   const AWS_CONFIG_MAPPING = new AwsConfigMapping();
@@ -114,8 +116,7 @@ function productName(
   const finding = Array.isArray(findings) ? findings[0] : findings;
   // `${_.get(findings[0], 'ProductFields.aws/securityhub/CompanyName')} ${_.get(findings[0], 'ProductFields.aws/securityhub/ProductName')}`
   // not using above due to wanting to provide the standard's name instead
-  let standardName: string;
-  standardName = ((_.get(finding, 'Types[0]') as string)
+  const standardName = ((_.get(finding, 'Types[0]') as string)
     .split('/')
     .at(-1) ?? '')
     .replaceAll('-', ' ')
@@ -133,7 +134,7 @@ function productName(
       .split('/')
       .slice(-4)[0]
       .replaceAll('-', ' ')
-      .split(/\s+/v)
+      .split(WHITESPACE_RE)
       .map((element: string) => {
         return element.charAt(0).toUpperCase() + element.slice(1);
       })

@@ -112,23 +112,20 @@ function compileFindings(
   return Object.fromEntries([['data', output]]);
 }
 function formatDesc(entry: unknown): string {
-  const text = [];
-  text.push(`Task : ${_.get(entry, 'Task')}`);
-  text.push(`Check Category : ${_.get(entry, 'Check Category')}`);
+  const text = [
+    `Task : ${_.get(entry, 'Task')}`,
+    `Check Category : ${_.get(entry, 'Check Category')}`,
+  ];
   return text.join('; ');
 }
 function formatSummary(entry: unknown): string {
-  const text = [];
-  text.push(`Organization : ${_.get(entry, 'Organization')}`);
-  text.push(`Asset : ${_.get(entry, 'Check Asset')}`);
-  text.push(`Asset Type : ${_.get(entry, 'Asset Type')}`);
-  text.push(`IP Address, Port, Instance : ${_.get(entry, 'Asset Type')}`);
-  text.push(
-    `IP Address, Port, Instance : ${_.get(
-      entry,
-      'IP Address, Port, Instance',
-    )} `,
-  );
+  const text = [
+    `Organization : ${_.get(entry, 'Organization')}`,
+    `Asset : ${_.get(entry, 'Check Asset')}`,
+    `Asset Type : ${_.get(entry, 'Asset Type')}`,
+    `IP Address, Port, Instance : ${_.get(entry, 'Asset Type')}`,
+    `IP Address, Port, Instance : ${_.get(entry, 'IP Address, Port, Instance')} `,
+  ];
   return text.join('\n');
 }
 function getStatus(input: unknown): ExecJSON.ControlResultStatus {

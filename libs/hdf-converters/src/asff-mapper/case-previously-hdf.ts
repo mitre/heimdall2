@@ -37,7 +37,9 @@ function objectifyTypesArray(
         );
         try {
           parsed = JSON.parse(parsed);
-        } catch {}
+        } catch {
+          // Value is not JSON — use as-is
+        }
         return { [type]: { [attribute]: parsed } };
       })(),
     );
@@ -71,7 +73,7 @@ function findExecutionFindingIndex(
 function preprocessingASFF(
   asff: Record<string, unknown>,
 ): Record<string, unknown> {
-  const clone = _.cloneDeep(asff);
+  const clone = structuredClone(asff);
   const index = findExecutionFindingIndex(clone);
   _.pullAt(_.get(clone, 'Findings') as Record<string, unknown>[], index);
   return clone;
@@ -85,7 +87,7 @@ function supportingDocs(
 ): Map<SpecialCasing, Record<string, Record<string, unknown>>> {
   const [asff, docs] = input;
   const index = findExecutionFindingIndex(asff);
-  const docsClone = _.cloneDeep(docs);
+  const docsClone = structuredClone(docs);
   docsClone.set(SpecialCasing.PreviouslyHDF, { execution: _.get(asff, `Findings[${index}]`) as Record<string, unknown> });
   return docsClone;
 }

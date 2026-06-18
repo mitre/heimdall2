@@ -29,10 +29,11 @@ function impactMapping(severity: unknown): number {
   return typeof severity === 'string' || typeof severity === 'number' ? IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0.1 : 0.1;
 }
 function formatCodeDesc(input: unknown): string {
-  const output = [];
-  output.push(`URL : ${_.get(input, 'artifactLocation.uri')}`);
-  output.push(`LINE : ${_.get(input, 'region.startLine')}`);
-  output.push(`COLUMN : ${_.get(input, 'region.startColumn')}`);
+  const output = [
+    `URL : ${_.get(input, 'artifactLocation.uri')}`,
+    `LINE : ${_.get(input, 'region.startLine')}`,
+    `COLUMN : ${_.get(input, 'region.startColumn')}`,
+  ];
   return output.join(' ');
 }
 function nistTag(text: string): string[] {
