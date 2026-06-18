@@ -191,32 +191,44 @@ M3's 5-tier system requires maintaining a full tone scale per color. For a self-
 
 All status/severity colors are CSS custom properties in `:root`. The mapper's SVG icons use `fill="currentColor"` and inherit from parent elements via the CSS token system.
 
-### 3.2 Values (Primer-anchored, WCAG AA verified)
+**Source:** `apps/frontend/src/plugins/vuetify.ts` lines 5-58 — the Vuetify theme defines status/severity/compliance using Material Design color constants. The HTML export tokens are derived from the same Material palette for consistency between the live app and exported reports.
 
-**Status colors — anchored on GitHub Primer's verified AA palette:**
+### 3.2 Values (Material Design palette, WCAG AA verified)
 
-| Token | Light | Dark | Used for |
-|-------|-------|------|----------|
-| `--st-pass-fg` | `#1a7f37` | `#3fb950` | Passed text/icon |
-| `--st-pass-bg` | `#dafbe1` | `#132d1c` | Passed badge background |
-| `--st-fail-fg` | `#b3202a` | `#f85149` | Failed text/icon |
-| `--st-fail-bg` | `#ffebe9` | `#3a1517` | Failed badge background |
-| `--st-na-fg` | `#59636e` | `#8b949e` | Not Applicable text/icon |
-| `--st-na-bg` | `#eef1f4` | `#21262d` | Not Applicable badge background |
-| `--st-nr-fg` | `#9a4d00` | `#db8a30` | Not Reviewed text/icon |
-| `--st-nr-bg` | `#fff1e5` | `#2a1a0a` | Not Reviewed badge background |
-| `--st-error-fg` | `#6639ba` | `#a371f7` | Profile Error text/icon |
-| `--st-error-bg` | `#fbefff` | `#2a1a44` | Profile Error badge background |
+**Derivation strategy:** The Heimdall app uses Material 500-level colors on a dark background. These colors fail WCAG AA (4.5:1) on white backgrounds. The export supports light+dark+auto, so:
+- **Light mode fg:** Material 700-800 variants (darkened for WCAG AA on white)
+- **Dark mode fg:** Material 500 (exact app colors, designed for dark backgrounds)
+- **Badge bg:** Light tint (50-100 level) in light mode, deep tint in dark mode
 
-**Severity colors — cool-to-warm hue ramp:**
+**Status colors — Material Design, matching Heimdall dashboard:**
 
-| Token | Light | Dark | Used for |
-|-------|-------|------|----------|
-| `--sv-none-fg/bg` | `#59636e` / `#eef1f4` | `#8b949e` / `#21262d` | None severity |
-| `--sv-low-fg/bg` | `#1a5fb4` / `#ddf4ff` | `#58a6ff` / `#0d2b45` | Low severity |
-| `--sv-medium-fg/bg` | `#9a6700` / `#fff8c5` | `#d29922` / `#2e2410` | Medium severity |
-| `--sv-high-fg/bg` | `#bc4c00` / `#fff1e5` | `#db8a30` / `#3a2410` | High severity |
-| `--sv-critical-fg/bg` | `#b3202a` / `#ffebe9` | `#f85149` / `#3a1517` | Critical severity |
+| Token | Light fg | Light bg | Dark fg | Dark bg | Material source |
+|-------|----------|----------|---------|---------|-----------------|
+| `--st-pass-*` | `#388E3C` (700) | `#E8F5E9` (50) | `#4CAF50` (500) | `#1B3A1C` | `colors.green` |
+| `--st-fail-*` | `#D32F2F` (700) | `#FFEBEE` (50) | `#F44336` (500) | `#3A1517` | `colors.red` |
+| `--st-na-*` | `#0288D1` (700) | `#E1F5FE` (50) | `#03A9F4` (500) | `#0A2A3A` | `colors.lightBlue` |
+| `--st-nr-*` | `#F57C00` (700) | `#FFF3E0` (50) | `#FF9800` (500) | `#2A1A0A` | `colors.orange` |
+| `--st-error-*` | `#5C6BC0` (400) | `#E8EAF6` (50) | `#7986CB` (300) | `#1A1A3A` | `colors.indigo.lighten2` |
+
+**Severity colors — Material Design cool-to-warm hue ramp:**
+
+| Token | Light fg | Light bg | Dark fg | Dark bg | Material source |
+|-------|----------|----------|---------|---------|-----------------|
+| `--sv-none-*` | `#0288D1` | `#E1F5FE` | `#03A9F4` | `#0A2A3A` | `colors.lightBlue` |
+| `--sv-low-*` | `#F9A825` (800) | `#FFFDE7` (50) | `#FFEB3B` (500) | `#2E2A10` | `colors.yellow` |
+| `--sv-medium-*` | `#F57C00` (700) | `#FFF3E0` (50) | `#FF9800` (500) | `#2A1A0A` | `colors.orange` |
+| `--sv-high-*` | `#E64A19` (700) | `#FBE9E7` (50) | `#FF5722` (500) | `#3A1A10` | `colors.deepOrange` |
+| `--sv-critical-*` | `#D32F2F` (700) | `#FFEBEE` (50) | `#F44336` (500) | `#3A1517` | `colors.red` |
+
+**Compliance colors — Material 500 (used for ring/bar, not text):**
+
+| Level | Value | Material source |
+|-------|-------|-----------------|
+| Low | `#F44336` | `colors.red.base` |
+| Medium | `#FFEB3B` | `colors.yellow.base` |
+| High | `#4CAF50` | `colors.green.base` |
+
+**Note on N/A color:** The app uses **light blue** (`colors.lightBlue.base = #03A9F4`) for Not Applicable, not gray. This is a Heimdall convention — gray might be more semantically "neutral" but light blue is what users know from the dashboard.
 
 ### 3.3 Dark Mode Scoping Pattern
 

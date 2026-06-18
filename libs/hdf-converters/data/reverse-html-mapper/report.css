@@ -20,21 +20,26 @@
   --report-active-bg: rgba(var(--report-emphasis-rgb), 0.10);
   --report-border: rgba(var(--report-emphasis-rgb), 0.175);
 
-  --st-pass-fg: #1a7f37;   --st-pass-bg: #dafbe1;
-  --st-fail-fg: #b3202a;   --st-fail-bg: #ffebe9;
-  --st-na-fg: #59636e;     --st-na-bg: #eef1f4;
-  --st-nr-fg: #9a4d00;     --st-nr-bg: #fff1e5;
-  --st-error-fg: #6639ba;  --st-error-bg: #fbefff;
+  /* Status tokens — Material Design palette from Heimdall vuetify.ts.
+     Light fg: darkened (700-800) for WCAG AA on white. Dark fg: 500 (app colors).
+     Bg: light tint of the Material color for badge backgrounds. */
+  --st-pass-fg: #388E3C;   --st-pass-bg: #E8F5E9;
+  --st-fail-fg: #D32F2F;   --st-fail-bg: #FFEBEE;
+  --st-na-fg: #0288D1;     --st-na-bg: #E1F5FE;
+  --st-nr-fg: #F57C00;     --st-nr-bg: #FFF3E0;
+  --st-error-fg: #5C6BC0;  --st-error-bg: #E8EAF6;
 
-  --sv-none-fg: #59636e;     --sv-none-bg: #eef1f4;
-  --sv-low-fg: #1a5fb4;      --sv-low-bg: #ddf4ff;
-  --sv-medium-fg: #9a6700;   --sv-medium-bg: #fff8c5;
-  --sv-high-fg: #bc4c00;     --sv-high-bg: #fff1e5;
-  --sv-critical-fg: #b3202a; --sv-critical-bg: #ffebe9;
+  /* Severity tokens — Material palette, same derivation. */
+  --sv-none-fg: #0288D1;     --sv-none-bg: #E1F5FE;
+  --sv-low-fg: #F9A825;      --sv-low-bg: #FFFDE7;
+  --sv-medium-fg: #F57C00;   --sv-medium-bg: #FFF3E0;
+  --sv-high-fg: #E64A19;     --sv-high-bg: #FBE9E7;
+  --sv-critical-fg: #D32F2F; --sv-critical-bg: #FFEBEE;
 
-  --compliance-low: rgb(243, 67, 53);
-  --compliance-medium: rgb(255, 235, 59);
-  --compliance-high: rgb(76, 176, 79);
+  /* Compliance — Material 500 colors from vuetify.ts */
+  --compliance-low: #F44336;
+  --compliance-medium: #FFEB3B;
+  --compliance-high: #4CAF50;
 
   --print-muted: #555;
   --print-border: #ccc;
@@ -45,41 +50,43 @@
   :root:not([data-theme]) {
     --report-emphasis-rgb: 255, 255, 255;
 
-    --st-pass-fg: #3fb950;   --st-pass-bg: #132d1c;
-    --st-fail-fg: #f85149;   --st-fail-bg: #3a1517;
-    --st-na-fg: #8b949e;     --st-na-bg: #21262d;
-    --st-nr-fg: #db8a30;     --st-nr-bg: #2a1a0a;
-    --st-error-fg: #a371f7;  --st-error-bg: #2a1a44;
+    /* Dark fg: Material 500 — the exact Heimdall app colors (designed for dark bg).
+       Dark bg: deep tint of each color for badge backgrounds. */
+    --st-pass-fg: #4CAF50;   --st-pass-bg: #1B3A1C;
+    --st-fail-fg: #F44336;   --st-fail-bg: #3A1517;
+    --st-na-fg: #03A9F4;     --st-na-bg: #0A2A3A;
+    --st-nr-fg: #FF9800;     --st-nr-bg: #2A1A0A;
+    --st-error-fg: #7986CB;  --st-error-bg: #1A1A3A;
 
-    --sv-none-fg: #8b949e;     --sv-none-bg: #21262d;
-    --sv-low-fg: #58a6ff;      --sv-low-bg: #0d2b45;
-    --sv-medium-fg: #d29922;   --sv-medium-bg: #2e2410;
-    --sv-high-fg: #db8a30;     --sv-high-bg: #3a2410;
-    --sv-critical-fg: #f85149; --sv-critical-bg: #3a1517;
+    --sv-none-fg: #03A9F4;     --sv-none-bg: #0A2A3A;
+    --sv-low-fg: #FFEB3B;      --sv-low-bg: #2E2A10;
+    --sv-medium-fg: #FF9800;   --sv-medium-bg: #2A1A0A;
+    --sv-high-fg: #FF5722;     --sv-high-bg: #3A1A10;
+    --sv-critical-fg: #F44336; --sv-critical-bg: #3A1517;
 
-    --compliance-low: #f87171;
-    --compliance-medium: #fbbf24;
-    --compliance-high: #4ade80;
+    --compliance-low: #F44336;
+    --compliance-medium: #FFEB3B;
+    --compliance-high: #4CAF50;
   }
 }
 [data-theme="dark"] {
   --report-emphasis-rgb: 255, 255, 255;
 
-  --st-pass-fg: #3fb950;   --st-pass-bg: #132d1c;
-  --st-fail-fg: #f85149;   --st-fail-bg: #3a1517;
-  --st-na-fg: #8b949e;     --st-na-bg: #21262d;
-  --st-nr-fg: #db8a30;     --st-nr-bg: #2a1a0a;
-  --st-error-fg: #a371f7;  --st-error-bg: #2a1a44;
+  --st-pass-fg: #4CAF50;   --st-pass-bg: #1B3A1C;
+  --st-fail-fg: #F44336;   --st-fail-bg: #3A1517;
+  --st-na-fg: #03A9F4;     --st-na-bg: #0A2A3A;
+  --st-nr-fg: #FF9800;     --st-nr-bg: #2A1A0A;
+  --st-error-fg: #7986CB;  --st-error-bg: #1A1A3A;
 
-  --sv-none-fg: #8b949e;     --sv-none-bg: #21262d;
-  --sv-low-fg: #58a6ff;      --sv-low-bg: #0d2b45;
-  --sv-medium-fg: #d29922;   --sv-medium-bg: #2e2410;
-  --sv-high-fg: #db8a30;     --sv-high-bg: #3a2410;
-  --sv-critical-fg: #f85149; --sv-critical-bg: #3a1517;
+  --sv-none-fg: #03A9F4;     --sv-none-bg: #0A2A3A;
+  --sv-low-fg: #FFEB3B;      --sv-low-bg: #2E2A10;
+  --sv-medium-fg: #FF9800;   --sv-medium-bg: #2A1A0A;
+  --sv-high-fg: #FF5722;     --sv-high-bg: #3A1A10;
+  --sv-critical-fg: #F44336; --sv-critical-bg: #3A1517;
 
-  --compliance-low: #f87171;
-  --compliance-medium: #fbbf24;
-  --compliance-high: #4ade80;
+  --compliance-low: #F44336;
+  --compliance-medium: #FFEB3B;
+  --compliance-high: #4CAF50;
 }
 
 /* Compliance ring colors */

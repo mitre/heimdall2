@@ -572,6 +572,52 @@ describe('Emphasis overlay system (Bootstrap 5.3 pattern)', () => {
   });
 });
 
+describe('Heimdall Material palette alignment (n3v.25)', () => {
+  it('--st-na-fg uses Material blue (not Primer gray #59636e)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toContain('--st-na-fg: #59636e');
+    expect(reportCss).toMatch(/--st-na-fg:\s*#0[0-9a-fA-F]{5}/);
+  });
+
+  it('status tokens use Material-derived colors (not Primer palette)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toContain('--st-pass-fg: #1a7f37');
+    expect(reportCss).not.toContain('--st-fail-fg: #b3202a');
+    expect(reportCss).not.toContain('--st-error-fg: #6639ba');
+  });
+
+  it('severity tokens use Material-derived colors', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toContain('--sv-none-fg: #59636e');
+    expect(reportCss).not.toContain('--sv-low-fg: #1a5fb4');
+  });
+
+  it('compliance colors use Material green/yellow/red', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/--compliance-high:.*#4CAF50/i);
+    expect(reportCss).toMatch(/--compliance-low:.*#[fFeE][0-9a-fA-F]{5}/);
+  });
+
+  it('dark mode uses Material 500 colors directly (designed for dark bg)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const darkBlock = reportCss.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\}/);
+    expect(darkBlock).not.toBeNull();
+    expect(darkBlock![1]).toContain('#4CAF50');
+    expect(darkBlock![1]).toContain('#F44336');
+    expect(darkBlock![1]).toContain('#03A9F4');
+  });
+});
+
 describe('Blades idiom polish (n3v.22)', () => {
   const inputData = fs.readFileSync(
     'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
