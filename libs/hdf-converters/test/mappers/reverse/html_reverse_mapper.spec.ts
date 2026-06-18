@@ -1554,6 +1554,25 @@ describe('Profile visibility toggle (n3v.33)', () => {
     expect(output).not.toContain('👁');
   });
 
+  it('Profile Info and Executive Summary are collapsible via details/summary', async () => {
+    const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: rhel7, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const profileSection = output.match(/<section id="profile-info"[^>]*>([\s\S]*?)<\/section>/);
+    expect(profileSection).not.toBeNull();
+    expect(profileSection![1]).toContain('<details');
+    expect(profileSection![1]).toContain('<summary');
+    expect(profileSection![1]).toContain('Profile Info');
+    const summarySection = output.match(/<section id="summary"[^>]*>([\s\S]*?)<\/section>/);
+    expect(summarySection).not.toBeNull();
+    expect(summarySection![1]).toContain('<details');
+    expect(summarySection![1]).toContain('<summary');
+    expect(summarySection![1]).toContain('Executive Summary');
+  });
+
   it('profile sections are collapsible via details/summary (Blades accordion)', async () => {
     const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
     const sonarqube = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json', 'utf-8');

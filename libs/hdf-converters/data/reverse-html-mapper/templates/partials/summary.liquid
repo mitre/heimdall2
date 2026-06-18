@@ -2,7 +2,8 @@
 Variables: statistics, severity, compliance, icons.
 Raw HTML justification: icon values are SVG strings built by the mapper with fill="currentColor".{% endcomment -%}
 <section id="summary" aria-labelledby="summary-h">
-  <h2 id="summary-h">Executive Summary</h2>
+  <details open>
+    <summary><h2 id="summary-h" style="display:inline;">Executive Summary</h2></summary>
   <article class="summary-hero">
     <div class="summary-layout">
       <div class="compliance-hero compliance-{{ compliance.color }}">
@@ -47,4 +48,5 @@ Raw HTML justification: icon values are SVG strings built by the mapper with fil
       <small>{{ statistics.passedTests }} checks passed, {{ statistics.failedTests }} failed of {{ statistics.totalTests }} total &middot; {{ statistics.totalResults }} controls</small>
     </footer>
   </article>
+  </details>
 </section>

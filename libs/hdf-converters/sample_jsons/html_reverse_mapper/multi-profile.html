@@ -536,7 +536,8 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
 
     <main id="main">
       <section id="profile-info" aria-labelledby="profile-info-h">
-  <h2 id="profile-info-h">Profile Info</h2>
+  <details open>
+    <summary><h2 id="profile-info-h" style="display:inline;">Profile Info</h2></summary>
   <table class="striped">
     <thead>
       <tr><th scope="col"></th>
@@ -567,10 +568,12 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
       </tr>
     </tbody>
   </table>
+  </details>
 </section>
 
       <section id="summary" aria-labelledby="summary-h">
-  <h2 id="summary-h">Executive Summary</h2>
+  <details open>
+    <summary><h2 id="summary-h" style="display:inline;">Executive Summary</h2></summary>
   <article class="summary-hero">
     <div class="summary-layout">
       <div class="compliance-hero compliance-low">
@@ -610,6 +613,7 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
       <small>202 checks passed, 398 failed of 520 total &middot; 245 controls</small>
     </footer>
   </article>
+  </details>
 </section>
 
       <section id="file-rhel7" aria-labelledby="file-rhel7-h">

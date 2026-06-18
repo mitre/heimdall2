@@ -3,7 +3,8 @@ Variables: files (array of {filename, fileID, toolVersion, platform, duration}).
 Multi-profile: eye icon toggle per row to show/hide that profile's controls.
 Single-profile: no toggle (just metadata).{% endcomment -%}
 <section id="profile-info" aria-labelledby="profile-info-h">
-  <h2 id="profile-info-h">Profile Info</h2>
+  <details open>
+    <summary><h2 id="profile-info-h" style="display:inline;">Profile Info</h2></summary>
   <table class="striped">
     <thead>
       <tr>
@@ -26,4 +27,5 @@ Single-profile: no toggle (just metadata).{% endcomment -%}
       {%- endfor %}
     </tbody>
   </table>
+  </details>
 </section>
