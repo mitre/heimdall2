@@ -387,6 +387,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             logger.verbose(
               `Successfully uploaded execution for ${report.meta.filename}`,
             );
+            return undefined;
           });
       });
       await Promise.all(execEvents);

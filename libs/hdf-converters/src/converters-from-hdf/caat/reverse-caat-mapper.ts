@@ -60,14 +60,14 @@ export class FromHDFToCAATMapper {
 
   static readonly MaxSheetNameLength = 31;
 
+  static readonly DefaultWritingOptions: XLSX.WritingOptions = { bookType: 'xlsx', type: 'binary' };
+
   static readonly NistCanonizationConfig: CanonizationConfig = {
     add_spaces: false,
     allow_letters: false,
     max_specifiers: 3,
     pad_zeros: true,
   };
-
-  static readonly DefaultWritingOptions: XLSX.WritingOptions = { bookType: 'xlsx', type: 'binary' };
 
   static readonly SheetOptions: XLSX.JSON2SheetOpts = { header: [...CAATHeaders] };
 

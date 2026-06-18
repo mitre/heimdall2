@@ -206,19 +206,20 @@ function componentTransform(input: unknown): Record<string, unknown>[] {
       }));
       return vulnerability;
     })
-    .reduce((acc: Record<string, unknown>[], cur: Record<string, unknown>) => {
-      const cveId = _.get(cur, '@_.cve_id');
-      const index = acc.findIndex(vuln => cveId === _.get(vuln, '@_.cve_id'));
-      if (index === -1) {
-        return [...acc, cur];
-      } else {
-        (_.get(acc[index], 'components') as Record<string, unknown>[]).push(
-          ...(_.get(cur, 'components') as Record<string, unknown>[]),
-        );
-        return acc;
-      }
-    }, []);
-  return vulns;
+    ;
+  const grouped: Record<string, unknown>[] = [];
+  for (const cur of vulns) {
+    const cveId = _.get(cur, '@_.cve_id');
+    const existing = grouped.find(vuln => cveId === _.get(vuln, '@_.cve_id'));
+    if (!existing) {
+      grouped.push(cur);
+    } else {
+      (_.get(existing, 'components') as Record<string, unknown>[]).push(
+        ...(_.get(cur, 'components') as Record<string, unknown>[]),
+      );
+    }
+  }
+  return grouped;
 }
 
 function controlMappingCve(): MappedTransform<

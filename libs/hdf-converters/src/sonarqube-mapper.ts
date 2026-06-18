@@ -31,6 +31,24 @@ function applyLineNumber(snippet: string): string {
     .join('\n');
 }
 
+function getContextualizedSnippet(
+  fullFiles: Record<string, string>,
+  component: string,
+  startLine: number,
+  endLine: number,
+  msg?: string,
+): string {
+  const linenumberedFile = applyLineNumber(fullFiles[component]);
+  const snippet = linenumberedFile
+    .split('\n')
+    .slice(Math.max(startLine - 3, 0), endLine + 3)
+    .join('\n')
+    .trim();
+  const location = `${component}:${startLine}-${endLine}\n`;
+  const message = msg ? `${msg}\n` : '';
+  return `${location}${message}<pre>\n${snippet}\n</pre>`;
+}
+
 // the Sonarqube schema typings are meant to support the four versions out right now (8, 9, 10, and 2025/25).  9 and 25 are supposed to be LTS releases.  8 is currently used by the Sonarcloud deployment though Sonarqube POCs say that it is no longer supported / they do not see many deployments of it.
 enum SonarqubeVersion {
   Eight = '8.0.0',
@@ -976,23 +994,7 @@ export class SonarqubeResults {
           );
         });
     };
-    const getContextualizedSnippet = (
-      fullFiles: Record<string, string>,
-      component: string,
-      startLine: number,
-      endLine: number,
-      msg?: string,
-    ): string => {
-      const linenumberedFile = applyLineNumber(fullFiles[component]);
-      const snippet = linenumberedFile
-        .split('\n')
-        .slice(Math.max(startLine - 3, 0), endLine + 3) // slice wraps around if the start is less than 0 so we want to put a bounds check there to ensure we start at the top of the file; however, if the end is past the end of the array then it just goes until the end of the array so no bounds check is required there
-        .join('\n')
-        .trim();
-      const location = `${component}:${startLine}-${endLine}\n`;
-      const message = msg ? `${msg}\n` : '';
-      return `${location}${message}<pre>\n${snippet}\n</pre>`;
-    };
+    // getContextualizedSnippet moved to module scope
 
     const components = _.uniq(
       issues.flatMap(issue =>
@@ -1157,6 +1159,7 @@ export class SonarqubeResults {
             paging
               = data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
             page += 1;
+            return undefined;
           })
           .catch((error) => {
             this.logAxiosError(error);
@@ -1196,6 +1199,7 @@ export class SonarqubeResults {
             paging
               = data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
             page += 1;
+            return undefined;
           })
           .catch((error) => {
             this.logAxiosError(error);

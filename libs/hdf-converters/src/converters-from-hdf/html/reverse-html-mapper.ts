@@ -212,16 +212,10 @@ export class FromHDFToHTMLMapper {
 
     // Pull out results from file
     const filteredControlsSet = file.filteredControls ? new Set(file.filteredControls) : null;
-    const allResultLevels = file.data.contains.reduce<ContextualizedControl[]>(
-      (acc, profile) => {
-        const matchingResults = profile.contains.filter(
-          (result: ContextualizedControl) => !filteredControlsSet || filteredControlsSet.has(result.data.id),
-        );
-
-        acc.push(...matchingResults);
-        return acc;
-      },
-      [],
+    const allResultLevels = file.data.contains.flatMap(
+      profile => profile.contains.filter(
+        (result: ContextualizedControl) => !filteredControlsSet || filteredControlsSet.has(result.data.id),
+      ),
     );
 
     // Begin filling out outpuData object to pass into HTML template
