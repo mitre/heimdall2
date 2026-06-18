@@ -722,15 +722,16 @@ describe('Mobile responsive layout (n3v.28)', () => {
     expect(reportCss).toMatch(/\[data-jump-to="top"\]\s*\{[^}]*right/);
   });
 
-  it('NIST dropdown is in its own nist-row (not inside a chip-row group)', async () => {
+  it('NIST dropdown is in the filter-actions row (not inside a chip group)', async () => {
     const mapper = new FromHDFToHTMLMapper(
       [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
       FileExportTypes.Administrator
     );
     const output = await mapper.toHTML();
-    const nistRowMatch = output.match(/<div class="nist-row">([\s\S]*?)<\/div>\s*<\/div>/);
-    expect(nistRowMatch).not.toBeNull();
-    expect(nistRowMatch![1]).toContain('nist-family-filter');
+    const actionsMatch = output.match(/<div class="filter-actions">([\s\S]*?)<\/div>/);
+    expect(actionsMatch).not.toBeNull();
+    expect(actionsMatch![1]).toContain('nist-family-filter');
+    expect(actionsMatch![1]).toContain('btn-expand-all');
   });
 });
 
@@ -846,12 +847,12 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
     expect(reportCss).toMatch(/\.report-header\s*>\s*hgroup\s*\{[^}]*flex:\s*1/);
   });
 
-  it('.nist-row has desktop styles (flex, gap, right-aligned)', async () => {
+  it('.filter-actions row has flex layout with right alignment', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
-    expect(reportCss).toMatch(/\.nist-row\s*\{[^}]*display:\s*flex/);
-    expect(reportCss).toMatch(/\.nist-row\s*\{[^}]*justify-content:\s*flex-end/);
+    expect(reportCss).toMatch(/\.filter-actions\s*\{[^}]*display:\s*flex/);
+    expect(reportCss).toMatch(/\.filter-actions\s*\{[^}]*justify-content:\s*flex-end/);
   });
 
   it('search input inside nav does not override Pico padding (preserves magnifying glass)', async () => {
@@ -859,6 +860,21 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
     expect(reportCss).not.toMatch(/nav.*input.*padding-inline-start/);
+  });
+
+  it('expand/collapse buttons are in the filter bar (not nav)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const navMatch = output.match(/<nav[^>]*>([\s\S]*?)<\/nav>/);
+    expect(navMatch).not.toBeNull();
+    expect(navMatch![1]).not.toContain('btn-expand-all');
+    expect(navMatch![1]).not.toContain('btn-collapse-all');
+    const filterMatch = output.match(/id="filter-bar"([\s\S]*?)<!-- end filter-bar -->/);
+    expect(filterMatch).not.toBeNull();
+    expect(filterMatch![1]).toContain('btn-expand-all');
   });
 
   it('expand/collapse buttons use arrow+text labels (not cryptic icons)', async () => {
@@ -890,11 +906,11 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
     expect(reportCss).toMatch(/\.chip\[data-filter-severity.*high.*aria-current/);
   });
 
-  it('NIST row is right-aligned', async () => {
+  it('filter-actions row is right-aligned with NIST + expand/collapse', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
-    expect(reportCss).toMatch(/\.nist-row\s*\{[^}]*justify-content:\s*flex-end/);
+    expect(reportCss).toMatch(/\.filter-actions\s*\{[^}]*justify-content:\s*flex-end/);
   });
 
   it('theme toggle is inside the report header (same row as title)', async () => {

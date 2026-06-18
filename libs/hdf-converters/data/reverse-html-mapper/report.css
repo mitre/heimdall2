@@ -258,7 +258,8 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
 .chip[data-filter-severity="high"][aria-current="true"]     { background: var(--sv-high-bg);     border-color: var(--sv-high-fg);     color: var(--sv-high-fg); }
 .chip[data-filter-severity="critical"][aria-current="true"] { background: var(--sv-critical-bg); border-color: var(--sv-critical-fg); color: var(--sv-critical-fg); }
 .chip-count { font-weight: 600; font-variant-numeric: tabular-nums; }
-.nist-row { display: flex; gap: .3rem; justify-content: flex-end; margin-top: .3rem; }
+.filter-actions { display: flex; gap: .3rem; align-items: center; justify-content: flex-end; margin-top: .3rem; }
+.filter-actions button { margin: 0; }
 #nist-family-list { max-height: 16rem; overflow-y: auto; }
 .active-tokens { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; padding: .4rem 0; }
 .active-tokens[hidden] { display: none; }

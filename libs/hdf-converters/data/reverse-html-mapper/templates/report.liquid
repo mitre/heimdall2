@@ -33,8 +33,6 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
       <ul>
         {%- if showResultSets %}
         <li><form role="search"><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title"></form></li>
-        <li><button class="outline" id="btn-expand-all" data-tooltip="Expand all controls">&#9660; Expand</button></li>
-        <li><button class="outline" id="btn-collapse-all" data-tooltip="Collapse all controls">&#9650; Collapse</button></li>
         <li><button class="btn-icon mobile-only" id="nav-filter-toggle" aria-label="Toggle filters" aria-expanded="false">&#9776;</button></li>
         {%- endif %}
       </ul>
@@ -56,7 +54,7 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
         <button type="button" class="chip" data-filter-severity="high">High <span class="chip-count">{{ severity.high }}</span></button>
         <button type="button" class="chip" data-filter-severity="critical">Crit <span class="chip-count">{{ severity.critical }}</span></button>
       </div>
-      <div class="nist-row">
+      <div class="filter-actions">
         <details id="nist-family-filter" class="dropdown" role="listbox" aria-label="NIST 800-53 family">
           <summary id="nist-family-trigger">NIST Family</summary>
           <ul id="nist-family-list">
@@ -65,13 +63,15 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
             {%- endfor %}
           </ul>
         </details>
+        <button type="button" class="outline" id="btn-expand-all" data-tooltip="Expand all controls">&#9660; Expand</button>
+        <button type="button" class="outline" id="btn-collapse-all" data-tooltip="Collapse all controls">&#9650; Collapse</button>
       </div>
       <div id="active-tokens" class="active-tokens" hidden></div>
       <div class="filter-status-row">
         <small id="filter-count"></small>
         <button type="button" id="btn-clear-filters" class="link-btn" hidden data-tooltip="Clear all active filters">Clear all</button>
       </div>
-    </div>
+    </div><!-- end filter-bar -->
     {%- endif %}
 
     <main id="main">
