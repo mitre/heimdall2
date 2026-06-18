@@ -158,6 +158,14 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/scripts/**/*.{ts,mts}'],
+    name: 'scripts/security-overrides',
+    rules: {
+      'security/detect-non-literal-fs-filename': 'off',
+      'security/detect-object-injection': 'off',
+    },
+  },
+  {
     extends: [json.configs.recommended],
     files: ['**/*.json'],
     ignores: ['package-lock.json', 'parse_testbed/**', 'schemas/**'],
