@@ -1526,6 +1526,94 @@ describe('Mapper interface', () => {
   });
 });
 
+describe('Profile visibility toggle (n3v.33)', () => {
+  it('multi-profile: each Profile Info row has an eye toggle button with data-file-id', async () => {
+    const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
+    const sonarqube = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json', 'utf-8');
+    const mapper = new FromHDFToHTMLMapper(
+      [
+        {data: rhel7, fileName: 'rhel7-results.json', fileID: 'rhel7'},
+        {data: sonarqube, fileName: 'sonarqube-hdf.json', fileID: 'sonarqube'}
+      ],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/data-file-id="rhel7"/);
+    expect(output).toMatch(/data-file-id="sonarqube"/);
+    expect(output).toContain('👁');
+  });
+
+  it('single-profile: no eye toggle button', async () => {
+    const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: rhel7, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).not.toContain('data-file-id=');
+    expect(output).not.toContain('👁');
+  });
+
+  it('profile sections are collapsible via details/summary (Blades accordion)', async () => {
+    const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
+    const sonarqube = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json', 'utf-8');
+    const mapper = new FromHDFToHTMLMapper(
+      [
+        {data: rhel7, fileName: 'rhel7-results.json', fileID: 'rhel7'},
+        {data: sonarqube, fileName: 'sonarqube-hdf.json', fileID: 'sonarqube'}
+      ],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/<section id="file-rhel7"[^>]*>[\s\S]*?<details[^>]*open/);
+    expect(output).toMatch(/<summary[^>]*>[\s\S]*?rhel7-results\.json/);
+  });
+
+  it('scripts contain profile toggle logic', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const scriptsSrc = templates['partials/scripts'];
+    expect(scriptsSrc).toContain('data-file-id');
+    expect(scriptsSrc).toContain('file-');
+  });
+});
+
+describe('Multi-profile report', () => {
+  it('generates a report with 3 profiles and writes to disk for live review', async () => {
+    const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
+    const sonarqube = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json', 'utf-8');
+    const sonarBranch = fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json', 'utf-8');
+
+    const mapper = new FromHDFToHTMLMapper(
+      [
+        {data: rhel7, fileName: 'rhel7-results.json', fileID: 'rhel7'},
+        {data: sonarqube, fileName: 'sonarqube-hdf.json', fileID: 'sonarqube'},
+        {data: sonarBranch, fileName: 'sonarqube-branch.json', fileID: 'sonar-branch'}
+      ],
+      FileExportTypes.Administrator
+    );
+
+    const output = await mapper.toHTML();
+
+    fs.writeFileSync('sample_jsons/html_reverse_mapper/multi-profile.html', output);
+
+    expect(output).toContain('rhel7-results.json');
+    expect(output).toContain('sonarqube-hdf.json');
+    expect(output).toContain('sonarqube-branch.json');
+
+    const fileSections = output.match(/<section id="file-/g) || [];
+    expect(fileSections.length).toBe(3);
+
+    const navLinks = output.match(/<li><a href="#file-/g) || [];
+    expect(navLinks.length).toBe(3);
+
+    expect(output).toContain('data-families=');
+    expect(output).toContain('data-status=');
+    expect(output).toContain('class="shiki');
+  });
+});
+
 describe('HTML Results Reverse Mapper', () => {
   it('Successfully converts RHEL7 HDF into HTML', async () => {
     const inputData = fs.readFileSync(

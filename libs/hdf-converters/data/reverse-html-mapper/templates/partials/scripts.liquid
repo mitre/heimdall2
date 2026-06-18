@@ -114,12 +114,27 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
     }
   }
 
+  var profileToggles = document.querySelectorAll('.profile-toggle');
+  profileToggles.forEach(function(btn) {
+    btn.setAttribute('aria-pressed', 'true');
+    btn.addEventListener('click', function() {
+      var fid = btn.getAttribute('data-file-id');
+      var section = document.getElementById('file-' + fid);
+      if (!section) return;
+      var visible = btn.getAttribute('aria-pressed') !== 'false';
+      btn.setAttribute('aria-pressed', String(!visible));
+      section.classList.toggle('filtered-out', visible);
+      applyFilters();
+    });
+  });
+
   if (clearBtn) clearBtn.addEventListener('click', function() {
     activeStatus = {}; activeSeverity = {}; activeFamilies = {}; searchTerm = '';
     if (searchInput) searchInput.value = '';
     document.querySelectorAll('.chip[aria-current]').forEach(function(c) { c.removeAttribute('aria-current'); });
     document.querySelectorAll('#nist-family-list input').forEach(function(cb) { cb.checked = false; });
     if (familyDetails) familyDetails.open = false;
+    profileToggles.forEach(function(btn) { btn.setAttribute('aria-pressed', 'true'); var s = document.getElementById('file-' + btn.getAttribute('data-file-id')); if (s) s.classList.remove('filtered-out'); });
     applyFilters();
   });
 

@@ -5,6 +5,7 @@ import {ContextualizedControl} from 'inspecjs';
 // Basic info for exported files; lvl 1
 export interface IFileInfo {
   filename: string;
+  fileID: string;
   toolVersion: string;
   platform: string;
   duration: string;

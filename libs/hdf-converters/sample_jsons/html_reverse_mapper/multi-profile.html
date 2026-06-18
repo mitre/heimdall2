@@ -488,7 +488,9 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
       <ul>
         <li><a href="#summary"><strong>Summary</strong></a></li>
         <li><a href="#profile-info">Profile Info</a></li>
-        <li><a href="#file-1">rhel7-results.json</a></li>
+        <li><a href="#file-rhel7">rhel7-results.json</a></li>
+        <li><a href="#file-sonarqube">sonarqube-hdf.json</a></li>
+        <li><a href="#file-sonar-branch">sonarqube-branch.json</a></li>
       </ul>
       <ul>
         <li><form role="search"><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title"></form></li>
@@ -498,7 +500,7 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
     <div class="no-print report-filters" id="filter-bar" aria-label="Control filters" hidden>
       <div role="group" aria-label="Filter by status">
         <button type="button" class="chip" data-filter-status="Passed">&#10003; Pass <span class="chip-count">78</span></button>
-        <button type="button" class="chip" data-filter-status="Failed">&#10007; Fail <span class="chip-count">149</span></button>
+        <button type="button" class="chip" data-filter-status="Failed">&#10007; Fail <span class="chip-count">151</span></button>
         <button type="button" class="chip" data-filter-status="Not Applicable">&#8854; N/A <span class="chip-count">10</span></button>
         <button type="button" class="chip" data-filter-status="Not Reviewed">&#9888; NR <span class="chip-count">6</span></button>
         <button type="button" class="chip" data-filter-status="Profile Error">&#9651; Err <span class="chip-count">0</span></button>
@@ -507,7 +509,7 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
         <button type="button" class="chip" data-filter-severity="none">None <span class="chip-count">9</span></button>
         <button type="button" class="chip" data-filter-severity="low">Low <span class="chip-count">11</span></button>
         <button type="button" class="chip" data-filter-severity="medium">Med <span class="chip-count">196</span></button>
-        <button type="button" class="chip" data-filter-severity="high">High <span class="chip-count">27</span></button>
+        <button type="button" class="chip" data-filter-severity="high">High <span class="chip-count">29</span></button>
         <button type="button" class="chip" data-filter-severity="critical">Crit <span class="chip-count">0</span></button>
       </div>
       <div id="active-tokens" class="active-tokens" hidden></div>
@@ -515,14 +517,14 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
         <details id="nist-family-filter" class="dropdown" role="listbox" aria-label="NIST 800-53 family">
           <summary id="nist-family-trigger">NIST Family</summary>
           <ul id="nist-family-list">
-            <li><label><input type="checkbox" value="AC" data-family-count="42"> AC (42)</label></li>
+            <li><label><input type="checkbox" value="AC" data-family-count="43"> AC (43)</label></li>
             <li><label><input type="checkbox" value="AU" data-family-count="72"> AU (72)</label></li>
             <li><label><input type="checkbox" value="CM" data-family-count="98"> CM (98)</label></li>
             <li><label><input type="checkbox" value="IA" data-family-count="34"> IA (34)</label></li>
             <li><label><input type="checkbox" value="MA" data-family-count="36"> MA (36)</label></li>
             <li><label><input type="checkbox" value="SA" data-family-count="1"> SA (1)</label></li>
             <li><label><input type="checkbox" value="SC" data-family-count="8"> SC (8)</label></li>
-            <li><label><input type="checkbox" value="SI" data-family-count="5"> SI (5)</label></li>
+            <li><label><input type="checkbox" value="SI" data-family-count="6"> SI (6)</label></li>
           </ul>
         </details>
         <button type="button" class="outline" id="btn-expand-all" data-tooltip="Expand all controls">&#9660; Expand</button>
@@ -537,7 +539,7 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
   <h2 id="profile-info-h">Profile Info</h2>
   <table class="striped">
     <thead>
-      <tr>
+      <tr><th scope="col"></th>
         <th scope="col">Filename</th>
         <th scope="col">Tool Version</th>
         <th scope="col">Platform</th>
@@ -545,11 +547,23 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr><td data-label=""><button type="button" class="profile-toggle" data-file-id="rhel7" aria-label="Toggle rhel7-results.json visibility" data-tooltip="Show/hide rhel7-results.json">👁</button></td>
         <td data-label="Filename"><code>rhel7-results.json</code></td>
         <td data-label="Tool Version">4.16.0</td>
         <td data-label="Platform">centos</td>
         <td data-label="Duration (s)">10.681128104</td>
+      </tr>
+      <tr><td data-label=""><button type="button" class="profile-toggle" data-file-id="sonarqube" aria-label="Toggle sonarqube-hdf.json visibility" data-tooltip="Show/hide sonarqube-hdf.json">👁</button></td>
+        <td data-label="Filename"><code>sonarqube-hdf.json</code></td>
+        <td data-label="Tool Version">2.11.5</td>
+        <td data-label="Platform">Heimdall Tools</td>
+        <td data-label="Duration (s)"></td>
+      </tr>
+      <tr><td data-label=""><button type="button" class="profile-toggle" data-file-id="sonar-branch" aria-label="Toggle sonarqube-branch.json visibility" data-tooltip="Show/hide sonarqube-branch.json">👁</button></td>
+        <td data-label="Filename"><code>sonarqube-branch.json</code></td>
+        <td data-label="Tool Version">2.11.5</td>
+        <td data-label="Platform">Heimdall Tools</td>
+        <td data-label="Duration (s)"></td>
       </tr>
     </tbody>
   </table>
@@ -560,7 +574,7 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
   <article class="summary-hero">
     <div class="summary-layout">
       <div class="compliance-hero compliance-low">
-        <div class="compliance-ring compliance-low">33.47%</div>
+        <div class="compliance-ring compliance-low">33.19%</div>
         <div class="compliance-label">Compliance</div>
       </div>
       <div class="breakdown-grid">
@@ -569,7 +583,7 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
           <table>
             <tbody>
               <tr><td><span class="st-icon" style="color: var(--st-pass-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"/></svg></span></td><td>Passed</td><td class="num">78</td></tr>
-              <tr><td><span class="st-icon" style="color: var(--st-fail-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg></span></td><td>Failed</td><td class="num">149</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-fail-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg></span></td><td>Failed</td><td class="num">151</td></tr>
               <tr><td><span class="st-icon" style="color: var(--st-na-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M17,13H7V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>N/A</td><td class="num">10</td></tr>
               <tr><td><span class="st-icon" style="color: var(--st-nr-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>Not Reviewed</td><td class="num">6</td></tr>
               <tr><td><span class="st-icon" style="color: var(--st-error-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"/></svg></span></td><td>Error</td><td class="num">0</td></tr>
@@ -583,24 +597,24 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
               <tr><td><span class="st-icon" style="color: var(--sv-none-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>None</td><td class="num">9</td></tr>
               <tr><td><span class="st-icon" style="color: var(--sv-low-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>Low</td><td class="num">11</td></tr>
               <tr><td><span class="st-icon" style="color: var(--sv-medium-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>Medium</td><td class="num">196</td></tr>
-              <tr><td><span class="st-icon" style="color: var(--sv-high-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>High</td><td class="num">27</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-high-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>High</td><td class="num">29</td></tr>
               <tr><td><span class="st-icon" style="color: var(--sv-critical-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>Critical</td><td class="num">0</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="status-bar" role="img" aria-label="Status distribution: 78 passed, 149 failed, 10 not applicable, 6 not reviewed, 0 errors of 243 total"><div class="bar-seg bar-passed" style="flex-grow: 78;" data-tooltip="78 Passed" data-filter-status="Passed"></div><div class="bar-seg bar-failed" style="flex-grow: 149;" data-tooltip="149 Failed" data-filter-status="Failed"></div><div class="bar-seg bar-na" style="flex-grow: 10;" data-tooltip="10 N/A" data-filter-status="Not Applicable"></div><div class="bar-seg bar-nr" style="flex-grow: 6;" data-tooltip="6 Not Reviewed" data-filter-status="Not Reviewed"></div>
+    <div class="status-bar" role="img" aria-label="Status distribution: 78 passed, 151 failed, 10 not applicable, 6 not reviewed, 0 errors of 245 total"><div class="bar-seg bar-passed" style="flex-grow: 78;" data-tooltip="78 Passed" data-filter-status="Passed"></div><div class="bar-seg bar-failed" style="flex-grow: 151;" data-tooltip="151 Failed" data-filter-status="Failed"></div><div class="bar-seg bar-na" style="flex-grow: 10;" data-tooltip="10 N/A" data-filter-status="Not Applicable"></div><div class="bar-seg bar-nr" style="flex-grow: 6;" data-tooltip="6 Not Reviewed" data-filter-status="Not Reviewed"></div>
     </div>
     <footer>
-      <small>202 checks passed, 396 failed of 518 total &middot; 243 controls</small>
+      <small>202 checks passed, 398 failed of 520 total &middot; 245 controls</small>
     </footer>
   </article>
 </section>
 
-      <section id="file-1" aria-labelledby="file-1-h">
+      <section id="file-rhel7" aria-labelledby="file-rhel7-h">
         <details open>
-          <summary><h2 id="file-1-h" style="display:inline;">rhel7-results.json</h2></summary>
+          <summary><h2 id="file-rhel7-h" style="display:inline;">rhel7-results.json</h2></summary>
           <article class="control" id="V-71849" data-status="Failed" data-severity="High" data-families="AU">
   <details>
     <summary><span class="badge status--failed"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg> Failed</span>
@@ -42387,6 +42401,421 @@ The audit daemon must be restarted for the changes to take effect.</dd>
 <span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    end</span></span>
 <span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  end</span></span>
 <span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">end</span></span></code></pre>
+    </figure>
+  </details>
+</article>
+
+        </details>
+      </section>
+      <section id="file-sonarqube" aria-labelledby="file-sonarqube-h">
+        <details open>
+          <summary><h2 id="file-sonarqube-h" style="display:inline;">sonarqube-hdf.json</h2></summary>
+          <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High" data-families="SI">
+  <details>
+    <summary><span class="badge status--failed"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg> Failed</span>
+      <span class="badge sev--high"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg> High</span>
+      <code class="control-id">javascript:S2819</code>
+      <span class="control-title" data-tooltip="Origins should be verified during cross-origin communications">Origins should be verified during cross-origin communications</span>
+    </summary>
+    <div class="control-tags" aria-label="Control tags"><span class="tag">SI-11</span><span class="tag">CCI-001312</span></div>
+
+    <p>Browsers <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">allow message exchanges</a> between Window objects of
+different origins.</p>
+<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>
+<ul>
+  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be
+  used). </li>
+  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<p>When sending message:</p>
+<pre>
+var iframe = document.getElementById("testiframe");
+iframe.contentWindow.postMessage("secret", "*"); // Noncompliant: * is used
+</pre>
+<p>When receiving message:</p>
+<pre>
+window.addEventListener("message", function(event) { // Noncompliant: no checks are done on the origin property.
+      console.log(event.data);
+ });
+</pre>
+<h2>Compliant Solution</h2>
+<p>When sending message:</p>
+<pre>
+var iframe = document.getElementById("testsecureiframe");
+iframe.contentWindow.postMessage("hello", "https://secure.example.com"); // Compliant
+</pre>
+<p>When receiving message:</p>
+<pre>
+window.addEventListener("message", function(event) {
+
+  if (event.origin !== "http://example.org") // Compliant
+    return;
+
+  console.log(event.data)
+});
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>
+  <li> <a href="https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management">OWASP Top 10 2017 Category A3</a> -
+  Broken Authentication and Session Management </li>
+  <li> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">developer.mozilla.org</a> - postMessage API </li>
+</ul>
+
+    <h4>Test Results</h4>
+    <table class="striped test-results">
+      <thead><tr><th>Status</th><th>Test</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><del>failed</del></td>
+          <td>xss:packages/docs/src/service-worker.js:29-29
+<pre>
+27 })
+28 
+29 self.addEventListener('message', event => {
+30   if (event.data === 'sw:update') self.skipWaiting()
+31 })
+32
+</pre></td>
+          <td><samp>{
+  &#34;Message&#34;: &#34;Verify the message&#39;s origin in this cross-origin communication.&#34;,
+  &#34;Author&#34;: &#34;example@example.com&#34;,
+  &#34;Creation Date&#34;: &#34;2020-09-01T17:04:31+0000&#34;,
+  &#34;Debt&#34;: &#34;10min&#34;,
+  &#34;Effort&#34;: &#34;10min&#34;,
+  &#34;Status&#34;: &#34;OPEN&#34;,
+  &#34;Update Date&#34;: &#34;2021-12-06T20:27:51+0000&#34;,
+  &#34;Hash&#34;: &#34;8be50716e6366451fef374e82fb66aca&#34;,
+  &#34;Key&#34;: &#34;AX2RcGnrl-KH7KTFNgLl&#34;,
+  &#34;Quick Fix Available&#34;: false,
+  &#34;Tags&#34;: [
+    &#34;cwe&#34;,
+    &#34;html5&#34;,
+    &#34;owasp-a3&#34;
+  ]
+}</samp></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Details</h4>
+    <dl>
+      <dt>Control</dt>
+      <dd>javascript:S2819</dd>
+      <dt>Title</dt>
+      <dd>Origins should be verified during cross-origin communications</dd>
+      <dt>Desc</dt>
+      <dd><p>Browsers <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">allow message exchanges</a> between Window objects of
+different origins.</p>
+<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>
+<ul>
+  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be
+  used). </li>
+  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>
+</ul>
+<h2>Noncompliant Code Example</h2>
+<p>When sending message:</p>
+<pre>
+var iframe = document.getElementById("testiframe");
+iframe.contentWindow.postMessage("secret", "*"); // Noncompliant: * is used
+</pre>
+<p>When receiving message:</p>
+<pre>
+window.addEventListener("message", function(event) { // Noncompliant: no checks are done on the origin property.
+      console.log(event.data);
+ });
+</pre>
+<h2>Compliant Solution</h2>
+<p>When sending message:</p>
+<pre>
+var iframe = document.getElementById("testsecureiframe");
+iframe.contentWindow.postMessage("hello", "https://secure.example.com"); // Compliant
+</pre>
+<p>When receiving message:</p>
+<pre>
+window.addEventListener("message", function(event) {
+
+  if (event.origin !== "http://example.org") // Compliant
+    return;
+
+  console.log(event.data)
+});
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>
+  <li> <a href="https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management">OWASP Top 10 2017 Category A3</a> -
+  Broken Authentication and Session Management </li>
+  <li> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">developer.mozilla.org</a> - postMessage API </li>
+</ul></dd>
+      <dt>Severity</dt>
+      <dd>high</dd>
+      <dt>Impact</dt>
+      <dd>0.7</dd>
+      <dt>Nist Controls</dt>
+      <dd>SI-11</dd>
+    </dl>
+    <figure>
+      <figcaption>Source Code</figcaption>
+      <pre class="shiki shiki-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8" tabindex="0"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">=========================================================</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># Profile name: SonarQube Scan</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">=========================================================</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">undefined</span></span></code></pre>
+    </figure>
+  </details>
+</article>
+
+        </details>
+      </section>
+      <section id="file-sonar-branch" aria-labelledby="file-sonar-branch-h">
+        <details open>
+          <summary><h2 id="file-sonar-branch-h" style="display:inline;">sonarqube-branch.json</h2></summary>
+          <article class="control" id="c:S5847" data-status="Failed" data-severity="High" data-families="AC">
+  <details>
+    <summary><span class="badge status--failed"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg> Failed</span>
+      <span class="badge sev--high"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg> High</span>
+      <code class="control-id">c:S5847</code>
+      <span class="control-title" data-tooltip="Accessing files should not introduce TOCTOU vulnerabilities">Accessing files should not introduce TOCTOU vulnerabilities</span>
+    </summary>
+    <div class="control-tags" aria-label="Control tags"><span class="tag">AC-3</span><span class="tag">CCI-000213</span></div>
+
+    <p>Time Of Check to Time Of Use (TOCTOU) vulnerabilities occur when an application:</p>
+<ul>
+  <li> First, checks permissions or attributes of a file: for instance, is a file a symbolic link? </li>
+  <li> Next, performs some operations such as writing data to this file. </li>
+</ul>
+<p>The application cannot assume the state of the file is unchanged between these two steps, there is a race condition (ie: two different processes
+can access and modify the same shared object/file at the same time, which can lead to privilege escalation, denial of service and other unexpected
+results).</p>
+<p>For instance, attackers can benefit from this situation by creating a symbolic link to a sensitive file directly after the first step (eg in Unix:
+<code>/etc/passwd</code>) and try to elevate their privileges (eg: if the written data has the correct <code>/etc/passwd</code> file format).</p>
+<p>To avoid TOCTOU vulnerabilities, one possible solution is to do a single atomic operation for the check and use actions, therefore removing the
+race condition window. Another possibility is to use file descriptors. This way the binding of the file descriptor to the file cannot be changed by a
+concurrent process.</p>
+<h2>Noncompliant Code Example</h2>
+<p>A check function (for instance <code>access</code>, <code>stat</code> …​ in this case <code>access</code> to verify the existence of a file) is
+used, followed by a use function (<code>open</code>, <code>fopen</code> …​) to write data inside a non existing file. These two consecutive calls
+create a TOCTOU race condition:</p>
+<pre>
+#include &lt;stdio.h&gt;
+
+void fopen_with_toctou(const char *file) {
+  if (access(file, F_OK) == -1 &amp;&amp; errno == ENOENT) {
+    // the file doesn't exist
+    // it is now created in order to write some data inside
+    FILE *f = fopen(file, w); // Noncompliant: a race condition window exist from access() call to fopen() call calls
+    if (NULL == f) {
+      /* Handle error */
+    }
+
+    if (fclose(f) == EOF) {
+      /* Handle error */
+    }
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<p>If the file already exists on the disk, <code>fopen</code> with <code>x</code> mode will fail:</p>
+<pre>
+#include &lt;stdio.h&gt;
+
+void open_without_toctou(const char *file) {
+  FILE *f = fopen(file, wx); // Compliant
+  if (NULL == f) {
+    /* Handle error */
+  }
+  /* Write to file */
+  if (fclose(f) == EOF) {
+    /* Handle error */
+  }
+}
+</pre>
+<p>A more generic solution is to use file descriptors:</p>
+<pre>
+void open_without_toctou(const char *file) {
+  int fd = open(file, O_CREAT | O_EXCL | O_WRONLY);
+  if (-1 != fd) {
+    FILE *f = fdopen(fd, w);  // Compliant
+  }
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href=https://owasp.org/Top10/A01_2021-Broken_Access_Control/>OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>
+  <li> <a href=https://www.owasp.org/index.php/Top_10-2017_A5-Broken_Access_Control>OWASP Top 10 2017 Category A5</a> - Boken Access Control </li>
+  <li> <a href=https://cwe.mitre.org/data/definitions/367.html>MITRE, CWE-367</a> - Time-of-check Time-of-use (TOCTOU) Race Condition </li>
+  <li> <a href=https://wiki.sei.cmu.edu/confluence/display/c/FIO45-C.+Avoid+TOCTOU+race+conditions+while+accessing+files>CERT, FIO45-C.</a> - Avoid
+  TOCTOU race conditions while accessing files </li>
+</ul>
+
+    <h4>Test Results</h4>
+    <table class="striped test-results">
+      <thead><tr><th>Status</th><th>Test</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><del>failed</del></td>
+          <td>libc_unix:dev/src/libc_unix/sumapss7.c:65-65
+File checked here
+<pre>
+63 
+64    /* ! If Key String is invalid */
+65    if ( stat(Key_String, &buf) )
+66    {
+67       FILE *fd;
+68       /* !! If this is a physical device, error is fatal */
+</pre>
+libc_unix:dev/src/libc_unix/sumapss7.c:79-79
+File used here
+<pre>
+77       }
+78       /* !! Try to create the file */
+79       fd = fopen(Key_String, "w");
+80       /* !! If NOT sucessfull */
+81       if (! fd )
+82       {
+</pre></td>
+          <td><samp>{
+  &#34;Message&#34;: &#34;Remove this TOCTOU race condition window when accessing files&#34;,
+  &#34;Author&#34;: &#34;&#34;,
+  &#34;Creation Date&#34;: &#34;2021-10-05T07:48:39-0400&#34;,
+  &#34;Debt&#34;: &#34;10min&#34;,
+  &#34;Effort&#34;: &#34;10min&#34;,
+  &#34;Status&#34;: &#34;OPEN&#34;,
+  &#34;Update Date&#34;: &#34;2021-10-05T07:48:39-0400&#34;,
+  &#34;Flows&#34;: [
+    {
+      &#34;locations&#34;: [
+        {
+          &#34;component&#34;: &#34;libc_unix:dev/src/libc_unix/sumapss7.c&#34;,
+          &#34;textRange&#34;: {
+            &#34;startLine&#34;: 65,
+            &#34;endLine&#34;: 65,
+            &#34;startOffset&#34;: 8,
+            &#34;endOffset&#34;: 30
+          },
+          &#34;msg&#34;: &#34;File checked here&#34;
+        }
+      ]
+    },
+    {
+      &#34;locations&#34;: [
+        {
+          &#34;component&#34;: &#34;libc_unix:dev/src/libc_unix/sumapss7.c&#34;,
+          &#34;textRange&#34;: {
+            &#34;startLine&#34;: 79,
+            &#34;endLine&#34;: 79,
+            &#34;startOffset&#34;: 11,
+            &#34;endOffset&#34;: 33
+          },
+          &#34;msg&#34;: &#34;File used here&#34;
+        }
+      ]
+    }
+  ],
+  &#34;Hash&#34;: &#34;8430f2c6db3e4549755fbd9e481817c7&#34;,
+  &#34;Key&#34;: &#34;AXzck64vC85-0Ss6yFbS&#34;,
+  &#34;Quick Fix Available&#34;: false,
+  &#34;Tags&#34;: [
+    &#34;cert&#34;,
+    &#34;cwe&#34;,
+    &#34;owasp-a5&#34;
+  ]
+}</samp></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Details</h4>
+    <dl>
+      <dt>Control</dt>
+      <dd>c:S5847</dd>
+      <dt>Title</dt>
+      <dd>Accessing files should not introduce TOCTOU vulnerabilities</dd>
+      <dt>Desc</dt>
+      <dd><p>Time Of Check to Time Of Use (TOCTOU) vulnerabilities occur when an application:</p>
+<ul>
+  <li> First, checks permissions or attributes of a file: for instance, is a file a symbolic link? </li>
+  <li> Next, performs some operations such as writing data to this file. </li>
+</ul>
+<p>The application cannot assume the state of the file is unchanged between these two steps, there is a race condition (ie: two different processes
+can access and modify the same shared object/file at the same time, which can lead to privilege escalation, denial of service and other unexpected
+results).</p>
+<p>For instance, attackers can benefit from this situation by creating a symbolic link to a sensitive file directly after the first step (eg in Unix:
+<code>/etc/passwd</code>) and try to elevate their privileges (eg: if the written data has the correct <code>/etc/passwd</code> file format).</p>
+<p>To avoid TOCTOU vulnerabilities, one possible solution is to do a single atomic operation for the check and use actions, therefore removing the
+race condition window. Another possibility is to use file descriptors. This way the binding of the file descriptor to the file cannot be changed by a
+concurrent process.</p>
+<h2>Noncompliant Code Example</h2>
+<p>A check function (for instance <code>access</code>, <code>stat</code> …​ in this case <code>access</code> to verify the existence of a file) is
+used, followed by a use function (<code>open</code>, <code>fopen</code> …​) to write data inside a non existing file. These two consecutive calls
+create a TOCTOU race condition:</p>
+<pre>
+#include &lt;stdio.h&gt;
+
+void fopen_with_toctou(const char *file) {
+  if (access(file, F_OK) == -1 &amp;&amp; errno == ENOENT) {
+    // the file doesn't exist
+    // it is now created in order to write some data inside
+    FILE *f = fopen(file, w); // Noncompliant: a race condition window exist from access() call to fopen() call calls
+    if (NULL == f) {
+      /* Handle error */
+    }
+
+    if (fclose(f) == EOF) {
+      /* Handle error */
+    }
+  }
+}
+</pre>
+<h2>Compliant Solution</h2>
+<p>If the file already exists on the disk, <code>fopen</code> with <code>x</code> mode will fail:</p>
+<pre>
+#include &lt;stdio.h&gt;
+
+void open_without_toctou(const char *file) {
+  FILE *f = fopen(file, wx); // Compliant
+  if (NULL == f) {
+    /* Handle error */
+  }
+  /* Write to file */
+  if (fclose(f) == EOF) {
+    /* Handle error */
+  }
+}
+</pre>
+<p>A more generic solution is to use file descriptors:</p>
+<pre>
+void open_without_toctou(const char *file) {
+  int fd = open(file, O_CREAT | O_EXCL | O_WRONLY);
+  if (-1 != fd) {
+    FILE *f = fdopen(fd, w);  // Compliant
+  }
+}
+</pre>
+<h2>See</h2>
+<ul>
+  <li> <a href="https://owasp.org/Top10/A01_2021-Broken_Access_Control/">OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>
+  <li> <a href="https://www.owasp.org/index.php/Top_10-2017_A5-Broken_Access_Control">OWASP Top 10 2017 Category A5</a> - Boken Access Control </li>
+  <li> <a href="https://cwe.mitre.org/data/definitions/367.html">MITRE, CWE-367</a> - Time-of-check Time-of-use (TOCTOU) Race Condition </li>
+  <li> <a href="https://wiki.sei.cmu.edu/confluence/display/c/FIO45-C.+Avoid+TOCTOU+race+conditions+while+accessing+files">CERT, FIO45-C.</a> - Avoid
+  TOCTOU race conditions while accessing files </li>
+</ul></dd>
+      <dt>Severity</dt>
+      <dd>high</dd>
+      <dt>Impact</dt>
+      <dd>0.7</dd>
+      <dt>Nist Controls</dt>
+      <dd>AC-3</dd>
+    </dl>
+    <figure>
+      <figcaption>Source Code</figcaption>
+      <pre class="shiki shiki-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8" tabindex="0"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">=========================================================</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># Profile name: SonarQube Scan</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">=========================================================</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">undefined</span></span></code></pre>
     </figure>
   </details>
 </article>

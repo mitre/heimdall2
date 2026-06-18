@@ -385,6 +385,8 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
 .filter-actions .dropdown { margin: 0; }
 .filter-actions #filter-count { margin-left: auto; cursor: default; }
 #nist-family-list { max-height: 16rem; overflow-y: auto; }
+.profile-toggle { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: .2rem; margin: 0; opacity: 1; transition: opacity .15s; }
+.profile-toggle[aria-pressed="false"] { opacity: .3; }
 .active-tokens { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; padding: .4rem 0; }
 .active-tokens[hidden] { display: none; }
 .active-token { padding: .1rem .4rem; font-size: .7rem; border-radius: 1rem; border: none; white-space: nowrap; }
@@ -590,8 +592,9 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
 </section>
 
       <section id="file-1" aria-labelledby="file-1-h">
-        <h2 id="file-1-h">sonarqube-hdf.json</h2>
-        <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High" data-families="SI">
+        <details open>
+          <summary><h2 id="file-1-h" style="display:inline;">sonarqube-hdf.json</h2></summary>
+          <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High" data-families="SI">
   <details>
     <summary><span class="badge status--failed"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg> Failed</span>
       <span class="badge sev--high"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg> High</span>
@@ -748,6 +751,7 @@ window.addEventListener("message", function(event) {
   </details>
 </article>
 
+        </details>
       </section>
     </main>
 
@@ -873,12 +877,27 @@ window.addEventListener("message", function(event) {
     }
   }
 
+  var profileToggles = document.querySelectorAll('.profile-toggle');
+  profileToggles.forEach(function(btn) {
+    btn.setAttribute('aria-pressed', 'true');
+    btn.addEventListener('click', function() {
+      var fid = btn.getAttribute('data-file-id');
+      var section = document.getElementById('file-' + fid);
+      if (!section) return;
+      var visible = btn.getAttribute('aria-pressed') !== 'false';
+      btn.setAttribute('aria-pressed', String(!visible));
+      section.classList.toggle('filtered-out', visible);
+      applyFilters();
+    });
+  });
+
   if (clearBtn) clearBtn.addEventListener('click', function() {
     activeStatus = {}; activeSeverity = {}; activeFamilies = {}; searchTerm = '';
     if (searchInput) searchInput.value = '';
     document.querySelectorAll('.chip[aria-current]').forEach(function(c) { c.removeAttribute('aria-current'); });
     document.querySelectorAll('#nist-family-list input').forEach(function(cb) { cb.checked = false; });
     if (familyDetails) familyDetails.open = false;
+    profileToggles.forEach(function(btn) { btn.setAttribute('aria-pressed', 'true'); var s = document.getElementById('file-' + btn.getAttribute('data-file-id')); if (s) s.classList.remove('filtered-out'); });
     applyFilters();
   });
 

@@ -79,10 +79,12 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
       {%- if showResultSets %}
       {%- for resultSet in resultSets %}
       <section id="file-{{ resultSet.fileID }}" aria-labelledby="file-{{ resultSet.fileID }}-h">
-        <h2 id="file-{{ resultSet.fileID }}-h">{{ resultSet.filename }}</h2>
-        {%- for result in resultSet.results %}
-        {% render 'partials/control-card', result: result, showCode: showCode %}
-        {%- endfor %}
+        <details open>
+          <summary><h2 id="file-{{ resultSet.fileID }}-h" style="display:inline;">{{ resultSet.filename }}</h2></summary>
+          {%- for result in resultSet.results %}
+          {% render 'partials/control-card', result: result, showCode: showCode %}
+          {%- endfor %}
+        </details>
       </section>
       {%- endfor %}
       {%- endif %}

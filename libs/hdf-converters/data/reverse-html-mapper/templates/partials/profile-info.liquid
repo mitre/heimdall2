@@ -1,11 +1,13 @@
 {% comment %}Renders scan profile metadata in a compact horizontal layout.
-Variables: files (array of {filename, toolVersion, platform, duration}).
-No raw HTML — all plain text values.{% endcomment -%}
+Variables: files (array of {filename, fileID, toolVersion, platform, duration}).
+Multi-profile: eye icon toggle per row to show/hide that profile's controls.
+Single-profile: no toggle (just metadata).{% endcomment -%}
 <section id="profile-info" aria-labelledby="profile-info-h">
   <h2 id="profile-info-h">Profile Info</h2>
   <table class="striped">
     <thead>
       <tr>
+        {%- if files.size > 1 %}<th scope="col"></th>{%- endif %}
         <th scope="col">Filename</th>
         <th scope="col">Tool Version</th>
         <th scope="col">Platform</th>
@@ -15,6 +17,7 @@ No raw HTML — all plain text values.{% endcomment -%}
     <tbody>
       {%- for file in files %}
       <tr>
+        {%- if files.size > 1 %}<td data-label=""><button type="button" class="profile-toggle" data-file-id="{{ file.fileID }}" aria-label="Toggle {{ file.filename }} visibility" data-tooltip="Show/hide {{ file.filename }}">👁</button></td>{%- endif %}
         <td data-label="Filename"><code>{{ file.filename | default: '' }}</code></td>
         <td data-label="Tool Version">{{ file.toolVersion | default: '' }}</td>
         <td data-label="Platform">{{ file.platform | default: '' }}</td>
