@@ -2,11 +2,15 @@ import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import {describe, expect, it} from 'vitest';
 import {SonarqubeResults} from '../../../src/sonarqube-mapper';
-import {omitHDFTitle, omitVersions} from '../../utils';
+import {isServiceAvailable, omitHDFTitle, omitVersions} from '../../utils';
 
-const testURL = 'http://127.0.0.1:3001';
+const SONARQUBE_HOST = process.env.SONARQUBE_HOST ?? '127.0.0.1';
+const SONARQUBE_PORT = Number(process.env.SONARQUBE_PORT ?? 3001);
+const testURL = `http://${SONARQUBE_HOST}:${SONARQUBE_PORT}`;
 
-describe('sonarqube_mapper', () => {
+const sonarqubeAvailable = await isServiceAvailable(SONARQUBE_HOST, SONARQUBE_PORT);
+
+describe.skipIf(!sonarqubeAvailable)('sonarqube_mapper', () => {
   it('Successfully pulls SonarQube vulnerabilities', async () => {
     const mapper = new SonarqubeResults(testURL, 'xss', 'NotARealKey');
     const result: ExecJSON.Execution = await mapper.toHdf();

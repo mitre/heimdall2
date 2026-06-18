@@ -154,12 +154,14 @@ function loadJsonFile(filePath: string): any {
 function extractSeverity(
   jsonixData: Checklist,
   vulnIndex: number,
-  stigdataIndex: number
+  _stigdataIndex: number
 ): string | undefined {
   const istig = (jsonixData?.value as Stigdata)?.stigs?.istig[0];
   const vuln = istig?.vuln[vulnIndex];
-  const stigdataElement = vuln?.stigdata[stigdataIndex];
-  return stigdataElement?.attributedata ?? undefined;
+  const severityElement = vuln?.stigdata.find(
+    (sd: {vulnattribute?: string}) => sd.vulnattribute === 'Severity'
+  );
+  return severityElement?.attributedata ?? undefined;
 }
 /**
  * Extract the status string for a specific control from the mapper.

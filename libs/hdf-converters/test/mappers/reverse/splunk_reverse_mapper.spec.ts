@@ -2,13 +2,15 @@ import fs from 'fs';
 import {describe, it} from 'vitest';
 import {FromHDFToSplunkMapper} from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
 
+const SPLUNK_HOST = process.env.SPLUNK_HOST ?? '127.0.0.1';
+const SPLUNK_PORT = Number(process.env.SPLUNK_PORT ?? 8089);
+
 export function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 describe('Describe Splunk Reverse Mapper', () => {
-  it('Successfully converts HDF into Splunk', async () => {
-    // The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
+  it('Successfully converts HDF into Splunk', async ({ skip }) => {
     const inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
@@ -16,16 +18,22 @@ describe('Describe Splunk Reverse Mapper', () => {
       )
     );
 
-    // Currently tests are to make sure there are no errors during upload to Splunk
-    await new FromHDFToSplunkMapper(inputData).toSplunk(
-      {
-        host: '127.0.0.1',
-        username: 'admin',
-        password: 'Valid_password!',
-        index: 'main',
-        scheme: 'http'
-      },
-      'rhel7-results.json'
-    );
+    try {
+      await new FromHDFToSplunkMapper(inputData).toSplunk(
+        {
+          host: SPLUNK_HOST,
+          username: process.env.SPLUNK_USERNAME ?? 'admin',
+          password: process.env.SPLUNK_PASSWORD ?? 'Valid_password!',
+          index: process.env.SPLUNK_INDEX ?? 'main',
+          scheme: (process.env.SPLUNK_SCHEME as 'http' | 'https') ?? 'http'
+        },
+        'rhel7-results.json'
+      );
+    } catch (error: any) {
+      if (error?.cause?.code === 'ECONNREFUSED' || error?.cause?.code === 'ECONNRESET') {
+        skip(`Splunk not available at ${SPLUNK_HOST}:${SPLUNK_PORT}`);
+      }
+      throw error;
+    }
   });
 });

@@ -1,8 +1,29 @@
-import {ExecJSON} from 'inspecjs';
+import { createConnection } from 'net';
+import { ExecJSON } from 'inspecjs';
 import _ from 'lodash';
-import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
-import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
-import {version as hdfConvertersVersion} from '../package.json';
+import { IFindingASFF } from '../src/converters-from-hdf/asff/asff-types';
+import { ExecJSONProfile } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import { version as hdfConvertersVersion } from '../package.json';
+
+export function isServiceAvailable(host: string, port: number, timeoutMs = 1000): Promise<boolean> {
+  return new Promise((resolve) => {
+    const socket = createConnection({ host, port });
+    const timer = setTimeout(() => {
+      socket.destroy();
+      resolve(false);
+    }, timeoutMs);
+    socket.on('connect', () => {
+      clearTimeout(timer);
+      socket.destroy();
+      resolve(true);
+    });
+    socket.on('error', () => {
+      clearTimeout(timer);
+      socket.destroy();
+      resolve(false);
+    });
+  });
+}
 
 export function omitVersions(
   input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
