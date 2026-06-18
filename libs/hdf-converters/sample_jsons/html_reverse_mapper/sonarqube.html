@@ -262,9 +262,13 @@ html { scrollbar-gutter: stable; overflow-y: scroll; }
 @media (max-width: 768px) { .report-wrapper { padding: 0 .75rem; } }
 
 /* === Layout === */
-.report-header { border-bottom: 1px solid var(--pico-muted-border-color); padding-top: 1.5rem; padding-bottom: .5rem; margin-bottom: 0; }
-.report-nav { background: var(--report-cap-bg); border-bottom: 1px solid var(--pico-muted-border-color); padding: .35rem .75rem; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.report-header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--pico-muted-border-color); padding-top: 1.5rem; padding-bottom: .5rem; margin-bottom: 0; }
+.report-header > hgroup { flex: 1; }
+.report-header > .btn-icon { flex: none; margin-top: .5rem; }
+/* .report-nav removed — using Blades native nav + nav[aria-label] overrides */
 .report-filters { background: var(--report-stripe-bg); border-bottom: 1px solid var(--pico-muted-border-color); padding: .5rem .75rem; }
+[data-jump-to="top"] { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 5; padding: .4rem .7rem; border-radius: .5rem; background: var(--report-stripe-bg); border: 1px solid var(--report-border); font-size: .8rem; text-decoration: none; opacity: .6; transition: opacity .15s; }
+[data-jump-to="top"]:hover { opacity: 1; }
 .report-footer { border-top: 1px solid var(--pico-muted-border-color); padding-top: 1rem; margin-top: 2rem; }
 .tag { display: inline-block; padding: .05em .35em; border-radius: 1em; font-size: .65rem; border: 1px solid var(--pico-muted-border-color, #ccc); color: var(--pico-muted-color, #666); }
 
@@ -291,11 +295,15 @@ html { scrollbar-gutter: stable; overflow-y: scroll; }
 .bar-nr { background: var(--st-nr-fg); }
 .bar-error { background: var(--st-error-fg); }
 
-/* Mobile: stack summary vertically */
+/* Mobile: compact summary — ring shrinks, stays left, stats beside it */
 @media (max-width: 768px) {
-  .summary-layout { flex-direction: column; gap: 1rem; }
-  .compliance-hero { width: 100%; padding: 1rem; }
-  .breakdown-grid { grid-template-columns: 1fr; padding: 0 1rem 1rem; }
+  .summary-layout { gap: .75rem; }
+  .compliance-hero { min-width: auto; padding: .75rem; }
+  .compliance-ring { width: 4.5rem; height: 4.5rem; font-size: 1rem; border-width: 4px; }
+  .compliance-label { font-size: .7rem; }
+  .breakdown-grid { grid-template-columns: 1fr; gap: .75rem; padding: .5rem; }
+  .breakdown-grid h3 { font-size: .75rem; }
+  .breakdown-grid td { padding: .1rem .3rem; font-size: .85rem; }
   .report-nav { position: static; }
 }
 /* Control cards — expandable cards with emphasis overlay zebra (Bootstrap 5.3 pattern) */
@@ -347,32 +355,33 @@ pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
 [data-theme="dark"] pre.shiki { background-color: var(--shiki-dark-bg, #24292e) !important; }
 [data-theme="dark"] .shiki span { color: var(--shiki-dark) !important; }
 
-/* === Nav layout === */
-.nav-row { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
-.nav-links { gap: .5rem; flex-wrap: wrap; margin-inline: 0; }
-.nav-links li { margin: 0; }
-.nav-actions { display: flex; align-items: center; gap: .35rem; flex-wrap: nowrap; }
-.nav-actions input[type="search"] { width: 14rem; margin: 0; padding: .3rem .6rem; font-size: .85rem; }
+/* === Nav overrides (Blades nav provides flex layout natively) === */
+nav[aria-label="Report controls"] { position: sticky; top: 0; z-index: 10; background: var(--report-cap-bg); border-bottom: 1px solid var(--pico-muted-border-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+nav[aria-label="Report controls"] form[role="search"] { margin: 0; }
+nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
 .btn-icon { margin: 0; padding: .3rem .5rem; font-size: .9rem; width: auto; }
 .mobile-only { display: none; }
 
 /* === Filter chips (M3 filter chip pattern + SonarQube counts) === */
 .filtered-out { display: none; }
 #filter-bar[hidden] { display: none; }
-.chip-row { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; }
+/* chip-row removed — Blades role="group" handles flex layout natively */
 .chip { display: inline-flex; align-items: center; gap: .2em; margin: 0; padding: .15rem .5rem; font-size: .75rem; border-radius: 1rem; border: 1px solid var(--report-border); background: transparent; color: inherit; cursor: pointer; white-space: nowrap; line-height: 1.4; transition: background .15s, border-color .15s; }
 .chip:hover { background: var(--report-hover-bg); }
 .chip[aria-current="true"] { background: var(--pico-primary-background); border-color: var(--pico-primary); color: var(--pico-primary-inverse); }
+.chip[data-filter-status="Passed"][aria-current="true"]        { background: var(--st-pass-bg);  border-color: var(--st-pass-fg);  color: var(--st-pass-fg); }
+.chip[data-filter-status="Failed"][aria-current="true"]        { background: var(--st-fail-bg);  border-color: var(--st-fail-fg);  color: var(--st-fail-fg); }
+.chip[data-filter-status="Not Applicable"][aria-current="true"]{ background: var(--st-na-bg);    border-color: var(--st-na-fg);    color: var(--st-na-fg); }
+.chip[data-filter-status="Not Reviewed"][aria-current="true"]  { background: var(--st-nr-bg);    border-color: var(--st-nr-fg);    color: var(--st-nr-fg); }
+.chip[data-filter-status="Profile Error"][aria-current="true"] { background: var(--st-error-bg); border-color: var(--st-error-fg); color: var(--st-error-fg); }
+.chip[data-filter-severity="none"][aria-current="true"]     { background: var(--sv-none-bg);     border-color: var(--sv-none-fg);     color: var(--sv-none-fg); }
+.chip[data-filter-severity="low"][aria-current="true"]      { background: var(--sv-low-bg);      border-color: var(--sv-low-fg);      color: var(--sv-low-fg); }
+.chip[data-filter-severity="medium"][aria-current="true"]   { background: var(--sv-medium-bg);   border-color: var(--sv-medium-fg);   color: var(--sv-medium-fg); }
+.chip[data-filter-severity="high"][aria-current="true"]     { background: var(--sv-high-bg);     border-color: var(--sv-high-fg);     color: var(--sv-high-fg); }
+.chip[data-filter-severity="critical"][aria-current="true"] { background: var(--sv-critical-bg); border-color: var(--sv-critical-fg); color: var(--sv-critical-fg); }
 .chip-count { font-weight: 600; font-variant-numeric: tabular-nums; }
-.chip-divider { width: 1px; height: 1.2rem; background: var(--report-border); margin: 0 .15rem; }
-.chip-dropdown { display: inline-block; position: relative; margin: 0; }
-.chip-dropdown > summary { list-style: none; }
-.chip-dropdown > summary::-webkit-details-marker { display: none; }
-.chip-dropdown > summary::after { content: " \25BE"; font-size: .65em; }
-.chip-dropdown .dropdown-body { position: absolute; top: 100%; left: 0; z-index: 20; min-width: 10rem; max-height: 16rem; overflow-y: auto; background: var(--pico-card-background-color, #fff); border: 1px solid var(--report-border); border-radius: .5rem; padding: .25rem 0; margin-top: .2rem; box-shadow: 0 4px 12px rgba(0,0,0,.15); }
-.chip-dropdown label { display: flex; align-items: center; gap: .4rem; padding: .25rem .6rem; font-size: .8rem; cursor: pointer; white-space: nowrap; }
-.chip-dropdown label:hover { background: var(--report-hover-bg); }
-.chip-dropdown input[type="checkbox"] { margin: 0; width: 1rem; height: 1rem; }
+.nist-row { display: flex; gap: .3rem; justify-content: flex-end; margin-top: .3rem; }
+#nist-family-list { max-height: 16rem; overflow-y: auto; }
 .active-tokens { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; padding: .4rem 0; }
 .active-tokens[hidden] { display: none; }
 .active-token { padding: .1rem .4rem; font-size: .7rem; border-radius: 1rem; border: none; white-space: nowrap; }
@@ -381,14 +390,28 @@ pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
 .link-btn { background: none; border: none; color: var(--pico-primary); cursor: pointer; font-size: .75rem; padding: 0; margin: 0; text-decoration: underline; }
 .link-btn[hidden] { display: none; }
 
-/* Mobile responsive */
+/* Mobile responsive — research-backed: M3 chips, NN/g nav, Apple HIG 44px, Roselli tables */
 @media (max-width: 768px) {
   .mobile-only { display: inline-flex; }
   #filter-bar:not([hidden]) { display: block; }
-  .nav-actions input[type="search"] { width: 100%; min-width: 0; flex: 1; }
-  .nav-links { font-size: .85rem; }
-  .chip-row { flex-wrap: wrap; }
-  #filter-bar select { width: 100%; }
+
+  /* Nav: Blades handles layout, just ensure 44px touch targets + static positioning */
+  .btn-icon { min-width: 2.75rem; min-height: 2.75rem; }
+  nav[aria-label="Report controls"] { position: static; }
+
+  /* Chips: 44px touch targets on mobile */
+  .chip { min-height: 2.75rem; padding: .5rem .8rem; }
+
+  /* NIST row below chips (not inside scroll container) */
+  .nist-row { display: flex; gap: .3rem; margin-top: .4rem; }
+
+  /* Profile Info: stack to card */
+  #profile-info thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  #profile-info table, #profile-info tbody, #profile-info tr, #profile-info td { display: block; width: 100%; }
+  #profile-info tr { border: 1px solid var(--report-border); border-radius: .5rem; margin-bottom: .5rem; padding: .25rem .6rem; }
+  #profile-info td { display: flex; justify-content: space-between; gap: 1rem; border: none; padding: .35rem 0; }
+  #profile-info td::before { content: attr(data-label); font-weight: 600; opacity: .6; text-transform: uppercase; font-size: .7rem; letter-spacing: .03em; }
+  #profile-info td code { overflow-wrap: anywhere; text-align: right; }
 }
 
 /* === Corrected @media print — ADR §9.2 === */
@@ -453,43 +476,43 @@ pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
         <h1>Heimdall Administrator Report</h1>
         <p>Self-contained security compliance report</p>
       </hgroup>
+      <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme" data-tooltip="Toggle light/dark theme" data-placement="bottom">&#9788;/&#9790;</button>
     </header>
 
-    <nav class="report-nav no-print" aria-label="Report controls">
-      <div class="nav-row">
-        <ul class="nav-links">
-          <li><a href="#summary"><strong>Summary</strong></a></li>
-          <li><a href="#profile-info">Profile Info</a></li>
-          <li><a href="#file-1">sonarqube-hdf.json</a></li>
-        </ul>
-        <div class="nav-actions">
-          <input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title">
-          <button type="button" id="btn-expand-all" class="btn-icon" aria-label="Expand all" data-tooltip="Expand all controls" data-placement="bottom">&#8862;</button>
-          <button type="button" id="btn-collapse-all" class="btn-icon" aria-label="Collapse all" data-tooltip="Collapse all controls" data-placement="bottom">&#8863;</button>
-          <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme" data-tooltip="Toggle light/dark theme" data-placement="bottom">&#9788;/&#9790;</button>
-          <button type="button" id="nav-filter-toggle" class="btn-icon mobile-only" aria-label="Toggle filters" aria-expanded="false">&#9776;</button>
-        </div>
-      </div>
+    <nav class="no-print" aria-label="Report controls">
+      <ul>
+        <li><a href="#summary"><strong>Summary</strong></a></li>
+        <li><a href="#profile-info">Profile Info</a></li>
+        <li><a href="#file-1">sonarqube-hdf.json</a></li>
+      </ul>
+      <ul>
+        <li><form role="search"><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title"></form></li>
+        <li><button class="outline" id="btn-expand-all" data-tooltip="Expand all controls">&#9660; Expand</button></li>
+        <li><button class="outline" id="btn-collapse-all" data-tooltip="Collapse all controls">&#9650; Collapse</button></li>
+        <li><button class="btn-icon mobile-only" id="nav-filter-toggle" aria-label="Toggle filters" aria-expanded="false">&#9776;</button></li>
+      </ul>
     </nav>
-    <div class="report-filters no-print" id="filter-bar" aria-label="Control filters" hidden>
-      <div class="chip-row">
+    <div class="no-print report-filters" id="filter-bar" aria-label="Control filters" hidden>
+      <div role="group" aria-label="Filter by status">
         <button type="button" class="chip" data-filter-status="Passed">&#10003; Pass <span class="chip-count">0</span></button>
         <button type="button" class="chip" data-filter-status="Failed">&#10007; Fail <span class="chip-count">1</span></button>
         <button type="button" class="chip" data-filter-status="Not Applicable">&#8854; N/A <span class="chip-count">0</span></button>
         <button type="button" class="chip" data-filter-status="Not Reviewed">&#9888; NR <span class="chip-count">0</span></button>
         <button type="button" class="chip" data-filter-status="Profile Error">&#9651; Err <span class="chip-count">0</span></button>
-        <span class="chip-divider"></span>
+      </div>
+      <div role="group" aria-label="Filter by severity">
         <button type="button" class="chip" data-filter-severity="none">None <span class="chip-count">0</span></button>
         <button type="button" class="chip" data-filter-severity="low">Low <span class="chip-count">0</span></button>
         <button type="button" class="chip" data-filter-severity="medium">Med <span class="chip-count">0</span></button>
         <button type="button" class="chip" data-filter-severity="high">High <span class="chip-count">1</span></button>
         <button type="button" class="chip" data-filter-severity="critical">Crit <span class="chip-count">0</span></button>
-        <span class="chip-divider"></span>
-        <details id="nist-family-filter" class="chip-dropdown" role="listbox" aria-label="NIST 800-53 family">
-          <summary class="chip" id="nist-family-trigger">NIST Family</summary>
-          <div class="dropdown-body" id="nist-family-list">
-            <label><input type="checkbox" value="SI" data-family-count="1"> SI (1)</label>
-          </div>
+      </div>
+      <div class="nist-row">
+        <details id="nist-family-filter" class="dropdown" role="listbox" aria-label="NIST 800-53 family">
+          <summary id="nist-family-trigger">NIST Family</summary>
+          <ul id="nist-family-list">
+            <li><label><input type="checkbox" value="SI" data-family-count="1"> SI (1)</label></li>
+          </ul>
         </details>
       </div>
       <div id="active-tokens" class="active-tokens" hidden></div>
@@ -513,10 +536,10 @@ pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
     </thead>
     <tbody>
       <tr>
-        <td><code>sonarqube-hdf.json</code></td>
-        <td>2.11.5</td>
-        <td>Heimdall Tools</td>
-        <td></td>
+        <td data-label="Filename"><code>sonarqube-hdf.json</code></td>
+        <td data-label="Tool Version">2.11.5</td>
+        <td data-label="Platform">Heimdall Tools</td>
+        <td data-label="Duration (s)"></td>
       </tr>
     </tbody>
   </table>

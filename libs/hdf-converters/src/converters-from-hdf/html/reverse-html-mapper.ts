@@ -359,7 +359,7 @@ export class FromHDFToHTMLMapper {
     resultLevels: ContextualizedControl[]
   ): ContextualizedControl & {details: IDetail[]} & {resultID: string} & {
     resultStatus: IResultStatus;
-  } & {resultSeverity: IResultSeverity} & {controlTags: string[]} {
+  } & {resultSeverity: IResultSeverity} & {controlTags: string[]; nistFamilies: string} {
     // Check status of individual result to assign corresponding icon
     let statusColor;
     switch (result.root.hdf.status) {

@@ -15,10 +15,10 @@ No raw HTML — all plain text values.{% endcomment -%}
     <tbody>
       {%- for file in files %}
       <tr>
-        <td><code>{{ file.filename | default: '' }}</code></td>
-        <td>{{ file.toolVersion | default: '' }}</td>
-        <td>{{ file.platform | default: '' }}</td>
-        <td>{{ file.duration | default: '' }}</td>
+        <td data-label="Filename"><code>{{ file.filename | default: '' }}</code></td>
+        <td data-label="Tool Version">{{ file.toolVersion | default: '' }}</td>
+        <td data-label="Platform">{{ file.platform | default: '' }}</td>
+        <td data-label="Duration (s)">{{ file.duration | default: '' }}</td>
       </tr>
       {%- endfor %}
     </tbody>

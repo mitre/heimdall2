@@ -652,7 +652,262 @@ describe('Shiki syntax highlighting (n3v.13)', () => {
   });
 });
 
+describe('Mobile responsive layout (n3v.28)', () => {
+  it('mobile CSS: icon buttons have 44px (2.75rem) min touch targets', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.btn-icon\s*\{[^}]*min-height:\s*2\.75rem/);
+    expect(reportCss).toMatch(/\.btn-icon\s*\{[^}]*min-width:\s*2\.75rem/);
+  });
+
+  it('nav search form has no margin (Blades nav handles spacing)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/form\[role="search"\]\s*\{[^}]*margin:\s*0/);
+  });
+
+  it('mobile CSS: nav is static on mobile (not sticky)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/nav\[aria-label.*\]\s*\{[^}]*position:\s*static/);
+  });
+
+  it('status and severity chips are in separate role="group" rows (Pico-idiomatic)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const statusGroup = output.match(/<div[^>]*role="group"[^>]*aria-label="[^"]*status[^"]*"/i);
+    const severityGroup = output.match(/<div[^>]*role="group"[^>]*aria-label="[^"]*severity[^"]*"/i);
+    expect(statusGroup).not.toBeNull();
+    expect(severityGroup).not.toBeNull();
+  });
+
+  it('mobile CSS: chips have 44px min-height touch target', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.chip\s*\{[^}]*min-height:\s*2\.75rem/);
+  });
+
+  it('mobile CSS: profile info table stacks to card layout', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/#profile-info\s+td\s*\{[^}]*display:\s*flex/);
+    expect(reportCss).toMatch(/#profile-info\s+td::before/);
+  });
+
+  it('profile-info.liquid td elements have data-label attributes', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const src = templates['partials/profile-info'];
+    expect(src).toContain('data-label="Filename"');
+    expect(src).toContain('data-label="Tool Version"');
+    expect(src).toContain('data-label="Platform"');
+    expect(src).toContain('data-label="Duration (s)"');
+  });
+
+  it('back-to-top link is fixed position bottom-right', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\[data-jump-to="top"\]\s*\{[^}]*position:\s*fixed/);
+    expect(reportCss).toMatch(/\[data-jump-to="top"\]\s*\{[^}]*bottom/);
+    expect(reportCss).toMatch(/\[data-jump-to="top"\]\s*\{[^}]*right/);
+  });
+
+  it('NIST dropdown is in its own nist-row (not inside a chip-row group)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const nistRowMatch = output.match(/<div class="nist-row">([\s\S]*?)<\/div>\s*<\/div>/);
+    expect(nistRowMatch).not.toBeNull();
+    expect(nistRowMatch![1]).toContain('nist-family-filter');
+  });
+});
+
+describe('Blades component refactor (n3v.31)', () => {
+  const inputData = fs.readFileSync(
+    'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
+    {encoding: 'utf-8'}
+  );
+
+  it('nav uses Blades pattern: two <ul> groups, no custom wrappers', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const navMatch = output.match(/<nav[^>]*>([\s\S]*?)<\/nav>/);
+    expect(navMatch).not.toBeNull();
+    const navContent = navMatch![1];
+    const ulCount = (navContent.match(/<ul[^>]*>/g) || []).length;
+    expect(ulCount).toBe(2);
+    expect(navContent).not.toContain('class="nav-row"');
+    expect(navContent).not.toContain('class="nav-links"');
+    expect(navContent).not.toContain('class="nav-actions"');
+  });
+
+  it('NIST dropdown uses Blades pattern: details.dropdown > summary + ul > li > label', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/details[^>]*id="nist-family-filter"[^>]*class="dropdown"/);
+    expect(output).toMatch(/<ul[^>]*id="nist-family-list"/);
+    const nistMatch = output.match(/<ul[^>]*id="nist-family-list"[^>]*>([\s\S]*?)<\/ul>/);
+    expect(nistMatch).not.toBeNull();
+    expect(nistMatch![1]).toContain('<li>');
+  });
+
+  it('report.css has no .nav-row, .nav-links, .nav-actions, .nav-search rules', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toMatch(/\.nav-row\s*\{/);
+    expect(reportCss).not.toMatch(/\.nav-links\s*\{/);
+    expect(reportCss).not.toMatch(/\.nav-actions\s*\{/);
+    expect(reportCss).not.toMatch(/\.nav-search\s*\{/);
+  });
+
+  it('report.css has no .chip-dropdown or .dropdown-body rules', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toMatch(/\.chip-dropdown\s*[\{>]/);
+    expect(reportCss).not.toMatch(/\.dropdown-body\s*[\{,]/);
+  });
+
+  it('report.css has no .chip-row rules (role="group" handles layout)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toMatch(/\.chip-row\s*\{/);
+  });
+
+  it('filter chip groups use bare role="group" without wrapper class', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const statusGroup = output.match(/<div[^>]*role="group"[^>]*aria-label="[^"]*status[^"]*"[^>]*>/i);
+    expect(statusGroup).not.toBeNull();
+    expect(statusGroup![0]).not.toContain('class="chip-row"');
+  });
+});
+
 describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
+  it('mobile: summary layout stays flex-row (ring left, stats right — not stacked)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toMatch(/\.summary-layout\s*\{[^}]*flex-direction:\s*column/);
+  });
+
+  it('mobile: compliance ring shrinks to compact size', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.compliance-ring\s*\{[^}]*width:\s*4\.5rem/);
+    expect(reportCss).toMatch(/\.compliance-ring\s*\{[^}]*height:\s*4\.5rem/);
+  });
+
+  it('mobile: breakdown grid stacks to single column', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.breakdown-grid\s*\{[^}]*grid-template-columns:\s*1fr\s*[;,]/);
+  });
+
+  it('nav uses sticky positioning on desktop with backdrop blur', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/nav\[aria-label.*\]\s*\{[^}]*position:\s*sticky/);
+    expect(reportCss).toMatch(/nav\[aria-label.*\]\s*\{[^}]*backdrop-filter/);
+  });
+
+  it('report header is flex row with hgroup filling and button right-aligned', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.report-header\s*\{[^}]*display:\s*flex/);
+    expect(reportCss).toMatch(/\.report-header\s*\{[^}]*justify-content:\s*space-between/);
+    expect(reportCss).toMatch(/\.report-header\s*>\s*hgroup\s*\{[^}]*flex:\s*1/);
+  });
+
+  it('.nist-row has desktop styles (flex, gap, right-aligned)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.nist-row\s*\{[^}]*display:\s*flex/);
+    expect(reportCss).toMatch(/\.nist-row\s*\{[^}]*justify-content:\s*flex-end/);
+  });
+
+  it('search input inside nav does not override Pico padding (preserves magnifying glass)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toMatch(/nav.*input.*padding-inline-start/);
+  });
+
+  it('expand/collapse buttons use arrow+text labels (not cryptic icons)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/id="btn-expand-all"[^>]*>.*Expand/);
+    expect(output).toMatch(/id="btn-collapse-all"[^>]*>.*Collapse/);
+  });
+
+  it('search input uses Pico role="search" group pattern', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/role="search"[^>]*>[\s\S]*?id="control-search"/);
+  });
+
+  it('active status chips use status colors (not generic primary)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.chip\[data-filter-status.*Passed.*aria-current/);
+    expect(reportCss).toContain('--st-pass-fg');
+    expect(reportCss).toMatch(/\.chip\[data-filter-status.*Failed.*aria-current/);
+    expect(reportCss).toMatch(/\.chip\[data-filter-severity.*high.*aria-current/);
+  });
+
+  it('NIST row is right-aligned', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.nist-row\s*\{[^}]*justify-content:\s*flex-end/);
+  });
+
+  it('theme toggle is inside the report header (same row as title)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const headerMatch = output.match(/<header class="report-header[^"]*">([\s\S]*?)<\/header>/);
+    expect(headerMatch).not.toBeNull();
+    expect(headerMatch![1]).toContain('id="theme-toggle"');
+  });
+
   it('report header has top padding (title does not touch browser edge)', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
@@ -660,41 +915,36 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
     expect(reportCss).toMatch(/\.report-header\s*\{[^}]*padding-top/);
   });
 
-  it('nav and filter bar have compact internal padding', async () => {
+  it('filter bar has background and border styling', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
-    expect(reportCss).toMatch(/\.report-nav\s*\{[^}]*padding:\s*\.35rem\s+\.75rem/);
-    expect(reportCss).toMatch(/\.report-filters\s*\{[^}]*padding:\s*\.5rem\s+\.75rem/);
+    expect(reportCss).toMatch(/\.report-filters\s*\{[^}]*background/);
+    expect(reportCss).toMatch(/\.report-filters\s*\{[^}]*border/);
   });
 
-  it('H1: .nav-row has flex:1 to fill Blades nav flex container', async () => {
+  it('H1: nav uses Blades native layout (no .nav-row wrapper)', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
-    expect(reportCss).toMatch(/\.nav-row\s*\{[^}]*flex:\s*1/);
+    expect(reportCss).not.toMatch(/\.nav-row/);
   });
 
-  it('H2: NIST dropdown does not use Blades "dropdown" class', async () => {
+  it('H2: NIST dropdown uses Blades "dropdown" class (not custom chip-dropdown)', async () => {
     const mapper = new FromHDFToHTMLMapper(
       [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
       FileExportTypes.Administrator
     );
     const output = await mapper.toHTML();
-    expect(output).not.toMatch(/class="dropdown\s/);
-    expect(output).toContain('class="chip-dropdown"');
+    expect(output).toContain('class="dropdown"');
+    expect(output).not.toContain('chip-dropdown');
   });
 
-  it('M1: .nav-links does not redeclare display:flex or list-style (Blades nav ul provides these)', async () => {
+  it('M1: no .nav-links class in CSS (Blades nav ul provides these)', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
-    const navLinksRule = reportCss.match(/\.nav-links\s*\{([^}]*)\}/);
-    expect(navLinksRule).not.toBeNull();
-    const props = navLinksRule![1];
-    expect(props).not.toContain('display');
-    expect(props).not.toContain('list-style');
-    expect(props).not.toContain('padding: 0');
+    expect(reportCss).not.toMatch(/\.nav-links/);
   });
 
   it('M4: no --pico-accordion-border-color in report.css (dead variable)', async () => {
@@ -1151,12 +1401,11 @@ describe('Blades idiom polish (n3v.22)', () => {
     }
   });
 
-  it('does not add custom CSS for data-tooltip, ins, del, or data-jump-to', async () => {
+  it('does not add custom CSS for data-tooltip, ins, or del (Blades native)', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
     expect(reportCss).not.toContain('data-tooltip');
-    expect(reportCss).not.toContain('data-jump-to');
     expect(reportCss).not.toMatch(/\bins\b\s*\{/);
     expect(reportCss).not.toMatch(/\bdel\b\s*\{/);
   });

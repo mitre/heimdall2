@@ -17,55 +17,53 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
         <h1>Heimdall {{ exportType }} Report</h1>
         <p>Self-contained security compliance report</p>
       </hgroup>
+      <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme" data-tooltip="Toggle light/dark theme" data-placement="bottom">&#9788;/&#9790;</button>
     </header>
 
-    <nav class="report-nav no-print" aria-label="Report controls">
-      <div class="nav-row">
-        <ul class="nav-links">
-          <li><a href="#summary"><strong>Summary</strong></a></li>
-          <li><a href="#profile-info">Profile Info</a></li>
-          {%- if showResultSets %}
-          {%- for resultSet in resultSets %}
-          <li><a href="#file-{{ resultSet.fileID }}">{{ resultSet.filename }}</a></li>
-          {%- endfor %}
-          {%- endif %}
-        </ul>
-        <div class="nav-actions">
-          {%- if showResultSets %}
-          <input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title">
-          <button type="button" id="btn-expand-all" class="btn-icon" aria-label="Expand all" data-tooltip="Expand all controls" data-placement="bottom">&#8862;</button>
-          <button type="button" id="btn-collapse-all" class="btn-icon" aria-label="Collapse all" data-tooltip="Collapse all controls" data-placement="bottom">&#8863;</button>
-          {%- endif %}
-          <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme" data-tooltip="Toggle light/dark theme" data-placement="bottom">&#9788;/&#9790;</button>
-          {%- if showResultSets %}
-          <button type="button" id="nav-filter-toggle" class="btn-icon mobile-only" aria-label="Toggle filters" aria-expanded="false">&#9776;</button>
-          {%- endif %}
-        </div>
-      </div>
+    <nav class="no-print" aria-label="Report controls">
+      <ul>
+        <li><a href="#summary"><strong>Summary</strong></a></li>
+        <li><a href="#profile-info">Profile Info</a></li>
+        {%- if showResultSets %}
+        {%- for resultSet in resultSets %}
+        <li><a href="#file-{{ resultSet.fileID }}">{{ resultSet.filename }}</a></li>
+        {%- endfor %}
+        {%- endif %}
+      </ul>
+      <ul>
+        {%- if showResultSets %}
+        <li><form role="search"><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title"></form></li>
+        <li><button class="outline" id="btn-expand-all" data-tooltip="Expand all controls">&#9660; Expand</button></li>
+        <li><button class="outline" id="btn-collapse-all" data-tooltip="Collapse all controls">&#9650; Collapse</button></li>
+        <li><button class="btn-icon mobile-only" id="nav-filter-toggle" aria-label="Toggle filters" aria-expanded="false">&#9776;</button></li>
+        {%- endif %}
+      </ul>
     </nav>
 
     {%- if showResultSets %}
-    <div class="report-filters no-print" id="filter-bar" aria-label="Control filters" hidden>
-      <div class="chip-row">
+    <div class="no-print report-filters" id="filter-bar" aria-label="Control filters" hidden>
+      <div role="group" aria-label="Filter by status">
         <button type="button" class="chip" data-filter-status="Passed">&#10003; Pass <span class="chip-count">{{ statistics.passed }}</span></button>
         <button type="button" class="chip" data-filter-status="Failed">&#10007; Fail <span class="chip-count">{{ statistics.failed }}</span></button>
         <button type="button" class="chip" data-filter-status="Not Applicable">&#8854; N/A <span class="chip-count">{{ statistics.notApplicable }}</span></button>
         <button type="button" class="chip" data-filter-status="Not Reviewed">&#9888; NR <span class="chip-count">{{ statistics.notReviewed }}</span></button>
         <button type="button" class="chip" data-filter-status="Profile Error">&#9651; Err <span class="chip-count">{{ statistics.profileError }}</span></button>
-        <span class="chip-divider"></span>
+      </div>
+      <div role="group" aria-label="Filter by severity">
         <button type="button" class="chip" data-filter-severity="none">None <span class="chip-count">{{ severity.none }}</span></button>
         <button type="button" class="chip" data-filter-severity="low">Low <span class="chip-count">{{ severity.low }}</span></button>
         <button type="button" class="chip" data-filter-severity="medium">Med <span class="chip-count">{{ severity.medium }}</span></button>
         <button type="button" class="chip" data-filter-severity="high">High <span class="chip-count">{{ severity.high }}</span></button>
         <button type="button" class="chip" data-filter-severity="critical">Crit <span class="chip-count">{{ severity.critical }}</span></button>
-        <span class="chip-divider"></span>
-        <details id="nist-family-filter" class="chip-dropdown" role="listbox" aria-label="NIST 800-53 family">
-          <summary class="chip" id="nist-family-trigger">NIST Family</summary>
-          <div class="dropdown-body" id="nist-family-list">
+      </div>
+      <div class="nist-row">
+        <details id="nist-family-filter" class="dropdown" role="listbox" aria-label="NIST 800-53 family">
+          <summary id="nist-family-trigger">NIST Family</summary>
+          <ul id="nist-family-list">
             {%- for fam in nistFamilies %}
-            <label><input type="checkbox" value="{{ fam.family }}" data-family-count="{{ fam.count }}"> {{ fam.family }} ({{ fam.count }})</label>
+            <li><label><input type="checkbox" value="{{ fam.family }}" data-family-count="{{ fam.count }}"> {{ fam.family }} ({{ fam.count }})</label></li>
             {%- endfor %}
-          </div>
+          </ul>
         </details>
       </div>
       <div id="active-tokens" class="active-tokens" hidden></div>

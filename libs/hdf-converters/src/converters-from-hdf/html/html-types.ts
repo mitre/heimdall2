@@ -66,6 +66,7 @@ export interface IResultSet {
     resultID: string;
   } & {resultStatus: IResultStatus} & {resultSeverity: IResultSeverity} & {
     controlTags: string[];
+    nistFamilies: string;
   })[];
 }
 
