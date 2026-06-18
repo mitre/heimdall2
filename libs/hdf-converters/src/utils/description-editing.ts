@@ -7,7 +7,7 @@ type DescriptionsInput
   = | ExecJSON.ControlDescription[]
     | Record<string, string>;
 
-const CKL_SECTION_MARKER_RE = /^(?:CAVEAT|COMMENTS|JUSTIFICATION|RATIONALE) ::/v;
+const CKL_SECTION_MARKER_RE = /^(?<section>CAVEAT|COMMENTS|JUSTIFICATION|RATIONALE) ::/v;
 const CKL_SECTION_SPLIT_RE = /\n(?=[A-Z]+ ::)/v;
 
 export type DescriptionEdits = {
@@ -195,7 +195,7 @@ function parseStructuredComments(
   for (const section of commentString.split(CKL_SECTION_SPLIT_RE)) {
     const match = CKL_SECTION_MARKER_RE.exec(section);
     if (match) {
-      const label = match[1];
+      const label = match.groups!.section;
       const data = section.slice(match[0].length).trim();
       if (data) {
         sections.set(label, data);

@@ -133,7 +133,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
             ).map(element => element.urls) as Record<string, unknown>[];
           }
           return (
-            [...vuln_urls, ...relatedVulnerabilitiesUrls]
+            [...vuln_urls, ...relatedVulnerabilitiesUrls].flat()
           ).map(element => ({ url: element }));
         },
       } as unknown as ExecJSON.Reference[],

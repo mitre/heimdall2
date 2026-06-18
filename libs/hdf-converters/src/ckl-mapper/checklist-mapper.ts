@@ -297,16 +297,16 @@ function getAttributes(input: unknown[]) {
 function getHdfSpecificDataAttribute(
   attribute: string,
   input: string,
-): Record<string, any>[] | string | undefined {
+): Record<string, any>[] | string | null {
   const data = parseJson(input);
   if (!data.ok) {
-    return undefined;
+    return null;
   }
   const hdfSpecificData = _.get(data.value, 'hdfSpecificData');
   if (!_.isObject(hdfSpecificData)) {
-    return undefined;
+    return null;
   }
-  return _.get(hdfSpecificData, attribute);
+  return (_.get(hdfSpecificData, attribute) as Record<string, any>[] | string) ?? null;
 }
 
 /**
