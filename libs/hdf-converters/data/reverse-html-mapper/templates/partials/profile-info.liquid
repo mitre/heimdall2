@@ -1,15 +1,26 @@
+{% comment %}Renders scan profile metadata in a compact horizontal layout.
+Variables: files (array of {filename, toolVersion, platform, duration}).
+No raw HTML — all plain text values.{% endcomment -%}
 <section id="profile-info" aria-labelledby="profile-info-h">
   <h2 id="profile-info-h">Profile Info</h2>
-  <div class="grid">
-    {%- for file in files %}
-    <article>
-      <dl>
-        <dt>Filename</dt><dd>{{ file.filename | default: '' }}</dd>
-        <dt>Tool Version</dt><dd>{{ file.toolVersion | default: '' }}</dd>
-        <dt>Platform</dt><dd>{{ file.platform | default: '' }}</dd>
-        <dt>Duration</dt><dd>{{ file.duration | default: '' }}</dd>
-      </dl>
-    </article>
-    {%- endfor %}
-  </div>
+  <table class="striped">
+    <thead>
+      <tr>
+        <th scope="col">Filename</th>
+        <th scope="col">Tool Version</th>
+        <th scope="col">Platform</th>
+        <th scope="col">Duration (s)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for file in files %}
+      <tr>
+        <td><code>{{ file.filename | default: '' }}</code></td>
+        <td>{{ file.toolVersion | default: '' }}</td>
+        <td>{{ file.platform | default: '' }}</td>
+        <td>{{ file.duration | default: '' }}</td>
+      </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
 </section>

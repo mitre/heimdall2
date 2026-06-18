@@ -2,8 +2,24 @@
    Pattern: append after Blades, override via --pico-* vars, add new tokens.
    Dark mode follows Blades' own pattern: @media + [data-theme]. */
 
-/* === Status color tokens (light default) === */
+/* === Emphasis overlay system ===
+   Bootstrap 5.3's proven pattern: emphasis-rgb = maximum-contrast color
+   (black in light, white in dark). All layered surfaces use
+   rgba(var(--report-emphasis-rgb), <factor>). One set of rules works
+   in both themes because the overlay color flips automatically.
+   Factors: cap .03, stripe .05, hover .075, active .10
+   Source: Bootstrap scss/_variables.scss — $table-striped-bg-factor et al.
+   Cross-validated: Primer, Material Design 3, Pico (see STYLE-GUIDE.md §2) */
+
+/* === Token system (light default) === */
 :root {
+  --report-emphasis-rgb: 0, 0, 0;
+  --report-cap-bg: rgba(var(--report-emphasis-rgb), 0.03);
+  --report-stripe-bg: rgba(var(--report-emphasis-rgb), 0.05);
+  --report-hover-bg: rgba(var(--report-emphasis-rgb), 0.075);
+  --report-active-bg: rgba(var(--report-emphasis-rgb), 0.10);
+  --report-border: rgba(var(--report-emphasis-rgb), 0.175);
+
   --st-pass-fg: #1a7f37;   --st-pass-bg: #dafbe1;
   --st-fail-fg: #b3202a;   --st-fail-bg: #ffebe9;
   --st-na-fg: #59636e;     --st-na-bg: #eef1f4;
@@ -20,13 +36,6 @@
   --compliance-medium: rgb(255, 235, 59);
   --compliance-high: rgb(76, 176, 79);
 
-  /* Control card zebra — Bootstrap-proven 5%/7.5% overlay approach.
-     Uses Pico's own stripe gray (111, 120, 135) at 6% for card-sized elements
-     (stronger than Pico's 3.75% table stripe — cards need more differentiation).
-     Transparent overlay adapts to light/dark automatically — no separate dark values needed. */
-  --control-stripe-bg: rgba(111, 120, 135, 0.06);
-  --control-hover-bg: rgba(111, 120, 135, 0.09);
-
   --print-muted: #555;
   --print-border: #ccc;
 }
@@ -34,6 +43,8 @@
 /* Dark mode: Blades-idiomatic scoping — @media + [data-theme="dark"] */
 @media only screen and (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
+    --report-emphasis-rgb: 255, 255, 255;
+
     --st-pass-fg: #3fb950;   --st-pass-bg: #132d1c;
     --st-fail-fg: #f85149;   --st-fail-bg: #3a1517;
     --st-na-fg: #8b949e;     --st-na-bg: #21262d;
@@ -52,6 +63,8 @@
   }
 }
 [data-theme="dark"] {
+  --report-emphasis-rgb: 255, 255, 255;
+
   --st-pass-fg: #3fb950;   --st-pass-bg: #132d1c;
   --st-fail-fg: #f85149;   --st-fail-bg: #3a1517;
   --st-na-fg: #8b949e;     --st-na-bg: #21262d;
@@ -93,10 +106,49 @@
 .badge.sev--high     { color: var(--sv-high-fg);     background: var(--sv-high-bg);     border-color: var(--sv-high-fg); }
 .badge.sev--critical { color: var(--sv-critical-fg); background: var(--sv-critical-bg); border-color: var(--sv-critical-fg); }
 
+/* === Report wrapper — single source of horizontal padding === */
+.report-wrapper { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+@media (max-width: 768px) { .report-wrapper { padding: 0 .75rem; } }
+
 /* === Layout === */
-.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+.report-header { border-bottom: 1px solid var(--pico-muted-border-color); padding-bottom: .5rem; margin-bottom: 0; }
+.report-nav { background: var(--report-cap-bg); border-bottom: 1px solid var(--pico-muted-border-color); padding-top: .5rem; padding-bottom: .5rem; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.report-filters { background: var(--report-stripe-bg); border-bottom: 1px solid var(--pico-muted-border-color); padding: .75rem 0; }
+.report-footer { border-top: 1px solid var(--pico-muted-border-color); padding-top: 1rem; margin-top: 2rem; }
 .tag { display: inline-block; padding: .05em .35em; border-radius: 1em; font-size: .65rem; border: 1px solid var(--pico-muted-border-color, #ccc); color: var(--pico-muted-color, #666); }
-/* Control cards — expandable cards with zebra striping (Bootstrap 5% overlay pattern) */
+
+/* === Hero summary === */
+.summary-hero { border: 1px solid var(--report-border); }
+.summary-hero > footer { background: var(--report-cap-bg); border-top: 1px solid var(--report-border); }
+.summary-layout { display: flex; gap: 2rem; align-items: flex-start; padding: 0; }
+.compliance-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 8rem; padding: 1rem; }
+.compliance-label { font-size: .85rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-top: .5rem; opacity: .7; }
+.breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; flex: 1; padding: 1rem 1rem 1rem 0; }
+.breakdown-grid h3 { font-size: .9rem; font-weight: 700; margin-bottom: .25rem; text-transform: uppercase; letter-spacing: .03em; opacity: .6; }
+.breakdown-grid table { margin-bottom: 0; }
+.breakdown-grid td { padding: .15rem .4rem; border: none; }
+.breakdown-grid td.num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.st-icon { display: inline-flex; vertical-align: middle; }
+.st-icon svg { width: 16px; height: 16px; }
+
+/* Stacked status bar */
+.status-bar { display: flex; height: .5rem; border-radius: 4px; overflow: hidden; margin: 0 1rem .75rem; gap: 2px; }
+.bar-seg { min-width: 3px; transition: flex-grow .3s ease; }
+.bar-passed { background: var(--st-pass-fg); }
+.bar-failed { background: var(--st-fail-fg); }
+.bar-na { background: var(--st-na-fg); }
+.bar-nr { background: var(--st-nr-fg); }
+.bar-error { background: var(--st-error-fg); }
+
+/* Mobile: stack summary vertically */
+@media (max-width: 768px) {
+  .summary-layout { flex-direction: column; gap: 1rem; }
+  .compliance-hero { width: 100%; padding: 1rem; }
+  .breakdown-grid { grid-template-columns: 1fr; padding: 0 1rem 1rem; }
+  nav.container-fluid { position: static; }
+  nav.container-fluid > ul { flex-wrap: wrap; gap: .25rem; }
+}
+/* Control cards — expandable cards with emphasis overlay zebra (Bootstrap 5.3 pattern) */
 article.control {
   content-visibility: auto;
   contain-intrinsic-size: auto 200px;
@@ -105,10 +157,10 @@ article.control {
   --pico-accordion-border-color: transparent;
 }
 article.control:nth-child(odd) {
-  background: var(--control-stripe-bg);
+  background: var(--report-stripe-bg);
 }
 article.control:hover {
-  background: var(--control-hover-bg);
+  background: var(--report-hover-bg);
 }
 article.control > details { border: none; margin: 0; }
 article.control > details > summary::after { display: none; }
@@ -125,15 +177,38 @@ article.control > details[open] > summary::before { transform: rotate(45deg); }
 .control-id { font-family: var(--pico-font-family-monospace, ui-monospace, monospace); font-size: .8rem; font-weight: 600; white-space: nowrap; }
 .control-title { grid-column: 1 / -1; font-size: .9rem; line-height: 1.4; }
 .control-tags { display: flex; flex-wrap: wrap; gap: .25rem; margin: .5rem 0; }
-.compliance-ring { display: inline-block; border: 4px solid var(--compliance-color, #ccc); border-radius: 50%; width: 5rem; height: 5rem; line-height: 5rem; text-align: center; font-size: 1.25rem; font-weight: 700; }
+.compliance-ring { display: inline-flex; align-items: center; justify-content: center; border: 5px solid var(--compliance-color, #ccc); border-radius: 50%; width: 7rem; height: 7rem; text-align: center; font-size: 1.5rem; font-weight: 700; }
 table.test-results { width: 100%; }
 table.test-results th { width: 6rem; white-space: nowrap; vertical-align: top; }
 table.test-results td { white-space: pre-line; overflow-wrap: anywhere; }
 
+/* === Nav layout === */
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+.nav-links { display: flex; gap: .5rem; list-style: none; padding: 0; margin: 0; flex-wrap: wrap; align-items: center; }
+.nav-links li { margin: 0; }
+.nav-actions { display: flex; align-items: center; gap: .35rem; flex-wrap: nowrap; }
+.nav-actions input[type="search"] { width: 14rem; margin: 0; padding: .3rem .6rem; font-size: .85rem; }
+.btn-icon { margin: 0; padding: .3rem .5rem; font-size: .9rem; width: auto; }
+.mobile-only { display: none; }
+
 /* === Filtering === */
 .filtered-out { display: none; }
-#filter-bar [role="group"] { display: inline-flex; flex-wrap: wrap; gap: .25rem; margin-right: 1rem; margin-bottom: .5rem; }
-#filter-bar button { margin: 0; padding: .25rem .6rem; font-size: .8rem; }
+#filter-bar[hidden] { display: none; }
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.filter-row [role="group"] { display: inline-flex; flex-wrap: wrap; gap: .25rem; }
+.filter-row button { margin: 0; padding: .25rem .6rem; font-size: .8rem; border-width: 2px; }
+.filter-row select { margin: 0; padding: .25rem .6rem; font-size: .8rem; width: auto; }
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .mobile-only { display: inline-flex; }
+  #filter-bar:not([hidden]) { display: block; }
+  .nav-actions input[type="search"] { width: 100%; min-width: 0; flex: 1; }
+  .nav-links { font-size: .85rem; }
+  .filter-row { flex-direction: column; align-items: stretch; }
+  .filter-row [role="group"] { flex-wrap: wrap; }
+  .filter-row select { width: 100%; }
+}
 
 /* === Corrected @media print — ADR §9.2 === */
 @media print {

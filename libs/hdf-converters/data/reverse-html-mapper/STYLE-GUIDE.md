@@ -29,64 +29,159 @@ Every color in report.css MUST be a `var()` reference to either:
 
 ---
 
-## 2. Background Layering System
+## 2. Background Layering & Emphasis Overlay System
 
 ### 2.1 The Problem
 
-Pico's card background (`--pico-card-background-color`) is nearly identical to the page background in both light and dark mode:
-- Light: card = `var(--pico-background-color)` = `#fff` (same as page)
-- Dark: card = `#181c25`, page = `rgb(19, 22.5, 30.5)` ≈ `#13161f` (barely different)
+Pico's card background equals the page background in light mode — zero contrast:
+- Light: card = `var(--pico-background-color)` = `#fff`, page = `#fff` (**identical**)
+- Dark: card = `#181c25`, page ≈ `#13171f` (small delta, ~+5 per channel)
 
-This makes zebra striping invisible.
+Card separation in light mode relies entirely on border + box-shadow. Zebra striping on same-bg cards is invisible without an explicit overlay system.
 
-### 2.2 Solution: Bootstrap's Proven Three-Tier Approach
+### 2.2 Cross-System Research (2026-06-17)
 
-Bootstrap 5.3 defines three background tiers (source: `scss/_variables.scss` + `scss/_variables-dark.scss`):
+Four major design systems were studied to find the proven, production-scale solution.
 
-| Tier | Bootstrap Light | Bootstrap Dark | Purpose |
-|------|----------------|----------------|---------|
-| Primary (body-bg) | `#fff` | `$gray-900` = `#212529` | Page background |
-| Secondary | `$gray-200` = `#e9ecef` | `$gray-800` = `#343a40` | Secondary surfaces |
-| Tertiary | `$gray-100` = `#f8f9fa` | `mix($gray-800, $gray-900)` ≈ `#2b3035` | Tertiary surfaces |
+#### Bootstrap 5.3
 
-Bootstrap's gray scale (for reference):
+**3 background tiers** (source: `scss/_variables.scss` + `scss/_variables-dark.scss`):
+
+| Tier | Light | Dark | SCSS source |
+|------|-------|------|-------------|
+| body-bg | `#fff` | `#212529` ($gray-900) | `$body-bg` |
+| secondary-bg | `#e9ecef` ($gray-200) | `#343a40` ($gray-800) | `$body-secondary-bg` |
+| tertiary-bg | `#f8f9fa` ($gray-100) | `#2b3035` (mix) | `$body-tertiary-bg` |
+
+**Key insight — tertiary is LIGHTER than secondary in light mode.** "Tertiary" means "subtlest tint away from body," not "third darkest."
+
+**Card-bg defaults to body-bg** (same color as page). Separation via translucent border only. Cards that need to "float" must explicitly set a tier bg.
+
+**Emphasis overlay system** — the keystone pattern:
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--bs-emphasis-color-rgb` | `0, 0, 0` | `255, 255, 255` |
+
+All layered surfaces use `rgba(var(--bs-emphasis-color-rgb), <factor>)`:
+
+| State | Factor | Light effect | Dark effect |
+|-------|--------|-------------|-------------|
+| card cap | `.03` | 3% black darkening | 3% white lightening |
+| stripe | `.05` | 5% black darkening | 5% white lightening |
+| hover | `.075` | 7.5% black darkening | 7.5% white lightening |
+| active | `.10` | 10% black darkening | 10% white lightening |
+
+**One set of factors, auto-adapts to both themes.** This is exactly how Bootstrap keeps one set of table rules working across light/dark.
+
+Bootstrap gray scale:
 ```
 $gray-100: #f8f9fa    $gray-600: #6c757d
 $gray-200: #e9ecef    $gray-700: #495057
 $gray-300: #dee2e6    $gray-800: #343a40
 $gray-400: #ced4da    $gray-900: #212529
-$gray-500: #adb5bd
 ```
 
-### 2.3 Bootstrap's Stripe Formula
+#### GitHub Primer
 
-For table/list striping, Bootstrap uses a **transparent overlay** of the emphasis (text) color:
-- **Stripe:** `rgba($emphasis-color-rgb, 0.05)` — 5% opacity
-- **Hover:** `rgba($emphasis-color-rgb, 0.075)` — 7.5% opacity
-- **Active:** `rgba($emphasis-color-rgb, 0.1)` — 10% opacity
+**3 neutral surface tiers** (source: `primer/primitives` token files):
 
-This automatically adapts to light/dark because:
-- Light mode: 5% black overlay = subtle darkening
-- Dark mode: 5% white overlay = subtle lightening
+| Token | Light | Dark | Role |
+|-------|-------|------|------|
+| `bgColor-default` | `#ffffff` | `#0d1117` | Page / card fill |
+| `bgColor-muted` | `#f6f8fa` | `#151b23` | Secondary areas, table headers, code |
+| `bgColor-inset` | `#f6f8fa` | `#010409` | Recessed wells, inputs |
+| `bgColor-emphasis` | `#25292e` | `#3d444d` | Tooltips, inverted chips |
 
-### 2.4 Pico's Existing Stripe Value
+**Borders do the heavy lifting.** The default→muted bg delta is tiny (~1.04:1). Primer relies on a consistently-darker 1px border (neutral steps 6-8) to separate surfaces:
 
-Pico defines `--pico-table-row-stripped-background-color: rgba(111, 120, 135, 0.0375)` — a midtone gray at 3.75% opacity, same value in both modes. This is lighter than Bootstrap's 5%.
+| Border token | Light | Dark |
+|-------------|-------|------|
+| `borderColor-default` | `#d1d9e0` | `#3d444d` |
+| `borderColor-muted` | default @ alpha 0.7 | default @ alpha 0.7 |
 
-### 2.5 Our Control Card Token System
+**Zebra striping** (from live `github-markdown.css`): alternates `bgColor-default` ↔ `bgColor-muted` on odd/even rows, plus cell borders. DataTable component uses hover instead of stripes.
 
-For control cards (which are larger than table rows and need stronger differentiation), we use:
+**Inset flips direction:** in light mode, inset = muted = greyer. In dark mode, inset goes DARKER than default (toward true black). Recession = "away from the page mid-tone."
 
+#### Material Design 3
+
+**5 discrete surface container tiers** (source: `material-color-utilities` tone numbers + AndroidX Compose `PaletteTokens.kt`):
+
+| Role | Light (tone → hex) | Dark (tone → hex) |
+|------|-------------------|-------------------|
+| surfaceContainerLowest | 100 → `#FFFFFF` | 4 → `#0D0F13` |
+| surface | 98 → `#FEF7FF` | 6 → `#121218` |
+| surfaceContainerLow | 96 → `#F7F2FA` | 10 → `#1D1B20` |
+| surfaceContainer | 94 → `#F3EDF7` | 12 → `#211F26` |
+| surfaceContainerHigh | 92 → `#ECE6F0` | 17 → `#2B2930` |
+| surfaceContainerHighest | 90 → `#E6E0E9` | 22 → `#36343B` |
+
+Light mode darkens from ~white (tone 98→90). Dark mode lightens from ~black (tone 6→22). In BOTH, "higher container" = more separation from the page. Tone steps are deliberately small (2-5) so one `onSurface` text color stays legible across all tiers.
+
+**Card surfaces:** Elevated = `surfaceContainerLow` + shadow. Filled = `surfaceContainerHighest`. Outlined = `surface` + border.
+
+**No zebra striping.** M3 uses row dividers + state-layer overlays: hover @ 8%, focus @ 10%, pressed @ 10%.
+
+**Current spec (2023+) uses discrete tiers, NOT overlay math.** The older tonal-elevation overlay system was deprecated.
+
+#### Pico/Blades CSS
+
+**2 surface tiers** (source: compiled `pico.css` via jsdelivr, CSS variables docs):
+
+| Variable | Light | Dark |
+|----------|-------|------|
+| `--pico-background-color` | `#fff` | ≈ `#13171f` |
+| `--pico-card-background-color` | `#fff` (**same**) | `#181c25` |
+| `--pico-card-sectioning-background-color` | ≈ `#fbfbfc` | ≈ `#1a1f28` |
+
+Light: card = page = **zero contrast**. Dark: card ~+5 per channel lighter (Material-style elevation).
+
+**Table stripe:** `--pico-table-row-stripped-background-color: rgba(111, 120, 135, 0.0375)` — zinc-500 at 3.75%, same in both modes.
+
+**Separation:** Light = border + box-shadow. Dark = background contrast (border set to card-bg = invisible).
+
+### 2.3 Cross-System Summary
+
+| System | Page bg (light) | Card bg (light) | Card separation | Zebra method | # tiers |
+|--------|----------------|-----------------|-----------------|-------------|---------|
+| Bootstrap 5.3 | `#fff` | `#fff` (same) | Translucent border | `rgba(emphasis, .05)` | 3 |
+| Primer | `#fff` | `#fff` (same) | 1px border + radius | default↔muted alt | 3 |
+| Material 3 | `#FEF7FF` | `#F7F2FA` (different) | Tonal tier + shadow | Dividers (no zebra) | 5 |
+| Pico/Blades | `#fff` | `#fff` (same) | Border + shadow | `rgba(zinc, .0375)` | 2 |
+
+**Universal finding:** Card-bg = page-bg is the norm in 3 of 4 systems. Only Material uses a distinct card tier.
+
+### 2.4 Our Solution: Bootstrap Emphasis Overlay (adapted for Pico)
+
+We adopt Bootstrap's emphasis-rgb pattern — the most proven approach, used at massive scale. Adapted to work within Pico's variable system and dark mode scoping.
+
+**Core mechanism:**
 ```css
 :root {
-  /* Control card zebra — adapted from Bootstrap's 5% overlay approach.
-     Cards are visually heavier than table rows, so we use 6% for clearer differentiation. */
-  --control-bg-odd: rgba(111, 120, 135, 0.06);
-  --control-bg-even: transparent;
+  --report-emphasis-rgb: 0, 0, 0;          /* black in light → darkening overlays */
+  --report-cap-bg:    rgba(var(--report-emphasis-rgb), 0.03);
+  --report-stripe-bg: rgba(var(--report-emphasis-rgb), 0.05);
+  --report-hover-bg:  rgba(var(--report-emphasis-rgb), 0.075);
+  --report-active-bg: rgba(var(--report-emphasis-rgb), 0.10);
+}
+[data-theme="dark"] {
+  --report-emphasis-rgb: 255, 255, 255;     /* white in dark → lightening overlays */
+  /* All derived tokens auto-recalculate — no per-mode overrides needed */
 }
 ```
 
-This uses Pico's own stripe gray (111, 120, 135) at a slightly stronger 6% for card-sized elements. No separate dark mode value needed — the transparent overlay adapts automatically.
+**Factor scale** (Bootstrap-proven, validated at scale):
+- **`.03` (cap)** — card header/footer tinting (Bootstrap `$card-cap-bg`)
+- **`.05` (stripe)** — zebra alternation (Bootstrap `$table-striped-bg-factor`)
+- **`.075` (hover)** — interactive hover state (Bootstrap `$table-hover-bg-factor`)
+- **`.10` (active)** — active/pressed state (Bootstrap `$table-active-bg-factor`)
+
+**Why this over Pico's fixed zinc gray:**
+Pico uses `rgba(111, 120, 135, 0.0375)` — a midtone gray at fixed opacity. This works but is less principled: it doesn't "darken light" or "lighten dark," it "adds gray" to both. Bootstrap's pattern is semantically correct — it always moves AWAY from the surface toward maximum contrast.
+
+**Why this over Material's discrete tiers:**
+M3's 5-tier system requires maintaining a full tone scale per color. For a self-contained HTML report (not an app), the overlay approach is simpler and produces equally good results with zero per-mode hex values.
 
 ---
 
@@ -299,9 +394,20 @@ new Liquid({
 
 ## Sources
 
-- Bootstrap 5.3: `scss/_variables.scss`, `scss/_variables-dark.scss` (gray scale, three-tier bg, stripe factors)
-- Pico CSS: `picocss.com/docs/css-variables`, `picocss.com/docs/color-schemes` (theming pattern)
+### Background Layering Research (2026-06-17)
+- Bootstrap 5.3: `scss/_variables.scss`, `scss/_variables-dark.scss` — gray scale, 3-tier bg, emphasis-rgb overlay system, stripe/hover/active factors
+- Bootstrap 5.3: `getbootstrap.com/docs/5.3` — CSS variables, color-modes, tables, card pages (via Context7)
+- GitHub Primer: `primer/primitives` token files — `bgColor.json5`, `borderColor.json5`, `light.json5`/`dark.json5`
+- GitHub Primer: `primer.style/foundations/color/overview/`, `primer.style/product/primitives/token-names/`
+- GitHub Primer: `github-markdown.css` (live zebra stripe implementation)
+- Material Design 3: `material-color-utilities` source (`color_spec_2021.ts`) — tonal palette tone numbers
+- Material Design 3: AndroidX Compose `PaletteTokens.kt` — baseline surface container hex values
+- Material Design 3: `m3.material.io/styles/color` — surface container roles, tonal elevation deprecation
+- Pico CSS v2: compiled `pico.css` via `cdn.jsdelivr.net/npm/@picocss/pico@2` — actual variable values
+- Pico CSS: `picocss.com/docs/css-variables` — dark mode scoping pattern, table stripe value
+- Pico CSS: `github.com/picocss/pico` SCSS source — color-mix math for dark mode fractional values
+
+### Framework & Template
 - Blades CSS: `blades.ninja/html/starter/`, `@anyblades/pico` npm source (component catalog)
-- GitHub Primer: color foundations (status palette)
 - LiquidJS: `liquidjs.com/tutorials/options.html`, `liquidjs.com/tutorials/escaping.html`
 - ADR-002: `docs/adr-002-blades-css-html-export.md` (decisions, risks, print research)

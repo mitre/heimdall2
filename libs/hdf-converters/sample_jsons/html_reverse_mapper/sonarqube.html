@@ -124,8 +124,24 @@ table,pre,figure,video,iframe,canvas,img,picture,.breakout-item,.breakout-item-m
    Pattern: append after Blades, override via --pico-* vars, add new tokens.
    Dark mode follows Blades' own pattern: @media + [data-theme]. */
 
-/* === Status color tokens (light default) === */
+/* === Emphasis overlay system ===
+   Bootstrap 5.3's proven pattern: emphasis-rgb = maximum-contrast color
+   (black in light, white in dark). All layered surfaces use
+   rgba(var(--report-emphasis-rgb), <factor>). One set of rules works
+   in both themes because the overlay color flips automatically.
+   Factors: cap .03, stripe .05, hover .075, active .10
+   Source: Bootstrap scss/_variables.scss — $table-striped-bg-factor et al.
+   Cross-validated: Primer, Material Design 3, Pico (see STYLE-GUIDE.md §2) */
+
+/* === Token system (light default) === */
 :root {
+  --report-emphasis-rgb: 0, 0, 0;
+  --report-cap-bg: rgba(var(--report-emphasis-rgb), 0.03);
+  --report-stripe-bg: rgba(var(--report-emphasis-rgb), 0.05);
+  --report-hover-bg: rgba(var(--report-emphasis-rgb), 0.075);
+  --report-active-bg: rgba(var(--report-emphasis-rgb), 0.10);
+  --report-border: rgba(var(--report-emphasis-rgb), 0.175);
+
   --st-pass-fg: #1a7f37;   --st-pass-bg: #dafbe1;
   --st-fail-fg: #b3202a;   --st-fail-bg: #ffebe9;
   --st-na-fg: #59636e;     --st-na-bg: #eef1f4;
@@ -142,13 +158,6 @@ table,pre,figure,video,iframe,canvas,img,picture,.breakout-item,.breakout-item-m
   --compliance-medium: rgb(255, 235, 59);
   --compliance-high: rgb(76, 176, 79);
 
-  /* Control card zebra — Bootstrap-proven 5%/7.5% overlay approach.
-     Uses Pico's own stripe gray (111, 120, 135) at 6% for card-sized elements
-     (stronger than Pico's 3.75% table stripe — cards need more differentiation).
-     Transparent overlay adapts to light/dark automatically — no separate dark values needed. */
-  --control-stripe-bg: rgba(111, 120, 135, 0.06);
-  --control-hover-bg: rgba(111, 120, 135, 0.09);
-
   --print-muted: #555;
   --print-border: #ccc;
 }
@@ -156,6 +165,8 @@ table,pre,figure,video,iframe,canvas,img,picture,.breakout-item,.breakout-item-m
 /* Dark mode: Blades-idiomatic scoping — @media + [data-theme="dark"] */
 @media only screen and (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
+    --report-emphasis-rgb: 255, 255, 255;
+
     --st-pass-fg: #3fb950;   --st-pass-bg: #132d1c;
     --st-fail-fg: #f85149;   --st-fail-bg: #3a1517;
     --st-na-fg: #8b949e;     --st-na-bg: #21262d;
@@ -174,6 +185,8 @@ table,pre,figure,video,iframe,canvas,img,picture,.breakout-item,.breakout-item-m
   }
 }
 [data-theme="dark"] {
+  --report-emphasis-rgb: 255, 255, 255;
+
   --st-pass-fg: #3fb950;   --st-pass-bg: #132d1c;
   --st-fail-fg: #f85149;   --st-fail-bg: #3a1517;
   --st-na-fg: #8b949e;     --st-na-bg: #21262d;
@@ -215,10 +228,49 @@ table,pre,figure,video,iframe,canvas,img,picture,.breakout-item,.breakout-item-m
 .badge.sev--high     { color: var(--sv-high-fg);     background: var(--sv-high-bg);     border-color: var(--sv-high-fg); }
 .badge.sev--critical { color: var(--sv-critical-fg); background: var(--sv-critical-bg); border-color: var(--sv-critical-fg); }
 
+/* === Report wrapper — single source of horizontal padding === */
+.report-wrapper { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+@media (max-width: 768px) { .report-wrapper { padding: 0 .75rem; } }
+
 /* === Layout === */
-.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }
+.report-header { border-bottom: 1px solid var(--pico-muted-border-color); padding-bottom: .5rem; margin-bottom: 0; }
+.report-nav { background: var(--report-cap-bg); border-bottom: 1px solid var(--pico-muted-border-color); padding-top: .5rem; padding-bottom: .5rem; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.report-filters { background: var(--report-stripe-bg); border-bottom: 1px solid var(--pico-muted-border-color); padding: .75rem 0; }
+.report-footer { border-top: 1px solid var(--pico-muted-border-color); padding-top: 1rem; margin-top: 2rem; }
 .tag { display: inline-block; padding: .05em .35em; border-radius: 1em; font-size: .65rem; border: 1px solid var(--pico-muted-border-color, #ccc); color: var(--pico-muted-color, #666); }
-/* Control cards — expandable cards with zebra striping (Bootstrap 5% overlay pattern) */
+
+/* === Hero summary === */
+.summary-hero { border: 1px solid var(--report-border); }
+.summary-hero > footer { background: var(--report-cap-bg); border-top: 1px solid var(--report-border); }
+.summary-layout { display: flex; gap: 2rem; align-items: flex-start; padding: 0; }
+.compliance-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 8rem; padding: 1rem; }
+.compliance-label { font-size: .85rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-top: .5rem; opacity: .7; }
+.breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; flex: 1; padding: 1rem 1rem 1rem 0; }
+.breakdown-grid h3 { font-size: .9rem; font-weight: 700; margin-bottom: .25rem; text-transform: uppercase; letter-spacing: .03em; opacity: .6; }
+.breakdown-grid table { margin-bottom: 0; }
+.breakdown-grid td { padding: .15rem .4rem; border: none; }
+.breakdown-grid td.num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.st-icon { display: inline-flex; vertical-align: middle; }
+.st-icon svg { width: 16px; height: 16px; }
+
+/* Stacked status bar */
+.status-bar { display: flex; height: .5rem; border-radius: 4px; overflow: hidden; margin: 0 1rem .75rem; gap: 2px; }
+.bar-seg { min-width: 3px; transition: flex-grow .3s ease; }
+.bar-passed { background: var(--st-pass-fg); }
+.bar-failed { background: var(--st-fail-fg); }
+.bar-na { background: var(--st-na-fg); }
+.bar-nr { background: var(--st-nr-fg); }
+.bar-error { background: var(--st-error-fg); }
+
+/* Mobile: stack summary vertically */
+@media (max-width: 768px) {
+  .summary-layout { flex-direction: column; gap: 1rem; }
+  .compliance-hero { width: 100%; padding: 1rem; }
+  .breakdown-grid { grid-template-columns: 1fr; padding: 0 1rem 1rem; }
+  nav.container-fluid { position: static; }
+  nav.container-fluid > ul { flex-wrap: wrap; gap: .25rem; }
+}
+/* Control cards — expandable cards with emphasis overlay zebra (Bootstrap 5.3 pattern) */
 article.control {
   content-visibility: auto;
   contain-intrinsic-size: auto 200px;
@@ -227,10 +279,10 @@ article.control {
   --pico-accordion-border-color: transparent;
 }
 article.control:nth-child(odd) {
-  background: var(--control-stripe-bg);
+  background: var(--report-stripe-bg);
 }
 article.control:hover {
-  background: var(--control-hover-bg);
+  background: var(--report-hover-bg);
 }
 article.control > details { border: none; margin: 0; }
 article.control > details > summary::after { display: none; }
@@ -247,15 +299,38 @@ article.control > details[open] > summary::before { transform: rotate(45deg); }
 .control-id { font-family: var(--pico-font-family-monospace, ui-monospace, monospace); font-size: .8rem; font-weight: 600; white-space: nowrap; }
 .control-title { grid-column: 1 / -1; font-size: .9rem; line-height: 1.4; }
 .control-tags { display: flex; flex-wrap: wrap; gap: .25rem; margin: .5rem 0; }
-.compliance-ring { display: inline-block; border: 4px solid var(--compliance-color, #ccc); border-radius: 50%; width: 5rem; height: 5rem; line-height: 5rem; text-align: center; font-size: 1.25rem; font-weight: 700; }
+.compliance-ring { display: inline-flex; align-items: center; justify-content: center; border: 5px solid var(--compliance-color, #ccc); border-radius: 50%; width: 7rem; height: 7rem; text-align: center; font-size: 1.5rem; font-weight: 700; }
 table.test-results { width: 100%; }
 table.test-results th { width: 6rem; white-space: nowrap; vertical-align: top; }
 table.test-results td { white-space: pre-line; overflow-wrap: anywhere; }
 
+/* === Nav layout === */
+.nav-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+.nav-links { display: flex; gap: .5rem; list-style: none; padding: 0; margin: 0; flex-wrap: wrap; align-items: center; }
+.nav-links li { margin: 0; }
+.nav-actions { display: flex; align-items: center; gap: .35rem; flex-wrap: nowrap; }
+.nav-actions input[type="search"] { width: 14rem; margin: 0; padding: .3rem .6rem; font-size: .85rem; }
+.btn-icon { margin: 0; padding: .3rem .5rem; font-size: .9rem; width: auto; }
+.mobile-only { display: none; }
+
 /* === Filtering === */
 .filtered-out { display: none; }
-#filter-bar [role="group"] { display: inline-flex; flex-wrap: wrap; gap: .25rem; margin-right: 1rem; margin-bottom: .5rem; }
-#filter-bar button { margin: 0; padding: .25rem .6rem; font-size: .8rem; }
+#filter-bar[hidden] { display: none; }
+.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.filter-row [role="group"] { display: inline-flex; flex-wrap: wrap; gap: .25rem; }
+.filter-row button { margin: 0; padding: .25rem .6rem; font-size: .8rem; border-width: 2px; }
+.filter-row select { margin: 0; padding: .25rem .6rem; font-size: .8rem; width: auto; }
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .mobile-only { display: inline-flex; }
+  #filter-bar:not([hidden]) { display: block; }
+  .nav-actions input[type="search"] { width: 100%; min-width: 0; flex: 1; }
+  .nav-links { font-size: .85rem; }
+  .filter-row { flex-direction: column; align-items: stretch; }
+  .filter-row [role="group"] { flex-wrap: wrap; }
+  .filter-row select { width: 100%; }
+}
 
 /* === Corrected @media print — ADR §9.2 === */
 @media print {
@@ -313,119 +388,125 @@ table.test-results td { white-space: pre-line; overflow-wrap: anywhere; }
   </head>
   <body>
     
-  <a class="skip-link" href="#main">Skip to report content</a>
+  <div class="report-wrapper">
+    <a class="skip-link" href="#main">Skip to report content</a>
 
-  <header class="container-fluid no-print">
-    <hgroup>
-      <h1>Heimdall Administrator Report</h1>
-      <p>Self-contained security compliance report</p>
-    </hgroup>
-  </header>
+    <header class="report-header no-print">
+      <hgroup>
+        <h1>Heimdall Administrator Report</h1>
+        <p>Self-contained security compliance report</p>
+      </hgroup>
+    </header>
 
-  <nav class="container-fluid no-print" aria-label="Report contents">
-    <ul>
-      <li><a href="#summary"><strong>Summary</strong></a></li>
-      <li><a href="#profile-info">Profile Info</a></li>
-      <li><a href="#file-1">sonarqube-hdf.json</a></li>
-    </ul>
-    <ul>
-      <li><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title" style="width:14rem;margin:0;"></li>
-      <li><button type="button" id="btn-expand-all">Expand All</button></li>
-      <li><button type="button" id="btn-collapse-all">Collapse All</button></li>
-      <li><button type="button" id="btn-clear-filters" class="secondary">Clear Filters</button></li>
-      <li><button type="button" id="theme-toggle" class="contrast" aria-label="Toggle light/dark theme">&#9788;/&#9790;</button></li>
-    </ul>
-  </nav>
-
-  
-<div class="container-fluid no-print" id="filter-bar" role="toolbar" aria-label="Control filters">
-  <div role="group" aria-label="Filter by status">
-    <button type="button" class="outline" data-filter-status="Passed">&#10003; Passed <small>(0)</small></button>
-    <button type="button" class="outline" data-filter-status="Failed">&#10007; Failed <small>(1)</small></button>
-    <button type="button" class="outline" data-filter-status="Not Applicable">&#8854; N/A <small>(0)</small></button>
-    <button type="button" class="outline" data-filter-status="Not Reviewed">&#9888; NR <small>(0)</small></button>
-    <button type="button" class="outline" data-filter-status="Profile Error">&#9651; Error <small>(0)</small></button>
-  </div>
-  <div role="group" aria-label="Filter by severity">
-    <button type="button" class="outline" data-filter-severity="none">None</button>
-    <button type="button" class="outline" data-filter-severity="low">Low</button>
-    <button type="button" class="outline" data-filter-severity="medium">Medium</button>
-    <button type="button" class="outline" data-filter-severity="high">High</button>
-    <button type="button" class="outline" data-filter-severity="critical">Critical</button>
-  </div>
-  <div role="group" aria-label="Filter by NIST 800-53 family">
-    <select id="nist-family-filter" aria-label="NIST 800-53 family"><option value="">All NIST Families</option></select>
-  </div>
-  <div><small id="filter-count"></small></div>
-</div>
-
-
-  <main id="main" class="container-fluid">
-    <section id="summary" aria-labelledby="summary-h">
-  <h2 id="summary-h">Executive Summary</h2>
-  <div class="summary-grid">
-    <article>
-      <header><strong>Status Counts</strong></header>
-      <table class="striped">
-        <tbody>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-pass-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"/></svg></span> Passed</th><td>0</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-fail-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg></span> Failed</th><td>1</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-na-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M17,13H7V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span> Not Applicable</th><td>0</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-nr-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span> Not Reviewed</th><td>0</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-error-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"/></svg></span> Profile Error</th><td>0</td></tr>
-          <tr><th scope="row"><span aria-hidden="true"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M17,16V14H7V16H17M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3H19M17,10V8H7V10H17Z"/></svg></span> Total</th><td>1</td></tr>
-        </tbody>
-      </table>
-      <footer>
-        <small>0 checks passed, 1 failed of 1 total</small>
-      </footer>
-    </article>
-
-    <article>
-      <header><strong>Severity Breakdown</strong></header>
-      <table class="striped">
-        <tbody>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-none-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span> None</th><td>0</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-low-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span> Low</th><td>0</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-medium-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span> Medium</th><td>0</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-high-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span> High</th><td>1</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-critical-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span> Critical</th><td>0</td></tr>
-        </tbody>
-      </table>
-    </article>
-
-    <article>
-      <header><strong>Compliance</strong></header>
-      <div style="text-align:center;">
-        <meter min="0" max="100" low="50" high="80" optimum="100"
-               value="0.00%" aria-label="Compliance percentage"
-               style="width:100%;height:1.5rem;">0.00%</meter>
-        <div class="compliance-ring compliance-low">0.00%</div>
+    <nav class="report-nav no-print" aria-label="Report controls">
+      <div class="nav-row">
+        <ul class="nav-links">
+          <li><a href="#summary"><strong>Summary</strong></a></li>
+          <li><a href="#profile-info">Profile Info</a></li>
+          <li><a href="#file-1">sonarqube-hdf.json</a></li>
+        </ul>
+        <div class="nav-actions">
+          <input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title">
+          <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme">&#9788;/&#9790;</button>
+          <button type="button" id="nav-filter-toggle" class="btn-icon mobile-only" aria-label="Toggle filters" aria-expanded="false">&#9776;</button>
+        </div>
       </div>
-      <footer>
-        <small>Passed / (Passed + Failed + Not Reviewed + Profile Error) &times; 100</small>
-      </footer>
-    </article>
-  </div>
-</section>
+    </nav>
+    <div class="report-filters no-print" id="filter-bar" aria-label="Control filters" hidden>
+      <div class="filter-row">
+        <div role="group" aria-label="Filter by status">
+          <button type="button" class="outline" data-filter-status="Passed">&#10003; Passed <small>(0)</small></button>
+          <button type="button" class="outline" data-filter-status="Failed">&#10007; Failed <small>(1)</small></button>
+          <button type="button" class="outline" data-filter-status="Not Applicable">&#8854; N/A <small>(0)</small></button>
+          <button type="button" class="outline" data-filter-status="Not Reviewed">&#9888; NR <small>(0)</small></button>
+          <button type="button" class="outline" data-filter-status="Profile Error">&#9651; Error <small>(0)</small></button>
+        </div>
+        <div role="group" aria-label="Filter by severity">
+          <button type="button" class="outline" data-filter-severity="none">None</button>
+          <button type="button" class="outline" data-filter-severity="low">Low</button>
+          <button type="button" class="outline" data-filter-severity="medium">Medium</button>
+          <button type="button" class="outline" data-filter-severity="high">High</button>
+          <button type="button" class="outline" data-filter-severity="critical">Critical</button>
+        </div>
+        <div role="group" aria-label="NIST family and actions">
+          <select id="nist-family-filter" aria-label="NIST 800-53 family"><option value="">All NIST Families</option></select>
+          <button type="button" id="btn-expand-all">Expand All</button>
+          <button type="button" id="btn-collapse-all">Collapse All</button>
+          <button type="button" id="btn-clear-filters" class="secondary">Clear Filters</button>
+        </div>
+      </div>
+      <div><small id="filter-count"></small></div>
+    </div>
 
-    <section id="profile-info" aria-labelledby="profile-info-h">
+    <main id="main">
+      <section id="profile-info" aria-labelledby="profile-info-h">
   <h2 id="profile-info-h">Profile Info</h2>
-  <div class="grid">
-    <article>
-      <dl>
-        <dt>Filename</dt><dd>sonarqube-hdf.json</dd>
-        <dt>Tool Version</dt><dd>2.11.5</dd>
-        <dt>Platform</dt><dd>Heimdall Tools</dd>
-        <dt>Duration</dt><dd></dd>
-      </dl>
-    </article>
-  </div>
+  <table class="striped">
+    <thead>
+      <tr>
+        <th scope="col">Filename</th>
+        <th scope="col">Tool Version</th>
+        <th scope="col">Platform</th>
+        <th scope="col">Duration (s)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>sonarqube-hdf.json</code></td>
+        <td>2.11.5</td>
+        <td>Heimdall Tools</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 
-    <section id="file-1" aria-labelledby="file-1-h">
-      <h2 id="file-1-h">sonarqube-hdf.json</h2>
-      <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High">
+      <section id="summary" aria-labelledby="summary-h">
+  <h2 id="summary-h">Executive Summary</h2>
+  <article class="summary-hero">
+    <div class="summary-layout">
+      <div class="compliance-hero compliance-low">
+        <div class="compliance-ring compliance-low">0.00%</div>
+        <div class="compliance-label">Compliance</div>
+      </div>
+      <div class="breakdown-grid">
+        <div class="breakdown-col">
+          <h3>Status</h3>
+          <table>
+            <tbody>
+              <tr><td><span class="st-icon" style="color: var(--st-pass-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z"/></svg></span></td><td>Passed</td><td class="num">0</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-fail-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg></span></td><td>Failed</td><td class="num">1</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-na-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M17,13H7V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>N/A</td><td class="num">0</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-nr-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>Not Reviewed</td><td class="num">0</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-error-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M13 14H11V9H13M13 18H11V16H13M1 21H23L12 2L1 21Z"/></svg></span></td><td>Error</td><td class="num">0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="breakdown-col">
+          <h3>Severity</h3>
+          <table>
+            <tbody>
+              <tr><td><span class="st-icon" style="color: var(--sv-none-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>None</td><td class="num">0</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-low-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>Low</td><td class="num">0</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-medium-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>Medium</td><td class="num">0</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-high-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>High</td><td class="num">1</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-critical-fg)"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg></span></td><td>Critical</td><td class="num">0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="status-bar" role="img" aria-label="Status distribution: 0 passed, 1 failed, 0 not applicable, 0 not reviewed, 0 errors of 1 total"><div class="bar-seg bar-failed" style="flex-grow: 1;" data-tooltip="1 Failed"></div>
+    </div>
+    <footer>
+      <small>0 checks passed, 1 failed of 1 total &middot; 1 controls</small>
+    </footer>
+  </article>
+</section>
+
+      <section id="file-1" aria-labelledby="file-1-h">
+        <h2 id="file-1-h">sonarqube-hdf.json</h2>
+        <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High">
   <details>
     <summary><span class="badge status--failed"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg> Failed</span>
       <span class="badge sev--high"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg> High</span>
@@ -579,12 +660,13 @@ undefined</code></pre>
   </details>
 </article>
 
-    </section>
-  </main>
+      </section>
+    </main>
 
-  <footer class="container-fluid">
-    <p><small>Generated by Heimdall &middot; Administrator Report &middot; Self-contained export</small></p>
-  </footer>
+    <footer class="report-footer">
+      <p><small>Generated by Heimdall &middot; Administrator Report &middot; Self-contained export</small></p>
+    </footer>
+  </div>
 
     
     <script>
@@ -594,6 +676,20 @@ undefined</code></pre>
     themeBtn.addEventListener('click', function() {
       var h = document.documentElement;
       h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+  }
+
+  var filterBar = document.getElementById('filter-bar');
+  var filterToggle = document.getElementById('nav-filter-toggle');
+  if (filterBar && filterToggle) {
+    if (window.innerWidth > 768) filterBar.hidden = false;
+    filterToggle.addEventListener('click', function() {
+      var expanded = filterBar.hidden;
+      filterBar.hidden = !expanded;
+      filterToggle.setAttribute('aria-expanded', String(expanded));
+    });
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768) { filterBar.hidden = false; filterToggle.setAttribute('aria-expanded', 'true'); }
     });
   }
 })();

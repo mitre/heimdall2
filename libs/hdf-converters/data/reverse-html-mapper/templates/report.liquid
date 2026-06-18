@@ -9,57 +9,87 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
 {% endblock %}
 
 {% block body %}
-  <a class="skip-link" href="#main">Skip to report content</a>
+  <div class="report-wrapper">
+    <a class="skip-link" href="#main">Skip to report content</a>
 
-  <header class="container-fluid no-print">
-    <hgroup>
-      <h1>Heimdall {{ exportType }} Report</h1>
-      <p>Self-contained security compliance report</p>
-    </hgroup>
-  </header>
+    <header class="report-header no-print">
+      <hgroup>
+        <h1>Heimdall {{ exportType }} Report</h1>
+        <p>Self-contained security compliance report</p>
+      </hgroup>
+    </header>
 
-  <nav class="container-fluid no-print" aria-label="Report contents">
-    <ul>
-      <li><a href="#summary"><strong>Summary</strong></a></li>
-      <li><a href="#profile-info">Profile Info</a></li>
-      {%- if showResultSets %}
-      {%- for resultSet in resultSets %}
-      <li><a href="#file-{{ resultSet.fileID }}">{{ resultSet.filename }}</a></li>
-      {%- endfor %}
-      {%- endif %}
-    </ul>
-    <ul>
-      {%- if showResultSets %}
-      <li><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title" style="width:14rem;margin:0;"></li>
-      <li><button type="button" id="btn-expand-all">Expand All</button></li>
-      <li><button type="button" id="btn-collapse-all">Collapse All</button></li>
-      <li><button type="button" id="btn-clear-filters" class="secondary">Clear Filters</button></li>
-      {%- endif %}
-      <li><button type="button" id="theme-toggle" class="contrast" aria-label="Toggle light/dark theme">&#9788;/&#9790;</button></li>
-    </ul>
-  </nav>
-
-  {% render 'partials/filter-bar', statistics: statistics, showResultSets: showResultSets %}
-
-  <main id="main" class="container-fluid">
-    {% render 'partials/summary', statistics: statistics, severity: severity, compliance: compliance, icons: icons %}
-    {% render 'partials/profile-info', files: files %}
+    <nav class="report-nav no-print" aria-label="Report controls">
+      <div class="nav-row">
+        <ul class="nav-links">
+          <li><a href="#summary"><strong>Summary</strong></a></li>
+          <li><a href="#profile-info">Profile Info</a></li>
+          {%- if showResultSets %}
+          {%- for resultSet in resultSets %}
+          <li><a href="#file-{{ resultSet.fileID }}">{{ resultSet.filename }}</a></li>
+          {%- endfor %}
+          {%- endif %}
+        </ul>
+        <div class="nav-actions">
+          {%- if showResultSets %}
+          <input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title">
+          {%- endif %}
+          <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme">&#9788;/&#9790;</button>
+          {%- if showResultSets %}
+          <button type="button" id="nav-filter-toggle" class="btn-icon mobile-only" aria-label="Toggle filters" aria-expanded="false">&#9776;</button>
+          {%- endif %}
+        </div>
+      </div>
+    </nav>
 
     {%- if showResultSets %}
-    {%- for resultSet in resultSets %}
-    <section id="file-{{ resultSet.fileID }}" aria-labelledby="file-{{ resultSet.fileID }}-h">
-      <h2 id="file-{{ resultSet.fileID }}-h">{{ resultSet.filename }}</h2>
-      {%- for result in resultSet.results %}
-      {% render 'partials/control-card', result: result, showCode: showCode %}
-      {%- endfor %}
-    </section>
-    {%- endfor %}
+    <div class="report-filters no-print" id="filter-bar" aria-label="Control filters" hidden>
+      <div class="filter-row">
+        <div role="group" aria-label="Filter by status">
+          <button type="button" class="outline" data-filter-status="Passed">&#10003; Passed <small>({{ statistics.passed }})</small></button>
+          <button type="button" class="outline" data-filter-status="Failed">&#10007; Failed <small>({{ statistics.failed }})</small></button>
+          <button type="button" class="outline" data-filter-status="Not Applicable">&#8854; N/A <small>({{ statistics.notApplicable }})</small></button>
+          <button type="button" class="outline" data-filter-status="Not Reviewed">&#9888; NR <small>({{ statistics.notReviewed }})</small></button>
+          <button type="button" class="outline" data-filter-status="Profile Error">&#9651; Error <small>({{ statistics.profileError }})</small></button>
+        </div>
+        <div role="group" aria-label="Filter by severity">
+          <button type="button" class="outline" data-filter-severity="none">None</button>
+          <button type="button" class="outline" data-filter-severity="low">Low</button>
+          <button type="button" class="outline" data-filter-severity="medium">Medium</button>
+          <button type="button" class="outline" data-filter-severity="high">High</button>
+          <button type="button" class="outline" data-filter-severity="critical">Critical</button>
+        </div>
+        <div role="group" aria-label="NIST family and actions">
+          <select id="nist-family-filter" aria-label="NIST 800-53 family"><option value="">All NIST Families</option></select>
+          <button type="button" id="btn-expand-all">Expand All</button>
+          <button type="button" id="btn-collapse-all">Collapse All</button>
+          <button type="button" id="btn-clear-filters" class="secondary">Clear Filters</button>
+        </div>
+      </div>
+      <div><small id="filter-count"></small></div>
+    </div>
     {%- endif %}
-  </main>
 
-  <footer class="container-fluid">
-    <p><small>Generated by Heimdall &middot; {{ exportType }} Report &middot; Self-contained export</small></p>
-  </footer>
+    <main id="main">
+      {% render 'partials/profile-info', files: files %}
+      {% render 'partials/summary', statistics: statistics, severity: severity, compliance: compliance, icons: icons %}
+
+      {%- if showResultSets %}
+      {%- for resultSet in resultSets %}
+      <section id="file-{{ resultSet.fileID }}" aria-labelledby="file-{{ resultSet.fileID }}-h">
+        <h2 id="file-{{ resultSet.fileID }}-h">{{ resultSet.filename }}</h2>
+        {%- for result in resultSet.results %}
+        {% render 'partials/control-card', result: result, showCode: showCode %}
+        {%- endfor %}
+      </section>
+      {%- endfor %}
+      {%- endif %}
+    </main>
+
+    <footer class="report-footer">
+      <p><small>Generated by Heimdall &middot; {{ exportType }} Report &middot; Self-contained export</small></p>
+    </footer>
+  </div>
 {% endblock %}
 
 {% block scripts %}

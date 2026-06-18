@@ -329,18 +329,34 @@ engine.parseAndRenderSync('{{ x | escape }}', { x: '&amp;' })
 3. **`{% render %}` isolates scope** — child partial does NOT see parent variables unless explicitly passed
 4. **Whitespace** — block tags on own lines leave blank lines; use `{%- -%}` / `{{- -}}` for trimming
 
-### 8.6 Blades Starter Template Pattern
+### 8.6 Template Architecture
 
-From https://blades.ninja/html/starter/ — the canonical Liquid composition:
-```liquid
-{% capture body %}
-  <main class="container">{{ content }}</main>
-  <footer>{{ site.footer }}</footer>
-{% endcapture %}
-{% include blades/html.liquid %}
+Our `html.liquid` uses LiquidJS `{% layout %}` + `{% block %}` inheritance (not the `{% capture %}` + `{% include %}` pattern from the Blades starter). The layout provides named blocks (`styles`, `body`, `scripts`); the report template extends it via `{% layout 'html', title: title %}`.
+
+### 8.7 Background Layering Research (2026-06-17)
+
+**Cross-system study:** Bootstrap 5.3, GitHub Primer, Material Design 3, Pico/Blades CSS.
+
+**Universal finding:** Card-bg = page-bg is the norm (3 of 4 systems). Separation via borders/shadow in light mode.
+
+**Adopted pattern — Bootstrap 5.3 emphasis overlay:**
+```css
+:root { --report-emphasis-rgb: 0, 0, 0; }      /* black in light */
+[data-theme="dark"] { --report-emphasis-rgb: 255, 255, 255; }  /* white in dark */
+
+/* Overlay factor scale (Bootstrap-proven): */
+--report-cap-bg:    rgba(var(--report-emphasis-rgb), 0.03);   /* card headers */
+--report-stripe-bg: rgba(var(--report-emphasis-rgb), 0.05);   /* zebra */
+--report-hover-bg:  rgba(var(--report-emphasis-rgb), 0.075);  /* hover */
+--report-active-bg: rgba(var(--report-emphasis-rgb), 0.10);   /* active */
 ```
 
-Our `html.liquid` shell follows this pattern but omits external refs (favicon, CDN links) for self-contained output. Uses `site.inline_styles` array for CSS injection and `site.inline_scripts` for JS injection.
+**Why this over alternatives:**
+- vs Pico's fixed zinc gray: emphasis-rgb is semantically correct (darkens light, lightens dark) not "adds gray to both"
+- vs Material's 5-tier system: overkill for a static report — overlay approach is simpler with identical visual results
+- vs hardcoded hex: one set of factors, zero per-mode overrides needed
+
+Full research with hex values in `STYLE-GUIDE.md §2`.
 
 ---
 

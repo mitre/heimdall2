@@ -9,4 +9,18 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
       h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
     });
   }
+
+  var filterBar = document.getElementById('filter-bar');
+  var filterToggle = document.getElementById('nav-filter-toggle');
+  if (filterBar && filterToggle) {
+    if (window.innerWidth > 768) filterBar.hidden = false;
+    filterToggle.addEventListener('click', function() {
+      var expanded = filterBar.hidden;
+      filterBar.hidden = !expanded;
+      filterToggle.setAttribute('aria-expanded', String(expanded));
+    });
+    window.addEventListener('resize', function() {
+      if (window.innerWidth > 768) { filterBar.hidden = false; filterToggle.setAttribute('aria-expanded', 'true'); }
+    });
+  }
 })();

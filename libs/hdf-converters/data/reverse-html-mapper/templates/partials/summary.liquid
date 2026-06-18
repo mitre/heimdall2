@@ -1,47 +1,50 @@
+{% comment %}Executive summary with hero compliance KPI, status/severity breakdown, and segmented bar.
+Variables: statistics, severity, compliance, icons.
+Raw HTML justification: icon values are SVG strings built by the mapper with fill="currentColor".{% endcomment -%}
 <section id="summary" aria-labelledby="summary-h">
   <h2 id="summary-h">Executive Summary</h2>
-  <div class="summary-grid">
-    <article>
-      <header><strong>Status Counts</strong></header>
-      <table class="striped">
-        <tbody>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-pass-fg)">{{ icons.circleCheck | raw }}</span> Passed</th><td>{{ statistics.passed }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-fail-fg)">{{ icons.circleCross | raw }}</span> Failed</th><td>{{ statistics.failed }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-na-fg)">{{ icons.circleMinus | raw }}</span> Not Applicable</th><td>{{ statistics.notApplicable }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-nr-fg)">{{ icons.circleAlert | raw }}</span> Not Reviewed</th><td>{{ statistics.notReviewed }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--st-error-fg)">{{ icons.triangleAlert | raw }}</span> Profile Error</th><td>{{ statistics.profileError }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true">{{ icons.squareEqual | raw }}</span> Total</th><td>{{ statistics.totalResults }}</td></tr>
-        </tbody>
-      </table>
-      <footer>
-        <small>{{ statistics.passedTests }} checks passed, {{ statistics.failedTests }} failed of {{ statistics.totalTests }} total</small>
-      </footer>
-    </article>
-
-    <article>
-      <header><strong>Severity Breakdown</strong></header>
-      <table class="striped">
-        <tbody>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-none-fg)">{{ icons.circleNone | raw }}</span> None</th><td>{{ severity.none }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-low-fg)">{{ icons.circleLow | raw }}</span> Low</th><td>{{ severity.low }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-medium-fg)">{{ icons.circleMedium | raw }}</span> Medium</th><td>{{ severity.medium }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-high-fg)">{{ icons.circleHigh | raw }}</span> High</th><td>{{ severity.high }}</td></tr>
-          <tr><th scope="row"><span aria-hidden="true" style="color: var(--sv-critical-fg)">{{ icons.circleCritical | raw }}</span> Critical</th><td>{{ severity.critical }}</td></tr>
-        </tbody>
-      </table>
-    </article>
-
-    <article>
-      <header><strong>Compliance</strong></header>
-      <div style="text-align:center;">
-        <meter min="0" max="100" low="50" high="80" optimum="100"
-               value="{{ compliance.level }}" aria-label="Compliance percentage"
-               style="width:100%;height:1.5rem;">{{ compliance.level }}</meter>
+  <article class="summary-hero">
+    <div class="summary-layout">
+      <div class="compliance-hero compliance-{{ compliance.color }}">
         <div class="compliance-ring compliance-{{ compliance.color }}">{{ compliance.level }}</div>
+        <div class="compliance-label">Compliance</div>
       </div>
-      <footer>
-        <small>Passed / (Passed + Failed + Not Reviewed + Profile Error) &times; 100</small>
-      </footer>
-    </article>
-  </div>
+      <div class="breakdown-grid">
+        <div class="breakdown-col">
+          <h3>Status</h3>
+          <table>
+            <tbody>
+              <tr><td><span class="st-icon" style="color: var(--st-pass-fg)">{{ icons.circleCheck | raw }}</span></td><td>Passed</td><td class="num">{{ statistics.passed }}</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-fail-fg)">{{ icons.circleCross | raw }}</span></td><td>Failed</td><td class="num">{{ statistics.failed }}</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-na-fg)">{{ icons.circleMinus | raw }}</span></td><td>N/A</td><td class="num">{{ statistics.notApplicable }}</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-nr-fg)">{{ icons.circleAlert | raw }}</span></td><td>Not Reviewed</td><td class="num">{{ statistics.notReviewed }}</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--st-error-fg)">{{ icons.triangleAlert | raw }}</span></td><td>Error</td><td class="num">{{ statistics.profileError }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="breakdown-col">
+          <h3>Severity</h3>
+          <table>
+            <tbody>
+              <tr><td><span class="st-icon" style="color: var(--sv-none-fg)">{{ icons.circleNone | raw }}</span></td><td>None</td><td class="num">{{ severity.none }}</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-low-fg)">{{ icons.circleLow | raw }}</span></td><td>Low</td><td class="num">{{ severity.low }}</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-medium-fg)">{{ icons.circleMedium | raw }}</span></td><td>Medium</td><td class="num">{{ severity.medium }}</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-high-fg)">{{ icons.circleHigh | raw }}</span></td><td>High</td><td class="num">{{ severity.high }}</td></tr>
+              <tr><td><span class="st-icon" style="color: var(--sv-critical-fg)">{{ icons.circleCritical | raw }}</span></td><td>Critical</td><td class="num">{{ severity.critical }}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="status-bar" role="img" aria-label="Status distribution: {{ statistics.passed }} passed, {{ statistics.failed }} failed, {{ statistics.notApplicable }} not applicable, {{ statistics.notReviewed }} not reviewed, {{ statistics.profileError }} errors of {{ statistics.totalResults }} total">
+      {%- if statistics.passed > 0 %}<div class="bar-seg bar-passed" style="flex-grow: {{ statistics.passed }};" data-tooltip="{{ statistics.passed }} Passed"></div>{%- endif %}
+      {%- if statistics.failed > 0 %}<div class="bar-seg bar-failed" style="flex-grow: {{ statistics.failed }};" data-tooltip="{{ statistics.failed }} Failed"></div>{%- endif %}
+      {%- if statistics.notApplicable > 0 %}<div class="bar-seg bar-na" style="flex-grow: {{ statistics.notApplicable }};" data-tooltip="{{ statistics.notApplicable }} N/A"></div>{%- endif %}
+      {%- if statistics.notReviewed > 0 %}<div class="bar-seg bar-nr" style="flex-grow: {{ statistics.notReviewed }};" data-tooltip="{{ statistics.notReviewed }} Not Reviewed"></div>{%- endif %}
+      {%- if statistics.profileError > 0 %}<div class="bar-seg bar-error" style="flex-grow: {{ statistics.profileError }};" data-tooltip="{{ statistics.profileError }} Error"></div>{%- endif %}
+    </div>
+    <footer>
+      <small>{{ statistics.passedTests }} checks passed, {{ statistics.failedTests }} failed of {{ statistics.totalTests }} total &middot; {{ statistics.totalResults }} controls</small>
+    </footer>
+  </article>
 </section>

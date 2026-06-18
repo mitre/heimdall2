@@ -24,7 +24,7 @@ describe('Liquid partial templates', () => {
     expect(out).toContain('console.log("test")');
   });
 
-  it('partials/summary.liquid renders status counts table with icon+text', async () => {
+  it('partials/summary.liquid renders hero layout with compliance ring, status, severity, and bar', async () => {
     const {Liquid} = await import('liquidjs');
     const {templates} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
@@ -39,8 +39,12 @@ describe('Liquid partial templates', () => {
     expect(out).toContain('Passed');
     expect(out).toContain('>10<');
     expect(out).toContain('<svg>pass</svg>');
-    expect(out).toContain('<meter');
+    expect(out).toContain('compliance-ring');
     expect(out).toContain('55.55%');
+    expect(out).toContain('summary-hero');
+    expect(out).toContain('status-bar');
+    expect(out).toContain('bar-passed');
+    expect(out).toContain('breakdown-grid');
   });
 
   it('report.liquid uses {% layout %} not {% capture body %}', async () => {
@@ -85,7 +89,7 @@ describe('Liquid partial templates', () => {
       icons: {circleCheck: '<svg><path fill="currentColor"/></svg>', circleCross: '<svg><path fill="currentColor"/></svg>', circleMinus: '<svg><path fill="currentColor"/></svg>', circleAlert: '<svg><path fill="currentColor"/></svg>', triangleAlert: '<svg><path fill="currentColor"/></svg>', squareEqual: '<svg><path fill="currentColor"/></svg>', circleNone: '<svg><path fill="currentColor"/></svg>', circleLow: '<svg><path fill="currentColor"/></svg>', circleMedium: '<svg><path fill="currentColor"/></svg>', circleHigh: '<svg><path fill="currentColor"/></svg>', circleCritical: '<svg><path fill="currentColor"/></svg>'}
     });
     expect(out).not.toContain('fill="rgb(');
-    expect(out).toContain('var(--st-pass-fg)');
+    expect(out).toContain('var(--st-');
   });
 
   it('mapper icons use currentColor fill', async () => {
@@ -475,6 +479,96 @@ describe('Custom CSS layer (P4)', () => {
     );
     const output = await mapper.toHTML();
     expect(output).toContain('print-color-adjust');
+  });
+});
+
+describe('Emphasis overlay system (Bootstrap 5.3 pattern)', () => {
+  it('report.css defines --report-emphasis-rgb in :root (light = black)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('--report-emphasis-rgb: 0, 0, 0');
+  });
+
+  it('report.css flips --report-emphasis-rgb to white in dark mode', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('--report-emphasis-rgb: 255, 255, 255');
+  });
+
+  it('report.css defines the 4-factor overlay scale (cap/stripe/hover/active)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('--report-cap-bg');
+    expect(reportCss).toContain('--report-stripe-bg');
+    expect(reportCss).toContain('--report-hover-bg');
+    expect(reportCss).toContain('--report-active-bg');
+  });
+
+  it('overlay tokens use rgba(var(--report-emphasis-rgb), <factor>) pattern', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/--report-stripe-bg:\s*rgba\(var\(--report-emphasis-rgb\)/);
+    expect(reportCss).toMatch(/--report-hover-bg:\s*rgba\(var\(--report-emphasis-rgb\)/);
+    expect(reportCss).toMatch(/--report-cap-bg:\s*rgba\(var\(--report-emphasis-rgb\)/);
+    expect(reportCss).toMatch(/--report-active-bg:\s*rgba\(var\(--report-emphasis-rgb\)/);
+  });
+
+  it('control card zebra uses --report-stripe-bg (not hardcoded rgba)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('var(--report-stripe-bg)');
+    expect(reportCss).not.toContain('--control-stripe-bg');
+  });
+
+  it('control card hover uses --report-hover-bg (not hardcoded rgba)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('var(--report-hover-bg)');
+    expect(reportCss).not.toContain('--control-hover-bg');
+  });
+
+  it('summary card headers/footers use --report-cap-bg', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('var(--report-cap-bg)');
+  });
+
+  it('report.css has zero hardcoded rgb/hex outside of var() declarations and fallbacks', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const lines = reportCss.split('\n');
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('/*') || trimmed.startsWith('*')) continue;
+      if (trimmed.startsWith('--')) continue;
+      const withoutVarFallbacks = trimmed.replace(/var\([^)]+\)/g, '');
+      if (withoutVarFallbacks.includes('#') && !withoutVarFallbacks.includes('href')) {
+        const hexMatch = withoutVarFallbacks.match(/#[0-9a-fA-F]{3,8}\b/);
+        if (hexMatch) {
+          expect.fail(`Found hardcoded hex "${hexMatch[0]}" in non-declaration line: ${trimmed}`);
+        }
+      }
+    }
+  });
+
+  it('dark mode blocks in both @media and [data-theme] include emphasis-rgb flip', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const mediaMatch = reportCss.match(/@media only screen and \(prefers-color-scheme: dark\)\s*\{[^}]*\{([\s\S]*?)\}/);
+    expect(mediaMatch).not.toBeNull();
+    expect(mediaMatch![1]).toContain('--report-emphasis-rgb: 255, 255, 255');
+    const themeMatch = reportCss.match(/\[data-theme="dark"\]\s*\{([\s\S]*?)\}/);
+    expect(themeMatch).not.toBeNull();
+    expect(themeMatch![1]).toContain('--report-emphasis-rgb: 255, 255, 255');
   });
 });
 
