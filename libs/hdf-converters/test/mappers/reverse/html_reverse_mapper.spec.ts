@@ -653,6 +653,21 @@ describe('Shiki syntax highlighting (n3v.13)', () => {
 });
 
 describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
+  it('report header has top padding (title does not touch browser edge)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.report-header\s*\{[^}]*padding-top/);
+  });
+
+  it('nav and filter bar have compact internal padding', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.report-nav\s*\{[^}]*padding:\s*\.35rem\s+\.75rem/);
+    expect(reportCss).toMatch(/\.report-filters\s*\{[^}]*padding:\s*\.5rem\s+\.75rem/);
+  });
+
   it('H1: .nav-row has flex:1 to fill Blades nav flex container', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
