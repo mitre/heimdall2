@@ -2,7 +2,7 @@ import { createHash } from 'crypto';
 import { XMLParser } from 'fast-xml-parser';
 import type { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import Papa from 'papaparse';
+import { parse as parseCsvRaw } from 'papaparse';
 
 export type ILookupPath = {
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
@@ -50,18 +50,18 @@ export const DEFAULT_PROFILE_FIELDS = {
   supports: [],
   title: null,
   version: null,
-} as const;
+} satisfies Partial<ExecJSON.Profile>;
 
 const identityTransformer = (val: unknown) => val;
 
 export class BaseConverter<D = Record<string, unknown>> {
-  collapseResults: boolean;
   data: D;
   mappings?: MappedTransform<ExecJSON.Execution, ILookupPath>;
+  shouldCollapseResults: boolean;
 
-  constructor(data: D, collapseResults = false) {
+  constructor(data: D, shouldCollapseResults = false) {
     this.data = data;
-    this.collapseResults = collapseResults;
+    this.shouldCollapseResults = shouldCollapseResults;
   }
 
   convertInternal<T>(
@@ -102,14 +102,14 @@ export class BaseConverter<D = Record<string, unknown>> {
       v = _.omit(v as object, 'transformer') as T;
     }
 
-    const haspathTransform
+    const isHaspathTransform
       = _.has(v, 'pathTransform') && _.isFunction(_.get(v, 'pathTransform'));
 
     let pathTransform: (
       val: T | T[],
       f?: Record<string, unknown>,
     ) => T | T[] = (val: T | T[]) => val;
-    if (haspathTransform) {
+    if (isHaspathTransform) {
       pathTransform = _.get(v, 'pathTransform') as any;
       v = _.omit(v as object, 'pathTransform') as T;
     }
@@ -233,7 +233,7 @@ export class BaseConverter<D = Record<string, unknown>> {
                 : (Reflect.apply(arrayTransformer, null, [v, this.data]) as any);
             }
             if (key !== undefined) {
-              v = collapseDuplicates(v, key, this.collapseResults);
+              v = collapseDuplicates(v, key, this.shouldCollapseResults);
             }
             resultingData.push(...v);
           } else {
@@ -250,22 +250,19 @@ export class BaseConverter<D = Record<string, unknown>> {
   }
 
   handlePath(file: Record<string, unknown>, path: string | string[]): unknown {
-    let pathArray = path;
-
-    if (typeof path === 'string') {
-      pathArray = [path];
-    }
+    const pathArray = typeof path === 'string' ? [path] : path;
 
     const index = _.findIndex(pathArray, p => this.hasPath(file, p));
 
     if (index === -1) {
       // should probably throw error here, but instead are providing a default value to match current behavior
       return '';
-    } else if (pathArray[index].startsWith('$.')) {
-      return _.get(this.data, pathArray[index].slice(2)) || ''; // having default values implemented like this also prevents 'null' from being passed through
-    } else {
-      return _.get(file, pathArray[index]) ?? '';
     }
+    const resolvedPath = pathArray.at(index)!;
+    if (resolvedPath.startsWith('$.')) {
+      return _.get(this.data, resolvedPath.slice(2)) || '';
+    }
+    return _.get(file, resolvedPath) ?? '';
   }
 
   hasPath(file: Record<string, unknown>, path: string | string[]): boolean {
@@ -294,16 +291,16 @@ export class BaseConverter<D = Record<string, unknown>> {
   toHdf(): ExecJSON.Execution {
     if (this.mappings === undefined) {
       throw new Error('Mappings must be provided');
-    } else {
-      const v = this.convertInternal(
-        this.data as Record<string, unknown>,
-        this.mappings,
-      );
-      for (const element of v.profiles) {
-        element.sha256 = generateHash(JSON.stringify(element));
-      }
-      return v;
     }
+
+    const v = this.convertInternal(
+      this.data as Record<string, unknown>,
+      this.mappings,
+    );
+    for (const element of v.profiles) {
+      element.sha256 = generateHash(JSON.stringify(element));
+    }
+    return v;
   }
 }
 
@@ -319,7 +316,7 @@ export async function buildParseHtmlFunc(): Promise<(input: unknown) => string> 
         data.push(text);
       },
     });
-    parser.write(String(input));
+    parser.write(input);
     parser.end();
     return data.join('');
   };
@@ -340,7 +337,7 @@ export function impactMapping(
 }
 
 export function parseCsv(csv: string): unknown[] {
-  const result = Papa.parse(csv.trim(), { header: true });
+  const result = parseCsvRaw(csv.trim(), { header: true });
 
   if (result.errors.length > 0) {
     throw new Error(`CSV parse errors: ${JSON.stringify(result.errors)}`);
@@ -370,7 +367,7 @@ export function parseXml(
 function collapseDuplicates<T extends object>(
   array: T[],
   key: string,
-  collapseResults: boolean,
+  shouldCollapseResults: boolean,
 ): T[] {
   const seen = new Map<string, number>();
   const newArray: T[] = [];
@@ -378,30 +375,32 @@ function collapseDuplicates<T extends object>(
   for (const item of array) {
     const propertyValue = _.get(item, key);
     if (typeof propertyValue === 'string') {
-      const index = seen.get(propertyValue) || 0;
+      const seenIndex = seen.get(propertyValue) || 0;
       if (seen.has(propertyValue)) {
+        const existingItem = newArray.at(seenIndex)!;
         const oldResult = _.get(
-          newArray[index],
+          existingItem,
           'results',
         ) as ExecJSON.ControlResult[];
         const descriptions = oldResult.map(element =>
           _.get(element, 'code_desc'),
         );
-        if (collapseResults) {
+        const newResults = _.get(item, 'results') as ExecJSON.ControlResult[];
+        if (shouldCollapseResults) {
           if (
             !descriptions.includes(_.get(item, 'results[0].code_desc') as string)
           ) {
             _.set(
-              newArray[index],
+              existingItem,
               'results',
-              [...oldResult, ..._.get(item, 'results') as ExecJSON.ControlResult[]],
+              [...oldResult, ...newResults],
             );
           }
         } else {
           _.set(
-            newArray[index],
+            existingItem,
             'results',
-            [...oldResult, ..._.get(item, 'results') as ExecJSON.ControlResult[]],
+            [...oldResult, ...newResults],
           );
         }
       } else {
