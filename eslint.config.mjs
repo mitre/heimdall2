@@ -7,6 +7,7 @@ import json from '@eslint/json';
 import markdown from '@eslint/markdown';
 import stylistic from '@stylistic/eslint-plugin';
 import vitest from '@vitest/eslint-plugin';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import { importX } from 'eslint-plugin-import-x';
 import markdownLinks from 'eslint-plugin-markdown-links';
 import markdownPreferences from 'eslint-plugin-markdown-preferences';
@@ -77,6 +78,19 @@ export default defineConfig([
       sourceType: 'module',
     },
     name: 'js/ts',
+    settings: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+          project: [
+            'tsconfig.json',
+            'apps/*/tsconfig.json',
+            'libs/*/tsconfig.json',
+          ],
+          noWarnOnMultipleProjects: true,
+        }),
+      ],
+    },
     rules: {
       '@stylistic/eol-last': 'error',
       '@stylistic/object-curly-newline': ['error', { multiline: true }],
@@ -129,6 +143,18 @@ export default defineConfig([
       'unicorn/no-process-exit': 'off',
       'unicorn/prefer-node-protocol': 'off',
       'unicorn/prevent-abbreviations': 'off',
+    },
+  },
+  {
+    files: ['apps/frontend/**/*.{ts,vue}'],
+    name: 'frontend/resolver',
+    settings: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+          project: 'apps/frontend/tsconfig.json',
+        }),
+      ],
     },
   },
   {
