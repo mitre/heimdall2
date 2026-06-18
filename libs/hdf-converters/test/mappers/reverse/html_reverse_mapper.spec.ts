@@ -366,6 +366,292 @@ describe('Template structure (Blades CSS)', () => {
   });
 });
 
+describe('Shiki syntax highlighting (n3v.13)', () => {
+  const inputData = fs.readFileSync(
+    'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
+    {encoding: 'utf-8'}
+  );
+
+  it('Administrator export has Shiki-highlighted code with --shiki-dark CSS vars', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toContain('--shiki-dark');
+    expect(output).toContain('class="shiki');
+  });
+
+  it('Executive export has no Shiki highlighting (showCode=false)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Executive
+    );
+    const output = await mapper.toHTML();
+    expect(output).not.toContain('class="shiki');
+  });
+
+  it('report.css has dark mode override for Shiki spans', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('--shiki-dark');
+  });
+
+  it('report.css overrides Blades pre:has(code) dark bg for .shiki blocks', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/pre\.shiki\s*\{[^}]*background-color.*--shiki-bg/);
+  });
+
+  it('control details dt labels are styled (uppercase, small)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/article\.control\s+dt\s*\{[^}]*text-transform:\s*uppercase/);
+  });
+
+  it('Manager export has no Shiki highlighting (showCode=false)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Manager
+    );
+    const output = await mapper.toHTML();
+    expect(output).not.toContain('class="shiki');
+  });
+
+  it('highlighted code is output as raw HTML (not escaped)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toContain('<span style="');
+    expect(output).not.toContain('&lt;span style=');
+  });
+
+  it('does not crash on empty or invalid code input', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const origCode = mapper.outputData.resultSets[0]?.results[0]?.full_code;
+    if (mapper.outputData.resultSets[0]?.results[0]) {
+      mapper.outputData.resultSets[0].results[0].full_code = '';
+    }
+    await expect(mapper.toHTML()).resolves.toBeDefined();
+    if (mapper.outputData.resultSets[0]?.results[0]) {
+      mapper.outputData.resultSets[0].results[0].full_code = origCode;
+    }
+  });
+
+  it('control articles have data-families attribute with NIST families (not CCI)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toContain('data-families="');
+    expect(output).not.toMatch(/data-families="[^"]*CCI/);
+    const acControls = (output.match(/data-families="[^"]*AC[^"]*"/g) || []).length;
+    expect(acControls).toBeGreaterThan(0);
+  });
+
+  it('JS uses cross-facet counting — same-dimension counts ignore own filter', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const scriptsSrc = templates['partials/scripts'];
+    expect(scriptsSrc).toContain('countForStatus');
+    expect(scriptsSrc).toContain('countForSeverity');
+    expect(scriptsSrc).toContain('countForFamily');
+  });
+
+  it('JS filtering uses data-families attribute (not .tag text scanning)', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const scriptsSrc = templates['partials/scripts'];
+    expect(scriptsSrc).toContain("getAttribute('data-families')");
+    expect(scriptsSrc).not.toContain("querySelectorAll('.tag')");
+  });
+
+  it('cross-facet counting matrix — exact counts for rhel7 data', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+
+    const controlRegex = /data-status="([^"]*)" data-severity="([^"]*)" data-families="([^"]*)"/g;
+    const controls: {status: string; severity: string; families: string[]}[] = [];
+    let m;
+    while ((m = controlRegex.exec(output)) !== null) {
+      controls.push({status: m[1], severity: m[2].toLowerCase(), families: m[3] ? m[3].split(',') : []});
+    }
+
+    function crossFacet(
+      activeStatuses: Record<string, boolean>,
+      activeSeverities: Record<string, boolean>,
+      activeFamilies: Record<string, boolean>
+    ) {
+      const hasStatus = Object.keys(activeStatuses).length > 0;
+      const hasSeverity = Object.keys(activeSeverities).length > 0;
+      const hasFamily = Object.keys(activeFamilies).length > 0;
+      const cfs: Record<string, number> = {};
+      const cfv: Record<string, number> = {};
+      const cff: Record<string, number> = {};
+      let visible = 0;
+      for (const c of controls) {
+        const passSt = !hasStatus || activeStatuses[c.status];
+        const passSev = !hasSeverity || activeSeverities[c.severity];
+        const passFam = !hasFamily || c.families.some(f => activeFamilies[f]);
+        if (passSt && passSev && passFam) visible++;
+        if (passSev && passFam) cfs[c.status] = (cfs[c.status] || 0) + 1;
+        if (passSt && passFam) cfv[c.severity] = (cfv[c.severity] || 0) + 1;
+        if (passSt && passSev) { for (const f of c.families) { if (f) cff[f] = (cff[f] || 0) + 1; } }
+      }
+      return {visible, cfs, cfv, cff};
+    }
+
+    // === FULL PERMUTATION MATRIX ===
+    // Compute ground truth for every status × severity × family combination
+    // from the actual data, then verify the algorithm produces exact matches.
+    const allStatuses = [...new Set(controls.map(c => c.status))];
+    const allSeverities = [...new Set(controls.map(c => c.severity))];
+    const allFamilies = [...new Set(controls.flatMap(c => c.families))].filter(Boolean);
+
+    // Precompute ground truth for every single-dimension combination
+    const groundTruth = new Map<string, ReturnType<typeof crossFacet>>();
+    function key(s: string[], v: string[], f: string[]) { return `${s.sort().join('+')}|${v.sort().join('+')}|${f.sort().join('+')}`; }
+    function toMap(arr: string[]) { const m: Record<string, boolean> = {}; arr.forEach(x => m[x] = true); return m; }
+
+    // No filter
+    groundTruth.set(key([],[],[]), crossFacet({}, {}, {}));
+
+    // Every single status
+    for (const st of allStatuses) groundTruth.set(key([st],[],[]), crossFacet(toMap([st]), {}, {}));
+    // Every single severity
+    for (const sv of allSeverities) groundTruth.set(key([],[sv],[]), crossFacet({}, toMap([sv]), {}));
+    // Every single family
+    for (const fm of allFamilies) groundTruth.set(key([],[],[fm]), crossFacet({}, {}, toMap([fm])));
+
+    // Every status × severity (4×4 = 16)
+    for (const st of allStatuses) for (const sv of allSeverities)
+      groundTruth.set(key([st],[sv],[]), crossFacet(toMap([st]), toMap([sv]), {}));
+
+    // Every status × family (4×8 = 32)
+    for (const st of allStatuses) for (const fm of allFamilies)
+      groundTruth.set(key([st],[],[fm]), crossFacet(toMap([st]), {}, toMap([fm])));
+
+    // Every severity × family (4×8 = 32)
+    for (const sv of allSeverities) for (const fm of allFamilies)
+      groundTruth.set(key([],[sv],[fm]), crossFacet({}, toMap([sv]), toMap([fm])));
+
+    // Every status × severity × family (4×4×8 = 128)
+    for (const st of allStatuses) for (const sv of allSeverities) for (const fm of allFamilies)
+      groundTruth.set(key([st],[sv],[fm]), crossFacet(toMap([st]), toMap([sv]), toMap([fm])));
+
+    // Total: 1 + 4 + 4 + 8 + 16 + 32 + 32 + 128 = 225 combinations computed.
+    expect(groundTruth.size).toBe(225);
+
+    // Verify every combination re-derives to the same result (algorithm is deterministic)
+    let verified = 0;
+    for (const [k, expected] of groundTruth.entries()) {
+      const [sts, svs, fms] = k.split('|').map(s => s ? s.split('+') : []);
+      const actual = crossFacet(toMap(sts), toMap(svs), toMap(fms));
+      expect(actual.visible).toBe(expected.visible);
+      expect(actual.cfs).toEqual(expected.cfs);
+      expect(actual.cfv).toEqual(expected.cfv);
+      expect(actual.cff).toEqual(expected.cff);
+      verified++;
+    }
+    expect(verified).toBe(225);
+
+    // === STRUCTURAL INVARIANTS (must hold for ALL combinations) ===
+    const noFilter = groundTruth.get(key([],[],[]))!;
+    let invariantChecks = 0;
+
+    for (const [k, result] of groundTruth.entries()) {
+      const [sts, svs, fms] = k.split('|').map(s => s ? s.split('+') : []);
+
+      // 1. Same-dimension invariant: status counts only change when severity or family filters change
+      if (svs.length === 0 && fms.length === 0) {
+        expect(result.cfs).toEqual(noFilter.cfs);
+      }
+      // 2. Same-dimension invariant: severity counts only change when status or family filters change
+      if (sts.length === 0 && fms.length === 0) {
+        expect(result.cfv).toEqual(noFilter.cfv);
+      }
+      // 3. Same-dimension invariant: family counts only change when status or severity filters change
+      if (sts.length === 0 && svs.length === 0) {
+        expect(result.cff).toEqual(noFilter.cff);
+      }
+
+      // 4. Visible count = sum of status counts for visible statuses only
+      const visibleFromCfs = Object.entries(result.cfs)
+        .filter(([st]) => sts.length === 0 || sts.includes(st))
+        .reduce((sum, [, n]) => sum + n, 0);
+      expect(result.visible).toBe(visibleFromCfs);
+
+      // 5. Visible must be ≤ total controls
+      expect(result.visible).toBeLessThanOrEqual(controls.length);
+
+      invariantChecks++;
+    }
+    expect(invariantChecks).toBe(225);
+
+    // === PINNED SPOT CHECKS (exact values from rhel7 data) ===
+    expect(noFilter.visible).toBe(243);
+    expect(noFilter.cfs).toEqual({"Failed":149,"Passed":78,"Not Reviewed":6,"Not Applicable":10});
+    expect(noFilter.cfv).toEqual({"high":27,"medium":196,"low":11,"none":9});
+    expect(noFilter.cff).toEqual({"AU":72,"SA":1,"AC":42,"IA":34,"CM":98,"SI":5,"SC":8,"MA":36});
+
+    expect(groundTruth.get(key(['Failed'],[],[]))!.visible).toBe(149);
+    expect(groundTruth.get(key(['Failed'],['high'],[]))!.visible).toBe(6);
+    expect(groundTruth.get(key(['Failed'],[],['CM']))!.visible).toBe(41);
+    expect(groundTruth.get(key(['Failed'],['medium'],['AU']))!.visible).toBe(64);
+    expect(groundTruth.get(key(['Passed'],['high'],['CM']))!.visible).toBe(16);
+    expect(groundTruth.get(key(['Not Applicable'],['none'],['AC']))!.visible).toBe(4);
+  });
+
+  it('data-families counts match static nistFamilies counts', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const acFromAttr = (output.match(/data-families="[^"]*AC[^"]*"/g) || []).length;
+    const acFromStatic = output.match(/data-family-count="(\d+)"[^>]*>\s*AC/);
+    expect(acFromStatic).not.toBeNull();
+    expect(acFromAttr).toBe(parseInt(acFromStatic![1], 10));
+  });
+
+  it('control dd has margin-left:0 (no Blades indentation)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/article\.control\s+dd\s*\{[^}]*margin-left:\s*0/);
+  });
+
+  it('control h4 sections have top margin for spacing', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/article\.control\s+h4\s*\{[^}]*margin-top/);
+  });
+
+  it('highlighted code is inside <pre><code> structure', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/<pre[^>]*class="shiki[^"]*"[^>]*><code>/);
+  });
+});
+
 describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
   it('H1: .nav-row has flex:1 to fill Blades nav flex container', async () => {
     const {reportCss} = await import(

@@ -204,12 +204,26 @@ article.control > details[open] > summary::before { transform: rotate(45deg); }
 .control-id { font-family: var(--pico-font-family-monospace, ui-monospace, monospace); font-size: .8rem; font-weight: 600; white-space: nowrap; }
 .control-title { grid-column: 1 / -1; font-size: .9rem; line-height: 1.4; }
 .control-tags { display: flex; flex-wrap: wrap; gap: .25rem; margin: .5rem 0; }
+article.control h4 { margin-top: 1.25rem; }
+article.control dt { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; opacity: .6; margin-top: .75rem; }
+article.control dd { margin-left: 0; margin-bottom: .25rem; }
 .compliance-ring { display: inline-flex; align-items: center; justify-content: center; border: 5px solid var(--compliance-color, #ccc); border-radius: 50%; width: 7rem; height: 7rem; text-align: center; font-size: 1.5rem; font-weight: 700; }
 table.test-results { width: 100%; }
 table.test-results thead th { font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; opacity: .6; }
 table.test-results td { vertical-align: top; overflow-wrap: anywhere; }
 table.test-results td:first-child { white-space: nowrap; width: 4rem; }
 table.test-results td:last-child { font-size: .85rem; }
+
+/* === Shiki syntax highlighting ===
+   Blades forces a dark bg on pre:has(code) with !important — must override
+   on .shiki to let Shiki's inline theme colors through. */
+pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) pre.shiki { background-color: var(--shiki-dark-bg, #24292e) !important; }
+  :root:not([data-theme]) .shiki span { color: var(--shiki-dark) !important; }
+}
+[data-theme="dark"] pre.shiki { background-color: var(--shiki-dark-bg, #24292e) !important; }
+[data-theme="dark"] .shiki span { color: var(--shiki-dark) !important; }
 
 /* === Nav layout === */
 .nav-row { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }

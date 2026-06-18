@@ -326,12 +326,26 @@ article.control > details[open] > summary::before { transform: rotate(45deg); }
 .control-id { font-family: var(--pico-font-family-monospace, ui-monospace, monospace); font-size: .8rem; font-weight: 600; white-space: nowrap; }
 .control-title { grid-column: 1 / -1; font-size: .9rem; line-height: 1.4; }
 .control-tags { display: flex; flex-wrap: wrap; gap: .25rem; margin: .5rem 0; }
+article.control h4 { margin-top: 1.25rem; }
+article.control dt { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; opacity: .6; margin-top: .75rem; }
+article.control dd { margin-left: 0; margin-bottom: .25rem; }
 .compliance-ring { display: inline-flex; align-items: center; justify-content: center; border: 5px solid var(--compliance-color, #ccc); border-radius: 50%; width: 7rem; height: 7rem; text-align: center; font-size: 1.5rem; font-weight: 700; }
 table.test-results { width: 100%; }
 table.test-results thead th { font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; opacity: .6; }
 table.test-results td { vertical-align: top; overflow-wrap: anywhere; }
 table.test-results td:first-child { white-space: nowrap; width: 4rem; }
 table.test-results td:last-child { font-size: .85rem; }
+
+/* === Shiki syntax highlighting ===
+   Blades forces a dark bg on pre:has(code) with !important — must override
+   on .shiki to let Shiki's inline theme colors through. */
+pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) pre.shiki { background-color: var(--shiki-dark-bg, #24292e) !important; }
+  :root:not([data-theme]) .shiki span { color: var(--shiki-dark) !important; }
+}
+[data-theme="dark"] pre.shiki { background-color: var(--shiki-dark-bg, #24292e) !important; }
+[data-theme="dark"] .shiki span { color: var(--shiki-dark) !important; }
 
 /* === Nav layout === */
 .nav-row { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
@@ -553,7 +567,7 @@ table.test-results td:last-child { font-size: .85rem; }
 
       <section id="file-1" aria-labelledby="file-1-h">
         <h2 id="file-1-h">sonarqube-hdf.json</h2>
-        <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High">
+        <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High" data-families="SI">
   <details>
     <summary><span class="badge status--failed"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg> Failed</span>
       <span class="badge sev--high"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg> High</span>
@@ -701,11 +715,11 @@ window.addEventListener("message", function(event) {
     </dl>
     <figure>
       <figcaption>Source Code</figcaption>
-      <pre><code>=========================================================
-# Profile name: SonarQube Scan
-=========================================================
-
-undefined</code></pre>
+      <pre class="shiki shiki-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8" tabindex="0"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">=========================================================</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># Profile name: SonarQube Scan</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">=========================================================</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">undefined</span></span></code></pre>
     </figure>
   </details>
 </article>
@@ -750,12 +764,9 @@ undefined</code></pre>
       if (hasStatus && !activeStatus[st]) show = false;
       if (show && hasSeverity && !activeSeverity[sv]) show = false;
       if (show && hasFamily) {
-        var tags = c.querySelectorAll('.tag');
+        var fams = (c.getAttribute('data-families') || '').split(',');
         var match = false;
-        for (var j = 0; j < tags.length; j++) {
-          var m = tags[j].textContent.match(/^([A-Z]{2})-/);
-          if (m && activeFamilies[m[1]]) { match = true; break; }
-        }
+        for (var j = 0; j < fams.length; j++) { if (activeFamilies[fams[j]]) { match = true; break; } }
         if (!match) show = false;
       }
       if (show && q) {
@@ -767,21 +778,23 @@ undefined</code></pre>
     }
     var hasAny = hasStatus || hasSeverity || hasFamily || q;
     if (countEl) countEl.textContent = hasAny ? visible + ' of ' + total + ' controls' : total + ' controls';
-    var stCounts = {}, svCounts = {}, famCounts = {};
+    var countForStatus = {}, countForSeverity = {}, countForFamily = {};
     for (var k = 0; k < controls.length; k++) {
-      if (!controls[k].classList.contains('filtered-out')) {
-        var vst = controls[k].getAttribute('data-status');
-        var vsv = (controls[k].getAttribute('data-severity') || '').toLowerCase();
-        stCounts[vst] = (stCounts[vst] || 0) + 1;
-        svCounts[vsv] = (svCounts[vsv] || 0) + 1;
-        var vtags = controls[k].querySelectorAll('.tag');
-        var seenFam = {};
-        for (var vt = 0; vt < vtags.length; vt++) { var vm = vtags[vt].textContent.match(/^([A-Z]{2})-/); if (vm && vtags[vt].textContent.indexOf('CCI-') !== 0 && !seenFam[vm[1]]) { seenFam[vm[1]] = true; famCounts[vm[1]] = (famCounts[vm[1]] || 0) + 1; } }
-      }
+      var ck = controls[k];
+      var cst = ck.getAttribute('data-status');
+      var csv = (ck.getAttribute('data-severity') || '').toLowerCase();
+      var cfams = (ck.getAttribute('data-families') || '').split(',');
+      var passSev = !hasSeverity || activeSeverity[csv];
+      var passFam = !hasFamily || cfams.some(function(f) { return activeFamilies[f]; });
+      var passQ = !q || (ck.getAttribute('id') + ' ' + ck.textContent).toLowerCase().indexOf(q) !== -1;
+      if (passSev && passFam && passQ) countForStatus[cst] = (countForStatus[cst] || 0) + 1;
+      var passSt = !hasStatus || activeStatus[cst];
+      if (passSt && passFam && passQ) countForSeverity[csv] = (countForSeverity[csv] || 0) + 1;
+      if (passSt && passSev && passQ) { for (var fi = 0; fi < cfams.length; fi++) { if (cfams[fi]) countForFamily[cfams[fi]] = (countForFamily[cfams[fi]] || 0) + 1; } }
     }
-    document.querySelectorAll('.chip[data-filter-status] .chip-count').forEach(function(el) { el.textContent = stCounts[el.parentElement.getAttribute('data-filter-status')] || 0; });
-    document.querySelectorAll('.chip[data-filter-severity] .chip-count').forEach(function(el) { el.textContent = svCounts[el.parentElement.getAttribute('data-filter-severity')] || 0; });
-    document.querySelectorAll('#nist-family-list label').forEach(function(lbl) { var cb = lbl.querySelector('input'); if (cb) { var f = cb.value; lbl.lastChild.textContent = ' ' + f + ' (' + (famCounts[f] || 0) + ')'; } });
+    document.querySelectorAll('.chip[data-filter-status] .chip-count').forEach(function(el) { el.textContent = countForStatus[el.parentElement.getAttribute('data-filter-status')] || 0; });
+    document.querySelectorAll('.chip[data-filter-severity] .chip-count').forEach(function(el) { el.textContent = countForSeverity[el.parentElement.getAttribute('data-filter-severity')] || 0; });
+    document.querySelectorAll('#nist-family-list label').forEach(function(lbl) { var cb = lbl.querySelector('input'); if (cb) { var f = cb.value; lbl.lastChild.textContent = ' ' + f + ' (' + (countForFamily[f] || 0) + ')'; } });
     updateTokens();
     updateFamilyTrigger();
   }

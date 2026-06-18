@@ -17,6 +17,7 @@ import {
 import _ from 'lodash';
 import {Liquid} from 'liquidjs';
 import sanitize from 'sanitize-html';
+import {createHighlighter} from 'shiki';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
 import {templates, css, reportCss} from './embedded-assets';
 import {
@@ -478,7 +479,14 @@ export class FromHDFToHTMLMapper {
         severity: severity,
         icon: severityColor
       },
-      controlTags: filteredControls
+      controlTags: filteredControls,
+      nistFamilies: [...new Set(
+        filteredControls
+          .filter((t) => !t.startsWith('CCI-'))
+          .map((t) => t.match(/^([A-Z]{2})-/))
+          .filter(Boolean)
+          .map((m) => m![1])
+      )].sort().join(',')
     };
   }
 
@@ -515,6 +523,29 @@ export class FromHDFToHTMLMapper {
 
   // Prompt HTML generation from data pulled from file during constructor initialization
   async toHTML(): Promise<string> {
+    if (this.outputData.showCode) {
+      const highlighter = await createHighlighter({
+        themes: ['github-light', 'github-dark'],
+        langs: ['ruby', 'shellscript', 'json']
+      });
+      for (const rs of this.outputData.resultSets) {
+        for (const result of rs.results) {
+          if (result.full_code) {
+            try {
+              result.full_code = highlighter.codeToHtml(result.full_code, {
+                lang: 'ruby',
+                themes: {light: 'github-light', dark: 'github-dark'},
+                defaultColor: 'light'
+              });
+            } catch {
+              // Fallback: leave as raw text — template will escape it
+            }
+          }
+        }
+      }
+      highlighter.dispose();
+    }
+
     const engine = new Liquid({
       templates,
       outputEscape: 'escape',

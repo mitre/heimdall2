@@ -29,12 +29,9 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
       if (hasStatus && !activeStatus[st]) show = false;
       if (show && hasSeverity && !activeSeverity[sv]) show = false;
       if (show && hasFamily) {
-        var tags = c.querySelectorAll('.tag');
+        var fams = (c.getAttribute('data-families') || '').split(',');
         var match = false;
-        for (var j = 0; j < tags.length; j++) {
-          var m = tags[j].textContent.match(/^([A-Z]{2})-/);
-          if (m && activeFamilies[m[1]]) { match = true; break; }
-        }
+        for (var j = 0; j < fams.length; j++) { if (activeFamilies[fams[j]]) { match = true; break; } }
         if (!match) show = false;
       }
       if (show && q) {
@@ -46,21 +43,23 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
     }
     var hasAny = hasStatus || hasSeverity || hasFamily || q;
     if (countEl) countEl.textContent = hasAny ? visible + ' of ' + total + ' controls' : total + ' controls';
-    var stCounts = {}, svCounts = {}, famCounts = {};
+    var countForStatus = {}, countForSeverity = {}, countForFamily = {};
     for (var k = 0; k < controls.length; k++) {
-      if (!controls[k].classList.contains('filtered-out')) {
-        var vst = controls[k].getAttribute('data-status');
-        var vsv = (controls[k].getAttribute('data-severity') || '').toLowerCase();
-        stCounts[vst] = (stCounts[vst] || 0) + 1;
-        svCounts[vsv] = (svCounts[vsv] || 0) + 1;
-        var vtags = controls[k].querySelectorAll('.tag');
-        var seenFam = {};
-        for (var vt = 0; vt < vtags.length; vt++) { var vm = vtags[vt].textContent.match(/^([A-Z]{2})-/); if (vm && vtags[vt].textContent.indexOf('CCI-') !== 0 && !seenFam[vm[1]]) { seenFam[vm[1]] = true; famCounts[vm[1]] = (famCounts[vm[1]] || 0) + 1; } }
-      }
+      var ck = controls[k];
+      var cst = ck.getAttribute('data-status');
+      var csv = (ck.getAttribute('data-severity') || '').toLowerCase();
+      var cfams = (ck.getAttribute('data-families') || '').split(',');
+      var passSev = !hasSeverity || activeSeverity[csv];
+      var passFam = !hasFamily || cfams.some(function(f) { return activeFamilies[f]; });
+      var passQ = !q || (ck.getAttribute('id') + ' ' + ck.textContent).toLowerCase().indexOf(q) !== -1;
+      if (passSev && passFam && passQ) countForStatus[cst] = (countForStatus[cst] || 0) + 1;
+      var passSt = !hasStatus || activeStatus[cst];
+      if (passSt && passFam && passQ) countForSeverity[csv] = (countForSeverity[csv] || 0) + 1;
+      if (passSt && passSev && passQ) { for (var fi = 0; fi < cfams.length; fi++) { if (cfams[fi]) countForFamily[cfams[fi]] = (countForFamily[cfams[fi]] || 0) + 1; } }
     }
-    document.querySelectorAll('.chip[data-filter-status] .chip-count').forEach(function(el) { el.textContent = stCounts[el.parentElement.getAttribute('data-filter-status')] || 0; });
-    document.querySelectorAll('.chip[data-filter-severity] .chip-count').forEach(function(el) { el.textContent = svCounts[el.parentElement.getAttribute('data-filter-severity')] || 0; });
-    document.querySelectorAll('#nist-family-list label').forEach(function(lbl) { var cb = lbl.querySelector('input'); if (cb) { var f = cb.value; lbl.lastChild.textContent = ' ' + f + ' (' + (famCounts[f] || 0) + ')'; } });
+    document.querySelectorAll('.chip[data-filter-status] .chip-count').forEach(function(el) { el.textContent = countForStatus[el.parentElement.getAttribute('data-filter-status')] || 0; });
+    document.querySelectorAll('.chip[data-filter-severity] .chip-count').forEach(function(el) { el.textContent = countForSeverity[el.parentElement.getAttribute('data-filter-severity')] || 0; });
+    document.querySelectorAll('#nist-family-list label').forEach(function(lbl) { var cb = lbl.querySelector('input'); if (cb) { var f = cb.value; lbl.lastChild.textContent = ' ' + f + ' (' + (countForFamily[f] || 0) + ')'; } });
     updateTokens();
     updateFamilyTrigger();
   }
