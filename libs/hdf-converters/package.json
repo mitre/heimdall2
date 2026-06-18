@@ -14,6 +14,7 @@
   "main": "src/index.ts",
   "scripts": {
     "prebuild": "node data/reverse-html-mapper/convert-to-embedded-strings.ts",
+    "build:html-report": "npx tsx scripts/build-html-report.ts",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0",

@@ -1526,6 +1526,46 @@ describe('Mapper interface', () => {
   });
 });
 
+describe('CLI build:html-report (n3v.32)', () => {
+  it('script file exists', () => {
+    expect(fs.existsSync('scripts/build-html-report.ts')).toBe(true);
+  });
+
+  it('generates an Administrator HTML report from CLI', async () => {
+    const {execSync} = await import('child_process');
+    const outPath = '/tmp/cli-test-admin.html';
+    try { fs.unlinkSync(outPath); } catch {}
+    execSync(`npx tsx scripts/build-html-report.ts --type admin --files sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json --output ${outPath}`, {cwd: process.cwd(), timeout: 120000});
+    expect(fs.existsSync(outPath)).toBe(true);
+    const html = fs.readFileSync(outPath, 'utf-8');
+    expect(html).toContain('<!doctype html>');
+    expect(html).toContain('Heimdall Administrator Report');
+    expect(html).toContain('class="shiki');
+  });
+
+  it('generates an Executive HTML report (no controls)', async () => {
+    const {execSync} = await import('child_process');
+    const outPath = '/tmp/cli-test-exec.html';
+    try { fs.unlinkSync(outPath); } catch {}
+    execSync(`npx tsx scripts/build-html-report.ts --type executive --files sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json --output ${outPath}`, {cwd: process.cwd(), timeout: 120000});
+    const html = fs.readFileSync(outPath, 'utf-8');
+    expect(html).toContain('Heimdall Executive Report');
+    expect(html).not.toContain('id="filter-bar"');
+    expect(html).not.toContain('id="control-search"');
+  });
+
+  it('generates a multi-profile report from multiple files', async () => {
+    const {execSync} = await import('child_process');
+    const outPath = '/tmp/cli-test-multi.html';
+    try { fs.unlinkSync(outPath); } catch {}
+    execSync(`npx tsx scripts/build-html-report.ts --type admin --files sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json --output ${outPath}`, {cwd: process.cwd(), timeout: 120000});
+    const html = fs.readFileSync(outPath, 'utf-8');
+    expect(html).toContain('rhel7-results.json');
+    expect(html).toContain('sonarqube-hdf.json');
+    expect(html).toContain('data-file-id=');
+  });
+});
+
 describe('Profile visibility toggle (n3v.33)', () => {
   it('multi-profile: each Profile Info row has an eye toggle button with data-file-id', async () => {
     const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
