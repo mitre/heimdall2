@@ -33,6 +33,8 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
         <div class="nav-actions">
           {%- if showResultSets %}
           <input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title">
+          <button type="button" id="btn-expand-all" class="btn-icon" aria-label="Expand all" data-tooltip="Expand all controls" data-placement="bottom">&#8862;</button>
+          <button type="button" id="btn-collapse-all" class="btn-icon" aria-label="Collapse all" data-tooltip="Collapse all controls" data-placement="bottom">&#8863;</button>
           {%- endif %}
           <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme" data-tooltip="Toggle light/dark theme" data-placement="bottom">&#9788;/&#9790;</button>
           {%- if showResultSets %}
@@ -44,29 +46,29 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
 
     {%- if showResultSets %}
     <div class="report-filters no-print" id="filter-bar" aria-label="Control filters" hidden>
-      <div class="filter-row">
-        <div role="group" aria-label="Filter by status">
-          <button type="button" class="outline" data-filter-status="Passed">&#10003; Passed <small>({{ statistics.passed }})</small></button>
-          <button type="button" class="outline" data-filter-status="Failed">&#10007; Failed <small>({{ statistics.failed }})</small></button>
-          <button type="button" class="outline" data-filter-status="Not Applicable">&#8854; N/A <small>({{ statistics.notApplicable }})</small></button>
-          <button type="button" class="outline" data-filter-status="Not Reviewed">&#9888; NR <small>({{ statistics.notReviewed }})</small></button>
-          <button type="button" class="outline" data-filter-status="Profile Error">&#9651; Error <small>({{ statistics.profileError }})</small></button>
-        </div>
-        <div role="group" aria-label="Filter by severity">
-          <button type="button" class="outline" data-filter-severity="none">None</button>
-          <button type="button" class="outline" data-filter-severity="low">Low</button>
-          <button type="button" class="outline" data-filter-severity="medium">Medium</button>
-          <button type="button" class="outline" data-filter-severity="high">High</button>
-          <button type="button" class="outline" data-filter-severity="critical">Critical</button>
-        </div>
-        <div role="group" aria-label="NIST family and actions">
-          <select id="nist-family-filter" aria-label="NIST 800-53 family"><option value="">All NIST Families</option></select>
-          <button type="button" id="btn-expand-all" data-tooltip="Expand all controls" data-placement="bottom">Expand All</button>
-          <button type="button" id="btn-collapse-all" data-tooltip="Collapse all controls" data-placement="bottom">Collapse All</button>
-          <button type="button" id="btn-clear-filters" class="secondary" data-tooltip="Clear all active filters" data-placement="bottom">Clear Filters</button>
-        </div>
+      <div class="chip-row">
+        <button type="button" class="chip" data-filter-status="Passed">&#10003; Pass <span class="chip-count">{{ statistics.passed }}</span></button>
+        <button type="button" class="chip" data-filter-status="Failed">&#10007; Fail <span class="chip-count">{{ statistics.failed }}</span></button>
+        <button type="button" class="chip" data-filter-status="Not Applicable">&#8854; N/A <span class="chip-count">{{ statistics.notApplicable }}</span></button>
+        <button type="button" class="chip" data-filter-status="Not Reviewed">&#9888; NR <span class="chip-count">{{ statistics.notReviewed }}</span></button>
+        <button type="button" class="chip" data-filter-status="Profile Error">&#9651; Err <span class="chip-count">{{ statistics.profileError }}</span></button>
+        <span class="chip-divider"></span>
+        <button type="button" class="chip" data-filter-severity="none">None <span class="chip-count">{{ severity.none }}</span></button>
+        <button type="button" class="chip" data-filter-severity="low">Low <span class="chip-count">{{ severity.low }}</span></button>
+        <button type="button" class="chip" data-filter-severity="medium">Med <span class="chip-count">{{ severity.medium }}</span></button>
+        <button type="button" class="chip" data-filter-severity="high">High <span class="chip-count">{{ severity.high }}</span></button>
+        <button type="button" class="chip" data-filter-severity="critical">Crit <span class="chip-count">{{ severity.critical }}</span></button>
+        <span class="chip-divider"></span>
+        <details id="nist-family-filter" class="dropdown chip-dropdown" role="listbox" aria-label="NIST 800-53 family">
+          <summary class="chip" id="nist-family-trigger">NIST Family</summary>
+          <div class="dropdown-body" id="nist-family-list"></div>
+        </details>
       </div>
-      <div><small id="filter-count"></small></div>
+      <div id="active-tokens" class="active-tokens" hidden></div>
+      <div class="filter-status-row">
+        <small id="filter-count"></small>
+        <button type="button" id="btn-clear-filters" class="link-btn" hidden data-tooltip="Clear all active filters">Clear all</button>
+      </div>
     </div>
     {%- endif %}
 

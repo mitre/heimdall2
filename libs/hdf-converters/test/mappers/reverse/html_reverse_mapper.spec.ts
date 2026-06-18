@@ -366,56 +366,146 @@ describe('Template structure (Blades CSS)', () => {
   });
 });
 
-describe('Interactivity — filtering, search, theme toggle (P8)', () => {
+describe('Cloudscape toolbar + ISSO filtering (n3v.12)', () => {
   const inputData = fs.readFileSync(
     'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
     {encoding: 'utf-8'}
   );
 
-  it('has a search input for filtering controls', async () => {
+  it('has filter chips with counts for all 5 statuses', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toContain('data-filter-status="Passed"');
+    expect(output).toContain('data-filter-status="Failed"');
+    expect(output).toContain('data-filter-status="Not Applicable"');
+    expect(output).toContain('data-filter-status="Not Reviewed"');
+    expect(output).toContain('data-filter-status="Profile Error"');
+  });
+
+  it('has filter chips with counts for all 5 severities', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toContain('data-filter-severity="none"');
+    expect(output).toContain('data-filter-severity="critical"');
+  });
+
+  it('filter chips use chip class (not outline buttons)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('.chip');
+  });
+
+  it('has a search input', async () => {
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
       FileExportTypes.Administrator
     );
     const output = await mapper.toHTML();
     expect(output).toContain('type="search"');
+    expect(output).toContain('id="control-search"');
   });
 
-  it('has a theme toggle button', async () => {
+  it('has a theme toggle and expand/collapse icon buttons', async () => {
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
       FileExportTypes.Administrator
     );
     const output = await mapper.toHTML();
-    expect(output).toContain('theme-toggle');
-    expect(output).toContain('data-theme');
+    expect(output).toContain('id="theme-toggle"');
+    expect(output).toContain('id="btn-expand-all"');
+    expect(output).toContain('id="btn-collapse-all"');
   });
 
-  it('has filter buttons for status values', async () => {
+  it('has a live count element and clear-all link', async () => {
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
       FileExportTypes.Administrator
     );
     const output = await mapper.toHTML();
-    expect(output).toContain('data-filter-status');
+    expect(output).toContain('id="filter-count"');
+    expect(output).toContain('id="btn-clear-filters"');
   });
 
-  it('has a live count display element', async () => {
+  it('has an active-tokens container for dismissable filter tokens', async () => {
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
       FileExportTypes.Administrator
     );
     const output = await mapper.toHTML();
-    expect(output).toContain('filter-count');
+    expect(output).toContain('id="active-tokens"');
   });
 
-  it('has a clear filters button', async () => {
+  it('has a NIST family multi-select checkbox dropdown', async () => {
     const mapper = new FromHDFToHTMLMapper(
       [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
       FileExportTypes.Administrator
     );
     const output = await mapper.toHTML();
-    expect(output).toContain('btn-clear-filters');
+    expect(output).toContain('id="nist-family-filter"');
+    expect(output).toContain('id="nist-family-list"');
+    expect(output).toContain('class="dropdown');
+  });
+
+  it('hero summary bar segments have data-filter-status for cross-filtering', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/class="bar-seg bar-passed"[^>]*data-filter-status/);
+    expect(output).toMatch(/class="bar-seg bar-failed"[^>]*data-filter-status/);
+  });
+
+  it('scripts contain beforeprint and afterprint handlers', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const scriptsSrc = templates['partials/scripts'];
+    expect(scriptsSrc).toContain('beforeprint');
+    expect(scriptsSrc).toContain('afterprint');
+  });
+
+  it('scripts contain filter logic with debounced search', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const scriptsSrc = templates['partials/scripts'];
+    expect(scriptsSrc).toContain('applyFilters');
+    expect(scriptsSrc).toContain('setTimeout');
+  });
+
+  it('toolbar is sticky on desktop via CSS', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('position: sticky');
+  });
+
+  it('has a mobile filter toggle button', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toContain('id="nav-filter-toggle"');
+  });
+
+  it('Executive export has no filter controls (showResultSets=false)', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Executive
+    );
+    const output = await mapper.toHTML();
+    expect(output).not.toContain('id="control-search"');
+    expect(output).not.toContain('id="filter-bar"');
+    expect(output).not.toContain('class="chip"');
   });
 });
 

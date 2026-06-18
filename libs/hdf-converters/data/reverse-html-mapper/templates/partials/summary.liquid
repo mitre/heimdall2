@@ -37,11 +37,11 @@ Raw HTML justification: icon values are SVG strings built by the mapper with fil
       </div>
     </div>
     <div class="status-bar" role="img" aria-label="Status distribution: {{ statistics.passed }} passed, {{ statistics.failed }} failed, {{ statistics.notApplicable }} not applicable, {{ statistics.notReviewed }} not reviewed, {{ statistics.profileError }} errors of {{ statistics.totalResults }} total">
-      {%- if statistics.passed > 0 %}<div class="bar-seg bar-passed" style="flex-grow: {{ statistics.passed }};" data-tooltip="{{ statistics.passed }} Passed"></div>{%- endif %}
-      {%- if statistics.failed > 0 %}<div class="bar-seg bar-failed" style="flex-grow: {{ statistics.failed }};" data-tooltip="{{ statistics.failed }} Failed"></div>{%- endif %}
-      {%- if statistics.notApplicable > 0 %}<div class="bar-seg bar-na" style="flex-grow: {{ statistics.notApplicable }};" data-tooltip="{{ statistics.notApplicable }} N/A"></div>{%- endif %}
-      {%- if statistics.notReviewed > 0 %}<div class="bar-seg bar-nr" style="flex-grow: {{ statistics.notReviewed }};" data-tooltip="{{ statistics.notReviewed }} Not Reviewed"></div>{%- endif %}
-      {%- if statistics.profileError > 0 %}<div class="bar-seg bar-error" style="flex-grow: {{ statistics.profileError }};" data-tooltip="{{ statistics.profileError }} Error"></div>{%- endif %}
+      {%- if statistics.passed > 0 %}<div class="bar-seg bar-passed" style="flex-grow: {{ statistics.passed }};" data-tooltip="{{ statistics.passed }} Passed" data-filter-status="Passed"></div>{%- endif %}
+      {%- if statistics.failed > 0 %}<div class="bar-seg bar-failed" style="flex-grow: {{ statistics.failed }};" data-tooltip="{{ statistics.failed }} Failed" data-filter-status="Failed"></div>{%- endif %}
+      {%- if statistics.notApplicable > 0 %}<div class="bar-seg bar-na" style="flex-grow: {{ statistics.notApplicable }};" data-tooltip="{{ statistics.notApplicable }} N/A" data-filter-status="Not Applicable"></div>{%- endif %}
+      {%- if statistics.notReviewed > 0 %}<div class="bar-seg bar-nr" style="flex-grow: {{ statistics.notReviewed }};" data-tooltip="{{ statistics.notReviewed }} Not Reviewed" data-filter-status="Not Reviewed"></div>{%- endif %}
+      {%- if statistics.profileError > 0 %}<div class="bar-seg bar-error" style="flex-grow: {{ statistics.profileError }};" data-tooltip="{{ statistics.profileError }} Error" data-filter-status="Profile Error"></div>{%- endif %}
     </div>
     <footer>
       <small>{{ statistics.passedTests }} checks passed, {{ statistics.failedTests }} failed of {{ statistics.totalTests }} total &middot; {{ statistics.totalResults }} controls</small>

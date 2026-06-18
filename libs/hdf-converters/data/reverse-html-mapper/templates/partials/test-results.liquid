@@ -6,7 +6,7 @@ Raw HTML justification: code_desc may contain sanitized HTML from the mapper.{% 
   <tbody>
     <tr><th scope="row">Status</th><td>{%- if segment.status == 'passed' %}<ins>passed</ins>{%- elsif segment.status == 'failed' %}<del>failed</del>{%- else %}<samp>{{ segment.status | default: '' }}</samp>{%- endif %}</td></tr>
     <tr><th scope="row">Test</th><td>{{ segment.code_desc | default: '' | raw }}</td></tr>
-    <tr><th scope="row">Result</th><td><samp>{{ segment.message | default: '' }}</samp></td></tr>
+    {%- if segment.message != blank %}<tr><th scope="row">Result</th><td><samp>{{ segment.message }}</samp></td></tr>{%- endif %}
   </tbody>
 </table>
 {%- endfor %}

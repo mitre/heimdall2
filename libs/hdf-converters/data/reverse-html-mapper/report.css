@@ -113,8 +113,30 @@
 .badge.sev--high     { color: var(--sv-high-fg);     background: var(--sv-high-bg);     border-color: var(--sv-high-fg); }
 .badge.sev--critical { color: var(--sv-critical-fg); background: var(--sv-critical-bg); border-color: var(--sv-critical-fg); }
 
-/* === Report wrapper — single source of horizontal padding === */
-.report-wrapper { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
+/* === Report wrapper — single source of horizontal padding ===
+   Two INDEPENDENT guards against the filter layout-shift. Removing EITHER
+   reintroduces a visible horizontal jump when filtering changes how many
+   controls are shown. Both verified in-browser (filter 243 → few controls).
+
+   1. width: 100% on .report-wrapper — NOT redundant with max-width.
+      Blades sets `body { display:flex; flex-direction:column }`, so
+      .report-wrapper is a flex item and its `margin: 0 auto` are auto margins
+      on the flex CROSS axis. Auto cross-axis margins suppress the default
+      `align-items: stretch`, so without an explicit width the wrapper is sized
+      fit-content (shrink-to-wrap its content) and re-centers whenever the
+      visible content's intrinsic width changes — a ~178px jump on filter.
+      width: 100% makes the cross size definite (then clamped by max-width),
+      so the wrapper width is content-independent.
+
+   2. html { scrollbar-gutter: stable; overflow-y: scroll } — keeps the vertical
+      scrollbar gutter reserved when a filter shrinks the page below one viewport
+      and the scrollbar would otherwise vanish (~7.5px jump, classic scrollbars).
+      overflow-y: scroll is REQUIRED, not redundant with scrollbar-gutter:
+      Blades' `html { overflow-x: clip }` forces overflow-y to compute as
+      `visible`, and scrollbar-gutter has no effect without a scroll container. */
+html { scrollbar-gutter: stable; overflow-y: scroll; }
+.report-wrapper { flex: 1; display: flex; flex-direction: column; max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 1.5rem; }
+.report-wrapper > main { flex: 1; }
 @media (max-width: 768px) { .report-wrapper { padding: 0 .75rem; } }
 
 /* === Layout === */
@@ -186,8 +208,10 @@ article.control > details[open] > summary::before { transform: rotate(45deg); }
 .control-tags { display: flex; flex-wrap: wrap; gap: .25rem; margin: .5rem 0; }
 .compliance-ring { display: inline-flex; align-items: center; justify-content: center; border: 5px solid var(--compliance-color, #ccc); border-radius: 50%; width: 7rem; height: 7rem; text-align: center; font-size: 1.5rem; font-weight: 700; }
 table.test-results { width: 100%; }
-table.test-results th { width: 6rem; white-space: nowrap; vertical-align: top; }
-table.test-results td { white-space: pre-line; overflow-wrap: anywhere; }
+table.test-results thead th { font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; opacity: .6; }
+table.test-results td { vertical-align: top; overflow-wrap: anywhere; }
+table.test-results td:first-child { white-space: nowrap; width: 4rem; }
+table.test-results td:last-child { font-size: .85rem; }
 
 /* === Nav layout === */
 .nav-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
@@ -198,13 +222,30 @@ table.test-results td { white-space: pre-line; overflow-wrap: anywhere; }
 .btn-icon { margin: 0; padding: .3rem .5rem; font-size: .9rem; width: auto; }
 .mobile-only { display: none; }
 
-/* === Filtering === */
+/* === Filter chips (M3 filter chip pattern + SonarQube counts) === */
 .filtered-out { display: none; }
 #filter-bar[hidden] { display: none; }
-.filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
-.filter-row [role="group"] { display: inline-flex; flex-wrap: wrap; gap: .25rem; }
-.filter-row button { margin: 0; padding: .25rem .6rem; font-size: .8rem; border-width: 2px; }
-.filter-row select { margin: 0; padding: .25rem .6rem; font-size: .8rem; width: auto; }
+.chip-row { display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; }
+.chip { display: inline-flex; align-items: center; gap: .2em; margin: 0; padding: .15rem .5rem; font-size: .75rem; border-radius: 1rem; border: 1px solid var(--report-border); background: transparent; color: inherit; cursor: pointer; white-space: nowrap; line-height: 1.4; transition: background .15s, border-color .15s; }
+.chip:hover { background: var(--report-hover-bg); }
+.chip[aria-current="true"] { background: var(--pico-primary-background); border-color: var(--pico-primary); color: var(--pico-primary-inverse); }
+.chip-count { font-weight: 600; font-variant-numeric: tabular-nums; }
+.chip-divider { width: 1px; height: 1.2rem; background: var(--report-border); margin: 0 .15rem; }
+.chip-dropdown { display: inline-block; position: relative; margin: 0; }
+.chip-dropdown > summary { list-style: none; }
+.chip-dropdown > summary::-webkit-details-marker { display: none; }
+.chip-dropdown > summary::after { content: " \25BE"; font-size: .65em; }
+.chip-dropdown .dropdown-body { position: absolute; top: 100%; left: 0; z-index: 20; min-width: 10rem; max-height: 16rem; overflow-y: auto; background: var(--pico-card-background-color, #fff); border: 1px solid var(--report-border); border-radius: .5rem; padding: .25rem 0; margin-top: .2rem; box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+.chip-dropdown label { display: flex; align-items: center; gap: .4rem; padding: .25rem .6rem; font-size: .8rem; cursor: pointer; white-space: nowrap; }
+.chip-dropdown label:hover { background: var(--report-hover-bg); }
+.chip-dropdown input[type="checkbox"] { margin: 0; width: 1rem; height: 1rem; }
+.active-tokens { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; padding: .4rem 0; }
+.active-tokens[hidden] { display: none; }
+.active-token { display: inline-flex; align-items: center; gap: .2em; padding: .1rem .4rem; font-size: .7rem; border-radius: 1rem; background: var(--pico-primary-background); color: var(--pico-primary-inverse); border: none; cursor: pointer; white-space: nowrap; }
+.active-token:hover { opacity: .8; }
+.filter-status-row { display: flex; align-items: center; gap: .5rem; padding: .2rem 0; }
+.link-btn { background: none; border: none; color: var(--pico-primary); cursor: pointer; font-size: .75rem; padding: 0; margin: 0; text-decoration: underline; }
+.link-btn[hidden] { display: none; }
 
 /* Mobile responsive */
 @media (max-width: 768px) {

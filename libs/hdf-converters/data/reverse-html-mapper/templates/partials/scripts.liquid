@@ -1,26 +1,156 @@
-{% comment %}Inline JavaScript for interactive features.
+{% comment %}Inline JavaScript for interactive features (~120 lines).
 Runs after DOM is ready (placed at end of <body> by html.liquid).
 Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
 (function() {
-  var themeBtn = document.getElementById('theme-toggle');
-  if (themeBtn) {
-    themeBtn.addEventListener('click', function() {
-      var h = document.documentElement;
-      h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  var h = document.documentElement;
+  var controls = [].slice.call(document.querySelectorAll('article.control'));
+  var total = controls.length;
+  var activeStatus = {}, activeSeverity = {}, activeFamilies = {}, searchTerm = '';
+  var countEl = document.getElementById('filter-count');
+  var tokensEl = document.getElementById('active-tokens');
+  var clearBtn = document.getElementById('btn-clear-filters');
+  var searchInput = document.getElementById('control-search');
+  var familyDetails = document.getElementById('nist-family-filter');
+  var familyTrigger = document.getElementById('nist-family-trigger');
+  var familyList = document.getElementById('nist-family-list');
+  var debounceTimer;
+
+  function applyFilters() {
+    var visible = 0;
+    var hasStatus = Object.keys(activeStatus).length > 0;
+    var hasSeverity = Object.keys(activeSeverity).length > 0;
+    var hasFamily = Object.keys(activeFamilies).length > 0;
+    var q = searchTerm.toLowerCase();
+    for (var i = 0; i < controls.length; i++) {
+      var c = controls[i];
+      var st = c.getAttribute('data-status');
+      var sv = (c.getAttribute('data-severity') || '').toLowerCase();
+      var show = true;
+      if (hasStatus && !activeStatus[st]) show = false;
+      if (show && hasSeverity && !activeSeverity[sv]) show = false;
+      if (show && hasFamily) {
+        var tags = c.querySelectorAll('.tag');
+        var match = false;
+        for (var j = 0; j < tags.length; j++) {
+          var m = tags[j].textContent.match(/^([A-Z]{2})-/);
+          if (m && activeFamilies[m[1]]) { match = true; break; }
+        }
+        if (!match) show = false;
+      }
+      if (show && q) {
+        var text = (c.getAttribute('id') + ' ' + c.textContent).toLowerCase();
+        if (text.indexOf(q) === -1) show = false;
+      }
+      c.classList.toggle('filtered-out', !show);
+      if (show) visible++;
+    }
+    var hasAny = hasStatus || hasSeverity || hasFamily || q;
+    if (countEl) countEl.textContent = hasAny ? visible + ' of ' + total + ' controls' : total + ' controls';
+    var stCounts = {}, svCounts = {}, famCounts = {};
+    for (var k = 0; k < controls.length; k++) {
+      if (!controls[k].classList.contains('filtered-out')) {
+        var vst = controls[k].getAttribute('data-status');
+        var vsv = (controls[k].getAttribute('data-severity') || '').toLowerCase();
+        stCounts[vst] = (stCounts[vst] || 0) + 1;
+        svCounts[vsv] = (svCounts[vsv] || 0) + 1;
+        var vtags = controls[k].querySelectorAll('.tag');
+        for (var vt = 0; vt < vtags.length; vt++) { var vm = vtags[vt].textContent.match(/^([A-Z]{2})-/); if (vm) famCounts[vm[1]] = (famCounts[vm[1]] || 0) + 1; }
+      }
+    }
+    document.querySelectorAll('.chip[data-filter-status] .chip-count').forEach(function(el) { el.textContent = stCounts[el.parentElement.getAttribute('data-filter-status')] || 0; });
+    document.querySelectorAll('.chip[data-filter-severity] .chip-count').forEach(function(el) { el.textContent = svCounts[el.parentElement.getAttribute('data-filter-severity')] || 0; });
+    document.querySelectorAll('#nist-family-list label').forEach(function(lbl) { var cb = lbl.querySelector('input'); if (cb) { var f = cb.value; lbl.lastChild.textContent = ' ' + f + ' (' + (famCounts[f] || 0) + ')'; } });
+    updateTokens();
+    updateFamilyTrigger();
+  }
+
+  function updateFamilyTrigger() {
+    if (!familyTrigger) return;
+    var keys = Object.keys(activeFamilies);
+    familyTrigger.textContent = keys.length ? 'NIST (' + keys.length + ')' : 'NIST Family';
+  }
+
+  function updateTokens() {
+    if (!tokensEl) return;
+    var parts = [];
+    Object.keys(activeStatus).forEach(function(s) { parts.push('<button class="active-token" data-remove-status="' + s + '">&times; ' + s + '</button>'); });
+    Object.keys(activeSeverity).forEach(function(s) { parts.push('<button class="active-token" data-remove-severity="' + s + '">&times; ' + s + '</button>'); });
+    Object.keys(activeFamilies).forEach(function(f) { parts.push('<button class="active-token" data-remove-family="' + f + '">&times; ' + f + '</button>'); });
+    tokensEl.innerHTML = parts.join('');
+    tokensEl.hidden = parts.length === 0;
+    if (clearBtn) clearBtn.hidden = parts.length === 0 && !searchTerm;
+  }
+
+  function toggleChip(btn, map, key) {
+    if (map[key]) { delete map[key]; btn.removeAttribute('aria-current'); } else { map[key] = true; btn.setAttribute('aria-current', 'true'); }
+    applyFilters();
+  }
+
+  document.addEventListener('click', function(e) {
+    var t = e.target.closest ? e.target.closest('[data-filter-status]') : null;
+    if (t && !t.classList.contains('bar-seg') && !t.classList.contains('active-token')) { toggleChip(t, activeStatus, t.getAttribute('data-filter-status')); return; }
+    if (t && t.classList.contains('bar-seg')) {
+      var st = t.getAttribute('data-filter-status');
+      var chips = document.querySelectorAll('.chip[data-filter-status="' + st + '"]');
+      if (chips.length) toggleChip(chips[0], activeStatus, st);
+      return;
+    }
+    var sv = e.target.closest ? e.target.closest('.chip[data-filter-severity]') : null;
+    if (sv) { toggleChip(sv, activeSeverity, sv.getAttribute('data-filter-severity')); return; }
+    var rs = e.target.closest ? e.target.closest('[data-remove-status]') : null;
+    if (rs) { var k = rs.getAttribute('data-remove-status'); delete activeStatus[k]; var c = document.querySelector('.chip[data-filter-status="' + k + '"]'); if (c) c.removeAttribute('aria-current'); applyFilters(); return; }
+    var rv = e.target.closest ? e.target.closest('[data-remove-severity]') : null;
+    if (rv) { var k2 = rv.getAttribute('data-remove-severity'); delete activeSeverity[k2]; var c2 = document.querySelector('.chip[data-filter-severity="' + k2 + '"]'); if (c2) c2.removeAttribute('aria-current'); applyFilters(); return; }
+    var rf = e.target.closest ? e.target.closest('[data-remove-family]') : null;
+    if (rf) { var fk = rf.getAttribute('data-remove-family'); delete activeFamilies[fk]; var cb = document.querySelector('#nist-family-list input[value="' + fk + '"]'); if (cb) cb.checked = false; applyFilters(); return; }
+  });
+
+  if (searchInput) searchInput.addEventListener('input', function() { clearTimeout(debounceTimer); debounceTimer = setTimeout(function() { searchTerm = searchInput.value; applyFilters(); }, 200); });
+
+  if (familyList) {
+    var families = {};
+    controls.forEach(function(c) { var tags = c.querySelectorAll('.tag'); for (var i = 0; i < tags.length; i++) { var m = tags[i].textContent.match(/^([A-Z]{2})-/); if (m) families[m[1]] = true; } });
+    Object.keys(families).sort().forEach(function(f) {
+      var lbl = document.createElement('label');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.value = f;
+      cb.addEventListener('change', function() { if (cb.checked) activeFamilies[f] = true; else delete activeFamilies[f]; applyFilters(); });
+      lbl.appendChild(cb); lbl.appendChild(document.createTextNode(' ' + f));
+      familyList.appendChild(lbl);
     });
   }
+
+  if (clearBtn) clearBtn.addEventListener('click', function() {
+    activeStatus = {}; activeSeverity = {}; activeFamilies = {}; searchTerm = '';
+    if (searchInput) searchInput.value = '';
+    document.querySelectorAll('.chip[aria-current]').forEach(function(c) { c.removeAttribute('aria-current'); });
+    document.querySelectorAll('#nist-family-list input').forEach(function(cb) { cb.checked = false; });
+    if (familyDetails) familyDetails.open = false;
+    applyFilters();
+  });
+
+  var expandBtn = document.getElementById('btn-expand-all');
+  var collapseBtn = document.getElementById('btn-collapse-all');
+  if (expandBtn) expandBtn.addEventListener('click', function() { controls.forEach(function(c) { if (!c.classList.contains('filtered-out')) { var d = c.querySelector('details'); if (d) d.open = true; } }); });
+  if (collapseBtn) collapseBtn.addEventListener('click', function() { controls.forEach(function(c) { var d = c.querySelector('details'); if (d) d.open = false; }); });
+
+  var themeBtn = document.getElementById('theme-toggle');
+  if (themeBtn) themeBtn.addEventListener('click', function() { h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); });
 
   var filterBar = document.getElementById('filter-bar');
   var filterToggle = document.getElementById('nav-filter-toggle');
   if (filterBar && filterToggle) {
     if (window.innerWidth > 768) filterBar.hidden = false;
-    filterToggle.addEventListener('click', function() {
-      var expanded = filterBar.hidden;
-      filterBar.hidden = !expanded;
-      filterToggle.setAttribute('aria-expanded', String(expanded));
-    });
-    window.addEventListener('resize', function() {
-      if (window.innerWidth > 768) { filterBar.hidden = false; filterToggle.setAttribute('aria-expanded', 'true'); }
-    });
+    filterToggle.addEventListener('click', function() { var show = filterBar.hidden; filterBar.hidden = !show; filterToggle.setAttribute('aria-expanded', String(show)); });
+    window.addEventListener('resize', function() { if (window.innerWidth > 768) { filterBar.hidden = false; filterToggle.setAttribute('aria-expanded', 'true'); } });
   }
+
+  var savedOpen = [];
+  function beforePrint() { savedOpen = []; controls.forEach(function(c) { var d = c.querySelector('details'); if (d) { savedOpen.push({el: d, was: d.open}); d.open = true; } }); }
+  function afterprint() { savedOpen.forEach(function(s) { s.el.open = s.was; }); savedOpen = []; }
+  window.addEventListener('beforeprint', beforePrint);
+  window.addEventListener('afterprint', afterprint);
+  if (window.matchMedia) { var mql = window.matchMedia('print'); if (mql.addEventListener) mql.addEventListener('change', function(e) { if (e.matches) beforePrint(); else afterprint(); }); }
+
+  applyFilters();
 })();

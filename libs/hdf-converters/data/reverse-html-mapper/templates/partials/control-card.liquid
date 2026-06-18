@@ -21,15 +21,18 @@ segment.code_desc may contain sanitized HTML. detail.value is sanitized by sanit
     {{ result.data.desc | raw }}
 
     <h4>Test Results</h4>
-    {%- for segment in result.hdf.segments %}
     <table class="striped test-results">
+      <thead><tr><th>Status</th><th>Test</th><th>Result</th></tr></thead>
       <tbody>
-        <tr><th scope="row">Status</th><td>{%- if segment.status == 'passed' %}<ins>passed</ins>{%- elsif segment.status == 'failed' %}<del>failed</del>{%- else %}<samp>{{ segment.status | default: '' }}</samp>{%- endif %}</td></tr>
-        <tr><th scope="row">Test</th><td>{{ segment.code_desc | default: '' | raw }}</td></tr>
-        <tr><th scope="row">Result</th><td><samp>{{ segment.message | default: '' }}</samp></td></tr>
+        {%- for segment in result.hdf.segments %}
+        <tr>
+          <td>{%- if segment.status == 'passed' %}<ins>passed</ins>{%- elsif segment.status == 'failed' %}<del>failed</del>{%- else %}<samp>{{ segment.status | default: '' }}</samp>{%- endif %}</td>
+          <td>{{ segment.code_desc | default: '' | raw }}</td>
+          <td>{%- if segment.message != blank %}<samp>{{ segment.message }}</samp>{%- endif %}</td>
+        </tr>
+        {%- endfor %}
       </tbody>
     </table>
-    {%- endfor %}
 
     <h4>Details</h4>
     <dl>
