@@ -31,6 +31,27 @@ export type MappedTransform<T, U extends ILookupPath> = {
 };
 export type ObjectEntryValue<T> = { [K in keyof T]: readonly [K, T[K]] }[keyof T];
 
+export const DEFAULT_PROFILE_FIELDS = {
+  attributes: [],
+  copyright: null,
+  copyright_email: null,
+  depends: [],
+  description: null,
+  groups: [],
+  inspec_version: null,
+  license: null,
+  maintainer: null,
+  parent_profile: null,
+  sha256: '',
+  skip_message: null,
+  status: 'loaded',
+  status_message: null,
+  summary: null,
+  supports: [],
+  title: null,
+  version: null,
+} as const;
+
 const identityTransformer = (val: unknown) => val;
 
 export class BaseConverter<D = Record<string, unknown>> {
