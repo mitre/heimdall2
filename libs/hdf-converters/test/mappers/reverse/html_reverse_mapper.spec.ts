@@ -847,12 +847,19 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
     expect(reportCss).toMatch(/\.report-header\s*>\s*hgroup\s*\{[^}]*flex:\s*1/);
   });
 
-  it('.filter-actions row has flex layout with right alignment', async () => {
+  it('filter-actions uses align-items:stretch for equal-height children', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
-    expect(reportCss).toMatch(/\.filter-actions\s*\{[^}]*display:\s*flex/);
-    expect(reportCss).toMatch(/\.filter-actions\s*\{[^}]*justify-content:\s*flex-end/);
+    expect(reportCss).toMatch(/\.filter-actions\s*\{[^}]*align-items:\s*stretch/);
+  });
+
+  it('filter-actions buttons and summary share consistent font-size and padding', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.filter-actions\s+button.*summary\s*\{[^}]*font-size:\s*\.85rem/);
+    expect(reportCss).toMatch(/\.filter-actions\s+button.*summary\s*\{[^}]*padding:\s*\.4rem\s+\.75rem/);
   });
 
   it('search input inside nav does not override Pico padding (preserves magnifying glass)', async () => {
@@ -860,6 +867,29 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
     expect(reportCss).not.toMatch(/nav.*input.*padding-inline-start/);
+  });
+
+  it('filter-actions row has NIST + expand + collapse + count + clear on one row', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const actionsMatch = output.match(/<div class="filter-actions">([\s\S]*?)<\/div>\s*<div/);
+    expect(actionsMatch).not.toBeNull();
+    const content = actionsMatch![1];
+    expect(content).toContain('nist-family-filter');
+    expect(content).toContain('btn-expand-all');
+    expect(content).toContain('btn-collapse-all');
+    expect(content).toContain('filter-count');
+    expect(content).toContain('btn-clear-filters');
+  });
+
+  it('nav has proper padding via Blades native spacing', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/nav\[aria-label.*\]\s*\{[^}]*padding/);
   });
 
   it('expand/collapse buttons are in the filter bar (not nav)', async () => {
@@ -906,11 +936,12 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
     expect(reportCss).toMatch(/\.chip\[data-filter-severity.*high.*aria-current/);
   });
 
-  it('filter-actions row is right-aligned with NIST + expand/collapse', async () => {
+  it('filter-actions row uses flex with count pushed right via margin-left:auto', async () => {
     const {reportCss} = await import(
       '../../../src/converters-from-hdf/html/embedded-assets.js'
     );
-    expect(reportCss).toMatch(/\.filter-actions\s*\{[^}]*justify-content:\s*flex-end/);
+    expect(reportCss).toMatch(/\.filter-actions\s*\{[^}]*display:\s*flex/);
+    expect(reportCss).toMatch(/#filter-count\s*\{[^}]*margin-left:\s*auto/);
   });
 
   it('theme toggle is inside the report header (same row as title)', async () => {
