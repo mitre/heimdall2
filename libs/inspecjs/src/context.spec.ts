@@ -12,10 +12,7 @@ it('correctly detects an overlayed profile', () => {
   );
   const result: ConversionResult = convertFile(content);
   expect(result).toHaveProperty('1_0_ExecJson');
-  expect(() => {
-    if (result['1_0_ExecJson'] !== undefined) {
-      const contextualized = contextualizeEvaluation(result['1_0_ExecJson']);
-      expect(contextualized.contains.length).toBe(2);
-    }
-  }).not.toThrow(Error);
+  expect(result['1_0_ExecJson']).toBeDefined();
+  const contextualized = contextualizeEvaluation(result['1_0_ExecJson']!);
+  expect(contextualized.contains.length).toBe(2);
 });

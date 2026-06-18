@@ -13,9 +13,7 @@ import {
   convertImpactToSeverity,
   severities,
 } from '../compat_wrappers';
-import {
-  ControlResultStatus,
-} from '../generated_parsers/v_1_0/exec-json';
+import { ControlResultStatus } from '../generated_parsers/v_1_0/exec-json';
 import type {
   ControlResult as ControlResult_1_0,
   ExecJSONControl as ResultControl_1_0,
@@ -130,7 +128,7 @@ abstract class HDFControl10 implements HDFControl {
     const seenSpecs = new Set<string>(); // Used to track duplication
 
     // Process item by item
-    for (const x of (Array.isArray(raw) ? raw : [raw]).map(parse_nist)) {
+    for (const x of (Array.isArray(raw) ? raw : [raw]).map(tag => parse_nist(tag))) {
       if (!x) {
         continue;
       } else if (is_control(x)) {
@@ -145,7 +143,7 @@ abstract class HDFControl10 implements HDFControl {
     }
 
     // Sort the tags
-    parsedNistTags = parsedNistTags.sort((a, b) => a.localCompare(b));
+    parsedNistTags = parsedNistTags.toSorted((a, b) => a.localCompare(b));
 
     // Stub if necessary
     if (parsedNistTags.length === 0) {
@@ -159,17 +157,21 @@ abstract class HDFControl10 implements HDFControl {
     raw: ProfileControl_1_0 | ResultControl_1_0,
   ): string | string[] {
     const fetched: null | string | string[] | undefined = raw.tags.nist;
-    return fetched ? fetched : ['UM-1'];
+    return fetched || ['UM-1'];
   }
 
   private static compute_severity(
     raw: ProfileControl_1_0 | ResultControl_1_0,
   ): Severity {
     // use severity override tag if it exists
-    if (severities.includes(raw.tags.severityoverride?.toLowerCase())) { return raw.tags.severityoverride; }
+    if (severities.includes(raw.tags.severityoverride?.toLowerCase())) {
+      return raw.tags.severityoverride;
+    }
 
     // use severity tag if it exists
-    if (severities.includes(raw.tags.severity?.toLowerCase())) { return raw.tags.severity; }
+    if (severities.includes(raw.tags.severity?.toLowerCase())) {
+      return raw.tags.severity;
+    }
 
     // otherwise, compute severity with impact
     return convertImpactToSeverity(raw.impact);
@@ -230,13 +232,9 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   }
 
   private static compute_message(control: ResultControl_1_0): string {
-    if (control.impact === 0) {
-      // If it's no impact, just post the description (if it exists)
-      return control.desc || 'No message found.';
-    } else {
-      // If it has any impact, convert each result to a message line and chain them all together
-      return control.results.map(ExecControl.to_message_line).join('');
-    }
+    return control.impact === 0
+      ? (control.desc || 'No message found.')
+      : control.results.map(r => ExecControl.to_message_line(r)).join('');
   }
 
   private static compute_segments(
