@@ -136,7 +136,7 @@
       `visible`, and scrollbar-gutter has no effect without a scroll container. */
 html { scrollbar-gutter: stable; overflow-y: scroll; }
 .report-wrapper { flex: 1; display: flex; flex-direction: column; max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 1.5rem; }
-.report-wrapper > main { flex: 1; }
+.report-wrapper > main { flex: 1; padding-block: var(--pico-block-spacing-vertical, 1rem); }
 @media (max-width: 768px) { .report-wrapper { padding: 0 .75rem; } }
 
 /* === Layout === */
@@ -174,8 +174,7 @@ html { scrollbar-gutter: stable; overflow-y: scroll; }
   .summary-layout { flex-direction: column; gap: 1rem; }
   .compliance-hero { width: 100%; padding: 1rem; }
   .breakdown-grid { grid-template-columns: 1fr; padding: 0 1rem 1rem; }
-  nav.container-fluid { position: static; }
-  nav.container-fluid > ul { flex-wrap: wrap; gap: .25rem; }
+  .report-nav { position: static; }
 }
 /* Control cards — expandable cards with emphasis overlay zebra (Bootstrap 5.3 pattern) */
 article.control {
@@ -183,7 +182,6 @@ article.control {
   contain-intrinsic-size: auto 200px;
   border-left: 4px solid var(--pico-muted-border-color);
   margin-bottom: .5rem;
-  --pico-accordion-border-color: transparent;
 }
 article.control:nth-child(odd) {
   background: var(--report-stripe-bg);
@@ -214,8 +212,8 @@ table.test-results td:first-child { white-space: nowrap; width: 4rem; }
 table.test-results td:last-child { font-size: .85rem; }
 
 /* === Nav layout === */
-.nav-row { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
-.nav-links { display: flex; gap: .5rem; list-style: none; padding: 0; margin: 0; flex-wrap: wrap; align-items: center; }
+.nav-row { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+.nav-links { gap: .5rem; flex-wrap: wrap; margin-inline: 0; }
 .nav-links li { margin: 0; }
 .nav-actions { display: flex; align-items: center; gap: .35rem; flex-wrap: nowrap; }
 .nav-actions input[type="search"] { width: 14rem; margin: 0; padding: .3rem .6rem; font-size: .85rem; }
@@ -241,7 +239,7 @@ table.test-results td:last-child { font-size: .85rem; }
 .chip-dropdown input[type="checkbox"] { margin: 0; width: 1rem; height: 1rem; }
 .active-tokens { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; padding: .4rem 0; }
 .active-tokens[hidden] { display: none; }
-.active-token { display: inline-flex; align-items: center; gap: .2em; padding: .1rem .4rem; font-size: .7rem; border-radius: 1rem; background: var(--pico-primary-background); color: var(--pico-primary-inverse); border: none; cursor: pointer; white-space: nowrap; }
+.active-token { padding: .1rem .4rem; font-size: .7rem; border-radius: 1rem; border: none; white-space: nowrap; }
 .active-token:hover { opacity: .8; }
 .filter-status-row { display: flex; align-items: center; gap: .5rem; padding: .2rem 0; }
 .link-btn { background: none; border: none; color: var(--pico-primary); cursor: pointer; font-size: .75rem; padding: 0; margin: 0; text-decoration: underline; }
@@ -253,9 +251,8 @@ table.test-results td:last-child { font-size: .85rem; }
   #filter-bar:not([hidden]) { display: block; }
   .nav-actions input[type="search"] { width: 100%; min-width: 0; flex: 1; }
   .nav-links { font-size: .85rem; }
-  .filter-row { flex-direction: column; align-items: stretch; }
-  .filter-row [role="group"] { flex-wrap: wrap; }
-  .filter-row select { width: 100%; }
+  .chip-row { flex-wrap: wrap; }
+  #filter-bar select { width: 100%; }
 }
 
 /* === Corrected @media print — ADR §9.2 === */
@@ -269,9 +266,7 @@ table.test-results td:last-child { font-size: .85rem; }
 
   /* Reveal closed <details> — CSS fallback; JS beforeprint handler is primary (n3v.12) */
   details::details-content { content-visibility: visible !important; }
-  summary { list-style: none; cursor: default; }
-  summary::-webkit-details-marker { display: none; }
-  summary::marker { content: ""; }
+  summary { cursor: default; }
 
   /* Un-defer lazy controls */
   article.control { content-visibility: visible !important; contain-intrinsic-size: auto !important; }
@@ -280,7 +275,7 @@ table.test-results td:last-child { font-size: .85rem; }
   thead { display: table-header-group; }
 
   /* Only page-safe elements avoid breaks — NOT article.control or pre */
-  tr, figure, .badge, .summary-grid > article { break-inside: avoid; page-break-inside: avoid; }
+  tr, figure, .badge, .summary-hero { break-inside: avoid; page-break-inside: avoid; }
   h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
   p, li { orphans: 3; widows: 3; }
 

@@ -74,6 +74,12 @@ export interface IIcons {
   [key: string]: string;
 }
 
+// NIST 800-53 family with control count; lvl 1
+export interface INistFamily {
+  family: string;
+  count: number;
+}
+
 // Top level interface; lvl 0
 export interface IOutputData {
   frameworkStyles: string;
@@ -86,4 +92,5 @@ export interface IOutputData {
   showCode: boolean;
   exportType: string;
   icons: IIcons;
+  nistFamilies: INistFamily[];
 }

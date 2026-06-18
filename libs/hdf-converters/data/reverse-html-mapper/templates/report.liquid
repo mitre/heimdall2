@@ -59,9 +59,13 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
         <button type="button" class="chip" data-filter-severity="high">High <span class="chip-count">{{ severity.high }}</span></button>
         <button type="button" class="chip" data-filter-severity="critical">Crit <span class="chip-count">{{ severity.critical }}</span></button>
         <span class="chip-divider"></span>
-        <details id="nist-family-filter" class="dropdown chip-dropdown" role="listbox" aria-label="NIST 800-53 family">
+        <details id="nist-family-filter" class="chip-dropdown" role="listbox" aria-label="NIST 800-53 family">
           <summary class="chip" id="nist-family-trigger">NIST Family</summary>
-          <div class="dropdown-body" id="nist-family-list"></div>
+          <div class="dropdown-body" id="nist-family-list">
+            {%- for fam in nistFamilies %}
+            <label><input type="checkbox" value="{{ fam.family }}" data-family-count="{{ fam.count }}"> {{ fam.family }} ({{ fam.count }})</label>
+            {%- endfor %}
+          </div>
         </details>
       </div>
       <div id="active-tokens" class="active-tokens" hidden></div>

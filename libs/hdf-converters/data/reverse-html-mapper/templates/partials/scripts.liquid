@@ -54,7 +54,8 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
         stCounts[vst] = (stCounts[vst] || 0) + 1;
         svCounts[vsv] = (svCounts[vsv] || 0) + 1;
         var vtags = controls[k].querySelectorAll('.tag');
-        for (var vt = 0; vt < vtags.length; vt++) { var vm = vtags[vt].textContent.match(/^([A-Z]{2})-/); if (vm) famCounts[vm[1]] = (famCounts[vm[1]] || 0) + 1; }
+        var seenFam = {};
+        for (var vt = 0; vt < vtags.length; vt++) { var vm = vtags[vt].textContent.match(/^([A-Z]{2})-/); if (vm && vtags[vt].textContent.indexOf('CCI-') !== 0 && !seenFam[vm[1]]) { seenFam[vm[1]] = true; famCounts[vm[1]] = (famCounts[vm[1]] || 0) + 1; } }
       }
     }
     document.querySelectorAll('.chip[data-filter-status] .chip-count').forEach(function(el) { el.textContent = stCounts[el.parentElement.getAttribute('data-filter-status')] || 0; });
@@ -108,16 +109,10 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
   if (searchInput) searchInput.addEventListener('input', function() { clearTimeout(debounceTimer); debounceTimer = setTimeout(function() { searchTerm = searchInput.value; applyFilters(); }, 200); });
 
   if (familyList) {
-    var families = {};
-    controls.forEach(function(c) { var tags = c.querySelectorAll('.tag'); for (var i = 0; i < tags.length; i++) { var m = tags[i].textContent.match(/^([A-Z]{2})-/); if (m) families[m[1]] = true; } });
-    Object.keys(families).sort().forEach(function(f) {
-      var lbl = document.createElement('label');
-      var cb = document.createElement('input');
-      cb.type = 'checkbox'; cb.value = f;
-      cb.addEventListener('change', function() { if (cb.checked) activeFamilies[f] = true; else delete activeFamilies[f]; applyFilters(); });
-      lbl.appendChild(cb); lbl.appendChild(document.createTextNode(' ' + f));
-      familyList.appendChild(lbl);
-    });
+    var cbs = familyList.querySelectorAll('input[type="checkbox"]');
+    for (var ci = 0; ci < cbs.length; ci++) {
+      (function(cb) { cb.addEventListener('change', function() { if (cb.checked) activeFamilies[cb.value] = true; else delete activeFamilies[cb.value]; applyFilters(); }); })(cbs[ci]);
+    }
   }
 
   if (clearBtn) clearBtn.addEventListener('click', function() {

@@ -105,6 +105,7 @@ export class FromHDFToHTMLMapper {
     showResultSets: false,
     showCode: false,
     exportType: '',
+    nistFamilies: [],
     // Series of icons used for profile-related detail reports
     icons: {
       // Passed
@@ -173,6 +174,23 @@ export class FromHDFToHTMLMapper {
         exportType
       );
     }
+
+    const familyCounts: Record<string, number> = {};
+    for (const rs of this.outputData.resultSets) {
+      for (const result of rs.results) {
+        const seen = new Set<string>();
+        for (const tag of result.controlTags) {
+          const match = tag.match(/^([A-Z]{2})-/);
+          if (match && !tag.startsWith('CCI-') && !seen.has(match[1])) {
+            seen.add(match[1]);
+            familyCounts[match[1]] = (familyCounts[match[1]] || 0) + 1;
+          }
+        }
+      }
+    }
+    this.outputData.nistFamilies = Object.keys(familyCounts)
+      .sort()
+      .map((f) => ({family: f, count: familyCounts[f]}));
   }
 
   // Pulls and sets high level attributes of outputData object from file data

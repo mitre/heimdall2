@@ -366,6 +366,64 @@ describe('Template structure (Blades CSS)', () => {
   });
 });
 
+describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
+  it('H1: .nav-row has flex:1 to fill Blades nav flex container', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.nav-row\s*\{[^}]*flex:\s*1/);
+  });
+
+  it('H2: NIST dropdown does not use Blades "dropdown" class', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).not.toMatch(/class="dropdown\s/);
+    expect(output).toContain('class="chip-dropdown"');
+  });
+
+  it('M1: .nav-links does not redeclare display:flex or list-style (Blades nav ul provides these)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const navLinksRule = reportCss.match(/\.nav-links\s*\{([^}]*)\}/);
+    expect(navLinksRule).not.toBeNull();
+    const props = navLinksRule![1];
+    expect(props).not.toContain('display');
+    expect(props).not.toContain('list-style');
+    expect(props).not.toContain('padding: 0');
+  });
+
+  it('M4: no --pico-accordion-border-color in report.css (dead variable)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toContain('--pico-accordion-border-color');
+  });
+
+  it('L1: no orphaned nav.container-fluid or .filter-row selectors', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toContain('nav.container-fluid');
+    expect(reportCss).not.toMatch(/\.filter-row\s*[\{,]/);
+  });
+
+  it('L1: print break-avoid targets .summary-hero not .summary-grid', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toContain('.summary-grid > article');
+    expect(reportCss).toContain('.summary-hero');
+  });
+
+  it('L2: filter-bar.liquid partial does not exist (orphaned)', () => {
+    expect(fs.existsSync('data/reverse-html-mapper/templates/partials/filter-bar.liquid')).toBe(false);
+  });
+});
+
 describe('Cloudscape toolbar + ISSO filtering (n3v.12)', () => {
   const inputData = fs.readFileSync(
     'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
