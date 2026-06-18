@@ -261,7 +261,7 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
 .filter-actions { display: flex; gap: .5rem; align-items: stretch; flex-wrap: wrap; margin-top: .3rem; }
 .filter-actions button, .filter-actions summary { margin: 0; font-size: .85rem; padding: .4rem .75rem; }
 .filter-actions .dropdown { margin: 0; }
-.filter-actions #filter-count { margin-left: auto; }
+.filter-actions #filter-count { margin-left: auto; cursor: default; }
 #nist-family-list { max-height: 16rem; overflow-y: auto; }
 .active-tokens { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; padding: .4rem 0; }
 .active-tokens[hidden] { display: none; }
