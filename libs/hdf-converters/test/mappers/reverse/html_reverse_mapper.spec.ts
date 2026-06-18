@@ -572,6 +572,101 @@ describe('Emphasis overlay system (Bootstrap 5.3 pattern)', () => {
   });
 });
 
+describe('Blades idiom polish (n3v.22)', () => {
+  const inputData = fs.readFileSync(
+    'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
+    {encoding: 'utf-8'}
+  );
+
+  it('has data-tooltip on theme toggle button', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/id="theme-toggle"[^>]*data-tooltip=/);
+  });
+
+  it('has data-tooltip on Expand All, Collapse All, Clear Filters buttons', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toMatch(/id="btn-expand-all"[^>]*data-tooltip=/);
+    expect(output).toMatch(/id="btn-collapse-all"[^>]*data-tooltip=/);
+    expect(output).toMatch(/id="btn-clear-filters"[^>]*data-tooltip=/);
+  });
+
+  it('has data-tooltip with data-placement on nav action buttons', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toContain('data-placement="bottom"');
+  });
+
+  it('has a back-to-top link with data-jump-to after main', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    expect(output).toContain('data-jump-to="top"');
+    expect(output).toMatch(/class="[^"]*no-print[^"]*"[^>]*data-jump-to="top"/);
+    expect(output).toContain('aria-label="Back to top"');
+  });
+
+  it('wraps segment status "passed" in <ins> and "failed" in <del>', async () => {
+    const {Liquid} = await import('liquidjs');
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const engine = new Liquid({templates, outputEscape: 'escape', lenientIf: true, jsTruthy: true});
+    const out = engine.parseAndRenderSync(templates['partials/control-card'], {
+      result: {
+        resultID: 'r-1',
+        resultStatus: {status: 'Failed', icon: '<svg>x</svg>'},
+        resultSeverity: {severity: 'high', icon: '<svg>h</svg>'},
+        hdf: {wraps: {id: 'V-1', title: 'Test'}, segments: [
+          {status: 'passed', code_desc: 'check A', message: 'ok'},
+          {status: 'failed', code_desc: 'check B', message: 'not ok'}
+        ]},
+        data: {desc: ''},
+        details: [],
+        controlTags: []
+      },
+      showCode: false
+    });
+    expect(out).toContain('<ins>passed</ins>');
+    expect(out).toContain('<del>failed</del>');
+  });
+
+  it('does NOT use ins/del on status badges', async () => {
+    const mapper = new FromHDFToHTMLMapper(
+      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+      FileExportTypes.Administrator
+    );
+    const output = await mapper.toHTML();
+    const badges = output.match(/<span class="badge[^"]*">[^<]*<\/span>/g) || [];
+    for (const badge of badges) {
+      expect(badge).not.toContain('<ins>');
+      expect(badge).not.toContain('<del>');
+    }
+  });
+
+  it('does not add custom CSS for data-tooltip, ins, del, or data-jump-to', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).not.toContain('data-tooltip');
+    expect(reportCss).not.toContain('data-jump-to');
+    expect(reportCss).not.toMatch(/\bins\b\s*\{/);
+    expect(reportCss).not.toMatch(/\bdel\b\s*\{/);
+  });
+});
+
 describe('LiquidJS engine wiring (n3v.20)', () => {
   const inputData = fs.readFileSync(
     'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',

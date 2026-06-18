@@ -11,7 +11,7 @@ segment.code_desc may contain sanitized HTML. detail.value is sanitized by sanit
       <span class="badge status--{{ status_class }}">{{ result.resultStatus.icon | raw }} {{ result.resultStatus.status }}</span>
       <span class="badge sev--{{ sev_class }}">{{ result.resultSeverity.icon | raw }} {{ result.resultSeverity.severity }}</span>
       <code class="control-id">{{ result.hdf.wraps.id }}</code>
-      <span class="control-title" title="{{ result.hdf.wraps.title | strip_html }}">{{ result.hdf.wraps.title | raw }}</span>
+      <span class="control-title" data-tooltip="{{ result.hdf.wraps.title | strip_html }}">{{ result.hdf.wraps.title | raw }}</span>
     </summary>
 
     {%- if result.controlTags.size > 0 %}
@@ -24,7 +24,7 @@ segment.code_desc may contain sanitized HTML. detail.value is sanitized by sanit
     {%- for segment in result.hdf.segments %}
     <table class="striped test-results">
       <tbody>
-        <tr><th scope="row">Status</th><td><samp>{{ segment.status | default: '' }}</samp></td></tr>
+        <tr><th scope="row">Status</th><td>{%- if segment.status == 'passed' %}<ins>passed</ins>{%- elsif segment.status == 'failed' %}<del>failed</del>{%- else %}<samp>{{ segment.status | default: '' }}</samp>{%- endif %}</td></tr>
         <tr><th scope="row">Test</th><td>{{ segment.code_desc | default: '' | raw }}</td></tr>
         <tr><th scope="row">Result</th><td><samp>{{ segment.message | default: '' }}</samp></td></tr>
       </tbody>
