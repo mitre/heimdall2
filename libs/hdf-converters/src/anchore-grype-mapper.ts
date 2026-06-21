@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
 } from './base-converter';
 import { HeimdallToolsVersion } from './utils/global';
@@ -22,21 +23,17 @@ const IMPACT_MAPPING = new Map<string, number>([
 // If the highest rating severity for a control is `negligible` or `unknown`, set the results to skipped and request a manual review
 function skipSeverityNegligibleOrUnknown(controls: unknown[]): unknown[] {
   if (controls) {
-    (controls as ExecJSON.Control[])
-      // Filter to controls whose highest rating severity is either `negligible` or `unknown`
-      .filter((control) => {
-        const rating = _.get(control, 'tags.severity', '') as string;
-        // console.log(rating)
-        return rating === 'Negligible' || rating === 'Unknown';
-      })
-      // For every result contained by that control, set the status to skipped and request a manual review
-      .map(control =>
-        control.results.map((result) => {
-          result.status = ExecJSON.ControlResultStatus.Skipped;
-          result.skip_message
-            = 'Manual review required because a Anchore Grype rating severity is set to `negligible` or `unknown`.';
-        }),
-      );
+    const negligibleOrUnknown = (controls as ExecJSON.Control[]).filter((control) => {
+      const rating = _.get(control, 'tags.severity', '') as string;
+      return rating === 'Negligible' || rating === 'Unknown';
+    });
+    for (const control of negligibleOrUnknown) {
+      for (const result of control.results) {
+        result.status = ExecJSON.ControlResultStatus.Skipped;
+        result.skip_message
+          = 'Manual review required because a Anchore Grype rating severity is set to `negligible` or `unknown`.';
+      }
+    }
   }
   return controls;
 }
@@ -51,7 +48,8 @@ function description(data: Record<string, unknown>): string {
     return (relatedVulnerabilities.find(
       relatedVulnerability => relatedVulnerability.id === vulnerability.id,
     )?.description ?? '') as string;
-  } else if (vulnerability.description) {
+  }
+  if (vulnerability.description) {
     return vulnerability.description as string;
   }
   return 'no description found';
@@ -59,13 +57,13 @@ function description(data: Record<string, unknown>): string {
 
 export class AnchoreGrypeMapper extends BaseConverter {
   metadata: Record<string, unknown>;
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
-  constructor(exportJson: string, withRaw = false) {
+  constructor(exportJson: string, shouldIncludeRaw = false) {
     const temp = JSON.parse(exportJson);
     super({ wrapper: _.pick(temp, ['matches', 'ignoredMatches']) });
     this.metadata = _.omit(temp, ['matches', 'ignoredMatches']);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
     this.setMappings(this.mapping());
   }
 
@@ -79,14 +77,14 @@ export class AnchoreGrypeMapper extends BaseConverter {
       arrayTransformer: skipSeverityNegligibleOrUnknown,
       code: {
         transformer: (data: Record<string, unknown>): string =>
-          `${JSON.stringify(
+          JSON.stringify(
             _.omitBy(
               _.pick(data, ['vulnerability', 'relatedVulnerabilities']),
               value => value === null || value === '',
             ),
             null,
             2,
-          )}`,
+          ),
       },
       desc: { transformer: description },
       descriptions: [
@@ -95,7 +93,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
             path: 'vulnerability.fix',
             transformer: (data: Record<string, unknown>): string =>
               data.state == 'fixed'
-                ? `vulnerability is ${_.get(data, 'state')} for versions ${(_.get(data, 'versions') as string[]).join(', ')}`
+                ? `vulnerability is ${String(_.get(data, 'state'))} for versions ${(_.get(data, 'versions') as string[]).join(', ')}`
                 : 'vulnerability is not known to be fixed in any versions',
           },
           label: 'fix',
@@ -104,7 +102,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
           data: {
             path: 'relatedVulnerabilities',
             transformer: (data: Record<string, unknown>): string =>
-              `${JSON.stringify(_.get(data, 'cvss'), null, 2)}`,
+              JSON.stringify(_.get(data, 'cvss'), null, 2),
           },
           label: 'check',
         },
@@ -123,15 +121,9 @@ export class AnchoreGrypeMapper extends BaseConverter {
             unknown
           >[];
           const relatedVulnerabilities = _.get(data, 'relatedVulnerabilities');
-          let relatedVulnerabilitiesUrls = [] as unknown as Record<
-            string,
-            unknown
-          >[];
-          if (relatedVulnerabilities) {
-            relatedVulnerabilitiesUrls = (
-              relatedVulnerabilities as Record<string, unknown>[]
-            ).map(element => element.urls) as Record<string, unknown>[];
-          }
+          const relatedVulnerabilitiesUrls = relatedVulnerabilities
+            ? (relatedVulnerabilities as Record<string, unknown>[]).map(element => element.urls) as Record<string, unknown>[]
+            : [] as unknown as Record<string, unknown>[];
           return (
             [...vuln_urls, ...relatedVulnerabilitiesUrls].flat()
           ).map(element => ({ url: element }));
@@ -141,7 +133,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
         {
           code_desc: {
             transformer: (data: Record<string, unknown>): string =>
-              `${JSON.stringify(_.get(data, 'matchDetails'), null, 2)}`,
+              JSON.stringify(_.get(data, 'matchDetails'), null, 2),
           },
           message: { transformer: resultMessageTransformer },
           start_time: _.get(this.metadata, 'descriptor.timestamp') as string,
@@ -156,7 +148,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
       },
       title: {
         transformer: (data: Record<string, unknown>): string =>
-          `Grype found a vulnerability to ${_.get(data, 'vulnerability.id')} in ${_.get(this.metadata, 'source.target.userInput') as string}`,
+          `Grype found a vulnerability to ${String(_.get(data, 'vulnerability.id'))} in ${_.get(this.metadata, 'source.target.userInput') as string}`,
       },
     };
   }
@@ -170,7 +162,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
           return {
             auxiliary_data: [{ data: _.omit([]), name: '' }], // Insert service name and mapped fields to be removed
-            ...(this.withRaw && { raw: data }),
+            ...(this.shouldIncludeRaw && { raw: data }),
           };
         },
       },
@@ -181,40 +173,30 @@ export class AnchoreGrypeMapper extends BaseConverter {
       },
       profiles: [
         {
-          attributes: [],
+          ...DEFAULT_PROFILE_FIELDS,
           controls: [
             {
               ...this.controlMatches(
                 'wrapper.matches',
                 (data: Record<string, unknown>): string =>
-                  `Grype/${_.get(data, 'vulnerability.id')}`,
+                  `Grype/${String(_.get(data, 'vulnerability.id'))}`,
                 impactMapping(IMPACT_MAPPING),
                 (data: Record<string, unknown>): string =>
-                  `${JSON.stringify(_.get(data, 'artifact'), null, 2)}`,
+                  JSON.stringify(_.get(data, 'artifact'), null, 2),
               ),
             },
             {
               ...this.controlMatches(
                 'wrapper.ignoredMatches',
                 (data: Record<string, unknown>): string =>
-                  `Grype-Ignored-Match/${_.get(data, 'vulnerability.id')}`,
+                  `Grype-Ignored-Match/${String(_.get(data, 'vulnerability.id'))}`,
                 () => 0,
                 (data: Record<string, unknown>): string =>
                   `This finding is ignored due to the following applied ignored rules:\n${JSON.stringify(_.get(data, 'appliedIgnoreRules'), null, 2)}\nArtifact Information:\n${JSON.stringify(_.get(data, 'artifact'), null, 2)}`,
               ),
             },
           ],
-          copyright: null,
-          copyright_email: null,
-          depends: [],
-          groups: [],
-          license: null,
-          maintainer: null,
           name: 'Anchore - Grype',
-          sha256: '',
-          status: 'loaded',
-          summary: null,
-          supports: [],
           title: 'Anchore Grype Matches',
           version: _.get(this.metadata, 'descriptor.version') as string,
         },
