@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
 } from './base-converter';
 import {
@@ -65,7 +66,7 @@ export class TwistlockMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             code: {
@@ -119,11 +120,8 @@ export class TwistlockMapper extends BaseConverter {
             title: { path: 'id' },
           },
         ],
-        groups: [],
         name: 'Twistlock Scan',
         path: 'results',
-        sha256: '',
-        status: 'loaded',
         summary: {
           transformer: (data: Record<string, unknown>): string => {
             const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
@@ -137,7 +135,6 @@ export class TwistlockMapper extends BaseConverter {
             return `Package Vulnerability Summary: ${vulnerabilityTotal} Application Compliance Issue Total: ${complianceTotal}`;
           },
         },
-        supports: [],
         title: {
           transformer: (data: Record<string, unknown>): string => {
             let projectArr: unknown = 'N/A';

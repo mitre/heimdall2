@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
 } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
@@ -45,7 +46,7 @@ export class SnykMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             code: {
@@ -91,22 +92,13 @@ export class SnykMapper extends BaseConverter {
             title: { path: 'title' },
           },
         ],
-        copyright: null,
-        copyright_email: null,
-        depends: [],
-        groups: [],
-        license: null,
-        maintainer: null,
         name: 'Snyk Scan',
-        sha256: '',
-        status: 'loaded',
         summary: {
           path: 'summary',
           transformer: (summary: string): string => {
             return `Snyk Summary: ${summary}`;
           },
         },
-        supports: [],
         title: {
           transformer: (data: Record<string, unknown>): string => {
             const projectName = _.has(data, 'projectName')

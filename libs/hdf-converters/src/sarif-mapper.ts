@@ -1,7 +1,7 @@
 import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
-import { BaseConverter } from './base-converter';
+import { BaseConverter, DEFAULT_PROFILE_FIELDS } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
@@ -81,7 +81,7 @@ export class SarifMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             code: {
@@ -146,12 +146,8 @@ export class SarifMapper extends BaseConverter {
             },
           },
         ],
-        groups: [],
         name: 'SARIF',
         path: 'runs',
-        sha256: '',
-        status: 'loaded',
-        supports: [],
         title: 'Static Analysis Results Interchange Format',
         version: { path: '$.version' },
       },

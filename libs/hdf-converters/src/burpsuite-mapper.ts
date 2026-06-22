@@ -7,6 +7,7 @@ import type {
 import {
   BaseConverter,
   buildParseHtmlFunc,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
   parseXml,
 } from './base-converter';
@@ -30,7 +31,7 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 let parseHtml: (input: unknown) => string;
 
 export class BurpSuiteMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -38,7 +39,7 @@ export class BurpSuiteMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return { ...(this.withRaw && { raw: data }) };
+        return { ...(this.shouldIncludeRaw && { raw: data }) };
       },
     },
     platform: {
@@ -47,7 +48,7 @@ export class BurpSuiteMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             code: {
@@ -99,12 +100,8 @@ export class BurpSuiteMapper extends BaseConverter {
             title: { path: 'name' },
           },
         ],
-        groups: [],
         name: NAME,
-        sha256: '',
-        status: 'loaded',
         summary: NAME,
-        supports: [],
         title: NAME,
         version: { path: 'issues.burpVersion' },
       },
@@ -113,18 +110,18 @@ export class BurpSuiteMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(burpsXml: string, withRaw = false) {
+  constructor(burpsXml: string, shouldIncludeRaw = false) {
     super(parseXml(burpsXml));
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 export class BurpSuiteResults {
-  constructor(readonly burpsXml: string, readonly withRaw = false) {}
+  constructor(readonly burpsXml: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
     parseHtml = await buildParseHtmlFunc();
 
-    return (new BurpSuiteMapper(this.burpsXml, this.withRaw)).toHdf();
+    return (new BurpSuiteMapper(this.burpsXml, this.shouldIncludeRaw)).toHdf();
   }
 }
 // Transformation Functions
@@ -132,7 +129,7 @@ function formatCodeDesc(issue: unknown): string {
   const text = [];
   if (_.has(issue, 'host.ip') && _.has(issue, 'host.text')) {
     text.push(
-      `Host: ip: ${_.get(issue, 'host.ip')}, url: ${_.get(issue, 'host.text')}`,
+      `Host: ip: ${String(_.get(issue, 'host.ip'))}, url: ${String(_.get(issue, 'host.text'))}`,
     );
   } else {
     text.push('Host: ip: , url: ');
@@ -164,7 +161,7 @@ function idToString(id: unknown): string {
 function nistTag(input: string): string[] {
   let cwe = formatCweId(input).split('CWE-');
   cwe.shift();
-  cwe = cwe.map(x => x.split(':')[0]);
+  cwe = cwe.map(x => x.split(':', 1)[0]);
   return CWE_NIST_MAPPING.nistFilter(
     cwe,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,

@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
 } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
@@ -48,7 +49,7 @@ export class GosecMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             desc: '',
@@ -80,11 +81,7 @@ export class GosecMapper extends BaseConverter {
             title: { path: 'details' },
           },
         ],
-        groups: [],
         name: 'gosec Scan',
-        sha256: '',
-        status: 'loaded',
-        supports: [],
         title: 'gosec Scan',
         version: { path: 'GosecVersion' },
       },

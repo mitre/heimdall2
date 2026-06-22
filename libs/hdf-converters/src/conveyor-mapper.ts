@@ -33,7 +33,6 @@ export class ConveyorMapper extends BaseConverter {
       {
         attributes: [],
         controls: [
-          // Each control is a service/file result pair
           {
             path: 'api_response.results',
             ...controlMappingConveyor(),

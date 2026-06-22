@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   parseXml,
 } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
@@ -91,7 +92,7 @@ export class VeracodeMapper extends BaseConverter {
       },
       profiles: [
         {
-          attributes: [],
+          ...DEFAULT_PROFILE_FIELDS,
           controls: [
             ..._.range(0, 6).map(value => ({
               path: `detailedreport.severity[${value}].category`,
@@ -132,11 +133,7 @@ export class VeracodeMapper extends BaseConverter {
               ...controlMappingCve(),
             },
           ],
-          groups: [],
           name: { path: 'detailedreport.@_.policy_name' },
-          sha256: '',
-          status: 'loaded',
-          supports: [],
           title: { path: 'detailedreport.static-analysis.modules.module.@_.name' },
           version: { path: 'detailedreport.@_.policy_version' },
         },

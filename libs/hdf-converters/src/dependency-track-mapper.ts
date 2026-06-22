@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
 } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
@@ -49,7 +50,7 @@ export class DependencyTrackMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             code: {
@@ -136,12 +137,8 @@ export class DependencyTrackMapper extends BaseConverter {
             title: { transformer: getTitle },
           },
         ],
-        groups: [],
         name: { path: 'project.uuid' },
-        sha256: '',
-        status: 'loaded',
         summary: { path: 'project.description' },
-        supports: [],
         title: { path: 'project.name' },
         version: { path: 'project.version' },
       },

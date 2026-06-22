@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
 } from './base-converter';
 import { ScoutsuiteNistMapping } from './mappings/ScoutsuiteNistMapping';
@@ -58,6 +59,7 @@ export class ScoutsuiteMapper extends BaseConverter {
     },
     profiles: [
       {
+        ...DEFAULT_PROFILE_FIELDS,
         attributes: [
           {
             name: 'account_id',
@@ -173,12 +175,8 @@ export class ScoutsuiteMapper extends BaseConverter {
             title: { path: '[1].description' },
           },
         ],
-        groups: [],
         name: 'Scout Suite Multi-Cloud Security Auditing Tool',
-        sha256: '',
-        status: 'loaded',
         summary: { path: 'last_run.ruleset_about' },
-        supports: [],
         title: { transformer: formatTitle },
         version: { path: 'last_run.version' },
       },

@@ -5,7 +5,7 @@ import { compare, validate } from 'compare-versions';
 import { encode } from 'html-entities';
 import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import { BaseConverter } from '../base-converter';
+import { BaseConverter, DEFAULT_PROFILE_FIELDS } from '../base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   getCCIsForNISTTags,
@@ -59,15 +59,18 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     && _.get(finding, 'GeneratorId') === 'cms.Chef Inspec'
   ) {
     return SpecialCasing.CMSInSpec;
-  } else if (
+  }
+  if (
     ARN_FIREWALL_MANAGER_RE.test(productArn)
   ) {
     return SpecialCasing.FirewallManager;
-  } else if (
+  }
+  if (
     ARN_GUARDDUTY_RE.test(productArn)
   ) {
     return SpecialCasing.GuardDuty;
-  } else if (
+  }
+  if (
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
       (type: string) => {
@@ -75,31 +78,29 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
         if (!_.startsWith(type, 'MITRE/SAF/')) {
           return false;
         }
-        const version = type.split('/').pop()?.split('-')[0] ?? '';
+        const version = type.split('/').pop()?.split('-', 1)[0] ?? '';
         return validate(version) && compare(version, '2.6.20', '>'); // older versions aren't supported by the 'PreviouslyHDF' specialcasing and instead use the default casing
       },
     )
   ) {
     return SpecialCasing.PreviouslyHDF;
-  } else if (
+  }
+  if (
     ARN_INSPECTOR_RE.test(productArn)
   ) {
     return SpecialCasing.Inspector;
-  } else if (
+  }
+  if (
     ARN_PROWLER_RE.test(productArn)
   ) {
     return SpecialCasing.Prowler;
-  } else if (
+  }
+  if (
     ARN_SECURITYHUB_RE.test(productArn)
   ) {
     return SpecialCasing.SecurityHub;
-  } else if (
-    ARN_TRIVY_RE.test(productArn)
-  ) {
-    return SpecialCasing.Trivy;
-  } else {
-    return SpecialCasing.Default;
   }
+  return ARN_TRIVY_RE.test(productArn) ? SpecialCasing.Trivy : SpecialCasing.Default;
 }
 
 const SPECIAL_CASE_MAPPING = new Map<
@@ -128,17 +129,15 @@ function externalProductHandler<T>(
     product !== SpecialCasing.Default
     && _.has(SPECIAL_CASE_MAPPING.get(product), func)
   ) {
-    let keywords: Record<string, unknown> = {};
-    if (context.supportingDocs.has(product)) {
-      keywords = { ...context.supportingDocs.get(product) };
-    }
+    const keywords: Record<string, unknown> = context.supportingDocs.has(product)
+      ? { ...context.supportingDocs.get(product) }
+      : {};
     return _.get(SPECIAL_CASE_MAPPING.get(product), func)?.apply(context, [
       data,
       keywords,
     ]);
-  } else {
-    return typeof defaultVal === 'function' ? (defaultVal as () => T)() : defaultVal;
   }
+  return typeof defaultVal === 'function' ? (defaultVal as () => T)() : defaultVal;
 }
 
 // helper function to take all the controls that have the same id and turn them into results/subtests within an overarching control
@@ -206,11 +205,8 @@ function handleIdGroup(
       );
       if (locs.length === 0) {
         return {};
-      } else if (locs.length === 1) {
-        return locs[0];
-      } else {
-        return { ref: JSON.stringify(locs) };
       }
+      return locs.length === 1 ? locs[0] : { ref: JSON.stringify(locs) };
     })(),
     tags: _.mergeWith(
       {},
@@ -218,11 +214,10 @@ function handleIdGroup(
       (acc: unknown, cur: unknown) => {
         if (acc === undefined || cur === undefined) {
           return acc || cur;
-        } else {
-          return Array.isArray(acc) || Array.isArray(cur)
-            ? _.uniq(_.concat([], acc, cur))
-            : acc;
         }
+        return Array.isArray(acc) || Array.isArray(cur)
+          ? _.uniq(_.concat([], acc, cur))
+          : acc;
       },
     ),
     title: `${titlePrefix}${_.uniq(group.map(d => d.title)).join(';')}`,
@@ -330,7 +325,7 @@ export class ASFFMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             arrayTransformer: consolidate.bind(this, this),
@@ -569,11 +564,9 @@ export class ASFFMapper extends BaseConverter {
                     'findingNistTag',
                     [],
                   ) as string[];
-                  return tags.length === 0
-                    ? getCCIsForNISTTags(
-                      DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-                    )
-                    : getCCIsForNISTTags(tags);
+                  return getCCIsForNISTTags(
+                    tags.length === 0 ? DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS : tags,
+                  );
                 },
               },
               nist: {
@@ -611,21 +604,12 @@ export class ASFFMapper extends BaseConverter {
             },
           },
         ],
-        copyright: null,
-        copyright_email: null,
-        depends: [],
-        groups: [],
-        license: null,
-        maintainer: null,
         name: {
           transformer: (): string => {
             return this.meta?.name || 'AWS Security Finding Format';
           },
         },
-        sha256: '',
-        status: 'loaded',
         summary: '',
-        supports: [],
         title: {
           transformer: (): string => {
             return (_.get(this.meta, 'title')!) || 'ASFF Findings';
@@ -704,7 +688,7 @@ export class ASFFResults {
         'securityhubSupportingDocs',
         (standards: string[] | undefined) => {
           throw new Error(
-            `supportingDocs function should've been defined: ${standards}`,
+            `supportingDocs function should've been defined: ${String(standards)}`,
           );
         },
       )(securityhubStandardsJsonArray),
@@ -731,34 +715,12 @@ export class ASFFResults {
   toHdf(): Record<string, ExecJSON.Execution> {
     return _.mapValues(this.data, (val) => {
       const wrapped = wrapWithFindingsObject(val);
+      const firstFinding = _.get(wrapped, 'Findings[0]') as unknown as Record<string, unknown>;
+      const specialCase = whichSpecialCase(firstFinding);
       return new ASFFMapper(
-        externalProductHandler(
-          this,
-          whichSpecialCase(
-            _.get(wrapped, 'Findings[0]') as unknown as Record<string, unknown>,
-          ),
-          wrapped,
-          'preprocessingASFF',
-          wrapped,
-        ),
-        externalProductHandler(
-          this,
-          whichSpecialCase(
-            _.get(wrapped, 'Findings[0]') as unknown as Record<string, unknown>,
-          ),
-          [wrapped, this.supportingDocs],
-          'supportingDocs',
-          this.supportingDocs,
-        ),
-        externalProductHandler(
-          this,
-          whichSpecialCase(
-            _.get(wrapped, 'Findings[0]') as unknown as Record<string, unknown>,
-          ),
-          undefined,
-          'meta',
-          this.meta,
-        ),
+        externalProductHandler(this, specialCase, wrapped, 'preprocessingASFF', wrapped),
+        externalProductHandler(this, specialCase, [wrapped, this.supportingDocs], 'supportingDocs', this.supportingDocs),
+        externalProductHandler(this, specialCase, undefined, 'meta', this.meta),
       ).toHdf();
     });
   }

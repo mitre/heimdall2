@@ -1,7 +1,7 @@
 import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
-import { BaseConverter } from './base-converter';
+import { BaseConverter, DEFAULT_PROFILE_FIELDS } from './base-converter';
 import { NiktoNistMapping } from './mappings/NiktoNistMapping';
 import { getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
 
@@ -34,7 +34,7 @@ export class NiktoMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             code: {
@@ -66,17 +66,13 @@ export class NiktoMapper extends BaseConverter {
             title: { path: 'msg' },
           },
         ],
-        groups: [],
         name: 'Nikto Website Scanner',
-        sha256: '',
-        status: 'loaded',
         summary: {
           path: 'banner',
           transformer: (input: unknown): string => {
-            return `Banner: ${input}`;
+            return `Banner: ${String(input)}`;
           },
         },
-        supports: [],
         title: { transformer: formatTitle },
       },
     ],

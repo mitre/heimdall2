@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
   parseXml,
 } from './base-converter';
@@ -40,7 +41,7 @@ export class DBProtectMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             code: {
@@ -71,12 +72,8 @@ export class DBProtectMapper extends BaseConverter {
             title: { path: 'Check' },
           },
         ],
-        groups: [],
         name: { path: 'data.[0].Policy' },
-        sha256: '',
-        status: 'loaded',
         summary: { path: 'data.[0]', transformer: formatSummary },
-        supports: [],
         title: { path: 'data.[0].Job Name' },
       },
     ],

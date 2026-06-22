@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  DEFAULT_PROFILE_FIELDS,
   generateHash,
   impactMapping,
 } from './base-converter';
@@ -54,7 +55,7 @@ export class JfrogXrayMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             code: {
@@ -97,12 +98,8 @@ export class JfrogXrayMapper extends BaseConverter {
             title: { path: 'summary' },
           },
         ],
-        groups: [],
         name: 'JFrog Xray Scan',
-        sha256: '',
-        status: 'loaded',
         summary: 'Continuous Security and Universal Artifact Analysis',
-        supports: [],
         title: 'JFrog Xray Scan',
       },
     ],

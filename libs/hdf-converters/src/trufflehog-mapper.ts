@@ -1,7 +1,7 @@
 import { ExecJSON } from 'inspecjs';
 import _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
-import { BaseConverter } from './base-converter';
+import { BaseConverter, DEFAULT_PROFILE_FIELDS } from './base-converter';
 import { HeimdallToolsVersion } from './utils/global';
 
 export class TrufflehogMapper extends BaseConverter {
@@ -22,7 +22,7 @@ export class TrufflehogMapper extends BaseConverter {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             id: {
@@ -74,15 +74,11 @@ export class TrufflehogMapper extends BaseConverter {
             },
           },
         ],
-        groups: [],
         name: {
           path: 'wrapper[0]',
           transformer: (data: Record<string, unknown>): string =>
-            `Source ID: ${_.get(data, 'SourceID')}, Source Name: ${_.get(data, 'SourceName')}`,
+            `Source ID: ${String(_.get(data, 'SourceID'))}, Source Name: ${String(_.get(data, 'SourceName'))}`,
         },
-        sha256: '',
-        status: 'loaded',
-        supports: [],
         title: { path: 'wrapper[0].SourceName' },
       },
     ],

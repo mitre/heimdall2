@@ -1,7 +1,7 @@
 import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
-import { BaseConverter } from './base-converter';
+import { BaseConverter, DEFAULT_PROFILE_FIELDS } from './base-converter';
 import { data as MappingData } from './mappings/CheckovToCciAndNistMappingData';
 import {
   conditionallyProvideAttribute,
@@ -97,7 +97,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 ]);
 
 export class CheckovMapper extends BaseConverter<CheckovReport> {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -117,7 +117,7 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
               name: 'Checkov',
             },
           ],
-          ...conditionallyProvideAttribute('raw', data, this.withRaw),
+          ...conditionallyProvideAttribute('raw', data, this.shouldIncludeRaw),
         };
       },
     },
@@ -127,7 +127,7 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
     },
     profiles: [
       {
-        attributes: [],
+        ...DEFAULT_PROFILE_FIELDS,
         controls: [
           {
             path: 'results.passed_checks',
@@ -157,11 +157,7 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
               tags: {},
             } as MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath>]),
         ],
-        groups: [],
         name: 'Checkov',
-        sha256: '',
-        status: 'loaded',
-        supports: [],
         title: {
           path: 'check_type',
           transformer: (checkType): string => `Bridgecrew (by Prisma Cloud) Checkov ${checkType} Security Scan`,
@@ -173,9 +169,9 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
     version: HeimdallToolsVersion,
   };
 
-  constructor(checkovJson: string, withRaw = false) {
+  constructor(checkovJson: string, shouldIncludeRaw = false) {
     super(JSON.parse(checkovJson) as CheckovReport);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
   controlMapping(): MappedTransform<
@@ -284,7 +280,8 @@ function impactMapping(severity: CheckovCheck['severity']): number {
 function statusMapper(result: CheckovCheckResult['result']): ExecJSON.ControlResultStatus {
   if (result === 'PASSED') {
     return ExecJSON.ControlResultStatus.Passed;
-  } else if (result === 'FAILED') {
+  }
+  if (result === 'FAILED') {
     return ExecJSON.ControlResultStatus.Failed;
   }
   return ExecJSON.ControlResultStatus.Skipped;
