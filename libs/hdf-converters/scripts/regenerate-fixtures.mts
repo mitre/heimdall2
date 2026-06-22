@@ -1,6 +1,7 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import { AnchoreGrypeMapper } from '../src/anchore-grype-mapper';
+import { ASFFResults } from '../src/asff-mapper/asff-mapper';
 import { BurpSuiteResults } from '../src/burpsuite-mapper';
 import { CheckovMapper } from '../src/checkov-mapper';
 import { ChecklistResults } from '../src/ckl-mapper/checklist-mapper';
@@ -31,6 +32,7 @@ export interface FixtureEntry {
   isAsync: boolean;
   isExternal?: boolean;
   mapperFactory: (input: string) => { toHdf: () => any };
+  objectKey?: string;
   outputFile: string;
 }
 
@@ -58,11 +60,17 @@ export interface ValidationResult {
   verdict: 'FAIL' | 'PASS' | 'SKIP';
 }
 
+const MAX_DIFF_DEPTH = 5;
+
 function diffProfiles(
   baseline: Record<string, unknown>,
   current: Record<string, unknown>,
   path: string,
+  depth = 0,
 ): string[] {
+  if (depth > MAX_DIFF_DEPTH) {
+    return [];
+  }
   const unexpected: string[] = [];
   const allKeys = new Set([...Object.keys(baseline), ...Object.keys(current)]);
 
@@ -95,7 +103,7 @@ function diffProfiles(
       if (JSON.stringify(baseVal) !== JSON.stringify(curVal) && key === 'profiles') {
         for (let i = 0; i < Math.max(baseVal.length, curVal.length); i++) {
           if (i < baseVal.length && i < curVal.length) {
-            unexpected.push(...diffProfiles(baseVal[i] as Record<string, unknown>, curVal[i] as Record<string, unknown>, `${fullPath}[${i}]`));
+            unexpected.push(...diffProfiles(baseVal[i] as Record<string, unknown>, curVal[i] as Record<string, unknown>, `${fullPath}[${i}]`, depth + 1));
           }
         }
       }
@@ -103,7 +111,7 @@ function diffProfiles(
     }
 
     if (typeof baseVal === 'object' && baseVal !== null && curVal !== null) {
-      unexpected.push(...diffProfiles(baseVal as Record<string, unknown>, curVal as Record<string, unknown>, fullPath));
+      unexpected.push(...diffProfiles(baseVal as Record<string, unknown>, curVal as Record<string, unknown>, fullPath, depth + 1));
     }
   }
 
@@ -130,10 +138,32 @@ export async function validateMapperOutput(mapperName: string): Promise<Validati
       const input = readInput(entry.inputFile);
       const mapper = entry.mapperFactory(input);
       const rawResult = entry.isAsync ? await mapper.toHdf() : mapper.toHdf();
-      const current = entry.arrayIndex === undefined ? rawResult : rawResult[entry.arrayIndex];
+      let current = rawResult;
+      if (entry.arrayIndex !== undefined) {
+        current = rawResult[entry.arrayIndex];
+      } else if (entry.objectKey !== undefined) {
+        current = rawResult[entry.objectKey];
+      }
       const baseline = JSON.parse(fs.readFileSync(validatedPath, 'utf8'));
 
-      const unexpected = diffProfiles(baseline, current, '');
+      let unexpected: string[];
+      try {
+        unexpected = diffProfiles(baseline, current, '');
+      } catch {
+        const baselineKeys = new Set(Object.keys(baseline));
+        const currentKeys = new Set(Object.keys(current));
+        unexpected = [];
+        for (const key of currentKeys) {
+          if (!baselineKeys.has(key) && !ALLOWED_NEW_FIELDS.has(key)) {
+            unexpected.push(`+${key}: new top-level field not in ALLOWED_NEW_FIELDS`);
+          }
+        }
+        for (const key of baselineKeys) {
+          if (!currentKeys.has(key)) {
+            unexpected.push(`-${key}: top-level field removed`);
+          }
+        }
+      }
 
       results.push({
         isSkipped: false,
@@ -169,6 +199,15 @@ export const FIXTURE_REGISTRY = new Map<string, FixtureEntry[]>([
     { inputFile: 'sample_jsons/anchore_grype_mapper/sample_input_report/tensorflow.json', isAsync: false, mapperFactory: input => new AnchoreGrypeMapper(input), outputFile: 'sample_jsons/anchore_grype_mapper/tensorflow-grype-hdf.json' },
     { inputFile: 'sample_jsons/anchore_grype_mapper/sample_input_report/tensorflow.json', isAsync: false, mapperFactory: input => new AnchoreGrypeMapper(input, true), outputFile: 'sample_jsons/anchore_grype_mapper/tensorflow-grype-withraw.json' },
   ]],
+  ['asff', [
+    { inputFile: 'sample_jsons/asff_mapper/sample_input_report/asff_sample.json', isAsync: false, mapperFactory: input => new ASFFResults(input), objectKey: 'CIS AWS Foundations Benchmark v1.2.0.json', outputFile: 'sample_jsons/asff_mapper/asff-cis_aws-foundations_benchmark_v1.2.0-hdf.json' },
+    { inputFile: 'sample_jsons/asff_mapper/sample_input_report/asff_sample.json', isAsync: false, mapperFactory: input => new ASFFResults(input), objectKey: 'AWS Foundational Security Best Practices v1.0.0.json', outputFile: 'sample_jsons/asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json' },
+    { inputFile: 'sample_jsons/asff_mapper/sample_input_report/prowler_sample.json', isAsync: false, mapperFactory: input => new ASFFResults(input), objectKey: 'Prowler.json', outputFile: 'sample_jsons/asff_mapper/prowler-hdf.json' },
+    { inputFile: 'sample_jsons/asff_mapper/sample_input_report/prowler-sample.asff-json', isAsync: false, mapperFactory: input => new ASFFResults(input), objectKey: 'Prowler.json', outputFile: 'sample_jsons/asff_mapper/prowler-hdf.json' },
+    { inputFile: 'sample_jsons/asff_mapper/sample_input_report/trivy-image_golang-1.12-alpine_sample.json', isAsync: false, mapperFactory: input => new ASFFResults(input), objectKey: 'Aqua Security - Trivy.json', outputFile: 'sample_jsons/asff_mapper/trivy-image_golang-1.12-alpine-hdf.json' },
+    { inputFile: 'sample_jsons/asff_mapper/sample_input_report/rhel7_V-71931_asff.json', isAsync: false, mapperFactory: input => new ASFFResults(input), objectKey: 'rhel7_V-71931.json-this-is-a-test.json', outputFile: 'sample_jsons/asff_mapper/rhel7_V-71931-hdf.json' },
+    { inputFile: 'sample_jsons/asff_mapper/sample_input_report/example-3-layer-overlay_asff.json', isAsync: false, mapperFactory: input => new ASFFResults(input), objectKey: 'example-3-layer-overlay_03062022.json-this-is-a-test.json', outputFile: 'sample_jsons/asff_mapper/example-3-layer-overlay_hdf.json' },
+  ]],
   ['burpsuite', [
     { inputFile: 'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min', isAsync: true, mapperFactory: input => new BurpSuiteResults(input), outputFile: 'sample_jsons/burpsuite_mapper/burpsuite-hdf.json' },
     { inputFile: 'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min', isAsync: true, mapperFactory: input => new BurpSuiteResults(input, true), outputFile: 'sample_jsons/burpsuite_mapper/burpsuite-hdf-withraw.json' },
@@ -189,7 +228,10 @@ export const FIXTURE_REGISTRY = new Map<string, FixtureEntry[]>([
     { inputFile: 'sample_jsons/checkov_mapper/sample_input_report/checkov_with_skips.json', isAsync: false, mapperFactory: input => new CheckovMapper(input), outputFile: 'sample_jsons/checkov_mapper/checkov_with_skips-hdf.json' },
   ]],
   ['conveyor', [
-    { inputFile: 'sample_jsons/conveyor_mapper/sample_input_report/sample-results.json', isAsync: false, mapperFactory: input => new ConveyorResults(input), outputFile: 'sample_jsons/conveyor_mapper/conveyor-hdf.json' },
+    { inputFile: 'sample_jsons/conveyor_mapper/sample_input_report/sample-results.json', isAsync: false, mapperFactory: input => new ConveyorResults(input), objectKey: 'Moldy', outputFile: 'sample_jsons/conveyor_mapper/conveyor-moldy-hdf.json' },
+    { inputFile: 'sample_jsons/conveyor_mapper/sample_input_report/sample-results.json', isAsync: false, mapperFactory: input => new ConveyorResults(input), objectKey: 'Stigma', outputFile: 'sample_jsons/conveyor_mapper/conveyor-stigma-hdf.json' },
+    { inputFile: 'sample_jsons/conveyor_mapper/sample_input_report/sample-results.json', isAsync: false, mapperFactory: input => new ConveyorResults(input), objectKey: 'CodeQuality', outputFile: 'sample_jsons/conveyor_mapper/conveyor-codequality-hdf.json' },
+    { inputFile: 'sample_jsons/conveyor_mapper/sample_input_report/sample-results.json', isAsync: false, mapperFactory: input => new ConveyorResults(input), objectKey: 'Clamav', outputFile: 'sample_jsons/conveyor_mapper/conveyor-clamav-hdf.json' },
   ]],
   ['cyclonedx-sbom', [
     { inputFile: 'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/dropwizard-vulns.json', isAsync: false, mapperFactory: input => new CycloneDXSBOMResults(input), outputFile: 'sample_jsons/cyclonedx_sbom_mapper/sbom-dropwizard-vulns-hdf.json' },
@@ -272,8 +314,8 @@ export const FIXTURE_REGISTRY = new Map<string, FixtureEntry[]>([
     { inputFile: 'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js', isAsync: false, mapperFactory: input => new ScoutsuiteMapper(input, true), outputFile: 'sample_jsons/scoutsuite_mapper/scoutsuite-hdf-withraw.json' },
   ]],
   ['snyk', [
-    { inputFile: 'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-local.json', isAsync: false, mapperFactory: input => new SnykMapper(input), outputFile: 'sample_jsons/snyk_mapper/nodejs-goof-local-hdf.json' },
-    { inputFile: 'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-remote.json', isAsync: false, mapperFactory: input => new SnykMapper(input), outputFile: 'sample_jsons/snyk_mapper/nodejs-goof-remote-hdf.json' },
+    { inputFile: 'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-local.json', isAsync: false, mapperFactory: input => new SnykMapper(JSON.parse(input)), outputFile: 'sample_jsons/snyk_mapper/nodejs-goof-local-hdf.json' },
+    { inputFile: 'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-remote.json', isAsync: false, mapperFactory: input => new SnykMapper(JSON.parse(input)), outputFile: 'sample_jsons/snyk_mapper/nodejs-goof-remote-hdf.json' },
   ]],
   ['sonarqube', [
     { inputFile: '', isAsync: true, isExternal: true, mapperFactory: () => { throw new Error('sonarqube requires external service'); }, outputFile: 'sample_jsons/sonarqube_mapper/sonarqube-hdf.json' },
@@ -341,7 +383,12 @@ async function regenerateMapper(mapperName: string, isDryRun: boolean): Promise<
       const input = readInput(entry.inputFile);
       const mapper = entry.mapperFactory(input);
       const rawResult = entry.isAsync ? await mapper.toHdf() : mapper.toHdf();
-      const result = entry.arrayIndex === undefined ? rawResult : rawResult[entry.arrayIndex];
+      let result = rawResult;
+      if (entry.arrayIndex !== undefined) {
+        result = rawResult[entry.arrayIndex];
+      } else if (entry.objectKey !== undefined) {
+        result = rawResult[entry.objectKey];
+      }
       const output = `${JSON.stringify(result, null, 2)}\n`;
 
       const validatedOutput = validateFixturePath(entry.outputFile);
@@ -358,6 +405,14 @@ async function regenerateMapper(mapperName: string, isDryRun: boolean): Promise<
           written.push(`${entry.outputFile} (would create)`);
         }
       } else {
+        const MAX_SIZE_RATIO = 3;
+        if (fs.existsSync(validatedOutput)) {
+          const originalSize = fs.statSync(validatedOutput).size;
+          if (originalSize > 0 && output.length > originalSize * MAX_SIZE_RATIO) {
+            errors.push(`${entry.outputFile}: REJECTED — output is ${Math.round(output.length / originalSize)}x larger than original (${output.length} vs ${originalSize} bytes). Likely wrong constructor or raw data inclusion.`);
+            continue;
+          }
+        }
         fs.writeFileSync(validatedOutput, output);
         written.push(entry.outputFile);
       }

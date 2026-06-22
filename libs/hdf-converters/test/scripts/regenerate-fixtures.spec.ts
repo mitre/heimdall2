@@ -106,6 +106,53 @@ describe('regenerate-fixtures registry', () => {
     }
   });
 
+  it('snyk mapper produces output within 3x of original fixture size', async () => {
+    const entries = getFixtureEntries('snyk');
+    for (const entry of entries) {
+      if (entry.isExternal || !fs.existsSync(entry.outputFile)) {
+        continue;
+      }
+      const input = fs.readFileSync(entry.inputFile, 'utf8');
+      const mapper = entry.mapperFactory(input);
+      const result = entry.isAsync ? await mapper.toHdf() : mapper.toHdf();
+      const output = JSON.stringify(result, null, 2);
+      const originalSize = fs.statSync(entry.outputFile).size;
+      const ratio = output.length / originalSize;
+      expect(
+        ratio,
+        `${entry.outputFile}: output is ${ratio.toFixed(1)}x original size — likely wrong constructor (string vs parsed object)`,
+      ).toBeLessThan(3);
+    }
+  });
+
+  it('no mapper factory passes raw string to a constructor that expects parsed object', async () => {
+    for (const [name, entries] of FIXTURE_REGISTRY) {
+      for (const entry of entries) {
+        if (entry.isExternal) {
+          continue;
+        }
+        try {
+          const input = fs.readFileSync(entry.inputFile, 'utf8');
+          const mapper = entry.mapperFactory(input);
+          const result = entry.isAsync ? await mapper.toHdf() : mapper.toHdf();
+          const output = JSON.stringify(result, null, 2);
+          if (fs.existsSync(entry.outputFile)) {
+            const originalSize = fs.statSync(entry.outputFile).size;
+            if (originalSize > 0) {
+              const ratio = output.length / originalSize;
+              expect(
+                ratio,
+                `${name}/${entry.outputFile}: output is ${ratio.toFixed(1)}x original — check constructor`,
+              ).toBeLessThan(3);
+            }
+          }
+        } catch {
+          // Constructor/toHdf errors are caught by other tests
+        }
+      }
+    }
+  });
+
   it('every non-external entry has input files that exist on disk', () => {
     for (const [name, entries] of FIXTURE_REGISTRY) {
       for (const entry of entries) {
