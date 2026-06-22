@@ -150,7 +150,7 @@
             </v-btn>
             <v-btn
               v-show="authStrategySupported('saml')"
-              id="oauth-saml"
+              id="saml"
               class="mt-5 flex-fill"
               plain
               @click="oauthLogin('saml')"
@@ -175,6 +175,10 @@ import { email, required } from "vuelidate/lib/validators";
 import UserValidatorMixin from "@/mixins/UserValidatorMixin";
 import { ServerModule } from "@/store/server";
 import { SnackbarModule } from "@/store/snackbar";
+import type {
+  AuthStrategy,
+  ExternalAuthStrategy
+} from '@heimdall/common/interfaces';
 
 type LoginHash = {
   email: string;
@@ -197,7 +201,7 @@ export default class LocalLogin extends Vue {
   showPassword = false;
 
   get localLoginEnabled() {
-    return ServerModule.localLoginEnabled;
+    return this.authStrategySupported('local');
   }
 
   get oidcName() {
@@ -209,11 +213,13 @@ export default class LocalLogin extends Vue {
   }
 
   get showAlternateAuth() {
-    return ServerModule.enabledOAuth.length > 0;
+    return ServerModule.enabledAuthStrategies.some(
+      (strategy) => strategy !== 'local' && strategy !== 'ldap'
+    );
   }
 
-  authStrategySupported(strategy: string) {
-    return ServerModule.enabledOAuth.includes(strategy);
+  authStrategySupported(strategy: AuthStrategy) {
+    return ServerModule.enabledAuthStrategies.includes(strategy);
   }
 
   login() {
@@ -232,7 +238,7 @@ export default class LocalLogin extends Vue {
       });
   }
 
-  oauthLogin(site: string) {
+  oauthLogin(site: ExternalAuthStrategy) {
     globalThis.location.href = `/authn/${site}`;
   }
 

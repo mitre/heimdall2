@@ -1,16 +1,16 @@
-export interface IStartupSettings {
+import type { AuthStrategy } from './auth-strategy.interface';
+
+export type IStartupSettings = {
   readonly apiKeysEnabled: boolean;
   readonly banner: string;
   readonly classificationBannerColor: string;
   readonly classificationBannerText: string;
   readonly classificationBannerTextColor: string;
-  readonly enabledOAuth: string[];
+  readonly enabledAuthStrategies: AuthStrategy[];
   readonly externalUrl: string;
-  readonly oidcName: string;
-  readonly ldap: boolean;
-  readonly registrationEnabled: boolean;
-  readonly localLoginEnabled: boolean;
-  readonly tenableHostUrl: string;
   readonly forceTenableFrontend: boolean;
+  readonly oidcName: string;
+  readonly registrationEnabled: boolean;
   readonly splunkHostUrl: string;
-}
+  readonly tenableHostUrl: string;
+};

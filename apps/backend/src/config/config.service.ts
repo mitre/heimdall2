@@ -1,6 +1,15 @@
+import type {AuthStrategy} from '@heimdall/common/interfaces';
 import {SequelizeOptions} from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
 import {StartupSettingsDto} from './dto/startup-settings.dto';
+
+const OAUTH_AUTH_STRATEGIES = [
+  'github',
+  'gitlab',
+  'google',
+  'okta',
+  'oidc'
+] as const;
 
 export class ConfigService {
   private readonly appConfig: AppConfig;
@@ -34,17 +43,28 @@ export class ConfigService {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }
 
-  enabledOauthStrategies() {
-    const enabledOauth: string[] = [];
-    supportedOauth.forEach((oauthStrategy) => {
-      if (oauthStrategy == 'saml'&& this.get('SAML_ENTRY_POINT') && this.get('SAML_ISSUER') && this.get('SAML_IDP_CERT')) {
-        enabledOauth.push(oauthStrategy);
-      }
-      else if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)){
-        enabledOauth.push(oauthStrategy);
-      }
-    });
-    return enabledOauth;
+  enabledAuthStrategies(): AuthStrategy[] {
+    const enabledAuthStrategies: AuthStrategy[] = [];
+    if (this.isLocalLoginAllowed()) {
+      enabledAuthStrategies.push('local');
+    }
+    if (this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true') {
+      enabledAuthStrategies.push('ldap');
+    }
+    enabledAuthStrategies.push(
+      ...OAUTH_AUTH_STRATEGIES.filter((authStrategy) =>
+        this.get(`${authStrategy.toUpperCase()}_CLIENTID`)
+      )
+    );
+    if (
+      ['SAML_ENTRY_POINT', 'SAML_ISSUER', 'SAML_IDP_CERT'].every((setting) =>
+        this.get(setting)
+      )
+    ) {
+      enabledAuthStrategies.push('saml');
+    }
+
+    return enabledAuthStrategies;
   }
 
   frontendStartupSettings(): StartupSettingsDto {
@@ -56,12 +76,10 @@ export class ConfigService {
       classificationBannerText: this.get('CLASSIFICATION_BANNER_TEXT') || '',
       classificationBannerTextColor:
         this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
-      enabledOAuth: this.enabledOauthStrategies(),
+      enabledAuthStrategies: this.enabledAuthStrategies(),
       externalUrl: this.getExternalUrl(),
       oidcName: this.get('OIDC_NAME') || '',
-      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
       registrationEnabled: this.isRegistrationAllowed(),
-      localLoginEnabled: this.isLocalLoginAllowed(),
       tenableHostUrl: this.getTenableHostUrl(),
       forceTenableFrontend:
         this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',
@@ -97,11 +115,3 @@ export class ConfigService {
     return this.appConfig.get(key);
   }
 }
-export const supportedOauth: string[] = [
-  'github',
-  'gitlab',
-  'google',
-  'okta',
-  'oidc',
-  'saml'
-];
