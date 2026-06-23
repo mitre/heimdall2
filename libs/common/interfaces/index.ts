@@ -3,9 +3,13 @@ export * from './apikey/create-apikey.interface';
 export * from './apikey/delete-apikey.interface';
 export * from './apikey/regenerate-apikey.interface';
 export * from './apikey/update-apikey.interface';
+export {
+  AUTH_STRATEGIES,
+  AUTH_STRATEGY,
+} from './config/auth-strategy.interface';
 export type {
   AuthStrategy,
-  ExternalAuthStrategy
+  ExternalAuthStrategy,
 } from './config/auth-strategy.interface';
 export * from './config/startup-settings.interface';
 export * from './evaluation-tag/create-evaluation-tag.interface';

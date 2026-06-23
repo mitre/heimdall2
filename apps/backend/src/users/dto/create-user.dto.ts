@@ -1,16 +1,6 @@
+import { AUTH_STRATEGIES } from '@heimdall/common/interfaces';
 import type { AuthStrategy, ICreateUser } from '@heimdall/common/interfaces';
 import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-
-const AUTH_STRATEGIES: AuthStrategy[] = [
-  'local',
-  'ldap',
-  'github',
-  'gitlab',
-  'google',
-  'okta',
-  'oidc',
-  'saml',
-];
 
 export class CreateUserDto implements ICreateUser {
   @IsIn(AUTH_STRATEGIES)

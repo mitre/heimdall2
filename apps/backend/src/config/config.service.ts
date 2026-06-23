@@ -1,14 +1,15 @@
-import type {AuthStrategy} from '@heimdall/common/interfaces';
-import {SequelizeOptions} from 'sequelize-typescript';
+import { AUTH_STRATEGY } from '@heimdall/common/interfaces';
+import type { AuthStrategy } from '@heimdall/common/interfaces';
+import type { SequelizeOptions } from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
-import {StartupSettingsDto} from './dto/startup-settings.dto';
+import { StartupSettingsDto } from './dto/startup-settings.dto';
 
 const OAUTH_AUTH_STRATEGIES = [
-  'github',
-  'gitlab',
-  'google',
-  'okta',
-  'oidc'
+  AUTH_STRATEGY.GITHUB,
+  AUTH_STRATEGY.GITLAB,
+  AUTH_STRATEGY.GOOGLE,
+  AUTH_STRATEGY.OKTA,
+  AUTH_STRATEGY.OIDC,
 ] as const;
 
 export class ConfigService {
@@ -46,22 +47,22 @@ export class ConfigService {
   enabledAuthStrategies(): AuthStrategy[] {
     const enabledAuthStrategies: AuthStrategy[] = [];
     if (this.isLocalLoginAllowed()) {
-      enabledAuthStrategies.push('local');
+      enabledAuthStrategies.push(AUTH_STRATEGY.LOCAL);
     }
     if (this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true') {
-      enabledAuthStrategies.push('ldap');
+      enabledAuthStrategies.push(AUTH_STRATEGY.LDAP);
     }
     enabledAuthStrategies.push(
-      ...OAUTH_AUTH_STRATEGIES.filter((authStrategy) =>
-        this.get(`${authStrategy.toUpperCase()}_CLIENTID`)
-      )
+      ...OAUTH_AUTH_STRATEGIES.filter(authStrategy =>
+        this.get(`${authStrategy.toUpperCase()}_CLIENTID`),
+      ),
     );
     if (
-      ['SAML_ENTRY_POINT', 'SAML_ISSUER', 'SAML_IDP_CERT'].every((setting) =>
-        this.get(setting)
+      ['SAML_ENTRY_POINT', 'SAML_ISSUER', 'SAML_IDP_CERT'].every(setting =>
+        this.get(setting),
       )
     ) {
-      enabledAuthStrategies.push('saml');
+      enabledAuthStrategies.push(AUTH_STRATEGY.SAML);
     }
 
     return enabledAuthStrategies;
