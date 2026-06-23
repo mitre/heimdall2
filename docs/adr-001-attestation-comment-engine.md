@@ -111,7 +111,7 @@ The "editable comments" feature is really the first step of a **compliance revie
 
 Build a GUI attestation and comment engine that:
 
-1. Makes Heimdall Server the **single source of truth** for compliance review
+1. Makes Heimdall a **day-to-day view for posture and review collaboration** — not a GRC tool. The downstream GRC system (eMASS, etc.) remains the source of truth for formal authorization decisions.
 2. Replaces the CKL-email-STIG-Viewer loop with a **URL-based collaborative workflow**
 3. Uses the **existing attestation infrastructure** in hdf-converters and inspecjs
 4. Preserves **scan data integrity** — attestation/comment records are stored separately as the source of truth; in-memory mutations are a display optimization (see §5.1)
@@ -214,6 +214,8 @@ CKL has TWO free-text fields per vuln: `COMMENTS` (reviewer notes) and `FINDING_
 
 ### 3.2 The Review Lifecycle
 
+> **Simplified (per Will Dower review):** No formal state machine (Draft → In Review → Final) in Phase 1. Attestations and comments carry timestamps and identity for auditability ("who said what and when") without requiring RBAC, workflow states, or formal finalization. The downstream GRC tool (eMASS) handles formal authorization. Heimdall's role is day-to-day posture view and review collaboration, not GRC workflow.
+
 ```
                     ┌──────────────────────────────────────┐
                     │            SCAN                       │
@@ -223,58 +225,31 @@ CKL has TWO free-text fields per vuln: `COMMENTS` (reviewer notes) and `FINDING_
                     ┌──────────────▼───────────────────────┐
                     │       LOAD INTO HEIMDALL              │
                     │  Upload or load from DB               │
-                    │  State: DRAFT                         │
                     └──────────────┬───────────────────────┘
                                    │
                     ┌──────────────▼───────────────────────┐
-                    │       SAVE TO DB (Phase 2)            │
-                    │  Get permanent URL                    │
-                    │  Share in Jira / Slack / email        │
-                    └──────────────┬───────────────────────┘
-                                   │
-                    ┌──────────────▼───────────────────────┐
-                    │       REVIEW CYCLE (repeatable)       │
+                    │       REVIEW (repeatable)             │
                     │                                       │
-                    │  Reviewer opens URL                   │
-                    │  → sees current state + history       │
+                    │  Reviewer opens file                  │
                     │  → attests NR controls                │
                     │  → adds comments to any control       │
-                    │  → Save (creates new revision)        │
+                    │  → each action has timestamp + user   │
                     │                                       │
-                    │  Can include CKL round-trip:          │
-                    │  Export CKL → STIG Viewer → Reimport  │
-                    │                                       │
-                    │  State: IN REVIEW                     │
+                    │  Can include CKL/CKLB round-trip:     │
+                    │  Export → STIG Viewer → Reimport      │
                     └──────────────┬───────────────────────┘
                                    │ (repeat as needed)
                     ┌──────────────▼───────────────────────┐
-                    │       FINALIZE (Phase 2)               │
-                    │  ISSO marks FINAL                     │
-                    │  Evaluation locked — no more edits    │
-                    │  State: FINAL                         │
-                    └──────────────┬───────────────────────┘
-                                   │
-                    ┌──────────────▼───────────────────────┐
-                    │       SUBMIT (Phase 3)                │
-                    │  Export to eMASS (CKL/XCCDF/POA&M)   │
-                    │  Canonical record stays in Heimdall   │
+                    │       EXPORT                          │
+                    │  HDF (with attestations applied)      │
+                    │  HDF (original, un-attested)          │
+                    │  CKL / CKLB / XCCDF / CSV             │
+                    │  Attestation bundle (SAF CLI compat)  │
+                    │  → Submit to eMASS / downstream GRC   │
                     └──────────────────────────────────────┘
 ```
 
-**State machine:**
-```
-DRAFT ──save──▸ IN REVIEW ──mark final──▸ FINAL
-                    │                        │
-                    │◂──save (new revision)───│ (not allowed)
-                    │                        │
-                    │◂──CKL round-trip───────│ (not allowed)
-```
-
-- **DRAFT**: initial state after loading. No review actions taken yet.
-- **IN REVIEW**: at least one save/attestation/comment has been made. Multiple reviewers can contribute. Each save creates a new revision.
-- **FINAL**: locked. No more edits. Ready for eMASS submission. Export only.
-
-Phase 1 implements DRAFT and IN REVIEW (without DB persistence). Phase 2 adds FINAL and revision history.
+Phase 2 can add DB persistence, revision history, and formal finalization if needed. Phase 1 keeps it simple: timestamp + identity on every action, export when ready.
 
 ### 3.3 CKL Round-Trip Support
 
@@ -310,7 +285,7 @@ Heimdall → Export CKL → STIG Viewer (reviewer edits) → Import back → mor
 
 ### 3.4 Export Artifacts
 
-Two distinct export types:
+Three distinct export types:
 
 #### 3.4.1 Export Results (existing EXPORT button)
 
@@ -324,7 +299,18 @@ Full HDF/CKL/CSV/XCCDF with attestations and comments **baked into the output**.
 5. Serialize in chosen format (HDF JSON, CKL XML, CSV, XCCDF)
 6. Mark files saved (clear dirty state)
 
-#### 3.4.2 Export Attestations (new, on notification bar)
+#### 3.4.2 Export Original (un-attested HDF)
+
+> **Added per Will Dower review.** Export the original HDF file as-is, before any attestations or comments were applied. This preserves the raw scan data for comparison or reprocessing.
+
+**Flow:**
+1. Get the original evaluation data (no clone, no attestation application)
+2. Serialize as HDF JSON
+3. No dirty state change — this is the original data
+
+This gives users three export options: attested (for submission), original (for baseline), and attestation records (for portability).
+
+#### 3.4.3 Export Attestations (new, on notification bar)
 
 Just the attestation/comment records as a standalone file. SAF CLI compatible.
 
@@ -377,10 +363,11 @@ Users load previously exported attestation files into Heimdall.
 **Import flow:**
 1. Upload attestation file via new tab in UploadNexus (alongside Local Files, Database, Samples, etc.)
 2. Parse → validate format
-3. Preview: show table of attestation records with "Control ID | Status | Explanation | Match?" — indicate which controls exist in the currently loaded files
-4. User confirms → apply matching records to the appropriate files
-5. Non-matching records (control not found in any loaded file) are reported but not discarded
-6. Applied attestations appear in the side panel history
+3. **File selection modal** (per Will Dower review): if multiple HDF files are loaded, show a modal asking which file(s) to apply the attestation to. Options: select one, select multiple, or apply to all matching. Display file names + control match counts so the user can make an informed choice.
+4. Preview: show table of attestation records with "Control ID | Status | Explanation | Match?" — indicate which controls exist in the selected file(s)
+5. User confirms → apply matching records to the selected files
+6. Non-matching records (control not found in selected files) are reported but not discarded
+7. Applied attestations appear in the Annotations tab history
 
 ---
 
@@ -419,77 +406,57 @@ Users load previously exported attestation files into Heimdall.
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 4.2 Review Side Panel
+### 4.2 Annotations Tab (inside Control Expansion)
 
-**Component: `ReviewPanel.vue`** — mounted in `Results.vue` (NOT inside ControlTable). A deep-mounted `app` drawer fights the layout. ControlTable emits events; Results.vue owns the panel state.
+> **Design change (per Will Dower review):** Use an Annotations tab inside the existing control expansion instead of a side panel drawer. This merges the feature into the existing UI pattern (`Test | Details | Code | Annotations`) rather than introducing a new paradigm.
 
-Vuetify `v-navigation-drawer` with `right` and `app`:
-- **lgAndUp (≥1264px):** persistent drawer, pushes content left (`app` prop). Width 400px. Results table remains visible and interactive.
-- **mdAndDown (<1264px):** temporary overlay, full width. Scrim covers results (acceptable on small screens).
-- **Drawer coordination:** opening ReviewPanel closes the left Sidebar (and vice versa) to prevent stacked scrims and competing focus traps. Managed via a `ui` store flag (`activeDrawer: 'sidebar' | 'review' | null`) — testable in vitest, no event bus.
+When a user expands a control row (e.g., V-2255), they see the existing tabs plus a new one:
 
 ```
-┌──────────────────────────────────────────┬──────────────────────────────┐
-│                                          │  ✕ Close                     │
-│  (main results view stays visible,       │                              │
-│   narrowed to make room for panel)       │  V-2255 — htpasswd files     │
-│                                          │  Status: Not Reviewed        │
-│                                          │  Severity: LOW  │ AC-3       │
-│                                          │  ─────────────────────────── │
-│                                          │                              │
-│                                          │  ATTEST (change status)      │
-│                                          │  ┌─────────────────────────┐ │
-│                                          │  │ New Status: [Passed ▾]  │ │
-│                                          │  │                         │ │
-│                                          │  │ Explanation: (required) │ │
-│                                          │  │ ┌─────────────────────┐ │ │
-│                                          │  │ │ Verified manually   │ │ │
-│                                          │  │ │ by ISSO on site     │ │ │
-│                                          │  │ └─────────────────────┘ │ │
-│                                          │  │                         │ │
-│                                          │  │ Review Freq: [Annual ▾] │ │
-│                                          │  │ Reviewed by: A.Lippold  │ │
-│                                          │  └─────────────────────────┘ │
-│                                          │                              │
-│                                          │  ─── or ──────────────────── │
-│                                          │                              │
-│                                          │  💬 ADD COMMENT               │
-│                                          │  ┌─────────────────────────┐ │
-│                                          │  │                         │ │
-│                                          │  └─────────────────────────┘ │
-│                                          │                              │
-│                                          │  [Save]                      │
-│                                          │                              │
-│                                          │  ─── Comment History ──────── │
-│                                          │  📅 2026-06-15 Reviewer1:    │
-│                                          │     "Needs documentation"    │
-│                                          │  📅 2026-06-10 Engineer:     │
-│                                          │     "Docs added — see wiki"  │
-│                                          │                              │
-│                                          │  [◀ Prev]          [Next ▶] │
-└──────────────────────────────────────────┴──────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────┐
+│ V-2255 — htpasswd files must be accessible...          NR   LOW   AC-3  │
+├──────────────────────────────────────────────────────────────────────────┤
+│  Test  │  Details  │  Code  │  Annotations (2)                          │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ATTEST (NR controls only)                                               │
+│  ┌────────────────────────────────────────────────────────────────────┐  │
+│  │ New Status: [Passed ▾]                                             │  │
+│  │ Explanation: (required) ┌──────────────────────────────────────┐   │  │
+│  │                         │ Verified manually by ISSO on site    │   │  │
+│  │                         └──────────────────────────────────────┘   │  │
+│  │ Review Freq: [Annual ▾]     Reviewed by: A.Lippold               │  │
+│  └────────────────────────────────────────────────────────────────────┘  │
+│                                                                          │
+│  💬 ADD COMMENT (all controls)                                           │
+│  ┌────────────────────────────────────────────────────────────────────┐  │
+│  │                                                                    │  │
+│  └────────────────────────────────────────────────────────────────────┘  │
+│  [Save]                                                                  │
+│                                                                          │
+│  ─── Comment History ──────────────────────────────────────────────────  │
+│  📅 2026-06-15 Reviewer1: "Needs documentation"                         │
+│  📅 2026-06-10 Engineer: "Docs added — see wiki"                        │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Component: `ReviewPanel.vue`**
+**Component: `AnnotationsTab.vue`** — rendered inside `ControlRowDetails.vue` as a new tab alongside Test/Details/Code.
 
 Props:
-- `control: ContextualizedControl` — the control being reviewed
+- `control: ContextualizedControl` — the control being annotated
 - `fileId: FileID` — which loaded file this control belongs to
-- `visible: boolean` — controls drawer open/close (v-model)
 
 Behavior:
 - **Attest section** only renders when `control.root.hdf.status === 'Not Reviewed'`
-- **Comment section** always renders for all controls
+- **Comment section** always renders for ALL controls (comment on any control, attest only NR)
 - **History section** shows accumulated comment log entries, newest first
 - **Save** button commits attestation and/or comment to the annotation store, marks file dirty
-- **Cancel** button discards unsaved form changes, closes drawer
-- **Prev/Next** emits events to parent (ControlTable) to navigate through `ControlTable.items` array (respects current filter and sort). Disabled at first/last control. If form has unsaved changes, prompts "Discard changes?" before navigating.
-- **Close (✕)** — if form has unsaved text, shows "Discard changes?" confirmation. Otherwise closes immediately.
-- **Click-away** — same behavior as Close
-- **Security:** All user-supplied text (explanation, comment text, history entries) MUST render via Vue mustache `{{ }}` interpolation (auto-escaped), NOT `v-html`. The existing `sanitize_html` mixin is for control metadata display only. User-authored attestation/comment text is untrusted input.
+- **Tab badge** shows annotation count: `Annotations (N)` where N = attestations + comments for this control
+- **Security:** All user-supplied text (explanation, comment text, history entries) MUST render via Vue mustache `{{ }}` interpolation (auto-escaped), NOT `v-html`. User-authored text is untrusted input.
 - Explanation textarea has validation: required for attestation, empty check
 - Frequency dropdown populated from `advanceDate()` supported values: daily, weekly, monthly, quarterly, semiannually, annually
-- **Expiration indicator:** if an attestation exists for this control, show computed expiration date (`advanceDate(updated, frequency)`). If expired, show "⚠ Expired — re-attest" with warning color. This is display-only (computed client-side), not a live status change.
+- **Expiration indicator:** if an attestation exists for this control, show computed expiration date (`advanceDate(updated, frequency)`). If expired, show "Expired — re-attest" with warning color. Display-only.
 - `updated_by` auto-populated from `ServerModule.userInfo.email` (server mode) or `'local user'` (lite mode)
 
 ### 4.3 Control Row Actions + Indicators
@@ -497,22 +464,20 @@ Behavior:
 **Modifications to `ControlRowHeader.vue`:**
 
 Add to the row (after the existing columns):
-- **Action button**: `v-btn` icon button
-  - NR controls: `mdi-clipboard-check-outline` with tooltip "Attest"
-  - All others: `mdi-comment-plus-outline` with tooltip "Add Comment"
-  - Click emits `open-review-panel` with the control
+- **Action buttons**: `v-btn` icon buttons in the collapsed row for quick access
+  - NR controls: `mdi-clipboard-check-outline` with tooltip "Attest" — expands the row and focuses the Annotations tab
+  - ALL controls: `mdi-comment-plus-outline` with tooltip "Add Comment" — expands the row and focuses the Annotations tab
+  - Both buttons use `@click.stop` to prevent event bubbling to the row toggle handler
 
 - **Indicators** (shown in the status area or after filename):
-  - `mdi-comment-text` (💬) — shown when `annotationStore.hasComments(fileId, controlId)` is true
-  - `mdi-check-decagram` (✓) — shown when `annotationStore.hasAttestation(fileId, controlId)` is true
+  - `mdi-comment-text` — shown when `annotationStore.hasComments(fileId, controlId)` is true
+  - `mdi-check-decagram` — shown when `annotationStore.hasAttestation(fileId, controlId)` is true
   - Both can be present simultaneously
 
-**Modifications to `ControlTable.vue`:**
-- Add `reviewPanelControl` data property (currently selected control for review)
-- Add `reviewPanelVisible` data property
-- Handle `open-review-panel` event from ControlRowHeader
-- Include `<ReviewPanel>` component in template
-- Handle prev/next navigation events from ReviewPanel
+**Modifications to `ControlRowDetails.vue`:**
+- Add `AnnotationsTab` component as a new tab
+- Pass control + fileId props
+- Tab shows badge count from annotation store
 
 ### 4.4 NR Status Card Attest Action
 
@@ -1030,11 +995,13 @@ Layer 4 — Integration (end-to-end verification):
 
 **Goal:** Approval chains, bulk operations, advanced export, notifications.
 
+> **Note (per Will Dower review):** Phase 3 should consume the updated HDF Libs (which already support amendments, POA&Ms, risk adjustments) rather than reimplementing that logic in the Heimdall monorepo. POA&M export is a follow-on PR that wraps HDF Libs, not new domain logic. The existing script that exports failed findings from CKL to a POA&M spreadsheet starter is the reference for scope.
+
 | ID | Title | Depends On |
 |----|-------|-----------|
 | R | Approval workflows (reviewed_by, review_status distinct from updated_by) | Phase 2 |
-| S1 | Build FromHDFToPOAMMapper in hdf-converters — HDF + attestations → POA&M XLSX (adapts mitre/ckl2POAM severity/status mappings). **RESEARCH REQUIRED:** verify against NIST 800-37 / eMASS POA&M requirements which control dispositions are POA&M items: Open (Failed) = yes; Risk Accepted = yes (with AO justification); Not Applicable = probably NOT a POA&M item (dispositioned). The ckl2POAM code maps CKL statuses but doesn't account for attestation dispositions. | Phase 1 H (export infra) |
-| S2 | POA&M export in Heimdall GUI — "Export as POA&M" button using S1 mapper | S1 |
+| S1 | POA&M export — wrap HDF Libs POA&M support, NOT reimplement in Heimdall. Follow-on PR. | Phase 1 H (export infra) |
+| S2 | POA&M export in Heimdall GUI — "Export as POA&M" button using S1 | S1 |
 | T | Bulk attestation (select multiple NR controls, attest all with same explanation) | Phase 1 B |
 | U | Expiring attestation dashboard (controls nearing re-review) | Phase 1 A |
 | V | Notification when someone else edits a shared evaluation | Phase 2 |
