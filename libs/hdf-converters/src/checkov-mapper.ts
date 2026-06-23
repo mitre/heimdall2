@@ -2,7 +2,9 @@ import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
 import { BaseConverter, DEFAULT_PROFILE_FIELDS } from './base-converter';
-import { data as MappingData } from './mappings/CheckovToCciAndNistMappingData';
+import { data as MappingDataRecord } from './mappings/CheckovToCciAndNistMappingData';
+
+const MappingData = new Map(Object.entries(MappingDataRecord));
 import {
   conditionallyProvideAttribute,
   DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
@@ -230,7 +232,7 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
         cci: {
           path: 'check_id',
           transformer: (checkId: CheckovCheck['check_id']): string[] => {
-            const mapping = MappingData[checkId];
+            const mapping = MappingData.get(checkId);
             return mapping ? mapping.cci : DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS;
           },
         },
@@ -239,7 +241,7 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
         nist: {
           path: 'check_id',
           transformer: (checkId: CheckovCheck['check_id']): string[] => {
-            const mapping = MappingData[checkId];
+            const mapping = MappingData.get(checkId);
             return mapping ? mapping.nist : DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
           },
         },
