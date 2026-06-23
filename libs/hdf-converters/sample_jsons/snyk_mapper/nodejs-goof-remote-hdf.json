@@ -1,9 +1,5 @@
 {
   "passthrough": {
-    "heimdall": {
-      "sourceFormat": "snyk",
-      "toolVersion": "2.13.0"
-    },
     "snyk_metadata": {
       "ok": false,
       "numDependencies": 552,
@@ -23,6 +19,10 @@
       },
       "uniqueCount": 66,
       "path": "https://github.com/snyk-labs/nodejs-goof"
+    },
+    "heimdall": {
+      "sourceFormat": "snyk",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

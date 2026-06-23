@@ -133,8 +133,11 @@ export class IonChannelMapper extends BaseConverter {
     ILookupPath
   > = {
     passthrough: {
-      heimdall: { transformer: () => ({ sourceFormat: 'ionchannel', toolVersion: HeimdallToolsVersion }) },
-      ionchannel_metadata: { path: 'metadata' },
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return createHeimdallPassthrough('ionchannel', {
+          ionchannel_metadata: _.get(data, 'metadata'),
+        });
+      },
     },
     platform: {
       name: 'Heimdall Tools',

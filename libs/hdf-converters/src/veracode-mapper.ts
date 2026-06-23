@@ -82,7 +82,9 @@ export class VeracodeMapper extends BaseConverter {
               : '';
           },
         },
-        heimdall: { transformer: () => ({ sourceFormat: 'veracode', toolVersion: HeimdallToolsVersion }) },
+        heimdall: {
+          transformer: () => createHeimdallPassthrough('veracode').heimdall,
+        },
         ...(withRaw && { raw: this.originalData }),
       },
       platform: {

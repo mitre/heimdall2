@@ -32,13 +32,10 @@ export class SnykMapper extends BaseConverter {
     ILookupPath
   > = {
     passthrough: {
-      heimdall: { transformer: () => ({ sourceFormat: 'snyk', toolVersion: HeimdallToolsVersion }) },
-      snyk_metadata: {
-        transformer: (
-          data: Record<string, unknown>,
-        ): Record<string, unknown> => {
-          return _.omit(data, ['vulnerabilities']);
-        },
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return createHeimdallPassthrough('snyk', {
+          snyk_metadata: _.omit(data, ['vulnerabilities']),
+        });
       },
     },
     platform: {

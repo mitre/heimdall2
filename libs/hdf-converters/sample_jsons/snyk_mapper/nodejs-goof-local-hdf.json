@@ -1,9 +1,5 @@
 {
   "passthrough": {
-    "heimdall": {
-      "sourceFormat": "snyk",
-      "toolVersion": "2.13.0"
-    },
     "snyk_metadata": {
       "ok": false,
       "dependencyCount": 565,
@@ -2248,6 +2244,10 @@
       "projectName": "goof",
       "displayTargetFile": "package-lock.json",
       "path": ".\\nodejs-goof\\"
+    },
+    "heimdall": {
+      "sourceFormat": "snyk",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {
