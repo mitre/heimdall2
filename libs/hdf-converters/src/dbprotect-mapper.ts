@@ -25,7 +25,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 ]);
 
 export class DBProtectMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -33,7 +33,7 @@ export class DBProtectMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return createHeimdallPassthrough('dbProtect', { ...(this.withRaw && { raw: data }) });
+        return createHeimdallPassthrough('dbProtect', { ...(this.shouldIncludeRaw && { raw: data }) });
       },
     },
     platform: {
@@ -82,9 +82,9 @@ export class DBProtectMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(dbProtectXml: string, withRaw = false) {
+  constructor(dbProtectXml: string, shouldIncludeRaw = false) {
     super(compileFindings(parseXml(dbProtectXml)));
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 function compileFindings(

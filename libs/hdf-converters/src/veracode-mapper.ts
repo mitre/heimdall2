@@ -28,7 +28,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 
 export class VeracodeMapper extends BaseConverter {
   originalData: unknown;
-  constructor(xml: string, withRaw = false) {
+  constructor(xml: string, shouldIncludeRaw = false) {
     // the default textNodeName that we're using ('text') clobbers any attributes that also are named 'text' of which there are many in this format
     // the attribute group names are necessary since there are many times that attributes and inner tags share the same name within a tag (ex. 'vulnerabilities' the attribute is a count whereas as an inner tag it is an array detailing the vulnerabilities) where it seems that the attribute clobbers the inner tag
     const parsedXML = parseXml(xml, {
@@ -49,11 +49,11 @@ export class VeracodeMapper extends BaseConverter {
     _.set(parsedXML, SEVERITY, arrayedControls);
     super(parsedXML);
     this.originalData = xml;
-    this.setMappings(this.defaultMapping(withRaw));
+    this.setMappings(this.defaultMapping(shouldIncludeRaw));
   }
 
   defaultMapping(
-    withRaw = false,
+    shouldIncludeRaw = false,
   ): MappedTransform<ExecJSON.Execution & { passthrough: unknown }, ILookupPath> {
     return {
       passthrough: {
@@ -82,10 +82,8 @@ export class VeracodeMapper extends BaseConverter {
               : '';
           },
         },
-        heimdall: {
-          transformer: () => createHeimdallPassthrough('veracode').heimdall,
-        },
-        ...(withRaw && { raw: this.originalData }),
+        heimdall: { transformer: () => createHeimdallPassthrough('veracode').heimdall },
+        ...(shouldIncludeRaw && { raw: this.originalData }),
       },
       platform: {
         name: 'Heimdall Tools',
@@ -332,12 +330,12 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
     ['Function Relative Location', 'functionrelativelocation'],
   ];
   if (_.has(input, '@_.sourcefilepath')) {
-    flawDesc = `Sourcefile Path: ${_.get(input, '@_.sourcefilepath')}\n`;
+    flawDesc = `Sourcefile Path: ${String(_.get(input, '@_.sourcefilepath'))}\n`;
     flawDesc += categories
       .map(([title, name]) => {
         if (_.has(input, `@_.${name}`)) {
           const nameVal = _.get(input, `@_.${name}`);
-          return `${title}: ${nameVal}\n`;
+          return `${title}: ${String(nameVal)}\n`;
         }
         return '';
       })
@@ -364,13 +362,13 @@ function formatCweData(input: Record<string, unknown>): string {
     }
     text.push(
       ...(cweInput as Record<string, unknown>[]).map((cweinfo) => {
-        let cwe = `CWE-${_.get(cweinfo, '@_.cweid')}: `;
-        cwe += `${_.get(cweinfo, '@_.cwename')}`;
+        let cwe = `CWE-${String(_.get(cweinfo, '@_.cweid'))}: `;
+        cwe += String(_.get(cweinfo, '@_.cwename'));
         cwe += categories
           .map((value: string) => {
             if (_.has(cweinfo, `@_.${value}`)) {
               const val = _.get(cweinfo, `@_.${value}`);
-              return `${value}: ${val}\n`;
+              return `${value}: ${String(val)}\n`;
             }
             return '';
           })
@@ -392,10 +390,10 @@ function formatCweDesc(input: Record<string, unknown>): string {
     text.push(
       ...(cwe as Record<string, unknown>[]).map(
         (value: Record<string, unknown>) =>
-          `CWE-${_.get(value, '@_.cweid')}: ${_.get(
+          `CWE-${String(_.get(value, '@_.cweid'))}: ${String(_.get(
             value,
             '@_.cwename',
-          )} Description: ${_.get(value, 'description.text.@_.text')}; `,
+          ))} Description: ${String(_.get(value, 'description.text.@_.text'))}; `,
       ),
     );
   }
@@ -406,7 +404,7 @@ function formatDesc(input: Record<string, unknown>): string {
   const text = [];
   if (_.has(input, 'desc.para')) {
     if (_.has(input, 'desc.para.@_.text')) {
-      text.push(`${_.get(input, 'desc.para.@_.text')}`);
+      text.push(String(_.get(input, 'desc.para.@_.text')));
     } else {
       text.push(
         ...(_.get(input, 'desc.para') as Record<string, unknown>[]).map(
@@ -422,7 +420,7 @@ function formatRecommendations(input: Record<string, unknown>): string {
   const text: string[] = [];
   if (_.has(input, 'recommendations.para')) {
     if (_.has(input, 'recommendations.para.@_.text')) {
-      text.push(`${_.get(input, 'recommendations.para.@_.text')}`);
+      text.push(String(_.get(input, 'recommendations.para.@_.text')));
     } else {
       text.push(
         ...(
@@ -463,18 +461,18 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
     'component_affects_policy_compliance',
   ];
   if (_.has(input, '@_.component_id')) {
-    flawDesc = `component_id: ${_.get(input, '@_.component_id')}\n`;
+    flawDesc = `component_id: ${String(_.get(input, '@_.component_id'))}\n`;
     flawDesc += _.compact(
       categories.map((value: string) => {
         if (_.has(input, `@_.${value}`)) {
           const val = _.get(input, `@_.${value}`);
-          return `${value}: ${val}`;
+          return `${value}: ${String(val)}`;
         }
         return '';
       }),
     ).join('\n');
     if (_.has(input, FILE_PATH_VALUE)) {
-      flawDesc += `\nfile_path: ${_.get(input, FILE_PATH_VALUE)}\n`;
+      flawDesc += `\nfile_path: ${String(_.get(input, FILE_PATH_VALUE))}\n`;
     }
   }
   return flawDesc;

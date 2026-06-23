@@ -33,9 +33,7 @@ export class SnykMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return createHeimdallPassthrough('snyk', {
-          snyk_metadata: _.omit(data, ['vulnerabilities']),
-        });
+        return createHeimdallPassthrough('snyk', { snyk_metadata: _.omit(data, ['vulnerabilities']) });
       },
     },
     platform: {
@@ -101,9 +99,9 @@ export class SnykMapper extends BaseConverter {
         title: {
           transformer: (data: Record<string, unknown>): string => {
             const projectName = _.has(data, 'projectName')
-              ? `Snyk Project: ${_.get(data, 'projectName')} `
+              ? `Snyk Project: ${String(_.get(data, 'projectName'))} `
               : '';
-            return `${projectName}Snyk Path: ${_.get(data, 'path')}`;
+            return `${projectName}Snyk Path: ${String(_.get(data, 'path'))}`;
           },
         },
       },
@@ -134,13 +132,12 @@ export class SnykResults {
         results.push(entry.toHdf());
       }
       return results;
-    } else {
-      const result = new SnykMapper(this.data);
-      if (this.customMapping !== undefined) {
-        result.setMappings(this.customMapping);
-      }
-      return result.toHdf();
     }
+    const result = new SnykMapper(this.data);
+    if (this.customMapping !== undefined) {
+      result.setMappings(this.customMapping);
+    }
+    return result.toHdf();
   }
 }
 

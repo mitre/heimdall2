@@ -22,7 +22,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 ]);
 
 export class GosecMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -40,7 +40,7 @@ export class GosecMapper extends BaseConverter {
               name: 'gosec',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -91,20 +91,20 @@ export class GosecMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(gosecJson: string, withRaw = false) {
+  constructor(gosecJson: string, shouldIncludeRaw = false) {
     super(JSON.parse(gosecJson));
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 
 // Report gosec rule violation and violation location
 function formatCodeDesc(input: Record<string, unknown>): string {
-  return `Rule ${_.get(input, 'rule_id')} violation detected at:\nFile: ${_.get(input, 'file')}\nLine: ${_.get(input, 'line')}\nColumn: ${_.get(input, 'column')}`;
+  return `Rule ${String(_.get(input, 'rule_id'))} violation detected at:\nFile: ${String(_.get(input, 'file'))}\nLine: ${String(_.get(input, 'line'))}\nColumn: ${String(_.get(input, 'column'))}`;
 }
 
 // Report confidence of violation and specific offending code
 function formatMessage(input: Record<string, unknown>): string {
-  return `${_.get(input, 'confidence')} confidence of rule violation at:\n${_.get(input, 'code')}`;
+  return `${String(_.get(input, 'confidence'))} confidence of rule violation at:\n${String(_.get(input, 'code'))}`;
 }
 
 // If a gosec rule violation is suppressed, forward the given justification
@@ -112,7 +112,7 @@ function formatSkipMessage(input: Record<string, unknown>): string | undefined {
   const suppressions = _.get(input, 'suppressions');
 
   // If test is not skipped
-  if (`${suppressions}` === 'null') {
+  if (String(suppressions) === 'null') {
     return undefined;
   }
 
@@ -131,13 +131,13 @@ function formatSkipMessage(input: Record<string, unknown>): string | undefined {
 
 // Check `nosec` and `suppressions` fields which denote whether the gosec rule violation should be suppressed/skipped
 function formatStatus(input: Record<string, unknown>): string {
-  return `${_.get(input, 'nosec')}` === 'false'
-    && `${_.get(input, 'suppressions')}` === 'null'
+  return String(_.get(input, 'nosec')) === 'false'
+    && String(_.get(input, 'suppressions')) === 'null'
     ? ExecJSON.ControlResultStatus.Failed
     : ExecJSON.ControlResultStatus.Skipped;
 }
 
 function nistTag(input: Record<string, unknown>): string[] {
-  const cwe = [`${_.get(input, 'id')}`];
+  const cwe = [String(_.get(input, 'id'))];
   return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
 }

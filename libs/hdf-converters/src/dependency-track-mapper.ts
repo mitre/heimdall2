@@ -33,7 +33,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 export class DependencyTrackMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -41,7 +41,7 @@ export class DependencyTrackMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return createHeimdallPassthrough('dependencyTrack', { ...(this.withRaw && { raw: data }) });
+        return createHeimdallPassthrough('dependencyTrack', { ...(this.shouldIncludeRaw && { raw: data }) });
       },
     },
     platform: {
@@ -148,9 +148,9 @@ export class DependencyTrackMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(dtJson: string, withRaw = false) {
+  constructor(dtJson: string, shouldIncludeRaw = false) {
     super(JSON.parse(dtJson));
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 
@@ -170,7 +170,7 @@ function getCweNames(cwes: ICweEntry[] | undefined) {
 
 function getTitle(finding: unknown) {
   const title = _.get(finding, 'vulnerability.title');
-  return `${_.get(finding, 'component.purl')}${title ? ` - ${title}` : ''}`;
+  return `${String(_.get(finding, 'component.purl'))}${title ? ` - ${String(title)}` : ''}`;
 }
 
 function getVersion(file: unknown): string {

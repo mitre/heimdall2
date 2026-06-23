@@ -31,7 +31,7 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 
 // Mappings
 export class JfrogXrayMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -46,7 +46,7 @@ export class JfrogXrayMapper extends BaseConverter {
               name: 'JFrog Xray',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -108,9 +108,9 @@ export class JfrogXrayMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(xrayJson: string, withRaw = false) {
+  constructor(xrayJson: string, shouldIncludeRaw = false) {
     super(JSON.parse(xrayJson), true);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 function formatCodeDesc(vulnerability: unknown): string {
@@ -118,7 +118,7 @@ function formatCodeDesc(vulnerability: unknown): string {
   const re = /,/gv;
   if (_.has(vulnerability, 'source_comp_id')) {
     codeDescArray.push(
-      `source_comp_id : ${_.get(vulnerability, 'source_comp_id')}`,
+      `source_comp_id : ${String(_.get(vulnerability, 'source_comp_id'))}`,
     );
   } else {
     codeDescArray.push('source_comp_id : ');
@@ -142,12 +142,12 @@ function formatCodeDesc(vulnerability: unknown): string {
     codeDescArray.push('fixed_versions : ');
   }
   if (_.has(vulnerability, 'issue_type')) {
-    codeDescArray.push(`issue_type : ${_.get(vulnerability, 'issue_type')}`);
+    codeDescArray.push(`issue_type : ${String(_.get(vulnerability, 'issue_type'))}`);
   } else {
     codeDescArray.push('issue_type : ');
   }
   if (_.has(vulnerability, 'provider')) {
-    codeDescArray.push(`provider : ${_.get(vulnerability, 'provider')}`);
+    codeDescArray.push(`provider : ${String(_.get(vulnerability, 'provider'))}`);
   } else {
     codeDescArray.push('provider : ');
   }

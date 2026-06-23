@@ -47,7 +47,7 @@ function nistTag(text: string): string[] {
 }
 
 export class SarifMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -71,7 +71,7 @@ export class SarifMapper extends BaseConverter {
               name: 'SARIF',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -157,8 +157,8 @@ export class SarifMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(sarifJson: string, withRaw = false) {
+  constructor(sarifJson: string, shouldIncludeRaw = false) {
     super(JSON.parse(sarifJson));
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }

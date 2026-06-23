@@ -30,7 +30,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 const SCOUTSUITE_NIST_MAPPING = new ScoutsuiteNistMapping();
 
 export class ScoutsuiteMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -49,7 +49,7 @@ export class ScoutsuiteMapper extends BaseConverter {
         auxData.last_run = _.pick(auxData.last_run, ['summary']);
         return createHeimdallPassthrough('scoutsuite', {
           auxiliary_data: auxData,
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -186,9 +186,10 @@ export class ScoutsuiteMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(scoutsuiteJson: string, withRaw = false) {
-    super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])));
-    this.withRaw = withRaw;
+  constructor(scoutsuiteJson: string, shouldIncludeRaw = false) {
+    const parsed = JSON.parse(scoutsuiteJson.split('\n', 2)[1]);
+    super(collapseServices(parsed));
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 function checkArray(input: string | unknown[]): string {

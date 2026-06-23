@@ -6,7 +6,7 @@ import { HeimdallToolsVersion } from './utils/global';
 import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 export class TrufflehogMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -14,7 +14,7 @@ export class TrufflehogMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, any>): Record<string, unknown> => {
-        return createHeimdallPassthrough('trufflehog', { ...(this.withRaw && { raw: data }) });
+        return createHeimdallPassthrough('trufflehog', { ...(this.shouldIncludeRaw && { raw: data }) });
       },
     },
     platform: {
@@ -28,7 +28,7 @@ export class TrufflehogMapper extends BaseConverter {
           {
             id: {
               transformer: (data: Record<string, unknown>): string =>
-                `${_.get(data, 'DetectorName')} ${_.get(data, 'DecoderName')}`,
+                `${String(_.get(data, 'DetectorName'))} ${String(_.get(data, 'DecoderName'))}`,
             },
             impact: 0.5,
             key: 'id',
@@ -38,11 +38,11 @@ export class TrufflehogMapper extends BaseConverter {
               {
                 code_desc: {
                   transformer: (data: Record<string, unknown>): string =>
-                    `${JSON.stringify(_.get(data, 'SourceMetadata'), null, 2)}`,
+                    JSON.stringify(_.get(data, 'SourceMetadata'), null, 2),
                 },
                 message: {
                   transformer: (data: Record<string, unknown>): string =>
-                    `${JSON.stringify(
+                    JSON.stringify(
                       _.omitBy(
                         _.pick(data, [
                           'Verified',
@@ -57,7 +57,7 @@ export class TrufflehogMapper extends BaseConverter {
                       ),
                       null,
                       2,
-                    )}`,
+                    ),
                 },
                 start_time: '',
                 status: ExecJSON.ControlResultStatus.Failed,
@@ -71,7 +71,7 @@ export class TrufflehogMapper extends BaseConverter {
             },
             title: {
               transformer: (data: Record<string, unknown>): string =>
-                `Found ${_.get(data, 'DetectorName')} secret using ${_.get(data, 'DecoderName')} decoder`,
+                `Found ${String(_.get(data, 'DetectorName'))} secret using ${String(_.get(data, 'DecoderName'))} decoder`,
             },
           },
         ],
@@ -87,16 +87,16 @@ export class TrufflehogMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(trufflehogJson: Record<string, unknown>, withRaw = false) {
+  constructor(trufflehogJson: Record<string, unknown>, shouldIncludeRaw = false) {
     super(trufflehogJson, true);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 
 export class TrufflehogResults {
   data: Record<string, unknown>;
-  withRaw: boolean;
-  constructor(trufflehogJson: string, withRaw = false) {
+  shouldIncludeRaw: boolean;
+  constructor(trufflehogJson: string, shouldIncludeRaw = false) {
     let parsedData;
     try {
       parsedData = JSON.parse(trufflehogJson.trim());
@@ -106,11 +106,11 @@ export class TrufflehogResults {
         .split('\n')
         .map(line => JSON.parse(line.trim()));
     }
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
     this.data = _.isArray(parsedData) ? { wrapper: parsedData } : { wrapper: [parsedData] };
   }
 
   toHdf(): ExecJSON.Execution {
-    return new TrufflehogMapper(this.data, this.withRaw).toHdf();
+    return new TrufflehogMapper(this.data, this.shouldIncludeRaw).toHdf();
   }
 }

@@ -9,7 +9,7 @@ import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 const NIKTO_NIST_MAPPING = new NiktoNistMapping();
 
 export class NiktoMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -24,7 +24,7 @@ export class NiktoMapper extends BaseConverter {
               name: 'Nikto',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -81,9 +81,9 @@ export class NiktoMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(niktoJson: string, withRaw = false) {
+  constructor(niktoJson: string, shouldIncludeRaw = false) {
     super(JSON.parse(niktoJson));
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 function formatCodeDesc(vulnerability: unknown): string {

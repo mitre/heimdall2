@@ -26,7 +26,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 ]);
 
 export class TwistlockMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -56,7 +56,7 @@ export class TwistlockMapper extends BaseConverter {
               name: 'Twistlock',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -89,10 +89,10 @@ export class TwistlockMapper extends BaseConverter {
                 code_desc: {
                   transformer: (data: Record<string, unknown>): string => {
                     const packageName = _.has(data, 'packageName')
-                      ? `${JSON.stringify(_.get(data, 'packageName'))}`
+                      ? JSON.stringify(_.get(data, 'packageName'))
                       : 'N/A';
                     const impactedVersions = _.has(data, 'impactedVersions')
-                      ? `${JSON.stringify(_.get(data, 'impactedVersions'))}`
+                      ? JSON.stringify(_.get(data, 'impactedVersions'))
                       : 'N/A';
                     return `Package ${packageName} should be updated to latest version above impacted versions ${impactedVersions}`;
                   },
@@ -100,10 +100,10 @@ export class TwistlockMapper extends BaseConverter {
                 message: {
                   transformer: (data: Record<string, unknown>): string => {
                     const packageName = _.has(data, 'packageName')
-                      ? `${JSON.stringify(_.get(data, 'packageName'))}`
+                      ? JSON.stringify(_.get(data, 'packageName'))
                       : 'N/A';
                     const packageVersion = _.has(data, 'packageVersion')
-                      ? `${JSON.stringify(_.get(data, 'packageVersion'))}`
+                      ? JSON.stringify(_.get(data, 'packageVersion'))
                       : 'N/A';
                     return `Expected latest version of ${packageName}\nDetected vulnerable version ${packageVersion} of ${packageName}`;
                   },
@@ -126,28 +126,26 @@ export class TwistlockMapper extends BaseConverter {
         summary: {
           transformer: (data: Record<string, unknown>): string => {
             const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
-              ? `${JSON.stringify(
+              ? JSON.stringify(
                 _.get(data, 'vulnerabilityDistribution.total'),
-              )}`
+              )
               : 'N/A';
             const complianceTotal = _.has(data, 'complianceDistribution')
-              ? `${JSON.stringify(_.get(data, 'complianceDistribution.total'))}`
+              ? JSON.stringify(_.get(data, 'complianceDistribution.total'))
               : 'N/A';
             return `Package Vulnerability Summary: ${vulnerabilityTotal} Application Compliance Issue Total: ${complianceTotal}`;
           },
         },
         title: {
           transformer: (data: Record<string, unknown>): string => {
-            let projectArr: unknown = 'N/A';
-            if (_.has(data, 'collections')) {
-              projectArr = _.get(data, 'collections');
-            }
-            if (_.has(data, 'repository')) {
-              projectArr = _.get(data, 'repository');
-            }
+            const projectArr = _.has(data, 'repository')
+              ? _.get(data, 'repository')
+              : (_.has(data, 'collections')
+                ? _.get(data, 'collections')
+                : 'N/A');
             const projectName = Array.isArray(projectArr)
               ? projectArr.join(' / ')
-              : projectArr;
+              : String(projectArr);
             return `Twistlock Project: ${projectName}`;
           },
         },
@@ -157,18 +155,18 @@ export class TwistlockMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(twistlockJson: Record<string, unknown>, withRaw = false) {
+  constructor(twistlockJson: Record<string, unknown>, shouldIncludeRaw = false) {
     super(twistlockJson, true);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 
 export class TwistlockResults {
   data: Record<string, unknown>;
-  withRaw: boolean;
-  constructor(twistlockJson: string, withRaw = false) {
+  shouldIncludeRaw: boolean;
+  constructor(twistlockJson: string, shouldIncludeRaw = false) {
     this.data = JSON.parse(twistlockJson);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
 
     // Add a wrapper to the data for the repository scan case which doesn't include the `results` key
     if (!_.has(this.data, 'results')) {
@@ -177,6 +175,6 @@ export class TwistlockResults {
   }
 
   toHdf(): ExecJSON.Execution {
-    return new TwistlockMapper(this.data, this.withRaw).toHdf();
+    return new TwistlockMapper(this.data, this.shouldIncludeRaw).toHdf();
   }
 }
