@@ -16,6 +16,7 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
@@ -62,7 +63,7 @@ export class XCCDFResultsMapper extends BaseConverter {
           ]);
         }
         auxData = { Benchmark: auxData };
-        return {
+        return createHeimdallPassthrough('xccdf', {
           auxiliary_data: [
             {
               data: auxData,
@@ -70,7 +71,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {
@@ -442,11 +443,8 @@ export class XCCDFResultsResults {
 function asArray<T>(arg: T | T[]): T[] {
   if (Array.isArray(arg)) {
     return arg;
-  } else if (arg === undefined || arg === null) {
-    return [];
-  } else {
-    return [arg];
   }
+  return arg === undefined || arg === null ? [] : [arg];
 }
 
 function extractCci(input: IIdent | IIdent[]): string[] {

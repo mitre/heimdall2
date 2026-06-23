@@ -13,6 +13,7 @@ import {
 import { CciNistMapping } from './mappings/CciNistMapping';
 import { NessusPluginsNistMapping } from './mappings/NessusPluginsNistMapping';
 import { HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 // Constants
 const IMPACT_MAPPING = new Map<string, number>([
@@ -50,7 +51,7 @@ export class NessusMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {
+        return createHeimdallPassthrough('nessus', {
           auxiliary_data: [
             {
               data: _.omit(data, ['name', 'ReportItem']),
@@ -58,7 +59,7 @@ export class NessusMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {
@@ -337,7 +338,7 @@ function getVersion(): string {
 }
 function parseRef(input: string, key: string): string[] {
   const matches = input.split(',').filter(element => element.startsWith(key));
-  return matches.map(element => element.split('|')[1]);
+  return matches.map(element => element.split('|', 2)[1]);
 }
 
 function pluginNistTag(item: unknown): string[] {

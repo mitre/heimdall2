@@ -12,6 +12,7 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 export type CombinedResponse = {
   profiles: ProfileResponse;
@@ -41,7 +42,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (): Record<string, unknown> => {
-        return {
+        return createHeimdallPassthrough('msft_secure_score', {
           auxiliary_data: [
             {
               data: {
@@ -63,7 +64,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: this.rawData }),
-        };
+        });
       },
     },
     platform: {
@@ -164,13 +165,11 @@ export class MsftSecureScoreMapper extends BaseConverter {
                     if (knownMaxScores.length === 0) {
                       // no Profile found matching the controlName
                       return ExecJSON.ControlResultStatus.Failed;
-                    } else if (data.score === undefined) {
-                      return ExecJSON.ControlResultStatus.Error;
-                    } else if (data.score === highMaxScore) {
-                      return ExecJSON.ControlResultStatus.Passed;
-                    } else {
-                      return ExecJSON.ControlResultStatus.Failed;
                     }
+                    if (data.score === undefined) {
+                      return ExecJSON.ControlResultStatus.Error;
+                    }
+                    return data.score === highMaxScore ? ExecJSON.ControlResultStatus.Passed : ExecJSON.ControlResultStatus.Failed;
                   },
                 },
               },

@@ -14,6 +14,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
@@ -28,7 +29,7 @@ export class ZapMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {
+        return createHeimdallPassthrough('zap', {
           auxiliary_data: [
             {
               data: _.pick(data, ['site.@port', 'site.@ssl']),
@@ -36,7 +37,7 @@ export class ZapMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {
@@ -217,16 +218,13 @@ function impactMapping(input: unknown): number {
     const impact = Number.parseInt(input);
     if (0 <= impact && impact <= 1) {
       return 0.3;
-    } else if (impact === 2) {
-      return 0.5;
-    } else if (impact >= 3) {
-      return 0.7;
-    } else {
-      return 0;
     }
-  } else {
-    return 0;
+    if (impact === 2) {
+      return 0.5;
+    }
+    return impact >= 3 ? 0.7 : 0;
   }
+  return 0;
 }
 
 function nistTag(cweid: string): string[] {

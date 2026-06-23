@@ -15,6 +15,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['high', 0.7],
@@ -32,7 +33,7 @@ export class DBProtectMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return { ...(this.withRaw && { raw: data }) };
+        return createHeimdallPassthrough('dbProtect', { ...(this.withRaw && { raw: data }) });
       },
     },
     platform: {

@@ -11,6 +11,7 @@ import {
 } from './base-converter';
 import { ScoutsuiteNistMapping } from './mappings/ScoutsuiteNistMapping';
 import { getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const INSPEC_INPUTS_MAPPING = {
   any: 'Any',
@@ -46,10 +47,10 @@ export class ScoutsuiteMapper extends BaseConverter {
           'services',
         ]);
         auxData.last_run = _.pick(auxData.last_run, ['summary']);
-        return {
+        return createHeimdallPassthrough('scoutsuite', {
           auxiliary_data: auxData,
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {
@@ -205,12 +206,7 @@ function collapseServices(
   const services = Object.values(
     _.get(file, 'services') as Record<string, unknown>,
   );
-  const findings: Record<string, unknown>[] = [];
-  for (const element of services) {
-    findings.push(
-      _.get(element, 'findings') as unknown as Record<string, unknown>,
-    );
-  }
+  const findings: Record<string, unknown>[] = Array.from(services, element => (_.get(element, 'findings') as unknown as Record<string, unknown>));
   const entries: [string, unknown][] = [];
   for (const element of Object.values(findings)) {
     for (const subElement of Object.entries(element)) {
@@ -248,19 +244,18 @@ function formatTitle(file: unknown): string {
 function getMessage(input: unknown): string {
   if (_.get(input, 'checked_items') === 0) {
     return '';
-  } else if (_.get(input, 'flagged_items') === 0) {
-    return `0 flagged items out of ${_.get(
+  }
+  return _.get(input, 'flagged_items') === 0
+    ? `0 flagged items out of ${_.get(
       input,
       'checked_items',
-    )} checked items`;
-  } else {
-    return `${_.get(input, 'flagged_items')} flagged items out of ${_.get(
+    )} checked items`
+    : `${_.get(input, 'flagged_items')} flagged items out of ${_.get(
       input,
       'checked_items',
     )} checked items:\n${(_.get(input, 'items') as unknown as string[]).join(
       '\n',
     )}`;
-  }
 }
 function getRulesetName(file: unknown) {
   return _.get(file, 'last_run.ruleset_name');
@@ -269,11 +264,8 @@ function getRulesetName(file: unknown) {
 function getStatus(input: unknown): ExecJSON.ControlResultStatus {
   if (_.get(input, 'checked_items') === 0) {
     return ExecJSON.ControlResultStatus.Skipped;
-  } else if (_.get(input, 'flagged_items') === 0) {
-    return ExecJSON.ControlResultStatus.Passed;
-  } else {
-    return ExecJSON.ControlResultStatus.Failed;
   }
+  return _.get(input, 'flagged_items') === 0 ? ExecJSON.ControlResultStatus.Passed : ExecJSON.ControlResultStatus.Failed;
 }
 function nistTag(rule: string): string[] {
   return SCOUTSUITE_NIST_MAPPING.nistTag(rule);

@@ -11,6 +11,7 @@ import {
 } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
 import { getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 const STATIC_FLAWS = 'staticflaws.flaw';
 const SEVERITY = 'detailedreport.severity';
 const FILE_PATH_VALUE = 'file_paths.file_path.@_.value';
@@ -41,11 +42,8 @@ export class VeracodeMapper extends BaseConverter {
       (control: { category: unknown; level: string }) => {
         if (Array.isArray(control.category)) {
           return { category: control.category, level: control.level };
-        } else if (control.category) {
-          return { category: [control.category], level: control.level };
-        } else {
-          return { level: control.level };
         }
+        return control.category ? { category: [control.category], level: control.level } : { level: control.level };
       },
     );
     _.set(parsedXML, SEVERITY, arrayedControls);
@@ -84,6 +82,7 @@ export class VeracodeMapper extends BaseConverter {
               : '';
           },
         },
+        heimdall: { transformer: () => ({ sourceFormat: 'veracode', toolVersion: HeimdallToolsVersion }) },
         ...(withRaw && { raw: this.originalData }),
       },
       platform: {
@@ -208,12 +207,12 @@ function componentTransform(input: unknown): Record<string, unknown>[] {
   for (const cur of vulns) {
     const cveId = _.get(cur, '@_.cve_id');
     const existing = grouped.find(vuln => cveId === _.get(vuln, '@_.cve_id'));
-    if (!existing) {
-      grouped.push(cur);
-    } else {
+    if (existing) {
       (_.get(existing, 'components') as Record<string, unknown>[]).push(
         ...(_.get(cur, 'components') as Record<string, unknown>[]),
       );
+    } else {
+      grouped.push(cur);
     }
   }
   return grouped;
@@ -337,9 +336,8 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
         if (_.has(input, `@_.${name}`)) {
           const nameVal = _.get(input, `@_.${name}`);
           return `${title}: ${nameVal}\n`;
-        } else {
-          return '';
         }
+        return '';
       })
       .join('');
   }
@@ -371,9 +369,8 @@ function formatCweData(input: Record<string, unknown>): string {
             if (_.has(cweinfo, `@_.${value}`)) {
               const val = _.get(cweinfo, `@_.${value}`);
               return `${value}: ${val}\n`;
-            } else {
-              return '';
             }
+            return '';
           })
           .join('');
         return cwe;
@@ -470,9 +467,8 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
         if (_.has(input, `@_.${value}`)) {
           const val = _.get(input, `@_.${value}`);
           return `${value}: ${val}`;
-        } else {
-          return '';
         }
+        return '';
       }),
     ).join('\n');
     if (_.has(input, FILE_PATH_VALUE)) {

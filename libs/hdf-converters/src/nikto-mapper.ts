@@ -4,6 +4,7 @@ import type { ILookupPath, MappedTransform } from './base-converter';
 import { BaseConverter, DEFAULT_PROFILE_FIELDS } from './base-converter';
 import { NiktoNistMapping } from './mappings/NiktoNistMapping';
 import { getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const NIKTO_NIST_MAPPING = new NiktoNistMapping();
 
@@ -16,7 +17,7 @@ export class NiktoMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {
+        return createHeimdallPassthrough('nikto', {
           auxiliary_data: [
             {
               data: _.omit(data, ['banner', 'host', 'port', 'vulnerabilities']),
@@ -24,7 +25,7 @@ export class NiktoMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {

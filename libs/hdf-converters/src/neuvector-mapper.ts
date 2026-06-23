@@ -11,6 +11,7 @@ import type { ILookupPath, MappedTransform } from './base-converter';
 import { BaseConverter } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
 import { DEFAULT_UPDATE_REMEDIATION_NIST_TAGS, HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
@@ -27,7 +28,7 @@ export class NeuVectorMapper extends BaseConverter {
       transformer: (
         data: NeuVectorScanJson,
       ): Record<string, unknown> & { raw?: NeuVectorScanJson } => {
-        return {
+        return createHeimdallPassthrough('neuvector', {
           auxiliary_data: [
             {
               data: _.omit([
@@ -44,7 +45,7 @@ export class NeuVectorMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {

@@ -21,6 +21,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const logger = createWinstonLogger('SonarQube2HDF');
 
@@ -371,7 +372,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
   > = {
     passthrough: {
       transformer: (data: Data<T>): Record<string, unknown> => {
-        return {
+        return createHeimdallPassthrough('sonarqube', {
           auxiliary_data: [
             {
               data: { ..._.omit(data, 'search.issues') },
@@ -379,7 +380,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
             },
           ],
           ...conditionallyProvideAttribute('raw', data, this.withRaw),
-        };
+        });
       },
     },
     platform: {
@@ -903,9 +904,9 @@ export class SonarqubeResults {
 
       // Smart nag: compare user list against defaults
       const defaultSet = new Set(defaultDenyList);
-      const sameAsDefault = defaultSet.symmetricDifference(denySet).size === 0;
+      const isSameAsDefault = defaultSet.symmetricDifference(denySet).size === 0;
 
-      if (sameAsDefault) {
+      if (isSameAsDefault) {
         logger.info(
           `Exclusion list matches the defaults (${[...defaultSet].join(',')}). `
           + 'You can omit --excludeIssueStatuses unless you want to be explicit.',
@@ -1025,16 +1026,15 @@ export class SonarqubeResults {
             ),
           )
           .join('\n');
-      } else if (issue.textRange) {
-        return getContextualizedSnippet(
+      }
+      return issue.textRange
+        ? getContextualizedSnippet(
           fullFiles,
           issue.component,
           issue.textRange.startLine,
           issue.textRange.endLine,
-        );
-      } else {
-        return '';
-      }
+        )
+        : '';
     });
     return snippets;
   }
@@ -1139,7 +1139,7 @@ export class SonarqubeResults {
 
     // intentionally doing the await in a loop so as to slow down requests a tad bit in order to avoid any rate limit issues
     const collectPagedSearch = async (component: string, sizeCheck = false) => {
-      let paging = true;
+      let isPaging = true;
       let page = 1;
       const results: Search<T> = {
         components: [],
@@ -1148,7 +1148,7 @@ export class SonarqubeResults {
         issues: [],
         paging: { pageIndex: 0, pageSize: 0, total: 0 },
       };
-      while (sizeCheck ? page === 1 : paging) {
+      while (sizeCheck ? page === 1 : isPaging) {
         console.log(results);
         await createSearch(component, page)
           .then(({ data }) => {
@@ -1156,10 +1156,10 @@ export class SonarqubeResults {
               _.isArray(objValue) ? [...objValue, srcValue] : undefined,
             );
             // only need to check if it exceeds the upper limit, if it's less than the upper limit and we request a page that goes past the page total then it just returns fewer results without throwing an error
-            paging
+            isPaging
               = data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
             page += 1;
-            return undefined;
+            return;
           })
           .catch((error) => {
             this.logAxiosError(error);
@@ -1169,7 +1169,7 @@ export class SonarqubeResults {
           logger.warn(
             `Exceeded SonarQube cap of ${UPPER_LIMIT} results for findings of or under the ${component} component.  Remaining findings may be truncated.`,
           );
-          paging = false;
+          isPaging = false;
         }
       }
       results.components = _.uniqBy(results.components, 'key'); // sometimes components will be duplicated if an issue on one page applies to the same component as an issue on another page.  additionally at minimum the top level project will show up in every search result
@@ -1177,7 +1177,7 @@ export class SonarqubeResults {
     };
 
     const collectPagedComponentSearch = async (component: string) => {
-      let paging = true;
+      let isPaging = true;
       let page = 1;
       const results: ComponentSearch = {
         baseComponent: {
@@ -1190,16 +1190,16 @@ export class SonarqubeResults {
         components: [],
         paging: { pageIndex: 0, pageSize: 0, total: 0 },
       };
-      while (paging) {
+      while (isPaging) {
         await createComponentSearch(component, page)
           .then(({ data }) => {
             _.mergeWith(results, data, (objValue, srcValue) =>
               _.isArray(objValue) ? [...objValue, srcValue] : undefined,
             );
-            paging
+            isPaging
               = data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
             page += 1;
-            return undefined;
+            return;
           })
           .catch((error) => {
             this.logAxiosError(error);
@@ -1209,7 +1209,7 @@ export class SonarqubeResults {
           logger.warn(
             `Exceeded SonarQube cap of ${UPPER_LIMIT} results for the search for children of the ${component} component.  Remaining set of components may be truncated.`,
           );
-          paging = false;
+          isPaging = false;
         }
       }
       return results;
@@ -1282,18 +1282,20 @@ export class SonarqubeResults {
 
     if (isSonarqubeVersionEight(sonarqubeVersion)) {
       return this.generateHdf<SonarqubeVersion.Eight>(sonarqubeVersion);
-    } else if (isSonarqubeVersionNine(sonarqubeVersion)) {
+    }
+    if (isSonarqubeVersionNine(sonarqubeVersion)) {
       return this.generateHdf<SonarqubeVersion.Nine>(sonarqubeVersion);
-    } else if (isSonarqubeVersionTen(sonarqubeVersion)) {
+    }
+    if (isSonarqubeVersionTen(sonarqubeVersion)) {
       return this.generateHdf<SonarqubeVersion.Ten>(sonarqubeVersion);
-    } else if (isSonarqubeVersionTwenty_five(sonarqubeVersion)) {
-      return this.generateHdf<SonarqubeVersion.Twenty_five>(sonarqubeVersion);
-    } else {
-      logger.debug(
-        `Sonarqube version ${sonarqubeVersion} is not formally supported.  Please create an issue at https://github.com/mitre/heimdall2/issues if something is broken.`,
-      );
+    }
+    if (isSonarqubeVersionTwenty_five(sonarqubeVersion)) {
       return this.generateHdf<SonarqubeVersion.Twenty_five>(sonarqubeVersion);
     }
+    logger.debug(
+      `Sonarqube version ${sonarqubeVersion} is not formally supported.  Please create an issue at https://github.com/mitre/heimdall2/issues if something is broken.`,
+    );
+    return this.generateHdf<SonarqubeVersion.Twenty_five>(sonarqubeVersion);
   }
 }
 
@@ -1321,7 +1323,7 @@ function parseNistTags<T extends SonarqubeVersion>(
 ): string[] | undefined {
   const uniqueNist = _.uniq(
     [...(parseCweTags<T>(issue) ?? [])
-      .flatMap(t => CWE_NIST_MAPPING.nistFilter(t.split('-')[1])), ...(parseOwaspInSysTags<T>(issue) ?? []).flatMap(t =>
+      .flatMap(t => CWE_NIST_MAPPING.nistFilter(t.split('-', 2)[1])), ...(parseOwaspInSysTags<T>(issue) ?? []).flatMap(t =>
       OWASP_NIST_MAPPING.nistFilterNoDefault(t),
     )],
   );

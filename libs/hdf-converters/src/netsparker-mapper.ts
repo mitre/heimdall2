@@ -17,6 +17,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['best_practice', 0],
@@ -66,7 +67,7 @@ export class NetsparkerMapper extends BaseConverter {
             'url',
             'initiated',
           ]);
-          return {
+          return createHeimdallPassthrough('netsparker', {
             auxiliary_data: [
               {
                 data: {
@@ -79,7 +80,7 @@ export class NetsparkerMapper extends BaseConverter {
               },
             ],
             ...(this.withRaw && { raw: data }),
-          };
+          });
         },
       },
       platform: {

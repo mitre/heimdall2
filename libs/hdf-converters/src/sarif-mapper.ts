@@ -8,6 +8,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['error', 0.7],
@@ -38,7 +39,7 @@ function formatCodeDesc(input: unknown): string {
 }
 function nistTag(text: string): string[] {
   let identifiers = extractCwe(text);
-  identifiers = identifiers.map(element => element.split('-')[1]);
+  identifiers = identifiers.map(element => element.split('-', 2)[1]);
   return CWE_NIST_MAPPING.nistFilter(
     identifiers,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
@@ -60,7 +61,7 @@ export class SarifMapper extends BaseConverter {
             _.omit(run, ['results']),
           );
         }
-        return {
+        return createHeimdallPassthrough('sarif', {
           auxiliary_data: [
             {
               data: {
@@ -71,7 +72,7 @@ export class SarifMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {
@@ -91,7 +92,7 @@ export class SarifMapper extends BaseConverter {
             desc: {
               path: MESSAGE_TEXT,
               transformer: (text: unknown): string => {
-                return typeof text === 'string' ? text.split(': ')[1] : '';
+                return typeof text === 'string' ? text.split(': ', 2)[1] : '';
               },
             },
             id: { path: 'ruleId' },
@@ -141,7 +142,7 @@ export class SarifMapper extends BaseConverter {
             title: {
               path: MESSAGE_TEXT,
               transformer: (text: unknown): string => {
-                return typeof text === 'string' ? text.split(': ')[0] : '';
+                return typeof text === 'string' ? text.split(': ', 1)[0] : '';
               },
             },
           },

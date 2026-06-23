@@ -16,6 +16,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 export class IonChannelAPIMapper {
   analysisId?: string;
@@ -131,7 +132,10 @@ export class IonChannelMapper extends BaseConverter {
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
   > = {
-    passthrough: { ionchannel_metadata: { path: 'metadata' } },
+    passthrough: {
+      heimdall: { transformer: () => ({ sourceFormat: 'ionchannel', toolVersion: HeimdallToolsVersion }) },
+      ionchannel_metadata: { path: 'metadata' },
+    },
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -314,7 +318,7 @@ function preprocessIonChannelData(ionchannelData: string) {
   }
 
   // Associate dependencies with each-other
-  for (const [, dependency] of Object.entries(dependencyGraph)) {
+  for (const dependency of Object.values(dependencyGraph)) {
     if (Array.isArray(dependency.dependencies)) {
       for (const subDependency of dependency.dependencies) {
         dependencyGraph[
@@ -324,7 +328,7 @@ function preprocessIonChannelData(ionchannelData: string) {
     }
   }
 
-  for (const [, dependency] of Object.entries(dependencyGraph)) {
+  for (const dependency of Object.values(dependencyGraph)) {
     result.scans.dependency.contextualizedDependencies.push(dependency);
   }
 

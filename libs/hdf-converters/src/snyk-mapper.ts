@@ -15,6 +15,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['high', 0.7],
@@ -31,6 +32,7 @@ export class SnykMapper extends BaseConverter {
     ILookupPath
   > = {
     passthrough: {
+      heimdall: { transformer: () => ({ sourceFormat: 'snyk', toolVersion: HeimdallToolsVersion }) },
       snyk_metadata: {
         transformer: (
           data: Record<string, unknown>,
@@ -161,7 +163,6 @@ function parseIdentifier(identifiers: unknown | unknown[]): string[] {
       output.push(numbers.join('-'));
     }
     return output;
-  } else {
-    return [];
   }
+  return [];
 }

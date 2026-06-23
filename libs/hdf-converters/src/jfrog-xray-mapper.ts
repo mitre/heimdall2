@@ -16,6 +16,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 // Constants
 const IMPACT_MAPPING = new Map<string, number>([
@@ -38,7 +39,7 @@ export class JfrogXrayMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {
+        return createHeimdallPassthrough('jfrog', {
           auxiliary_data: [
             {
               data: _.pick(data, ['total_count']),
@@ -46,7 +47,7 @@ export class JfrogXrayMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {
@@ -184,8 +185,8 @@ function nistTag(identifier: Record<string, unknown>): string[] {
   const identifiers: string[] = [];
   if (Array.isArray(identifier)) {
     for (const element of identifier) {
-      if (element.split('CWE-')[1]) {
-        identifiers.push(element.split('CWE-')[1]);
+      if (element.split('CWE-', 2)[1]) {
+        identifiers.push(element.split('CWE-', 2)[1]);
       }
     }
   }

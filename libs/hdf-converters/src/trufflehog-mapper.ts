@@ -3,6 +3,7 @@ import _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
 import { BaseConverter, DEFAULT_PROFILE_FIELDS } from './base-converter';
 import { HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 export class TrufflehogMapper extends BaseConverter {
   withRaw: boolean;
@@ -13,7 +14,7 @@ export class TrufflehogMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, any>): Record<string, unknown> => {
-        return { ...(this.withRaw && { raw: data }) };
+        return createHeimdallPassthrough('trufflehog', { ...(this.withRaw && { raw: data }) });
       },
     },
     platform: {

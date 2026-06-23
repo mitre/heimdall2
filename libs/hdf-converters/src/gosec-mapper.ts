@@ -11,6 +11,7 @@ import {
 } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
 import { HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
@@ -29,7 +30,7 @@ export class GosecMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {
+        return createHeimdallPassthrough('gosec', {
           auxiliary_data: [
             {
               data: {
@@ -40,7 +41,7 @@ export class GosecMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {

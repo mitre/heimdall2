@@ -10,6 +10,7 @@ import {
   parseXml,
 } from './base-converter';
 import { getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const NIST_REFERENCE_NAME
   = 'Standards Mapping - NIST Special Publication 800-53 Revision 4';
@@ -35,7 +36,7 @@ export class FortifyMapper extends BaseConverter {
             'Snippets',
           ]);
         }
-        return {
+        return createHeimdallPassthrough('fortify', {
           auxiliary_data: [
             {
               data: { FVDL: auxData },
@@ -43,7 +44,7 @@ export class FortifyMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {
@@ -185,7 +186,6 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
         ),
       );
     }
-    continue;
   }
   return input as ExecJSON.Control[];
 }
@@ -195,9 +195,8 @@ function impactMapping(input: Record<string, unknown>, id: string): number {
       return _.get(element, 'ClassInfo.ClassID') === id;
     });
     return Number.parseFloat(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5;
-  } else {
-    return Number.parseFloat(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
   }
+  return Number.parseFloat(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
 }
 function makeArray(input: unknown): unknown[] {
   return Array.isArray(input) ? (input as unknown[]) : [input];

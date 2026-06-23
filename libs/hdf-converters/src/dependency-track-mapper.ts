@@ -15,6 +15,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 type ICweEntry = {
   cweId: number;
@@ -40,7 +41,7 @@ export class DependencyTrackMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return { ...(this.withRaw && { raw: data }) };
+        return createHeimdallPassthrough('dependencyTrack', { ...(this.withRaw && { raw: data }) });
       },
     },
     platform: {

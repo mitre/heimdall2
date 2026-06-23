@@ -9,6 +9,7 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 type CheckovCheck = {
   // Catch-all for remaining optional fields
@@ -107,7 +108,7 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
       transformer: (
         data: CheckovReport,
       ): Record<string, unknown> => {
-        return {
+        return createHeimdallPassthrough('checkov', {
           auxiliary_data: [
             {
               data: {
@@ -118,7 +119,7 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
             },
           ],
           ...conditionallyProvideAttribute('raw', data, this.shouldIncludeRaw),
-        };
+        });
       },
     },
     platform: {

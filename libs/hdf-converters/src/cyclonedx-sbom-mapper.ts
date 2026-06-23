@@ -22,6 +22,7 @@ import type { ILookupPath, MappedTransform } from './base-converter';
 import { BaseConverter } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
 import { filterString, getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const cvssMethods = ['CVSSv2', 'CVSSv3', 'CVSSv31', 'CVSSv4'] as const;
 type CVSSMethodEnum = Extract<MethodEnum, (typeof cvssMethods)[number]>;
@@ -75,7 +76,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
         const components = input.components.filter(
           component => !component.isDummy,
         );
-        return {
+        return createHeimdallPassthrough('cyclonedx_sbom', {
           auxiliary_data: [
             {
               components: components.length > 0 ? components : undefined,
@@ -89,7 +90,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             },
           ],
           ...(this.withRaw && { raw: input.raw }),
-        };
+        });
       },
     },
     platform: {
@@ -399,12 +400,12 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               return (input.authors as Record<string, unknown>[])
                 .map(author => `${author.name}${manufacturer}`)
                 .join(', ');
-            } else if (input.author) {
+            }
+            if (input.author) {
               // `author` is deprecated in v1.6 but may still appear
               return `${input.author}${manufacturer}`;
-            } else {
-              return undefined;
             }
+            return undefined;
           },
         },
         name: {
@@ -427,9 +428,8 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             if (input.name) {
               const group = input.group ? `${input.group}/` : '';
               return `${group}${input.name} CycloneDX BOM Report`;
-            } else {
-              return 'CycloneDX BOM Report';
             }
+            return 'CycloneDX BOM Report';
           },
         },
         version: {

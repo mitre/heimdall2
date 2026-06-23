@@ -17,6 +17,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 // Constant
 const IMPACT_MAPPING = new Map<string, number>([
@@ -39,7 +40,7 @@ export class BurpSuiteMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return { ...(this.shouldIncludeRaw && { raw: data }) };
+        return createHeimdallPassthrough('burp', { ...(this.shouldIncludeRaw && { raw: data }) });
       },
     },
     platform: {

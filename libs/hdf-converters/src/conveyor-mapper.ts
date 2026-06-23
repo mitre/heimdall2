@@ -7,6 +7,7 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 const CONVEYOR_MAX_SCORE = 1000;
 enum scannerType {
   ClamAV = 'Clamav',
@@ -23,7 +24,11 @@ export class ConveyorMapper extends BaseConverter {
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
   > = {
-    passthrough: { path: 'api_response' },
+    passthrough: {
+      path: 'api_response',
+      transformer: (data: Record<string, unknown>): Record<string, unknown> =>
+        createHeimdallPassthrough('conveyor', { api_response: data }),
+    },
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -185,15 +190,14 @@ function createDescription(
         String.raw`\"`,
         '',
       );
-    } else if (scannerName === scannerType.CodeQuality) {
-      return `body:${_.get(data, 'body')}
+    }
+    return scannerName === scannerType.CodeQuality
+      ? `body:${_.get(data, 'body')}
       body_format:${_.get(data, 'body_format') as string}
       classificaton:${_.get(data, 'classification') as string}
       depth:${_.get(data, 'depth') as string}
-      title_text:${_.get(data, 'title_text') as string}`.replace(String.raw`\"`, '');
-    } else {
-      return JSON.stringify(data).replace(String.raw`\"`, '');
-    }
+      title_text:${_.get(data, 'title_text') as string}`.replace(String.raw`\"`, '')
+      : JSON.stringify(data).replace(String.raw`\"`, '');
   };
   return {
     code_desc: desc(),

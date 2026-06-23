@@ -10,6 +10,7 @@ import {
   impactMapping,
 } from './base-converter';
 import { HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
@@ -160,10 +161,10 @@ export class AnchoreGrypeMapper extends BaseConverter {
     return {
       passthrough: {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
-          return {
-            auxiliary_data: [{ data: _.omit([]), name: '' }], // Insert service name and mapped fields to be removed
+          return createHeimdallPassthrough('grype', {
+            auxiliary_data: [{ data: _.omit([]), name: '' }],
             ...(this.shouldIncludeRaw && { raw: data }),
-          };
+          });
         },
       },
       platform: {

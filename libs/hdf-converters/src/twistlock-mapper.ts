@@ -14,6 +14,7 @@ import {
   getCCIsForNISTTags,
   HeimdallToolsVersion,
 } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
@@ -45,7 +46,7 @@ export class TwistlockMapper extends BaseConverter {
             ]),
           );
         }
-        return {
+        return createHeimdallPassthrough('twistlock', {
           auxiliary_data: [
             {
               data: {
@@ -56,7 +57,7 @@ export class TwistlockMapper extends BaseConverter {
             },
           ],
           ...(this.withRaw && { raw: data }),
-        };
+        });
       },
     },
     platform: {
