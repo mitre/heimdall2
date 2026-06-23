@@ -14,7 +14,8 @@
   ],
   "main": "src/index.ts",
   "scripts": {
-    "prebuild": "tailwindcss -i data/reverse-html-mapper/tailwind.css -o data/reverse-html-mapper/style.css --minify && node data/reverse-html-mapper/convert-to-embedded-strings.mts",
+    "generate:assets": "tailwindcss -i data/reverse-html-mapper/tailwind.css -o data/reverse-html-mapper/style.css --minify && node data/reverse-html-mapper/convert-to-embedded-strings.mts",
+    "prebuild": "yarn generate:assets",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0",
@@ -25,7 +26,9 @@
     "postpack": "run-script-os",
     "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
+    "pretest": "yarn generate:assets",
     "test": "vitest",
+    "pretest:ci": "yarn generate:assets",
     "test:ci": "vitest run",
     "csv2json": "node data/converters/csv2json.ts",
     "xml2json": "node data/converters/xml2json.ts"
