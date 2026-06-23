@@ -1,30 +1,7 @@
 {
-  "platform": {
-    "name": "Heimdall Tools",
-    "release": "2.10.14"
-  },
-  "version": "2.10.14",
-  "statistics": {},
-  "profiles": [
-    {
-      "name": "CycloneDX BOM Report: application/@mitre/saf@1.4.7",
-      "title": "@mitre/saf CycloneDX BOM Report",
-      "version": "1.4.7",
-      "maintainer": "The MITRE Security Automation Framework",
-      "summary": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines.",
-      "license": "Apache-2.0",
-      "supports": [],
-      "attributes": [],
-      "groups": [],
-      "status": "loaded",
-      "controls": [],
-      "sha256": "bb7e08a6555c552f8096497e3ea8043e91f3425eebe8ddc4e0966c262f7e7635"
-    }
-  ],
   "passthrough": {
     "auxiliary_data": [
       {
-        "name": "SBOM",
         "components": [
           {
             "type": "library",
@@ -77840,6 +77817,106 @@
             ]
           }
         ],
+        "data": {
+          "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+          "bomFormat": "CycloneDX",
+          "specVersion": "1.4",
+          "version": 1,
+          "serialNumber": "urn:uuid:7103f08b-5c5e-4b5b-b2c7-d4be65fa19fe",
+          "metadata": {
+            "timestamp": "2024-07-08T18:08:55.978Z",
+            "tools": [
+              {
+                "name": "npm",
+                "version": "10.7.0"
+              },
+              {
+                "vendor": "@cyclonedx",
+                "name": "cyclonedx-npm",
+                "version": "1.19.0",
+                "externalReferences": [
+                  {
+                    "url": "git+https://github.com/CycloneDX/cyclonedx-node-npm.git",
+                    "type": "vcs",
+                    "comment": "as detected from PackageJson property \"repository.url\""
+                  },
+                  {
+                    "url": "https://github.com/CycloneDX/cyclonedx-node-npm#readme",
+                    "type": "website",
+                    "comment": "as detected from PackageJson property \"homepage\""
+                  },
+                  {
+                    "url": "https://github.com/CycloneDX/cyclonedx-node-npm/issues",
+                    "type": "issue-tracker",
+                    "comment": "as detected from PackageJson property \"bugs.url\""
+                  }
+                ]
+              },
+              {
+                "vendor": "@cyclonedx",
+                "name": "cyclonedx-library",
+                "version": "6.10.0",
+                "externalReferences": [
+                  {
+                    "url": "git+https://github.com/CycloneDX/cyclonedx-javascript-library.git",
+                    "type": "vcs",
+                    "comment": "as detected from PackageJson property \"repository.url\""
+                  },
+                  {
+                    "url": "https://github.com/CycloneDX/cyclonedx-javascript-library#readme",
+                    "type": "website",
+                    "comment": "as detected from PackageJson property \"homepage\""
+                  },
+                  {
+                    "url": "https://github.com/CycloneDX/cyclonedx-javascript-library/issues",
+                    "type": "issue-tracker",
+                    "comment": "as detected from PackageJson property \"bugs.url\""
+                  }
+                ]
+              }
+            ],
+            "component": {
+              "type": "application",
+              "name": "saf",
+              "group": "@mitre",
+              "version": "1.4.7",
+              "bom-ref": "@mitre/saf@1.4.7",
+              "author": "The MITRE Security Automation Framework",
+              "description": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines.",
+              "licenses": [
+                {
+                  "license": {
+                    "id": "Apache-2.0"
+                  }
+                }
+              ],
+              "purl": "pkg:npm/%40mitre/saf@1.4.7?vcs_url=git%2Bhttps%3A//github.com/mitre/saf.git",
+              "externalReferences": [
+                {
+                  "url": "git+https://github.com/mitre/saf.git",
+                  "type": "vcs",
+                  "comment": "as detected from PackageJson property \"repository.url\""
+                },
+                {
+                  "url": "https://github.com/mitre/saf",
+                  "type": "website",
+                  "comment": "as detected from PackageJson property \"homepage\""
+                },
+                {
+                  "url": "https://github.com/mitre/saf/issues",
+                  "type": "issue-tracker",
+                  "comment": "as detected from PackageJson property \"bugs.url\""
+                }
+              ],
+              "properties": [
+                {
+                  "name": "cdx:npm:package:path",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
         "dependencies": [
           {
             "ref": "@mitre/saf@1.4.7",
@@ -88861,107 +88938,34 @@
             ]
           }
         ],
-        "data": {
-          "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
-          "bomFormat": "CycloneDX",
-          "specVersion": "1.4",
-          "version": 1,
-          "serialNumber": "urn:uuid:7103f08b-5c5e-4b5b-b2c7-d4be65fa19fe",
-          "metadata": {
-            "timestamp": "2024-07-08T18:08:55.978Z",
-            "tools": [
-              {
-                "name": "npm",
-                "version": "10.7.0"
-              },
-              {
-                "vendor": "@cyclonedx",
-                "name": "cyclonedx-npm",
-                "version": "1.19.0",
-                "externalReferences": [
-                  {
-                    "url": "git+https://github.com/CycloneDX/cyclonedx-node-npm.git",
-                    "type": "vcs",
-                    "comment": "as detected from PackageJson property \"repository.url\""
-                  },
-                  {
-                    "url": "https://github.com/CycloneDX/cyclonedx-node-npm#readme",
-                    "type": "website",
-                    "comment": "as detected from PackageJson property \"homepage\""
-                  },
-                  {
-                    "url": "https://github.com/CycloneDX/cyclonedx-node-npm/issues",
-                    "type": "issue-tracker",
-                    "comment": "as detected from PackageJson property \"bugs.url\""
-                  }
-                ]
-              },
-              {
-                "vendor": "@cyclonedx",
-                "name": "cyclonedx-library",
-                "version": "6.10.0",
-                "externalReferences": [
-                  {
-                    "url": "git+https://github.com/CycloneDX/cyclonedx-javascript-library.git",
-                    "type": "vcs",
-                    "comment": "as detected from PackageJson property \"repository.url\""
-                  },
-                  {
-                    "url": "https://github.com/CycloneDX/cyclonedx-javascript-library#readme",
-                    "type": "website",
-                    "comment": "as detected from PackageJson property \"homepage\""
-                  },
-                  {
-                    "url": "https://github.com/CycloneDX/cyclonedx-javascript-library/issues",
-                    "type": "issue-tracker",
-                    "comment": "as detected from PackageJson property \"bugs.url\""
-                  }
-                ]
-              }
-            ],
-            "component": {
-              "type": "application",
-              "name": "saf",
-              "group": "@mitre",
-              "version": "1.4.7",
-              "bom-ref": "@mitre/saf@1.4.7",
-              "author": "The MITRE Security Automation Framework",
-              "description": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ],
-              "purl": "pkg:npm/%40mitre/saf@1.4.7?vcs_url=git%2Bhttps%3A//github.com/mitre/saf.git",
-              "externalReferences": [
-                {
-                  "url": "git+https://github.com/mitre/saf.git",
-                  "type": "vcs",
-                  "comment": "as detected from PackageJson property \"repository.url\""
-                },
-                {
-                  "url": "https://github.com/mitre/saf",
-                  "type": "website",
-                  "comment": "as detected from PackageJson property \"homepage\""
-                },
-                {
-                  "url": "https://github.com/mitre/saf/issues",
-                  "type": "issue-tracker",
-                  "comment": "as detected from PackageJson property \"bugs.url\""
-                }
-              ],
-              "properties": [
-                {
-                  "name": "cdx:npm:package:path",
-                  "value": ""
-                }
-              ]
-            }
-          }
-        }
+        "name": "SBOM"
       }
-    ]
-  }
+    ],
+    "heimdall": {
+      "sourceFormat": "cyclonedx_sbom",
+      "toolVersion": "2.13.0"
+    }
+  },
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.13.0"
+  },
+  "profiles": [
+    {
+      "attributes": [],
+      "controls": [],
+      "groups": [],
+      "license": "Apache-2.0",
+      "maintainer": "The MITRE Security Automation Framework",
+      "name": "CycloneDX BOM Report: application/@mitre/saf@1.4.7",
+      "sha256": "0cbe0913a44d6b42309bad181d116eb6771b6003e4f739a5cb6e4778f8da74e3",
+      "status": "loaded",
+      "summary": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines.",
+      "supports": [],
+      "title": "@mitre/saf CycloneDX BOM Report",
+      "version": "1.4.7"
+    }
+  ],
+  "statistics": {},
+  "version": "2.13.0"
 }

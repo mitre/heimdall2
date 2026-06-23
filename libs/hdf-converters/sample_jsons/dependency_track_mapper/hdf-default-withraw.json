@@ -86,6 +86,10 @@
           "matrix": "ca4f2da9-0fad-4a13-92d7-f627f3168a56:979f87f5-eaf5-4095-9d38-cde17bf9228e:701a3953-666b-4b7a-96ca-e1e6a3e1def3"
         }
       ]
+    },
+    "heimdall": {
+      "sourceFormat": "dependencyTrack",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

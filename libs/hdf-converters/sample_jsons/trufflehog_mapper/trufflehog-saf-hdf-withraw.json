@@ -722,6 +722,10 @@
           "StructuredData": null
         }
       ]
+    },
+    "heimdall": {
+      "sourceFormat": "trufflehog",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

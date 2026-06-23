@@ -13,7 +13,11 @@
         },
         "name": "gosec"
       }
-    ]
+    ],
+    "heimdall": {
+      "sourceFormat": "gosec",
+      "toolVersion": "2.13.0"
+    }
   },
   "platform": {
     "name": "Heimdall Tools",

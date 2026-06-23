@@ -1,27 +1,7 @@
 {
-  "platform": {
-    "name": "Heimdall Tools",
-    "release": "2.10.14"
-  },
-  "version": "2.10.14",
-  "statistics": {},
-  "profiles": [
-    {
-      "name": "CycloneDX BOM Report: container/1d098408640ab242",
-      "title": "alpine CycloneDX BOM Report",
-      "version": "sha256:c5c5fda71656f28e49ac9c5416b3643eaa6a108a8093151d6d1afc9463be8e33",
-      "supports": [],
-      "attributes": [],
-      "groups": [],
-      "status": "loaded",
-      "controls": [],
-      "sha256": "f57879a123b5e7ca79958826037eca3b44402838eab9c4418280c4abc06ec12e"
-    }
-  ],
   "passthrough": {
     "auxiliary_data": [
       {
-        "name": "SBOM",
         "components": [
           {
             "bom-ref": "pkg:apk/alpine/alpine-baselayout@3.4.3-r1?arch=x86_64&distro=alpine-3.18.3&package-id=baca676b3df82a63",
@@ -1441,6 +1421,32 @@
             ]
           }
         ],
+        "data": {
+          "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+          "bomFormat": "CycloneDX",
+          "specVersion": "1.6",
+          "serialNumber": "urn:uuid:600bf98a-94fb-4a9c-b7b5-0bae4f32aeb7",
+          "version": 1,
+          "metadata": {
+            "timestamp": "2024-08-19T08:25:05-04:00",
+            "tools": {
+              "components": [
+                {
+                  "type": "application",
+                  "author": "anchore",
+                  "name": "syft",
+                  "version": "1.11.0"
+                }
+              ]
+            },
+            "component": {
+              "bom-ref": "1d098408640ab242",
+              "type": "container",
+              "name": "alpine",
+              "version": "sha256:c5c5fda71656f28e49ac9c5416b3643eaa6a108a8093151d6d1afc9463be8e33"
+            }
+          }
+        },
         "dependencies": [
           {
             "ref": "pkg:apk/alpine/alpine-baselayout@3.4.3-r1?arch=x86_64&distro=alpine-3.18.3&package-id=baca676b3df82a63",
@@ -1518,32 +1524,7 @@
             ]
           }
         ],
-        "data": {
-          "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
-          "bomFormat": "CycloneDX",
-          "specVersion": "1.6",
-          "serialNumber": "urn:uuid:600bf98a-94fb-4a9c-b7b5-0bae4f32aeb7",
-          "version": 1,
-          "metadata": {
-            "timestamp": "2024-08-19T08:25:05-04:00",
-            "tools": {
-              "components": [
-                {
-                  "type": "application",
-                  "author": "anchore",
-                  "name": "syft",
-                  "version": "1.11.0"
-                }
-              ]
-            },
-            "component": {
-              "bom-ref": "1d098408640ab242",
-              "type": "container",
-              "name": "alpine",
-              "version": "sha256:c5c5fda71656f28e49ac9c5416b3643eaa6a108a8093151d6d1afc9463be8e33"
-            }
-          }
-        }
+        "name": "SBOM"
       }
     ],
     "raw": {
@@ -3067,6 +3048,29 @@
           ]
         }
       ]
+    },
+    "heimdall": {
+      "sourceFormat": "cyclonedx_sbom",
+      "toolVersion": "2.13.0"
     }
-  }
+  },
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.13.0"
+  },
+  "profiles": [
+    {
+      "attributes": [],
+      "controls": [],
+      "groups": [],
+      "name": "CycloneDX BOM Report: container/1d098408640ab242",
+      "sha256": "7f3d61b8cee6dd68147a3bc50871ba0183ccc2bd81ccc9b695534b7562e6ba1f",
+      "status": "loaded",
+      "supports": [],
+      "title": "alpine CycloneDX BOM Report",
+      "version": "sha256:c5c5fda71656f28e49ac9c5416b3643eaa6a108a8093151d6d1afc9463be8e33"
+    }
+  ],
+  "statistics": {},
+  "version": "2.13.0"
 }

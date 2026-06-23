@@ -6178,6 +6178,10 @@
         }
       ],
       "consoleURL": "https://twistlock.test.net/#!/monitor/vulnerabilities/images/ci?search=sha256%3Ab1c0237ebd29860066656372da10d8d7da33b34715986f74b3d5a7e4ba060d1b"
+    },
+    "heimdall": {
+      "sourceFormat": "twistlock",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

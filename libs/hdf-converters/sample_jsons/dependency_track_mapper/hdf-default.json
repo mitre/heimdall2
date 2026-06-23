@@ -1,5 +1,10 @@
 {
-  "passthrough": {},
+  "passthrough": {
+    "heimdall": {
+      "sourceFormat": "dependencyTrack",
+      "toolVersion": "2.13.0"
+    }
+  },
   "platform": {
     "name": "Dependency-Track",
     "release": "1.1 4.5.0",

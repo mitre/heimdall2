@@ -7,7 +7,11 @@
         },
         "name": "JFrog Xray"
       }
-    ]
+    ],
+    "heimdall": {
+      "sourceFormat": "jfrog",
+      "toolVersion": "2.13.0"
+    }
   },
   "platform": {
     "name": "Heimdall Tools",

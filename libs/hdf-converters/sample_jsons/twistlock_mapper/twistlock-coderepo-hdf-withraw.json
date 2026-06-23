@@ -158,6 +158,10 @@
           }
         }
       ]
+    },
+    "heimdall": {
+      "sourceFormat": "twistlock",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

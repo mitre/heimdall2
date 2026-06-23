@@ -1,5 +1,9 @@
 {
   "passthrough": {
+    "heimdall": {
+      "sourceFormat": "snyk",
+      "toolVersion": "2.13.0"
+    },
     "snyk_metadata": {
       "ok": false,
       "numDependencies": 552,

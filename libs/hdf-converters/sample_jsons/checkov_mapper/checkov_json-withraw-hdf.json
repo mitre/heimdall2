@@ -10903,6 +10903,10 @@
         "checkov_version": "3.2.497"
       },
       "url": "Add an api key '--bc-api-key <api-key>' to see more detailed insights via https://bridgecrew.cloud"
+    },
+    "heimdall": {
+      "sourceFormat": "checkov",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

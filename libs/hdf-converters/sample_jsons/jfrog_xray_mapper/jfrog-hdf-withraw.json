@@ -841,6 +841,10 @@
           "edited": "2020-05-04T15:42:22-04:00"
         }
       ]
+    },
+    "heimdall": {
+      "sourceFormat": "jfrog",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

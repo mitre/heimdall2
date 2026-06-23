@@ -1,5 +1,10 @@
 {
-  "passthrough": {},
+  "passthrough": {
+    "heimdall": {
+      "sourceFormat": "burp",
+      "toolVersion": "2.13.0"
+    }
+  },
   "platform": {
     "name": "Heimdall Tools",
     "release": "2.13.0"

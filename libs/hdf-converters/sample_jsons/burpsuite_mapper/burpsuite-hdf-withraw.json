@@ -1036,6 +1036,10 @@
         "burpVersion": "2020.1",
         "exportTime": "Thu Feb 27 09:28:17 EST 2020"
       }
+    },
+    "heimdall": {
+      "sourceFormat": "burp",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

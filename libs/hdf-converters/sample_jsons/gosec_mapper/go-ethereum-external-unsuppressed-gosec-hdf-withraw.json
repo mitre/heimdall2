@@ -2803,6 +2803,10 @@
         "found": 171
       },
       "GosecVersion": "dev"
+    },
+    "heimdall": {
+      "sourceFormat": "gosec",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

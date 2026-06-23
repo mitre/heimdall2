@@ -2861,6 +2861,10 @@
         "found": 161
       },
       "GosecVersion": "dev"
+    },
+    "heimdall": {
+      "sourceFormat": "gosec",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {

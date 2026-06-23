@@ -15,7 +15,11 @@
         },
         "name": "Checkov"
       }
-    ]
+    ],
+    "heimdall": {
+      "sourceFormat": "checkov",
+      "toolVersion": "2.13.0"
+    }
   },
   "platform": {
     "name": "Heimdall Tools",

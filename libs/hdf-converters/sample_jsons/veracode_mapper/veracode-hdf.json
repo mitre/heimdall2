@@ -4094,7 +4094,11 @@
         },
         "control_ids": []
       }
-    ]
+    ],
+    "heimdall": {
+      "sourceFormat": "veracode",
+      "toolVersion": "2.13.0"
+    }
   },
   "platform": {
     "name": "Heimdall Tools",

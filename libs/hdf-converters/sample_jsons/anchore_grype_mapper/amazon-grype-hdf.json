@@ -5,7 +5,11 @@
         "data": {},
         "name": ""
       }
-    ]
+    ],
+    "heimdall": {
+      "sourceFormat": "grype",
+      "toolVersion": "2.13.0"
+    }
   },
   "platform": {
     "name": "Heimdall Tools",

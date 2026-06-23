@@ -1,26 +1,7 @@
 {
-  "platform": {
-    "name": "Heimdall Tools",
-    "release": "2.10.14"
-  },
-  "version": "2.10.14",
-  "statistics": {},
-  "profiles": [
-    {
-      "name": "CycloneDX BOM Report",
-      "title": "CycloneDX BOM Report",
-      "supports": [],
-      "attributes": [],
-      "groups": [],
-      "status": "loaded",
-      "controls": [],
-      "sha256": "6ee2405d5989a8a247a146594423542db865fb915d4896a411a783460935e3d6"
-    }
-  ],
   "passthrough": {
     "auxiliary_data": [
       {
-        "name": "SBOM",
         "components": [
           {
             "type": "library",
@@ -570,7 +551,8 @@
               }
             ]
           }
-        }
+        },
+        "name": "SBOM"
       }
     ],
     "raw": {
@@ -1122,6 +1104,28 @@
           ]
         }
       ]
+    },
+    "heimdall": {
+      "sourceFormat": "cyclonedx_sbom",
+      "toolVersion": "2.13.0"
     }
-  }
+  },
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.13.0"
+  },
+  "profiles": [
+    {
+      "attributes": [],
+      "controls": [],
+      "groups": [],
+      "name": "CycloneDX BOM Report",
+      "sha256": "a8cc5fdd50481ceb4ee35f65b7f4ad2b40281d94827ae6146a4aa06cc452d14e",
+      "status": "loaded",
+      "supports": [],
+      "title": "CycloneDX BOM Report"
+    }
+  ],
+  "statistics": {},
+  "version": "2.13.0"
 }

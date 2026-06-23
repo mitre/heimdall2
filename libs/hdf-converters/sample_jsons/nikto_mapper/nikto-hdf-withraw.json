@@ -113,6 +113,10 @@
           "url": "/"
         }
       ]
+    },
+    "heimdall": {
+      "sourceFormat": "nikto",
+      "toolVersion": "2.13.0"
     }
   },
   "platform": {
