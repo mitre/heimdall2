@@ -510,10 +510,23 @@ export function countResultStatus(result: ContextualizedControl) {
       counts.failedTests = segments.filter((s: HDFControlSegment) => s.status === 'failed').length;
       break;
     }
-    case 'Not Applicable': { counts.notApplicable = 1; break; }
-    case 'Not Reviewed': { counts.notReviewed = 1; break; }
-    case 'Passed': { counts.passed = 1; counts.passedTests = segments.length; break; }
-    case 'Profile Error': { counts.profileError = 1; break; }
+    case 'Not Applicable': {
+      counts.notApplicable = 1;
+      break;
+    }
+    case 'Not Reviewed': {
+      counts.notReviewed = 1;
+      break;
+    }
+    case 'Passed': {
+      counts.passed = 1;
+      counts.passedTests = segments.length;
+      break;
+    }
+    case 'Profile Error': {
+      counts.profileError = 1;
+      break;
+    }
   }
   return counts;
 }
@@ -521,11 +534,26 @@ export function countResultStatus(result: ContextualizedControl) {
 export function countResultSeverity(result: ContextualizedControl) {
   const counts = { critical: 0, high: 0, low: 0, medium: 0, none: 0 };
   switch (result.root.hdf.severity) {
-    case 'critical': { counts.critical = 1; break; }
-    case 'high': { counts.high = 1; break; }
-    case 'low': { counts.low = 1; break; }
-    case 'medium': { counts.medium = 1; break; }
-    case 'none': { counts.none = 1; break; }
+    case 'critical': {
+      counts.critical = 1;
+      break;
+    }
+    case 'high': {
+      counts.high = 1;
+      break;
+    }
+    case 'low': {
+      counts.low = 1;
+      break;
+    }
+    case 'medium': {
+      counts.medium = 1;
+      break;
+    }
+    case 'none': {
+      counts.none = 1;
+      break;
+    }
   }
   return counts;
 }
