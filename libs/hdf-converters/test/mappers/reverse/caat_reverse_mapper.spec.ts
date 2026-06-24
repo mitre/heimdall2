@@ -77,7 +77,7 @@ describe('CAAT Results Reverse Mapper', () => {
     ).toEqual(
       expected.SheetNames.map(name =>
         XLSX.utils
-          .sheet_to_json<CAATRow>(expected.Sheets[name])
+          .sheet_to_json<CAATRow>(expected.Sheets[name] /* eslint-disable-line security/detect-object-injection -- name from SheetNames */)
           .map(sheet =>
             Object.fromEntries(
               Object.entries(sheet).map(([k, v]) => [

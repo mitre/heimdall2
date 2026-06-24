@@ -284,37 +284,31 @@ export function consolidatePayloads(
   const grouped = groupBy(payloads, pl => pl.meta.guid);
 
   const built = mapHash(grouped, consolidateFilePayloads);
-  return Object.values(built);
+  return [...built.values()];
 }
 
 // Groups items by using the provided key function
 export function groupBy<T>(
   items: T[],
   keyGetter: (v: T) => string,
-): Hash<T[]> {
-  const result: Hash<T[]> = {};
+): Map<string, T[]> {
+  const result = new Map<string, T[]>();
   for (const i of items) {
-    // Get the items key
     const key = keyGetter(i);
-
-    // Get the list it should go in
-    const corrList = result[key];
-    if (corrList) {
-      // If list exists, place
-      corrList.push(i);
+    const existing = result.get(key);
+    if (existing) {
+      existing.push(i);
     } else {
-      // List does not exist; create and put
-      result[key] = [i];
+      result.set(key, [i]);
     }
   }
   return result;
 }
 
-// Maps a hash to a new hash, with the same keys but each value replaced with a new (mapped) value
-export function mapHash<T, G>(old: Hash<T>, mapFunction: (v: T) => G): Hash<G> {
-  const result: Hash<G> = {};
-  for (const key in old) {
-    result[key] = mapFunction(old[key]);
+export function mapHash<T, G>(old: Map<string, T>, mapFunction: (v: T) => G): Map<string, G> {
+  const result = new Map<string, G>();
+  for (const [key, value] of old) {
+    result.set(key, mapFunction(value));
   }
   return result;
 }
@@ -341,12 +335,12 @@ function consolidateFilePayloads(
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
   const subtypes = groupBy(filePayloads, event => event.meta.subtype);
-  const execEvents = (subtypes.header
-    || []) as Partial<ExecJSON.Execution>[];
-  const profileEvents = (subtypes.profile
-    || []) as unknown as (ExecJSON.Profile & GenericPayloadWithMetadata)[];
-  const controlEvents = (subtypes.control
-    || []) as unknown as (ExecJSON.Control & GenericPayloadWithMetadata)[];
+  const execEvents = (subtypes.get('header')
+    ?? []) as Partial<ExecJSON.Execution>[];
+  const profileEvents = (subtypes.get('profile')
+    ?? []) as unknown as (ExecJSON.Profile & GenericPayloadWithMetadata)[];
+  const controlEvents = (subtypes.get('control')
+    ?? []) as unknown as (ExecJSON.Control & GenericPayloadWithMetadata)[];
 
   logger.debug(`Have ${execEvents.length} execution events`);
   logger.debug(`Have ${profileEvents.length} profile events`);
@@ -375,7 +369,7 @@ function consolidateFilePayloads(
     // Get the corresponding controls, and put them into the profile
     const sha = profile.meta.profile_sha256;
     logger.debug(`Adding controls for profile with SHA256: ${sha}`);
-    const corrControls = shaGroupedControls[sha] || [];
+    const corrControls = shaGroupedControls.get(sha) ?? [];
     profile.controls.push(
       ...replaceKeyValueDescriptions(
         corrControls as unknown as (ExecJSON.Control
