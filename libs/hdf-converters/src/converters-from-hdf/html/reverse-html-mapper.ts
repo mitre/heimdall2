@@ -253,37 +253,21 @@ export class FromHDFToHTMLMapper {
     let failedTests = 0;
     let passingTestsFailedResult = 0;
     for (const result of results) {
-      const segments = result.root.hdf.segments || [];
-      const { status, severity } = result.root.hdf;
-      if (status === 'Failed') {
-        failed++;
-        passingTestsFailedResult += segments.filter(
-          (s: HDFControlSegment) => s.status === 'passed',
-        ).length;
-        failedTests += segments.filter(
-          (s: HDFControlSegment) => s.status === 'failed',
-        ).length;
-      } else if (status === 'Not Applicable') {
-        notApplicable++;
-      } else if (status === 'Not Reviewed') {
-        notReviewed++;
-      } else if (status === 'Passed') {
-        passed++;
-        passedTests += segments.length;
-      } else if (status === 'Profile Error') {
-        profileError++;
-      }
-      if (severity === 'high') {
-        high++;
-      } else if (severity === 'low') {
-        low++;
-      } else if (severity === 'medium') {
-        medium++;
-      } else if (severity === 'none') {
-        none++;
-      } else if (severity === 'critical') {
-        critical++;
-      }
+      const counts = countResultStatus(result);
+      failed += counts.failed;
+      failedTests += counts.failedTests;
+      passingTestsFailedResult += counts.passingTestsFailedResult;
+      notApplicable += counts.notApplicable;
+      notReviewed += counts.notReviewed;
+      passed += counts.passed;
+      passedTests += counts.passedTests;
+      profileError += counts.profileError;
+      const sev = countResultSeverity(result);
+      high += sev.high;
+      low += sev.low;
+      medium += sev.medium;
+      none += sev.none;
+      critical += sev.critical;
     }
 
     // Set following attributes from existing file data
@@ -514,4 +498,34 @@ export class FromHDFToHTMLMapper {
     // Render template and return generated HTML file
     return Mustache.render(template, this.outputData);
   }
+}
+
+export function countResultStatus(result: ContextualizedControl) {
+  const segments = result.root.hdf.segments || [];
+  const counts = { failed: 0, failedTests: 0, notApplicable: 0, notReviewed: 0, passed: 0, passedTests: 0, passingTestsFailedResult: 0, profileError: 0 };
+  switch (result.root.hdf.status) {
+    case 'Failed': {
+      counts.failed = 1;
+      counts.passingTestsFailedResult = segments.filter((s: HDFControlSegment) => s.status === 'passed').length;
+      counts.failedTests = segments.filter((s: HDFControlSegment) => s.status === 'failed').length;
+      break;
+    }
+    case 'Not Applicable': { counts.notApplicable = 1; break; }
+    case 'Not Reviewed': { counts.notReviewed = 1; break; }
+    case 'Passed': { counts.passed = 1; counts.passedTests = segments.length; break; }
+    case 'Profile Error': { counts.profileError = 1; break; }
+  }
+  return counts;
+}
+
+export function countResultSeverity(result: ContextualizedControl) {
+  const counts = { critical: 0, high: 0, low: 0, medium: 0, none: 0 };
+  switch (result.root.hdf.severity) {
+    case 'critical': { counts.critical = 1; break; }
+    case 'high': { counts.high = 1; break; }
+    case 'low': { counts.low = 1; break; }
+    case 'medium': { counts.medium = 1; break; }
+    case 'none': { counts.none = 1; break; }
+  }
+  return counts;
 }

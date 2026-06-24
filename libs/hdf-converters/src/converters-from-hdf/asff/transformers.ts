@@ -20,7 +20,7 @@ import type {
 import { escapeForwardSlashes } from './reverse-asff-mapper';
 
 // FromHdfToAsff mapper transformers
-type Counts = {
+export type Counts = {
   Failed: number;
   FailedTests: number;
   NotApplicable: number;
@@ -138,25 +138,38 @@ export function statusCount(evaluation: ContextualizedEvaluation): Counts {
     PassingTestsFailedControl: 0,
   };
   for (const control of controls) {
-    const segments = control.hdf.segments || [];
-    if (control.hdf.status === 'Failed') {
-      statusCounts.PassingTestsFailedControl += segments.filter(
-        (s: HDFControlSegment) => s.status === 'passed',
-      ).length;
-      statusCounts.FailedTests += segments.filter(
-        (s: HDFControlSegment) => s.status === 'failed',
-      ).length;
-      statusCounts.Failed += 1;
-    } else if (control.hdf.status === 'Not Applicable') {
-      statusCounts.NotApplicable += 1;
-    } else if (control.hdf.status === 'Not Reviewed') {
-      statusCounts.NotReviewed += 1;
-    } else if (control.hdf.status === 'Passed') {
-      statusCounts.Passed += 1;
-      statusCounts.PassedTests += segments.length;
-    }
+    accumulateControlStatus(statusCounts, control);
   }
   return statusCounts;
+}
+
+export function accumulateControlStatus(counts: Counts, control: ContextualizedControl): void {
+  const segments = control.hdf.segments || [];
+  switch (control.hdf.status) {
+    case 'Failed': {
+      counts.PassingTestsFailedControl += segments.filter(
+        (s: HDFControlSegment) => s.status === 'passed',
+      ).length;
+      counts.FailedTests += segments.filter(
+        (s: HDFControlSegment) => s.status === 'failed',
+      ).length;
+      counts.Failed += 1;
+      break;
+    }
+    case 'Not Applicable': {
+      counts.NotApplicable += 1;
+      break;
+    }
+    case 'Not Reviewed': {
+      counts.NotReviewed += 1;
+      break;
+    }
+    case 'Passed': {
+      counts.Passed += 1;
+      counts.PassedTests += segments.length;
+      break;
+    }
+  }
 }
 
 export function createDescription(counts: Counts): string {

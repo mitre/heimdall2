@@ -26,6 +26,33 @@ const NAME = 'AWS Config';
 const AWS_CONFIG_MAPPING = new AwsConfigMapping();
 const ACCOUNT_ID_RE = /:(?<accountId>\d{12}):config-rule/v;
 
+export function buildSkipResult(complianceType: string | undefined): ExecJSON.ControlResult | undefined {
+  const currentDate = new Date().toISOString();
+  switch (complianceType) {
+    case 'NOT_APPLICABLE': {
+      return {
+        code_desc: NOT_APPLICABLE_MSG,
+        run_time: 0,
+        skip_message: NOT_APPLICABLE_MSG,
+        start_time: currentDate,
+        status: ExecJSON.ControlResultStatus.Skipped,
+      };
+    }
+    case 'INSUFFICIENT_DATA': {
+      return {
+        code_desc: INSUFFICIENT_DATA_MSG,
+        run_time: 0,
+        skip_message: INSUFFICIENT_DATA_MSG,
+        start_time: currentDate,
+        status: ExecJSON.ControlResultStatus.Skipped,
+      };
+    }
+    default: {
+      return undefined;
+    }
+  }
+}
+
 export class AwsConfigMapper {
   configService: ConfigService;
   issues: Promise<ConfigRule[]>;
@@ -108,33 +135,6 @@ export class AwsConfigMapper {
         return completedControl;
       }),
     );
-  }
-
-  private buildSkipResult(complianceType: string | undefined): ExecJSON.ControlResult | undefined {
-    const currentDate = new Date().toISOString();
-    switch (complianceType) {
-      case 'NOT_APPLICABLE': {
-        return {
-          code_desc: NOT_APPLICABLE_MSG,
-          run_time: 0,
-          skip_message: NOT_APPLICABLE_MSG,
-          start_time: currentDate,
-          status: ExecJSON.ControlResultStatus.Skipped,
-        };
-      }
-      case 'INSUFFICIENT_DATA': {
-        return {
-          code_desc: INSUFFICIENT_DATA_MSG,
-          run_time: 0,
-          skip_message: INSUFFICIENT_DATA_MSG,
-          start_time: currentDate,
-          status: ExecJSON.ControlResultStatus.Skipped,
-        };
-      }
-      default: {
-        return undefined;
-      }
-    }
   }
 
   private checkText(configRule: ConfigRule): string {
@@ -371,7 +371,7 @@ export class AwsConfigMapper {
             complianceResult =>
               complianceResult.ConfigRuleName === configRule.ConfigRuleName,
           )?.Compliance?.ComplianceType;
-          const skipResult = this.buildSkipResult(complianceType);
+          const skipResult = buildSkipResult(complianceType);
           if (skipResult) {
             ruleData.push([skipResult]);
           }

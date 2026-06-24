@@ -3,7 +3,7 @@ import type { ChecklistVuln } from '../ckl-mapper/checklist-jsonix-converter';
 import type { Attestation } from './attestations';
 import { addAttestationToHDF } from './attestations';
 
-function findControlAcrossProfiles(
+export function findControlAcrossProfiles(
   profiles: ExecJSON.Profile[],
   vulnNum: string,
 ): ExecJSON.Control | undefined {
