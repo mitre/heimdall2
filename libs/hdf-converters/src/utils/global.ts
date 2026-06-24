@@ -6,7 +6,9 @@ import { contextualizeEvaluation } from 'inspecjs';
 import * as _ from 'lodash';
 import { createLogger, format, transports } from 'winston';
 import packageJson from '../../package.json';
-import { data as NistCciMappingData } from '../mappings/NistCciMappingData';
+import { data as NistCciMappingRecord } from '../mappings/NistCciMappingData';
+
+const NistCciMappingData = new Map(Object.entries(NistCciMappingRecord));
 
 export const HeimdallToolsVersion: string = packageJson.version;
 
@@ -17,7 +19,7 @@ const NIST_BASE_TAG_RE = /\w{2}-\d{1,3}/v;
 export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
 
 export const DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS
-  = DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS.flatMap(tag => NistCciMappingData[tag]);
+  = DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS.flatMap(tag => NistCciMappingData.get(tag) ?? []);
 
 // REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
 // SI-2 (FLAW REMEDIATION) - RA-5 (VULNERABILITY SCANNING)
@@ -71,12 +73,11 @@ export function getCCIsForNISTTags(nistTags: string[]): string[] {
   const cciTags: string[] = [];
   for (const nistTag of nistTags) {
     const baseTag = NIST_BASE_TAG_RE.exec(nistTag);
-    if (
-      Array.isArray(baseTag)
-      && baseTag.length > 0
-      && Object.hasOwn(NistCciMappingData, baseTag[0])
-    ) {
-      cciTags.push(...NistCciMappingData[baseTag[0]]);
+    if (Array.isArray(baseTag) && baseTag.length > 0) {
+      const ccis = NistCciMappingData.get(baseTag[0]);
+      if (ccis) {
+        cciTags.push(...ccis);
+      }
     }
   }
   return cciTags;
