@@ -15,7 +15,7 @@ describe('HTML Results Reverse Mapper', () => {
       FileExportTypes.Administrator,
     );
 
-    const converted = await mapper.toHTML();
+    const converted = mapper.toHTML();
 
     // fs.writeFileSync(
     //   'sample_jsons/html_reverse_mapper/rhel7.html',
@@ -41,7 +41,7 @@ describe('HTML Results Reverse Mapper', () => {
       FileExportTypes.Administrator,
     );
 
-    const converted = await mapper.toHTML();
+    const converted = mapper.toHTML();
 
     // fs.writeFileSync(
     //   'sample_jsons/html_reverse_mapper/sonarqube.html',
@@ -67,7 +67,7 @@ describe('HTML Results Reverse Mapper', () => {
       FileExportTypes.Administrator,
     );
 
-    const converted = await mapper.toHTML();
+    const converted = mapper.toHTML();
 
     // fs.writeFileSync(
     //   'sample_jsons/html_reverse_mapper/sonarqube.html',

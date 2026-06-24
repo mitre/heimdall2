@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { type ExecJSON } from 'inspecjs';
 import { describe, expect, it } from 'vitest';
 import { SonarqubeResults } from '../../../src/sonarqube-mapper';

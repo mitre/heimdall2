@@ -1,24 +1,20 @@
-import fs from 'fs';
 import { describe, expect, it } from 'vitest';
 import { ChecklistResults } from '../../../src/ckl-mapper/checklist-mapper';
-
-function loadJsonFile(path: string): any {
-  return JSON.parse(fs.readFileSync(path, { encoding: 'utf8' }));
-}
+import { loadFixture } from '../../utils';
 
 describe('CKL export performance (9go.49)', () => {
   it('toCkl() without prettyPrint is faster than with prettyPrint', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
     );
     const mapper = new ChecklistResults(hdfData);
 
     const startRaw = performance.now();
-    const rawXml = mapper.toCkl();
+    mapper.toCkl();
     const rawTime = performance.now() - startRaw;
 
     const startPretty = performance.now();
-    const prettyXml = mapper.toCkl({ prettyPrint: true });
+    mapper.toCkl({ prettyPrint: true });
     const prettyTime = performance.now() - startPretty;
 
     console.log(`Raw XML: ${rawTime.toFixed(1)}ms, Pretty XML: ${prettyTime.toFixed(1)}ms, Speedup: ${(prettyTime / rawTime).toFixed(1)}x`);
@@ -27,7 +23,7 @@ describe('CKL export performance (9go.49)', () => {
   });
 
   it('toCkl() default output is valid XML (starts with <?xml)', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -39,7 +35,7 @@ describe('CKL export performance (9go.49)', () => {
   });
 
   it('toCkl({prettyPrint: true}) produces formatted output with indentation', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -50,7 +46,7 @@ describe('CKL export performance (9go.49)', () => {
   });
 
   it('both outputs contain the same VULN count', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
     );
     const mapper = new ChecklistResults(hdfData);

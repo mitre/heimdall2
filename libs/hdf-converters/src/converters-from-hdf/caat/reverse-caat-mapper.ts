@@ -107,7 +107,7 @@ export class FromHDFToCAATMapper {
   static fix(str?: null | string): string {
     return (str ?? '')
       .replaceAll(/\r\n|\n|\r/gv, '\r\n')
-      .slice(0, FromHDFToCAATMapper.MaxCellSize);
+      .slice(0, this.MaxCellSize);
   }
 
   static formatDate(date: Date, delimiter: string): string {

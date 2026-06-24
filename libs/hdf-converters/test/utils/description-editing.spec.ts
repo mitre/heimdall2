@@ -369,10 +369,10 @@ describe('prepareEvaluationForCklExport', () => {
       version: '4.0',
     };
 
-    const snapshot = JSON.parse(JSON.stringify(original));
+    const snapshot = structuredClone(original);
 
     const clone = prepareEvaluationForCklExport(original, []);
-    expect(JSON.parse(JSON.stringify(original))).toEqual(snapshot);
+    expect(structuredClone(original)).toEqual(snapshot);
     expect(clone).not.toBe(original);
   });
 

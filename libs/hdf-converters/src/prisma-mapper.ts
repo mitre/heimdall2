@@ -156,8 +156,7 @@ export class PrismaMapper {
     const executions: ExecJSON.Execution[] = [];
     const hostnameToControls: Record<string, PrismaControl[]> = {};
     for (const record of this.data) {
-      hostnameToControls[record.Hostname]
-        = hostnameToControls[record.Hostname] || [];
+      hostnameToControls[record.Hostname] ||= [];
       hostnameToControls[record.Hostname].push(record);
     }
     for (const [hostname, controls] of Object.entries(hostnameToControls)) {

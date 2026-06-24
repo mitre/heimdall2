@@ -12,7 +12,7 @@ import {
   handleSplunkErrorResponse,
 } from './utils/splunk-tools';
 
-export type FileMetaData = {
+export type FileMetadata = {
   [key: string]: never[] | unknown;
   filename: string;
   filetype: string;
@@ -22,9 +22,9 @@ export type FileMetaData = {
   subtype: string;
 };
 
-export type GenericPayloadWithMetaData = {
+export type GenericPayloadWithMetadata = {
   [key: string]: never[] | Record<string, unknown>;
-  meta: FileMetaData;
+  meta: FileMetadata;
 };
 
 export type Hash<T> = Record<string, T>;
@@ -321,7 +321,7 @@ export function mapHash<T, G>(old: Hash<T>, mapFunction: (v: T) => G): Hash<G> {
 
 export function replaceKeyValueDescriptions(
   controls: (ExecJSON.Control
-    & GenericPayloadWithMetaData & { descriptions?: ExecJSON.ControlDescription[] | Record<string, string> })[],
+    & GenericPayloadWithMetadata & { descriptions?: ExecJSON.ControlDescription[] | Record<string, string> })[],
 ) {
   return controls.map((control) => {
     if (control.descriptions && !Array.isArray(control.descriptions)) {
@@ -344,9 +344,9 @@ function consolidateFilePayloads(
   const execEvents = (subtypes.header
     || []) as Partial<ExecJSON.Execution>[];
   const profileEvents = (subtypes.profile
-    || []) as unknown as (ExecJSON.Profile & GenericPayloadWithMetaData)[];
+    || []) as unknown as (ExecJSON.Profile & GenericPayloadWithMetadata)[];
   const controlEvents = (subtypes.control
-    || []) as unknown as (ExecJSON.Control & GenericPayloadWithMetaData)[];
+    || []) as unknown as (ExecJSON.Control & GenericPayloadWithMetadata)[];
 
   logger.debug(`Have ${execEvents.length} execution events`);
   logger.debug(`Have ${profileEvents.length} profile events`);
@@ -379,7 +379,7 @@ function consolidateFilePayloads(
     profile.controls.push(
       ...replaceKeyValueDescriptions(
         corrControls as unknown as (ExecJSON.Control
-          & GenericPayloadWithMetaData & {
+          & GenericPayloadWithMetadata & {
             descriptions?:
               | ExecJSON.ControlDescription[]
               | Record<string, string>;

@@ -993,6 +993,7 @@ export class SonarqubeResults {
         this.logAxiosError(error);
         throw new Error(
           `Failed at getting Sonarqube code snippet for ${component}`,
+          { cause: error },
         );
       }
     };
@@ -1060,7 +1061,7 @@ export class SonarqubeResults {
         return data;
       } catch (error) {
         this.logAxiosError(error);
-        throw new Error(`Failed at getting Sonarqube rule: ${rule}`);
+        throw new Error(`Failed at getting Sonarqube rule: ${rule}`, { cause: error });
       }
     };
 
@@ -1163,7 +1164,7 @@ export class SonarqubeResults {
           page += 1;
         } catch (error) {
           this.logAxiosError(error);
-          throw new Error('Failed at retrieving Sonarqube issues');
+          throw new Error('Failed at retrieving Sonarqube issues', { cause: error });
         }
         if (page * PAGE_SIZE > UPPER_LIMIT) {
           logger.warn(
@@ -1201,7 +1202,7 @@ export class SonarqubeResults {
           page += 1;
         } catch (error) {
           this.logAxiosError(error);
-          throw new Error('Failed at retrieving the list of components');
+          throw new Error('Failed at retrieving the list of components', { cause: error });
         }
         if (page * PAGE_SIZE > UPPER_LIMIT) {
           logger.warn(

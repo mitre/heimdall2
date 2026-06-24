@@ -154,11 +154,12 @@ export function validateChecklistMetadata(
 }
 
 export function throwIfInvalidProfileMetadata(profileMetadata?: StigMetadata) {
-  if (profileMetadata) {
-    const results = validateChecklistProfileMetadata(profileMetadata);
-    if (!results.ok) {
-      throw new InvalidChecklistMetadataException(results.error.message);
-    }
+  if (!profileMetadata) {
+    return;
+  }
+  const results = validateChecklistProfileMetadata(profileMetadata);
+  if (!results.ok) {
+    throw new InvalidChecklistMetadataException(results.error.message);
   }
 }
 
