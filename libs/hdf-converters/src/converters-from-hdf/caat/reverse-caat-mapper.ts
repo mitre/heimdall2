@@ -261,7 +261,7 @@ export class FromHDFToCAATMapper {
         rows,
         FromHDFToCAATMapper.SheetOptions,
       );
-      workBook.Sheets[sheetName] = workSheet;
+      workBook.Sheets[sheetName] = workSheet; // eslint-disable-line security/detect-object-injection -- XLSX API pattern, sheetName is sanitized
     }
 
     if (shouldReturnWorkBook) {

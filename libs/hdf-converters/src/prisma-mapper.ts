@@ -28,13 +28,13 @@ export type PrismaControl = {
   Type: string;
 };
 
-const SEVERITY_LOOKUP: Record<string, number> = {
-  critical: 1,
-  high: 0.7,
-  important: 0.9,
-  low: 0.3,
-  moderate: 0.5,
-};
+const SEVERITY_LOOKUP = new Map<string, number>([
+  ['critical', 1],
+  ['high', 0.7],
+  ['important', 0.9],
+  ['low', 0.3],
+  ['moderate', 0.5],
+]);
 
 export class PrismaControlMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
@@ -59,7 +59,7 @@ export class PrismaControlMapper extends BaseConverter {
             impact: {
               path: 'Severity',
               transformer: (severity: string) => {
-                return severity ? SEVERITY_LOOKUP[severity] : 0.5;
+                return severity ? SEVERITY_LOOKUP.get(severity) : 0.5;
               },
             },
             key: 'id',

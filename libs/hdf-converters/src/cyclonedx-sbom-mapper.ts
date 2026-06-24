@@ -452,7 +452,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
     index: number,
     keys: string[],
   ): Record<string, unknown> {
-    return _.pick(this.data.components[index], keys);
+    return _.pick(this.data.components.at(index), keys);
   }
 }
 
@@ -579,10 +579,11 @@ export class CycloneDXSBOMResults {
 
       // Also record the ID of the vulnerability in the component for use in bidirectional traversal
       for (const index of vulnerability.affectedComponents) {
-        if (!data.components[index].affectingVulnerabilities) {
-          data.components[index].affectingVulnerabilities = [];
+        const component = data.components.at(index)!;
+        if (!component.affectingVulnerabilities) {
+          component.affectingVulnerabilities = [];
         }
-        (data.components[index].affectingVulnerabilities).push(
+        component.affectingVulnerabilities.push(
           _.get(vulnerability, 'bom-ref') as unknown as string,
         );
       }
