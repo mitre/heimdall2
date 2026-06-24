@@ -138,15 +138,12 @@ export class AwsConfigMapper {
   }
 
   private checkText(configRule: ConfigRule): string {
-    let params: any[] = [];
-    if (
-      configRule.InputParameters !== undefined
+    const params: any[] = configRule.InputParameters !== undefined
       && configRule.InputParameters !== '{}'
-    ) {
-      params = configRule.InputParameters.replaceAll('{', '')
+      ? configRule.InputParameters.replaceAll('{', '')
         .replaceAll('}', '')
-        .split(',');
-    }
+        .split(',')
+      : [];
     const checkText = [`ARN: ${configRule.ConfigRuleArn || 'N/A'}`,
       `Source Identifier: ${configRule.Source?.SourceIdentifier || 'N/A'}`];
     if (params.length > 0) {
@@ -265,18 +262,14 @@ export class AwsConfigMapper {
   }
 
   private getCodeDesc(result: EvaluationResult): string {
-    let output = '';
-    if (
-      result.EvaluationResultIdentifier?.EvaluationResultQualifier !== undefined
-    ) {
-      output = JSON.stringify(
+    return result.EvaluationResultIdentifier?.EvaluationResultQualifier !== undefined
+      ? JSON.stringify(
         result.EvaluationResultIdentifier.EvaluationResultQualifier,
       )
         .replaceAll('"', '')
         .replaceAll('{', '')
-        .replaceAll('}', '');
-    }
-    return output;
+        .replaceAll('}', '')
+      : '';
   }
 
   private async getConfigRulePage(
@@ -388,17 +381,12 @@ export class AwsConfigMapper {
   }
 
   private getRunTime(result: EvaluationResult): number {
-    let diff = 0;
-    if (
-      result.ResultRecordedTime !== undefined
+    return result.ResultRecordedTime !== undefined
       && result.ConfigRuleInvokedTime !== undefined
-    ) {
-      diff
-        = (result.ResultRecordedTime.getTime()
-          - result.ConfigRuleInvokedTime.getTime())
-        / 1000;
-    }
-    return diff;
+      ? (result.ResultRecordedTime.getTime()
+        - result.ConfigRuleInvokedTime.getTime())
+        / 1000
+      : 0;
   }
 
   private getStatus(result: EvaluationResult): ExecJSON.ControlResultStatus {
@@ -421,10 +409,9 @@ export class AwsConfigMapper {
     let result = {};
     const sourceIdentifier = configRule.Source?.SourceIdentifier;
     result = _.set(result, 'nist', []);
-    let defaultMatch: null | string[] = [];
-    if (sourceIdentifier !== undefined) {
-      defaultMatch = AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier]);
-    }
+    const defaultMatch = sourceIdentifier !== undefined
+      ? AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier])
+      : [];
     if (Array.isArray(defaultMatch) && defaultMatch.length > 0) {
       result = _.set(
         result,

@@ -104,11 +104,10 @@ function findingTitle(
   finding: unknown,
   { controls = null }: { controls: null | unknown[] },
 ) {
-  let control;
-  return controls !== null
-    && (control = correspondingControl(controls, finding)) !== null
-    ? encode(_.get(control, 'Title'))
-    : encode(_.get(finding, 'Title'));
+  const control = controls !== null
+    ? correspondingControl(controls, finding)
+    : null;
+  return encode(_.get(control ?? finding, 'Title'));
 }
 
 function productName(

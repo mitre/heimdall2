@@ -114,10 +114,7 @@ function computeSeverity(vuln: ChecklistVuln): string {
   const severity = findSeverity(vuln);
   const severityOverride = findSeverityOverride(vuln);
 
-  let computed = severity;
-  if (severityOverride) {
-    computed = severityOverride;
-  }
+  const computed = severityOverride || severity;
 
   if (!(severities as readonly string[]).includes(computed)) {
     throw new Error(

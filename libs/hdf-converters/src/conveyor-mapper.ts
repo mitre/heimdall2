@@ -189,13 +189,14 @@ function createDescription(
         '',
       );
     }
-    return scannerName === scannerType.CodeQuality
+    const raw = scannerName === scannerType.CodeQuality
       ? `body:${_.get(data, 'body')}
       body_format:${_.get(data, 'body_format') as string}
       classificaton:${_.get(data, 'classification') as string}
       depth:${_.get(data, 'depth') as string}
-      title_text:${_.get(data, 'title_text') as string}`.replace(String.raw`\"`, '')
-      : JSON.stringify(data).replace(String.raw`\"`, '');
+      title_text:${_.get(data, 'title_text') as string}`
+      : JSON.stringify(data);
+    return raw.replace(String.raw`\"`, '');
   };
   return {
     code_desc: desc(),

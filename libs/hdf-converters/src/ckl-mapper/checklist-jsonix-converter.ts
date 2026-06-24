@@ -335,11 +335,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     severityTag: null | string,
     severityOverrideTag: null | string,
   ): number | undefined {
-    let computedSeverity = severityTag;
-    if (severityOverrideTag) {
-      computedSeverity = severityOverrideTag;
-    }
-    computedSeverity = computedSeverity?.toLowerCase() ?? null;
+    const computedSeverity = (severityOverrideTag || severityTag)?.toLowerCase() ?? null;
     if (computedSeverity) {
       return IMPACT_MAPPING.get(computedSeverity);
     }

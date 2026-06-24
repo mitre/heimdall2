@@ -232,7 +232,8 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
   return filteredControl;
 }
 function formatCodeDesc(item: unknown): string {
-  return _.has(item, 'description') ? parseHtml(_.get(item, 'description') || NA_PLUGIN_OUTPUT) : parseHtml(_.get(item, 'plugin_output') || NA_PLUGIN_OUTPUT);
+  const source = _.has(item, 'description') ? _.get(item, 'description') : _.get(item, 'plugin_output');
+  return parseHtml(source || NA_PLUGIN_OUTPUT);
 }
 function formatDesc(issue: unknown): string {
   const desc = [
@@ -250,7 +251,8 @@ function getCheck(item: unknown): string {
 }
 
 function getDesc(item: unknown): string {
-  return _.has(item, COMPLIANCE_INFO) ? parseHtml(_.get(item, COMPLIANCE_INFO)) : parseHtml(formatDesc(item));
+  const source = _.has(item, COMPLIANCE_INFO) ? _.get(item, COMPLIANCE_INFO) : formatDesc(item);
+  return parseHtml(source);
 }
 function getFix(item: unknown): string {
   const fix = _.get(item, 'solution');
