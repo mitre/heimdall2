@@ -107,7 +107,7 @@ export function omitHDFTimes(
 
 const CKL_VERSION_RE = /(?<=<!--Heimdall Version :: )\S+(?=-->)/v;
 const XCCDF_VERSION_RE = /(?<=<version>)\S+(?=<\/version>)/v;
-const HTML_STYLE_TAG_RE = /(<style>)[\s\S]*?(?=<\/style>)/v;
+const HTML_STYLE_TAG_RE = /(?<styleTag><style>)[\s\S]*?(?=<\/style>)/v;
 
 export function replaceCKLVersion(input: string): string {
   return input.replace(CKL_VERSION_RE, () => hdfConvertersVersion);
@@ -118,5 +118,5 @@ export function replaceXCCDFVersion(input: string): string {
 }
 
 export function omitHTMLStyleTag(input: string): string {
-  return input.replace(HTML_STYLE_TAG_RE, '$1');
+  return input.replace(HTML_STYLE_TAG_RE, '$<styleTag>');
 }

@@ -259,7 +259,7 @@ export function createCode(
     return '';
   }
   return `=========================================================\n# Profile name: ${
-    String(control.profileInfo?.name ?? '')
+    (control.profileInfo?.name as string | undefined) ?? ''
   }\n=========================================================\n\n${
     control.code ? control.code?.replaceAll(String.raw`\"`, '"') : noCodeValue
   }`;

@@ -1,13 +1,9 @@
 import fs from 'fs';
-import { describe, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { FromHDFToSplunkMapper } from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
 
 const SPLUNK_HOST = process.env.SPLUNK_HOST ?? '127.0.0.1';
 const SPLUNK_PORT = Number(process.env.SPLUNK_PORT ?? 8089);
-
-export function delay(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 describe('Splunk Reverse Mapper', () => {
   it('Successfully converts HDF into Splunk', async ({ skip }) => {
@@ -19,7 +15,7 @@ describe('Splunk Reverse Mapper', () => {
     );
 
     try {
-      await new FromHDFToSplunkMapper(inputData).toSplunk(
+      const guid = await new FromHDFToSplunkMapper(inputData).toSplunk(
         {
           host: SPLUNK_HOST,
           index: process.env.SPLUNK_INDEX ?? 'main',
@@ -29,6 +25,7 @@ describe('Splunk Reverse Mapper', () => {
         },
         'rhel7-results.json',
       );
+      expect(guid).toBeTruthy();
     } catch (error: any) {
       if (error?.cause?.code === 'ECONNREFUSED' || error?.cause?.code === 'ECONNRESET') {
         skip(`Splunk not available at ${SPLUNK_HOST}:${SPLUNK_PORT}`);

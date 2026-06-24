@@ -568,17 +568,14 @@ export class CycloneDXSBOMResults {
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [];
 
-      vulnerability.affectedComponents.push(
-        ...data.components.entries().toArray()
-          // Find every component that is affected via listed bom-refs
-          .filter(([_index, component]) =>
-            vulnerability.affects
-              ?.map(id => id.ref.toString())
-              .includes(component['bom-ref']!),
-          )
-          // Add the index of that affected component to the corresponding vulnerability object
-          .map(([index, _component]) => index),
+      const affectedRefs = new Set(
+        vulnerability.affects?.map(id => id.ref.toString()) ?? [],
       );
+      for (const [index, component] of data.components.entries()) {
+        if (affectedRefs.has(component['bom-ref']!)) {
+          vulnerability.affectedComponents.push(index);
+        }
+      }
 
       // Also record the ID of the vulnerability in the component for use in bidirectional traversal
       for (const index of vulnerability.affectedComponents) {
@@ -636,31 +633,28 @@ function maxImpact(ratings: FluffyRating[] | PurpleRating[]): number {
 // If the highest rating severity for a control is `info` or `unknown`, set the results to skipped and request a manual review
 function skipSeverityInfoOrUnknown(controls: unknown[]): unknown[] {
   if (controls) {
-    (controls as ExecJSON.Control[])
-      // Filter to controls whose highest rating severity is either `info` or `unknown`
-      .filter((control) => {
-        const ratings = new Set((_.get(control, 'tags.ratings', '') as string).split(
-          RATINGS_SEPARATOR_RE,
-        ));
-        return (
-          (ratings.has('info') || ratings.has('unknown'))
-          && !(
-            ratings.has('critical')
-            || ratings.has('high')
-            || ratings.has('medium')
-            || ratings.has('low')
-            || ratings.has('none')
-          )
-        );
-      })
-      // For every result contained by that control, set the status to skipped and request a manual review
-      .forEach(control =>
-        control.results.forEach((result) => {
-          result.status = ExecJSON.ControlResultStatus.Skipped;
-          result.skip_message
-            = 'Manual review required because a CycloneDX rating severity is set to `info` or `unknown`.';
-        }),
+    const infoOrUnknownControls = (controls as ExecJSON.Control[]).filter((control) => {
+      const ratings = new Set((_.get(control, 'tags.ratings', '') as string).split(
+        RATINGS_SEPARATOR_RE,
+      ));
+      return (
+        (ratings.has('info') || ratings.has('unknown'))
+        && !(
+          ratings.has('critical')
+          || ratings.has('high')
+          || ratings.has('medium')
+          || ratings.has('low')
+          || ratings.has('none')
+        )
       );
+    });
+    for (const control of infoOrUnknownControls) {
+      for (const result of control.results) {
+        result.status = ExecJSON.ControlResultStatus.Skipped;
+        result.skip_message
+          = 'Manual review required because a CycloneDX rating severity is set to `info` or `unknown`.';
+      }
+    }
   }
   return controls;
 }
