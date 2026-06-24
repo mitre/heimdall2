@@ -7,7 +7,7 @@ import { version as hdfConvertersVersion } from '../package.json';
 import { type IFindingASFF } from '../src/converters-from-hdf/asff/asff-types';
 
 export function loadFixture(path: string): unknown {
-  return JSON.parse(fs.readFileSync(path, { encoding: 'utf8' }));
+  return JSON.parse(fs.readFileSync(path, { encoding: 'utf8' })); // eslint-disable-line security/detect-non-literal-fs-filename -- centralized test fixture loader
 }
 
 export function isServiceAvailable(host: string, port: number, timeoutMs = 1000): Promise<boolean> {

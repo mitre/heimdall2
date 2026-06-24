@@ -284,7 +284,7 @@ export function consolidatePayloads(
   const grouped = groupBy(payloads, pl => pl.meta.guid);
 
   const built = mapHash(grouped, consolidateFilePayloads);
-  return [...built.values()];
+  return built.values().toArray();
 }
 
 // Groups items by using the provided key function

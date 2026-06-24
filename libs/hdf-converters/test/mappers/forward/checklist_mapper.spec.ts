@@ -11,7 +11,7 @@ import { omitVersions } from '../../utils';
 // );
 
 const readFile = (path: fs.PathOrFileDescriptor) =>
-  fs.readFileSync(path, { encoding: 'utf8' });
+  fs.readFileSync(path, { encoding: 'utf8' }); // eslint-disable-line security/detect-non-literal-fs-filename -- test fixture path
 const parseJsonFile = (path: fs.PathOrFileDescriptor) =>
   JSON.parse(readFile(path));
 

@@ -1,13 +1,14 @@
 import fs from 'fs';
 import { describe, expect, it } from 'vitest';
 import { ChecklistResults } from '../../../src/ckl-mapper/checklist-mapper';
+import { loadFixture } from '../../utils';
 import { InvalidChecklistMetadataException } from '../../../src/ckl-mapper/checklist-metadata-utils';
 import { type Checklist, type Stigdata } from '../../../src/ckl-mapper/checklistJsonix';
 import { replaceCKLVersion } from '../../utils';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -20,7 +21,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
   });
 
   it('Successfully converts HDF with multiple stigs to Checklist', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -35,7 +36,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
 
 describe('non_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -50,7 +51,7 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
 
 describe('Small RHEL8 HDF file', () => {
   it('can be successfully converted from HDF to Checklist', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -65,7 +66,7 @@ describe('Small RHEL8 HDF file', () => {
 
 describe('Small RHEL 7 with severity and severity override tags', () => {
   it('can be successfully converted from HDF to Checklist', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/sample_input_report/RHEL7_overrides_hdf.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -80,7 +81,7 @@ describe('Small RHEL 7 with severity and severity override tags', () => {
 
 describe('hdf_profile_with_invalid_metadata', () => {
   it('Throws InvalidChecklistFormatException when trying to convert to checklist with invalid metadata', () => {
-    const fileContents = loadJsonFile(
+    const fileContents = loadFixture(
       'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.json',
     );
     expect(() => new ChecklistResults(fileContents)).toThrowError(
@@ -91,7 +92,7 @@ describe('hdf_profile_with_invalid_metadata', () => {
 
 describe('hdf_profile_with_multiple_mac_host_addresses', () => {
   it('can correctly provide multiple mac host addresses for the checklist file', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/multiple_mac_addresses_metadata.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -108,7 +109,7 @@ describe('hdf_profile_with_multiple_mac_host_addresses', () => {
 
 describe('hdf_profile_with_multiple_ip_host_addresses', () => {
   it('can correctly provide multiple host ip host addresses for the checklist file', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/checklist_mapper/multiple_ip_addresses_metadata.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -124,7 +125,7 @@ describe('hdf_profile_with_multiple_ip_host_addresses', () => {
 
 describe('checklist_mapper_severity_mapping', () => {
   it('Maps control V-61867 to correct severity category', () => {
-    const hdfData = loadJsonFile(
+    const hdfData = loadFixture(
       'sample_jsons/attestations/triple_overlay_profile_sample.json',
     );
     const mapper = new ChecklistResults(hdfData);
@@ -136,14 +137,6 @@ describe('checklist_mapper_severity_mapping', () => {
   });
 });
 
-/**
- * Load and parse the file.
- * @param filePath Path to the file.
- * @returns Parsed data.
- */
-function loadJsonFile(filePath: string): any {
-  return JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
-}
 /**
  * Extract the severity string for a specific control from the mapper.
  * @param jsonixData Checklist data in jsonix format.
@@ -189,5 +182,5 @@ function extractStatus(
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function saveCklOutput(mapper: ChecklistResults, outputPath: string): void {
   const cklOutput = mapper.toCkl({ prettyPrint: true });
-  fs.writeFileSync(outputPath, cklOutput);
+  fs.writeFileSync(outputPath, cklOutput); // eslint-disable-line security/detect-non-literal-fs-filename -- test fixture output path
 }

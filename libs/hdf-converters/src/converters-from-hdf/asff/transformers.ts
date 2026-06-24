@@ -68,7 +68,7 @@ function filter_overlays(
     }
   }
 
-  return [...idMap.values()];
+  return idMap.values().toArray();
 }
 
 export function createProfileInfoFinding(

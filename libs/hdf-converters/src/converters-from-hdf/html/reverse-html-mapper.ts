@@ -478,7 +478,7 @@ export class FromHDFToHTMLMapper {
   replaceIllegalCharacters(text: string): string {
     for (const illegalCharacter of ILLEGAL_CHARACTER_SET) {
       text = text.replaceAll(
-        new RegExp(illegalCharacter[0], 'g'),
+        new RegExp(illegalCharacter[0], 'g'), // eslint-disable-line security/detect-non-literal-regexp -- pattern from hardcoded ILLEGAL_CHARACTER_SET
         () => illegalCharacter[1],
       );
     }

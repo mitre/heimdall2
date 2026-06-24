@@ -152,9 +152,9 @@ export class CciNistTwoWayMapper {
 
     const { cci_item } = this.data.cci_list.cci_items;
 
-    const regexPattern = new RegExp(`^${pattern}`);
+    const regexPattern = new RegExp(`^${pattern}`); // eslint-disable-line security/detect-non-literal-regexp -- pattern is internal NIST control ID
     const editedPattern = NIST_FAMILY_NUM_RE.exec(pattern);
-    const regexEditedPattern = editedPattern ? new RegExp(String(editedPattern)) : null;
+    const regexEditedPattern = editedPattern ? new RegExp(String(editedPattern)) : null; // eslint-disable-line security/detect-non-literal-regexp -- derived from internal NIST pattern
     for (const item of cci_item) {
       if (item.type !== 'technical') {
         continue;

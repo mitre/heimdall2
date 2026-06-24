@@ -33,7 +33,7 @@ enum ImpactMapping {
 }
 
 const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
-const FINDING_DETAILS_RE = /^(?<status>error|failed|passed|skipped) :: TEST (?<codeDesc>.*?)(?: :: (?<messageType>MESSAGE|SKIP_MESSAGE) (?<message>.*))?$/sv;
+const FINDING_DETAILS_RE = /^(?<status>error|failed|passed|skipped) :: TEST (?<codeDesc>.*?)(?: :: (?<messageType>MESSAGE|SKIP_MESSAGE) (?<message>.*))?$/sv; // eslint-disable-line security/detect-unsafe-regex -- anchored regex with bounded quantifiers, no exponential backtrack
 const COMMENT_SECTION_SPLIT_RE = /\n(?=[A-Z]+ ::)/v;
 const COMMENT_SECTION_PARSE_RE = /^(?<label>[A-Z]+) :: (?<data>.+)/sv;
 
