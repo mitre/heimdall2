@@ -165,16 +165,17 @@ export class NeuVectorMapper extends BaseConverter {
   memoizedGetModules(): (
     moduleName: string,
   ) => RESTScanModule['source'] | undefined {
-    const cache: Record<string, RESTScanModule['source'] | undefined> = {};
+    const cache = new Map<string, RESTScanModule['source'] | undefined>();
 
     return (moduleName: string) => {
-      if (Object.hasOwn(cache, moduleName)) {
-        return cache[moduleName];
+      if (cache.has(moduleName)) {
+        return cache.get(moduleName);
       }
-      cache[moduleName] = (this.data as NeuVectorScanJson).report.modules?.find(
+      const source = (this.data as NeuVectorScanJson).report.modules?.find(
         value => value.name === moduleName,
       )?.source;
-      return cache[moduleName];
+      cache.set(moduleName, source);
+      return source;
     };
   }
 }
