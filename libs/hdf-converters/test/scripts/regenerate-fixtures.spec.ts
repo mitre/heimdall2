@@ -141,8 +141,8 @@ describe('regenerate-fixtures registry', () => {
           const mapper = entry.mapperFactory(input);
           const result = entry.isAsync ? await mapper.toHdf() : mapper.toHdf();
           const output = JSON.stringify(result, null, 2);
-          const doesOutputExist = fs.existsSync(entry.outputFile);
-          const originalSize = doesOutputExist ? fs.statSync(entry.outputFile).size : 0;
+          const hasOutputFile = fs.existsSync(entry.outputFile);
+          const originalSize = hasOutputFile ? fs.statSync(entry.outputFile).size : 0;
           const ratio = originalSize > 0 ? output.length / originalSize : 0;
           expect(
             ratio,

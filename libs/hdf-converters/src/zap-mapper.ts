@@ -168,8 +168,8 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
     .value();
   for (const id of dupId) {
     let index = 1;
-    for (const element of input
-      .filter(element => _.get(element, 'id') === id)) {
+    const duplicates = input.filter(element => _.get(element, 'id') === id);
+    for (const element of duplicates) {
       if (element instanceof Object) {
         _.set(element, 'id', `${id}.${index.toString()}`);
       }

@@ -569,7 +569,7 @@ export class CycloneDXSBOMResults {
       vulnerability.affectedComponents = [];
 
       vulnerability.affectedComponents.push(
-        ...[...data.components.entries()]
+        ...data.components.entries().toArray()
           // Find every component that is affected via listed bom-refs
           .filter(([_index, component]) =>
             vulnerability.affects
@@ -654,8 +654,8 @@ function skipSeverityInfoOrUnknown(controls: unknown[]): unknown[] {
         );
       })
       // For every result contained by that control, set the status to skipped and request a manual review
-      .map(control =>
-        control.results.map((result) => {
+      .forEach(control =>
+        control.results.forEach((result) => {
           result.status = ExecJSON.ControlResultStatus.Skipped;
           result.skip_message
             = 'Manual review required because a CycloneDX rating severity is set to `info` or `unknown`.';
