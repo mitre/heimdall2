@@ -166,10 +166,10 @@ function zeroCounts(): Counts {
     FailedTests: 0,
     NotApplicable: 0,
     NotReviewed: 0,
-      Passed: 0,
-      PassedTests: 0,
-      PassingTestsFailedControl: 0,
-    };
+    Passed: 0,
+    PassedTests: 0,
+    PassingTestsFailedControl: 0,
+  };
 }
 
 describe('accumulateControlStatus', () => {

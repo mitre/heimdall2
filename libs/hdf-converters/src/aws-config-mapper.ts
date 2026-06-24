@@ -262,14 +262,14 @@ export class AwsConfigMapper {
   }
 
   private getCodeDesc(result: EvaluationResult): string {
-    return result.EvaluationResultIdentifier?.EvaluationResultQualifier !== undefined
-      ? JSON.stringify(
+    return result.EvaluationResultIdentifier?.EvaluationResultQualifier === undefined
+      ? ''
+      : JSON.stringify(
         result.EvaluationResultIdentifier.EvaluationResultQualifier,
       )
         .replaceAll('"', '')
         .replaceAll('{', '')
-        .replaceAll('}', '')
-      : '';
+        .replaceAll('}', '');
   }
 
   private async getConfigRulePage(
@@ -385,7 +385,7 @@ export class AwsConfigMapper {
       && result.ConfigRuleInvokedTime !== undefined
       ? (result.ResultRecordedTime.getTime()
         - result.ConfigRuleInvokedTime.getTime())
-        / 1000
+      / 1000
       : 0;
   }
 
@@ -409,9 +409,9 @@ export class AwsConfigMapper {
     let result = {};
     const sourceIdentifier = configRule.Source?.SourceIdentifier;
     result = _.set(result, 'nist', []);
-    const defaultMatch = sourceIdentifier !== undefined
-      ? AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier])
-      : [];
+    const defaultMatch = sourceIdentifier === undefined
+      ? []
+      : AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier]);
     if (Array.isArray(defaultMatch) && defaultMatch.length > 0) {
       result = _.set(
         result,
