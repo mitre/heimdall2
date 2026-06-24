@@ -78,6 +78,38 @@ export class AwsConfigMapper {
     this.issues = this.getAllConfigRules();
   }
 
+  public async toHdf(): Promise<ExecJSON.Execution> {
+    const hdf: ExecJSON.Execution = {
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+        target_id: '',
+      },
+      profiles: [
+        {
+          attributes: [],
+          controls: await this.getControls(),
+          copyright: null,
+          copyright_email: null,
+          depends: [],
+          groups: [],
+          license: null,
+          maintainer: null,
+          name: NAME,
+          sha256: '',
+          status: 'loaded',
+          summary: NAME,
+          supports: [],
+          title: NAME,
+          version: '',
+        },
+      ],
+      statistics: { duration: null },
+      version: HeimdallToolsVersion,
+    };
+    return hdf;
+  }
+
   private appendResourceNamesToResults(
     completedControlResults: ExecJSON.ControlResult[][],
     extractedResourceNames: Record<string, string>,
@@ -385,39 +417,5 @@ export class AwsConfigMapper {
       );
     }
     return result;
-  }
-
-  public async toHdf(): Promise<ExecJSON.Execution> {
-    const hdf: ExecJSON.Execution = {
-      platform: {
-        name: 'Heimdall Tools',
-        release: HeimdallToolsVersion,
-        target_id: '',
-      },
-      profiles: [
-        {
-          attributes: [],
-          controls: await this.getControls(),
-          copyright: null,
-          copyright_email: null,
-          depends: [],
-          groups: [],
-          license: null,
-          maintainer: null,
-          name: NAME,
-          sha256: '',
-          status: 'loaded',
-          summary: NAME,
-          supports: [],
-          title: NAME,
-          version: '',
-        },
-      ],
-      statistics: {
-        duration: null,
-      },
-      version: HeimdallToolsVersion,
-    };
-    return hdf;
   }
 }

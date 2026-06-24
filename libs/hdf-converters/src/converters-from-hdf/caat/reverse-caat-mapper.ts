@@ -71,22 +71,6 @@ export class FromHDFToCAATMapper {
 
   static readonly SheetOptions: XLSX.JSON2SheetOpts = { header: [...CAATHeaders] };
 
-  static fix(str?: null | string): string {
-    return (str ?? '')
-      .replaceAll(/\r\n|\n|\r/gv, '\r\n')
-      .slice(0, this.MaxCellSize);
-  }
-
-  static formatDate(date: Date, delimiter: string): string {
-    return [
-      Intl.DateTimeFormat('en-US', { month: '2-digit' }),
-      Intl.DateTimeFormat('en-US', { day: '2-digit' }),
-      Intl.DateTimeFormat('en-US', { year: 'numeric' }),
-    ]
-      .map(formatter => formatter.format(date))
-      .join(delimiter);
-  }
-
   data: Data[];
 
   // ensure input is turned into an array of contextualized evaluations with some additional metadata
@@ -117,6 +101,22 @@ export class FromHDFToCAATMapper {
           ?? 'ExecJSON', // otherwise set the default
       };
     });
+  }
+
+  static fix(str?: null | string): string {
+    return (str ?? '')
+      .replaceAll(/\r\n|\n|\r/gv, '\r\n')
+      .slice(0, this.MaxCellSize);
+  }
+
+  static formatDate(date: Date, delimiter: string): string {
+    return [
+      Intl.DateTimeFormat('en-US', { month: '2-digit' }),
+      Intl.DateTimeFormat('en-US', { day: '2-digit' }),
+      Intl.DateTimeFormat('en-US', { year: 'numeric' }),
+    ]
+      .map(formatter => formatter.format(date))
+      .join(delimiter);
   }
 
   getRow(control: ContextualizedControl, filename: string): CAATRow[] {

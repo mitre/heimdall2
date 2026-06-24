@@ -101,6 +101,33 @@ export class CciNistTwoWayMapper {
     this.data = parser.parse(CCI_List);
   }
 
+  cciFilter(identifiers: string[], defaultCci: string[]): string[] {
+    const matches: string[] = [];
+    for (const id of identifiers) {
+      matches.push(...this.findMatchingCciIdsByNistControl(id));
+    }
+    return matches ?? defaultCci;
+  }
+
+  nistFilter(
+    identifiers: string[],
+    defaultNist: string[],
+    shouldCollapse = true,
+  ): string[] {
+    const DEFAULT_NIST_TAGS = defaultNist;
+    let matches: string[] = [];
+    for (const id of identifiers) {
+      const nistRef = this.findHighestVersionNistControlByCci(id);
+      if (nistRef) {
+        matches.push(nistRef);
+      }
+    }
+    if (shouldCollapse) {
+      matches = _.uniq(matches);
+    }
+    return matches ?? DEFAULT_NIST_TAGS;
+  }
+
   private findHighestVersionNistControlByCci(targetId: string): null | string {
     let highestVersionControl: null | string = null;
     let highestVersion = -1;
@@ -118,14 +145,6 @@ export class CciNistTwoWayMapper {
       }
     }
     return highestVersionControl;
-  }
-
-  cciFilter(identifiers: string[], defaultCci: string[]): string[] {
-    const matches: string[] = [];
-    for (const id of identifiers) {
-      matches.push(...this.findMatchingCciIdsByNistControl(id));
-    }
-    return matches ?? defaultCci;
   }
 
   private findMatchingCciIdsByNistControl(pattern: string): string[] {
@@ -152,24 +171,5 @@ export class CciNistTwoWayMapper {
     }
 
     return matchingIds;
-  }
-
-  nistFilter(
-    identifiers: string[],
-    defaultNist: string[],
-    shouldCollapse = true,
-  ): string[] {
-    const DEFAULT_NIST_TAGS = defaultNist;
-    let matches: string[] = [];
-    for (const id of identifiers) {
-      const nistRef = this.findHighestVersionNistControlByCci(id);
-      if (nistRef) {
-        matches.push(nistRef);
-      }
-    }
-    if (shouldCollapse) {
-      matches = _.uniq(matches);
-    }
-    return matches ?? DEFAULT_NIST_TAGS;
   }
 }
