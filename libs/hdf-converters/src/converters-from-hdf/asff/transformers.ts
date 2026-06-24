@@ -546,7 +546,8 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
       }
     }
   } else {
-    for (const [key, value] of Object.entries(control.descriptions || {})) {
+    const descriptionEntries = Object.entries(control.descriptions || {});
+    for (const [key, value] of descriptionEntries) {
       if (value && cleanText(value as string)) {
         typesArr.push(
           `Descriptions/${escapeForwardSlashes(key)}/${escapeForwardSlashes(

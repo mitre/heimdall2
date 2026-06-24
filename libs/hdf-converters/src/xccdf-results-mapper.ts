@@ -155,7 +155,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 >;
                 if (ruleResult) {
                   const result = _.get(ruleResult, 'result') as string;
-                  if (['notselected', 'notapplicable', 'informational'].includes(result)) {
+                  if (['informational', 'notapplicable', 'notselected'].includes(result)) {
                     return 0;
                   }
                 }

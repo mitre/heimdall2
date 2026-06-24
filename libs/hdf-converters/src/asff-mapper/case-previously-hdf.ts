@@ -132,18 +132,18 @@ function getCodeForProfileLayer(
   profileName: string,
 ) {
   const profileLayerToCodeMapping: Record<string, string> = {};
-  for (const codeLayer of (
-    _.get(finding, 'Resources') as {
-      Details?: { AwsIamRole?: { AssumeRolePolicyDocument: string } };
-      Id: string;
-      Type: string;
-    }[]
-  )
+  const resources = _.get(finding, 'Resources') as {
+    Details?: { AwsIamRole?: { AssumeRolePolicyDocument: string } };
+    Id: string;
+    Type: string;
+  }[];
+  const codeLayers = resources
     .find(resource => resource.Type === 'AwsIamRole')
     ?.Details?.AwsIamRole?.AssumeRolePolicyDocument?.split(
       '=========================================================\n# Profile name: ',
     )
-    ?.filter(Boolean) ?? []) {
+    ?.filter(Boolean) ?? [];
+  for (const codeLayer of codeLayers) {
     const [profileLevel, code] = codeLayer.split(
       '\n=========================================================\n\n',
     );

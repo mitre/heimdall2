@@ -562,12 +562,12 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   getStatus(results: ExecJSON.ControlResult[], impact: number): StatusMapping {
-    const statuses: ExecJSON.ControlResultStatus[] = results.map((result) => {
-      return result.status;
-    }) as unknown as ExecJSON.ControlResultStatus[];
     if (impact === 0) {
       return StatusMapping.Not_Applicable;
     }
+    const statuses: ExecJSON.ControlResultStatus[] = results.map((result) => {
+      return result.status;
+    }) as unknown as ExecJSON.ControlResultStatus[];
     if (statuses.includes(ExecJSON.ControlResultStatus.Failed)) {
       return StatusMapping.Open;
     }

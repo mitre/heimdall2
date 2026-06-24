@@ -6,7 +6,7 @@ hdf2Splunk has the following 3 schemas for importing data into Splunk.
 
 A full raw search query:
 
-```
+```text
 index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) first(meta.status)  list(meta.status)  list(meta.is_baseline) values(title) last(code) list(code) values(desc) values(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
 | join  meta.guid 
     [search index="hdf"  meta.subtype=header | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(statistics.duration)  list(platform.*) list(version)  by meta.guid] 
@@ -17,7 +17,7 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
 
 A formatted table search query:
 
-```
+```text
 index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) first(meta.status)  list(meta.status)  list(meta.is_baseline) values(title) last(code) list(code) values(desc) values(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
 | join  meta.guid 
     [search index="hdf"  meta.subtype=header | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(statistics.duration)  list(platform.*) list(version)  by meta.guid] 
@@ -29,7 +29,7 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
 
 ### Control
 
-```
+```jsonc
 {
     "meta": {
         // This field is consistent accross all events per upload, i.e you can get all data related to a results set by querying meta.guid="<<GUID>>"
@@ -117,7 +117,7 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
 
 ### Profile
 
-```
+```jsonc
 {
     "meta": {
         // This field is consistent across all events per upload, i.e you can get all data related to a results set by querying meta.guid="<<GUID>>"
@@ -200,7 +200,7 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
 
 ### (Execution) Header
 
-```
+```jsonc
 
 {
     "meta": {

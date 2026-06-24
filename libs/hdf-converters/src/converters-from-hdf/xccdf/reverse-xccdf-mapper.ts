@@ -284,7 +284,8 @@ export class FromHDFToXCCDFMapper {
     }
 
     // Add the control metadata for the top-level profile
-    for (const control of this.data.profiles[0].controls) {
+    const topLevelControls = this.data.profiles[0].controls;
+    for (const control of topLevelControls) {
       mappedData.Benchmark.Rule.push(this.getControlInfo(control));
     }
 
