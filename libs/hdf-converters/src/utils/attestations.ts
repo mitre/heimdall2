@@ -8,7 +8,7 @@ import type {
 import * as _ from 'lodash';
 import moment from 'moment';
 
-const CUSTOM_FREQUENCY_RE = /(?<value>\d{1,10}(?:\.\d{0,10})?)\s{0,10}(?<unit>[a-z])/v;
+const CUSTOM_FREQUENCY_RE = /(?<value>\d{1,10}(?:\.\d{0,10})?)\s{0,10}(?<unit>[a-z])/v; // eslint-disable-line security/detect-unsafe-regex -- all quantifiers bounded, max 1000 iterations
 
 // Convert from using enum type to enum values
 export type Attestation = Omit<AttestationData, 'status'> & { status: `${ControlAttestationStatus}` };
