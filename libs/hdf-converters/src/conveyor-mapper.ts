@@ -190,7 +190,7 @@ function createDescription(
       );
     }
     const raw = scannerName === scannerType.CodeQuality
-      ? `body:${_.get(data, 'body')}
+      ? `body:${String(_.get(data, 'body'))}
       body_format:${_.get(data, 'body_format') as string}
       classificaton:${_.get(data, 'classification') as string}
       depth:${_.get(data, 'depth') as string}

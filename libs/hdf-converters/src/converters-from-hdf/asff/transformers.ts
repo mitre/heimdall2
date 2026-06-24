@@ -480,8 +480,8 @@ function createProfileInfoFindingFields(
     }
   }
   const passthrough = _.get(hdf, 'passthrough');
-  if (_.isString(passthrough) && passthrough.trim()) {
-    typesArr.push(`Execution/passthrough/${escapeForwardSlashes(passthrough)}`);
+  if (_.isString(passthrough) && (passthrough as string).trim()) {
+    typesArr.push(`Execution/passthrough/${escapeForwardSlashes(passthrough as string)}`);
   } else if (passthrough !== undefined) {
     typesArr.push(
       `Execution/passthrough/${escapeForwardSlashes(

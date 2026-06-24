@@ -7,7 +7,7 @@ function findingId(finding: unknown): string {
   const generatorId = _.get(finding, 'GeneratorId');
   const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
   if (typeof cveId === 'string') {
-    return encode(`${generatorId}/${cveId}`);
+    return encode(`${generatorId}/${cveId as string}`);
   }
   const id = _.get(finding, 'Id');
   return encode(`${generatorId}/${id}`);
