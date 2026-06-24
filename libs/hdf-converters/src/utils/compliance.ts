@@ -26,7 +26,7 @@ export function formatCompliance(
 // >=90 is high compliance, >= 60 is medium compliance, <60 is low compliance
 // Mainly for HTML export
 export function translateCompliance(rawCompliance: string): string {
-  const compliance = Number.parseFloat(rawCompliance.slice(0, -1));
+  const compliance = Number(rawCompliance.slice(0, -1));
 
   if (compliance >= 90) {
     return 'high';

@@ -152,7 +152,7 @@ export class AwsConfigMapper {
         result,
         'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId',
       ) as unknown as string;
-      if (resourceType in resourceMap) {
+      if (Object.hasOwn(resourceMap, resourceType)) {
         if (
           !resourceMap[resourceType]?.includes(resourceId)
           && typeof resourceId === 'string'

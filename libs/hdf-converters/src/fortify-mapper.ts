@@ -194,9 +194,9 @@ function impactMapping(input: Record<string, unknown>, id: string): number {
     const matches = input.find((element) => {
       return _.get(element, 'ClassInfo.ClassID') === id;
     });
-    return Number.parseFloat(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5;
+    return Number(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5;
   }
-  return Number.parseFloat(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
+  return Number(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
 }
 function makeArray(input: unknown): unknown[] {
   return Array.isArray(input) ? (input as unknown[]) : [input];

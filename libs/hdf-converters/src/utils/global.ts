@@ -74,7 +74,7 @@ export function getCCIsForNISTTags(nistTags: string[]): string[] {
     if (
       Array.isArray(baseTag)
       && baseTag.length > 0
-      && baseTag[0] in NistCciMappingData
+      && Object.hasOwn(NistCciMappingData, baseTag[0])
     ) {
       cciTags.push(...NistCciMappingData[baseTag[0]]);
     }

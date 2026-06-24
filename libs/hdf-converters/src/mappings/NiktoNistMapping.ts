@@ -13,6 +13,6 @@ export class NiktoNistMapping {
     if (id === '' || id === undefined) {
       return DEFAULT_NIST_TAG;
     }
-    return id in data ? [(data as Record<string, string>)[id]] : DEFAULT_NIST_TAG;
+    return Object.hasOwn(data, id) ? [(data as Record<string, string>)[id]] : DEFAULT_NIST_TAG;
   }
 }

@@ -396,5 +396,5 @@ function consolidateFilePayloads(
 
 function unixTimeToDate(unixTime: string): Date {
   // Splunk only currently returns ints but this could be a decimal for more precision
-  return new Date(Number.parseFloat(unixTime) * 1000);
+  return new Date(Number(unixTime) * 1000);
 }

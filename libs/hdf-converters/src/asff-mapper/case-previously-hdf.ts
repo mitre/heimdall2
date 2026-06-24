@@ -151,7 +151,7 @@ function getCodeForProfileLayer(
       .split('Test Description:', 1)[0]
       .trim();
   }
-  return profileName in profileLayerToCodeMapping ? profileLayerToCodeMapping[profileName] : '';
+  return Object.hasOwn(profileLayerToCodeMapping, profileName) ? profileLayerToCodeMapping[profileName] : '';
 }
 
 function mapping(
