@@ -147,7 +147,7 @@ describe('trufflehog_example_mapper', () => {
   });
 });
 
-describe('trufflehog_example_mapper', () => {
+describe('trufflehog_example_mapper_withraw', () => {
   it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(

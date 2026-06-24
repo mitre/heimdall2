@@ -42,7 +42,7 @@ describe('zap_mapper', () => {
   });
 });
 
-describe('zap_mapper', () => {
+describe('zap_mapper_withraw', () => {
   it('Successfully converts webgoat.json using withRaw flag', async () => {
     const mapper = new ZapResults(
       fs.readFileSync(
