@@ -175,9 +175,7 @@ function createDescription(
 ): Record<string, unknown> {
   const desc = () => {
     if (
-      scannerName === scannerType.Moldy
-      || scannerName === scannerType.Stigma
-      || scannerName === scannerType.ClamAV
+      [scannerType.Moldy, scannerType.Stigma, scannerType.ClamAV].includes(scannerName)
     ) {
       return `title_text:${_.get(data, 'title_text') as string}
       body:${String(_.get(data, 'body'))}

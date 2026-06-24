@@ -4,7 +4,7 @@ import { FileExportTypes, FromHDFToHTMLMapper } from '../../../index';
 import { omitHTMLStyleTag } from '../../utils';
 
 describe('HTML Results Reverse Mapper', () => {
-  it('Successfully converts RHEL7 HDF into HTML', async () => {
+  it('Successfully converts RHEL7 HDF into HTML', () => {
     const inputData = fs.readFileSync(
       'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
       { encoding: 'utf8' },
@@ -30,7 +30,7 @@ describe('HTML Results Reverse Mapper', () => {
     expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
   });
 
-  it('Successfully converts SonarQube HDF into HTML', async () => {
+  it('Successfully converts SonarQube HDF into HTML', () => {
     const inputData = fs.readFileSync(
       'sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json',
       { encoding: 'utf8' },
@@ -56,7 +56,7 @@ describe('HTML Results Reverse Mapper', () => {
     expect(omitHTMLStyleTag(converted)).toEqual(omitHTMLStyleTag(expected));
   });
 
-  it('Successfully converts SonarQube HDF into HTML with filtered controls', async () => {
+  it('Successfully converts SonarQube HDF into HTML with filtered controls', () => {
     const inputData = fs.readFileSync(
       'sample_jsons/html_reverse_mapper/sample_input_report/sonarqube-hdf.json',
       { encoding: 'utf8' },
