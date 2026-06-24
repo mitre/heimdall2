@@ -110,11 +110,11 @@ const XCCDF_VERSION_RE = /(?<=<version>)\S+(?=<\/version>)/v;
 const HTML_STYLE_TAG_RE = /(<style>)[\s\S]*?(?=<\/style>)/v;
 
 export function replaceCKLVersion(input: string): string {
-  return input.replace(CKL_VERSION_RE, hdfConvertersVersion);
+  return input.replace(CKL_VERSION_RE, () => hdfConvertersVersion);
 }
 
 export function replaceXCCDFVersion(input: string): string {
-  return input.replace(XCCDF_VERSION_RE, hdfConvertersVersion);
+  return input.replace(XCCDF_VERSION_RE, () => hdfConvertersVersion);
 }
 
 export function omitHTMLStyleTag(input: string): string {

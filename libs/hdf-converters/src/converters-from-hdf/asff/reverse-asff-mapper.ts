@@ -32,10 +32,10 @@ export const TO_ASFF_TYPES_SLASH_REPLACEMENT = '{{{SLASH}}}'; // The "Types" fie
 
 export function escapeForwardSlashes<T>(s: T): T {
   return _.isString(s)
-    ? (s.replaceAll('/', TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
+    ? (s.replaceAll('/', () => TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
     : (JSON.stringify(s).replaceAll(
       '/',
-      TO_ASFF_TYPES_SLASH_REPLACEMENT,
+      () => TO_ASFF_TYPES_SLASH_REPLACEMENT,
     ) as unknown as T);
 }
 

@@ -478,8 +478,8 @@ export class FromHDFToHTMLMapper {
   replaceIllegalCharacters(text: string): string {
     for (const illegalCharacter of ILLEGAL_CHARACTER_SET) {
       text = text.replaceAll(
-        new RegExp(illegalCharacter[0], 'g'),
-        illegalCharacter[1],
+        new RegExp(String(illegalCharacter[0]), 'g'),
+        () => String(illegalCharacter[1]),
       );
     }
     return text;
