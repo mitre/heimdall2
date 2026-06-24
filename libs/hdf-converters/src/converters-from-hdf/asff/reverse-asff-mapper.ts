@@ -79,35 +79,6 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     this.counts = statusCount(contextualizeEvaluation(hdfObj));
   }
 
-  // Security hub currently works at the sub-control level, meaning we need to create our mapped data based off control.results
-  controlsToSegments() {
-    const segments: SegmentedControl[] = [];
-    for (const profile of this.data.profiles) {
-      for (const control of profile.controls.toReversed()) {
-        for (const segment of control.results) {
-          // Ensure that the UpdatedAt time is different across findings (to match the order in HDF)
-          segments.push({
-            ...control,
-            layersOfControl: getAllLayers(this.data, control),
-            result: segment,
-          });
-        }
-      }
-    }
-
-    return segments;
-  }
-
-  defaultOptions(): IOptions {
-    return {
-      awsAccountId: '',
-      input: '',
-      region: '',
-      regionAttribute: false,
-      target: 'default',
-    };
-  }
-
   mappings: () => MappedTransform<IExecJSONASFF, ILookupPathASFF> = () => ({
     Findings: [
       {
@@ -170,6 +141,33 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       },
     ],
   });
+
+  defaultOptions(): IOptions {
+    return {
+      awsAccountId: '',
+      input: '',
+      region: '',
+      regionAttribute: false,
+      target: 'default',
+    };
+  }
+
+  controlsToSegments() {
+    const segments: SegmentedControl[] = [];
+    for (const profile of this.data.profiles) {
+      for (const control of profile.controls.toReversed()) {
+        for (const segment of control.results) {
+          segments.push({
+            ...control,
+            layersOfControl: getAllLayers(this.data, control),
+            result: segment,
+          });
+        }
+      }
+    }
+
+    return segments;
+  }
 
   // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in AssumeRolePolicyDocument and FindingProviderFields.Types for now.
   restrictionAttributesLessThan32KiB(finding: IFindingASFF): IFindingASFF {
