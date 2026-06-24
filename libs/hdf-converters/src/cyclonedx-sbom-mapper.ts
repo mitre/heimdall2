@@ -219,11 +219,11 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                         'copyright',
                       ],
                     );
-                    const msg = Object.keys(selectComponentValues)
-                      .map((key) => {
-                        return Array.isArray(selectComponentValues[key])
-                          ? `\n\n- ${_.capitalize(key)}: ${JSON.stringify(selectComponentValues[key], null, 2)}`
-                          : `\n\n- ${_.capitalize(key)}: ${selectComponentValues[key]}`;
+                    const msg = Object.entries(selectComponentValues)
+                      .map(([key, value]) => {
+                        return Array.isArray(value)
+                          ? `\n\n- ${_.capitalize(key)}: ${JSON.stringify(value, null, 2)}`
+                          : `\n\n- ${_.capitalize(key)}: ${String(value)}`;
                       })
                       .join('');
                     return `-Component Summary-${msg}`;
