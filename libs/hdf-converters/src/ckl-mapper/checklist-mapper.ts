@@ -534,7 +534,7 @@ export class ChecklistMapper extends BaseConverter {
                 for (const [key, path] of tags) {
                   const tagValue = _.get(input, path);
                   if (tagValue && tagValue !== '; ') {
-                    fullTags[key] = tagValue;
+                    fullTags[key] = tagValue; // eslint-disable-line security/detect-object-injection -- key is from hardcoded tags Map entries
                   }
                 }
 

@@ -54,25 +54,21 @@ export function getRunTime(hdf: ExecJSON.Execution): string {
 function filter_overlays(
   controls: ContextualizedControl[],
 ): ContextualizedControl[] {
-  const idHash: Record<string, ContextualizedControl> = {};
+  const idMap = new Map<string, ContextualizedControl>();
   for (const c of controls) {
     const id = c.hdf.wraps.id;
-    const old: ContextualizedControl | undefined = idHash[id];
-    // If old, gotta check if our new status list is "better than" old
+    const old = idMap.get(id);
     if (old) {
       const newSignificant = c.hdf.status_list && c.hdf.status_list.length > 0;
       if (newSignificant) {
-        // Overwrite
-        idHash[id] = c;
+        idMap.set(id, c);
       }
     } else {
-      // First time seeing this id
-      idHash[id] = c;
+      idMap.set(id, c);
     }
   }
 
-  // Return the set of keys
-  return Object.values(idHash);
+  return [...idMap.values()];
 }
 
 export function createProfileInfoFinding(
@@ -521,10 +517,10 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
 
 function createTagInfo(control: { tags: Record<string, unknown> }): string[] {
   const typesArr: string[] = [];
-  for (const tag in control.tags) {
+  for (const [tag, value] of Object.entries(control.tags)) {
     typesArr.push(
       `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
-        JSON.stringify(control.tags[tag]),
+        JSON.stringify(value),
       )}`,
     );
   }
