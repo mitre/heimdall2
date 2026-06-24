@@ -7595,10 +7595,10 @@ cypress-wait-until@^3.0.2:
   resolved "https://registry.npmjs.org/cypress-wait-until/-/cypress-wait-until-3.0.2.tgz#c90dddfa4c46a2c422f5b91d486531c560bae46e"
   integrity sha512-iemies796dD5CgjG5kV0MnpEmKSH+s7O83ZoJLVzuVbZmm4lheMsZqAVT73hlMx4QlkwhxbyUzhOBUOZwoOe0w==
 
-cypress@15.17.0:
-  version "15.17.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-15.17.0.tgz#45b1807d2cb06aa1985006824ce2aa11d3cb7190"
-  integrity sha512-WL5Gcqi1GaDWozBwXmkSAtOPafTsVSRS764iX6xvuz3DPzvBAxbkRyEi4BreVdVWxLDpiYRgZCyJUafBw44njw==
+cypress@15.18.0:
+  version "15.18.0"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-15.18.0.tgz#2d98799596c6a730090375c39c440b36726af7b8"
+  integrity sha512-aLfOYSLlVt1b6QSoVUjbCY27taZlYAT8ST47xQbwd9pvQrY/g5gXi12yItZTB+kxkkj+ZcvUYmRLUC95SlCJsw==
   dependencies:
     "@cypress/request" "^4.0.0"
     "@cypress/xvfb" "^1.2.4"
