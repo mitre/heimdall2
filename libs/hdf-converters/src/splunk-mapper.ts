@@ -110,7 +110,7 @@ export class SplunkMapper {
     for (const value of results.rows) {
       let object;
       try {
-        object = JSON.parse(value[rawDataIndex]);
+        object = JSON.parse(value.at(rawDataIndex)!);
       } catch {
         throw new Error(
           'Unable to parse file. Have you configured EVENT_BREAKER? See https://github.com/mitre/saf/wiki/Splunk-Configuration',
@@ -122,7 +122,7 @@ export class SplunkMapper {
         _.set(
           object,
           'meta.parse_time',
-          unixTimeToDate(value[indexTimeIndex]).toISOString(),
+          unixTimeToDate(value.at(indexTimeIndex)!).toISOString(),
         );
       } catch {
         // Parsing dates can be tricky sometimes
