@@ -89,13 +89,13 @@ function getMessages(segments: ExecJSON.ControlResult[]) {
 
 export class FromHDFToXCCDFMapper {
   data: ExecJSON.Execution;
-  dateOverride: boolean;
+  hasDateOverride: boolean;
   xccdfTemplate: string;
 
-  constructor(data: string, xccdfTemplate: string, dateOverride = false) {
+  constructor(data: string, xccdfTemplate: string, hasDateOverride = false) {
     this.data = JSON.parse(data);
     this.xccdfTemplate = xccdfTemplate;
-    this.dateOverride = dateOverride;
+    this.hasDateOverride = hasDateOverride;
   }
 
   getControlInfo(control: ExecJSON.Control) {
@@ -171,7 +171,7 @@ export class FromHDFToXCCDFMapper {
     };
   }
 
-  getExecutionTime(isoTime = false): string {
+  getExecutionTime(isIsoTime = false): string {
     // Extract the first results from profile level
     const results: ExecJSON.ControlResult[] = [];
 
@@ -188,12 +188,12 @@ export class FromHDFToXCCDFMapper {
         try {
           const parsedDate = moment(result.start_time);
           if (parsedDate.isValid()) {
-            return isoTime
+            return isIsoTime
               ? moment(result.start_time).toISOString()
               : moment(result.start_time, false).format(DATE_FORMAT);
           }
         } catch {
-          return isoTime
+          return isIsoTime
             ? moment().toISOString()
             : moment().format(DATE_FORMAT);
         }
@@ -201,7 +201,7 @@ export class FromHDFToXCCDFMapper {
     }
 
     // Default return date is now
-    return isoTime ? moment().toISOString() : moment().format(DATE_FORMAT);
+    return isIsoTime ? moment().toISOString() : moment().format(DATE_FORMAT);
   }
 
   getSeverity(control: ExecJSON.Control): XCCDFSeverity {
@@ -225,7 +225,7 @@ export class FromHDFToXCCDFMapper {
 
     const mappedData: MappedXCCDFtoHDF = {
       Benchmark: {
-        date: this.dateOverride
+        date: this.hasDateOverride
           ? TESTING_DATE_OVERRIDE
           : this.getExecutionTime(),
         id: 'xccdf_mitre.hdf-converters.xccdf_benchmark_hdf2xccdf',
@@ -238,7 +238,7 @@ export class FromHDFToXCCDFMapper {
         Rule: [],
         TestResult: {
           attributes: [],
-          endTime: this.dateOverride
+          endTime: this.hasDateOverride
             ? TESTING_DATETIME_OVERRIDE
             : this.getExecutionTime(true),
           hasAttributes: false,

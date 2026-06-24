@@ -180,7 +180,7 @@ function createDescription(
       || scannerName === scannerType.ClamAV
     ) {
       return `title_text:${_.get(data, 'title_text') as string}
-      body:${_.get(data, 'body')}
+      body:${String(_.get(data, 'body'))}
       body_format:${_.get(data, 'body_format') as string}
       classificaton:${_.get(data, 'classification') as string}
       depth:${_.get(data, 'depth') as string}

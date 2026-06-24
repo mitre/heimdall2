@@ -273,7 +273,7 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   return results;
 }
 
-function containsChecklist(object: ExecJSON.Execution): boolean {
+function hasChecklist(object: ExecJSON.Execution): boolean {
   return _.has(object, 'passthrough.checklist');
 }
 
@@ -319,23 +319,23 @@ function getHdfSpecificDataAttribute(
  * @property {string | ExecJSON.Execution} data - The input data, which can be a string of XML data or an HDF JSON execution object.
  * @property {Checklist} jsonixData - The JSON representation of the checklist data using the jsonix library.
  * @property {ChecklistObject} checklistObject - The intermediate object representation of the checklist data.
- * @property {boolean} withRaw - A flag indicating whether to include raw data in the output.
+ * @property {boolean} shouldIncludeRaw - A flag indicating whether to include raw data in the output.
  */
 export class ChecklistResults extends ChecklistJsonixConverter {
   checklistObject: ChecklistObject;
   data: ExecJSON.Execution | string;
   jsonixData: Checklist;
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   /**
    * @param {string | ExecJSON.Execution} data - The input data, which can be either an HDF JSON object
    * or an XML CKL string, depending on the direction of the conversion.
-   * @param {boolean} [withRaw=false] - A flag indicating whether to include raw data in the output.
+   * @param {boolean} [shouldIncludeRaw=false] - A flag indicating whether to include raw data in the output.
    * Defaults to false.
    *
    * @throws Will throw an error if the asset metadata is invalid.
    */
-  constructor(data: ExecJSON.Execution | string, withRaw = false) {
+  constructor(data: ExecJSON.Execution | string, shouldIncludeRaw = false) {
     super(jsonixMapping);
     this.data = data;
 
@@ -343,7 +343,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
       this.jsonixData = super.toJsonix(data);
       this.checklistObject = super.toIntermediateObject(this.jsonixData);
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
-    } else if (containsChecklist(data)) {
+    } else if (hasChecklist(data)) {
       this.checklistObject = getChecklistObjectFromHdf(data);
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
@@ -353,7 +353,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     }
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
   /**
@@ -422,7 +422,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
  * Checklist mapper
  */
 export class ChecklistMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
@@ -435,7 +435,7 @@ export class ChecklistMapper extends BaseConverter {
             asset: data.asset,
             stigs: data.stigs,
           },
-          ...(this.withRaw && { raw: data.jsonixData }),
+          ...(this.shouldIncludeRaw && { raw: data.jsonixData }),
         };
       },
     },
@@ -591,8 +591,8 @@ export class ChecklistMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(checklistObject: ChecklistObject, withRaw = false) {
+  constructor(checklistObject: ChecklistObject, shouldIncludeRaw = false) {
     super(checklistObject);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }

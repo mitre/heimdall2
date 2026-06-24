@@ -63,14 +63,14 @@ export class CciNistMapping {
   nistFilter(
     identifiers: string[],
     defaultNist: string[],
-    collapse = true,
+    shouldCollapse = true,
   ): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
     const matches: string[] = [];
     for (const id of identifiers) {
       const item = this.data.find(element => element.cci === id);
       if (item?.nistId) {
-        if (collapse) {
+        if (shouldCollapse) {
           if (!matches.includes(item.nistId)) {
             matches.push(item.nistId);
           }
@@ -112,7 +112,7 @@ export class CciNistTwoWayMapper {
   nistFilter(
     identifiers: string[],
     defaultNist: string[],
-    collapse = true,
+    shouldCollapse = true,
   ): string[] {
     const DEFAULT_NIST_TAGS = defaultNist;
     let matches: string[] = [];
@@ -122,7 +122,7 @@ export class CciNistTwoWayMapper {
         matches.push(nistRef);
       }
     }
-    if (collapse) {
+    if (shouldCollapse) {
       matches = _.uniq(matches);
     }
     return matches ?? DEFAULT_NIST_TAGS;

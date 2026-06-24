@@ -124,7 +124,7 @@ function filename(
     (_.get(findingInfo[1][index], 'Id') as string).split('/', 1)[0],
   );
   const finding = findingInfo[0];
-  return `${_.get(objectifyTypesArray(finding), 'File.Input')}-${target}.json`;
+  return `${String(_.get(objectifyTypesArray(finding), 'File.Input'))}-${target}.json`;
 }
 
 function getCodeForProfileLayer(

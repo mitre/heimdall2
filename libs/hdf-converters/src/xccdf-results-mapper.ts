@@ -36,7 +36,7 @@ type IIdent = {
 };
 
 export class XCCDFResultsMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -70,7 +70,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               name: 'XCCDF',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -413,7 +413,7 @@ export class XCCDFResultsMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(scapXml: string, withRaw = false) {
+  constructor(scapXml: string, shouldIncludeRaw = false) {
     super(
       parseXml(scapXml, {
         stopNodes: [
@@ -426,17 +426,17 @@ export class XCCDFResultsMapper extends BaseConverter {
         ],
       }),
     );
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 
 export class XCCDFResultsResults {
-  constructor(readonly scapXml: string, readonly withRaw = false) {}
+  constructor(readonly scapXml: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
     parseHtml = await buildParseHtmlFunc();
 
-    return (new XCCDFResultsMapper(this.scapXml, this.withRaw)).toHdf();
+    return (new XCCDFResultsMapper(this.scapXml, this.shouldIncludeRaw)).toHdf();
   }
 }
 

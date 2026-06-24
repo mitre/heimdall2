@@ -21,7 +21,7 @@ function securityhubSupportingDocs(standards: string[] | undefined) {
       : null;
   } catch (error) {
     throw new Error(
-      `Invalid supporting docs for Security Hub:\nException: ${error}`,
+      `Invalid supporting docs for Security Hub:\nException: ${String(error)}`,
       { cause: error },
     );
   }

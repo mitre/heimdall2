@@ -32,7 +32,7 @@ export class AwsConfigMapper {
   results: ExecJSON.ControlResult[][];
   constructor(
     options: ConfigServiceClientConfig,
-    verifySSLCertificates = true,
+    shouldVerifySSLCertificates = true,
     certificate?: string,
   ) {
     const clientOptions: ConfigServiceClientConfig = {
@@ -42,7 +42,7 @@ export class AwsConfigMapper {
           // Pass an SSL certificate to trust
           ca: certificate,
           // Disable HTTPS verification if requested
-          rejectUnauthorized: verifySSLCertificates,
+          rejectUnauthorized: shouldVerifySSLCertificates,
         }),
       }),
     };

@@ -20,7 +20,7 @@ const NIST_CONTROL_PATTERN_RE = /[A-Za-z][A-Za-z]-\d{1,2}/v;
 let parseHtml: (input: unknown) => string;
 
 export class FortifyMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
@@ -43,7 +43,7 @@ export class FortifyMapper extends BaseConverter {
               name: 'Fortify',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -99,7 +99,7 @@ export class FortifyMapper extends BaseConverter {
         summary: {
           path: 'FVDL.UUID',
           transformer: (uuid: unknown): string => {
-            return `Fortify Static Analyzer Scan of UUID: ${uuid}`;
+            return `Fortify Static Analyzer Scan of UUID: ${String(uuid)}`;
           },
         },
         supports: [],
@@ -112,25 +112,25 @@ export class FortifyMapper extends BaseConverter {
   };
 
   startTime: string;
-  constructor(fvdl: string, withRaw = false) {
+  constructor(fvdl: string, shouldIncludeRaw = false) {
     super(
       parseXml(fvdl, { stopNodes: ['FVDL.Description.Abstract', 'FVDL.Description.Explanation'] }),
     );
-    this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
+    this.startTime = `${String(_.get(this.data, 'FVDL.CreatedTS.date'))} ${String(_.get(
       this.data,
       'FVDL.CreatedTS.time',
-    )}`;
-    this.withRaw = withRaw;
+    ))}`;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 
 export class FortifyResults {
-  constructor(readonly fvdl: string, readonly withRaw = false) {}
+  constructor(readonly fvdl: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
     parseHtml = await buildParseHtmlFunc();
 
-    return (new FortifyMapper(this.fvdl, this.withRaw)).toHdf();
+    return (new FortifyMapper(this.fvdl, this.shouldIncludeRaw)).toHdf();
   }
 }
 

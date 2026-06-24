@@ -237,7 +237,7 @@ export function createNote(segment: ExecJSON.ControlResult) {
   return segment.skip_message ? `Test Description: ${segment.code_desc} --- Skip Message: ${segment.skip_message}` : `Test Description: ${segment.code_desc}`;
 }
 
-function cleanObjectValues<T>(value: T): boolean {
+function shouldCleanObjectValues<T>(value: T): boolean {
   if (Array.isArray(value)) {
     return value.length < 0;
   }
@@ -254,14 +254,14 @@ export function createCode(
       : JSON.stringify(
         _.omitBy(
           _.omit(control, ['results', 'profileInfo']),
-          cleanObjectValues,
+          shouldCleanObjectValues,
         ),
       );
   if (!control.code && noCodeValue === '') {
     return '';
   }
   return `=========================================================\n# Profile name: ${
-    control.profileInfo?.name
+    control.profileInfo?.name ?? ''
   }\n=========================================================\n\n${
     control.code ? control.code?.replaceAll(String.raw`\"`, '"') : noCodeValue
   }`;
@@ -482,7 +482,7 @@ function createProfileInfoFindingFields(
     }
   }
   const passthrough = _.get(hdf, 'passthrough');
-  if (_.isString(passthrough) && (passthrough as string).trim()) {
+  if (_.isString(passthrough) && passthrough.trim()) {
     typesArr.push(`Execution/passthrough/${escapeForwardSlashes(passthrough)}`);
   } else if (passthrough !== undefined) {
     typesArr.push(
@@ -514,7 +514,7 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
       } else {
         typesArr.push(
           `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
-            _.get(segment, target),
+            String(_.get(segment, target)),
           )}`,
         );
       }

@@ -6,7 +6,7 @@ export const MAX_DECIMAL_PRECISION = 2;
 // Returns string typed compliance level
 export function formatCompliance(
   rawCompliance: number,
-  showAsPercentage = true,
+  shouldShowAsPercentage = true,
   maxDisplayPrecision = MAX_DECIMAL_PRECISION,
 ): string {
   let truncatedCompliance
@@ -19,7 +19,7 @@ export function formatCompliance(
   }
 
   // Return as string representation of compliance level percentage
-  return `${truncatedCompliance.toFixed(maxDisplayPrecision)}${showAsPercentage ? '%' : ''}`;
+  return `${truncatedCompliance.toFixed(maxDisplayPrecision)}${shouldShowAsPercentage ? '%' : ''}`;
 }
 
 // Takes formatted compliance level and determines human language equivalent of compliance

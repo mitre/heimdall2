@@ -21,7 +21,7 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 let parseHtml: (input: unknown) => string;
 
 export class ZapMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -36,7 +36,7 @@ export class ZapMapper extends BaseConverter {
               name: 'OWASP ZAP',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -96,14 +96,14 @@ export class ZapMapper extends BaseConverter {
         summary: {
           path: 'site.@host',
           transformer: (input: unknown): string => {
-            return `OWASP ZAP Scan of Host: ${input}`;
+            return `OWASP ZAP Scan of Host: ${String(input)}`;
           },
         },
         supports: [],
         title: {
           path: 'site.@host',
           transformer: (input: unknown): string => {
-            return `OWASP ZAP Scan of Host: ${input}`;
+            return `OWASP ZAP Scan of Host: ${String(input)}`;
           },
         },
         version: { path: '@version' },
@@ -113,7 +113,7 @@ export class ZapMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(zapJson: string, name?: string, withRaw = false) {
+  constructor(zapJson: string, name?: string, shouldIncludeRaw = false) {
     super(
       _.set(
         JSON.parse(zapJson),
@@ -122,7 +122,7 @@ export class ZapMapper extends BaseConverter {
       ),
       false,
     );
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
   toHdf(): ExecJSON.Execution {
@@ -146,12 +146,12 @@ export class ZapMapper extends BaseConverter {
   }
 }
 export class ZapResults {
-  constructor(readonly zapJson: string, readonly name?: string, readonly withRaw = false) {}
+  constructor(readonly zapJson: string, readonly name?: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
     parseHtml = await buildParseHtmlFunc();
 
-    return (new ZapMapper(this.zapJson, this.name, this.withRaw)).toHdf();
+    return (new ZapMapper(this.zapJson, this.name, this.shouldIncludeRaw)).toHdf();
   }
 }
 function checkText(input: Record<string, unknown>): string {

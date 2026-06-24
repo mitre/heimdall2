@@ -157,11 +157,11 @@ export function convertAttestationToSegment(
 
 export function createAttestationMessage(
   attestation: Attestation,
-  expired: boolean,
+  isExpired: boolean,
 ) {
   let message = '';
 
-  if (expired) {
+  if (isExpired) {
     message += 'Expired Attestation:\n';
     message += `Expired Status: ${attestation.status}\n`;
     message += `Expired Explanation: ${attestation.explanation}\n\n`;

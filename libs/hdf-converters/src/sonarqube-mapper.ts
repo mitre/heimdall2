@@ -364,7 +364,7 @@ enum AuthenticationMethod {
 export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
   Data<T>
 > {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -379,7 +379,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
               name: 'SonarQube',
             },
           ],
-          ...conditionallyProvideAttribute('raw', data, this.withRaw),
+          ...conditionallyProvideAttribute('raw', data, this.shouldIncludeRaw),
         });
       },
     },
@@ -783,10 +783,10 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
 
   constructor(
     public readonly data: Data<T>,
-    withRaw = false,
+    shouldIncludeRaw = false,
   ) {
     super(data);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 
@@ -807,7 +807,7 @@ export class SonarqubeResults {
     public readonly branchName?: string, // if branch/pr are not specified, then sonarqube uses the default branch
     public readonly pullRequestID?: string,
     public readonly organization?: string, // sometimes the organization parameter is required for the api/rules/show endpoint - we try to grab it from the issue, but this is here to ensure a fallback if necessary
-    public readonly withRaw = false,
+    public readonly shouldIncludeRaw = false,
     public readonly excludeIssueStatuses?: string, // user-supplied comma-separated list of additional issue statuses to EXCLUDE from results
   ) {
     this.axiosClient = axios.create();
@@ -969,7 +969,7 @@ export class SonarqubeResults {
       sonarqubeHost: this.sonarqubeHost,
       sonarqubeVersion,
     };
-    return new SonarqubeMapper<T>(data, this.withRaw).toHdf();
+    return new SonarqubeMapper<T>(data, this.shouldIncludeRaw).toHdf();
   }
 
   async getCodeSnippets<T extends SonarqubeVersion>(
@@ -1138,7 +1138,7 @@ export class SonarqubeResults {
     };
 
     // intentionally doing the await in a loop so as to slow down requests a tad bit in order to avoid any rate limit issues
-    const collectPagedSearch = async (component: string, sizeCheck = false) => {
+    const collectPagedSearch = async (component: string, shouldCheckSizeOnly = false) => {
       let isPaging = true;
       let page = 1;
       const results: Search<T> = {
@@ -1148,7 +1148,7 @@ export class SonarqubeResults {
         issues: [],
         paging: { pageIndex: 0, pageSize: 0, total: 0 },
       };
-      while (sizeCheck ? page === 1 : isPaging) {
+      while (shouldCheckSizeOnly ? page === 1 : isPaging) {
         console.log(results);
         await createSearch(component, page)
           .then(({ data }) => {

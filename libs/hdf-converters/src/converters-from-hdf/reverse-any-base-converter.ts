@@ -6,8 +6,8 @@ import { FromHdfBaseConverter } from './reverse-base-converter';
 export class FromAnyBaseConverter extends FromHdfBaseConverter {
   declare data: any;
 
-  constructor(data: any, collapseResults = false) {
-    super(data, collapseResults);
+  constructor(data: any, shouldCollapseResults = false) {
+    super(data, shouldCollapseResults);
   }
 
   // Called over and over to iterate through objects assigned to keys too

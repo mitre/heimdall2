@@ -35,9 +35,9 @@ export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /\{\{\{slash\}\}\}/giv;
 export function conditionallyProvideAttribute(
   attributeName: string,
   attribute: unknown,
-  condition: boolean,
+  shouldInclude: boolean,
 ): Record<string, unknown> | undefined {
-  if (!condition) {
+  if (!shouldInclude) {
     return undefined;
   }
   return { [attributeName]: attribute };
@@ -48,7 +48,7 @@ export function createWinstonLogger(mapperName: string, level = 'debug') {
     format: format.combine(
       format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
       format.printf(
-        info => `[${[info.timestamp]}] ${mapperName} ${info.message}`,
+        info => `[${String(info.timestamp)}] ${mapperName} ${String(info.message)}`,
       ),
     ),
     level: level,

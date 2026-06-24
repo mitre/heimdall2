@@ -18,7 +18,7 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 export class NeuVectorMapper extends BaseConverter {
   getModules: (moduleName: string) => RESTScanModule['source'] | undefined;
   rawData: NeuVectorScanJson;
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -44,7 +44,7 @@ export class NeuVectorMapper extends BaseConverter {
               name: 'NeuVector',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -154,10 +154,10 @@ export class NeuVectorMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(exportJson: string, withRaw = false) {
+  constructor(exportJson: string, shouldIncludeRaw = false) {
     const rawParams = JSON.parse(exportJson);
     super(rawParams);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
     this.rawData = rawParams;
     this.getModules = this.memoizedGetModules();
   }

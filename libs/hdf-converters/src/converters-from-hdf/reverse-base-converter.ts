@@ -17,13 +17,13 @@ export type ILookupPathFH = {
 
 // Base converter used to support conversions from HDF to Any Format
 export class FromHdfBaseConverter {
-  collapseResults: boolean;
+  shouldCollapseResults: boolean;
   data: ExecJSON.Execution;
   mappings?: MappedTransform<any, ILookupPathFH>;
 
-  constructor(data: ExecJSON.Execution, collapseResults = false) {
+  constructor(data: ExecJSON.Execution, shouldCollapseResults = false) {
     this.data = data;
-    this.collapseResults = collapseResults;
+    this.shouldCollapseResults = shouldCollapseResults;
   }
 
   // Called over and over to iterate through objects assigned to keys too

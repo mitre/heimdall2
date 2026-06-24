@@ -43,7 +43,7 @@ let policyName: string;
 let version: string;
 
 export class NessusMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -58,7 +58,7 @@ export class NessusMapper extends BaseConverter {
               name: 'Nessus',
             },
           ],
-          ...(this.withRaw && { raw: data }),
+          ...(this.shouldIncludeRaw && { raw: data }),
         });
       },
     },
@@ -144,18 +144,18 @@ export class NessusMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(nessusJson: Record<string, unknown>, withRaw = false) {
+  constructor(nessusJson: Record<string, unknown>, shouldIncludeRaw = false) {
     super(nessusJson);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 export class NessusResults {
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   data: Record<string, unknown>;
-  withRaw: boolean;
-  constructor(nessusXml: string, withRaw = false) {
+  shouldIncludeRaw: boolean;
+  constructor(nessusXml: string, shouldIncludeRaw = false) {
     this.data = parseXml(nessusXml);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
   async toHdf(): Promise<ExecJSON.Execution | ExecJSON.Execution[]> {
@@ -185,7 +185,7 @@ export class NessusResults {
     );
     if (Array.isArray(reportHost)) {
       for (const element of reportHost) {
-        const entry = new NessusMapper(element, this.withRaw);
+        const entry = new NessusMapper(element, this.shouldIncludeRaw);
         if (this.customMapping !== undefined) {
           entry.setMappings(this.customMapping);
         }
@@ -195,7 +195,7 @@ export class NessusResults {
     } else {
       const result = new NessusMapper(
         reportHost as Record<string, unknown>,
-        this.withRaw,
+        this.shouldIncludeRaw,
       );
       if (this.customMapping !== undefined) {
         result.setMappings(this.customMapping);

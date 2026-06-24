@@ -35,11 +35,11 @@ const FIRST_CHAR_RE = /^./v;
 let parseHtml: (input: unknown) => string;
 
 export class NetsparkerMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
-  constructor(netsparkerXml: string, withRaw = false) {
+  constructor(netsparkerXml: string, shouldIncludeRaw = false) {
     super(parseXml(netsparkerXml));
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
     this.setMappings(
       this.defineMappings(
         Object.keys(this.data).some(k => k.includes('netsparker'))
@@ -79,7 +79,7 @@ export class NetsparkerMapper extends BaseConverter {
                 name: 'Netsparker',
               },
             ],
-            ...(this.withRaw && { raw: data }),
+            ...(this.shouldIncludeRaw && { raw: data }),
           });
         },
       },
@@ -164,12 +164,12 @@ export class NetsparkerMapper extends BaseConverter {
   }
 }
 export class NetsparkerResults {
-  constructor(readonly netsparkerXml: string, readonly withRaw = false) {}
+  constructor(readonly netsparkerXml: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
     parseHtml = await buildParseHtmlFunc();
 
-    return (new NetsparkerMapper(this.netsparkerXml, this.withRaw)).toHdf();
+    return (new NetsparkerMapper(this.netsparkerXml, this.shouldIncludeRaw)).toHdf();
   }
 }
 function formatCheck(vulnerability: unknown): string {

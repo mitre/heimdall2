@@ -63,7 +63,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 ]);
 
 export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -89,7 +89,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               name: 'SBOM',
             },
           ],
-          ...(this.withRaw && { raw: input.raw }),
+          ...(this.shouldIncludeRaw && { raw: input.raw }),
         });
       },
     },
@@ -442,9 +442,9 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
     version: HeimdallToolsVersion,
   };
 
-  constructor(exportJson: DataStorage, withRaw = false) {
+  constructor(exportJson: DataStorage, shouldIncludeRaw = false) {
     super(exportJson, true);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
   // Pull any keys from a given index for the stored components listing
@@ -458,14 +458,14 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
 
 export class CycloneDXSBOMResults {
   data: DataStorage;
-  withRaw: boolean;
-  constructor(sbomJson: string, withRaw = false) {
+  shouldIncludeRaw: boolean;
+  constructor(sbomJson: string, shouldIncludeRaw = false) {
     this.data = {
       components: [],
       raw: JSON.parse(sbomJson),
       vulnerabilities: [],
     };
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
 
     if (this.data.raw.components) {
       // We know this is SBOM data
@@ -593,7 +593,7 @@ export class CycloneDXSBOMResults {
   }
 
   toHdf(): ExecJSON.Execution {
-    return new CycloneDXSBOMMapper(this.data, this.withRaw).toHdf();
+    return new CycloneDXSBOMMapper(this.data, this.shouldIncludeRaw).toHdf();
   }
 }
 
@@ -601,10 +601,10 @@ export class CycloneDXSBOMResults {
 function formatCWETags(
   input:
     | CycloneDXBillOfMaterialsStandardVulnerability['cwes'],
-  addPrefix = true,
+  shouldAddPrefix = true,
 ): string[] {
   return input && Array.isArray(input)
-    ? input.map(cwe => (addPrefix ? `CWE-${cwe}` : String(cwe)))
+    ? input.map(cwe => (shouldAddPrefix ? `CWE-${cwe}` : String(cwe)))
     : [];
 }
 

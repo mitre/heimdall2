@@ -34,7 +34,7 @@ export type SecureScoreResponse = {
 export class MsftSecureScoreMapper extends BaseConverter {
   getProfiles: (controlName: string) => SecureScoreControlProfile[];
   rawData: CombinedResponse;
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
@@ -63,7 +63,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
               name: 'Microsoft Secure Score',
             },
           ],
-          ...(this.withRaw && { raw: this.rawData }),
+          ...(this.shouldIncludeRaw && { raw: this.rawData }),
         });
       },
     },
@@ -300,10 +300,10 @@ export class MsftSecureScoreMapper extends BaseConverter {
     version: HeimdallToolsVersion,
   };
 
-  constructor(secureScore_and_profiles_combined: string, withRaw = false) {
+  constructor(secureScore_and_profiles_combined: string, shouldIncludeRaw = false) {
     const rawParams = JSON.parse(secureScore_and_profiles_combined);
     super(rawParams.secureScore.value[0]);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
     this.rawData = rawParams;
     this.getProfiles = this.memoizedGetProfiles();
   }
@@ -324,11 +324,11 @@ export class MsftSecureScoreMapper extends BaseConverter {
 
 export class MsftSecureScoreResults {
   data: CombinedResponse;
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
 
-  constructor(combinedJson: string, withRaw = false) {
+  constructor(combinedJson: string, shouldIncludeRaw = false) {
     this.data = JSON.parse(combinedJson);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
   toHdf(): ExecJSON.Execution[] {
@@ -344,7 +344,7 @@ export class MsftSecureScoreResults {
             ]),
           },
         }),
-        this.withRaw,
+        this.shouldIncludeRaw,
       ).toHdf(),
     );
   }

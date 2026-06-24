@@ -10,10 +10,10 @@ function productName(
 ): string {
   const finding = Array.isArray(findings) ? findings[0] : findings;
   return encode(
-    `${_.get(finding, 'ProductFields.aws/securityhub/CompanyName')} ${_.get(
+    `${String(_.get(finding, 'ProductFields.aws/securityhub/CompanyName'))} ${String(_.get(
       finding,
       'ProductFields.aws/securityhub/ProductName',
-    )}`,
+    ))}`,
   );
 }
 

@@ -203,9 +203,9 @@ export class FromHDFToCAATMapper {
     return `${controlStatus}${description}`;
   }
 
-  // returnWorkBook: true -> raw workbook class
+  // shouldReturnWorkBook: true -> raw workbook class
   toCAAT(
-    returnWorkBook = false,
+    shouldReturnWorkBook = false,
     options: XLSX.WritingOptions = FromHDFToCAATMapper.DefaultWritingOptions,
   ) {
     // Sheet names must be unique across the workbook
@@ -266,7 +266,7 @@ export class FromHDFToCAATMapper {
       workBook.Sheets[sheetName] = workSheet;
     }
 
-    if (returnWorkBook) {
+    if (shouldReturnWorkBook) {
       return workBook;
     }
     return XLSX.write(workBook, options);
