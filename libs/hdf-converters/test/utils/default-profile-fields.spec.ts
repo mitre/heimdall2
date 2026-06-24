@@ -8,21 +8,33 @@ const schema = JSON.parse(
 const profileDef = schema.definitions.Exec_JSON_Profile;
 const requiredFields = new Set(profileDef.required as string[]);
 const allFields = Object.keys(profileDef.properties as Record<string, unknown>);
+const properties = profileDef.properties as Record<string, any>;
 
 const PER_MAPPER_FIELDS = new Set(['controls', 'name']);
 const INTENTIONAL_NON_NULL_DEFAULTS = new Set(['status']);
 
+const requiredArrayFields = allFields.filter(
+  field =>
+    requiredFields.has(field)
+    && !PER_MAPPER_FIELDS.has(field)
+    && properties[field].type === 'array',
+);
+
+const optionalNullableStringFields = allFields.filter((field) => {
+  if (requiredFields.has(field) || PER_MAPPER_FIELDS.has(field) || INTENTIONAL_NON_NULL_DEFAULTS.has(field)) {
+    return false;
+  }
+  const propType = properties[field].type;
+  return Array.isArray(propType) && propType.includes('string') && propType.includes('null');
+});
+
+const coveredFields = allFields.filter(field => !PER_MAPPER_FIELDS.has(field));
+
 describe('DEFAULT_PROFILE_FIELDS', () => {
   it('contains all required array fields as empty arrays', () => {
-    for (const field of allFields) {
-      if (!requiredFields.has(field) || PER_MAPPER_FIELDS.has(field)) {
-        continue;
-      }
-      const propType = (profileDef.properties as Record<string, any>)[field].type;
-      if (propType === 'array') {
-        expect(DEFAULT_PROFILE_FIELDS).toHaveProperty(field);
-        expect(DEFAULT_PROFILE_FIELDS[field as keyof typeof DEFAULT_PROFILE_FIELDS]).toEqual([]);
-      }
+    for (const field of requiredArrayFields) {
+      expect(DEFAULT_PROFILE_FIELDS).toHaveProperty(field);
+      expect(DEFAULT_PROFILE_FIELDS[field as keyof typeof DEFAULT_PROFILE_FIELDS]).toEqual([]);
     }
   });
 
@@ -35,17 +47,11 @@ describe('DEFAULT_PROFILE_FIELDS', () => {
   });
 
   it('contains all optional string|null fields as null (except intentional defaults)', () => {
-    for (const field of allFields) {
-      if (requiredFields.has(field) || PER_MAPPER_FIELDS.has(field) || INTENTIONAL_NON_NULL_DEFAULTS.has(field)) {
-        continue;
-      }
-      const propType = (profileDef.properties as Record<string, any>)[field].type;
-      if (Array.isArray(propType) && propType.includes('string') && propType.includes('null')) {
-        expect(
-          DEFAULT_PROFILE_FIELDS,
-          `optional field "${field}" should be present with value null`,
-        ).toHaveProperty(field, null);
-      }
+    for (const field of optionalNullableStringFields) {
+      expect(
+        DEFAULT_PROFILE_FIELDS,
+        `optional field "${field}" should be present with value null`,
+      ).toHaveProperty(field, null);
     }
   });
 
@@ -62,10 +68,7 @@ describe('DEFAULT_PROFILE_FIELDS', () => {
 
   it('covers every schema field except per-mapper fields', () => {
     const defaultKeys = new Set(Object.keys(DEFAULT_PROFILE_FIELDS));
-    for (const field of allFields) {
-      if (PER_MAPPER_FIELDS.has(field)) {
-        continue;
-      }
+    for (const field of coveredFields) {
       expect(
         defaultKeys.has(field),
         `schema field "${field}" is missing from DEFAULT_PROFILE_FIELDS`,

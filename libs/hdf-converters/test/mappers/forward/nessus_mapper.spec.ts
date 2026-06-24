@@ -43,14 +43,11 @@ describe('nessus_mapper', () => {
     ];
 
     expect(Array.isArray(converted)).toBe(true);
-
-    if (Array.isArray(converted)) {
-      expect(converted.map(resultsSet => omitVersions(resultsSet))).toEqual(
-        expectedSet.map((resultsSet: ExecJSON.Execution) =>
-          omitVersions(resultsSet),
-        ),
-      );
-    }
+    expect((converted as ExecJSON.Execution[]).map(resultsSet => omitVersions(resultsSet))).toEqual(
+      expectedSet.map((resultsSet: ExecJSON.Execution) =>
+        omitVersions(resultsSet),
+      ),
+    );
   });
 });
 
@@ -103,13 +100,10 @@ describe('nessus_mapper_withraw', () => {
     ];
 
     expect(Array.isArray(converted)).toBe(true);
-
-    if (Array.isArray(converted)) {
-      expect(converted.map(resultsSet => omitVersions(resultsSet))).toEqual(
-        expectedSet.map((resultsSet: ExecJSON.Execution) =>
-          omitVersions(resultsSet),
-        ),
-      );
-    }
+    expect((converted as ExecJSON.Execution[]).map(resultsSet => omitVersions(resultsSet))).toEqual(
+      expectedSet.map((resultsSet: ExecJSON.Execution) =>
+        omitVersions(resultsSet),
+      ),
+    );
   });
 });
