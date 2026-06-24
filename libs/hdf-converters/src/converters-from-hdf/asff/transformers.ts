@@ -510,11 +510,9 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
       if (_.get(segment, target) === '') {
         typesArr.push(`Segment/${escapeForwardSlashes(target)}/''`);
       } else {
-        typesArr.push(
-          `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
-            String(_.get(segment, target)),
-          )}`,
-        );
+        const escapedTarget = escapeForwardSlashes(target);
+        const escapedValue = escapeForwardSlashes(String(_.get(segment, target)));
+        typesArr.push(`Segment/${escapedTarget}/${escapedValue}`);
       }
     }
   }

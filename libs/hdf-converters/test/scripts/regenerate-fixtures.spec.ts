@@ -1,5 +1,8 @@
 import fs from 'fs';
 import { describe, expect, it } from 'vitest';
+
+const SAMPLE_JSONS_PREFIX_RE = /^sample_jsons\//v;
+
 import {
   ALLOWED_NEW_FIELDS,
   FIXTURE_REGISTRY,
@@ -47,8 +50,8 @@ describe('regenerate-fixtures registry', () => {
         }
         expect(entry.inputFile, `${name}: inputFile should be a non-empty string`).toBeTruthy();
         expect(entry.outputFile, `${name}: outputFile should be a non-empty string`).toBeTruthy();
-        expect(entry.inputFile).toMatch(/^sample_jsons\//v);
-        expect(entry.outputFile).toMatch(/^sample_jsons\//v);
+        expect(entry.inputFile).toMatch(SAMPLE_JSONS_PREFIX_RE);
+        expect(entry.outputFile).toMatch(SAMPLE_JSONS_PREFIX_RE);
       }
     }
   });

@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { ChecklistResults } from '../../../src/ckl-mapper/checklist-mapper';
 import { loadFixture } from '../../utils';
 
+const XML_DECLARATION_RE = /^<\?xml version="1\.0"/v;
+const VULN_TAG_RE = /<VULN>/gv;
+
 describe('CKL export performance (9go.49)', () => {
   it('toCkl() without prettyPrint is faster than with prettyPrint', () => {
     const hdfData = loadFixture(
@@ -29,7 +32,7 @@ describe('CKL export performance (9go.49)', () => {
     const mapper = new ChecklistResults(hdfData);
     const xml = mapper.toCkl();
 
-    expect(xml).toMatch(/^<\?xml version="1\.0"/v);
+    expect(xml).toMatch(XML_DECLARATION_RE);
     expect(xml).toContain('<CHECKLIST>');
     expect(xml).toContain('</CHECKLIST>');
   });
@@ -53,8 +56,8 @@ describe('CKL export performance (9go.49)', () => {
     const raw = mapper.toCkl();
     const pretty = mapper.toCkl({ prettyPrint: true });
 
-    const rawVulns = (raw.match(/<VULN>/gv) || []).length;
-    const prettyVulns = (pretty.match(/<VULN>/gv) || []).length;
+    const rawVulns = (raw.match(VULN_TAG_RE) || []).length;
+    const prettyVulns = (pretty.match(VULN_TAG_RE) || []).length;
 
     expect(rawVulns).toBe(prettyVulns);
     expect(rawVulns).toBeGreaterThan(0);

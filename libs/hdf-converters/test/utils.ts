@@ -105,24 +105,18 @@ export function omitHDFTimes(
   };
 }
 
-// replaces the version in the checklist file with the
-// actual hdf-converters version
+const CKL_VERSION_RE = /(?<=<!--Heimdall Version :: )\S+(?=-->)/v;
+const XCCDF_VERSION_RE = /(?<=<version>)\S+(?=<\/version>)/v;
+const HTML_STYLE_TAG_RE = /(<style>)[\s\S]*?(?=<\/style>)/v;
+
 export function replaceCKLVersion(input: string): string {
-  return input.replace(
-    /(?<=<!--Heimdall Version :: )\S+(?=-->)/v,
-    hdfConvertersVersion,
-  );
+  return input.replace(CKL_VERSION_RE, hdfConvertersVersion);
 }
 
-// replaces the version in the checklist file with the
-// actual hdf-converters version
 export function replaceXCCDFVersion(input: string): string {
-  return input.replace(
-    /(?<=<version>)\S+(?=<\/version>)/v,
-    hdfConvertersVersion,
-  );
+  return input.replace(XCCDF_VERSION_RE, hdfConvertersVersion);
 }
 
 export function omitHTMLStyleTag(input: string): string {
-  return input.replace(/(<style>)[\s\S]*?(?=<\/style>)/v, '$1');
+  return input.replace(HTML_STYLE_TAG_RE, '$1');
 }

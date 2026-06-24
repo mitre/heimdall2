@@ -114,14 +114,9 @@ export class ZapMapper extends BaseConverter {
   };
 
   constructor(zapJson: string, name?: string, shouldIncludeRaw = false) {
-    super(
-      _.set(
-        JSON.parse(zapJson),
-        'site',
-        filterSite(_.get(JSON.parse(zapJson), 'site'), name),
-      ),
-      false,
-    );
+    const parsed = JSON.parse(zapJson);
+    const site = filterSite(_.get(parsed, 'site'), name);
+    super(_.set(parsed, 'site', site), false);
     this.shouldIncludeRaw = shouldIncludeRaw;
   }
 

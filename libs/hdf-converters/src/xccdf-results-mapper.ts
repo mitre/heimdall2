@@ -541,15 +541,14 @@ function getRulesInGroup(
   );
   if (rules) {
     for (const rule of rules) {
+      const ruleId = _.get(rule, 'id') as string;
+      const groupId = _.get(group, 'id') as string;
       allRules.push(
         _.merge({}, rule, {
-          group: _.omit(group, ['Rule', 'Group']), // save the group as a new "group" property on the rule to allow the mapper to use the group
-          profiles: getProfiles(
-            [_.get(rule, 'id') as string, _.get(group, 'id') as string],
-            benchmark,
-          ), // save the profiles as a new "profiles" property on the rule to allow the mapper to use the profiles
-          ruleResult: getRuleResult(_.get(rule, 'id') as string, benchmark), // save the ruleResult as a new "ruleResult" property on the rule to allow the mapper to use the ruleResult
-          values: getValues(rule, group, benchmark), // save the values as a new "values" property on the rule to allow the mapper to use the values
+          group: _.omit(group, ['Rule', 'Group']),
+          profiles: getProfiles([ruleId, groupId], benchmark),
+          ruleResult: getRuleResult(ruleId, benchmark),
+          values: getValues(rule, group, benchmark),
         }),
       );
     }

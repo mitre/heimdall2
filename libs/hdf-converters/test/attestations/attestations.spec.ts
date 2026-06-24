@@ -12,6 +12,9 @@ import {
   parseXLSXAttestations,
 } from '../../src/utils/attestations';
 
+const ATTESTATION_PREFIX_RE = /^Attestation/v;
+const EXPIRED_PREFIX_RE = /^Expired/v;
+
 const validPassingAttestation_skippedControl: Attestation[] = [
   {
     control_id: 'SV-230223',
@@ -193,9 +196,7 @@ describe('CreateAttestationMessage', () => {
       false,
     );
 
-    expect(unexpiredAttestationMessage).toEqual(
-      expect.stringMatching(/^Attestation/v),
-    );
+    expect(unexpiredAttestationMessage).toMatch(ATTESTATION_PREFIX_RE);
   });
 
   it('Should create a message for an expired attestation', () => {
@@ -204,9 +205,7 @@ describe('CreateAttestationMessage', () => {
       true,
     );
 
-    expect(expiredAttestationMessage).toEqual(
-      expect.stringMatching(/^Expired/v),
-    );
+    expect(expiredAttestationMessage).toMatch(EXPIRED_PREFIX_RE);
   });
 });
 
