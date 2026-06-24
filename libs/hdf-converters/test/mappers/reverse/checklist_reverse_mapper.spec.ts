@@ -157,7 +157,7 @@ function extractSeverity(
   _stigdataIndex: number,
 ): string | undefined {
   const istig = (jsonixData?.value as Stigdata)?.stigs?.istig[0];
-  const vuln = istig?.vuln[vulnIndex];
+  const vuln = istig?.vuln.at(vulnIndex);
   const severityElement = vuln?.stigdata.find(
     (sd: { vulnattribute?: string }) => sd.vulnattribute === 'Severity',
   );
@@ -174,7 +174,7 @@ function extractStatus(
   vulnIndex: number,
 ): string | undefined {
   const istig = (jsonixData?.value as Stigdata)?.stigs?.istig[0];
-  const vuln = istig?.vuln[vulnIndex];
+  const vuln = istig?.vuln.at(vulnIndex);
   const status = vuln?.status;
   return status;
 }

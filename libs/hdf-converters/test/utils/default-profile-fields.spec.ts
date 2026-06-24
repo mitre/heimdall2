@@ -17,14 +17,14 @@ const requiredArrayFields = allFields.filter(
   field =>
     requiredFields.has(field)
     && !PER_MAPPER_FIELDS.has(field)
-    && properties[field].type === 'array',
+    && properties[field].type === 'array', // eslint-disable-line security/detect-object-injection -- field from schema Object.keys()
 );
 
 const optionalNullableStringFields = allFields.filter((field) => {
   if (requiredFields.has(field) || PER_MAPPER_FIELDS.has(field) || INTENTIONAL_NON_NULL_DEFAULTS.has(field)) {
     return false;
   }
-  const propType = properties[field].type;
+  const propType = properties[field].type; // eslint-disable-line security/detect-object-injection -- field from schema Object.keys()
   return Array.isArray(propType) && propType.includes('string') && propType.includes('null');
 });
 

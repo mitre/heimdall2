@@ -29,7 +29,7 @@ describe('msft_secure_score_mapper', () => {
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {
       expect(omitVersions(hdfReport)).toEqual(
-        omitVersions(expectedHdfReports[idx]),
+        omitVersions(expectedHdfReports.at(idx)),
       );
     }
   });
@@ -59,7 +59,7 @@ describe('msft_secure_score_mapper_withraw', () => {
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {
       expect(omitVersions(hdfReport)).toEqual(
-        omitVersions(expectedHdfReports[idx]),
+        omitVersions(expectedHdfReports.at(idx)),
       );
     }
   });
@@ -98,7 +98,7 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {
       expect(omitVersions(hdfReport)).toEqual(
-        omitVersions(expectedHdfReports[idx]),
+        omitVersions(expectedHdfReports.at(idx)),
       );
     }
   });
