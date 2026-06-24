@@ -309,15 +309,18 @@ export class MsftSecureScoreMapper extends BaseConverter {
   }
 
   memoizedGetProfiles(): (controlName: string) => SecureScoreControlProfile[] {
-    const cache: Record<string, SecureScoreControlProfile[]> = {};
+    const cache = new Map<string, SecureScoreControlProfile[]>();
 
     return (controlName: string): SecureScoreControlProfile[] => {
-      if (Object.hasOwn(cache, controlName)) {
-        return cache[controlName];
+      const cached = cache.get(controlName);
+      if (cached) {
+        return cached;
       }
-      return (cache[controlName] = this.rawData.profiles.value.filter(
+      const profiles = this.rawData.profiles.value.filter(
         profile => profile.id === controlName,
-      ));
+      );
+      cache.set(controlName, profiles);
+      return profiles;
     };
   }
 }

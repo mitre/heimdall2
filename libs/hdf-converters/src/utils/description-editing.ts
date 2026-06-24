@@ -147,7 +147,7 @@ export function setControlDescription(
       descriptions.push({ data: value, label });
     }
   } else {
-    descriptions[label] = value;
+    descriptions[label] = value; // eslint-disable-line security/detect-object-injection -- label is a controlled internal key, not user input
   }
 }
 
