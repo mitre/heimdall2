@@ -16,7 +16,7 @@ function findingTitle(finding: Record<string, unknown>): string {
   return encode(
     (_.get(finding, 'Description') as string)
       .slice(`${_.get(finding, 'Title') as string} titled `.length)
-      .split(' : ')[0],
+      .split(' : ', 1)[0],
   );
 }
 
@@ -28,7 +28,7 @@ function subfindingsCodeDesc(finding: Record<string, unknown>): string {
   return encode(
     (_.get(finding, 'Description') as string)
       .slice(`${_.get(finding, 'Title') as string} titled `.length)
-      .split(' : ')[1],
+      .split(' : ', 2)[1],
   );
 }
 

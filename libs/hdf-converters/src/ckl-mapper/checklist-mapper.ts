@@ -251,7 +251,8 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   const commentString = descriptions[0].data;
   if (!commentString) {
     return results;
-  } else if (commentString.includes(' :: ')) {
+  }
+  if (commentString.includes(' :: ')) {
     for (const section of commentString.split(COMMENT_SECTION_SPLIT_RE)) {
       const matches = COMMENT_SECTION_PARSE_RE.exec(section);
       if (matches?.groups) {
@@ -297,7 +298,7 @@ function getAttributes(input: unknown[]) {
 function getHdfSpecificDataAttribute(
   attribute: string,
   input: string,
-): Record<string, any>[] | string | null {
+): null | Record<string, any>[] | string {
   const data = parseJson(input);
   if (!data.ok) {
     return null;

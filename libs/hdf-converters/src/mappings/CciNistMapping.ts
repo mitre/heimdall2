@@ -166,7 +166,7 @@ export class CciNistTwoWayMapper {
         // if there were no matches using the original pattern, try using only 2 letters hyphen followed by one or two numbers
         if (matchingIds.length === 0) {
           const regexEditedPattern = new RegExp(
-            `${NIST_FAMILY_NUM_RE.exec(pattern)}`,
+            String(NIST_FAMILY_NUM_RE.exec(pattern)),
           );
           if (
             new RegExp(regexEditedPattern).test(reference['@_index'])

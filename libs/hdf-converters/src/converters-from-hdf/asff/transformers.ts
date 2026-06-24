@@ -233,11 +233,8 @@ export function getAllLayers(
 export function createNote(segment: ExecJSON.ControlResult) {
   if (segment.message) {
     return `Test Description: ${segment.code_desc} --- Test Result: ${segment.message}`;
-  } else if (segment.skip_message) {
-    return `Test Description: ${segment.code_desc} --- Skip Message: ${segment.skip_message}`;
-  } else {
-    return `Test Description: ${segment.code_desc}`;
   }
+  return segment.skip_message ? `Test Description: ${segment.code_desc} --- Skip Message: ${segment.skip_message}` : `Test Description: ${segment.code_desc}`;
 }
 
 function cleanObjectValues<T>(value: T): boolean {
@@ -369,7 +366,7 @@ export function setupSevLabel(
 }
 
 export function setupSevOriginal(control: SegmentedControl) {
-  return `${control.impact}`;
+  return String(control.impact);
 }
 
 function createControlMetadata(control: SegmentedControl) {

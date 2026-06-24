@@ -42,19 +42,20 @@ function findingId(
     && (control = correspondingControl(controls, finding)) !== null
   ) {
     return encode(_.get(control, 'ControlId'));
-  } else if (_.has(finding, 'ProductFields.ControlId')) {
+  }
+  if (_.has(finding, 'ProductFields.ControlId')) {
     // AWS Standards
     return _.get(finding, 'ProductFields.ControlId');
-  } else if (_.has(finding, 'ProductFields.RuleId')) {
+  }
+  if (_.has(finding, 'ProductFields.RuleId')) {
     // CIS
     return encode(_.get(finding, 'ProductFields.RuleId'));
-  } else {
-    return encode(
-      (_.get(finding, 'GeneratorId') as unknown as string)
-        .split('/')
-        .at(-1),
-    );
   }
+  return encode(
+    (_.get(finding, 'GeneratorId') as unknown as string)
+      .split('/')
+      .at(-1),
+  );
 }
 
 function findingImpact(

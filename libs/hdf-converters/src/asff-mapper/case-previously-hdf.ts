@@ -52,7 +52,7 @@ function findExecutionFindingIndex(
   asffFindingToMatch?: { Id: string },
 ): number {
   if (asffFindingToMatch) {
-    const targetToMatch = asffFindingToMatch.Id.split('/')[0];
+    const targetToMatch = asffFindingToMatch.Id.split('/', 1)[0];
     return _.findIndex(
       Array.isArray(asffOrFindings)
         ? asffOrFindings
@@ -121,7 +121,7 @@ function filename(
   );
 
   const target = replaceTypesSlashes(
-    (_.get(findingInfo[1][index], 'Id') as string).split('/')[0],
+    (_.get(findingInfo[1][index], 'Id') as string).split('/', 1)[0],
   );
   const finding = findingInfo[0];
   return `${_.get(objectifyTypesArray(finding), 'File.Input')}-${target}.json`;
@@ -148,7 +148,7 @@ function getCodeForProfileLayer(
       '\n=========================================================\n\n',
     );
     profileLayerToCodeMapping[profileLevel] = code
-      .split('Test Description:')[0]
+      .split('Test Description:', 1)[0]
       .trim();
   }
   return profileName in profileLayerToCodeMapping ? profileLayerToCodeMapping[profileName] : '';
@@ -174,7 +174,7 @@ function mapping(
       target_id: (
         context.supportingDocs.get(SpecialCasing.PreviouslyHDF)?.execution
           .Id as string
-      ).split('/')[0],
+      ).split('/', 1)[0],
     },
     profiles: _.map(profileNames, (profileName: string, index: number) => {
       // order could be incorrect since we're only doing it via index instead of mapping the depends tree properly

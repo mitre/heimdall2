@@ -301,9 +301,9 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       hdfSpecificData.code = control.code;
     }
 
-    const hdfDataExist = Object.keys(hdfSpecificData).length > 0;
+    const isHdfDataExist = Object.keys(hdfSpecificData).length > 0;
 
-    return hdfDataExist
+    return isHdfDataExist
       ? JSON.stringify({ hdfSpecificData: hdfSpecificData }, null, 2)
       : '';
   }
@@ -326,8 +326,8 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       hdfSpecificData.version = profile.version;
     }
 
-    const hdfDataExist = Object.keys(hdfSpecificData).length > 0;
-    return hdfDataExist ? JSON.stringify({ hdfSpecificData }) : '';
+    const isHdfDataExist = Object.keys(hdfSpecificData).length > 0;
+    return isHdfDataExist ? JSON.stringify({ hdfSpecificData }) : '';
   }
 
   // computes what the impact would be based on the given tags
@@ -542,11 +542,8 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         .map((result) => {
           if (result.message) {
             return `${result.status} :: TEST ${result.code_desc} :: MESSAGE ${result.message}`;
-          } else if (result.skip_message) {
-            return `${result.status} :: TEST ${result.code_desc} :: SKIP_MESSAGE ${result.skip_message}`;
-          } else {
-            return `${result.status} :: TEST ${result.code_desc}`;
           }
+          return result.skip_message ? `${result.status} :: TEST ${result.code_desc} :: SKIP_MESSAGE ${result.skip_message}` : `${result.status} :: TEST ${result.code_desc}`;
         })
         .join('\n--------------------------------\n');
   }
@@ -557,13 +554,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   ): string | undefined {
     if (releasenumber && releasedate) {
       return `Release: ${releasenumber} Benchmark Date: ${releasedate}`;
-    } else if (releasenumber) {
-      return `Release: ${releasenumber}`;
-    } else if (releasedate) {
-      return `Benchmark Date: ${releasedate}`;
-    } else {
-      return undefined;
     }
+    if (releasenumber) {
+      return `Release: ${releasenumber}`;
+    }
+    return releasedate ? `Benchmark Date: ${releasedate}` : undefined;
   }
 
   getStatus(results: ExecJSON.ControlResult[], impact: number): StatusMapping {
@@ -572,13 +567,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     }) as unknown as ExecJSON.ControlResultStatus[];
     if (impact === 0) {
       return StatusMapping.Not_Applicable;
-    } else if (statuses.includes(ExecJSON.ControlResultStatus.Failed)) {
-      return StatusMapping.Open;
-    } else if (statuses.includes(ExecJSON.ControlResultStatus.Passed)) {
-      return StatusMapping.NotAFinding;
-    } else {
-      return StatusMapping.Not_Reviewed;
     }
+    if (statuses.includes(ExecJSON.ControlResultStatus.Failed)) {
+      return StatusMapping.Open;
+    }
+    return statuses.includes(ExecJSON.ControlResultStatus.Passed) ? StatusMapping.NotAFinding : StatusMapping.Not_Reviewed;
   }
 
   getValueFromAttributeName<T extends Sidata | Stigdata>(
@@ -710,11 +703,8 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     // if no valid severity tag, compute severity based on impact
     if (impact < 0.4) {
       return Severity.Low;
-    } else if (impact < 0.7) {
-      return Severity.Medium;
-    } else {
-      return Severity.High;
     }
+    return impact < 0.7 ? Severity.Medium : Severity.High;
   }
 
   /**

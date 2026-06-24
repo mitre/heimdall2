@@ -284,10 +284,10 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   input: FluffyCredits | PurpleCredits,
                 ): string | undefined =>
                   input
-                    ? `${input.individuals
+                    ? input.individuals
                       ?.map(individual => individual.name)
                       .filter(Boolean)
-                      .join(', ')}`
+                      .join(', ')
                     : undefined,
               },
               cwe: { path: 'cwes', transformer: formatCWETags },
@@ -357,7 +357,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   | CycloneDXBillOfMaterialsStandardVulnerability
                   | CycloneDXSoftwareBillOfMaterialsStandardVulnerability,
               ): string =>
-                input.description ? `${input.description}` : `${input.id}`,
+                input.description ? input.description : String(input.id),
             },
           },
         ],
@@ -516,9 +516,9 @@ export class CycloneDXSBOMResults {
       vulnerability.affectedComponents = vulnerability.affects?.map((id) => {
         // Build a dummy component for each bom-ref identified as being affected by the vulnerability
         const dummy: IntermediaryComponent = {
-          'bom-ref': `${id.ref}`,
+          'bom-ref': id.ref,
           isDummy: true,
-          name: `${id.ref}`,
+          name: id.ref,
           type: 'application', // a type must be provided, and "application" is the default classification
         };
         // Add that component to the corresponding vulnerability object
@@ -604,7 +604,7 @@ function formatCWETags(
   addPrefix = true,
 ): string[] {
   return input && Array.isArray(input)
-    ? input.map(cwe => (addPrefix ? `CWE-${cwe}` : `${cwe}`))
+    ? input.map(cwe => (addPrefix ? `CWE-${cwe}` : String(cwe)))
     : [];
 }
 

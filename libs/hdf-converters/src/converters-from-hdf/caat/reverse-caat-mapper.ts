@@ -49,6 +49,8 @@ export type CAATRow = Partial<
 >;
 
 export class FromHDFToCAATMapper {
+  static readonly DefaultWritingOptions: XLSX.WritingOptions = { bookType: 'xlsx', type: 'binary' };
+
   static readonly FileSettings: XLSX.Properties = {
     Author: 'MITRE SAF',
     CreatedDate: new Date(),
@@ -59,8 +61,6 @@ export class FromHDFToCAATMapper {
   static readonly MaxCellSize = 32_000;
 
   static readonly MaxSheetNameLength = 31;
-
-  static readonly DefaultWritingOptions: XLSX.WritingOptions = { bookType: 'xlsx', type: 'binary' };
 
   static readonly NistCanonizationConfig: CanonizationConfig = {
     add_spaces: false,
@@ -218,9 +218,8 @@ export class FromHDFToCAATMapper {
     for (const d of this.data) {
       // Ensure sheet name uniqueness
       let renameCount = 2;
-      const fullName = `${
-        d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'
-      }`;
+      const fullName
+        = d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON';
       let sheetName: string = fullName.slice(
         0,
         Math.max(0, FromHDFToCAATMapper.MaxSheetNameLength),

@@ -7,9 +7,8 @@ export class ScoutsuiteNistMappingItem {
   constructor(values: ISCOUTSUITEJSONID) {
     if (values.RULE === undefined) {
       throw new Error('Scoutsuite Nist Mapping Data must contain a rule.');
-    } else {
-      this.rule = values.RULE;
     }
+    this.rule = values.RULE;
     this.nistId = values['NIST-ID'] === undefined ? '' : values['NIST-ID'];
   }
 }

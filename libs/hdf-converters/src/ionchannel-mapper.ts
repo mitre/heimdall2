@@ -134,9 +134,7 @@ export class IonChannelMapper extends BaseConverter {
   > = {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return createHeimdallPassthrough('ionchannel', {
-          ionchannel_metadata: _.get(data, 'metadata'),
-        });
+        return createHeimdallPassthrough('ionchannel', { ionchannel_metadata: _.get(data, 'metadata') });
       },
     },
     platform: {
@@ -175,7 +173,7 @@ export class IonChannelMapper extends BaseConverter {
                       DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS,
                     ),
                     dependencies: dependency.dependencies.map(
-                      subDependency => `${subDependency.name}`,
+                      subDependency => subDependency.name,
                     ),
                     nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS,
                   }

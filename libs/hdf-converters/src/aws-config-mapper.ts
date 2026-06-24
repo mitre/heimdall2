@@ -123,7 +123,7 @@ export class AwsConfigMapper {
     const checkText = [`ARN: ${configRule.ConfigRuleArn || 'N/A'}`,
       `Source Identifier: ${configRule.Source?.SourceIdentifier || 'N/A'}`];
     if (params.length > 0) {
-      checkText.push(`${params.join('<br/>').replaceAll('"', '')}`);
+      checkText.push(params.join('<br/>').replaceAll('"', ''));
     }
     return checkText.join('<br/>');
   }
@@ -196,12 +196,11 @@ export class AwsConfigMapper {
       const response = await this.configService.describeComplianceByConfigRule({ ConfigRuleNames: slice.map(rule => rule.ConfigRuleName || '') });
       if (response.ComplianceByConfigRules === undefined) {
         throw new Error('No compliance data was returned');
-      } else {
-        if (response.ComplianceByConfigRules) {
-          for (const compliance of response.ComplianceByConfigRules) {
-            complianceResults.push(compliance)
-            ;
-          }
+      }
+      if (response.ComplianceByConfigRules) {
+        for (const compliance of response.ComplianceByConfigRules) {
+          complianceResults.push(compliance)
+          ;
         }
       }
     }
@@ -222,18 +221,17 @@ export class AwsConfigMapper {
     let response = await this.getConfigRulePage(params);
     if (response.ConfigRules === undefined) {
       throw new Error('No data was returned');
-    } else {
-      while (response?.ConfigRules !== undefined) {
-        for (const rule of response.ConfigRules) {
-          configRules.push(rule);
-        }
-        if (response.NextToken) {
-          params = _.set(params, 'NextToken', response.NextToken);
-        } else {
-          break;
-        }
-        response = await this.getConfigRulePage(params);
+    }
+    while (response?.ConfigRules !== undefined) {
+      for (const rule of response.ConfigRules) {
+        configRules.push(rule);
       }
+      if (response.NextToken) {
+        params = _.set(params, 'NextToken', response.NextToken);
+      } else {
+        break;
+      }
+      response = await this.getConfigRulePage(params);
     }
     this.results = await this.getResults(configRules);
     return configRules;
@@ -379,7 +377,6 @@ export class AwsConfigMapper {
           }
         } else {
           ruleData.push(result);
-          continue;
         }
       }
     }
@@ -407,11 +404,8 @@ export class AwsConfigMapper {
   private getStatus(result: EvaluationResult): ExecJSON.ControlResultStatus {
     if (result.ComplianceType === 'COMPLIANT') {
       return ExecJSON.ControlResultStatus.Passed;
-    } else if (result.ComplianceType === 'NON_COMPLIANT') {
-      return ExecJSON.ControlResultStatus.Failed;
-    } else {
-      return ExecJSON.ControlResultStatus.Skipped;
     }
+    return result.ComplianceType === 'NON_COMPLIANT' ? ExecJSON.ControlResultStatus.Failed : ExecJSON.ControlResultStatus.Skipped;
   }
 
   private hdfDescriptions(configRule: ConfigRule) {

@@ -135,35 +135,43 @@ export function fingerprint(guessOptions: {
     // If we don't have valid json, look for known strings inside the file text
     if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
       return INPUT_TYPES.NESSUS;
-    } else if (
+    }
+    if (
       XCCDF_XMLNS_RE.test(guessOptions.data)
       || guessOptions.filename.toLowerCase().includes('xccdf')
     ) {
       return INPUT_TYPES.XCCDF;
-    } else if (
+    }
+    if (
       NETSPARKER_RE.test(guessOptions.data)
       || INVICTI_RE.test(guessOptions.data)
     ) {
       return INPUT_TYPES.NETSPARKER;
-    } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
+    }
+    if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
       return INPUT_TYPES.FORTIFY;
-    } else if (
+    }
+    if (
       guessOptions.data.includes('"AwsAccountId"')
       && guessOptions.data.includes('"SchemaVersion"')
     ) {
       return INPUT_TYPES.ASFF;
-    } else if (guessOptions.data.includes('issues burpVersion')) {
+    }
+    if (guessOptions.data.includes('issues burpVersion')) {
       return INPUT_TYPES.BURP;
-    } else if (guessOptions.data.includes('scoutsuite_results')) {
+    }
+    if (guessOptions.data.includes('scoutsuite_results')) {
       return INPUT_TYPES.SCOUTSUITE;
-    } else if (
+    }
+    if (
       guessOptions.data.includes('Policy')
       && guessOptions.data.includes('Job Name')
       && guessOptions.data.includes('Check ID')
       && guessOptions.data.indexOf('Result Status')
     ) {
       return INPUT_TYPES.DB_PROTECT;
-    } else if (
+    }
+    if (
       splitLines[0].includes('Hostname')
       && splitLines[0].includes('Distro')
       && splitLines[0].includes('CVE ID')
@@ -172,14 +180,16 @@ export function fingerprint(guessOptions: {
       && splitLines[0].includes('Severity')
     ) {
       return INPUT_TYPES.PRISMA;
-    } else if (
+    }
+    if (
       splitLines[0].includes('SourceName')
       && splitLines[0].includes('DetectorType')
       && splitLines[0].includes('DetectorName')
       && splitLines[0].includes('DecoderName')
     ) {
       return INPUT_TYPES.TRUFFLEHOG;
-    } else if (
+    }
+    if (
       guessOptions.data.includes('veracode')
       && guessOptions.data.includes('detailedreport')
     ) {

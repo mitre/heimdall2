@@ -5,6 +5,7 @@ hdf2Splunk has the following 3 schemas for importing data into Splunk.
 ## Previewing HDF Data Within Splunk
 
 A full raw search query:
+
 ```
 index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) first(meta.status)  list(meta.status)  list(meta.is_baseline) values(title) last(code) list(code) values(desc) values(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
 | join  meta.guid 
@@ -13,7 +14,9 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
     [search index="hdf"  meta.subtype=profile | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(meta.profile_sha256) list(meta.is_baseline)  last(summary) list(summary) list(sha256) list(supports{}.*) last(name) list(name) list(copyright) list(maintainer) list(copyright_email) last(version) list(version) list(license) list(title) list(parent_profile) list(depends{}.*) list(controls{}.*) list(attributes{}.*) list(status) by meta.guid] 
 
 ```
+
 A formatted table search query:
+
 ```
 index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) first(meta.status)  list(meta.status)  list(meta.is_baseline) values(title) last(code) list(code) values(desc) values(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
 | join  meta.guid 
@@ -25,6 +28,7 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
 ```
 
 ### Control
+
 ```
 {
     "meta": {
@@ -110,6 +114,7 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
     }
 }
 ```
+
 ### Profile
 
 ```
@@ -194,6 +199,7 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
 ```
 
 ### (Execution) Header
+
 ```
 
 {

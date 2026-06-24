@@ -69,11 +69,10 @@ export class SplunkMapper {
     // Return unique search ID (SID) assigned to that search job for future reference
     if (_.has(jobSID, ['data', 'sid'])) {
       return jobSID.data.sid;
-    } else {
-      throw new Error(
-        'Failed to create search job - Malformed search job creation response received',
-      );
     }
+    throw new Error(
+      'Failed to create search job - Malformed search job creation response received',
+    );
   }
 
   parseSplunkResponse(
@@ -170,11 +169,10 @@ export class SplunkMapper {
     // Return search job results
     if (_.has(queryJob, ['data'])) {
       return this.parseSplunkResponse(query, queryJob.data);
-    } else {
-      throw new Error(
-        'Failed search job - Malformed search job results response received',
-      );
     }
+    throw new Error(
+      'Failed search job - Malformed search job results response received',
+    );
   }
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
@@ -211,12 +209,12 @@ export class SplunkMapper {
     // Time interval between checking on status of search job
     const searchJobPing = 50;
     let queryStatus: AxiosResponse;
-    let continuePing = true;
+    let isContinuePing = true;
 
     // Kill query after 2 minute of waiting
     // Arbitrary time used, change as needed
     const queryTimer = setTimeout(() => {
-      continuePing = false;
+      isContinuePing = false;
       clearTimeout(queryTimer);
       throw new Error('Search job timed out - Unable to retrieve query');
     }, searchJobTimeout);
@@ -272,7 +270,7 @@ export class SplunkMapper {
       }
 
       // Kill loop if search job times out
-      if (!continuePing) {
+      if (!isContinuePing) {
         clearInterval(awaitJob);
       }
     }, searchJobPing);

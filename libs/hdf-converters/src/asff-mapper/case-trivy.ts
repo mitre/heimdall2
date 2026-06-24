@@ -41,9 +41,8 @@ function subfindingsMessage(finding: unknown): string | undefined {
       finding,
       'Resources[0].Details.Other.Installed Package',
     )}.  ${patchedVersionMessage}`;
-  } else {
-    return undefined;
   }
+  return undefined;
 }
 
 function productName() {

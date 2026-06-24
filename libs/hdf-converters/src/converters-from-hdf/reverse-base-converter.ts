@@ -57,13 +57,11 @@ export class FromHdfBaseConverter {
     if (typeof transformer === 'function') {
       if (v.path) {
         return v.passParent ? transformer(this.handlePath(file, v.path), this) : transformer(this.handlePath(file, v.path));
-      } else {
-        return v.passParent ? transformer(file, this) : transformer(file);
       }
-    } else {
-      if (v.path) {
-        return this.handlePath(file, v.path) as T | T[];
-      }
+      return v.passParent ? transformer(file, this) : transformer(file);
+    }
+    if (v.path) {
+      return this.handlePath(file, v.path) as T | T[];
     }
     return this.convertInternal(file, v);
   }
@@ -113,7 +111,7 @@ export class FromHdfBaseConverter {
     const uniqueResults: T[] = [];
     for (const result of resultingData) {
       if (
-        !uniqueResults.some(uniqueResult => _.isEqual(result, uniqueResult))
+        uniqueResults.every(uniqueResult => !_.isEqual(result, uniqueResult))
       ) {
         uniqueResults.push(result);
       }

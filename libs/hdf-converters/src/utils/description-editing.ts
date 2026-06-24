@@ -178,7 +178,7 @@ export function syncChecklistVulnComments(
   }
 }
 
-const SECTION_ORDER = ['CAVEAT', 'JUSTIFICATION', 'RATIONALE', 'COMMENTS'];
+const SECTION_ORDER = new Set(['CAVEAT', 'COMMENTS', 'JUSTIFICATION', 'RATIONALE']);
 
 function parseStructuredComments(
   commentString: string,
@@ -228,7 +228,7 @@ function serializeStructuredComments(
   }
 
   for (const [label, value] of sections) {
-    if (!SECTION_ORDER.includes(label) && value) {
+    if (!SECTION_ORDER.has(label) && value) {
       parts.push(`${label} :: ${value}`);
     }
   }

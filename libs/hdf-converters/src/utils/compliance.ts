@@ -30,9 +30,6 @@ export function translateCompliance(rawCompliance: string): string {
 
   if (compliance >= 90) {
     return 'high';
-  } else if (compliance >= 60) {
-    return 'medium';
-  } else {
-    return 'low';
   }
+  return compliance >= 60 ? 'medium' : 'low';
 }

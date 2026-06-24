@@ -207,13 +207,11 @@ export class FromHDFToXCCDFMapper {
   getSeverity(control: ExecJSON.Control): XCCDFSeverity {
     if (control.impact < 0.1) {
       return 'info';
-    } else if (control.impact < 0.4) {
-      return 'low';
-    } else if (control.impact < 0.7) {
-      return 'medium';
-    } else {
-      return 'high';
     }
+    if (control.impact < 0.4) {
+      return 'low';
+    }
+    return control.impact < 0.7 ? 'medium' : 'high';
   }
 
   toXCCDF() {

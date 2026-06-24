@@ -333,7 +333,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
     // Report provided indexes
     const indexes = indexResponse.data.entry;
-    if (indexes.length <= 0) {
+    if (indexes.length === 0) {
       throw new Error(
         'Unable to retrieve available indexes, double-check your scheme configuration and try again',
       );
@@ -363,9 +363,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
         }
         logger.info(`Successfully uploaded to ${config.index}`);
         return guid;
-      } else {
-        throw new Error(`Invalid index - ${config.index}`);
       }
+      throw new Error(`Invalid index - ${config.index}`);
     }
   }
 
@@ -387,7 +386,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             logger.verbose(
               `Successfully uploaded execution for ${report.meta.filename}`,
             );
-            return undefined;
+            return;
           });
       });
       await Promise.all(execEvents);

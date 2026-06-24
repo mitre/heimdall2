@@ -357,12 +357,6 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     return restrictedResults;
   }
 
-  setMappings(
-    customMappings: MappedTransform<IExecJSONASFF, ILookupPathASFF>,
-  ): void {
-    super.setMappings(customMappings);
-  }
-
   // Convert from HDF to ASFF
   toAsff(): IFindingASFF[] {
     if (this.mappings() === undefined) {

@@ -10,9 +10,8 @@ export class NessusPluginsNistMappingItem {
       throw new Error(
         'Nessus Plugins Nist Mapping Data must contain a plugin family.',
       );
-    } else {
-      this.pluginFamily = values.pluginFamily;
     }
+    this.pluginFamily = values.pluginFamily;
     // Could be a string "*" or a number
     this.pluginId = typeof values.pluginID === 'string' ? values.pluginID : values.pluginID.toString();
     this.nistId = values['NIST-ID'] === undefined ? '' : values['NIST-ID'];

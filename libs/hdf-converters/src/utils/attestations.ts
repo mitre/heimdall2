@@ -18,11 +18,11 @@ export function addAttestationToHDF(
   attestations: Attestation[],
 ): ExecJSON.Execution {
   for (const attestation of attestations) {
-    let found_control = false;
+    let isFound_control = false;
     for (const profile of hdf.profiles) {
       for (const control of profile.controls) {
         if (attestationCanBeAdded(attestation, control)) {
-          found_control = true;
+          isFound_control = true;
           if (['failed', 'passed'].includes(attestation.status)) {
             control.attestation_data
               = attestation as unknown as AttestationData;
@@ -35,7 +35,7 @@ export function addAttestationToHDF(
         }
       }
     }
-    if (!found_control) {
+    if (!isFound_control) {
       console.error(
         `Attestation cannot be added for control ${attestation.control_id}. Skipping attestation.`,
       );
@@ -146,14 +146,13 @@ export function convertAttestationToSegment(
       start_time: new Date().toISOString(),
       status: ExecJSON.ControlResultStatus.Skipped,
     };
-  } else {
-    return {
-      code_desc: 'Manually verified status provided through attestation',
-      message: createAttestationMessage(attestation, false),
-      start_time: new Date().toISOString(),
-      status: attestation.status as ControlResultStatus,
-    };
   }
+  return {
+    code_desc: 'Manually verified status provided through attestation',
+    message: createAttestationMessage(attestation, false),
+    start_time: new Date().toISOString(),
+    status: attestation.status as ControlResultStatus,
+  };
 }
 
 export function createAttestationMessage(
