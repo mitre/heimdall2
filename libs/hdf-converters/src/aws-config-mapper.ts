@@ -112,20 +112,20 @@ export class AwsConfigMapper {
 
   private appendResourceNamesToResults(
     completedControlResults: ExecJSON.ControlResult[][],
-    extractedResourceNames: Record<string, string>,
+    extractedResourceNames: Map<string, string>,
   ) {
     return completedControlResults.map(completedControlResult =>
       completedControlResult.map((completedControl) => {
-        for (const extractedResourceName in extractedResourceNames) {
+        for (const [resourceId, resourceName] of extractedResourceNames) {
           if (
-            completedControl.code_desc.includes(JSON.stringify(extractedResourceName)
+            completedControl.code_desc.includes(JSON.stringify(resourceId)
               .replaceAll('"', '')
               .replaceAll('{', '')
               .replaceAll('}', ''))
           ) {
             return {
               ...completedControl,
-              code_desc: `${completedControl.code_desc}, resource_name: ${extractedResourceNames[extractedResourceName]}`,
+              code_desc: `${completedControl.code_desc}, resource_name: ${resourceName}`,
             };
           }
         }
@@ -157,9 +157,9 @@ export class AwsConfigMapper {
     evaluationResults: EvaluationResult[],
   ) {
     // Map of resource types to resource IDs {resourceType: ResourceId[]}
-    const resourceMap: Partial<Record<ResourceType, string[]>> = {};
+    const resourceMap = new Map<ResourceType, string[]>();
     // Map of resource IDs to resource names
-    const resolvedResourcesMap: Record<string, string> = {};
+    const resolvedResourcesMap = new Map<string, string>();
     // Extract resource Ids
     for (const result of evaluationResults) {
       const resourceType: ResourceType
@@ -173,21 +173,18 @@ export class AwsConfigMapper {
         result,
         'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId',
       ) as unknown as string;
-      if (Object.hasOwn(resourceMap, resourceType)) {
-        if (
-          !resourceMap[resourceType]?.includes(resourceId)
-          && typeof resourceId === 'string'
-        ) {
-          resourceMap[resourceType]?.push(resourceId);
+      const existing = resourceMap.get(resourceType);
+      if (existing) {
+        if (!existing.includes(resourceId) && typeof resourceId === 'string') {
+          existing.push(resourceId);
         }
       } else {
-        resourceMap[resourceType] = [resourceId];
+        resourceMap.set(resourceType, [resourceId]);
       }
     }
     // Resolve resource names from AWS
-    let resourceType: ResourceType;
-    for (resourceType in resourceMap) {
-      const resourceIDSlices = _.chunk(resourceMap[resourceType], 20);
+    for (const [resourceType, resourceIds] of resourceMap) {
+      const resourceIDSlices = _.chunk(resourceIds, 20);
       for (const slice of resourceIDSlices) {
         await this.delay(150);
         const resources = await this.configService.listDiscoveredResources({
@@ -197,7 +194,7 @@ export class AwsConfigMapper {
         if (resources.resourceIdentifiers) {
           for (const resource of resources.resourceIdentifiers) {
             if (resource.resourceId && resource.resourceName) {
-              resolvedResourcesMap[resource.resourceId] = resource.resourceName;
+              resolvedResourcesMap.set(resource.resourceId, resource.resourceName);
             }
           }
         }
@@ -277,9 +274,8 @@ export class AwsConfigMapper {
   }
 
   private async getControls(): Promise<ExecJSON.Control[]> {
-    let index = 0;
     const issues = await this.issues;
-    return issues.map((issue: ConfigRule) => {
+    return issues.map((issue: ConfigRule, index: number) => {
       const control: ExecJSON.Control = {
         code: '',
         desc: issue.Description || null,
@@ -287,7 +283,7 @@ export class AwsConfigMapper {
         id: issue.ConfigRuleId || '',
         impact: this.getImpact(issue),
         refs: [],
-        results: this.results[index],
+        results: this.results.at(index) ?? [],
         source_location: { line: 1, ref: issue.ConfigRuleArn },
         tags: this.hdfTags(issue),
         title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${
@@ -296,7 +292,6 @@ export class AwsConfigMapper {
           .replaceAll(':', '')
           .replaceAll(/config-rule/giv, ''),
       };
-      index++;
       return control;
     });
   }
