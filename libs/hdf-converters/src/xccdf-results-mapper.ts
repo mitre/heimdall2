@@ -383,7 +383,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               for (const path of paths) {
                 const item = _.get(input, path);
                 if (item !== undefined) {
-                  fullDescription[path] = typeof item === 'string' ? parseHtml(item) : item;
+                  fullDescription[path] = typeof item === 'string' ? parseHtml(item) : item; // eslint-disable-line security/detect-object-injection -- path is from hardcoded descriptionPaths array
                 }
               }
             }

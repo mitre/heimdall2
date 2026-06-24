@@ -39,7 +39,7 @@ function getContextualizedSnippet(
   endLine: number,
   msg?: string,
 ): string {
-  const linenumberedFile = applyLineNumber(fullFiles[component]);
+  const linenumberedFile = applyLineNumber(fullFiles[component]); // eslint-disable-line security/detect-object-injection -- component is a Sonarqube API identifier, not user input
   const snippet = linenumberedFile
     .split('\n')
     .slice(Math.max(startLine - 3, 0), endLine + 3)
@@ -962,8 +962,8 @@ export class SonarqubeResults {
         ...searchResults,
         issues: searchResults.issues.map((issue, index) => ({
           ...issue,
-          codeSnippet: codeSnippets[index],
-          ruleInformation: rules[index],
+          codeSnippet: codeSnippets.at(index),
+          ruleInformation: rules.at(index),
         })),
       },
       sonarqubeHost: this.sonarqubeHost,
