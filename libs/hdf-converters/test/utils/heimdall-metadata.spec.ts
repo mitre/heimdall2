@@ -39,7 +39,7 @@ describe('createHeimdallPassthrough', () => {
   it('ZAP mapper output contains passthrough.heimdall.sourceFormat', async () => {
     const zapInput = fs.readFileSync(
       'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
-      { encoding: 'utf-8' },
+      { encoding: 'utf8' },
     );
     const mapper = new ZapResults(zapInput, 'https://zero.webappsecurity.com');
     const result = await mapper.toHdf() as ExecJSON.Execution & { passthrough: Record<string, unknown> };

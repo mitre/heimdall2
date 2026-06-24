@@ -1,21 +1,21 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {FromHDFToXCCDFMapper} from '../../../index';
-import {replaceXCCDFVersion} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { FromHDFToXCCDFMapper } from '../../../index';
+import { replaceXCCDFVersion } from '../../utils';
 
 describe('XCCDF Results Reverse Mapper', () => {
   it('Successfully converts RHEL7 HDF into XCCDF-Results', () => {
     const inputData = fs.readFileSync(
       'sample_jsons/xccdf_reverse_mapper/sample_input_report/rhel7-results.json',
-      {encoding: 'utf-8'}
+      { encoding: 'utf8' },
     );
     const outputTemplate = fs.readFileSync(
-      'src/converters-from-hdf/xccdf/hdf2xccdf-results-template.xml'
+      'src/converters-from-hdf/xccdf/hdf2xccdf-results-template.xml',
     );
     const mapper = new FromHDFToXCCDFMapper(
       inputData,
       outputTemplate.toString(),
-      true
+      true,
     );
 
     const converted = mapper.toXCCDF();
@@ -28,7 +28,7 @@ describe('XCCDF Results Reverse Mapper', () => {
 
     const expected = fs.readFileSync(
       'sample_jsons/xccdf_reverse_mapper/rhel7-xccdf-results.xml',
-      'utf-8'
+      'utf8',
     );
 
     expect(converted).toEqual(replaceXCCDFVersion(expected));
@@ -37,15 +37,15 @@ describe('XCCDF Results Reverse Mapper', () => {
   it('Successfully converts a 3 layer overlay HDF into XCCDF-Results', () => {
     const inputData = fs.readFileSync(
       'sample_jsons/xccdf_reverse_mapper/sample_input_report/example-3-layer-overlay.json',
-      {encoding: 'utf-8'}
+      { encoding: 'utf8' },
     );
     const outputTemplate = fs.readFileSync(
-      'src/converters-from-hdf/xccdf/hdf2xccdf-results-template.xml'
+      'src/converters-from-hdf/xccdf/hdf2xccdf-results-template.xml',
     );
     const mapper = new FromHDFToXCCDFMapper(
       inputData,
       outputTemplate.toString(),
-      true
+      true,
     );
 
     const converted = mapper.toXCCDF();
@@ -58,7 +58,7 @@ describe('XCCDF Results Reverse Mapper', () => {
 
     const expected = fs.readFileSync(
       'sample_jsons/xccdf_reverse_mapper/example-3-layer-overlay-xccdf-results.xml',
-      'utf-8'
+      'utf8',
     );
 
     expect(converted).toEqual(replaceXCCDFVersion(expected));

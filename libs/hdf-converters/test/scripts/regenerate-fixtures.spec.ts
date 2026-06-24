@@ -47,8 +47,8 @@ describe('regenerate-fixtures registry', () => {
         }
         expect(entry.inputFile, `${name}: inputFile should be a non-empty string`).toBeTruthy();
         expect(entry.outputFile, `${name}: outputFile should be a non-empty string`).toBeTruthy();
-        expect(entry.inputFile).toMatch(/^sample_jsons\//);
-        expect(entry.outputFile).toMatch(/^sample_jsons\//);
+        expect(entry.inputFile).toMatch(/^sample_jsons\//v);
+        expect(entry.outputFile).toMatch(/^sample_jsons\//v);
       }
     }
   });
@@ -78,7 +78,7 @@ describe('regenerate-fixtures registry', () => {
     );
     const profileDef = schema.definitions.Exec_JSON_Profile;
     const required = new Set(profileDef.required as string[]);
-    const perMapper = new Set(['name', 'controls']);
+    const perMapper = new Set(['controls', 'name']);
     const optionalFields = Object.keys(profileDef.properties as Record<string, unknown>)
       .filter(f => !required.has(f) && !perMapper.has(f))
       .toSorted((a, b) => a.localeCompare(b));

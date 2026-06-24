@@ -1,25 +1,25 @@
-import {ExecJSON} from 'inspecjs';
-import {describe, expect, it} from 'vitest';
-import {Severityoverride} from '../../src/ckl-mapper/checklistJsonix';
+import { type ExecJSON } from 'inspecjs';
+import { describe, expect, it } from 'vitest';
 import {
-  ChecklistVuln,
-  Severity
+  type ChecklistVuln,
+  Severity,
 } from '../../src/ckl-mapper/checklist-jsonix-converter';
+import { Severityoverride } from '../../src/ckl-mapper/checklistJsonix';
 import {
-  setControlDescription,
-  sanitizeCklSectionMarkers,
-  syncChecklistVulnComments,
   buildEditsMapFromProfiles,
-  prepareEvaluationForCklExport
+  prepareEvaluationForCklExport,
+  sanitizeCklSectionMarkers,
+  setControlDescription,
+  syncChecklistVulnComments,
 } from '../../src/utils/description-editing';
 
 describe('setControlDescription', () => {
   describe('array-form descriptions (evaluation controls)', () => {
     it('updates existing description by label', () => {
       const descriptions: ExecJSON.ControlDescription[] = [
-        {label: 'check', data: 'Run the check'},
-        {label: 'comments', data: 'old comment'},
-        {label: 'fix', data: 'Apply the fix'}
+        { data: 'Run the check', label: 'check' },
+        { data: 'old comment', label: 'comments' },
+        { data: 'Apply the fix', label: 'fix' },
       ];
       setControlDescription(descriptions, 'comments', 'new comment');
       expect(descriptions[1].data).toBe('new comment');
@@ -27,19 +27,19 @@ describe('setControlDescription', () => {
 
     it('adds a new description when label does not exist', () => {
       const descriptions: ExecJSON.ControlDescription[] = [
-        {label: 'check', data: 'Run the check'}
+        { data: 'Run the check', label: 'check' },
       ];
       setControlDescription(descriptions, 'comments', 'added comment');
       expect(descriptions).toHaveLength(2);
       expect(descriptions[1]).toEqual({
+        data: 'added comment',
         label: 'comments',
-        data: 'added comment'
       });
     });
 
     it('handles case-insensitive label matching', () => {
       const descriptions: ExecJSON.ControlDescription[] = [
-        {label: 'Comments', data: 'old'}
+        { data: 'old', label: 'Comments' },
       ];
       setControlDescription(descriptions, 'comments', 'new');
       expect(descriptions[0].data).toBe('new');
@@ -50,7 +50,7 @@ describe('setControlDescription', () => {
       const descriptions: ExecJSON.ControlDescription[] = [];
       setControlDescription(descriptions, 'caveat', 'new caveat');
       expect(descriptions).toHaveLength(1);
-      expect(descriptions[0]).toEqual({label: 'caveat', data: 'new caveat'});
+      expect(descriptions[0]).toEqual({ data: 'new caveat', label: 'caveat' });
     });
   });
 
@@ -58,16 +58,14 @@ describe('setControlDescription', () => {
     it('updates existing property', () => {
       const descriptions: Record<string, string> = {
         check: 'Run the check',
-        comments: 'old comment'
+        comments: 'old comment',
       };
       setControlDescription(descriptions, 'comments', 'new comment');
       expect(descriptions.comments).toBe('new comment');
     });
 
     it('adds a new property when key does not exist', () => {
-      const descriptions: Record<string, string> = {
-        check: 'Run the check'
-      };
+      const descriptions: Record<string, string> = { check: 'Run the check' };
       setControlDescription(descriptions, 'justification', 'justified');
       expect(descriptions.justification).toBe('justified');
     });
@@ -77,7 +75,7 @@ describe('setControlDescription', () => {
 describe('sanitizeCklSectionMarkers', () => {
   it('returns plain text unchanged', () => {
     expect(sanitizeCklSectionMarkers('This is a normal comment')).toBe(
-      'This is a normal comment'
+      'This is a normal comment',
     );
   });
 
@@ -88,21 +86,21 @@ describe('sanitizeCklSectionMarkers', () => {
 
   it('escapes JUSTIFICATION :: marker in user text', () => {
     const result = sanitizeCklSectionMarkers(
-      'some text\nJUSTIFICATION :: not real'
+      'some text\nJUSTIFICATION :: not real',
     );
     expect(result).not.toContain('\nJUSTIFICATION ::');
   });
 
   it('escapes RATIONALE :: marker in user text', () => {
     const result = sanitizeCklSectionMarkers(
-      'text\nRATIONALE :: fake rationale'
+      'text\nRATIONALE :: fake rationale',
     );
     expect(result).not.toContain('\nRATIONALE ::');
   });
 
   it('escapes COMMENTS :: marker in user text', () => {
     const result = sanitizeCklSectionMarkers(
-      'line1\nCOMMENTS :: duplicate section'
+      'line1\nCOMMENTS :: duplicate section',
     );
     expect(result).not.toContain('\nCOMMENTS ::');
   });
@@ -120,10 +118,10 @@ describe('sanitizeCklSectionMarkers', () => {
 describe('syncChecklistVulnComments', () => {
   it('updates comments on matching vuln by vulnNum', () => {
     const vulns = [
-      makeVuln({vulnNum: 'V-12345', ruleId: 'SV-12345r1_rule'}),
-      makeVuln({vulnNum: 'V-67890', ruleId: 'SV-67890r1_rule'})
+      makeVuln({ ruleId: 'SV-12345r1_rule', vulnNum: 'V-12345' }),
+      makeVuln({ ruleId: 'SV-67890r1_rule', vulnNum: 'V-67890' }),
     ];
-    const edits = new Map([['V-12345', {comments: 'updated comment'}]]);
+    const edits = new Map([['V-12345', { comments: 'updated comment' }]]);
 
     syncChecklistVulnComments(vulns, edits);
 
@@ -134,12 +132,12 @@ describe('syncChecklistVulnComments', () => {
   it('preserves existing structured comments (CAVEAT, JUSTIFICATION) when updating COMMENTS section', () => {
     const vulns = [
       makeVuln({
-        vulnNum: 'V-12345',
+        comments: 'CAVEAT :: existing caveat\nCOMMENTS :: old comment',
         ruleId: 'SV-12345r1_rule',
-        comments: 'CAVEAT :: existing caveat\nCOMMENTS :: old comment'
-      })
+        vulnNum: 'V-12345',
+      }),
     ];
-    const edits = new Map([['V-12345', {comments: 'new comment'}]]);
+    const edits = new Map([['V-12345', { comments: 'new comment' }]]);
 
     syncChecklistVulnComments(vulns, edits);
 
@@ -151,12 +149,12 @@ describe('syncChecklistVulnComments', () => {
   it('adds COMMENTS section when none existed in structured comments', () => {
     const vulns = [
       makeVuln({
-        vulnNum: 'V-12345',
+        comments: 'CAVEAT :: some caveat',
         ruleId: 'SV-12345r1_rule',
-        comments: 'CAVEAT :: some caveat'
-      })
+        vulnNum: 'V-12345',
+      }),
     ];
-    const edits = new Map([['V-12345', {comments: 'brand new'}]]);
+    const edits = new Map([['V-12345', { comments: 'brand new' }]]);
 
     syncChecklistVulnComments(vulns, edits);
 
@@ -167,12 +165,12 @@ describe('syncChecklistVulnComments', () => {
   it('removes COMMENTS section when value is empty', () => {
     const vulns = [
       makeVuln({
-        vulnNum: 'V-12345',
+        comments: 'CAVEAT :: caveat\nCOMMENTS :: to be removed',
         ruleId: 'SV-12345r1_rule',
-        comments: 'CAVEAT :: caveat\nCOMMENTS :: to be removed'
-      })
+        vulnNum: 'V-12345',
+      }),
     ];
-    const edits = new Map([['V-12345', {comments: ''}]]);
+    const edits = new Map([['V-12345', { comments: '' }]]);
 
     syncChecklistVulnComments(vulns, edits);
 
@@ -183,12 +181,12 @@ describe('syncChecklistVulnComments', () => {
   it('handles plain (non-structured) comments by replacing entirely', () => {
     const vulns = [
       makeVuln({
-        vulnNum: 'V-12345',
+        comments: 'just a plain comment',
         ruleId: 'SV-12345r1_rule',
-        comments: 'just a plain comment'
-      })
+        vulnNum: 'V-12345',
+      }),
     ];
-    const edits = new Map([['V-12345', {comments: 'replaced'}]]);
+    const edits = new Map([['V-12345', { comments: 'replaced' }]]);
 
     syncChecklistVulnComments(vulns, edits);
 
@@ -197,28 +195,28 @@ describe('syncChecklistVulnComments', () => {
 
   it('sanitizes section markers in user text before writing', () => {
     const vulns = [
-      makeVuln({vulnNum: 'V-12345', ruleId: 'SV-12345r1_rule'})
+      makeVuln({ ruleId: 'SV-12345r1_rule', vulnNum: 'V-12345' }),
     ];
     const edits = new Map([
-      ['V-12345', {comments: 'ok\nCAVEAT :: injected'}]
+      ['V-12345', { comments: 'ok\nCAVEAT :: injected' }],
     ]);
 
     syncChecklistVulnComments(vulns, edits);
 
     const result = vulns[0].comments ?? '';
-    const caveatCount = (result.match(/CAVEAT ::/g) || []).length;
+    const caveatCount = (result.match(/CAVEAT ::/gv) || []).length;
     expect(caveatCount).toBe(0);
   });
 
   it('does not modify vulns with no matching edits', () => {
     const vulns = [
       makeVuln({
-        vulnNum: 'V-12345',
+        comments: 'original',
         ruleId: 'SV-12345r1_rule',
-        comments: 'original'
-      })
+        vulnNum: 'V-12345',
+      }),
     ];
-    const edits = new Map([['V-99999', {comments: 'should not apply'}]]);
+    const edits = new Map([['V-99999', { comments: 'should not apply' }]]);
 
     syncChecklistVulnComments(vulns, edits);
 
@@ -228,13 +226,13 @@ describe('syncChecklistVulnComments', () => {
   it('updates multiple description fields (caveat + comments)', () => {
     const vulns = [
       makeVuln({
-        vulnNum: 'V-12345',
+        comments: 'CAVEAT :: old caveat\nCOMMENTS :: old comment',
         ruleId: 'SV-12345r1_rule',
-        comments: 'CAVEAT :: old caveat\nCOMMENTS :: old comment'
-      })
+        vulnNum: 'V-12345',
+      }),
     ];
     const edits = new Map([
-      ['V-12345', {comments: 'new comment', caveat: 'new caveat'}]
+      ['V-12345', { caveat: 'new caveat', comments: 'new comment' }],
     ]);
 
     syncChecklistVulnComments(vulns, edits);
@@ -249,29 +247,29 @@ describe('buildEditsMapFromProfiles', () => {
   it('extracts description fields from profiles for matching vulns', () => {
     const profiles: ExecJSON.Profile[] = [
       {
-        name: 'test',
-        version: '1.0',
-        sha256: 'abc',
-        supports: [],
         attributes: [],
-        groups: [],
         controls: [
           {
-            id: 'V-2255',
-            title: 'Test',
             desc: '',
-            impact: 0.5,
-            tags: {},
             descriptions: [
-              {label: 'comments', data: 'reviewer note'},
-              {label: 'caveat', data: 'applies only to prod'}
+              { data: 'reviewer note', label: 'comments' },
+              { data: 'applies only to prod', label: 'caveat' },
             ],
+            id: 'V-2255',
+            impact: 0.5,
             refs: [],
+            results: [],
             source_location: {},
-            results: []
-          }
-        ]
-      }
+            tags: {},
+            title: 'Test',
+          },
+        ],
+        groups: [],
+        name: 'test',
+        sha256: 'abc',
+        supports: [],
+        version: '1.0',
+      },
     ];
     const vulnNums = ['V-2255', 'V-9999'];
 
@@ -287,26 +285,26 @@ describe('buildEditsMapFromProfiles', () => {
   it('skips controls with no edited description fields', () => {
     const profiles: ExecJSON.Profile[] = [
       {
-        name: 'test',
-        version: '1.0',
-        sha256: 'abc',
-        supports: [],
         attributes: [],
-        groups: [],
         controls: [
           {
-            id: 'V-2255',
-            title: 'Test',
             desc: '',
-            impact: 0.5,
-            tags: {},
             descriptions: [],
+            id: 'V-2255',
+            impact: 0.5,
             refs: [],
+            results: [],
             source_location: {},
-            results: []
-          }
-        ]
-      }
+            tags: {},
+            title: 'Test',
+          },
+        ],
+        groups: [],
+        name: 'test',
+        sha256: 'abc',
+        supports: [],
+        version: '1.0',
+      },
     ];
 
     const edits = buildEditsMapFromProfiles(profiles, ['V-2255']);
@@ -316,26 +314,26 @@ describe('buildEditsMapFromProfiles', () => {
   it('handles case-insensitive control ID matching', () => {
     const profiles: ExecJSON.Profile[] = [
       {
-        name: 'test',
-        version: '1.0',
-        sha256: 'abc',
-        supports: [],
         attributes: [],
-        groups: [],
         controls: [
           {
-            id: 'v-2255',
-            title: 'Test',
             desc: '',
+            descriptions: [{ data: 'test', label: 'comments' }],
+            id: 'v-2255',
             impact: 0.5,
-            tags: {},
-            descriptions: [{label: 'comments', data: 'test'}],
             refs: [],
+            results: [],
             source_location: {},
-            results: []
-          }
-        ]
-      }
+            tags: {},
+            title: 'Test',
+          },
+        ],
+        groups: [],
+        name: 'test',
+        sha256: 'abc',
+        supports: [],
+        version: '1.0',
+      },
     ];
 
     const edits = buildEditsMapFromProfiles(profiles, ['V-2255']);
@@ -347,28 +345,28 @@ describe('buildEditsMapFromProfiles', () => {
 describe('prepareEvaluationForCklExport', () => {
   it('returns a deep clone — original is NOT mutated', () => {
     const original: ExecJSON.Execution = {
-      platform: {name: 'test', release: '1.0'},
+      platform: { name: 'test', release: '1.0' },
       profiles: [{
+        attributes: [],
+        controls: [{
+          desc: '',
+          descriptions: [{ data: 'original comment', label: 'comments' }],
+          id: 'V-2255',
+          impact: 0.5,
+          refs: [],
+          results: [{ code_desc: 'Manual review', status: 'skipped' }],
+          source_location: {},
+          tags: {},
+          title: 'Test',
+        }],
+        groups: [],
         name: 'test-profile',
-        version: '1.0',
         sha256: 'abc',
         supports: [],
-        attributes: [],
-        groups: [],
-        controls: [{
-          id: 'V-2255',
-          title: 'Test',
-          desc: '',
-          impact: 0.5,
-          tags: {},
-          descriptions: [{label: 'comments', data: 'original comment'}],
-          refs: [],
-          source_location: {},
-          results: [{status: 'skipped', code_desc: 'Manual review'}]
-        }]
+        version: '1.0',
       }],
-      statistics: {duration: 0},
-      version: '4.0'
+      statistics: { duration: 0 },
+      version: '4.0',
     };
 
     const snapshot = JSON.parse(JSON.stringify(original));
@@ -380,37 +378,37 @@ describe('prepareEvaluationForCklExport', () => {
 
   it('applies attestations to the clone', () => {
     const original: ExecJSON.Execution = {
-      platform: {name: 'test', release: '1.0'},
+      platform: { name: 'test', release: '1.0' },
       profiles: [{
+        attributes: [],
+        controls: [{
+          desc: '',
+          descriptions: [],
+          id: 'V-2255',
+          impact: 0.5,
+          refs: [],
+          results: [{ code_desc: 'Manual review', status: 'skipped' }],
+          source_location: {},
+          tags: {},
+          title: 'Test',
+        }],
+        groups: [],
         name: 'test-profile',
-        version: '1.0',
         sha256: 'abc',
         supports: [],
-        attributes: [],
-        groups: [],
-        controls: [{
-          id: 'V-2255',
-          title: 'Test',
-          desc: '',
-          impact: 0.5,
-          tags: {},
-          descriptions: [],
-          refs: [],
-          source_location: {},
-          results: [{status: 'skipped', code_desc: 'Manual review'}]
-        }]
+        version: '1.0',
       }],
-      statistics: {duration: 0},
-      version: '4.0'
+      statistics: { duration: 0 },
+      version: '4.0',
     };
 
     const attestations = [{
       control_id: 'V-2255',
-      status: 'passed' as const,
       explanation: 'Verified',
       frequency: 'annually',
+      status: 'passed' as const,
       updated: '2026-06-17T00:00:00Z',
-      updated_by: 'test@example.com'
+      updated_by: 'test@example.com',
     }];
 
     const clone = prepareEvaluationForCklExport(original, attestations);
@@ -421,80 +419,74 @@ describe('prepareEvaluationForCklExport', () => {
 
   it('syncs passthrough vuln comments from description edits', () => {
     const original: ExecJSON.Execution = {
-      platform: {name: 'test', release: '1.0'},
+      passthrough: { checklist: { stigs: [{ vulns: [makeVuln({ comments: '', vulnNum: 'V-2255' })] }] } },
+      platform: { name: 'test', release: '1.0' },
       profiles: [{
+        attributes: [],
+        controls: [{
+          desc: '',
+          descriptions: [{ data: 'edited comment', label: 'comments' }],
+          id: 'V-2255',
+          impact: 0.5,
+          refs: [],
+          results: [{ code_desc: 'Manual review', status: 'skipped' }],
+          source_location: {},
+          tags: {},
+          title: 'Test',
+        }],
+        groups: [],
         name: 'test-profile',
-        version: '1.0',
         sha256: 'abc',
         supports: [],
-        attributes: [],
-        groups: [],
-        controls: [{
-          id: 'V-2255',
-          title: 'Test',
-          desc: '',
-          impact: 0.5,
-          tags: {},
-          descriptions: [{label: 'comments', data: 'edited comment'}],
-          refs: [],
-          source_location: {},
-          results: [{status: 'skipped', code_desc: 'Manual review'}]
-        }]
+        version: '1.0',
       }],
-      statistics: {duration: 0},
+      statistics: { duration: 0 },
       version: '4.0',
-      passthrough: {
-        checklist: {
-          stigs: [{
-            vulns: [makeVuln({vulnNum: 'V-2255', comments: ''})]
-          }]
-        }
-      }
-    } as ExecJSON.Execution & {passthrough: unknown};
+    } as ExecJSON.Execution & { passthrough: unknown };
 
     const clone = prepareEvaluationForCklExport(original, []);
     const passthrough = (clone as any).passthrough;
     expect(passthrough.checklist.stigs[0].vulns[0].comments).toContain(
-      'COMMENTS :: edited comment'
+      'COMMENTS :: edited comment',
     );
   });
 });
 
 function makeVuln(
-  overrides: Partial<{vulnNum: string; ruleId: string; comments: string}>
+  overrides: Partial<{ comments: string; ruleId: string; vulnNum: string }>,
 ): ChecklistVuln {
   return {
-    status: 'Not Reviewed' as ChecklistVuln['status'],
-    vulnNum: overrides.vulnNum ?? 'V-00000',
-    severity: Severity.Empty,
-    groupTitle: '',
-    ruleId: overrides.ruleId ?? '',
-    ruleVer: '',
-    ruleTitle: '',
-    vulnDiscuss: '',
-    iaControls: '',
+    cciRef: '',
     checkContent: '',
-    fixText: '',
-    falsePositives: '',
-    falseNegatives: '',
+    checkContentRef: 'M',
+    class: 'Unclass',
+    comments: overrides.comments ?? '',
     documentable: 'false',
+    falseNegatives: '',
+    falsePositives: '',
+    findingdetails: '',
+    fixText: '',
+    groupTitle: '',
+    iaControls: '',
+    legacyId: '',
+    mitigationControl: '',
     mitigations: '',
     potentialImpact: '',
-    thirdPartyTools: '',
-    mitigationControl: '',
     responsibility: '',
+    ruleId: overrides.ruleId ?? '',
+    ruleTitle: '',
+    ruleVer: '',
     securityOverrideGuidance: '',
-    checkContentRef: 'M',
-    weight: '10.0',
-    class: 'Unclass',
-    stigRef: '',
-    targetKey: '',
-    stigUuid: '',
-    legacyId: '',
-    cciRef: '',
-    comments: overrides.comments ?? '',
-    findingdetails: '',
+    severity: Severity.Empty,
     severityjustification: '',
-    severityoverride: Severityoverride.Empty
+    severityoverride: Severityoverride.Empty,
+    status: 'Not Reviewed' as ChecklistVuln['status'],
+    stigRef: '',
+    stigUuid: '',
+    targetKey: '',
+    thirdPartyTools: '',
+    vulnDiscuss: '',
+    vulnNum: overrides.vulnNum ?? 'V-00000',
+    weight: '10.0',
   };
 }

@@ -1,15 +1,15 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {NeuVectorMapper} from '../../../src/neuvector-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { NeuVectorMapper } from '../../../src/neuvector-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('neuvector_mapper', () => {
   it('Successfully converts NeuVector targeted at mitre/caldera', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-caldera.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -18,14 +18,7 @@ describe('neuvector_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-caldera.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/neuvector_mapper/neuvector-hdf-mitre-caldera.json')),
     );
   });
 
@@ -33,8 +26,8 @@ describe('neuvector_mapper', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-heimdall.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -43,14 +36,7 @@ describe('neuvector_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall.json')),
     );
   });
 
@@ -58,8 +44,8 @@ describe('neuvector_mapper', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-heimdall2.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -68,14 +54,7 @@ describe('neuvector_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall2.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall2.json')),
     );
   });
 
@@ -83,8 +62,8 @@ describe('neuvector_mapper', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-vulcan.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -93,14 +72,7 @@ describe('neuvector_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-vulcan.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/neuvector_mapper/neuvector-hdf-mitre-vulcan.json')),
     );
   });
 });
@@ -110,9 +82,9 @@ describe('neuvector_mapper_withraw', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-caldera.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -121,14 +93,7 @@ describe('neuvector_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-caldera.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-caldera.json')),
     );
   });
 
@@ -136,9 +101,9 @@ describe('neuvector_mapper_withraw', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-heimdall.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -147,14 +112,7 @@ describe('neuvector_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall.json')),
     );
   });
 
@@ -162,9 +120,9 @@ describe('neuvector_mapper_withraw', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-heimdall2.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -173,14 +131,7 @@ describe('neuvector_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall2.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall2.json')),
     );
   });
 
@@ -188,9 +139,9 @@ describe('neuvector_mapper_withraw', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-vulcan.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -199,14 +150,7 @@ describe('neuvector_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-vulcan.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-vulcan.json')),
     );
   });
 });

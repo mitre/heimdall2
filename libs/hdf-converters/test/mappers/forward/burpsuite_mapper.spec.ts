@@ -1,15 +1,15 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {BurpSuiteResults} from '../../../src/burpsuite-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { BurpSuiteResults } from '../../../src/burpsuite-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('burpsuite_mapper', () => {
   it('Successfully converts Burpsuite reports', async () => {
     const mapper = new BurpSuiteResults(
       fs.readFileSync(
         'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -18,13 +18,7 @@ describe('burpsuite_mapper', () => {
     // );
 
     expect(omitVersions(await mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync('sample_jsons/burpsuite_mapper/burpsuite-hdf.json', {
-            encoding: 'utf-8'
-          })
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/burpsuite_mapper/burpsuite-hdf.json')),
     );
   });
 });
@@ -34,9 +28,9 @@ describe('burpsuite_mapper_withraw', () => {
     const mapper = new BurpSuiteResults(
       fs.readFileSync(
         'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -45,16 +39,7 @@ describe('burpsuite_mapper_withraw', () => {
     // );
 
     expect(omitVersions(await mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/burpsuite_mapper/burpsuite-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/burpsuite_mapper/burpsuite-hdf-withraw.json')),
     );
   });
 });

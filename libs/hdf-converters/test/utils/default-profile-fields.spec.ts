@@ -3,13 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_PROFILE_FIELDS } from '../../src/base-converter';
 
 const schema = JSON.parse(
-  fs.readFileSync('../../libs/inspecjs/schemas/exec-json.json', 'utf-8'),
+  fs.readFileSync('../../libs/inspecjs/schemas/exec-json.json', 'utf8'),
 );
 const profileDef = schema.definitions.Exec_JSON_Profile;
 const requiredFields = new Set(profileDef.required as string[]);
 const allFields = Object.keys(profileDef.properties as Record<string, unknown>);
 
-const PER_MAPPER_FIELDS = new Set(['name', 'controls']);
+const PER_MAPPER_FIELDS = new Set(['controls', 'name']);
 const INTENTIONAL_NON_NULL_DEFAULTS = new Set(['status']);
 
 describe('DEFAULT_PROFILE_FIELDS', () => {

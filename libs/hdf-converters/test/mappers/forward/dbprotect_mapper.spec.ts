@@ -1,15 +1,15 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {DBProtectMapper} from '../../../src/dbprotect-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { DBProtectMapper } from '../../../src/dbprotect-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('dbprotect_mapper_check', () => {
   it('Successfully converts DBProtect check scan targeted at a local/cloned repository data', () => {
     const mapper = new DBProtectMapper(
       fs.readFileSync(
         'sample_jsons/dbprotect_mapper/sample_input_report/DbProtect-Check-Results-Details-XML-Sample.xml',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -18,16 +18,7 @@ describe('dbprotect_mapper_check', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dbprotect_mapper/dbprotect-check-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dbprotect_mapper/dbprotect-check-hdf.json')),
     );
   });
 });
@@ -37,8 +28,8 @@ describe('dbprotect_mapper_findings', () => {
     const mapper = new DBProtectMapper(
       fs.readFileSync(
         'sample_jsons/dbprotect_mapper/sample_input_report/DbProtect-Findings-Detail-XML-Sample.xml',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -47,16 +38,7 @@ describe('dbprotect_mapper_findings', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dbprotect_mapper/dbprotect-findings-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dbprotect_mapper/dbprotect-findings-hdf.json')),
     );
   });
 });
@@ -66,9 +48,9 @@ describe('dbprotect_mapper_check_withraw', () => {
     const mapper = new DBProtectMapper(
       fs.readFileSync(
         'sample_jsons/dbprotect_mapper/sample_input_report/DbProtect-Check-Results-Details-XML-Sample.xml',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -77,16 +59,7 @@ describe('dbprotect_mapper_check_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dbprotect_mapper/dbprotect-check-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dbprotect_mapper/dbprotect-check-hdf-withraw.json')),
     );
   });
 });
@@ -96,9 +69,9 @@ describe('dbprotect_mapper_findings_withraw', () => {
     const mapper = new DBProtectMapper(
       fs.readFileSync(
         'sample_jsons/dbprotect_mapper/sample_input_report/DbProtect-Findings-Detail-XML-Sample.xml',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -107,16 +80,7 @@ describe('dbprotect_mapper_findings_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dbprotect_mapper/dbprotect-findings-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dbprotect_mapper/dbprotect-findings-hdf-withraw.json')),
     );
   });
 });

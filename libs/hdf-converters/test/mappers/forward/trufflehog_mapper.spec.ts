@@ -1,15 +1,15 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {TrufflehogResults} from '../../../src/trufflehog-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { TrufflehogResults } from '../../../src/trufflehog-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('trufflehog_mapper', () => {
   it('Successfully converts trufflehog targeted at a local/cloned repository data', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -18,16 +18,7 @@ describe('trufflehog_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-hdf.json')),
     );
   });
 });
@@ -37,9 +28,9 @@ describe('trufflehog_mapper_withraw', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -48,16 +39,7 @@ describe('trufflehog_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-hdf-withraw.json')),
     );
   });
 });
@@ -67,8 +49,8 @@ describe('trufflehog_docker_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_docker_example.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -77,16 +59,7 @@ describe('trufflehog_docker_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-docker-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-docker-hdf.json')),
     );
   });
 });
@@ -96,9 +69,9 @@ describe('trufflehog_docker_mapper_withraw', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_docker_example.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -107,16 +80,7 @@ describe('trufflehog_docker_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-docker-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-docker-hdf-withraw.json')),
     );
   });
 });
@@ -126,8 +90,8 @@ describe('trufflehog_saf_example_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_saf_example.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -136,16 +100,7 @@ describe('trufflehog_saf_example_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-saf-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-saf-hdf.json')),
     );
   });
 });
@@ -155,9 +110,9 @@ describe('trufflehog_saf_example_mapper_withraw', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_saf_example.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -166,16 +121,7 @@ describe('trufflehog_saf_example_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-saf-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-saf-hdf-withraw.json')),
     );
   });
 });
@@ -185,9 +131,9 @@ describe('trufflehog_example_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog-report-example.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      false
+      false,
     );
 
     // fs.writeFileSync(
@@ -196,16 +142,7 @@ describe('trufflehog_example_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf.json')),
     );
   });
 });
@@ -215,9 +152,9 @@ describe('trufflehog_example_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog-report-example.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -226,16 +163,7 @@ describe('trufflehog_example_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf-withraw.json')),
     );
   });
 });
@@ -245,9 +173,9 @@ describe('trufflehog_dup_ndjson', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_dup.ndjson',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      false
+      false,
     );
 
     // fs.writeFileSync(
@@ -256,16 +184,7 @@ describe('trufflehog_dup_ndjson', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/trufflehog_mapper/trufflehog-ndjson-dup-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-ndjson-dup-hdf.json')),
     );
   });
 });
