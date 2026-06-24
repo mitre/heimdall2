@@ -192,9 +192,11 @@ export class SplunkMapper {
     return consolidatePayloads(executionData)[0];
   }
 
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   async trackJob(job: string): Promise<void> {
-    // All documented potential error states for a search job
-    // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTTUT/RESTsearches#Tips_on_accessing_searches
     const badState = new Set([
       'BAD_INPUT_CANCEL',
       'FAILED',
@@ -203,77 +205,51 @@ export class SplunkMapper {
       'QUIT',
       'USER_CANCEL',
     ]);
-    // Arbitrary time values for waiting (in ms), change as necessary
-    // Time to wait until killing search job
     const searchJobTimeout = 120_000;
-    // Time interval between checking on status of search job
     const searchJobPing = 50;
-    let queryStatus: AxiosResponse;
-    let isContinuePing = true;
+    const deadline = Date.now() + searchJobTimeout;
 
-    // Kill query after 2 minute of waiting
-    // Arbitrary time used, change as needed
-    const queryTimer = setTimeout(() => {
-      isContinuePing = false;
-      clearTimeout(queryTimer);
-      throw new Error('Search job timed out - Unable to retrieve query');
-    }, searchJobTimeout);
-
-    // Ping Splunk instance every 50 ms on status of search job
-    const awaitJob = setInterval(async () => {
+    while (Date.now() < deadline) {
+      let queryStatus: AxiosResponse;
       try {
         queryStatus = await this.axiosInstance.get(
           `${this.hostname}/services/search/jobs/${job}`,
         );
       } catch (error) {
-        clearTimeout(queryTimer);
-        clearInterval(awaitJob);
         throw new Error(
           `Failed search job - ${handleSplunkErrorResponse(error)}`,
           { cause: error },
         );
       }
 
-      // Check if response schema is malformed
-      if (_.has(queryStatus, 'data.entry[0].content')) {
-        if (queryStatus.data.entry.length !== 1) {
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-          throw new Error(
-            `Failed search job - Detected malformed entry field length ${queryStatus.data.entry.length}`,
-          );
-        }
-
-        // If search job is complete, kill interval loop and exit
-        if (
-          queryStatus.data.entry[0].content.dispatchState === 'DONE'
-          && queryStatus.data.entry[0].content.isDone
-        ) {
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-        } else if (
-          badState.has(queryStatus.data.entry[0].content.dispatchState)
-        ) {
-          // If search job returns a bad state result, kill interval loop and fail the query
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-          throw new Error(
-            `Failed search job - Detected dispatch state ${queryStatus.data.entry[0].content.dispatchState}`,
-          );
-        }
-      } else {
-        clearTimeout(queryTimer);
-        clearInterval(awaitJob);
+      if (!_.has(queryStatus, 'data.entry[0].content')) {
         throw new Error(
           'Failed search job - Malformed search job response received',
         );
       }
 
-      // Kill loop if search job times out
-      if (!isContinuePing) {
-        clearInterval(awaitJob);
+      if (queryStatus.data.entry.length !== 1) {
+        throw new Error(
+          `Failed search job - Detected malformed entry field length ${queryStatus.data.entry.length}`,
+        );
       }
-    }, searchJobPing);
+
+      const { dispatchState, isDone } = queryStatus.data.entry[0].content;
+
+      if (dispatchState === 'DONE' && isDone) {
+        return;
+      }
+
+      if (badState.has(dispatchState)) {
+        throw new Error(
+          `Failed search job - Detected dispatch state ${dispatchState}`,
+        );
+      }
+
+      await this.delay(searchJobPing);
+    }
+
+    throw new Error('Search job timed out - Unable to retrieve query');
   }
 }
 

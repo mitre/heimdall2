@@ -73,10 +73,14 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   index?: number;
   ioptions: IOptions;
 
+  // Initialized in constructor because it references this.ioptions
+  mappings!: () => MappedTransform<IExecJSONASFF, ILookupPathASFF>;
+
   constructor(hdfObj: ExecJSON.Execution, options: IOptions | undefined) {
     super(hdfObj);
     this.ioptions = options === undefined ? this.defaultOptions() : options;
     this.counts = statusCount(contextualizeEvaluation(hdfObj));
+    this.mappings = this.buildMappings();
   }
 
   controlsToSegments() {
@@ -105,69 +109,6 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       target: 'default',
     };
   }
-
-  mappings: () => MappedTransform<IExecJSONASFF, ILookupPathASFF> = () => ({
-    Findings: [
-      {
-        AwsAccountId: { passParent: true, path: '', transformer: setupAwsAcct },
-        CreatedAt: { path: '', transformer: setupCreated },
-        Id: { passParent: true, path: '', transformer: setupId },
-        ProductArn: { passParent: true, path: '', transformer: setupProductARN },
-        SchemaVersion: '2018-10-08',
-        Types: { transformer: () => ['Software and Configuration Checks'] },
-        UpdatedAt: { passParent: true, path: '', transformer: setupUpdated },
-        ...(this.ioptions.regionAttribute && { Region: { passParent: true, path: '', transformer: setupRegion } }),
-        Compliance: {
-          RelatedRequirements: {
-            transformer: () => [
-              'SEE REMEDIATION FIELD FOR RESULTS AND RECOMMENDED ACTION(S)',
-            ],
-          },
-          Status: { path: '', transformer: setupControlStatus },
-        },
-        Description: { path: '', transformer: setupDescr },
-        FindingProviderFields: {
-          Severity: {
-            Label: { passParent: true, path: '', transformer: setupSevLabel },
-            Original: { passParent: true, path: '', transformer: setupSevLabel },
-          },
-          Types: { passParent: true, path: '', transformer: setupFindingType },
-        },
-        GeneratorId: {
-          passParent: true,
-          path: '',
-          transformer: setupGeneratorId,
-        },
-        ProductFields: { Check: { path: '', transformer: setupProdFieldCheck } },
-        Remediation: { Recommendation: { Text: { path: '', transformer: setupRemRec } } },
-        Resources: [
-          {
-            Id: { passParent: true, path: '', transformer: setupResourcesID },
-            Partition: 'aws',
-            Region: { passParent: true, path: '', transformer: setupRegion },
-            Type: 'AwsAccount',
-          },
-          {
-            Details: {
-              AwsIamRole: {
-                AssumeRolePolicyDocument: {
-                  path: '',
-                  transformer: setupDetailsAssume,
-                },
-              },
-            },
-            Id: { path: '', transformer: setupResourcesID2 },
-            Type: 'AwsIamRole',
-          },
-        ],
-        Severity: {
-          Label: { passParent: true, path: '', transformer: setupSevLabel },
-          Original: { path: '', transformer: setupSevOriginal },
-        },
-        Title: { path: '', transformer: setupTitle },
-      },
-    ],
-  });
 
   // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in AssumeRolePolicyDocument and FindingProviderFields.Types for now.
   restrictionAttributesLessThan32KiB(finding: IFindingASFF): IFindingASFF {
@@ -371,5 +312,70 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     resList = this.restrictToSchemaSizes(resList);
 
     return resList;
+  }
+
+  private buildMappings(): () => MappedTransform<IExecJSONASFF, ILookupPathASFF> {
+    return () => ({
+      Findings: [
+        {
+          AwsAccountId: { passParent: true, path: '', transformer: setupAwsAcct },
+          CreatedAt: { path: '', transformer: setupCreated },
+          Id: { passParent: true, path: '', transformer: setupId },
+          ProductArn: { passParent: true, path: '', transformer: setupProductARN },
+          SchemaVersion: '2018-10-08',
+          Types: { transformer: () => ['Software and Configuration Checks'] },
+          UpdatedAt: { passParent: true, path: '', transformer: setupUpdated },
+          ...(this.ioptions.regionAttribute && { Region: { passParent: true, path: '', transformer: setupRegion } }),
+          Compliance: {
+            RelatedRequirements: {
+              transformer: () => [
+                'SEE REMEDIATION FIELD FOR RESULTS AND RECOMMENDED ACTION(S)',
+              ],
+            },
+            Status: { path: '', transformer: setupControlStatus },
+          },
+          Description: { path: '', transformer: setupDescr },
+          FindingProviderFields: {
+            Severity: {
+              Label: { passParent: true, path: '', transformer: setupSevLabel },
+              Original: { passParent: true, path: '', transformer: setupSevLabel },
+            },
+            Types: { passParent: true, path: '', transformer: setupFindingType },
+          },
+          GeneratorId: {
+            passParent: true,
+            path: '',
+            transformer: setupGeneratorId,
+          },
+          ProductFields: { Check: { path: '', transformer: setupProdFieldCheck } },
+          Remediation: { Recommendation: { Text: { path: '', transformer: setupRemRec } } },
+          Resources: [
+            {
+              Id: { passParent: true, path: '', transformer: setupResourcesID },
+              Partition: 'aws',
+              Region: { passParent: true, path: '', transformer: setupRegion },
+              Type: 'AwsAccount',
+            },
+            {
+              Details: {
+                AwsIamRole: {
+                  AssumeRolePolicyDocument: {
+                    path: '',
+                    transformer: setupDetailsAssume,
+                  },
+                },
+              },
+              Id: { path: '', transformer: setupResourcesID2 },
+              Type: 'AwsIamRole',
+            },
+          ],
+          Severity: {
+            Label: { passParent: true, path: '', transformer: setupSevLabel },
+            Original: { path: '', transformer: setupSevOriginal },
+          },
+          Title: { path: '', transformer: setupTitle },
+        },
+      ],
+    });
   }
 }
