@@ -33,13 +33,13 @@ function applyLineNumber(snippet: string): string {
 }
 
 function getContextualizedSnippet(
-  fullFiles: Record<string, string>,
+  fullFiles: Map<string, string>,
   component: string,
   startLine: number,
   endLine: number,
   msg?: string,
 ): string {
-  const linenumberedFile = applyLineNumber(fullFiles[component]); // eslint-disable-line security/detect-object-injection -- component is a Sonarqube API identifier, not user input
+  const linenumberedFile = applyLineNumber(fullFiles.get(component)!);
   const snippet = linenumberedFile
     .split('\n')
     .slice(Math.max(startLine - 3, 0), endLine + 3)
@@ -1011,7 +1011,9 @@ export class SonarqubeResults {
     const fullFilePromises = await Promise.all(
       components.map(component => getFullFile(component)),
     );
-    const fullFiles = Object.fromEntries(_.zip(components, fullFilePromises));
+    const fullFiles = new Map(
+      components.map((component, i) => [component, fullFilePromises.at(i)!] as const),
+    );
 
     const snippets = issues.map((issue) => {
       if (issue.flows.length > 0) {

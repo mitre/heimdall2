@@ -378,16 +378,16 @@ export class XCCDFResultsMapper extends BaseConverter {
               ['TestResult.title'],
               ['TestResult.version'],
             ];
-            const fullDescription: Record<string, unknown> = {};
+            const fullDescription = new Map<string, unknown>();
             for (const paths of descriptionPaths) {
               for (const path of paths) {
                 const item = _.get(input, path);
                 if (item !== undefined) {
-                  fullDescription[path] = typeof item === 'string' ? parseHtml(item) : item; // eslint-disable-line security/detect-object-injection -- path is from hardcoded descriptionPaths array
+                  fullDescription.set(path, typeof item === 'string' ? parseHtml(item) : item);
                 }
               }
             }
-            return JSON.stringify(fullDescription, null, 2);
+            return JSON.stringify(Object.fromEntries(fullDescription), null, 2);
           },
         },
         groups: [],

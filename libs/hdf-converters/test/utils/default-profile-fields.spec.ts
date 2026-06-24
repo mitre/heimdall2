@@ -8,7 +8,7 @@ const schema = JSON.parse(
 const profileDef = schema.definitions.Exec_JSON_Profile;
 const requiredFields = new Set(profileDef.required as string[]);
 const allFields = Object.keys(profileDef.properties as Record<string, unknown>);
-const properties = profileDef.properties as Record<string, any>;
+const properties = new Map(Object.entries(profileDef.properties as Record<string, any>));
 
 const PER_MAPPER_FIELDS = new Set(['controls', 'name']);
 const INTENTIONAL_NON_NULL_DEFAULTS = new Set(['status']);
@@ -17,14 +17,14 @@ const requiredArrayFields = allFields.filter(
   field =>
     requiredFields.has(field)
     && !PER_MAPPER_FIELDS.has(field)
-    && properties[field].type === 'array', // eslint-disable-line security/detect-object-injection -- field from schema Object.keys()
+    && properties.get(field)?.type === 'array',
 );
 
 const optionalNullableStringFields = allFields.filter((field) => {
   if (requiredFields.has(field) || PER_MAPPER_FIELDS.has(field) || INTENTIONAL_NON_NULL_DEFAULTS.has(field)) {
     return false;
   }
-  const propType = properties[field].type; // eslint-disable-line security/detect-object-injection -- field from schema Object.keys()
+  const propType = properties.get(field)?.type;
   return Array.isArray(propType) && propType.includes('string') && propType.includes('null');
 });
 

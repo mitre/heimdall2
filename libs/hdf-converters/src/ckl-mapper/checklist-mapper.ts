@@ -530,11 +530,11 @@ export class ChecklistMapper extends BaseConverter {
                   // because it could be used in other converters
                   ['severityjustification', 'severityjustification'],
                 ];
-                const fullTags: Record<string, unknown> = {};
+                const fullTags = new Map<string, unknown>();
                 for (const [key, path] of tags) {
                   const tagValue = _.get(input, path);
                   if (tagValue && tagValue !== '; ') {
-                    fullTags[key] = tagValue; // eslint-disable-line security/detect-object-injection -- key is from hardcoded tags Map entries
+                    fullTags.set(key, tagValue);
                   }
                 }
 
@@ -542,9 +542,9 @@ export class ChecklistMapper extends BaseConverter {
                 // not follow above naming conventions
                 const severityOverride = findSeverityOverride(input);
                 if (severityOverride) {
-                  fullTags.severityoverride = severityOverride;
+                  fullTags.set('severityoverride', severityOverride);
                 }
-                return fullTags;
+                return Object.fromEntries(fullTags);
               },
               weight: { path: 'weight' },
             },
