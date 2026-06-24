@@ -29,20 +29,20 @@ const ACCOUNT_ID_RE = /:(?<accountId>\d{12}):config-rule/v;
 export function buildSkipResult(complianceType: string | undefined): ExecJSON.ControlResult | undefined {
   const currentDate = new Date().toISOString();
   switch (complianceType) {
-    case 'NOT_APPLICABLE': {
-      return {
-        code_desc: NOT_APPLICABLE_MSG,
-        run_time: 0,
-        skip_message: NOT_APPLICABLE_MSG,
-        start_time: currentDate,
-        status: ExecJSON.ControlResultStatus.Skipped,
-      };
-    }
     case 'INSUFFICIENT_DATA': {
       return {
         code_desc: INSUFFICIENT_DATA_MSG,
         run_time: 0,
         skip_message: INSUFFICIENT_DATA_MSG,
+        start_time: currentDate,
+        status: ExecJSON.ControlResultStatus.Skipped,
+      };
+    }
+    case 'NOT_APPLICABLE': {
+      return {
+        code_desc: NOT_APPLICABLE_MSG,
+        run_time: 0,
+        skip_message: NOT_APPLICABLE_MSG,
         start_time: currentDate,
         status: ExecJSON.ControlResultStatus.Skipped,
       };

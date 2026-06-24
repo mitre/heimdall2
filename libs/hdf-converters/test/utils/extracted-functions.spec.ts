@@ -32,7 +32,7 @@ function makeProfile(controls: ExecJSON.Control[]): ExecJSON.Profile {
   };
 }
 
-function makeHdfControl(status: string, severity: string, segments: Array<{ status: string }> = []) {
+function makeHdfControl(status: string, severity: string, segments: { status: string }[] = []) {
   return {
     root: {
       hdf: {
@@ -44,7 +44,7 @@ function makeHdfControl(status: string, severity: string, segments: Array<{ stat
   } as any;
 }
 
-function makeAsffControl(status: string, segments: Array<{ status: string }> = []) {
+function makeAsffControl(status: string, segments: { status: string }[] = []) {
   return {
     hdf: {
       segments: segments.map(s => ({ ...s })),
@@ -160,19 +160,19 @@ describe('countResultSeverity', () => {
   });
 });
 
-describe('accumulateControlStatus', () => {
-  function zeroCounts(): Counts {
-    return {
-      Failed: 0,
-      FailedTests: 0,
-      NotApplicable: 0,
-      NotReviewed: 0,
+function zeroCounts(): Counts {
+  return {
+    Failed: 0,
+    FailedTests: 0,
+    NotApplicable: 0,
+    NotReviewed: 0,
       Passed: 0,
       PassedTests: 0,
       PassingTestsFailedControl: 0,
     };
-  }
+}
 
+describe('accumulateControlStatus', () => {
   it('accumulates Failed with segment counts', () => {
     const counts = zeroCounts();
     accumulateControlStatus(counts, makeAsffControl('Failed', [
