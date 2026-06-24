@@ -104,9 +104,9 @@ function findingTitle(
   finding: unknown,
   { controls = null }: { controls: null | unknown[] },
 ) {
-  const control = controls !== null
-    ? correspondingControl(controls, finding)
-    : null;
+  const control = controls === null
+    ? null
+    : correspondingControl(controls, finding);
   return encode(_.get(control ?? finding, 'Title'));
 }
 

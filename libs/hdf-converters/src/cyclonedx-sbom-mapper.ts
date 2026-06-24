@@ -357,7 +357,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   | CycloneDXBillOfMaterialsStandardVulnerability
                   | CycloneDXSoftwareBillOfMaterialsStandardVulnerability,
               ): string =>
-                input.description ? input.description : String(input.id),
+                input.description || String(input.id),
             },
           },
         ],

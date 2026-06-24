@@ -196,7 +196,7 @@ function impactMapping(input: Record<string, unknown>, id: string): number {
     });
     return Number(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5;
   }
-  return Number(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
+  return Number(_.get(input, 'ClassInfo.DefaultSeverity')) / 5;
 }
 function makeArray(input: unknown): unknown[] {
   return Array.isArray(input) ? (input as unknown[]) : [input];
