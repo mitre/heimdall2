@@ -1,9 +1,9 @@
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
-import { join } from 'path';
+import path from 'path';
 
-const PROJECT_DIR = join(__dirname, '..');
-const EMBEDDED_ASSETS = join(
+const PROJECT_DIR = path.join(__dirname, '..');
+const EMBEDDED_ASSETS = path.join(
   PROJECT_DIR,
   'src/converters-from-hdf/html/embedded-assets.ts',
 );

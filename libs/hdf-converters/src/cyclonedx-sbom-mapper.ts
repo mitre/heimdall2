@@ -569,7 +569,7 @@ export class CycloneDXSBOMResults {
       vulnerability.affectedComponents = [];
 
       const affectedRefs = new Set(
-        vulnerability.affects?.map(id => id.ref.toString()) ?? [],
+        vulnerability.affects?.map(id => id.ref.toString()),
       );
       for (const [index, component] of data.components.entries()) {
         if (affectedRefs.has(component['bom-ref']!)) {
