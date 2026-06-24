@@ -17,11 +17,9 @@ describe('fortify_mapper', () => {
     //   JSON.stringify(await mapper.toHdf(), null, 2)
     // );
 
-    expect(JSON.stringify(omitVersions(await mapper.toHdf()))).toEqual(
-      JSON.stringify(
-        omitVersions(loadFixture('sample_jsons/fortify_mapper/fortify-hdf.json')),
-      ),
-    );
+    const actual = JSON.stringify(omitVersions(await mapper.toHdf()));
+    const expected = JSON.stringify(omitVersions(loadFixture('sample_jsons/fortify_mapper/fortify-hdf.json')));
+    expect(actual).toEqual(expected);
   });
 });
 
@@ -40,10 +38,8 @@ describe('fortify_mapper_withraw', () => {
     //   JSON.stringify(await mapper.toHdf(), null, 2)
     // );
 
-    expect(JSON.stringify(omitVersions(await mapper.toHdf()))).toEqual(
-      JSON.stringify(
-        omitVersions(loadFixture('sample_jsons/fortify_mapper/fortify-hdf-withraw.json')),
-      ),
-    );
+    const actual = JSON.stringify(omitVersions(await mapper.toHdf()));
+    const expected = JSON.stringify(omitVersions(loadFixture('sample_jsons/fortify_mapper/fortify-hdf-withraw.json')));
+    expect(actual).toEqual(expected);
   });
 });

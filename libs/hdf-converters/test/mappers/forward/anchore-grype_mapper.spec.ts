@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { describe, expect, it } from 'vitest';
 import { AnchoreGrypeMapper } from '../../../src/anchore-grype-mapper';
-import { omitVersions } from '../../utils';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('anchore-grype_mapper', () => {
   it('Successfully converts anchore_grype targeted at a local/cloned repository data', () => {
@@ -18,14 +18,7 @@ describe('anchore-grype_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/anchore_grype_mapper/anchore-grype-hdf.json',
-            { encoding: 'utf8' },
-          ),
-        ),
-      ),
+      omitVersions(loadFixture('sample_jsons/anchore_grype_mapper/anchore-grype-hdf.json')),
     );
   });
 });
@@ -46,14 +39,7 @@ describe('anchore-grype_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/anchore_grype_mapper/anchore-grype-withraw.json',
-            { encoding: 'utf8' },
-          ),
-        ),
-      ),
+      omitVersions(loadFixture('sample_jsons/anchore_grype_mapper/anchore-grype-withraw.json')),
     );
   });
 });
@@ -73,14 +59,7 @@ describe('anchore-grype_mapper amazon', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/anchore_grype_mapper/amazon-grype-hdf.json',
-            { encoding: 'utf8' },
-          ),
-        ),
-      ),
+      omitVersions(loadFixture('sample_jsons/anchore_grype_mapper/amazon-grype-hdf.json')),
     );
   });
 });
@@ -101,14 +80,7 @@ describe('anchore-grype_mapper_withraw amazon', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/anchore_grype_mapper/amazon-grype-withraw.json',
-            { encoding: 'utf8' },
-          ),
-        ),
-      ),
+      omitVersions(loadFixture('sample_jsons/anchore_grype_mapper/amazon-grype-withraw.json')),
     );
   });
 });
@@ -128,14 +100,7 @@ describe('anchore-grype_mapper tensorflow', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/anchore_grype_mapper/tensorflow-grype-hdf.json',
-            { encoding: 'utf8' },
-          ),
-        ),
-      ),
+      omitVersions(loadFixture('sample_jsons/anchore_grype_mapper/tensorflow-grype-hdf.json')),
     );
   });
 });
@@ -156,14 +121,7 @@ describe('anchore-grype_mapper_withraw tensorflow', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/anchore_grype_mapper/tensorflow-grype-withraw.json',
-            { encoding: 'utf8' },
-          ),
-        ),
-      ),
+      omitVersions(loadFixture('sample_jsons/anchore_grype_mapper/tensorflow-grype-withraw.json')),
     );
   });
 });

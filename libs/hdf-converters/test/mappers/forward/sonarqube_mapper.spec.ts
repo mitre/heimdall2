@@ -19,11 +19,8 @@ describe.skipIf(!isSonarqubeAvailable)('sonarqube_mapper', () => {
     //   JSON.stringify(result, null, 2)
     // );
 
-    expect(omitHDFTitle(omitVersions(result))).toEqual(
-      omitHDFTitle(
-        omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-hdf.json')),
-      ),
-    );
+    const expected = omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-hdf.json'));
+    expect(omitHDFTitle(omitVersions(result))).toEqual(omitHDFTitle(expected));
   });
   it('Successfully pulls SonarQube vulnerabilities from a particular branch', async () => {
     const mapper = new SonarqubeResults(
@@ -39,11 +36,8 @@ describe.skipIf(!isSonarqubeAvailable)('sonarqube_mapper', () => {
     //   JSON.stringify(result, null, 2)
     // );
 
-    expect(omitHDFTitle(omitVersions(result))).toEqual(
-      omitHDFTitle(
-        omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json')),
-      ),
-    );
+    const expected = omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json'));
+    expect(omitHDFTitle(omitVersions(result))).toEqual(omitHDFTitle(expected));
   });
   it('Successfully pulls SonarQube vulnerabilities from a particular pull request', async () => {
     const mapper = new SonarqubeResults(
@@ -60,10 +54,7 @@ describe.skipIf(!isSonarqubeAvailable)('sonarqube_mapper', () => {
     //   JSON.stringify(result, null, 2)
     // );
 
-    expect(omitHDFTitle(omitVersions(result))).toEqual(
-      omitHDFTitle(
-        omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json')),
-      ),
-    );
+    const expected = omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json'));
+    expect(omitHDFTitle(omitVersions(result))).toEqual(omitHDFTitle(expected));
   });
 });
