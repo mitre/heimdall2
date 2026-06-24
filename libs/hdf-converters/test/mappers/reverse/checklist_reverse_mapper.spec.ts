@@ -1,10 +1,9 @@
 import fs from 'fs';
 import { describe, expect, it } from 'vitest';
 import { ChecklistResults } from '../../../src/ckl-mapper/checklist-mapper';
-import { loadFixture } from '../../utils';
 import { InvalidChecklistMetadataException } from '../../../src/ckl-mapper/checklist-metadata-utils';
 import { type Checklist, type Stigdata } from '../../../src/ckl-mapper/checklistJsonix';
-import { replaceCKLVersion } from '../../utils';
+import { loadFixture, replaceCKLVersion } from '../../utils';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
