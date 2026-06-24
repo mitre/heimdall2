@@ -121,7 +121,7 @@ function filename(
   );
 
   const target = replaceTypesSlashes(
-    (_.get(findingInfo[1][index], 'Id') as string).split('/', 1)[0],
+    (_.get(findingInfo[1].at(index), 'Id') as string).split('/', 1)[0],
   );
   const finding = findingInfo[0];
   return `${String(_.get(objectifyTypesArray(finding), 'File.Input'))}-${target}.json`;
@@ -131,7 +131,7 @@ function getCodeForProfileLayer(
   finding: Record<string, unknown>,
   profileName: string,
 ) {
-  const profileLayerToCodeMapping: Record<string, string> = {};
+  const profileLayerToCodeMapping = new Map<string, string>();
   const resources = _.get(finding, 'Resources') as {
     Details?: { AwsIamRole?: { AssumeRolePolicyDocument: string } };
     Id: string;
@@ -147,11 +147,11 @@ function getCodeForProfileLayer(
     const [profileLevel, code] = codeLayer.split(
       '\n=========================================================\n\n',
     );
-    profileLayerToCodeMapping[profileLevel] = code
+    profileLayerToCodeMapping.set(profileLevel, code
       .split('Test Description:', 1)[0]
-      .trim();
+      .trim());
   }
-  return Object.hasOwn(profileLayerToCodeMapping, profileName) ? profileLayerToCodeMapping[profileName] : '';
+  return profileLayerToCodeMapping.get(profileName) ?? '';
 }
 
 function mapping(
