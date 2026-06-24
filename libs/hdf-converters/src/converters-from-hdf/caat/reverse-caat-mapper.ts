@@ -237,21 +237,20 @@ export class FromHDFToCAATMapper {
       workBook.Props = FromHDFToCAATMapper.FileSettings;
 
       // Get the controls for the current evaluation
-      const processedControls = new Set();
-      const rows: CAATRow[] = [];
-      // Convert them into rows
-      for (const control of d.controls
-        ?? d.data.contains.flatMap(profile => profile.contains)) {
-        const root = control.root;
-
-        // Overlay profiles will usually share controls
-        if (processedControls.has(root.hdf.wraps.id)) {
-          continue;
+      const allControls = d.controls
+        ?? d.data.contains.flatMap(profile => profile.contains);
+      const processedControls = new Set<string>();
+      const uniqueControls = allControls.filter((control) => {
+        const id = control.root.hdf.wraps.id;
+        if (processedControls.has(id)) {
+          return false;
         }
-
-        processedControls.add(root.hdf.wraps.id);
-        rows.push(...this.getRow(root, d.filename));
-      }
+        processedControls.add(id);
+        return true;
+      });
+      const rows: CAATRow[] = uniqueControls.flatMap(
+        control => this.getRow(control.root, d.filename),
+      );
 
       rows.sort(
         (x, y) =>

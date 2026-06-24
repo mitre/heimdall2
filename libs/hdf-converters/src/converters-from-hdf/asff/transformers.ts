@@ -138,35 +138,22 @@ export function statusCount(evaluation: ContextualizedEvaluation): Counts {
     PassingTestsFailedControl: 0,
   };
   for (const control of controls) {
-    switch (control.hdf.status) {
-      case 'Failed': {
-        statusCounts.PassingTestsFailedControl += (
-          control.hdf.segments || []
-        ).filter((s: HDFControlSegment) => s.status === 'passed').length;
-        statusCounts.FailedTests += (control.hdf.segments || []).filter(
-          (s: HDFControlSegment) => s.status === 'failed',
-        ).length;
-        statusCounts.Failed += 1;
-
-        break;
-      }
-      case 'Not Applicable': {
-        statusCounts.NotApplicable += 1;
-
-        break;
-      }
-      case 'Not Reviewed': {
-        statusCounts.NotReviewed += 1;
-
-        break;
-      }
-      case 'Passed': {
-        statusCounts.Passed += 1;
-        statusCounts.PassedTests += (control.hdf.segments || []).length;
-
-        break;
-      }
-    // No default
+    const segments = control.hdf.segments || [];
+    if (control.hdf.status === 'Failed') {
+      statusCounts.PassingTestsFailedControl += segments.filter(
+        (s: HDFControlSegment) => s.status === 'passed',
+      ).length;
+      statusCounts.FailedTests += segments.filter(
+        (s: HDFControlSegment) => s.status === 'failed',
+      ).length;
+      statusCounts.Failed += 1;
+    } else if (control.hdf.status === 'Not Applicable') {
+      statusCounts.NotApplicable += 1;
+    } else if (control.hdf.status === 'Not Reviewed') {
+      statusCounts.NotReviewed += 1;
+    } else if (control.hdf.status === 'Passed') {
+      statusCounts.Passed += 1;
+      statusCounts.PassedTests += segments.length;
     }
   }
   return statusCounts;

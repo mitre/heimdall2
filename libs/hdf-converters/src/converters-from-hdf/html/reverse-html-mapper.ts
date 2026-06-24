@@ -252,57 +252,37 @@ export class FromHDFToHTMLMapper {
     let passedTests = 0;
     let failedTests = 0;
     let passingTestsFailedResult = 0;
-    // Count out statuses and sub-statuses
     for (const result of results) {
-      switch (result.root.hdf.status) {
-        case 'Failed': {
-          failed++;
-          passingTestsFailedResult += (result.root.hdf.segments || []).filter(
-            (subStatus: HDFControlSegment) => subStatus.status === 'passed',
-          ).length;
-          failedTests += (result.root.hdf.segments || []).filter(
-            (subStatus: HDFControlSegment) => subStatus.status === 'failed',
-          ).length;
-          break;
-        }
-        case 'Not Applicable': {
-          notApplicable++;
-          break;
-        }
-        case 'Not Reviewed': {
-          notReviewed++;
-          break;
-        }
-        case 'Passed': {
-          passed++;
-          passedTests += (result.root.hdf.segments || []).length;
-          break;
-        }
-        case 'Profile Error': {
-          profileError++;
-        }
+      const segments = result.root.hdf.segments || [];
+      const { status, severity } = result.root.hdf;
+      if (status === 'Failed') {
+        failed++;
+        passingTestsFailedResult += segments.filter(
+          (s: HDFControlSegment) => s.status === 'passed',
+        ).length;
+        failedTests += segments.filter(
+          (s: HDFControlSegment) => s.status === 'failed',
+        ).length;
+      } else if (status === 'Not Applicable') {
+        notApplicable++;
+      } else if (status === 'Not Reviewed') {
+        notReviewed++;
+      } else if (status === 'Passed') {
+        passed++;
+        passedTests += segments.length;
+      } else if (status === 'Profile Error') {
+        profileError++;
       }
-      // Count out severities
-      switch (result.root.hdf.severity) {
-        case 'high': {
-          high++;
-          break;
-        }
-        case 'low': {
-          low++;
-          break;
-        }
-        case 'medium': {
-          medium++;
-          break;
-        }
-        case 'none': {
-          none++;
-          break;
-        }
-        case 'critical': {
-          critical++;
-        }
+      if (severity === 'high') {
+        high++;
+      } else if (severity === 'low') {
+        low++;
+      } else if (severity === 'medium') {
+        medium++;
+      } else if (severity === 'none') {
+        none++;
+      } else if (severity === 'critical') {
+        critical++;
       }
     }
 

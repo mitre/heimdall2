@@ -3,6 +3,21 @@ import type { ChecklistVuln } from '../ckl-mapper/checklist-jsonix-converter';
 import type { Attestation } from './attestations';
 import { addAttestationToHDF } from './attestations';
 
+function findControlAcrossProfiles(
+  profiles: ExecJSON.Profile[],
+  vulnNum: string,
+): ExecJSON.Control | undefined {
+  for (const profile of profiles) {
+    const control = profile.controls.find(
+      c => c.id.toLowerCase() === vulnNum.toLowerCase(),
+    );
+    if (control) {
+      return control;
+    }
+  }
+  return undefined;
+}
+
 type DescriptionsInput
   = | ExecJSON.ControlDescription[]
     | Record<string, string>;
@@ -34,35 +49,30 @@ export function buildEditsMapFromProfiles(
   const edits = new Map<string, DescriptionEdits>();
 
   for (const vulnNum of vulnNums) {
-    for (const profile of profiles) {
-      const control = profile.controls.find(
-        c => c.id.toLowerCase() === vulnNum.toLowerCase(),
-      );
-      if (!control) {
-        continue;
-      }
+    const control = findControlAcrossProfiles(profiles, vulnNum);
+    if (!control) {
+      continue;
+    }
 
-      const descriptions: Record<string, string> = {};
-      if (Array.isArray(control.descriptions)) {
-        for (const desc of control.descriptions) {
-          descriptions[desc.label.toLowerCase()] = desc.data;
-        }
+    const descriptions: Record<string, string> = {};
+    if (Array.isArray(control.descriptions)) {
+      for (const desc of control.descriptions) {
+        descriptions[desc.label.toLowerCase()] = desc.data;
       }
+    }
 
-      if (
-        descriptions.comments
-        || descriptions.caveat
-        || descriptions.justification
-        || descriptions.rationale
-      ) {
-        edits.set(vulnNum, {
-          caveat: descriptions.caveat,
-          comments: descriptions.comments,
-          justification: descriptions.justification,
-          rationale: descriptions.rationale,
-        });
-      }
-      break;
+    if (
+      descriptions.comments
+      || descriptions.caveat
+      || descriptions.justification
+      || descriptions.rationale
+    ) {
+      edits.set(vulnNum, {
+        caveat: descriptions.caveat,
+        comments: descriptions.comments,
+        justification: descriptions.justification,
+        rationale: descriptions.rationale,
+      });
     }
   }
 

@@ -292,19 +292,12 @@ function preprocessIonChannelData(ionchannelData: string) {
   }
 
   for (const scanSummary of scanSummaries) {
-    switch (scanSummary.name) {
-      case 'dependency': {
-        if (!scanSummary.results.data.dependencies) {
-          throw new Error('Dependency scan contains no dependencies array');
-        }
-        result.scans.dependency.dependencies
-          = scanSummary.results.data.dependencies;
-        break;
+    if (scanSummary.name === 'dependency') {
+      if (!scanSummary.results.data.dependencies) {
+        throw new Error('Dependency scan contains no dependencies array');
       }
-      // We only care about dependencies at the moment
-      default: {
-        break;
-      }
+      result.scans.dependency.dependencies
+        = scanSummary.results.data.dependencies;
     }
   }
 

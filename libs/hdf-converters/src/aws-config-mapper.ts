@@ -110,6 +110,33 @@ export class AwsConfigMapper {
     );
   }
 
+  private buildSkipResult(complianceType: string | undefined): ExecJSON.ControlResult | undefined {
+    const currentDate = new Date().toISOString();
+    switch (complianceType) {
+      case 'NOT_APPLICABLE': {
+        return {
+          code_desc: NOT_APPLICABLE_MSG,
+          run_time: 0,
+          skip_message: NOT_APPLICABLE_MSG,
+          start_time: currentDate,
+          status: ExecJSON.ControlResultStatus.Skipped,
+        };
+      }
+      case 'INSUFFICIENT_DATA': {
+        return {
+          code_desc: INSUFFICIENT_DATA_MSG,
+          run_time: 0,
+          skip_message: INSUFFICIENT_DATA_MSG,
+          start_time: currentDate,
+          status: ExecJSON.ControlResultStatus.Skipped,
+        };
+      }
+      default: {
+        return undefined;
+      }
+    }
+  }
+
   private checkText(configRule: ConfigRule): string {
     let params: any[] = [];
     if (
@@ -339,41 +366,14 @@ export class AwsConfigMapper {
           status: this.getStatus(evaluation),
         };
         result.push(hdfResult);
-        const currentDate: string = new Date().toISOString();
         if (result.length === 0) {
-          switch (
-            complianceResults.find(
-              complianceResult =>
-                complianceResult.ConfigRuleName === configRule.ConfigRuleName,
-            )?.Compliance?.ComplianceType
-          ) {
-            case 'NOT_APPLICABLE': {
-              ruleData.push([
-                {
-                  code_desc: NOT_APPLICABLE_MSG,
-                  run_time: 0,
-                  skip_message: NOT_APPLICABLE_MSG,
-                  start_time: currentDate,
-                  status: ExecJSON.ControlResultStatus.Skipped,
-                },
-              ]);
-              continue;
-            }
-            case 'INSUFFICIENT_DATA': {
-              ruleData.push([
-                {
-                  code_desc: INSUFFICIENT_DATA_MSG,
-                  run_time: 0,
-                  skip_message: INSUFFICIENT_DATA_MSG,
-                  start_time: currentDate,
-                  status: ExecJSON.ControlResultStatus.Skipped,
-                },
-              ]);
-              continue;
-            }
-            default: {
-              continue;
-            }
+          const complianceType = complianceResults.find(
+            complianceResult =>
+              complianceResult.ConfigRuleName === configRule.ConfigRuleName,
+          )?.Compliance?.ComplianceType;
+          const skipResult = this.buildSkipResult(complianceType);
+          if (skipResult) {
+            ruleData.push([skipResult]);
           }
         } else {
           ruleData.push(result);

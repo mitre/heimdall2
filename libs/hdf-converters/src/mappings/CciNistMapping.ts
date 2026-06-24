@@ -152,30 +152,21 @@ export class CciNistTwoWayMapper {
 
     const { cci_item } = this.data.cci_list.cci_items;
 
+    const regexPattern = new RegExp(`^${pattern}`);
+    const editedPattern = NIST_FAMILY_NUM_RE.exec(pattern);
+    const regexEditedPattern = editedPattern ? new RegExp(String(editedPattern)) : null;
     for (const item of cci_item) {
-      for (const reference of item.references.reference) {
-        // first try the pattern as is
-        const regexPattern = new RegExp(`^${pattern}`);
-        if (
-          new RegExp(regexPattern).test(reference['@_index'])
-            && item.type === 'technical'
-        ) {
-          matchingIds.push(item['@_id']);
-          break;
-        }
-        // if there were no matches using the original pattern, try using only 2 letters hyphen followed by one or two numbers
-        if (matchingIds.length === 0) {
-          const regexEditedPattern = new RegExp(
-            String(NIST_FAMILY_NUM_RE.exec(pattern)),
-          );
-          if (
-            new RegExp(regexEditedPattern).test(reference['@_index'])
-              && item.type === 'technical'
-          ) {
-            matchingIds.push(item['@_id']);
-            break;
-          }
-        }
+      if (item.type !== 'technical') {
+        continue;
+      }
+      const isMatch = item.references.reference.some(
+        reference =>
+          regexPattern.test(reference['@_index'])
+          || (matchingIds.length === 0
+            && regexEditedPattern?.test(reference['@_index'])),
+      );
+      if (isMatch) {
+        matchingIds.push(item['@_id']);
       }
     }
 
