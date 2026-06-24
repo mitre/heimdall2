@@ -18,31 +18,30 @@ export class AwsConfigMapping {
   searchNIST(identifiers: string[]): string[] {
     if (identifiers.length === 0) {
       return [];
-    } else {
-      let matches: string[] = [];
-      for (const [awsConfigRuleName, NISTTags] of Object.entries(this.awsConfigRuleNameMappings)) {
-        for (const identifier of identifiers) {
-          if (
-            identifier.toLowerCase().toLowerCase().includes(awsConfigRuleName)
-          ) {
-            matches = [...matches, ...NISTTags];
-          }
-        }
-      }
-
-      for (const [awsConfigRuleSourceIdentifier, NISTTags] of Object.entries(this.awsConfigRuleSourceIdentifierMappings)) {
-        for (const identifier of identifiers) {
-          if (
-            identifier
-              .toLowerCase()
-              .includes(awsConfigRuleSourceIdentifier.toLowerCase())
-          ) {
-            matches = [...matches, ...NISTTags];
-          }
-        }
-      }
-
-      return _.uniq(matches);
     }
+    let matches: string[] = [];
+    for (const [awsConfigRuleName, NISTTags] of Object.entries(this.awsConfigRuleNameMappings)) {
+      for (const identifier of identifiers) {
+        if (
+          identifier.toLowerCase().toLowerCase().includes(awsConfigRuleName)
+        ) {
+          matches = [...matches, ...NISTTags];
+        }
+      }
+    }
+
+    for (const [awsConfigRuleSourceIdentifier, NISTTags] of Object.entries(this.awsConfigRuleSourceIdentifierMappings)) {
+      for (const identifier of identifiers) {
+        if (
+          identifier
+            .toLowerCase()
+            .includes(awsConfigRuleSourceIdentifier.toLowerCase())
+        ) {
+          matches = [...matches, ...NISTTags];
+        }
+      }
+    }
+
+    return _.uniq(matches);
   }
 }

@@ -8,10 +8,9 @@ function findingId(finding: unknown): string {
   const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
   if (typeof cveId === 'string') {
     return encode(`${generatorId}/${cveId}`);
-  } else {
-    const id = _.get(finding, 'Id');
-    return encode(`${generatorId}/${id}`);
   }
+  const id = _.get(finding, 'Id');
+  return encode(`${generatorId}/${id}`);
 }
 
 function findingNistTag(finding: unknown): string[] {

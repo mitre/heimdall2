@@ -212,21 +212,19 @@ export function getAllLayers(
         profileInfo: { ..._.omit(hdf.profiles[0], 'controls') },
       },
     ];
-  } else {
-    const foundControls: (ExecJSON.Control & Record<string, unknown>)[] = [];
-    // For each control in each profile
-    for (const profile of hdf.profiles) {
-      for (const control of profile.controls) {
-        if (control.id === knownControl.id) {
-          foundControls.push({
-            ...control,
-            profileInfo: { ..._.omit(profile, 'controls') },
-          });
-        }
+  }
+  const foundControls: (ExecJSON.Control & Record<string, unknown>)[] = [];
+  for (const profile of hdf.profiles) {
+    for (const control of profile.controls) {
+      if (control.id === knownControl.id) {
+        foundControls.push({
+          ...control,
+          profileInfo: { ..._.omit(profile, 'controls') },
+        });
       }
     }
-    return foundControls;
   }
+  return foundControls;
 }
 
 // Creates Note field containing control status

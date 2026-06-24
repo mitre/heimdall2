@@ -29,24 +29,23 @@ export class CweNistMapping {
     }
     if (identifiers.length === 0) {
       return DEFAULT_NIST_TAG === undefined ? [] : DEFAULT_NIST_TAG;
-    } else {
-      const matches: string[] = [];
-      for (const id of identifiers) {
-        const key = Number.parseInt(id);
-        const item = this.data.find(element => element.id === key);
-        if (
-          item !== null
-          && item !== undefined
-          && item.nistId !== ''
-          && !matches.includes(item.nistId)
-        ) {
-          matches.push(item.nistId);
-        }
-      }
-      if (matches.length === 0 && DEFAULT_NIST_TAG !== undefined) {
-        return DEFAULT_NIST_TAG;
-      }
-      return matches;
     }
+    const matches: string[] = [];
+    for (const id of identifiers) {
+      const key = Number.parseInt(id);
+      const item = this.data.find(element => element.id === key);
+      if (
+        item !== null
+        && item !== undefined
+        && item.nistId !== ''
+        && !matches.includes(item.nistId)
+      ) {
+        matches.push(item.nistId);
+      }
+    }
+    if (matches.length === 0 && DEFAULT_NIST_TAG !== undefined) {
+      return DEFAULT_NIST_TAG;
+    }
+    return matches;
   }
 }

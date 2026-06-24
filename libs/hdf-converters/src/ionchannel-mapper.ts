@@ -57,15 +57,15 @@ export class IonChannelAPIMapper {
     if (!this.analysisId) {
       throw new Error('No Analysis ID Defined');
     }
-    return this.apiClient
+    const { data } = await this.apiClient
       .get('https://api.ionchannel.io/v1/report/getAnalysis', {
         params: {
           analysis_id: this.analysisId,
           project_id: this.projectId,
           team_id: this.teamId,
         },
-      })
-      .then(({ data }) => data.data);
+      });
+    return data.data;
   }
 
   async getProjects(): Promise<Project[]> {
@@ -75,18 +75,18 @@ export class IonChannelAPIMapper {
     if (!this.teamId) {
       throw new Error('No Team ID Defined');
     }
-    return this.apiClient
-      .get('https://api.ionchannel.io/v1/report/getProjects', { params: { team_id: this.teamId } })
-      .then(({ data }) => data.data);
+    const { data } = await this.apiClient
+      .get('https://api.ionchannel.io/v1/report/getProjects', { params: { team_id: this.teamId } });
+    return data.data;
   }
 
   async getTeams(): Promise<Team[]> {
     if (!this.apiKey) {
       throw new Error('No API-Key Set');
     }
-    return this.apiClient
-      .get('https://api.ionchannel.io/v1/teams/getTeams')
-      .then(({ data }) => data.data);
+    const { data } = await this.apiClient
+      .get('https://api.ionchannel.io/v1/teams/getTeams');
+    return data.data;
   }
 
   async setProject(projectName: string) {

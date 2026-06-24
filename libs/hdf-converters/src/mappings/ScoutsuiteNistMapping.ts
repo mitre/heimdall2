@@ -21,9 +21,8 @@ export class ScoutsuiteNistMapping {
   nistTag(rule: string): string[] {
     if (rule === '' || rule === undefined) {
       return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
-    } else {
-      const item = this.data.find(element => element.rule === rule);
-      return item !== null && item !== undefined ? item.nistId.split('|') : DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
     }
+    const item = this.data.find(element => element.rule === rule);
+    return item !== null && item !== undefined ? item.nistId.split('|') : DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
   }
 }

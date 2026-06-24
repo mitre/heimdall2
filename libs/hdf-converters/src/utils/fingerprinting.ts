@@ -194,7 +194,8 @@ export function fingerprint(guessOptions: {
       && guessOptions.data.includes('detailedreport')
     ) {
       return INPUT_TYPES.VERACODE;
-    } else if (
+    }
+    if (
       guessOptions.data.includes('<CHECKLIST>')
       && guessOptions.data.includes('<STIGS>')
       && guessOptions.data.includes('<STIG_INFO>')

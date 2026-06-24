@@ -192,16 +192,15 @@ export class NessusResults {
         results.push(entry.toHdf());
       }
       return results;
-    } else {
-      const result = new NessusMapper(
-        reportHost as Record<string, unknown>,
-        this.shouldIncludeRaw,
-      );
-      if (this.customMapping !== undefined) {
-        result.setMappings(this.customMapping);
-      }
-      return result.toHdf();
     }
+    const result = new NessusMapper(
+      reportHost as Record<string, unknown>,
+      this.shouldIncludeRaw,
+    );
+    if (this.customMapping !== undefined) {
+      result.setMappings(this.customMapping);
+    }
+    return result.toHdf();
   }
 }
 

@@ -189,17 +189,15 @@ function filterSite<T>(input: T[], name?: string) {
     return input.find(
       element => (_.get(element, '@name') as unknown as string) === name,
     );
-  } else {
-    // Otherwise choose the site with the most alerts
-    let best = input[0];
-    for (const item of input) {
-      if ((_.get(item, 'alerts') as unknown as Record<string, unknown>[]).length
-        > (_.get(best, 'alerts') as unknown as Record<string, unknown>[]).length) {
-        best = item;
-      }
-    }
-    return best;
   }
+  let best = input[0];
+  for (const item of input) {
+    if ((_.get(item, 'alerts') as unknown as Record<string, unknown>[]).length
+      > (_.get(best, 'alerts') as unknown as Record<string, unknown>[]).length) {
+      best = item;
+    }
+  }
+  return best;
 }
 function formatCodeDesc(input: unknown): string {
   const text: string[] = [];

@@ -391,30 +391,29 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     if (numberOfStigs === 1) {
       const defaultChecklist = new ChecklistMapper(this.checklistObject);
       return defaultChecklist.toHdf();
-    } else {
-      const checklist = new ChecklistMapper(this.checklistObject);
-      const original = checklist.toHdf();
-      const parentProfileName = 'Parent Profile';
-      const parent_profile: ExecJSON.Profile = {
-        attributes: [],
-        controls: [],
-        depends: [],
-        groups: [],
-        name: parentProfileName,
-        sha256: '',
-        supports: [],
-        version: HeimdallToolsVersion,
-      };
-      for (const profile of original.profiles) {
-        parent_profile.depends?.push({ name: profile.name });
-        parent_profile.controls.push(...profile.controls);
-        profile.parent_profile = parentProfileName;
-        profile.sha256 = generateHash(JSON.stringify(profile));
-      }
-      parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
-      original.profiles.unshift(parent_profile);
-      return original;
     }
+    const checklist = new ChecklistMapper(this.checklistObject);
+    const original = checklist.toHdf();
+    const parentProfileName = 'Parent Profile';
+    const parent_profile: ExecJSON.Profile = {
+      attributes: [],
+      controls: [],
+      depends: [],
+      groups: [],
+      name: parentProfileName,
+      sha256: '',
+      supports: [],
+      version: HeimdallToolsVersion,
+    };
+    for (const profile of original.profiles) {
+      parent_profile.depends?.push({ name: profile.name });
+      parent_profile.controls.push(...profile.controls);
+      profile.parent_profile = parentProfileName;
+      profile.sha256 = generateHash(JSON.stringify(profile));
+    }
+    parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
+    original.profiles.unshift(parent_profile);
+    return original;
   }
 }
 
