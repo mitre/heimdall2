@@ -33,12 +33,13 @@ export type SplunkConfigNoIndex = Omit<SplunkConfig, 'index'>;
 
 const MAPPER_NAME = 'Splunk2HDF';
 
-let logger = createWinstonLogger('Splunk2HDF');
+const defaultLogger = createWinstonLogger('Splunk2HDF');
 
 export class SplunkMapper {
   axiosInstance: AxiosInstance;
   config: SplunkConfig;
   hostname: string;
+  logger: Logger;
 
   constructor(
     config: SplunkConfig,
@@ -48,8 +49,8 @@ export class SplunkMapper {
     this.config = config;
     this.axiosInstance = axios.create({ params: { output_mode: 'json' } });
     this.hostname = generateHostname(config);
-    logger = logService || createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
-    logger.debug(`Initialized ${this.constructor.name} successfully`);
+    this.logger = logService || createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
+    this.logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
   private delay(ms: number): Promise<void> {
@@ -57,7 +58,7 @@ export class SplunkMapper {
   }
 
   async createJob(query: string): Promise<string> {
-    logger.debug(`Creating job for query: ${query}`);
+    this.logger.debug(`Creating job for query: ${query}`);
     // Post to {host}/services/search/jobs endpoint to queue search job for given query
     let jobSID: AxiosResponse;
     try {
@@ -83,7 +84,7 @@ export class SplunkMapper {
     query: string,
     results: { fields: string[]; rows: string[] },
   ): SplunkReport[] {
-    logger.info(`Got results for query: ${query}`);
+    this.logger.info(`Got results for query: ${query}`);
 
     // Our data parsed as Key/Value pairs
     const objects: SplunkReport[] = [];
@@ -93,11 +94,11 @@ export class SplunkMapper {
     );
 
     if (rawDataIndex === -1) {
-      logger.error('Field _raw not found, using default index 3');
+      this.logger.error('Field _raw not found, using default index 3');
       rawDataIndex = 3;
     }
 
-    logger.debug(`Got field _raw at index ${rawDataIndex}`);
+    this.logger.debug(`Got field _raw at index ${rawDataIndex}`);
 
     // Find _indextime, this is when the data was imported into splunk
     let indexTimeIndex = results?.fields.findIndex(
@@ -105,12 +106,12 @@ export class SplunkMapper {
     );
 
     if (indexTimeIndex === -1) {
-      logger.error('Field _indextime not found, using default index 2');
+      this.logger.error('Field _indextime not found, using default index 2');
       indexTimeIndex = 2;
     }
 
-    logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
-    logger.verbose('Parsing data returned by Splunk and appending timestamps');
+    this.logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
+    this.logger.verbose('Parsing data returned by Splunk and appending timestamps');
     for (const value of results.rows) {
       let object;
       try {
@@ -135,7 +136,7 @@ export class SplunkMapper {
 
       objects.push(object);
     }
-    logger.debug('Successfully parsed and added timestamps');
+    this.logger.debug('Successfully parsed and added timestamps');
     return objects;
   }
 
@@ -180,20 +181,20 @@ export class SplunkMapper {
   }
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
-    logger.info(`Starting conversion of GUID ${guid}`);
+    this.logger.info(`Starting conversion of GUID ${guid}`);
     // Preliminary check of credentials
     // Not used for later logins
     await checkSplunkCredentials(this.config);
-    logger.info(`Credentials valid, querying data for ${guid}`);
+    this.logger.info(`Credentials valid, querying data for ${guid}`);
 
     // Start search job for query
     const executionData = await this.queryData(
       `search index="*" meta.guid="${guid}"`,
     );
-    logger.info(
+    this.logger.info(
       `Data received, consolidating payloads for ${executionData.length} items`,
     );
-    return consolidatePayloads(executionData)[0];
+    return consolidatePayloads(executionData, this.logger)[0];
   }
 
   async trackJob(job: string): Promise<void> {
@@ -255,11 +256,11 @@ export class SplunkMapper {
 
 export function consolidatePayloads(
   payloads: SplunkReport[],
+  log: Logger = defaultLogger,
 ): ExecJSON.Execution[] {
-  // Group by exec id
   const grouped = groupBy(payloads, pl => pl.meta.guid);
 
-  const built = mapHash(grouped, consolidateFilePayloads);
+  const built = mapHash(grouped, filePayloads => consolidateFilePayloads(filePayloads, log));
   return built.values().toArray();
 }
 
@@ -307,6 +308,7 @@ export function replaceKeyValueDescriptions(
 
 function consolidateFilePayloads(
   filePayloads: SplunkReport[],
+  log: Logger = defaultLogger,
 ): ExecJSON.Execution {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
@@ -318,9 +320,9 @@ function consolidateFilePayloads(
   const controlEvents = (subtypes.get('control')
     ?? []) as unknown as (ExecJSON.Control & GenericPayloadWithMetadata)[];
 
-  logger.debug(`Have ${execEvents.length} execution events`);
-  logger.debug(`Have ${profileEvents.length} profile events`);
-  logger.debug(`Have ${controlEvents.length} control events`);
+  log.debug(`Have ${execEvents.length} execution events`);
+  log.debug(`Have ${profileEvents.length} profile events`);
+  log.debug(`Have ${controlEvents.length} control events`);
 
   // Verify we only have one exec event
   if (execEvents.length !== 1) {
@@ -344,7 +346,7 @@ function consolidateFilePayloads(
     profile.controls = [];
     // Get the corresponding controls, and put them into the profile
     const sha = profile.meta.profile_sha256;
-    logger.debug(`Adding controls for profile with SHA256: ${sha}`);
+    log.debug(`Adding controls for profile with SHA256: ${sha}`);
     const corrControls = shaGroupedControls.get(sha) ?? [];
     profile.controls.push(
       ...replaceKeyValueDescriptions(
@@ -356,7 +358,7 @@ function consolidateFilePayloads(
           })[],
       ),
     );
-    logger.debug(
+    log.debug(
       `Added ${profile.controls.length} controls to profile with SHA256 ${sha}`,
     );
   }
