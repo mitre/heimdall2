@@ -17,120 +17,123 @@ const NIST_REFERENCE_NAME
 const DEFAULT_NIST_TAG: string[] = [];
 const NIST_CONTROL_PATTERN_RE = /[A-Za-z][A-Za-z]-\d{1,2}/v;
 
-let parseHtml: (input: unknown) => string;
-
 export class FortifyMapper extends BaseConverter {
-  shouldIncludeRaw: boolean;
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
-  > = {
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        let auxData = _.get(data, 'FVDL');
-        if (_.isObject(auxData)) {
-          auxData = _.omit(auxData, [
-            'CreatedTS',
-            'UUID',
-            'Description',
-            'Snippets',
-          ]);
-        }
-        return createHeimdallPassthrough('fortify', {
-          auxiliary_data: [
-            {
-              data: { FVDL: auxData },
-              name: 'Fortify',
-            },
-          ],
-          ...(this.shouldIncludeRaw && { raw: data }),
-        });
-      },
-    },
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-    },
-    profiles: [
-      {
-        attributes: [],
-        controls: [
-          {
-            arrayTransformer: filterVuln,
-            code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
-              },
-            },
-            desc: { path: 'Explanation', transformer: parseHtml },
-            id: { path: 'classID' },
-            impact: { path: '$.FVDL.Vulnerabilities.Vulnerability' },
-            key: 'id',
-            path: 'FVDL.Description',
-            refs: [],
-            results: [
-              {
-                code_desc: { transformer: processEntry },
-                path: '$.FVDL.Snippets.Snippet',
-                start_time: {
-                  path: '$.FVDL.CreatedTS',
-                  transformer: (input: unknown): string => {
-                    return `${_.get(input, 'date')} ${_.get(input, 'time')}`;
-                  },
-                },
-                status: ExecJSON.ControlResultStatus.Failed,
-              },
-            ],
-            source_location: {},
-            tags: {
-              cci: {
-                transformer: (data: Record<string, unknown>) =>
-                  getCCIsForNISTTags(nistTag(data)),
-              },
-              nist: { transformer: nistTag },
-            },
-            title: { path: 'Abstract', transformer: parseHtml }, // there are embedded nodes that do not show up properly
-          },
-        ],
-        groups: [],
-        name: 'Fortify Static Analyzer Scan',
-        sha256: '',
-        status: 'loaded',
-        summary: {
-          path: 'FVDL.UUID',
-          transformer: (uuid: unknown): string => {
-            return `Fortify Static Analyzer Scan of UUID: ${String(uuid)}`;
-          },
-        },
-        supports: [],
-        title: 'Fortify Static Analyzer Scan',
-        version: { path: 'FVDL.EngineData.EngineVersion' },
-      },
-    ],
-    statistics: {},
-    version: HeimdallToolsVersion,
-  };
+  >;
 
+  parseHtml: (input: unknown) => string;
+  shouldIncludeRaw: boolean;
   startTime: string;
-  constructor(fvdl: string, shouldIncludeRaw = false) {
+
+  constructor(fvdl: string, shouldIncludeRaw = false, parseHtml: (input: unknown) => string) {
     super(
       parseXml(fvdl, { stopNodes: ['FVDL.Description.Abstract', 'FVDL.Description.Explanation'] }),
     );
+    this.parseHtml = parseHtml;
+    this.shouldIncludeRaw = shouldIncludeRaw;
     this.startTime = `${String(_.get(this.data, 'FVDL.CreatedTS.date'))} ${String(_.get(
       this.data,
       'FVDL.CreatedTS.time',
     ))}`;
-    this.shouldIncludeRaw = shouldIncludeRaw;
+    this.mappings = {
+      passthrough: {
+        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+          let auxData = _.get(data, 'FVDL');
+          if (_.isObject(auxData)) {
+            auxData = _.omit(auxData, [
+              'CreatedTS',
+              'UUID',
+              'Description',
+              'Snippets',
+            ]);
+          }
+          return createHeimdallPassthrough('fortify', {
+            auxiliary_data: [
+              {
+                data: { FVDL: auxData },
+                name: 'Fortify',
+              },
+            ],
+            ...(this.shouldIncludeRaw && { raw: data }),
+          });
+        },
+      },
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+      },
+      profiles: [
+        {
+          attributes: [],
+          controls: [
+            {
+              arrayTransformer: filterVuln,
+              code: {
+                transformer: (vulnerability: Record<string, unknown>): string => {
+                  return JSON.stringify(vulnerability, null, 2);
+                },
+              },
+              desc: { path: 'Explanation', transformer: (input: unknown) => this.parseHtml(input) },
+              id: { path: 'classID' },
+              impact: { path: '$.FVDL.Vulnerabilities.Vulnerability' },
+              key: 'id',
+              path: 'FVDL.Description',
+              refs: [],
+              results: [
+                {
+                  code_desc: { transformer: processEntry },
+                  path: '$.FVDL.Snippets.Snippet',
+                  start_time: {
+                    path: '$.FVDL.CreatedTS',
+                    transformer: (input: unknown): string => {
+                      return `${_.get(input, 'date')} ${_.get(input, 'time')}`;
+                    },
+                  },
+                  status: ExecJSON.ControlResultStatus.Failed,
+                },
+              ],
+              source_location: {},
+              tags: {
+                cci: {
+                  transformer: (data: Record<string, unknown>) =>
+                    getCCIsForNISTTags(nistTag(data)),
+                },
+                nist: { transformer: nistTag },
+              },
+              title: { path: 'Abstract', transformer: (input: unknown) => this.parseHtml(input) },
+            },
+          ],
+          groups: [],
+          name: 'Fortify Static Analyzer Scan',
+          sha256: '',
+          status: 'loaded',
+          summary: {
+            path: 'FVDL.UUID',
+            transformer: (uuid: unknown): string => {
+              return `Fortify Static Analyzer Scan of UUID: ${String(uuid)}`;
+            },
+          },
+          supports: [],
+          title: 'Fortify Static Analyzer Scan',
+          version: { path: 'FVDL.EngineData.EngineVersion' },
+        },
+      ],
+      statistics: {},
+      version: HeimdallToolsVersion,
+    };
   }
 }
 
 export class FortifyResults {
+  parseHtml!: (input: unknown) => string;
   constructor(readonly fvdl: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    this.parseHtml = await buildParseHtmlFunc();
 
-    return (new FortifyMapper(this.fvdl, this.shouldIncludeRaw)).toHdf();
+    return (new FortifyMapper(this.fvdl, this.shouldIncludeRaw, this.parseHtml)).toHdf();
   }
 }
 

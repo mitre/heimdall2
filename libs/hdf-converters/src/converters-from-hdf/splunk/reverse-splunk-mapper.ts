@@ -35,7 +35,7 @@ export type SplunkData = {
   reports: SplunkReport[];
 };
 
-let logger = createWinstonLogger('HDF2Splunk', 'INFO');
+const _defaultLogger = createWinstonLogger('HDF2Splunk', 'INFO'); // Available for standalone functions — wired in 4qm.48
 
 export function createGUID(length: number) {
   let result = '';
@@ -243,6 +243,7 @@ export class FromHDFControlToSplunkControlMapper extends FromAnyBaseConverter {
 export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   axiosInstance: AxiosInstance;
   contextualizedEvaluation?: ContextualizedEvaluation;
+  logger: Logger;
   declare mappings?: MappedTransform<SplunkData, ILookupPathFH>;
 
   constructor(
@@ -250,10 +251,10 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     logService?: Logger,
     loggingLevel?: string,
   ) {
-    logger = logService || createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     super(ensureContextualizedEvaluation(data));
+    this.logger = logService || createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     this.axiosInstance = axios.create({ params: { output_mode: 'json' } });
-    logger.debug(`Initialized ${this.constructor.name} successfully`);
+    this.logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
   createSplunkData(guid: string, filename: string) {
@@ -299,12 +300,12 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     const returnCount = 0;
     let indexResponse: AxiosResponse;
 
-    logger.info(
+    this.logger.info(
       `Logging into Splunk instance at ${hostname} with user ${config.username}`,
     );
-    logger.verbose(`Found designated file to transfer: ${filename}`);
+    this.logger.verbose(`Found designated file to transfer: ${filename}`);
     const guid = createGUID(30);
-    logger.verbose(`Using GUID: ${guid}`);
+    this.logger.verbose(`Using GUID: ${guid}`);
 
     // Attempt to authenticate using given credentials
     const authResponse = await checkSplunkCredentials(config);
@@ -341,13 +342,13 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     const indexNames: string[] = indexes.map(
       (index: { name: string }) => index.name,
     );
-    logger.verbose(`Available indexes: ${indexNames.join(', ')}`);
+    this.logger.verbose(`Available indexes: ${indexNames.join(', ')}`);
 
     if (indexNames.includes(config.index)) {
       const targetIndex = indexes.find(
         (index: { name: string }) => index.name === config.index,
       );
-      logger.verbose(`Found index: ${targetIndex.name}`);
+      this.logger.verbose(`Found index: ${targetIndex.name}`);
 
       const splunkData = this.createSplunkData(guid, filename);
 
@@ -359,7 +360,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
           { cause: error },
         );
       }
-      logger.info(`Successfully uploaded to ${config.index}`);
+      this.logger.info(`Successfully uploaded to ${config.index}`);
       return guid;
     }
     throw new Error(`Invalid index - ${config.index}`);
@@ -379,7 +380,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       const execEvents = splunkData.reports.map(async (report) => {
         await this.axiosInstance
           .post(`${hostname}/services/receivers/simple`, JSON.stringify(report));
-        logger.verbose(
+        this.logger.verbose(
           `Successfully uploaded execution for ${report.meta.filename}`,
         );
       });
@@ -392,7 +393,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
         `${hostname}/services/receivers/simple`,
         splunkData.profiles.map(profile => JSON.stringify(profile)).join('\n'),
       );
-      logger.verbose(
+      this.logger.verbose(
         `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`,
       );
 
@@ -404,7 +405,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
               `${hostname}/services/receivers/simple`,
               chunk.map(control => JSON.stringify(control)).join('\n'),
             );
-          logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
+          this.logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
         },
       );
       await Promise.all(controlEvents);

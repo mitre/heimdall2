@@ -18,106 +18,107 @@ import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
-let parseHtml: (input: unknown) => string;
-
 export class ZapMapper extends BaseConverter {
-  shouldIncludeRaw: boolean;
-
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
-  > = {
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return createHeimdallPassthrough('zap', {
-          auxiliary_data: [
-            {
-              data: _.pick(data, ['site.@port', 'site.@ssl']),
-              name: 'OWASP ZAP',
-            },
-          ],
-          ...(this.shouldIncludeRaw && { raw: data }),
-        });
-      },
-    },
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-    },
-    profiles: [
-      {
-        attributes: [],
-        controls: [
-          {
-            arrayTransformer: deduplicateId,
-            code: {
-              transformer: (vulnerability: Record<string, unknown>): string =>
-                JSON.stringify(vulnerability, null, 2),
-            },
-            desc: { path: 'desc', transformer: parseHtml },
-            descriptions: [
-              {
-                data: { transformer: checkText },
-                label: 'check',
-              },
-            ],
-            id: { path: 'pluginid' },
-            impact: { path: 'riskcode', transformer: impactMapping },
-            path: 'site.alerts',
-            refs: [],
-            results: [
-              {
-                code_desc: { transformer: formatCodeDesc },
-                path: 'instances',
-                start_time: { path: '$.@generated' },
-                status: ExecJSON.ControlResultStatus.Failed,
-              },
-            ],
-            source_location: {},
-            tags: {
-              cci: {
-                path: 'cweid',
-                transformer: (cwe: string) => getCCIsForNISTTags(nistTag(cwe)),
-              },
-              confidence: { path: 'confidence' },
-              cweid: { path: 'cweid' },
-              nist: { path: 'cweid', transformer: nistTag },
-              riskdesc: { path: 'riskdesc' },
-              sourceid: { path: 'sourceid' },
-              wascid: { path: 'wascid' },
-            },
-            title: { path: 'name' },
-          },
-        ],
-        groups: [],
-        name: 'OWASP ZAP Scan',
-        sha256: '',
-        status: 'loaded',
-        summary: {
-          path: 'site.@host',
-          transformer: (input: unknown): string => {
-            return `OWASP ZAP Scan of Host: ${String(input)}`;
-          },
-        },
-        supports: [],
-        title: {
-          path: 'site.@host',
-          transformer: (input: unknown): string => {
-            return `OWASP ZAP Scan of Host: ${String(input)}`;
-          },
-        },
-        version: { path: '@version' },
-      },
-    ],
-    statistics: {},
-    version: HeimdallToolsVersion,
-  };
+  >;
 
-  constructor(zapJson: string, name?: string, shouldIncludeRaw = false) {
+  parseHtml: (input: unknown) => string;
+  shouldIncludeRaw: boolean;
+
+  constructor(zapJson: string, name: string | undefined, shouldIncludeRaw: boolean, parseHtml: (input: unknown) => string) {
     const parsed = JSON.parse(zapJson);
     const site = filterSite(_.get(parsed, 'site'), name);
     super(_.set(parsed, 'site', site), false);
+    this.parseHtml = parseHtml;
     this.shouldIncludeRaw = shouldIncludeRaw;
+    this.mappings = {
+      passthrough: {
+        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+          return createHeimdallPassthrough('zap', {
+            auxiliary_data: [
+              {
+                data: _.pick(data, ['site.@port', 'site.@ssl']),
+                name: 'OWASP ZAP',
+              },
+            ],
+            ...(this.shouldIncludeRaw && { raw: data }),
+          });
+        },
+      },
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+      },
+      profiles: [
+        {
+          attributes: [],
+          controls: [
+            {
+              arrayTransformer: deduplicateId,
+              code: {
+                transformer: (vulnerability: Record<string, unknown>): string =>
+                  JSON.stringify(vulnerability, null, 2),
+              },
+              desc: { path: 'desc', transformer: (input: unknown) => this.parseHtml(input) },
+              descriptions: [
+                {
+                  data: { transformer: checkText },
+                  label: 'check',
+                },
+              ],
+              id: { path: 'pluginid' },
+              impact: { path: 'riskcode', transformer: impactMapping },
+              path: 'site.alerts',
+              refs: [],
+              results: [
+                {
+                  code_desc: { transformer: formatCodeDesc },
+                  path: 'instances',
+                  start_time: { path: '$.@generated' },
+                  status: ExecJSON.ControlResultStatus.Failed,
+                },
+              ],
+              source_location: {},
+              tags: {
+                cci: {
+                  path: 'cweid',
+                  transformer: (cwe: string) => getCCIsForNISTTags(nistTag(cwe)),
+                },
+                confidence: { path: 'confidence' },
+                cweid: { path: 'cweid' },
+                nist: { path: 'cweid', transformer: nistTag },
+                riskdesc: { path: 'riskdesc' },
+                sourceid: { path: 'sourceid' },
+                wascid: { path: 'wascid' },
+              },
+              title: { path: 'name' },
+            },
+          ],
+          groups: [],
+          name: 'OWASP ZAP Scan',
+          sha256: '',
+          status: 'loaded',
+          summary: {
+            path: 'site.@host',
+            transformer: (input: unknown): string => {
+              return `OWASP ZAP Scan of Host: ${String(input)}`;
+            },
+          },
+          supports: [],
+          title: {
+            path: 'site.@host',
+            transformer: (input: unknown): string => {
+              return `OWASP ZAP Scan of Host: ${String(input)}`;
+            },
+          },
+          version: { path: '@version' },
+        },
+      ],
+      statistics: {},
+      version: HeimdallToolsVersion,
+    };
   }
 
   toHdf(): ExecJSON.Execution {
@@ -141,12 +142,13 @@ export class ZapMapper extends BaseConverter {
   }
 }
 export class ZapResults {
+  parseHtml!: (input: unknown) => string;
   constructor(readonly zapJson: string, readonly name?: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    this.parseHtml = await buildParseHtmlFunc();
 
-    return (new ZapMapper(this.zapJson, this.name, this.shouldIncludeRaw)).toHdf();
+    return (new ZapMapper(this.zapJson, this.name, this.shouldIncludeRaw, this.parseHtml)).toHdf();
   }
 }
 function checkText(input: Record<string, unknown>): string {

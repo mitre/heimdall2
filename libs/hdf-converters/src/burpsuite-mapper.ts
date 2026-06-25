@@ -29,104 +29,106 @@ const IMPACT_MAPPING = new Map<string, number>([
 const NAME = 'BurpSuite Pro Scan';
 const CWE_NIST_MAPPING = new CweNistMapping();
 
-let parseHtml: (input: unknown) => string;
-
 export class BurpSuiteMapper extends BaseConverter {
-  shouldIncludeRaw: boolean;
-
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
-  > = {
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return createHeimdallPassthrough('burp', { ...(this.shouldIncludeRaw && { raw: data }) });
-      },
-    },
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-    },
-    profiles: [
-      {
-        ...DEFAULT_PROFILE_FIELDS,
-        controls: [
-          {
-            code: {
-              transformer: (vulnerability: Record<string, unknown>): string =>
-                JSON.stringify(vulnerability, null, 2),
-            },
-            desc: { path: 'issueBackground', transformer: parseHtml },
-            descriptions: [
-              {
-                data: { path: 'issueBackground', transformer: parseHtml },
-                label: 'check',
-              },
-              {
-                data: { path: 'remediationBackground', transformer: parseHtml },
-                label: 'fix',
-              },
-            ],
-            id: { path: 'type', transformer: idToString },
-            impact: {
-              path: 'severity',
-              transformer: impactMapping(IMPACT_MAPPING),
-            },
-            key: 'id',
-            path: 'issues.issue',
-            refs: [],
-            results: [
-              {
-                code_desc: { transformer: formatCodeDesc },
-                start_time: { path: '$.issues.exportTime' },
-                status: ExecJSON.ControlResultStatus.Failed,
-              },
-            ],
-            source_location: {},
-            tags: {
-              cci: {
-                path: 'vulnerabilityClassifications',
-                transformer: (data: string) => getCCIsForNISTTags(nistTag(data)),
-              },
-              confidence: { path: 'confidence' },
-              cweid: {
-                path: 'vulnerabilityClassifications',
-                transformer: formatCweId,
-              },
-              nist: {
-                path: 'vulnerabilityClassifications',
-                transformer: nistTag,
-              },
-            },
-            title: { path: 'name' },
-          },
-        ],
-        name: NAME,
-        summary: NAME,
-        title: NAME,
-        version: { path: 'issues.burpVersion' },
-      },
-    ],
-    statistics: {},
-    version: HeimdallToolsVersion,
-  };
+  >;
 
-  constructor(burpsXml: string, shouldIncludeRaw = false) {
+  parseHtml: (input: unknown) => string;
+  shouldIncludeRaw: boolean;
+
+  constructor(burpsXml: string, shouldIncludeRaw = false, parseHtml: (input: unknown) => string) {
     super(parseXml(burpsXml));
+    this.parseHtml = parseHtml;
     this.shouldIncludeRaw = shouldIncludeRaw;
+    this.mappings = {
+      passthrough: {
+        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+          return createHeimdallPassthrough('burp', { ...(this.shouldIncludeRaw && { raw: data }) });
+        },
+      },
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+      },
+      profiles: [
+        {
+          ...DEFAULT_PROFILE_FIELDS,
+          controls: [
+            {
+              code: {
+                transformer: (vulnerability: Record<string, unknown>): string =>
+                  JSON.stringify(vulnerability, null, 2),
+              },
+              desc: { path: 'issueBackground', transformer: (input: unknown) => this.parseHtml(input) },
+              descriptions: [
+                {
+                  data: { path: 'issueBackground', transformer: (input: unknown) => this.parseHtml(input) },
+                  label: 'check',
+                },
+                {
+                  data: { path: 'remediationBackground', transformer: (input: unknown) => this.parseHtml(input) },
+                  label: 'fix',
+                },
+              ],
+              id: { path: 'type', transformer: idToString },
+              impact: {
+                path: 'severity',
+                transformer: impactMapping(IMPACT_MAPPING),
+              },
+              key: 'id',
+              path: 'issues.issue',
+              refs: [],
+              results: [
+                {
+                  code_desc: { transformer: (v: unknown) => formatCodeDesc(v, this.parseHtml) },
+                  start_time: { path: '$.issues.exportTime' },
+                  status: ExecJSON.ControlResultStatus.Failed,
+                },
+              ],
+              source_location: {},
+              tags: {
+                cci: {
+                  path: 'vulnerabilityClassifications',
+                  transformer: (data: string) => getCCIsForNISTTags(nistTag(data, this.parseHtml)),
+                },
+                confidence: { path: 'confidence' },
+                cweid: {
+                  path: 'vulnerabilityClassifications',
+                  transformer: (input: string) => formatCweId(input, this.parseHtml),
+                },
+                nist: {
+                  path: 'vulnerabilityClassifications',
+                  transformer: (input: string) => nistTag(input, this.parseHtml),
+                },
+              },
+              title: { path: 'name' },
+            },
+          ],
+          name: NAME,
+          summary: NAME,
+          title: NAME,
+          version: { path: 'issues.burpVersion' },
+        },
+      ],
+      statistics: {},
+      version: HeimdallToolsVersion,
+    };
   }
 }
 export class BurpSuiteResults {
+  parseHtml!: (input: unknown) => string;
   constructor(readonly burpsXml: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    this.parseHtml = await buildParseHtmlFunc();
 
-    return (new BurpSuiteMapper(this.burpsXml, this.shouldIncludeRaw)).toHdf();
+    return (new BurpSuiteMapper(this.burpsXml, this.shouldIncludeRaw, this.parseHtml)).toHdf();
   }
 }
 // Transformation Functions
-function formatCodeDesc(issue: unknown): string {
+function formatCodeDesc(issue: unknown, parseHtml: (input: unknown) => string): string {
   const text = [];
   if (_.has(issue, 'host.ip') && _.has(issue, 'host.text')) {
     text.push(
@@ -151,7 +153,7 @@ function formatCodeDesc(issue: unknown): string {
   return text.join('\n') + '\n';
 }
 
-function formatCweId(input: string): string {
+function formatCweId(input: string, parseHtml: (input: unknown) => string): string {
   return parseHtml(input).slice(1, -1).trimStart();
 }
 
@@ -159,8 +161,8 @@ function idToString(id: unknown): string {
   return typeof id === 'string' || typeof id === 'number' ? id.toString() : '';
 }
 
-function nistTag(input: string): string[] {
-  let cwe = formatCweId(input).split('CWE-');
+function nistTag(input: string, parseHtml: (input: unknown) => string): string[] {
+  let cwe = formatCweId(input, parseHtml).split('CWE-');
   cwe.shift();
   cwe = cwe.map(x => x.split(':', 1)[0]);
   return CWE_NIST_MAPPING.nistFilter(

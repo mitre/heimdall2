@@ -28,152 +28,168 @@ const IMPACT_MAPPING = new Map<string, number>([
 const CCI_NIST_MAPPING = new CciNistMapping();
 const CCI_REGEX = /CCI-\d*/v;
 
-let parseHtml: (input: unknown) => string;
-
 type IIdent = {
   system: string;
   text: string;
 };
 
 export class XCCDFResultsMapper extends BaseConverter {
-  shouldIncludeRaw: boolean;
-
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
-  > = {
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        let auxData = _.get(data, 'Benchmark') as Record<string, unknown>;
-        if (auxData) {
-          auxData = _.omit(auxData, [
-            'id',
-            'xml:lang',
-            'style',
-            'title',
-            'description',
-            'notice',
-            'front-matter',
-            'reference',
-            'platform',
-            'version',
-            'model',
-            'Group',
-            'TestResult',
-          ]);
-        }
-        auxData = { Benchmark: auxData };
-        return createHeimdallPassthrough('xccdf', {
-          auxiliary_data: [
-            {
-              data: auxData,
-              name: 'XCCDF',
-            },
-          ],
-          ...(this.shouldIncludeRaw && { raw: data }),
-        });
-      },
-    },
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: { path: 'Benchmark.platform.idref' },
-    },
-    profiles: [
-      {
-        attributes: [],
-        controls: [
-          {
-            code: {
-              transformer: (vulnerability: Record<string, unknown>): string =>
-                JSON.stringify(
-                  _.omit(vulnerability, [
-                    'group',
-                    'ruleResult',
-                    'profiles',
-                    'values',
-                  ]),
-                  null,
-                  2,
-                ),
-            },
-            desc: {
-              path: ['description.text', 'description'],
-              transformer: (description: string): string =>
-                parseHtml(
-                  _.get(
-                    parseXml(description),
-                    'ProfileDescription',
-                    description,
-                  ),
-                ),
-            },
-            descriptions: [
+  >;
+
+  parseHtml: (input: unknown) => string;
+  shouldIncludeRaw: boolean;
+
+  constructor(scapXml: string, shouldIncludeRaw: boolean, parseHtml: (input: unknown) => string) {
+    super(
+      parseXml(scapXml, {
+        stopNodes: [
+          '*.fixtext',
+          '*.fix',
+          '*.rationale',
+          '*.warning',
+          '*.title',
+          '*.description',
+        ],
+      }),
+    );
+    this.parseHtml = parseHtml;
+    this.shouldIncludeRaw = shouldIncludeRaw;
+    this.mappings = {
+      passthrough: {
+        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+          let auxData = _.get(data, 'Benchmark') as Record<string, unknown>;
+          if (auxData) {
+            auxData = _.omit(auxData, [
+              'id',
+              'xml:lang',
+              'style',
+              'title',
+              'description',
+              'notice',
+              'front-matter',
+              'reference',
+              'platform',
+              'version',
+              'model',
+              'Group',
+              'TestResult',
+            ]);
+          }
+          auxData = { Benchmark: auxData };
+          return createHeimdallPassthrough('xccdf', {
+            auxiliary_data: [
               {
-                path: ['check.check-content-ref.name'],
-                transformer: (
-                  data: string | string[],
-                ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).join('\n'),
-                  label: 'check',
-                }),
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: ['fixtext.text', 'fix.text'],
-                transformer: (
-                  data: string | string[],
-                ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(item => parseHtml(item)).join('\n'),
-                  label: 'fix',
-                }),
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: ['rationale.text'],
-                transformer: (
-                  data: string | string[],
-                ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(item => parseHtml(item)).join('\n'),
-                  label: 'rationale',
-                }),
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: ['warning.text'],
-                transformer: (
-                  data: string | string[],
-                ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(item => parseHtml(item)).join('\n'),
-                  label: 'warning',
-                }),
-              } as unknown as ExecJSON.ControlDescription,
-            ],
-            id: { path: ['id'] },
-            impact: {
-              transformer: (vulnerability: Record<string, unknown>): number => {
-                const ruleResult = _.get(vulnerability, 'ruleResult') as Record<
-                  string,
-                  unknown
-                >;
-                if (ruleResult) {
-                  const result = _.get(ruleResult, 'result') as string;
-                  if (['informational', 'notapplicable', 'notselected'].includes(result)) {
-                    return 0;
-                  }
-                }
-                return impactMapping(IMPACT_MAPPING)(
-                  _.get(vulnerability, 'severity'),
-                );
+                data: auxData,
+                name: 'XCCDF',
               },
-            },
-            key: 'id',
-            path: 'Benchmark',
-            pathTransform: getRulesInBenchmark,
-            refs: [
-              {
-                path: 'reference',
-                transformer: (
-                  data: Record<string, unknown>,
-                ): ExecJSON.Reference => ({
-                  ref:
+            ],
+            ...(this.shouldIncludeRaw && { raw: data }),
+          });
+        },
+      },
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+        target_id: { path: 'Benchmark.platform.idref' },
+      },
+      profiles: [
+        {
+          attributes: [],
+          controls: [
+            {
+              code: {
+                transformer: (vulnerability: Record<string, unknown>): string =>
+                  JSON.stringify(
+                    _.omit(vulnerability, [
+                      'group',
+                      'ruleResult',
+                      'profiles',
+                      'values',
+                    ]),
+                    null,
+                    2,
+                  ),
+              },
+              desc: {
+                path: ['description.text', 'description'],
+                transformer: (description: string): string =>
+                  this.parseHtml(
+                    _.get(
+                      parseXml(description),
+                      'ProfileDescription',
+                      description,
+                    ),
+                  ),
+              },
+              descriptions: [
+                {
+                  path: ['check.check-content-ref.name'],
+                  transformer: (
+                    data: string | string[],
+                  ): ExecJSON.ControlDescription => ({
+                    data: asArray(data).join('\n'),
+                    label: 'check',
+                  }),
+                } as unknown as ExecJSON.ControlDescription,
+                {
+                  path: ['fixtext.text', 'fix.text'],
+                  transformer: (
+                    data: string | string[],
+                  ): ExecJSON.ControlDescription => ({
+                    data: asArray(data).map(item => this.parseHtml(item)).join('\n'),
+                    label: 'fix',
+                  }),
+                } as unknown as ExecJSON.ControlDescription,
+                {
+                  path: ['rationale.text'],
+                  transformer: (
+                    data: string | string[],
+                  ): ExecJSON.ControlDescription => ({
+                    data: asArray(data).map(item => this.parseHtml(item)).join('\n'),
+                    label: 'rationale',
+                  }),
+                } as unknown as ExecJSON.ControlDescription,
+                {
+                  path: ['warning.text'],
+                  transformer: (
+                    data: string | string[],
+                  ): ExecJSON.ControlDescription => ({
+                    data: asArray(data).map(item => this.parseHtml(item)).join('\n'),
+                    label: 'warning',
+                  }),
+                } as unknown as ExecJSON.ControlDescription,
+              ],
+              id: { path: ['id'] },
+              impact: {
+                transformer: (vulnerability: Record<string, unknown>): number => {
+                  const ruleResult = _.get(vulnerability, 'ruleResult') as Record<
+                    string,
+                    unknown
+                  >;
+                  if (ruleResult) {
+                    const result = _.get(ruleResult, 'result') as string;
+                    if (['informational', 'notapplicable', 'notselected'].includes(result)) {
+                      return 0;
+                    }
+                  }
+                  return impactMapping(IMPACT_MAPPING)(
+                    _.get(vulnerability, 'severity'),
+                  );
+                },
+              },
+              key: 'id',
+              path: 'Benchmark',
+              pathTransform: getRulesInBenchmark,
+              refs: [
+                {
+                  path: 'reference',
+                  transformer: (
+                    data: Record<string, unknown>,
+                  ): ExecJSON.Reference => ({
+                    ref:
                     _.has(data, 'publisher')
                     || _.has(data, 'identifier')
                     || _.has(data, 'type')
@@ -204,20 +220,50 @@ export class XCCDFResultsMapper extends BaseConverter {
                       : (_.has(data, 'text')
                         ? (_.get(data, 'text') as string)
                         : undefined),
-                  ...conditionallyProvideAttribute(
-                    'url',
-                    _.get(data, 'href'),
-                    _.has(data, 'href') && _.get(data, 'href') !== '',
-                  ),
-                }),
-              },
-            ],
-            results: [
-              {
-                code_desc: {
+                    ...conditionallyProvideAttribute(
+                      'url',
+                      _.get(data, 'href'),
+                      _.has(data, 'href') && _.get(data, 'href') !== '',
+                    ),
+                  }),
+                },
+              ],
+              results: [
+                {
+                  code_desc: {
+                    path: ['description.text', 'description'],
+                    transformer: (description: string): string =>
+                      this.parseHtml(
+                        _.get(
+                          parseXml(description),
+                          'VulnDiscussion',
+                          description,
+                        ),
+                      ),
+                  },
+                  start_time: { path: ['ruleResult.time'] },
+                  status: {
+                    path: ['ruleResult.result'],
+                    transformer: getStatus,
+                  },
+                },
+              ],
+              source_location: {},
+              tags: {
+                cci: {
+                  path: ['ident', 'reference'],
+                  transformer: extractCci,
+                },
+                check: {
+                  path: 'check',
+                  transformer: (
+                    data: Record<string, unknown> | Record<string, unknown>[],
+                  ) => JSON.stringify(data, null, 2),
+                },
+                description: {
                   path: ['description.text', 'description'],
                   transformer: (description: string): string =>
-                    parseHtml(
+                    this.parseHtml(
                       _.get(
                         parseXml(description),
                         'VulnDiscussion',
@@ -225,214 +271,170 @@ export class XCCDFResultsMapper extends BaseConverter {
                       ),
                     ),
                 },
-                start_time: { path: ['ruleResult.time'] },
-                status: {
-                  path: ['ruleResult.result'],
-                  transformer: getStatus,
+                fix_id: { path: 'fix.id' },
+                fixtext_fixref: {
+                  path: ['fixtext.fixref.text', 'fixtext.fixref'],
+                  transformer: (text: string) => this.parseHtml(text) || undefined,
                 },
-              },
-            ],
-            source_location: {},
-            tags: {
-              cci: {
-                path: ['ident', 'reference'],
-                transformer: extractCci,
-              },
-              check: {
-                path: 'check',
-                transformer: (
-                  data: Record<string, unknown> | Record<string, unknown>[],
-                ) => JSON.stringify(data, null, 2),
-              },
-              description: {
-                path: ['description.text', 'description'],
-                transformer: (description: string): string =>
-                  parseHtml(
-                    _.get(
-                      parseXml(description),
-                      'VulnDiscussion',
-                      description,
-                    ),
-                  ),
-              },
-              fix_id: { path: 'fix.id' },
-              fixtext_fixref: {
-                path: ['fixtext.fixref.text', 'fixtext.fixref'],
-                transformer: (text: string) => parseHtml(text) || undefined,
-              },
-              group_description: {
-                path: ['group.description.text', 'group.description'],
-                transformer: (description: string): string =>
-                  parseHtml(
-                    _.get(
-                      parseXml(description),
-                      'GroupDescription',
-                      description,
-                    ),
-                  ),
-              },
-              group_id: { path: 'group.id' },
-              group_title: { path: ['group.title.text', 'group.title'] },
-              ident: {
-                path: 'ident',
-                transformer: (text: string) => text || undefined,
-              },
-              nist: {
-                path: ['ident', 'reference'],
-                transformer: nistTag,
-              },
-              profiles: [
-                {
-                  description: {
-                    path: ['description.text', 'description'],
-                    transformer: (description: string): string =>
-                      parseHtml(
-                        _.get(
-                          parseXml(description),
-                          'ProfileDescription',
-                          description,
-                        ),
+                group_description: {
+                  path: ['group.description.text', 'group.description'],
+                  transformer: (description: string): string =>
+                    this.parseHtml(
+                      _.get(
+                        parseXml(description),
+                        'GroupDescription',
+                        description,
                       ),
-                  },
-                  id: { path: ['id'] },
-                  path: ['profiles'],
-                  title: { path: ['title.text', 'title'] },
+                    ),
                 },
-              ],
-              reference: {
-                path: 'reference',
-                transformer: (data: Record<string, unknown>) => ({ references: data }),
+                group_id: { path: 'group.id' },
+                group_title: { path: ['group.title.text', 'group.title'] },
+                ident: {
+                  path: 'ident',
+                  transformer: (text: string) => text || undefined,
+                },
+                nist: {
+                  path: ['ident', 'reference'],
+                  transformer: nistTag,
+                },
+                profiles: [
+                  {
+                    description: {
+                      path: ['description.text', 'description'],
+                      transformer: (description: string): string =>
+                        this.parseHtml(
+                          _.get(
+                            parseXml(description),
+                            'ProfileDescription',
+                            description,
+                          ),
+                        ),
+                    },
+                    id: { path: ['id'] },
+                    path: ['profiles'],
+                    title: { path: ['title.text', 'title'] },
+                  },
+                ],
+                reference: {
+                  path: 'reference',
+                  transformer: (data: Record<string, unknown>) => ({ references: data }),
+                },
+                rule_id: { path: 'id' },
+                rule_result: { path: ['ruleResult'] },
+                selected: { path: 'selected' },
+                severity: { path: 'severity' },
+                transformer: (data: Record<string, unknown>) => ({
+                  ...conditionallyProvideAttribute(
+                    'version',
+                    _.get(data, 'version.text'),
+                    _.has(data, 'version.text'),
+                  ),
+                }),
+                value: {
+                  path: ['values'],
+                  transformer: (
+                    values: Record<string, unknown> | Record<string, unknown>[],
+                  ) =>
+                    asArray(values).map(value => ({
+                      description: this.parseHtml(
+                        _.get(value, 'description.text')
+                        || _.get(value, 'description'),
+                      ),
+                      Id: _.get(value, 'Id'),
+                      id: _.get(value, 'id'),
+                      interactive: _.get(value, 'interactive'),
+                      title: _.get(value, 'title.text') || _.get(value, 'title'),
+                      type: _.get(value, 'type'),
+                      value: _.get(value, 'value'),
+                      warning: this.parseHtml(
+                        _.get(value, 'warning.text') || _.get(value, 'warning'),
+                      ),
+                    })),
+                },
+                weight: { path: 'weight' },
               },
-              rule_id: { path: 'id' },
-              rule_result: { path: ['ruleResult'] },
-              selected: { path: 'selected' },
-              severity: { path: 'severity' },
-              transformer: (data: Record<string, unknown>) => ({
-                ...conditionallyProvideAttribute(
-                  'version',
-                  _.get(data, 'version.text'),
-                  _.has(data, 'version.text'),
-                ),
-              }),
-              value: {
-                path: ['values'],
-                transformer: (
-                  values: Record<string, unknown> | Record<string, unknown>[],
-                ) =>
-                  asArray(values).map(value => ({
-                    description: parseHtml(
-                      _.get(value, 'description.text')
-                      || _.get(value, 'description'),
-                    ),
-                    Id: _.get(value, 'Id'),
-                    id: _.get(value, 'id'),
-                    interactive: _.get(value, 'interactive'),
-                    title: _.get(value, 'title.text') || _.get(value, 'title'),
-                    type: _.get(value, 'type'),
-                    value: _.get(value, 'value'),
-                    warning: parseHtml(
-                      _.get(value, 'warning.text') || _.get(value, 'warning'),
-                    ),
-                  })),
-              },
-              weight: { path: 'weight' },
+              title: { path: ['title.text', 'title'] },
             },
-            title: { path: ['title.text', 'title'] },
-          },
-        ],
-        copyright: { path: 'Benchmark.metadata.creator' },
-        copyright_email: 'disa.stig_spt@mail.mil', // this should only be specified if that email address is in Benchmark.description
-        description: {
-          path: 'Benchmark',
-          transformer: (input: Record<string, unknown>): string => {
-            const descriptionPaths = [
-              ['description.text'],
-              ['front-matter'],
-              ['metadata'],
-              ['model'],
-              ['plain-text'],
-              ['rear-matter'],
-              ['reference'],
-              ['status'],
-              ['version'],
-              ['xml:lang'],
-              ['xmlns:cdf', 'xmlns'],
-              ['xmlns:dc'],
-              ['xmlns:dsi'],
-              ['xsi:schemaLocation'],
-              ['TestResult.benchmark'],
-              ['TestResult.start-time'],
-              ['TestResult.end-time'],
-              ['TestResult.id'],
-              ['TestResult.identity'],
-              ['TestResult.organization'],
-              ['TestResult.platform.idref'],
-              ['TestResult.profile.idref'],
-              ['TestResult.score'],
-              ['TestResult.set-value'],
-              ['TestResult.target'],
-              ['TestResult.target-address'],
-              ['TestResult.target-facts'],
-              ['TestResult.target-id-ref'],
-              ['TestResult.test-system'],
-              ['TestResult.title'],
-              ['TestResult.version'],
-            ];
-            const fullDescription = new Map<string, unknown>();
-            for (const paths of descriptionPaths) {
-              for (const path of paths) {
-                const item = _.get(input, path);
-                if (item !== undefined) {
-                  fullDescription.set(path, typeof item === 'string' ? parseHtml(item) : item);
+          ],
+          copyright: { path: 'Benchmark.metadata.creator' },
+          copyright_email: 'disa.stig_spt@mail.mil', // this should only be specified if that email address is in Benchmark.description
+          description: {
+            path: 'Benchmark',
+            transformer: (input: Record<string, unknown>): string => {
+              const descriptionPaths = [
+                ['description.text'],
+                ['front-matter'],
+                ['metadata'],
+                ['model'],
+                ['plain-text'],
+                ['rear-matter'],
+                ['reference'],
+                ['status'],
+                ['version'],
+                ['xml:lang'],
+                ['xmlns:cdf', 'xmlns'],
+                ['xmlns:dc'],
+                ['xmlns:dsi'],
+                ['xsi:schemaLocation'],
+                ['TestResult.benchmark'],
+                ['TestResult.start-time'],
+                ['TestResult.end-time'],
+                ['TestResult.id'],
+                ['TestResult.identity'],
+                ['TestResult.organization'],
+                ['TestResult.platform.idref'],
+                ['TestResult.profile.idref'],
+                ['TestResult.score'],
+                ['TestResult.set-value'],
+                ['TestResult.target'],
+                ['TestResult.target-address'],
+                ['TestResult.target-facts'],
+                ['TestResult.target-id-ref'],
+                ['TestResult.test-system'],
+                ['TestResult.title'],
+                ['TestResult.version'],
+              ];
+              const fullDescription = new Map<string, unknown>();
+              for (const paths of descriptionPaths) {
+                for (const path of paths) {
+                  const item = _.get(input, path);
+                  if (item !== undefined) {
+                    fullDescription.set(path, typeof item === 'string' ? this.parseHtml(item) : item);
+                  }
                 }
               }
-            }
-            return JSON.stringify(Object.fromEntries(fullDescription), null, 2);
+              return JSON.stringify(Object.fromEntries(fullDescription), null, 2);
+            },
           },
+          groups: [],
+          license: { path: 'Benchmark.notice.id' },
+          maintainer: { path: 'Benchmark.reference.publisher' },
+          name: { path: 'Benchmark.id' },
+          sha256: '',
+          status: 'loaded',
+          summary: {
+            path: ['Benchmark.description.text', 'Benchmark.description'],
+            transformer: parseHtml,
+          },
+          supports: [],
+          title: { path: ['Benchmark.title.text', 'Benchmark.title'] },
+          version: { path: 'Benchmark.style' },
         },
-        groups: [],
-        license: { path: 'Benchmark.notice.id' },
-        maintainer: { path: 'Benchmark.reference.publisher' },
-        name: { path: 'Benchmark.id' },
-        sha256: '',
-        status: 'loaded',
-        summary: {
-          path: ['Benchmark.description.text', 'Benchmark.description'],
-          transformer: parseHtml,
-        },
-        supports: [],
-        title: { path: ['Benchmark.title.text', 'Benchmark.title'] },
-        version: { path: 'Benchmark.style' },
-      },
-    ],
-    statistics: {},
-    version: HeimdallToolsVersion,
-  };
-
-  constructor(scapXml: string, shouldIncludeRaw = false) {
-    super(
-      parseXml(scapXml, {
-        stopNodes: [
-          '*.fixtext',
-          '*.fix',
-          '*.rationale',
-          '*.warning',
-          '*.title',
-          '*.description',
-        ],
-      }),
-    );
-    this.shouldIncludeRaw = shouldIncludeRaw;
+      ],
+      statistics: {},
+      version: HeimdallToolsVersion,
+    };
   }
 }
 
 export class XCCDFResultsResults {
+  parseHtml!: (input: unknown) => string;
   constructor(readonly scapXml: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    this.parseHtml = await buildParseHtmlFunc();
 
-    return (new XCCDFResultsMapper(this.scapXml, this.shouldIncludeRaw)).toHdf();
+    return (new XCCDFResultsMapper(this.scapXml, this.shouldIncludeRaw, this.parseHtml)).toHdf();
   }
 }
 

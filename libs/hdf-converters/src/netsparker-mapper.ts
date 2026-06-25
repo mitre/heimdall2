@@ -32,13 +32,13 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING = new OwaspNistMapping();
 const FIRST_CHAR_RE = /^./v;
 
-let parseHtml: (input: unknown) => string;
-
 export class NetsparkerMapper extends BaseConverter {
+  parseHtml: (input: unknown) => string;
   shouldIncludeRaw: boolean;
 
-  constructor(netsparkerXml: string, shouldIncludeRaw = false) {
+  constructor(netsparkerXml: string, shouldIncludeRaw = false, parseHtml: (input: unknown) => string) {
     super(parseXml(netsparkerXml));
+    this.parseHtml = parseHtml;
     this.shouldIncludeRaw = shouldIncludeRaw;
     this.setMappings(
       this.defineMappings(
@@ -100,7 +100,7 @@ export class NetsparkerMapper extends BaseConverter {
               desc: { transformer: formatControlDesc },
               descriptions: [
                 {
-                  data: { transformer: formatCheck },
+                  data: { transformer: (v: unknown) => formatCheck(v, this.parseHtml) },
                   label: 'check',
                 },
                 {
@@ -164,15 +164,16 @@ export class NetsparkerMapper extends BaseConverter {
   }
 }
 export class NetsparkerResults {
+  parseHtml!: (input: unknown) => string;
   constructor(readonly netsparkerXml: string, readonly shouldIncludeRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    this.parseHtml = await buildParseHtmlFunc();
 
-    return (new NetsparkerMapper(this.netsparkerXml, this.shouldIncludeRaw)).toHdf();
+    return (new NetsparkerMapper(this.netsparkerXml, this.shouldIncludeRaw, this.parseHtml)).toHdf();
   }
 }
-function formatCheck(vulnerability: unknown): string {
+function formatCheck(vulnerability: unknown, parseHtml: (input: unknown) => string): string {
   const text: string[] = [];
   const exploitationSkills = _.get(vulnerability, 'exploitation-skills');
   if (exploitationSkills) {

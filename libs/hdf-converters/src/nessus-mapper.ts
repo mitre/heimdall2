@@ -37,132 +37,138 @@ const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG: string[] = [];
 
-let parseHtml: (input: unknown) => string;
-
-let policyName: string;
-let version: string;
-
 export class NessusMapper extends BaseConverter {
-  shouldIncludeRaw: boolean;
-
   mappings: MappedTransform<
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
-  > = {
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return createHeimdallPassthrough('nessus', {
-          auxiliary_data: [
+  >;
+
+  parseHtml: (input: unknown) => string;
+  policyName: string;
+  shouldIncludeRaw: boolean;
+  version: string;
+
+  constructor(nessusJson: Record<string, unknown>, shouldIncludeRaw: boolean, parseHtml: (input: unknown) => string, policyName: string, version: string) {
+    super(nessusJson);
+    this.parseHtml = parseHtml;
+    this.policyName = policyName;
+    this.shouldIncludeRaw = shouldIncludeRaw;
+    this.version = version;
+    this.mappings = {
+      passthrough: {
+        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+          return createHeimdallPassthrough('nessus', {
+            auxiliary_data: [
+              {
+                data: _.omit(data, ['name', 'ReportItem']),
+                name: 'Nessus',
+              },
+            ],
+            ...(this.shouldIncludeRaw && { raw: data }),
+          });
+        },
+      },
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+        target_id: { path: 'name' },
+      },
+      profiles: [
+        {
+          attributes: [],
+          controls: [
             {
-              data: _.omit(data, ['name', 'ReportItem']),
-              name: 'Nessus',
+              arrayTransformer: cleanData,
+              code: {
+                transformer: (reportItem: unknown) =>
+                  JSON.stringify(reportItem, null, 2),
+              },
+              desc: { transformer: (item: unknown) => getDesc(item, this.parseHtml) },
+              descriptions: [
+                {
+                  data: { transformer: (item: unknown) => getCheck(item, this.parseHtml) },
+                  label: 'check',
+                },
+                {
+                  data: { transformer: getFix },
+                  label: 'fix',
+                },
+              ],
+              id: { transformer: getId },
+              impact: { transformer: getImpact },
+              key: 'id',
+              path: 'ReportItem',
+              refs: [
+                { url: { path: 'see_also' } },
+              ],
+              results: [
+                {
+                  code_desc: { transformer: (item: unknown) => formatCodeDesc(item, this.parseHtml) },
+                  message: {
+                    path: ['plugin_output', COMPLIANCE_ACTUAL_VALUE],
+                    transformer: (value: unknown) => {
+                      if (value == null) {
+                        return value;
+                      }
+                      return typeof value === 'string' ? value : JSON.stringify(value);
+                    },
+                  },
+                  start_time: {
+                    path: '$.HostProperties.tag',
+                    transformer: getStartTime,
+                  },
+                  status: { transformer: getStatus },
+                },
+              ],
+              source_location: {},
+              tags: {
+                cci: { transformer: getCci },
+                cvss3_base_score: { path: 'cvss3_base_score' },
+                cvss_base_score: { path: 'cvss_base_score' },
+                fname: { path: 'fname' },
+                nist: { transformer: getNist },
+                plugin_publication_date: { path: 'plugin_publication_date' },
+                plugin_type: { path: 'plugin_type' },
+                rid: { transformer: getRid },
+                risk_factor: { path: 'risk_factor' },
+                stig_id: { transformer: getStig },
+              },
+              title: { transformer: getTitle },
             },
           ],
-          ...(this.shouldIncludeRaw && { raw: data }),
-        });
-      },
-    },
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: { path: 'name' },
-    },
-    profiles: [
-      {
-        attributes: [],
-        controls: [
-          {
-            arrayTransformer: cleanData,
-            code: {
-              transformer: (reportItem: unknown) =>
-                JSON.stringify(reportItem, null, 2),
-            },
-            desc: { transformer: getDesc },
-            descriptions: [
-              {
-                data: { transformer: getCheck },
-                label: 'check',
-              },
-              {
-                data: { transformer: getFix },
-                label: 'fix',
-              },
-            ],
-            id: { transformer: getId },
-            impact: { transformer: getImpact },
-            key: 'id',
-            path: 'ReportItem',
-            refs: [
-              { url: { path: 'see_also' } },
-            ],
-            results: [
-              {
-                code_desc: { transformer: formatCodeDesc },
-                message: {
-                  path: ['plugin_output', COMPLIANCE_ACTUAL_VALUE],
-                  transformer: (value: unknown) => {
-                    if (value == null) {
-                      return value;
-                    }
-                    return typeof value === 'string' ? value : JSON.stringify(value);
-                  },
-                },
-                start_time: {
-                  path: '$.HostProperties.tag',
-                  transformer: getStartTime,
-                },
-                status: { transformer: getStatus },
-              },
-            ],
-            source_location: {},
-            tags: {
-              cci: { transformer: getCci },
-              cvss3_base_score: { path: 'cvss3_base_score' },
-              cvss_base_score: { path: 'cvss_base_score' },
-              fname: { path: 'fname' },
-              nist: { transformer: getNist },
-              plugin_publication_date: { path: 'plugin_publication_date' },
-              plugin_type: { path: 'plugin_type' },
-              rid: { transformer: getRid },
-              risk_factor: { path: 'risk_factor' },
-              stig_id: { transformer: getStig },
-            },
-            title: { transformer: getTitle },
-          },
-        ],
-        groups: [],
-        name: { transformer: getPolicyName },
-        sha256: '',
-        status: 'loaded',
-        summary: { transformer: getPolicyName },
-        supports: [],
-        title: { transformer: getPolicyName },
-        version: { transformer: getVersion },
-      },
-    ],
-    statistics: {},
-    version: HeimdallToolsVersion,
-  };
-
-  constructor(nessusJson: Record<string, unknown>, shouldIncludeRaw = false) {
-    super(nessusJson);
-    this.shouldIncludeRaw = shouldIncludeRaw;
+          groups: [],
+          name: { transformer: () => 'Nessus ' + this.policyName },
+          sha256: '',
+          status: 'loaded',
+          summary: { transformer: () => 'Nessus ' + this.policyName },
+          supports: [],
+          title: { transformer: () => 'Nessus ' + this.policyName },
+          version: { transformer: () => this.version },
+        },
+      ],
+      statistics: {},
+      version: HeimdallToolsVersion,
+    };
   }
 }
 export class NessusResults {
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   data: Record<string, unknown>;
+  parseHtml!: (input: unknown) => string;
+  policyName = '';
   shouldIncludeRaw: boolean;
+  version = '';
+
   constructor(nessusXml: string, shouldIncludeRaw = false) {
     this.data = parseXml(nessusXml);
     this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
   async toHdf(): Promise<ExecJSON.Execution | ExecJSON.Execution[]> {
-    parseHtml = await buildParseHtmlFunc();
+    this.parseHtml = await buildParseHtmlFunc();
 
     const results: ExecJSON.Execution[] = [];
-    policyName = _.get(
+    this.policyName = _.get(
       this.data,
       'NessusClientData_v2.Policy.policyName',
     ) as string;
@@ -171,7 +177,7 @@ export class NessusResults {
       'NessusClientData_v2.Policy.Preferences.ServerPreferences.preference',
     );
     if (Array.isArray(preference)) {
-      version
+      this.version
         = _.get(
           preference.find((element: Record<string, unknown>) => {
             return _.get(element, 'name') === 'sc_version';
@@ -185,7 +191,7 @@ export class NessusResults {
     );
     if (Array.isArray(reportHost)) {
       for (const element of reportHost) {
-        const entry = new NessusMapper(element, this.shouldIncludeRaw);
+        const entry = new NessusMapper(element, this.shouldIncludeRaw, this.parseHtml, this.policyName, this.version);
         if (this.customMapping !== undefined) {
           entry.setMappings(this.customMapping);
         }
@@ -196,6 +202,9 @@ export class NessusResults {
     const result = new NessusMapper(
       reportHost as Record<string, unknown>,
       this.shouldIncludeRaw,
+      this.parseHtml,
+      this.policyName,
+      this.version,
     );
     if (this.customMapping !== undefined) {
       result.setMappings(this.customMapping);
@@ -231,7 +240,7 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
   }
   return filteredControl;
 }
-function formatCodeDesc(item: unknown): string {
+function formatCodeDesc(item: unknown, parseHtml: (input: unknown) => string): string {
   const source = _.has(item, 'description') ? _.get(item, 'description') : _.get(item, 'plugin_output');
   return parseHtml(source || NA_PLUGIN_OUTPUT);
 }
@@ -246,11 +255,11 @@ function formatDesc(issue: unknown): string {
 function getCci(item: unknown): string[] {
   return _.has(item, COMPLIANCE_PATH) ? parseRef(_.get(item, COMPLIANCE_PATH), 'CCI') : [];
 }
-function getCheck(item: unknown): string {
+function getCheck(item: unknown, parseHtml: (input: unknown) => string): string {
   return _.has(item, COMPLIANCE_SOLUTION) ? parseHtml(_.get(item, COMPLIANCE_SOLUTION)) : '';
 }
 
-function getDesc(item: unknown): string {
+function getDesc(item: unknown, parseHtml: (input: unknown) => string): string {
   const source = _.has(item, COMPLIANCE_INFO) ? _.get(item, COMPLIANCE_INFO) : formatDesc(item);
   return parseHtml(source);
 }
@@ -283,9 +292,6 @@ function getImpact(item: unknown): number {
 
 function getNist(item: unknown): string[] {
   return _.has(item, COMPLIANCE_PATH) ? cciNistTag(_.get(item, COMPLIANCE_PATH)) : pluginNistTag(item);
-}
-function getPolicyName(): string {
-  return 'Nessus ' + policyName;
 }
 function getRid(item: unknown): string {
   return _.has(item, COMPLIANCE_PATH)
@@ -334,9 +340,6 @@ function getTitle(item: unknown): string {
   return _.has(item, COMPLIANCE_CHECK_NAME) ? (_.get(item, COMPLIANCE_CHECK_NAME)) : (_.get(item, 'pluginName') as unknown as string);
 }
 
-function getVersion(): string {
-  return version;
-}
 function parseRef(input: string, key: string): string[] {
   const matches = input.split(',').filter(element => element.startsWith(key));
   return matches.map(element => element.split('|', 2)[1]);
