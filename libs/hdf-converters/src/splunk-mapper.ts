@@ -52,6 +52,10 @@ export class SplunkMapper {
     logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   async createJob(query: string): Promise<string> {
     logger.debug(`Creating job for query: ${query}`);
     // Post to {host}/services/search/jobs endpoint to queue search job for given query
@@ -190,10 +194,6 @@ export class SplunkMapper {
       `Data received, consolidating payloads for ${executionData.length} items`,
     );
     return consolidatePayloads(executionData)[0];
-  }
-
-  private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async trackJob(job: string): Promise<void> {

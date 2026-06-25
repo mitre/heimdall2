@@ -138,6 +138,7 @@ export default defineConfig([
       'n/no-unsupported-features/es-syntax': 'off',
       'n/no-unsupported-features/node-builtins': 'off',
       'n/no-unpublished-import': 'off',
+      'perfectionist/sort-classes': 'off',
       'perfectionist/sort-modules': 'off',
       'unicorn/no-null': 'off',
       'unicorn/no-process-exit': 'off',
