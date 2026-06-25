@@ -1,7 +1,7 @@
-# ADR-003: CKLB (STIG Viewer 3 JSON Checklist) Converter — Forward, Reverse, and Shared Checklist Domain Layer
+# ADR-003: CKLB (STIG Viewer 3 JSON Checklist) Converter — Forward, Reverse, and CKL Adapter
 
-**Status:** Draft (reviewed by 10 independent agents across 2 rounds, 32 findings incorporated)
-**Date:** 2026-06-22
+**Status:** Draft (reviewed by 10 independent agents across 2 rounds + Amndeep7, wdower, ejaronne feedback incorporated)
+**Date:** 2026-06-22 (revised 2026-06-25)
 **Author:** Aaron Lippold
 **Resolves:** #5603 (epic), #7271 (schema mapping), #7733 (CKL↔CKLB conversion)
 **Branch:** `feature/attestation-editing-engine`
@@ -17,7 +17,7 @@
 | **CKL** | Checklist — DISA's legacy XML format used by STIG Viewer 2 for recording STIG review results. Uses statuses: Not A Finding, Open (Finding), Not Applicable, Not Reviewed. |
 | **CKLB** | Checklist JSON — DISA's newer JSON format introduced by STIG Viewer 3 (SV3). File extension `.cklb`. Uses statuses: `not_a_finding`, `open`, `not_applicable`, `not_reviewed`. |
 | **SV3** | STIG Viewer 3 — DISA's tool for reviewing STIGs and producing checklists |
-| **HDF / OHDF** | Heimdall Data Format / Outcome-based HDF — JSON output format from InSpec and other scanners |
+| **HDF / OHDF** | Heimdall Data Format / OASIS HDF — JSON output format from InSpec and other scanners |
 | **passthrough** | An extension point in the InSpec JSON report schema. Designed for reporters, plugins, and downstream tools to attach structured data to the report. A deliberate interoperability mechanism — not a dump for unknown data. |
 | **round-trip** | Import CKLB into Heimdall, review/attest/comment, export back to CKLB. The output must be valid CKLB that SV3 accepts with all user edits preserved. |
 | **patching** | The round-trip export strategy: start from the original CKLB (preserved in HDF passthrough), unconditionally overlay the 4 mutable fields from current HDF state, serialize. An unchanged value overlaid = the same value, so no dirty-tracking is needed for the overlay itself. |
@@ -38,69 +38,69 @@ DISA's STIG Viewer 3 produces `.cklb` files — a JSON-based checklist format th
 ### 1.2 Existing Issues
 
 - **#5603** (Amndeep, epic): "Support for CKLB checklist format." Includes a checklist item to "propose a modification to the CKLB format to include a field for pass-through data" — this ADR concludes that modification is **unnecessary** (see §4).
-- **#7271** (Emily Rodriguez): "Perform schema mapping between latest CKLB format and OHDF." Assigned, never completed. The mapping is provided in §3 of this ADR.
-- **#7733** (RCramm123): "SAFcli to convert between cklb and ckl files." Answered by the shared intermediate architecture in §5.
+- **#7271**: "Perform schema mapping between latest CKLB format and OHDF." Assigned, never completed. The mapping is provided in §3 of this ADR.
+- **#7733** (RCramm123): "SAFcli to convert between cklb and ckl files." Answered by the CKLB-as-canonical architecture in §5.
 
 ### 1.3 The CKLB Schema (SV3 v1.0)
 
 The schema defines a JSON structure with:
-- **Top level:** `title` (filename, **required**), `id` (UUID, **required**), `cklb_version` ("1.0"), `target_data`, `stigs[]`
-- **Per STIG:** `stig_name`, `display_name`, `stig_id`, `release_info`, `uuid`, `size`, `rules[]`
-- **Per rule (`stig_rule`):** 35+ fields including `group_id`, `rule_id`, `rule_version`, `severity`, `status`, `comments`, `finding_details`, `overrides`, `ccis[]`, `legacy_ids[]`, `group_tree[]`
+- **Top level:** `title` (filename, **required**), `id` (UUID, **required**), `cklb_version` ("1.0"), `target_data`, `stigs[]`, `active`, `mode`, `has_path`
+- **Per STIG:** `stig_name`, `display_name`, `stig_id`, `release_info`, `uuid`, `reference_identifier`, `size`, `rules[]`
+- **Per rule (`stig_rule`):** 35+ fields including `group_id`, `rule_id`, `rule_version`, `severity`, `status`, `comments`, `finding_details`, `overrides`, `ccis[]`, `legacy_ids[]`, `group_tree[]`, `createdAt`, `updatedAt`, `uuid`, `stig_uuid`, `group_id_src`, `rule_id_src`, `STIGUuid`
 - **`additionalProperties: false`** at every level — strict schema, no extension points
 - **No `required` fields on `stig_rule`** — all rule fields are optional. Converter must handle missing fields defensively.
+
+> **Note:** The field lists above must be verified against the actual `SV3_CKLB_1_0_JSON_SCHEMA.json` during implementation (Phase 1). Amndeep7 flagged missing fields used internally by SV3 — the generated types (§6.5) will be authoritative.
 
 **Schema bug:** `check_content` appears twice (lines 250 and 286). JSON forbids duplicate keys; parsers keep the last. Real CKLB files have a single field. Report upstream to DISA.
 
 ### 1.4 Key Insight
 
-**CKLB is structurally the existing CKL intermediate object with renamed fields and no XML layer.** Every piece of format-agnostic logic the CKL mapper already has — status mapping, severity↔impact, CCI↔NIST, finding-details parsing, structured-comment parsing, multi-STIG parent-profile synthesis — applies unchanged to CKLB. The difference is serialization: CKL needs JSONIX for XML; CKLB is `JSON.parse`/`JSON.stringify`.
+**CKLB is structurally the existing CKL intermediate object with renamed fields and no XML layer.** Every piece of format-agnostic logic the CKL mapper already has — status mapping, severity↔impact, CCI↔NIST, finding-details parsing, structured-comment parsing, multi-STIG parent-profile synthesis — applies unchanged to CKLB. The difference is serialization: CKL needs XML parsing; CKLB is `JSON.parse`/`JSON.stringify`.
+
+> *"This is what I've been saying this entire time. So instead of having to continue dealing with the intermediate object let's replace it outright with just CKLB instead."* — Amndeep7 (PR #8283 review, 2026-06-25)
+
+The logical conclusion: **CKLB should BE the canonical intermediate format.** The CKL mapper becomes a thin XML adapter that converts CKL XML to/from CKLB objects, then uses the shared CKLB→HDF path. No custom third intermediate needed.
 
 ---
 
 ## 2. Decision
 
-Build a CKLB converter (forward + reverse) by extracting the shared checklist domain logic from the existing CKL mapper into a common module, then adding a thin CKLB serialization layer. The extraction and the new converter are one body of work — not "DRY first, then build."
+Build a CKLB converter (forward + reverse) where **CKLB is the canonical checklist intermediate format**. The CKL mapper becomes a thin XML adapter that converts CKL XML ↔ CKLB objects, then delegates to the shared CKLB↔HDF conversion path. This eliminates the need for a custom intermediate type system or complex class extraction.
 
-### 2.1 Architecture: Shared Intermediate (Option B)
+### 2.1 Architecture: CKLB as Canonical Intermediate (Option D)
 
 ```
-                    ┌─────────────────────┐
-                    │  Shared Checklist    │
-                    │  Domain Logic        │
-                    │  (checklist-common/) │
-                    │                      │
-                    │  - Domain enums      │
-                    │  - StatusMapping     │
-                    │  - severity↔impact   │
-                    │  - CCI↔NIST          │
-                    │  - comment parsing   │
-                    │  - finding details   │
-                    │  - hdfSpecificData   │
-                    │  - ChecklistMapper   │
-                    │    (intermediate→HDF)│
-                    └──────┬───────┬───────┘
-                           │       │
-              ┌────────────┘       └────────────┐
-              │                                  │
-    ┌─────────▼──────────┐            ┌─────────▼──────────┐
-    │  CKL Mapper        │            │  CKLB Mapper       │
-    │  (existing)        │            │  (new)             │
-    │                    │            │                    │
-    │  XML ↔ JSONIX ↔    │            │  JSON.parse ↔      │
-    │  intermediate      │            │  intermediate      │
-    │                    │            │                    │
-    │  toCkl() (XML out) │            │  toCklb() (JSON)   │
-    └────────────────────┘            └────────────────────┘
+FORWARD (to HDF):
+
+  CKLB file ──→ JSON.parse ──→ CKLB object ──→ CKLB→HDF mapper ──→ HDF
+                                                    ▲
+  CKL file  ──→ XML parse  ──→ CKL→CKLB    ────────┘
+                (fast-xml-      adapter
+                 parser)       (field rename +
+                                restructure)
+
+REVERSE (from HDF):
+
+  HDF ──→ HDF→CKLB mapper ──→ CKLB object ──→ JSON.stringify ──→ CKLB file
+                                    │
+                                    └──→ CKLB→CKL  ──→ XML build ──→ CKL file
+                                          adapter      (fast-xml-
+                                         (field rename   parser or
+                                          + restructure)  JSONIX)
 ```
 
-**CKL↔CKLB conversion via shared intermediate:** `CKL→intermediate→CKLB` and `CKLB→intermediate→CKL`. This is lossless for the shared field set (status, severity, CCIs, comments, finding details, target data). **CKLB-native fields** (`display_name`, `group_tree`, `reference_identifier`, `createdAt`/`updatedAt`, structured `overrides`) have no CKL representation and are lost on CKLB→CKL — they survive only via HDF passthrough. Document this lossiness explicitly for users.
+**CKL↔CKLB conversion:** Falls out naturally — `CKL→adapter→CKLB object→JSON.stringify` and `CKLB object→adapter→CKL XML`. No HDF round-trip needed for format conversion.
 
-### 2.2 Why Not the Alternatives
+### 2.2 Why This Architecture (and Why Not the Alternatives)
 
-**Option A (fully standalone CKLB mapper):** Duplicates ~400 lines of validated severity/status/CCI/comment logic. Guarantees the two mappers drift over time. Violates DRY.
+**Option A (fully standalone CKLB mapper):** Duplicates ~400 lines of validated severity/status/CCI/comment logic. Guarantees the two mappers drift over time. Violates DRY. Rejected.
 
-**Option C (CKLB→CKL→HDF, convert internally):** Forces CKLB through XML's lossy `STIG_DATA` key-value representation. Discards CKLB-native fields. Strictly more lossy and more fragile.
+**Option B (custom shared intermediate extracted from CKL mapper):** Creates a THIRD format — neither CKL nor CKLB but a TypeScript abstraction of both. Requires extracting ~20 functions from `checklist-jsonix-converter.ts` into a shared base class, relocating JSONIX-coupled domain enums, and solving the instance-method extraction problem (instance methods on `ChecklistJsonixConverter` can't be moved without a shared base class refactor). Amndeep7 called this "a massive headache during the refactor process." The ADR's own §1.4 says CKLB already IS this intermediate — so why create a third one? Rejected.
+
+**Option C (CKLB→CKL→HDF, convert internally):** Forces CKLB through XML's lossy `STIG_DATA` key-value representation. Discards CKLB-native fields. Strictly more lossy and more fragile. Rejected.
+
+**Option D (CKLB as canonical intermediate — chosen):** CKLB IS the intermediate that Option B would have created. CKL becomes a thin adapter. No custom type system, no class extraction, no JSONIX dependency in the shared layer. CKL is DISA's legacy format; CKLB is the going-forward format. When CKL eventually sunsets, drop the XML adapter — the core stays clean.
 
 ### 2.3 Round-Trip Export: The Patching Approach
 
@@ -115,11 +115,17 @@ For CKLB files that were imported into Heimdall and are being exported back:
 
 **Multi-cycle invariant:** On reimport, the patched CKLB output becomes the next `passthrough.source`. Each cycle's overlay is idempotent (same HDF state → same CKLB values), so divergence does not accumulate.
 
-This is simpler and more reliable than reconstructing a CKLB from HDF fields. The full intermediate→CKLB path is only needed for "fresh export" (HDF that was never CKLB).
+This is simpler and more reliable than reconstructing a CKLB from HDF fields. The full HDF→CKLB path is only needed for "fresh export" (HDF that was never CKLB).
 
 ### 2.4 Relationship to BaseResults (ADR-002)
 
-The checklist mapper family (`ChecklistResults`, `CklbResults`) is **bidirectional** — both `toHdf()` and `toCkl()`/`toCklb()`. ADR-002's `BaseResults<TInput, TOutput>` is forward-only (`toHdf()`). The checklist family sits outside the BaseResults direction by design. This is not a conflict — BaseResults standardizes the 14 forward-only Results wrappers; checklist converters are a distinct pattern with their own shared intermediate.
+The checklist mapper family is **bidirectional** — both `toHdf()` and `toCklb()`/`toCkl()`. ADR-002's `BaseResults<TInput, TOutput>` is forward-only (`toHdf()`). The checklist family sits outside the BaseResults pattern by design. Under Option D this is even cleaner: the CKLB mapper has its own `CklbResults` entry point, the CKL adapter wraps it with XML handling. Neither needs `BaseResults`.
+
+### 2.5 Backward Compatibility
+
+> *"If someone loads an old OHDF derived from an old CKL, will the process be backward compatible?"* — ejaronne (PR #8283, 2026-06-25)
+
+**Yes.** Option D changes the *internal implementation* of the CKL mapper, not the HDF output format. Existing HDF files produced by the old CKL mapper import identically into Heimdall — they are valid HDF with CKL passthrough data. The CKL adapter produces the same HDF output as the current CKL mapper; only the internal pipeline changes (XML → CKLB object → HDF instead of XML → JSONIX intermediate → HDF). The CKL fixture regression tests (§6.7) enforce byte-for-byte output equivalence.
 
 ---
 
@@ -167,7 +173,7 @@ The checklist mapper family (`ChecklistResults`, `CklbResults`) is **bidirection
 | `severity` | `impact` + `tags.severity` | enum → float (§3.2) |
 | `status` | `results[].status` + `impact` | enum (§3.1) |
 | `ccis[]` | `tags.cci` + `tags.nist` | array + `CciNistTwoWayMapper.nistFilter` |
-| `legacy_ids[]` | `tags.Legacy_ID` | keep as array (see §8.7 for type mismatch) |
+| `legacy_ids[]` | `tags.Legacy_ID` | keep as array (see §5.5 for type handling) |
 | `weight` | `tags.weight` | direct |
 | `classification` | `tags.Class` | direct |
 | `group_title` | `tags.gtitle` | direct |
@@ -182,20 +188,22 @@ The checklist mapper family (`ChecklistResults`, `CklbResults`) is **bidirection
 | `ia_controls` | `tags.IA_Controls` | direct |
 | `overrides.severity` | `tags.severityoverride` + `tags.severityjustification` | restructure |
 | `third_party_tools` | `hdfSpecificData` blob | JSON parse/stringify (same as CKL) |
-| `check_content_ref` | `refs[]` | map `{name, href}` → HDF `refs` entry (cleaner than passthrough) |
+| `check_content_ref` | `refs[]` | map `{name, href}` → HDF `refs` entry |
 | `target_key` | `tags.TargetKey` | direct |
 | `stig_ref` | `tags.STIGRef` | direct |
 | `reference_identifier` (per-rule) | `tags.reference_identifier` | direct |
 
 ### 3.4 Fields with No HDF Equivalent (Passthrough)
 
-These fields are preserved in `passthrough.source` for round-trip fidelity:
+These fields are preserved in `passthrough.source` for round-trip fidelity. **All fields present in the CKLB schema must be brought through** — we do not selectively drop data.
 
 **Top level:** `title` (**required** — round-trip produces invalid CKLB without it), `id`, `cklb_version`, `active`, `mode`, `has_path`
 
 **Per STIG:** `display_name`, `uuid`, `reference_identifier` (STIG-level), `size`
 
-**Per rule:** `uuid` (used as primary round-trip matching key, §2.3), `stig_uuid`, `group_id_src`, `rule_id_src`, `group_tree[]`, `createdAt`, `updatedAt`, full `overrides` object (preserves future override keys beyond `severity`), `STIGUuid` (deprecated)
+**Per rule:** `uuid`, `stig_uuid`, `group_id_src`, `rule_id_src`, `group_tree[]`, `createdAt`, `updatedAt`, full `overrides` object (preserves future override keys beyond `severity`), `STIGUuid`
+
+> **Implementation note:** The generated CKLB types (§6.5) are authoritative for the complete field list. If the schema has fields not listed above, they MUST be brought through in passthrough — no silent drops.
 
 ### 3.5 Target Data Mapping
 
@@ -242,7 +250,7 @@ CKLB file → JSON.parse → map to HDF controls
                           store original in passthrough.source
                           add heimdall metadata via createHeimdallPassthrough('cklb', ...)
          → User works in Heimdall (attest, comment, review)
-         → Export: read passthrough.source, patch dirty-tracked fields only, JSON.stringify
+         → Export: read passthrough.source, patch mutable fields, JSON.stringify
          → Valid CKLB file (SV3 accepts it)
 ```
 
@@ -264,11 +272,24 @@ passthrough: {
     mode?: number,
     has_path?: boolean,
   },
-  raw?: CklbDocument,          // entire original (withRaw mode only)
+  raw?: CklbDocument,          // entire original (shouldIncludeRaw mode only)
 }
 ```
 
-### 4.1 `hdfSpecificData` Strategy
+### 4.1 Passthrough Key Contract (Cross-ADR Requirement)
+
+**CKL and CKLB use different passthrough keys. This is intentional and must not be unified.**
+
+| Source format | Passthrough key | Structure | Consumers |
+|---|---|---|---|
+| CKL (XML) | `passthrough.checklist` | `{asset: {...}, stigs: [{vulns: [...]}]}` | ExportCKLModal.vue (13 direct accesses), checklist-mapper.ts `hasChecklist` |
+| CKLB (JSON) | `passthrough.source` | `{target_data: {...}, stigs: [{rules: [...]}]}` | CKLB reverse mapper (§2.3 patching) |
+
+**Dispatch:** `passthrough.heimdall.sourceFormat` (set by `createHeimdallPassthrough`) tells export code which key to read. CKL export reads `passthrough.checklist`. CKLB export reads `passthrough.source`. No format checks shape-incompatible data.
+
+**Backward compatibility:** Existing HDF files with `passthrough.checklist` from the current CKL mapper continue working unchanged. The CKL adapter (1af.17) does NOT change the passthrough key for CKL-origin files — it keeps `passthrough.checklist` with the existing shape. Only CKLB-origin files use `passthrough.source`.
+
+### 4.2 `hdfSpecificData` Strategy
 
 The existing CKL mapper stores HDF-specific data (impact precision, critical/none severity, control code) as a JSON blob inside the `third_party_tools` string field. This allows HDF data to survive a CKL round-trip.
 
@@ -278,165 +299,142 @@ CKLB has the same `third_party_tools` field (string, per rule). **For v1, use th
 
 ---
 
-## 5. Shared Checklist Domain Layer
+## 5. Architecture Under Option D
 
-### 5.1 What Gets Extracted
+### 5.1 CKLB as Canonical — What This Means
 
-The shared logic lives in two CKL mapper files today. The table below shows **actual locations** (verified by code audit):
+Under Option D, CKLB is the canonical checklist format. The domain logic (status mapping, severity conversion, CCI→NIST, comment parsing, finding details parsing, hdfSpecificData handling) lives with the CKLB mapper. The CKL mapper becomes an adapter: it converts CKL XML ↔ CKLB objects and delegates all domain logic to the CKLB path.
 
-**From `checklist-jsonix-converter.ts`:**
+**This eliminates:**
+- The custom `ChecklistObject`/`ChecklistVuln`/`ChecklistStig` intermediate types
+- The `checklist-common/` shared extraction (Option B's ~sp:11 of risky refactoring)
+- The `ChecklistConverterBase` shared base class
+- JSONIX type coupling in shared logic (domain enums no longer need to be relocated)
+- Two separate `IMPACT_MAPPING` sources (consolidate into one in the CKLB mapper)
 
-| Item | Line(s) | Verdict |
-|---|---|---|
-| `StatusMapping` enum | :92 | SHAREABLE (pure enum) |
-| `Severity` enum | :109 | SHAREABLE |
-| `ChecklistObject`, `ChecklistStig`, `ChecklistVuln` types | :29-89 | NEEDS-MODIFICATION (see §5.4) |
-| `ChecklistMetadata`, `StigMetadata` types | :116-140 | NEEDS-MODIFICATION (uses JSONIX enums) |
-| `EmptyChecklistObject` | :142-200 | NEEDS-MODIFICATION (instantiates JSONIX enums) |
-| `IMPACT_MAPPING` (Map) | :101 | SHAREABLE |
-| `computeImpact` | :334 | SHAREABLE |
-| `addHdfControlSpecificData` | :258 | SHAREABLE |
-| `addHdfProfileSpecificData` | :311 | SHAREABLE |
-| `severityMap` | :690 | SHAREABLE |
-| `controlsToVulns` | :348 | SHAREABLE (but depends on helpers below) |
-| `getStatus` (HDF→checklist status) | :569 | SHAREABLE (name collides with checklist-mapper.ts:172 — disambiguate) |
-| `getComments` | :517 | SHAREABLE |
-| `getFindingDetails` | :538 | SHAREABLE |
-| `getReleaseInfo` | :554 | SHAREABLE |
-| `matchNistToCcis` | :682 | SHAREABLE |
-| `hdfToIntermediateObject` | :608 | SHAREABLE (needed for fresh CKLB export) |
-| `updateChecklistWithMetadata` | :209 | SHAREABLE |
-
-**From `checklist-mapper.ts`:**
-
-| Item | Line(s) | Verdict |
-|---|---|---|
-| `ImpactMapping` enum | :29 | SHAREABLE |
-| `transformImpact` | :138 | SHAREABLE |
-| `computeSeverity` | :113 | SHAREABLE |
-| `findSeverity` / `findSeverityOverride` | :72 / :92 | SHAREABLE |
-| `cciRef` / `nistTag` | :45 / :55 | SHAREABLE |
-| `parseComments` | :248 | SHAREABLE (**private** — must be exported) |
-| `parseFindingDetails` | :207 | SHAREABLE (**private** — must be exported) |
-| `getAttributes` | :291 | SHAREABLE |
-| `getHdfSpecificDataAttribute` | :297 | SHAREABLE |
-| `getChecklistObjectFromHdf` | :279 | SHAREABLE (already exported) |
-| `ChecklistMapper` (intermediate→HDF) | :423 | Move to shared (uses intermediate, not XML) |
-| `ChecklistResults` (CKL entry point) | :323 | STAYS in ckl-mapper (extends JSONIX converter) |
-
-**From `description-editing.ts` (already format-agnostic, no extraction needed):**
-`setControlDescription`, `syncChecklistVulnComments`, `buildEditsMapFromProfiles`, `prepareEvaluationForCklExport`, `sanitizeCklSectionMarkers`
-
-**Note:** `description-editing.ts` does NOT contain `parseComments` or `getComments` — those are in the files listed above. It does import `ChecklistVuln` from `ckl-mapper/`, making it a coupling point that needs updating when types move.
-
-**NOT extractable (JSONIX-coupled, stays in ckl-mapper):**
-`createVulns`, `expandHeader`, `expandVulns`, `fromIntermediateObject`, `getValueFromAttributeName`, `toIntermediateObject`, the `ChecklistJsonixConverter` class.
+**This preserves:**
+- All existing domain logic (status/severity/CCI/comment functions) — code moves, not rewrites
+- CKL fixture regression tests as the backward-compat gate
+- JSONIX for CKL XML output (reverse path only — see §5.4)
 
 ### 5.2 File Structure
 
 ```
 libs/hdf-converters/src/
-  checklist-common/                    # NEW — extracted shared logic
-    types.ts                           # ChecklistObject, ChecklistVuln, ChecklistStig, enums
-                                       # + domain enums (Assettype, Role, Techarea,
-                                       #   Severityoverride) relocated FROM checklistJsonix.ts
-    status-severity.ts                 # StatusMapping, ImpactMapping, severity↔impact,
-                                       # transformImpact, computeSeverity, findSeverity,
-                                       # computeImpact, getStatus
-    hdf-specific-data.ts               # addHdfControlSpecificData, addHdfProfileSpecificData
-    comment-finding-details.ts         # parseComments, parseFindingDetails, getComments,
-                                       # getFindingDetails, cciRef, nistTag, getAttributes,
-                                       # getHdfSpecificDataAttribute
-    intermediate-to-hdf.ts             # ChecklistMapper (moved from checklist-mapper.ts)
-    hdf-to-intermediate.ts             # controlsToVulns, severityMap, getStatus (reverse),
-                                       # matchNistToCcis, getReleaseInfo,
-                                       # hdfToIntermediateObject, getChecklistObjectFromHdf
-    index.ts                           # re-exports everything (backward compat)
-  ckl-mapper/                          # EXISTING — keeps only XML/JSONIX concerns
-    checklist-jsonix-converter.ts      # XML ↔ intermediate (JSONIX layer)
-    checklist-mapper.ts                # ChecklistResults (CKL entry point, delegates to shared)
-    checklist-metadata-utils.ts        # CKL-specific metadata validation
-    checklistJsonix.ts                 # JSONIX type definitions
-                                       # (re-imports domain enums from checklist-common/)
-    jsonixMapping.ts                   # JSONIX config
-  cklb-mapper/                         # NEW
-    cklb-types.ts                      # TypeScript types from CKLB JSON schema
-    cklb-converter.ts                  # CKLB JSON ↔ intermediate
-    cklb-mapper.ts                     # CklbResults entry point: toHdf() + toCklb()
+  cklb-mapper/                         # NEW — canonical checklist converter
+    cklb-types.ts                      # Generated from CKLB JSON schema (§6.5)
+    cklb-mapper.ts                     # CklbMapper: CKLB object ↔ HDF conversion
+                                       # Contains all domain logic:
+                                       #   status mapping, severity↔impact,
+                                       #   CCI↔NIST, comment parsing,
+                                       #   finding details, hdfSpecificData
+    cklb-results.ts                    # CklbResults: entry point (toHdf + toCklb)
+    index.ts                           # re-exports
+  ckl-mapper/                          # EXISTING — becomes a thin XML adapter
+    ckl-to-cklb-adapter.ts             # NEW: CKL XML → CKLB object
+                                       #   fast-xml-parser for XML reading
+                                       #   field rename + STIG_DATA restructure
+    cklb-to-ckl-adapter.ts             # NEW: CKLB object → CKL XML
+                                       #   JSONIX or fast-xml-parser builder
+    checklist-mapper.ts                # MODIFIED: delegates to cklb-mapper
+    checklist-jsonix-converter.ts      # RETAINED for CKL XML output (Phase 2 removal candidate)
+    checklistJsonix.ts                 # RETAINED for CKL XML output
+    jsonixMapping.ts                   # RETAINED for CKL XML output
 ```
 
-### 5.3 Migration Discipline
+### 5.3 Domain Logic Migration
 
-The extraction moves functions out of `ckl-mapper/` into `checklist-common/` with re-exports so all existing imports keep working. CKL behavior must be **byte-for-byte unchanged** — the existing CKL test fixtures are the regression gate. This is an extract, not a rewrite.
+The domain logic currently lives in two CKL mapper files. Under Option D, it moves to `cklb-mapper/` where it operates on CKLB types directly:
 
-**External call sites are minimal:** `ChecklistResults` is imported in `apps/frontend/src/store/report_intake.ts:155`, `ExportCKLModal.vue`, and tests — all via `index.ts` `export *`. Re-exports preserve them.
+**From `checklist-jsonix-converter.ts` → `cklb-mapper.ts`:**
+- `StatusMapping` enum → operates on CKLB snake_case statuses directly
+- `IMPACT_MAPPING` → consolidated with `ImpactMapping` from checklist-mapper.ts
+- `computeImpact`, `addHdfControlSpecificData`, `addHdfProfileSpecificData`
+- `controlsToVulns` → `controlsToRules` (CKLB naming)
+- `getComments`, `getFindingDetails`, `getStatus` (reverse)
+- `severityMap`, `matchNistToCcis`, `getReleaseInfo`
+- `hdfToIntermediateObject` → `hdfToCklbObject`
+- `updateChecklistWithMetadata`
 
-### 5.4 The JSONIX Type Coupling (Critical Extraction Risk)
+**From `checklist-mapper.ts` → `cklb-mapper.ts`:**
+- `transformImpact`, `computeSeverity`, `findSeverity`/`findSeverityOverride`
+- `cciRef`, `nistTag`
+- `parseComments`, `parseFindingDetails`, `checkMessage`
+- `getAttributes`, `getHdfSpecificDataAttribute`
+- `getChecklistObjectFromHdf` → `getCklbObjectFromHdf`
+- `ChecklistMapper` → core logic absorbed into `CklbMapper`
+- Module-level regex constants, `CCI_NIST_TWO_WAY_MAPPER` singleton
 
-The shared intermediate types are currently **defined in terms of JSONIX types** from `checklistJsonix.ts`:
-- `ChecklistVuln = Omit<Vuln, 'status' | 'stigdata'> & {...}` — extends the JSONIX `Vuln` type
-- `ChecklistMetadata` uses JSONIX enums: `Assettype`, `Role`, `Techarea`
-- `EmptyChecklistObject` instantiates JSONIX enum values: `Assettype.Computing`, `Role.None`, `Techarea.Empty`, `Severityoverride.Empty`
+**Stays in `ckl-mapper/`:**
+- `ChecklistJsonixConverter` class (XML↔JSONIX — only for CKL reverse export)
+- JSONIX type definitions, mapping config
+- `ChecklistResults` — modified to: parse CKL XML → adapter → CKLB object → delegate to `CklbMapper`
 
-Moving these to `checklist-common/` while leaving `checklistJsonix.ts` in `ckl-mapper/` would create an **inverted dependency** (shared-layer → CKL-layer).
+**Already format-agnostic (no move needed):**
+- `description-editing.ts` — `setControlDescription`, `syncChecklistVulnComments`, etc.
+- `CciNistMapping.ts` — already standalone
 
-**Fix:** Relocate the domain enums (`Assettype`, `Role`, `Techarea`, `Severityoverride`), the base `Vuln` shape, the `Asset` type, and their transitive dependencies (`Status`, `StigdatumElement`, `Vulnattribute`) into `checklist-common/types.ts`. Have `checklistJsonix.ts` re-import/alias them. Constraint: `checklist-common/types.ts` must import NOTHING from `ckl-mapper/` — enforce this with an ESLint `no-restricted-imports` rule or a build test.
+### 5.4 CKL XML Adapter Design
 
-### 5.4a The Instance-Method Problem (Critical Extraction Challenge)
+#### 5.4.1 Forward: CKL XML → CKLB Object
 
-Many "shareable" functions in `checklist-jsonix-converter.ts` are **instance methods** on the `ChecklistJsonixConverter` class (which §5.1 says "NOT extractable, stays in ckl-mapper"). `controlsToVulns`, `computeImpact`, `getComments`, `getFindingDetails`, `severityMap`, `getStatus`, `matchNistToCcis`, `hdfToIntermediateObject` are all `this.`-coupled — `controlsToVulns` calls `this.computeImpact`, `this.getComments`, `this.getFindingDetails`, `this.severityMap`, `this.getStatus`, `this.matchNistToCcis`.
+The CKL XML structure uses `<STIG_DATA>` key-value pairs for rule attributes, while CKLB uses direct JSON properties. The adapter handles this structural transformation:
 
-You cannot "move" an instance method out of a class — that contradicts §5.3's "extract, not rewrite." Two options:
+```
+CKL XML:
+  <VULN>
+    <STIG_DATA>
+      <VULN_ATTRIBUTE>Vuln_Num</VULN_ATTRIBUTE>
+      <ATTRIBUTE_DATA>V-257777</ATTRIBUTE_DATA>
+    </STIG_DATA>
+    <STATUS>NotAFinding</STATUS>
+  </VULN>
 
-**Option 1 (recommended): Extract a shared base class `ChecklistConverterBase` in `checklist-common/`.** Move the format-agnostic methods there. Both `ChecklistJsonixConverter` (CKL) and the new CKLB converter extend it. CKL behavior is byte-for-byte unchanged because the method bodies are identical — just the class hierarchy changes. This is the safest path.
+CKLB Object:
+  { group_id: "V-257777", status: "not_a_finding" }
+```
 
-**Option 2: Refactor to parameterized free functions.** Convert each `this.` method to a standalone function that takes its dependencies as parameters. More invasive, breaks more call sites, but produces a cleaner API. Not recommended for initial extraction — do this as a follow-up refactor if Option 1 proves constraining.
+**Implementation:**
+1. Parse CKL XML with `fast-xml-parser` (same library as XCCDF, BurpSuite, and 30+ other mappers)
+2. Extract `<ASSET>` → `target_data` (field rename map)
+3. Extract `<STIG_INFO>/<SI_DATA>` key-value pairs → STIG header fields
+4. Extract `<VULN>/<STIG_DATA>` key-value pairs → rule direct properties
+5. Map status vocabulary: `NotAFinding` → `not_a_finding`, `Open` → `open`, etc.
+6. Map `<SEVERITY_OVERRIDE>` + `<SEVERITY_JUSTIFICATION>` → `overrides.severity`
+7. Output: valid CKLB object (passes CKLB schema validation)
 
-### 5.4b Additional Missing Extraction Items
+**Why fast-xml-parser, not JSONIX:** JSONIX is only used by CKL — every other XML mapper uses fast-xml-parser. The `isArray` option handles the arrays-vs-single-element quirk. This eliminates a dependency that only one mapper uses.
 
-The following were identified by code audit as needed but missing from §5.1:
-- **`Asset` type** (jsonix-converter.ts:35) — `ChecklistAsset = Asset` inside `ChecklistObject` depends on JSONIX. Must relocate with domain enums.
-- **`getStatus`** (checklist-mapper.ts:172, string→ControlResultStatus) — distinct from the reverse `getStatus` in jsonix-converter.ts:569. CKLB forward mapper needs it. Rename on extraction to `parseHdfStatus` to disambiguate.
-- **`checkMessage`** (checklist-mapper.ts:192) — helper called by `parseFindingDetails`. Must move with it.
-- **Module-level regex constants** (`FINDING_DETAILS_RE`, `COMMENT_SECTION_SPLIT_RE`, `COMMENT_SECTION_PARSE_RE` at checklist-mapper.ts:36-38) and `CCI_NIST_TWO_WAY_MAPPER` singleton (:35) — move with their consumers.
-- **Consolidate `IMPACT_MAPPING`** (jsonix-converter.ts:101, 5 entries incl critical/none) and `ImpactMapping` enum (checklist-mapper.ts:29, 3 entries) into **one source** in `status-severity.ts`. Two separate impact maps is a DRY violation within the shared layer itself.
+#### 5.4.2 Reverse: CKLB Object → CKL XML
 
-### 5.5 Status Vocabulary Normalization
+For HDF→CKL export, the CKLB object must be serialized as CKL XML. Two options:
+
+**Option 1 (Phase 1 — retain JSONIX for reverse):** Keep the existing `ChecklistJsonixConverter` for XML output. The CKLB→CKL adapter maps CKLB fields to the JSONIX intermediate, then JSONIX serializes to XML. Lower risk — the XML output is unchanged.
+
+**Option 2 (Phase 2 — fast-xml-parser builder for reverse):** Replace JSONIX entirely. Build CKL XML from a template using fast-xml-parser's `XMLBuilder`. Higher risk but eliminates the JSONIX dependency completely.
+
+**Decision:** Option 1 for the main CKLB epic (cards 1af.14–1af.17). Option 2 is carded as follow-on **1af.18** (sp:5, P2) — replaces JSONIX with fast-xml-parser for both CKL forward (XMLParser) and reverse (XMLBuilder), removes `@mitre/jsonix` dependency entirely. CKL fixture regression tests gate correctness in both phases. This is a dependency cleanup, not an architecture change — JSONIX is already isolated inside the CKL adapter by the time 1af.18 runs.
+
+### 5.5 Status Vocabulary and Type Handling
 
 CKL and CKLB use the same DISA vocabulary — both come from the same agency. The only difference is casing:
 
 | CKL (XML) | CKLB (JSON) | Meaning |
 |-----------|-------------|---------|
-| `NotAFinding` | `not_a_finding` | Passed (not a finding) |
-| `Open` | `open` | Failed (it IS a finding) |
+| `NotAFinding` | `not_a_finding` | Passed |
+| `Open` | `open` | Failed |
 | `Not_Applicable` | `not_applicable` | Not Applicable |
 | `Not_Reviewed` | `not_reviewed` | Not Reviewed |
 
-**Important:** The shared `StatusMapping` enum uses HDF vocabulary as VALUES, not CKL vocabulary:
-```typescript
-enum StatusMapping {
-  Not_Applicable = 'Not Applicable',  // VALUE is HDF display string
-  Not_Reviewed = 'Not Reviewed',
-  NotAFinding = 'Passed',             // KEY is CKL-style, VALUE is HDF-style
-  Open = 'Failed',
-}
-```
+The CKLB mapper uses CKLB vocabulary natively. The CKL adapter translates on entry/exit.
 
-So there are THREE vocabularies: CKL keys (`NotAFinding`), CKLB strings (`not_a_finding`), and HDF values (`Passed`). The CKLB serializer maps HDF values to CKLB strings:
-- `'Passed'` → `'not_a_finding'`
-- `'Failed'` → `'open'`
-- `'Not Applicable'` → `'not_applicable'`
-- `'Not Reviewed'` → `'not_reviewed'`
+**`legacy_ids` type handling:** CKL's `legacyId` is `string` (`;`-joined). CKLB's `legacy_ids` is `string[]`. The CKLB mapper normalizes to `string[]` internally. The CKL adapter splits by separator on input and re-joins on output.
 
-Tests should verify the full roundtrip: CKLB snake_case → intermediate → HDF → intermediate → CKLB snake_case.
+### 5.6 Migration Discipline
 
-### 5.6 `legacy_ids` Type Mismatch
+The CKL adapter produces the same HDF output as the current CKL mapper — the existing CKL test fixtures are the regression gate. This is a pipeline change, not a behavior change.
 
-CKL's `ChecklistVuln.legacyId` is `string` (`;`-joined). CKLB's `legacy_ids` is `string[]`. Options:
-- **Widen intermediate to `string | string[]`** and handle both in shared logic
-- **Normalize to array in intermediate** — CKL import splits by separator, CKLB passes through directly. CKL export re-joins. CKLB export uses array.
-
-Recommend normalize to array — cleaner, no conditional types. CKL's `expandVulns` already splits by separator (jsonix-converter.ts SEPARATOR_RE).
+**External call sites are minimal:** `ChecklistResults` is imported in `apps/frontend/src/store/report_intake.ts`, `ExportCKLModal.vue`, and tests — all via `index.ts` `export *`. Re-exports preserve them.
 
 ---
 
@@ -469,7 +467,7 @@ DISA versions the CKLB schema via the `cklb_version` field (`const: "1.0"` in th
 - Register in `libs/hdf-converters/src/index.ts`: `CklbResults`, `CklbMapper`
 - Register `createHeimdallPassthrough('cklb', ...)` in the mapper
 - SAF CLI commands: `cklb2hdf`, `hdf2cklb`
-- Composed commands: `ckl2cklb` (CKL→intermediate→CKLB), `cklb2ckl` (CKLB→intermediate→CKL)
+- Composed commands: `ckl2cklb` (CKL→adapter→CKLB object→serialize), `cklb2ckl` (CKLB→adapter→CKL XML)
 
 ### 6.4 Error Strategy
 
@@ -482,7 +480,7 @@ DISA versions the CKLB schema via the `cklb_version` field (`const: "1.0"` in th
 
 ### 6.5 CKLB Type Generation
 
-Generate TypeScript types from the CKLB JSON schema using `json-schema-to-typescript` (or `quicktype`). Do NOT hand-type the 35+ field interface — hand-typed types drift from the schema silently. The CKL side already generates types from XSD via JSONIX — there is in-repo precedent.
+Generate TypeScript types from the CKLB JSON schema using `json-schema-to-typescript` (or `quicktype`). Do NOT hand-type the 35+ field interface — hand-typed types drift from the schema silently. The generated types ARE the canonical intermediate types under Option D.
 
 ```bash
 npx json-schema-to-typescript SV3_CKLB_1_0_JSON_SCHEMA.json -o src/cklb-mapper/cklb-types.ts
@@ -490,36 +488,34 @@ npx json-schema-to-typescript SV3_CKLB_1_0_JSON_SCHEMA.json -o src/cklb-mapper/c
 
 Check the generated file into source control. Regenerate when DISA publishes a new schema version. Handle the duplicate `check_content` key (§1.3) by pre-processing the schema before generation.
 
+> **Regen tool** (ADR-002): The fixture regeneration tool at `libs/hdf-converters/scripts/regenerate-fixtures.mts` supports `--validate`, `--dry-run`, `--revert`, and size guards for safe mapper refactoring. Add CKLB fixtures to the registry. Use the same `omitVersions + toEqual` fixture-comparison pattern as all other mappers.
+
 ### 6.6 DRY Integration
 
-- **`DEFAULT_PROFILE_FIELDS`** (ADR-002): Wire into `ChecklistMapper` (shared intermediate→HDF) and `CklbMapper`. The current `ChecklistMapper` hand-declares `attributes/groups/sha256/status/supports` — it is NOT in ADR-002's list of wired mappers and should be.
+- **`DEFAULT_PROFILE_FIELDS`** (ADR-002): Wire into `CklbMapper` and the CKL adapter's HDF output path.
 - **`createHeimdallPassthrough('cklb', ...)`** (ADR-002 / 9go.52): Use the standard passthrough helper.
-- **Regen tool** (ADR-002): Add CKLB fixtures to the `regenerate-fixtures.mts` registry. Use the same `omitVersions + toEqual` fixture-comparison pattern as all other mappers.
+- **Regen tool** (ADR-002): Add CKLB fixtures to the `regenerate-fixtures.mts` registry.
 
 ### 6.7 Testing Strategy
 
 - **Fixture-based regression tests** (primary): CKLB→HDF output compared against known-good baseline via `omitVersions + toEqual`. Same pattern as CKL and all other mappers.
+- **CKL regression gate**: After every change to the CKL adapter or domain logic, ALL existing CKL fixture tests must pass unchanged. This enforces §2.5 backward compatibility.
 - **Property-based invariant tests**: "every CKLB status maps to a valid HDF status," "every severity maps to a valid impact," "round-trip preserves all 4 mutable fields." These catch enum/mapping gaps fixtures won't.
 - **Output schema validation**: Forward mapper output validates against `exec-json.json`. Reverse mapper output validates against `SV3_CKLB_1_0_JSON_SCHEMA.json`.
-- **CKL regression gate**: After every shared-layer extraction step, ALL existing CKL fixture tests must pass unchanged. This is the §5.3 byte-for-byte invariant.
 
 ---
 
-## 7. Integration with Attestation Engine (ADR-001)
+## 7. Attestation Engine Integration (ADR-001)
 
-The CKLB converter integrates with the attestation engine (9go epic) at several points:
+> **Scope note (per Amndeep7 review):** The CKLB converter is a standalone feature. Attestation integration is wired through the existing export infrastructure (ADR-001 §5.4) and does not add CKLB-specific complexity. This section documents the integration points, not the attestation design — see ADR-001 for that.
 
 1. **Import:** CKLB `comments` and `finding_details` fields populate the same HDF `descriptions` that the attestation engine reads. The structured comment format (`CAVEAT :: text\nCOMMENTS :: text`) is identical to CKL — reuse `parseComments`.
 
-2. **Attestation on export:** When exporting HDF back to CKLB, `addAttestationToHDF()` applies attestation records to a clone (ADR-001 §5.4), then the patching approach writes the attested status and comments back into the CKLB. **Explicit card needed:** ADR-001 §5.4.2c lists CKL export (9go.27) but not CKLB. Add a dedicated card for "CKLB export with attestations applied" to prevent this falling through the cracks.
+2. **Export with attestations:** Same clone→apply→serialize pattern as all other formats (ADR-001 §5.4.2c). `addAttestationToHDF(clone, attestations)` runs before `toCklb()` serialization. **Needs a dedicated card** — ADR-001 §5.4.2c lists CKL (9go.27) but not CKLB.
 
-3. **CKL round-trip through CKLB:** A user can import CKL → work in Heimdall → export as CKLB (for SV3). The shared intermediate makes this lossless for mapped fields; CKLB-native fields are synthesized/empty.
+3. **Source format badge:** `passthrough.heimdall.sourceFormat === 'cklb'` drives the format badge (9go.48/9go.52).
 
-4. **Source format badge (9go.48):** `passthrough.heimdall.sourceFormat === 'cklb'` drives the format badge display, same as all other mappers (9go.52).
-
-5. **Attestation status gap (ADR-001 dependency):** ADR-001's `ControlAttestationStatus` enum has only `passed | failed`. ISSOs routinely mark NR controls as Not Applicable ("system lacks this component"). CKLB has `not_applicable` as a first-class status. An ISSO attesting NR→N/A through the attestation engine cannot be represented in the current enum. ADR-001 §3.1.3 #1 flags this but does not resolve it. **This must be resolved before CKLB attestation export works correctly.** Options: extend the enum to include `not_applicable`, or handle the mapping in the export layer.
-
-6. **Finding details preservation on export:** The patching approach preserves the original `finding_details` verbatim from `passthrough.source` unless the ISSO edited it. Export uses the preserved passthrough value, NOT a regenerated parse. This is important for large scan-output blobs — a parse→regenerate path would be lossy.
+4. **`ControlAttestationStatus` gap:** The enum has only `passed | failed`. CKLB has `not_applicable` as a first-class status. An ISSO attesting NR→N/A cannot be represented. This must be resolved in ADR-001 before CKLB attestation export works correctly.
 
 ---
 
@@ -543,7 +539,7 @@ When `size > rules.length`, the STIG was cherry-picked (not all rules included).
 
 ### 8.5 Free-Text Enums
 
-CKLB uses free strings for `role`, `technology_area`, `target_type` where CKL has fixed enums. On CKLB→intermediate: validate against CKL enum values, use if match, else passthrough as-is. On intermediate→CKLB: write directly (CKLB accepts any string). Never silently coerce.
+CKLB uses free strings for `role`, `technology_area`, `target_type` where CKL has fixed enums. On CKLB→HDF: validate against CKL enum values, use if match, else passthrough as-is. On HDF→CKLB: write directly (CKLB accepts any string). Never silently coerce.
 
 ### 8.6 `unknown` Severity + `open` Status Interaction
 
@@ -551,7 +547,7 @@ An `open` rule with `severity: unknown` must NOT get impact 0 — that renders a
 
 ### 8.7 `legacy_ids` Array vs String
 
-See §5.6. The intermediate normalizes to `string[]`. CKL import splits by separator. CKLB passes through directly. CKL export re-joins with `; `. CKLB export uses the array.
+See §5.5. The CKLB mapper normalizes to `string[]`. CKL adapter splits by separator on input. CKL adapter re-joins with `; ` on output. CKLB uses the array directly.
 
 ### 8.8 Empty/Missing Rule Fields
 
@@ -566,27 +562,11 @@ CKLB `stig_rule` has no `required` fields. A rule with no `status` defaults to `
 - Per STIG (6 required): `stig_name` (from `profile.title`), `display_name` (abbreviated), `stig_id` (from `profile.name`), `release_info` (from `profile.version` or synthesized), `uuid` (generate UUIDv4), `size` (= rules.length)
 - Per rule: `uuid` (generate UUIDv4), `group_id` (from `control.id`), `rule_id` (from `tags.rid` or `control.id`), `rule_version` (from `tags.stig_id` or `control.id`)
 
-**All HDF sources map cleanly:**
-
-| Source | control.id → group_id | Has CCIs? | Has NIST? | Status? |
-|---|---|---|---|---|
-| CKL (STIG) | `V-230221` | ✓ | ✓ | ✓ |
-| XCCDF (OpenSCAP) | `xccdf_mil.disa...SV-204393...` | ✓ | ✓ | ✓ |
-| CIS AWS Foundations | `1.1` | ✓ | ✓ | ✓ |
-| AWS Security Hub | `Config.1`, `S3.2` | ~ | ✓ | ✓ |
-| Checkov (Terraform) | `CKV_AWS_41` | ✓ | ✓ | ✓ |
-| ScoutSuite (AWS) | `cloudtrail-no-data-logging` | ~ | ✓ | ✓ |
-| Nikto (web) | `999986` | ✓ | ✓ | ✓ |
-| Snyk (dependency) | `SNYK-JS-ADMZIP-1065796` | ✓ | ✓ | ✓ |
-| Twistlock (container) | `CVE-2021-43529` | ✓ | ✓ | ✓ |
-
-SV3 behavior with non-STIG IDs should be verified by test, but the schema imposes no constraints on ID format.
-
-**The `ckl2cklb` composed command** uses this same synthesis path for CKLB-native fields that CKL doesn't carry (`display_name`, `uuid`, `size`, `group_tree`). Add a JSON-schema validation test on fresh output.
+**The `ckl2cklb` composed command** uses the CKL→adapter→CKLB object path directly. No HDF round-trip. CKLB-native fields (`display_name`, `uuid`, `group_tree`) are synthesized for CKL-origin data. Add a JSON-schema validation test on output.
 
 ### 8.10 CKLB Round-Trip Detection (Deferred)
 
-ADR-001's CKL round-trip detection (reimport after external SV3 editing, detect status/comment changes, create attestation records) is deferred to Phase 2 (ADR-001 card J). **CKLB round-trip detection is similarly deferred.** In v1, when a user reimports a CKLB that was edited in SV3, the edits import as raw description text with no attestation records and no attribution. The multi-reviewer SV3 workflow silently loses audit trail on the SV3 leg. This is acceptable for MVP but must be addressed in Phase 2.
+ADR-001's CKL round-trip detection (reimport after external SV3 editing, detect status/comment changes, create attestation records) is deferred to Phase 2 (ADR-001 card J). **CKLB round-trip detection is similarly deferred.** In v1, when a user reimports a CKLB that was edited in SV3, the edits import as raw description text with no attestation records and no attribution. This is acceptable for MVP but must be addressed in Phase 2.
 
 ### 8.11 Attestation `explanation` / `frequency` in CKLB
 
@@ -602,22 +582,24 @@ Attestation structured metadata (`explanation`, `frequency`, `updated_by`) has n
 ### 9.1 Positive
 
 - Heimdall supports both CKL and CKLB — covers legacy and modern DISA workflows
-- Round-trip editing with STIG Viewer 3 via the patching approach — field-level fidelity for unmodified rules
-- CKL↔CKLB conversion via shared intermediate — lossless for the shared field set (status, severity, CCIs, comments, finding details, target data). CKLB-native fields (`display_name`, `group_tree`, timestamps) are lost on CKLB→CKL — documented.
-- Shared domain layer eliminates ~400 lines of would-be duplication
-- No DISA schema modification needed — passthrough is HDF-side
-- Attestation engine (ADR-001) works with CKLB for all mapped fields
-- CKLB is simpler than CKL (no XML/JSONIX) — the converter will be smaller and faster
+- CKLB as canonical intermediate eliminates custom type system — uses the official DISA format
+- CKL becomes a thin XML adapter — simpler, less code, lower risk than class extraction
+- No JSONIX dependency in the CKLB path — standard `JSON.parse`/`JSON.stringify`
+- Round-trip editing with STIG Viewer 3 via the patching approach
+- CKL↔CKLB conversion falls out of the architecture — no HDF round-trip needed
+- Generated types from DISA schema — no hand-typed drift
+- Backward compatible — existing CKL→HDF users see identical output
+- When CKL eventually sunsets, drop the XML adapter — the core stays clean
+- Aligns with DISA's direction (CKLB is the going-forward format)
 
 ### 9.2 Negative
 
-- Extraction is a real disentangle of two files — `checklist-mapper.ts` has standalone free functions (clean lift), but `checklist-jsonix-converter.ts` has instance methods on a class (requires shared base class refactor, not just a move). Mitigated by CKL fixture regression gate.
-- Domain enum + `Asset` type + base `Vuln` shape relocation from JSONIX types into shared layer requires updating `checklistJsonix.ts` imports and verifying no circular dependencies
-- Two `IMPACT_MAPPING` sources must be consolidated during extraction (existing DRY violation)
-- `third_party_tools` hijack for `hdfSpecificData` is carried forward from CKL — pragmatic but not ideal
+- CKL adapter must handle `STIG_DATA` key-value pair extraction (structural, not just rename)
+- CKL reverse path retains JSONIX dependency in Phase 1 (can be removed in Phase 2)
+- `third_party_tools` hijack for `hdfSpecificData` is carried forward from CKL
 - `unknown` severity + `open` status interaction requires conditional mapping logic
-- `ControlAttestationStatus` enum lacks `not_applicable` — blocks a core ISSO attestation workflow until ADR-001 addresses it (needs dedicated card)
-- Standalone `.cklb` file does not carry full attestation metadata (frequency, TTL, attribution) — annotation bundle must accompany it for complete audit trail
+- `ControlAttestationStatus` enum lacks `not_applicable` — blocks a core ISSO workflow (ADR-001 scope)
+- Standalone `.cklb` file does not carry full attestation metadata — annotation bundle must accompany it
 
 ### 9.3 What's NOT in Scope
 
@@ -628,6 +610,8 @@ Attestation structured metadata (`explanation`, `frequency`, `updated_by`) has n
 - CKLB round-trip detection / reimport-and-diff (deferred to Phase 2, §8.10)
 - Target data editing in the GUI (read-only in passthrough for v1)
 - Extending `ControlAttestationStatus` with `not_applicable` (ADR-001 scope)
+- Full JSONIX removal from CKL reverse path (Phase 2 candidate)
+- Attestation engine design (ADR-001 scope — this ADR documents integration points only)
 
 ---
 
@@ -637,87 +621,79 @@ Attestation structured metadata (`explanation`, `frequency`, `updated_by`) has n
 
 | Prerequisite | Blocks |
 |---|---|
-| SAF team decision: `unknown` severity → impact value | Phase 3+ (forward mapper severity logic) |
-| SAF team decision: `hdfSpecificData` storage (third_party_tools vs passthrough) | Phase 4+ (reverse mapper) |
-| Obtain real `.cklb` fixture files from STIG Viewer 3 | Phase 3+ (forward mapper tests) |
+| SAF team decision: `unknown` severity → impact value | Phase 3 (forward mapper severity logic) |
+| SAF team decision: `hdfSpecificData` storage (third_party_tools vs passthrough) | Phase 4 (reverse mapper) |
+| Obtain real `.cklb` fixture files from STIG Viewer 3 | Phase 3 (forward mapper tests) |
 
-Phase 1 (extraction) and Phase 2 (types) need none of these and can start immediately.
+Phase 1 (types) needs none of these and can start immediately. Phase 3 (CKL adapter) does not need `.cklb` fixtures.
 
 ### Implementation
 
 | Phase | Scope | Depends on | Est | Notes |
 |---|---|---|---|---|
-| 1a | Relocate domain enums + `Asset` + base `Vuln` shape + transitive deps (`Status`, `StigdatumElement`, `Vulnattribute`) from `checklistJsonix.ts` to `checklist-common/types.ts`. Update `checklistJsonix.ts` to re-import. Verify CKL fixtures. | — | sp:3 | Resolves §5.4. Smallest move, highest risk. |
-| 1b-i | Extract free functions from `checklist-mapper.ts` into `checklist-common/`: `parseComments`, `parseFindingDetails`, `checkMessage`, `transformImpact`, `computeSeverity`, `findSeverity`/`findSeverityOverride`, `cciRef`/`nistTag`, `getAttributes`, `getHdfSpecificDataAttribute`, `getChecklistObjectFromHdf`, regex constants, CCI_NIST_TWO_WAY_MAPPER. Export previously-private functions. Add re-exports. Verify CKL fixtures. | 1a | sp:3 | True lift — these are standalone functions. |
-| 1b-ii | Extract `ChecklistJsonixConverter` instance methods into shared `ChecklistConverterBase` base class in `checklist-common/`. Both CKL converter and CKLB converter will extend this base. Methods: `controlsToVulns`, `computeImpact`, `getComments`, `getFindingDetails`, `severityMap`, `getStatus`, `matchNistToCcis`, `hdfToIntermediateObject`, `addHdfControlSpecificData`, `addHdfProfileSpecificData`, `getReleaseInfo`, `updateChecklistWithMetadata`. Consolidate `IMPACT_MAPPING` + `ImpactMapping` into one source. Verify CKL fixtures. | 1a | sp:5 | Heaviest extraction — class refactor, not just move. |
-| 1c | Build status vocabulary normalization: CKLB snake_case ↔ `StatusMapping` enum ↔ HDF display strings. Dedicated tests covering all 3 vocabularies (§5.5). Wire `DEFAULT_PROFILE_FIELDS` into `ChecklistMapper`. | 1b | sp:2 | |
-| 2 | CKLB TypeScript types generated from JSON schema via `json-schema-to-typescript` (§6.5) | — (parallel with Phase 1) | sp:1 | |
-| 3 | CKLB forward mapper (CKLB → HDF) + fixtures + property-based + output-schema-validation tests. Add to regen tool registry. | Phase 1, 2, `.cklb` fixtures, severity decision | sp:5 | |
-| 4 | CKLB reverse mapper (HDF → CKLB) — unconditional overlay patching for round-trip (§2.3). Output validates against CKLB schema. | Phase 3, hdfSpecificData decision | sp:5 | |
-| 5 | CKLB reverse mapper — fresh export (template/synthesis approach, §8.9) + SV3 acceptance test | Phase 3 | sp:3 | Also covers `ckl2cklb` synthesis path. |
-| 6 | Format detection + `index.ts` + `createHeimdallPassthrough('cklb')` + version handling (§6.2) | Phase 3 | sp:2 | |
-| 7 | SAF CLI commands: `cklb2hdf`, `hdf2cklb`, `ckl2cklb`, `cklb2ckl` | Phase 3-5 | sp:3 | |
-| 8 | Heimdall GUI: import/export CKLB options + CKLB export-with-attestations card. **ADR-001 dependency:** `ControlAttestationStatus` must include `not_applicable` before attestation→CKLB export works (create ADR-001 card). | Phase 3-5, ADR-001 | sp:5 | |
-| 9 | Integration tests: CKLB round-trip (multi-cycle), attestation engine integration, CKL↔CKLB conversion | Phase 4, ADR-001 | sp:3 | |
+| 1 | Generate CKLB TypeScript types from JSON schema. These are the canonical intermediate types for Option D. | — | sp:1 | `json-schema-to-typescript`. Handle duplicate `check_content` key. |
+| 2 | CKLB→HDF forward mapper + domain logic migration. Move status/severity/CCI/comment functions from ckl-mapper into cklb-mapper, operating on CKLB types directly. Fixture tests. | Phase 1, `.cklb` fixtures, severity decision | sp:5 | Primary path. All domain logic lives here. |
+| 3 | CKL forward adapter (XML→CKLB object). Parse CKL XML with fast-xml-parser, map STIG_DATA key-value pairs to CKLB properties, translate status vocabulary. **CKL fixture regression gate.** | Phase 2 | sp:3 | Replaces JSONIX for CKL forward path. |
+| 4 | HDF→CKLB reverse mapper — round-trip patching (§2.3) + fresh export (§8.9). Output validates against CKLB schema. | Phase 2, hdfSpecificData decision | sp:5 | |
+| 5 | CKL reverse adapter (CKLB object→CKL XML). Uses existing JSONIX infrastructure for XML output (Phase 1 approach — §5.4.2). **CKL fixture regression gate.** | Phase 4 | sp:3 | JSONIX removal is a follow-up. |
+| 6 | Format detection + `index.ts` + `createHeimdallPassthrough('cklb')` + version handling (§6.2) | Phase 2 | sp:2 | |
+| 7 | SAF CLI commands: `cklb2hdf`, `hdf2cklb`, `ckl2cklb`, `cklb2ckl` | Phase 2-5 | sp:3 | |
+| 8 | Heimdall GUI: import/export CKLB options + CKLB export-with-attestations. | Phase 2-5, ADR-001 | sp:3 | |
+| 9 | Integration tests: CKLB round-trip (multi-cycle), CKL↔CKLB conversion, CKL regression suite | Phase 3-5 | sp:3 | |
 
-**Total: ~sp:40, ~180 min Claude-pace**
+**Total: ~sp:28, ~140 min Claude-pace**
+
+Compared to Option B (sp:40, ~180 min): **sp:12 savings (30%), and dramatically lower risk** — no class hierarchy refactoring, no type relocation, no JSONIX dependency in shared logic.
+
+### Follow-on (not blocking CKLB support)
+
+| Card | Scope | Depends on | Est | Notes |
+|---|---|---|---|---|
+| 1af.18 | Remove JSONIX — replace with fast-xml-parser for CKL XML read (XMLParser) and write (XMLBuilder). Delete checklistJsonix.ts + jsonixMapping.ts. Remove @mitre/jsonix dependency. | 1af.17 (CKL delegation) | sp:5 | Dependency cleanup. CKL fixture regression gate. See §5.4.2 decision. |
 
 ---
 
 ## 11. Review Findings Log
 
-This ADR was reviewed by 10 independent agents across 2 rounds on 2026-06-22. Roles: architecture, schema mapping, round-trip stress test, CKL code audit, compliance/ISSO workflow, adversarial doubter, external observer, KISS/minimizer, DRY/maintainability, best practices/standards.
+### Rounds 1-2 (10 agents, 2026-06-22)
 
-### Round 1 (5 agents, 17 findings)
+This ADR was reviewed by 10 independent agents across 2 rounds. Roles: architecture, schema mapping, round-trip stress test, CKL code audit, compliance/ISSO workflow, adversarial doubter, external observer, KISS/minimizer, DRY/maintainability, best practices/standards. **32 findings incorporated** — see prior revision for full detail.
 
-| # | Finding | Source | Resolution |
-|---|---|---|---|
-| 1 | `rule_version` matching ambiguous across STIGs | round-trip | §2.3: match by `control.id` ↔ `group_id` scoped by profile→STIG |
-| 2 | `open` + `unknown` severity = hidden finding | schema | §3.2 + §8.6: conditional mapping based on status |
-| 3 | Shared types depend back on JSONIX types | code audit | §5.4: relocate domain enums + Asset + base Vuln to `checklist-common/` |
-| 4 | §5.1 wrong file locations | architecture + code audit | §5.1: corrected with actual line numbers |
-| 5 | §3.1 "identical in both directions" wrong | schema | §3.1: reworded with reverse disambiguation |
-| 6 | "CKL↔CKLB for free" oversold | architecture | §2.1: qualified — lossless for shared fields only |
-| 7 | 4 passthrough fields missing | schema | §3.3 + §3.4: added `title`, `target_key`, `stig_ref`, per-rule `reference_identifier` |
-| 8 | Patching must be conditional (dirty-tracked) | round-trip | §2.3: simplified to unconditional overlay (unchanged value = same value) |
-| 9 | `passed\|failed` attestation enum lacks `not_applicable` | compliance | §7 item 5 + §10 Phase 8: ADR-001 dependency, needs own card |
-| 10 | Checklist family outside BaseResults by design | architecture | §2.4: explicit statement |
-| 11 | CKLB round-trip detection undefined | compliance | §8.10: deferred to Phase 2 |
-| 12 | Prerequisites should be per-phase | architecture | §10: restructured as per-phase gates |
-| 13 | Need explicit CKLB export-with-attestations card | compliance | §7 item 2 + §10 Phase 8 |
-| 14 | `check_content_ref` → HDF `refs[]` | schema | §3.3: mapped to `refs[]` instead of passthrough |
-| 15 | `legacy_ids` array vs string type mismatch | code audit | §5.6 + §8.7: normalize to array in intermediate |
-| 16 | `StatusMapping` uses CKL vocabulary — CKLB needs translation | architecture | §5.5: three-vocabulary normalization with dedicated tests |
-| 17 | Attestation metadata has no native CKLB field | round-trip | §8.11: standalone .cklb is not a complete attestation record |
+Key findings that survive into Option D:
+- `open` + `unknown` severity = hidden finding (§3.2 + §8.6)
+- Rule matching by `group_id` not `uuid` (§2.3)
+- Unconditional overlay for patching — no dirty-tracking (§2.3)
+- `ControlAttestationStatus` lacks `not_applicable` (§7)
+- `third_party_tools` repurposing is pragmatic, not ideal (§4.1)
+- Fresh export works for all HDF sources, not STIG-only (§8.9)
+- `legacy_ids` normalize to array (§5.5)
+- Three-vocabulary status normalization (§5.5)
 
-### Round 2 (10 agents — added doubter, external observer, KISS/minimizer, DRY, best practices)
+### Round 3: Reviewer Feedback (2026-06-22 to 2026-06-25)
 
 | # | Finding | Source | Resolution |
 |---|---|---|---|
-| 18 | Rule `uuid` is in passthrough only, not on HDF controls — can't match by uuid | doubter | §2.3: match by `control.id` ↔ `group_id`, not uuid |
-| 19 | Field-level dirty-tracking doesn't exist, isn't needed | doubter + KISS | §2.3: unconditional overlay of 4 fields (unchanged = same value) |
-| 20 | §4 "unnecessary" too strong re: attestation metadata through SV3 | doubter | §4: softened — "no schema change for v1; standalone .cklb drops attestation audit trail" |
-| 21 | Instance methods on ChecklistJsonixConverter can't be "extracted" — need base class | architecture v2 | §5.4a: `ChecklistConverterBase` shared base class approach |
-| 22 | `Asset` type, `checkMessage`, `getStatus`:172, regex constants missing from extraction | code audit v2 | §5.4b: all added with locations |
-| 23 | Two `IMPACT_MAPPING`s (DRY violation within shared layer) | DRY | §5.4b: consolidate into one source in `status-severity.ts` |
-| 24 | `StatusMapping` enum values are HDF words, not CKL words — ADR conflated them | compliance v2 | §5.5: three-vocabulary table with actual enum values |
-| 25 | No `not_applicable` attestation enum card exists in either ADR | compliance v2 | §10 Phase 8: explicit ADR-001 card dependency |
-| 26 | Specify type-generation tooling (json-schema-to-typescript) | standards | §6.5: added |
-| 27 | Name error strategy (best-effort + warn, never silent drop) | standards | §6.4: added |
-| 28 | Add CKLB version-handling policy | standards | §6.2: added |
-| 29 | Add property-based + output-schema-validation tests | standards | §6.7: testing strategy added |
-| 30 | Wire `DEFAULT_PROFILE_FIELDS` into ChecklistMapper + CklbMapper | DRY | §6.6: added |
-| 31 | Add CKLB to regen tool registry | DRY | §6.6: added |
-| 32 | Fresh CKLB export works for ALL HDF sources (not STIG-only) | domain review | §8.9: CKLB is a checklist format; `group_id` = control primary key in any scheme |
+| 33 | "the O in OHDF does not stand for 'outcome-based'" | Amndeep7 | Fixed: OHDF = OASIS HDF |
+| 34 | Missing three fields used by SV internally | Amndeep7 | §1.3: noted, generated types (§6.5) are authoritative. All schema fields brought through. |
+| 35 | Missing a field in per-rule listing | Amndeep7 | §1.3 + §3.4: expanded field lists. Generated types are the final source. |
+| 36 | Where is Option A? | Amndeep7 | §2.2: Option A added (standalone, rejected — DRY violation) |
+| 37 | **No Option D — ckl→cklb→hdf, replace intermediate with CKLB** | Amndeep7 | **Accepted as chosen architecture.** §2.1 revised. |
+| 38 | Attestation/comment stuff should be separate from CKLB converter | Amndeep7 | §7: reduced to integration points only. CKLB converter is standalone. |
+| 39 | Slight misunderstanding of JSONIX type origin | Amndeep7 | §5.3: clarified — JSONIX derives from original CKL XSD, types are XSD-derived not invented |
+| 40 | Type refactor = massive headache | Amndeep7 | **Eliminated by Option D** — no extraction needed |
+| 41 | What is the regen tool? | Amndeep7 | §6.5: explained with link to ADR-002 |
+| 42 | "CKLB IS the intermediate — replace it outright" | Amndeep7 | §1.4: cited directly. Core motivation for Option D. |
+| 43 | Backward compatibility with old OHDF from old CKL? | ejaronne | §2.5: yes — internal pipeline change, same HDF output. CKL fixtures enforce. |
+| 44 | Not single source of truth; Heimdall is day-to-day view | wdower | ADR-001 scope (§7 references simplified). |
+| 45 | Phase 3 POA&M should consume HDF Libs, not reimplement | wdower | ADR-001 scope. |
 
 ### Findings assessed and rejected
 
 | Finding | Source | Why rejected |
 |---|---|---|
-| Skip extraction entirely (import from ckl-mapper directly) | KISS | User decision: do it right once, no follow-up refactors |
-| Fresh CKLB export restricted to STIG-origin HDF | multiple | Incorrect — CKLB `group_id` is unconstrained; any control ID works |
-| `legacy_ids` array normalization breaks CKL byte-for-byte | code audit | HDF tags are `additionalProperties: true`; string→array is non-breaking. Regen CKL fixtures. |
-| Runtime ajv validation of input CKLB | standards | No other converter in the repo does this. Fingerprint detection + defensive access is consistent. |
+| Skip extraction entirely (import from ckl-mapper directly) | KISS (Round 1) | Superseded by Option D — CKLB IS the primary, not a consumer of ckl-mapper |
+| Fresh CKLB export restricted to STIG-origin HDF | multiple (Round 1) | Incorrect — CKLB `group_id` is unconstrained; any control ID works |
+| Runtime ajv validation of input CKLB | standards (Round 2) | No other converter in the repo does this. Fingerprint detection + defensive access is consistent. |
 
 ---
 
@@ -729,4 +705,5 @@ This ADR was reviewed by 10 independent agents across 2 rounds on 2026-06-22. Ro
 - ADR-001: GUI Attestation & Comment Engine (`docs/adr-001-attestation-comment-engine.md`)
 - ADR-002: DRY hdf-converters (`docs/adr-002-dry-hdf-converters.md`)
 - GitHub issues: #5603, #7271, #7733
+- PR #8283 review comments: Amndeep7, wdower, ejaronne (2026-06-22 to 2026-06-25)
 - HDF Mapper Creation Guide: [SAF Wiki](https://github.com/mitre/saf/wiki/HDF-Mapper-and-Converter-Creation-Guide-(for-SAF-CLI-&-Heimdall2))

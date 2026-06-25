@@ -13,7 +13,7 @@
 
 | Term | Definition |
 |------|-----------|
-| **HDF** | Heimdall Data Format — JSON output format from InSpec and other scanners, based on OHDF (Outcome-based HDF) |
+| **HDF** | Heimdall Data Format — JSON output format from InSpec and other scanners, based on OHDF (OASIS HDF) |
 | **CKL** | Checklist — XML format used by DISA STIG Viewer for recording STIG review results |
 | **CKLB** | Checklist JSON — newer JSON-based checklist format (not yet supported in Heimdall) |
 | **eMASS** | Enterprise Mission Assurance Support Service — DISA's system for managing security authorizations and POA&Ms |
@@ -759,6 +759,7 @@ Approach: add Attestation Status and Attestation Explanation columns to CSV outp
 | CSV (ExportCSVModal) | `FilteredDataModule.controls()` | Add attestation columns | 9go.43 |
 | HTML (ExportHTMLModal) | contextualized evaluation | Clone → apply → mapper | TBD |
 | CAAT (ExportCaat) | contextualized + controls | Clone → apply → mapper | TBD |
+| CKLB (ExportCKLBModal) | `evaluation.data` (raw) | Clone → apply → `toCklb()` | TBD (ADR-003) |
 | NIST (ExportNist) | NIST tags only | N/A — no status in output | — |
 | Attestation File | annotation store | Direct export (no clone) | 9go.28 ✓ |
 
@@ -1134,7 +1135,7 @@ Phase 1 builds the data structures to support approval without implementing it:
 
 ### 8.1 Positive
 
-- Heimdall becomes the single source of truth for compliance review
+- Heimdall becomes the day-to-day posture view and review collaboration tool for compliance teams (downstream GRC tools like eMASS remain the source of truth for formal authorization)
 - Replaces error-prone CKL-email-STIG-Viewer loop with URL-based collaboration
 - Full audit trail: who attested/commented what, when, with what explanation
 - SAF CLI interoperable: export/import attestation files for `saf attest apply`
@@ -1155,7 +1156,7 @@ Phase 1 builds the data structures to support approval without implementing it:
 
 | Decision | Chosen | Alternative | Why |
 |----------|--------|-------------|-----|
-| Review UI | Right-side panel | Modal dialog | Panel keeps results visible, supports prev/next navigation through controls, matches STIG Viewer workflow |
+| Review UI | Annotations Tab (inside control expansion) | Side panel drawer / Modal dialog | Tab merges into existing UI pattern (Test/Details/Code/Annotations), keeps results visible, no new drawer paradigm. Per Will Dower review. |
 | Attestation format | SAF CLI 6-field format | Extended format with reason_type, reviewed_by | Interoperability with existing `saf attest apply` toolchain; extended fields added in Phase 3 |
 | Phase 1 persistence | Vuex store + exportable files | DB from the start | Ship faster, validate UX before building DB schema; file export ensures no data loss |
 | Data integrity | Separate annotation records + display mutations | Pure immutability (overlay-only at export) | Pure immutability would require re-contextualizing controls after every edit (expensive) or showing stale data. Display mutations + separate records gives both live display AND audit trail. See §5.1. |
