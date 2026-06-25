@@ -23,8 +23,6 @@ import {
 } from './utils/global';
 import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
-const logger = createWinstonLogger('SonarQube2HDF');
-
 function applyLineNumber(snippet: string): string {
   return snippet
     .split('\n')
@@ -799,6 +797,7 @@ export class SonarqubeResults {
   authMethod?: AuthenticationMethod;
 
   axiosClient: AxiosInstance;
+  logger: Logger;
 
   constructor(
     public readonly sonarqubeHost: string,
@@ -811,6 +810,7 @@ export class SonarqubeResults {
     public readonly excludeIssueStatuses?: string, // user-supplied comma-separated list of additional issue statuses to EXCLUDE from results
   ) {
     this.axiosClient = axios.create();
+    this.logger = createWinstonLogger('SonarQube2HDF');
     const MAX_RETRIES = 5;
     this.axiosClient.defaults.raxConfig = {
       onError: (e) => {
@@ -819,7 +819,7 @@ export class SonarqubeResults {
           cfg?.currentRetryAttempt !== null
           && cfg?.currentRetryAttempt !== undefined
         ) {
-          logger.debug(
+          this.logger.debug(
             `Error occurred: retry attempt #${cfg?.currentRetryAttempt}/${MAX_RETRIES} will happen after backoff`,
           );
         } else {
@@ -861,7 +861,7 @@ export class SonarqubeResults {
         allStatuses = statusParam.possibleValues.map((s: string) =>
           s.toUpperCase(),
         );
-        logger.info(
+        this.logger.info(
           `Available issue statuses from server: ${allStatuses.join(',')}`,
         );
       } else {
@@ -882,10 +882,10 @@ export class SonarqubeResults {
           'FIXED',
           'IN_SANDBOX',
         ];
-      logger.warn(
+      this.logger.warn(
         `Could not discover statuses from server, using fallback: ${allStatuses.join(',')}`,
       );
-      logger.debug(inspect(error, { depth: 3 }));
+      this.logger.debug(inspect(error, { depth: 3 }));
     }
 
     // Step 3: Determine which deny-list to use
@@ -907,12 +907,12 @@ export class SonarqubeResults {
       const isSameAsDefault = defaultSet.symmetricDifference(denySet).size === 0;
 
       if (isSameAsDefault) {
-        logger.info(
+        this.logger.info(
           `Exclusion list matches the defaults (${[...defaultSet].join(',')}). `
           + 'You can omit --excludeIssueStatuses unless you want to be explicit.',
         );
       } else {
-        logger.warn(
+        this.logger.warn(
           `Custom status exclusions applied: ${userExclusions.join(',')} `
           + `(replaces defaults: ${defaultDenyList.join(',')}). `
           + 'If this exclusion should be a default, please consider filing an issue at '
@@ -922,7 +922,7 @@ export class SonarqubeResults {
     } else {
       // No user override — use defaults
       denySet = new Set(defaultDenyList);
-      logger.info(
+      this.logger.info(
         `Using default status exclusions: ${defaultDenyList.join(',')}`,
       );
     }
@@ -932,13 +932,13 @@ export class SonarqubeResults {
     const result = allStatuses.filter(s => !denySet.has(s));
 
     if (result.length === 0) {
-      logger.warn(
+      this.logger.warn(
         'All statuses were excluded by the deny-list. This will likely return no results. '
         + `Available: ${allStatuses.join(',')} | Excluded: ${excluded.join(',')}`,
       );
     }
 
-    logger.info(
+    this.logger.info(
       `Querying with issue statuses: ${result.join(',')} (excluded: ${excluded.join(',')})`,
     );
     return result.join(',');
@@ -948,11 +948,11 @@ export class SonarqubeResults {
     sonarqubeVersion: string,
   ): Promise<ExecJSON.Execution> {
     const searchResults = await this.getSearchResults<T>(sonarqubeVersion);
-    logger.debug(`Got ${searchResults.issues.length} issues`);
+    this.logger.debug(`Got ${searchResults.issues.length} issues`);
     const codeSnippets = await this.getCodeSnippets<T>(searchResults.issues);
-    logger.debug(`Got ${codeSnippets.length} code snippets`);
+    this.logger.debug(`Got ${codeSnippets.length} code snippets`);
     const rules = await this.getRules<T>(searchResults.issues);
-    logger.debug(`Got ${rules.length} rules`);
+    this.logger.debug(`Got ${rules.length} rules`);
     const data: Data<T> = {
       branchName: this.branchName,
       organization: this.organization,
@@ -1169,7 +1169,7 @@ export class SonarqubeResults {
           throw new Error('Failed at retrieving Sonarqube issues', { cause: error });
         }
         if (page * PAGE_SIZE > UPPER_LIMIT) {
-          logger.warn(
+          this.logger.warn(
             `Exceeded SonarQube cap of ${UPPER_LIMIT} results for findings of or under the ${component} component.  Remaining findings may be truncated.`,
           );
           isPaging = false;
@@ -1207,7 +1207,7 @@ export class SonarqubeResults {
           throw new Error('Failed at retrieving the list of components', { cause: error });
         }
         if (page * PAGE_SIZE > UPPER_LIMIT) {
-          logger.warn(
+          this.logger.warn(
             `Exceeded SonarQube cap of ${UPPER_LIMIT} results for the search for children of the ${component} component.  Remaining set of components may be truncated.`,
           );
           isPaging = false;
@@ -1241,11 +1241,11 @@ export class SonarqubeResults {
     results.issues = _.uniqBy(results.issues, 'key');
 
     if (results.paging.total === results.issues.length) {
-      logger.warn(
+      this.logger.warn(
         'Alternative search queries were able to retrieve all findings.',
       );
     } else {
-      logger.warn(
+      this.logger.warn(
         `Alternative search queries were not able to retrieve all findings - ${results.paging.total - results.issues.length} findings were not retrieved.`,
       );
     }
@@ -1255,24 +1255,24 @@ export class SonarqubeResults {
 
   logAxiosError(e: AxiosError): void {
     if (e.response) {
-      logger.debug('response');
-      logger.debug(e.response.status);
-      logger.debug(inspect(e.response.data, { depth: 3 }));
+      this.logger.debug('response');
+      this.logger.debug(e.response.status);
+      this.logger.debug(inspect(e.response.data, { depth: 3 }));
     }
     if (e.request) {
-      logger.debug('request');
-      logger.debug(inspect(e.request, { depth: 3 }));
+      this.logger.debug('request');
+      this.logger.debug(inspect(e.request, { depth: 3 }));
     }
     if (e.message) {
-      logger.debug('message');
-      logger.debug('Error', e.message);
+      this.logger.debug('message');
+      this.logger.debug('Error', e.message);
     }
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
     const { data: sonarqubeVersion } = await this.axiosClient
       .get<string>(`${this.sonarqubeHost}/api/server/version`);
-    logger.debug(
+    this.logger.debug(
       `Generating HDF for ${this.sonarqubeHost} version: ${sonarqubeVersion}`,
     );
 
@@ -1292,7 +1292,7 @@ export class SonarqubeResults {
     if (isSonarqubeVersionTwenty_five(sonarqubeVersion)) {
       return this.generateHdf<SonarqubeVersion.Twenty_five>(sonarqubeVersion);
     }
-    logger.debug(
+    this.logger.debug(
       `Sonarqube version ${sonarqubeVersion} is not formally supported.  Please create an issue at https://github.com/mitre/heimdall2/issues if something is broken.`,
     );
     return this.generateHdf<SonarqubeVersion.Twenty_five>(sonarqubeVersion);

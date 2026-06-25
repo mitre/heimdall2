@@ -19,7 +19,7 @@ import type {
   ToolsToolsLegacy,
 } from '../types/cyclonedx';
 import type { ILookupPath, MappedTransform } from './base-converter';
-import { BaseConverter } from './base-converter';
+import { BaseConverter, BaseResults } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
 import { filterString, getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
 import { createHeimdallPassthrough } from './utils/heimdall_metadata';
@@ -456,32 +456,38 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
   }
 }
 
-export class CycloneDXSBOMResults {
-  data: DataStorage;
+export class CycloneDXSBOMResults extends BaseResults<DataStorage> {
   shouldIncludeRaw: boolean;
+
   constructor(sbomJson: string, shouldIncludeRaw = false) {
-    this.data = {
+    super(sbomJson);
+    this.shouldIncludeRaw = shouldIncludeRaw;
+  }
+
+  protected parse(input: string): DataStorage {
+    const data: DataStorage = {
       components: [],
-      raw: JSON.parse(sbomJson),
+      raw: JSON.parse(input),
       vulnerabilities: [],
     };
-    this.shouldIncludeRaw = shouldIncludeRaw;
 
-    if (this.data.raw.components) {
-      // We know this is SBOM data
-      this.flattenComponents(this.data);
-      if (this.data.raw.vulnerabilities) {
-        // If this SBOM data has a vulnerabilities field, we can create an intermediary object
-        this.generateIntermediary(this.data);
+    if (data.raw.components) {
+      this.flattenComponents(data);
+      if (data.raw.vulnerabilities) {
+        this.generateIntermediary(data);
       }
-    } else if (this.data.raw.vulnerabilities) {
-      // Back up in case we ingest VEX data instead
-      this.formatVEX(this.data);
+    } else if (data.raw.vulnerabilities) {
+      this.formatVEX(data);
     } else {
       throw new Error(
         'Unrecognized CycloneDX format detected. We currently only support SBOM and VEX formats.',
       );
     }
+    return data;
+  }
+
+  protected createMapper(data: unknown): BaseConverter {
+    return new CycloneDXSBOMMapper(data as DataStorage, this.shouldIncludeRaw);
   }
 
   // Flatten any arbitrarily nested components list
@@ -588,10 +594,6 @@ export class CycloneDXSBOMResults {
         );
       }
     }
-  }
-
-  toHdf(): ExecJSON.Execution {
-    return new CycloneDXSBOMMapper(this.data, this.shouldIncludeRaw).toHdf();
   }
 }
 

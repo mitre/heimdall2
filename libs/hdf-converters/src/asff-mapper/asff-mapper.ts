@@ -5,7 +5,7 @@ import { compare, validate } from 'compare-versions';
 import { encode } from 'html-entities';
 import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import { BaseConverter, DEFAULT_PROFILE_FIELDS } from '../base-converter';
+import { BaseConverter, BaseResults, DEFAULT_PROFILE_FIELDS } from '../base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   getCCIsForNISTTags,
@@ -667,16 +667,20 @@ export class ASFFMapper extends BaseConverter {
 
 // sometimes there is a need to change certain meta level information such as the profile name to make it clearer that the original ASFF file came from an external tool instead of SecHub
 // some special cases can take in additional files aside from findings, ex. the guidelines which contain correct severity information
-export class ASFFResults {
-  data: Record<string, Record<string, unknown>[]>;
+export class ASFFResults extends BaseResults<Record<string, Record<string, unknown>[]>, Record<string, ExecJSON.Execution>> {
+  data!: Record<string, Record<string, unknown>[]>;
   meta: Record<string, string | undefined> | undefined;
+  securityhubStandardsJsonArray?: string[];
   supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
+
   constructor(
     asffJson: string,
     securityhubStandardsJsonArray?: string[],
     meta?: Record<string, string | undefined>,
   ) {
+    super(asffJson);
     this.meta = meta;
+    this.securityhubStandardsJsonArray = securityhubStandardsJsonArray;
     this.supportingDocs = new Map<
       SpecialCasing,
       Record<string, Record<string, unknown>>
@@ -693,9 +697,15 @@ export class ASFFResults {
         },
       )(securityhubStandardsJsonArray),
     );
+  }
 
-    // split input findings via product, each of which will get their own resultant HDF file
-    const findings = _.get(fixFileInput(asffJson), 'Findings');
+  protected createMapper(data: unknown): BaseConverter {
+    return new ASFFMapper(data as Record<string, unknown>);
+  }
+
+  async toHdf(): Promise<Record<string, ExecJSON.Execution>> {
+    await this.init();
+    const findings = _.get(fixFileInput(this.rawInput), 'Findings');
     this.data = _.groupBy(findings, (finding) => {
       const productInfo = ((_.get(finding, 'ProductArn') as string)
         .split(':')
@@ -710,9 +720,7 @@ export class ASFFResults {
         encode(defaultFilename),
       );
     });
-  }
 
-  toHdf(): Record<string, ExecJSON.Execution> {
     return _.mapValues(this.data, (val) => {
       const wrapped = wrapWithFindingsObject(val);
       const firstFinding = _.get(wrapped, 'Findings[0]') as unknown as Record<string, unknown>;

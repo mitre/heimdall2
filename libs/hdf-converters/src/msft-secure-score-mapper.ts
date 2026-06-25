@@ -6,7 +6,7 @@ import type {
 import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
-import { BaseConverter } from './base-converter';
+import { BaseConverter, BaseResults } from './base-converter';
 import {
   conditionallyProvideAttribute,
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
@@ -325,23 +325,28 @@ export class MsftSecureScoreMapper extends BaseConverter {
   }
 }
 
-export class MsftSecureScoreResults {
-  data: CombinedResponse;
+export class MsftSecureScoreResults extends BaseResults<CombinedResponse, ExecJSON.Execution[]> {
   shouldIncludeRaw: boolean;
 
   constructor(combinedJson: string, shouldIncludeRaw = false) {
-    this.data = JSON.parse(combinedJson);
+    super(combinedJson);
     this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
-  toHdf(): ExecJSON.Execution[] {
-    return this.data.secureScore.value.map(element =>
+  protected createMapper(data: unknown): BaseConverter {
+    return new MsftSecureScoreMapper(data as string, this.shouldIncludeRaw);
+  }
+
+  async toHdf(): Promise<ExecJSON.Execution[]> {
+    this.parsed = this.parse(this.rawInput);
+    await this.init();
+    return this.parsed.secureScore.value.map(element =>
       new MsftSecureScoreMapper(
         JSON.stringify({
-          profiles: this.data.profiles,
+          profiles: this.parsed.profiles,
           secureScore: {
             value: [element],
-            ..._.pick(this.data.secureScore, [
+            ..._.pick(this.parsed.secureScore, [
               '@odata.context',
               '@odata.context',
             ]),

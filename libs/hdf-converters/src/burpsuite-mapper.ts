@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  BaseResults,
   buildParseHtmlFunc,
   DEFAULT_PROFILE_FIELDS,
   impactMapping,
@@ -117,14 +118,25 @@ export class BurpSuiteMapper extends BaseConverter {
     };
   }
 }
-export class BurpSuiteResults {
+export class BurpSuiteResults extends BaseResults {
   parseHtml!: (input: unknown) => string;
-  constructor(readonly burpsXml: string, readonly shouldIncludeRaw = false) {}
+  shouldIncludeRaw: boolean;
 
-  async toHdf(): Promise<ExecJSON.Execution> {
+  constructor(burpsXml: string, shouldIncludeRaw = false) {
+    super(burpsXml);
+    this.shouldIncludeRaw = shouldIncludeRaw;
+  }
+
+  protected parse(input: string): Record<string, unknown> {
+    return { raw: input };
+  }
+
+  protected async init(): Promise<void> {
     this.parseHtml = await buildParseHtmlFunc();
+  }
 
-    return (new BurpSuiteMapper(this.burpsXml, this.shouldIncludeRaw, this.parseHtml)).toHdf();
+  protected createMapper(_data: unknown): BaseConverter {
+    return new BurpSuiteMapper(this.rawInput, this.shouldIncludeRaw, this.parseHtml);
   }
 }
 // Transformation Functions

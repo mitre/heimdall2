@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  BaseResults,
   buildParseHtmlFunc,
   impactMapping,
   parseXml,
@@ -163,14 +164,25 @@ export class NetsparkerMapper extends BaseConverter {
     };
   }
 }
-export class NetsparkerResults {
+export class NetsparkerResults extends BaseResults {
   parseHtml!: (input: unknown) => string;
-  constructor(readonly netsparkerXml: string, readonly shouldIncludeRaw = false) {}
+  shouldIncludeRaw: boolean;
 
-  async toHdf(): Promise<ExecJSON.Execution> {
+  constructor(netsparkerXml: string, shouldIncludeRaw = false) {
+    super(netsparkerXml);
+    this.shouldIncludeRaw = shouldIncludeRaw;
+  }
+
+  protected parse(input: string): Record<string, unknown> {
+    return { raw: input };
+  }
+
+  protected async init(): Promise<void> {
     this.parseHtml = await buildParseHtmlFunc();
+  }
 
-    return (new NetsparkerMapper(this.netsparkerXml, this.shouldIncludeRaw, this.parseHtml)).toHdf();
+  protected createMapper(_data: unknown): BaseConverter {
+    return new NetsparkerMapper(this.rawInput, this.shouldIncludeRaw, this.parseHtml);
   }
 }
 function formatCheck(vulnerability: unknown, parseHtml: (input: unknown) => string): string {

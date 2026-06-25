@@ -5,7 +5,7 @@ import { ASFFResults as Mapper } from '../../../src/asff-mapper/asff-mapper';
 import { loadFixture, omitVersions } from '../../utils';
 
 describe('ASFF Mapper', () => {
-  it('Successfully converts SecurityHub benchmark ASFFs', () => {
+  it('Successfully converts SecurityHub benchmark ASFFs', async () => {
     const mapper = new Mapper(
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/asff_sample.json',
@@ -16,7 +16,7 @@ describe('ASFF Mapper', () => {
     // fs.writeFileSync(
     //   'sample_jsons/asff_mapper/asff-cis_aws-foundations_benchmark_v1.2.0-hdf.json',
     //   JSON.stringify(
-    //     mapper.toHdf()['CIS AWS Foundations Benchmark v1.2.0.json'],
+    //     (await mapper.toHdf())['CIS AWS Foundations Benchmark v1.2.0.json'],
     //     null,
     //     2
     //   )
@@ -25,13 +25,14 @@ describe('ASFF Mapper', () => {
     // fs.writeFileSync(
     //   'sample_jsons/asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json',
     //   JSON.stringify(
-    //     mapper.toHdf()['AWS Foundational Security Best Practices v1.0.0.json'],
+    //     (await mapper.toHdf())['AWS Foundational Security Best Practices v1.0.0.json'],
     //     null,
     //     2
     //   )
     // );
 
-    expect(_.mapValues(mapper.toHdf(), omitVersions)).toEqual({
+    const result = await mapper.toHdf();
+    expect(_.mapValues(result, omitVersions)).toEqual({
       'AWS Foundational Security Best Practices v1.0.0.json': omitVersions(
         loadFixture('sample_jsons/asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json'),
       ),
@@ -41,7 +42,7 @@ describe('ASFF Mapper', () => {
     });
   });
 
-  it('Successfully converts Prowler ASFF as Array', () => {
+  it('Successfully converts Prowler ASFF as Array', async () => {
     const mapper = new Mapper(
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/prowler_sample.json',
@@ -51,15 +52,16 @@ describe('ASFF Mapper', () => {
 
     // fs.writeFileSync(
     //   'sample_jsons/asff_mapper/prowler-hdf.json',
-    //   JSON.stringify(mapper.toHdf()['Prowler.json'], null, 2)
+    //   JSON.stringify((await mapper.toHdf())['Prowler.json'], null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
+    const result = await mapper.toHdf();
+    expect(omitVersions(result['Prowler.json'])).toEqual(
       omitVersions(loadFixture('sample_jsons/asff_mapper/prowler-hdf.json')),
     );
   });
 
-  it('Successfully converts Prowler ASFF as Objects delimited by newline', () => {
+  it('Successfully converts Prowler ASFF as Objects delimited by newline', async () => {
     const mapper = new Mapper(
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/prowler-sample.asff-json',
@@ -69,15 +71,16 @@ describe('ASFF Mapper', () => {
 
     // fs.writeFileSync(
     //   'sample_jsons/asff_mapper/prowler-hdf.json',
-    //   JSON.stringify(mapper.toHdf()['Prowler.json'], null, 2)
+    //   JSON.stringify((await mapper.toHdf())['Prowler.json'], null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
+    const result = await mapper.toHdf();
+    expect(omitVersions(result['Prowler.json'])).toEqual(
       omitVersions(loadFixture('sample_jsons/asff_mapper/prowler-hdf.json')),
     );
   });
 
-  it('Successfully converts Trivy ASFF as Array', () => {
+  it('Successfully converts Trivy ASFF as Array', async () => {
     const mapper = new Mapper(
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/trivy-image_golang-1.12-alpine_sample.json',
@@ -87,15 +90,16 @@ describe('ASFF Mapper', () => {
 
     // fs.writeFileSync(
     //   'sample_jsons/asff_mapper/trivy-image_golang-1.12-alpine-hdf.json',
-    //   JSON.stringify(mapper.toHdf()['Aqua Security - Trivy.json'], null, 2)
+    //   JSON.stringify((await mapper.toHdf())['Aqua Security - Trivy.json'], null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf()['Aqua Security - Trivy.json'])).toEqual(
+    const result = await mapper.toHdf();
+    expect(omitVersions(result['Aqua Security - Trivy.json'])).toEqual(
       omitVersions(loadFixture('sample_jsons/asff_mapper/trivy-image_golang-1.12-alpine-hdf.json')),
     );
   });
 
-  it('Successfully converts HDF2ASFF / Previously HDF', () => {
+  it('Successfully converts HDF2ASFF / Previously HDF', async () => {
     let mapper = new Mapper(
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/rhel7_V-71931_asff.json',
@@ -106,14 +110,15 @@ describe('ASFF Mapper', () => {
     // fs.writeFileSync(
     //   'sample_jsons/asff_mapper/rhel7_V-71931-hdf.json',
     //   JSON.stringify(
-    //     mapper.toHdf()['rhel7_V-71931.json-this-is-a-test.json'],
+    //     (await mapper.toHdf())['rhel7_V-71931.json-this-is-a-test.json'],
     //     null,
     //     2
     //   )
     // );
 
+    const result = await mapper.toHdf();
     expect(
-      omitVersions(mapper.toHdf()['rhel7_V-71931.json-this-is-a-test.json']),
+      omitVersions(result['rhel7_V-71931.json-this-is-a-test.json']),
     ).toEqual(
       omitVersions(loadFixture('sample_jsons/asff_mapper/rhel7_V-71931-hdf.json')),
     );
@@ -127,7 +132,7 @@ describe('ASFF Mapper', () => {
     // fs.writeFileSync(
     //   'sample_jsons/asff_mapper/example-3-layer-overlay_hdf.json',
     //   JSON.stringify(
-    //     mapper.toHdf()[
+    //     (await mapper.toHdf())[
     //       'example-3-layer-overlay_03062022.json-this-is-a-test.json'
     //     ],
     //     null,
@@ -135,9 +140,10 @@ describe('ASFF Mapper', () => {
     //   )
     // );
 
+    const result2 = await mapper.toHdf();
     expect(
       omitVersions(
-        mapper.toHdf()[
+        result2[
           'example-3-layer-overlay_03062022.json-this-is-a-test.json'
         ],
       ),

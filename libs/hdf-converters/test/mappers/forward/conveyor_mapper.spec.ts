@@ -3,14 +3,14 @@ import { describe, expect, it } from 'vitest';
 import { ConveyorResults } from '../../../src/conveyor-mapper';
 import { loadFixture, omitVersions } from '../../utils';
 describe('conveyor_mapper', () => {
-  it('Successfully converts Conveyor reports', () => {
+  it('Successfully converts Conveyor reports', async () => {
     const mapper = new ConveyorResults(
       fs.readFileSync(
         'sample_jsons/conveyor_mapper/sample_input_report/sample-results.json',
         { encoding: 'utf8' },
       ),
     );
-    const mapped = mapper.toHdf();
+    const mapped = await mapper.toHdf();
     // fs.writeFileSync(
     //  'sample_jsons/conveyor_mapper/conveyor-moldy-hdf.json',
     //  JSON.stringify(mapped['Moldy'], null, 2)

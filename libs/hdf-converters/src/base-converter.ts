@@ -3,6 +3,8 @@ import { XMLParser } from 'fast-xml-parser';
 import type { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
 import { parse as parseCsvRaw } from 'papaparse';
+import type { Logger } from 'winston';
+import { createWinstonLogger } from './utils/global';
 
 export type ILookupPath = {
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
@@ -56,11 +58,13 @@ const identityTransformer = (val: unknown) => val;
 
 export class BaseConverter<D = Record<string, unknown>> {
   data: D;
+  logger: Logger;
   mappings?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   shouldCollapseResults: boolean;
 
-  constructor(data: D, shouldCollapseResults = false) {
+  constructor(data: D, shouldCollapseResults = false, logService?: Logger) {
     this.data = data;
+    this.logger = logService || createWinstonLogger(this.constructor.name);
     this.shouldCollapseResults = shouldCollapseResults;
   }
 
@@ -411,4 +415,43 @@ function collapseDuplicates<T extends object>(
     }
   }
   return newArray;
+}
+
+export abstract class BaseResults<
+  TInput = Record<string, unknown>,
+  TOutput extends ExecJSON.Execution | ExecJSON.Execution[] | Record<string, ExecJSON.Execution> = ExecJSON.Execution,
+> {
+  logger: Logger;
+  protected parsed!: TInput;
+  protected readonly rawInput: string;
+
+  constructor(input: string, logService?: Logger) {
+    this.logger = logService || createWinstonLogger(this.constructor.name);
+    this.rawInput = input;
+  }
+
+  protected parse(input: string): TInput {
+    return JSON.parse(input) as TInput;
+  }
+
+  protected async init(): Promise<void> {
+    // Override in subclasses for async initialization (e.g., parseHtml)
+  }
+
+  protected abstract createMapper(data: unknown): BaseConverter;
+
+  protected split(parsed: TInput): TInput | TInput[] {
+    return parsed;
+  }
+
+  async toHdf(): Promise<TOutput> {
+    this.parsed = this.parse(this.rawInput);
+    await this.init();
+    const parts = this.split(this.parsed);
+
+    if (Array.isArray(parts)) {
+      return parts.map(p => this.createMapper(p).toHdf()) as TOutput;
+    }
+    return this.createMapper(parts).toHdf() as TOutput;
+  }
 }

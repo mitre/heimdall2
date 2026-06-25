@@ -1,10 +1,12 @@
 import type { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
+import type { Logger } from 'winston';
 import type {
   MappedReform,
   MappedTransform,
   ObjectEntryValue,
 } from '../base-converter';
+import { createWinstonLogger } from '../utils/global';
 
 export type ILookupPathFH = {
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
@@ -18,11 +20,13 @@ export type ILookupPathFH = {
 // Base converter used to support conversions from HDF to Any Format
 export class FromHdfBaseConverter {
   data: ExecJSON.Execution;
+  logger: Logger;
   mappings?: MappedTransform<any, ILookupPathFH>;
   shouldCollapseResults: boolean;
 
-  constructor(data: ExecJSON.Execution, shouldCollapseResults = false) {
+  constructor(data: ExecJSON.Execution, shouldCollapseResults = false, logService?: Logger) {
     this.data = data;
+    this.logger = logService || createWinstonLogger(this.constructor.name);
     this.shouldCollapseResults = shouldCollapseResults;
   }
 

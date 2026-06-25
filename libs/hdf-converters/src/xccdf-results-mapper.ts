@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  BaseResults,
   buildParseHtmlFunc,
   impactMapping,
   parseXml,
@@ -427,14 +428,25 @@ export class XCCDFResultsMapper extends BaseConverter {
   }
 }
 
-export class XCCDFResultsResults {
+export class XCCDFResultsResults extends BaseResults {
   parseHtml!: (input: unknown) => string;
-  constructor(readonly scapXml: string, readonly shouldIncludeRaw = false) {}
+  shouldIncludeRaw: boolean;
 
-  async toHdf(): Promise<ExecJSON.Execution> {
+  constructor(scapXml: string, shouldIncludeRaw = false) {
+    super(scapXml);
+    this.shouldIncludeRaw = shouldIncludeRaw;
+  }
+
+  protected parse(input: string): Record<string, unknown> {
+    return { raw: input };
+  }
+
+  protected async init(): Promise<void> {
     this.parseHtml = await buildParseHtmlFunc();
+  }
 
-    return (new XCCDFResultsMapper(this.scapXml, this.shouldIncludeRaw, this.parseHtml)).toHdf();
+  protected createMapper(_data: unknown): BaseConverter {
+    return new XCCDFResultsMapper(this.rawInput, this.shouldIncludeRaw, this.parseHtml);
   }
 }
 

@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  BaseResults,
   buildParseHtmlFunc,
 } from './base-converter';
 import { CweNistMapping } from './mappings/CweNistMapping';
@@ -141,14 +142,27 @@ export class ZapMapper extends BaseConverter {
     return original;
   }
 }
-export class ZapResults {
+export class ZapResults extends BaseResults {
   parseHtml!: (input: unknown) => string;
-  constructor(readonly zapJson: string, readonly name?: string, readonly shouldIncludeRaw = false) {}
+  name?: string;
+  shouldIncludeRaw: boolean;
 
-  async toHdf(): Promise<ExecJSON.Execution> {
+  constructor(zapJson: string, name?: string, shouldIncludeRaw = false) {
+    super(zapJson);
+    this.name = name;
+    this.shouldIncludeRaw = shouldIncludeRaw;
+  }
+
+  protected parse(input: string): Record<string, unknown> {
+    return { raw: input };
+  }
+
+  protected async init(): Promise<void> {
     this.parseHtml = await buildParseHtmlFunc();
+  }
 
-    return (new ZapMapper(this.zapJson, this.name, this.shouldIncludeRaw, this.parseHtml)).toHdf();
+  protected createMapper(_data: unknown): BaseConverter {
+    return new ZapMapper(this.rawInput, this.name, this.shouldIncludeRaw, this.parseHtml);
   }
 }
 function checkText(input: Record<string, unknown>): string {

@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  BaseResults,
   buildParseHtmlFunc,
   impactMapping,
   parseXml,
@@ -151,29 +152,41 @@ export class NessusMapper extends BaseConverter {
     };
   }
 }
-export class NessusResults {
+export class NessusResults extends BaseResults<Record<string, unknown>, ExecJSON.Execution | ExecJSON.Execution[]> {
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  data: Record<string, unknown>;
   parseHtml!: (input: unknown) => string;
   policyName = '';
   shouldIncludeRaw: boolean;
   version = '';
 
   constructor(nessusXml: string, shouldIncludeRaw = false) {
-    this.data = parseXml(nessusXml);
+    super(nessusXml);
     this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
-  async toHdf(): Promise<ExecJSON.Execution | ExecJSON.Execution[]> {
+  protected parse(input: string): Record<string, unknown> {
+    return parseXml(input);
+  }
+
+  protected async init(): Promise<void> {
     this.parseHtml = await buildParseHtmlFunc();
+  }
+
+  protected createMapper(data: unknown): BaseConverter {
+    return new NessusMapper(data as Record<string, unknown>, this.shouldIncludeRaw, this.parseHtml, this.policyName, this.version);
+  }
+
+  async toHdf(): Promise<ExecJSON.Execution | ExecJSON.Execution[]> {
+    this.parsed = this.parse(this.rawInput);
+    await this.init();
 
     const results: ExecJSON.Execution[] = [];
     this.policyName = _.get(
-      this.data,
+      this.parsed,
       'NessusClientData_v2.Policy.policyName',
     ) as string;
     const preference = _.get(
-      this.data,
+      this.parsed,
       'NessusClientData_v2.Policy.Preferences.ServerPreferences.preference',
     );
     if (Array.isArray(preference)) {
@@ -186,7 +199,7 @@ export class NessusResults {
         ) || '';
     }
     const reportHost = _.get(
-      this.data,
+      this.parsed,
       'NessusClientData_v2.Report.ReportHost',
     );
     if (Array.isArray(reportHost)) {

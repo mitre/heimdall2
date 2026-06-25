@@ -7,7 +7,7 @@ import {
 import { omitVersions } from '../../utils';
 
 describe('msft_secure_score_mapper', () => {
-  it('Successfully converts Microsoft Secure Score reports', () => {
+  it('Successfully converts Microsoft Secure Score reports', async () => {
     const mapper = new MsftSecureScoreResults(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
@@ -17,7 +17,7 @@ describe('msft_secure_score_mapper', () => {
 
     // fs.writeFileSync(
     //   'sample_jsons/msft_secure_score_mapper/secure_score-hdfs.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
+    //   JSON.stringify(await mapper.toHdf(), null, 2)
     // );
 
     const expectedHdfReports = JSON.parse(
@@ -27,7 +27,8 @@ describe('msft_secure_score_mapper', () => {
       ),
     );
 
-    for (const [idx, hdfReport] of mapper.toHdf().entries()) {
+    const results = await mapper.toHdf();
+    for (const [idx, hdfReport] of results.entries()) {
       expect(omitVersions(hdfReport)).toEqual(
         omitVersions(expectedHdfReports.at(idx)),
       );
@@ -36,7 +37,7 @@ describe('msft_secure_score_mapper', () => {
 });
 
 describe('msft_secure_score_mapper_withraw', () => {
-  it('Successfully converts withRaw flagged Microsoft Secure Score reports', () => {
+  it('Successfully converts withRaw flagged Microsoft Secure Score reports', async () => {
     const mapper = new MsftSecureScoreResults(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
@@ -47,7 +48,7 @@ describe('msft_secure_score_mapper_withraw', () => {
 
     // fs.writeFileSync(
     //   'sample_jsons/msft_secure_score_mapper/secure_score-hdf-withraws.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
+    //   JSON.stringify(await mapper.toHdf(), null, 2)
     // );
 
     const expectedHdfReports = JSON.parse(
@@ -57,7 +58,8 @@ describe('msft_secure_score_mapper_withraw', () => {
       ),
     );
 
-    for (const [idx, hdfReport] of mapper.toHdf().entries()) {
+    const results = await mapper.toHdf();
+    for (const [idx, hdfReport] of results.entries()) {
       expect(omitVersions(hdfReport)).toEqual(
         omitVersions(expectedHdfReports.at(idx)),
       );
@@ -66,7 +68,7 @@ describe('msft_secure_score_mapper_withraw', () => {
 });
 
 describe('msft_secure_score_mapper_multiple_reports', () => {
-  it('Successfully converts multiple Microsoft Secure Score reports into multiple ohdf files', () => {
+  it('Successfully converts multiple Microsoft Secure Score reports into multiple ohdf files', async () => {
     const input_data: CombinedResponse = {
       profiles: JSON.parse(
         fs.readFileSync(
@@ -86,7 +88,7 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
 
     // fs.writeFileSync(
     //   'sample_jsons/msft_secure_score_mapper/secure_score-hdf-multi.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
+    //   JSON.stringify(await mapper.toHdf(), null, 2)
     // );
 
     const expectedHdfReports = JSON.parse(
@@ -96,7 +98,8 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
       ),
     );
 
-    for (const [idx, hdfReport] of mapper.toHdf().entries()) {
+    const results = await mapper.toHdf();
+    for (const [idx, hdfReport] of results.entries()) {
       expect(omitVersions(hdfReport)).toEqual(
         omitVersions(expectedHdfReports.at(idx)),
       );

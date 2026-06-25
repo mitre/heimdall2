@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  BaseResults,
   buildParseHtmlFunc,
   parseXml,
 } from './base-converter';
@@ -126,14 +127,25 @@ export class FortifyMapper extends BaseConverter {
   }
 }
 
-export class FortifyResults {
+export class FortifyResults extends BaseResults {
   parseHtml!: (input: unknown) => string;
-  constructor(readonly fvdl: string, readonly shouldIncludeRaw = false) {}
+  shouldIncludeRaw: boolean;
 
-  async toHdf(): Promise<ExecJSON.Execution> {
+  constructor(fvdl: string, shouldIncludeRaw = false) {
+    super(fvdl);
+    this.shouldIncludeRaw = shouldIncludeRaw;
+  }
+
+  protected async init(): Promise<void> {
     this.parseHtml = await buildParseHtmlFunc();
+  }
 
-    return (new FortifyMapper(this.fvdl, this.shouldIncludeRaw, this.parseHtml)).toHdf();
+  protected parse(input: string): Record<string, unknown> {
+    return { raw: input };
+  }
+
+  protected createMapper(_data: unknown): BaseConverter {
+    return new FortifyMapper(this.rawInput, this.shouldIncludeRaw, this.parseHtml);
   }
 }
 

@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  BaseResults,
   DEFAULT_PROFILE_FIELDS,
   impactMapping,
 } from './base-converter';
@@ -114,17 +115,23 @@ export class SnykMapper extends BaseConverter {
     super(snykJson);
   }
 }
-export class SnykResults {
+export class SnykResults extends BaseResults<Record<string, unknown>, ExecJSON.Execution | ExecJSON.Execution[]> {
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  data: Record<string, unknown>;
+
   constructor(snykJson: string) {
-    this.data = JSON.parse(snykJson);
+    super(snykJson);
   }
 
-  toHdf(): ExecJSON.Execution | ExecJSON.Execution[] {
-    const results: ExecJSON.Execution[] = [];
-    if (Array.isArray(this.data)) {
-      for (const element of this.data) {
+  protected createMapper(data: unknown): BaseConverter {
+    return new SnykMapper(data as Record<string, unknown>);
+  }
+
+  async toHdf(): Promise<ExecJSON.Execution | ExecJSON.Execution[]> {
+    this.parsed = this.parse(this.rawInput);
+    await this.init();
+    if (Array.isArray(this.parsed)) {
+      const results: ExecJSON.Execution[] = [];
+      for (const element of this.parsed) {
         const entry = new SnykMapper(element);
         if (this.customMapping !== undefined) {
           entry.setMappings(this.customMapping);
@@ -133,7 +140,7 @@ export class SnykResults {
       }
       return results;
     }
-    const result = new SnykMapper(this.data);
+    const result = new SnykMapper(this.parsed);
     if (this.customMapping !== undefined) {
       result.setMappings(this.customMapping);
     }

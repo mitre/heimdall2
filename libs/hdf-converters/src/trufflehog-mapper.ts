@@ -1,7 +1,7 @@
 import { ExecJSON } from 'inspecjs';
 import _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
-import { BaseConverter, DEFAULT_PROFILE_FIELDS } from './base-converter';
+import { BaseConverter, BaseResults, DEFAULT_PROFILE_FIELDS } from './base-converter';
 import { HeimdallToolsVersion } from './utils/global';
 import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
@@ -93,24 +93,28 @@ export class TrufflehogMapper extends BaseConverter {
   }
 }
 
-export class TrufflehogResults {
-  data: Record<string, unknown>;
+export class TrufflehogResults extends BaseResults {
   shouldIncludeRaw: boolean;
+
   constructor(trufflehogJson: string, shouldIncludeRaw = false) {
+    super(trufflehogJson);
+    this.shouldIncludeRaw = shouldIncludeRaw;
+  }
+
+  protected parse(input: string): Record<string, unknown> {
     let parsedData;
     try {
-      parsedData = JSON.parse(trufflehogJson.trim());
+      parsedData = JSON.parse(input.trim());
     } catch {
-      parsedData = trufflehogJson
+      parsedData = input
         .trim()
         .split('\n')
         .map(line => JSON.parse(line.trim()));
     }
-    this.shouldIncludeRaw = shouldIncludeRaw;
-    this.data = _.isArray(parsedData) ? { wrapper: parsedData } : { wrapper: [parsedData] };
+    return _.isArray(parsedData) ? { wrapper: parsedData } : { wrapper: [parsedData] };
   }
 
-  toHdf(): ExecJSON.Execution {
-    return new TrufflehogMapper(this.data, this.shouldIncludeRaw).toHdf();
+  protected createMapper(data: unknown): BaseConverter {
+    return new TrufflehogMapper(data as Record<string, unknown>, this.shouldIncludeRaw);
   }
 }

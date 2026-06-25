@@ -4,7 +4,7 @@ import { TrufflehogResults } from '../../../src/trufflehog-mapper';
 import { loadFixture, omitVersions } from '../../utils';
 
 describe('trufflehog_mapper', () => {
-  it('Successfully converts trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts trufflehog targeted at a local/cloned repository data', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog.json',
@@ -17,14 +17,14 @@ describe('trufflehog_mapper', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-hdf.json')),
     );
   });
 });
 
 describe('trufflehog_mapper_withraw', () => {
-  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog.json',
@@ -38,14 +38,14 @@ describe('trufflehog_mapper_withraw', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-hdf-withraw.json')),
     );
   });
 });
 
 describe('trufflehog_docker_mapper', () => {
-  it('Successfully converts trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts trufflehog targeted at a local/cloned repository data', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_docker_example.json',
@@ -58,14 +58,14 @@ describe('trufflehog_docker_mapper', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-docker-hdf.json')),
     );
   });
 });
 
 describe('trufflehog_docker_mapper_withraw', () => {
-  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_docker_example.json',
@@ -79,14 +79,14 @@ describe('trufflehog_docker_mapper_withraw', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-docker-hdf-withraw.json')),
     );
   });
 });
 
 describe('trufflehog_saf_example_mapper', () => {
-  it('Successfully converts trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts trufflehog targeted at a local/cloned repository data', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_saf_example.json',
@@ -99,14 +99,14 @@ describe('trufflehog_saf_example_mapper', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-saf-hdf.json')),
     );
   });
 });
 
 describe('trufflehog_saf_example_mapper_withraw', () => {
-  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_saf_example.json',
@@ -120,14 +120,14 @@ describe('trufflehog_saf_example_mapper_withraw', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-saf-hdf-withraw.json')),
     );
   });
 });
 
 describe('trufflehog_example_mapper', () => {
-  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog-report-example.json',
@@ -141,14 +141,14 @@ describe('trufflehog_example_mapper', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf.json')),
     );
   });
 });
 
 describe('trufflehog_example_mapper_withraw', () => {
-  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog-report-example.json',
@@ -162,14 +162,14 @@ describe('trufflehog_example_mapper_withraw', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf-withraw.json')),
     );
   });
 });
 
 describe('trufflehog_dup_ndjson', () => {
-  it('Successfully converts trufflehog in ndjson format with duplicate findings', () => {
+  it('Successfully converts trufflehog in ndjson format with duplicate findings', async () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_dup.ndjson',
@@ -183,7 +183,7 @@ describe('trufflehog_dup_ndjson', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
+    expect(omitVersions(await mapper.toHdf())).toEqual(
       omitVersions(loadFixture('sample_jsons/trufflehog_mapper/trufflehog-ndjson-dup-hdf.json')),
     );
   });

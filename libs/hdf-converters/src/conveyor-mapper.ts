@@ -1,7 +1,7 @@
 import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
 import type { ILookupPath, MappedTransform } from './base-converter';
-import { BaseConverter } from './base-converter';
+import { BaseConverter, BaseResults } from './base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
@@ -68,27 +68,32 @@ export class ConveyorMapper extends BaseConverter {
   }
 }
 
-export class ConveyorResults {
-  data: Record<string, unknown>;
+export class ConveyorResults extends BaseResults<Record<string, unknown>, Record<string, ExecJSON.Execution>> {
   constructor(conveyorJson: string) {
-    const parsed = JSON.parse(conveyorJson);
-    const mappings = mapSha2Filename(parsed);
-    const processed = preprocessObject(parsed, mappings);
-    this.data = _.set(
-      parsed,
-      'api_response.results',
-      groupByScanner(processed),
-    );
+    super(conveyorJson);
   }
 
-  toHdf(): Record<string, ExecJSON.Execution> {
+  protected parse(input: string): Record<string, unknown> {
+    const parsed = JSON.parse(input);
+    const mappings = mapSha2Filename(parsed);
+    const processed = preprocessObject(parsed, mappings);
+    return _.set(parsed, 'api_response.results', groupByScanner(processed));
+  }
+
+  protected createMapper(data: unknown): BaseConverter {
+    return new ConveyorMapper(data as Record<string, unknown>, this.parsed);
+  }
+
+  async toHdf(): Promise<Record<string, ExecJSON.Execution>> {
+    this.parsed = this.parse(this.rawInput);
+    await this.init();
     const scannerRecordInput = (
       Object.entries(
-        _.get(this.data, 'api_response.results') as Record<string, unknown>,
+        _.get(this.parsed, 'api_response.results') as Record<string, unknown>,
       ) as [string, Record<string, unknown>][]
     ).map(([scannerName, scannerData]) => [
       scannerName,
-      new ConveyorMapper(scannerData, this.data, scannerName as scannerType).toHdf(),
+      new ConveyorMapper(scannerData, this.parsed, scannerName as scannerType).toHdf(),
     ]);
     return Object.fromEntries(scannerRecordInput);
   }

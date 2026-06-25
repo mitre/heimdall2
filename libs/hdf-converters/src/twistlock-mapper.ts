@@ -6,6 +6,7 @@ import type {
 } from './base-converter';
 import {
   BaseConverter,
+  BaseResults,
   DEFAULT_PROFILE_FIELDS,
   impactMapping,
 } from './base-converter';
@@ -161,20 +162,23 @@ export class TwistlockMapper extends BaseConverter {
   }
 }
 
-export class TwistlockResults {
-  data: Record<string, unknown>;
+export class TwistlockResults extends BaseResults {
   shouldIncludeRaw: boolean;
-  constructor(twistlockJson: string, shouldIncludeRaw = false) {
-    this.data = JSON.parse(twistlockJson);
-    this.shouldIncludeRaw = shouldIncludeRaw;
 
-    // Add a wrapper to the data for the repository scan case which doesn't include the `results` key
-    if (!_.has(this.data, 'results')) {
-      this.data = { results: [this.data] };
-    }
+  constructor(twistlockJson: string, shouldIncludeRaw = false) {
+    super(twistlockJson);
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
-  toHdf(): ExecJSON.Execution {
-    return new TwistlockMapper(this.data, this.shouldIncludeRaw).toHdf();
+  protected parse(input: string): Record<string, unknown> {
+    const data = JSON.parse(input) as Record<string, unknown>;
+    if (!_.has(data, 'results')) {
+      return { results: [data] };
+    }
+    return data;
+  }
+
+  protected createMapper(data: unknown): BaseConverter {
+    return new TwistlockMapper(data as Record<string, unknown>, this.shouldIncludeRaw);
   }
 }
