@@ -8898,10 +8898,10 @@ eslint-plugin-security@^4.0.0:
   dependencies:
     safe-regex "^2.1.1"
 
-eslint-plugin-unicorn@^68.0.0:
-  version "68.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-68.0.0.tgz#2d9f9a3035609a65a17ee227ac414b23a631e14e"
-  integrity sha512-mHYWvX948Q4H3bGc39bsNMxD/leOuNI+Iws9NVsoSz5VA7EGP86wnz7mZ/SPSvRhefT8L4hd8DHfDuGC+lIoCQ==
+eslint-plugin-unicorn@^69.0.0:
+  version "69.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-69.0.0.tgz#3dcf2b5d892f80f5b31231be1883529fb522f1c3"
+  integrity sha512-ZN/KtHr9hQ6AOByANSNJpsDbo/+Nn+EyQ6blK4w+dcmS/xpYkqLLfrUc+NA/wOK6vF5uEUvhn8my5B/3sruB9g==
   dependencies:
     "@babel/helper-validator-identifier" "^7.29.7"
     "@eslint-community/eslint-utils" "^4.9.1"
