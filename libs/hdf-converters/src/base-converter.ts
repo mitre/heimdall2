@@ -297,6 +297,7 @@ export class BaseConverter<D = Record<string, unknown>> {
       throw new Error('Mappings must be provided');
     }
 
+    this.logger.info(`Starting ${this.constructor.name} conversion`);
     const v = this.convertInternal(
       this.data as Record<string, unknown>,
       this.mappings,
@@ -304,6 +305,8 @@ export class BaseConverter<D = Record<string, unknown>> {
     for (const element of v.profiles) {
       element.sha256 = generateHash(JSON.stringify(element));
     }
+    const controlCount = v.profiles.reduce((sum, p) => sum + (p.controls?.length ?? 0), 0);
+    this.logger.info(`${this.constructor.name} conversion complete: ${controlCount} controls`);
     return v;
   }
 }
@@ -445,13 +448,15 @@ export abstract class BaseResults<
   }
 
   async toHdf(): Promise<TOutput> {
+    this.logger.info(`Starting ${this.constructor.name} conversion`);
     this.parsed = this.parse(this.rawInput);
     await this.init();
     const parts = this.split(this.parsed);
 
-    if (Array.isArray(parts)) {
-      return parts.map(p => this.createMapper(p).toHdf()) as TOutput;
-    }
-    return this.createMapper(parts).toHdf() as TOutput;
+    const result = Array.isArray(parts)
+      ? (parts.map(p => this.createMapper(p).toHdf()) as TOutput)
+      : (this.createMapper(parts).toHdf() as TOutput);
+    this.logger.info(`${this.constructor.name} conversion complete`);
+    return result;
   }
 }
