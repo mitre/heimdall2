@@ -8850,9 +8850,9 @@ eslint-plugin-markdown-preferences@^0.41.1:
     string-width "^8.0.0"
 
 eslint-plugin-n@^18.0.1:
-  version "18.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-n/-/eslint-plugin-n-18.1.0.tgz#c1eadf2bc59704bf0078eca8d59743a7386b1081"
-  integrity sha512-hkUm9EtnFV2h2fE16jNVUfCVUqvPzI7fGLsFdun5lFt/pbmf2kCgDx6ymi9rx+NCUSggBmurJCZOfG20JBs/kg==
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-n/-/eslint-plugin-n-18.2.0.tgz#264530a08db399a2dc9b3d94d82a5181bb9c28ef"
+  integrity sha512-Hf7bfQ5qBC1U/E5jLM9s3pE5su4HHnPmPxVsYzHgS3X0Eg7/9cK7lf+JBx29YEyZ09DqJ34bS/bcb4Dyv3Th9w==
   dependencies:
     "@eslint-community/eslint-utils" "^4.5.0"
     enhanced-resolve "^5.17.1"
