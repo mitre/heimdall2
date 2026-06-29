@@ -8,10 +8,6 @@ import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
 import { getRequiredClaim } from './resolve-claim';
 
-//function samlBooleanConfigValue(value: string | undefined): boolean{
-//  return (value ?? '').toLowerCase() === 'true';
-//}
-
 @Injectable()
 export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
@@ -44,8 +40,8 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
       privateKey: configService.get('SAML_PRIVATE_KEY'),
       publicCert: configService.get('SAML_PUBLIC_CERT'),
       decryptionPvk: configService.get('SAML_DECRYPTION_PVK'),
-      wantAssertionsSigned: /*samlBooleanConfigValue*/(configService.get('SAML_WANT_ASSERTIONS_SIGNED')??"").toLowerCase() === 'true',
-      wantAuthnResponseSigned: /*samlBooleanConfigValue*/(configService.get('SAML_WANT_AUTHN_RESPONSE_SIGNED')??"").toLowerCase() === 'true',
+      wantAssertionsSigned: (configService.get('SAML_WANT_ASSERTIONS_SIGNED')??"").toLowerCase() === 'true',
+      wantAuthnResponseSigned: (configService.get('SAML_WANT_AUTHN_RESPONSE_SIGNED')??"").toLowerCase() === 'true',
       signMetadata: (configService.get('SAML_SIGN_METADATA') ?? '').toLowerCase() === 'true',
       forceAuthn: (configService.get('SAML_FORCE_AUTHN') ?? '').toLowerCase() === 'true',
       passive: (configService.get('SAML_PASSIVE') ?? '').toLowerCase() === 'true',
@@ -61,13 +57,41 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
       authnRequestBinding: configService.get('SAML_AUTHN_REQUEST_BINDING'),
       logoutUrl: configService.get('SAML_LOGOUT_URL'),
       logoutCallbackUrl: configService.get('SAML_LOGOUT_CALLBACK_URL'),
-      validateInResponseTo:
-      configService.get('SAML_VALIDATE_IN_RESPONSE_TO') as 'never' | 'ifPresent' | 'always' | undefined,
-      scoping: configService.get('SAML_SCOPING_PROXY_COUNT') 
+      validateInResponseTo: configService.get('SAML_VALIDATE_IN_RESPONSE_TO') as 'never' | 'ifPresent' | 'always' | undefined,
+      xmlSignatureTransforms: configService.get('SAML_XML_SIGNATURE_TRANSFORMS') ? JSON.parse(configService.get('SAML_XML_SIGNATURE_TRANSFORMS') as string): undefined,
+      additionalParams: configService.get('SAML_ADDITIONAL_PARAMS') ? JSON.parse(configService.get('SAML_ADDITIONAL_PARAMS') as string) : undefined,
+      additionalAuthorizeParams: configService.get('SAML_ADDITIONAL_AUTHORIZE_PARAMS') ? JSON.parse(configService.get('SAML_ADDITIONAL_AUTHORIZE_PARAMS') as string) : undefined,
+      additionalLogoutParams: configService.get('SAML_ADDITIONAL_LOGOUT_PARAMS') ? JSON.parse(configService.get('SAML_ADDITIONAL_LOGOUT_PARAMS') as string): undefined,
+      spNameQualifier: configService.get('SAML_SP_NAME_QUALIFIER'),
+      attributeConsumingServiceIndex: configService.get('SAML_ATTRIBUTE_CONSUMING_SERVICE_INDEX',),
+      authnContext: configService.get('SAML_AUTHN_CONTEXT') ? configService.get('SAML_AUTHN_CONTEXT')?.split(',').map(value => value.trim()): undefined,
+      racComparison: configService.get('SAML_RAC_COMPARISON') as
+        | 'exact'
+        | 'minimum'
+        | 'maximum'
+        | 'better'
+        | undefined,
+      providerName: configService.get('SAML_PROVIDER_NAME'),
+      passReqToCallback:(configService.get('SAML_PASS_REQ_TO_CALLBACK') ?? '').toLowerCase() === 'true',
+      samlAuthnRequestExtensions: configService.get('SAML_AUTHN_REQUEST_EXTENSIONS')?JSON.parse(configService.get('SAML_AUTHN_REQUEST_EXTENSIONS') as string): undefined,
+      samlLogoutRequestExtensions: configService.get('SAML_LOGOUT_REQUEST_EXTENSIONS')? JSON.parse(configService.get('SAML_LOGOUT_REQUEST_EXTENSIONS') as string): undefined,
+      metadataContactPerson: configService.get('SAML_METADATA_CONTACT_PERSON')? JSON.parse(configService.get('SAML_METADATA_CONTACT_PERSON') as string): undefined,
+      metadataOrganization: configService.get('SAML_METADATA_ORGANIZATION')? JSON.parse(configService.get('SAML_METADATA_ORGANIZATION') as string): undefined,
+      scoping: 
+        configService.get('SAML_SCOPING_PROXY_COUNT')
+          || configService.get('SAML_SCOPING_REQUESTER_ID')
+          || configService.get('SAML_SCOPING_IDP_LIST')
         ? {
-          proxyCount: Number(configService.get('SAML_SCOPING_PROXY_COUNT')),
+           proxyCount: configService.get('SAML_SCOPING_PROXY_COUNT')
+          ? Number(configService.get('SAML_SCOPING_PROXY_COUNT'))
+          : undefined,
+        requesterId: configService.get('SAML_SCOPING_REQUESTER_ID')?.includes(',')
+          ? configService.get('SAML_SCOPING_REQUESTER_ID')?.split(',').map(value => value.trim())
+          : configService.get('SAML_SCOPING_REQUESTER_ID'),
+        idpList: configService.get('SAML_SCOPING_IDP_LIST')
+          ? JSON.parse(configService.get('SAML_SCOPING_IDP_LIST') as string)
+          : undefined,
           }
-        : undefined,
     });
   }
 
