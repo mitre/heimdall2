@@ -14317,9 +14317,9 @@ number-is-nan@^1.0.0:
     "@nx/nx-win32-x64-msvc" "22.7.1"
 
 oauth2-mock-server@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-9.0.0.tgz#d495785856ae13c579fd357a3c84c8976003418f"
-  integrity sha512-fLOtud91LgWzKkx/vQY9DF6C0YPFdQFfPrpUKK4Czl44+BLA8i9bEBQElsFuOItmYKg15cEem1vUiWGBMSXo/g==
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-9.1.0.tgz#920d2c2f90c796131e98675aa2e229c1db0d602e"
+  integrity sha512-1Aug6KQhD9IoxyCogFb0XQqovSOhkvOSRUz5Zm98o96H4omt1HEbUMxwzgwl7GO42eh+BqBH/uCbcKIxi4OBbg==
   dependencies:
     basic-auth "^2.0.1"
     is-plain-obj "^4.1.0"
