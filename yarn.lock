@@ -1827,12 +1827,12 @@
   integrity sha512-zeR9k5pd4gxjZ0abRoIaxdc7I3nDktoXZk2qOv9gCNWx3mVwEn32VRhyLaRsDiJjTs0xq/T8mfPtyuXu7GWBcA==
 
 "@eslint/json@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@eslint/json/-/json-2.0.0.tgz#3e6eb59de8d89f449bb1707a2e0187a47edd15c9"
-  integrity sha512-P32ZJMIopNWQd1SFhd0tgjfA/hgzUuVSqHmMi2273QaLWHWimXq6V+qL4DNKnjGzO/aNECtYW+rEJ/pWB6uP+w==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@eslint/json/-/json-2.0.1.tgz#90dce53fe51996bd7e3abfe96aaa755381ea02ea"
+  integrity sha512-Thz2j92ceUF3Bq/0TuWb3MWn3Z+Cwc8k5ptF0fakl2D4Mp8mSx07Xr1aQM4R5NoihzarWUdxfOmQ8DesGy4jOg==
   dependencies:
     "@eslint/core" "^1.2.1"
-    "@eslint/plugin-kit" "^0.7.1"
+    "@eslint/plugin-kit" "^0.7.2"
     "@humanwhocodes/momoa" "^3.3.10"
     natural-compare "^1.4.0"
 
