@@ -93,7 +93,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue2": "^2.3.4",
-    "@vue/test-utils": "^1.0.3",
+    "@vue/test-utils": "^2.4.6",
     "esbuild": "^0.28.0",
     "jsdom": "^29.0.0",
     "vite-svg-loader": "^5.1.0",
