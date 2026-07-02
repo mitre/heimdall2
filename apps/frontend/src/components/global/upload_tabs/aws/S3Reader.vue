@@ -8,6 +8,8 @@
       :access-token.sync="accessToken"
       :secret-token.sync="secretToken"
       :region.sync="region"
+      :endpoint.sync="endpoint"
+      :skip-sts.sync="skipSts"
       @auth-basic="handleBasic"
       @goto-mfa="handleGotoMfa"
       @show-help="showHelp = true"
@@ -68,6 +70,8 @@ import {SnackbarModule} from '@/store/snackbar';
 import {
   Auth,
   AUTH_DURATION,
+  endpointConfig,
+  getDirectAuth,
   getSessionToken,
   MFAInfo,
   transcribeError
@@ -100,6 +104,8 @@ export default class S3Reader extends Vue {
   accessToken = '';
   secretToken = '';
   region = '';
+  endpoint = '';
+  skipSts = false;
   mfaSerial = '';
   mfaToken = '';
   showHelp = false;
@@ -118,12 +124,27 @@ export default class S3Reader extends Vue {
    * Gets a session token
    */
   handleBasic() {
+    // Skip STS entirely for S3-compatible servers that don't support it:
+    // use the supplied long-lived credentials directly.
+    if (this.skipSts) {
+      this.assumedRole = getDirectAuth(
+        this.accessToken,
+        this.secretToken,
+        this.region || 'us-east-1',
+        this.endpoint
+      );
+      this.step = 3;
+      return;
+    }
+
     // Attempt to assume role based on if we've determined 2fa necessary
     getSessionToken(
       this.accessToken,
       this.secretToken,
       this.region || 'us-east-1',
-      AUTH_DURATION
+      AUTH_DURATION,
+      undefined,
+      this.endpoint
     ).then(
       // Success of get session token - now need to determine if MFA necessary
       (success) => {
@@ -146,7 +167,9 @@ export default class S3Reader extends Vue {
       this.accessToken,
       this.secretToken,
       this.region || 'us-east-1',
-      10
+      10,
+      undefined,
+      this.endpoint
     ).then(
       // Success of get session token - now need to determine if MFA necessary
       () => {
@@ -189,7 +212,8 @@ export default class S3Reader extends Vue {
       this.secretToken,
       this.region || 'us-east-1',
       AUTH_DURATION,
-      mfa
+      mfa,
+      this.endpoint
     ).then(
       (success) => {
         // Keep them
@@ -217,7 +241,8 @@ export default class S3Reader extends Vue {
   async loadBucket(name: string) {
     const s3 = new S3Client({
       credentials: this.assumedRole?.creds,
-      region: this.assumedRole?.region || 'us-east-1'
+      region: this.assumedRole?.region || 'us-east-1',
+      ...endpointConfig(this.assumedRole?.endpoint)
     });
     try {
       const response = await s3.send(
