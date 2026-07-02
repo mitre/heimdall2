@@ -4,10 +4,6 @@
     "release": "7.9.2009",
     "target_id": "this-is-a-test"
   },
-  "version": "4.52.9",
-  "statistics": {
-    "duration": 0.029982749
-  },
   "profiles": [
     {
       "name": "redhat-enterprise-linux-7-stig-baseline",
@@ -18,16 +14,6 @@
       "license": "Apache-2.0",
       "copyright": "MITRE, 2020",
       "copyright_email": "saf@groups.mitre.org",
-      "supports": [
-        {
-          "platform-name": "centos",
-          "release": "7.*"
-        },
-        {
-          "platform-name": "redhat",
-          "release": "7.*"
-        }
-      ],
       "attributes": [
         {
           "name": "disable_slow_controls",
@@ -600,13 +586,42 @@
           }
         }
       ],
+      "supports": [
+        {
+          "platform-name": "centos",
+          "release": "7.*"
+        },
+        {
+          "platform-name": "redhat",
+          "release": "7.*"
+        }
+      ],
       "groups": [],
       "status": "loaded",
       "status_message": "",
       "controls": [
         {
+          "desc": "Any password, no matter how complex, can eventually be cracked.\nTherefore, passwords need to be changed periodically. If the operating system\ndoes not limit the lifetime of passwords and force users to change their\npasswords, there is the risk that the operating system passwords could be\ncompromised.",
+          "descriptions": [
+            {
+              "data": "Any password, no matter how complex, can eventually be cracked. Therefore, passwords need to be changed periodically. If the operating system does not limit the lifetime of passwords and force users to change their passwords, there is the risk that the operating system passwords could be compromised.",
+              "label": "default"
+            },
+            {
+              "data": "Check whether the maximum time period for existing passwords is restricted to 60 days.   # awk -F: '$5 > 60 {print $1 \" \" $5}' /etc/shadow   If any results are returned that are not associated with a system account, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Configure non-compliant accounts to enforce a 60-day maximum password lifetime restriction.   # chage -M 60 [user]",
+              "label": "fix"
+            }
+          ],
           "id": "V-71931",
-          "title": "The Red Hat Enterprise Linux operating system must be configured so\nthat existing passwords are restricted to a 60-day maximum lifetime.",
+          "impact": 0.5,
+          "refs": [],
+          "source_location": {
+            "ref": "[{\"line\":2,\"ref\":\"redhat-enterprise-linux-7-stig-baseline/controls/V-71931.rb\"},{\"line\":2,\"ref\":\"redhat-enterprise-linux-7-stig-baseline/controls/V-71931.rb\"}]"
+          },
           "tags": {
             "severity": null,
             "gtitle": "SRG-OS-000076-GPOS-00044",
@@ -621,26 +636,7 @@
               "IA-5 (1) (d)"
             ]
           },
-          "impact": 0.5,
-          "desc": "Any password, no matter how complex, can eventually be cracked.\nTherefore, passwords need to be changed periodically. If the operating system\ndoes not limit the lifetime of passwords and force users to change their\npasswords, there is the risk that the operating system passwords could be\ncompromised.",
-          "descriptions": [
-            {
-              "label": "default",
-              "data": "Any password, no matter how complex, can eventually be cracked. Therefore, passwords need to be changed periodically. If the operating system does not limit the lifetime of passwords and force users to change their passwords, there is the risk that the operating system passwords could be compromised."
-            },
-            {
-              "label": "check",
-              "data": "Check whether the maximum time period for existing passwords is restricted to 60 days.   # awk -F: '$5 > 60 {print $1 \" \" $5}' /etc/shadow   If any results are returned that are not associated with a system account, this is a finding."
-            },
-            {
-              "label": "fix",
-              "data": "Configure non-compliant accounts to enforce a 60-day maximum password lifetime restriction.   # chage -M 60 [user]"
-            }
-          ],
-          "refs": [],
-          "source_location": {
-            "ref": "[{\"line\":2,\"ref\":\"redhat-enterprise-linux-7-stig-baseline/controls/V-71931.rb\"},{\"line\":2,\"ref\":\"redhat-enterprise-linux-7-stig-baseline/controls/V-71931.rb\"}]"
-          },
+          "title": "The Red Hat Enterprise Linux operating system must be configured so\nthat existing passwords are restricted to a 60-day maximum lifetime.",
           "code": "control \"V-71931\" do\n  title \"The Red Hat Enterprise Linux operating system must be configured so\nthat existing passwords are restricted to a 60-day maximum lifetime.\"\n  desc  \"Any password, no matter how complex, can eventually be cracked.\nTherefore, passwords need to be changed periodically. If the operating system\ndoes not limit the lifetime of passwords and force users to change their\npasswords, there is the risk that the operating system passwords could be\ncompromised.\"\n  desc  \"rationale\", \"\"\n  desc  \"check\", \"\n    Check whether the maximum time period for existing passwords is restricted\nto 60 days.\n\n    # awk -F: '$5 > 60 {print $1 \" \" $5}' /etc/shadow\n\n    If any results are returned that are not associated with a system account,\nthis is a finding.\n\n  \"\n  desc  \"fix\", \"\n    Configure non-compliant accounts to enforce a 60-day maximum password\nlifetime restriction.\n\n    # chage -M 60 [user]\n  \"\n  impact 0.5\n  tag severity: nil\n  tag gtitle: \"SRG-OS-000076-GPOS-00044\"\n  tag gid: \"V-71931\"\n  tag rid: \"SV-86555r3_rule\"\n  tag stig_id: \"RHEL-07-010260\"\n  tag fix_id: \"F-78283r1_fix\"\n  tag cci: [\"CCI-000199\"]\n  tag nist: [\"IA-5 (1) (d)\"]\n\n  shadow.users.each do |user|\n    # filtering on non-system accounts (uid >= 1000)\n    next unless user(user).uid >= 1000\n    describe shadow.users(user) do\n      its('max_days.first.to_i') { should cmp <= 60 }\n    end\n  end\nend",
           "results": [
             {
@@ -659,7 +655,11 @@
           ]
         }
       ],
-      "sha256": "c476d4680013b06a188ff88eae40280a591b7f03eafcee24511f2a7a91eb60ca"
+      "sha256": "24d64b54fc1c34da11d9f8015d8a68b1d78106cb1a7ee2adb7197d4c80009312"
     }
-  ]
+  ],
+  "statistics": {
+    "duration": 0.029982749
+  },
+  "version": "4.52.9"
 }

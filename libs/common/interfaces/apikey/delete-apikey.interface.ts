@@ -1,3 +1,1 @@
-export interface IDeleteApiKey {
-  readonly currentPassword: string;
-}
+export type IDeleteApiKey = { readonly currentPassword: string };

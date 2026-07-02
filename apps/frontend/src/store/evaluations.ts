@@ -1,11 +1,9 @@
-import {SpinnerModule} from '@/store/spinner';
-import Store from '@/store/store';
-import {
+import type {
   ICreateEvaluationTag,
   IEvalPaginationParams,
   IEvaluation,
   IEvaluationResponse,
-  IEvaluationTag
+  IEvaluationTag,
 } from '@heimdall/common/interfaces';
 import axios from 'axios';
 import * as _ from 'lodash';
@@ -14,33 +12,41 @@ import {
   getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
 } from 'vuex-module-decorators';
-import {InspecDataModule} from './data_store';
-import {
+import { SpinnerModule } from '@/store/spinner';
+import Store from '@/store/store';
+import { InspecDataModule } from './data_store';
+import type {
   EvaluationFile,
   FileID,
   FileLoadOptions,
-  InspecIntakeModule,
-  ProfileFile
+  ProfileFile,
 } from './report_intake';
-import {SnackbarModule} from './snackbar';
+import { InspecIntakeModule } from './report_intake';
+import { SnackbarModule } from './snackbar';
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'EvaluationModule',
+  namespaced: true,
   store: Store,
-  name: 'EvaluationModule'
 })
 export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
-  pagedEvaluations: IEvaluation[] = [];
-  evaluationsCount: number = 0;
-  page: number = 1;
-  offset: number = 0;
-  limit: number = 10;
-  order: Array<string> = ['createdAt', 'DESC'];
+  evaluationsCount = 0;
+  limit = 10;
   loading = true;
+  offset = 0;
+  order: string[] = ['createdAt', 'DESC'];
+  page = 1;
+  pagedEvaluations: IEvaluation[] = [];
+
+  get allEvaluationTags(): string[] {
+    return this.allEvaluations.flatMap((evaluation) => {
+      return evaluation.evaluationTags.map(tag => tag.value);
+    });
+  }
 
   get evaluationForFile(): Function {
     return (file: EvaluationFile | ProfileFile) => {
@@ -48,7 +54,7 @@ export class Evaluation extends VuexModule {
         return this.allEvaluations.find((e) => {
           return e.id === file.database_id?.toString();
         });
-      } catch (err) {
+      } catch {
         return false;
       }
     };
@@ -62,9 +68,32 @@ export class Evaluation extends VuexModule {
     return this.pagedEvaluations.length;
   }
 
-  get allEvaluationTags(): string[] {
-    return this.allEvaluations.flatMap((evaluation) => {
-      return evaluation.evaluationTags.map((tag) => tag.value);
+  @Action
+  async addTag({
+    evaluation,
+    tag,
+  }: {
+    evaluation: IEvaluation;
+    tag: ICreateEvaluationTag;
+  }) {
+    return axios.post(`/evaluation-tags/${evaluation.id}`, tag);
+  }
+
+  @Action
+  async deleteEvaluation(evaluation: IEvaluation) {
+    this.context.commit('REMOVE_EVALUATION', evaluation);
+    return axios.delete(`/evaluations/${evaluation.id}`);
+  }
+
+  @Action
+  async deleteTag(tag: IEvaluationTag) {
+    return axios.delete(`/evaluation-tags/${tag.id}`);
+  }
+
+  @Action
+  evaluationLoaded(evalId: string) {
+    return this.allEvaluations.find((obj) => {
+      return obj.id === evalId;
     });
   }
 
@@ -72,9 +101,9 @@ export class Evaluation extends VuexModule {
   async getAllEvaluations(params: IEvalPaginationParams): Promise<void> {
     this.context.commit('SET_LOADING', true);
     return axios
-      .get<IEvaluationResponse>('/evaluations', {params})
-      .then(({data}) => {
-        const {totalCount, evaluations} = data;
+      .get<IEvaluationResponse>('/evaluations', { params })
+      .then(({ data }) => {
+        const { evaluations, totalCount } = data;
         this.context.commit('UPDATE_PARAMS', params);
         this.context.commit('SET_PAGED_EVALUATIONS', evaluations);
         this.context.commit('SET_ALL_EVALUATION_COUNT', totalCount);
@@ -89,12 +118,12 @@ export class Evaluation extends VuexModule {
     document.body.style.cursor = 'wait';
     const unloadedIds = _.difference(
       evaluationIds,
-      InspecDataModule.loadedDatabaseIds
+      InspecDataModule.loadedDatabaseIds,
     );
     let index = 1;
     const loadedIds: FileID[] = [];
     await Promise.all(
-      unloadedIds.map(async (id) =>
+      unloadedIds.map(async id =>
         this.loadEvaluation(id)
           .then(async (evaluation) => {
             SpinnerModule.setMessage(`Loading: ${evaluation.filename}`);
@@ -102,29 +131,23 @@ export class Evaluation extends VuexModule {
             SpinnerModule.setValue(value);
             if (await InspecIntakeModule.isHDF(evaluation.data)) {
               InspecIntakeModule.loadText({
-                text: JSON.stringify(evaluation.data),
-                filename: evaluation.filename,
-                database_id: evaluation.id,
                 createdAt: evaluation.createdAt,
+                database_id: evaluation.id,
+                filename: evaluation.filename,
+                tags: [], // Tags are not yet implemented, so for now the value is passed in empty
+                text: JSON.stringify(evaluation.data),
                 updatedAt: evaluation.updatedAt,
-                tags: [] // Tags are not yet implemented, so for now the value is passed in empty
               })
-                .then((fileId) => loadedIds.push(fileId))
-                .catch((err) => {
-                  SnackbarModule.failure(err);
+                .then(fileId => loadedIds.push(fileId))
+                .catch((error) => {
+                  SnackbarModule.failure(error);
                 });
             } else if (evaluation.data) {
-              const inputFile: FileLoadOptions = {
-                filename: evaluation.filename
-              };
-              if (
-                'originalResultsData' in evaluation.data &&
-                evaluation.data.originalResultsData
-              ) {
-                inputFile.data = evaluation.data.originalResultsData;
-              } else {
-                inputFile.data = JSON.stringify(evaluation.data);
-              }
+              const inputFile: FileLoadOptions = { filename: evaluation.filename };
+              inputFile.data = 'originalResultsData' in evaluation.data
+                && evaluation.data.originalResultsData
+                ? evaluation.data.originalResultsData
+                : JSON.stringify(evaluation.data);
 
               const fileIds = await InspecIntakeModule.loadFile(inputFile);
               loadedIds.push(...fileIds);
@@ -132,50 +155,32 @@ export class Evaluation extends VuexModule {
               SnackbarModule.failure(`Empty File: ${evaluation.filename}`);
             }
           })
-          .catch((err) => {
-            SnackbarModule.failure(err);
-          })
-      )
+          .catch((error) => {
+            SnackbarModule.failure(error);
+          }),
+      ),
     );
     document.body.style.cursor = 'default';
     return loadedIds;
   }
 
   @Action
-  evaluationLoaded(evalId: string) {
-    return this.allEvaluations.find((obj) => {
-      return obj.id === evalId;
-    });
-  }
-
-  @Action
   async loadEvaluation(id: string) {
-    return axios.get<IEvaluation>(`/evaluations/${id}`).then(({data}) => {
+    return axios.get<IEvaluation>(`/evaluations/${id}`).then(({ data }) => {
       this.context.commit('SAVE_EVALUATION', data);
       this.context.commit('SAVE_PAGED_EVALUATION', data);
       return data;
     });
   }
 
-  @Action
-  async updateEvaluation(evaluation: IEvaluation) {
-    return axios
-      .put<IEvaluation>(`/evaluations/${evaluation.id}`, evaluation)
-      .then(({data}) => {
-        this.context.commit('SAVE_EVALUATION', data);
-        return data;
-      });
-  }
-
-  @Action
-  async deleteEvaluation(evaluation: IEvaluation) {
-    this.context.commit('REMOVE_EVALUATION', evaluation);
-    return axios.delete(`/evaluations/${evaluation.id}`);
+  @Mutation
+  REMOVE_EVALUATION(evaluation: IEvaluation) {
+    this.allEvaluations.splice(this.allEvaluations.indexOf(evaluation), 1);
   }
 
   @Action
   async removeEvaluation(fileId: FileID) {
-    const dbId = await InspecDataModule.loadedDatabaseIdsForFileId(fileId);
+    const dbId = InspecDataModule.databaseIdForFile(fileId);
     const evaluation = this.allEvaluations.find((obj) => {
       return obj.id === dbId;
     });
@@ -183,49 +188,6 @@ export class Evaluation extends VuexModule {
     if (evaluation != undefined) {
       this.context.commit('REMOVE_EVALUATION', evaluation);
     }
-  }
-
-  @Action
-  async deleteTag(tag: IEvaluationTag) {
-    return axios.delete(`/evaluation-tags/${tag.id}`);
-  }
-
-  @Action
-  async addTag({
-    evaluation,
-    tag
-  }: {
-    evaluation: IEvaluation;
-    tag: ICreateEvaluationTag;
-  }) {
-    return axios.post(`/evaluation-tags/${evaluation.id}`, tag);
-  }
-
-  @Mutation
-  UPDATE_PARAMS(params: IEvalPaginationParams) {
-    const totalReturned = Number(params.offset) + Number(params.limit);
-    const onPage = Math.ceil(
-      totalReturned / 100 / (Number(params.limit) / 100)
-    );
-    this.page = onPage;
-    this.offset = Number(params.offset);
-    this.limit = Number(params.limit);
-    this.order = params.order;
-  }
-
-  @Mutation
-  SET_PAGED_EVALUATIONS(evaluations: IEvaluation[]) {
-    this.pagedEvaluations = evaluations;
-  }
-
-  @Mutation
-  SET_ALL_EVALUATION(evaluations: IEvaluation[]) {
-    this.allEvaluations = evaluations;
-  }
-
-  @Mutation
-  SET_ALL_EVALUATION_COUNT(evaluationsCount: number) {
-    this.evaluationsCount = evaluationsCount;
   }
 
   // Save an evaluation or update it if is already saved.
@@ -262,8 +224,13 @@ export class Evaluation extends VuexModule {
   }
 
   @Mutation
-  REMOVE_EVALUATION(evaluation: IEvaluation) {
-    this.allEvaluations.splice(this.allEvaluations.indexOf(evaluation), 1);
+  SET_ALL_EVALUATION(evaluations: IEvaluation[]) {
+    this.allEvaluations = evaluations;
+  }
+
+  @Mutation
+  SET_ALL_EVALUATION_COUNT(evaluationsCount: number) {
+    this.evaluationsCount = evaluationsCount;
   }
 
   @Mutation
@@ -272,6 +239,33 @@ export class Evaluation extends VuexModule {
       document.body.style.cursor = 'default';
     }
     this.loading = value;
+  }
+
+  @Mutation
+  SET_PAGED_EVALUATIONS(evaluations: IEvaluation[]) {
+    this.pagedEvaluations = evaluations;
+  }
+
+  @Mutation
+  UPDATE_PARAMS(params: IEvalPaginationParams) {
+    const totalReturned = Number(params.offset) + Number(params.limit);
+    const onPage = Math.ceil(
+      totalReturned / 100 / (Number(params.limit) / 100),
+    );
+    this.page = onPage;
+    this.offset = Number(params.offset);
+    this.limit = Number(params.limit);
+    this.order = params.order;
+  }
+
+  @Action
+  async updateEvaluation(evaluation: IEvaluation) {
+    return axios
+      .put<IEvaluation>(`/evaluations/${evaluation.id}`, evaluation)
+      .then(({ data }) => {
+        this.context.commit('SAVE_EVALUATION', data);
+        return data;
+      });
   }
 }
 

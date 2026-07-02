@@ -25,7 +25,9 @@
             />
           </v-list-item-action>
           <v-list-item-avatar>
-            <v-icon small>mdi-format-list-bulleted</v-icon>
+            <v-icon small>
+              mdi-format-list-bulleted
+            </v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
@@ -34,7 +36,10 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-row class="pt-5 pb-5" justify="center">
+        <v-row
+          class="pt-5 pb-5"
+          justify="center"
+        >
           <v-btn
             small
             style="cursor: pointer"
@@ -42,7 +47,9 @@
             @click="$emit('remove-selected')"
           >
             <span>Remove selected {{ headerText }} </span>
-            <v-icon right>mdi-text-box-remove-outline</v-icon>
+            <v-icon right>
+              mdi-text-box-remove-outline
+            </v-icon>
           </v-btn>
         </v-row>
 
@@ -56,7 +63,10 @@
           @click.stop="$emit('toggle-compare-view')"
         >
           <v-list-item-action>
-            <v-switch color="blue" :input-value="compareViewActive" />
+            <v-switch
+              color="blue"
+              :input-value="compareViewActive"
+            />
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Comparison View</v-list-item-title>
@@ -71,33 +81,30 @@
 </template>
 
 <script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
-import {Trinary} from '@/enums/Trinary';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {Component, Prop, Vue} from 'vue-property-decorator';
+import { Trinary } from '@/enums/Trinary';
+import type { EvaluationFile, ProfileFile } from '@/store/report_intake';
 
-@Component({
-  components: {
-    FileList
-  }
-})
+@Component({ components: { FileList } })
 export default class DropdownContent extends Vue {
-  @Prop({type: String, required: true}) readonly headerText!: string;
-  @Prop({type: String, required: true}) readonly allSelected!: Trinary;
+  @Prop({ required: true, type: String }) readonly allSelected!: Trinary;
+  @Prop({ default: false, required: false, type: Boolean })
+  readonly anySelected!: boolean;
 
-  @Prop({type: Array, required: true}) readonly files!:
+  @Prop({ default: false, required: false, type: Boolean })
+  readonly compareViewActive!: boolean;
+
+  @Prop({ default: false, required: false, type: Boolean })
+  readonly enableCompareView!: boolean;
+
+  @Prop({ required: true, type: Array }) readonly files!:
     | EvaluationFile[]
     | ProfileFile[];
 
-  @Prop({type: String, required: false}) readonly route!: string;
-  @Prop({default: false, type: Boolean, required: false})
-  readonly compareViewActive!: boolean;
+  @Prop({ required: true, type: String }) readonly headerText!: string;
 
-  @Prop({default: false, type: Boolean, required: false})
-  readonly enableCompareView!: boolean;
-
-  @Prop({default: false, type: Boolean, required: false})
-  readonly anySelected!: boolean;
+  @Prop({ required: false, type: String }) readonly route!: string;
 
   get allSelectedValue(): boolean {
     return this.allSelected === Trinary.On;

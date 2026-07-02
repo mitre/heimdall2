@@ -11,16 +11,12 @@
 </template>
 
 <script lang="ts">
+import Component, { mixins } from 'vue-class-component';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import ServerMixin from '@/mixins/ServerMixin';
-import {ServerModule} from '@/store/server';
-import Component, {mixins} from 'vue-class-component';
+import { ServerModule } from '@/store/server';
 
-@Component({
-  components: {
-    IconLinkItem
-  }
-})
+@Component({ components: { IconLinkItem } })
 export default class LogoutButton extends mixins(ServerMixin) {
   logOut() {
     ServerModule.Logout();

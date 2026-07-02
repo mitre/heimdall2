@@ -1,7 +1,10 @@
 <template>
   <v-card>
     <v-card-title class="pb-0">
-      <GroupModal id="groupModal" :create="true">
+      <GroupModal
+        id="groupModal"
+        :create="true"
+      >
         <template #clickable="{on, attrs}">
           <v-btn
             color="primary"
@@ -36,7 +39,10 @@
         </v-container>
       </template>
       <template #[`item.members`]="{item}">
-        <span v-for="user in item.members.slice(0, 3)" :key="user.id">
+        <span
+          v-for="user in item.members.slice(0, 3)"
+          :key="user.id"
+        >
           <v-chip
             pill
             color="primary"
@@ -58,7 +64,10 @@
         </v-chip>
       </template>
       <template #[`item.owners`]="{item}">
-        <span v-for="user in item.owners.slice(0, 3)" :key="user.id">
+        <span
+          v-for="user in item.owners.slice(0, 3)"
+          :key="user.id"
+        >
           <v-chip
             pill
             color="primary"
@@ -80,13 +89,27 @@
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
-        <v-tooltip color="secondary" left>
+        <v-tooltip
+          color="secondary"
+          left
+        >
           <template #activator="{on}">
-            <v-icon small title="Info" data-cy="info" class="mr-2" v-on="on">
+            <v-icon
+              small
+              title="Info"
+              data-cy="info"
+              class="mr-2"
+              v-on="on"
+            >
               mdi-information
             </v-icon>
           </template>
-          <v-card color="transparent" flat max-width="600px" overflow-y-auto>
+          <v-card
+            color="transparent"
+            flat
+            max-width="600px"
+            overflow-y-auto
+          >
             <span>
               <v-card-title>{{ item.name }}</v-card-title>
               <v-card-text>
@@ -102,7 +125,7 @@
                   v-for="(line, index) in item.desc.split('\n')"
                   :key="index"
                 >
-                  {{ line }} <br />
+                  {{ line }} <br>
                 </div>
               </v-card-text>
               <v-card-text v-else>None</v-card-text>
@@ -117,7 +140,13 @@
             :group="item"
           >
             <template #clickable="{on}">
-              <v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
+              <v-icon
+                small
+                title="Edit"
+                data-cy="edit"
+                class="mr-2"
+                v-on="on"
+              >
                 mdi-pencil
               </v-icon>
             </template>
@@ -132,7 +161,9 @@
           </v-icon>
         </span>
       </template>
-      <template #no-data> No groups match current selection. </template>
+      <template #no-data>
+        No groups match current selection.
+      </template>
     </v-data-table>
     <ActionDialog
       v-model="dialogDelete"
@@ -149,65 +180,89 @@
 </template>
 
 <script lang="ts">
+import type { IGroup, ISlimUser } from '@heimdall/common/interfaces';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
 import GroupUsers from '@/components/global/groups/GroupUsers.vue';
 import Users from '@/components/global/groups/Users.vue';
-import {GroupsModule} from '@/store/groups';
-import {SnackbarModule} from '@/store/snackbar';
-import {IGroup, ISlimUser} from '@heimdall/common/interfaces';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { GroupsModule } from '@/store/groups';
+import { SnackbarModule } from '@/store/snackbar';
 
 @Component({
   components: {
     ActionDialog,
     GroupModal,
+    GroupUsers,
     Users,
-    GroupUsers
-  }
+  },
 })
 export default class GroupManagement extends Vue {
-  @Prop({type: Boolean, default: false}) readonly adminPanel!: boolean;
+  @Prop({ default: false, type: Boolean }) readonly adminPanel!: boolean;
 
-  editedGroup: IGroup | null = null;
-  selectedGroupUsers: ISlimUser[] | null = [];
   dialogDelete = false;
   dialogDisplayUsers = false;
-  search = '';
-
+  editedGroup: IGroup | null = null;
   groupsHeaders: {
+    align?: string;
+    sortable?: boolean;
     text: string;
     value: string;
-    sortable?: boolean;
-    align?: string;
   }[] = [
     {
-      text: 'ID',
       sortable: true,
-      value: 'id'
+      text: 'ID',
+      value: 'id',
     },
     {
-      text: 'Group Name',
       align: 'start',
       sortable: true,
-      value: 'name'
+      text: 'Group Name',
+      value: 'name',
     },
     {
-      text: 'Public',
       sortable: true,
-      value: 'public'
+      text: 'Public',
+      value: 'public',
     },
-    {text: 'Your Role', value: 'role', sortable: true},
-    {text: 'Owners', value: 'owners', sortable: true},
-    {text: 'Members', value: 'members', sortable: true},
-    {text: 'Actions', value: 'actions', sortable: false}
+    { sortable: true, text: 'Your Role', value: 'role' },
+    { sortable: true, text: 'Owners', value: 'owners' },
+    { sortable: true, text: 'Members', value: 'members' },
+    { sortable: false, text: 'Actions', value: 'actions' },
   ];
 
-  deleteGroupDialog(group: IGroup): void {
-    this.editedGroup = group;
-    this.dialogDelete = true;
+  search = '';
+
+  selectedGroupUsers: ISlimUser[] | null = [];
+
+  get groupData(): (IGroup & { members: ISlimUser[]; owners: ISlimUser[] })[] {
+    let groups: IGroup[];
+    groups = this.adminPanel
+      ? [...GroupsModule.myGroups, ...GroupsModule.allGroups.filter(
+        group =>
+          !GroupsModule.myGroups
+            .map(myGroup => myGroup.id)
+            .includes(group.id),
+      )]
+      : GroupsModule.myGroups;
+    return groups.map((group) => {
+      return {
+        ...group,
+        members: group.users.filter(user => user.groupRole === 'member'),
+        owners: group.users.filter(user => user.groupRole === 'owner'),
+      };
+    });
+  }
+
+  get loading(): boolean {
+    return GroupsModule.loading;
+  }
+
+  closeActionDialog() {
+    this.dialogDelete = false;
+    this.editedGroup = null;
   }
 
   deleteGroupConfirm(): void {
@@ -222,17 +277,9 @@ export default class GroupManagement extends Vue {
     }
   }
 
-  closeActionDialog() {
-    this.dialogDelete = false;
-    this.editedGroup = null;
-  }
-
-  getMemberName(users: ISlimUser): string {
-    if (!users.firstName && !users.lastName) {
-      return users.email;
-    } else {
-      return `${users.firstName}${users.lastName ? ' ' + users.lastName : ''}`;
-    }
+  deleteGroupDialog(group: IGroup): void {
+    this.editedGroup = group;
+    this.dialogDelete = true;
   }
 
   displayUsersDialog(members: ISlimUser[]) {
@@ -240,31 +287,8 @@ export default class GroupManagement extends Vue {
     this.dialogDisplayUsers = true;
   }
 
-  get loading(): boolean {
-    return GroupsModule.loading;
-  }
-
-  get groupData(): (IGroup & {members: ISlimUser[]; owners: ISlimUser[]})[] {
-    let groups: IGroup[];
-    if (this.adminPanel) {
-      groups = GroupsModule.myGroups.concat(
-        GroupsModule.allGroups.filter(
-          (group) =>
-            !GroupsModule.myGroups
-              .map((myGroup) => myGroup.id)
-              .includes(group.id)
-        )
-      );
-    } else {
-      groups = GroupsModule.myGroups;
-    }
-    return groups.map((group) => {
-      return {
-        ...group,
-        members: group.users.filter((user) => user.groupRole === 'member'),
-        owners: group.users.filter((user) => user.groupRole === 'owner')
-      };
-    });
+  getMemberName(users: ISlimUser): string {
+    return !users.firstName && !users.lastName ? users.email : `${users.firstName}${users.lastName ? ' ' + users.lastName : ''}`;
   }
 }
 </script>

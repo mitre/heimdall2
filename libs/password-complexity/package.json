@@ -3,6 +3,7 @@
   "version": "2.13.0",
   "license": "Apache-2.0",
   "description": "Common utilities for checking password complexity",
+  "type": "commonjs",
   "private": true,
   "repository": {
     "type": "git",

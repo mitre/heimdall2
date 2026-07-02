@@ -1,9 +1,9 @@
-import {Module} from '@nestjs/common';
-import {JwtModule} from '@nestjs/jwt';
-import {tokenProviders} from './token.providers';
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { tokenProviders } from './token.providers';
 
 @Module({
+  exports: [JwtModule],
   imports: [...tokenProviders],
-  exports: [JwtModule]
 })
 export class TokenModule {}

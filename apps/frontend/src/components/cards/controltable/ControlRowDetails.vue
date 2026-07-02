@@ -1,25 +1,46 @@
 <template>
-  <v-row no-gutters dense class="pb-1">
-    <v-col cols="12" class="font-weight-bold">
+  <v-row
+    no-gutters
+    dense
+    class="pb-1"
+  >
+    <v-col
+      cols="12"
+      class="font-weight-bold"
+    >
       <v-card>
-        <v-tabs v-model="localTab" fixed-tabs show-arrows @change="tab_change">
+        <v-tabs
+          v-model="localTab"
+          fixed-tabs
+          show-arrows
+          @change="tab_change"
+        >
           <!-- Declare our tabs -->
-          <v-tab href="#tab-test"> Test </v-tab>
-          <v-tab href="#tab-details"> Details </v-tab>
-          <v-tab href="#tab-code"> Code </v-tab>
+          <v-tab href="#tab-test">
+            Test
+          </v-tab>
+          <v-tab href="#tab-details">
+            Details
+          </v-tab>
+          <v-tab href="#tab-code">
+            Code
+          </v-tab>
 
           <v-tab-item value="tab-test">
             <div class="pa-4">
               <div
                 v-if="
                   caveat ||
-                  justification ||
-                  rationale ||
-                  comments ||
-                  errorMessage
+                    justification ||
+                    rationale ||
+                    comments ||
+                    errorMessage
                 "
               >
-                <div v-if="errorMessage" class="mb-2">
+                <div
+                  v-if="errorMessage"
+                  class="mb-2"
+                >
                   <v-btn
                     class="unclickable-button mr-3"
                     elevation="2"
@@ -29,18 +50,18 @@
                   </v-btn>
                   <span>
                     {{ errorMessage }}
-                    <br />
+                    <br>
                   </span>
                 </div>
-                <span v-if="caveat">Caveat: {{ caveat }}<br /></span>
+                <span v-if="caveat">Caveat: {{ caveat }}<br></span>
                 <span v-if="justification">
                   Justification: {{ justification }}
-                  <br />
+                  <br>
                 </span>
-                <span v-if="rationale">Rationale: {{ rationale }}<br /></span>
-                <span v-if="comments">Comments: {{ comments }}<br /></span>
+                <span v-if="rationale">Rationale: {{ rationale }}<br></span>
+                <span v-if="comments">Comments: {{ comments }}<br></span>
                 <v-divider />
-                <br />
+                <br>
               </div>
               <!-- eslint-disable-next-line vue/no-v-html -->
               <div v-html="sanitize_html(main_desc)" />
@@ -58,12 +79,21 @@
             <v-container fluid>
               <!-- Create a row for each detail -->
               <template v-for="(detail, index) in details">
-                <v-row :key="'tab' + index" :class="zebra(index)">
-                  <v-col cols="12" :class="detail.class">
+                <v-row
+                  :key="'tab' + index"
+                  :class="zebra(index)"
+                >
+                  <v-col
+                    cols="12"
+                    :class="detail.class"
+                  >
                     <h3>{{ detail.name }}:</h3>
                     <h4>
                       <!-- eslint-disable vue/no-v-html -->
-                      <pre class="mono" v-html="sanitize_html(detail.value)" />
+                      <pre
+                        class="mono"
+                        v-html="sanitize_html(detail.value)"
+                      />
                       <!-- eslint-enable vue/no-v-html -->
                     </h4>
                   </v-col>
@@ -77,7 +107,9 @@
             <v-container fluid>
               <v-row>
                 <v-col cols="12">
-                  <prism :language="language">{{ control.full_code }}</prism>
+                  <prism :language="language">
+                    {{ control.full_code }}
+                  </prism>
                 </v-col>
               </v-row>
             </v-container>
@@ -89,48 +121,46 @@
 </template>
 
 <script lang="ts">
-import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
-import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import {ContextualizedControl} from 'inspecjs';
+import type { ContextualizedControl, ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-//TODO: add line numbers
+import Component, { mixins } from 'vue-class-component';
+// @ts-ignore
+import Prism from 'vue-prism-component';
+// TODO: add line numbers
 import 'prismjs';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-makefile.js';
 import 'prismjs/components/prism-ruby.js';
 import 'prismjs/themes/prism-tomorrow.css';
-import Component, {mixins} from 'vue-class-component';
-//@ts-ignore
-import Prism from 'vue-prism-component';
-import {Prop, Watch} from 'vue-property-decorator';
+import { Prop, Watch } from 'vue-property-decorator';
+import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
+import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 
-interface Detail {
+type Detail = {
+  class?: string;
   name: string;
   value: string;
-  class?: string;
-}
+};
 
 @Component({
   components: {
     ControlRowCol,
-    Prism
-  }
+    Prism,
+  },
 })
 export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
-  @Prop({type: String, default: 'tab-test'}) readonly tab!: string;
-  @Prop({type: Object, required: true})
+  @Prop({ required: true, type: Object })
   readonly control!: ContextualizedControl;
+
+  @Prop({ default: 'tab-test', type: String }) readonly tab!: string;
 
   localTab = this.tab;
 
-  @Watch('tab')
-  onTabChanged(newTab?: string, _oldVal?: string) {
-    if (newTab) {
-      this.localTab = newTab;
-    }
+  get caveat(): string | undefined {
+    return this.control.hdf.descriptions.caveat;
   }
 
-  get cciControlString(): string | null {
+  get cciControlString(): null | string {
     const cci = this.control.hdf.wraps.tags.cci;
     if (!cci) {
       return null;
@@ -141,7 +171,11 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     }
   }
 
-  get cweControlString(): string | null {
+  get comments(): string | undefined {
+    return this.control.hdf.descriptions.comments;
+  }
+
+  get cweControlString(): null | string {
     const cwe = this.control.hdf.wraps.tags.cweid;
     if (!cwe) {
       return null;
@@ -152,95 +186,37 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     }
   }
 
-  get main_desc(): string {
-    if (this.control.data.desc) {
-      return this.control.data.desc.trim();
-    } else {
-      return 'No description';
-    }
-  }
-
-  get language(): string {
-    try {
-      JSON.parse(this.control.data.code || '');
-      return 'json';
-    } catch {
-      return 'ruby';
-    }
-  }
-
-  tab_change(tab: string) {
-    this.$emit('update:tab', tab);
-  }
-
-  /** Shown above the description */
-  get header(): string {
-    const msgSplit = this.control.root.hdf.finding_details.split(':');
-    if (msgSplit.length === 1) {
-      return msgSplit[0] + '.';
-    } else {
-      return msgSplit[0] + ':';
-    }
-  }
-
-  get caveat(): string | undefined {
-    return this.control.hdf.descriptions.caveat;
-  }
-
-  get rationale(): string | undefined {
-    return this.control.hdf.descriptions.rationale;
-  }
-
-  get justification(): string | undefined {
-    return this.control.hdf.descriptions.justification;
-  }
-
-  get comments(): string | undefined {
-    return this.control.hdf.descriptions.comments;
-  }
-
-  get errorMessage(): string {
-    return this.control.root.hdf.segments?.length == 0
-      ? "The control didn't return any results.  Check with the author of the profile to ensure the code is correct."
-      : '';
-  }
-
   get details(): Detail[] {
-    const detailsMap = new Map();
+    const detailsMap = new Map([['Caveat', this.control.hdf.descriptions.caveat], ['Control', this.control.data.id], ['Desc', this.control.data.desc], ['Rationale', this.control.hdf.descriptions.rationale], ['Title', this.control.data.title]]);
 
-    detailsMap.set('Control', this.control.data.id);
-    detailsMap.set('Title', this.control.data.title);
-    detailsMap.set('Caveat', this.control.hdf.descriptions.caveat);
-    detailsMap.set('Desc', this.control.data.desc);
-    detailsMap.set('Rationale', this.control.hdf.descriptions.rationale);
     // default to showing severity tag, otherwise show the computed severity (based on impact or severityoverride)
     detailsMap.set(
       'Severity',
       _.get(
         this.control.root.data.tags,
         'severity',
-        this.control.root.hdf.severity
-      )
+        this.control.root.hdf.severity,
+      ),
     );
     detailsMap.set(
       'Severity Override',
-      _.get(this.control.root.data.tags, 'severityoverride')
+      _.get(this.control.root.data.tags, 'severityoverride'),
     );
     detailsMap.set(
       'Severity Override Justification',
-      _.get(this.control.root.data.tags, 'severityjustification')
+      _.get(this.control.root.data.tags, 'severityjustification'),
     );
-    detailsMap.set('Impact', this.control.data.impact);
+    detailsMap.set('Impact', String(this.control.data.impact));
     detailsMap.set('NIST Controls', this.control.hdf.rawNistTags.join(', '));
     detailsMap.set('CCI Controls', this.cciControlString);
     detailsMap.set('CWE ID', this.cweControlString);
     detailsMap.set(
       'Check',
-      this.control.hdf.descriptions.check || this.control.data.tags.check
+      this.control.hdf.descriptions.check || this.control.data.tags.check,
     );
     detailsMap.set(
       'Fix',
-      this.control.hdf.descriptions.fix || this.control.data.tags.fix
+      this.control.hdf.descriptions.fix || this.control.data.tags.fix,
     );
 
     const sparseControl = _.omit(this.control, [
@@ -249,17 +225,17 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       'data.tags.cweid',
       'data.tags.severity',
       'data.tags.severityoverride',
-      'data.tags.severityjustification'
+      'data.tags.severityjustification',
     ]);
 
     // Convert all tags to Details
-    Object.entries(sparseControl.data?.tags || {}).forEach(([key, value]) => {
+    for (const [key, value] of Object.entries(sparseControl.data?.tags || {})) {
       if (!detailsMap.has(_.startCase(key))) {
         // Make sure all values are strings
         if (Array.isArray(value)) {
           detailsMap.set(
             _.startCase(key),
-            value.map((v) => JSON.stringify(v, null, 2)).join(', ')
+            value.map(v => JSON.stringify(v, null, 2)).join(', '),
           );
         } else if (typeof value === 'object') {
           detailsMap.set(_.startCase(key), JSON.stringify(value, null, 2));
@@ -267,7 +243,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
           detailsMap.set(_.startCase(key), String(value));
         }
       }
-    });
+    }
 
     for (const prop in this.control.hdf.descriptions) {
       if (!detailsMap.has(_.capitalize(prop))) {
@@ -280,17 +256,61 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       detailsMap.set(
         'References',
         this.control.data.refs
-          ?.map((ref) => JSON.stringify(ref, null, 2))
-          .join('\n')
+          ?.map((ref: ExecJSON.Reference) => JSON.stringify(ref, null, 2))
+          .join('\n'),
       );
     }
 
-    return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
-      (v) => v.value !== undefined
+    return Array.from(detailsMap, ([name, value]) => ({ name, value })).filter(
+      (v): v is Detail => v.value != null,
     );
   }
 
-  //for zebra background
+  get errorMessage(): string {
+    return this.control.root.hdf.segments?.length == 0
+      ? "The control didn't return any results.  Check with the author of the profile to ensure the code is correct."
+      : '';
+  }
+
+  /** Shown above the description */
+  get header(): string {
+    const msgSplit = this.control.root.hdf.finding_details.split(':');
+    return msgSplit.length === 1 ? msgSplit[0] + '.' : msgSplit[0] + ':';
+  }
+
+  get justification(): string | undefined {
+    return this.control.hdf.descriptions.justification;
+  }
+
+  get language(): string {
+    try {
+      JSON.parse(this.control.data.code || '');
+      return 'json';
+    } catch {
+      return 'ruby';
+    }
+  }
+
+  get main_desc(): string {
+    return this.control.data.desc ? this.control.data.desc.trim() : 'No description';
+  }
+
+  get rationale(): string | undefined {
+    return this.control.hdf.descriptions.rationale;
+  }
+
+  @Watch('tab')
+  onTabChanged(newTab?: string, _oldVal?: string) {
+    if (newTab) {
+      this.localTab = newTab;
+    }
+  }
+
+  tab_change(tab: string) {
+    this.$emit('update:tab', tab);
+  }
+
+  // for zebra background
   zebra(ix: number): string {
     if (ix % 2 === 0) {
       return 'zebra-table';

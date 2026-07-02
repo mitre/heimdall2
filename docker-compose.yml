@@ -38,7 +38,7 @@ services:
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
     env_file: .env
     ports:
-      - "3000"
+      - "${HEIMDALL_BACKEND_PORT:-3000}"
     volumes:
       - type: volume
         source: cert_bundles

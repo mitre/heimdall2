@@ -1,5 +1,5 @@
 export const enum Trinary {
-  On = 'On',
+  Mixed = 'Mixed',
   Off = 'Off',
-  Mixed = 'Mixed'
+  On = 'On',
 }

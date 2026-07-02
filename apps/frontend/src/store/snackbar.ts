@@ -1,37 +1,29 @@
-import Store from '@/store/store';
 import * as _ from 'lodash';
 import {
   Action,
   getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
 } from 'vuex-module-decorators';
+import Store from '@/store/store';
 
-export interface ISnackbarState {
-  message: string;
+export type ISnackbarState = {
   error: boolean;
+  message: string;
   show: boolean;
-}
+};
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'SnackbarModule',
+  namespaced: true,
   store: Store,
-  name: 'SnackbarModule'
 })
 export class Snackbar extends VuexModule {
-  message = '';
   error = false;
+  message = '';
   show = false;
-
-  @Action
-  notify(message: string) {
-    this.context.commit('SET_VISIBILITY', false);
-    this.context.commit('SET_ERROR', false);
-    this.context.commit('SET_MESSAGE', message);
-    this.context.commit('SET_VISIBILITY', true);
-  }
 
   @Action
   failure(message: string) {
@@ -44,20 +36,20 @@ export class Snackbar extends VuexModule {
   @Action
   HTTPFailure(error: unknown) {
     const nestedError = _.get(error, 'response.data.message') as
+      | null
       | string[]
-      | undefined
-      | null;
+      | undefined;
     if (
-      nestedError !== null &&
-      nestedError !== undefined &&
-      _.isArray(nestedError)
+      nestedError !== null
+      && nestedError !== undefined
+      && _.isArray(nestedError)
     ) {
       this.failure(
         nestedError
           .map(function capitalize(c: string) {
             return c.charAt(0).toUpperCase() + c.slice(1);
           })
-          .join(', ')
+          .join(', '),
       );
     } else {
       this.failure(`${nestedError || error}`);
@@ -65,8 +57,11 @@ export class Snackbar extends VuexModule {
   }
 
   @Action
-  visibility(visibility: boolean) {
-    this.context.commit('SET_VISIBILITY', visibility);
+  notify(message: string) {
+    this.context.commit('SET_VISIBILITY', false);
+    this.context.commit('SET_ERROR', false);
+    this.context.commit('SET_MESSAGE', message);
+    this.context.commit('SET_VISIBILITY', true);
   }
 
   @Mutation
@@ -82,6 +77,11 @@ export class Snackbar extends VuexModule {
   @Mutation
   SET_VISIBILITY(visibility: boolean) {
     this.show = visibility;
+  }
+
+  @Action
+  visibility(visibility: boolean) {
+    this.context.commit('SET_VISIBILITY', visibility);
   }
 }
 

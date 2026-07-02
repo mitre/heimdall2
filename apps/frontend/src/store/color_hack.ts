@@ -1,6 +1,6 @@
+import { ControlGroupStatus } from 'inspecjs';
+import { getModule, Module, VuexModule } from 'vuex-module-decorators';
 import Store from '@/store/store';
-import {ControlGroupStatus} from 'inspecjs';
-import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 /**
  * Gets a hex code for the given color
@@ -13,38 +13,73 @@ function calculateColor(colorName: string): string {
   elt.style.color = colorName;
 
   // Add it to the doc and get the resulting style
-  const style = window.getComputedStyle(document.body.appendChild(elt));
+  const style = globalThis.getComputedStyle(document.body.appendChild(elt));
 
   // Parse out the colors
   const rawColors = style.color.match(/\d+/gv) as RegExpExecArray; // We know this will succeed - we've already given the colors
-  const colors = rawColors.map((a: string) => parseInt(a, 10));
+  const colors = rawColors.map((a: string) => Number.parseInt(a, 10));
 
   // Cleanup
-  document.body.removeChild(elt);
+  elt.remove();
   if (colors.length >= 3) {
     // Make a (padded) integer representing the hex code
     const value = (1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2];
     // Parse it as hex, and replace the leading 1 with a #
-    return `#${value.toString(16).substring(1)}`;
+    return `#${value.toString(16).slice(1)}`;
   } else {
     throw new Error(`Error generating color ${colorName}`);
   }
 }
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'colorHack',
+  namespaced: true,
   store: Store,
-  name: 'colorHack'
 })
 export class ColorHack extends VuexModule {
+  /**
+   * Parameterized getter that returns an appropriate rgb color code for a given control (group) status
+   */
+  get colorForStatus(): (status: ControlGroupStatus) => string {
+    return (status: ControlGroupStatus) => {
+      switch (status) {
+        case 'Empty': {
+          return 'black';
+        }
+        case 'Failed': {
+          return this.lookupColor('statusFailed');
+        }
+        case 'From Profile': {
+          return this.lookupColor('statusFromProfile');
+        }
+        case 'Not Applicable': {
+          return this.lookupColor('statusNotApplicable');
+        }
+        case 'Not Reviewed': {
+          return this.lookupColor('statusNotReviewed');
+        }
+        case 'Passed': {
+          return this.lookupColor('statusPassed');
+        }
+        case 'Profile Error': {
+          return this.lookupColor('statusProfileError');
+        }
+        default: {
+          console.warn(`No color defined for ${status}`);
+          return 'rgb(187, 187, 187)';
+        }
+      }
+    };
+  }
+
   /**
    * Get a color's (e.g. red, blue, info, error) hex code by name.
    * Tries a class color before a base/builtin color
    */
   get lookupColor(): (colorName: string) => string {
     // Establish a cache
-    const localCache: {[key: string]: string} = {};
+    const localCache: Record<string, string> = {};
 
     // Establish to vue that we vary on any changes to the theme
     // let _depends: any = this.
@@ -69,34 +104,6 @@ export class ColorHack extends VuexModule {
 
         localCache[colorName] = color;
         return color;
-      }
-    };
-  }
-
-  /**
-   * Parameterized getter that returns an appropriate rgb color code for a given control (group) status
-   */
-  get colorForStatus(): (status: ControlGroupStatus) => string {
-    return (status: ControlGroupStatus) => {
-      switch (status) {
-        case 'Passed':
-          return this.lookupColor('statusPassed');
-        case 'Failed':
-          return this.lookupColor('statusFailed');
-        case 'Not Applicable':
-          return this.lookupColor('statusNotApplicable');
-        case 'Not Reviewed':
-          return this.lookupColor('statusNotReviewed');
-        case 'Profile Error':
-          return this.lookupColor('statusProfileError');
-        case 'From Profile':
-          return this.lookupColor('statusFromProfile');
-        case 'Empty':
-          return 'black';
-        default:
-          // eslint-disable-next-line no-console
-          console.warn(`No color defined for ${status}`);
-          return 'rgb(187, 187, 187)';
       }
     };
   }

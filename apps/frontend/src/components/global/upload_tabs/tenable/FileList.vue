@@ -1,18 +1,27 @@
 <template>
   <span>
     <div class="d-flex flex-row-reverse">
-      <v-btn icon style="cursor: pointer" @click="updateSearch">
+      <v-btn
+        icon
+        style="cursor: pointer"
+        @click="updateSearch"
+      >
         <v-icon
           b-tooltip.hover
           title="Request content from the server"
           color="primary"
-          >mdi-refresh</v-icon
-        >
+        >mdi-refresh</v-icon>
       </v-btn>
-      <v-btn icon style="cursor: pointer" @click="logout">
-        <v-icon b-tooltip.hover title="Return to login page" color="red"
-          >mdi-logout</v-icon
-        >
+      <v-btn
+        icon
+        style="cursor: pointer"
+        @click="logout"
+      >
+        <v-icon
+          b-tooltip.hover
+          title="Return to login page"
+          color="red"
+        >mdi-logout</v-icon>
       </v-btn>
     </div>
 
@@ -20,9 +29,16 @@
 
     <v-container class="bg-surface-variant">
       <v-row no-gutters>
-        <v-col cols="12" sm="8">
+        <v-col
+          cols="12"
+          sm="8"
+        >
           <v-sheet>
-            <v-radio-group v-model="scanDays" row inline>
+            <v-radio-group
+              v-model="scanDays"
+              row
+              inline
+            >
               <v-radio
                 label="Today's"
                 :value="0"
@@ -72,7 +88,11 @@
       >
         <template #no-data> No data. Try relaxing the scan options. </template>
       </v-data-table>
-      <v-btn block class="card-outter" @click="loadResults">
+      <v-btn
+        block
+        class="card-outter"
+        @click="loadResults"
+      >
         Load Selected
         <v-icon class="pl-2"> mdi-file-download</v-icon>
       </v-btn>
@@ -81,65 +101,192 @@
 </template>
 
 <script lang="ts">
-import {InspecIntakeModule, FileLoadOptions} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
-import {FileMetaData} from '@mitre/hdf-converters';
-import {AuthInfo, ScanResults, TenableUtil} from '@/utilities/tenable_util';
+import { FileMetaData } from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {InspecDataModule} from '@/store/data_store';
+import { Prop } from 'vue-property-decorator';
+import { InspecDataModule } from '@/store/data_store';
+import { FileLoadOptions, InspecIntakeModule } from '@/store/report_intake';
+import { SnackbarModule } from '@/store/snackbar';
+import type { AuthInfo, ScanResults } from '@/utilities/tenable_util';
+import { TenableUtil } from '@/utilities/tenable_util';
 
 @Component({})
 export default class FileList extends Vue {
-  @Prop({type: Object, required: true}) readonly tenableConfig!: AuthInfo;
-
   executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
-  selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+
+  /** Table info */
+  headers = [
+    {
+      align: 'start',
+      filterable: true,
+      text: 'Scan ID',
+      value: 'id',
+    },
+    {
+      align: 'start',
+      text: 'Name',
+      value: 'name',
+    },
+    {
+      align: 'start',
+      text: 'Details',
+      value: 'details',
+    },
+    {
+      text: 'IPs',
+      value: 'scannedIPs',
+    },
+    {
+      text: 'Total Checks',
+      value: 'totalChecks',
+    },
+    {
+      text: 'Start Time',
+      value: 'startTime',
+    },
+    {
+      text: 'Finished Time',
+      value: 'finishTime',
+    },
+    {
+      text: 'Scan Status',
+      value: 'status',
+    },
+  ];
 
   loading = false;
 
   scanDays = 0;
 
-  /** Table info */
-  headers = [
-    {
-      text: 'Scan ID',
-      value: 'id',
-      filterable: true,
-      align: 'start'
-    },
-    {
-      text: 'Name',
-      value: 'name',
-      align: 'start'
-    },
-    {
-      text: 'Details',
-      value: 'details',
-      align: 'start'
-    },
-    {
-      text: 'IPs',
-      value: 'scannedIPs'
-    },
-    {
-      text: 'Total Checks',
-      value: 'totalChecks'
-    },
-    {
-      text: 'Start Time',
-      value: 'startTime'
-    },
-    {
-      text: 'Finished Time',
-      value: 'finishTime'
-    },
-    {
-      text: 'Scan Status',
-      value: 'status'
+  selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+
+  @Prop({ required: true, type: Object }) readonly tenableConfig!: AuthInfo;
+
+  epochToDate(date: string): string {
+    return Number(date) === -1
+      ? ''
+      : new Date(Number(date) * 1000).toLocaleString();
+  }
+
+  formatNumberOfScans(value: string | undefined): string {
+    const num = Number(value);
+
+    // Handle undefined, null, empty string, or invalid numbers
+    if (!value || isNaN(num) || num === -1) {
+      return '-';
     }
-  ];
+
+    return num.toLocaleString('en-US');
+  }
+
+  async loadResults() {
+    this.loading = true;
+
+    const files = this.selectedExecutions.map(
+      async (execution: Partial<ScanResults>) => {
+        if (execution.id) {
+          switch (execution.status) {
+            case 'Cancelled': {
+              SnackbarModule.failure(
+                `Scan ${execution.id} has been cancelled, please check the Tenable.sc for more details.`,
+              );
+
+              break;
+            }
+            case 'Error':
+            case 'Failed': {
+              SnackbarModule.failure(
+                `Scan ${execution.id} has failed, please check the Tenable.sc for more details.`,
+              );
+
+              break;
+            }
+            case 'Paused': {
+              SnackbarModule.failure(
+                `Scan ${execution.id} is paused, please check the Tenable.sc for more details.`,
+              );
+              // If the scan is completed, we can load the results
+
+              break;
+            }
+            case 'Running': {
+              SnackbarModule.failure(
+                `Scan ${execution.id} hasn't finished, wait until completed before loading for viewing.`,
+              );
+              // eslint-disable-next-line prettier/prettier
+
+              break;
+            }
+            default: {
+              await new TenableUtil(this.tenableConfig)
+                .getVulnerabilities(execution.id)
+                .then(async (resultData: unknown) => {
+                  if (resultData) {
+                  // Check is this scan is already loaded
+                    let isLoaded = false;
+                    const loadedFiles = InspecDataModule.allEvaluationFiles;
+
+                    // We need to check if loaded zip file contained multiple scans, where they are
+                    // loaded as [scanId]-[ReportHost] (i.e. 9214-mitre-saf-rhel8-mitre.org)
+                    // if they are, just use the scanId for the Map key. If the scan contains a single
+                    // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
+                    const loadedMap = new Map(
+                      loadedFiles.map(obj => [
+                        obj.filename.includes('-')
+                          ? obj.filename.slice(0, Math.max(0, obj.filename.indexOf('-')))
+                          : obj.filename.slice(0, Math.max(0, obj.filename.indexOf('.'))),
+                        obj.uniqueId,
+                      ]),
+                    );
+
+                    isLoaded
+                      = typeof execution.id === 'string'
+                        && loadedMap.has(execution.id);
+                    if (!isLoaded) {
+                      try {
+                        const textFile: FileLoadOptions = {
+                          data:
+                          typeof resultData === 'string'
+                            ? resultData
+                            : JSON.stringify(resultData),
+                          filename: execution.id + '.nessus',
+                        };
+                        // .loadFile evaluates to data if file is not provided
+                        return await InspecIntakeModule.loadFile(textFile);
+                      } catch (error) {
+                        SnackbarModule.failure(String(error));
+                      }
+                    }
+                  } else {
+                    SnackbarModule.failure(
+                      'Attempted to load an undefined execution',
+                    );
+                    throw new Error('Attempted to load an undefined execution');
+                  }
+                })
+                .catch((error: string) => {
+                  SnackbarModule.failure(
+                    `Failed to load scan results for execution. Scan Id: ${execution.id}, ${error}`,
+                  );
+                });
+            }
+          }
+        }
+      },
+    );
+    await Promise.all(files);
+    this.loading = false;
+    this.$emit('got-files', files);
+  }
+
+  logout() {
+    this.$emit('signOut');
+  }
+
+  async mounted() {
+    await this.updateSearch();
+  }
 
   async updateSearch() {
     this.loading = true;
@@ -153,7 +300,7 @@ export default class FileList extends Vue {
     // Set the start time to midnight (start of the day), converting to epoch
     dateNow.setHours(0, 0, 0, 0);
     const startTime = Math.trunc(
-      dateNow.setDate(dateNow.getDate() - this.scanDays) / 1000
+      dateNow.setDate(dateNow.getDate() - this.scanDays) / 1000,
     );
 
     await new TenableUtil(this.tenableConfig)
@@ -169,125 +316,15 @@ export default class FileList extends Vue {
         });
         this.loading = false;
         SnackbarModule.notify(
-          'Successfully queried Tenable.sc for available scan results'
+          'Successfully queried Tenable.sc for available scan results',
         );
       })
       .catch((error: string) => {
         this.loading = false;
         SnackbarModule.failure(
-          `Failed to retrieve scan results from the Tenable server. ${error}`
+          `Failed to retrieve scan results from the Tenable server. ${error}`,
         );
       });
-  }
-
-  async loadResults() {
-    this.loading = true;
-
-    const files = this.selectedExecutions.map(
-      async (execution: Partial<ScanResults>) => {
-        if (execution.id) {
-          if (execution.status === 'Running') {
-            SnackbarModule.failure(
-              `Scan ${execution.id} hasn't finished, wait until completed before loading for viewing.`
-            );
-            // eslint-disable-next-line prettier/prettier
-          } else if (execution.status === 'Failed' || execution.status === 'Error') {
-            SnackbarModule.failure(
-              `Scan ${execution.id} has failed, please check the Tenable.sc for more details.`
-            );
-          } else if (execution.status === 'Cancelled') {
-            SnackbarModule.failure(
-              `Scan ${execution.id} has been cancelled, please check the Tenable.sc for more details.`
-            );
-          } else if (execution.status === 'Paused') {
-            SnackbarModule.failure(
-              `Scan ${execution.id} is paused, please check the Tenable.sc for more details.`
-            );
-            // If the scan is completed, we can load the results
-          } else {
-            await new TenableUtil(this.tenableConfig)
-              .getVulnerabilities(execution.id)
-              .then(async (resultData: unknown) => {
-                if (resultData) {
-                  // Check is this scan is already loaded
-                  let isLoaded = false;
-                  const loadedFiles = InspecDataModule.allEvaluationFiles;
-
-                  // We need to check if loaded zip file contained multiple scans, where they are
-                  // loaded as [scanId]-[ReportHost] (i.e. 9214-mitre-saf-rhel8-mitre.org)
-                  // if they are, just use the scanId for the Map key. If the scan contains a single
-                  // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
-                  const loadedMap = new Map(
-                    loadedFiles.map((obj) => [
-                      obj.filename.indexOf('-') != -1
-                        ? obj.filename.substring(0, obj.filename.indexOf('-'))
-                        : obj.filename.substring(0, obj.filename.indexOf('.')),
-                      obj.uniqueId
-                    ])
-                  );
-
-                  isLoaded =
-                    typeof execution.id === 'string' &&
-                    loadedMap.has(execution.id);
-                  if (!isLoaded) {
-                    try {
-                      const textFile: FileLoadOptions = {
-                        filename: execution.id + '.nessus',
-                        data:
-                          typeof resultData === 'string'
-                            ? resultData
-                            : JSON.stringify(resultData)
-                      };
-                      // .loadFile evaluates to data if file is not provided
-                      return await InspecIntakeModule.loadFile(textFile);
-                    } catch (err) {
-                      SnackbarModule.failure(String(err));
-                    }
-                  }
-                } else {
-                  SnackbarModule.failure(
-                    'Attempted to load an undefined execution'
-                  );
-                  throw new Error('Attempted to load an undefined execution');
-                }
-              })
-              .catch((error: string) => {
-                SnackbarModule.failure(
-                  `Failed to load scan results for execution. Scan Id: ${execution.id}, ${error}`
-                );
-              });
-          }
-        }
-      }
-    );
-    await Promise.all(files);
-    this.loading = false;
-    this.$emit('got-files', files);
-  }
-
-  async mounted() {
-    await this.updateSearch();
-  }
-
-  epochToDate(date: string): string {
-    return Number(date) !== -1
-      ? new Date(Number(date) * 1000).toLocaleString()
-      : '';
-  }
-
-  formatNumberOfScans(value: string | undefined): string {
-    const num = Number(value);
-
-    // Handle undefined, null, empty string, or invalid numbers
-    if (!value || isNaN(num) || num === -1) {
-      return '-';
-    }
-
-    return num.toLocaleString('en-US');
-  }
-
-  logout() {
-    this.$emit('signOut');
   }
 }
 </script>

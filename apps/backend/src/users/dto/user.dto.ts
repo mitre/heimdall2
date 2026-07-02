@@ -1,18 +1,18 @@
-import {IUser} from '@heimdall/common/interfaces';
-import {User} from '../user.model';
+import type { IUser } from '@heimdall/common/interfaces';
+import type { User } from '../user.model';
 
 export class UserDto implements IUser {
-  id: string;
+  readonly createdAt: Date;
+  readonly creationMethod: string;
   readonly email: string;
   readonly firstName: string | undefined;
-  readonly lastName: string | undefined;
-  readonly title: string | undefined;
-  readonly role: string;
-  readonly organization: string | undefined;
-  readonly loginCount: number;
+  id: string;
   readonly lastLogin: Date | undefined;
-  readonly creationMethod: string;
-  readonly createdAt: Date;
+  readonly lastName: string | undefined;
+  readonly loginCount: number;
+  readonly organization: string | undefined;
+  readonly role: string;
+  readonly title: string | undefined;
   readonly updatedAt: Date;
 
   constructor(user: User) {

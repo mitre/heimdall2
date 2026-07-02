@@ -1,11 +1,22 @@
 <template>
-  <v-dialog v-model="dialog" width="75%">
+  <v-dialog
+    v-model="dialog"
+    width="75%"
+  >
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
     <template #activator="{on, attrs}">
-      <slot name="clickable" :on="on" :attrs="attrs" />
+      <slot
+        name="clickable"
+        :on="on"
+        :attrs="attrs"
+      />
     </template>
-    <v-banner v-if="update_unavailable" icon="mdi-alert" color="warning">
+    <v-banner
+      v-if="update_unavailable"
+      icon="mdi-alert"
+      color="warning"
+    >
       Some of the settings are managed by your identity provider.
     </v-banner>
     <v-card class="rounded-t-0">
@@ -13,13 +24,18 @@
         data-cy="userModalTitle"
         class="headline grey"
         primary-title
-        >{{ title }}</v-card-title
       >
+        {{ title }}
+      </v-card-title>
       <v-card-text v-if="userInfo === null">
-        <v-progress-linear indeterminate color="white" class="mb-0" />
+        <v-progress-linear
+          indeterminate
+          color="white"
+          class="mb-0"
+        />
       </v-card-text>
       <v-card-text v-else>
-        <br />
+        <br>
         <v-form data-cy="updateUserForm">
           <v-row>
             <v-col>
@@ -57,7 +73,11 @@
               />
             </v-col>
             <v-col v-if="admin">
-              <v-select v-model="userInfo.role" :items="roles" label="Role" />
+              <v-select
+                v-model="userInfo.role"
+                :items="roles"
+                label="Role"
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -105,14 +125,17 @@
               style="max-height: 300px"
               class="overflow-y-auto"
             >
-              <template #[`item.name`]="{item}"
-                ><v-text-field v-model="item.name" @change="updateAPIKey(item)"
-              /></template>
-              <template #[`item.apiKey`]="{item}"
-                ><span class="break-lines">{{
+              <template #[`item.name`]="{item}">
+                <v-text-field
+                  v-model="item.name"
+                  @change="updateAPIKey(item)"
+                />
+              </template>
+              <template #[`item.apiKey`]="{item}">
+                <span class="break-lines">{{
                   item.apiKey || 'Only Shown on Creation'
-                }}</span></template
-              >
+                }}</span>
+              </template>
               <template #[`item.action`]="{item}">
                 <v-tooltip left>
                   <template #activator="{on, attrs}">
@@ -122,15 +145,22 @@
                       v-bind="attrs"
                       @click="refreshAPIKey(item)"
                       v-on="on"
-                      >mdi-refresh</v-icon
                     >
+                      mdi-refresh
+                    </v-icon>
                   </template>
                   <span>Recreate this API Key</span>
                 </v-tooltip>
                 <v-tooltip top>
                   <template #activator="{on, attrs}">
-                    <span v-bind="attrs" v-on="on">
-                      <CopyButton v-if="item.apiKey" :text="item.apiKey" />
+                    <span
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <CopyButton
+                        v-if="item.apiKey"
+                        :text="item.apiKey"
+                      />
                     </span>
                   </template>
                   <span>Copy this API Key</span>
@@ -144,8 +174,9 @@
                       v-bind="attrs"
                       @click="deleteAPIKey(item)"
                       v-on="on"
-                      >mdi-delete</v-icon
                     >
+                      mdi-delete
+                    </v-icon>
                   </template>
                   <span>Delete this API Key</span>
                 </v-tooltip>
@@ -173,14 +204,16 @@
             id="toggleChangePassword"
             :disabled="update_unavailable"
             @click="changePasswordDialog"
-            >Change Password</v-btn
           >
+            Change Password
+          </v-btn>
           <v-btn
             v-if="apiKeysEnabled"
             id="toggleAPIKeys"
             class="ml-2"
             @click="toggleShowAPIKeys"
-            >{{ showAPIKeys ? 'Hide API Keys' : 'Show API Keys' }}
+          >
+            {{ showAPIKeys ? 'Hide API Keys' : 'Show API Keys' }}
           </v-btn>
           <div v-show="changePassword">
             <v-text-field
@@ -221,8 +254,9 @@
             color="primary"
             text
             @click="dialog = false"
-            >Close without saving</v-btn
           >
+            Close without saving
+          </v-btn>
         </v-col>
         <v-col class="text-right">
           <v-btn
@@ -232,8 +266,9 @@
             :disabled="!admin && update_unavailable"
             :loading="buttonLoading"
             @click="updateUserInfo"
-            >Save Changes</v-btn
           >
+            Save Changes
+          </v-btn>
         </v-col>
       </v-card-actions>
     </v-card>
@@ -241,135 +276,154 @@
 </template>
 
 <script lang="ts">
+import type { IApiKey, IUpdateUser, IUser } from '@heimdall/common/interfaces';
+import axios from 'axios';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+import { email, required, requiredIf } from 'vuelidate/lib/validators';
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import CopyButton from '@/components/generic/CopyButton.vue';
 import InputDialog from '@/components/generic/InputDialog.vue';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
-import {IApiKey, IUpdateUser, IUser} from '@heimdall/common/interfaces';
-import axios from 'axios';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {email, required, requiredIf} from 'vuelidate/lib/validators';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
 
 @Component({
-  components: {ActionDialog, CopyButton, InputDialog},
+  components: { ActionDialog, CopyButton, InputDialog },
   mixins: [UserValidatorMixin],
   validations: {
-    userInfo: {
-      email: {
-        required,
-        email
-      }
-    },
     currentPassword: {
       required: requiredIf(function (userInfo) {
         return userInfo.user.role === 'admin';
-      })
+      }),
     },
-    newPassword: {
-      required: requiredIf('changePassword')
+    newPassword: { required: requiredIf('changePassword') },
+    passwordConfirmation: { required: requiredIf('changePassword') },
+    userInfo: {
+      email: {
+        email,
+        required,
+      },
     },
-    passwordConfirmation: {
-      required: requiredIf('changePassword')
-    }
-  }
+  },
 })
 export default class UserModal extends Vue {
-  @Prop({type: Object, required: true}) readonly user!: IUser;
-  @Prop({type: Boolean, default: false}) readonly admin!: boolean;
+  activeAPIKey: IApiKey | null = null;
+  @Prop({ default: false, type: Boolean }) readonly admin!: boolean;
 
-  roles: string[] = ['user', 'admin'];
-
-  showAPIKeys = false;
   apiKeyHeaders = [
     {
+      align: 'start',
+      filterable: true,
       text: 'Name',
       value: 'name',
-      filterable: true,
       width: '20%',
-      align: 'start'
     },
     {
+      sortable: false,
       text: 'Value',
       value: 'apiKey',
-      sortable: false
     },
     {
+      sortable: false,
       text: 'Action',
       value: 'action',
-      sortable: false
-    }
+    },
   ];
 
   apiKeys: IApiKey[] = [];
+  apiKeyTableLoading = false;
+
+  buttonLoading = false;
+  changePassword = false;
+
+  currentPassword = '';
+  dialog = false;
+  inputPasswordDialog = false;
+
+  newPassword = '';
+  passwordConfirmation = '';
+
+  roles: string[] = ['user', 'admin'];
+  showAPIKeys = false;
+  @Prop({ required: true, type: Object }) readonly user!: IUser;
+  userInfo: IUser = { ...this.user };
   get apiKeysEnabled(): boolean {
     return ServerModule.apiKeysEnabled;
   }
 
-  apiKeyTableLoading = false;
-  activeAPIKey: IApiKey | null = null;
-  inputPasswordDialog = false;
-
-  dialog = false;
-  changePassword = false;
-
-  userInfo: IUser = {...this.user};
-  currentPassword = '';
-  newPassword = '';
-  passwordConfirmation = '';
-  buttonLoading = false;
-  updateCallback = () => {
-    return;
-  };
-
-  mounted() {
-    this.getAPIKeys();
+  get title(): string {
+    return this.admin ? `Update account information for ${this.user.email}` : 'Update your account information';
   }
 
-  async updateUserInfo(): Promise<void> {
-    this.buttonLoading = true;
-    this.$v.$touch();
-    if (this.userInfo != null && (this.admin || !this.$v.$invalid)) {
-      var updateUserInfo: IUpdateUser = {
-        ...this.userInfo,
-        password: undefined,
-        passwordConfirmation: undefined,
-        forcePasswordChange: undefined
-      };
-      if (!this.admin) {
-        updateUserInfo = {
-          ...updateUserInfo,
-          currentPassword: this.currentPassword
-        };
-      }
-      if (this.changePassword) {
-        updateUserInfo = {
-          ...updateUserInfo,
-          password: this.newPassword,
-          passwordConfirmation: this.passwordConfirmation
-        };
-      }
-      ServerModule.updateUserInfo({id: this.user.id, info: updateUserInfo})
-        .then((data) => {
-          SnackbarModule.notify('User updated successfully.');
-          this.$emit('update-user', data);
-          this.dialog = false;
-        })
-        .finally(() => {
-          this.buttonLoading = false;
-        });
-    }
+  get update_unavailable() {
+    return (
+      this.userInfo.creationMethod === 'ldap'
+      || ServerModule.enabledOAuth.includes(this.userInfo.creationMethod)
+    );
+  }
+
+  addAPIKey() {
+    this.inputPasswordDialog = false;
+    this.apiKeyTableLoading = true;
+    axios
+      .post<IApiKey>('/apikeys', {
+        currentPassword: this.currentPassword,
+        name: this.activeAPIKey?.name,
+        userId: this.user.id,
+      })
+      .then(({ data }) => this.apiKeys.push(data))
+      .catch((error) => {
+        if (error.response?.status === 403) {
+          this.updateCallback = this.addAPIKey;
+          this.inputPasswordDialog = true;
+        }
+        throw error;
+      })
+      .finally(() => {
+        this.activeAPIKey = null;
+        this.apiKeyTableLoading = false;
+      });
   }
 
   changePasswordDialog() {
     this.changePassword = !this.changePassword;
   }
 
-  toggleShowAPIKeys() {
-    this.showAPIKeys = !this.showAPIKeys;
+  deleteAPIKey(item: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, { data: { ...this.activeAPIKey, currentPassword: this.currentPassword } })
+      .then(() => {
+        this.apiKeys = this.apiKeys.filter(key => key.id !== item.id);
+      })
+      .catch((error) => {
+        if (error.response?.status === 403) {
+          this.updateCallback = this.deleteAPIKeyConfirm;
+          this.inputPasswordDialog = true;
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
+  }
+
+  deleteAPIKeyConfirm() {
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, { data: { ...this.activeAPIKey, currentPassword: this.currentPassword } })
+      .then(({ data }) => {
+        this.apiKeys = this.apiKeys.filter(key => key.id !== data.id);
+      })
+      .catch((error) => {
+        if (error.response?.status === 403) {
+          this.inputPasswordDialog = true;
+        }
+        throw error;
+      });
   }
 
   getAPIKeys() {
@@ -377,8 +431,8 @@ export default class UserModal extends Vue {
       this.apiKeyTableLoading = true;
       axios
         .create()
-        .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}})
-        .then(({data}) => {
+        .get<IApiKey[]>('/apikeys', { params: { userId: this.user.id } })
+        .then(({ data }) => {
           this.apiKeys = data;
         })
         .catch((error) => {
@@ -390,94 +444,8 @@ export default class UserModal extends Vue {
     }
   }
 
-  addAPIKey() {
-    this.inputPasswordDialog = false;
-    this.apiKeyTableLoading = true;
-    axios
-      .post<IApiKey>(`/apikeys`, {
-        userId: this.user.id,
-        name: this.activeAPIKey?.name,
-        currentPassword: this.currentPassword
-      })
-      .then(({data}) => this.apiKeys.push(data))
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.updateCallback = this.addAPIKey;
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
-      })
-      .finally(() => {
-        this.activeAPIKey = null;
-        this.apiKeyTableLoading = false;
-      });
-  }
-
-  deleteAPIKey(item: IApiKey) {
-    if (typeof item === 'object') {
-      this.activeAPIKey = item;
-    }
-    this.inputPasswordDialog = false;
-    axios
-      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
-        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
-      })
-      .then(() => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.updateCallback = this.deleteAPIKeyConfirm;
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
-      });
-    this.activeAPIKey = null;
-  }
-
-  deleteAPIKeyConfirm() {
-    this.inputPasswordDialog = false;
-    axios
-      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
-        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
-      })
-      .then(({data}) => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id);
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
-      });
-  }
-
-  updateAPIKey(item?: IApiKey) {
-    if (typeof item === 'object') {
-      this.activeAPIKey = item;
-    }
-    this.inputPasswordDialog = false;
-    axios
-      .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
-        name: this.activeAPIKey?.name,
-        currentPassword: this.currentPassword
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.updateCallback = this.updateAPIKey;
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
-      });
-    this.activeAPIKey = null;
+  mounted() {
+    this.getAPIKeys();
   }
 
   refreshAPIKey(item: IApiKey) {
@@ -486,19 +454,15 @@ export default class UserModal extends Vue {
     }
     this.inputPasswordDialog = false;
     axios
-      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
-        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
-      })
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, { data: { ...this.activeAPIKey, currentPassword: this.currentPassword } })
       .then(() => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+        this.apiKeys = this.apiKeys.filter(key => key.id !== item.id);
         this.addAPIKey();
       })
       .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.updateCallback = this.refreshAPIKeyConfirm;
-            this.inputPasswordDialog = true;
-          }
+        if (error.response?.status === 403) {
+          this.updateCallback = this.refreshAPIKeyConfirm;
+          this.inputPasswordDialog = true;
         }
         throw error;
       });
@@ -510,22 +474,70 @@ export default class UserModal extends Vue {
     this.addAPIKey();
   }
 
+  toggleShowAPIKeys() {
+    this.showAPIKeys = !this.showAPIKeys;
+  }
+
+  updateAPIKey(item?: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        currentPassword: this.currentPassword,
+        name: this.activeAPIKey?.name,
+      })
+      .catch((error) => {
+        if (error.response?.status === 403) {
+          this.updateCallback = this.updateAPIKey;
+          this.inputPasswordDialog = true;
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
+  }
+
+  updateCallback = () => {
+    return;
+  };
+
   updateCurrentPassword(password: string): void {
     this.currentPassword = password;
   }
 
-  get update_unavailable() {
-    return (
-      this.userInfo.creationMethod === 'ldap' ||
-      ServerModule.enabledOAuth.includes(this.userInfo.creationMethod)
-    );
-  }
-
-  get title(): string {
-    if (this.admin) {
-      return `Update account information for ${this.user.email}`;
-    } else {
-      return 'Update your account information';
+  async updateUserInfo(): Promise<void> {
+    this.buttonLoading = true;
+    this.$v.$touch();
+    if (this.userInfo != null && (this.admin || !this.$v.$invalid)) {
+      var updateUserInfo: IUpdateUser = {
+        ...this.userInfo,
+        forcePasswordChange: undefined,
+        password: undefined,
+        passwordConfirmation: undefined,
+      };
+      if (!this.admin) {
+        updateUserInfo = {
+          ...updateUserInfo,
+          currentPassword: this.currentPassword,
+        };
+      }
+      if (this.changePassword) {
+        updateUserInfo = {
+          ...updateUserInfo,
+          password: this.newPassword,
+          passwordConfirmation: this.passwordConfirmation,
+        };
+      }
+      ServerModule.updateUserInfo({ id: this.user.id, info: updateUserInfo })
+        .then((data) => {
+          SnackbarModule.notify('User updated successfully.');
+          this.$emit('update-user', data);
+          this.dialog = false;
+        })
+        .finally(() => {
+          this.buttonLoading = false;
+        });
     }
   }
 }

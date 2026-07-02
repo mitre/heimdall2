@@ -2,26 +2,26 @@
  * Counts the severities of controls.
  */
 
+import type { Severity } from 'inspecjs';
+import { LRUCache } from 'lru-cache';
+import { getModule, Module, VuexModule } from 'vuex-module-decorators';
 import {
   Filter,
+  filter_cache_key,
   FilteredData,
   FilteredDataModule,
-  filter_cache_key
 } from '@/store/data_filters';
 import Store from '@/store/store';
-import {Severity} from 'inspecjs';
-import {LRUCache} from 'lru-cache';
-import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 // The hash that we will generally be working with herein
-type SeverityHash = {[key in Severity]: number};
+type SeverityHash = Record<Severity, number>;
 
 // Helper function for counting a status in a list of controls
 function count_severities(data: FilteredData, filter: Filter): SeverityHash {
   // Remove the status filter from the control filter
   const newFilter: Filter = {
     status: [],
-    ...filter
+    ...filter,
   };
 
   // Get the controls
@@ -29,32 +29,36 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
 
   // Count 'em out
   const hash: SeverityHash = {
-    none: 0,
+    critical: 0,
+    high: 0,
     low: 0,
     medium: 0,
-    high: 0,
-    critical: 0
+    none: 0,
   };
-  controls.forEach((c) => {
+  for (const c of controls) {
     const severity: Severity = c.root.hdf.severity;
     hash[severity] += 1;
-  });
+  }
 
   // And we're done
   return hash;
 }
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'severityCounts',
+  namespaced: true,
   store: Store,
-  name: 'severityCounts'
 })
 export class SeverityCount extends VuexModule {
+  get critical(): (filter: Filter) => number {
+    return filter => this.hash(filter).critical;
+  }
+
   /** Generates a hash mapping each status -> a count of its members */
   get hash(): (filter: Filter) => SeverityHash {
     // Establish our cache and dependency
-    const cache: LRUCache<string, SeverityHash> = new LRUCache({max: 30});
+    const cache = new LRUCache<string, SeverityHash>({ max: 30 });
 
     return (filter: Filter) => {
       const id = filter_cache_key(filter);
@@ -71,24 +75,20 @@ export class SeverityCount extends VuexModule {
     };
   }
 
-  get none(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['none'];
+  get high(): (filter: Filter) => number {
+    return filter => this.hash(filter).high;
   }
 
   get low(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['low'];
+    return filter => this.hash(filter).low;
   }
 
   get medium(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['medium'];
+    return filter => this.hash(filter).medium;
   }
 
-  get high(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['high'];
-  }
-
-  get critical(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['critical'];
+  get none(): (filter: Filter) => number {
+    return filter => this.hash(filter).none;
   }
 }
 

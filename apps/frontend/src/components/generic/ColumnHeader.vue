@@ -4,7 +4,11 @@
     <span v-else>
       {{ numberOfViewedControls + '/' + numberOfAllControls + ' ' + text }}
     </span>
-    <v-icon :disabled="!allow_sort" class="pa-0" @click="toggle_sort">
+    <v-icon
+      :disabled="!allow_sort"
+      class="pa-0"
+      @click="toggle_sort"
+    >
       {{ icon }}
     </v-icon>
   </div>
@@ -13,21 +17,23 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
 
-export type Sort = 'ascending' | 'descending' | 'none' | 'disabled';
+export type Sort = 'ascending' | 'descending' | 'disabled' | 'none';
 
 @Component
 export default class ColumnHeader extends Vue {
-  @Prop({type: String, required: true}) readonly text!: string;
-  @Prop({type: String, required: true}) readonly sort!: Sort;
-  @Prop({type: Boolean, required: false, default: false})
-  readonly viewedHeader!: boolean;
-
-  @Prop({type: Number, required: false})
+  @Prop({ required: false, type: Number }) readonly numberOfAllControls!: number;
+  @Prop({ required: false, type: Number })
   readonly numberOfViewedControls!: number;
 
-  @Prop({type: Number, required: false}) readonly numberOfAllControls!: number;
+  @Prop({ required: true, type: String }) readonly sort!: Sort;
+
+  @Prop({ required: true, type: String }) readonly text!: string;
+
+  @Prop({ default: false, required: false, type: Boolean })
+  readonly viewedHeader!: boolean;
+
   /**
    * Simple boolean deciding whether or not to actually show/allow sorting
    */
@@ -36,33 +42,33 @@ export default class ColumnHeader extends Vue {
   }
 
   /**
+   * Computes the material theme getter to use for the sort icon
+   */
+  get icon(): string {
+    switch (this.sort) {
+      case 'ascending': {
+        return 'mdi-sort-ascending';
+      }
+      case 'descending': {
+        return 'mdi-sort-descending';
+      }
+      case 'disabled': {
+        return '';
+      }
+      default: {
+        return 'mdi-sort-variant';
+      }
+    }
+  }
+
+  /**
    * Callback fired upon clicking the column header.
    * Toggles between the sort modes, and emits them as an "input" event.
    */
   toggle_sort(): void {
     let newSort: string;
-    if (this.sort === 'descending') {
-      newSort = 'ascending';
-    } else {
-      newSort = 'descending';
-    }
+    newSort = this.sort === 'descending' ? 'ascending' : 'descending';
     this.$emit('input', newSort);
-  }
-
-  /**
-   * Computes the material theme getter to use for the sort icon
-   */
-  get icon(): string {
-    switch (this.sort) {
-      case 'ascending':
-        return 'mdi-sort-ascending';
-      case 'descending':
-        return 'mdi-sort-descending';
-      case 'disabled':
-        return '';
-      default:
-        return 'mdi-sort-variant';
-    }
   }
 }
 </script>

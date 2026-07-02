@@ -1,11 +1,11 @@
-import {ISlimUser} from '../user/slim-user.interface';
-export interface IGroup {
+import type { ISlimUser } from '../user/slim-user.interface';
+export type IGroup = {
+  readonly createdAt: Date;
+  readonly desc: string;
   id: string;
   readonly name: string;
   readonly public: boolean;
   readonly role?: string;
-  readonly users: ISlimUser[];
-  readonly desc: string;
-  readonly createdAt: Date;
   readonly updatedAt: Date;
-}
+  readonly users: ISlimUser[];
+};

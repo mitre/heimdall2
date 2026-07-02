@@ -1,88 +1,82 @@
-/////Interfaces for ExecJSON focused on ASFF
+/// //Interfaces for ExecJSON focused on ASFF
 
-export interface IOptions {
-  input: string;
+export type IOptions = {
   awsAccountId: string;
-  target: string;
+  input: string;
   region: string;
   regionAttribute?: boolean;
-}
+  target: string;
+};
 
-export interface IExecJSONASFF {
-  Findings: IFindingASFF[];
-}
+export type IExecJSONASFF = { Findings: IFindingASFF[] };
 
-export interface IFindingASFF {
-  SchemaVersion: string;
-  Id: string;
-  ProductArn: string;
-  ProductName?: string;
-  CompanyName?: string;
-  Region?: string;
-  GeneratorId: string;
+export type IFindingASFF = {
   AwsAccountId: string;
-  Types?: string[] | Record<string, unknown>;
-  FirstObservedAt?: string;
-  LastObservedAt?: string;
+  CompanyName?: string;
+  Compliance: IComplianceASFF;
   CreatedAt: string;
-  UpdatedAt: string;
+  Description: string;
+  FindingProviderFields: IFindingProviderFieldsASFF;
+  FirstObservedAt?: string;
+  GeneratorId: string;
+  Id: string;
+  LastObservedAt?: string;
+  ProductArn: string;
+  ProductFields: IProductFieldsASFF;
+  ProductName?: string;
+  RecordState?: string;
+  Region?: string;
+  Remediation: IRemediationASFF;
+  Resources: IResourcesASFF[];
+  SchemaVersion: string;
   Severity: ISeverityASFF;
   Title: string;
-  Description: string;
-  Remediation: IRemediationASFF;
-  ProductFields: IProductFieldsASFF;
-  Resources: IResourcesASFF[];
-  Compliance: IComplianceASFF;
+  Types?: Record<string, unknown> | string[];
+  UpdatedAt: string;
+  Workflow?: { Status: string };
   WorkflowState?: string;
-  Workflow?: {Status: string};
-  RecordState?: string;
-  FindingProviderFields: IFindingProviderFieldsASFF;
-}
+};
 
-export interface ISeverityASFF {
-  Product?: number;
+export type ISeverityASFF = {
   Label: string;
   Normalized?: number;
   Original?: string;
-}
+  Product?: number;
+};
 
-export interface IRemediationASFF {
-  Recommendation: {Text: string; Url?: string};
-}
+export type IRemediationASFF = { Recommendation: { Text: string; Url?: string } };
 
-export interface IProductFieldsASFF {
-  Check?: string | Record<string, unknown>;
+export type IProductFieldsASFF = {
+  'aws/securityhub/annotation'?: string;
+  'aws/securityhub/CompanyName'?: string;
+  'aws/securityhub/FindingId'?: string;
+  'aws/securityhub/ProductName'?: string;
+  Check?: Record<string, unknown> | string;
+  RecommendationUrl?: string;
+  'Resources:0/Id'?: string;
+  RuleId?: string;
+  StandardsControlArn?: string;
   StandardsGuideArn?: string;
   StandardsGuideSubscriptionArn?: string;
-  RuleId?: string;
-  RecommendationUrl?: string;
-  StandardsControlArn?: string;
-  'aws/securityhub/ProductName'?: string;
-  'aws/securityhub/CompanyName'?: string;
-  'aws/securityhub/annotation'?: string;
-  'Resources:0/Id'?: string;
-  'aws/securityhub/FindingId'?: string;
-}
+};
 
-export interface IResourcesASFF {
-  Type: string;
+export type IResourcesASFF = {
+  Details?: { AwsIamRole: { AssumeRolePolicyDocument: Record<string, unknown> | string } };
   Id: string;
   Partition?: string;
   Region?: string;
-  Details?: {
-    AwsIamRole: {AssumeRolePolicyDocument: string | Record<string, unknown>};
-  };
-}
+  Type: string;
+};
 
-export interface IComplianceASFF {
+export type IComplianceASFF = {
+  RelatedRequirements?: Record<string, unknown> | string[];
   Status: string;
-  StatusReasons?: ({
-    ReasonCode: string | null;
-    Description: string | null;
-  } | null)[];
-  RelatedRequirements?: string[] | Record<string, unknown>;
-}
-export interface IFindingProviderFieldsASFF {
-  Severity: {Label: string; Original?: string};
-  Types: string[] | Record<string, unknown>;
-}
+  StatusReasons?: (null | {
+    Description: null | string;
+    ReasonCode: null | string;
+  })[];
+};
+export type IFindingProviderFieldsASFF = {
+  Severity: { Label: string; Original?: string };
+  Types: Record<string, unknown> | string[];
+};

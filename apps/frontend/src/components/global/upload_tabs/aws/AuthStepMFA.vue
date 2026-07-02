@@ -23,7 +23,13 @@
       >
         Login
       </v-btn>
-      <v-btn color="red" class="my-2 ml-2" @click="proceed"> Cancel </v-btn>
+      <v-btn
+        color="red"
+        class="my-2 ml-2"
+        @click="proceed"
+      >
+        Cancel
+      </v-btn>
     </v-form>
   </v-stepper-content>
 </template>
@@ -31,9 +37,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {PropSync} from 'vue-property-decorator';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {requireFieldRule} from '@/utilities/upload_util';
+import { PropSync } from 'vue-property-decorator';
+import { LocalStorageVal } from '@/utilities/helper_util';
+import { requireFieldRule } from '@/utilities/upload_util';
 
 /** Localstorage keys */
 const localMFASerial = new LocalStorageVal<string>('aws_s3_mfa_serial');
@@ -45,24 +51,15 @@ const localMFASerial = new LocalStorageVal<string>('aws_s3_mfa_serial');
  */
 @Component
 export default class S3Reader extends Vue {
-  @PropSync('mfaToken', {type: String}) token!: string;
-  @PropSync('mfaSerial', {type: String}) serial!: string;
+  // Form required field rule
+  reqRule = requireFieldRule;
+  @PropSync('mfaSerial', { type: String }) serial!: string;
+  @PropSync('mfaToken', { type: String }) token!: string;
+
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
   valid = false;
-
-  // Form required field rule
-  reqRule = requireFieldRule;
-
-  mfaRule = (v: string | null | undefined) =>
-    (v || '').trim().match('^\\d{6}$') !== null ||
-    'Field must be the 6 number code from a valid authenticator device';
-
-  /** On mount, try to look up stored auth info */
-  mounted() {
-    this.changeMFASerial(localMFASerial.getDefault(''));
-  }
 
   /** Handles changes to mfa serial */
   change_mfa_token(newValue: string) {
@@ -73,6 +70,15 @@ export default class S3Reader extends Vue {
   changeMFASerial(newValue: string) {
     localMFASerial.set(newValue);
     this.serial = newValue;
+  }
+
+  mfaRule = (v: null | string | undefined) =>
+    (/^\d{6}$/v.test((v || '').trim()))
+    || 'Field must be the 6 number code from a valid authenticator device';
+
+  /** On mount, try to look up stored auth info */
+  mounted() {
+    this.changeMFASerial(localMFASerial.getDefault(''));
   }
 
   /** When button is pressed or enter is pressed */

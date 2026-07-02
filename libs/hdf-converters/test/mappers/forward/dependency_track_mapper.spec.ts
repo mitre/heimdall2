@@ -1,15 +1,15 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {DependencyTrackMapper} from '../../../src/dependency-track-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { DependencyTrackMapper } from '../../../src/dependency-track-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('dependency_track_mapper', () => {
   it('Successfully converts Dependency Track targeted at a local/cloned repository data', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-default.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -18,16 +18,7 @@ describe('dependency_track_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dependency_track_mapper/hdf-default.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dependency_track_mapper/hdf-default.json')),
     );
   });
 });
@@ -37,9 +28,9 @@ describe('dependency_track_mapper_withraw', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-default.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -48,16 +39,7 @@ describe('dependency_track_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dependency_track_mapper/hdf-default-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dependency_track_mapper/hdf-default-withraw.json')),
     );
   });
 });
@@ -67,8 +49,8 @@ describe('dependency_track_mapper_optional_attributes', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-optional-attributes.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -77,16 +59,7 @@ describe('dependency_track_mapper_optional_attributes', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dependency_track_mapper/hdf-optional-attributes.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dependency_track_mapper/hdf-optional-attributes.json')),
     );
   });
 });
@@ -96,8 +69,8 @@ describe('dependency_track_mapper_no_vulnerabilities', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-no-vulnerabilities.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -106,16 +79,7 @@ describe('dependency_track_mapper_no_vulnerabilities', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dependency_track_mapper/hdf-no-vulnerabilities.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dependency_track_mapper/hdf-no-vulnerabilities.json')),
     );
   });
 });
@@ -125,8 +89,8 @@ describe('dependency_track_mapper_with_attributions', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-with-attributions.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -135,16 +99,7 @@ describe('dependency_track_mapper_with_attributions', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dependency_track_mapper/hdf-with-attributions.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dependency_track_mapper/hdf-with-attributions.json')),
     );
   });
 });
@@ -154,8 +109,8 @@ describe('dependency_track_mapper_info_vulnerability', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-info-vulnerability.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -164,16 +119,7 @@ describe('dependency_track_mapper_info_vulnerability', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dependency_track_mapper/hdf-info-vulnerability.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/dependency_track_mapper/hdf-info-vulnerability.json')),
     );
   });
 });

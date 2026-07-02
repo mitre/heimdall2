@@ -1,15 +1,15 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {ScoutsuiteMapper} from '../../../src/scoutsuite-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { ScoutsuiteMapper } from '../../../src/scoutsuite-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('scoutsuite_mapper', () => {
   it('Successfully converts Scoutsuite data', () => {
     const mapper = new ScoutsuiteMapper(
       fs.readFileSync(
         'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -18,14 +18,7 @@ describe('scoutsuite_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json')),
     );
   });
 });
@@ -35,9 +28,9 @@ describe('scoutsuite_mapper_withraw', () => {
     const mapper = new ScoutsuiteMapper(
       fs.readFileSync(
         'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -46,14 +39,7 @@ describe('scoutsuite_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/scoutsuite_mapper/scoutsuite-hdf-withraw.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/scoutsuite_mapper/scoutsuite-hdf-withraw.json')),
     );
   });
 });

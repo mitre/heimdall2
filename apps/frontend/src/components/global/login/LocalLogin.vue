@@ -38,7 +38,10 @@
             </v-icon>
           </template>
         </v-text-field>
-        <v-container fluid class="mb-0">
+        <v-container
+          fluid
+          class="mb-0"
+        >
           <v-btn
             id="login_button"
             depressed
@@ -57,9 +60,12 @@
         <v-layout>
           NOTE: This Heimdall instance is in an external-authentication only
           mode.
-          <v-icon class="mr-3" @click="openExternalAuthModeDocumentation"
-            >mdi-help-circle-outline</v-icon
+          <v-icon
+            class="mr-3"
+            @click="openExternalAuthModeDocumentation"
           >
+            mdi-help-circle-outline
+          </v-icon>
         </v-layout>
       </v-banner>
     </v-card-text>
@@ -70,12 +76,21 @@
           class="d-flex align-end flex-column mb-2"
         >
           <router-link to="/signup">
-            <v-btn id="sign_up_button" depressed small> Sign Up </v-btn>
+            <v-btn
+              id="sign_up_button"
+              depressed
+              small
+            >
+              Sign Up
+            </v-btn>
           </router-link>
         </div>
         <v-spacer />
         <div v-show="showAlternateAuth">
-          <v-row v-if="localLoginEnabled" align="center">
+          <v-row
+            v-if="localLoginEnabled"
+            align="center"
+          >
             <v-divider />OR<v-divider />
           </v-row>
           <div class="d-flex justify-content-center flex-wrap">
@@ -91,7 +106,9 @@
                 max-height="32"
                 :src="require('@/assets/openid_mark.png')"
               />
-              <div class="pl-2">Login with {{ oidcName }}</div>
+              <div class="pl-2">
+                Login with {{ oidcName }}
+              </div>
             </v-btn>
             <v-btn
               v-show="authStrategySupported('google')"
@@ -105,7 +122,9 @@
                 max-height="32"
                 :src="require('@/assets/google_mark.png')"
               />
-              <div class="pl-2">Login with Google</div>
+              <div class="pl-2">
+                Login with Google
+              </div>
             </v-btn>
             <v-btn
               v-show="authStrategySupported('github')"
@@ -119,8 +138,10 @@
                 max-height="32"
                 :src="require('@/assets/github_mark.png')"
               />
-              <div class="pl-2">Login with GitHub</div> </v-btn
-            ><v-btn
+              <div class="pl-2">
+                Login with GitHub
+              </div>
+            </v-btn><v-btn
               v-show="authStrategySupported('gitlab')"
               id="oauth-gitlab"
               class="mt-5 flex-fill"
@@ -132,7 +153,9 @@
                 max-height="32"
                 :src="require('@/assets/gitlab_mark.png')"
               />
-              <div class="pl-2">Login with GitLab</div>
+              <div class="pl-2">
+                Login with GitLab
+              </div>
             </v-btn>
             <v-btn
               v-show="authStrategySupported('okta')"
@@ -146,7 +169,9 @@
                 max-height="32"
                 :src="require('@/assets/okta_mark.png')"
               />
-              <div class="pl-2">Login with Okta</div>
+              <div class="pl-2">
+                Login with Okta
+              </div>
             </v-btn>
           </div>
         </div>
@@ -155,40 +180,58 @@
   </v-card>
 </template>
 <script lang="ts">
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {email, required} from 'vuelidate/lib/validators';
+import { email, required } from 'vuelidate/lib/validators';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
 
-interface LoginHash {
+type LoginHash = {
   email: string;
   password: string;
-}
+};
 @Component({
   mixins: [UserValidatorMixin],
   validations: {
     email: {
+      email,
       required,
-      email
     },
-    password: {
-      required
-    }
-  }
+    password: { required },
+  },
 })
 export default class LocalLogin extends Vue {
+  buttonLoading = false;
   email = '';
   password = '';
-  buttonLoading = false;
   showPassword = false;
+
+  get localLoginEnabled() {
+    return ServerModule.localLoginEnabled;
+  }
+
+  get oidcName() {
+    return ServerModule.oidcName;
+  }
+
+  get registrationEnabled() {
+    return ServerModule.registrationEnabled;
+  }
+
+  get showAlternateAuth() {
+    return ServerModule.enabledOAuth.length > 0;
+  }
+
+  authStrategySupported(strategy: string) {
+    return ServerModule.enabledOAuth.includes(strategy);
+  }
 
   login() {
     this.buttonLoading = true;
     const creds: LoginHash = {
       email: this.email,
-      password: this.password
+      password: this.password,
     };
     ServerModule.Login(creds)
       .then(() => {
@@ -200,34 +243,14 @@ export default class LocalLogin extends Vue {
       });
   }
 
-  get showAlternateAuth() {
-    return ServerModule.enabledOAuth.length !== 0;
-  }
-
-  get localLoginEnabled() {
-    return ServerModule.localLoginEnabled;
+  oauthLogin(site: string) {
+    globalThis.location.href = `/authn/${site}`;
   }
 
   openExternalAuthModeDocumentation() {
     window.open(
-      'https://github.com/mitre/heimdall2/wiki/Heimdall-Authentication-Methods#external-authentication-only'
+      'https://github.com/mitre/heimdall2/wiki/Heimdall-Authentication-Methods#external-authentication-only',
     );
-  }
-
-  authStrategySupported(strategy: string) {
-    return ServerModule.enabledOAuth.includes(strategy);
-  }
-
-  oauthLogin(site: string) {
-    window.location.href = `/authn/${site}`;
-  }
-
-  get oidcName() {
-    return ServerModule.oidcName;
-  }
-
-  get registrationEnabled() {
-    return ServerModule.registrationEnabled;
   }
 }
 </script>

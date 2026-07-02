@@ -1,5 +1,5 @@
 import sanitize from 'sanitize-html';
-import {Component, Vue} from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class HtmlSanitizeMixin extends Vue {

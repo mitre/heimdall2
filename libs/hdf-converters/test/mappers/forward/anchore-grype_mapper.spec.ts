@@ -1,15 +1,15 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {AnchoreGrypeMapper} from '../../../src/anchore-grype-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { AnchoreGrypeMapper } from '../../../src/anchore-grype-mapper';
+import { omitVersions } from '../../utils';
 
 describe('anchore-grype_mapper', () => {
   it('Successfully converts anchore_grype targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/anchore_grype.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -22,12 +22,10 @@ describe('anchore-grype_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/anchore-grype-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+            { encoding: 'utf8' },
+          ),
+        ),
+      ),
     );
   });
 });
@@ -37,9 +35,9 @@ describe('anchore-grype_mapper_withraw', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/anchore_grype.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -52,23 +50,21 @@ describe('anchore-grype_mapper_withraw', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/anchore-grype-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+            { encoding: 'utf8' },
+          ),
+        ),
+      ),
     );
   });
 });
 
-describe('anchore-grype_mapper', () => {
+describe('anchore-grype_mapper amazon', () => {
   it('Successfully converts amazon.json targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/amazon.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -81,24 +77,22 @@ describe('anchore-grype_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/amazon-grype-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+            { encoding: 'utf8' },
+          ),
+        ),
+      ),
     );
   });
 });
 
-describe('anchore-grype_mapper_withraw', () => {
+describe('anchore-grype_mapper_withraw amazon', () => {
   it('Successfully converts withraw flagged amazon.json targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/amazon.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -111,23 +105,21 @@ describe('anchore-grype_mapper_withraw', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/amazon-grype-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+            { encoding: 'utf8' },
+          ),
+        ),
+      ),
     );
   });
 });
 
-describe('anchore-grype_mapper', () => {
+describe('anchore-grype_mapper tensorflow', () => {
   it('Successfully converts tensorflow.json targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/tensorflow.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -140,24 +132,22 @@ describe('anchore-grype_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/tensorflow-grype-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+            { encoding: 'utf8' },
+          ),
+        ),
+      ),
     );
   });
 });
 
-describe('anchore-grype_mapper_withraw', () => {
+describe('anchore-grype_mapper_withraw tensorflow', () => {
   it('Successfully converts withraw flagged tensorflow.json targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/tensorflow.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -170,12 +160,10 @@ describe('anchore-grype_mapper_withraw', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/tensorflow-grype-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+            { encoding: 'utf8' },
+          ),
+        ),
+      ),
     );
   });
 });

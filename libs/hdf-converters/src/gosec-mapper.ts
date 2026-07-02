@@ -1,33 +1,110 @@
-import {ExecJSON} from 'inspecjs';
+import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../package.json';
+import type {
+  ILookupPath,
+  MappedTransform,
+} from './base-converter';
 import {
   BaseConverter,
-  ILookupPath,
+  DEFAULT_PROFILE_FIELDS,
   impactMapping,
-  MappedTransform
 } from './base-converter';
-import {CweNistMapping} from './mappings/CweNistMapping';
+import { CweNistMapping } from './mappings/CweNistMapping';
+import { HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['high', 0.7],
+  ['low', 0.3],
   ['medium', 0.5],
-  ['low', 0.3]
 ]);
 
-function nistTag(input: Record<string, unknown>): string[] {
-  const cwe = [`${_.get(input, 'id')}`];
-  return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
+export class GosecMapper extends BaseConverter {
+  shouldIncludeRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & { passthrough: unknown },
+    ILookupPath
+  > = {
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return createHeimdallPassthrough('gosec', {
+          auxiliary_data: [
+            {
+              data: {
+                'Golang errors': _.get(data, 'Golang errors'),
+                Stats: _.get(data, 'Stats'),
+              },
+              name: 'gosec',
+            },
+          ],
+          ...(this.shouldIncludeRaw && { raw: data }),
+        });
+      },
+    },
+    platform: {
+      name: 'Heimdall Tools',
+      release: HeimdallToolsVersion,
+    },
+    profiles: [
+      {
+        ...DEFAULT_PROFILE_FIELDS,
+        controls: [
+          {
+            desc: '',
+            id: { path: 'rule_id' },
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING),
+            },
+            key: 'id',
+            path: 'Issues',
+            refs: [],
+            results: [
+              {
+                code_desc: { transformer: formatCodeDesc },
+                message: { transformer: formatMessage },
+                skip_message: { transformer: formatSkipMessage },
+                start_time: '',
+                status: { transformer: formatStatus },
+              },
+            ],
+            source_location: {},
+            tags: {
+              cwe: { path: 'cwe' },
+              nist: {
+                path: 'cwe',
+                transformer: nistTag,
+              },
+            },
+            title: { path: 'details' },
+          },
+        ],
+        name: 'gosec Scan',
+        title: 'gosec Scan',
+        version: { path: 'GosecVersion' },
+      },
+    ],
+    statistics: {},
+    version: HeimdallToolsVersion,
+  };
+
+  constructor(gosecJson: string, shouldIncludeRaw = false) {
+    super(JSON.parse(gosecJson));
+    this.shouldIncludeRaw = shouldIncludeRaw;
+  }
 }
 
-// Check `nosec` and `suppressions` fields which denote whether the gosec rule violation should be suppressed/skipped
-function formatStatus(input: Record<string, unknown>): string {
-  return `${_.get(input, 'nosec')}` === 'false' &&
-    `${_.get(input, 'suppressions')}` === 'null'
-    ? ExecJSON.ControlResultStatus.Failed
-    : ExecJSON.ControlResultStatus.Skipped;
+// Report gosec rule violation and violation location
+function formatCodeDesc(input: Record<string, unknown>): string {
+  return `Rule ${String(_.get(input, 'rule_id'))} violation detected at:\nFile: ${String(_.get(input, 'file'))}\nLine: ${String(_.get(input, 'line'))}\nColumn: ${String(_.get(input, 'column'))}`;
+}
+
+// Report confidence of violation and specific offending code
+function formatMessage(input: Record<string, unknown>): string {
+  return `${String(_.get(input, 'confidence'))} confidence of rule violation at:\n${String(_.get(input, 'code'))}`;
 }
 
 // If a gosec rule violation is suppressed, forward the given justification
@@ -35,7 +112,7 @@ function formatSkipMessage(input: Record<string, unknown>): string | undefined {
   const suppressions = _.get(input, 'suppressions');
 
   // If test is not skipped
-  if (`${suppressions}` === 'null') {
+  if (String(suppressions) === 'null') {
     return undefined;
   }
 
@@ -46,97 +123,21 @@ function formatSkipMessage(input: Record<string, unknown>): string | undefined {
   // otherwise, supply the justifications
   return suppressions
     .map(
-      (suppression) =>
-        `${suppression.justification ? suppression.justification : 'No justification provided'} (${suppression.kind})`
+      suppression =>
+        `${suppression.justification || 'No justification provided'} (${suppression.kind})`,
     )
     .join('\n');
 }
 
-// Report gosec rule violation and violation location
-function formatCodeDesc(input: Record<string, unknown>): string {
-  return `Rule ${_.get(input, 'rule_id')} violation detected at:\nFile: ${_.get(input, 'file')}\nLine: ${_.get(input, 'line')}\nColumn: ${_.get(input, 'column')}`;
+// Check `nosec` and `suppressions` fields which denote whether the gosec rule violation should be suppressed/skipped
+function formatStatus(input: Record<string, unknown>): string {
+  return String(_.get(input, 'nosec')) === 'false'
+    && String(_.get(input, 'suppressions')) === 'null'
+    ? ExecJSON.ControlResultStatus.Failed
+    : ExecJSON.ControlResultStatus.Skipped;
 }
 
-// Report confidence of violation and specific offending code
-function formatMessage(input: Record<string, unknown>): string {
-  return `${_.get(input, 'confidence')} confidence of rule violation at:\n${_.get(input, 'code')}`;
-}
-
-export class GosecMapper extends BaseConverter {
-  withRaw: boolean;
-
-  mappings: MappedTransform<
-    ExecJSON.Execution & {passthrough: unknown},
-    ILookupPath
-  > = {
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion
-    },
-    version: HeimdallToolsVersion,
-    statistics: {},
-    profiles: [
-      {
-        name: 'gosec Scan',
-        title: 'gosec Scan',
-        version: {path: 'GosecVersion'},
-        supports: [],
-        attributes: [],
-        groups: [],
-        status: 'loaded',
-        controls: [
-          {
-            path: 'Issues',
-            key: 'id',
-            tags: {
-              nist: {
-                path: 'cwe',
-                transformer: nistTag
-              },
-              cwe: {path: 'cwe'}
-            },
-            refs: [],
-            source_location: {},
-            title: {path: 'details'},
-            id: {path: 'rule_id'},
-            desc: '',
-            impact: {
-              path: 'severity',
-              transformer: impactMapping(IMPACT_MAPPING)
-            },
-            results: [
-              {
-                status: {transformer: formatStatus},
-                skip_message: {transformer: formatSkipMessage},
-                code_desc: {transformer: formatCodeDesc},
-                message: {transformer: formatMessage},
-                start_time: ''
-              }
-            ]
-          }
-        ],
-        sha256: ''
-      }
-    ],
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {
-          auxiliary_data: [
-            {
-              name: 'gosec',
-              data: {
-                'Golang errors': _.get(data, 'Golang errors'),
-                Stats: _.get(data, 'Stats')
-              }
-            }
-          ],
-          ...(this.withRaw && {raw: data})
-        };
-      }
-    }
-  };
-  constructor(gosecJson: string, withRaw = false) {
-    super(JSON.parse(gosecJson));
-    this.withRaw = withRaw;
-  }
+function nistTag(input: Record<string, unknown>): string[] {
+  const cwe = [String(_.get(input, 'id'))];
+  return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
 }

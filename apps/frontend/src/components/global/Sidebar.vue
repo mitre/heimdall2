@@ -12,7 +12,10 @@
     @input="$emit('input', $event)"
     @blur="value = false"
   >
-    <v-expansion-panels v-model="active_path" accordion>
+    <v-expansion-panels
+      v-model="active_path"
+      accordion
+    >
       <DropdownContent
         header-text="Results"
         :files="visible_evaluation_files"
@@ -39,32 +42,28 @@
 </template>
 
 <script lang="ts">
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
-import {Trinary} from '@/enums/Trinary';
+import { Trinary } from '@/enums/Trinary';
 import RouteMixin from '@/mixins/RouteMixin';
-import {FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import Component, {mixins} from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '../../store/server';
-import {EvaluationModule} from '@/store/evaluations';
+import { FilteredDataModule } from '@/store/data_filters';
+import { InspecDataModule } from '@/store/data_store';
+import { EvaluationModule } from '@/store/evaluations';
+import type { EvaluationFile, ProfileFile } from '@/store/report_intake';
+import { ServerModule } from '../../store/server';
 
-@Component({
-  components: {
-    DropdownContent
-  }
-})
+@Component({ components: { DropdownContent } })
 export default class Sidebar extends mixins(RouteMixin) {
-  @Prop({type: Boolean}) value!: boolean;
+  @Prop({ type: Boolean }) value!: boolean;
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
     if (this.current_route === 'profiles') {
       return 1;
     } else if (
-      this.current_route === 'results' ||
-      this.current_route === 'compare'
+      this.current_route === 'results'
+      || this.current_route === 'compare'
     ) {
       return 0;
     } else {
@@ -77,10 +76,34 @@ export default class Sidebar extends mixins(RouteMixin) {
     // 0 -> results view
     // 1 -> profile view
     if (id === 0) {
-      this.navigateWithNoErrors(`/results`);
+      this.navigateWithNoErrors('/results');
     } else if (id === 1) {
-      this.navigateWithNoErrors(`/profiles`);
+      this.navigateWithNoErrors('/profiles');
     }
+  }
+
+  get all_evaluations_selected(): Trinary {
+    return FilteredDataModule.all_evaluations_selected;
+  }
+
+  get all_profiles_selected(): Trinary {
+    return FilteredDataModule.all_profiles_selected;
+  }
+
+  get any_evaluation_selected(): boolean {
+    return FilteredDataModule.any_evaluation_selected;
+  }
+
+  get any_profile_selected(): boolean {
+    return FilteredDataModule.any_profile_selected;
+  }
+
+  get classification(): string {
+    return ServerModule.classificationBannerText;
+  }
+
+  get compareViewActive(): boolean {
+    return this.current_route === 'compare';
   }
 
   // get all visible (uploaded) evaluation files
@@ -95,40 +118,6 @@ export default class Sidebar extends mixins(RouteMixin) {
     return files.sort((a, b) => a.filename.localeCompare(b.filename));
   }
 
-  get all_evaluations_selected(): Trinary {
-    return FilteredDataModule.all_evaluations_selected;
-  }
-
-  get any_evaluation_selected(): boolean {
-    return FilteredDataModule.any_evaluation_selected;
-  }
-
-  get all_profiles_selected(): Trinary {
-    return FilteredDataModule.all_profiles_selected;
-  }
-
-  get any_profile_selected(): boolean {
-    return FilteredDataModule.any_profile_selected;
-  }
-
-  get compareViewActive(): boolean {
-    return this.current_route === 'compare';
-  }
-
-  get classification(): string {
-    return ServerModule.classificationBannerText;
-  }
-
-  // toggle the "select all" for profiles
-  toggle_all_profiles(): void {
-    FilteredDataModule.toggle_all_profiles();
-  }
-
-  // toggle the "select all" for evaluations
-  toggle_all_evaluations(): void {
-    FilteredDataModule.toggle_all_evaluations();
-  }
-
   // toggle between the comparison view and the results view
   compareView(): void {
     if (this.current_route === 'results') {
@@ -141,26 +130,36 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   removeSelectedEvaluations(): void {
     const selectedFiles = FilteredDataModule.selected_evaluation_ids;
-    selectedFiles.forEach((fileId) => {
+    for (const fileId of selectedFiles) {
       EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL
       // by calling the router and causing it to write the appropriate
       // route to the URL bar
       this.navigateWithNoErrors(`/${this.current_route}`);
-    });
+    }
   }
 
   removeSelectedProfiles(): void {
     const selectedFiles = FilteredDataModule.selected_profile_ids;
-    selectedFiles.forEach((fileId) => {
+    for (const fileId of selectedFiles) {
       EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL
       // by calling the router and causing it to write the appropriate
       // route to the URL bar
       this.navigateWithNoErrors(`/${this.current_route}`);
-    });
+    }
+  }
+
+  // toggle the "select all" for evaluations
+  toggle_all_evaluations(): void {
+    FilteredDataModule.toggle_all_evaluations();
+  }
+
+  // toggle the "select all" for profiles
+  toggle_all_profiles(): void {
+    FilteredDataModule.toggle_all_profiles();
   }
 }
 </script>

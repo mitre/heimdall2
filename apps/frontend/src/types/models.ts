@@ -3,42 +3,42 @@ export class Content {
   value!: string;
 }
 export class Tag {
+  content!: Content;
+  createdAt!: Date;
   id!: number;
   taggerId!: number;
   taggerType!: string;
-  content!: Content;
-  createdAt!: Date;
   updatedAt!: Date;
 }
 export class Evaluation {
-  id!: number;
-  filename!: string;
-  version!: string;
   createdAt!: Date;
-  updatedAt!: Date;
+  filename!: string;
+  id!: number;
   tags!: Tag[];
+  updatedAt!: Date;
+  version!: string;
 }
 export class Tags {
   tags!: Tag[];
 }
-export class UserProfile {
-  id!: number;
-  firstName!: string;
-  lastName!: string;
-  email!: string;
-  image!: string;
-  phoneNumber!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
-  personalGroup!: Usergroup;
-  usergroups!: Usergroup[];
-}
 export class Usergroup {
+  createdAt!: Date;
+  evaluations!: Evaluation[];
   id!: number;
   name!: string;
   type!: string;
-  users!: UserProfile[];
-  evaluations!: Evaluation[];
-  createdAt!: Date;
   updatedAt!: Date;
+  users!: UserProfile[];
+}
+export class UserProfile {
+  createdAt!: Date;
+  email!: string;
+  firstName!: string;
+  id!: number;
+  image!: string;
+  lastName!: string;
+  personalGroup!: Usergroup;
+  phoneNumber!: string;
+  updatedAt!: Date;
+  usergroups!: Usergroup[];
 }

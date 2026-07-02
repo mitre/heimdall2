@@ -1,8 +1,16 @@
 <template>
   <div>
     <div class="ma-0 pa-0">
-      <v-row class="mb-6" no-gutters justify="start">
-        <v-col cols="3" sm="2" md="3">
+      <v-row
+        class="mb-6"
+        no-gutters
+        justify="start"
+      >
+        <v-col
+          cols="3"
+          sm="2"
+          md="3"
+        >
           <v-text-field
             v-model="searchItems"
             class="px-3 pb-1"
@@ -15,7 +23,11 @@
             @click:clear="clearSearchItemsClicked()"
           />
         </v-col>
-        <v-col cols="3" sm="2" md="3">
+        <v-col
+          cols="3"
+          sm="2"
+          md="3"
+        >
           <v-text-field
             v-model="searchGroups"
             class="px-3 pb-1"
@@ -28,7 +40,11 @@
             @click:clear="clearSearchGroupsClicked()"
           />
         </v-col>
-        <v-col cols="2" sm="2" md="3">
+        <v-col
+          cols="2"
+          sm="2"
+          md="3"
+        >
           <v-text-field
             v-model="searchTags"
             class="px-3 pb-1"
@@ -41,8 +57,15 @@
             @click:clear="clearSearchTagsClicked()"
           />
         </v-col>
-        <v-col cols="2" sm="1" md="2">
-          <v-radio-group v-model="logicOperator" row>
+        <v-col
+          cols="2"
+          sm="1"
+          md="2"
+        >
+          <v-radio-group
+            v-model="logicOperator"
+            row
+          >
             <v-radio value="AND">
               <template #label>
                 <div><strong class="page-of-pages-div">AND</strong></div>
@@ -55,8 +78,17 @@
             </v-radio>
           </v-radio-group>
         </v-col>
-        <v-col cols="1" sm="1" md="1" class="ml-n3 pt-4">
-          <v-btn depressed color="primary" @click="executeSearch()">
+        <v-col
+          cols="1"
+          sm="1"
+          md="1"
+          class="ml-n3 pt-4"
+        >
+          <v-btn
+            depressed
+            color="primary"
+            @click="executeSearch()"
+          >
             Search
           </v-btn>
         </v-col>
@@ -184,12 +216,18 @@
 
           <!-- Format how to render the fields - render action events -->
           <template #[`item.filename`]="{item}">
-            <span class="cursor-pointer" @click="emit_selected([item])">
+            <span
+              class="cursor-pointer"
+              @click="emit_selected([item])"
+            >
               {{ item.filename }}
             </span>
           </template>
           <template #[`item.groups`]="{item}">
-            <GroupRow v-if="item.id" :evaluation="item" />
+            <GroupRow
+              v-if="item.id"
+              :evaluation="item"
+            />
           </template>
           <template #[`item.evaluationTags`]="{item}">
             <TagRow
@@ -231,8 +269,9 @@
                   small
                   title="Delete record from the database"
                   @click="deleteItem(item)"
-                  >mdi-delete</v-icon
                 >
+                  mdi-delete
+                </v-icon>
               </div>
             </v-row>
           </template>
@@ -250,7 +289,9 @@
               @click="emit_selected(selectedFiles)"
             >
               Load Selected
-              <v-icon class="pl-2"> mdi-file-download</v-icon>
+              <v-icon class="pl-2">
+                mdi-file-download
+              </v-icon>
             </v-btn>
           </template>
           <span>Load selected item(s)</span>
@@ -261,90 +302,89 @@
 </template>
 
 <script lang="ts">
+import {
+  IEvalPaginationParams,
+  IEvaluation,
+  IEvaluationTag,
+} from '@heimdall/common/interfaces';
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import CopyButton from '@/components/generic/CopyButton.vue';
 import GroupRow from '@/components/global/groups/GroupRow.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
-import {EvaluationModule} from '@/store/evaluations';
-import {SnackbarModule} from '@/store/snackbar';
-import {InspecDataModule} from '@/store/data_store';
-import {
-  IEvalPaginationParams,
-  IEvaluation,
-  IEvaluationTag
-} from '@heimdall/common/interfaces';
-import {Prop} from 'vue-property-decorator';
-import Component, {mixins} from 'vue-class-component';
-import {FilteredDataModule} from '../../../store/data_filters';
-import ServerMixin from '../../../mixins/ServerMixin';
 import RouteMixin from '@/mixins/RouteMixin';
+import { InspecDataModule } from '@/store/data_store';
+import { EvaluationModule } from '@/store/evaluations';
+import { SnackbarModule } from '@/store/snackbar';
+import ServerMixin from '../../../mixins/ServerMixin';
+import { FilteredDataModule } from '../../../store/data_filters';
 
 @Component({
   components: {
     ActionDialog,
-    EditEvaluationModal,
     CopyButton,
+    EditEvaluationModal,
     GroupRow,
-    TagRow
-  }
+    TagRow,
+  },
 })
 export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
-  @Prop({required: true}) readonly headers!: Object[];
-  @Prop({type: Boolean, default: false}) loading!: boolean;
-  @Prop({type: String, default: 'id'}) readonly fileKey!: string;
-  @Prop({required: true}) evaluationsLoaded!: IEvaluation[];
-  @Prop({required: true}) totalItemsPerPage!: number;
-  @Prop({required: true}) evaluationsCount!: number;
-
-  selectedFiles: IEvaluation[] = [];
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
-
-  editEvaluationDialog = false;
   deleteItemDialog = false;
   deleteTagDialog = false;
-  searching = false;
-  setPageOnSearch = false;
-  updatingPage = false;
+  editEvaluationDialog = false;
+  @Prop({ required: true }) evaluationsCount!: number;
 
+  @Prop({ required: true }) evaluationsLoaded!: IEvaluation[];
+  @Prop({ default: 'id', type: String }) readonly fileKey!: string;
   // Table supporting variables
   headerprops = {
+    'sort-by-text': 'filename', // used when rendering the mobile view
     'sort-icon': 'mdi-dot', // Hack to hide the default sort icon
-    'sort-by-text': 'filename' // used when rendering the mobile view
   };
 
-  tableHight = '440px';
-  page = EvaluationModule.page;
+  @Prop({ required: true }) readonly headers!: object[];
+  @Prop({ required: true }) totalItemsPerPage!: number;
   itemsPerPageShowing = this.totalItemsPerPage;
+  @Prop({ default: false, type: Boolean }) loading!: boolean;
+  logicOperator = 'OR';
+  page = EvaluationModule.page;
+
   pagination = {
-    page: this.page,
-    itemsPerPage: this.totalItemsPerPage,
-    sortBy: ([] = ['createdAt']),
-    sortDesc: ([] = [true]),
     groupBy: ([] = []),
     groupDesc: ([] = []),
+    itemsPerPage: this.totalItemsPerPage,
+    multiSort: false,
     mustSort: false,
-    multiSort: false
+    page: this.page,
+    sortBy: ([] = ['createdAt']),
+    sortDesc: ([] = [true]),
   };
 
+  searchGroups = '';
+  searching = false;
   // Search  variable declaration
   searchItems = '';
-  searchGroups = '';
   searchTags = '';
-  logicOperator = 'OR';
 
+  selectedFiles: IEvaluation[] = [];
+  setPageOnSearch = false;
   // Sort variables declaration
   sortByField = 'createdAt'; // Default sort field
   sortOrder = ['createdAt', 'DESC']; // db sort order
 
-  async getEvaluations(params: IEvalPaginationParams): Promise<void> {
-    document.body.style.cursor = 'wait';
-    EvaluationModule.getAllEvaluations(params);
-  }
+  tableHight = '440px';
+  updatingPage = false;
 
-  clearSearchItemsClicked() {
-    if (this.isEmpty(this.searchGroups) && this.isEmpty(this.searchTags)) {
+  allFieldsCleared() {
+    if (
+      this.isEmpty(this.searchItems)
+      && this.isEmpty(this.searchGroups)
+      && this.isEmpty(this.searchTags)
+    ) {
       this.endSearchLoadPage();
     }
   }
@@ -355,26 +395,60 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
+  clearSearchItemsClicked() {
+    if (this.isEmpty(this.searchGroups) && this.isEmpty(this.searchTags)) {
+      this.endSearchLoadPage();
+    }
+  }
+
   clearSearchTagsClicked() {
     if (this.isEmpty(this.searchItems) && this.isEmpty(this.searchGroups)) {
       this.endSearchLoadPage();
     }
   }
 
-  allFieldsCleared() {
-    if (
-      this.isEmpty(this.searchItems) &&
-      this.isEmpty(this.searchGroups) &&
-      this.isEmpty(this.searchTags)
-    ) {
-      this.endSearchLoadPage();
-    }
+  createShareLink(item: IEvaluation) {
+    return `${globalThis.location.origin}/results/${item.id}`;
   }
 
-  isEmpty(value: string): boolean {
-    return (
-      value == null || (typeof value === 'string' && value.trim().length === 0)
-    );
+  deleteItem(item: IEvaluation) {
+    this.activeItem = item;
+    this.deleteItemDialog = true;
+  }
+
+  async deleteItemConfirm(): Promise<void> {
+    EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
+      SnackbarModule.notify('Deleted evaluation successfully.');
+      this.updateEvaluations();
+      const fileId = InspecDataModule.fileIdForDatabaseId(
+        Number(this.activeItem.id),
+      );
+      if (FilteredDataModule.selected_file_ids.includes(fileId)) {
+        // removes uploaded file from the currently observed files
+        EvaluationModule.removeEvaluation(fileId);
+        InspecDataModule.removeFile(fileId);
+        // Remove any database files that may have been in the URL
+        // by calling the router and causing it to write the appropriate
+        // route to the URL bar
+        this.navigateWithNoErrors(`/${this.current_route}`);
+      }
+    });
+    this.deleteItemDialog = false;
+  }
+
+  deleteTag(tag: IEvaluationTag) {
+    this.activeTag = tag;
+    this.deleteTagDialog = true;
+  }
+
+  editItem(item: IEvaluation) {
+    this.activeItem = item;
+    this.editEvaluationDialog = true;
+  }
+
+  emit_selected(selection: IEvaluation[]) {
+    this.selectedFiles = [];
+    this.$emit('load-selected', selection);
   }
 
   endSearchLoadPage() {
@@ -386,43 +460,21 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  getQueryParams(): IEvalPaginationParams {
-    const {offset, limit} = this.getOffSetLimit();
-    let params: IEvalPaginationParams = {
-      offset: offset,
-      limit: limit,
-      order: this.sortOrder
-    };
-    return params;
-  }
-
-  getOffSetLimit() {
-    const page = this.pagination.page;
-    // offset: where to start returning values
-    // limit:  the number of records to return
-    const limit =
-      this.pagination.itemsPerPage == -1
-        ? this.evaluationsCount
-        : this.pagination.itemsPerPage;
-    const offset = page == 1 ? 0 : page * limit - limit;
-    return {offset, limit};
-  }
-
-  //--------------------------------------------------------------------
+  // --------------------------------------------------------------------
   // Called when the Search button is invoked (@click="executeSearch()")
   async executeSearch() {
     // Clearing the fields using the clearable icon sets the model to null
-    this.searchItems = this.searchItems == null ? '' : this.searchItems;
-    this.searchGroups = this.searchGroups == null ? '' : this.searchGroups;
-    this.searchTags = this.searchTags == null ? '' : this.searchTags;
+    this.searchItems = this.searchItems ?? '';
+    this.searchGroups = this.searchGroups ?? '';
+    this.searchTags = this.searchTags ?? '';
 
     if (
-      this.searchItems.trim().length == 0 &&
-      this.searchGroups.trim().length == 0 &&
-      this.searchTags.trim().length == 0
+      this.searchItems.trim().length === 0
+      && this.searchGroups.trim().length === 0
+      && this.searchTags.trim().length === 0
     ) {
       SnackbarModule.notify(
-        'No search criteria provided (provide a file, group, or tag name)!'
+        'No search criteria provided (provide a file, group, or tag name)!',
       );
     } else {
       if (this.pagination.page != 1) {
@@ -440,25 +492,75 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     const delimiterChr = searchValue.indexOf(',') > 0 ? ',' : ' ';
     if (delimiterChr == ',') {
       // Remove any blank spaces
-      searchValue = searchValue.replace(/\s/gv, '');
+      searchValue = searchValue.replaceAll(/\s/gv, '');
     }
     const searchParam = searchValue.split(delimiterChr).join('|');
     return `(${searchParam})`;
   }
 
+  /*
+    Action is based on the following:
+
+    asking < showing             -> action = slice
+    asking > showing <= totalRec -> action = query
+    All other permutation        -> action = none
+
+    Where:
+    asking   = this.pagination.itemsPerPage
+    showing  = this.itemsPerPageShowing
+    totalRec = this.evaluationsCount
+  */
+  getAction(): string {
+    let action = 'none';
+    if (this.pagination.itemsPerPage < this.itemsPerPageShowing) {
+      action = 'slice';
+    } else if (this.pagination.itemsPerPage > this.itemsPerPageShowing && this.itemsPerPageShowing <= this.evaluationsCount) {
+      action = 'query';
+    }
+
+    return action;
+  }
+
+  async getEvaluations(params: IEvalPaginationParams): Promise<void> {
+    document.body.style.cursor = 'wait';
+    EvaluationModule.getAllEvaluations(params);
+  }
+
+  getOffSetLimit() {
+    const page = this.pagination.page;
+    // offset: where to start returning values
+    // limit:  the number of records to return
+    const limit
+      = this.pagination.itemsPerPage == -1
+        ? this.evaluationsCount
+        : this.pagination.itemsPerPage;
+    const offset = page == 1 ? 0 : page * limit - limit;
+    return { limit, offset };
+  }
+
+  getQueryParams(): IEvalPaginationParams {
+    const { limit, offset } = this.getOffSetLimit();
+    let params: IEvalPaginationParams = {
+      limit: limit,
+      offset: offset,
+      order: this.sortOrder,
+    };
+    return params;
+  }
+
   async getSearchEvaluation() {
     this.itemsPerPageShowing = this.pagination.itemsPerPage;
 
-    const filename =
-      this.searchItems == null
+    const filename
+      = this.searchItems == null
         ? ''
         : this.formatSearchParam(this.searchItems.trim());
-    const groups =
-      this.searchGroups == null
+    const groups
+      = this.searchGroups == null
         ? ''
         : this.formatSearchParam(this.searchGroups.trim());
-    const tags =
-      this.searchTags == null
+    const tags
+      = this.searchTags == null
         ? ''
         : this.formatSearchParam(this.searchTags.trim());
     const searchFields = [filename, groups, tags];
@@ -474,59 +576,26 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     this.evaluationsCount = EvaluationModule.evaluationsCount;
   }
 
-  //-------------------------------------------------------------------
-  // Called when any of the sorted fields are invoked (@update:sort-by)
-  async updateSortBy(sortField: string) {
-    /* Hack: Implementing custom headers slots, the v-data-table sorting is
-       disabled. Sort logic must be implemented by the application. The issue
-       is that when any header field is clicked initially the pagination object
-       is populated with the appropriate attributes, however on the second 
-       every other click the object pagination object is not populated. This
-       could be due too how the custom header slot is implemented.
-
-       Using local variables to maintain the sort in synchronization.
-       The else block of the this.pagination.sortBy[0] == sortField is never
-       executed. Leaving it here incase we rectify the implementation.
-    */
-    if (sortField.length == 0) {
-      this.pagination.sortDesc[0] =
-        this.sortOrder[this.sortOrder.length - 1] == 'DESC' ? false : true;
-      this.pagination.sortBy[0] = this.sortByField;
-      const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
-      this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
-    } else {
-      if (this.pagination.sortBy[0] == sortField) {
-        this.pagination.sortDesc[0] = !this.pagination.sortDesc[0];
-      } else {
-        this.pagination.sortBy[0] = sortField;
-        this.pagination.sortDesc[0] = false;
-      }
-      this.sortByField = sortField;
-      const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
-      this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
-    }
-
-    // Call the Database - update display
-    const params = this.getQueryParams();
-    await this.getEvaluations(params);
-    this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
-    this.evaluationsCount = EvaluationModule.evaluationsCount;
-  }
-
   getSortClause(field: string, order: string): string[] {
     //  Map sorted fields to database names.
     if (field == 'filename' || field == 'createdAt') {
-      return new Array(`${field}`, `${order}`);
+      return [`${field}`, `${order}`];
     } else if (field == 'groups') {
-      return new Array('groups', 'name', order);
+      return ['groups', 'name', order];
     } else if (field == 'evaluationTags') {
-      return new Array('evaluationTags', 'value', order);
+      return ['evaluationTags', 'value', order];
     } else {
-      return new Array(field, order);
+      return [field, order];
     }
   }
 
-  //------------------------------------------------------------------------
+  isEmpty(value: string): boolean {
+    return (
+      value == null || (typeof value === 'string' && value.trim().length === 0)
+    );
+  }
+
+  // ------------------------------------------------------------------------
   // Called when page navigation arrows are invoked (@update:items-per-page)
   // or when the Rows per page is invoked (@update:page) and not in Page 1
   // or when the page variable is programmatically set.
@@ -552,13 +621,20 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     this.updatingPage = false;
   }
 
-  //----------------------------------------------------
+  async updateEvaluations() {
+    const params = this.getQueryParams();
+    this.getEvaluations(params).then(() => {
+      this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
+    });
+  }
+
+  // ----------------------------------------------------
   // Called when Rows per page is invoked (@update:page)
   // Note: If not on Page 1 the @update:items-per-page
   //       is invoked first, hence the need for the flag
   async updateItemsPerPage(itemsCount: number) {
     // Updating the page reset to Page 1
-    //this.page = 1;
+    // this.page = 1;
     if (this.updatingPage) {
       return;
     } else {
@@ -588,11 +664,11 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
         EvaluationModule.context.commit('SET_LOADING', true);
         const newEvaluations = this.evaluationsLoaded.slice(
           0,
-          this.pagination.itemsPerPage
+          this.pagination.itemsPerPage,
         );
         EvaluationModule.context.commit(
           'SET_PAGED_EVALUATIONS',
-          newEvaluations
+          newEvaluations,
         );
         this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
         EvaluationModule.context.commit('SET_LOADING', false);
@@ -600,81 +676,43 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  /*
-    Action is based on the following:
-    
-    asking < showing             -> action = slice
-    asking > showing <= totalRec -> action = query
-    All other permutation        -> action = none
+  // -------------------------------------------------------------------
+  // Called when any of the sorted fields are invoked (@update:sort-by)
+  async updateSortBy(sortField: string) {
+    /* Hack: Implementing custom headers slots, the v-data-table sorting is
+       disabled. Sort logic must be implemented by the application. The issue
+       is that when any header field is clicked initially the pagination object
+       is populated with the appropriate attributes, however on the second
+       every other click the object pagination object is not populated. This
+       could be due too how the custom header slot is implemented.
 
-    Where:
-    asking   = this.pagination.itemsPerPage
-    showing  = this.itemsPerPageShowing
-    totalRec = this.evaluationsCount
-  */
-  getAction(): string {
-    let action = 'none';
-    if (this.pagination.itemsPerPage < this.itemsPerPageShowing) {
-      action = 'slice';
-    } else if (this.pagination.itemsPerPage > this.itemsPerPageShowing) {
-      if (this.itemsPerPageShowing <= this.evaluationsCount) {
-        action = 'query';
+       Using local variables to maintain the sort in synchronization.
+       The else block of the this.pagination.sortBy[0] == sortField is never
+       executed. Leaving it here incase we rectify the implementation.
+    */
+    if (sortField.length === 0) {
+      this.pagination.sortDesc[0]
+        = this.sortOrder.at(-1) == 'DESC' ? false : true;
+      this.pagination.sortBy[0] = this.sortByField;
+      const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
+      this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
+    } else {
+      if (this.pagination.sortBy[0] == sortField) {
+        this.pagination.sortDesc[0] = !this.pagination.sortDesc[0];
+      } else {
+        this.pagination.sortBy[0] = sortField;
+        this.pagination.sortDesc[0] = false;
       }
+      this.sortByField = sortField;
+      const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
+      this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
     }
 
-    return action;
-  }
-
-  emit_selected(selection: IEvaluation[]) {
-    this.selectedFiles = [];
-    this.$emit('load-selected', selection);
-  }
-
-  async updateEvaluations() {
+    // Call the Database - update display
     const params = this.getQueryParams();
-    this.getEvaluations(params).then(() => {
-      this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
-    });
-  }
-
-  editItem(item: IEvaluation) {
-    this.activeItem = item;
-    this.editEvaluationDialog = true;
-  }
-
-  deleteItem(item: IEvaluation) {
-    this.activeItem = item;
-    this.deleteItemDialog = true;
-  }
-
-  deleteTag(tag: IEvaluationTag) {
-    this.activeTag = tag;
-    this.deleteTagDialog = true;
-  }
-
-  async deleteItemConfirm(): Promise<void> {
-    EvaluationModule.deleteEvaluation(this.activeItem).then(async () => {
-      SnackbarModule.notify('Deleted evaluation successfully.');
-      this.updateEvaluations();
-      // Remove the file from the visualization panel if it is loaded.
-      const fileId = await InspecDataModule.loadedFileIsForDatabaseIds(
-        Number(this.activeItem.id)
-      );
-      if (FilteredDataModule.selected_file_ids.includes(fileId)) {
-        //removes uploaded file from the currently observed files
-        EvaluationModule.removeEvaluation(fileId);
-        InspecDataModule.removeFile(fileId);
-        // Remove any database files that may have been in the URL
-        // by calling the router and causing it to write the appropriate
-        // route to the URL bar
-        this.navigateWithNoErrors(`/${this.current_route}`);
-      }
-    });
-    this.deleteItemDialog = false;
-  }
-
-  createShareLink(item: IEvaluation) {
-    return `${window.location.origin}/results/${item.id}`;
+    await this.getEvaluations(params);
+    this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
+    this.evaluationsCount = EvaluationModule.evaluationsCount;
   }
 }
 </script>

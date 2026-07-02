@@ -1,48 +1,49 @@
-import {ForbiddenError} from '@casl/ability';
-import {NotFoundException} from '@nestjs/common';
-import {SequelizeModule} from '@nestjs/sequelize';
-import {Test, TestingModule} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import { ForbiddenError } from '@casl/ability';
+import { NotFoundException } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   EVALUATION_1,
   EVALUATION_WITH_TAGS_1,
-  UPDATE_EVALUATION
+  UPDATE_EVALUATION,
 } from '../../test/constants/evaluations-test.constant';
 import {
   GROUP_1,
-  PRIVATE_GROUP
+  PRIVATE_GROUP,
 } from '../../test/constants/groups-test.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
-  CREATE_USER_DTO_TEST_OBJ_2
+  CREATE_USER_DTO_TEST_OBJ_2,
 } from '../../test/constants/users-test.constant';
-import {AuthzService} from '../authz/authz.service';
-import {ConfigService} from '../config/config.service';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
-import {GroupUser} from '../group-users/group-user.model';
-import {Group} from '../groups/group.model';
-import {GroupsService} from '../groups/groups.service';
-import {User} from '../users/user.model';
-import {UsersService} from '../users/users.service';
-import {EvaluationDto} from './dto/evaluation.dto';
-import {Evaluation} from './evaluation.model';
-import {EvaluationsController} from './evaluations.controller';
-import {EvaluationsService} from './evaluations.service';
+import { AuthzService } from '../authz/authz.service';
+import { ConfigService } from '../config/config.service';
+import { DatabaseModule } from '../database/database.module';
+import { DatabaseService } from '../database/database.service';
+import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
+import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { Group } from '../groups/group.model';
+import { GroupsService } from '../groups/groups.service';
+import { User } from '../users/user.model';
+import { UsersService } from '../users/users.service';
+import { EvaluationDto } from './dto/evaluation.dto';
+import { Evaluation } from './evaluation.model';
+import { EvaluationsController } from './evaluations.controller';
+import { EvaluationsService } from './evaluations.service';
 
 // This allows basic testing of the evaluations controller
 // interface without having to construct a full File object
 const mockFile: Express.Multer.File = {
+  buffer: Buffer.from('{}'),
   originalname: 'abc.json',
-  buffer: Buffer.from('{}')
 };
 const secondMockFile: Express.Multer.File = {
+  buffer: Buffer.from('{}'),
   originalname: 'cda.json',
-  buffer: Buffer.from('{}')
 };
 
 describe('EvaluationsController', () => {
@@ -66,8 +67,8 @@ describe('EvaluationsController', () => {
           User,
           GroupEvaluation,
           GroupUser,
-          Group
-        ])
+          Group,
+        ]),
       ],
       providers: [
         AuthzService,
@@ -75,14 +76,14 @@ describe('EvaluationsController', () => {
         DatabaseService,
         UsersService,
         EvaluationsService,
-        GroupsService
-      ]
+        GroupsService,
+      ],
     }).compile();
 
     databaseService = module.get<DatabaseService>(DatabaseService);
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
     evaluationsController = module.get<EvaluationsController>(
-      EvaluationsController
+      EvaluationsController,
     );
     usersService = module.get<UsersService>(UsersService);
     groupsService = module.get<GroupsService>(GroupsService);
@@ -103,19 +104,19 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: user.id
+        userId: user.id,
       });
 
       const foundEvaluation = await evaluationsController.findById(
         evaluation.id,
-        {user: user}
+        { user: user },
       );
 
       expect(foundEvaluation).toEqual(
         // The evaluation is created with the current user ID above
         // so the expectation is that user should be able to edit
         // which is the 2nd parameter to EvaluationDto.
-        new EvaluationDto(evaluation, true)
+        new EvaluationDto(evaluation, true),
       );
     });
 
@@ -123,15 +124,15 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: mockFile,
-        userId: user.id
+        userId: user.id,
       });
 
       const foundEvaluation = await evaluationsController.findById(
         evaluation.id,
-        {user: user}
+        { user: user },
       );
       expect(foundEvaluation.evaluationTags).toEqual(
-        new EvaluationDto(evaluation).evaluationTags
+        new EvaluationDto(evaluation).evaluationTags,
       );
     });
 
@@ -139,22 +140,22 @@ describe('EvaluationsController', () => {
       expect.assertions(1);
 
       await expect(
-        evaluationsController.findById('0', {user: user})
+        evaluationsController.findById('0', { user: user }),
       ).rejects.toBeInstanceOf(NotFoundException);
     });
 
     it('should prevent non-owners from viewing an evaluation', async () => {
       expect.assertions(1);
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       await expect(
-        evaluationsController.findById(evaluation.id, {user: user})
+        evaluationsController.findById(evaluation.id, { user: user }),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
@@ -164,19 +165,19 @@ describe('EvaluationsController', () => {
       await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: user.id
+        userId: user.id,
       });
-      let foundEvaluations = await evaluationsController.findAll({user: user});
+      let foundEvaluations = await evaluationsController.findAll({ user: user });
       expect(foundEvaluations.length).toEqual(1);
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
-      foundEvaluations = await evaluationsController.findAll({user: user});
+      foundEvaluations = await evaluationsController.findAll({ user: user });
       expect(foundEvaluations.length).toEqual(1);
     });
 
@@ -184,11 +185,9 @@ describe('EvaluationsController', () => {
       await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: mockFile,
-        userId: user.id
+        userId: user.id,
       });
-      const foundEvaluations = await evaluationsController.findAll({
-        user: user
-      });
+      const foundEvaluations = await evaluationsController.findAll({ user: user });
       expect(foundEvaluations[0].evaluationTags.length).toEqual(1);
     });
 
@@ -196,50 +195,44 @@ describe('EvaluationsController', () => {
       await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: user.id
+        userId: user.id,
       });
-      const foundEvaluations = await evaluationsController.findAll({
-        user: user
-      });
+      const foundEvaluations = await evaluationsController.findAll({ user: user });
       expect(foundEvaluations[0].editable).toBeTruthy();
     });
 
     it('should return editable true if the user is the owner of a group that an evaluation belongs to', async () => {
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       const group = await groupsService.create(PRIVATE_GROUP);
       await groupsService.addUserToGroup(group, user, 'owner');
       await groupsService.addEvaluationToGroup(group, evaluation);
-      const foundEvaluations = await evaluationsController.findAll({
-        user: user
-      });
+      const foundEvaluations = await evaluationsController.findAll({ user: user });
 
       expect(foundEvaluations[0].editable).toBeTruthy();
     });
 
     it('should return editable false if the user is not owner of a group that an evaluation belongs to', async () => {
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       const group = await groupsService.create(GROUP_1);
       const group2 = await groupsService.create(PRIVATE_GROUP);
       await groupsService.addUserToGroup(group, user, 'user');
       await groupsService.addUserToGroup(group2, user, 'owner');
       await groupsService.addEvaluationToGroup(group, evaluation);
-      const foundEvaluations = await evaluationsController.findAll({
-        user: user
-      });
+      const foundEvaluations = await evaluationsController.findAll({ user: user });
       expect(foundEvaluations[0].editable).toBeFalsy();
     });
   });
@@ -249,12 +242,12 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsController.create(
         EVALUATION_WITH_TAGS_1,
         [mockFile],
-        {user: user}
+        { user: user },
       );
       expect(evaluation).toBeDefined();
       if (Array.isArray(evaluation)) {
-        throw new Error(
-          'Returned evaluation for one file upload should not be an array'
+        throw new TypeError(
+          'Returned evaluation for one file upload should not be an array',
         );
       }
       expect(evaluation.evaluationTags.length).toEqual(1);
@@ -266,12 +259,12 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsController.create(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS,
         [mockFile],
-        {user: user}
+        { user: user },
       );
       expect(evaluation).toBeDefined();
       if (Array.isArray(evaluation)) {
-        throw new Error(
-          'Returned evaluation for one file upload should not be an array'
+        throw new TypeError(
+          'Returned evaluation for one file upload should not be an array',
         );
       }
       expect(evaluation.evaluationTags.length).toEqual(0);
@@ -281,12 +274,12 @@ describe('EvaluationsController', () => {
       const evaluations = await evaluationsController.create(
         EVALUATION_WITH_TAGS_1,
         [mockFile, secondMockFile],
-        {user: user}
+        { user: user },
       );
       expect(evaluations).toBeDefined();
       if (!Array.isArray(evaluations)) {
-        throw new Error(
-          'Returned evaluation for multiple file upload should be an array'
+        throw new TypeError(
+          'Returned evaluation for multiple file upload should be an array',
         );
       }
       expect(evaluations.length).toEqual(2);
@@ -302,12 +295,12 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: user.id
+        userId: user.id,
       });
       const updatedEvaluation = await evaluationsController.update(
         evaluation.id,
-        {user: user},
-        UPDATE_EVALUATION
+        { user: user },
+        UPDATE_EVALUATION,
       );
       expect(evaluation.filename).not.toEqual(updatedEvaluation.filename);
       expect(evaluation.data).not.toEqual(updatedEvaluation.data);
@@ -322,15 +315,15 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: user.id
+        userId: user.id,
       });
 
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
 
       const updatedEvaluation = await evaluationsController.update(
         evaluation.id,
-        {user: owner},
-        UPDATE_EVALUATION
+        { user: owner },
+        UPDATE_EVALUATION,
       );
       expect(evaluation.filename).not.toEqual(updatedEvaluation.filename);
       expect(evaluation.data).not.toEqual(updatedEvaluation.data);
@@ -349,7 +342,7 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: user.id
+        userId: user.id,
       });
 
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
@@ -357,28 +350,28 @@ describe('EvaluationsController', () => {
       await expect(
         evaluationsController.update(
           evaluation.id,
-          {user: basicUser},
-          UPDATE_EVALUATION
-        )
+          { user: basicUser },
+          UPDATE_EVALUATION,
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
 
     it('should prevent unauthorized users from updating', async () => {
       expect.assertions(1);
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       await expect(
         evaluationsController.update(
           evaluation.id,
-          {user: user},
-          UPDATE_EVALUATION
-        )
+          { user: user },
+          UPDATE_EVALUATION,
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
@@ -389,26 +382,26 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
-      await evaluationsController.remove(evaluation.id, {user: user});
+      await evaluationsController.remove(evaluation.id, { user: user });
       await expect(
-        evaluationsController.findById(evaluation.id, {user: user})
+        evaluationsController.findById(evaluation.id, { user: user }),
       ).rejects.toBeInstanceOf(NotFoundException);
     });
 
     it('should prevent unauthorized users removing an evaluation', async () => {
       expect.assertions(1);
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       await expect(
-        evaluationsController.remove(evaluation.id, {user: user})
+        evaluationsController.remove(evaluation.id, { user: user }),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
@@ -416,19 +409,19 @@ describe('EvaluationsController', () => {
   describe('groups for evaluation', () => {
     it('should return groups the evaluation belongs to that the requesting user can add and remove the evaluation from', async () => {
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       const group = await groupsService.create(GROUP_1);
       await groupsService.addUserToGroup(group, user, 'member');
       await groupsService.addEvaluationToGroup(group, evaluation);
       const foundGroups = await evaluationsController.groupsForEvaluation(
         evaluation.id,
-        {user: user}
+        { user: user },
       );
       expect(foundGroups[0].id).toEqual(group.id);
     });
@@ -436,18 +429,18 @@ describe('EvaluationsController', () => {
     it('should not return groups the user has no access to', async () => {
       // GROUP_1 is a public group and still should not show up.
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: mockFile,
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       const group = await groupsService.create(GROUP_1);
       await groupsService.addEvaluationToGroup(group, evaluation);
       const foundGroups = await evaluationsController.groupsForEvaluation(
         evaluation.id,
-        {user: user}
+        { user: user },
       );
       expect(foundGroups.length).toEqual(0);
     });

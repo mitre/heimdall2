@@ -2,10 +2,6 @@
  * Reads and parses inspec files
  */
 
-import {InspecDataModule} from '@/store/data_store';
-import Store from '@/store/store';
-import {Tag} from '@/types/models';
-import {readFileAsync} from '@/utilities/async_util';
 import {
   AnchoreGrypeMapper,
   ASFFResults as ASFFResultsMapper,
@@ -35,7 +31,7 @@ import {
   TwistlockResults,
   VeracodeMapper,
   XCCDFResultsResults,
-  ZapResults
+  ZapResults,
 } from '@mitre/hdf-converters';
 import axios from 'axios';
 import {
@@ -45,19 +41,54 @@ import {
   contextualizeProfile,
   ConversionResult,
   convertFile,
-  ExecJSON
+  ExecJSON,
 } from 'inspecjs';
 import * as _ from 'lodash';
-import {v4 as uuid} from 'uuid';
-import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
-import {FilteredDataModule} from './data_filters';
-import {SnackbarModule} from './snackbar';
+import { v4 as uuid } from 'uuid';
+import { Action, getModule, Module, VuexModule } from 'vuex-module-decorators';
+import { InspecDataModule } from '@/store/data_store';
+import Store from '@/store/store';
+import { Tag } from '@/types/models';
+import { readFileAsync } from '@/utilities/async_util';
+import { FilteredDataModule } from './data_filters';
+import { SnackbarModule } from './snackbar';
+
+/** Represents a file containing an Inspec Execution output */
+export type EvaluationFile = InspecFile & { evaluation: SourcedContextualizedEvaluation };
+
+export type ExecJSONLoadOptions = {
+  createdAt?: Date;
+  data: ExecJSON.Execution;
+  database_id?: string;
+  /** The filename to denote this object with */
+  filename: string;
+  sourceFormat?: string;
+  tags?: Tag[];
+  updatedAt?: Date;
+};
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
 
+export type FileLoadOptions = {
+  data?: string;
+  /** The file to load */
+  file?: File;
+  filename?: string;
+};
+
 /** Represents the minimum data to represent an uploaded file handle. */
 export type InspecFile = {
+  createdAt?: Date;
+  database_id?: number;
+  /** The filename that this file was uploaded under. */
+  filename: string;
+
+  /** The detected source format when this file was loaded (e.g., INPUT_TYPES value, 'inspec-json', 'inspec-profile'). */
+  sourceFormat?: string;
+
+  tags?: Tag[];
+
   /**
    * Unique identifier for this file. Used to encode which file is currently selected, etc.
    *
@@ -66,134 +97,179 @@ export type InspecFile = {
    * Using this property, one might order files by order in which they were added.
    */
   uniqueId: FileID;
-  /** The filename that this file was uploaded under. */
-  filename: string;
-
-  database_id?: number;
-
-  tags?: Tag[];
-
-  createdAt?: Date;
   updatedAt?: Date;
-};
-
-/** Modify our contextual types to sort of have back-linking to sourced from files */
-export interface SourcedContextualizedEvaluation extends ContextualizedEvaluation {
-  from_file: EvaluationFile;
-}
-
-export interface SourcedContextualizedProfile extends ContextualizedProfile {
-  from_file: ProfileFile;
-}
-
-/** Represents a file containing an Inspec Execution output */
-export type EvaluationFile = InspecFile & {
-  evaluation: SourcedContextualizedEvaluation;
 };
 
 /** Represents a file containing an Inspec Profile (not run) */
-export type ProfileFile = InspecFile & {
-  profile: SourcedContextualizedProfile;
-};
+export type ProfileFile = InspecFile & { profile: SourcedContextualizedProfile };
 
-export type FileLoadOptions = {
-  /** The file to load */
-  file?: File;
-  filename?: string;
-  data?: string;
-};
+/** Modify our contextual types to sort of have back-linking to sourced from files */
+export type SourcedContextualizedEvaluation = ContextualizedEvaluation & { from_file: EvaluationFile };
+
+export type SourcedContextualizedProfile = ContextualizedProfile & { from_file: ProfileFile };
 
 export type TextLoadOptions = {
+  createdAt?: Date;
+  database_id?: string;
   /** The filename to denote this object with */
   filename: string;
-  database_id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  sourceFormat?: string;
   tags?: Tag[];
-
   /** The text to use for it. */
   text: string;
-};
 
-export type ExecJSONLoadOptions = {
-  /** The filename to denote this object with */
-  filename: string;
-  database_id?: string;
-  createdAt?: Date;
   updatedAt?: Date;
-  tags?: Tag[];
-  data: ExecJSON.Execution;
 };
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'intake',
+  namespaced: true,
   store: Store,
-  name: 'intake'
 })
 export class InspecIntake extends VuexModule {
-  /**
-   * Load a file with the specified options. Promises an error message on failure
-   */
   @Action
-  async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
-    let read: string;
-    const filename =
-      options.file?.name || options.filename || 'Missing Filename';
-    if (options.file) {
-      read = await readFileAsync(options.file);
-    } else if (options.data) {
-      read = options.data;
-    } else {
-      throw new Error('No file or data passed to report intake');
-    }
-    if (await this.isHDF(read)) {
-      return this.loadText({
-        text: read,
-        filename: filename
-      });
-    } else {
-      const converted = await this.convertToHdf({
-        fileOptions: options,
-        data: read
-      });
-      if (Array.isArray(converted)) {
-        const originalFileSplit = filename.split('.');
-        // Default to .json if not found
-        let originalFileType = '.json';
-        if (originalFileSplit.length > 1) {
-          originalFileType = originalFileSplit[originalFileSplit.length - 1];
-        }
-        return Promise.all(
-          converted.map((evaluation) => {
-            return this.loadExecJson({
-              data: evaluation,
-              filename: `${filename.replaceAll(/\.json/giv, '').replaceAll(/\.nessus/giv, '')}-${_.get(evaluation, 'platform.target_id', _.get(evaluation, 'profiles[0].name'))}.${originalFileType}`
-            });
-          })
+  async convertToHdf(convertOptions: {
+    data: string;
+    fileOptions: FileLoadOptions;
+  }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
+    const filename
+      = convertOptions.fileOptions.file?.name
+        || convertOptions.fileOptions.filename
+        || 'No Filename';
+    // If the data passed is valid json, try to match up known keys
+    const typeGuess = fingerprint({
+      data: convertOptions.data,
+      filename: filename,
+    });
+    switch (typeGuess) {
+      case INPUT_TYPES.ASFF: {
+        return Object.values(
+          new ASFFResultsMapper(convertOptions.data).toHdf(),
         );
-      } else if (converted) {
-        return this.loadExecJson({
-          data: converted,
-          filename: filename
-        });
-      } else {
-        return [];
+      }
+      case INPUT_TYPES.BURP: {
+        return new BurpSuiteResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.CHECKLIST: {
+        return new ChecklistResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.CHECKOV: {
+        return new CheckovMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.CONVEYOR: {
+        return Object.values(
+          new ConveyorResultsMapper(convertOptions.data).toHdf(),
+        );
+      }
+      case INPUT_TYPES.CYCLONEDX_SBOM: {
+        return new CycloneDXSBOMResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.DB_PROTECT: {
+        return new DBProtectMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.DEPENDENCY_TRACK: {
+        return new DependencyTrackMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.FORTIFY: {
+        return new FortifyResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.GOSEC: {
+        return new GosecMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.GRYPE: {
+        return new AnchoreGrypeMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.IONCHANNEL: {
+        return new IonChannelMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.JFROG: {
+        return new JfrogXrayMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.MSFT_SEC_SCORE: {
+        return new MsftSecureScoreResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.NESSUS: {
+        return new NessusResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.NETSPARKER: {
+        return new NetsparkerResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.NEUVECTOR: {
+        return new NeuVectorMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.NIKTO: {
+        return new NiktoMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.PRISMA: {
+        return new PrismaMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.SARIF: {
+        return new SarifMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.SCOUTSUITE: {
+        return new ScoutsuiteMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.SNYK: {
+        return new SnykResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.TRUFFLEHOG: {
+        return new TrufflehogResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.TWISTLOCK: {
+        return new TwistlockResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.VERACODE: {
+        return new VeracodeMapper(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.XCCDF: {
+        return new XCCDFResultsResults(convertOptions.data).toHdf();
+      }
+      case INPUT_TYPES.ZAP: {
+        return new ZapResults(convertOptions.data).toHdf();
+      }
+      default: {
+        return SnackbarModule.failure(
+          `Invalid file uploaded (${filename}), no fingerprints matched.`,
+        );
       }
     }
   }
 
   @Action
+  async detectAndLoadPredefinedJSON() {
+    // On page load, check for the flag to load the preloaded JSON file
+    const queryString = globalThis.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    return urlParams.get('predefinedLoad')?.toLowerCase() === 'true'
+      ? axios
+        .get('/dynamic/predefinedload.json', { headers: { Accept: 'application/json' } })
+        .then(async ({ data }) => {
+          data.forEach(async (file: { data: string; filename: string }) => {
+            InspecIntakeModule.loadFile({ file: new File([new Blob([file.data])], file.filename) });
+          });
+          return true;
+        })
+        .catch((error) => {
+          SnackbarModule.failure(
+            `An error ocurred while loading your pre-defined file: ${error}`,
+          );
+          return false;
+        })
+      : false;
+  }
+
+  @Action
   async isHDF(
-    data: string | Record<string, unknown> | undefined
+    data: Record<string, unknown> | string | undefined,
   ): Promise<boolean> {
     if (typeof data === 'string') {
       try {
         // If our data loads correctly it could be HDF
         const parsed = JSON.parse(data);
         return (
-          Array.isArray(parsed.profiles) || // Execution JSON
-          (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
+          Array.isArray(parsed.profiles) // Execution JSON
+          || (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
         );
       } catch {
         // HDF isn't valid json, we have a different format
@@ -201,8 +277,8 @@ export class InspecIntake extends VuexModule {
       }
     } else if (typeof data === 'object') {
       return (
-        Array.isArray(data.profiles) || // Execution JSON
-        (Boolean(data.controls) && Boolean(data.sha256)) // Profile JSON
+        Array.isArray(data.profiles) // Execution JSON
+        || (Boolean(data.controls) && Boolean(data.sha256)) // Profile JSON
       );
     } else if (data === undefined) {
       SnackbarModule.failure('Missing data to convert to validate HDF');
@@ -213,114 +289,101 @@ export class InspecIntake extends VuexModule {
     }
   }
 
+  // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
   @Action
-  async convertToHdf(convertOptions: {
-    fileOptions: FileLoadOptions;
-    data: string;
-  }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
-    const filename =
-      convertOptions.fileOptions.file?.name ||
-      convertOptions.fileOptions.filename ||
-      'No Filename';
-    // If the data passed is valid json, try to match up known keys
-    const typeGuess = fingerprint({
-      data: convertOptions.data,
-      filename: filename
-    });
-    switch (typeGuess) {
-      case INPUT_TYPES.JFROG:
-        return new JfrogXrayMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.MSFT_SEC_SCORE:
-        return new MsftSecureScoreResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.ASFF:
-        return Object.values(
-          new ASFFResultsMapper(convertOptions.data).toHdf()
-        );
-      case INPUT_TYPES.CONVEYOR:
-        return Object.values(
-          new ConveyorResultsMapper(convertOptions.data).toHdf()
-        );
-      case INPUT_TYPES.ZAP:
-        return new ZapResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.NIKTO:
-        return new NiktoMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.SARIF:
-        return new SarifMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.SNYK:
-        return new SnykResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.TWISTLOCK:
-        return new TwistlockResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.NESSUS:
-        return new NessusResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.XCCDF:
-        return new XCCDFResultsResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.BURP:
-        return new BurpSuiteResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.IONCHANNEL:
-        return new IonChannelMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.SCOUTSUITE:
-        return new ScoutsuiteMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.DB_PROTECT:
-        return new DBProtectMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.NETSPARKER:
-        return new NetsparkerResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.PRISMA:
-        return new PrismaMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.VERACODE:
-        return new VeracodeMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.FORTIFY:
-        return new FortifyResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.CHECKLIST:
-        return new ChecklistResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.GOSEC:
-        return new GosecMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.CYCLONEDX_SBOM:
-        return new CycloneDXSBOMResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.TRUFFLEHOG:
-        return new TrufflehogResults(convertOptions.data).toHdf();
-      case INPUT_TYPES.GRYPE:
-        return new AnchoreGrypeMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.NEUVECTOR:
-        return new NeuVectorMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.DEPENDENCY_TRACK:
-        return new DependencyTrackMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.CHECKOV:
-        return new CheckovMapper(convertOptions.data).toHdf();
-      default:
-        return SnackbarModule.failure(
-          `Invalid file uploaded (${filename}), no fingerprints matched.`
-        );
-    }
+  async loadExecJson(options: ExecJSONLoadOptions) {
+    // Convert it
+    const fileID: FileID = uuid();
+    // A bit of chicken and egg here, this will be our circular JSON structure
+    const evalFile = {
+      createdAt: options.createdAt,
+      database_id: options.database_id,
+      filename: options.filename,
+      sourceFormat: options.sourceFormat,
+      tags: options.tags,
+      uniqueId: fileID,
+      updatedAt: options.updatedAt,
+    } as EvaluationFile;
+
+    // Fixup the evaluation to be Sourced from a file.
+    const evaluation = contextualizeEvaluation(
+      options.data,
+    ) as SourcedContextualizedEvaluation;
+    evaluation.from_file = evalFile;
+
+    // Set and freeze
+    evalFile.evaluation = evaluation;
+    Object.freeze(evaluation);
+    InspecDataModule.addExecution(evalFile);
+    FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
+
+    return fileID;
   }
 
+  /**
+   * Load a file with the specified options. Promises an error message on failure
+   */
   @Action
-  async detectAndLoadPredefinedJSON() {
-    // On page load, check for the flag to load the preloaded JSON file
-    const queryString = globalThis.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    if (urlParams.get('predefinedLoad')?.toLowerCase() === 'true') {
-      return axios
-        .get('/dynamic/predefinedload.json', {
-          headers: {
-            Accept: 'application/json'
-          }
-        })
-        .then(async ({data}) => {
-          data.forEach(async (file: {filename: string; data: string}) => {
-            InspecIntakeModule.loadFile({
-              file: new File([new Blob([file.data])], file.filename)
-            });
-          });
-          return true;
-        })
-        .catch((error) => {
-          SnackbarModule.failure(
-            `An error ocurred while loading your pre-defined file: ${error}`
-          );
-          return false;
-        });
+  async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
+    let read: string;
+    const filename
+      = options.file?.name || options.filename || 'Missing Filename';
+    if (options.file) {
+      read = await readFileAsync(options.file);
+    } else if (options.data) {
+      read = options.data;
     } else {
-      return false;
+      throw new Error('No file or data passed to report intake');
+    }
+    if (await this.isHDF(read)) {
+      let sourceFormat = 'inspec-json';
+      try {
+        const parsed = JSON.parse(read);
+        const passthroughFormat = parsed?.passthrough?.heimdall?.sourceFormat;
+        if (passthroughFormat) {
+          sourceFormat = passthroughFormat;
+        } else if (parsed?.platform?.name === 'Heimdall Tools') {
+          sourceFormat = 'hdf-converted';
+        }
+      } catch {
+        // parse failed — default to inspec-json
+      }
+      return this.loadText({
+        filename: filename,
+        sourceFormat,
+        text: read,
+      });
+    } else {
+      const typeGuess = fingerprint({ data: read, filename });
+      const converted = await this.convertToHdf({
+        data: read,
+        fileOptions: options,
+      });
+      if (Array.isArray(converted)) {
+        const originalFileSplit = filename.split('.');
+        // Default to .json if not found
+        let originalFileType = '.json';
+        if (originalFileSplit.length > 1) {
+          originalFileType = originalFileSplit.at(-1) ?? '.json';
+        }
+        return Promise.all(
+          converted.map((evaluation) => {
+            return this.loadExecJson({
+              data: evaluation,
+              filename: `${filename.replaceAll(/\.json/giv, '').replaceAll(/\.nessus/giv, '')}-${_.get(evaluation, 'platform.target_id', _.get(evaluation, 'profiles[0].name'))}.${originalFileType}`,
+              sourceFormat: typeGuess,
+            });
+          }),
+        );
+      } else if (converted) {
+        return this.loadExecJson({
+          data: converted,
+          filename: filename,
+          sourceFormat: typeGuess,
+        });
+      } else {
+        return [];
+      }
     }
   }
 
@@ -333,18 +396,19 @@ export class InspecIntake extends VuexModule {
     if (result['1_0_ExecJson']) {
       // A bit of chicken and egg here
       const evalFile = {
-        uniqueId: fileID,
-        filename: options.filename,
-        database_id: options.database_id,
         createdAt: options.createdAt,
+        database_id: options.database_id,
+        filename: options.filename,
+        sourceFormat: options.sourceFormat ?? 'inspec-json',
+        tags: options.tags,
+        uniqueId: fileID,
         updatedAt: options.updatedAt,
-        tags: options.tags
         // evaluation
       } as EvaluationFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
       const evaluation = contextualizeEvaluation(
-        result['1_0_ExecJson']
+        result['1_0_ExecJson'],
       ) as unknown as SourcedContextualizedEvaluation;
       evaluation.from_file = evalFile;
 
@@ -356,13 +420,14 @@ export class InspecIntake extends VuexModule {
     } else if (result['1_0_ProfileJson']) {
       // Handle as profile
       const profileFile = {
+        filename: options.filename,
+        sourceFormat: options.sourceFormat ?? 'inspec-profile',
         uniqueId: fileID,
-        filename: options.filename
       } as ProfileFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
       const profile = contextualizeProfile(
-        result['1_0_ProfileJson']
+        result['1_0_ProfileJson'],
       ) as unknown as SourcedContextualizedProfile;
       profile.from_file = profileFile;
 
@@ -372,42 +437,11 @@ export class InspecIntake extends VuexModule {
       InspecDataModule.addProfile(profileFile);
       FilteredDataModule.toggle_profile(profileFile.uniqueId);
     } else {
-      // eslint-disable-next-line no-console
       console.error(result.errors);
       throw new Error(
-        "Couldn't parse data. See developer's tools for more details."
+        "Couldn't parse data. See developer's tools for more details.",
       );
     }
-    return fileID;
-  }
-
-  // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
-  @Action
-  async loadExecJson(options: ExecJSONLoadOptions) {
-    // Convert it
-    const fileID: FileID = uuid();
-    // A bit of chicken and egg here, this will be our circular JSON structure
-    const evalFile = {
-      uniqueId: fileID,
-      filename: options.filename,
-      database_id: options.database_id,
-      createdAt: options.createdAt,
-      updatedAt: options.updatedAt,
-      tags: options.tags
-    } as EvaluationFile;
-
-    // Fixup the evaluation to be Sourced from a file.
-    const evaluation = contextualizeEvaluation(
-      options.data
-    ) as SourcedContextualizedEvaluation;
-    evaluation.from_file = evalFile;
-
-    // Set and freeze
-    evalFile.evaluation = evaluation;
-    Object.freeze(evaluation);
-    InspecDataModule.addExecution(evalFile);
-    FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
-
     return fileID;
   }
 }

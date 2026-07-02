@@ -7,40 +7,48 @@
   >
     There is a newer version of Heimdall available. The latest version is
     <strong>v{{ latestVersion }}</strong> and you are running
-    <strong>v{{ version }}</strong
-    >.
+    <strong>v{{ version }}</strong>.
     <template #actions>
-      <v-btn text :href="repository + changelog" target="_blank" color="black"
-        >Learn More</v-btn
+      <v-btn
+        text
+        :href="repository + changelog"
+        target="_blank"
+        color="black"
       >
-      <v-btn text color="red darken-4" @click="updateAvailable = false"
-        >Dismiss</v-btn
+        Learn More
+      </v-btn>
+      <v-btn
+        text
+        color="red darken-4"
+        @click="updateAvailable = false"
       >
+        Dismiss
+      </v-btn>
     </template>
   </v-banner>
 </template>
 
 <script lang="ts">
+import Component, { mixins } from 'vue-class-component';
 import AppInfoMixin from '@/mixins/AppInfoMixin';
-import {AppInfoModule} from '@/store/app_info';
-import {ServerModule} from '@/store/server';
-import Component, {mixins} from 'vue-class-component';
+import { AppInfoModule } from '@/store/app_info';
+import { ServerModule } from '@/store/server';
 
 @Component({})
 export default class UpdateNotification extends mixins(AppInfoMixin) {
+  get latestVersion(): string {
+    return AppInfoModule.latestVersion;
+  }
+
   get updateAvailable(): boolean {
     return (
-      (!ServerModule.serverMode || ServerModule.userInfo.role === 'admin') &&
-      AppInfoModule.updateNotification
+      (!ServerModule.serverMode || ServerModule.userInfo.role === 'admin')
+      && AppInfoModule.updateNotification
     );
   }
 
   set updateAvailable(visible: boolean) {
     AppInfoModule.SetUpdateVisibility(visible);
-  }
-
-  get latestVersion(): string {
-    return AppInfoModule.latestVersion;
   }
 }
 </script>

@@ -1,6 +1,12 @@
 <template>
-  <div v-if="show" class="spin">
-    <div class="ring" style="font-size: 160%">
+  <div
+    v-if="show"
+    class="spin"
+  >
+    <div
+      class="ring"
+      style="font-size: 160%"
+    >
       <v-progress-circular
         :rotate="360"
         :size="200"
@@ -8,12 +14,16 @@
         :value="value"
         color="light-blue"
       >
-        <template #default
-          ><b>{{ value }} %</b></template
-        >
+        <template #default>
+          <b>{{ value }} %</b>
+        </template>
       </v-progress-circular>
     </div>
-    <div v-if="message.length > 0" class="ring" style="top: 65%">
+    <div
+      v-if="message.length > 0"
+      class="ring"
+      style="top: 65%"
+    >
       <b>{{ message }}</b>
     </div>
   </div>
@@ -22,16 +32,16 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {SpinnerModule} from '@/store/spinner';
+import { SpinnerModule } from '@/store/spinner';
 
 @Component
 export default class Spinner extends Vue {
-  get show(): boolean {
-    return SpinnerModule.show;
-  }
-
   get message(): string {
     return SpinnerModule.message;
+  }
+
+  get show(): boolean {
+    return SpinnerModule.show;
   }
 
   get value(): number {

@@ -1,32 +1,32 @@
-import {NotFoundException} from '@nestjs/common';
-import {SequelizeModule} from '@nestjs/sequelize';
-import {Test} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import { NotFoundException } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Test } from '@nestjs/testing';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   EVALUATION_WITH_TAGS_1,
   UPDATE_EVALUATION,
   UPDATE_EVALUATION_DATA_ONLY,
-  UPDATE_EVALUATION_FILENAME_ONLY
+  UPDATE_EVALUATION_FILENAME_ONLY,
 } from '../../test/constants/evaluations-test.constant';
-import {GROUP_1} from '../../test/constants/groups-test.constant';
-import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
-import {ConfigService} from '../config/config.service';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
-import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
-import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
-import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
-import {GroupUser} from '../group-users/group-user.model';
-import {Group} from '../groups/group.model';
-import {GroupsService} from '../groups/groups.service';
-import {UserDto} from '../users/dto/user.dto';
-import {UsersModule} from '../users/users.module';
-import {UsersService} from '../users/users.service';
-import {EvaluationDto} from './dto/evaluation.dto';
-import {Evaluation} from './evaluation.model';
-import {EvaluationsService} from './evaluations.service';
+import { GROUP_1 } from '../../test/constants/groups-test.constant';
+import { CREATE_USER_DTO_TEST_OBJ } from '../../test/constants/users-test.constant';
+import { ConfigService } from '../config/config.service';
+import { DatabaseModule } from '../database/database.module';
+import { DatabaseService } from '../database/database.service';
+import { EvaluationTagsModule } from '../evaluation-tags/evaluation-tags.module';
+import { EvaluationTagsService } from '../evaluation-tags/evaluation-tags.service';
+import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { Group } from '../groups/group.model';
+import { GroupsService } from '../groups/groups.service';
+import { UserDto } from '../users/dto/user.dto';
+import { UsersModule } from '../users/users.module';
+import { UsersService } from '../users/users.service';
+import { EvaluationDto } from './dto/evaluation.dto';
+import { Evaluation } from './evaluation.model';
+import { EvaluationsService } from './evaluations.service';
 
 describe('EvaluationsService', () => {
   let evaluationsService: EvaluationsService;
@@ -44,24 +44,24 @@ describe('EvaluationsService', () => {
           Evaluation,
           GroupUser,
           Group,
-          GroupEvaluation
+          GroupEvaluation,
         ]),
         EvaluationTagsModule,
-        UsersModule
+        UsersModule,
       ],
       providers: [
         ConfigService,
         EvaluationsService,
         DatabaseService,
         UsersService,
-        GroupsService
-      ]
+        GroupsService,
+      ],
     }).compile();
 
     databaseService = module.get<DatabaseService>(DatabaseService);
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
     evaluationTagsService = module.get<EvaluationTagsService>(
-      EvaluationTagsService
+      EvaluationTagsService,
     );
     usersService = module.get<UsersService>(UsersService);
     groupsService = module.get<GroupsService>(GroupsService);
@@ -85,12 +85,12 @@ describe('EvaluationsService', () => {
       await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray.length).toEqual(2);
@@ -100,7 +100,7 @@ describe('EvaluationsService', () => {
       await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
 
       const evaluations = await evaluationsService.findAll();
@@ -113,7 +113,7 @@ describe('EvaluationsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
 
       let evaluations = await evaluationsService.findAll();
@@ -138,18 +138,18 @@ describe('EvaluationsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       const foundEvaluation = await evaluationsService.findById(evaluation.id);
       expect(new EvaluationDto(evaluation)).toEqual(
-        new EvaluationDto(foundEvaluation)
+        new EvaluationDto(foundEvaluation),
       );
     });
 
     it('should throw an error if an evaluation does not exist', async () => {
       expect.assertions(1);
       await expect(evaluationsService.findById('-1')).rejects.toThrow(
-        NotFoundException
+        NotFoundException,
       );
     });
   });
@@ -159,7 +159,7 @@ describe('EvaluationsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
@@ -172,12 +172,12 @@ describe('EvaluationsService', () => {
 
       if (EVALUATION_WITH_TAGS_1.evaluationTags === undefined) {
         throw new TypeError(
-          'Evaluation fixture does not have any associated tags.'
+          'Evaluation fixture does not have any associated tags.',
         );
       }
 
       expect(evaluation.evaluationTags?.[0].value).toEqual(
-        EVALUATION_WITH_TAGS_1.evaluationTags[0].value
+        EVALUATION_WITH_TAGS_1.evaluationTags[0].value,
       );
     });
 
@@ -185,14 +185,14 @@ describe('EvaluationsService', () => {
       const evaluation = await evaluationsService.create({
         ...CREATE_EVALUATION_DTO_WITHOUT_TAGS,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
       expect(evaluation.data).toEqual({});
       expect(evaluation.filename).toEqual(
-        CREATE_EVALUATION_DTO_WITHOUT_TAGS.filename
+        CREATE_EVALUATION_DTO_WITHOUT_TAGS.filename,
       );
       expect(evaluation.evaluationTags).not.toBeDefined();
       expect((await evaluationTagsService.findAll()).length).toBe(0);
@@ -204,10 +204,10 @@ describe('EvaluationsService', () => {
         evaluationsService.create({
           ...CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
           data: {},
-          userId: user.id
-        })
+          userId: user.id,
+        }),
       ).rejects.toThrow(
-        'notNull Violation: Evaluation.filename cannot be null'
+        'notNull Violation: Evaluation.filename cannot be null',
       );
     });
   });
@@ -216,7 +216,7 @@ describe('EvaluationsService', () => {
     it('should throw an error if an evaluation does not exist', async () => {
       expect.assertions(1);
       await expect(
-        evaluationsService.update('-1', UPDATE_EVALUATION)
+        evaluationsService.update('-1', UPDATE_EVALUATION),
       ).rejects.toThrow(NotFoundException);
     });
 
@@ -224,11 +224,11 @@ describe('EvaluationsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
-        UPDATE_EVALUATION
+        UPDATE_EVALUATION,
       );
       expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
@@ -241,17 +241,17 @@ describe('EvaluationsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
-        UPDATE_EVALUATION_DATA_ONLY
+        UPDATE_EVALUATION_DATA_ONLY,
       );
       expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
       expect(updatedEvaluation.updatedAt).not.toEqual(evaluation.updatedAt);
       expect(updatedEvaluation.evaluationTags.length).toEqual(
-        evaluation.evaluationTags.length
+        evaluation.evaluationTags.length,
       );
       expect(updatedEvaluation.data).not.toEqual(evaluation.data);
       expect(updatedEvaluation.filename).toEqual(evaluation.filename);
@@ -261,18 +261,18 @@ describe('EvaluationsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
 
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
-        UPDATE_EVALUATION_FILENAME_ONLY
+        UPDATE_EVALUATION_FILENAME_ONLY,
       );
       expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
       expect(updatedEvaluation.updatedAt).not.toEqual(evaluation.updatedAt);
       expect(updatedEvaluation.evaluationTags.length).toEqual(
-        evaluation.evaluationTags.length
+        evaluation.evaluationTags.length,
       );
       expect(updatedEvaluation.data).toEqual(evaluation.data);
       expect(updatedEvaluation.filename).not.toEqual(evaluation.filename);
@@ -284,24 +284,24 @@ describe('EvaluationsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       const removedEvaluation = await evaluationsService.remove(evaluation.id);
       const foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toEqual(0);
       expect(new EvaluationDto(removedEvaluation)).toEqual(
-        new EvaluationDto(evaluation)
+        new EvaluationDto(evaluation),
       );
 
       await expect(
-        evaluationsService.findById(removedEvaluation.id)
+        evaluationsService.findById(removedEvaluation.id),
       ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw an error when the evaluation does not exist', async () => {
       expect.assertions(1);
       await expect(evaluationsService.findById('-1')).rejects.toThrow(
-        NotFoundException
+        NotFoundException,
       );
     });
   });

@@ -1,7 +1,13 @@
 <template>
   <v-card>
-    <v-row class="pa-4" justify="space-between">
-      <v-col md="3" cols="12">
+    <v-row
+      class="pa-4"
+      justify="space-between"
+    >
+      <v-col
+        md="3"
+        cols="12"
+      >
         <v-card-text> Parent Profile </v-card-text>
         <!-- literally of just the one root item -->
         <v-treeview
@@ -50,17 +56,17 @@
 </template>
 
 <script lang="ts">
+import type { ContextualizedProfile } from 'inspecjs';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop, Watch } from 'vue-property-decorator';
 import ProfileInfo from '@/components/cards/ProfileInfo.vue';
 import {
   SourcedContextualizedEvaluation,
-  SourcedContextualizedProfile
+  SourcedContextualizedProfile,
 } from '@/store/report_intake';
-import {profile_unique_key} from '@/utilities/format_util';
-import {ContextualizedProfile} from 'inspecjs';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop, Watch} from 'vue-property-decorator';
-import {InspecDataModule} from '../../store/data_store';
+import { profile_unique_key } from '@/utilities/format_util';
+import { InspecDataModule } from '../../store/data_store';
 
 /**
  * Makes a ContextualizedProfile work as a TreeView item
@@ -68,38 +74,61 @@ import {InspecDataModule} from '../../store/data_store';
  * for reasons unknown, it will cause a horrendous recursion loop
  */
 class TreeItem {
+  /** The children on the treeview */
+  children: TreeItem[];
   /** The item's unique identifier */
   id: string;
   /** What to show on the treeview */
   name: string;
-  /** The children on the treeview */
-  children: TreeItem[];
 
   constructor(profile: SourcedContextualizedProfile) {
     // Base information
     this.id = profile_unique_key(profile);
     this.name = profile.data.name;
     this.children = profile.extendsFrom.map(
-      (p) => new TreeItem(p as SourcedContextualizedProfile)
+      (p: ContextualizedProfile) => new TreeItem(p as SourcedContextualizedProfile),
     );
   }
 }
 
-@Component({
-  components: {
-    ProfileInfo
-  }
-})
+@Component({ components: { ProfileInfo } })
 export default class ProfileData extends Vue {
-  @Prop({type: Object, required: true})
+  /** Models selected item ids */
+  active: string[] = [];
+
+  @Prop({ required: true, type: Object })
   readonly file!:
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile;
 
-  // auto select the root profile on file change
-  @Watch('file')
-  onFileChanged(_newValue: boolean, _oldValue: boolean) {
-    this.setDefault();
+  stopActivePropagation = false;
+
+  /** Models all loaded profiles */
+  get children(): TreeItem[] {
+    return new TreeItem(this.file_root_profile).children;
+  }
+
+  get file_root_profile(): SourcedContextualizedProfile {
+    let result: ContextualizedProfile | undefined;
+    if (Object.hasOwn(this.file.from_file, 'evaluation')) {
+      result = (
+        this.file as SourcedContextualizedEvaluation
+      ).from_file.evaluation.contains.find(p => p.extendedBy.length === 0);
+    }
+    return (result || this.file) as SourcedContextualizedProfile;
+  }
+
+  // the single root tree item
+  get root_tree(): TreeItem[] {
+    const tree = new TreeItem(this.file_root_profile);
+    tree.children = [];
+    return [tree];
+  }
+
+  get selected(): SourcedContextualizedProfile | undefined {
+    return InspecDataModule.allProfiles.find(p =>
+      this.active.includes(profile_unique_key(p)),
+    );
   }
 
   // auto select the root profile on load
@@ -107,35 +136,10 @@ export default class ProfileData extends Vue {
     this.setDefault();
   }
 
-  /** Models selected item ids */
-  active: string[] = [];
-  stopActivePropagation = false;
-  /** Models all loaded profiles */
-  get children(): TreeItem[] {
-    return new TreeItem(this.file_root_profile).children;
-  }
-
-  get selected(): SourcedContextualizedProfile | undefined {
-    return InspecDataModule.allProfiles.find((p) =>
-      this.active.includes(profile_unique_key(p))
-    );
-  }
-
-  get file_root_profile(): SourcedContextualizedProfile {
-    let result: ContextualizedProfile | undefined;
-    if (this.file.from_file.hasOwnProperty('evaluation')) {
-      result = (
-        this.file as SourcedContextualizedEvaluation
-      ).from_file.evaluation.contains.find((p) => p.extendedBy.length === 0);
-    }
-    return (result || this.file) as SourcedContextualizedProfile;
-  }
-
-  //the single root tree item
-  get root_tree(): TreeItem[] {
-    const tree = new TreeItem(this.file_root_profile);
-    tree.children = [];
-    return [tree];
+  // auto select the root profile on file change
+  @Watch('file')
+  onFileChanged(_newValue: boolean, _oldValue: boolean) {
+    this.setDefault();
   }
 
   // stopActivePropagation is to stop the two v-treeviews from infinitely toggling

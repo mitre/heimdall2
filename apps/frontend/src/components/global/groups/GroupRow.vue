@@ -8,21 +8,26 @@
       chips
     >
       <template v-for="(group, i) in groups">
-        <v-chip :key="'chip' + i" small>{{ group.text }}</v-chip>
+        <v-chip
+          :key="'chip' + i"
+          small
+        >
+          {{ group.text }}
+        </v-chip>
       </template>
     </v-chip-group>
   </div>
 </template>
 
 <script lang="ts">
-import {IEvaluation} from '@heimdall/common/interfaces';
-import Component, {mixins} from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import type { IEvaluation } from '@heimdall/common/interfaces';
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import EvaluationMixin from '../../../mixins/EvaluationMixin';
 
 @Component({})
 export default class GroupRow extends mixins(EvaluationMixin) {
-  @Prop({required: true}) readonly evaluation!: IEvaluation;
+  @Prop({ required: true }) readonly evaluation!: IEvaluation;
 
   get groups() {
     return this.convertGroupsToIVuetifyItems(this.evaluation.groups);

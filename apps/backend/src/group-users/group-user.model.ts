@@ -9,39 +9,39 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
+import { Group } from '../groups/group.model';
+import { User } from '../users/user.model';
 
 @Table
 export class GroupUser extends Model {
-  @PrimaryKey
-  @AutoIncrement
   @AllowNull(false)
+  @Column(DataType.DATE)
+  @CreatedAt
+  declare createdAt: Date;
+
   @Column(DataType.BIGINT)
+  @ForeignKey(() => Group)
+  declare groupId: string;
+
+  @AllowNull(false)
+  @AutoIncrement
+  @Column(DataType.BIGINT)
+  @PrimaryKey
   declare id: string;
 
   @AllowNull(false)
-  @Default('member')
   @Column(DataType.STRING)
+  @Default('member')
   declare role: string;
 
-  @ForeignKey(() => Group)
-  @Column(DataType.BIGINT)
-  declare groupId: string;
-
-  @ForeignKey(() => User)
-  @Column(DataType.BIGINT)
-  declare userId: string;
-
-  @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  declare createdAt: Date;
-
   @UpdatedAt
-  @AllowNull(false)
-  @Column(DataType.DATE)
   declare updatedAt: Date;
+
+  @Column(DataType.BIGINT)
+  @ForeignKey(() => User)
+  declare userId: string;
 }

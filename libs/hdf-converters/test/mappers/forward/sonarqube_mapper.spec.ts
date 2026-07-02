@@ -1,12 +1,15 @@
-import fs from 'fs';
-import {ExecJSON} from 'inspecjs';
-import {describe, expect, it} from 'vitest';
-import {SonarqubeResults} from '../../../src/sonarqube-mapper';
-import {omitHDFTitle, omitVersions} from '../../utils';
+import { type ExecJSON } from 'inspecjs';
+import { describe, expect, it } from 'vitest';
+import { SonarqubeResults } from '../../../src/sonarqube-mapper';
+import { isServiceAvailable, loadFixture, omitHDFTitle, omitVersions } from '../../utils';
 
-const testURL = 'http://127.0.0.1:3001';
+const SONARQUBE_HOST = process.env.SONARQUBE_HOST ?? '127.0.0.1';
+const SONARQUBE_PORT = Number(process.env.SONARQUBE_PORT ?? 3001);
+const testURL = `http://${SONARQUBE_HOST}:${SONARQUBE_PORT}`;
 
-describe('sonarqube_mapper', () => {
+const isSonarqubeAvailable = await isServiceAvailable(SONARQUBE_HOST, SONARQUBE_PORT);
+
+describe.skipIf(!isSonarqubeAvailable)('sonarqube_mapper', () => {
   it('Successfully pulls SonarQube vulnerabilities', async () => {
     const mapper = new SonarqubeResults(testURL, 'xss', 'NotARealKey');
     const result: ExecJSON.Execution = await mapper.toHdf();
@@ -18,17 +21,8 @@ describe('sonarqube_mapper', () => {
 
     expect(omitHDFTitle(omitVersions(result))).toEqual(
       omitHDFTitle(
-        omitVersions(
-          JSON.parse(
-            fs.readFileSync(
-              'sample_jsons/sonarqube_mapper/sonarqube-hdf.json',
-              {
-                encoding: 'utf-8'
-              }
-            )
-          )
-        )
-      )
+        omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-hdf.json')),
+      ),
     );
   });
   it('Successfully pulls SonarQube vulnerabilities from a particular branch', async () => {
@@ -36,7 +30,7 @@ describe('sonarqube_mapper', () => {
       testURL,
       'libc_unix',
       'NotARealKey',
-      'release'
+      'release',
     );
     const result: ExecJSON.Execution = await mapper.toHdf();
 
@@ -47,17 +41,8 @@ describe('sonarqube_mapper', () => {
 
     expect(omitHDFTitle(omitVersions(result))).toEqual(
       omitHDFTitle(
-        omitVersions(
-          JSON.parse(
-            fs.readFileSync(
-              'sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json',
-              {
-                encoding: 'utf-8'
-              }
-            )
-          )
-        )
-      )
+        omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json')),
+      ),
     );
   });
   it('Successfully pulls SonarQube vulnerabilities from a particular pull request', async () => {
@@ -66,7 +51,7 @@ describe('sonarqube_mapper', () => {
       'libc_unix',
       'NotARealKey',
       undefined,
-      '123'
+      '123',
     );
     const result: ExecJSON.Execution = await mapper.toHdf();
 
@@ -77,17 +62,8 @@ describe('sonarqube_mapper', () => {
 
     expect(omitHDFTitle(omitVersions(result))).toEqual(
       omitHDFTitle(
-        omitVersions(
-          JSON.parse(
-            fs.readFileSync(
-              'sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json',
-              {
-                encoding: 'utf-8'
-              }
-            )
-          )
-        )
-      )
+        omitVersions(loadFixture('sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json')),
+      ),
     );
   });
 });

@@ -1,5 +1,8 @@
 <template>
-  <v-dialog v-model="showingModal" width="800px">
+  <v-dialog
+    v-model="showingModal"
+    width="800px"
+  >
     <template #activator="{on}">
       <LinkItem
         key="export_splunk"
@@ -10,15 +13,28 @@
       />
     </template>
     <v-card>
-      <v-card-title class="headline"> Export to Splunk </v-card-title>
+      <v-card-title class="headline">
+        Export to Splunk
+      </v-card-title>
       <v-card-text>
-        <v-stepper v-model="step" class="elevation-0">
+        <v-stepper
+          v-model="step"
+          class="elevation-0"
+        >
           <v-stepper-header class="elevation-0">
-            <v-stepper-step id="step-1" step="1">
+            <v-stepper-step
+              id="step-1"
+              step="1"
+            >
               Login Credentials
             </v-stepper-step>
             <v-divider />
-            <v-stepper-step id="step-2" step="2"> Post Data </v-stepper-step>
+            <v-stepper-step
+              id="step-2"
+              step="2"
+            >
+              Post Data
+            </v-stepper-step>
           </v-stepper-header>
           <v-stepper-items>
             <v-stepper-content step="1">
@@ -44,23 +60,23 @@
                   It seems you may be having trouble using the Splunk toolkit.
                   Are you sure that you have configured it properly?
                 </span>
-                <br />
+                <br>
                 <span>
                   Accessing a Splunk instance from Heimdall requires the input
                   of the following information:
-                  <br />
+                  <br>
                   username: A qualified username recognized by the referenced
                   Splunk instance.
-                  <br />
+                  <br>
                   password: A qualified password recognized by the referenced
                   Splunk instance.
-                  <br />
+                  <br>
                   hostname: The domain name for the desired Splunk instance.
                   Include port number if available.
-                  <br />
+                  <br>
                   index: A valid index name within the referenced Splunk
                   instance.
-                  <br />
+                  <br>
                   For installation instructions and further information, see:
                 </span>
                 <v-btn
@@ -70,53 +86,67 @@
                   color="info"
                   px-0
                 >
-                  <v-icon pr-2>mdi-github-circle</v-icon>
+                  <v-icon pr-2>
+                    mdi-github-circle
+                  </v-icon>
                   Splunk Interfacing Guide
                 </v-btn>
               </p>
-              <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
+              <v-btn
+                color="info"
+                @click="errorCount = 0"
+              >
+                Ok
+              </v-btn>
             </div>
           </v-overlay>
         </v-stepper>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click="closeModal"> Close </v-btn>
+        <v-btn
+          text
+          @click="closeModal"
+        >
+          Close
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {FilteredDataModule} from '@/store/data_filters';
-import {FileID} from '@/store/report_intake';
-import {FromHDFToSplunkMapper, SplunkConfig} from '@mitre/hdf-converters';
+import type { SplunkConfig } from '@mitre/hdf-converters';
+import { FromHDFToSplunkMapper } from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Logger} from 'winston';
-import {SnackbarModule} from '../../store/snackbar';
+import { Logger } from 'winston';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import { FilteredDataModule } from '@/store/data_filters';
+import type { FileID } from '@/store/report_intake';
+import { SnackbarModule } from '../../store/snackbar';
 import AuthStep from '../global/upload_tabs/splunk/AuthStep.vue';
 
 @Component({
   components: {
     AuthStep,
-    LinkItem
-  }
+    LinkItem,
+  },
 })
 export default class ExportSplunkModal extends Vue {
-  showingModal = false;
-  step = 1;
   errorCount = 0;
-  statusLog = '';
-  splunkConfig: SplunkConfig | null = null;
-
   logger: unknown = {
-    info: this.addLogMessage,
     debug: this.addLogMessage,
+    error: this.addLogMessage,
+    info: this.addLogMessage,
     verbose: this.addLogMessage,
-    error: this.addLogMessage
   };
+
+  showingModal = false;
+  splunkConfig: null | SplunkConfig = null;
+  statusLog = '';
+
+  step = 1;
 
   addLogMessage(message: string) {
     this.statusLog += message + '\n';
@@ -126,25 +156,6 @@ export default class ExportSplunkModal extends Vue {
     this.showingModal = false;
     this.step = 1;
     this.statusLog = '';
-    this.splunkConfig = null;
-  }
-
-  showModal() {
-    this.showingModal = true;
-  }
-
-  onAuthenticationComplete(splunkConfig: SplunkConfig) {
-    this.splunkConfig = splunkConfig;
-    this.step = 2;
-    this.convertAndUpload();
-  }
-
-  got_files(files: FileID[]) {
-    this.$emit('got-files', files);
-  }
-
-  onSignOut() {
-    this.step = 1;
     this.splunkConfig = null;
   }
 
@@ -163,10 +174,29 @@ export default class ExportSplunkModal extends Vue {
           });
       } else {
         SnackbarModule.failure(
-          'Failed to upload to Splunk: Invalid Configuration (undefined)'
+          'Failed to upload to Splunk: Invalid Configuration (undefined)',
         );
       }
     });
+  }
+
+  got_files(files: FileID[]) {
+    this.$emit('got-files', files);
+  }
+
+  onAuthenticationComplete(splunkConfig: SplunkConfig) {
+    this.splunkConfig = splunkConfig;
+    this.step = 2;
+    this.convertAndUpload();
+  }
+
+  onSignOut() {
+    this.step = 1;
+    this.splunkConfig = null;
+  }
+
+  showModal() {
+    this.showingModal = true;
   }
 }
 </script>

@@ -1,19 +1,14 @@
-import {ISCOUTSUITEJSONID} from './ScoutsuiteNistMapping';
+import type { ISCOUTSUITEJSONID } from './ScoutsuiteNistMapping';
 
 export class ScoutsuiteNistMappingItem {
-  rule: string;
   nistId: string;
+  rule: string;
 
   constructor(values: ISCOUTSUITEJSONID) {
-    if (values['RULE'] === undefined) {
+    if (values.RULE === undefined) {
       throw new Error('Scoutsuite Nist Mapping Data must contain a rule.');
-    } else {
-      this.rule = values['RULE'];
     }
-    if (values['NIST-ID'] === undefined) {
-      this.nistId = '';
-    } else {
-      this.nistId = values['NIST-ID'];
-    }
+    this.rule = values.RULE;
+    this.nistId = values['NIST-ID'] === undefined ? '' : values['NIST-ID'];
   }
 }

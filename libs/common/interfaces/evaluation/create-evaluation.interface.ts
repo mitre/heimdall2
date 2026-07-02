@@ -1,8 +1,8 @@
-import {ICreateEvaluationTag} from '..';
+import type { ICreateEvaluationTag } from '..';
 
-export interface ICreateEvaluation {
-  readonly filename: string;
-  readonly public: boolean;
+export type ICreateEvaluation = {
   readonly evaluationTags: ICreateEvaluationTag[] | undefined;
+  readonly filename: string;
   readonly groups: string[] | undefined;
-}
+  readonly public: boolean;
+};

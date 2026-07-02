@@ -1,7 +1,7 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {SnykMapper} from '../../../src/snyk-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { SnykMapper } from '../../../src/snyk-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('snyk_mapper', () => {
   it('Successfully converts Snyk cli targeted at a local/cloned repository data', () => {
@@ -9,9 +9,9 @@ describe('snyk_mapper', () => {
       JSON.parse(
         fs.readFileSync(
           'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-local.json',
-          {encoding: 'utf-8'}
-        )
-      )
+          { encoding: 'utf8' },
+        ),
+      ),
     );
 
     // fs.writeFileSync(
@@ -20,16 +20,7 @@ describe('snyk_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/snyk_mapper/nodejs-goof-local-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/snyk_mapper/nodejs-goof-local-hdf.json')),
     );
   });
   it('Successfully converts Snyk cli targeted at a remote/online repository data', () => {
@@ -37,9 +28,9 @@ describe('snyk_mapper', () => {
       JSON.parse(
         fs.readFileSync(
           'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-remote.json',
-          {encoding: 'utf-8'}
-        )
-      )
+          { encoding: 'utf8' },
+        ),
+      ),
     );
 
     // fs.writeFileSync(
@@ -48,16 +39,7 @@ describe('snyk_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/snyk_mapper/nodejs-goof-remote-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/snyk_mapper/nodejs-goof-remote-hdf.json')),
     );
   });
 });

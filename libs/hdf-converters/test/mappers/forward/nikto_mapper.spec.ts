@@ -1,15 +1,15 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {NiktoMapper} from '../../../src/nikto-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { NiktoMapper } from '../../../src/nikto-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('nikto_mapper', () => {
   it('Successfully converts Nikto data', () => {
     const mapper = new NiktoMapper(
       fs.readFileSync(
         'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -18,13 +18,7 @@ describe('nikto_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync('sample_jsons/nikto_mapper/nikto-hdf.json', {
-            encoding: 'utf-8'
-          })
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/nikto_mapper/nikto-hdf.json')),
     );
   });
 });
@@ -34,9 +28,9 @@ describe('nikto_mapper_withraw', () => {
     const mapper = new NiktoMapper(
       fs.readFileSync(
         'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -45,13 +39,7 @@ describe('nikto_mapper_withraw', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync('sample_jsons/nikto_mapper/nikto-hdf-withraw.json', {
-            encoding: 'utf-8'
-          })
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/nikto_mapper/nikto-hdf-withraw.json')),
     );
   });
 });

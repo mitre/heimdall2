@@ -1,30 +1,47 @@
 <template>
   <v-card class="elevation-0">
-    <v-row class="pt-5" justify="space-between">
+    <v-row
+      class="pt-5"
+      justify="space-between"
+    >
       <v-card-subtitle>
         Samples to show the power of the Heimdall application and supported OHDF
         formats.
       </v-card-subtitle>
-      <v-btn class="mr-8 ml-2 mt-2" icon small @click="isActiveDialog = true">
-        <v-icon b-tooltip.hover title="Filter Instructions" color="primary">
+      <v-btn
+        class="mr-8 ml-2 mt-2"
+        icon
+        small
+        @click="isActiveDialog = true"
+      >
+        <v-icon
+          b-tooltip.hover
+          title="Filter Instructions"
+          color="primary"
+        >
           mdi-information-outline
         </v-icon>
       </v-btn>
-      <v-dialog v-model="isActiveDialog" width="500">
+      <v-dialog
+        v-model="isActiveDialog"
+        width="500"
+      >
         <v-card>
           <v-card-title>Filter Instructions</v-card-title>
           <v-card-text class="text-h7">
             Sample entries can be filtered by entering the value into the search
             input text field. The result of the filtering process will include
             entries not currently visible (on another page).
-            <br /><br />
+            <br><br>
             <b>NOTE:</b>
             To clear the search, either click the clear icon (X) or simply
             delete any value(s) from the input box.
           </v-card-text>
           <v-card-actions>
             <v-spacer />
-            <v-btn @click="isActiveDialog = false">Close Dialog</v-btn>
+            <v-btn @click="isActiveDialog = false">
+              Close Dialog
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -93,7 +110,10 @@
 
               <!-- Customize the display text -->
               <template #[`item.filename`]="{item}">
-                <span class="cursor-pointer" @click="load_samples([item])">
+                <span
+                  class="cursor-pointer"
+                  @click="load_samples([item])"
+                >
                   {{ item.filename }}
                 </span>
               </template>
@@ -111,7 +131,9 @@
                   @click="load_samples(selectedFiles)"
                 >
                   Load Selected
-                  <v-icon class="pl-2">mdi-file-download</v-icon>
+                  <v-icon class="pl-2">
+                    mdi-file-download
+                  </v-icon>
                 </v-btn>
               </template>
               <span>Load selected items(s)</span>
@@ -124,48 +146,48 @@
 </template>
 
 <script lang="ts">
-import {SnackbarModule} from '@/store/snackbar';
-import {SpinnerModule} from '@/store/spinner';
-import {FileID, InspecIntakeModule} from '@/store/report_intake';
-import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import type { FileID } from '@/store/report_intake';
+import { InspecIntakeModule } from '@/store/report_intake';
+import { SnackbarModule } from '@/store/snackbar';
+import { SpinnerModule } from '@/store/spinner';
+import { fetchSample, Sample, samples } from '@/utilities/sample_util';
 
 // Needed to render the show-select
-@Component({
-  components: {}
-})
+@Component({ components: {} })
 export default class SampleList extends Vue {
-  samples: Sample[] = samples; // Get the samples from utilities
-  selectedFiles: Sample[] = [];
+  fileKey = 'filename';
+  headerprops = {
+    'sort-by-text': 'filename', // used when rendering the mobile view
+    'sort-icon': 'mdi-dot', // Hack to hide the default sort icon
+  };
 
-  isActiveDialog = false;
-  headers: Object[] = [
+  headers: object[] = [
     {
-      text: 'Filename',
       align: 'left',
       class: 'sticky-header',
       sortable: true,
-      value: 'filename'
-    }
+      text: 'Filename',
+      value: 'filename',
+    },
   ];
 
-  sortBy = 'filename';
-  fileKey = 'filename';
-  sortDesc = false;
+  isActiveDialog = false;
+
   loading = false;
-  tableHight = '400px';
+  samples: Sample[] = samples; // Get the samples from utilities
   search = '';
   searchItem = '';
+  selectedFiles: Sample[] = [];
+  sortBy = 'filename';
+  sortDesc = false;
 
-  headerprops = {
-    'sort-icon': 'mdi-dot', // Hack to hide the default sort icon
-    'sort-by-text': 'filename' // used when rendering the mobile view
-  };
+  tableHight = '400px';
 
   // Fires when user selects entries and loads them into the visualization panel
   load_samples(selectedSamples: Sample[]) {
-    if (selectedSamples.length != 0) {
+    if (selectedSamples.length > 0) {
       const promises: Promise<FileID | FileID[]>[] = [];
       this.loading = true;
       SpinnerModule.reset();
@@ -175,7 +197,7 @@ export default class SampleList extends Vue {
         const requestFile = fetchSample(sample).then(async (data: File) => {
           const done = await InspecIntakeModule.loadFile({
             file: data,
-            filename: sample.filename
+            filename: sample.filename,
           });
           SpinnerModule.setMessage(`Loading: ${sample.filename}`);
           const value = Math.floor((index++ / selectedSamples.length) * 100);
@@ -199,7 +221,7 @@ export default class SampleList extends Vue {
         });
     } else {
       SnackbarModule.notify(
-        'Please select a sample for viewing in the visualization panel'
+        'Please select a sample for viewing in the visualization panel',
       );
     }
   }

@@ -1,4 +1,4 @@
-import {IStartupSettings} from '@heimdall/common/interfaces';
+import type { IStartupSettings } from '@heimdall/common/interfaces';
 
 export class StartupSettingsDto implements IStartupSettings {
   readonly apiKeysEnabled: boolean;
@@ -8,13 +8,13 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly classificationBannerTextColor: string;
   readonly enabledOAuth: string[];
   readonly externalUrl: string;
-  readonly oidcName: string;
-  readonly ldap: boolean;
-  readonly registrationEnabled: boolean;
-  readonly localLoginEnabled: boolean;
-  readonly tenableHostUrl: string;
   readonly forceTenableFrontend: boolean;
+  readonly ldap: boolean;
+  readonly localLoginEnabled: boolean;
+  readonly oidcName: string;
+  readonly registrationEnabled: boolean;
   readonly splunkHostUrl: string;
+  readonly tenableHostUrl: string;
 
   constructor(settings: IStartupSettings) {
     this.apiKeysEnabled = settings.apiKeysEnabled;

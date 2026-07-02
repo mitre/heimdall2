@@ -3,31 +3,27 @@
  * Especially useful for handling overlay/wrapper profiles.
  */
 
-import {HDFControl, hdfWrapControl} from './compat_wrappers';
+import { type HDFControl, hdfWrapControl } from './compat_wrappers';
 import {
-  AnyControl,
-  AnyEval,
-  AnyEvalControl,
-  AnyEvalProfile,
-  AnyProfile
+  type AnyControl,
+  type AnyEval,
+  type AnyEvalControl,
+  type AnyEvalProfile,
+  type AnyProfile,
 } from './fileparse';
 
 /**
  * Mixin type to express that this type wraps another data type to add additional fields,
  * without modifying the inner type.
  */
-interface WrapsType<Data> {
-  data: Data;
-}
+interface WrapsType<Data> { data: Data }
 
 /**
  * Mixin type to express that this type has some sort "parent".
  * Sort of an inverse to the Contains mixin.
  * E.g. A control is sourced from a profile, and an execution is from a file.
  */
-interface Sourced<From> {
-  sourcedFrom: From;
-}
+interface Sourced<From> { sourcedFrom: From }
 
 /**
  * Mixin type to express that this type has some sort of directional dependency-graph with members of a (usually the same) type.
@@ -55,82 +51,49 @@ interface Extendable<By> {
  * For instance, profiles are most directly a parent of controls .
  * What objects/resources does this item contain?
  */
-interface Contains<Item> {
-  contains: Item;
-}
+interface Contains<Item> { contains: Item }
 
 // Create our three primary data types from the above mixins
 // Essentially this is just describing the parent/child relationships each type has
 export interface ContextualizedEvaluation
-  extends WrapsType<AnyEval>, Contains<ContextualizedProfile[]> {}
+  extends Contains<ContextualizedProfile[]>, WrapsType<AnyEval> {}
 
 export interface ContextualizedProfile
   extends
-    WrapsType<AnyProfile>,
-    Sourced<ContextualizedEvaluation | null>,
-    Contains<ContextualizedControl[]>,
-    Extendable<ContextualizedProfile> {}
+  Contains<ContextualizedControl[]>,
+  Extendable<ContextualizedProfile>,
+  Sourced<ContextualizedEvaluation | null>,
+  WrapsType<AnyProfile> {}
 export interface ContextualizedControl
   extends
-    WrapsType<AnyControl>,
-    Sourced<ContextualizedProfile>,
-    Extendable<ContextualizedControl> {
+  Extendable<ContextualizedControl>,
+  Sourced<ContextualizedProfile>,
+  WrapsType<AnyControl> {
+  /** Yields the full code of this control, by concatenating overlay code. */
+  full_code: string;
+
   /** The HDF version of this particular control */
   hdf: HDFControl;
 
   /** Drills down to this controls root CC. In general you should use this for all data operations */
   root: ContextualizedControl;
-
-  /** Yields the full code of this control, by concatenating overlay code. */
-  full_code: string;
 }
 
 class ContextualizedControlImp implements ContextualizedControl {
   // Imp stuff
   data: AnyControl;
-  sourcedFrom: ContextualizedProfile;
-  extendsFrom: ContextualizedControl[];
   extendedBy: ContextualizedControl[];
+  extendsFrom: ContextualizedControl[];
   hdf: HDFControl;
-
-  constructor(
-    data: AnyControl,
-    sourcedFrom: ContextualizedProfile,
-    extendedBy: ContextualizedControl[],
-    extendsFrom: ContextualizedControl[]
-  ) {
-    // Simple save
-    this.data = data;
-    this.sourcedFrom = sourcedFrom;
-    this.hdf = hdfWrapControl(data);
-    this.extendedBy = extendedBy;
-    this.extendsFrom = extendsFrom;
-  }
-
-  get root(): ContextualizedControl {
-    if (this.extendsFrom.length) {
-      return this.extendsFrom[0].root;
-    }
-    return this;
-  }
-
-  /** Returns whether this control is just a duplicate of base/root (but is not itself root) */
-  get is_redundant(): boolean {
-    return (
-      !this.data.code ||
-      this.data.code.trim() === '' ||
-      (this.extendsFrom.length > 0 && this.data.code === this.root.data.code)
-    );
-  }
+  sourcedFrom: ContextualizedProfile;
 
   get full_code(): string {
     // If we extend from something, we behave slightly differently
-    if (this.extendsFrom.length) {
+    if (this.extendsFrom.length > 0) {
       const ancestor = this.extendsFrom[0];
-      if (this.is_redundant) {
-        return ancestor.full_code;
-      } else {
-        return `\
+      return this.is_redundant
+        ? ancestor.full_code
+        : `\
 =========================================================
 # Profile name: ${this.sourcedFrom.data.name}
 =========================================================
@@ -138,7 +101,6 @@ class ContextualizedControlImp implements ContextualizedControl {
 ${this.data.code}
 
 ${this.extendsFrom[0].full_code}`.trim();
-      }
     } else {
       // We are the endpoint
       return `\
@@ -149,24 +111,54 @@ ${this.extendsFrom[0].full_code}`.trim();
 ${this.data.code}`.trim();
     }
   }
+
+  /** Returns whether this control is just a duplicate of base/root (but is not itself root) */
+  get is_redundant(): boolean {
+    return (
+      !this.data.code
+      || this.data.code.trim() === ''
+      || (this.extendsFrom.length > 0 && this.data.code === this.root.data.code)
+    );
+  }
+
+  get root(): ContextualizedControl {
+    if (this.extendsFrom.length > 0) {
+      return this.extendsFrom[0].root;
+    }
+    return this;
+  }
+
+  constructor(
+    data: AnyControl,
+    sourcedFrom: ContextualizedProfile,
+    extendedBy: ContextualizedControl[],
+    extendsFrom: ContextualizedControl[],
+  ) {
+    // Simple save
+    this.data = data;
+    this.sourcedFrom = sourcedFrom;
+    this.hdf = hdfWrapControl(data);
+    this.extendedBy = extendedBy;
+    this.extendsFrom = extendsFrom;
+  }
 }
 
 export function contextualizeEvaluation(
-  evaluation: AnyEval
+  evaluation: AnyEval,
 ): ContextualizedEvaluation {
   // To begin, create basic context for profiles and evaluation
   const evalContext: ContextualizedEvaluation = {
+    contains: [],
     data: evaluation,
-    contains: []
   };
 
   for (const profile of evaluation.profiles) {
     const evalProfileContext: ContextualizedProfile = {
+      contains: [],
       data: profile,
-      sourcedFrom: evalContext,
       extendedBy: [],
       extendsFrom: [],
-      contains: []
+      sourcedFrom: evalContext,
     };
 
     // Add it to our parent
@@ -182,7 +174,7 @@ export function contextualizeEvaluation(
     if (asExec.parent_profile !== undefined) {
       // Look it up
       const parent = evalContext.contains.find(
-        (p) => p.data.name === asExec.parent_profile
+        p => p.data.name === asExec.parent_profile,
       );
 
       // Link it up
@@ -208,7 +200,7 @@ export function contextualizeEvaluation(
   // Link each contextualized control
   for (const cc of allControls) {
     // Behavior changes based on if we have well-formed or malformed profile dependency
-    if (cc.sourcedFrom.extendsFrom.length || cc.sourcedFrom.extendedBy.length) {
+    if (cc.sourcedFrom.extendsFrom.length > 0 || cc.sourcedFrom.extendedBy.length > 0) {
       // Our profile is a baseline! No need to continue - children will make connections for us
       // If we aren't extended from something we just drop. Our children will make connections for us
       if (cc.sourcedFrom.extendsFrom.length === 0) {
@@ -221,7 +213,7 @@ export function contextualizeEvaluation(
       for (const extendedProfile of cc.sourcedFrom.extendsFrom) {
         // Hunt for its ancestor in the extended profile
         const ancestor = extendedProfile.contains.find(
-          (c) => c.data.id === cc.data.id
+          c => c.data.id === cc.data.id,
         );
         // First one we find with a matching id we assume is the root (or at least, closer to root)
         if (ancestor) {
@@ -236,10 +228,10 @@ export function contextualizeEvaluation(
       // Unfortunately, if theres more than 2 profiles there's ultimately no way to figure out which one was applied "last".
       // This method leaves them as siblings. However, as a fallback method that is perhaps the best we can hope for
       // First, hunt out all controls from this file that have the same id as cc
-      const sameId = allControls.filter((c) => c.data.id === cc.data.id);
+      const sameId = allControls.filter(c => c.data.id === cc.data.id);
       // Find which of them, if any, is populated with results.
       let sameIdPopulated = sameId.find(
-        (c) => c.hdf.segments && c.hdf.segments.length
+        c => c.hdf.segments?.length,
       );
 
       // If found a populated base, use that. If not, we substitute in the first found element in sameId. This is arbitrary.
@@ -263,14 +255,14 @@ export function contextualizeEvaluation(
 // as a separate data structure.
 // As such, we can just do all the profile and controls from each in one fell swoop
 export function contextualizeProfile(
-  profile: AnyProfile
+  profile: AnyProfile,
 ): ContextualizedProfile {
   const profileContext: ContextualizedProfile = {
+    contains: [],
     data: profile,
     extendedBy: [],
     extendsFrom: [],
-    contains: [],
-    sourcedFrom: null
+    sourcedFrom: null,
   };
 
   // Now give it its controls

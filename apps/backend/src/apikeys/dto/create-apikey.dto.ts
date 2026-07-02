@@ -1,24 +1,24 @@
-import {ICreateApiKey} from '@heimdall/common/interfaces';
-import {IsOptional, IsString} from 'class-validator';
+import { ICreateApiKey } from '@heimdall/common/interfaces';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateApiKeyDto implements ICreateApiKey {
-  @IsString()
   @IsOptional()
-  readonly userId?: string;
+  @IsString()
+  readonly currentPassword!: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   readonly groupId?: string;
 
-  @IsString()
   @IsOptional()
-  readonly userEmail?: string;
-
   @IsString()
-  @IsOptional()
   readonly name?: string;
 
-  @IsString()
   @IsOptional()
-  readonly currentPassword!: string;
+  @IsString()
+  readonly userEmail?: string;
+
+  @IsOptional()
+  @IsString()
+  readonly userId?: string;
 }

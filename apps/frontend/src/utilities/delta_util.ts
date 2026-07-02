@@ -2,18 +2,56 @@
  * Provides utlities for comparing executions
  */
 
-import {SourcedContextualizedEvaluation} from '@/store/report_intake';
-import {calculateCompliance} from '@/store/status_counts';
-import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
-import {DateTime} from 'luxon';
+import type { ContextualizedControl, ContextualizedEvaluation } from 'inspecjs';
+import { DateTime } from 'luxon';
+import type { SourcedContextualizedEvaluation } from '@/store/report_intake';
+import { calculateCompliance } from '@/store/status_counts';
 
 export const NOT_SELECTED = 'not selected';
 
+/** An object of contextualized controls with the same V-ID */
+export type ControlSeries = Record<string, ContextualizedControl>;
+
+/** Matches ControlID keys to Arrays of Controls */
+export type ControlSeriesLookup = Record<string, ControlSeries>;
+
 // Unique ID is the unique ID of a file
 // Controls is a list of controls
-interface ResultControls {
-  uniqueId: string;
+type ResultControls = {
   controls: ContextualizedControl[];
+  uniqueId: string;
+};
+
+/** Helps manage comparing change(s) between one or more profile executions */
+export class ComparisonContext {
+  /** A list of old-new control pairings */
+  pairings: ControlSeriesLookup;
+
+  constructor(executions: readonly SourcedContextualizedEvaluation[]) {
+    // Get all of the "top level" controls from each execution, IE those that actually ran
+    // grouped by their files unique id.
+    const allControls = executions.map(extract_top_level_controls);
+    // Organize the controls by ID
+    // The structure this returns is as follows:
+    // {{"V-XXX": {"unique_file_id_1": control, "unique_file_id_2": control, ...}}}
+    const matched = allControls.reduce(
+      (acc: ControlSeriesLookup, evaluation: ResultControls) => {
+        for (const control of evaluation.controls) {
+          // Group initialization
+          if (!acc[control.data.id]) {
+            acc[control.data.id] = {};
+          }
+          // Grouping
+          acc[control.data.id][evaluation.uniqueId] = control;
+        }
+
+        return acc;
+      },
+      {},
+    );
+    // Store
+    this.pairings = matched;
+  }
 }
 
 /**
@@ -24,12 +62,6 @@ interface ResultControls {
 export class ControlChange {
   name: string; // the key/title of these values
   values: string[]; // values over controls sorted by time
-
-  /** Trivial constructor */
-  constructor(name: string, values: string[]) {
-    this.values = values;
-    this.name = name;
-  }
 
   /** Checks if this actually changes anything.
    * Returns true if old !== new
@@ -47,13 +79,19 @@ export class ControlChange {
     }
     for (let i = firstSelected + 1; i < this.values.length; i++) {
       if (
-        this.values[i] !== this.values[firstSelected] &&
-        this.values[i] !== NOT_SELECTED
+        this.values[i] !== this.values[firstSelected]
+        && this.values[i] !== NOT_SELECTED
       ) {
         return true;
       }
     }
     return false;
+  }
+
+  /** Trivial constructor */
+  constructor(name: string, values: string[]) {
+    this.values = values;
+    this.name = name;
   }
 }
 
@@ -61,8 +99,13 @@ export class ControlChange {
  * Represents a group of changes all under one cnosistent named banner.
  */
 export class ControlChangeGroup {
-  name: string;
   changes: ControlChange[];
+  name: string;
+
+  /** Checks if this has any changes at all. Simple shorthand */
+  get any(): boolean {
+    return this.changes.length > 0;
+  }
 
   /** Trivial constructor */
   constructor(name: string, changes: ControlChange[]) {
@@ -70,14 +113,9 @@ export class ControlChangeGroup {
     this.changes = changes;
   }
 
-  /** Checks if this has any changes at all. Simple shorthand */
-  get any(): boolean {
-    return this.changes.length > 0;
-  }
-
   /** Removes any changes if they aren't actually changes */
   clean() {
-    this.changes = this.changes.filter((c) => c.valid);
+    this.changes = this.changes.filter(c => c.valid);
   }
 }
 
@@ -88,17 +126,6 @@ export class ControlDelta {
   controls: ContextualizedControl[] = [];
   controlsandnull: (ContextualizedControl | null)[] = [];
   numNull = 0;
-
-  constructor(controls: (ContextualizedControl | null)[]) {
-    this.controlsandnull = controls;
-    for (const value of controls) {
-      if (value !== null) {
-        this.controls.push(value);
-      } else {
-        this.numNull += 1;
-      }
-    }
-  }
 
   /** Returns the changes in "header" elements of a control. E.g. name, status, etc. */
   get headerChanges(): ControlChangeGroup {
@@ -114,8 +141,8 @@ export class ControlDelta {
             return NOT_SELECTED;
           }
           return c.data.id;
-        })
-      )
+        }),
+      ),
     );
 
     // And severity! Why not
@@ -127,8 +154,8 @@ export class ControlDelta {
             return NOT_SELECTED;
           }
           return c.hdf.severity;
-        })
-      )
+        }),
+      ),
     );
 
     // Change in nist tags!
@@ -140,8 +167,8 @@ export class ControlDelta {
             return NOT_SELECTED;
           }
           return c.hdf.rawNistTags.join(', ');
-        })
-      )
+        }),
+      ),
     );
 
     // Make the group and clean it
@@ -149,14 +176,63 @@ export class ControlDelta {
     result.clean();
     return result;
   }
+
+  constructor(controls: (ContextualizedControl | null)[]) {
+    this.controlsandnull = controls;
+    for (const value of controls) {
+      if (value === null) {
+        this.numNull += 1;
+      } else {
+        this.controls.push(value);
+      }
+    }
+  }
+}
+
+export function compare_times(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation,
+) {
+  const aDate = parse_datetime(get_eval_start_time(a) || '');
+  const bDate = parse_datetime(get_eval_start_time(b) || '');
+
+  return aDate.valueOf() - bDate.valueOf();
+}
+
+export function compareCompliance(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation,
+) {
+  return (
+    calculateCompliance({ fromFile: [a.from_file.uniqueId] })
+    - calculateCompliance({ fromFile: [b.from_file.uniqueId] })
+  );
+}
+
+export function compareControlCount(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation,
+) {
+  const aControlCount = getControlCount(a);
+  const bControlCount = getControlCount(b);
+  return aControlCount - bControlCount;
+}
+
+export function compareExecutionTimes(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation,
+) {
+  const aExecutionTime = getResultsSetExecutionTime(a);
+  const bExecutionTime = getResultsSetExecutionTime(b);
+  return aExecutionTime - bExecutionTime;
 }
 
 export function get_eval_start_time(
-  ev: ContextualizedEvaluation
-): string | null {
+  ev: ContextualizedEvaluation,
+): null | string {
   for (const prof of ev.contains) {
     for (const ctrl of prof.contains) {
-      if (ctrl.hdf.segments!.length) {
+      if (ctrl.hdf.segments!.length > 0) {
         return ctrl.hdf.segments![0].start_time;
       }
     }
@@ -164,85 +240,31 @@ export function get_eval_start_time(
   return null;
 }
 
-export function getResultsSetExecutionTime(
-  resultsSet: SourcedContextualizedEvaluation
+export function getControlCount(
+  resultsSet: SourcedContextualizedEvaluation,
 ): number {
-  let time = 0;
-  resultsSet.contains.forEach((value) => {
-    value.contains.forEach((control) => {
-      time += getControlRunTime(control);
-    });
-  });
-  return time;
+  return resultsSet.contains.reduce((sum, li) => sum + li.contains.length, 0);
 }
 
 export function getControlRunTime(control: ContextualizedControl): number {
   return (
     control.hdf.segments?.reduce(
-      (total, segment) => (segment.run_time || 0) + total,
-      0
+      (total: number, segment: {run_time?: number}) => (segment.run_time || 0) + total,
+      0,
     ) || 0
   );
 }
 
-export function getControlCount(
-  resultsSet: SourcedContextualizedEvaluation
+export function getResultsSetExecutionTime(
+  resultsSet: SourcedContextualizedEvaluation,
 ): number {
-  return resultsSet.contains.reduce((sum, li) => sum + li.contains.length, 0);
-}
-
-/**
- * Grabs the "top" (IE non-overlayed/end of overlay chain) controls from the execution.
- *
- * @param exec The execution to grab controls from
- */
-function extract_top_level_controls(
-  exec: SourcedContextualizedEvaluation
-): ResultControls {
-  // Get all controls
-  const allControls = exec.contains.flatMap((p) => p.contains);
-
-  // Filter to controls that aren't overlayed further
-  const top = allControls.filter((control) => control.extendedBy.length === 0);
-  return {uniqueId: exec.from_file.uniqueId, controls: top};
-}
-
-/** An object of contextualized controls with the same V-ID */
-export type ControlSeries = {[key: string]: ContextualizedControl};
-
-/** Matches ControlID keys to Arrays of Controls */
-export type ControlSeriesLookup = {[key: string]: ControlSeries};
-
-/** Helps manage comparing change(s) between one or more profile executions */
-export class ComparisonContext {
-  /** A list of old-new control pairings */
-  pairings: ControlSeriesLookup;
-
-  constructor(executions: readonly SourcedContextualizedEvaluation[]) {
-    // Get all of the "top level" controls from each execution, IE those that actually ran
-    // grouped by their files unique id.
-    const allControls = executions.map(extract_top_level_controls);
-    // Organize the controls by ID
-    // The structure this returns is as follows:
-    // {{"V-XXX": {"unique_file_id_1": control, "unique_file_id_2": control, ...}}}
-    const matched = allControls.reduce(
-      (acc: ControlSeriesLookup, evaluation: ResultControls) => {
-        evaluation.controls.forEach((control) => {
-          // Group initialization
-          if (!acc[control.data.id]) {
-            acc[control.data.id] = {};
-          }
-          // Grouping
-          acc[control.data.id][evaluation.uniqueId] = control;
-        });
-
-        return acc;
-      },
-      {}
-    );
-    // Store
-    this.pairings = matched;
+  let time = 0;
+  for (const value of resultsSet.contains) {
+    for (const control of value.contains) {
+      time += getControlRunTime(control);
+    }
   }
+  return time;
 }
 
 /*
@@ -276,40 +298,18 @@ export function parse_datetime(dateString: string): DateTime {
   return DateTime.fromJSDate(new Date(dateString));
 }
 
-export function compare_times(
-  a: SourcedContextualizedEvaluation,
-  b: SourcedContextualizedEvaluation
-) {
-  const aDate = parse_datetime(get_eval_start_time(a) || '');
-  const bDate = parse_datetime(get_eval_start_time(b) || '');
+/**
+ * Grabs the "top" (IE non-overlayed/end of overlay chain) controls from the execution.
+ *
+ * @param exec The execution to grab controls from
+ */
+function extract_top_level_controls(
+  exec: SourcedContextualizedEvaluation,
+): ResultControls {
+  // Get all controls
+  const allControls = exec.contains.flatMap(p => p.contains);
 
-  return aDate.valueOf() - bDate.valueOf();
-}
-
-export function compareExecutionTimes(
-  a: SourcedContextualizedEvaluation,
-  b: SourcedContextualizedEvaluation
-) {
-  const aExecutionTime = getResultsSetExecutionTime(a);
-  const bExecutionTime = getResultsSetExecutionTime(b);
-  return aExecutionTime - bExecutionTime;
-}
-
-export function compareControlCount(
-  a: SourcedContextualizedEvaluation,
-  b: SourcedContextualizedEvaluation
-) {
-  const aControlCount = getControlCount(a);
-  const bControlCount = getControlCount(b);
-  return aControlCount - bControlCount;
-}
-
-export function compareCompliance(
-  a: SourcedContextualizedEvaluation,
-  b: SourcedContextualizedEvaluation
-) {
-  return (
-    calculateCompliance({fromFile: [a.from_file.uniqueId]}) -
-    calculateCompliance({fromFile: [b.from_file.uniqueId]})
-  );
+  // Filter to controls that aren't overlayed further
+  const top = allControls.filter(control => control.extendedBy.length === 0);
+  return { controls: top, uniqueId: exec.from_file.uniqueId };
 }

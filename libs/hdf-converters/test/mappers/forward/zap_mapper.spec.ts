@@ -1,16 +1,16 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {ZapResults} from '../../../src/zap-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { ZapResults } from '../../../src/zap-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 
 describe('zap_mapper', () => {
   it('Successfully converts webgoat.json', async () => {
     const mapper = new ZapResults(
       fs.readFileSync(
         'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      'http://mymac.com:8191'
+      'http://mymac.com:8191', // eslint-disable-line unicorn/prefer-https -- test fixture uses http
     );
 
     // fs.writeFileSync(
@@ -19,22 +19,16 @@ describe('zap_mapper', () => {
     // );
 
     expect(omitVersions(await mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync('sample_jsons/zap_mapper/zap-webgoat-hdf.json', {
-            encoding: 'utf-8'
-          })
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/zap_mapper/zap-webgoat-hdf.json')),
     );
   });
   it('Successfully converts zero.webappsecurity.json', async () => {
     const mapper = new ZapResults(
       fs.readFileSync(
         'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      'http://zero.webappsecurity.com'
+      'http://zero.webappsecurity.com', // eslint-disable-line unicorn/prefer-https -- test fixture uses http
     );
 
     // fs.writeFileSync(
@@ -43,27 +37,20 @@ describe('zap_mapper', () => {
     // );
 
     expect(omitVersions(await mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/zap_mapper/zap-webappsecurity-hdf.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/zap_mapper/zap-webappsecurity-hdf.json')),
     );
   });
 });
 
-describe('zap_mapper', () => {
+describe('zap_mapper_withraw', () => {
   it('Successfully converts webgoat.json using withRaw flag', async () => {
     const mapper = new ZapResults(
       fs.readFileSync(
         'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      'http://mymac.com:8191',
-      true
+      'http://mymac.com:8191', // eslint-disable-line unicorn/prefer-https -- test fixture uses http
+      true,
     );
 
     // fs.writeFileSync(
@@ -72,26 +59,17 @@ describe('zap_mapper', () => {
     // );
 
     expect(omitVersions(await mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/zap_mapper/zap-webgoat-hdf-withraw.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/zap_mapper/zap-webgoat-hdf-withraw.json')),
     );
   });
   it('Successfully converts zero.webappsecurity.json using withRaw flag', async () => {
     const mapper = new ZapResults(
       fs.readFileSync(
         'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      'http://zero.webappsecurity.com',
-      true
+      'http://zero.webappsecurity.com', // eslint-disable-line unicorn/prefer-https -- test fixture uses http
+      true,
     );
 
     // fs.writeFileSync(
@@ -100,14 +78,7 @@ describe('zap_mapper', () => {
     // );
 
     expect(omitVersions(await mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/zap_mapper/zap-webappsecurity-hdf-withraw.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/zap_mapper/zap-webappsecurity-hdf-withraw.json')),
     );
   });
 });

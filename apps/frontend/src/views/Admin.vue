@@ -5,10 +5,20 @@
     title="Heimdall - Admin Panel"
   >
     <template #main-content>
-      <v-tabs v-model="activeTab" fixed-tabs dark>
-        <v-tab key="users"> User Management </v-tab>
-        <v-tab key="groups"> Group Management </v-tab>
-        <v-tab key="statistics"> Statistics </v-tab>
+      <v-tabs
+        v-model="activeTab"
+        fixed-tabs
+        dark
+      >
+        <v-tab key="users">
+          User Management
+        </v-tab>
+        <v-tab key="groups">
+          Group Management
+        </v-tab>
+        <v-tab key="statistics">
+          Statistics
+        </v-tab>
       </v-tabs>
       <v-container>
         <v-row>
@@ -34,20 +44,20 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
 import Statistics from '@/components/global/admin/Statistics.vue';
 import UserManagement from '@/components/global/admin/UserManagement.vue';
 import GroupManagement from '@/components/global/groups/GroupManagement.vue';
 import Base from '@/views/Base.vue';
-import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
 
 @Component({
   components: {
     Base,
-    UserManagement,
     GroupManagement,
-    Statistics
-  }
+    Statistics,
+    UserManagement,
+  },
 })
 export default class Admin extends Vue {
   activeTab = 'users';

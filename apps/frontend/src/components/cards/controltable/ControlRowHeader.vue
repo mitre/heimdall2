@@ -24,15 +24,19 @@
           :style="$vuetify.breakpoint.lgAndUp ? 'width: 15vw' : 'width:20vw'"
           v-text="filename"
         />
-        <v-tooltip v-if="isOverlaid" bottom>
+        <v-tooltip
+          v-if="isOverlaid"
+          bottom
+        >
           <template #activator="{on, attrs}">
             <v-icon
               style="cursor: pointer"
               class="ml-2"
               v-bind="attrs"
               v-on="on"
-              >mdi-delta</v-icon
             >
+              mdi-delta
+            </v-icon>
           </template>
           <span>This control has been modified in an overlay</span>
         </v-tooltip>
@@ -41,11 +45,21 @@
 
     <template #severity>
       <v-card-text class="pa-2">
-        <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
+        <v-tooltip
+          v-if="'severityoverride' in control.data.tags"
+          bottom
+        >
           <template #activator="{on}">
             <span v-on="on">
-              <v-chip outlined :color="severity_color">
-                <v-icon size="16" class="mr-1" data-cy="severityOverride">
+              <v-chip
+                outlined
+                :color="severity_color"
+              >
+                <v-icon
+                  size="16"
+                  class="mr-1"
+                  data-cy="severityOverride"
+                >
                   mdi-delta
                 </v-icon>
                 {{ (control.hdf.severity || 'none').toUpperCase() }}
@@ -60,7 +74,7 @@
               </span>
               <span v-else> Unknown </span>
               to {{ control.data.tags['severityoverride'] }}
-              <br />
+              <br>
               <span v-if="'severityjustification' in control.data.tags">
                 Justification: {{ control.data.tags['severityjustification'] }}
               </span>
@@ -68,7 +82,11 @@
             </span>
           </span>
         </v-tooltip>
-        <v-chip v-else outlined :color="severity_color">
+        <v-chip
+          v-else
+          outlined
+          :color="severity_color"
+        >
           {{ (control.hdf.severity || 'none').toUpperCase() }}
         </v-chip>
       </v-card-text>
@@ -76,7 +94,10 @@
 
     <!-- eslint-disable vue/no-v-html -->
     <template #title>
-      <div class="pa-2 title" v-html="sanitize_html(control.data.title)" />
+      <div
+        class="pa-2 title"
+        v-html="sanitize_html(control.data.title)"
+      />
     </template>
     <!-- eslint-enable vue/no-v-html -->
 
@@ -93,9 +114,17 @@
     </template>
     <template #tags>
       <v-chip-group column>
-        <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
+        <v-tooltip
+          v-for="(tag, i) in nistTags"
+          :key="'nist-chip' + i"
+          bottom
+        >
           <template #activator="{on}">
-            <v-chip :href="tag.url" target="_blank" v-on="on">
+            <v-chip
+              :href="tag.url"
+              target="_blank"
+              v-on="on"
+            >
               {{ tag.label }}
             </v-chip>
           </template>
@@ -103,9 +132,16 @@
         </v-tooltip>
       </v-chip-group>
       <v-chip-group column>
-        <v-tooltip v-for="(tag, i) in cciTags" :key="'cci-chip' + i" bottom>
+        <v-tooltip
+          v-for="(tag, i) in cciTags"
+          :key="'cci-chip' + i"
+          bottom
+        >
           <template #activator="{on}">
-            <v-chip style="cursor: help" v-on="on">
+            <v-chip
+              style="cursor: help"
+              v-on="on"
+            >
               {{ tag.label }}
             </v-chip>
           </template>
@@ -115,9 +151,11 @@
     </template>
     <!-- Control Run Time -->
     <template #runTime>
-      <v-card-text class="pa-2 title font-weight-bold">{{
-        runTime
-      }}</v-card-text>
+      <v-card-text class="pa-2 title font-weight-bold">
+        {{
+          runTime
+        }}
+      </v-card-text>
     </template>
 
     <template #viewed>
@@ -140,54 +178,88 @@
 </template>
 
 <script lang="ts">
+import type { ContextualizedControl } from 'inspecjs';
+import { is_control, parse_nist } from 'inspecjs';
+import * as _ from 'lodash';
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
-import {getControlRunTime} from '@/utilities/delta_util';
-import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
-import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
-import * as _ from 'lodash';
-import Component, {mixins} from 'vue-class-component';
-import {control_unique_key} from '@/utilities/format_util';
-import {Prop} from 'vue-property-decorator';
+import { CCI_DESCRIPTIONS } from '@/utilities/cci_util';
+import { getControlRunTime } from '@/utilities/delta_util';
+import { control_unique_key } from '@/utilities/format_util';
+import { NIST_DESCRIPTIONS, nistCanonConfig } from '@/utilities/nist_util';
 
-interface Tag {
+type Tag = {
+  description: string;
   label: string;
   url: string;
-  description: string;
-}
+};
 
-@Component({
-  components: {
-    ResponsiveRowSwitch
-  }
-})
+@Component({ components: { ResponsiveRowSwitch } })
 export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
-  @Prop({type: Object, required: true})
+  @Prop({ required: true, type: Object })
   readonly control!: ContextualizedControl;
 
-  @Prop({type: Array, required: true})
+  @Prop({ default: false, type: Boolean }) readonly controlExpanded!: boolean;
+
+  @Prop({ required: true, type: Array })
   readonly viewedControls!: string[];
 
-  @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
-
-  get runTime(): string {
-    return `${_.truncate(getControlRunTime(this.control).toString(), {
-      length: 5,
-      omission: ''
-    })}s`;
+  get cciTags(): Tag[] {
+    let cci_tags: string | string[] = this.control.data.tags.cci || '';
+    if (!cci_tags) {
+      return [];
+    } else if (typeof cci_tags == 'string') {
+      cci_tags = cci_tags.split(' ');
+    }
+    return cci_tags.map((cci) => {
+      return { description: this.descriptionForTag(cci), label: cci, url: '' };
+    });
   }
 
   get filename(): string | undefined {
     return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename');
   }
 
-  get truncated_title(): string {
-    if (this.control.data.title && this.control.data.title.length > 80) {
-      return this.control.data.title.substr(0, 80) + '...';
-    } else {
-      return this.control.data.title || 'Untitled';
-    }
+  get isOverlaid() {
+    return this.control.extendsFrom.some(
+      (extension: ContextualizedControl) =>
+        extension.data.code !== this.control.data.code
+        && extension.data.code !== '',
+    );
+  }
+
+  get nistTags(): Tag[] {
+    let nistTags = this.control.hdf.rawNistTags;
+    nistTags = nistTags.filter((tag: string) => tag.search(/rev.*\d/iv) === -1);
+    return nistTags.map((tag: string) => {
+      const nisted = parse_nist(tag);
+      let url = '';
+      if (is_control(nisted)) {
+        url = nisted.canonize({
+          add_spaces: false,
+          allow_letters: false,
+          max_specifiers: 2,
+          pad_zeros: false,
+        });
+        url
+          = 'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=5.1&number='
+            + url;
+      }
+      return { description: this.descriptionForTag(tag), label: tag, url: url };
+    });
+  }
+
+  get runTime(): string {
+    return `${_.truncate(getControlRunTime(this.control).toString(), {
+      length: 5,
+      omission: '',
+    })}s`;
+  }
+
+  get severity_color(): string {
+    return `severity${_.startCase(this.control.hdf.severity)}`;
   }
 
   get status_color(): string {
@@ -195,24 +267,16 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
 
-  get severity_color(): string {
-    return `severity${_.startCase(this.control.hdf.severity)}`;
+  get truncated_title(): string {
+    return this.control.data.title && this.control.data.title.length > 80 ? this.control.data.title.slice(0, 80) + '...' : this.control.data.title || 'Untitled';
   }
 
   get wasViewed(): boolean {
-    return this.viewedControls.indexOf(control_unique_key(this.control)) !== -1;
+    return this.viewedControls.includes(control_unique_key(this.control));
   }
 
   set wasViewed(_value: boolean) {
     this.$emit('control-viewed', this.control);
-  }
-
-  get isOverlaid() {
-    return this.control.extendsFrom.some(
-      (extension) =>
-        extension.data.code !== this.control.data.code &&
-        extension.data.code !== ''
-    );
   }
 
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
@@ -231,41 +295,8 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return 'Unrecognized Tag';
   }
 
-  get nistTags(): Tag[] {
-    let nistTags = this.control.hdf.rawNistTags;
-    nistTags = nistTags.filter((tag) => tag.search(/rev.*\d/iv) === -1);
-    return nistTags.map((tag) => {
-      const nisted = parse_nist(tag);
-      let url = '';
-      if (is_control(nisted)) {
-        url = nisted.canonize({
-          max_specifiers: 2,
-          pad_zeros: false,
-          add_spaces: false,
-          allow_letters: false
-        });
-        url =
-          'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=5.1&number=' +
-          url;
-      }
-      return {label: tag, url: url, description: this.descriptionForTag(tag)};
-    });
-  }
-
-  get cciTags(): Tag[] {
-    let cci_tags: string | string[] = this.control.data.tags.cci || '';
-    if (!cci_tags) {
-      return [];
-    } else if (typeof cci_tags == 'string') {
-      cci_tags = cci_tags.split(' ');
-    }
-    return cci_tags.map((cci) => {
-      return {label: cci, url: '', description: this.descriptionForTag(cci)};
-    });
-  }
-
   showLegacy(control: ContextualizedControl) {
-    let legacyTag = control.data.tags['legacy'];
+    let legacyTag = control.data.tags.legacy;
     if (!legacyTag) {
       return '';
     }
@@ -273,7 +304,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
       legacyTag = [legacyTag];
     }
     const legacyID = legacyTag.find(
-      (ele: unknown) => _.isString(ele) && ele.startsWith('V-')
+      (ele: unknown) => _.isString(ele) && ele.startsWith('V-'),
     );
     return legacyID ? '(' + legacyID + ')' : '';
   }
