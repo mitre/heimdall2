@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.0.0",
-    "quicktype": "^15.0.260",
+    "quicktype": "^23.3.1",
     "vitest": "^4.0.18"
   }
 }
