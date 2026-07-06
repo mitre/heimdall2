@@ -26,6 +26,15 @@ jobs:
         image: rroemhild/test-openldap
         ports:
           - 10389:10389
+      mocksaml:
+        image: boxyhq/mock-saml
+        ports:
+          - 4000:4000
+        env:
+          APP_URL: http://localhost:4000
+          ENTITY_ID: http://localhost:4000/heimdall-local
+          PUBLIC_KEY: ${{ secrets.MOCKSAML_PUBLIC_KEY }}
+          PRIVATE_KEY: ${{ secrets.MOCKSAML_PRIVATE_KEY }}
       splunk:
         image: splunk/splunk
         volumes:
@@ -39,13 +48,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-
-      - name: Start MockSAML
-        run: >
-          docker run --detach --rm --name mocksaml
-          --publish 4000:4000
-          --env-file test/configs/mocksaml.env
-          boxyhq/mock-saml
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
