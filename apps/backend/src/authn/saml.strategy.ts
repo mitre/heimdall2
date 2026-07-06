@@ -1,12 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import type { Profile } from '@node-saml/passport-saml';
+import type { Profile, SamlScopingConfig } from '@node-saml/passport-saml';
 import { Strategy } from '@node-saml/passport-saml';
 import winston from 'winston';
 import { ConfigService } from '../config/config.service';
 import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
 import { getRequiredClaim } from './resolve-claim';
+
+function getSamlScoping(
+  configService: ConfigService,
+): SamlScopingConfig | undefined {
+  const idpList = configService.get('SAML_SCOPING_IDP_LIST');
+  const proxyCount = configService.get('SAML_SCOPING_PROXY_COUNT');
+  const requesterId = configService.get('SAML_SCOPING_REQUESTER_ID');
+
+  if (!proxyCount && !requesterId && !idpList) {
+    return undefined;
+  }
+
+  return {
+    idpList: idpList
+      ? JSON.parse(idpList)
+      : undefined,
+    proxyCount: proxyCount
+      ? Number(proxyCount)
+      : undefined,
+    requesterId: requesterId?.includes(',')
+      ? requesterId.split(',').map(value => value.trim())
+      : requesterId,
+  };
+}
 
 @Injectable()
 export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
@@ -73,22 +97,7 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
       requestIdExpirationPeriodMs: Number(configService.get('SAML_REQUEST_ID_EXPIRATION_PERIOD_MS') ?? 28_800_000),
       samlAuthnRequestExtensions: configService.get('SAML_AUTHN_REQUEST_EXTENSIONS') ? JSON.parse(configService.get('SAML_AUTHN_REQUEST_EXTENSIONS')!) : undefined,
       samlLogoutRequestExtensions: configService.get('SAML_LOGOUT_REQUEST_EXTENSIONS') ? JSON.parse(configService.get('SAML_LOGOUT_REQUEST_EXTENSIONS')!) : undefined,
-      scoping:
-        configService.get('SAML_SCOPING_PROXY_COUNT')
-        || configService.get('SAML_SCOPING_REQUESTER_ID')
-        || configService.get('SAML_SCOPING_IDP_LIST')
-          ? {
-            idpList: configService.get('SAML_SCOPING_IDP_LIST')
-              ? JSON.parse(configService.get('SAML_SCOPING_IDP_LIST')!)
-              : undefined,
-            proxyCount: configService.get('SAML_SCOPING_PROXY_COUNT')
-              ? Number(configService.get('SAML_SCOPING_PROXY_COUNT'))
-              : undefined,
-            requesterId: configService.get('SAML_SCOPING_REQUESTER_ID')?.includes(',')
-              ? configService.get('SAML_SCOPING_REQUESTER_ID')?.split(',').map(value => value.trim())
-              : configService.get('SAML_SCOPING_REQUESTER_ID'),
-          }
-          : undefined,
+      scoping: getSamlScoping(configService),
       signatureAlgorithm: configService.get('SAML_SIGNATURE_ALGORITHM') as 'sha1' | 'sha256' | 'sha512' | undefined,
       signMetadata: (configService.get('SAML_SIGN_METADATA') ?? '').toLowerCase() === 'true',
       skipRequestCompression: (configService.get('SAML_SKIP_REQUEST_COMPRESSION') ?? '').toLowerCase() === 'true',
