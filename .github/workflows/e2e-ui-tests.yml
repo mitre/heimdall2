@@ -40,6 +40,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Start MockSAML
+        run: >
+          docker run --detach --rm --name mocksaml
+          --publish 4000:4000
+          --env-file test/configs/mocksaml.env
+          boxyhq/mock-saml
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
