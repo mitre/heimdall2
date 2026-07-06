@@ -84,7 +84,7 @@
               id="oauth-oidc"
               class="mt-5 flex-fill"
               plain
-              @click="oauthLogin('oidc')"
+              @click="startExternalLogin('oidc')"
             >
               <v-img
                 max-width="32"
@@ -98,7 +98,7 @@
               id="oauth-google"
               class="mt-5 flex-fill"
               plain
-              @click="oauthLogin('google')"
+              @click="startExternalLogin('google')"
             >
               <v-img
                 max-width="32"
@@ -112,7 +112,7 @@
               id="oauth-github"
               class="mt-5 flex-fill"
               plain
-              @click="oauthLogin('github')"
+              @click="startExternalLogin('github')"
             >
               <v-img
                 max-width="32"
@@ -125,7 +125,7 @@
               id="oauth-gitlab"
               class="mt-5 flex-fill"
               plain
-              @click="oauthLogin('gitlab')"
+              @click="startExternalLogin('gitlab')"
             >
               <v-img
                 max-width="32"
@@ -139,7 +139,7 @@
               id="oauth-okta"
               class="mt-5 flex-fill"
               plain
-              @click="oauthLogin('okta')"
+              @click="startExternalLogin('okta')"
             >
               <v-img
                 max-width="32"
@@ -153,7 +153,7 @@
               id="saml"
               class="mt-5 flex-fill"
               plain
-              @click="oauthLogin('saml')"
+              @click="startExternalLogin('saml')"
             >
               <v-img
                 max-width="32"
@@ -238,14 +238,14 @@ export default class LocalLogin extends Vue {
       });
   }
 
-  oauthLogin(site: ExternalAuthStrategy) {
-    globalThis.location.href = `/authn/${site}`;
-  }
-
   openExternalAuthModeDocumentation() {
     window.open(
       "https://github.com/mitre/heimdall2/wiki/Heimdall-Authentication-Methods#external-authentication-only",
     );
+  }
+
+  startExternalLogin(strategy: ExternalAuthStrategy) {
+    globalThis.location.href = `/authn/${strategy}`;
   }
 }
 </script>
