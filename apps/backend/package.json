@@ -26,7 +26,7 @@
     "test:ci": "vitest run"
   },
   "dependencies": {
-    "@casl/ability": "^6.0.0",
+    "@casl/ability": "^7.0.0",
     "@govtechsg/passport-openidconnect": "^1.0.3",
     "@heimdall/common": "^2.13.0",
     "@heimdall/password-complexity": "^2.13.0",
@@ -46,7 +46,7 @@
     "@types/js-levenshtein": "^1.1.0",
     "@types/ms": "^0.7.31",
     "@types/multer": "^2.0.0",
-    "@types/node": "^25.0.0",
+    "@types/node": "^26.0.0",
     "@types/passport-github": "^1.1.5",
     "@types/passport-jwt": "^4.0.0",
     "@types/passport-local": "^1.0.33",

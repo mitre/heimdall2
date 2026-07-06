@@ -75,25 +75,6 @@ function getStatus(input: unknown): ExecJSON.ControlResultStatus {
   }
   return ExecJSON.ControlResultStatus.Skipped;
 }
-function getBacktrace(input: unknown): string {
-  if (input === 'Failed') {
-    return 'DB Protect Failed Check';
-  } else {
-    return '';
-  }
-}
-function handleBacktrace(input: unknown): ExecJSON.ControlResult[] {
-  if (Array.isArray(input)) {
-    input = input.map((element) => {
-      if (_.get(element, 'backtrace')[0] === '') {
-        return _.omit(element, 'backtrace');
-      } else {
-        return element;
-      }
-    });
-  }
-  return input as ExecJSON.ControlResult[];
-}
 function idToString(id: unknown): string {
   if (typeof id === 'string' || typeof id === 'number') {
     return id.toString();
@@ -147,11 +128,9 @@ export class DBProtectMapper extends BaseConverter {
             },
             results: [
               {
-                arrayTransformer: handleBacktrace,
                 status: {path: 'Result Status', transformer: getStatus},
                 code_desc: {path: 'Details'},
                 start_time: {path: 'Date'},
-                backtrace: [{path: 'Result Status', transformer: getBacktrace}]
               }
             ]
           }
