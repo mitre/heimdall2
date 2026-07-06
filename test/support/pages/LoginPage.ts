@@ -20,7 +20,7 @@ export default class LoginPage {
     cy.origin(origin, { args: { username } }, ({ username }) => {
       cy.get('#username').clear();
       cy.get('#username').type(username);
-      cy.get('button[type=submit]').click();
+      cy.contains('button', 'Sign In').click();
     });
   }
 
