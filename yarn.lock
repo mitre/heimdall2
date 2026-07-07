@@ -8700,9 +8700,9 @@ eslint-plugin-import@^2.20.1:
     tsconfig-paths "^3.15.0"
 
 eslint-plugin-markdown-links@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-markdown-links/-/eslint-plugin-markdown-links-0.9.0.tgz#33a6e0cff209b2ef656b5a26100ec4c9e45bd785"
-  integrity sha512-4LW0SQiI38CrJmvM9kCJeRDA4HGo/QetdYHJtO06EaTmcUVu9g620WNtt2LjXGBEHpKkDbq87sWugxJn26GB8g==
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-markdown-links/-/eslint-plugin-markdown-links-0.9.1.tgz#977d7a66759e0c728a3d0138a2c95e77c258cbf1"
+  integrity sha512-dDVhweFe44HOf6inWAfQe59pqVsRvyTAFw3MtN/CYz0YJ8s5/jj/4u6dQTdZSEY/mNkVZCSw3/70/kFD+PSPZQ==
   dependencies:
     "@mdit-vue/shared" "^3.0.2"
     entities "^8.0.0"
