@@ -1,33 +1,32 @@
-import Store from '@/store/store';
-import {Severity, severities} from 'inspecjs';
-import {parse} from 'search-query-parser';
+import type { Severity } from 'inspecjs';
+import { severities } from 'inspecjs';
+import { parse } from 'search-query-parser';
 import {
   Action,
   getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
 } from 'vuex-module-decorators';
-import {ExtendedControlStatus} from './data_filters';
+import Store from '@/store/store';
+import type { ExtendedControlStatus } from './data_filters';
 
-export interface ISearchState {
-  searchTerm: string;
-  freeSearch: string;
-  titleSearchTerms: string[];
-  descriptionSearchTerms: string[];
-  controlIdSearchTerms: string[];
+export type ISearchState = {
   codeSearchTerms: string[];
+  controlIdSearchTerms: string[];
+  descriptionSearchTerms: string[];
+  freeSearch: string;
   NISTIdFilter: string[];
-  statusFilter: ExtendedControlStatus[];
+  searchTerm: string;
   severityFilter: Severity[];
-}
+  statusFilter: ExtendedControlStatus[];
+  titleSearchTerms: string[];
+};
 
-export interface SearchQuery {
-  [key: string]: {
-    include?: string;
-    exclude?: string;
-  };
-}
+export type SearchQuery = Record<string, {
+  exclude?: string;
+  include?: string;
+}>;
 
 export const statusTypes = [
   'Not Applicable',
@@ -36,52 +35,234 @@ export const statusTypes = [
   'Passed',
   'Failed',
   'Not Reviewed',
-  'Waived'
+  'Waived',
 ];
 
-export function lowercaseAll(input: string | string[]): string | string[] {
-  if (typeof input === 'string') {
-    return input.toLowerCase();
-  } else {
-    return input.map((string) => {
-      return string.toLowerCase();
-    });
-  }
-}
-
-export function valueToSeverity(severity: string): Severity {
-  if (severities.find((severity) => severity === severity.toLowerCase())) {
-    return severity as Severity;
-  } else {
-    return 'none';
-  }
-}
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'SearchModule',
+  namespaced: true,
   store: Store,
-  name: 'SearchModule'
 })
 class Search extends VuexModule implements ISearchState {
-  controlIdSearchTerms: string[] = [];
   codeSearchTerms: string[] = [];
-  NISTIdFilter: string[] = [];
+  controlIdSearchTerms: string[] = [];
   descriptionSearchTerms: string[] = [];
   freeSearch = '';
+  NISTIdFilter: string[] = [];
   searchTerm = '';
-  statusFilter: ExtendedControlStatus[] = [];
   severityFilter: Severity[] = [];
-  titleSearchTerms: string[] = [];
+  statusFilter: ExtendedControlStatus[] = [];
   tagFilter: string[] = [];
+  titleSearchTerms: string[] = [];
 
-  /** Update the current search */
+  @Mutation
+  ADD_CODE(code: string | string[]) {
+    this.codeSearchTerms = [...this.codeSearchTerms, ...(Array.isArray(code) ? code : [code])];
+  }
+
+  /** Adds a description to the filter */
+  @Mutation
+  ADD_DESCRIPTION(description: string | string[]) {
+    this.descriptionSearchTerms
+      = [...this.descriptionSearchTerms, ...(Array.isArray(description) ? description : [description])];
+  }
+
+  @Mutation
+  ADD_ID(id: string | string[]) {
+    this.controlIdSearchTerms = [...this.controlIdSearchTerms, ...(Array.isArray(id) ? id : [id])];
+  }
+
+  @Mutation
+  ADD_NIST(NISTId: string | string[]) {
+    this.NISTIdFilter = [...this.NISTIdFilter, ...(Array.isArray(NISTId) ? NISTId : [NISTId])];
+  }
+
+  @Mutation
+  ADD_SEVERITY(severity: Severity | Severity[]) {
+    this.severityFilter = [...this.severityFilter, ...(Array.isArray(severity) ? severity : [severity])];
+  }
+
+  /** Adds a status filter */
+  @Mutation
+  ADD_STATUS(status: ExtendedControlStatus | ExtendedControlStatus[]) {
+    this.statusFilter = [...this.statusFilter, ...(Array.isArray(status) ? status : [status])];
+  }
+
+  // Status filtering
+
+  @Mutation
+  ADD_TAG(tag: string | string[]) {
+    this.tagFilter = [...this.tagFilter, ...(Array.isArray(tag) ? tag : [tag])];
+  }
+
+  @Mutation
+  ADD_TITLE(title: string | string[]) {
+    this.titleSearchTerms = [...this.titleSearchTerms, ...(Array.isArray(title) ? title : [title])];
+  }
+
+  /** Adds code to filter */
   @Action
-  updateSearch(newValue: string) {
-    if (newValue) {
-      this.context.commit('SET_SEARCH', newValue);
-    } else {
-      this.context.commit('SET_SEARCH', '');
+  addCodeFilter(code: string | string[]) {
+    this.context.commit('ADD_CODE', code);
+  }
+
+  /** Calls the description mutator to add a description to the filter */
+  @Action
+  addDescriptionFilter(description: string | string[]) {
+    this.context.commit('ADD_DESCRIPTION', description);
+  }
+
+  /** Adds control id to filter */
+  @Action
+  addIdFilter(id: string | string[]) {
+    this.context.commit('ADD_ID', id);
+  }
+
+  /** Adds NIST ID to filter */
+  @Action
+  addNISTIdFilter(NISTId: string | string[]) {
+    this.context.commit('ADD_NIST', NISTId);
+  }
+
+  // Generic filtering
+  @Action
+  addSearchFilter(searchPayload: {
+    field: string;
+    previousValues: (ExtendedControlStatus | string)[];
+    value: string;
+  }) {
+    // If we already have search filtering
+    if (this.searchTerm.trim() === '') {
+      this.context.commit(
+        'SET_SEARCH',
+        `${searchPayload.field}:"${searchPayload.value}"`,
+      );
     }
+    // We don't have any search yet
+    else {
+      // If our current filters include the field
+      if (
+        this.searchTerm.toLowerCase().includes(`${searchPayload.field}:`)
+      ) {
+        const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
+        const newSearch = this.searchTerm.replace(
+          replaceRegex,
+          `${searchPayload.field}:"${[...searchPayload.previousValues, searchPayload.value]
+            .join(',')}"`,
+        );
+        this.context.commit('SET_SEARCH', newSearch);
+      } // We have a filter already, but it doesn't include the field
+      else {
+        const newSearch = `${this.searchTerm} ${
+          searchPayload.field
+        }:"${[...searchPayload.previousValues, searchPayload.value]
+          .join(',')}"`;
+        this.context.commit('SET_SEARCH', newSearch);
+      }
+    }
+    this.parseSearch();
+  }
+
+  // Severity filtering
+
+  /** Adds severity to filter */
+  @Action
+  addSeverityFilter(severity: Severity | Severity[]) {
+    this.context.commit('ADD_SEVERITY', severity);
+  }
+
+  @Action
+  addStatusFilter(status: ExtendedControlStatus | ExtendedControlStatus[]) {
+    this.context.commit('ADD_STATUS', status);
+  }
+
+  /** Adds code to filter */
+  @Action
+  addTagFilter(tag: string | string[]) {
+    this.context.commit('ADD_TAG', tag);
+  }
+
+  /** Adds a title filter */
+  @Action
+  addTitleFilter(title: string | string[]) {
+    this.context.commit('ADD_TITLE', title);
+  }
+
+  /** Clears all current filters */
+  @Action
+  clear() {
+    this.context.commit('CLEAR_SEVERITY');
+    this.context.commit('CLEAR_STATUS');
+    this.context.commit('CLEAR_ID');
+    this.context.commit('CLEAR_TITLE');
+    this.context.commit('CLEAR_NIST');
+    this.context.commit('CLEAR_DESCRIPTION');
+    this.context.commit('CLEAR_CODE');
+    this.context.commit('CLEAR_TAG');
+    this.context.commit('CLEAR_FREESEARCH');
+  }
+
+  /** Clears all code filters */
+  @Mutation
+  CLEAR_CODE() {
+    this.codeSearchTerms = [];
+  }
+
+  /** Clears all description from the filters */
+  @Mutation
+  CLEAR_DESCRIPTION() {
+    this.descriptionSearchTerms = [];
+  }
+
+  /** Removes the current fulltext search */
+  @Mutation
+  CLEAR_FREESEARCH() {
+    this.freeSearch = '';
+  }
+
+  // Control ID Filtering
+
+  /** Clears all control ID filters */
+  @Mutation
+  CLEAR_ID() {
+    this.controlIdSearchTerms = [];
+  }
+
+  /** Clears all NIST ID filters */
+  @Mutation
+  CLEAR_NIST() {
+    this.NISTIdFilter = [];
+  }
+
+  /** Clears all severity filters */
+  @Mutation
+  CLEAR_SEVERITY() {
+    this.severityFilter = [];
+  }
+
+  @Mutation
+  CLEAR_STATUS() {
+    this.statusFilter = [];
+  }
+
+  // Title filtering
+
+  /** Clears all code filters */
+  @Mutation
+  CLEAR_TAG() {
+    this.tagFilter = [];
+  }
+
+  /** Clears all title filters */
+  @Mutation
+  CLEAR_TITLE() {
+    this.titleSearchTerms = [];
+  }
+
+  @Action
+  clearSeverityFilter() {
+    this.context.commit('CLEAR_SEVERITY');
   }
 
   @Action
@@ -99,8 +280,8 @@ class Search extends VuexModule implements ISearchState {
         'description',
         'code',
         'input',
-        'tags'
-      ]
+        'tags',
+      ],
     };
     const searchResult = parse(this.searchTerm, options);
     if (typeof searchResult === 'string') {
@@ -109,119 +290,84 @@ class Search extends VuexModule implements ISearchState {
       for (const prop in searchResult) {
         const include: string | string[] = searchResult[prop] || '';
         switch (prop) {
-          case 'status':
-            this.addStatusFilter(
-              include as ExtendedControlStatus | ExtendedControlStatus[]
-            );
-            break;
-          case 'severity':
-            this.addSeverityFilter(include as Severity | Severity[]);
-            break;
-          case 'id':
-            this.addIdFilter(lowercaseAll(include));
-            break;
-          case 'title':
-            this.addTitleFilter(lowercaseAll(include));
-            break;
-          case 'nist':
-            this.addNISTIdFilter(lowercaseAll(include));
-            break;
-          case 'desc':
-          case 'description':
-            this.addDescriptionFilter(lowercaseAll(include));
-            break;
-          case 'code':
+          case 'code': {
             this.addCodeFilter(lowercaseAll(include));
             break;
-          case 'tags':
+          }
+          case 'desc':
+          case 'description': {
+            this.addDescriptionFilter(lowercaseAll(include));
+            break;
+          }
+          case 'id': {
+            this.addIdFilter(lowercaseAll(include));
+            break;
+          }
+          case 'nist': {
+            this.addNISTIdFilter(lowercaseAll(include));
+            break;
+          }
+          case 'severity': {
+            this.addSeverityFilter(include as Severity | Severity[]);
+            break;
+          }
+          case 'status': {
+            this.addStatusFilter(
+              include as ExtendedControlStatus | ExtendedControlStatus[],
+            );
+            break;
+          }
+          case 'tags': {
             this.addTagFilter(lowercaseAll(include));
             break;
-          case 'text':
+          }
+          case 'text': {
             if (typeof include === 'string') {
               this.setFreesearch(include);
             }
             break;
+          }
+          case 'title': {
+            this.addTitleFilter(lowercaseAll(include));
+            break;
+          }
         }
       }
     }
   }
 
-  /** Sets the current search */
+  // NIST ID Filtering
+
   @Mutation
-  SET_SEARCH(newSearch: string) {
-    this.searchTerm = newSearch;
+  REMOVE_SEVERITY(severity: Severity) {
+    this.severityFilter = this.severityFilter.filter(
+      filter => filter.toLowerCase() !== severity.toLowerCase(),
+    );
   }
 
-  /** Clears all current filters */
-  @Action
-  clear() {
-    this.context.commit('CLEAR_SEVERITY');
-    this.context.commit('CLEAR_STATUS');
-    this.context.commit('CLEAR_ID');
-    this.context.commit('CLEAR_TITLE');
-    this.context.commit('CLEAR_NIST');
-    this.context.commit('CLEAR_DESCRIPTION');
-    this.context.commit('CLEAR_CODE');
-    this.context.commit('CLEAR_TAG');
-    this.context.commit('CLEAR_FREESEARCH');
-  }
-
-  // Generic filtering
-  @Action
-  addSearchFilter(searchPayload: {
-    field: string;
-    value: string;
-    previousValues: (string | ExtendedControlStatus)[];
-  }) {
-    // If we already have search filtering
-    if (this.searchTerm.trim() !== '') {
-      // If our current filters include the field
-      if (
-        this.searchTerm.toLowerCase().indexOf(`${searchPayload.field}:`) !== -1
-      ) {
-        const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
-        const newSearch = this.searchTerm.replace(
-          replaceRegex,
-          `${searchPayload.field}:"${searchPayload.previousValues
-            .concat(searchPayload.value)
-            .join(',')}"`
-        );
-        this.context.commit('SET_SEARCH', newSearch);
-      } // We have a filter already, but it doesn't include the field
-      else {
-        const newSearch = `${this.searchTerm} ${
-          searchPayload.field
-        }:"${searchPayload.previousValues
-          .concat(searchPayload.value)
-          .join(',')}"`;
-        this.context.commit('SET_SEARCH', newSearch);
-      }
-    }
-    // We don't have any search yet
-    else {
-      this.context.commit(
-        'SET_SEARCH',
-        `${searchPayload.field}:"${searchPayload.value}"`
-      );
-    }
-    this.parseSearch();
+  /** Removes a status filter */
+  @Mutation
+  REMOVE_STATUS(status: ExtendedControlStatus) {
+    this.statusFilter = this.statusFilter.filter(
+      filter => filter.toLowerCase() !== status.toLowerCase(),
+    );
   }
 
   @Action
   removeSearchFilter(searchPayload: {
     field: string;
+    previousValues: (ExtendedControlStatus | string)[];
     value: string;
-    previousValues: (string | ExtendedControlStatus)[];
   }) {
     searchPayload.previousValues = searchPayload.previousValues.filter(
-      (filter) => filter.toLowerCase() !== searchPayload.value.toLowerCase()
+      filter => filter.toLowerCase() !== searchPayload.value.toLowerCase(),
     );
     const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
-    if (searchPayload.previousValues.length !== 0) {
+    if (searchPayload.previousValues.length > 0) {
       // If we still have any filters
       const newSearch = this.searchTerm.replace(
         replaceRegex,
-        `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`
+        `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`,
       );
       this.context.commit('SET_SEARCH', newSearch);
     } // Otherwise just remove the text from the search bar
@@ -232,54 +378,7 @@ class Search extends VuexModule implements ISearchState {
     this.parseSearch();
   }
 
-  // Status filtering
-
-  @Action
-  addStatusFilter(status: ExtendedControlStatus | ExtendedControlStatus[]) {
-    this.context.commit('ADD_STATUS', status);
-  }
-
-  @Action
-  removeStatusFilter(status: ExtendedControlStatus) {
-    this.context.commit('REMOVE_STATUS', status);
-  }
-
-  @Action
-  setStatusFilter(status: ExtendedControlStatus[]) {
-    this.context.commit('SET_STATUS', status);
-  }
-
-  /** Adds a status filter */
-  @Mutation
-  ADD_STATUS(status: ExtendedControlStatus | ExtendedControlStatus[]) {
-    this.statusFilter = this.statusFilter.concat(status);
-  }
-
-  /** Removes a status filter */
-  @Mutation
-  REMOVE_STATUS(status: ExtendedControlStatus) {
-    this.statusFilter = this.statusFilter.filter(
-      (filter) => filter.toLowerCase() !== status.toLowerCase()
-    );
-  }
-
-  @Mutation
-  CLEAR_STATUS() {
-    this.statusFilter = [];
-  }
-
-  @Mutation
-  SET_STATUS(status: ExtendedControlStatus[]) {
-    this.statusFilter = status;
-  }
-
-  // Severity filtering
-
-  /** Adds severity to filter */
-  @Action
-  addSeverityFilter(severity: Severity | Severity[]) {
-    this.context.commit('ADD_SEVERITY', severity);
-  }
+  // Description Filtering
 
   @Action
   removeSeverity(severity: Severity) {
@@ -287,25 +386,27 @@ class Search extends VuexModule implements ISearchState {
   }
 
   @Action
-  setSeverity(severity: Severity[]) {
-    this.context.commit('SET_SEVERITY', severity);
-  }
-
-  @Action
-  clearSeverityFilter() {
-    this.context.commit('CLEAR_SEVERITY');
+  removeStatusFilter(status: ExtendedControlStatus) {
+    this.context.commit('REMOVE_STATUS', status);
   }
 
   @Mutation
-  ADD_SEVERITY(severity: Severity | Severity[]) {
-    this.severityFilter = this.severityFilter.concat(severity);
+  SET_FREESEARCH(text: string) {
+    this.freeSearch = text;
   }
 
+  // Code filtering
+
+  /** Sets the control IDs filter */
   @Mutation
-  REMOVE_SEVERITY(severity: Severity) {
-    this.severityFilter = this.severityFilter.filter(
-      (filter) => filter.toLowerCase() !== severity.toLowerCase()
-    );
+  SET_ID(ids: string[]) {
+    this.controlIdSearchTerms = ids;
+  }
+
+  /** Sets the current search */
+  @Mutation
+  SET_SEARCH(newSearch: string) {
+    this.searchTerm = newSearch;
   }
 
   /** Sets the severity filter */
@@ -314,48 +415,11 @@ class Search extends VuexModule implements ISearchState {
     this.severityFilter = severity;
   }
 
-  /** Clears all severity filters */
-  @Mutation
-  CLEAR_SEVERITY() {
-    this.severityFilter = [];
-  }
-
-  // Control ID Filtering
-
-  /** Adds control id to filter */
-  @Action
-  addIdFilter(id: string | string[]) {
-    this.context.commit('ADD_ID', id);
-  }
+  // Tag filtering
 
   @Mutation
-  ADD_ID(id: string | string[]) {
-    this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
-  }
-
-  /** Sets the control IDs filter */
-  @Mutation
-  SET_ID(ids: string[]) {
-    this.controlIdSearchTerms = ids;
-  }
-
-  /** Clears all control ID filters */
-  @Mutation
-  CLEAR_ID() {
-    this.controlIdSearchTerms = [];
-  }
-
-  // Title filtering
-
-  /** Adds a title filter */
-  @Action
-  addTitleFilter(title: string | string[]) {
-    this.context.commit('ADD_TITLE', title);
-  }
-
-  @Mutation
-  ADD_TITLE(title: string | string[]) {
-    this.titleSearchTerms = this.titleSearchTerms.concat(title);
+  SET_STATUS(status: ExtendedControlStatus[]) {
+    this.statusFilter = status;
   }
 
   /** Sets the title filters */
@@ -364,108 +428,44 @@ class Search extends VuexModule implements ISearchState {
     this.titleSearchTerms = titles;
   }
 
-  /** Clears all title filters */
-  @Mutation
-  CLEAR_TITLE() {
-    this.titleSearchTerms = [];
-  }
-
-  // NIST ID Filtering
-
-  /** Adds NIST ID to filter */
-  @Action
-  addNISTIdFilter(NISTId: string | string[]) {
-    this.context.commit('ADD_NIST', NISTId);
-  }
-
-  @Mutation
-  ADD_NIST(NISTId: string | string[]) {
-    this.NISTIdFilter = this.NISTIdFilter.concat(NISTId);
-  }
-
-  /** Clears all NIST ID filters */
-  @Mutation
-  CLEAR_NIST() {
-    this.NISTIdFilter = [];
-  }
-
-  // Description Filtering
-
-  /** Calls the description mutator to add a description to the filter */
-  @Action
-  addDescriptionFilter(description: string | string[]) {
-    this.context.commit('ADD_DESCRIPTION', description);
-  }
-
-  /** Adds a description to the filter */
-  @Mutation
-  ADD_DESCRIPTION(description: string | string[]) {
-    this.descriptionSearchTerms =
-      this.descriptionSearchTerms.concat(description);
-  }
-
-  /** Clears all description from the filters */
-  @Mutation
-  CLEAR_DESCRIPTION() {
-    this.descriptionSearchTerms = [];
-  }
-
-  // Code filtering
-
-  /** Adds code to filter */
-  @Action
-  addCodeFilter(code: string | string[]) {
-    this.context.commit('ADD_CODE', code);
-  }
-
-  @Mutation
-  ADD_CODE(code: string | string[]) {
-    this.codeSearchTerms = this.codeSearchTerms.concat(code);
-  }
-
-  /** Clears all code filters */
-  @Mutation
-  CLEAR_CODE() {
-    this.codeSearchTerms = [];
-  }
-
-  // Tag filtering
-
-  /** Adds code to filter */
-  @Action
-  addTagFilter(tag: string | string[]) {
-    this.context.commit('ADD_TAG', tag);
-  }
-
-  @Mutation
-  ADD_TAG(tag: string | string[]) {
-    this.tagFilter = this.tagFilter.concat(tag);
-  }
-
-  /** Clears all code filters */
-  @Mutation
-  CLEAR_TAG() {
-    this.tagFilter = [];
-  }
-
-  // Freetext search
-
   /** Sets the current fulltext search */
   @Action
   setFreesearch(search: string) {
     this.context.commit('SET_FREESEARCH', search);
   }
 
-  @Mutation
-  SET_FREESEARCH(text: string) {
-    this.freeSearch = text;
+  // Freetext search
+
+  @Action
+  setSeverity(severity: Severity[]) {
+    this.context.commit('SET_SEVERITY', severity);
   }
 
-  /** Removes the current fulltext search */
-  @Mutation
-  CLEAR_FREESEARCH() {
-    this.freeSearch = '';
+  @Action
+  setStatusFilter(status: ExtendedControlStatus[]) {
+    this.context.commit('SET_STATUS', status);
   }
+
+  /** Update the current search */
+  @Action
+  updateSearch(newValue: string) {
+    if (newValue) {
+      this.context.commit('SET_SEARCH', newValue);
+    } else {
+      this.context.commit('SET_SEARCH', '');
+    }
+  }
+}
+
+export function lowercaseAll(input: string | string[]): string | string[] {
+  return typeof input === 'string'
+    ? input.toLowerCase()
+    : input.map((string) => {
+      return string.toLowerCase();
+    });
+}
+export function valueToSeverity(severity: string): Severity {
+  return severities.some(severity => severity === severity.toLowerCase()) ? (severity as Severity) : 'none';
 }
 
 export const SearchModule = getModule(Search);

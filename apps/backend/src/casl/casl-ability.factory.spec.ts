@@ -1,11 +1,11 @@
-import {MongoAbility} from '@casl/ability';
-import {beforeEach, describe, expect, it} from 'vitest';
+import type { MongoAbility } from '@casl/ability';
+import { beforeEach, describe, expect, it } from 'vitest';
 import {
   ADMIN_WITH_ID,
-  TEST_USER_WITH_ID
+  TEST_USER_WITH_ID,
 } from '../../test/constants/users-test.constant';
-import {User} from '../users/user.model';
-import {Action, CaslAbilityFactory} from './casl-ability.factory';
+import { User } from '../users/user.model';
+import { Action, CaslAbilityFactory } from './casl-ability.factory';
 
 describe('CaslAbilityFactory', () => {
   let abilityFactory: CaslAbilityFactory;
@@ -22,20 +22,20 @@ describe('CaslAbilityFactory', () => {
     expect(
       userAbility.can(
         Action.Read,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
     expect(
       userAbility.can(
         Action.Update,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
     expect(
       userAbility.can(
         Action.Delete,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
   });
 
@@ -43,26 +43,26 @@ describe('CaslAbilityFactory', () => {
     expect(
       userAbility.can(
         Action.DeleteNoPassword,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeFalsy();
     expect(
       userAbility.can(
         Action.UpdateNoPassword,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeFalsy();
     expect(
       userAbility.can(
         Action.SkipForcePasswordChange,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeFalsy();
     expect(
       userAbility.can(
         Action.UpdateRole,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeFalsy();
   });
 
@@ -74,20 +74,20 @@ describe('CaslAbilityFactory', () => {
     expect(
       adminAbility.can(
         Action.Delete,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
     expect(
       adminAbility.can(
         Action.DeleteNoPassword,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
     expect(
       adminAbility.can(
         Action.DeleteNoPassword,
-        Object.assign(User.prototype, ADMIN_WITH_ID)
-      )
+        Object.assign(User.prototype, ADMIN_WITH_ID),
+      ),
     ).toBeFalsy();
   });
 
@@ -95,14 +95,14 @@ describe('CaslAbilityFactory', () => {
     expect(
       adminAbility.can(
         Action.Update,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
     expect(
       adminAbility.can(
         Action.Update,
-        Object.assign(User.prototype, ADMIN_WITH_ID)
-      )
+        Object.assign(User.prototype, ADMIN_WITH_ID),
+      ),
     ).toBeTruthy();
   });
 
@@ -110,14 +110,14 @@ describe('CaslAbilityFactory', () => {
     expect(
       adminAbility.can(
         Action.UpdateNoPassword,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
     expect(
       adminAbility.can(
         Action.UpdateNoPassword,
-        Object.assign(User.prototype, ADMIN_WITH_ID)
-      )
+        Object.assign(User.prototype, ADMIN_WITH_ID),
+      ),
     ).toBeFalsy();
   });
 
@@ -125,8 +125,8 @@ describe('CaslAbilityFactory', () => {
     expect(
       adminAbility.can(
         Action.SkipForcePasswordChange,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
   });
 
@@ -134,8 +134,8 @@ describe('CaslAbilityFactory', () => {
     expect(
       adminAbility.can(
         Action.UpdateRole,
-        Object.assign(User.prototype, TEST_USER_WITH_ID)
-      )
+        Object.assign(User.prototype, TEST_USER_WITH_ID),
+      ),
     ).toBeTruthy();
   });
 });

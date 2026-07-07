@@ -31,6 +31,7 @@ RUN yarn build
 
 FROM $BASE_CONTAINER AS app
 
+# Default backend port — override with HEIMDALL_BACKEND_PORT env var
 EXPOSE 3000
 
 ARG NODE_ENV=production

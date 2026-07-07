@@ -1,69 +1,141 @@
-import {ExecJSON} from 'inspecjs';
+import { ExecJSON } from 'inspecjs';
 import * as _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../package.json';
-import {
-  BaseConverter,
+import type {
   ILookupPath,
   MappedTransform,
-  buildParseHtmlFunc,
-  parseXml
 } from './base-converter';
-import {getCCIsForNISTTags} from './utils/global';
+import {
+  BaseConverter,
+  buildParseHtmlFunc,
+  parseXml,
+} from './base-converter';
+import { getCCIsForNISTTags, HeimdallToolsVersion } from './utils/global';
+import { createHeimdallPassthrough } from './utils/heimdall_metadata';
 
-const NIST_REFERENCE_NAME =
-  'Standards Mapping - NIST Special Publication 800-53 Revision 4';
+const NIST_REFERENCE_NAME
+  = 'Standards Mapping - NIST Special Publication 800-53 Revision 4';
 const DEFAULT_NIST_TAG: string[] = [];
+const NIST_CONTROL_PATTERN_RE = /[A-Za-z][A-Za-z]-\d{1,2}/v;
 
 let parseHtml: (input: unknown) => string;
 
-function impactMapping(input: Record<string, unknown>, id: string): number {
-  if (Array.isArray(input)) {
-    const matches = input.find((element) => {
-      return _.get(element, 'ClassInfo.ClassID') === id;
-    });
-    return parseFloat(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5;
-  } else {
-    return parseFloat(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
+export class FortifyMapper extends BaseConverter {
+  shouldIncludeRaw: boolean;
+  mappings: MappedTransform<
+    ExecJSON.Execution & { passthrough: unknown },
+    ILookupPath
+  > = {
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        let auxData = _.get(data, 'FVDL');
+        if (_.isObject(auxData)) {
+          auxData = _.omit(auxData, [
+            'CreatedTS',
+            'UUID',
+            'Description',
+            'Snippets',
+          ]);
+        }
+        return createHeimdallPassthrough('fortify', {
+          auxiliary_data: [
+            {
+              data: { FVDL: auxData },
+              name: 'Fortify',
+            },
+          ],
+          ...(this.shouldIncludeRaw && { raw: data }),
+        });
+      },
+    },
+    platform: {
+      name: 'Heimdall Tools',
+      release: HeimdallToolsVersion,
+    },
+    profiles: [
+      {
+        attributes: [],
+        controls: [
+          {
+            arrayTransformer: filterVuln,
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              },
+            },
+            desc: { path: 'Explanation', transformer: parseHtml },
+            id: { path: 'classID' },
+            impact: { path: '$.FVDL.Vulnerabilities.Vulnerability' },
+            key: 'id',
+            path: 'FVDL.Description',
+            refs: [],
+            results: [
+              {
+                code_desc: { transformer: processEntry },
+                path: '$.FVDL.Snippets.Snippet',
+                start_time: {
+                  path: '$.FVDL.CreatedTS',
+                  transformer: (input: unknown): string => {
+                    return `${_.get(input, 'date')} ${_.get(input, 'time')}`;
+                  },
+                },
+                status: ExecJSON.ControlResultStatus.Failed,
+              },
+            ],
+            source_location: {},
+            tags: {
+              cci: {
+                transformer: (data: Record<string, unknown>) =>
+                  getCCIsForNISTTags(nistTag(data)),
+              },
+              nist: { transformer: nistTag },
+            },
+            title: { path: 'Abstract', transformer: parseHtml }, // there are embedded nodes that do not show up properly
+          },
+        ],
+        groups: [],
+        name: 'Fortify Static Analyzer Scan',
+        sha256: '',
+        status: 'loaded',
+        summary: {
+          path: 'FVDL.UUID',
+          transformer: (uuid: unknown): string => {
+            return `Fortify Static Analyzer Scan of UUID: ${String(uuid)}`;
+          },
+        },
+        supports: [],
+        title: 'Fortify Static Analyzer Scan',
+        version: { path: 'FVDL.EngineData.EngineVersion' },
+      },
+    ],
+    statistics: {},
+    version: HeimdallToolsVersion,
+  };
+
+  startTime: string;
+  constructor(fvdl: string, shouldIncludeRaw = false) {
+    super(
+      parseXml(fvdl, { stopNodes: ['FVDL.Description.Abstract', 'FVDL.Description.Explanation'] }),
+    );
+    this.startTime = `${String(_.get(this.data, 'FVDL.CreatedTS.date'))} ${String(_.get(
+      this.data,
+      'FVDL.CreatedTS.time',
+    ))}`;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }
 
-function nistTag(rule: Record<string, unknown>): string[] {
-  let references = _.get(rule, 'References.Reference');
-  if (!Array.isArray(references)) {
-    references = [references];
+export class FortifyResults {
+  constructor(readonly fvdl: string, readonly shouldIncludeRaw = false) {}
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    parseHtml = await buildParseHtmlFunc();
+
+    return (new FortifyMapper(this.fvdl, this.shouldIncludeRaw)).toHdf();
   }
-  if (Array.isArray(references)) {
-    const tag = references.find((element: Record<string, unknown>) => {
-      return _.get(element, 'Author') === NIST_REFERENCE_NAME;
-    });
-    if (tag === null || tag === undefined) {
-      return DEFAULT_NIST_TAG;
-    } else {
-      return _.get(tag, 'Title').match(/[a-zA-Z][a-zA-Z]-\d{1,2}/);
-    }
-  }
-  return [];
 }
 
-function processEntry(input: unknown): string {
-  const output = [];
-  output.push(`${_.get(input, 'id')}<=SNIPPET`);
-  output.push(`\nPath: ${_.get(input, 'File')}\n`);
-  output.push(`StartLine: ${_.get(input, 'StartLine')}, `);
-  output.push(`EndLine: ${_.get(input, 'EndLine')}\n`);
-  output.push(`Code:\n${(_.get(input, 'Text') as unknown as string).trim()}`);
-
-  return output.join('');
-}
-function makeArray(input: unknown): unknown[] {
-  if (Array.isArray(input)) {
-    return input as unknown[];
-  } else {
-    return [input];
-  }
-}
 function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
-  input.forEach((element) => {
+  for (const element of input) {
     if (element instanceof Object) {
       _.set(
         element,
@@ -81,157 +153,77 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
             ).filter((subElement: Record<string, unknown>) => {
               return _.get(subElement, 'ClassInfo.ClassID') === classid;
             });
-            matches.forEach((match: Record<string, unknown>) => {
+            for (const match of matches) {
               const traces: unknown[] = makeArray(
-                _.get(match, 'AnalysisInfo.Unified.Trace')
+                _.get(match, 'AnalysisInfo.Unified.Trace'),
               );
-              traces.forEach((trace: unknown) => {
+              for (const trace of traces) {
                 const entries: unknown[] = makeArray(
-                  _.get(trace, 'Primary.Entry')
+                  _.get(trace, 'Primary.Entry'),
                 );
                 const filteredEntries = entries.filter((entry: unknown) => {
                   return _.has(entry, 'Node.SourceLocation.snippet');
                 });
-                filteredEntries.forEach((entry: unknown) => {
+                for (const entry of filteredEntries) {
                   if (
                     _.get(entry, 'Node.SourceLocation.snippet') === snippetid
                   ) {
                     isMatch = true;
                   }
-                });
-              });
-            });
+                }
+              }
+            }
             return isMatch;
-          }
-        )
+          },
+        ),
       );
       _.set(
         element,
         'impact',
         impactMapping(
           _.get(element, 'impact') as unknown as Record<string, unknown>,
-          _.get(element, 'id') as unknown as string
-        )
+          _.get(element, 'id') as unknown as string,
+        ),
       );
     }
-    return element;
-  });
+  }
   return input as ExecJSON.Control[];
 }
-
-export class FortifyResults {
-  constructor(readonly fvdl: string, readonly withRaw = false) {}
-
-  async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
-
-    return (new FortifyMapper(this.fvdl, this.withRaw)).toHdf();
+function impactMapping(input: Record<string, unknown>, id: string): number {
+  if (Array.isArray(input)) {
+    const matches = input.find((element) => {
+      return _.get(element, 'ClassInfo.ClassID') === id;
+    });
+    return Number(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5;
   }
+  return Number(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
+}
+function makeArray(input: unknown): unknown[] {
+  return Array.isArray(input) ? (input as unknown[]) : [input];
 }
 
-export class FortifyMapper extends BaseConverter {
-  startTime: string;
-  withRaw: boolean;
-
-  mappings: MappedTransform<
-    ExecJSON.Execution & {passthrough: unknown},
-    ILookupPath
-  > = {
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion
-    },
-    version: HeimdallToolsVersion,
-    statistics: {},
-    profiles: [
-      {
-        name: 'Fortify Static Analyzer Scan',
-        version: {path: 'FVDL.EngineData.EngineVersion'},
-        title: 'Fortify Static Analyzer Scan',
-        summary: {
-          path: 'FVDL.UUID',
-          transformer: (uuid: unknown): string => {
-            return `Fortify Static Analyzer Scan of UUID: ${uuid}`;
-          }
-        },
-        supports: [],
-        attributes: [],
-        groups: [],
-        status: 'loaded',
-        controls: [
-          {
-            arrayTransformer: filterVuln,
-            path: 'FVDL.Description',
-            key: 'id',
-            tags: {
-              nist: {transformer: nistTag},
-              cci: {
-                transformer: (data: Record<string, unknown>) =>
-                  getCCIsForNISTTags(nistTag(data))
-              }
-            },
-            refs: [],
-            source_location: {},
-            title: {path: 'Abstract', transformer: parseHtml}, // there are embedded nodes that do not show up properly
-            id: {path: 'classID'},
-            desc: {path: 'Explanation', transformer: parseHtml},
-            impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
-            code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
-              }
-            },
-            results: [
-              {
-                path: '$.FVDL.Snippets.Snippet',
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {transformer: processEntry},
-                start_time: {
-                  path: '$.FVDL.CreatedTS',
-                  transformer: (input: unknown): string => {
-                    return `${_.get(input, 'date')} ${_.get(input, 'time')}`;
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        sha256: ''
-      }
-    ],
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        let auxData = _.get(data, 'FVDL');
-        if (_.isObject(auxData)) {
-          auxData = _.omit(auxData, [
-            'CreatedTS',
-            'UUID',
-            'Description',
-            'Snippets'
-          ]);
-        }
-        return {
-          auxiliary_data: [
-            {
-              name: 'Fortify',
-              data: {FVDL: auxData}
-            }
-          ],
-          ...(this.withRaw && {raw: data})
-        };
-      }
-    }
-  };
-  constructor(fvdl: string, withRaw = false) {
-    super(
-      parseXml(fvdl, {
-        stopNodes: ['FVDL.Description.Abstract', 'FVDL.Description.Explanation']
-      })
-    );
-    this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
-      this.data,
-      'FVDL.CreatedTS.time'
-    )}`;
-    this.withRaw = withRaw;
+function nistTag(rule: Record<string, unknown>): string[] {
+  let references = _.get(rule, 'References.Reference');
+  if (!Array.isArray(references)) {
+    references = [references];
   }
+  if (Array.isArray(references)) {
+    const tag = references.find((element: Record<string, unknown>) => {
+      return _.get(element, 'Author') === NIST_REFERENCE_NAME;
+    });
+    return tag === null || tag === undefined ? DEFAULT_NIST_TAG : _.get(tag, 'Title').match(NIST_CONTROL_PATTERN_RE);
+  }
+  return [];
+}
+
+function processEntry(input: unknown): string {
+  const output = [
+    `${_.get(input, 'id')}<=SNIPPET`,
+    `\nPath: ${_.get(input, 'File')}\n`,
+    `StartLine: ${_.get(input, 'StartLine')}, `,
+    `EndLine: ${_.get(input, 'EndLine')}\n`,
+    `Code:\n${(_.get(input, 'Text') as unknown as string).trim()}`,
+  ];
+
+  return output.join('');
 }

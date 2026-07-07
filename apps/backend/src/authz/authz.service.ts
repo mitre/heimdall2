@@ -1,5 +1,5 @@
-import {Injectable} from '@nestjs/common';
-import {CaslAbilityFactory} from '../casl/casl-ability.factory';
+import { Injectable } from '@nestjs/common';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 
 @Injectable()
 export class AuthzService {

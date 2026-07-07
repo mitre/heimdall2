@@ -5,7 +5,10 @@
       <v-simple-table dark>
         <template #default>
           <tbody>
-            <tr v-for="(value, name) in statistics" :key="name">
+            <tr
+              v-for="(value, name) in statistics"
+              :key="name"
+            >
               <td>{{ toCapitalizedWords(name) }}</td>
               <td>{{ value.toLocaleString() }}</td>
             </tr>
@@ -14,38 +17,39 @@
       </v-simple-table>
     </div>
     <div v-else>
-      <v-progress-linear indeterminate :size="80" :width="20" />
+      <v-progress-linear
+        indeterminate
+        :size="80"
+        :width="20"
+      />
     </div>
   </v-card>
 </template>
 
 <script lang="ts">
-import {IStatistics} from '@heimdall/common/interfaces';
+import type { IStatistics } from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 
 @Component({})
 export default class Statistics extends Vue {
+  loading = true;
+
   statistics: IStatistics = {
     apiKeyCount: 0,
-    userCount: 0,
     evaluationCount: 0,
     evaluationTagCount: 0,
-    groupCount: 0
+    groupCount: 0,
+    userCount: 0,
   };
 
-  loading = true;
+  capitalize(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
 
   mounted() {
     this.updateStatistics();
-  }
-
-  updateStatistics() {
-    return axios.get<IStatistics>(`/statistics`).then(({data}) => {
-      this.statistics = data;
-      this.loading = false;
-    });
   }
 
   toCapitalizedWords(variable: string) {
@@ -53,8 +57,11 @@ export default class Statistics extends Vue {
     return words.map(this.capitalize).join(' ');
   }
 
-  capitalize(word: string) {
-    return word.charAt(0).toUpperCase() + word.substring(1);
+  updateStatistics() {
+    return axios.get<IStatistics>('/statistics').then(({ data }) => {
+      this.statistics = data;
+      this.loading = false;
+    });
   }
 }
 </script>

@@ -1,34 +1,41 @@
-import {ExecJSON, severities} from 'inspecjs';
+import { ExecJSON, severities } from 'inspecjs';
 import _ from 'lodash';
 import xmlFormat from 'xml-formatter';
-import {version as HeimdallToolsVersion} from '../../package.json';
+import type {
+  ILookupPath,
+  MappedTransform,
+} from '../base-converter';
 import {
   BaseConverter,
   generateHash,
-  ILookupPath,
-  MappedTransform
 } from '../base-converter';
-import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
+import { CciNistTwoWayMapper } from '../mappings/CciNistMapping';
+import { DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS, HeimdallToolsVersion } from '../utils/global';
+import { parseJson } from '../utils/parseJson';
 import {
   ChecklistJsonixConverter,
+  EmptyChecklistObject,
+  StatusMapping,
+  updateChecklistWithMetadata,
+} from './checklist-jsonix-converter';
+import type {
   ChecklistObject,
   ChecklistVuln,
-  EmptyChecklistObject,
-  updateChecklistWithMetadata
 } from './checklist-jsonix-converter';
-import {Checklist} from './checklistJsonix';
-import {jsonixMapping} from './jsonixMapping';
-import {throwIfInvalidAssetMetadata} from './checklist-metadata-utils';
-import {parseJson} from '../utils/parseJson';
+import { throwIfInvalidAssetMetadata } from './checklist-metadata-utils';
+import type { Checklist } from './checklistJsonix';
+import { jsonixMapping } from './jsonixMapping';
 
 enum ImpactMapping {
-  high = 0.7,
+  low = 0.3,
   medium = 0.5,
-  low = 0.3
+  high = 0.7,
 }
 
 const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
+const FINDING_DETAILS_RE = /^(?<status>error|failed|passed|skipped) :: TEST (?<codeDesc>.*?)(?: :: (?<messageType>MESSAGE|SKIP_MESSAGE) (?<message>.*))?$/sv;
+const COMMENT_SECTION_SPLIT_RE = /\n(?=[A-Z]+ ::)/v;
+const COMMENT_SECTION_PARSE_RE = /(?<label>[A-Z]+) :: (?<data>.+)/sv;
 
 /**
  * Tranformer function that splits a string and return array
@@ -49,7 +56,7 @@ function nistTag(input: string): string[] {
   const identifiers: string[] = cciRef(input);
   return CCI_NIST_TWO_WAY_MAPPER.nistFilter(
     identifiers,
-    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   );
 }
 
@@ -69,7 +76,7 @@ function findSeverity(vuln: ChecklistVuln): string {
     severity = _.get(
       hdfExistingData.value,
       'hdfSpecificData.severity',
-      severity
+      severity,
     ) as string;
   }
   return severity;
@@ -89,7 +96,7 @@ function findSeverityOverride(vuln: ChecklistVuln): string {
     severityOverride = _.get(
       hdfExistingData.value,
       'hdfSpecificData.severityoverride',
-      severityOverride
+      severityOverride,
     ) as string;
   }
   return severityOverride;
@@ -108,14 +115,17 @@ function computeSeverity(vuln: ChecklistVuln): string {
   const severityOverride = findSeverityOverride(vuln);
 
   let computed = severity;
-  if (severityOverride) computed = severityOverride;
+  if (severityOverride) {
+    computed = severityOverride;
+  }
 
-  if (!severities.find((severity) => severity === computed))
+  if (!(severities as readonly string[]).includes(computed)) {
     throw new Error(
       `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
         vuln.vulnNum
-      }`
+      }`,
     );
+  }
   return computed;
 }
 
@@ -126,7 +136,9 @@ function computeSeverity(vuln: ChecklistVuln): string {
  * @returns impact - number
  */
 function transformImpact(vuln: ChecklistVuln): number {
-  if (vuln.status === 'Not Applicable') return 0.0;
+  if (vuln.status === StatusMapping.Not_Applicable) {
+    return 0;
+  }
   const severity = computeSeverity(vuln);
   let impact: number = ImpactMapping[severity as keyof typeof ImpactMapping];
   const hdfExistingData = parseJson(vuln.thirdPartyTools);
@@ -134,16 +146,19 @@ function transformImpact(vuln: ChecklistVuln): number {
     const maybeImpact = _.get(
       hdfExistingData.value,
       'hdfSpecificData.impact',
-      impact
+      impact,
     );
-    if (typeof maybeImpact === 'number') impact = maybeImpact;
+    if (typeof maybeImpact === 'number') {
+      impact = maybeImpact;
+    }
   }
-  if (!impact)
+  if (!impact) {
     throw new Error(
       `Severity "${severity}" does not match low, medium, or high, please check severity for ${
         vuln.vulnNum
-      }`
+      }`,
     );
+  }
   return impact;
 }
 
@@ -157,29 +172,29 @@ function transformImpact(vuln: ChecklistVuln): number {
 function getStatus(input: string): ExecJSON.ControlResultStatus {
   const status = input.toLowerCase();
   switch (status) {
-    case 'notafinding':
-    case 'passed':
-      return ExecJSON.ControlResultStatus.Passed;
-    case 'open':
-    case 'failed':
-      return ExecJSON.ControlResultStatus.Failed;
-    case 'error':
+    case 'error': {
       return ExecJSON.ControlResultStatus.Error;
-    default:
+    }
+    case 'failed':
+    case 'open': {
+      return ExecJSON.ControlResultStatus.Failed;
+    }
+    case 'notafinding':
+    case 'passed': {
+      return ExecJSON.ControlResultStatus.Passed;
+    }
+    default: {
       return ExecJSON.ControlResultStatus.Skipped;
+    }
   }
 }
 
 function checkMessage(
   typeCheck: string,
   messageType: string,
-  message: string
-): string | null {
-  if (typeCheck === messageType) {
-    return message;
-  } else {
-    return null;
-  }
+  message: string,
+): null | string {
+  return typeCheck === messageType ? message : null;
 }
 
 /**
@@ -193,22 +208,13 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const findings = input as unknown as ExecJSON.ControlResult[];
   const results: ExecJSON.ControlResult[] = [];
   const findingDetails = findings[0].code_desc;
-  const regex =
-    /^(failed|passed|skipped|error) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*?))?$/s;
+  const regex = FINDING_DETAILS_RE;
 
   // check if code_desc is empty or does not match the above regular expression
-  if (!RegExp(regex).exec(findingDetails)) {
-    return [
-      {
-        status: findings[0].status,
-        code_desc: findings[0].code_desc,
-        start_time: ''
-      }
-    ];
-  } else {
+  if (regex.test(findingDetails)) {
     // split into multiple findings details using heimdall2 CKLExport functionality
     for (const details of findingDetails.split(
-      '\n--------------------------------\n'
+      '\n--------------------------------\n',
     )) {
       // regex of four groups (five if you count the full match) consisting of the four possible status
       // followed by any number of characters after :: TEST which represents the code_desc
@@ -216,17 +222,25 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
       // followed by any number of characters representing the message
       // split details for status
       const match = regex.exec(details.trim());
-      if (match) {
-        const [, mStatus, mCode_dec, messageType, mMessage] = match;
+      if (match?.groups) {
+        const { codeDesc, message: mMessage, messageType, status: mStatus } = match.groups;
         results.push({
-          status: getStatus(mStatus),
-          code_desc: mCode_dec,
+          code_desc: codeDesc,
           message: checkMessage('MESSAGE', messageType, mMessage),
+          skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage),
           start_time: '',
-          skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage)
+          status: getStatus(mStatus),
         });
       }
     }
+  } else {
+    return [
+      {
+        code_desc: findings[0].code_desc,
+        start_time: '',
+        status: findings[0].status,
+      },
+    ];
   }
   return results;
 }
@@ -237,33 +251,34 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   const commentString = descriptions[0].data;
   if (!commentString) {
     return results;
-  } else if (!commentString.includes(' :: ')) {
-    return [
-      {
-        label: descriptions[0].label,
-        data: descriptions[0].data
-      }
-    ];
-  } else {
-    for (const section of commentString.split(/\n(?=[A-Z]+ ::)/)) {
-      const matches = RegExp(/([A-Z]+) :: (.+)/s).exec(section);
-      if (matches) {
-        const [, label, data] = matches;
+  }
+  if (commentString.includes(' :: ')) {
+    for (const section of commentString.split(COMMENT_SECTION_SPLIT_RE)) {
+      const matches = COMMENT_SECTION_PARSE_RE.exec(section);
+      if (matches?.groups) {
+        const { data, label } = matches.groups;
         if (data) {
-          results.push({data, label: label.toLowerCase()});
+          results.push({ data, label: label.toLowerCase() });
         }
       }
     }
+  } else {
+    return [
+      {
+        data: descriptions[0].data,
+        label: descriptions[0].label,
+      },
+    ];
   }
   return results;
 }
 
-function containsChecklist(object: ExecJSON.Execution): boolean {
+function hasChecklist(object: ExecJSON.Execution): boolean {
   return _.has(object, 'passthrough.checklist');
 }
 
 export function getChecklistObjectFromHdf(
-  hdf: ExecJSON.Execution
+  hdf: ExecJSON.Execution,
 ): ChecklistObject {
   if (_.get(hdf, 'passthrough.metadata')) {
     return updateChecklistWithMetadata(hdf);
@@ -275,24 +290,24 @@ export function getChecklistObjectFromHdf(
 // consequently we have to use the arraytransformer, but that doesn't run if we provide a path at the top level of the object for the same reason as specified above, so we have to put the 'hdfSpecificData' object into the subobject 'data'
 // which we can then extract here
 function getAttributes(input: unknown[]) {
-  const passthrough = input as unknown as [{data: string}];
+  const passthrough = input as unknown as [{ data: string }];
   const data = passthrough[0].data;
-  if (!data) {
-    return [];
-  } else {
-    return JSON.parse(data).hdfSpecificData?.attributes || [];
-  }
+  return data ? JSON.parse(data).hdfSpecificData?.attributes || [] : [];
 }
 
 function getHdfSpecificDataAttribute(
   attribute: string,
-  input: string
-): {[key: string]: any}[] | string | undefined {
+  input: string,
+): null | Record<string, any>[] | string {
   const data = parseJson(input);
-  if (!data.ok) return undefined;
+  if (!data.ok) {
+    return null;
+  }
   const hdfSpecificData = _.get(data.value, 'hdfSpecificData');
-  if (!_.isObject(hdfSpecificData)) return undefined;
-  return _.get(hdfSpecificData, attribute);
+  if (!_.isObject(hdfSpecificData)) {
+    return null;
+  }
+  return (_.get(hdfSpecificData, attribute) as Record<string, any>[] | string) ?? null;
 }
 
 /**
@@ -304,23 +319,23 @@ function getHdfSpecificDataAttribute(
  * @property {string | ExecJSON.Execution} data - The input data, which can be a string of XML data or an HDF JSON execution object.
  * @property {Checklist} jsonixData - The JSON representation of the checklist data using the jsonix library.
  * @property {ChecklistObject} checklistObject - The intermediate object representation of the checklist data.
- * @property {boolean} withRaw - A flag indicating whether to include raw data in the output.
+ * @property {boolean} shouldIncludeRaw - A flag indicating whether to include raw data in the output.
  */
 export class ChecklistResults extends ChecklistJsonixConverter {
-  data: string | ExecJSON.Execution;
-  jsonixData: Checklist;
   checklistObject: ChecklistObject;
-  withRaw: boolean;
+  data: ExecJSON.Execution | string;
+  jsonixData: Checklist;
+  shouldIncludeRaw: boolean;
 
   /**
    * @param {string | ExecJSON.Execution} data - The input data, which can be either an HDF JSON object
    * or an XML CKL string, depending on the direction of the conversion.
-   * @param {boolean} [withRaw=false] - A flag indicating whether to include raw data in the output.
+   * @param {boolean} [shouldIncludeRaw=false] - A flag indicating whether to include raw data in the output.
    * Defaults to false.
    *
    * @throws Will throw an error if the asset metadata is invalid.
    */
-  constructor(data: string | ExecJSON.Execution, withRaw = false) {
+  constructor(data: ExecJSON.Execution | string, shouldIncludeRaw = false) {
     super(jsonixMapping);
     this.data = data;
 
@@ -328,7 +343,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
       this.jsonixData = super.toJsonix(data);
       this.checklistObject = super.toIntermediateObject(this.jsonixData);
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
-    } else if (containsChecklist(data)) {
+    } else if (hasChecklist(data)) {
       this.checklistObject = getChecklistObjectFromHdf(data);
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
@@ -338,7 +353,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     }
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 
   /**
@@ -353,13 +368,18 @@ export class ChecklistResults extends ChecklistJsonixConverter {
    * @method toCkl
    * @returns {string} - Converts JSON data in jsonix format to CKL (Checklist) XML format.
    */
-  toCkl(): string {
-    return xmlFormat(
-      `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
-        this.jsonixData
-      )}`,
-      {lineSeparator: '\n', collapseContent: true, indentation: '\t'}
-    );
+  toCkl(options?: { prettyPrint?: boolean }): string {
+    const raw = `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
+      this.jsonixData,
+    )}`;
+    if (options?.prettyPrint) {
+      return xmlFormat(raw, {
+        collapseContent: true,
+        indentation: '\t',
+        lineSeparator: '\n',
+      });
+    }
+    return raw;
   }
 
   /**
@@ -371,30 +391,29 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     if (numberOfStigs === 1) {
       const defaultChecklist = new ChecklistMapper(this.checklistObject);
       return defaultChecklist.toHdf();
-    } else {
-      const checklist = new ChecklistMapper(this.checklistObject);
-      const original = checklist.toHdf();
-      const parentProfileName = 'Parent Profile';
-      const parent_profile: ExecJSON.Profile = {
-        name: parentProfileName,
-        version: HeimdallToolsVersion,
-        supports: [],
-        attributes: [],
-        groups: [],
-        depends: [],
-        controls: [],
-        sha256: ''
-      };
-      for (const profile of original.profiles) {
-        parent_profile.depends?.push({name: profile.name});
-        parent_profile.controls.push(...profile.controls);
-        profile.parent_profile = parentProfileName;
-        profile.sha256 = generateHash(JSON.stringify(profile));
-      }
-      parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
-      original.profiles.unshift(parent_profile);
-      return original;
     }
+    const checklist = new ChecklistMapper(this.checklistObject);
+    const original = checklist.toHdf();
+    const parentProfileName = 'Parent Profile';
+    const parent_profile: ExecJSON.Profile = {
+      attributes: [],
+      controls: [],
+      depends: [],
+      groups: [],
+      name: parentProfileName,
+      sha256: '',
+      supports: [],
+      version: HeimdallToolsVersion,
+    };
+    for (const profile of original.profiles) {
+      parent_profile.depends?.push({ name: profile.name });
+      parent_profile.controls.push(...profile.controls);
+      profile.parent_profile = parentProfileName;
+      profile.sha256 = generateHash(JSON.stringify(profile));
+    }
+    parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
+    original.profiles.unshift(parent_profile);
+    return original;
   }
 }
 
@@ -402,75 +421,99 @@ export class ChecklistResults extends ChecklistJsonixConverter {
  * Checklist mapper
  */
 export class ChecklistMapper extends BaseConverter {
-  withRaw: boolean;
+  shouldIncludeRaw: boolean;
   mappings: MappedTransform<
-    ExecJSON.Execution & {passthrough: unknown},
+    ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
   > = {
+    passthrough: {
+      transformer: (data: ChecklistObject): Record<string, unknown> => {
+        return {
+
+          checklist: {
+            asset: data.asset,
+            stigs: data.stigs,
+          },
+          ...(this.shouldIncludeRaw && { raw: data.jsonixData }),
+        };
+      },
+    },
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion
+      release: HeimdallToolsVersion,
     },
-    version: HeimdallToolsVersion,
-    statistics: {},
     profiles: [
       {
-        path: 'stigs',
-        name: {path: 'header.stigid'},
-        version: {
-          path: 'header',
-          transformer: (input) => {
-            const ret =
-              getHdfSpecificDataAttribute('version', input.customname) ||
-              input.version;
-            return ret;
-          }
-        },
-        title: {path: 'header.title'},
-        maintainer: {
-          path: 'header.customname',
-          transformer: _.partial(getHdfSpecificDataAttribute, 'maintainer')
-        },
-        summary: {path: 'header.description'},
-        license: {path: 'header.notice'},
-        copyright: {
-          path: 'header.customname',
-          transformer: _.partial(getHdfSpecificDataAttribute, 'copyright')
-        },
-        copyright_email: {
-          path: 'header.customname',
-          transformer: _.partial(getHdfSpecificDataAttribute, 'copyright_email')
-        },
-        supports: [],
         attributes: [
           {
             arrayTransformer: getAttributes,
-            data: {path: 'header.customname'}
-          }
+            data: { path: 'header.customname' },
+          },
         ],
-        groups: [],
-        status: 'loaded',
         controls: [
           {
-            path: 'vulns',
+            code: {
+              transformer: (vulnerability: ChecklistVuln): string => {
+                const data = parseJson(vulnerability.thirdPartyTools);
+                if (data.ok) {
+                  const code = _.get(
+                    data.value,
+                    'hdfSpecificData.code',
+                  ) as unknown as string;
+                  if (code) {
+                    return code;
+                  }
+                }
+                return JSON.stringify(vulnerability, null, 2);
+              },
+            },
+            desc: { path: 'vulnDiscuss' },
+            descriptions: [
+              {
+                data: { path: 'checkContent' },
+                label: 'check',
+              },
+              {
+                data: { path: 'fixText' },
+                label: 'fix',
+              },
+              {
+                arrayTransformer: parseComments,
+                data: { path: 'comments' },
+                label: 'comments',
+              },
+            ],
+            id: { path: 'vulnNum' },
+            impact: { transformer: transformImpact },
             key: 'id',
+            path: 'vulns',
+            refs: [],
+            results: [
+              {
+                arrayTransformer: parseFindingDetails,
+                code_desc: { path: 'findingdetails' },
+                start_time: '',
+                status: {
+                  path: 'status',
+                  transformer: getStatus,
+                },
+              },
+            ],
+            source_location: {},
             tags: {
-              gtitle: {path: 'groupTitle'},
-              rid: {path: 'ruleId'},
-              gid: {path: 'vulnNum'},
-              stig_id: {path: 'ruleVer'},
               cci: {
                 path: 'cciRef',
-                transformer: cciRef
+                transformer: cciRef,
               },
+              gid: { path: 'vulnNum' },
+              gtitle: { path: 'groupTitle' },
               nist: {
                 path: 'cciRef',
-                transformer: nistTag
+                transformer: nistTag,
               },
-              severity: {
-                transformer: findSeverity
-              },
-              weight: {path: 'weight'},
+              rid: { path: 'ruleId' },
+              severity: { transformer: findSeverity },
+              stig_id: { path: 'ruleVer' },
               // following transform takes the available attributes found in a checklist vuln and if available will add to the tags.
               // first element is the label name as it will appear in UI while the second is the ChecklistObject keyname
               transformer: (input: ChecklistVuln): Record<string, unknown> => {
@@ -488,7 +531,7 @@ export class ChecklistMapper extends BaseConverter {
 
                   // does not follow above naming convention
                   // because it could be used in other converters
-                  ['severityjustification', 'severityjustification']
+                  ['severityjustification', 'severityjustification'],
                 ];
                 const fullTags: Record<string, unknown> = {};
                 for (const [key, path] of tags) {
@@ -502,80 +545,53 @@ export class ChecklistMapper extends BaseConverter {
                 // not follow above naming conventions
                 const severityOverride = findSeverityOverride(input);
                 if (severityOverride) {
-                  fullTags['severityoverride'] = severityOverride;
+                  fullTags.severityoverride = severityOverride;
                 }
                 return fullTags;
-              }
-            },
-            refs: [],
-            source_location: {},
-            title: {path: 'ruleTitle'},
-            id: {path: 'vulnNum'},
-            desc: {path: 'vulnDiscuss'},
-            descriptions: [
-              {
-                data: {path: 'checkContent'},
-                label: 'check'
               },
-              {
-                data: {path: 'fixText'},
-                label: 'fix'
-              },
-              {
-                arrayTransformer: parseComments,
-                data: {path: 'comments'},
-                label: 'comments'
-              }
-            ],
-            impact: {
-              transformer: transformImpact
+              weight: { path: 'weight' },
             },
-            code: {
-              transformer: (vulnerability: ChecklistVuln): string => {
-                const data = parseJson(vulnerability.thirdPartyTools);
-                if (data.ok) {
-                  const code = _.get(
-                    data.value,
-                    'hdfSpecificData.code'
-                  ) as unknown as string;
-                  if (code) return code;
-                }
-                return JSON.stringify(vulnerability, null, 2);
-              }
-            },
-            results: [
-              {
-                arrayTransformer: parseFindingDetails,
-                status: {
-                  path: 'status',
-                  transformer: getStatus
-                },
-                code_desc: {path: 'findingdetails'},
-                start_time: ''
-              }
-            ]
-          }
-        ],
-        sha256: ''
-      }
-    ],
-    passthrough: {
-      transformer: (data: ChecklistObject): Record<string, unknown> => {
-        return {
-          ...{
-            checklist: {
-              asset: data.asset,
-              stigs: data.stigs
-            }
+            title: { path: 'ruleTitle' },
           },
-          ...(this.withRaw && {raw: data.jsonixData})
-        };
-      }
-    }
+        ],
+        copyright: {
+          path: 'header.customname',
+          transformer: _.partial(getHdfSpecificDataAttribute, 'copyright'),
+        },
+        copyright_email: {
+          path: 'header.customname',
+          transformer: _.partial(getHdfSpecificDataAttribute, 'copyright_email'),
+        },
+        groups: [],
+        license: { path: 'header.notice' },
+        maintainer: {
+          path: 'header.customname',
+          transformer: _.partial(getHdfSpecificDataAttribute, 'maintainer'),
+        },
+        name: { path: 'header.stigid' },
+        path: 'stigs',
+        sha256: '',
+        status: 'loaded',
+        summary: { path: 'header.description' },
+        supports: [],
+        title: { path: 'header.title' },
+        version: {
+          path: 'header',
+          transformer: (input) => {
+            const ret
+              = getHdfSpecificDataAttribute('version', input.customname)
+                || input.version;
+            return ret;
+          },
+        },
+      },
+    ],
+    statistics: {},
+    version: HeimdallToolsVersion,
   };
 
-  constructor(checklistObject: ChecklistObject, withRaw = false) {
+  constructor(checklistObject: ChecklistObject, shouldIncludeRaw = false) {
     super(checklistObject);
-    this.withRaw = withRaw;
+    this.shouldIncludeRaw = shouldIncludeRaw;
   }
 }

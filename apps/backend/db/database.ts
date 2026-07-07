@@ -1,5 +1,5 @@
 import AppConfig from '../config/app_config';
 
-const appConfig = new AppConfig();
+const appConfig = AppConfig.getInstance();
 
 module.exports = appConfig.getDbConfig();

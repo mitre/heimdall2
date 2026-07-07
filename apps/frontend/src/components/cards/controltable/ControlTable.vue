@@ -1,5 +1,8 @@
 <template>
-  <v-container fluid class="font-weight-bold">
+  <v-container
+    fluid
+    class="font-weight-bold"
+  >
     <div
       ref="controlTableTitle"
       :class="
@@ -12,28 +15,57 @@
       <!-- Toolbar -->
       <v-row v-resize="onResize">
         <v-row>
-          <v-col cols="12" md="3" class="pb-0">
-            <v-card-title class="pb-0">Results View Data</v-card-title>
+          <v-col
+            cols="12"
+            md="3"
+            class="pb-0"
+          >
+            <v-card-title class="pb-0">
+              Results View Data
+            </v-card-title>
           </v-col>
           <v-spacer />
-          <v-col cols="3" md="auto" class="text-right pl-6 pb-0">
+          <v-col
+            cols="3"
+            md="auto"
+            class="text-right pl-6 pb-0"
+          >
             <v-switch
               v-model="displayUnviewedControls"
               label="Show Only Unviewed"
             />
           </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <v-switch v-model="syncTabs" label="Sync Tabs" />
+          <v-col
+            cols="3"
+            md="auto"
+            class="text-right pb-0"
+          >
+            <v-switch
+              v-model="syncTabs"
+              label="Sync Tabs"
+            />
           </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
+          <v-col
+            cols="3"
+            md="auto"
+            class="text-right pb-0"
+          >
             <v-switch
               v-model="singleExpand"
               label="Single Expand"
               @change="handleToggleSingleExpand"
             />
           </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
+          <v-col
+            cols="3"
+            md="auto"
+            class="text-right pb-0"
+          >
+            <v-switch
+              v-model="expandAll"
+              label="Expand All"
+              class="mr-5"
+            />
           </v-col>
         </v-row>
       </v-row>
@@ -71,16 +103,20 @@
                   style="cursor: pointer"
                   v-bind="attrs"
                   v-on="on"
-                  >mdi-information-outline</v-icon
                 >
+                  mdi-information-outline
+                </v-icon>
               </template>
-              <span>ID <br />(Legacy ID) </span>
+              <span>ID <br>(Legacy ID) </span>
             </v-tooltip>
           </v-row>
         </template>
 
         <template #title>
-          <ColumnHeader text="Title" sort="disabled" />
+          <ColumnHeader
+            text="Title"
+            sort="disabled"
+          />
         </template>
 
         <template #severity>
@@ -92,7 +128,10 @@
         </template>
 
         <template #tags>
-          <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
+          <ColumnHeader
+            text="800-53 Controls & CCIs"
+            sort="disabled"
+          />
         </template>
 
         <template #runTime>
@@ -144,124 +183,76 @@
 </template>
 
 <script lang="ts">
-import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
-import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
-import {HeightsModule} from '@/store/heights';
-import {getControlRunTime} from '@/utilities/delta_util';
-import {control_unique_key} from '@/utilities/format_util';
-import {ContextualizedControl, severities} from 'inspecjs';
+import type { ContextualizedControl } from 'inspecjs';
+import { severities } from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, Ref} from 'vue-property-decorator';
+import { Prop, Ref } from 'vue-property-decorator';
+import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
+import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
+import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
+import ColumnHeader, { Sort } from '@/components/generic/ColumnHeader.vue';
+import type { Filter } from '@/store/data_filters';
+import { FilteredDataModule } from '@/store/data_filters';
+import { HeightsModule } from '@/store/heights';
+import { getControlRunTime } from '@/utilities/delta_util';
+import { control_unique_key } from '@/utilities/format_util';
 
 // Tracks the visibility of an HDF control
-interface ListElt {
-  // A unique id to be used as a key.
-  key: string;
+type ListElt = {
+  control: ContextualizedControl;
 
   filename: string;
 
-  // Computed values for status and severity, for sorting
-  status_val: number;
+  // A unique id to be used as a key.
+  key: string;
   severity_val: number;
 
-  control: ContextualizedControl;
-}
+  // Computed values for status and severity, for sorting
+  status_val: number;
+};
 
 @Component({
   components: {
-    ControlRowHeader,
-    ControlRowDetails,
     ColumnHeader,
-    ResponsiveRowSwitch
-  }
+    ControlRowDetails,
+    ControlRowHeader,
+    ResponsiveRowSwitch,
+  },
 })
 export default class ControlTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
-
-  // Whether to allow multiple expansions
-  singleExpand = true;
-
-  // If the currently selected tab should sync
-  syncTabs = false;
-  syncTab = 'tab-test';
+  displayUnviewedControls = true;
 
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: string[] = [];
 
+  @Prop({ required: true, type: Object }) readonly filter!: Filter;
+  // Whether to allow multiple expansions
+  singleExpand = true;
+
   // Sorts
   sortId: Sort = 'none';
-  sortStatus: Sort = 'none';
+
+  sortRunTime: Sort = 'none';
   sortSet: Sort = 'none';
   sortSeverity: Sort = 'none';
-  sortRunTime: Sort = 'none';
+  sortStatus: Sort = 'none';
+  syncTab = 'tab-test';
 
+  // If the currently selected tab should sync
+  syncTabs = false;
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
-  displayUnviewedControls = true;
 
-  get numOfViewed() {
-    return this.raw_items.filter((elem) =>
-      this.viewedControlIds.includes(elem.key)
-    ).length;
+  get controlRowPinOffset() {
+    // There is ~10px of padding being added which makes the ControlRowHeader look out of place
+    return { top: `${this.topOfPage - 10}px` };
   }
 
-  toggleControlViewed(control: ContextualizedControl) {
-    const key = control_unique_key(control);
-    const alreadyViewed = this.viewedControlIds.indexOf(key);
-    // If the control hasn't been marked as viewed yet, mark it as viewed.
-    if (alreadyViewed === -1) {
-      this.viewedControlIds.push(key);
-    }
-    // Else, remove it from the view controls array.
-    else {
-      this.viewedControlIds.splice(alreadyViewed, 1);
-    }
-  }
-
-  mounted() {
-    this.onResize();
-  }
-
-  onResize() {
-    // Allow the page to settle before checking the controlTableHeader height
-    // (this is what $nextTick is supposed to do but it's firing too quickly)
-    setTimeout(() => {
-      HeightsModule.setControlTableHeaderHeight(
-        this.controlTableTitle?.clientHeight
-      );
-    }, 2000);
-  }
-
-  /** Callback to handle setting a new sort */
-  set_sort(column: string, newSort: Sort) {
-    this.sortId = 'none';
-    this.sortSet = 'none';
-    this.sortStatus = 'none';
-    this.sortSeverity = 'none';
-    this.sortRunTime = 'none';
-    switch (column) {
-      case 'id':
-        this.sortId = newSort;
-        break;
-      case 'status':
-        this.sortStatus = newSort;
-        break;
-      case 'set':
-        this.sortSet = newSort;
-        break;
-      case 'severity':
-        this.sortSeverity = newSort;
-        break;
-      case 'runTime':
-        this.sortRunTime = newSort;
-        break;
-    }
+  get controlTableTitleStyle() {
+    return { top: `${HeightsModule.topbarHeight}px` };
   }
 
   get expandAll() {
@@ -271,102 +262,10 @@ export default class ControlTable extends Vue {
   set expandAll(value: boolean) {
     if (value) {
       this.singleExpand = false;
-      this.expanded = this.items.map((items) => items.key);
+      this.expanded = this.items.map(items => items.key);
     } else {
       this.expanded = [];
     }
-  }
-
-  get controlTableTitleStyle() {
-    return {top: `${HeightsModule.topbarHeight}px`};
-  }
-
-  get controlRowPinOffset() {
-    // There is ~10px of padding being added which makes the ControlRowHeader look out of place
-    return {top: `${this.topOfPage - 10}px`};
-  }
-
-  // The top of the page, relative to the topbar and the title bar
-  get topOfPage() {
-    return HeightsModule.topbarHeight + HeightsModule.controlTableHeaderHeight;
-  }
-
-  /** Closes all open controls when single-expand is re-enabled */
-  async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
-    if (singleExpand) {
-      this.expandAll = false;
-    }
-  }
-
-  async updateTab(tab: string) {
-    this.syncTab = tab;
-  }
-
-  /** Toggles the given expansion of a control details panel */
-  toggle(key: string) {
-    if (this.singleExpand) {
-      // Check if key already there
-      const had = this.expanded.includes(key);
-
-      // Clear
-      this.expanded = [];
-
-      // If key is new, add it
-      if (!had) {
-        this.expanded.push(key);
-        this.jump_to_key(key);
-      }
-    } else {
-      // Add or remove it from the set, as appropriate. Shortcut this by only adding if delete fails
-      const i = this.expanded.indexOf(key);
-      if (i < 0) {
-        this.expanded.push(key);
-        this.jump_to_key(key);
-      } else {
-        this.expanded.splice(i, 1);
-      }
-    }
-  }
-
-  jump_to_key(key: string) {
-    if (!this.$vuetify.breakpoint.smAndDown) {
-      this.$nextTick(() => {
-        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {
-          offset: this.topOfPage,
-          duration: 300
-        });
-      });
-    }
-  }
-
-  striptoChars(key: string) {
-    return key.replace(/[^0-9a-z]/giv, '');
-  }
-
-  /** Return items as key, value pairs */
-  get raw_items(): ListElt[] {
-    return FilteredDataModule.controls(this.filter).map((d) => {
-      const key = control_unique_key(d);
-
-      // File, hdf wrapper
-      return {
-        key,
-        control: d,
-        status_val: [
-          'Passed',
-          'Not Applicable',
-          'No Data',
-          'Not Reviewed',
-          'Profile Error',
-          'Failed'
-        ].indexOf(d.root.hdf.status),
-        severity_val: severities.indexOf(d.root.hdf.severity),
-        filename: _.get(
-          d,
-          'sourcedFrom.sourcedFrom.from_file.filename'
-        ) as unknown as string
-      };
-    });
   }
 
   /** Return items sorted and filters out viewed controls */
@@ -387,16 +286,16 @@ export default class ControlTable extends Vue {
         factor = -1;
       }
     } else if (
-      this.sortStatus === 'ascending' ||
-      this.sortStatus === 'descending'
+      this.sortStatus === 'ascending'
+      || this.sortStatus === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) => a.status_val - b.status_val;
       if (this.sortStatus === 'ascending') {
         factor = -1;
       }
     } else if (
-      this.sortSeverity === 'ascending' ||
-      this.sortSeverity === 'descending'
+      this.sortSeverity === 'ascending'
+      || this.sortSeverity === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) => a.severity_val - b.severity_val;
       if (this.sortSeverity === 'ascending') {
@@ -408,8 +307,8 @@ export default class ControlTable extends Vue {
         factor = -1;
       }
     } else if (
-      this.sortRunTime === 'ascending' ||
-      this.sortRunTime === 'descending'
+      this.sortRunTime === 'ascending'
+      || this.sortRunTime === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) =>
         getControlRunTime(b.control) - getControlRunTime(a.control);
@@ -422,7 +321,7 @@ export default class ControlTable extends Vue {
 
     // Displays only unviewed controls.
     if (this.displayUnviewedControls) {
-      items = items.filter((val) => !this.viewedControlIds.includes(val.key));
+      items = items.filter(val => !this.viewedControlIds.includes(val.key));
     }
 
     if (sort === true) {
@@ -430,6 +329,153 @@ export default class ControlTable extends Vue {
     }
 
     return items;
+  }
+
+  get numOfViewed() {
+    return this.raw_items.filter(elem =>
+      this.viewedControlIds.includes(elem.key),
+    ).length;
+  }
+
+  /** Return items as key, value pairs */
+  get raw_items(): ListElt[] {
+    return FilteredDataModule.controls(this.filter).map((d) => {
+      const key = control_unique_key(d);
+
+      // File, hdf wrapper
+      return {
+        control: d,
+        filename: _.get(
+          d,
+          'sourcedFrom.sourcedFrom.from_file.filename',
+        ) as unknown as string,
+        key,
+        severity_val: severities.indexOf(d.root.hdf.severity),
+        status_val: [
+          'Passed',
+          'Not Applicable',
+          'No Data',
+          'Not Reviewed',
+          'Profile Error',
+          'Failed',
+        ].indexOf(d.root.hdf.status),
+      };
+    });
+  }
+
+  // The top of the page, relative to the topbar and the title bar
+  get topOfPage() {
+    return HeightsModule.topbarHeight + HeightsModule.controlTableHeaderHeight;
+  }
+
+  /** Closes all open controls when single-expand is re-enabled */
+  async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
+    if (singleExpand) {
+      this.expandAll = false;
+    }
+  }
+
+  jump_to_key(key: string) {
+    if (!this.$vuetify.breakpoint.smAndDown) {
+      this.$nextTick(() => {
+        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {
+          duration: 300,
+          offset: this.topOfPage,
+        });
+      });
+    }
+  }
+
+  mounted() {
+    this.onResize();
+  }
+
+  onResize() {
+    // Allow the page to settle before checking the controlTableHeader height
+    // (this is what $nextTick is supposed to do but it's firing too quickly)
+    setTimeout(() => {
+      HeightsModule.setControlTableHeaderHeight(
+        this.controlTableTitle?.clientHeight,
+      );
+    }, 2000);
+  }
+
+  /** Callback to handle setting a new sort */
+  set_sort(column: string, newSort: Sort) {
+    this.sortId = 'none';
+    this.sortSet = 'none';
+    this.sortStatus = 'none';
+    this.sortSeverity = 'none';
+    this.sortRunTime = 'none';
+    switch (column) {
+      case 'id': {
+        this.sortId = newSort;
+        break;
+      }
+      case 'runTime': {
+        this.sortRunTime = newSort;
+        break;
+      }
+      case 'set': {
+        this.sortSet = newSort;
+        break;
+      }
+      case 'severity': {
+        this.sortSeverity = newSort;
+        break;
+      }
+      case 'status': {
+        this.sortStatus = newSort;
+        break;
+      }
+    }
+  }
+
+  striptoChars(key: string) {
+    return key.replaceAll(/[^0-9a-z]/giv, '');
+  }
+
+  /** Toggles the given expansion of a control details panel */
+  toggle(key: string) {
+    if (this.singleExpand) {
+      // Check if key already there
+      const had = this.expanded.includes(key);
+
+      // Clear
+      this.expanded = [];
+
+      // If key is new, add it
+      if (!had) {
+        this.expanded.push(key);
+        this.jump_to_key(key);
+      }
+    } else {
+      // Add or remove it from the set, as appropriate. Shortcut this by only adding if delete fails
+      const i = this.expanded.indexOf(key);
+      if (i === -1) {
+        this.expanded.push(key);
+        this.jump_to_key(key);
+      } else {
+        this.expanded.splice(i, 1);
+      }
+    }
+  }
+
+  toggleControlViewed(control: ContextualizedControl) {
+    const key = control_unique_key(control);
+    const alreadyViewed = this.viewedControlIds.indexOf(key);
+    // If the control hasn't been marked as viewed yet, mark it as viewed.
+    if (alreadyViewed === -1) {
+      this.viewedControlIds.push(key);
+    }
+    // Else, remove it from the view controls array.
+    else {
+      this.viewedControlIds.splice(alreadyViewed, 1);
+    }
+  }
+
+  async updateTab(tab: string) {
+    this.syncTab = tab;
   }
 }
 </script>

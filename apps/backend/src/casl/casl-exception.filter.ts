@@ -1,6 +1,6 @@
-import {ForbiddenError} from '@casl/ability';
-import {ArgumentsHost, Catch, ForbiddenException} from '@nestjs/common';
-import {BaseExceptionFilter} from '@nestjs/core';
+import { ForbiddenError } from '@casl/ability';
+import { ArgumentsHost, Catch, ForbiddenException } from '@nestjs/common';
+import { BaseExceptionFilter } from '@nestjs/core';
 
 @Catch()
 export class CaslExceptionFilter extends BaseExceptionFilter {

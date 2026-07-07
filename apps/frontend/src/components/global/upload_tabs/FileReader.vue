@@ -1,13 +1,18 @@
 <template>
   <v-container fluid>
-    <v-card style="position: relative" class="elevation-0">
+    <v-card
+      style="position: relative"
+      class="elevation-0"
+    >
       <v-sheet class="d-flex bg-surface-variant">
         <v-sheet class="me-auto">
           <v-card-subtitle>
             Easily load any supported Data Format
           </v-card-subtitle>
         </v-sheet>
-        <v-sheet class="pr-1 pt-2 primary--text">Supported Formats:</v-sheet>
+        <v-sheet class="pr-1 pt-2 primary--text">
+          Supported Formats:
+        </v-sheet>
         <v-sheet>
           <v-btn
             class="pa-3 pt-4"
@@ -24,7 +29,10 @@
               mdi-information-outline
             </v-icon>
           </v-btn>
-          <v-dialog v-model="isActiveDialog" width="500">
+          <v-dialog
+            v-model="isActiveDialog"
+            width="500"
+          >
             <v-card>
               <v-card-title>Heimdall Supported Formats</v-card-title>
               <v-card-text class="text-h7">
@@ -61,13 +69,14 @@
                   For formats not supported please contact us at
                   <a
                     href="mailto:opensource@mitre.org?subject=Request Additional Format Support"
-                    >Request Additional Formats</a
-                  >
+                  >Request Additional Formats</a>
                 </v-card-text>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn @click="isActiveDialog = false">Close Dialog</v-btn>
+                <v-btn @click="isActiveDialog = false">
+                  Close Dialog
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -75,7 +84,10 @@
       </v-sheet>
       <v-container style="margin-top: 5%">
         <v-row>
-          <v-col cols="12" align="center">
+          <v-col
+            cols="12"
+            align="center"
+          >
             <v-img
               src="@/assets/logo-orange-tsp.svg"
               svg-inline
@@ -84,16 +96,28 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" align="center">
+          <v-col
+            cols="12"
+            align="center"
+          >
             <div class="d-flex flex-column justify-center">
               <span :class="title_class">Heimdall</span>
-              <span v-if="serverMode" :class="title_class">Server</span>
-              <span v-else :class="title_class">Lite</span>
+              <span
+                v-if="serverMode"
+                :class="title_class"
+              >Server</span>
+              <span
+                v-else
+                :class="title_class"
+              >Lite</span>
             </div>
           </v-col>
         </v-row>
         <v-row>
-          <v-col align="center" cols="12">
+          <v-col
+            align="center"
+            cols="12"
+          >
             <div class="caption font-weight-medium">
               <div v-if="!loading">
                 <VueFileAgent
@@ -125,20 +149,19 @@
 </template>
 
 <script lang="ts">
-import ServerMixin from '@/mixins/ServerMixin';
-import {AppInfoModule} from '@/store/app_info';
-import {FileID, InspecIntakeModule} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
-import Component, {mixins} from 'vue-class-component';
+import Component, { mixins } from 'vue-class-component';
 import vueFileAgent from 'vue-file-agent';
+import ServerMixin from '@/mixins/ServerMixin';
+import { AppInfoModule } from '@/store/app_info';
+import type { FileID } from '@/store/report_intake';
+import { InspecIntakeModule } from '@/store/report_intake';
+import { SnackbarModule } from '@/store/snackbar';
 import 'vue-file-agent/dist/vue-file-agent.css';
 
 Vue.use(vueFileAgent);
 
-interface VueFileAgentRecord {
-  file: File;
-}
+type VueFileAgentRecord = { file: File };
 
 /**
  * File reader component for taking in inspec JSON data.
@@ -147,15 +170,17 @@ interface VueFileAgentRecord {
  */
 @Component
 export default class FileReader extends mixins(ServerMixin) {
-  fileRecords: Array<VueFileAgentRecord> = [];
+  fileRecords: VueFileAgentRecord[] = [];
+  isActiveDialog = false;
   loading = false;
   percent = 0;
-  isActiveDialog = false;
 
-  filesSelected() {
-    this.loading = true;
-    this.commit_files(this.fileRecords.map((record) => record.file));
-    this.fileRecords = [];
+  get title_class(): string[] {
+    return this.$vuetify.breakpoint.mdAndUp ? ['display-4', 'px-0'] : ['display-2', 'px-0'];
+  }
+
+  get version(): string {
+    return AppInfoModule.version;
   }
 
   /** Callback for our file reader */
@@ -166,25 +191,25 @@ export default class FileReader extends mixins(ServerMixin) {
     Promise.all(
       files.map(async (file) => {
         try {
-          const fileId = await InspecIntakeModule.loadFile({file});
+          const fileId = await InspecIntakeModule.loadFile({ file });
           this.percent = Math.floor((index++ / totalFiles) * 100);
           return fileId;
-        } catch (err) {
-          SnackbarModule.failure(String(err));
+        } catch (error) {
+          SnackbarModule.failure(String(error));
           document.body.style.cursor = 'default';
         }
-      })
+      }),
     )
       // Since some HDF converters can return multiple results sets, we can sometimes have multiple file IDs returned
       .then((fileIds: (FileID | FileID[] | void)[]) => {
         const allIds: FileID[] = [];
-        fileIds.forEach((fileId) => {
+        for (const fileId of fileIds) {
           if (Array.isArray(fileId)) {
             allIds.push(...fileId.filter(Boolean));
           } else if (fileId) {
             allIds.push(fileId);
           }
-        });
+        }
         this.$emit('got-files', allIds);
       })
       .finally(() => {
@@ -194,16 +219,10 @@ export default class FileReader extends mixins(ServerMixin) {
       });
   }
 
-  get title_class(): string[] {
-    if (this.$vuetify.breakpoint.mdAndUp) {
-      return ['display-4', 'px-0'];
-    } else {
-      return ['display-2', 'px-0'];
-    }
-  }
-
-  get version(): string {
-    return AppInfoModule.version;
+  filesSelected() {
+    this.loading = true;
+    this.commit_files(this.fileRecords.map(record => record.file));
+    this.fileRecords = [];
   }
 }
 </script>

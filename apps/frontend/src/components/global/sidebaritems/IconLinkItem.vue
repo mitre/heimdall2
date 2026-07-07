@@ -1,7 +1,12 @@
 <template>
-  <v-list-item :to="link" @click="$emit('click', $event)">
+  <v-list-item
+    :to="link"
+    @click="$emit('click', $event)"
+  >
     <v-list-item-avatar>
-      <v-icon small>{{ icon }}</v-icon>
+      <v-icon small>
+        {{ icon }}
+      </v-icon>
     </v-list-item-avatar>
 
     <v-list-item-content>
@@ -13,12 +18,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
 
 @Component
 export default class IconLinkItem extends Vue {
-  @Prop({type: String, required: true}) readonly text!: string;
-  @Prop({type: String}) readonly icon!: string;
-  @Prop({type: String}) readonly link!: string;
+  @Prop({ type: String }) readonly icon!: string;
+  @Prop({ type: String }) readonly link!: string;
+  @Prop({ required: true, type: String }) readonly text!: string;
 }
 </script>

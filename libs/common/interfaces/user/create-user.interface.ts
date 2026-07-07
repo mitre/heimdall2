@@ -1,10 +1,10 @@
-export interface ICreateUser {
+export type ICreateUser = {
   readonly email: string;
-  readonly password: string;
-  readonly passwordConfirmation: string;
   readonly firstName: string | undefined;
   readonly lastName: string | undefined;
   readonly organization: string | undefined;
-  readonly title: string | undefined;
+  readonly password: string;
+  readonly passwordConfirmation: string;
   readonly role: string;
-}
+  readonly title: string | undefined;
+};

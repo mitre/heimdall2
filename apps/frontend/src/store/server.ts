@@ -1,10 +1,8 @@
-import Store from '@/store/store';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {
+import type {
   ISlimUser,
   IStartupSettings,
   IUpdateUser,
-  IUser
+  IUser,
 } from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
@@ -13,142 +11,83 @@ import {
   getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
 } from 'vuex-module-decorators';
-import {GroupsModule} from './groups';
+import Store from '@/store/store';
+import { LocalStorageVal } from '@/utilities/helper_util';
+import { GroupsModule } from './groups';
 
-const localToken = new LocalStorageVal<string | null>('auth_token');
-const localUserID = new LocalStorageVal<string | null>('localUserID');
+const localToken = new LocalStorageVal<null | string>('auth_token');
+const localUserID = new LocalStorageVal<null | string>('localUserID');
 
-export interface IServerState {
-  serverMode: boolean;
-  serverUrl: string;
-  loading: boolean;
-  token: string;
+export type IServerState = {
   banner: string;
   classificationBannerColor: string;
   classificationBannerText: string;
   classificationBannerTextColor: string;
   enabledOAuth: string[];
   externalUrl: string;
-  registrationEnabled: boolean;
-  oidcName: string;
-  ldap: boolean;
-  localLoginEnabled: boolean;
-  userInfo: IUser;
-  tenableHostUrl: string;
   forceTenableFrontend: boolean;
+  ldap: boolean;
+  loading: boolean;
+  localLoginEnabled: boolean;
+  oidcName: string;
+  registrationEnabled: boolean;
+  serverMode: boolean;
+  serverUrl: string;
   splunkHostUrl: string;
-}
+  tenableHostUrl: string;
+  token: string;
+  userInfo: IUser;
+};
 
-interface LoginData {
-  userID: string;
+type LoginData = {
   accessToken: string;
-}
+  userID: string;
+};
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'ServerModule',
+  namespaced: true,
   store: Store,
-  name: 'ServerModule'
 })
 class Server extends VuexModule implements IServerState {
+  allUsers: ISlimUser[] = [];
   apiKeysEnabled = false;
   banner = '';
   classificationBannerColor = '';
   classificationBannerText = '';
   classificationBannerTextColor = '';
-  ldap = false;
-  serverUrl = '';
-  serverMode = false;
-  registrationEnabled = true;
-  localLoginEnabled = true;
-  loading = true;
   enabledOAuth: string[] = [];
-  externalUrl: string = '';
-  allUsers: ISlimUser[] = [];
-  oidcName = '';
-  tenableHostUrl: string = '';
+  externalUrl = '';
   forceTenableFrontend = false; // If true, the frontend will use Tenable.SC Lite features
-  splunkHostUrl: string = '';
+  ldap = false;
+  loading = true;
+  localLoginEnabled = true;
+  oidcName = '';
+  registrationEnabled = true;
+  serverMode = false;
+  serverUrl = '';
+  splunkHostUrl = '';
+  tenableHostUrl = '';
   /** Our currently granted JWT token */
   token = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
   userInfo: IUser = {
-    id: '',
+    createdAt: new Date(),
+    creationMethod: '',
     email: '',
     firstName: '',
-    lastName: '',
-    title: '',
-    role: '',
-    organization: '',
-    loginCount: -1,
+    id: '',
     lastLogin: undefined,
-    creationMethod: '',
-    createdAt: new Date(),
-    updatedAt: new Date()
+    lastName: '',
+    loginCount: -1,
+    organization: '',
+    role: '',
+    title: '',
+    updatedAt: new Date(),
   };
-
-  @Mutation
-  SET_TOKEN(newToken: string) {
-    this.token = newToken;
-    localToken.set(newToken);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-  }
-
-  @Mutation
-  SET_USERID(newID: string) {
-    localUserID.set(newID);
-    this.userInfo.id = newID;
-  }
-
-  @Mutation
-  SET_STARTUP_SETTINGS(settings: IStartupSettings) {
-    this.apiKeysEnabled = settings.apiKeysEnabled;
-    this.banner = settings.banner;
-    this.classificationBannerText = settings.classificationBannerText;
-    this.classificationBannerColor = settings.classificationBannerColor;
-    this.classificationBannerTextColor = settings.classificationBannerTextColor;
-    this.enabledOAuth = settings.enabledOAuth;
-    this.externalUrl = settings.externalUrl;
-    this.registrationEnabled = settings.registrationEnabled;
-    this.oidcName = settings.oidcName;
-    this.ldap = settings.ldap;
-    this.localLoginEnabled = settings.localLoginEnabled;
-    this.tenableHostUrl = settings.tenableHostUrl;
-    this.forceTenableFrontend = settings.forceTenableFrontend;
-    this.splunkHostUrl = settings.splunkHostUrl;
-  }
-
-  @Mutation
-  SET_USER_INFO(info: IUser) {
-    this.userInfo = info;
-  }
-
-  @Mutation
-  SET_SERVER() {
-    this.serverMode = true;
-  }
-
-  @Mutation
-  SET_LOADING(loading: boolean) {
-    this.loading = loading;
-  }
-
-  @Mutation
-  SET_ALL_USERS(users: ISlimUser[]) {
-    this.allUsers = users;
-  }
-
-  @Mutation
-  CLEAR_TOKEN() {
-    localToken.clear();
-  }
-
-  @Mutation
-  CLEAR_USERID() {
-    localUserID.clear();
-  }
 
   /* Try to find the Heimdall-Server backend. We have configured the Vue dev server to
    * automatically proxy VUE_APP_API_URL, so all we need to do is check if we get a response
@@ -165,7 +104,7 @@ class Server extends VuexModule implements IServerState {
     }
 
     return axios
-      .get(`/server`)
+      .get('/server')
       .then((response) => {
         if (response.status === 200) {
           // This means the server successfully responded and we are therefore in server mode
@@ -193,64 +132,20 @@ class Server extends VuexModule implements IServerState {
       });
   }
 
-  @Action
-  public async handleLogin(data: LoginData) {
-    this.context.commit('SET_USERID', data.userID);
-    this.context.commit('SET_TOKEN', data.accessToken);
-    this.GetUserInfo();
+  @Mutation
+  CLEAR_TOKEN() {
+    localToken.clear();
+  }
+
+  @Mutation
+  CLEAR_USERID() {
+    localUserID.clear();
   }
 
   @Action
-  public async Login(userInfo: {email: string; password: string}) {
-    return axios.post<LoginData>('/authn/login', userInfo).then(({data}) => {
-      this.handleLogin(data);
-    });
-  }
-
-  @Action
-  public async LoginLDAP(userInfo: {username: string; password: string}) {
-    return axios
-      .post<LoginData>('/authn/login/ldap', userInfo)
-      .then(({data}) => {
-        this.handleLogin(data);
-      });
-  }
-
-  @Action
-  public async LoginGithub(callbackCode: string | null) {
-    return axios
-      .get<LoginData>(`/authn/github/callback`, {
-        params: {
-          code: callbackCode
-        }
-      })
-      .then(({data}) => {
-        this.handleLogin(data);
-      });
-  }
-
-  @Action
-  public async Register(userInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    passwordConfirmation: string;
-    creationMethod: string;
-  }) {
-    return axios.post('/users', userInfo);
-  }
-
-  @Action
-  public async updateUserInfo(user: {
-    id: string;
-    info: IUpdateUser;
-  }): Promise<IUser> {
-    return axios.put<IUser>(`/users/${user.id}`, user.info).then(({data}) => {
-      if (this.userInfo.id === data.id) {
-        this.context.commit('SET_USER_INFO', data);
-      }
-      return data;
+  public FetchAllUsers() {
+    return axios.get<ISlimUser[]>('/users/user-find-all').then(({ data }) => {
+      this.context.commit('SET_ALL_USERS', data);
     });
   }
 
@@ -271,17 +166,42 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public FetchAllUsers() {
-    return axios.get<ISlimUser[]>(`/users/user-find-all`).then(({data}) => {
-      this.context.commit('SET_ALL_USERS', data);
+  public async handleLogin(data: LoginData) {
+    this.context.commit('SET_USERID', data.userID);
+    this.context.commit('SET_TOKEN', data.accessToken);
+    this.GetUserInfo();
+  }
+
+  @Action
+  public async Login(userInfo: { email: string; password: string }) {
+    return axios.post<LoginData>('/authn/login', userInfo).then(({ data }) => {
+      this.handleLogin(data);
     });
+  }
+
+  @Action
+  public async LoginGithub(callbackCode: null | string) {
+    return axios
+      .get<LoginData>('/authn/github/callback', { params: { code: callbackCode } })
+      .then(({ data }) => {
+        this.handleLogin(data);
+      });
+  }
+
+  @Action
+  public async LoginLDAP(userInfo: { password: string; username: string }) {
+    return axios
+      .post<LoginData>('/authn/login/ldap', userInfo)
+      .then(({ data }) => {
+        this.handleLogin(data);
+      });
   }
 
   @Action
   public Logout(): Promise<void> {
     return axios
       .create() // Call axios.create() to skip the default interceptors setup in main.ts
-      .post(`/users/logout`)
+      .post('/users/logout')
       .then(() => {
         this.CLEAR_USERID();
         this.CLEAR_TOKEN();
@@ -291,9 +211,85 @@ class Server extends VuexModule implements IServerState {
         this.CLEAR_USERID();
         this.CLEAR_TOKEN();
         location.replace(
-          `/login?logoff=true&error=${error.response.data.message}`
+          `/login?logoff=true&error=${error.response.data.message}`,
         );
       });
+  }
+
+  @Action
+  public async Register(userInfo: {
+    creationMethod: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+    passwordConfirmation: string;
+  }) {
+    return axios.post('/users', userInfo);
+  }
+
+  @Mutation
+  SET_ALL_USERS(users: ISlimUser[]) {
+    this.allUsers = users;
+  }
+
+  @Mutation
+  SET_LOADING(loading: boolean) {
+    this.loading = loading;
+  }
+
+  @Mutation
+  SET_SERVER() {
+    this.serverMode = true;
+  }
+
+  @Mutation
+  SET_STARTUP_SETTINGS(settings: IStartupSettings) {
+    this.apiKeysEnabled = settings.apiKeysEnabled;
+    this.banner = settings.banner;
+    this.classificationBannerText = settings.classificationBannerText;
+    this.classificationBannerColor = settings.classificationBannerColor;
+    this.classificationBannerTextColor = settings.classificationBannerTextColor;
+    this.enabledOAuth = settings.enabledOAuth;
+    this.externalUrl = settings.externalUrl;
+    this.registrationEnabled = settings.registrationEnabled;
+    this.oidcName = settings.oidcName;
+    this.ldap = settings.ldap;
+    this.localLoginEnabled = settings.localLoginEnabled;
+    this.tenableHostUrl = settings.tenableHostUrl;
+    this.forceTenableFrontend = settings.forceTenableFrontend;
+    this.splunkHostUrl = settings.splunkHostUrl;
+  }
+
+  @Mutation
+  SET_TOKEN(newToken: string) {
+    this.token = newToken;
+    localToken.set(newToken);
+    axios.defaults.headers.common.Authorization = `Bearer ${newToken}`;
+  }
+
+  @Mutation
+  SET_USER_INFO(info: IUser) {
+    this.userInfo = info;
+  }
+
+  @Mutation
+  SET_USERID(newID: string) {
+    localUserID.set(newID);
+    this.userInfo.id = newID;
+  }
+
+  @Action
+  public async updateUserInfo(user: {
+    id: string;
+    info: IUpdateUser;
+  }): Promise<IUser> {
+    return axios.put<IUser>(`/users/${user.id}`, user.info).then(({ data }) => {
+      if (this.userInfo.id === data.id) {
+        this.context.commit('SET_USER_INFO', data);
+      }
+      return data;
+    });
   }
 }
 

@@ -13,8 +13,16 @@
         @click="toggleFilter(card.title)"
       >
         <v-card-title>
-          <v-icon large left>mdi-{{ card.icon }}</v-icon>
-          <span class="title" data-cy="cardText">{{
+          <v-icon
+            large
+            left
+          >
+            mdi-{{ card.icon }}
+          </v-icon>
+          <span
+            class="title"
+            data-cy="cardText"
+          >{{
             card.title + ': ' + card.number
           }}</span>
         </v-card-title>
@@ -23,7 +31,7 @@
     </v-col>
     <v-col
       v-if="
-        profileErrorProps.number && currentStatusFilter.indexOf('Waived') == -1
+        profileErrorProps.number && !currentStatusFilter.includes('Waived')
       "
       cols="12"
     >
@@ -34,7 +42,12 @@
       >
         <div>
           <v-card-title>
-            <v-icon class="pr-3" large>mdi-{{ profileErrorProps.icon }}</v-icon>
+            <v-icon
+              class="pr-3"
+              large
+            >
+              mdi-{{ profileErrorProps.icon }}
+            </v-icon>
             <span class="title">{{
               `ALERT: ${profileErrorProps.number} ${profileErrorProps.title}s`
             }}</span>
@@ -43,7 +56,7 @@
         </div>
         <v-card-actions>
           <v-btn
-            :disabled="filter.status.indexOf('Profile Error') !== -1"
+            :disabled="filter.status.includes('Profile Error')"
             @click="$emit('show-errors')"
           >
             Filter to Errors
@@ -54,7 +67,7 @@
     <v-col
       v-if="
         waivedProfiles.number &&
-        currentStatusFilter.indexOf('Profile Error') == -1
+          !currentStatusFilter.includes('Profile Error')
       "
       cols="12"
     >
@@ -65,7 +78,12 @@
       >
         <div>
           <v-card-title>
-            <v-icon class="pr-3" large>mdi-{{ waivedProfiles.icon }}</v-icon>
+            <v-icon
+              class="pr-3"
+              large
+            >
+              mdi-{{ waivedProfiles.icon }}
+            </v-icon>
             <span class="title">{{
               `INFO: ${waivedProfiles.number} ${waivedProfiles.title} Tests`
             }}</span>
@@ -74,7 +92,7 @@
         </div>
         <v-card-actions>
           <v-btn
-            :disabled="filter.status.indexOf('Waived') !== -1"
+            :disabled="filter.status.includes('Waived')"
             @click="$emit('show-waived')"
           >
             Filter to Waived
@@ -86,29 +104,44 @@
 </template>
 
 <script lang="ts">
-import {ExtendedControlStatus, Filter} from '@/store/data_filters';
-import {StatusCountModule} from '@/store/status_counts';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
+import type { ExtendedControlStatus, Filter } from '@/store/data_filters';
+import { StatusCountModule } from '@/store/status_counts';
 
-interface CardProps {
+type CardProps = {
+  color: string;
   icon: string;
-  title: ExtendedControlStatus;
   number: number;
   subtitle: string;
-  color: string;
-}
+  title: ExtendedControlStatus;
+};
 
 @Component
 export default class StatusCardRow extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @Prop({type: Array, required: false}) readonly currentStatusFilter!: Filter;
+  @Prop({ required: false, type: Array }) readonly currentStatusFilter!: Filter;
+  @Prop({ required: true, type: Object }) readonly filter!: Filter;
 
   get overlayRemovedFilter(): Filter {
     return {
       fromFile: this.filter.fromFile,
-      omit_overlayed_controls: this.filter.omit_overlayed_controls
+      omit_overlayed_controls: this.filter.omit_overlayed_controls,
+    };
+  }
+
+  get profileErrorProps(): CardProps | null {
+    // Want to ignore existing status filter
+    const filter = {
+      ...this.filter,
+      status: [],
+    };
+    return {
+      color: 'statusProfileError',
+      icon: 'alert',
+      number: StatusCountModule.countOf(filter, 'Profile Error'),
+      subtitle: 'Errors running test - check profile run privileges or check with the author of profile.',
+      title: 'Profile Error',
     };
   }
 
@@ -116,91 +149,76 @@ export default class StatusCardRow extends Vue {
   get standardCardProps(): CardProps[] {
     return [
       {
+        color: 'statusPassed',
         icon: 'check-circle',
-        title: 'Passed',
+        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Passed'),
         subtitle: `${StatusCountModule.countOf(
           this.overlayRemovedFilter,
-          'PassedTests'
+          'PassedTests',
         )} individual checks passed`,
-        color: 'statusPassed',
-        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Passed')
+        title: 'Passed',
       },
       {
+        color: 'statusFailed',
         icon: 'close-circle',
-        title: 'Failed',
+        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Failed'),
         subtitle: `${StatusCountModule.countOf(
           this.overlayRemovedFilter,
-          'PassingTestsFailedControl'
+          'PassingTestsFailedControl',
         )} individual checks passed, ${StatusCountModule.countOf(
           this.overlayRemovedFilter,
-          'FailedTests'
+          'FailedTests',
         )} failed out of ${
           StatusCountModule.countOf(
             this.overlayRemovedFilter,
-            'PassingTestsFailedControl'
-          ) +
-          StatusCountModule.countOf(this.overlayRemovedFilter, 'FailedTests')
+            'PassingTestsFailedControl',
+          )
+          + StatusCountModule.countOf(this.overlayRemovedFilter, 'FailedTests')
         } total checks`,
-        color: 'statusFailed',
-        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Failed')
+        title: 'Failed',
       },
       {
-        icon: 'minus-circle',
-        title: 'Not Applicable',
-        subtitle: `System exception or absent component`,
         color: 'statusNotApplicable',
+        icon: 'minus-circle',
         number: StatusCountModule.countOf(
           this.overlayRemovedFilter,
-          'Not Applicable'
-        )
+          'Not Applicable',
+        ),
+        subtitle: 'System exception or absent component',
+        title: 'Not Applicable',
       },
       {
-        icon: 'alert-circle',
-        title: 'Not Reviewed',
-        subtitle: `Can only be tested manually at this time`,
         color: 'statusNotReviewed',
+        icon: 'alert-circle',
         number: StatusCountModule.countOf(
           this.overlayRemovedFilter,
-          'Not Reviewed'
-        )
-      }
+          'Not Reviewed',
+        ),
+        subtitle: 'Can only be tested manually at this time',
+        title: 'Not Reviewed',
+      },
     ];
-  }
-
-  get profileErrorProps(): CardProps | null {
-    // Want to ignore existing status filter
-    const filter = {
-      ...this.filter,
-      status: []
-    };
-    return {
-      icon: 'alert',
-      title: 'Profile Error',
-      subtitle: `Errors running test - check profile run privileges or check with the author of profile.`,
-      color: 'statusProfileError',
-      number: StatusCountModule.countOf(filter, 'Profile Error')
-    };
   }
 
   get waivedProfiles(): CardProps | null {
     return {
-      icon: 'alert-circle',
-      title: 'Waived',
-      subtitle: `Consider using an overlay or manual attestation to properly address this control.`,
       color: 'statusNotApplicable',
+      icon: 'alert-circle',
       number: StatusCountModule.countOf(
-        {fromFile: this.filter.fromFile},
-        'Waived'
-      )
+        { fromFile: this.filter.fromFile },
+        'Waived',
+      ),
+      subtitle: 'Consider using an overlay or manual attestation to properly address this control.',
+      title: 'Waived',
     };
   }
 
   getCardColor(card: CardProps): string {
     if (
-      this.filter.status?.length === 0 ||
-      this.filter.status?.some(
-        (statusFilter) =>
-          statusFilter.toLowerCase() === card.title.toLowerCase()
+      this.filter.status?.length === 0
+      || this.filter.status?.some(
+        statusFilter =>
+          statusFilter.toLowerCase() === card.title.toLowerCase(),
       )
     ) {
       return card.color;

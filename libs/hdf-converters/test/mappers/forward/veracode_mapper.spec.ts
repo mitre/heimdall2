@@ -1,14 +1,14 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
-import {VeracodeMapper} from '../../../src/veracode-mapper';
-import {omitVersions} from '../../utils';
+import { describe, expect, it } from 'vitest';
+import { VeracodeMapper } from '../../../src/veracode-mapper';
+import { loadFixture, omitVersions } from '../../utils';
 describe('veracode_mapper', () => {
   it('Successfully converts Veracode reports', () => {
     const mapper = new VeracodeMapper(
       fs.readFileSync(
         'sample_jsons/veracode_mapper/sample_input_report/veracode.xml',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -17,13 +17,7 @@ describe('veracode_mapper', () => {
     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync('sample_jsons/veracode_mapper/veracode-hdf.json', {
-            encoding: 'utf-8'
-          })
-        )
-      )
+      omitVersions(loadFixture('sample_jsons/veracode_mapper/veracode-hdf.json')),
     );
   });
 });

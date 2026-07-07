@@ -13,7 +13,10 @@
         {{ role }}
       </v-card-title>
       <v-card-text>
-        <Users v-model="selectedGroupUsers" :editable="false" />
+        <Users
+          v-model="selectedGroupUsers"
+          :editable="false"
+        />
       </v-card-text>
       <v-card-actions>
         <v-col class="text-right">
@@ -31,34 +34,26 @@
 </template>
 
 <script lang="ts">
-import Users from '@/components/global/groups/Users.vue';
-import {ISlimUser} from '@heimdall/common/interfaces';
+import type { ISlimUser } from '@heimdall/common/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, VModel} from 'vue-property-decorator';
+import { Prop, VModel } from 'vue-property-decorator';
+import Users from '@/components/global/groups/Users.vue';
 
-@Component({
-  components: {
-    Users
-  }
-})
+@Component({ components: { Users } })
 export default class GroupUsers extends Vue {
-  @VModel({type: Array, required: true}) selectedGroupUsers!: ISlimUser[];
-  @Prop({type: Boolean, default: false}) readonly dialogDisplayUsers!: boolean;
+  @Prop({ default: false, type: Boolean }) readonly dialogDisplayUsers!: boolean;
+  @VModel({ required: true, type: Array }) selectedGroupUsers!: ISlimUser[];
 
   get role() {
-    if (
-      this.selectedGroupUsers.length > 0 &&
-      this.selectedGroupUsers[0].groupRole
-    ) {
-      return (
-        this.selectedGroupUsers[0].groupRole.charAt(0).toUpperCase() +
-        this.selectedGroupUsers[0].groupRole.slice(1) +
-        's'
-      );
-    } else {
-      return 'Members';
-    }
+    return this.selectedGroupUsers.length > 0
+      && this.selectedGroupUsers[0].groupRole
+      ? (
+        this.selectedGroupUsers[0].groupRole.charAt(0).toUpperCase()
+        + this.selectedGroupUsers[0].groupRole.slice(1)
+        + 's'
+      )
+      : 'Members';
   }
 }
 </script>

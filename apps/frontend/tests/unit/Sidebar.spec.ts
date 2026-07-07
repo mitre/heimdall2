@@ -1,13 +1,14 @@
-import Sidebar from '@/components/global/Sidebar.vue';
-import {FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
-import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils';
-import {beforeAll, describe, expect, it} from 'vitest';
-import Vue from 'vue';
+import type { Wrapper } from '@vue/test-utils';
+import { createLocalVue, shallowMount } from '@vue/test-utils';
+import { beforeAll, describe, expect, it } from 'vitest';
+import type Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
-import {EvaluationFile, ProfileFile} from '../../src/store/report_intake';
-import {loadAll} from '../util/testingUtils';
+import Sidebar from '@/components/global/Sidebar.vue';
+import { FilteredDataModule } from '@/store/data_filters';
+import { InspecDataModule } from '@/store/data_store';
+import type { EvaluationFile, ProfileFile } from '../../src/store/report_intake';
+import { loadAll } from '../util/testingUtils';
 
 const vuetify = new Vuetify();
 const localVue = createLocalVue();
@@ -16,9 +17,9 @@ const router = new VueRouter();
 
 const wrapper: Wrapper<Vue> = shallowMount(Sidebar, {
   localVue,
+  propsData: {},
   router,
   vuetify,
-  propsData: {}
 });
 
 describe('Sidebar tests', () => {
@@ -29,72 +30,54 @@ describe('Sidebar tests', () => {
   it('has the correct number of sidebar links', () => {
     expect(
       (
-        wrapper.vm as Vue & {
-          visible_evaluation_files: EvaluationFile[];
-        }
-      ).visible_evaluation_files.length
+        wrapper.vm as Vue & { visible_evaluation_files: EvaluationFile[] }
+      ).visible_evaluation_files.length,
     ).toBe(InspecDataModule.allEvaluationFiles.length);
     expect(
       (
-        wrapper.vm as Vue & {
-          visible_profile_files: ProfileFile[];
-        }
-      ).visible_profile_files.length
+        wrapper.vm as Vue & { visible_profile_files: ProfileFile[] }
+      ).visible_profile_files.length,
     ).toBe(InspecDataModule.allProfileFiles.length);
   });
 
   it('displays properly when select/deselect is clicked', () => {
     // deselect all profiles and evaluations
     (
-      wrapper.vm as Vue & {
-        toggle_all_profiles: () => void;
-      }
+      wrapper.vm as Vue & { toggle_all_profiles: () => void }
     ).toggle_all_profiles();
     (
-      wrapper.vm as Vue & {
-        toggle_all_evaluations: () => void;
-      }
+      wrapper.vm as Vue & { toggle_all_evaluations: () => void }
     ).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids).toEqual([]);
 
     // select all profiles and evaluations
     (
-      wrapper.vm as Vue & {
-        toggle_all_profiles: () => void;
-      }
+      wrapper.vm as Vue & { toggle_all_profiles: () => void }
     ).toggle_all_profiles();
     (
-      wrapper.vm as Vue & {
-        toggle_all_evaluations: () => void;
-      }
+      wrapper.vm as Vue & { toggle_all_evaluations: () => void }
     ).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids.length).toEqual(
-      InspecDataModule.allFiles.length
+      InspecDataModule.allFiles.length,
     );
 
     // select profiles only
     (
-      wrapper.vm as Vue & {
-        toggle_all_evaluations: () => void;
-      }
+      wrapper.vm as Vue & { toggle_all_evaluations: () => void }
     ).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids.length).toEqual(
-      InspecDataModule.allProfileFiles.length
+      InspecDataModule.allProfileFiles.length,
     );
 
     // select evaluations only
     (
-      wrapper.vm as Vue & {
-        toggle_all_profiles: () => void;
-      }
+      wrapper.vm as Vue & { toggle_all_profiles: () => void }
     ).toggle_all_profiles();
     (
-      wrapper.vm as Vue & {
-        toggle_all_evaluations: () => void;
-      }
+      wrapper.vm as Vue & { toggle_all_evaluations: () => void }
     ).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids.length).toEqual(
-      InspecDataModule.allEvaluationFiles.length
+      InspecDataModule.allEvaluationFiles.length,
     );
   });
 });

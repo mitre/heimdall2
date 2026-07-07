@@ -1,10 +1,11 @@
-export {
-  ControlGroup,
-  Convert,
-  Dependency as ProfileDependency,
-  ProfileJSON as Profile,
+export type {
   ProfileJSONControl as Control,
+  ControlGroup,
+  ProfileJSON as Profile,
+  Dependency as ProfileDependency,
   Reference,
   SourceLocation,
-  SupportedPlatform
+  SupportedPlatform,
 } from '../../generated_parsers/v_1_0/profile-json';
+
+export { Convert } from '../../generated_parsers/v_1_0/profile-json';

@@ -35,32 +35,15 @@
 </template>
 
 <script lang="ts">
-import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
-import {SearchModule} from '@/store/search';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Watch} from 'vue-property-decorator';
+import { Watch } from 'vue-property-decorator';
+import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
+import { SearchModule } from '@/store/search';
 
-@Component({
-  components: {
-    SearchHelpModal
-  }
-})
+@Component({ components: { SearchHelpModal } })
 export default class SearchBar extends Vue {
-  $refs!: {
-    search: HTMLInputElement;
-  };
-
-  /**
-   * The current search terms, as modeled by the search bar
-   */
-  get searchTerm(): string {
-    return SearchModule.searchTerm;
-  }
-
-  set searchTerm(term: string) {
-    SearchModule.updateSearch(term);
-  }
+  $refs!: { search: HTMLInputElement };
 
   /** If we are currently showing the search help modal */
   showSearchHelp = false;
@@ -76,13 +59,14 @@ export default class SearchBar extends Vue {
   }, 0);
 
   /**
-   * Handles focusing on the search bar
+   * The current search terms, as modeled by the search bar
    */
-  showSearch(): void {
-    this.showSearchMobile = true;
-    this.$nextTick(() => {
-      this.$refs.search.focus();
-    });
+  get searchTerm(): string {
+    return SearchModule.searchTerm;
+  }
+
+  set searchTerm(term: string) {
+    SearchModule.updateSearch(term);
   }
 
   @Watch('isTyping')
@@ -96,6 +80,16 @@ export default class SearchBar extends Vue {
       clearTimeout(this.typingTimer);
     }
     this.typingTimer = setTimeout(this.onDoneTyping, 100);
+  }
+
+  /**
+   * Handles focusing on the search bar
+   */
+  showSearch(): void {
+    this.showSearchMobile = true;
+    this.$nextTick(() => {
+      this.$refs.search.focus();
+    });
   }
 }
 </script>

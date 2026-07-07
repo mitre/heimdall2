@@ -4,40 +4,33 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import Vuetify from 'vuetify/lib';
-import {Resize} from 'vuetify/lib/directives';
+import { Resize } from 'vuetify/lib/directives';
 import App from '@/App.vue';
 import vuetify from '@/plugins/vuetify';
 import router from '@/router';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
 import store from '@/store/store';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueCookies);
-Vue.use(Vuetify, {
-  directives: {
-    Resize
-  }
-});
+Vue.use(Vuetify, { directives: { Resize } });
 
 new Vue({
-  router,
-  store,
-  vuetify,
   created() {
     axios.interceptors.response.use(
-      (response) => response, // simply return the response
+      response => response, // simply return the response
       (error) => {
-        const origin =
-          URL.parse(error?.config?.url, globalThis.location.origin)?.origin ??
-          '';
+        const origin
+          = URL.parse(error?.config?.url, globalThis.location.origin)?.origin
+            ?? '';
         // If there is no backend token then it is safe to assume this request
         // originated from the login page and should not perform the logout action.
         if (
-          origin === ServerModule.externalUrl &&
-          ServerModule.token !== '' &&
-          error?.response?.status === 401
+          origin === ServerModule.externalUrl
+          && ServerModule.token !== ''
+          && error?.response?.status === 401
         ) {
           // if we catch a 401 error
           ServerModule.Logout();
@@ -45,19 +38,22 @@ new Vue({
           SnackbarModule.HTTPFailure(error);
         }
         return Promise.reject(error); // reject the Promise with the error as the reason
-      }
+      },
     );
   },
-  render: (h) => h(App)
+  render: h => h(App),
+  router,
+  store,
+  vuetify,
 }).$mount('#app');
 
 // The following line is a hot patch to add regex support, there are better
 // places to edit Prism variables, but could not locate them. Namely this is
 // the Prism library variables, and not the Prism component variables
-//@ts-ignore
-Prism.languages['rb'] = {
+// @ts-ignore
+Prism.languages.rb = {
   'token-name': {
     pattern:
-      /(?<quote>["'])(?:\k<quote>|(?:(?![^\\]\k<quote>)[\s\S])*[^\\]\k<quote>)/gv
-  }
+      /(?<quote>["'])(?:\k<quote>|(?:(?![^\\]\k<quote>)[\s\S])*[^\\]\k<quote>)/gv,
+  },
 };

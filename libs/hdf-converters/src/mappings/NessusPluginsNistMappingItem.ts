@@ -1,28 +1,19 @@
-import {INESSUSJSONID} from './NessusPluginsNistMapping';
+import type { INESSUSJSONID } from './NessusPluginsNistMapping';
 
 export class NessusPluginsNistMappingItem {
+  nistId: string;
   pluginFamily: string;
   pluginId: string;
-  nistId: string;
 
   constructor(values: INESSUSJSONID) {
-    if (values['pluginFamily'] === undefined) {
+    if (values.pluginFamily === undefined) {
       throw new Error(
-        'Nessus Plugins Nist Mapping Data must contain a plugin family.'
+        'Nessus Plugins Nist Mapping Data must contain a plugin family.',
       );
-    } else {
-      this.pluginFamily = values['pluginFamily'];
     }
+    this.pluginFamily = values.pluginFamily;
     // Could be a string "*" or a number
-    if (typeof values['pluginID'] === 'string') {
-      this.pluginId = values['pluginID'];
-    } else {
-      this.pluginId = values['pluginID'].toString();
-    }
-    if (values['NIST-ID'] === undefined) {
-      this.nistId = '';
-    } else {
-      this.nistId = values['NIST-ID'];
-    }
+    this.pluginId = typeof values.pluginID === 'string' ? values.pluginID : values.pluginID.toString();
+    this.nistId = values['NIST-ID'] === undefined ? '' : values['NIST-ID'];
   }
 }

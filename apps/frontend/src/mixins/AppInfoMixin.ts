@@ -1,10 +1,10 @@
-import {AppInfoModule} from '@/store/app_info';
-import {Component, Vue} from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
+import { AppInfoModule } from '@/store/app_info';
 
 @Component({})
 export default class AppInfoMixin extends Vue {
-  get version(): string {
-    return AppInfoModule.version;
+  get branch(): string {
+    return AppInfoModule.branch;
   }
 
   get changelog(): string {
@@ -15,7 +15,7 @@ export default class AppInfoMixin extends Vue {
     return AppInfoModule.repository;
   }
 
-  get branch(): string {
-    return AppInfoModule.branch;
+  get version(): string {
+    return AppInfoModule.version;
   }
 }

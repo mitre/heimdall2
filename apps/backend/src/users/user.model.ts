@@ -11,85 +11,85 @@ import {
   PrimaryKey,
   Table,
   Unique,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
-import {GroupUser} from '../group-users/group-user.model';
-import {Group} from '../groups/group.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { Group } from '../groups/group.model';
 
 @Table
 export class User extends Model {
-  @PrimaryKey
-  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.BIGINT)
-  declare id: string;
+  @Column(DataType.DATE)
+  @CreatedAt
+  declare createdAt: Date;
 
-  @Unique
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  declare creationMethod: string;
+
+  @AllowNull(false)
+  @Column(DataType.STRING)
   @IsEmail
-  @AllowNull(false)
-  @Column(DataType.STRING)
+  @Unique
   declare email: string;
-
-  @AllowNull(true)
-  @Column(DataType.STRING)
-  declare firstName: string | undefined;
-
-  @AllowNull(true)
-  @Column(DataType.STRING)
-  declare lastName: string | undefined;
-
-  @AllowNull(true)
-  @Column(DataType.STRING)
-  declare organization: string | undefined;
-
-  @AllowNull(true)
-  @Column(DataType.STRING)
-  declare title: string | undefined;
 
   @AllowNull(false)
   @Column(DataType.STRING)
   declare encryptedPassword: string;
 
   @AllowNull(true)
+  @Column(DataType.STRING)
+  declare firstName: string | undefined;
+
+  @AllowNull(true)
   @Column(DataType.BOOLEAN)
   declare forcePasswordChange: boolean | undefined;
+
+  @BelongsToMany(() => Group, () => GroupUser)
+  declare groups: (Group & { GroupUser: GroupUser })[];
+
+  @AllowNull(false)
+  @AutoIncrement
+  @Column(DataType.BIGINT)
+  @PrimaryKey
+  declare id: string;
+
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  declare jwtSecret: string;
 
   @AllowNull(true)
   @Column(DataType.DATE)
   declare lastLogin: Date | undefined;
 
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  declare lastName: string | undefined;
+
   @AllowNull(false)
-  @Default(0)
   @Column(DataType.BIGINT)
+  @Default(0)
   declare loginCount: number;
+
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  declare organization: string | undefined;
 
   @AllowNull(true)
   @Column(DataType.DATE)
   declare passwordChangedAt: Date | undefined;
 
   @AllowNull(false)
+  @Column(DataType.STRING)
   @Default('user')
-  @Column(DataType.STRING)
   declare role: string;
-
-  @AllowNull(false)
-  @Column(DataType.STRING)
-  declare creationMethod: string;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  declare jwtSecret: string;
+  declare title: string | undefined;
 
-  @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  declare createdAt: Date;
-
   @UpdatedAt
-  @AllowNull(false)
-  @Column(DataType.DATE)
   declare updatedAt: Date;
-
-  @BelongsToMany(() => Group, () => GroupUser)
-  declare groups: Array<Group & {GroupUser: GroupUser}>;
 }

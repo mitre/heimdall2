@@ -1,80 +1,123 @@
 import * as XLSX from '@e965/xlsx';
-import {ExecJSON} from 'inspecjs';
-import {
+import { ExecJSON } from 'inspecjs';
+import { ControlResultStatus } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import type {
   AttestationData,
-  ControlResultStatus,
-  ControlAttestationStatus
+  ControlAttestationStatus,
 } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import * as _ from 'lodash';
 import moment from 'moment';
 
+const CUSTOM_FREQUENCY_RE = /(?<value>\d{1,10}(?:.\d{0,10})?)\s{0,10}(?<unit>[a-z])/v;
+
 // Convert from using enum type to enum values
-export type Attestation = Omit<AttestationData, 'status'> & {
-  status: `${ControlAttestationStatus}`;
-};
+export type Attestation = Omit<AttestationData, 'status'> & { status: `${ControlAttestationStatus}` };
+
+export function addAttestationToHDF(
+  hdf: ExecJSON.Execution,
+  attestations: Attestation[],
+): ExecJSON.Execution {
+  for (const attestation of attestations) {
+    let isFound_control = false;
+    for (const profile of hdf.profiles) {
+      for (const control of profile.controls) {
+        if (attestationCanBeAdded(attestation, control)) {
+          isFound_control = true;
+          if (['failed', 'passed'].includes(attestation.status)) {
+            control.attestation_data
+              = attestation as unknown as AttestationData;
+            control.results.push(convertAttestationToSegment(attestation));
+          } else {
+            console.error(
+              `Invalid attestation status for Control ${control.id}: ${attestation.status} - Status must be passed or failed. To make this control 'not applicable', use a waiver.`,
+            );
+          }
+        }
+      }
+    }
+    if (!isFound_control) {
+      console.error(
+        `Attestation cannot be added for control ${attestation.control_id}. Skipping attestation.`,
+      );
+    }
+  }
+  return hdf;
+}
 
 export function advanceDate(
   date: moment.Moment,
-  frequency: string
+  frequency: string,
 ): moment.Moment {
   switch (frequency) {
-    case 'annually':
+    case 'annually': {
       date.add(1, 'year');
       break;
-    case 'semiannually':
-      date.add(6, 'months');
-      break;
-    case 'quarterly':
-      date.add(3, 'months');
-      break;
-    case 'monthly':
-      date.add(1, 'month');
-      break;
-    case 'every2weeks':
-      date.add(2, 'weeks');
-      break;
-    case 'fortnightly':
-      date.add(2, 'weeks');
-      break;
-    case 'weekly':
-      date.add(1, 'week');
-      break;
-    case 'every3days':
-      date.add(3, 'day');
-      break;
-    case 'daily':
+    }
+    case 'daily': {
       date.add(1, 'day');
       break;
+    }
+    case 'every2weeks': {
+      date.add(2, 'weeks');
+      break;
+    }
+    case 'every3days': {
+      date.add(3, 'day');
+      break;
+    }
+    case 'fortnightly': {
+      date.add(2, 'weeks');
+      break;
+    }
+    case 'monthly': {
+      date.add(1, 'month');
+      break;
+    }
+    case 'quarterly': {
+      date.add(3, 'months');
+      break;
+    }
+    case 'semiannually': {
+      date.add(6, 'months');
+      break;
+    }
+    case 'weekly': {
+      date.add(1, 'week');
+      break;
+    }
     default: {
       // a number followed by d/w/m/y, with or without spaces in between
       // 10 character limit on number of digits and characters to prevent security issues with regex
-      const re = /(\d{1,10}(?:.\d{0,10})?)(\s{0,10})([a-z])/;
-      const match = re.exec(frequency);
+      const match = CUSTOM_FREQUENCY_RE.exec(frequency);
 
       if (!match) {
         throw new Error(
-          'Unknown date format: ' +
-            frequency +
-            '. Please use a number followed by d/w/m/y to indicate days, weeks, months, or years, e.g. 1d/2w/3m/1y/custom.'
+          'Unknown date format: '
+          + frequency
+          + '. Please use a number followed by d/w/m/y to indicate days, weeks, months, or years, e.g. 1d/2w/3m/1y/custom.',
         );
       }
 
-      const number = match[1];
-      const unit = match[3];
+      const number = match.groups!.value;
+      const unit = match.groups!.unit;
       // add inputted amount of time
       switch (unit) {
-        case 'd':
+        case 'd': {
           date.add(number, 'days');
           break;
-        case 'w':
-          date.add(number, 'weeks');
-          break;
-        case 'm':
+        }
+        case 'm': {
           date.add(number, 'months');
           break;
-        case 'y':
+        }
+        case 'w': {
+          date.add(number, 'weeks');
+          break;
+        }
+        case 'y': {
           date.add(number, 'years');
           break;
+        }
       }
       break;
     }
@@ -82,13 +125,43 @@ export function advanceDate(
   return date;
 }
 
+export function convertAttestationToSegment(
+  attestation: Attestation,
+): ExecJSON.ControlResult {
+  const expirationDate = advanceDate(
+    moment(attestation.updated),
+    attestation.frequency,
+  );
+
+  if (expirationDate.isBefore(new Date())) {
+    console.log(
+      `Warning: Attestation Expired: ${
+        attestation.control_id
+      } (Expired at ${expirationDate.toString()})`,
+    );
+    return {
+      code_desc:
+        'Manual verification status provided through attestation has expired',
+      message: createAttestationMessage(attestation, true),
+      start_time: new Date().toISOString(),
+      status: ExecJSON.ControlResultStatus.Skipped,
+    };
+  }
+  return {
+    code_desc: 'Manually verified status provided through attestation',
+    message: createAttestationMessage(attestation, false),
+    start_time: new Date().toISOString(),
+    status: attestation.status as ControlResultStatus,
+  };
+}
+
 export function createAttestationMessage(
   attestation: Attestation,
-  expired: boolean
+  isExpired: boolean,
 ) {
   let message = '';
 
-  if (expired) {
+  if (isExpired) {
     message += 'Expired Attestation:\n';
     message += `Expired Status: ${attestation.status}\n`;
     message += `Expired Explanation: ${attestation.explanation}\n\n`;
@@ -105,93 +178,29 @@ export function createAttestationMessage(
   return message;
 }
 
-export function convertAttestationToSegment(
-  attestation: Attestation
-): ExecJSON.ControlResult {
-  const expirationDate = advanceDate(
-    moment(attestation.updated),
-    attestation.frequency
-  );
-
-  if (expirationDate.isBefore(new Date())) {
-    console.log(
-      `Warning: Attestation Expired: ${
-        attestation.control_id
-      } (Expired at ${expirationDate.toString()})`
-    );
-    return {
-      code_desc:
-        'Manual verification status provided through attestation has expired',
-      status: ExecJSON.ControlResultStatus.Skipped,
-      message: createAttestationMessage(attestation, true),
-      start_time: new Date().toISOString()
-    };
-  } else {
-    return {
-      code_desc: 'Manually verified status provided through attestation',
-      status: attestation.status as ControlResultStatus,
-      message: createAttestationMessage(attestation, false),
-      start_time: new Date().toISOString()
-    };
-  }
-}
-
-export function addAttestationToHDF(
-  hdf: ExecJSON.Execution,
-  attestations: Attestation[]
-): ExecJSON.Execution {
-  for (const attestation of attestations) {
-    let found_control = false;
-    for (const profile of hdf.profiles) {
-      for (const control of profile.controls) {
-        if (attestationCanBeAdded(attestation, control)) {
-          found_control = true;
-          if (['passed', 'failed'].includes(attestation.status)) {
-            control.attestation_data =
-              attestation as unknown as AttestationData;
-            control.results.push(convertAttestationToSegment(attestation));
-          } else {
-            console.error(
-              `Invalid attestation status for Control ${control.id}: ${attestation.status} - Status must be passed or failed. To make this control 'not applicable', use a waiver.`
-            );
-          }
-        }
-      }
-    }
-    if (!found_control) {
-      console.error(
-        `Attestation cannot be added for control ${attestation.control_id}. Skipping attestation.`
-      );
-    }
-  }
-  return hdf;
-}
-
 export async function parseXLSXAttestations(
-  attestationXLSX: Uint8Array
+  attestationXLSX: Uint8Array,
 ): Promise<Attestation[]> {
   return new Promise((resolve) => {
-    const workbook = XLSX.read(attestationXLSX, {
-      cellDates: true
-    });
-    const sheet = workbook.Sheets['attestations'];
-    const data: Record<string, Date | string>[] =
-      XLSX.utils.sheet_to_json(sheet);
+    const workbook = XLSX.read(attestationXLSX, { cellDates: true });
+    const sheet = workbook.Sheets.attestations;
+    const data: Record<string, Date | string>[]
+      = XLSX.utils.sheet_to_json(sheet);
     const attestations: Attestation[] = data.map((attestation) => {
       const lowerAttestation = _.mapKeys(attestation, (_v, k) => {
-        return k.toLowerCase().replace(/\s/g, '_');
+        return k.toLowerCase().replaceAll(/\s/gv, '_');
       });
       return {
         control_id: getFirstPath(lowerAttestation, [
           'control_id',
           'id',
-          'control'
+          'control',
         ]),
         explanation: getFirstPath(lowerAttestation, ['explanation', 'explain']),
         frequency: getFirstPath(lowerAttestation, ['frequency']),
         status: getFirstPath(lowerAttestation, ['status']),
         updated: getFirstPath(lowerAttestation, ['updated', 'updated_at']),
-        updated_by: getFirstPath(lowerAttestation, ['updated_by'])
+        updated_by: getFirstPath(lowerAttestation, ['updated_by']),
       } as Attestation;
     });
     resolve(attestations);
@@ -200,7 +209,7 @@ export async function parseXLSXAttestations(
 
 function attestationCanBeAdded(
   attestation: Attestation,
-  control: ExecJSON.Control
+  control: ExecJSON.Control,
 ) {
   if (attestation.control_id.toLowerCase() !== control.id.toLowerCase()) {
     // An attestation cannot be added if it's not the same control.
@@ -212,26 +221,26 @@ function attestationCanBeAdded(
     return false;
   }
 
-  if (control.results[0].status === 'skipped') {
+  if (control.results[0].status === ControlResultStatus.Skipped) {
     // The attestation can be added if the control results show 'skipped', meaning it needs Manual Review.
     return true;
   }
 
   console.error(
-    'Invalid control selected: The control must have "skipped" status to be attested'
+    'Invalid control selected: The control must have "skipped" status to be attested',
   );
   return false;
 }
 
 function getFirstPath(
-  object: Record<string, string | Date>,
-  paths: string[]
+  object: Record<string, Date | string>,
+  paths: string[],
 ): string {
-  const index = _.findIndex(paths, (p) => hasPath(object, p));
+  const index = _.findIndex(paths, p => hasPath(object, p));
 
   if (index === -1) {
     throw new Error(
-      `Attestation is missing one of these paths: ${paths.join(', ')}`
+      `Attestation is missing one of these paths: ${paths.join(', ')}`,
     );
   }
   const stringOrDate = _.get(object, paths[index]);
@@ -243,14 +252,9 @@ function getFirstPath(
 
 function hasPath(
   file: Record<string, unknown>,
-  path: string | string[]
+  path: string | string[],
 ): boolean {
-  let pathArray;
-  if (typeof path === 'string') {
-    pathArray = [path];
-  } else {
-    pathArray = path;
-  }
+  const pathArray = typeof path === 'string' ? [path] : path;
 
-  return _.some(pathArray, (p) => _.has(file, p));
+  return _.some(pathArray, p => _.has(file, p));
 }

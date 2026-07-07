@@ -1,3 +1,1 @@
-export interface IDeleteEvaluationTag {
-  readonly id: string;
-}
+export type IDeleteEvaluationTag = { readonly id: string };

@@ -1,8 +1,8 @@
-export interface IApiKey {
+export type IApiKey = {
+  readonly apiKey?: string;
+  readonly createdAt: Date;
   id: string;
   readonly name: string;
-  readonly apiKey?: string;
   readonly type: string;
-  readonly createdAt: Date;
   readonly updatedAt: Date;
-}
+};

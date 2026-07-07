@@ -1,4 +1,4 @@
-export interface IStartupSettings {
+export type IStartupSettings = {
   readonly apiKeysEnabled: boolean;
   readonly banner: string;
   readonly classificationBannerColor: string;
@@ -6,11 +6,11 @@ export interface IStartupSettings {
   readonly classificationBannerTextColor: string;
   readonly enabledOAuth: string[];
   readonly externalUrl: string;
-  readonly oidcName: string;
-  readonly ldap: boolean;
-  readonly registrationEnabled: boolean;
-  readonly localLoginEnabled: boolean;
-  readonly tenableHostUrl: string;
   readonly forceTenableFrontend: boolean;
+  readonly ldap: boolean;
+  readonly localLoginEnabled: boolean;
+  readonly oidcName: string;
+  readonly registrationEnabled: boolean;
   readonly splunkHostUrl: string;
-}
+  readonly tenableHostUrl: string;
+};

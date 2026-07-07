@@ -1,12 +1,12 @@
-import {IEvaluationTag} from '@heimdall/common/interfaces';
-import {EvaluationTag} from '../evaluation-tag.model';
+import type { IEvaluationTag } from '@heimdall/common/interfaces';
+import type { EvaluationTag } from '../evaluation-tag.model';
 
 export class EvaluationTagDto implements IEvaluationTag {
-  readonly id: string;
-  readonly value: string;
-  readonly evaluationId: string;
   readonly createdAt: Date;
+  readonly evaluationId: string;
+  readonly id: string;
   readonly updatedAt: Date;
+  readonly value: string;
 
   constructor(evaluationTag: EvaluationTag) {
     this.id = evaluationTag.id;

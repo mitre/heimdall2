@@ -42,49 +42,51 @@
         Login
       </v-btn>
       <v-spacer />
-      <v-btn class="mt-4" @click="$emit('show-help')">
+      <v-btn
+        class="mt-4"
+        @click="$emit('show-help')"
+      >
         Help
-        <v-icon class="ml-2"> mdi-help-circle </v-icon>
+        <v-icon class="ml-2">
+          mdi-help-circle
+        </v-icon>
       </v-btn>
     </v-row>
   </div>
 </template>
 
 <script lang="ts">
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {AuthInfo, TenableUtil} from '@/utilities/tenable_util';
-import {requireFieldRule} from '@/utilities/upload_util';
-
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
+import { LocalStorageVal } from '@/utilities/helper_util';
+import type { AuthInfo } from '@/utilities/tenable_util';
+import { TenableUtil } from '@/utilities/tenable_util';
+import { requireFieldRule } from '@/utilities/upload_util';
 
 // Our saved fields
 const localAccesskey = new LocalStorageVal<string>('tenable_accesskey');
 const localSecretkey = new LocalStorageVal<string>('tenable_secretkey');
 const localHostname = new LocalStorageVal<string>('tenable_hostname');
 
-@Component({
-  components: {
-    FileList
-  }
-})
+@Component({ components: { FileList } })
 export default class AuthStep extends Vue {
-  accesskey = '';
-  secretkey = '';
-  hostname = '';
-  showSecret = false;
-
   $refs!: {
     access_Key: HTMLInputElement;
-    secret_Key: HTMLAnchorElement;
     hostname_value: HTMLAnchorElement;
+    secret_Key: HTMLAnchorElement;
   };
 
+  accesskey = '';
+  hostname = '';
   // Form required field rule
   reqRule = requireFieldRule;
+
+  secretkey = '';
+
+  showSecret = false;
 
   async login(): Promise<void> {
     if (!this.accesskey) {
@@ -113,8 +115,8 @@ export default class AuthStep extends Vue {
 
     const config: AuthInfo = {
       accesskey: this.accesskey,
+      host_url: this.hostname,
       secretkey: this.secretkey,
-      host_url: this.hostname
     };
 
     await new TenableUtil(config)

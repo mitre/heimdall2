@@ -1,5 +1,5 @@
-import {ForbiddenError, Subject} from '@casl/ability';
-import {IEvalPaginationParams} from '@heimdall/common/interfaces';
+import { ForbiddenError, Subject } from '@casl/ability';
+import { IEvalPaginationParams } from '@heimdall/common/interfaces';
 import {
   BadRequestException,
   Body,
@@ -13,26 +13,26 @@ import {
   Request,
   UploadedFiles,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
 } from '@nestjs/common';
-import {AnyFilesInterceptor} from '@nestjs/platform-express';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import _ from 'lodash';
-import {AuthzService} from '../authz/authz.service';
-import {Action} from '../casl/casl-ability.factory';
-import {ConfigService} from '../config/config.service';
-import {GroupDto} from '../groups/dto/group.dto';
-import {Group} from '../groups/group.model';
-import {GroupsService} from '../groups/groups.service';
-import {APIKeyOrJwtAuthGuard} from '../guards/api-key-or-jwt-auth.guard';
-import {JwtAuthGuard} from '../guards/jwt-auth.guard';
-import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-interceptor';
-import {LoggingInterceptor} from '../interceptors/logging.interceptor';
-import {User} from '../users/user.model';
-import {CreateEvaluationDto} from './dto/create-evaluation.dto';
-import {EvaluationDto, IEvaluationResponse} from './dto/evaluation.dto';
-import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
-import {Evaluation} from './evaluation.model';
-import {EvaluationsService} from './evaluations.service';
+import { AuthzService } from '../authz/authz.service';
+import { Action } from '../casl/casl-ability.factory';
+import { ConfigService } from '../config/config.service';
+import { GroupDto } from '../groups/dto/group.dto';
+import { Group } from '../groups/group.model';
+import { GroupsService } from '../groups/groups.service';
+import { APIKeyOrJwtAuthGuard } from '../guards/api-key-or-jwt-auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { CreateEvaluationInterceptor } from '../interceptors/create-evaluation-interceptor';
+import { LoggingInterceptor } from '../interceptors/logging.interceptor';
+import { User } from '../users/user.model';
+import { CreateEvaluationDto } from './dto/create-evaluation.dto';
+import { EvaluationDto, IEvaluationResponse } from './dto/evaluation.dto';
+import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
+import { Evaluation } from './evaluation.model';
+import { EvaluationsService } from './evaluations.service';
 
 @Controller('evaluations')
 @UseInterceptors(LoggingInterceptor)
@@ -41,139 +41,51 @@ export class EvaluationsController {
     private readonly evaluationsService: EvaluationsService,
     private readonly groupsService: GroupsService,
     private readonly configService: ConfigService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
   ) {}
 
-  @UseGuards(APIKeyOrJwtAuthGuard)
-  @Get(':id')
-  async findById(
-    @Param('id') id: string,
-    @Request() request: {user: User}
-  ): Promise<EvaluationDto> {
-    const abac = this.authz.abac.createForUser(request.user);
-    const evaluation = await this.evaluationsService.findById(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
-    return new EvaluationDto(evaluation, abac.can(Action.Update, evaluation));
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get(':id/groups')
-  async groupsForEvaluation(
-    @Param('id') id: string,
-    @Request() request: {user: User}
-  ): Promise<GroupDto[]> {
-    const abac = this.authz.abac.createForUser(request.user);
-    let evaluationGroups = await this.evaluationsService.groups(id);
-    evaluationGroups = evaluationGroups.filter(
-      (group) =>
-        abac.can(Action.AddEvaluation, group) &&
-        abac.can(Action.RemoveEvaluation, group)
-    );
-    return evaluationGroups.map((group) => new GroupDto(group));
-  }
-
-  @UseGuards(APIKeyOrJwtAuthGuard)
-  @Get('e2e')
-  async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
-    const abac = this.authz.abac.createForUser(request.user);
-    let evaluations = await this.evaluationsService.findAll();
-
-    evaluations = evaluations.filter((evaluation) =>
-      abac.can(Action.Read, evaluation)
-    );
-
-    return evaluations.map(
-      (evaluation) =>
-        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-    );
-  }
-
-  @UseGuards(APIKeyOrJwtAuthGuard)
-  @Get()
-  async findAndCountAll(
-    @Query() params: IEvalPaginationParams,
-    @Request() request: {user: User}
-  ): Promise<IEvaluationResponse> {
-    const abac = this.authz.abac.createForUser(request.user);
-    let evaluations: Evaluation[] = [];
-    let totalItems = 0;
-
-    if (params.useClause) {
-      const response = await this.evaluationsService.getEvaluationsWithClause(
-        params,
-        request.user.email,
-        request.user.role
-      );
-      evaluations = response.evaluations;
-      totalItems = response.totalItems;
-    } else {
-      const response = await this.evaluationsService.getAllEvaluations(
-        params,
-        request.user.email,
-        request.user.role
-      );
-      evaluations = response.evaluations;
-      totalItems = response.totalItems;
-    }
-
-    // Perform an policy-based access control (AKA Attribute-based access control)
-    // Show public evaluations, evaluations that belong to a group the logged-in user
-    // belongs too, or those created by logged-in user.
-    evaluations = evaluations.filter((evaluation: Subject) =>
-      abac.can(Action.Read, evaluation)
-    );
-
-    return {
-      evaluations: evaluations.map(
-        (evaluation: Evaluation) =>
-          new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-      ),
-      totalCount: totalItems
-    };
-  }
-
-  @UseGuards(APIKeyOrJwtAuthGuard)
   @Post()
+  @UseGuards(APIKeyOrJwtAuthGuard)
   @UseInterceptors(
-    AnyFilesInterceptor({limits: {files: 100}}),
-    CreateEvaluationInterceptor
+    AnyFilesInterceptor({ limits: { files: 100 } }),
+    CreateEvaluationInterceptor,
   )
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto,
     @UploadedFiles() data: Express.Multer.File[],
-    @Request() request: {user: User | Group}
+    @Request() request: { user: Group | User },
   ): Promise<EvaluationDto | EvaluationDto[]> {
     const uploadedFiles = data.map(async (file) => {
       let serializedDta: Record<string, unknown>;
       try {
         serializedDta = JSON.parse(file.buffer.toString('utf8'));
       } catch {
-        serializedDta = {originalResultsData: file.buffer.toString('utf8')};
+        serializedDta = { originalResultsData: file.buffer.toString('utf8') };
       }
 
       // If the "user" is a group, we'll add the evaluation to the group, and ignore any other groups
       if (request.user instanceof Group) {
         const evaluation = await this.evaluationsService
           .create({
+            data: serializedDta,
+            evaluationTags: createEvaluationDto.evaluationTags || [],
             // Only respect custom file names for single file uploads
             filename:
               data.length > 1
                 ? file.originalname
                 : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
-            evaluationTags: createEvaluationDto.evaluationTags || [],
+            groupId: request.user.id,
             public: createEvaluationDto.public,
-            data: serializedDta,
-            groupId: request.user.id
           })
           .then(async (evaluation) => {
             const group = await this.groupsService.findByPkBang(
-              request.user.id
+              request.user.id,
             );
             this.groupsService.addEvaluationToGroup(group, evaluation);
             return evaluation;
           })
-          .catch((err) => {
-            throw new BadRequestException(err.message);
+          .catch((error) => {
+            throw new BadRequestException(error.message);
           });
 
         const createdDto = new EvaluationDto(evaluation, true);
@@ -190,26 +102,27 @@ export class EvaluationsController {
         });
         const evaluation = await this.evaluationsService
           .create({
+            data: serializedDta,
+            evaluationTags: createEvaluationDto.evaluationTags || [],
             // Only respect custom file names for single file uploads
             filename:
               data.length > 1
                 ? file.originalname
                 : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
-            evaluationTags: createEvaluationDto.evaluationTags || [],
             public: createEvaluationDto.public,
-            data: serializedDta,
-            userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+            userId: request.user.id, // Do not include userId on the DTO so we can set it automatically to the uploader's id.
           })
           .then((createdEvaluation) => {
-            groups.forEach((group) =>
+            for (const group of groups) {
               this.groupsService.addEvaluationToGroup(group, createdEvaluation)
-            );
+              ;
+            }
             return createdEvaluation;
           });
         const createdDto: EvaluationDto = new EvaluationDto(
           evaluation,
           true,
-          `${this.configService.getExternalUrl()}/results/${evaluation.id}`
+          `${this.configService.getExternalUrl()}/results/${evaluation.id}`,
         );
         return _.omit(createdDto, 'data');
       }
@@ -220,12 +133,112 @@ export class EvaluationsController {
     return Promise.all(uploadedFiles);
   }
 
+  @Get('e2e')
+  @UseGuards(APIKeyOrJwtAuthGuard)
+  async findAll(@Request() request: { user: User }): Promise<EvaluationDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    let evaluations = await this.evaluationsService.findAll();
+
+    evaluations = evaluations.filter(evaluation =>
+      abac.can(Action.Read, evaluation),
+    );
+
+    return evaluations.map(
+      evaluation =>
+        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation)),
+    );
+  }
+
+  @Get()
+  @UseGuards(APIKeyOrJwtAuthGuard)
+  async findAndCountAll(
+    @Query() params: IEvalPaginationParams,
+    @Request() request: { user: User },
+  ): Promise<IEvaluationResponse> {
+    const abac = this.authz.abac.createForUser(request.user);
+    let evaluations: Evaluation[] = [];
+    let totalItems = 0;
+
+    if (params.useClause) {
+      const response = await this.evaluationsService.getEvaluationsWithClause(
+        params,
+        request.user.email,
+        request.user.role,
+      );
+      evaluations = response.evaluations;
+      totalItems = response.totalItems;
+    } else {
+      const response = await this.evaluationsService.getAllEvaluations(
+        params,
+        request.user.email,
+        request.user.role,
+      );
+      evaluations = response.evaluations;
+      totalItems = response.totalItems;
+    }
+
+    // Perform an policy-based access control (AKA Attribute-based access control)
+    // Show public evaluations, evaluations that belong to a group the logged-in user
+    // belongs too, or those created by logged-in user.
+    evaluations = evaluations.filter((evaluation: Subject) =>
+      abac.can(Action.Read, evaluation),
+    );
+
+    return {
+      evaluations: evaluations.map(
+        (evaluation: Evaluation) =>
+          new EvaluationDto(evaluation, abac.can(Action.Update, evaluation)),
+      ),
+      totalCount: totalItems,
+    };
+  }
+
+  @Get(':id')
+  @UseGuards(APIKeyOrJwtAuthGuard)
+  async findById(
+    @Param('id') id: string,
+    @Request() request: { user: User },
+  ): Promise<EvaluationDto> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const evaluation = await this.evaluationsService.findById(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
+    return new EvaluationDto(evaluation, abac.can(Action.Update, evaluation));
+  }
+
+  @Get(':id/groups')
   @UseGuards(JwtAuthGuard)
+  async groupsForEvaluation(
+    @Param('id') id: string,
+    @Request() request: { user: User },
+  ): Promise<GroupDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    let evaluationGroups = await this.evaluationsService.groups(id);
+    evaluationGroups = evaluationGroups.filter(
+      group =>
+        abac.can(Action.AddEvaluation, group)
+        && abac.can(Action.RemoveEvaluation, group),
+    );
+    return evaluationGroups.map(group => new GroupDto(group));
+  }
+
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  async remove(
+    @Param('id') id: string,
+    @Request() request: { user: User },
+  ): Promise<EvaluationDto> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const evaluationToDelete = await this.evaluationsService.findById(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Delete, evaluationToDelete);
+    return new EvaluationDto(await this.evaluationsService.remove(id));
+  }
+
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id') id: string,
-    @Request() request: {user: User},
-    @Body() updateEvaluationDto: UpdateEvaluationDto
+    @Request() request: { user: User },
+    @Body() updateEvaluationDto: UpdateEvaluationDto,
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationToUpdate = await this.evaluationsService.findById(id);
@@ -233,24 +246,12 @@ export class EvaluationsController {
 
     const updatedEvaluation = await this.evaluationsService.update(
       id,
-      updateEvaluationDto
+      updateEvaluationDto,
     );
 
     return new EvaluationDto(
       updatedEvaluation,
-      abac.can(Action.Update, updatedEvaluation)
+      abac.can(Action.Update, updatedEvaluation),
     );
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  async remove(
-    @Param('id') id: string,
-    @Request() request: {user: User}
-  ): Promise<EvaluationDto> {
-    const abac = this.authz.abac.createForUser(request.user);
-    const evaluationToDelete = await this.evaluationsService.findById(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Delete, evaluationToDelete);
-    return new EvaluationDto(await this.evaluationsService.remove(id));
   }
 }

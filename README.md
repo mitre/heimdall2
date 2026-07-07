@@ -457,8 +457,10 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    You can also manually edit the `apps/backend/.env` file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
+   **Port configuration:** The backend listen port is set via `HEIMDALL_BACKEND_PORT` (defaults to 3000). The frontend dev server port is set via `HEIMDALL_FRONTEND_PORT` in `apps/frontend/.env.development.local` (defaults to 8080). The legacy `PORT` env var is deprecated and will be removed in the next minor release — use `HEIMDALL_BACKEND_PORT` instead.
+
 > [!NOTE]
-> The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations.
+> The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations. The frontend dev server reads its own env from `apps/frontend/.env.development.local`.
 
 6. Build the project:
 

@@ -2,24 +2,22 @@
  * This module maintains the state of the sidebar between different pages.
  */
 
-import Store from '@/store/store';
 import {
   Action,
   getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
 } from 'vuex-module-decorators';
+import Store from '@/store/store';
 
-export interface ISidebarState {
-  active: boolean;
-}
+export type ISidebarState = { active: boolean };
 
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'SidebarState',
+  namespaced: true,
   store: Store,
-  name: 'SidebarState'
 })
 export class SidebarState extends VuexModule implements ISidebarState {
   active = false;

@@ -1,12 +1,12 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import {Request} from 'express';
+import { Request } from 'express';
 
-interface TenableCredentials {
-  host_url: string;
+type TenableCredentials = {
   accesskey: string;
+  host_url: string;
   secretkey: string;
-}
+};
 
 // NestJS service that performs proxied requests to Tenable using credentials stored in the session
 @Injectable()
@@ -15,9 +15,9 @@ export class TenableService {
     const axiosInstance = axios.create({
       baseURL: creds.host_url,
       headers: {
+        'Content-Type': req.get('content-type') || 'application/json',
         'x-apikey': `accesskey=${creds.accesskey}; secretkey=${creds.secretkey}`,
-        'Content-Type': req.get('content-type') || 'application/json'
-      }
+      },
     });
 
     const method = req.method;
@@ -26,14 +26,14 @@ export class TenableService {
     const params = req.query;
 
     return axiosInstance({
-      method,
-      url,
       data,
+      method,
       params,
       responseType:
         method === 'POST' && req.get('content-type')?.includes('zip')
           ? 'arraybuffer'
-          : 'json'
+          : 'json',
+      url,
     });
   }
 }

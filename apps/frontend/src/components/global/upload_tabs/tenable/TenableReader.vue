@@ -1,11 +1,17 @@
 <template>
   <v-stepper v-model="step">
     <v-stepper-header class="elevation-0">
-      <v-stepper-step id="step-1" step="1">
+      <v-stepper-step
+        id="step-1"
+        step="1"
+      >
         Tenable Authorization
       </v-stepper-step>
       <v-divider />
-      <v-stepper-step id="step-2" step="2">
+      <v-stepper-step
+        id="step-2"
+        step="2"
+      >
         Search Scan Results
       </v-stepper-step>
     </v-stepper-header>
@@ -33,13 +39,16 @@
     >
       <div class="text-center">
         <p>
-          <span v-if="errorCount > 0" style="color: red; font-weight: bold">
+          <span
+            v-if="errorCount > 0"
+            style="color: red; font-weight: bold"
+          >
             It seems you may be having trouble connecting to Tenable.sc. Ensure
-            <br />
+            <br>
             that the access key, secret key, and host url are properly
             configured.
           </span>
-          <br />
+          <br>
           <span>
             For connection instructions and further information, consult:
           </span>
@@ -50,49 +59,56 @@
             color="info"
             px-0
           >
-            <v-icon pr-2>mdi-github-circle</v-icon>
+            <v-icon pr-2>
+              mdi-github-circle
+            </v-icon>
             Tenable Configuration
           </v-btn>
-          <br />
+          <br>
           <span>
             API key authorization requires Tenable.sc 5.13.x or later.
-            <br />
+            <br>
             A unique set of API keys can be generated for each user account.
-            <br />
+            <br>
             The API authorization keys serve as a user authentication token.
           </span>
         </p>
-        <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
+        <v-btn
+          color="info"
+          @click="errorCount = 0"
+        >
+          Ok
+        </v-btn>
       </div>
     </v-overlay>
   </v-stepper>
 </template>
 <script lang="ts">
-import {FileID} from '@/store/report_intake';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import type { FileID } from '@/store/report_intake';
+import type { AuthInfo } from '@/utilities/tenable_util';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
-import {AuthInfo} from '@/utilities/tenable_util';
 
 @Component({
   components: {
     AuthStep,
-    FileList
-  }
+    FileList,
+  },
 })
 export default class TenableReader extends Vue {
-  step = 1;
   errorCount = 0;
+  step = 1;
   tenableConfig: AuthInfo | null = null;
+
+  got_files(files: FileID[]) {
+    this.$emit('got-files', files);
+  }
 
   onAuthenticationComplete(tenableConfig: AuthInfo) {
     this.tenableConfig = tenableConfig;
     this.step = 2;
-  }
-
-  got_files(files: FileID[]) {
-    this.$emit('got-files', files);
   }
 
   onSignOut() {

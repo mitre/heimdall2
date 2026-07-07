@@ -9,7 +9,10 @@
     <v-card>
       <v-card-title>
         <v-row>
-          <v-col sm="6" md="10">
+          <v-col
+            sm="6"
+            md="10"
+          >
             <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
@@ -18,7 +21,11 @@
               hide-details
             />
           </v-col>
-          <v-col sm="6" md="2" class="text-center mt-3">
+          <v-col
+            sm="6"
+            md="2"
+            class="text-center mt-3"
+          >
             <v-btn
               color="primary"
               max-width="100%"
@@ -43,18 +50,32 @@
             :admin="true"
             @update-user="updateUser"
           >
-            <template #clickable="{on}"
-              ><v-icon small title="Edit" class="mr-2" v-on="on">
+            <template #clickable="{on}">
+              <v-icon
+                small
+                title="Edit"
+                class="mr-2"
+                v-on="on"
+              >
                 mdi-pencil
               </v-icon>
             </template>
           </UserModal>
-          <v-icon small title="Delete" @click="deleteUserDialog(item)">
+          <v-icon
+            small
+            title="Delete"
+            @click="deleteUserDialog(item)"
+          >
             mdi-delete
           </v-icon>
         </template>
         <template #no-data>
-          <v-btn color="primary" @click="initialize"> Reset </v-btn>
+          <v-btn
+            color="primary"
+            @click="initialize"
+          >
+            Reset
+          </v-btn>
         </template>
       </v-data-table>
       <ActionDialog
@@ -69,52 +90,49 @@
 </template>
 
 <script lang="ts">
+import type { IUser } from '@heimdall/common/interfaces';
+import axios from 'axios';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import RegistrationModal from '@/components/global/RegistrationModal.vue';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import UserModal from '@/components/global/UserModal.vue';
-import {SnackbarModule} from '@/store/snackbar';
-import {IUser} from '@heimdall/common/interfaces';
-import axios from 'axios';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import { SnackbarModule } from '@/store/snackbar';
 
 @Component({
   components: {
     ActionDialog,
-    UserModal,
     IconLinkItem,
-    RegistrationModal
-  }
+    RegistrationModal,
+    UserModal,
+  },
 })
 export default class UserManagement extends Vue {
-  loading = true;
-  editedUser: IUser | null = null;
-  dialogDelete = false;
   createUserDialog = false;
-  search = '';
-  users: IUser[] = [];
-  headers: Object[] = [
+  dialogDelete = false;
+  editedUser: IUser | null = null;
+  headers: object[] = [
     {
-      text: 'Email',
       align: 'start',
       sortable: true,
-      value: 'email'
+      text: 'Email',
+      value: 'email',
     },
-    {text: 'First Name', value: 'firstName', sortable: true},
-    {text: 'Last Name', value: 'lastName', sortable: true},
-    {text: 'Role', value: 'role', sortable: true},
-    {text: 'Last Login', value: 'lastLogin', sortable: true},
-    {text: 'Actions', value: 'actions', sortable: false}
+    { sortable: true, text: 'First Name', value: 'firstName' },
+    { sortable: true, text: 'Last Name', value: 'lastName' },
+    { sortable: true, text: 'Role', value: 'role' },
+    { sortable: true, text: 'Last Login', value: 'lastLogin' },
+    { sortable: false, text: 'Actions', value: 'actions' },
   ];
 
-  mounted() {
-    this.getUsers();
-  }
+  loading = true;
+  search = '';
+  users: IUser[] = [];
 
-  deleteUserDialog(user: IUser): void {
-    this.editedUser = user;
-    this.dialogDelete = true;
+  closeActionDialog() {
+    this.dialogDelete = false;
+    this.editedUser = null;
   }
 
   deleteUserConfirm(): void {
@@ -123,7 +141,7 @@ export default class UserManagement extends Vue {
         .delete<IUser>(`/users/${this.editedUser.id}`)
         .then((response) => {
           SnackbarModule.notify(
-            `Successfully deleted user ${response.data.email}`
+            `Successfully deleted user ${response.data.email}`,
           );
         })
         .finally(() => {
@@ -133,16 +151,9 @@ export default class UserManagement extends Vue {
     }
   }
 
-  closeActionDialog() {
-    this.dialogDelete = false;
-    this.editedUser = null;
-  }
-
-  updateUser(updatedUser: IUser) {
-    const id = this.users.findIndex((user) => user.id === updatedUser.id);
-    if (id !== -1) {
-      this.$set(this.users, id, updatedUser);
-    }
+  deleteUserDialog(user: IUser): void {
+    this.editedUser = user;
+    this.dialogDelete = true;
   }
 
   getUsers(): void {
@@ -154,6 +165,17 @@ export default class UserManagement extends Vue {
       .finally(() => {
         this.loading = false;
       });
+  }
+
+  mounted() {
+    this.getUsers();
+  }
+
+  updateUser(updatedUser: IUser) {
+    const id = this.users.findIndex(user => user.id === updatedUser.id);
+    if (id !== -1) {
+      this.$set(this.users, id, updatedUser);
+    }
   }
 }
 </script>

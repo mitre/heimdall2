@@ -1,25 +1,23 @@
-import {ArgumentsHost, Catch, ExceptionFilter} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import _ from 'lodash';
 import winston from 'winston';
-import {ConfigService} from '../config/config.service';
+import { ConfigService } from '../config/config.service';
 
 @Catch(Error)
 export class AuthenticationExceptionFilter implements ExceptionFilter {
   configService = new ConfigService();
 
-  private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
+  private readonly line = '_______________________________________________\n';
   public logger = winston.createLogger({
-    transports: [new winston.transports.Console()],
     format: winston.format.combine(
-      winston.format.timestamp({
-        format: this.loggingTimeFormat
-      }),
+      winston.format.timestamp({ format: this.loggingTimeFormat }),
       winston.format.printf(
-        (info) =>
-          `${this.line}[${[info.timestamp]}] (Authentication Exception Filter): ${info.message}`
-      )
-    )
+        info =>
+          `${this.line}[${[info.timestamp]}] (Authentication Exception Filter): ${info.message}`,
+      ),
+    ),
+    transports: [new winston.transports.Console()],
   });
 
   catch(exception: Error, host: ArgumentsHost): void {
@@ -27,20 +25,18 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest();
     const response = ctx.getResponse();
     const errInfo = {
-      message: exception.message,
-      stack: exception.stack,
       authInfo: _.get(request, 'authInfo'),
+      headers: request.headers,
+      message: exception.message,
       query: request.query,
-      headers: request.headers
+      stack: exception.stack,
     };
     this.logger.warn(
-      `Authentication Error\n${JSON.stringify(errInfo, null, 2)}`
+      `Authentication Error\n${JSON.stringify(errInfo, null, 2)}`,
     );
-    const authError =
-      `${_.has(request, 'authInfo.message') ? _.get(request, 'authInfo.message') : ''}\n${exception.message}`.trim();
-    response.cookie('authenticationError', authError, {
-      secure: this.configService.isInProductionMode()
-    });
+    const authError
+      = `${_.has(request, 'authInfo.message') ? _.get(request, 'authInfo.message') : ''}\n${exception.message}`.trim();
+    response.cookie('authenticationError', authError, { secure: this.configService.isInProductionMode() });
     response.redirect(302, '/');
   }
 }

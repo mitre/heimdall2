@@ -1,18 +1,18 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
+  type CombinedResponse,
   MsftSecureScoreResults,
-  CombinedResponse
 } from '../../../src/msft-secure-score-mapper';
-import {omitVersions} from '../../utils';
+import { omitVersions } from '../../utils';
 
 describe('msft_secure_score_mapper', () => {
   it('Successfully converts Microsoft Secure Score reports', () => {
     const mapper = new MsftSecureScoreResults(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     // fs.writeFileSync(
@@ -23,13 +23,13 @@ describe('msft_secure_score_mapper', () => {
     const expectedHdfReports = JSON.parse(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/secure_score-hdfs.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {
       expect(omitVersions(hdfReport)).toEqual(
-        omitVersions(expectedHdfReports[idx])
+        omitVersions(expectedHdfReports[idx]),
       );
     }
   });
@@ -40,9 +40,9 @@ describe('msft_secure_score_mapper_withraw', () => {
     const mapper = new MsftSecureScoreResults(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
-        {encoding: 'utf-8'}
+        { encoding: 'utf8' },
       ),
-      true
+      true,
     );
 
     // fs.writeFileSync(
@@ -53,13 +53,13 @@ describe('msft_secure_score_mapper_withraw', () => {
     const expectedHdfReports = JSON.parse(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/secure_score-hdf-withraws.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {
       expect(omitVersions(hdfReport)).toEqual(
-        omitVersions(expectedHdfReports[idx])
+        omitVersions(expectedHdfReports[idx]),
       );
     }
   });
@@ -71,15 +71,15 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
       profiles: JSON.parse(
         fs.readFileSync(
           'sample_jsons/msft_secure_score_mapper/sample_input_report/profiles.json',
-          {encoding: 'utf-8'}
-        )
+          { encoding: 'utf8' },
+        ),
       ),
       secureScore: JSON.parse(
         fs.readFileSync(
           'sample_jsons/msft_secure_score_mapper/sample_input_report/secureScore-multiple.json',
-          {encoding: 'utf-8'}
-        )
-      )
+          { encoding: 'utf8' },
+        ),
+      ),
     };
 
     const mapper = new MsftSecureScoreResults(JSON.stringify(input_data));
@@ -92,13 +92,13 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
     const expectedHdfReports = JSON.parse(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/secure_score-hdf-multi.json',
-        {encoding: 'utf-8'}
-      )
+        { encoding: 'utf8' },
+      ),
     );
 
     for (const [idx, hdfReport] of mapper.toHdf().entries()) {
       expect(omitVersions(hdfReport)).toEqual(
-        omitVersions(expectedHdfReports[idx])
+        omitVersions(expectedHdfReports[idx]),
       );
     }
   });

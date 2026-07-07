@@ -3,3 +3,5 @@ converted_jsons
 lib
 mitre-hdf-converters-v*.tgz
 sample_jsons/*/output_report/*.xml
+data/reverse-html-mapper/style.css
+src/converters-from-hdf/html/embedded-assets.ts

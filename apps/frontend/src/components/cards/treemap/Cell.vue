@@ -40,77 +40,32 @@
 </template>
 
 <script lang="ts">
-import {is_leaf, TreemapNode, TreemapNodeLeaf} from '@/utilities/treemap_util';
-import {HierarchyRectangularNode} from 'd3-hierarchy';
-import {ScaleLinear} from 'd3-scale';
+import type { HierarchyRectangularNode } from 'd3-hierarchy';
+import { ScaleLinear } from 'd3-scale';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
+import { is_leaf, TreemapNode, TreemapNodeLeaf } from '@/utilities/treemap_util';
 
-export interface XYScale {
+export type XYScale = {
   scale_x: ScaleLinear<number, number>;
   scale_y: ScaleLinear<number, number>;
-}
+};
 
 /**
  * Categories property must be of type Category
  * Emits "select-node" with payload of type HierarchyRectangularNode<TreemapNode>
  */
-@Component({
-  name: 'Cell'
-})
+@Component({ name: 'Cell' })
 export default class Cell extends Vue {
-  @Prop({type: String}) readonly selectedControlId!: string;
-  @Prop({type: Object, required: true})
+  @Prop({ default: 0, type: Number }) readonly depth!: number;
+  @Prop({ required: true, type: Object })
   readonly node!: HierarchyRectangularNode<TreemapNode>;
 
-  @Prop({type: Number, default: 0}) readonly depth!: number;
-  @Prop({type: Object, default: 0}) readonly scales!: XYScale;
+  scale = 1;
+  @Prop({ default: 0, type: Object }) readonly scales!: XYScale;
 
-  scale = 1.0;
-
-  /** Are we a control? Use treemap util type checker */
-  get is_control(): boolean {
-    return is_leaf(this.node.data);
-  }
-
-  /** Invert of above. Checks if this node has children, essentially */
-  get is_parent(): boolean {
-    return !this.is_control;
-  }
-
-  /** Are we selected? True if selectedControlId matches our id, and we are in selected hierarchy */
-  get is_selected(): boolean {
-    return (
-      this.is_control && // We are a control
-      (this.node.data as TreemapNodeLeaf).control.data.id ===
-        this.selectedControlId // Our control id matches
-    );
-  }
-
-  /** Compute the top-left x coord of this cell rect based on the provided scale_x prop */
-  get x(): number {
-    return this.scales.scale_x(this.node.x0);
-  }
-
-  /** Compute the top-left y coord of this cell rect based on the provided scale_y prop */
-  get y(): number {
-    return this.scales.scale_y(this.node.y0);
-  }
-
-  /**
-   * Compute the width of this rect based on scale, and base x position
-   */
-  get width(): number {
-    return this.scales.scale_x(this.node.x1) - this.x;
-  }
-
-  /**
-   * Compute the height of this rect based on scale, and base y position
-   */
-  get height(): number {
-    return this.scales.scale_y(this.node.y1) - this.y;
-  }
+  @Prop({ type: String }) readonly selectedControlId!: string;
 
   /** Returns a list of classes appropriate to this nodes Rect
    * These are contextual based on type of data, and depth within the tree
@@ -119,7 +74,7 @@ export default class Cell extends Vue {
     const s: string[] = [];
     if (this.is_parent) {
       s.push('parent');
-      if (!this.node.children || !this.node.children.length) {
+      if (!this.node.children?.length) {
         s.push('empty');
       }
     } else {
@@ -143,6 +98,49 @@ export default class Cell extends Vue {
       return `fill: ${this.node.data.color.css()};`;
     }
     return 'fill-opacity: 0';
+  }
+
+  /**
+   * Compute the height of this rect based on scale, and base y position
+   */
+  get height(): number {
+    return this.scales.scale_y(this.node.y1) - this.y;
+  }
+
+  /** Are we a control? Use treemap util type checker */
+  get is_control(): boolean {
+    return is_leaf(this.node.data);
+  }
+
+  /** Invert of above. Checks if this node has children, essentially */
+  get is_parent(): boolean {
+    return !this.is_control;
+  }
+
+  /** Are we selected? True if selectedControlId matches our id, and we are in selected hierarchy */
+  get is_selected(): boolean {
+    return (
+      this.is_control // We are a control
+      && (this.node.data as TreemapNodeLeaf).control.data.id
+      === this.selectedControlId // Our control id matches
+    );
+  }
+
+  /**
+   * Compute the width of this rect based on scale, and base x position
+   */
+  get width(): number {
+    return this.scales.scale_x(this.node.x1) - this.x;
+  }
+
+  /** Compute the top-left x coord of this cell rect based on the provided scale_x prop */
+  get x(): number {
+    return this.scales.scale_x(this.node.x0);
+  }
+
+  /** Compute the top-left y coord of this cell rect based on the provided scale_y prop */
+  get y(): number {
+    return this.scales.scale_y(this.node.y0);
   }
 
   /**

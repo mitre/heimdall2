@@ -2,75 +2,73 @@
  * Tracks uploaded files, and their parsed contents
  */
 
-import {
-  EvaluationFile,
-  FileID,
-  ProfileFile,
-  SourcedContextualizedEvaluation,
-  SourcedContextualizedProfile
-} from '@/store/report_intake';
-import Store from '@/store/store';
+import { setControlDescription } from '@mitre/hdf-converters';
+import type { ContextualizedControl } from 'inspecjs';
 import {
   Action,
   getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
 } from 'vuex-module-decorators';
-import {FilteredDataModule} from './data_filters';
+import type {
+  EvaluationFile,
+  FileID,
+  ProfileFile,
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile,
+} from '@/store/report_intake';
+import Store from '@/store/store';
+import { FilteredDataModule } from './data_filters';
 
-/** We make some new variant types of the Contextual types, to include their files*/
-export function isFromProfileFile(p: SourcedContextualizedProfile) {
+export const UNSAVED_CHANGES_MESSAGE
+  = 'This file has unsaved edits. Export or save the file before '
+    + 'removing it from the loaded results.';
+
+export function isFromProfileFile(p: SourcedContextualizedProfile): boolean {
   return p.sourcedFrom === null;
 }
 
+function getFileForControl(
+  control: ContextualizedControl,
+): EvaluationFile | ProfileFile | undefined {
+  const profile = control.sourcedFrom as SourcedContextualizedProfile;
+  const evaluation = profile.sourcedFrom as
+    | null
+    | SourcedContextualizedEvaluation;
+  return evaluation?.from_file ?? profile.from_file;
+}
+
 @Module({
-  namespaced: true,
   dynamic: true,
+  name: 'data',
+  namespaced: true,
   store: Store,
-  name: 'data'
 })
 export class InspecData extends VuexModule {
+  /** Tracks which files have unsaved edits (dirty state) */
+  dirtyFileIds: FileID[] = [];
+
   /** State var containing all execution files that have been added */
   executionFiles: EvaluationFile[] = [];
 
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
 
-  /** Return all of the files that we currently have. */
-  get allFiles(): (EvaluationFile | ProfileFile)[] {
-    const result: (EvaluationFile | ProfileFile)[] = [];
-    result.push(...this.executionFiles);
-    result.push(...this.profileFiles);
-    return result;
-  }
-
-  /* Return all evaluation files only */
   get allEvaluationFiles(): EvaluationFile[] {
     return this.executionFiles;
   }
 
-  /* Return all profile files only */
+  get allFiles(): (EvaluationFile | ProfileFile)[] {
+    return [...this.executionFiles, ...this.profileFiles];
+  }
+
   get allProfileFiles(): ProfileFile[] {
     return this.profileFiles;
   }
 
-  /**
-   * Returns a readonly list of all executions currently held in the data store
-   * including associated context
-   */
-  get contextualExecutions(): readonly SourcedContextualizedEvaluation[] {
-    return this.executionFiles.map((file) => file.evaluation);
-  }
-
-  get loadedDatabaseIds(): string[] {
-    const ids: string[] = [];
-    this.allFiles.forEach((file) => {
-      if (file.database_id) {
-        ids.push(file.database_id.toString());
-      }
-    });
-    return ids;
+  get allProfiles(): readonly SourcedContextualizedProfile[] {
+    return [...this.contextualProfiles, ...this.contextualExecutionProfiles];
   }
 
   /**
@@ -78,9 +76,19 @@ export class InspecData extends VuexModule {
    * held in the data store
    */
   get contextualExecutionProfiles(): readonly SourcedContextualizedProfile[] {
+    // Cast is safe: report_intake creates all evaluation profiles as SourcedContextualizedProfile.
+    // Narrowing SourcedContextualizedEvaluation.contains causes circular type reference that breaks module loading.
     return this.contextualExecutions.flatMap(
-      (evaluation) => evaluation.contains
+      evaluation => evaluation.contains,
     ) as SourcedContextualizedProfile[];
+  }
+
+  /**
+   * Returns a readonly list of all executions currently held in the data store
+   * including associated context
+   */
+  get contextualExecutions(): readonly SourcedContextualizedEvaluation[] {
+    return this.executionFiles.map(file => file.evaluation);
   }
 
   /**
@@ -88,20 +96,42 @@ export class InspecData extends VuexModule {
    * including associated context
    */
   get contextualProfiles(): readonly SourcedContextualizedProfile[] {
-    return this.profileFiles.map((file) => file.profile);
+    return this.profileFiles.map(file => file.profile);
   }
 
-  get allProfiles(): readonly SourcedContextualizedProfile[] {
-    return this.contextualProfiles.concat(this.contextualExecutionProfiles);
+  get databaseIdForFile(): (fileId: FileID) => string {
+    return (fileId: FileID) => {
+      const file = this.allFiles.find(f => f.uniqueId === fileId);
+      return file?.database_id?.toString() ?? '';
+    };
   }
 
-  /**
-   * Adds a profile file to the store.
-   * @param newProfile The profile to add
-   */
-  @Mutation
-  addProfile(newProfile: ProfileFile) {
-    this.profileFiles.push(newProfile);
+  get fileIdForControl(): (
+    control: ContextualizedControl,
+  ) => FileID | undefined {
+    return (control: ContextualizedControl) =>
+      getFileForControl(control)?.uniqueId;
+  }
+
+  get fileIdForDatabaseId(): (databaseId: number) => FileID {
+    return (databaseId: number) => {
+      const file = this.allFiles.find(f => f.database_id === databaseId);
+      return file?.uniqueId ?? '';
+    };
+  }
+
+  get hasUnsavedFiles(): boolean {
+    return this.dirtyFileIds.length > 0;
+  }
+
+  get isFileDirty(): (fileId: FileID) => boolean {
+    return (fileId: FileID) => this.dirtyFileIds.includes(fileId);
+  }
+
+  get loadedDatabaseIds(): string[] {
+    return this.allFiles
+      .filter(file => file.database_id !== undefined)
+      .map(file => file.database_id!.toString());
   }
 
   /**
@@ -114,49 +144,71 @@ export class InspecData extends VuexModule {
   }
 
   /**
-   * Unloads the file with the given id
+   * Adds a profile file to the store.
+   * @param newProfile The profile to add
    */
-  @Action
-  removeFile(fileId: FileID) {
-    FilteredDataModule.clear_file(fileId);
-    this.context.commit('REMOVE_PROFILE', fileId);
-    this.context.commit('REMOVE_RESULT', fileId);
+  @Mutation
+  addProfile(newProfile: ProfileFile) {
+    this.profileFiles.push(newProfile);
+  }
+
+  @Mutation
+  CLEAR_DIRTY_FILES() {
+    this.dirtyFileIds = [];
   }
 
   @Action
-  async loadedDatabaseIdsForFileId(fileId: FileID): Promise<string> {
-    let dbId: string | undefined = '';
-    this.allFiles.forEach((file) => {
-      if (file.uniqueId == fileId) {
-        dbId = file.database_id?.toString();
-      }
-    });
-    return dbId;
+  clearDirtyFiles() {
+    this.context.commit('CLEAR_DIRTY_FILES');
+  }
+
+  @Mutation
+  MARK_FILE_DIRTY(fileId: FileID) {
+    if (!this.dirtyFileIds.includes(fileId)) {
+      this.dirtyFileIds = [...this.dirtyFileIds, fileId];
+    }
+  }
+
+  @Mutation
+  MARK_FILES_SAVED(fileIds: FileID[]) {
+    this.dirtyFileIds = this.dirtyFileIds.filter(
+      id => !fileIds.includes(id),
+    );
   }
 
   @Action
-  async loadedFileIsForDatabaseIds(databaseId: number): Promise<FileID> {
-    let fileId: string | undefined = '';
-    this.allFiles.forEach((file) => {
-      if (file.database_id == databaseId) {
-        fileId = file.uniqueId;
-      }
-    });
-    return fileId;
+  markFileDirty(fileId: FileID) {
+    this.context.commit('MARK_FILE_DIRTY', fileId);
+  }
+
+  @Action
+  markFileSaved(fileIds: FileID[]) {
+    this.context.commit('MARK_FILES_SAVED', fileIds);
   }
 
   @Mutation
   REMOVE_PROFILE(fileId: FileID) {
     this.profileFiles = this.profileFiles.filter(
-      (pf) => pf.uniqueId !== fileId
+      pf => pf.uniqueId !== fileId,
     );
   }
 
   @Mutation
   REMOVE_RESULT(fileId: FileID) {
     this.executionFiles = this.executionFiles.filter(
-      (ef) => ef.uniqueId !== fileId
+      ef => ef.uniqueId !== fileId,
     );
+  }
+
+  /**
+   * Unloads the file with the given id
+   */
+  @Action
+  removeFile(fileId: FileID) {
+    FilteredDataModule.clear_file(fileId);
+    this.context.commit('MARK_FILES_SAVED', [fileId]);
+    this.context.commit('REMOVE_PROFILE', fileId);
+    this.context.commit('REMOVE_RESULT', fileId);
   }
 
   /**
@@ -166,6 +218,29 @@ export class InspecData extends VuexModule {
   reset() {
     this.profileFiles = [];
     this.executionFiles = [];
+    this.dirtyFileIds = [];
+  }
+
+  @Mutation
+  updateControlDescription({
+    control,
+    label,
+    value,
+  }: {
+    control: ContextualizedControl;
+    label: string;
+    value: string;
+  }) {
+    const controlData = control.data as { descriptions?: Record<string, string> | { data: string; label: string }[] };
+    if (controlData.descriptions) {
+      setControlDescription(controlData.descriptions, label, value);
+    }
+    control.hdf.descriptions[label] = value;
+
+    const file = getFileForControl(control);
+    if (file && !this.dirtyFileIds.includes(file.uniqueId)) {
+      this.dirtyFileIds = [...this.dirtyFileIds, file.uniqueId];
+    }
   }
 }
 

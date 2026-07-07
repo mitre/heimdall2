@@ -1,16 +1,19 @@
 import fs from 'fs';
-import {ExecJSON} from 'inspecjs';
+import { ExecJSON } from 'inspecjs';
 import moment from 'moment';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import yaml from 'yaml';
 import {
   addAttestationToHDF,
   advanceDate,
-  Attestation,
+  type Attestation,
+  convertAttestationToSegment,
   createAttestationMessage,
   parseXLSXAttestations,
-  convertAttestationToSegment
 } from '../../src/utils/attestations';
+
+const ATTESTATION_PREFIX_RE = /^Attestation/v;
+const EXPIRED_PREFIX_RE = /^Expired/v;
 
 const validPassingAttestation_skippedControl: Attestation[] = [
   {
@@ -19,8 +22,8 @@ const validPassingAttestation_skippedControl: Attestation[] = [
     frequency: '1d',
     status: 'passed',
     updated: '3000-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const expiredPassingAttestation_skippedControl: Attestation[] = [
   {
@@ -29,8 +32,8 @@ const expiredPassingAttestation_skippedControl: Attestation[] = [
     frequency: '1d',
     status: 'passed',
     updated: '1999-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const validFailingAttestation_skippedControl: Attestation[] = [
   {
@@ -39,8 +42,8 @@ const validFailingAttestation_skippedControl: Attestation[] = [
     frequency: '1d',
     status: 'failed',
     updated: '3000-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const expiredFailingAttestation_skippedControl: Attestation[] = [
   {
@@ -49,8 +52,8 @@ const expiredFailingAttestation_skippedControl: Attestation[] = [
     frequency: '1d',
     status: 'failed',
     updated: '1999-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const validPassingAttestation_passingControl: Attestation[] = [
   {
@@ -59,8 +62,8 @@ const validPassingAttestation_passingControl: Attestation[] = [
     frequency: '1d',
     status: 'passed',
     updated: '3000-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const expiredPassingAttestation_passingControl: Attestation[] = [
   {
@@ -69,8 +72,8 @@ const expiredPassingAttestation_passingControl: Attestation[] = [
     frequency: '1d',
     status: 'passed',
     updated: '1999-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const validPassingAttestation_failingControl: Attestation[] = [
   {
@@ -79,8 +82,8 @@ const validPassingAttestation_failingControl: Attestation[] = [
     frequency: '1d',
     status: 'passed',
     updated: '3000-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const expiredPassingAttestation_failingControl: Attestation[] = [
   {
@@ -89,8 +92,8 @@ const expiredPassingAttestation_failingControl: Attestation[] = [
     frequency: '1d',
     status: 'passed',
     updated: '1999-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const missing_attestation: Attestation[] = [
   {
@@ -99,8 +102,8 @@ const missing_attestation: Attestation[] = [
     frequency: '1d',
     status: 'passed',
     updated: '3000-01-01',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const attestation_XLSXDate: Attestation[] = [
   {
@@ -109,8 +112,8 @@ const attestation_XLSXDate: Attestation[] = [
     frequency: '153d',
     status: 'passed',
     updated: '2024-03-21T22:17:52.761Z',
-    updated_by: 'John Doe'
-  }
+    updated_by: 'John Doe',
+  },
 ];
 const attestations_yaml: Attestation[] = [
   {
@@ -119,7 +122,7 @@ const attestations_yaml: Attestation[] = [
     frequency: '0d',
     status: 'passed',
     updated: '2024-03-26T15:20:05.181Z',
-    updated_by: 'Attestation Tester'
+    updated_by: 'Attestation Tester',
   },
   {
     control_id: 'SV-230328',
@@ -127,8 +130,8 @@ const attestations_yaml: Attestation[] = [
     frequency: '1d',
     status: 'passed',
     updated: '2024-03-26T15:22:03.690Z',
-    updated_by: 'Attestation Tester'
-  }
+    updated_by: 'Attestation Tester',
+  },
 ];
 
 const attestations_for_overlay: Attestation[] = [
@@ -139,7 +142,7 @@ const attestations_for_overlay: Attestation[] = [
     frequency: 'monthly',
     status: 'passed',
     updated: '2099-05-02',
-    updated_by: 'Yamilia Smith, Security'
+    updated_by: 'Yamilia Smith, Security',
   },
   {
     control_id: 'V-61449',
@@ -148,38 +151,38 @@ const attestations_for_overlay: Attestation[] = [
     frequency: 'daily',
     status: 'passed',
     updated: '2099-01-02',
-    updated_by: 'Alec Hardison, Security'
-  }
+    updated_by: 'Alec Hardison, Security',
+  },
 ];
 
 describe('advanceDate', () => {
   it('Should return a date two weeks from now when given "fortnightly" as an input', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), 'fortnightly').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), 'fortnightly').toISOString(true),
     ).toEqual('2022-09-23T21:29:02.000+00:00');
   });
 
   it('Should return correct date when given custom number of days to advance by', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '200d').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), '200d').toISOString(true),
     ).toEqual('2023-03-28T21:29:02.000+00:00');
   });
 
   it('Should return correct date when given custom number of weeks to advance by', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '12w').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), '12w').toISOString(true),
     ).toEqual('2022-12-02T21:29:02.000+00:00');
   });
 
   it('Should return correct date when given custom number of months to advance by', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '4m').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), '4m').toISOString(true),
     ).toEqual('2023-01-09T21:29:02.000+00:00');
   });
 
   it('Should return correct date when given custom number of years to advance by', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '5y').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), '5y').toISOString(true),
     ).toEqual('2027-09-09T21:29:02.000+00:00');
   });
 });
@@ -190,74 +193,70 @@ describe('CreateAttestationMessage', () => {
   it('Should create a message for a valid attestation', () => {
     const unexpiredAttestationMessage = createAttestationMessage(
       validPassingAttestation_skippedControl[0],
-      false
+      false,
     );
 
-    expect(unexpiredAttestationMessage).toEqual(
-      expect.stringMatching(/^Attestation/)
-    );
+    expect(unexpiredAttestationMessage).toMatch(ATTESTATION_PREFIX_RE);
   });
 
   it('Should create a message for an expired attestation', () => {
     const expiredAttestationMessage = createAttestationMessage(
       expiredPassingAttestation_skippedControl[0],
-      true
+      true,
     );
 
-    expect(expiredAttestationMessage).toEqual(
-      expect.stringMatching(/^Expired/)
-    );
+    expect(expiredAttestationMessage).toMatch(EXPIRED_PREFIX_RE);
   });
 });
 
 describe('convertAttestationToSegment', () => {
   it('Should correctly convert a valid and passing attestation message to an HDF segment', () => {
     const segment_unexpired_pass = convertAttestationToSegment(
-      validPassingAttestation_skippedControl[0]
+      validPassingAttestation_skippedControl[0],
     );
     expect(segment_unexpired_pass.status).toEqual('passed');
     expect(segment_unexpired_pass.message).toEqual(
-      createAttestationMessage(validPassingAttestation_skippedControl[0], false)
+      createAttestationMessage(validPassingAttestation_skippedControl[0], false),
     );
   });
 
   it('Should correctly convert an expired and passing attestation message to an HDF segment', () => {
     const segment_expired_pass = convertAttestationToSegment(
-      expiredPassingAttestation_skippedControl[0]
+      expiredPassingAttestation_skippedControl[0],
     );
     expect(segment_expired_pass.status).toEqual(
-      ExecJSON.ControlResultStatus.Skipped
+      ExecJSON.ControlResultStatus.Skipped,
     );
     expect(segment_expired_pass.message).toEqual(
       createAttestationMessage(
         expiredPassingAttestation_skippedControl[0],
-        true
-      )
+        true,
+      ),
     );
   });
 
   it('Should correctly convert a valid and failing attestation message to an HDF segment', () => {
     const segment_unexpired_fail = convertAttestationToSegment(
-      validFailingAttestation_skippedControl[0]
+      validFailingAttestation_skippedControl[0],
     );
     expect(segment_unexpired_fail.status).toEqual('failed');
     expect(segment_unexpired_fail.message).toEqual(
-      createAttestationMessage(validFailingAttestation_skippedControl[0], false)
+      createAttestationMessage(validFailingAttestation_skippedControl[0], false),
     );
   });
 
   it('Should correctly convert an expired and failing attestation message to an HDF segment', () => {
     const segment_expired_fail = convertAttestationToSegment(
-      expiredFailingAttestation_skippedControl[0]
+      expiredFailingAttestation_skippedControl[0],
     );
     expect(segment_expired_fail.status).toEqual(
-      ExecJSON.ControlResultStatus.Skipped
+      ExecJSON.ControlResultStatus.Skipped,
     );
     expect(segment_expired_fail.message).toEqual(
       createAttestationMessage(
         expiredFailingAttestation_skippedControl[0],
-        true
-      )
+        true,
+      ),
     );
   });
 });
@@ -270,8 +269,8 @@ describe.sequential('addAttestationToHDF', () => {
     inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json',
-        'utf-8'
-      )
+        'utf8',
+      ),
     ) as ExecJSON.Execution;
 
     console.error = vi.fn();
@@ -284,7 +283,7 @@ describe.sequential('addAttestationToHDF', () => {
   /**
     * Adding an attestation creates an additional result object in the controls.results array within an HDF object
     * As additional attestations are applied, additional result objects are appended to the results array
-    *   
+    *
             "results": [
               {
                 "status": "passed",
@@ -302,10 +301,10 @@ describe.sequential('addAttestationToHDF', () => {
                 "start_time": "2024-03-21T15:52:27.317Z"
               }
             ]
-     * 
+     *
      * An additional attestation_data object is appended to the control segment itself within an HDF object
      * This attestation_data object is overwritten with the most recent attestation applied
-     * 
+     *
             "attestation_data": {
               "control_id": "SV-230221",
               "explanation": "This is a test explanation for 230328",
@@ -314,13 +313,13 @@ describe.sequential('addAttestationToHDF', () => {
               "updated": "3000-01-01",
               "updated_by": "Attestation Tester"
             }
-     * 
+     *
      */
 
   it('Should add a valid attestation to a skipped control', () => {
     const output = addAttestationToHDF(
       inputData,
-      validPassingAttestation_skippedControl
+      validPassingAttestation_skippedControl,
     );
 
     // Check that the results array has one additional entry
@@ -329,30 +328,30 @@ describe.sequential('addAttestationToHDF', () => {
     expect(output.profiles[0].controls[2].results[1].status).toEqual('passed');
     // Check that the attestation data added to the control is the attestation passed into the function
     expect(output.profiles[0].controls[2].attestation_data).toEqual(
-      validPassingAttestation_skippedControl[0]
+      validPassingAttestation_skippedControl[0],
     );
   });
 
   it('Should add an expired attestation to a skipped control', () => {
     const output = addAttestationToHDF(
       inputData,
-      expiredPassingAttestation_skippedControl
+      expiredPassingAttestation_skippedControl,
     );
 
     expect(output.profiles[0].controls[2].results.length).toEqual(2);
     // Check that the status of the new result is skipped
     expect(output.profiles[0].controls[2].results[1].status).toEqual(
-      ExecJSON.ControlResultStatus.Skipped
+      ExecJSON.ControlResultStatus.Skipped,
     );
     expect(output.profiles[0].controls[2].attestation_data).toEqual(
-      expiredPassingAttestation_skippedControl[0]
+      expiredPassingAttestation_skippedControl[0],
     );
   });
 
   it('Should not add an attestation to a passing control', () => {
     const output = addAttestationToHDF(
       inputData,
-      validPassingAttestation_passingControl
+      validPassingAttestation_passingControl,
     );
 
     // Check that the results array has no additional entries
@@ -361,33 +360,33 @@ describe.sequential('addAttestationToHDF', () => {
     expect(output.profiles[0].controls[0].attestation_data).toBeUndefined();
     // Check that the correct error console message was received
     expect(console.error).toHaveBeenCalledWith(
-      'Invalid control selected: The control must have "skipped" status to be attested'
+      'Invalid control selected: The control must have "skipped" status to be attested',
     );
     expect(console.error).toHaveBeenCalledWith(
-      'Attestation cannot be added for control SV-230221. Skipping attestation.'
+      'Attestation cannot be added for control SV-230221. Skipping attestation.',
     );
   });
 
   it('Should not add an attestation to a failing control', () => {
     const output = addAttestationToHDF(
       inputData,
-      validPassingAttestation_failingControl
+      validPassingAttestation_failingControl,
     );
     // Failing control SV-230222 happens to have 2 entries already because it has 2 checks in the test
     expect(output.profiles[0].controls[1].results.length).toEqual(2);
     expect(output.profiles[0].controls[1].attestation_data).toBeUndefined();
     expect(console.error).toHaveBeenCalledWith(
-      'Invalid control selected: The control must have "skipped" status to be attested'
+      'Invalid control selected: The control must have "skipped" status to be attested',
     );
     expect(console.error).toHaveBeenCalledWith(
-      'Attestation cannot be added for control SV-230222. Skipping attestation.'
+      'Attestation cannot be added for control SV-230222. Skipping attestation.',
     );
   });
 
   it('Should add and overwrite an attestation to a control that already has an expired attestation', () => {
     const output = addAttestationToHDF(
       addAttestationToHDF(inputData, expiredPassingAttestation_skippedControl),
-      validPassingAttestation_skippedControl
+      validPassingAttestation_skippedControl,
     );
     // Check that the results array has two additional entries, this part doesn't overwrite
     expect(output.profiles[0].controls[2].results.length).toEqual(3);
@@ -395,7 +394,7 @@ describe.sequential('addAttestationToHDF', () => {
     expect(output.profiles[0].controls[2].results[2].status).toEqual('passed');
     // attestation_data is overwritten by most recently added attestation
     expect(output.profiles[0].controls[2].attestation_data).toEqual(
-      validPassingAttestation_skippedControl[0]
+      validPassingAttestation_skippedControl[0],
     );
   });
 
@@ -413,7 +412,7 @@ describe.sequential('addAttestationToHDF', () => {
     expect(output.profiles[0].controls[3].attestation_data).toBeUndefined();
 
     expect(console.error).toHaveBeenCalledWith(
-      'Attestation cannot be added for control SV-111111. Skipping attestation.'
+      'Attestation cannot be added for control SV-111111. Skipping attestation.',
     );
   });
 });
@@ -422,14 +421,14 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
   const inputDataWithEmptyResults = JSON.parse(
     fs.readFileSync(
       'sample_jsons/attestations/triple_overlay_profile_sample.json',
-      'utf-8'
-    )
+      'utf8',
+    ),
   ) as ExecJSON.Execution;
 
   it('Should add a valid attestation to a skipped control', () => {
     const output = addAttestationToHDF(
       inputDataWithEmptyResults,
-      attestations_for_overlay
+      attestations_for_overlay,
     );
 
     // The baseline profile is the third of the three profile entries in the HDF file
@@ -439,7 +438,7 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
     expect(output.profiles[2].controls[0].results[1].status).toEqual('passed');
     // Check that the attestation data added to the control is the attestation passed into the function
     expect(output.profiles[2].controls[0].attestation_data).toEqual(
-      attestations_for_overlay[0]
+      attestations_for_overlay[0],
     );
 
     // Check the second attestation
@@ -448,7 +447,7 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
     expect(output.profiles[2].controls[1].results[1].status).toEqual('passed');
     // Check that the attestation data added to the control is the attestation passed into the function
     expect(output.profiles[2].controls[1].attestation_data).toEqual(
-      attestations_for_overlay[1]
+      attestations_for_overlay[1],
     );
   });
 });
@@ -456,7 +455,7 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
 describe('parseXLSXAttestations', () => {
   const xlsxInputFile: Buffer = fs.readFileSync(
     'sample_jsons/attestations/attestations_xlsxInputFormat.xlsx',
-    null
+    null,
   );
 
   it('Should successfully parse XLSX attestations', async () => {
@@ -464,19 +463,19 @@ describe('parseXLSXAttestations', () => {
 
     expect(attestations[0]).toEqual(validPassingAttestation_skippedControl[0]);
     expect(attestations[1]).toEqual(
-      expiredPassingAttestation_skippedControl[0]
+      expiredPassingAttestation_skippedControl[0],
     );
     expect(attestations[2]).toEqual(validFailingAttestation_skippedControl[0]);
     expect(attestations[3]).toEqual(
-      expiredFailingAttestation_skippedControl[0]
+      expiredFailingAttestation_skippedControl[0],
     );
     expect(attestations[4]).toEqual(validPassingAttestation_passingControl[0]);
     expect(attestations[5]).toEqual(
-      expiredPassingAttestation_passingControl[0]
+      expiredPassingAttestation_passingControl[0],
     );
     expect(attestations[6]).toEqual(validPassingAttestation_failingControl[0]);
     expect(attestations[7]).toEqual(
-      expiredPassingAttestation_failingControl[0]
+      expiredPassingAttestation_failingControl[0],
     );
   });
 
@@ -487,10 +486,10 @@ describe('parseXLSXAttestations', () => {
   });
 });
 
-describe('parseXLSXAttestations', () => {
+describe('parseXLSXAttestations yaml format', () => {
   const yamlInputFile = fs.readFileSync(
     'sample_jsons/attestations/attestations_yamlFormat.yaml',
-    'utf8'
+    'utf8',
   );
 
   const parsed_attestations_yaml: Attestation[] = [];

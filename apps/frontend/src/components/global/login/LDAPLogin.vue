@@ -1,6 +1,10 @@
 <template>
   <v-card-text>
-    <v-form id="login_form" ref="form" name="login_form">
+    <v-form
+      id="login_form"
+      ref="form"
+      name="login_form"
+    >
       <v-text-field
         id="username_field"
         v-model="username"
@@ -42,37 +46,33 @@
 </template>
 
 <script lang="ts">
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {required} from 'vuelidate/lib/validators';
+import { required } from 'vuelidate/lib/validators';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
 
-export interface LDAPLoginHash {
-  username: string;
+export type LDAPLoginHash = {
   password: string;
-}
+  username: string;
+};
 
 @Component({
   mixins: [UserValidatorMixin],
   validations: {
-    username: {
-      required
-    },
-    password: {
-      required
-    }
-  }
+    password: { required },
+    username: { required },
+  },
 })
 export default class LDAPLogin extends Vue {
-  username = '';
   password = '';
+  username = '';
 
   ldapLogin() {
     const creds: LDAPLoginHash = {
+      password: this.password,
       username: this.username,
-      password: this.password
     };
     ServerModule.LoginLDAP(creds).then(() => {
       this.$router.push('/');

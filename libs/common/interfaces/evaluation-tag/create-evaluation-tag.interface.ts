@@ -1,3 +1,1 @@
-export interface ICreateEvaluationTag {
-  readonly value: string;
-}
+export type ICreateEvaluationTag = { readonly value: string };

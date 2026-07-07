@@ -7,6 +7,7 @@ import json from '@eslint/json';
 import markdown from '@eslint/markdown';
 import stylistic from '@stylistic/eslint-plugin';
 import vitest from '@vitest/eslint-plugin';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import { importX } from 'eslint-plugin-import-x';
 import markdownLinks from 'eslint-plugin-markdown-links';
 import markdownPreferences from 'eslint-plugin-markdown-preferences';
@@ -77,14 +78,29 @@ export default defineConfig([
       sourceType: 'module',
     },
     name: 'js/ts',
+    settings: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+          project: [
+            'tsconfig.json',
+            'apps/*/tsconfig.json',
+            'libs/*/tsconfig.json',
+          ],
+          noWarnOnMultipleProjects: true,
+        }),
+      ],
+    },
     rules: {
       '@stylistic/eol-last': 'error',
       '@stylistic/object-curly-newline': ['error', { multiline: true }],
       '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
-      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      '@typescript-eslint/consistent-type-definitions': 'off',
       '@typescript-eslint/consistent-type-exports': 'error',
-      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowBoolean: true, allowNullish: true, allowNumber: true }],
       '@typescript-eslint/no-redundant-type-constituents': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -113,11 +129,40 @@ export default defineConfig([
         },
       ],
       'prefer-object-has-own': 'error',
-      'unicorn/filename-case': ['error', { case: 'snakeCase' }],
+      'unicorn/filename-case': ['error', { cases: { camelCase: true, kebabCase: true, pascalCase: true, snakeCase: true } }],
+      'e18e/prefer-spread-syntax': 'off',
+      'import-x/namespace': 'off',
+      'unicorn/prefer-spread': 'off',
+      'n/no-missing-import': 'off',
+      'n/no-unsupported-features/es-builtins': 'off',
+      'n/no-unsupported-features/es-syntax': 'off',
+      'n/no-unsupported-features/node-builtins': 'off',
+      'n/no-unpublished-import': 'off',
+      'perfectionist/sort-modules': 'off',
       'unicorn/no-null': 'off',
       'unicorn/no-process-exit': 'off',
       'unicorn/prefer-node-protocol': 'off',
       'unicorn/prevent-abbreviations': 'off',
+    },
+  },
+  {
+    files: ['apps/frontend/**/*.{ts,vue}'],
+    name: 'frontend/resolver',
+    settings: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+          project: 'apps/frontend/tsconfig.json',
+        }),
+      ],
+    },
+  },
+  {
+    files: ['**/scripts/**/*.{ts,mts}'],
+    name: 'scripts/security-overrides',
+    rules: {
+      'security/detect-non-literal-fs-filename': 'off',
+      'security/detect-object-injection': 'off',
     },
   },
   {

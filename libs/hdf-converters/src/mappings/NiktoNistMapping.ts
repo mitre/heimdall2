@@ -1,23 +1,18 @@
-import {data} from './NiktoNistMappingData';
+import { data } from './NiktoNistMappingData';
 
-export interface INIKJSONID {
+export type INIKJSONID = {
   'NIKTO-ID': number;
-  'PLUGIN-CATEGORY': string;
   'NIST-ID': string;
   OSVDB: number;
-}
+  'PLUGIN-CATEGORY': string;
+};
 const DEFAULT_NIST_TAG = ['AC-3', 'SA-11', 'RA-5'];
 
 export class NiktoNistMapping {
   nistTag(id: string): string[] {
     if (id === '' || id === undefined) {
       return DEFAULT_NIST_TAG;
-    } else {
-      if (id in data) {
-        return [(data as Record<string, string>)[id]];
-      } else {
-        return DEFAULT_NIST_TAG;
-      }
     }
+    return Object.hasOwn(data, id) ? [(data as Record<string, string>)[id]] : DEFAULT_NIST_TAG;
   }
 }

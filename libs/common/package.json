@@ -2,6 +2,7 @@
   "name": "@heimdall/common",
   "version": "2.13.0",
   "description": "Common utilities and interfaces between the front and backends of Heimdall",
+  "type": "commonjs",
   "private": true,
   "repository": {
     "type": "git",

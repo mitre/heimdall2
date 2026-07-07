@@ -1,7 +1,11 @@
 <template>
   <v-tabs grow>
-    <v-tab href="#tab-profileInfo"> Profile Info </v-tab>
-    <v-tab href="#tab-inputs"> Inputs </v-tab>
+    <v-tab href="#tab-profileInfo">
+      Profile Info
+    </v-tab>
+    <v-tab href="#tab-inputs">
+      Inputs
+    </v-tab>
     <v-tab-item value="tab-profileInfo">
       <v-scroll-y-transition mode="out-in">
         <div
@@ -11,17 +15,29 @@
         >
           Select a Profile
         </div>
-        <v-card v-else :key="profile.id" flat>
+        <v-card
+          v-else
+          :key="profile.id"
+          flat
+        >
           <v-card-title>
-            <div class="mb-2">{{ profile.data.title }}</div>
+            <div class="mb-2">
+              {{ profile.data.title }}
+            </div>
           </v-card-title>
           <v-divider />
-          <v-row class="text-left pa-4" dense data-cy="profileInfoFields">
+          <v-row
+            class="text-left pa-4"
+            dense
+            data-cy="profileInfoFields"
+          >
             <v-col cols="12">
               <div v-if="from_file">
                 <strong>From File:</strong> {{ from_file }}
               </div>
-              <div v-if="version"><strong>Version:</strong> {{ version }}</div>
+              <div v-if="version">
+                <strong>Version:</strong> {{ version }}
+              </div>
               <div v-if="sha256_hash">
                 <strong>SHA256 Hash:</strong> {{ sha256_hash }}
               </div>
@@ -51,13 +67,22 @@
         >
           Select a Profile
         </div>
-        <v-card v-else :key="profile.id" flat>
+        <v-card
+          v-else
+          :key="profile.id"
+          flat
+        >
           <v-card-title>
-            <div class="mb-2">Inputs for {{ profile.data.title }}</div>
+            <div class="mb-2">
+              Inputs for {{ profile.data.title }}
+            </div>
           </v-card-title>
-          <div v-if="inputs.length !== 0">
-            <v-data-table :headers="headers" :items="inputs"
-              ><template #[`item.options`]="{item}">
+          <div v-if="inputs.length > 0">
+            <v-data-table
+              :headers="headers"
+              :items="inputs"
+            >
+              <template #[`item.options`]="{item}">
                 {{ item.options.value }}
               </template>
             </v-data-table>
@@ -72,53 +97,42 @@
 </template>
 
 <script lang="ts">
-import {SourcedContextualizedProfile} from '@/store/report_intake';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
+import { SourcedContextualizedProfile } from '@/store/report_intake';
 
-interface Attribute {
+type Attribute = {
   name: string;
-  options: {
-    value: unknown;
-  };
-}
+  options: { value: unknown };
+};
 
 @Component({})
 export default class ProfileInfo extends Vue {
-  @Prop({required: false}) readonly profile:
+  headers: object[] = [
+    {
+      align: 'start',
+      sortable: true,
+      text: 'Name',
+      value: 'name',
+    },
+    { sortable: true, text: 'Value', value: 'options' },
+  ];
+
+  @Prop({ required: false }) readonly profile:
     | SourcedContextualizedProfile
     | undefined;
 
-  headers: Object[] = [
-    {
-      text: 'Name',
-      align: 'start',
-      sortable: true,
-      value: 'name'
-    },
-    {text: 'Value', value: 'options', sortable: true}
-  ];
-
-  get from_file(): string | undefined {
-    return _.get(this.profile, 'sourcedFrom.from_file.filename') as unknown as
-      | string
-      | undefined;
-  }
-
-  get version(): string | undefined {
-    return _.get(this.profile, 'data.version') as unknown as string | undefined;
-  }
-
-  get sha256_hash(): string | undefined {
-    return _.get(this.profile, 'data.sha256') as unknown as string | undefined;
-  }
-
-  get maintainer(): string | undefined {
-    return _.get(this.profile, 'data.maintainer') as unknown as
-      | string
-      | undefined;
+  get control_count(): string | undefined {
+    return `${
+      (
+        _.get(this.profile, 'data.controls') as unknown as Record<
+          string,
+          unknown
+        >[]
+      ).length
+    }`;
   }
 
   get copyright(): string | undefined {
@@ -133,23 +147,30 @@ export default class ProfileInfo extends Vue {
       | undefined;
   }
 
-  get control_count(): string | undefined {
-    return `${
-      (
-        _.get(this.profile, 'data.controls') as unknown as Record<
-          string,
-          unknown
-        >[]
-      ).length
-    }`;
+  get from_file(): string | undefined {
+    return _.get(this.profile, 'sourcedFrom.from_file.filename');
   }
 
   get inputs(): Attribute[] {
-    if (this.profile?.data.hasOwnProperty('attributes')) {
-      return _.get(this.profile, 'data.attributes') as unknown as Attribute[];
-    } else {
-      return _.get(this.profile, 'data.inputs') as unknown as Attribute[];
+    const data = this.profile?.data;
+    if (!data) {
+      return [];
     }
+    return Object.hasOwn(data, 'attributes') ? (_.get(data, 'attributes') as unknown as Attribute[]) : (_.get(data, 'inputs') as unknown as Attribute[]);
+  }
+
+  get maintainer(): string | undefined {
+    return _.get(this.profile, 'data.maintainer') as unknown as
+      | string
+      | undefined;
+  }
+
+  get sha256_hash(): string | undefined {
+    return _.get(this.profile, 'data.sha256');
+  }
+
+  get version(): string | undefined {
+    return _.get(this.profile, 'data.version') as unknown as string | undefined;
   }
 }
 </script>

@@ -1,11 +1,11 @@
-import {data} from './NessusPluginNistMappingData';
-import {NessusPluginsNistMappingItem} from './NessusPluginsNistMappingItem';
+import { data } from './NessusPluginNistMappingData';
+import { NessusPluginsNistMappingItem } from './NessusPluginsNistMappingItem';
 
-export interface INESSUSJSONID {
-  pluginFamily: string;
-  pluginID: string | number;
+export type INESSUSJSONID = {
   'NIST-ID': string;
-}
+  pluginFamily: string;
+  pluginID: number | string;
+};
 
 export class NessusPluginsNistMapping {
   data: NessusPluginsNistMappingItem[];
@@ -14,31 +14,32 @@ export class NessusPluginsNistMapping {
     this.data = [];
 
     if (Array.isArray(data)) {
-      data.forEach((line: INESSUSJSONID) => {
+      for (const line of data) {
         this.data.push(new NessusPluginsNistMappingItem(line));
-      });
+      }
     }
   }
+
   nistFilter(family: string, id: string, defaultNist: string[]): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
     const matches: string[] = [];
     const item = this.data.find((element) => {
       return (
-        element.pluginFamily === family &&
-        (element.pluginId === '*' || element.pluginId === id) &&
-        element.nistId !== ''
+        element.pluginFamily === family
+        && (element.pluginId === '*' || element.pluginId === id)
+        && element.nistId !== ''
       );
     });
 
     if (
-      item !== null &&
-      item !== undefined &&
-      item.nistId !== '' &&
-      matches.indexOf(item.nistId) === -1
+      item !== null
+      && item !== undefined
+      && item.nistId !== ''
+      && !matches.includes(item.nistId)
     ) {
-      item.nistId.split('|').forEach((element) => {
+      for (const element of item.nistId.split('|')) {
         matches.push(element);
-      });
+      }
     }
     if (matches.length === 0) {
       return DEFAULT_NIST_TAG;

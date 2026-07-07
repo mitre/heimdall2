@@ -20,16 +20,16 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+import { Component } from 'vue-property-decorator';
 import GroupManagement from '@/components/global/groups/GroupManagement.vue';
 import Base from '@/views/Base.vue';
-import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
 
 @Component({
   components: {
     Base,
-    GroupManagement
-  }
+    GroupManagement,
+  },
 })
 export default class Groups extends Vue {}
 </script>

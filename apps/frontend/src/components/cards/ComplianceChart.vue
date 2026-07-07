@@ -11,59 +11,29 @@
     />
 
     <!-- Fallback message if data is missing -->
-    <div v-else style="text-align: center; padding: 1rem; color: #666">
+    <div
+      v-else
+      style="text-align: center; padding: 1rem; color: #666"
+    >
       <p>No compliance data to display.</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { formatCompliance } from '@mitre/hdf-converters';
+import { ApexOptions } from 'apexcharts';
 import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {ApexOptions} from 'apexcharts';
 import VueApexCharts from 'vue-apexcharts';
+import Component from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+import { ColorHackModule } from '@/store/color_hack';
+import type { Filter } from '@/store/data_filters';
+import { calculateCompliance } from '@/store/status_counts';
 
-import {ColorHackModule} from '@/store/color_hack';
-import {Filter} from '@/store/data_filters';
-import {calculateCompliance} from '@/store/status_counts';
-import {formatCompliance} from '@mitre/hdf-converters';
-
-@Component({
-  components: {
-    VueApexCharts
-  }
-})
+@Component({ components: { VueApexCharts } })
 export default class ComplianceChart extends Vue {
-  @Prop({type: Object, default: () => ({})}) readonly filter!: Filter;
-
-  /**
-   * Checks whether the chart has a valid non-empty data series.
-   *
-   * This is used to conditionally render the chart only when there is
-   * meaningful data available.
-   *
-   * Returns:
-   *   - true if series is an array with one or more elements
-   *   - otherwise false.
-   */
-  get hasSeries(): boolean {
-    return Array.isArray(this.series) && this.series.length > 0;
-  }
-
-  /**
-   * Generate the series (percentage decimal score value) from the given filter
-   * It should always be a single value to prevent chart rendering failures.
-   */
-  get series(): number[] {
-    try {
-      const val = calculateCompliance(this.filter);
-      if (isNaN(val) || typeof val !== 'number') return [];
-      return [val];
-    } catch (e) {
-      return [];
-    }
-  }
+  @Prop({ default: () => ({}), type: Object }) readonly filter!: Filter;
 
   /**
    * Generate the ApexChart configuration options for rendering a radial bar
@@ -100,62 +70,86 @@ export default class ComplianceChart extends Vue {
     }
 
     return {
-      // Radial center label (shows above the percentage score)
-      labels: ['Score'],
-
       // Basic chart settings including drop shadow
       chart: {
-        type: 'radialBar',
         dropShadow: {
-          enabled: true,
-          top: 0,
-          left: 0,
           blur: 3,
-          opacity: 0.35
-        }
-      },
-
-      // Configure radial bar specific options
-      plotOptions: {
-        radialBar: {
-          startAngle: -150, // Start angle of the semi-circle sweep
-          endAngle: 150, // End angle of the semi-circle sweep
-          hollow: {
-            size: '70%' // Makes a donut-style inner hole
-          },
-          track: {
-            opacity: 0 // Hides the track background
-          },
-          dataLabels: {
-            show: true,
-            name: {
-              show: true,
-              offsetY: -40, // Align with Status and Severity
-              color: '#008FFB',
-              fontSize: '1.5rem'
-            },
-            value: {
-              show: true,
-              offsetY: -15, // Align with Status and Severity
-              color: '#99a2ac',
-              fontSize: '2rem',
-              formatter: (val: number) => formatCompliance(val)
-            }
-          }
-        }
+          enabled: true,
+          left: 0,
+          opacity: 0.35,
+          top: 0,
+        },
+        type: 'radialBar',
       },
 
       // Solid fill color for the radial bar, dynamically assigned based on compliance
       fill: {
+        colors: [complianceColor],
         type: 'solid',
-        colors: [complianceColor]
+      },
+
+      // Radial center label (shows above the percentage score)
+      labels: ['Score'],
+
+      // Configure radial bar specific options
+      plotOptions: {
+        radialBar: {
+          dataLabels: {
+            name: {
+              color: '#008FFB',
+              fontSize: '1.5rem',
+              offsetY: -40, // Align with Status and Severity
+              show: true,
+            },
+            show: true,
+            value: {
+              color: '#99a2ac',
+              fontSize: '2rem',
+              formatter: (val: number) => formatCompliance(val),
+              offsetY: -15, // Align with Status and Severity
+              show: true,
+            },
+          },
+          endAngle: 150, // End angle of the semi-circle sweep
+          hollow: { size: '70%', // Makes a donut-style inner hole
+          },
+          startAngle: -150, // Start angle of the semi-circle sweep
+          track: { opacity: 0, // Hides the track background
+          },
+        },
       },
 
       // Dashed stroke around the radial bar
-      stroke: {
-        dashArray: 8
-      }
+      stroke: { dashArray: 8 },
     };
+  }
+
+  /**
+   * Checks whether the chart has a valid non-empty data series.
+   *
+   * This is used to conditionally render the chart only when there is
+   * meaningful data available.
+   *
+   * Returns:
+   *   - true if series is an array with one or more elements
+   *   - otherwise false.
+   */
+  get hasSeries(): boolean {
+    return Array.isArray(this.series) && this.series.length > 0;
+  }
+
+  /**
+   * Generate the series (percentage decimal score value) from the given filter
+   * It should always be a single value to prevent chart rendering failures.
+   */
+  get series(): number[] {
+    try {
+      const val = calculateCompliance(this.filter);
+      if (isNaN(val) || typeof val !== 'number') { return []; }
+      return [val];
+    } catch {
+      return [];
+    }
   }
 }
 </script>

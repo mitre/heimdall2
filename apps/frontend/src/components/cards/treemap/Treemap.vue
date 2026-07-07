@@ -1,19 +1,36 @@
 <template>
-  <v-container ref="treemapContainer" fluid>
+  <v-container
+    ref="treemapContainer"
+    fluid
+  >
     <v-row dense>
       <v-col :cols="4">
         NIST SP 800-53 Security and Privacy Control Coverage
       </v-col>
       <v-col :cols="8">
-        <v-btn :disabled="!allow_up" block x-small @click="up">
-          <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
+        <v-btn
+          :disabled="!allow_up"
+          block
+          x-small
+          @click="up"
+        >
+          <v-icon v-if="allow_up">
+            mdi-arrow-left
+          </v-icon>
           {{ 'NIST-SP-800-53 -> ' + value.join(' -> ') }}
         </v-btn>
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-resize="on_resize" :cols="12">
-        <svg id="chartBody" :width="width" :height="height">
+      <v-col
+        v-resize="on_resize"
+        :cols="12"
+      >
+        <svg
+          id="chartBody"
+          :width="width"
+          :height="height"
+        >
           <g
             style="shape-rendering: crispEdges"
             preserveAspectRatio="xMidYMid meet"
@@ -34,39 +51,55 @@
 </template>
 
 <script lang="ts">
-import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
-import {ColorHackModule} from '@/store/color_hack';
-import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
-import {compareArrays} from '@/utilities/helper_util';
+import type { HierarchyRectangularNode } from 'd3-hierarchy';
+import { treemap } from 'd3-hierarchy';
+import { scaleLinear } from 'd3-scale';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { Prop, PropSync, Ref } from 'vue-property-decorator';
+import Cell, { XYScale } from '@/components/cards/treemap/Cell.vue';
+import { ColorHackModule } from '@/store/color_hack';
+import type { Filter, TreeMapState } from '@/store/data_filters';
+import { FilteredDataModule } from '@/store/data_filters';
+import { compareArrays } from '@/utilities/helper_util';
 import {
   build_nist_tree_map,
   is_leaf,
   is_parent,
-  TreemapNode
+  TreemapNode,
 } from '@/utilities/treemap_util';
-import {HierarchyRectangularNode, treemap} from 'd3-hierarchy';
-import {scaleLinear} from 'd3-scale';
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {Prop, PropSync, Ref} from 'vue-property-decorator';
 
 // Respects a v-model of type TreeMapState
-@Component({
-  components: {
-    Cell
-  }
-})
+@Component({ components: { Cell } })
 export default class Treemap extends Vue {
-  @Ref('treemapContainer') readonly treemapContainer!: Element;
-  @Prop({type: Array, required: true}) readonly value!: TreeMapState;
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @PropSync('selected_control', {type: String}) syncedSelectedControl!:
-    | string
-    | null;
+  @Prop({ required: true, type: Object }) readonly filter!: Filter;
+  height = 530;
+  @PropSync('selected_control', { type: String }) syncedSelectedControl!:
+    | null
+    | string;
 
+  @Ref('treemapContainer') readonly treemapContainer!: Element;
+
+  @Prop({ required: true, type: Array }) readonly value!: TreeMapState;
   /** The svg internal coordinate space */
   width = 1600;
-  height = 530;
+
+  /** Controls whether we should allow up */
+  get allow_up(): boolean {
+    return this.value.length > 0;
+  }
+
+  /** Get our scales */
+  get scales(): XYScale {
+    return {
+      scale_x: scaleLinear()
+        .domain([this.selected_node.x0, this.selected_node.x1])
+        .range([0, this.width]),
+      scale_y: scaleLinear()
+        .domain([this.selected_node.y0, this.selected_node.y1])
+        .range([0, this.height]),
+    };
+  }
 
   /** The currently selected treemap node. Wrapped to avoid initialization woes */
   get selected_node(): HierarchyRectangularNode<TreemapNode> {
@@ -79,7 +112,7 @@ export default class Treemap extends Vue {
       for (; depth < this.value.length; depth++) {
         // If the current has no children, then just bail here
         if (curr.children === undefined) {
-          throw Error('no children to go into');
+          throw new Error('no children to go into');
         }
 
         // Fetch the next path spec
@@ -90,7 +123,7 @@ export default class Treemap extends Vue {
             const ssA = child.data.nist_control.subSpecifiers;
             return (
               compareArrays(ssA, nextSpecifiers, (a, b) =>
-                a.localeCompare(b)
+                a.localeCompare(b),
               ) === 0
             );
           } else {
@@ -98,39 +131,22 @@ export default class Treemap extends Vue {
           }
         });
         if (newCurr) {
-          if (newCurr.children && newCurr.children.length) {
+          if (newCurr.children?.length) {
             curr = newCurr;
           } else {
-            throw Error('empty');
+            throw new Error('empty');
           }
         } else {
-          throw Error('truncate');
+          throw new Error('truncate');
         }
       }
-    } catch (someTraversalError) {
+    } catch {
       // Slice to last successful depth. Slice is non inclusive so this works
       this.set_path(this.value.slice(0, depth));
     }
 
     // Return as deep as we travelled
     return curr;
-  }
-
-  /** Get our viewbox */
-  get view_box(): string {
-    return `0 0 ${this.width} ${this.height}`;
-  }
-
-  /** Get our scales */
-  get scales(): XYScale {
-    return {
-      scale_x: scaleLinear()
-        .domain([this.selected_node.x0, this.selected_node.x1])
-        .range([0, this.width]),
-      scale_y: scaleLinear()
-        .domain([this.selected_node.y0, this.selected_node.y1])
-        .range([0, this.height])
-    };
   }
 
   /** Generates a d3 hierarchy structure, with appropriate bounds to our width
@@ -147,13 +163,23 @@ export default class Treemap extends Vue {
       .paddingInner(0)(hierarchy);
   }
 
+  /** Get our viewbox */
+  get view_box(): string {
+    return `0 0 ${this.width} ${this.height}`;
+  }
+
+  /** Called on resize */
+  on_resize() {
+    this.width = this.treemapContainer.clientWidth;
+  }
+
   // Callbacks for our tree
   select_node(n: HierarchyRectangularNode<TreemapNode>): void {
     // If it is a leaf, then select it
     if (is_leaf(n.data)) {
       const id = n.data.control.data.id;
-      this.syncedSelectedControl =
-        id !== this.syncedSelectedControl ? id : null;
+      this.syncedSelectedControl
+        = id === this.syncedSelectedControl ? null : id;
     } else {
       // Otherwise, dive away. Set course for the leading title
       const cntrl = n.data.nist_control;
@@ -163,30 +189,20 @@ export default class Treemap extends Vue {
     }
   }
 
+  /** Typed method to wrap changes in the depth */
+  set_path(pathSpec: TreeMapState) {
+    this.$emit('input', pathSpec);
+  }
+
   /** Submits an event to go up one node */
   up(): void {
-    if (this.value.length) {
+    if (this.value.length > 0) {
       // Slice and dice, baybee
       this.set_path(this.value.slice(0, -1));
 
       // Also clear selected
       this.syncedSelectedControl = null;
     }
-  }
-
-  /** Typed method to wrap changes in the depth */
-  set_path(pathSpec: TreeMapState) {
-    this.$emit('input', pathSpec);
-  }
-
-  /** Controls whether we should allow up */
-  get allow_up(): boolean {
-    return this.value.length > 0;
-  }
-
-  /** Called on resize */
-  on_resize() {
-    this.width = this.treemapContainer.clientWidth;
   }
 }
 </script>

@@ -1,7 +1,14 @@
 <template>
-  <v-dialog v-model="vSync" max-width="550px">
+  <v-dialog
+    v-model="vSync"
+    max-width="550px"
+  >
     <template #activator="{on, attrs}">
-      <slot name="clickable" :on="on" :attrs="attrs" />
+      <slot
+        name="clickable"
+        :on="on"
+        :attrs="attrs"
+      />
     </template>
 
     <v-card>
@@ -13,9 +20,13 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="blue darken-1" text @click="$emit('cancel')"
-          >Cancel</v-btn
+        <v-btn
+          color="blue darken-1"
+          text
+          @click="$emit('cancel')"
         >
+          Cancel
+        </v-btn>
         <v-btn
           color="blue darken-1"
           data-cy="deleteConfirm"
@@ -33,22 +44,20 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, VModel} from 'vue-property-decorator';
+import { Prop, VModel } from 'vue-property-decorator';
 
-@Component({
-  components: {}
-})
+@Component({ components: {} })
 export default class ActionDialog extends Vue {
-  @Prop({required: false, type: String, default: 'delete'})
+  @Prop({ default: 'delete', required: false, type: String })
   readonly action!: string;
 
-  @Prop({required: false, type: String, default: ''})
+  @Prop({ default: '', required: false, type: String })
   readonly message!: string;
 
-  @Prop({required: true, type: String}) readonly type!: string;
-  @Prop({required: true, type: Boolean}) readonly value!: boolean;
+  @Prop({ required: true, type: String }) readonly type!: string;
+  @Prop({ required: true, type: Boolean }) readonly value!: boolean;
   // This passes through the v-model input to the child v-dialog and back up to
   // the parent component.
-  @VModel({type: Boolean}) vSync!: boolean;
+  @VModel({ type: Boolean }) vSync!: boolean;
 }
 </script>

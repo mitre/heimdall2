@@ -4,14 +4,28 @@
       v-model="logoffSnackbar"
       :color="logoffFailure ? 'red' : 'success'"
     >
-      {{ logoffMessage }}</v-snackbar
-    >
+      {{ logoffMessage }}
+    </v-snackbar>
     <v-main>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
-          <v-col cols="12" sm="8" md="4">
+      <v-container
+        class="fill-height"
+        fluid
+      >
+        <v-row
+          align="center"
+          justify="center"
+        >
+          <v-col
+            cols="12"
+            sm="8"
+            md="4"
+          >
             <v-card class="elevation-12 rounded-b-0">
-              <v-toolbar color="primary" dark flat>
+              <v-toolbar
+                color="primary"
+                dark
+                flat
+              >
                 <v-toolbar-title id="login_form_title">
                   Login to Heimdall Server
                 </v-toolbar-title>
@@ -28,14 +42,16 @@
                   v-if="anyAuthProvidersAvailable"
                   id="select-tab-standard-login"
                   href="#login-standard"
-                  >Heimdall Login (Local Authorization)</v-tab
                 >
+                  Heimdall Login (Local Authorization)
+                </v-tab>
                 <v-tab
                   v-if="ldapenabled"
                   id="select-tab-ldap-login"
                   href="#login-ldap"
-                  >Organization Login (LDAP Authorization)</v-tab
                 >
+                  Organization Login (LDAP Authorization)
+                </v-tab>
 
                 <v-tab-item value="login-standard">
                   <LocalLogin />
@@ -52,58 +68,32 @@
   </v-app>
 </template>
 <script lang="ts">
-import LDAPLogin from '@/components/global/login/LDAPLogin.vue';
-import LocalLogin from '@/components/global/login/LocalLogin.vue';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
-import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import LDAPLogin from '@/components/global/login/LDAPLogin.vue';
+import LocalLogin from '@/components/global/login/LocalLogin.vue';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
+import { LocalStorageVal } from '@/utilities/helper_util';
 
 const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 
 @Component({
   components: {
+    LDAPLogin,
     LocalLogin,
-    LDAPLogin
-  }
+  },
 })
 export default class Login extends Vue {
   activeTab: string = lastLoginTab.getDefault(
-    this.anyAuthProvidersAvailable ? 'logintab-standard' : 'login-ldap'
+    this.anyAuthProvidersAvailable ? 'logintab-standard' : 'login-ldap',
   );
 
   logoffMessage = 'You have successfully logged off';
 
-  mounted() {
-    this.checkLoggedIn();
-    this.checkForAuthenticationError();
-  }
-
-  checkLoggedIn() {
-    if (ServerModule.token) {
-      this.$router.push('/');
-    }
-  }
-
-  checkForAuthenticationError() {
-    if (this.$cookies.get('authenticationError')) {
-      SnackbarModule.failure(
-        `Sorry, a problem occurred while signing you in. The reason given was: ${this.$cookies.get(
-          'authenticationError'
-        )}`
-      );
-      this.$cookies.remove('authenticationError');
-    }
-  }
-
-  signup() {
-    this.$router.push('/signup');
-  }
-
   get anyAuthProvidersAvailable() {
     return (
-      ServerModule.localLoginEnabled || ServerModule.enabledOAuth.length !== 0
+      ServerModule.localLoginEnabled || ServerModule.enabledOAuth.length > 0
     );
   }
 
@@ -116,44 +106,68 @@ export default class Login extends Vue {
   }
 
   get logoffFailure() {
-    const queryString = window.location.search;
+    const queryString = globalThis.location.search;
     const urlParams = new URLSearchParams(queryString);
     return (
-      urlParams.get('logoff')?.toLowerCase() === 'true' &&
-      (ServerModule.token !== '' || urlParams.get('error'))
+      urlParams.get('logoff')?.toLowerCase() === 'true'
+      && (ServerModule.token !== '' || urlParams.get('error'))
     );
   }
 
   get logoffSnackbar() {
-    const queryString = window.location.search;
+    const queryString = globalThis.location.search;
     const urlParams = new URLSearchParams(queryString);
     if (
-      !this.logoffFailure &&
-      urlParams.get('logoff')?.toLowerCase() === 'true'
+      !this.logoffFailure
+      && urlParams.get('logoff')?.toLowerCase() === 'true'
     ) {
       return true;
     } else {
       if (urlParams.get('error')) {
         // If the token has expired or the user has changed their JWT secret
-        if (urlParams.get('error') === 'Unauthorized') {
-          this.logoffMessage = `Your session was invalid, please sign in again.`;
-        } else {
-          this.logoffMessage = `An error occurred while signing you out: ${urlParams.get(
-            'error'
+        this.logoffMessage = urlParams.get('error') === 'Unauthorized'
+          ? 'Your session was invalid, please sign in again.'
+          : `An error occurred while signing you out: ${urlParams.get(
+            'error',
           )}`;
-        }
         return true;
       } else if (
-        urlParams.get('logoff')?.toLowerCase() === 'true' &&
-        ServerModule.token !== ''
+        urlParams.get('logoff')?.toLowerCase() === 'true'
+        && ServerModule.token !== ''
       ) {
-        this.logoffMessage =
-          'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
+        this.logoffMessage
+          = 'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
         return false;
       } else {
         return false;
       }
     }
+  }
+
+  checkForAuthenticationError() {
+    if (this.$cookies.get('authenticationError')) {
+      SnackbarModule.failure(
+        `Sorry, a problem occurred while signing you in. The reason given was: ${this.$cookies.get(
+          'authenticationError',
+        )}`,
+      );
+      this.$cookies.remove('authenticationError');
+    }
+  }
+
+  checkLoggedIn() {
+    if (ServerModule.token) {
+      this.$router.push('/');
+    }
+  }
+
+  mounted() {
+    this.checkLoggedIn();
+    this.checkForAuthenticationError();
+  }
+
+  signup() {
+    this.$router.push('/signup');
   }
 }
 </script>

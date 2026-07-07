@@ -1,90 +1,84 @@
 // Interface for HTML template data rendering
 
-import {ContextualizedControl} from 'inspecjs';
+import type { ContextualizedControl } from 'inspecjs';
 
 // Basic info for exported files; lvl 1
-export interface IFileInfo {
-  filename: string;
-  toolVersion: string;
-  platform: string;
+export type IFileInfo = {
   duration: string;
-}
+  filename: string;
+  platform: string;
+  toolVersion: string;
+};
 
 // Info used for profile status reporting; lvl 1
-export interface IStatistics {
-  passed: number;
+export type IStatistics = {
   failed: number;
+  failedTests: number;
   notApplicable: number;
   notReviewed: number;
-  profileError: number;
-  totalResults: number;
+  passed: number;
   passedTests: number;
   passingTestsFailedResult: number;
-  failedTests: number;
+  profileError: number;
+  totalResults: number;
   totalTests: number;
-}
+};
 
 // Info used for profile result severity reporting; lvl 1
-export interface ISeverity {
-  none: number;
+export type ISeverity = {
+  critical: number;
+  high: number;
   low: number;
   medium: number;
-  high: number;
-  critical: number;
-}
+  none: number;
+};
 
 // Info used for profile compliance reporting; lvl 1
-export interface ICompliance {
-  level: string;
+export type ICompliance = {
   color: string;
-}
+  level: string;
+};
 
 // Container for specific info on each result; lvl 2
-export interface IDetail {
+export type IDetail = {
+  class?: string;
   name: string;
   value: string;
-  class?: string;
-}
+};
 
 // Status of a specific result; lvl 2
-export interface IResultStatus {
-  status: string;
+export type IResultStatus = {
   icon: string;
-}
+  status: string;
+};
 
 // Severity of a specific result; lvl 2
-export interface IResultSeverity {
-  severity: string;
+export type IResultSeverity = {
   icon: string;
-}
+  severity: string;
+};
 
 // Container for all results; lvl 1
-export interface IResultSet {
-  filename: string;
+export type IResultSet = {
   fileID: string;
-  results: (ContextualizedControl & {details: IDetail[]} & {
-    resultID: string;
-  } & {resultStatus: IResultStatus} & {resultSeverity: IResultSeverity} & {
-    controlTags: string[];
-  })[];
-}
+  filename: string;
+  results: (ContextualizedControl & { controlTags: string[] } & { details: IDetail[] } & { resultID: string } & { resultSeverity: IResultSeverity } & { resultStatus: IResultStatus })[];
+};
 
 // All used icons; lvl 1
-export interface IIcons {
-  [key: string]: string;
-}
+export type IIcons = Record<string, string>;
 
 // Top level interface; lvl 0
-export interface IOutputData {
-  tailwindStyles: string;
-  tailwindElements: string;
-  files: IFileInfo[];
-  statistics: IStatistics;
-  severity: ISeverity;
+export type IOutputData = {
   compliance: ICompliance;
-  resultSets: IResultSet[];
-  showResultSets: boolean;
-  showCode: boolean;
   exportType: string;
+  files: IFileInfo[];
   icons: IIcons;
-}
+  resultSets: IResultSet[];
+  severity: ISeverity;
+  showCode: boolean;
+  showResultSets: boolean;
+  statistics: IStatistics;
+  tailwindElements: string;
+  tailwindStyles: string;
+};

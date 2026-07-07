@@ -6,12 +6,12 @@ export const MAX_DECIMAL_PRECISION = 2;
 // Returns string typed compliance level
 export function formatCompliance(
   rawCompliance: number,
-  showAsPercentage = true,
-  maxDisplayPrecision = MAX_DECIMAL_PRECISION
+  shouldShowAsPercentage = true,
+  maxDisplayPrecision = MAX_DECIMAL_PRECISION,
 ): string {
-  let truncatedCompliance =
-    Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * rawCompliance) /
-    Math.pow(10, MAX_DECIMAL_PRECISION);
+  let truncatedCompliance
+    = Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * rawCompliance)
+      / Math.pow(10, MAX_DECIMAL_PRECISION);
 
   // Check if calculated compliance is valid
   if (truncatedCompliance < 0) {
@@ -19,20 +19,17 @@ export function formatCompliance(
   }
 
   // Return as string representation of compliance level percentage
-  return `${truncatedCompliance.toFixed(maxDisplayPrecision)}${showAsPercentage ? '%' : ''}`;
+  return `${truncatedCompliance.toFixed(maxDisplayPrecision)}${shouldShowAsPercentage ? '%' : ''}`;
 }
 
 // Takes formatted compliance level and determines human language equivalent of compliance
 // >=90 is high compliance, >= 60 is medium compliance, <60 is low compliance
 // Mainly for HTML export
 export function translateCompliance(rawCompliance: string): string {
-  const compliance = Number.parseFloat(rawCompliance.slice(0, -1));
+  const compliance = Number(rawCompliance.slice(0, -1));
 
   if (compliance >= 90) {
     return 'high';
-  } else if (compliance >= 60) {
-    return 'medium';
-  } else {
-    return 'low';
   }
+  return compliance >= 60 ? 'medium' : 'low';
 }
