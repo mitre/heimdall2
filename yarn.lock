@@ -1474,9 +1474,9 @@
     css-tree "^3.0.0"
 
 "@casl/ability@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/@casl/ability/-/ability-7.0.0.tgz#fdbf43aea64796ffed676e33b4153f2d50a5c376"
-  integrity sha512-QhwRflkTucpdS2uw1XScrzLWbgLYJGvPoq2Xm5OjeRci3dwtPixxnjUKJ04Ss1ivNS9tZQ8y4sjWeelWsrwo4g==
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@casl/ability/-/ability-7.0.1.tgz#3c81a804a453738fc217cc2aa9987f8bcda3fe9b"
+  integrity sha512-krOW1zQGEie5lH6fpryrcsPvc5r2pe5Vn5xbthuzc5X9gwzHIyZgGGgw9dMoSLHXdjB4BIVxGG/HBkG+1NuyZQ==
   dependencies:
     "@ucast/mongo2js" "^2.0.0"
 
