@@ -6,7 +6,7 @@ import winston from 'winston';
 import { ConfigService } from '../config/config.service';
 import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
-import { getRequiredClaim } from './resolve-claim';
+import { getRequiredClaim } from './resolve_claim';
 
 function getSamlScoping(
   configService: ConfigService,

@@ -7,10 +7,14 @@ export function getRequiredClaim(
   configuredClaimName?: string,
 ): string {
   const resolvedClaimName = configuredClaimName || defaultClaimName;
-  const claimValue = _.get(claims, [resolvedClaimName]);
+  const claimValue = _.get(claims, [resolvedClaimName])
+    ?? _.get(claims, resolvedClaimName);
+  const firstClaimValue = Array.isArray(claimValue)
+    ? claimValue.find(value => typeof value === 'string' && value.length > 0)
+    : claimValue;
 
-  if (typeof claimValue === 'string' && claimValue.length > 0) {
-    return claimValue;
+  if (typeof firstClaimValue === 'string' && firstClaimValue.length > 0) {
+    return firstClaimValue;
   }
 
   throw new UnauthorizedException(`Missing required claim "${resolvedClaimName}".`);
