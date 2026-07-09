@@ -1,10 +1,10 @@
-# ADR-004: External Authentication User Provisioning Policy
+# ADR-004: Scoped REGISTRATION_DISABLED for Local and SSO Account Creation
 
 **Status:** Proposed
-**Date:** 2026-07-08
-**Author:** TBD
-**Branch:** `feature/sso-auto-create-users-policy`
-**Related:** Environment variables configuration, OAuth/OIDC authentication, user registration controls
+**Date:** 2026-07-09
+**Author:** Eugene Aronne
+**Branch:** `external_auth_provisioning_policy`
+**Related:** Environment variables configuration, OAuth/OIDC authentication, LDAP authentication, user registration controls
 
 ---
 
@@ -17,7 +17,8 @@
 | **External authentication provider** | GitHub, GitLab, Google, Okta, custom OIDC, LDAP, or another non-local login mechanism |
 | **Local user** | A Heimdall database user record in the `users` table |
 | **JIT provisioning** | Just-in-time account creation: creating a local Heimdall user automatically the first time a valid external identity logs in |
-| **Public registration** | Self-service user creation through Heimdall's local registration endpoint |
+| **Local registration** | Self-service user creation through Heimdall's local registration endpoint |
+| **SSO auto-account creation** | Creating a local Heimdall user record after a successful first-time external-authentication login |
 | **Pre-provisioned user** | A local Heimdall user record created by an administrator before the user's first SSO login |
 
 ---
@@ -26,7 +27,7 @@
 
 ### 1.1 The Problem
 
-Heimdall currently supports two different account-creation paths:
+Heimdall currently supports two account-creation paths:
 
 1. **Local registration:** a user creates an account through Heimdall's user registration endpoint.
 2. **External authentication login:** a user authenticates with an external provider and Heimdall creates a local user record if one does not already exist.
@@ -42,9 +43,9 @@ LOCAL_LOGIN_DISABLED=true
 
 and still allow new local Heimdall accounts to be created when a previously unknown user successfully authenticates through SSO.
 
-This behavior is useful for low-friction deployments, but it is surprising for locked-down environments where administrators expect all account creation to be explicitly approved.
+This is surprising for locked-down environments, but changing `REGISTRATION_DISABLED=true` to always block SSO JIT provisioning would break deployments that intentionally disable local registration while relying on SSO as the provisioning gate.
 
-### 1.2 Current Behavior
+### 1.2 Current External Authentication Flow
 
 The current flow for OAuth/OIDC-style login is:
 
@@ -61,44 +62,40 @@ The current flow for OAuth/OIDC-style login is:
 
 The `REGISTRATION_DISABLED` check is not part of this flow.
 
-### 1.3 Why This Matters
+### 1.3 Desired Operator Controls
 
-Many Heimdall deployments run in environments where:
+Administrators need to express four simple policies:
 
-- only explicitly approved users should receive local Heimdall accounts
-- identity provider access does not necessarily mean Heimdall application authorization
-- auditors expect account creation to be traceable to an administrator action
-- default-deny access is preferred for mission or compliance systems
+| Policy | Local registration | SSO auto-account creation |
+|--------|--------------------|---------------------------|
+| Allow both | Allowed | Allowed |
+| Disable both | Rejected | Rejected |
+| Disable local only | Rejected | Allowed |
+| Disable SSO only | Allowed | Rejected |
 
-In those environments, SSO should authenticate identity, but Heimdall should still decide whether a local application account is allowed to exist.
-
-### 1.4 User Expectation Gap
-
-The name `REGISTRATION_DISABLED` naturally reads as "disable user self-registration." Administrators may reasonably assume this includes SSO-created accounts. In the current implementation, it does not.
-
-Changing `REGISTRATION_DISABLED` to also block SSO auto-creation would close that surprise, but it would also change established behavior for deployments that intentionally use SSO as their provisioning mechanism.
+This does not require provider-specific controls. Heimdall can keep one application-level registration setting while making the disabled scope explicit.
 
 ---
 
 ## 2. Decision
 
-Add a separate environment variable:
+Change `REGISTRATION_DISABLED` from a boolean-only flag into a small, case-insensitive enum:
 
-```env
-SSO_AUTO_CREATE_USERS_DISABLED=true
-```
+| `REGISTRATION_DISABLED` | Local registration | SSO auto-account creation |
+|-------------------------|--------------------|---------------------------|
+| unset | Allowed | Allowed |
+| `false` | Allowed | Allowed |
+| `true` | Rejected | Rejected |
+| `local` | Rejected | Allowed |
+| `sso` | Allowed | Rejected |
 
-When this variable is set to `true`, Heimdall will reject external-authentication logins for users who do not already have a local Heimdall account.
+`true` disables both account-creation paths. This introduces a small breaking change for existing deployments that currently set `REGISTRATION_DISABLED=true` to disable local registration while still relying on SSO JIT provisioning. Those deployments should change to `REGISTRATION_DISABLED=local`.
 
-Default behavior remains unchanged:
+`local` is the explicit spelling of the historical behavior where local public registration is disabled but SSO JIT provisioning remains enabled.
 
-| `SSO_AUTO_CREATE_USERS_DISABLED` | Behavior |
-|----------------------------------|----------|
-| unset | Missing SSO users are automatically created, current behavior |
-| `false` | Missing SSO users are automatically created |
-| `true` | Missing SSO users are rejected unless an admin pre-created the account |
+`sso` allows local registration but requires SSO users to be pre-provisioned.
 
-This keeps `REGISTRATION_DISABLED` scoped to local public registration and gives administrators an explicit control for SSO just-in-time provisioning.
+Existing users are unaffected. If a local Heimdall account already exists with the email returned by the external identity provider, SSO login continues to work for all values.
 
 ---
 
@@ -106,22 +103,50 @@ This keeps `REGISTRATION_DISABLED` scoped to local public registration and gives
 
 ### 3.1 Configuration Service
 
-Add a helper to `apps/backend/src/config/config.service.ts`:
+Update `apps/backend/src/config/config.service.ts` so `isRegistrationAllowed()` accepts an optional scope.
 
 ```ts
-isSsoAutoCreateUsersAllowed(): boolean {
-  return this.get('SSO_AUTO_CREATE_USERS_DISABLED')?.toLowerCase() !== 'true';
+type RegistrationScope = 'local' | 'sso';
+
+isRegistrationAllowed(scope: RegistrationScope = 'local'): boolean {
+  const registrationDisabled = this.get('REGISTRATION_DISABLED')?.toLowerCase();
+  return registrationDisabled !== 'true' && registrationDisabled !== scope;
 }
 ```
 
-This follows the existing boolean-disabled pattern used by:
+Behavior:
 
-- `isRegistrationAllowed()`
-- `isLocalLoginAllowed()`
+| Call | Disabled when `REGISTRATION_DISABLED` is |
+|------|------------------------------------------|
+| `isRegistrationAllowed()` | `true` or `local` |
+| `isRegistrationAllowed('local')` | `true` or `local` |
+| `isRegistrationAllowed('sso')` | `true` or `sso` |
 
-The default is permissive to preserve backwards compatibility.
+The default scope is `local`, so existing local-registration callers keep the same call shape and gain support for the new `local` value.
 
-### 3.2 Authentication Service
+Unknown values are treated as permissive, matching the current behavior where only recognized values disable registration.
+
+### 3.2 Local Registration Endpoint
+
+No code change is required if existing callers continue to use:
+
+```ts
+this.configService.isRegistrationAllowed()
+```
+
+With the new default scope, local registration is rejected when:
+
+```env
+REGISTRATION_DISABLED=true
+```
+
+or:
+
+```env
+REGISTRATION_DISABLED=local
+```
+
+### 3.3 Authentication Service
 
 Update `apps/backend/src/authn/authn.service.ts` inside `validateOrCreateUser(...)`.
 
@@ -154,7 +179,7 @@ Proposed behavior:
 try {
   user = await this.usersService.findByEmail(email);
 } catch {
-  if (!this.configService.isSsoAutoCreateUsersAllowed()) {
+  if (!this.configService.isRegistrationAllowed('sso')) {
     throw new UnauthorizedException(
       'No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.'
     );
@@ -177,68 +202,96 @@ try {
 }
 ```
 
-### 3.3 Environment Documentation
+This keeps provider strategies unchanged. GitHub, GitLab, Google, Okta, OIDC, LDAP, and any other strategy that uses `validateOrCreateUser(...)` inherit the same SSO-scope policy.
 
-Add the variable to `apps/backend/.env-example`:
+All external-authentication strategies must continue to provision through `AuthnService.validateOrCreateUser(...)`. This is the architectural choke point for account creation, so future strategies such as SAML must use the same service method rather than creating Heimdall users directly.
+
+### 3.4 Environment Documentation and Samples
+
+Update every repository surface that lists or examples environment variables, including Helm charts if present, to describe all supported values.
+
+Known surfaces in the current `master` checkout:
+
+| Surface | Required update |
+|---------|-----------------|
+| `apps/backend/.env-example` | Update `REGISTRATION_DISABLED` description |
+| `manifest.yml.example` | Add or update a `REGISTRATION_DISABLED` example under `env:` |
+| Helm chart `values.yaml` / `templates/*.yaml`, if present in the target branch or packaging path | Update any `REGISTRATION_DISABLED` value/comment and any generated environment variable list |
+| Docker Compose examples / generated `.env` docs | Update only if they list `REGISTRATION_DISABLED` directly; current `docker-compose.yml` delegates to `.env` |
+| Environment variables wiki | Update `REGISTRATION_DISABLED` wording and external-authentication behavior |
+| Release notes / migration notes | Call out the new enum values |
+
+Recommended wording for `.env-example`:
 
 ```env
-SSO_AUTO_CREATE_USERS_DISABLED=<If users who log in with OAuth/OIDC/other external authentication providers should be required to already exist in Heimdall instead of being created automatically (defaults to false)>
+REGISTRATION_DISABLED=<Controls account self-provisioning: false/unset allows local registration and SSO auto-account creation; true disables both; local disables local registration only; sso disables SSO auto-account creation only (defaults to false)>
 ```
 
-Update the environment variables wiki to distinguish:
+Recommended manifest example:
 
-- `REGISTRATION_DISABLED`: disables public local registration
-- `SSO_AUTO_CREATE_USERS_DISABLED`: disables SSO just-in-time local user creation
+```yaml
+#REGISTRATION_DISABLED: false # false|true|local|sso
+```
 
-### 3.4 Authentication Strategies
+### 3.5 Error Handling and Logging
 
-No strategy-specific changes are required.
+When SSO auto-account creation is disabled and an external identity authenticates successfully but no local Heimdall user exists:
 
-The existing provider strategies should continue to call `validateOrCreateUser(...)`:
+1. Do not create a user record.
+2. Throw `UnauthorizedException`.
+3. Log a structured event with:
+   - provider / `creationMethod`
+   - external email
+   - reason: `registrationDisabledForSso`
+   - no password or token material
+4. Preserve a structured error code through the callback / frontend flow, such as `account_not_provisioned`, so this condition is distinguishable from a generic authentication failure.
 
-- GitHub
-- GitLab
-- Google
-- Okta
-- OIDC
+The user-facing message should be clear enough to route the user to an administrator:
 
-The provisioning decision belongs in `AuthnService`, not in each provider strategy. This avoids duplicating policy logic and keeps provider code focused on identity validation.
+```text
+No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.
+```
 
 ---
 
 ## 4. Why Not the Alternatives
 
-### Option A: Reuse `REGISTRATION_DISABLED`
+### Option A: Keep `REGISTRATION_DISABLED` Boolean-Only and Apply to Both Paths
 
-This would make `REGISTRATION_DISABLED=true` block both local registration and SSO auto-creation.
-
-**Pros:**
-- Simple mental model: no self-service account creation of any kind
-- Minimal new configuration surface
-
-**Cons:**
-- Changes existing behavior for deployments that use SSO as their normal provisioning path
-- Makes "registration" mean two different mechanisms
-- Prevents administrators from disabling local public registration while still allowing SSO JIT provisioning
-
-**Decision:** Reject. The behavior change is too broad for an existing variable.
-
-### Option B: Remove SSO Auto-Creation Entirely
-
-Require all SSO users to be pre-created.
+`REGISTRATION_DISABLED=true` would block both local registration and SSO auto-account creation.
 
 **Pros:**
-- Strong default-deny posture
-- Simple implementation
+- Very simple mental model
+- No new values to document
+- Good locked-down default when set to `true`
 
 **Cons:**
-- Breaks low-friction deployments
-- Breaks existing environments that rely on IdP assignment as the provisioning gate
-- Requires manual admin work for every new SSO user
+- Behavior change for deployments that set `REGISTRATION_DISABLED=true` but rely on SSO JIT provisioning
+- Cannot express "local disabled, SSO JIT enabled"
+- Cannot express "local enabled, SSO JIT disabled"
 
-**Decision:** Reject. Heimdall should support both provisioning models.
+**Decision:** Reject. The enum keeps the simple one-variable model while allowing the needed deployment modes.
 
-### Option C: Provider-Specific Controls
+### Option B: Add `SSO_AUTO_CREATE_USERS_DISABLED`
+
+Add a separate global environment variable:
+
+```env
+SSO_AUTO_CREATE_USERS_DISABLED=true
+```
+
+**Pros:**
+- Explicit about the external-authentication path
+- Allows local registration and SSO JIT provisioning to be controlled independently
+
+**Cons:**
+- Adds another account-creation flag administrators must understand
+- Leaves the relationship between the two flags less obvious
+- Requires combinations of two variables to express a single policy
+
+**Decision:** Reject. Use one variable with explicit values.
+
+### Option C: Add Provider-Specific SSO Controls
 
 Add variables such as:
 
@@ -249,43 +302,51 @@ GITHUB_AUTO_CREATE_USERS_DISABLED=true
 ```
 
 **Pros:**
-- Maximum control per provider
-- Useful for mixed-provider environments
+- Supports mixed-provider deployments with different risk profiles
+- Allows one provider to auto-provision while another requires pre-created users
 
 **Cons:**
-- More configuration and documentation burden
-- Increases test matrix
-- Does not match the current centralized creation path
+- Larger configuration surface
+- Larger test matrix
+- Harder to explain than one registration policy
+- Makes account creation depend on provider naming conventions
 
-**Decision:** Defer. A global policy is sufficient for the immediate need. Provider-specific overrides can be added later if a real deployment requires them.
+**Decision:** Reject for this ADR. If per-provider policy becomes a real deployment requirement, it should be introduced in a later ADR as an explicit expansion of the registration model.
 
-### Option D: Rely on IdP App Assignment Only
+### Option D: Remove SSO Auto-Creation Entirely
 
-Tell administrators to restrict who can access the Heimdall app in the identity provider.
+Require all SSO users to be pre-created regardless of environment configuration.
 
 **Pros:**
-- No code change
-- Keeps authorization outside Heimdall
+- Strong default-deny posture
+- Simple implementation
 
 **Cons:**
-- Does not satisfy environments that require local account pre-approval
-- IdP assignment and Heimdall account creation are different audit events
-- Misconfiguration at the IdP still creates local users
+- Breaks low-friction deployments
+- Breaks existing environments that rely on IdP assignment as the provisioning gate
+- Requires manual admin work for every new SSO user
 
-**Decision:** Reject as the only control. IdP assignment remains recommended defense-in-depth, but Heimdall needs its own provisioning policy.
+**Decision:** Reject. Heimdall should still support SSO JIT provisioning when configured to do so.
 
 ---
 
 ## 5. Behavior Matrix
 
-| Scenario | Local user exists? | External auth succeeds? | `SSO_AUTO_CREATE_USERS_DISABLED` | Result |
-|----------|--------------------|--------------------------|----------------------------------|--------|
-| Existing user signs in with SSO | Yes | Yes | unset / `false` | Login succeeds |
-| Existing user signs in with SSO | Yes | Yes | `true` | Login succeeds |
-| Unknown user signs in with SSO | No | Yes | unset / `false` | User is created; login succeeds |
-| Unknown user signs in with SSO | No | Yes | `true` | Login rejected |
+| Scenario | Local user exists? | External auth succeeds? | `REGISTRATION_DISABLED` | Result |
+|----------|--------------------|--------------------------|-------------------------|--------|
+| Existing OIDC user signs in | Yes | Yes | any | Login succeeds |
+| Existing GitHub user signs in | Yes | Yes | any | Login succeeds |
+| Unknown OIDC user signs in | No | Yes | unset / `false` | User is created; login succeeds |
+| Unknown OIDC user signs in | No | Yes | `true` | Login rejected; user is not created |
+| Unknown OIDC user signs in | No | Yes | `local` | User is created; login succeeds |
+| Unknown OIDC user signs in | No | Yes | `sso` | Login rejected; user is not created |
+| SSO user has a local account under a different email | No matching email | Yes | unset / `false` / `local` | A new local user may be created for the IdP email; the existing mismatched account is not used |
+| SSO user has a local account under a different email | No matching email | Yes | `true` / `sso` | Login rejected; pre-provisioned users must exactly match the IdP email |
 | Unknown user fails IdP authentication | No | No | any | Login rejected by provider strategy |
-| Local public registration | No | n/a | any | Controlled by `REGISTRATION_DISABLED`, unchanged |
+| Local public registration | No | n/a | unset / `false` | User creation follows existing local-registration behavior |
+| Local public registration | No | n/a | `true` | Rejected unless current user has registration-bypass permission |
+| Local public registration | No | n/a | `local` | Rejected unless current user has registration-bypass permission |
+| Local public registration | No | n/a | `sso` | User creation follows existing local-registration behavior |
 | Local username/password login | Yes | n/a | any | Controlled by `LOCAL_LOGIN_DISABLED`, unchanged |
 
 ---
@@ -294,61 +355,99 @@ Tell administrators to restrict who can access the Heimdall app in the identity 
 
 ### 6.1 Positive Security Effects
 
-- Supports default-deny local account provisioning
-- Separates identity authentication from Heimdall application authorization
-- Reduces risk from overly broad IdP app assignment
-- Makes SSO provisioning behavior explicit and auditable
-- Enables administrators to require pre-created Heimdall accounts while still using SSO for authentication
+- Supports default-deny local and SSO account self-provisioning with `REGISTRATION_DISABLED=true`.
+- Separates identity authentication from Heimdall application authorization with `REGISTRATION_DISABLED=sso`.
+- Preserves low-friction SSO provisioning with `REGISTRATION_DISABLED=local`.
+- Keeps account-creation policy in a single environment variable.
+- Avoids provider-specific configuration unless future requirements justify it.
 
-### 6.2 Residual Risks
+### 6.2 Backwards Compatibility
 
-- Existing auto-created users remain in the database after the flag is enabled.
+Current boolean values keep their intuitive meaning:
+
+- unset / `false`: local registration and SSO auto-account creation are allowed
+- `true`: local registration and SSO auto-account creation are disabled
+
+This is a small breaking change for deployments that currently set `REGISTRATION_DISABLED=true` but rely on SSO JIT provisioning. Those deployments should change to:
+
+```env
+REGISTRATION_DISABLED=local
+```
+
+Deployments that want local registration enabled but SSO users pre-provisioned should set:
+
+```env
+REGISTRATION_DISABLED=sso
+```
+
+### 6.3 Residual Risks
+
+- Existing auto-created users remain in the database after SSO auto-account creation is disabled.
 - Administrators must still remove or disable unwanted existing accounts.
 - Email address matching remains the account binding mechanism.
+- If an IdP allows user-editable or unverified email claims, an external identity could bind to someone else's pre-provisioned Heimdall account. SSO providers must return verified, administrator-controlled email attributes.
 - IdP-side access control is still required to prevent users from reaching the SSO callback flow.
-
-### 6.3 Audit Behavior
-
-When the flag is enabled, a rejected SSO login should not create a user record. Any audit logging should record the failed authentication attempt without persisting a new local account.
-
-If existing logging does not distinguish "SSO user authenticated but no local account exists," add a structured log message at the rejection point.
+- Deployments cannot express per-provider SSO provisioning preferences with this ADR.
 
 ---
 
 ## 7. Testing Strategy
 
-### 7.1 Unit Tests
+### 7.1 ConfigService Tests
 
-Add tests for `ConfigService.isSsoAutoCreateUsersAllowed()`:
+Add tests for `ConfigService.isRegistrationAllowed(scope?)`:
 
-| Env value | Expected |
-|-----------|----------|
-| unset | `true` |
-| `false` | `true` |
-| `FALSE` | `true` |
-| `true` | `false` |
-| `TRUE` | `false` |
+| `REGISTRATION_DISABLED` | `isRegistrationAllowed()` | `isRegistrationAllowed('local')` | `isRegistrationAllowed('sso')` |
+|-------------------------|---------------------------|----------------------------------|--------------------------------|
+| unset | `true` | `true` | `true` |
+| `false` | `true` | `true` | `true` |
+| `FALSE` | `true` | `true` | `true` |
+| `true` | `false` | `false` | `false` |
+| `TRUE` | `false` | `false` | `false` |
+| `local` | `false` | `false` | `true` |
+| `LOCAL` | `false` | `false` | `true` |
+| `sso` | `true` | `true` | `false` |
+| `SSO` | `true` | `true` | `false` |
 
 ### 7.2 AuthnService Tests
 
 Add tests for `validateOrCreateUser(...)`:
 
-1. Existing user is returned regardless of `SSO_AUTO_CREATE_USERS_DISABLED`.
-2. Missing user is created when the variable is unset.
-3. Missing user is created when the variable is `false`.
-4. Missing user throws `UnauthorizedException` when the variable is `true`.
-5. Missing user with the variable set to `true` does not call `usersService.create(...)`.
-6. Existing user profile updates and login metadata updates are unchanged.
+1. Existing SSO user is returned regardless of `REGISTRATION_DISABLED`.
+2. Missing SSO user is created when `REGISTRATION_DISABLED` is unset.
+3. Missing SSO user is created when `REGISTRATION_DISABLED=false`.
+4. Missing SSO user is created when `REGISTRATION_DISABLED=local`.
+5. Missing SSO user throws `UnauthorizedException` when `REGISTRATION_DISABLED=true`.
+6. Missing SSO user throws `UnauthorizedException` when `REGISTRATION_DISABLED=sso`.
+7. Missing SSO user with SSO creation disabled does not call `usersService.create(...)`.
+8. Missing SSO user with SSO creation disabled emits a structured audit event.
+9. Missing SSO user with SSO creation disabled propagates a stable `account_not_provisioned` error code to the callback / frontend flow.
+10. Existing user profile updates and login metadata updates are unchanged.
+11. The thrown error does not leak provider tokens or sensitive profile data.
 
-### 7.3 Strategy Integration Tests
+### 7.3 Local Registration Tests
 
-No provider-specific logic should be required, but at least one OAuth/OIDC strategy test should verify the flow:
+Update local user creation tests to cover:
+
+1. Local registration allowed when unset / `false`.
+2. Local registration rejected when `true`.
+3. Local registration rejected when `local`.
+4. Local registration allowed when `sso`.
+5. Existing administrator bypass behavior remains unchanged for disabled local registration.
+
+### 7.4 Strategy Integration Tests
+
+No provider-specific policy logic should be required in strategy classes, but at least one OAuth/OIDC strategy test should verify the end-to-end flow:
 
 1. Strategy receives a valid verified external identity.
-2. `validateOrCreateUser(...)` rejects a missing user when auto-create is disabled.
-3. The login fails without creating a local user.
+2. Strategy calls `validateOrCreateUser(...)`.
+3. `validateOrCreateUser(...)` rejects a missing user when `REGISTRATION_DISABLED=sso`.
+4. `validateOrCreateUser(...)` rejects a missing user when `REGISTRATION_DISABLED=true`.
+5. The login fails without creating a local user.
 
 OIDC is the preferred coverage target because custom OIDC is the most common enterprise SSO integration point.
+
+LDAP already calls `validateOrCreateUser(...)`, so LDAP is covered by the same AuthnService gate. Add a lightweight regression assertion or code-reference test so future LDAP changes do not bypass the shared provisioning path.
 
 ---
 
@@ -356,22 +455,26 @@ OIDC is the preferred coverage target because custom OIDC is the most common ent
 
 ### 8.1 Default Migration
 
-No migration is required. The variable defaults to the existing behavior.
-
-Existing deployments will continue to auto-create missing SSO users unless they explicitly set:
+No migration is required for deployments that do not set `REGISTRATION_DISABLED`. The default remains equivalent to:
 
 ```env
-SSO_AUTO_CREATE_USERS_DISABLED=true
+REGISTRATION_DISABLED=false
 ```
 
-### 8.2 Locked-Down Deployment Procedure
+Missing SSO users continue to be auto-created by default.
 
-Recommended configuration for deployments that require explicit user provisioning:
+### 8.2 Locked-Down Deployment
+
+Recommended configuration for deployments that require explicit user provisioning for both local and SSO users:
+
+```env
+REGISTRATION_DISABLED=true
+```
+
+Optional, if local username/password login should also be disabled:
 
 ```env
 LOCAL_LOGIN_DISABLED=true
-REGISTRATION_DISABLED=true
-SSO_AUTO_CREATE_USERS_DISABLED=true
 ```
 
 Operational steps:
@@ -379,18 +482,30 @@ Operational steps:
 1. Create or import local Heimdall user records for approved users.
 2. Ensure each local user email exactly matches the email returned by the IdP.
 3. Assign the same users to the Heimdall app in the IdP.
-4. Enable `SSO_AUTO_CREATE_USERS_DISABLED=true`.
+4. Set `REGISTRATION_DISABLED=true`.
 5. Remove any previously auto-created users that should not retain access.
 
-### 8.3 Error Message
+### 8.3 SSO JIT With Local Registration Disabled
 
-Use a clear user-facing message:
+Recommended configuration for deployments that use SSO as the provisioning gate:
 
-```text
-No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.
+```env
+REGISTRATION_DISABLED=local
 ```
 
-Avoid exposing whether an arbitrary email exists unless the user has already authenticated through a trusted provider. This message is returned only after successful external identity validation.
+If local username/password login should also be disabled:
+
+```env
+LOCAL_LOGIN_DISABLED=true
+```
+
+### 8.4 Local Registration With SSO Pre-Provisioning
+
+Recommended configuration for deployments that allow local registration but require SSO users to already exist:
+
+```env
+REGISTRATION_DISABLED=sso
+```
 
 ---
 
@@ -398,23 +513,26 @@ Avoid exposing whether an arbitrary email exists unless the user has already aut
 
 ### 9.1 Positive
 
-- Administrators gain explicit control over SSO just-in-time provisioning.
-- Existing deployments keep current behavior by default.
-- The distinction between local registration and external-auth provisioning becomes documented and testable.
-- The implementation is centralized in `AuthnService`.
+- One environment variable expresses all four account-creation policies.
+- `REGISTRATION_DISABLED=true` gives locked-down deployments an explicit default-deny setting.
+- `REGISTRATION_DISABLED=local` provides a migration path for existing local-registration-only deployments.
+- `REGISTRATION_DISABLED=sso` supports pre-provisioned SSO without disabling local registration.
 - Provider strategies remain simple and unchanged.
 
 ### 9.2 Negative
 
-- Adds one more environment variable to document and support.
-- Administrators can misconfigure locked-down environments if they set `REGISTRATION_DISABLED=true` but forget `SSO_AUTO_CREATE_USERS_DISABLED=true`.
-- Pre-provisioned SSO deployments require exact email matching.
+- `REGISTRATION_DISABLED` is no longer boolean-only.
+- Documentation must be updated everywhere the environment variable is listed.
+- Deployments using strict boolean validators in external Helm charts or platform tooling may need updates.
+- Deployments cannot express different auto-account-creation preferences per SSO provider.
+- Deployments that currently use `REGISTRATION_DISABLED=true` while relying on SSO JIT provisioning must change to `REGISTRATION_DISABLED=local`.
 
 ### 9.3 Risks
 
-- If the error is surfaced poorly in the frontend, users may see a generic authentication failure with no remediation guidance.
+- The callback and frontend flow must preserve the `account_not_provisioned` error code; otherwise users may see a generic authentication failure with no remediation guidance.
 - If existing tests assume missing external users are always created, those tests must be updated to cover both branches.
-- LDAP may need a separate review if its login path does not call `validateOrCreateUser(...)`.
+- Future external-authentication strategies must continue to use `validateOrCreateUser(...)` so they do not bypass the shared provisioning gate.
+- Admin user-management workflows may be awkward when `LOCAL_LOGIN_DISABLED=true`.
 
 ### 9.4 What's NOT in Scope
 
@@ -423,8 +541,8 @@ Avoid exposing whether an arbitrary email exists unless the user has already aut
 - SCIM provisioning
 - Bulk user import
 - Provider-specific auto-create flags
-- Changing the meaning of `REGISTRATION_DISABLED`
 - Deleting existing auto-created users
+- Redesigning admin user creation when local login is disabled
 
 ---
 
@@ -432,30 +550,53 @@ Avoid exposing whether an arbitrary email exists unless the user has already aut
 
 | Phase | Scope | Depends On | Estimate | Notes |
 |-------|-------|------------|----------|-------|
-| 1 | Add `ConfigService.isSsoAutoCreateUsersAllowed()` | - | sp:1 | Defaults to allowed unless env var is exactly `true` |
-| 2 | Gate the create branch in `AuthnService.validateOrCreateUser(...)` | Phase 1 | sp:1 | Throw `UnauthorizedException`; do not call `usersService.create(...)` |
-| 3 | Add unit tests for config helper and auth service behavior | Phase 1-2 | sp:2 | Include "create not called" assertion |
-| 4 | Add one strategy integration test, preferably OIDC | Phase 2 | sp:2 | Verifies valid SSO identity + missing local user is rejected |
-| 5 | Update `.env-example` and environment variables wiki | Phase 1 | sp:1 | Clarify difference from `REGISTRATION_DISABLED` |
-| 6 | Manual smoke test with OIDC in server mode | Phase 2-5 | sp:2 | Existing user succeeds; missing user rejected |
+| 1 | Update `ConfigService.isRegistrationAllowed(scope?)` | - | sp:1 | Support unset/`false`/`true`/`local`/`sso`; default scope is `local` |
+| 2 | Gate the create branch in `AuthnService.validateOrCreateUser(...)` with `configService.isRegistrationAllowed('sso')` | Phase 1 | sp:1 | Throw `UnauthorizedException`; do not call `usersService.create(...)` |
+| 3 | Add structured audit logging for rejected SSO self-provisioning | Phase 2 | sp:1 | Include provider, email, and `registrationDisabledForSso`; exclude token/password material |
+| 4 | Preserve a frontend-visible `account_not_provisioned` error code | Phase 2 | sp:1 | Callback/login UI can distinguish missing pre-provisioned users from generic auth failure |
+| 5 | Add ConfigService, AuthnService, and local registration tests | Phase 1-4 | sp:3 | Cover case-insensitive values, both scopes, audit event, and error code |
+| 6 | Add or update strategy integration tests, preferably OIDC plus LDAP path coverage | Phase 2 | sp:2 | Verify valid external identity + missing local user is rejected for `true` and `sso`; assert LDAP still uses `validateOrCreateUser(...)` |
+| 7 | Update all environment-variable listing surfaces | Phase 1 | sp:2 | `.env-example`, `manifest.yml.example`, Helm chart values/templates if present, Docker/example docs if they list the variable, wiki, release notes |
+| 8 | Manual smoke test with OIDC in server mode | Phase 1-7 | sp:2 | Existing user succeeds; missing user follows `false`/`true`/`local`/`sso` matrix and surfaces the specific error |
 
 ---
 
-## 11. Review Questions
+## 11. Environment Surface Audit
 
-1. Should the variable name be `SSO_AUTO_CREATE_USERS_DISABLED` or `EXTERNAL_AUTH_AUTO_CREATE_USERS_DISABLED`?
-2. Should LDAP be covered by this same policy if it uses a separate creation path?
-3. Should the rejected-login event be added to structured audit logging as part of this change?
-4. Should the frontend show a specific message for this condition, or rely on the backend exception message?
+Searches run against current `mitre/heimdall2` `master` checkout:
+
+- `rg -n -uuu "REGISTRATION_DISABLED|LOCAL_LOGIN_DISABLED|OIDC_|GITHUB_CLIENTID|GITLAB_CLIENTID|GOOGLE_CLIENTID|OKTA_CLIENTID|LDAP_ENABLED|Environment Variables|environment variables"`
+- `rg --files -uuu | rg -i "helm|chart|values|template|manifest|compose|docker|env|example|sample|readme|docs|k8s|kubernetes"`
+
+Findings:
+
+| Surface | Status |
+|---------|--------|
+| `apps/backend/.env-example` | Must update `REGISTRATION_DISABLED` description |
+| `manifest.yml.example` | Should add `REGISTRATION_DISABLED` example/comment |
+| `docker-compose.yml` | Uses `env_file: .env`; no direct `REGISTRATION_DISABLED` listing found |
+| `setup-docker-env.sh` / `setup-docker-env.ps1` | Generate secrets only; no direct `REGISTRATION_DISABLED` listing found |
+| `README.md` | Links to the wiki for `.env`; no direct `REGISTRATION_DISABLED` listing found |
+| Helm chart | No chart directory, `Chart.yaml`, or `values.yaml` found in current `master`; update if present in a release branch, packaging branch, or downstream chart |
+| Backend test env files | LDAP/OIDC test config only; no `REGISTRATION_DISABLED` listing found |
 
 ---
 
-## 12. References
+## 12. Review Questions
+
+1. Should unknown `REGISTRATION_DISABLED` values remain permissive for backwards compatibility, or should startup fail fast?
+2. Should the wiki and release notes call this a small breaking change for `REGISTRATION_DISABLED=true` deployments that rely on SSO JIT provisioning?
+3. Should admin user creation remain blocked when `LOCAL_LOGIN_DISABLED=true`, or should that be split into a separate setting?
+
+---
+
+## 13. References
 
 - `apps/backend/src/authn/authn.service.ts` - `validateOrCreateUser(...)`
-- `apps/backend/src/config/config.service.ts` - environment-backed configuration helpers
+- `apps/backend/src/config/config.service.ts` - `isRegistrationAllowed()`
 - `apps/backend/src/users/users.controller.ts` - local public registration enforcement
 - `apps/backend/.env-example` - environment variable documentation
+- `manifest.yml.example` - Cloud Foundry example environment variables
 - Heimdall2 wiki: Environment Variables Configuration
 - ADR-001: GUI Attestation & Comment Engine
 - ADR-002: DRY Refactoring of hdf-converters
