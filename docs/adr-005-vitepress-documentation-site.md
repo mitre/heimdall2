@@ -152,6 +152,8 @@ Author docs in-repo, push to the wiki repo on merge.
 
 ### 5.3 Phases
 
+Tracked as epic **`heimdall2-yvx`** on the heimdall2 beads board; each phase below is child card `heimdall2-yvx.<phase>` (e.g. Phase 3 = `heimdall2-yvx.3`), with dependencies mirroring the Depends on column. ADR-004's Phase 9 card (`heimdall2-4qg.9`) soft-references this epic: once the docs site is live, its wiki deliverables become docs-site page edits.
+
 | Phase | Scope | Depends on | Estimate |
 |---|---|---|---|
 | 1 | Scaffold: `docs/` with own package.json/yarn.lock, VitePress config (base path, cleanUrls, lastUpdated, dead-link check), minimal theme, landing page, `.gitignore`/`.dockerignore` entries. AC: root install/build byte-identical | — | sp:3 |

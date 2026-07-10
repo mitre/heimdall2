@@ -772,6 +772,8 @@ The same upgrade-ordering rule applies (6.2): older code reads `sso` as fully pe
 
 ## 10. Work Order
 
+Tracked as epic **`heimdall2-4qg`** on the heimdall2 beads board; each phase below is child card `heimdall2-4qg.<phase>` (e.g. Phase 3 = `heimdall2-4qg.3`), with dependencies mirroring the Depends On column. The VitePress docs-site work referenced by Phase 9 is epic `heimdall2-yvx` (ADR-005) — a soft reference, not a blocking dependency.
+
 | Phase | Scope | Depends On | Estimate | Notes |
 |-------|-------|------------|----------|-------|
 | 1 | Update `ConfigService.isRegistrationAllowed(scope?)` + `validateRegistrationDisabled()` fail-fast startup validation | - | sp:1 | Support unset/`false`/`true`/`local`/`sso`; default scope `local`; unknown values refuse to start (3.1) |
