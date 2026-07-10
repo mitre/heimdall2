@@ -2,7 +2,7 @@
 
 **Status:** Proposed
 **Date:** 2026-07-09
-**Author:** Eugene Aronne
+**Author:** Eugene Aronne, Aaron Lippold
 **Branch:** `external_auth_provisioning_policy`
 **Related:** Environment variables configuration, OAuth/OIDC authentication, LDAP authentication, user registration controls
 
@@ -50,7 +50,7 @@ This is surprising for locked-down environments, but changing `REGISTRATION_DISA
 The current flow for OAuth/OIDC-style login is:
 
 1. User authenticates with the external identity provider.
-2. The provider returns a verified email and profile details.
+2. The provider returns an email and profile details. (Email verification is checked by the GitHub and Google strategies, and by OIDC unless `OIDC_USES_VERIFIED_EMAIL=false`; the GitLab, Okta, and LDAP strategies do not check verification — see 6.3.)
 3. The strategy calls `authnService.validateOrCreateUser(email, firstName, lastName, creationMethod)`.
 4. `validateOrCreateUser(...)` looks up the user by email.
 5. If the user exists, Heimdall updates profile metadata and login metadata.
@@ -113,7 +113,7 @@ Update `apps/backend/src/config/config.service.ts` so `isRegistrationAllowed()` 
 type RegistrationScope = 'local' | 'sso';
 
 isRegistrationAllowed(scope: RegistrationScope = 'local'): boolean {
-  const registrationDisabled = this.get('REGISTRATION_DISABLED')?.toLowerCase();
+  const registrationDisabled = this.get('REGISTRATION_DISABLED')?.trim().toLowerCase();
   return registrationDisabled !== 'true' && registrationDisabled !== scope;
 }
 ```
@@ -136,8 +136,8 @@ private static readonly VALID_REGISTRATION_VALUES = new Set([
 ]);
 
 validateRegistrationDisabled(): void {
-  const raw = this.get('REGISTRATION_DISABLED');
-  if (raw === undefined || raw === '') return; // unset/empty = false (permissive)
+  const raw = this.get('REGISTRATION_DISABLED')?.trim();
+  if (raw === undefined || raw === '') return; // unset/empty/whitespace-only = false (permissive)
   if (!ConfigService.VALID_REGISTRATION_VALUES.has(raw.toLowerCase())) {
     throw new Error(
       `Invalid REGISTRATION_DISABLED value "${raw}". ` +
@@ -148,6 +148,8 @@ validateRegistrationDisabled(): void {
 ```
 
 Called once during backend startup (alongside existing config initialization) so a misconfigured deployment refuses to boot with a clear message instead of running with an unintended registration policy.
+
+Values are trimmed before validation and matching. Environment values delivered by Kubernetes manifests, systemd units, or shell exports can carry stray whitespace; `true ` (trailing space) is silently permissive today and must behave as `true` after this change — not refuse to start — while whitespace-only values are treated as unset.
 
 ### 3.2 Local Registration Endpoint
 
@@ -168,6 +170,8 @@ or:
 ```env
 REGISTRATION_DISABLED=local
 ```
+
+`isRegistrationAllowed()` has one other caller: `frontendStartupSettings()` in `config.service.ts` exposes it (default `local` scope) as `registrationEnabled`, which is served to the login page pre-authentication and controls the Sign Up button (`LocalLogin.vue`). No code change is required there either, but the per-value UI must be verified against the section 5 matrix: `sso` still shows Sign Up; `true` and `local` hide it. The `/signup` route remains directly navigable — the backend gate in `users.controller.ts` is authoritative, not the button visibility.
 
 ### 3.3 Authentication Service
 
@@ -199,13 +203,30 @@ try {
 Proposed behavior:
 
 ```ts
+if (!email) {
+  // A missing or empty email attribute is a provider/mapping problem, not a
+  // provisioning-policy rejection — never report it as account_not_provisioned.
+  throw new UnauthorizedException({
+    message: 'External identity did not provide an email address.',
+    error: 'external_identity_missing_email'
+  });
+}
+
 try {
   user = await this.usersService.findByEmail(email);
-} catch {
+} catch (err) {
+  // findByEmail throws NotFoundException only for a missing user; database or
+  // query failures must not be treated as "not provisioned".
+  if (!(err instanceof NotFoundException)) {
+    throw err;
+  }
+
   if (!this.configService.isRegistrationAllowed('sso')) {
-    throw new UnauthorizedException(
-      'No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.'
-    );
+    throw new UnauthorizedException({
+      message:
+        'No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.',
+      error: 'account_not_provisioned'
+    });
   }
 
   const randomPass = crypto.randomBytes(128).toString('hex');
@@ -225,7 +246,9 @@ try {
 }
 ```
 
-This keeps provider strategies unchanged. GitHub, GitLab, Google, Okta, OIDC, LDAP, and any other strategy that uses `validateOrCreateUser(...)` inherit the same SSO-scope policy.
+This keeps provider strategies unchanged, with one exception. `LDAPStrategy.validate()` currently passes the un-awaited promise from `validateOrCreateUser(...)` to `done(...)`; today the rejection still propagates, but only because `@nestjs/passport` happens to await the resolved value — an undocumented internal. Because the `sso`/`true` rejection is a designed, high-frequency path, `validate()` must `await validateOrCreateUser(...)` and call `done(err)` on rejection so the failure flows through Passport's intended error path (Phase 8). GitHub, GitLab, Google, Okta, OIDC, and any other strategy that uses `validateOrCreateUser(...)` inherit the same SSO-scope policy with no change.
+
+Two LDAP-specific input rules fall out of the email gate: Heimdall uses the FIRST value of a multi-valued LDAP mail attribute (`ldap.strategy.ts`), and LDAP value ordering is not guaranteed — operators pre-provisioning accounts must ensure the provisioned email is the attribute's primary/first value (see 8.2). A missing or empty mail attribute is rejected before the lookup with a distinct error code (`external_identity_missing_email`), never `account_not_provisioned`, and never reaches `findByEmail(undefined)`.
 
 All external-authentication strategies must continue to provision through `AuthnService.validateOrCreateUser(...)`. This is the architectural choke point for account creation, so future strategies such as SAML must use the same service method rather than creating Heimdall users directly.
 
@@ -253,23 +276,29 @@ REGISTRATION_DISABLED=<Controls account self-provisioning: false/unset allows lo
 Recommended manifest example:
 
 ```yaml
-#REGISTRATION_DISABLED: false # false|true|local|sso
+#REGISTRATION_DISABLED: 'false' # 'false' | 'true' | 'local' | 'sso' — string value; keep it quoted so YAML tooling does not type it as a boolean
 ```
+
+External charts, manifests, or operators that model `REGISTRATION_DISABLED` as a boolean toggle must change it to a string field — `local` and `sso` are not booleans. Boolean renderings of the old values (`True`, `FALSE`, and so on) remain accepted case-insensitively.
 
 ### 3.5 Error Handling and Logging
 
 When SSO auto-account creation is disabled and an external identity authenticates successfully but no local Heimdall user exists:
 
 1. Do not create a user record.
-2. Throw `UnauthorizedException`.
+2. Throw `UnauthorizedException` carrying BOTH a human-readable `message` and a machine-readable `error: 'account_not_provisioned'` (see the 3.3 snippet). A message string alone does not satisfy this contract — every layer between the service and the frontend must forward the structured code, not prose.
 3. Log a structured event with:
    - provider / `creationMethod`
    - external email
    - reason: `registrationDisabledForSso`
    - no password or token material
-4. Preserve a structured error code through the callback / frontend flow, such as `account_not_provisioned`, so this condition is distinguishable from a generic authentication failure.
+4. Preserve the `account_not_provisioned` code through to the frontend on BOTH transport paths:
+   - **OAuth GET callbacks** (github/gitlab/google/okta/oidc): `AuthenticationExceptionFilter` catches the exception. Today it flattens everything into a human-readable `authenticationError` cookie and redirects to `/`; it gains a second cookie, `authenticationErrorCode`, carrying the code verbatim (see 3.6).
+   - **POST login flows** (LDAP, local): these routes answer an XHR with JSON — no redirect, no cookie, and no exception filter. The code travels in the 401 response body (NestJS serializes the object form of `UnauthorizedException`), and the frontend login components map it (see 3.6).
 
-The user-facing message should be clear enough to route the user to an administrator:
+The filter's diagnostic logging must also be constrained. `AuthenticationExceptionFilter` currently logs `request.query` and the complete `request.headers` at WARN on every caught error; OAuth callbacks arrive as `GET ?code=...&state=...` with cookie/authorization headers, and this ADR makes the filter a designed, potentially frequent rejection path. The filter must redact `code`/`state` query values and drop or allowlist headers (the existing `ConfigService.sensitiveKeys` list is the redaction reference) so the "no password or token material" rule in item 3 holds at every layer that handles the rejection, not just at the audit event.
+
+The `message` below is the API- and log-facing string, and the fallback shown by clients that do not recognize the code; the login-page alert wording in 3.6 is what browser users see. It should be clear enough to route the user to an administrator:
 
 ```text
 No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.
@@ -279,7 +308,14 @@ No Heimdall account exists for this SSO user. Please ask your system administrat
 
 Preserving the `account_not_provisioned` code (3.5) is only half the contract — the login page must render it distinctly. An intentional policy rejection surfaced as a generic authentication failure is the exact risk 9.3 warns about.
 
-The error code travels on the OAuth/LDAP callback redirect as a query parameter, consistent with how existing authentication failures reach the login page. The frontend maps `account_not_provisioned` to a dedicated alert above the login form:
+Today, OAuth authentication failures reach the login page like this: `AuthenticationExceptionFilter` sets an `authenticationError` cookie containing free text and redirects to `/`, and `Login.vue`'s `checkForAuthenticationError()` renders that cookie as a generic transient snackbar. There is no query-parameter error channel for login failures (`?error`/`?logoff` drive logout messaging only), and the LDAP/local POST flows bypass the filter entirely — their errors surface only as the global axios interceptor's generic HTTP-failure snackbar.
+
+The contract is therefore one rendering rule fed by two transports:
+
+- **OAuth GET callbacks:** the filter sets a second cookie, `authenticationErrorCode`, carrying the structured code; `checkForAuthenticationError()` reads and clears both cookies.
+- **LDAP/local POST logins:** the login component reads the code from the 401 JSON body (the axios error response) and feeds the same rendering rule. (`LDAPLogin.vue` currently has no error handler; it gains one under this ADR.)
+
+When the code resolves to `account_not_provisioned` — from either transport — the frontend renders ONLY the dedicated alert below, suppressing the generic `authenticationError` snackbar and the generic HTTP-failure snackbar for that event. Codes the frontend does not recognize fall back to today's generic messages. The alert, above the login form:
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -301,16 +337,20 @@ The `true` semantics change breaks one specific cohort: deployments with `REGIST
 At backend startup, when BOTH conditions hold:
 
 - `REGISTRATION_DISABLED` resolves to `true`, and
-- at least one external authentication strategy is enabled (OAuth/OIDC/LDAP)
+- at least one external authentication strategy is enabled, defined as `ConfigService.enabledOauthStrategies()` returning a non-empty list OR `LDAP_ENABLED=true`. (Strategy *registration* cannot be the test: every strategy provider class is registered unconditionally in `authn.module.ts` regardless of configuration.)
 
-log a single warning:
+log a single warning, emitted once from the bootstrap validation call — not re-emitted by later `isRegistrationAllowed()` reads:
 
 ```text
-WARN: As of vX.Y, REGISTRATION_DISABLED=true also disables SSO/LDAP auto-account
-creation. New external-authentication users will be rejected until an administrator
-pre-creates their accounts. Set REGISTRATION_DISABLED=local to restore the previous
-behavior (local registration disabled, SSO auto-creation enabled).
+WARN: REGISTRATION_DISABLED=true disables SSO/LDAP auto-account creation as well as
+local registration (changed in vX.Y). New external-authentication users will be
+rejected until an administrator pre-creates their accounts. Set
+REGISTRATION_DISABLED=local for the previous behavior (local registration disabled,
+SSO auto-creation enabled). If pre-provisioned-only access is what you intend, no
+action is needed.
 ```
+
+This is a configuration-shape notice, not a one-time migration event: it fires on every boot for as long as the combination holds, including for the deliberately locked-down configuration recommended in 8.2. That is accepted for the vX.Y release cycle — the migration cohort (6.2) sees it at the moment they upgrade, and intentionally locked-down operators see a factual restatement of their policy; softening or removing it later is a one-line change.
 
 This is the minimum viable form of an operator advisory; an in-app admin notification mechanism is explicitly out of scope (9.4).
 
@@ -451,7 +491,7 @@ Current boolean values keep their intuitive meaning:
 | Channel | Content |
 |---------|---------|
 | Release notes + wiki migration note (required deliverable, Phase 9) | Who is affected: `true` + SSO-JIT reliance. Symptom: new SSO/LDAP users rejected with `account_not_provisioned`. Fix: `REGISTRATION_DISABLED=local`. |
-| Startup warning (3.7) | Targets exactly the affected cohort at exactly the moment they upgrade |
+| Startup warning (3.7) | Reaches every `true` + external-auth deployment on every boot; the migration cohort sees it at the moment they upgrade, and intentionally locked-down deployments see a factual restatement of their policy |
 | Login page alert (3.6) | Affected end users get remediation guidance instead of a generic failure |
 
 Those deployments should change to:
@@ -466,12 +506,16 @@ Deployments that want local registration enabled but SSO users pre-provisioned s
 REGISTRATION_DISABLED=sso
 ```
 
+**A second cohort also breaks: previously-tolerated invalid values.** Today any value other than case-insensitive `true` — `1`, `yes`, `disabled`, typos — runs silently permissive. After this change those deployments refuse to start with an error naming the valid values (3.1). No pre-upgrade channel reaches them (the startup warning requires a successful boot; the boot error itself arrives only after the outage begins), so the Phase 9 release note must instruct operators to check their `REGISTRATION_DISABLED` value against the enum before upgrading.
+
+**Upgrade ordering and rollback:** on any pre-upgrade backend, `local` and `sso` read as "not `true`" — fully permissive, BOTH account-creation paths open, with a clean boot and no warning. Set `REGISTRATION_DISABLED=local` or `sso` only after ALL backend instances run vX.Y or later (rolling deploys included). If rolling back below vX.Y, revert `REGISTRATION_DISABLED` to `true` first.
+
 ### 6.3 Residual Risks
 
 - Existing auto-created users remain in the database after SSO auto-account creation is disabled.
 - Administrators must still remove or disable unwanted existing accounts.
 - Email address matching remains the account binding mechanism.
-- If an IdP allows user-editable or unverified email claims, an external identity could bind to someone else's pre-provisioned Heimdall account. SSO providers must return verified, administrator-controlled email attributes.
+- If an IdP allows user-editable or unverified email claims, an external identity could bind to someone else's pre-provisioned Heimdall account. Under `sso`/`true` the deployment model is pre-provisioned (often privileged) accounts, so this is an account-takeover risk, not merely an unwanted-account risk. The requirement that SSO providers return verified, administrator-controlled email attributes is enforced unevenly by the shipped strategies: GitHub and Google check the provider's verified flag; OIDC checks `email_verified`, but `OIDC_USES_VERIFIED_EMAIL=false` disables that check; GitLab and Okta perform no verification check; LDAP trusts whatever attribute `LDAP_MAILFIELD` names. Two mitigations are in scope: (1) log a startup warning when `OIDC_USES_VERIFIED_EMAIL=false` is combined with `REGISTRATION_DISABLED=sso` or `true`, and (2) the Phase 9 documentation must tell 8.2/8.4 operators that email claims must be administrator-controlled at the IdP, and which knobs weaken that.
 - IdP-side access control is still required to prevent users from reaching the SSO callback flow.
 - Deployments cannot express per-provider SSO provisioning preferences with this ADR.
 
@@ -501,16 +545,21 @@ Startup validation tests (`validateRegistrationDisabled()`, per 3.1):
 |-------------------------|---------|
 | unset | Boots (permissive) |
 | `` (empty string) | Boots (treated as unset) |
+| `   ` (whitespace only) | Boots (trimmed; treated as unset) |
 | `false` / `true` / `local` / `sso` (any case) | Boots |
+| ` true ` (padded) | Boots as `true` (trimmed before matching) |
+| `1` / `yes` / `0` (previously silently permissive) | Refuses to start, error names valid values |
 | `banana` | Refuses to start, error names valid values |
 | `ture` (typo) | Refuses to start |
 | `sso-approval` | Refuses to start |
 
 Startup warning tests (3.7):
 
-1. `true` + at least one external strategy enabled → warning logged once.
-2. `true` + no external strategies → no warning.
-3. `local` / `sso` / unset → no warning.
+1. `true` + at least one OAuth strategy configured (e.g. OIDC only) → warning logged.
+2. `true` + LDAP only (`LDAP_ENABLED=true`, no OAuth client IDs) → warning logged. Detection must cover both provider families, not just OAuth.
+3. `true` + no external strategies → no warning.
+4. `local` / `sso` / unset → no warning.
+5. "Logged once" means emitted from the one-time bootstrap validation call: assert with a logger spy that repeated `isRegistrationAllowed()` calls after boot do not re-emit it.
 
 ### 7.2 AuthnService Tests
 
@@ -526,7 +575,9 @@ Add tests for `validateOrCreateUser(...)`:
 8. Missing SSO user with SSO creation disabled emits a structured audit event.
 9. Missing SSO user with SSO creation disabled propagates a stable `account_not_provisioned` error code to the callback / frontend flow.
 10. Existing user profile updates and login metadata updates are unchanged.
-11. The thrown error does not leak provider tokens or sensitive profile data.
+11. The thrown error does not leak sensitive profile data. (Provider tokens never reach `validateOrCreateUser(...)` — its arguments are email, names, and `creationMethod` — so token-leak coverage lives at the filter layer, 7.5.)
+12. A `findByEmail` failure that is NOT `NotFoundException` (e.g. a database error) is rethrown unchanged: no `account_not_provisioned` code, no `registrationDisabledForSso` audit event, no user creation.
+13. A missing/empty email from the provider is rejected with `external_identity_missing_email` before any lookup — never `account_not_provisioned`.
 
 ### 7.3 Local Registration Tests
 
@@ -550,7 +601,29 @@ No provider-specific policy logic should be required in strategy classes, but at
 
 OIDC is the preferred coverage target because custom OIDC is the most common enterprise SSO integration point.
 
-LDAP already calls `validateOrCreateUser(...)`, so LDAP is covered by the same AuthnService gate. Add a lightweight regression assertion or code-reference test so future LDAP changes do not bypass the shared provisioning path.
+LDAP already calls `validateOrCreateUser(...)`, so LDAP is covered by the same AuthnService gate — once the strategy is fixed to `await` the call (3.3, Phase 8). Add an LDAP rejection regression test: a valid LDAP bind for a user with no Heimdall account under `REGISTRATION_DISABLED=sso` fails with `account_not_provisioned` and does not create a user.
+
+Two facts about the current test surface shape this section:
+
+- No backend spec exercises `validateOrCreateUser(...)` today — there is no `authn.service.spec.ts`, and the only existing `REGISTRATION_DISABLED` test covers `true` in `users.controller.spec.ts`. Every 7.2 test is new code, not an update.
+- The tests that actually depend on JIT auto-creation are the Cypress e2e logins (`test/integration/login.cy.ts` creates the LDAP user on first login), and CI's `.env-ci` never sets `REGISTRATION_DISABLED`. At least one automated end-to-end (or database-backed integration) test must run with `REGISTRATION_DISABLED=sso` and assert BOTH the rejection and that no `Users` row was created; Phase 8 owns the CI environment plumbing this requires.
+
+### 7.5 Exception Filter Tests
+
+`AuthenticationExceptionFilter` is where the structured code can be lost and where secrets can leak; both get direct tests:
+
+1. Given an `UnauthorizedException` carrying `error: 'account_not_provisioned'`, the filter emits a response from which the frontend can recover the exact code string (the `authenticationErrorCode` cookie), and the 302 redirect to `/` completes.
+2. Given a generic authentication failure with no structured code, the filter behaves as today: `authenticationError` cookie only, no code cookie.
+3. The filter's WARN log for a rejection excludes authorization/cookie headers and redacts `code`/`state` query values (3.5).
+
+### 7.6 Frontend Tests
+
+The 3.6 rendering contract is frontend behavior and needs frontend tests:
+
+1. `Login.vue` receiving the `account_not_provisioned` signal (cookie transport) renders the dedicated alert — not the generic `authenticationError` snackbar.
+2. The LDAP login flow receiving a 401 body with `account_not_provisioned` renders the same dedicated alert — not the generic HTTP-failure snackbar.
+3. The alert text contains the remediation guidance and does NOT contain the `REGISTRATION_DISABLED` value, the enabled-provider list, or any other configuration posture.
+4. A generic authentication failure still renders the existing generic message (no regression).
 
 ---
 
@@ -580,10 +653,12 @@ Optional, if local username/password login should also be disabled:
 LOCAL_LOGIN_DISABLED=true
 ```
 
+**Caveat — order matters:** the user-creation endpoint (`POST /users`) is blocked for everyone when `LOCAL_LOGIN_DISABLED=true`, including administrators — the local-login check in `users.controller.ts` runs before, and independently of, the admin registration-bypass. Pre-provision all accounts BEFORE setting `LOCAL_LOGIN_DISABLED=true`; adding a user later requires temporarily re-enabling local login (config change + restart). Splitting admin user creation out of `LOCAL_LOGIN_DISABLED` is open question 12.3.
+
 Operational steps:
 
 1. Create or import local Heimdall user records for approved users.
-2. Ensure each local user email exactly matches the email returned by the IdP.
+2. Ensure each local user email exactly matches the email returned by the IdP. For LDAP, Heimdall binds to the FIRST value of a multi-valued mail attribute — make the provisioned email the attribute's primary/first value.
 3. Assign the same users to the Heimdall app in the IdP.
 4. Set `REGISTRATION_DISABLED=true`.
 5. Remove any previously auto-created users that should not retain access.
@@ -602,6 +677,8 @@ If local username/password login should also be disabled:
 LOCAL_LOGIN_DISABLED=true
 ```
 
+Apply the upgrade-ordering rule in 6.2: set `local` only after all backend instances run vX.Y or later — older code reads `local` as fully permissive.
+
 ### 8.4 Local Registration With SSO Pre-Provisioning
 
 Recommended configuration for deployments that allow local registration but require SSO users to already exist:
@@ -609,6 +686,8 @@ Recommended configuration for deployments that allow local registration but requ
 ```env
 REGISTRATION_DISABLED=sso
 ```
+
+The same upgrade-ordering rule applies (6.2): older code reads `sso` as fully permissive.
 
 ---
 
@@ -632,8 +711,8 @@ REGISTRATION_DISABLED=sso
 
 ### 9.3 Risks
 
-- The callback and frontend flow must preserve the `account_not_provisioned` error code; otherwise users may see a generic authentication failure with no remediation guidance.
-- If existing tests assume missing external users are always created, those tests must be updated to cover both branches.
+- Both transports (the OAuth callback cookie and the POST 401 body) must preserve the `account_not_provisioned` error code; otherwise users see a generic authentication failure with no remediation guidance. The filter and frontend tests (7.5, 7.6) exist to hold this.
+- The tests that assume missing external users are always created are the Cypress e2e logins (7.4); no backend spec exercises `validateOrCreateUser(...)` today, so the 7.2 suite is new coverage, not an update.
 - Future external-authentication strategies must continue to use `validateOrCreateUser(...)` so they do not bypass the shared provisioning gate.
 - Admin user-management workflows may be awkward when `LOCAL_LOGIN_DISABLED=true`.
 
@@ -658,12 +737,12 @@ REGISTRATION_DISABLED=sso
 | 1 | Update `ConfigService.isRegistrationAllowed(scope?)` + `validateRegistrationDisabled()` fail-fast startup validation | - | sp:1 | Support unset/`false`/`true`/`local`/`sso`; default scope `local`; unknown values refuse to start (3.1) |
 | 2 | Gate the create branch in `AuthnService.validateOrCreateUser(...)` with `configService.isRegistrationAllowed('sso')` | Phase 1 | sp:1 | Throw `UnauthorizedException`; do not call `usersService.create(...)` |
 | 3 | Add structured audit logging for rejected SSO self-provisioning | Phase 2 | sp:1 | Include provider, email, and `registrationDisabledForSso`; exclude token/password material |
-| 4 | Preserve a frontend-visible `account_not_provisioned` error code | Phase 2 | sp:1 | Callback/login UI can distinguish missing pre-provisioned users from generic auth failure |
-| 5 | Render `account_not_provisioned` as a dedicated login-page alert | Phase 4 | sp:2 | Per 3.6: distinct alert with remediation, no config posture disclosed, redirect query param consistent with existing auth failures |
-| 6 | Startup migration warning for `true` + external auth enabled | Phase 1 | sp:1 | Per 3.7: one WARN naming `REGISTRATION_DISABLED=local` as the previous-behavior value |
-| 7 | Add ConfigService (incl. validation + warning), AuthnService, and local registration tests | Phase 1-6 | sp:3 | Cover case-insensitive values, unknown-value startup rejection, both scopes, warning conditions, audit event, error code |
-| 8 | Add or update strategy integration tests, preferably OIDC plus LDAP path coverage | Phase 2 | sp:2 | Verify valid external identity + missing local user is rejected for `true` and `sso`; assert LDAP still uses `validateOrCreateUser(...)` |
-| 9 | Update all environment-variable listing surfaces + REQUIRED release/migration note | Phase 1 | sp:2 | `.env-example`, `manifest.yml.example`, Helm chart if present, wiki; release note per 6.2 breaking-change table is a deliverable, not optional |
+| 4 | Preserve a frontend-visible `account_not_provisioned` error code on both transports | Phase 2 | sp:2 | Structured code in the exception body (3.3); `authenticationErrorCode` cookie in `AuthenticationExceptionFilter` for OAuth callbacks; 401 JSON body for LDAP/local POST; filter log redaction per 3.5 |
+| 5 | Render `account_not_provisioned` as a dedicated login-page alert | Phase 4 | sp:2 | Per 3.6: distinct alert with remediation, no config posture disclosed; cookie transport for OAuth callbacks, 401-body transport for LDAP/local; suppress generic snackbars for recognized codes; frontend tests per 7.6 |
+| 6 | Startup migration warning for `true` + external auth enabled | Phase 1 | sp:1 | Per 3.7: one WARN from bootstrap validation; enabled-strategy predicate = `enabledOauthStrategies()` non-empty OR `LDAP_ENABLED=true`; fires every boot while the shape holds (accepted) |
+| 7 | Add ConfigService (incl. validation + warning), AuthnService, exception-filter, and local registration tests | Phase 1-6 | sp:3 | Cover case-insensitive + whitespace values, unknown-value startup rejection incl. formerly-permissive `1`/`yes`, both scopes, per-family warning conditions, audit event, error code, non-NotFound rethrow, filter tests (7.5) |
+| 8 | Fix LDAP strategy to await `validateOrCreateUser(...)`; add strategy integration + e2e deny-path tests | Phase 2 | sp:3 | LDAP `validate()` awaits and calls `done(err)` on rejection (3.3); OIDC + LDAP rejection coverage for `true`/`sso`; one automated e2e/DB-backed test asserting rejection AND no `Users` row, incl. CI env plumbing (7.4) |
+| 9 | Update all environment-variable listing surfaces + REQUIRED release/migration note | Phase 1 | sp:2 | `.env-example`, `manifest.yml.example` (quoted string per 3.4), Helm chart if present, wiki; release note per 6.2 covers BOTH breaking cohorts, the upgrade-ordering/rollback rule, and IdP verified-email guidance (6.3) |
 | 10 | Manual smoke test with OIDC in server mode | Phase 1-9 | sp:2 | Existing user succeeds; missing user follows `false`/`true`/`local`/`sso` matrix; login page shows the 3.6 alert; boot warning fires for the `true`+SSO combination |
 
 ---
@@ -700,11 +779,12 @@ Findings:
 ## 13. References
 
 - `apps/backend/src/authn/authn.service.ts` - `validateOrCreateUser(...)`
-- `apps/backend/src/config/config.service.ts` - `isRegistrationAllowed()`
+- `apps/backend/src/authn/ldap.strategy.ts` - LDAP email extraction and the await fix (3.3)
+- `apps/backend/src/config/config.service.ts` - `isRegistrationAllowed()` and `frontendStartupSettings()` (`registrationEnabled` is served pre-auth and controls the Sign Up button)
+- `apps/backend/src/filters/authentication-exception.filter.ts` - OAuth callback error delivery (`authenticationError` cookie + redirect; gains `authenticationErrorCode`)
 - `apps/backend/src/users/users.controller.ts` - local public registration enforcement
+- `apps/frontend/src/views/Login.vue` - login-page error rendering (3.6)
 - `apps/backend/.env-example` - environment variable documentation
 - `manifest.yml.example` - Cloud Foundry example environment variables
 - Heimdall2 wiki: Environment Variables Configuration
-- ADR-001: GUI Attestation & Comment Engine
-- ADR-002: DRY Refactoring of hdf-converters
-- ADR-003: CKLB Converter
+- ADR-001 (GUI Attestation & Comment Engine), ADR-002 (DRY Refactoring of hdf-converters), ADR-003 (CKLB Converter) — other Heimdall ADRs; not present in this branch's `docs/`
