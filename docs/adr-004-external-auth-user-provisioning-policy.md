@@ -274,6 +274,8 @@ Known surfaces in the current `master` checkout:
 | Docker Compose examples / generated `.env` docs | Update only if they list `REGISTRATION_DISABLED` directly; current `docker-compose.yml` delegates to `.env` |
 | Environment variables wiki | Update `REGISTRATION_DISABLED` wording and external-authentication behavior. Verified 2026-07-09 against a clone of `heimdall2.wiki.git`: exactly one page names the variable — `Environment-Variables-Configuration.md` describes it as the boolean local-registration control ("If public user registration should be allowed ... defaults to false") and needs the full enum description, not a touch-up. No wiki page currently documents JIT auto-creation at all |
 | Wiki: `Heimdall-Authentication-Methods` page | Add the pre-provisioning / `account_not_provisioned` explanation here — the login page's external-authentication help icon links directly to this page's `#external-authentication-only` section (`LocalLogin.vue`), making it where rejected users land |
+
+The wiki is the documentation channel **as of this writing**. ADR-005 (VitePress documentation site) proposes replacing it with an in-repo, PR-reviewable docs site; once that lands, the two wiki rows above become edits to the docs site's `getting-started/environment-variables` and auth-methods pages — shippable in the same PR as the code change, which is the review property this table's wiki rows inherently lack.
 | `mitre/saf-packaging` (separate repo) | The Heimdall Server RPM ships a `backend.env` configuration file; update its `REGISTRATION_DISABLED` description. Outside this repository, so outside the section 11 audit's scope — listed here so Phase 9 does not miss it |
 | Release notes / migration notes | Call out the new enum values |
 
@@ -829,6 +831,7 @@ The audit above is scoped to this repository. Known out-of-repo surfaces: the `m
 - `manifest.yml.example` - Cloud Foundry example environment variables
 - Heimdall2 wiki: Environment Variables Configuration
 - ADR-001 (GUI Attestation & Comment Engine), ADR-002 (DRY Refactoring of hdf-converters), ADR-003 (CKLB Converter) — other Heimdall ADRs; not present in this branch's `docs/`
+- ADR-005 (VitePress Documentation Site) — `docs/adr-005-vitepress-documentation-site.md`; supersedes the wiki as the documentation channel for 3.4/Phase 9 once implemented
 
 Standards and prior art (all verified against primary sources, 2026-07-09):
 
