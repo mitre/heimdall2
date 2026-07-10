@@ -95,7 +95,11 @@ Change `REGISTRATION_DISABLED` from a boolean-only flag into a small, case-insen
 
 `sso` allows local registration but requires SSO users to be pre-provisioned.
 
+The `sso` scope governs **all** external authentication providers — GitHub, GitLab, Google, Okta, custom OIDC, **and LDAP** — because every provider strategy provisions through the same `AuthnService.validateOrCreateUser(...)` path (see 3.3). "SSO" in the value name is shorthand for external authentication generally, not OAuth/OIDC only.
+
 Existing users are unaffected. If a local Heimdall account already exists with the email returned by the external identity provider, SSO login continues to work for all values.
+
+Unknown values are rejected at startup (see 3.1) — a typo in a security-policy variable must never silently open both account-creation paths.
 
 ---
 
@@ -124,7 +128,26 @@ Behavior:
 
 The default scope is `local`, so existing local-registration callers keep the same call shape and gain support for the new `local` value.
 
-Unknown values are treated as permissive, matching the current behavior where only recognized values disable registration.
+**Unknown values fail fast at startup.** With a boolean, an unrecognized value degrading to permissive was a bounded surprise. With this enum, a typo (`REGISTRATION_DISABLED=locel`) degrading to permissive silently opens BOTH account-creation paths — in a variable whose purpose is to deny. Validate at application bootstrap:
+
+```ts
+private static readonly VALID_REGISTRATION_VALUES = new Set([
+  'false', 'true', 'local', 'sso'
+]);
+
+validateRegistrationDisabled(): void {
+  const raw = this.get('REGISTRATION_DISABLED');
+  if (raw === undefined || raw === '') return; // unset/empty = false (permissive)
+  if (!ConfigService.VALID_REGISTRATION_VALUES.has(raw.toLowerCase())) {
+    throw new Error(
+      `Invalid REGISTRATION_DISABLED value "${raw}". ` +
+      `Valid values: false, true, local, sso (case-insensitive).`
+    );
+  }
+}
+```
+
+Called once during backend startup (alongside existing config initialization) so a misconfigured deployment refuses to boot with a clear message instead of running with an unintended registration policy.
 
 ### 3.2 Local Registration Endpoint
 
@@ -252,6 +275,45 @@ The user-facing message should be clear enough to route the user to an administr
 No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.
 ```
 
+### 3.6 Login Page Rendering
+
+Preserving the `account_not_provisioned` code (3.5) is only half the contract — the login page must render it distinctly. An intentional policy rejection surfaced as a generic authentication failure is the exact risk 9.3 warns about.
+
+The error code travels on the OAuth/LDAP callback redirect as a query parameter, consistent with how existing authentication failures reach the login page. The frontend maps `account_not_provisioned` to a dedicated alert above the login form:
+
+```
+┌────────────────────────────────────────────────────────┐
+│  ⚠  Sign-in not completed                              │
+│     Your identity was verified, but no Heimdall        │
+│     account exists for you. Contact your Heimdall      │
+│     administrator to request an account.               │
+├────────────────────────────────────────────────────────┤
+│   Email / Password fields, provider buttons…           │
+└────────────────────────────────────────────────────────┘
+```
+
+The alert must not disclose configuration posture (which policy value is set, which providers auto-create). It is shown only after successful external identity validation, so it does not enable account enumeration by unauthenticated visitors.
+
+### 3.7 Startup Migration Warning
+
+The `true` semantics change breaks one specific cohort: deployments with `REGISTRATION_DISABLED=true` that rely on SSO JIT provisioning. Release notes are the weakest channel to reach them; the application itself can target them precisely at upgrade time.
+
+At backend startup, when BOTH conditions hold:
+
+- `REGISTRATION_DISABLED` resolves to `true`, and
+- at least one external authentication strategy is enabled (OAuth/OIDC/LDAP)
+
+log a single warning:
+
+```text
+WARN: As of vX.Y, REGISTRATION_DISABLED=true also disables SSO/LDAP auto-account
+creation. New external-authentication users will be rejected until an administrator
+pre-creates their accounts. Set REGISTRATION_DISABLED=local to restore the previous
+behavior (local registration disabled, SSO auto-creation enabled).
+```
+
+This is the minimum viable form of an operator advisory; an in-app admin notification mechanism is explicitly out of scope (9.4).
+
 ---
 
 ## 4. Why Not the Alternatives
@@ -328,6 +390,20 @@ Require all SSO users to be pre-created regardless of environment configuration.
 
 **Decision:** Reject. Heimdall should still support SSO JIT provisioning when configured to do so.
 
+### Option E: Approval Queue (Create-but-Block Pending Admin Approval)
+
+GitLab's `block_auto_created_users` pattern: the JIT user record is created on first SSO login but blocked until an administrator approves it. Default-deny access with zero manual email matching — the record self-creates with the IdP-correct email, and the approval click is itself the auditable admin action.
+
+**Pros:**
+- Best operator experience for locked-down deployments (no pre-provisioning typos, one-click approval)
+- Account-creation and approval events form a complete audit trail
+
+**Cons:**
+- Requires a pending/blocked user state and an admin approval UI — substantially larger scope
+- Not expressible in this ADR's model: "approval" is not a kind of "disabled," so it can never be a `REGISTRATION_DISABLED` value
+
+**Decision:** Reject for this ADR. If an approval workflow becomes a real requirement, it must be introduced as a **separate mechanism in its own ADR** — explicitly NOT as an additional `REGISTRATION_DISABLED` value. This note exists so a future contributor does not attempt `REGISTRATION_DISABLED=sso-approval` and turn the enum into a policy grab-bag.
+
 ---
 
 ## 5. Behavior Matrix
@@ -340,6 +416,8 @@ Require all SSO users to be pre-created regardless of environment configuration.
 | Unknown OIDC user signs in | No | Yes | `true` | Login rejected; user is not created |
 | Unknown OIDC user signs in | No | Yes | `local` | User is created; login succeeds |
 | Unknown OIDC user signs in | No | Yes | `sso` | Login rejected; user is not created |
+| Unknown LDAP user signs in | No | Yes | unset / `false` / `local` | User is created; login succeeds (LDAP uses the same `validateOrCreateUser` gate) |
+| Unknown LDAP user signs in | No | Yes | `true` / `sso` | Login rejected; user is not created |
 | SSO user has a local account under a different email | No matching email | Yes | unset / `false` / `local` | A new local user may be created for the IdP email; the existing mismatched account is not used |
 | SSO user has a local account under a different email | No matching email | Yes | `true` / `sso` | Login rejected; pre-provisioned users must exactly match the IdP email |
 | Unknown user fails IdP authentication | No | No | any | Login rejected by provider strategy |
@@ -368,7 +446,15 @@ Current boolean values keep their intuitive meaning:
 - unset / `false`: local registration and SSO auto-account creation are allowed
 - `true`: local registration and SSO auto-account creation are disabled
 
-This is a small breaking change for deployments that currently set `REGISTRATION_DISABLED=true` but rely on SSO JIT provisioning. Those deployments should change to:
+**This is a breaking change** for deployments that currently set `REGISTRATION_DISABLED=true` but rely on SSO JIT provisioning, and it is communicated through three required channels (not optional):
+
+| Channel | Content |
+|---------|---------|
+| Release notes + wiki migration note (required deliverable, Phase 9) | Who is affected: `true` + SSO-JIT reliance. Symptom: new SSO/LDAP users rejected with `account_not_provisioned`. Fix: `REGISTRATION_DISABLED=local`. |
+| Startup warning (3.7) | Targets exactly the affected cohort at exactly the moment they upgrade |
+| Login page alert (3.6) | Affected end users get remediation guidance instead of a generic failure |
+
+Those deployments should change to:
 
 ```env
 REGISTRATION_DISABLED=local
@@ -408,6 +494,23 @@ Add tests for `ConfigService.isRegistrationAllowed(scope?)`:
 | `LOCAL` | `false` | `false` | `true` |
 | `sso` | `true` | `true` | `false` |
 | `SSO` | `true` | `true` | `false` |
+
+Startup validation tests (`validateRegistrationDisabled()`, per 3.1):
+
+| `REGISTRATION_DISABLED` | Startup |
+|-------------------------|---------|
+| unset | Boots (permissive) |
+| `` (empty string) | Boots (treated as unset) |
+| `false` / `true` / `local` / `sso` (any case) | Boots |
+| `banana` | Refuses to start, error names valid values |
+| `ture` (typo) | Refuses to start |
+| `sso-approval` | Refuses to start |
+
+Startup warning tests (3.7):
+
+1. `true` + at least one external strategy enabled → warning logged once.
+2. `true` + no external strategies → no warning.
+3. `local` / `sso` / unset → no warning.
 
 ### 7.2 AuthnService Tests
 
@@ -543,6 +646,8 @@ REGISTRATION_DISABLED=sso
 - Provider-specific auto-create flags
 - Deleting existing auto-created users
 - Redesigning admin user creation when local login is disabled
+- Approval-queue provisioning (create-but-block pending admin approval) — see Option E; a separate mechanism in its own ADR if ever required
+- An in-app admin notification/advisory mechanism for configuration warnings — the startup warning (3.7) is the minimum viable form; a reusable admin-facing advisory channel is future work
 
 ---
 
@@ -550,14 +655,16 @@ REGISTRATION_DISABLED=sso
 
 | Phase | Scope | Depends On | Estimate | Notes |
 |-------|-------|------------|----------|-------|
-| 1 | Update `ConfigService.isRegistrationAllowed(scope?)` | - | sp:1 | Support unset/`false`/`true`/`local`/`sso`; default scope is `local` |
+| 1 | Update `ConfigService.isRegistrationAllowed(scope?)` + `validateRegistrationDisabled()` fail-fast startup validation | - | sp:1 | Support unset/`false`/`true`/`local`/`sso`; default scope `local`; unknown values refuse to start (3.1) |
 | 2 | Gate the create branch in `AuthnService.validateOrCreateUser(...)` with `configService.isRegistrationAllowed('sso')` | Phase 1 | sp:1 | Throw `UnauthorizedException`; do not call `usersService.create(...)` |
 | 3 | Add structured audit logging for rejected SSO self-provisioning | Phase 2 | sp:1 | Include provider, email, and `registrationDisabledForSso`; exclude token/password material |
 | 4 | Preserve a frontend-visible `account_not_provisioned` error code | Phase 2 | sp:1 | Callback/login UI can distinguish missing pre-provisioned users from generic auth failure |
-| 5 | Add ConfigService, AuthnService, and local registration tests | Phase 1-4 | sp:3 | Cover case-insensitive values, both scopes, audit event, and error code |
-| 6 | Add or update strategy integration tests, preferably OIDC plus LDAP path coverage | Phase 2 | sp:2 | Verify valid external identity + missing local user is rejected for `true` and `sso`; assert LDAP still uses `validateOrCreateUser(...)` |
-| 7 | Update all environment-variable listing surfaces | Phase 1 | sp:2 | `.env-example`, `manifest.yml.example`, Helm chart values/templates if present, Docker/example docs if they list the variable, wiki, release notes |
-| 8 | Manual smoke test with OIDC in server mode | Phase 1-7 | sp:2 | Existing user succeeds; missing user follows `false`/`true`/`local`/`sso` matrix and surfaces the specific error |
+| 5 | Render `account_not_provisioned` as a dedicated login-page alert | Phase 4 | sp:2 | Per 3.6: distinct alert with remediation, no config posture disclosed, redirect query param consistent with existing auth failures |
+| 6 | Startup migration warning for `true` + external auth enabled | Phase 1 | sp:1 | Per 3.7: one WARN naming `REGISTRATION_DISABLED=local` as the previous-behavior value |
+| 7 | Add ConfigService (incl. validation + warning), AuthnService, and local registration tests | Phase 1-6 | sp:3 | Cover case-insensitive values, unknown-value startup rejection, both scopes, warning conditions, audit event, error code |
+| 8 | Add or update strategy integration tests, preferably OIDC plus LDAP path coverage | Phase 2 | sp:2 | Verify valid external identity + missing local user is rejected for `true` and `sso`; assert LDAP still uses `validateOrCreateUser(...)` |
+| 9 | Update all environment-variable listing surfaces + REQUIRED release/migration note | Phase 1 | sp:2 | `.env-example`, `manifest.yml.example`, Helm chart if present, wiki; release note per 6.2 breaking-change table is a deliverable, not optional |
+| 10 | Manual smoke test with OIDC in server mode | Phase 1-9 | sp:2 | Existing user succeeds; missing user follows `false`/`true`/`local`/`sso` matrix; login page shows the 3.6 alert; boot warning fires for the `true`+SSO combination |
 
 ---
 
@@ -584,9 +691,9 @@ Findings:
 
 ## 12. Review Questions
 
-1. Should unknown `REGISTRATION_DISABLED` values remain permissive for backwards compatibility, or should startup fail fast?
-2. Should the wiki and release notes call this a small breaking change for `REGISTRATION_DISABLED=true` deployments that rely on SSO JIT provisioning?
-3. Should admin user creation remain blocked when `LOCAL_LOGIN_DISABLED=true`, or should that be split into a separate setting?
+1. ~~Should unknown `REGISTRATION_DISABLED` values remain permissive, or should startup fail fast?~~ **Resolved: fail fast (3.1).** An enum typo degrading to permissive would silently open both account-creation paths in a deny-purposed variable. Unset/empty remain permissive for compatibility; anything else refuses to start.
+2. ~~Should the wiki and release notes call this a breaking change?~~ **Resolved: yes, as a required deliverable (6.2 table, Phase 9)** — plus the startup warning (3.7) targeting the affected cohort at upgrade time, and the login-page alert (3.6) for affected end users.
+3. Should admin user creation remain blocked when `LOCAL_LOGIN_DISABLED=true`, or should that be split into a separate setting? (Open — separate concern from registration policy; candidate for its own issue/ADR.)
 
 ---
 
