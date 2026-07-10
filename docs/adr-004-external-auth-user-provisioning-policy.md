@@ -211,6 +211,7 @@ if (!email) {
   // A missing or empty email attribute is a provider/mapping problem, not a
   // provisioning-policy rejection — never report it as account_not_provisioned.
   throw new UnauthorizedException({
+    statusCode: HttpStatus.UNAUTHORIZED,
     message: 'External identity did not provide an email address.',
     error: 'external_identity_missing_email'
   });
@@ -227,6 +228,7 @@ try {
 
   if (!this.configService.isRegistrationAllowed('sso')) {
     throw new UnauthorizedException({
+      statusCode: HttpStatus.UNAUTHORIZED,
       message:
         'No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.',
       error: 'account_not_provisioned'
@@ -250,7 +252,7 @@ try {
 }
 ```
 
-This keeps provider strategies unchanged, with one exception. `LDAPStrategy.validate()` currently passes the un-awaited promise from `validateOrCreateUser(...)` to `done(...)`; today the rejection still propagates, but only because `@nestjs/passport` happens to await the resolved value — an undocumented internal. Because the `sso`/`true` rejection is a designed, high-frequency path, `validate()` must `await validateOrCreateUser(...)` and call `done(err)` on rejection so the failure flows through Passport's intended error path (Phase 8). GitHub, GitLab, Google, Okta, OIDC, and any other strategy that uses `validateOrCreateUser(...)` inherit the same SSO-scope policy with no change.
+This keeps provider strategies unchanged, with one exception. `LDAPStrategy.validate()` currently passes the un-awaited promise from `validateOrCreateUser(...)` to `done(...)`. Verified against the resolved `@nestjs/passport@11.0.5` (`dist/auth.guard.js`): `handleRequest(err, user, ...)` rethrows the original error when the strategy fails (`throw err || new UnauthorizedException()`), so a thrown exception propagates to the HTTP layer intact — but in the un-awaited case there is no `err`; the pending promise is returned as `user`, and the rejection surfaces only because `canActivate` awaits that returned value (JS promise adoption at `const user = await passportFn(...)`), bypassing Passport's designed `done(err)` failure path. It works, and it is fragile — nothing in the strategy contract promises the guard will await `user`. Because the `sso`/`true` rejection is a designed, high-frequency path, `validate()` must `await validateOrCreateUser(...)` and call `done(err)` on rejection so the failure flows through the verified `handleRequest` rethrow (Phase 8). GitHub, GitLab, Google, Okta, OIDC, and any other strategy that uses `validateOrCreateUser(...)` inherit the same SSO-scope policy with no change.
 
 Two LDAP-specific input rules fall out of the email gate: Heimdall uses the FIRST value of a multi-valued LDAP mail attribute (`ldap.strategy.ts`), and LDAP value ordering is not guaranteed — operators pre-provisioning accounts must ensure the provisioned email is the attribute's primary/first value (see 8.2). A missing or empty mail attribute is rejected before the lookup with a distinct error code (`external_identity_missing_email`), never `account_not_provisioned`, and never reaches `findByEmail(undefined)`.
 
@@ -270,7 +272,8 @@ Known surfaces in the current `master` checkout:
 | `manifest.yml.example` | Add or update a `REGISTRATION_DISABLED` example under `env:` |
 | Helm chart `values.yaml` / `templates/*.yaml`, if present in the target branch or packaging path | Update any `REGISTRATION_DISABLED` value/comment and any generated environment variable list |
 | Docker Compose examples / generated `.env` docs | Update only if they list `REGISTRATION_DISABLED` directly; current `docker-compose.yml` delegates to `.env` |
-| Environment variables wiki | Update `REGISTRATION_DISABLED` wording and external-authentication behavior |
+| Environment variables wiki | Update `REGISTRATION_DISABLED` wording and external-authentication behavior. Verified 2026-07-09 against a clone of `heimdall2.wiki.git`: exactly one page names the variable — `Environment-Variables-Configuration.md` describes it as the boolean local-registration control ("If public user registration should be allowed ... defaults to false") and needs the full enum description, not a touch-up. No wiki page currently documents JIT auto-creation at all |
+| Wiki: `Heimdall-Authentication-Methods` page | Add the pre-provisioning / `account_not_provisioned` explanation here — the login page's external-authentication help icon links directly to this page's `#external-authentication-only` section (`LocalLogin.vue`), making it where rejected users land |
 | `mitre/saf-packaging` (separate repo) | The Heimdall Server RPM ships a `backend.env` configuration file; update its `REGISTRATION_DISABLED` description. Outside this repository, so outside the section 11 audit's scope — listed here so Phase 9 does not miss it |
 | Release notes / migration notes | Call out the new enum values |
 
@@ -308,8 +311,8 @@ When SSO auto-account creation is disabled and an external identity authenticate
 
    No password or token material. The sink is stdout (winston console transport), consistent with the rest of the backend; durable retention is the deployment's log-aggregation concern, and that boundary is stated here deliberately.
 4. Preserve the `account_not_provisioned` code through to the frontend on BOTH transport paths:
-   - **OAuth GET callbacks** (github/gitlab/google/okta/oidc): `AuthenticationExceptionFilter` catches the exception. Today it flattens everything into a human-readable `authenticationError` cookie and redirects to `/`; it gains a second cookie, `authenticationErrorCode`, carrying the code verbatim (see 3.6).
-   - **POST login flows** (LDAP, local): these routes answer an XHR with JSON — no redirect, no cookie, and no exception filter. The code travels in the 401 response body (NestJS serializes the object form of `UnauthorizedException`), and the frontend login components map it (see 3.6).
+   - **OAuth GET callbacks** (github/gitlab/google/okta/oidc): `AuthenticationExceptionFilter` catches the exception. Today it flattens everything into a human-readable `authenticationError` cookie and redirects to `/`; it gains a second cookie, `authenticationErrorCode`, carrying the code verbatim (see 3.6). The filter extracts the code via `exception.getResponse().error` when the exception is an `HttpException` — `getResponse()` returns the object passed to the constructor (verified public API, `@nestjs/common@11.1.28`).
+   - **POST login flows** (LDAP, local): these routes answer an XHR with JSON — no redirect, no cookie, and no exception filter. The code travels in the 401 response body. Verified against the resolved `@nestjs/common@11.1.28` (`HttpException.createBody`) and the [current NestJS exception-filter docs](https://docs.nestjs.com/exception-filters): an object passed to `UnauthorizedException` **replaces the entire JSON body verbatim** — nothing is added, which is why the 3.3 snippet includes `statusCode` explicitly. The exact wire body is `{"statusCode": 401, "message": "...", "error": "account_not_provisioned"}`; `exception.message` still resolves to the `message` string (so existing filter/log code keeps working), and the frontend reads `error` from the axios error response (see 3.6).
 
 The filter's diagnostic logging must also be constrained. `AuthenticationExceptionFilter` currently logs `request.query` and the complete `request.headers` at WARN on every caught error; OAuth callbacks arrive as `GET ?code=...&state=...` with cookie/authorization headers, and this ADR makes the filter a designed, potentially frequent rejection path. The filter must redact `code`/`state` query values and drop or allowlist headers (the existing `ConfigService.sensitiveKeys` list is the redaction reference) so the "no password or token material" rule in item 3 holds at every layer that handles the rejection, not just at the audit event.
 
