@@ -236,6 +236,8 @@ Author docs in-repo, push to the wiki repo on merge.
 
 Tracked as epic **`heimdall2-yvx`** on the heimdall2 beads board; each phase below is child card `heimdall2-yvx.<phase>` (e.g. Phase 3 = `heimdall2-yvx.3`), with dependencies mirroring the Depends on column. ADR-004's Phase 9 card (`heimdall2-4qg.9`) soft-references this epic: once the docs site is live, its wiki deliverables become docs-site page edits.
 
+**Board access:** the board is a shared Dolt database published at `refs/dolt/data` in this repository. Install `bd` from [gastownhall/beads](https://github.com/gastownhall/beads), then run `bd dolt pull` from a heimdall2 checkout with an existing beads clone, or `bd bootstrap` on a fresh machine. **Upgrade note (2026-07-10):** the board schema was migrated v49 → v54 — if you have a pre-existing beads clone, run `bd dolt pull` on your *current* bd binary **before** upgrading bd; if you upgraded first and bd refuses to start, `bd bootstrap` re-clones (push any local issues first). The team agent skills used to work these cards (card template, TDD gates, AC verification) live in [mitre/mitre-saf-skills](https://github.com/mitre/mitre-saf-skills).
+
 | Phase | Scope | Depends on | Estimate |
 |---|---|---|---|
 | 1 | Scaffold: `docs/` with own package.json/yarn.lock, VitePress config (base path, cleanUrls, lastUpdated, dead-link check), minimal theme, landing page, `.gitignore`/`.dockerignore` entries. AC: root install/build byte-identical | — | sp:3 |

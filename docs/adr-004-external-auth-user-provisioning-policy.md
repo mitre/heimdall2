@@ -774,6 +774,8 @@ The same upgrade-ordering rule applies (6.2): older code reads `sso` as fully pe
 
 Tracked as epic **`heimdall2-4qg`** on the heimdall2 beads board; each phase below is child card `heimdall2-4qg.<phase>` (e.g. Phase 3 = `heimdall2-4qg.3`), with dependencies mirroring the Depends On column. The VitePress docs-site work referenced by Phase 9 is epic `heimdall2-yvx` (ADR-005) — a soft reference, not a blocking dependency.
 
+**Board access:** the board is a shared Dolt database published at `refs/dolt/data` in this repository. Install `bd` from [gastownhall/beads](https://github.com/gastownhall/beads), then run `bd dolt pull` from a heimdall2 checkout with an existing beads clone, or `bd bootstrap` on a fresh machine. **Upgrade note (2026-07-10):** the board schema was migrated v49 → v54 — if you have a pre-existing beads clone, run `bd dolt pull` on your *current* bd binary **before** upgrading bd; if you upgraded first and bd refuses to start, `bd bootstrap` re-clones (push any local issues first). The team agent skills used to work these cards (card template, TDD gates, AC verification) live in [mitre/mitre-saf-skills](https://github.com/mitre/mitre-saf-skills).
+
 | Phase | Scope | Depends On | Estimate | Notes |
 |-------|-------|------------|----------|-------|
 | 1 | Update `ConfigService.isRegistrationAllowed(scope?)` + `validateRegistrationDisabled()` fail-fast startup validation | - | sp:1 | Support unset/`false`/`true`/`local`/`sso`; default scope `local`; unknown values refuse to start (3.1) |
