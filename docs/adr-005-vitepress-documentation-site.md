@@ -67,6 +67,88 @@ All 24 wiki content pages map into the site; existing repo Markdown is symlinked
 | `about/` | Attributions, code of conduct, license | Wiki: Technology-Attributions (verbatim); repo: `CODE_OF_CONDUCT.md`, `LICENSE.md`, `README.md` (symlinked) |
 | Landing (`index.md`) | Home + navigation | Wiki: Home, _Sidebar (becomes the sidebar config) |
 
+#### 2.3.1 Concrete file tree (reference layout for Phases 1, 3, 4)
+
+Pages marked **NEW** are thin additive pages created during migration (an index, a checklist skeleton); they are not content rewrites and do not violate §4.3.
+
+```
+docs/
+├── .vitepress/
+│   ├── config.mjs              # nav/sidebar, base /heimdall2/, local search, dead-link check on
+│   └── theme/                  # minimal — SAF logo, theme color only
+├── public/                     # migrated images, saf-logo.svg
+├── index.md                    # landing page (spec below)
+├── getting-started/
+│   ├── quick-start.md          ← Home.md (docker-compose path, split out)
+│   ├── installation.md         ← Home.md + Docker-Bake.md
+│   ├── configuration.md        ← Environment-Variables-Configuration.md (overview half)
+│   ├── environment-variables.md← Environment-Variables-Configuration.md — THE canonical env
+│   │                             reference; everything else links here, never duplicates
+│   │                             (ADR-004 Phase 9 target)
+│   └── troubleshooting.md      ← Troubleshooting.md
+├── user-guide/
+│   ├── overview.md             ← Home.md (usage half)
+│   ├── groups-and-users.md     ← Group-and-User-Management.md
+│   ├── attestations.md         ← Manual-Attestations.md
+│   └── authentication.md      ← Heimdall-Authentication-Methods.md — owns the ADR-004
+│                                 account_not_provisioned explanation; LocalLogin.vue's help
+│                                 icon points here
+├── deployment/
+│   ├── production-checklist.md # NEW — TLS-mandatory (Helmet HSTS), REGISTRATION_DISABLED
+│   │                             posture (ADR-004 §8), LOCAL_LOGIN_DISABLED ordering caveat,
+│   │                             JWT/API-key secrets
+│   ├── oracle-linux.md         ← Oracle-Linux-Production-Install.md
+│   ├── lite-and-demo.md        ← MITRE-Heimdall-Lite-and-Demo-Deployment-Configurations.md
+│   ├── heroku.md               ← Heimdall-Heroku-Documentation.md (migrate with a
+│   │                             possibly-outdated banner; dropping content is the owner's
+│   │                             per-page call, not the migrator's)
+│   └── releases.md             ← How-to-create-a-Heimdall2-release.md
+├── converters/
+│   ├── mappings.md             ← HDF-Converter-Mappings.md
+│   ├── how-tos.md              ← HDF-Converters-How-Tos.md
+│   └── cci-converter.md        ← Control-Correlation-Identifier-(CCI)-Converter.md
+├── developers/
+│   ├── architecture.md         ← Heimdall-Architecture-Information.md
+│   ├── frontend-components.md  ← Heimdall-Frontend-Components.md
+│   ├── class-diagrams.md       ← Heimdall-Class-Diagrams.md
+│   ├── processes.md            ← Heimdall-Processes-Documentation.md
+│   ├── interface-connections.md← Heimdall-Interface-Connections.md
+│   ├── code-style.md           ← Developers-Code-Style.md
+│   ├── tips-and-tricks.md      ← Heimdall-Development-Tips-&-Tricks.md
+│   ├── backend.md              ← apps/backend/README.md (included, not duplicated)
+│   └── libraries.md            ← libs/inspecjs + libs/hdf-converters READMEs
+├── api/
+│   └── index.md                ← Heimdall-API-Documentation.md (vitepress-openapi later,
+│                                 only if a maintained machine-readable spec exists — §4.3)
+├── security/
+│   └── control-responses.md    ← Heimdall-Server-Security-Control-Responses.md
+├── decisions/
+│   ├── index.md                # NEW — ADR index, one-line summary each
+│   ├── adr-004-external-auth-user-provisioning-policy.md   (moved from docs/ root)
+│   └── adr-005-vitepress-documentation-site.md
+├── release-notes/              # NEW section — versioned upgrade/migration notes; the
+│   └── index.md                  ADR-004 breaking-change note is its first durable entry
+│                                 (GitLab upgrade-notes pattern; wiki has no equivalent)
+└── about/
+    ├── attributions.md         ← Technology-Attributions.md (verbatim)
+    ├── code-of-conduct.md      → symlink ../CODE_OF_CONDUCT.md
+    └── license.md              → symlink ../LICENSE.md (verbatim)
+```
+
+#### 2.3.2 Landing page (`index.md`)
+
+VitePress `layout: home` hero + features:
+
+- **Hero:** name "Heimdall", text "Visualize and analyze your security results", tagline covering InSpec + the 30+ formats via hdf-converters, SAF logo. Actions: Quick Start → `/getting-started/quick-start`, Live Demo → the demo URL currently in `README.md` (taken from there, not invented), Environment Variables → the canonical reference.
+- **Features (4):** View & Analyze (upload HDF, filter, drill into controls) · 30+ Converters · Deploy Anywhere (Docker, RPM, cloud, enterprise SSO/LDAP) · Compliance-Ready (NIST 800-53 views, attestations, exports).
+- **Top nav:** Guide · Deploy · Converters · Developers · API · Decisions, plus GitHub link.
+
+#### 2.3.3 Site capabilities
+
+- **Local search** via VitePress's built-in provider (`themeConfig.search: {provider: 'local'}`) — zero dependencies, and the wiki's biggest missing feature.
+- **`getting-started/environment-variables.md` is the single source of truth for configuration** — other pages link to it; duplicating variable descriptions elsewhere is a review-blocking error.
+- **Known gap, deliberately not filled here:** the repo has no `CONTRIBUTING.md`. Docs sites conventionally link one from the footer; whether to create one — and its content — is a separate owner decision, out of this ADR's scope.
+
 ### 2.4 Wiki Decommission
 
 Wikis cannot redirect, so each migrated wiki page is edited down to a one-line pointer to its new URL, and wiki editing is restricted to collaborators. Hardcoded wiki deep links in the product move to the docs site — verified inventory: `LocalLogin.vue` (external-authentication help icon), `apps/backend/.env-example` (header link), `README.md` (wiki references).
