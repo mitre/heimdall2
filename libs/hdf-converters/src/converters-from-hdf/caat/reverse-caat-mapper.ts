@@ -69,13 +69,16 @@ export class FromHDFToCAATMapper {
   };
 
   static formatDate(date: Date, delimiter: string): string {
-    return [
+    console.log('format date', date.toString());
+    const a = [
       Intl.DateTimeFormat('en-US', {month: '2-digit'}),
       Intl.DateTimeFormat('en-US', {day: '2-digit'}),
       Intl.DateTimeFormat('en-US', {year: 'numeric'})
     ]
       .map((formatter) => formatter.format(date))
       .join(delimiter);
+    console.log('formatted date', a);
+    return a;
   }
 
   // ensure we're using Windows style newlines and fit within the maximum length
