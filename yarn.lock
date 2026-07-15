@@ -1831,6 +1831,14 @@
   dependencies:
     "@types/json-schema" "^7.0.15"
 
+"@eslint/css-tree@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@eslint/css-tree/-/css-tree-4.0.4.tgz#5400c64acf00468d262b5b08c938a3fa8f6a73c4"
+  integrity sha512-nxMparyhqVWQvadx9x8dIfubfIPOE+X2b2waua8fzdnM9vdp9rgVtwEZlG0TmCwEUz/d/f40fzvO/eqBwdxz0A==
+  dependencies:
+    mdn-data "2.28.1"
+    source-map-js "^1.2.1"
+
 "@eslint/js@^10.0.1":
   version "10.0.1"
   resolved "https://registry.npmjs.org/@eslint/js/-/js-10.0.1.tgz#1e8a876f50117af8ab67e47d5ad94d38d6622583"
@@ -8385,7 +8393,7 @@ entities@^2.0.0, entities@^2.0.3:
   resolved "https://registry.npmjs.org/entities/-/entities-2.2.0.tgz#098dc90ebb83d8dffa089d55256b351d34c4da55"
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
 
-entities@^4.2.0, entities@^4.4.0:
+entities@^4.2.0, entities@^4.4.0, entities@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/entities/-/entities-4.5.0.tgz#5d268ea5e7113ec74c4d033b79ea5a35a488fb48"
   integrity sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
@@ -8821,17 +8829,19 @@ eslint-plugin-security@^4.0.0:
   dependencies:
     safe-regex "^2.1.1"
 
-eslint-plugin-unicorn@^71.1.0:
-  version "71.1.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-71.1.0.tgz#ab593d72aa459f40be1698f086d7fa2b5ac28ce9"
-  integrity sha512-dn3YmR3qLLUeYyo/os3ubZ7UHQJ1WbBAgC9cIhnLTyMj9J6kivuc2U1fCmYetLexUlTDVYtBqhjSj/VaebTe6Q==
+eslint-plugin-unicorn@^72.0.0:
+  version "72.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-72.0.0.tgz#3d8caf428fd84c02457e6f152128fd1944ce19a9"
+  integrity sha512-hqO6ksoOHO+ZhdseTuKRVQbx9U7PRO/cv8qAR1mctwzdVO2hYud8uS9luAhp43RJgziYgHAph8eHyipT8GL0ng==
   dependencies:
     "@eslint-community/eslint-utils" "^4.9.1"
+    "@eslint/css-tree" "^4.0.4"
     browserslist "^4.28.4"
     change-case "^5.4.4"
     ci-info "^4.4.0"
     core-js-compat "^3.49.0"
     detect-indent "^7.0.2"
+    entities "^4.5.0"
     find-up-simple "^1.0.1"
     globals "^17.7.0"
     indent-string "^5.0.0"
@@ -8843,6 +8853,7 @@ eslint-plugin-unicorn@^71.1.0:
     reserved-identifiers "^1.2.0"
     semver "^7.8.5"
     strip-indent "^4.1.1"
+    yaml "^2.9.0"
 
 eslint-plugin-vue@^10.8.0:
   version "10.9.2"
@@ -12929,6 +12940,11 @@ mdn-data@2.27.1:
   version "2.27.1"
   resolved "https://registry.npmjs.org/mdn-data/-/mdn-data-2.27.1.tgz#e37b9c50880b75366c4d40ac63d9bbcacdb61f0e"
   integrity sha512-9Yubnt3e8A0OKwxYSXyhLymGW4sCufcLG6VdiDdUGVkPhpqLxlvP5vl1983gQjJl3tqbrM731mjaZaP68AgosQ==
+
+mdn-data@2.28.1:
+  version "2.28.1"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.28.1.tgz#798ed0511d4097c22b091718435059fdb0a64ad9"
+  integrity sha512-U9w+PzSZ00Z5m9rZ5ARVFL5xOfuCHdKYi/1RRwDCJsboFgJDNT3zT6PIPD7mZQYaQLhsZM3GfDRgSMRHhSmVng==
 
 mdurl@^2.0.0:
   version "2.0.0"
@@ -19725,7 +19741,7 @@ yaml@^1.10.0, yaml@^1.10.2, yaml@^1.5.0, yaml@^1.7.2:
   resolved "https://registry.npmjs.org/yaml/-/yaml-1.10.3.tgz#76e407ed95c42684fb8e14641e5de62fe65bbcb3"
   integrity sha512-vIYeF1u3CjlhAFekPPAk2h/Kv4T3mAkMox5OymRiJQB0spDP10LHvt+K7G9Ny6NuuMAb25/6n1qyUjAcGNf/AA==
 
-yaml@^2.0.0, yaml@^2.1.1:
+yaml@^2.0.0, yaml@^2.1.1, yaml@^2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.9.0.tgz#78274afd93598a1dfdd6130df6a566defcbf9aa4"
   integrity sha512-2AvhNX3mb8zd6Zy7INTtSpl1F15HW6Wnqj0srWlkKLcpYl/gMIMJiyuGq2KeI2YFxUPjdlB+3Lc10seMLtL4cA==
