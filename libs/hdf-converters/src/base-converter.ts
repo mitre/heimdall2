@@ -71,10 +71,10 @@ export function parseXml(
     removeNSPrefix: true,
     processEntities: {
       enabled: true,
-      maxEntitySize: 100000,
-      maxTotalExpansions: 10000,
-      maxExpandedLength: 1000000,
-      maxEntityCount: 1000
+      maxEntitySize: 1000000,
+      maxTotalExpansions: 100000,
+      maxExpandedLength: 10000000,
+      maxEntityCount: 10000
     },
     ...additionalOptions
   };
