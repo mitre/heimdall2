@@ -69,6 +69,13 @@ export function parseXml(
     parseAttributeValue: false,
     parseTagValue: false,
     removeNSPrefix: true,
+    processEntities: {
+      enabled: true,
+      maxEntitySize: 100000,
+      maxTotalExpansions: 10000,
+      maxExpandedLength: 1000000,
+      maxEntityCount: 1000
+    },
     ...additionalOptions
   };
   const parser = new XMLParser(options);
