@@ -242,13 +242,13 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.1088.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1088.0.tgz#ead477a6921f2dfd0550d4ad1e70fce9c38f0f8a"
-  integrity sha512-9ryKKxnjtJRKLDI24P+2gQZki7k28BeV6gz1AySvFDWayhjAZuh4QZjCyx55tqR8Oz0IJxWutgJRO43dDOcXoQ==
+  version "3.1089.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1089.0.tgz#dacf7e6c8a9188aa0e1c65623642212c685d8d19"
+  integrity sha512-Sc+JOtNeP+v+XdP9Rb4Hh+uhiNO2hh/CZQbKYooNakhOIgK6/K0cjoDCEGeFmkG0vf2DopTmSctzKlcKwy1BPw==
   dependencies:
     "@aws-sdk/checksums" "^3.1000.18"
     "@aws-sdk/core" "^3.975.3"
-    "@aws-sdk/credential-provider-node" "^3.972.69"
+    "@aws-sdk/credential-provider-node" "^3.972.70"
     "@aws-sdk/middleware-sdk-s3" "^3.972.64"
     "@aws-sdk/signature-v4-multi-region" "^3.996.41"
     "@aws-sdk/types" "^3.974.2"
