@@ -227,13 +227,13 @@
     "@smithy/types" "^4.16.1"
     tslib "^2.6.2"
 
-"@aws-sdk/client-config-service@3.1088.0":
-  version "3.1088.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1088.0.tgz#0bc2a22cfdf36e0dd9627554ca55b467173f48a7"
-  integrity sha512-5GOY7Sf8QHKuKm8xgAwBmEwAeHLfvGA+CjuDE6E6qs9iTna6HtZ72AScgJuWHSTwcbgN04tOjzXVpWUi0wMxEg==
+"@aws-sdk/client-config-service@3.1089.0":
+  version "3.1089.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1089.0.tgz#62da331c6513ba0c4955abe2ccf49f0b8f4b6348"
+  integrity sha512-NOGMNCwb+0CYYUKJEzCKvdubmRuNLkDDTgrcjniR45qVUO+OltMVIwiMTiM6hVO/9TIf3pSQIym2FXhFtQ7cfA==
   dependencies:
     "@aws-sdk/core" "^3.975.3"
-    "@aws-sdk/credential-provider-node" "^3.972.69"
+    "@aws-sdk/credential-provider-node" "^3.972.70"
     "@aws-sdk/types" "^3.974.2"
     "@smithy/core" "^3.29.4"
     "@smithy/fetch-http-handler" "^5.6.6"
@@ -342,7 +342,7 @@
     "@smithy/types" "^4.16.1"
     tslib "^2.6.2"
 
-"@aws-sdk/credential-provider-node@^3.972.69", "@aws-sdk/credential-provider-node@^3.972.70":
+"@aws-sdk/credential-provider-node@^3.972.70":
   version "3.972.70"
   resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.972.70.tgz#a7431d96eabe4582e89fe85c7704e1f2d3e3b7b8"
   integrity sha512-3xzvkGdykBunxqh8WudmUpSyLWvIhfI6aBQo1b5rb3mDO5mNLadK+0hiI0qBQBMVynJbfLO+Ajy9dztMwy9O8w==
