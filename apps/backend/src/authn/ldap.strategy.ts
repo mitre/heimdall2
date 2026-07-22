@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import _ from 'lodash';
 import Strategy from 'passport-ldapauth';
 import {ConfigService} from '../config/config.service';
-import { User } from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 @Injectable()
@@ -68,27 +67,21 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
     });
   }
 
-  async validate(user: unknown): Promise<User> {
-    const { firstName, lastName } = this.authnService.splitName(
-      _.get(user, this.configService.get('LDAP_NAMEFIELD') || 'name'),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async validate(user: unknown, done: any) {
+    const {firstName, lastName} = this.authnService.splitName(
+      _.get(user, this.configService.get('LDAP_NAMEFIELD') || 'name')
     );
-    const mailAttribute: unknown = _.get(
+    const email: string = _.get(
       user,
-      this.configService.get('LDAP_MAILFIELD') || 'mail',
+      this.configService.get('LDAP_MAILFIELD') || 'mail'
     );
-    let email: string | undefined;
-    if (Array.isArray(mailAttribute)) {
-      const [firstMailValue] = mailAttribute;
-      email = typeof firstMailValue === 'string' ? firstMailValue : undefined;
-    } else {
-      email = typeof mailAttribute === 'string' ? mailAttribute : undefined;
-    }
-    const validatedUser = await this.authnService.validateOrCreateUser(
-      email,
+    const validatedUser = this.authnService.validateOrCreateUser(
+      Array.isArray(email) ? email[0] : email,
       firstName,
       lastName,
-      'ldap',
+      'ldap'
     );
-    return validatedUser;
+    return done(null, validatedUser);
   }
 }
