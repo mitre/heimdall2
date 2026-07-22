@@ -43,7 +43,7 @@ import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vu
 import {Trinary} from '@/enums/Trinary';
 import RouteMixin from '@/mixins/RouteMixin';
 import {FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
+import {InspecDataModule, UNSAVED_CHANGES_MESSAGE} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -141,7 +141,15 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   removeSelectedEvaluations(): void {
     const selectedFiles = FilteredDataModule.selected_evaluation_ids;
-    selectedFiles.forEach((fileId) => {
+    const files = this.visible_evaluation_files.filter((file) =>
+      selectedFiles.includes(file.uniqueId)
+    );
+    if (!this.confirmRemoveUnsavedFiles(files)) {
+      return;
+    }
+
+    files.forEach((file) => {
+      const fileId = file.uniqueId;
       EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL
@@ -153,7 +161,15 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   removeSelectedProfiles(): void {
     const selectedFiles = FilteredDataModule.selected_profile_ids;
-    selectedFiles.forEach((fileId) => {
+    const files = this.visible_profile_files.filter((file) =>
+      selectedFiles.includes(file.uniqueId)
+    );
+    if (!this.confirmRemoveUnsavedFiles(files)) {
+      return;
+    }
+
+    files.forEach((file) => {
+      const fileId = file.uniqueId;
       EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL
@@ -161,6 +177,16 @@ export default class Sidebar extends mixins(RouteMixin) {
       // route to the URL bar
       this.navigateWithNoErrors(`/${this.current_route}`);
     });
+  }
+
+  confirmRemoveUnsavedFiles(files: (EvaluationFile | ProfileFile)[]): boolean {
+    if (!files.some((file) => file.hasUnsavedChanges)) {
+      return true;
+    }
+
+    return globalThis.confirm(
+      `${UNSAVED_CHANGES_MESSAGE}\n\nRemove them anyway?`
+    );
   }
 }
 </script>
