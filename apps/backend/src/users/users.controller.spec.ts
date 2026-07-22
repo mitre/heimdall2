@@ -85,7 +85,6 @@ describe('UsersController Unit Tests', () => {
 
   beforeEach(async () => {
     await databaseService.cleanAll();
-    configService.set('REGISTRATION_DISABLED', undefined);
     const userDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
     basicUser = await usersService.findByPkBang(userDto.id);
     const adminDto = await usersService.create(CREATE_ADMIN_DTO);
@@ -127,62 +126,20 @@ describe('UsersController Unit Tests', () => {
     });
   });
 
-  describe('Local registration policy', () => {
-    it.each([undefined, 'false', 'sso'])(
-      'allows anonymous local registration when REGISTRATION_DISABLED=%s',
-      async (registrationDisabled) => {
-        configService.set('REGISTRATION_DISABLED', registrationDisabled);
-
-        const createdUser = await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_2,
-          {},
-        );
-
-        expect(createdUser).toEqual(
-          new UserDto(await usersService.findById(createdUser.id)),
-        );
-        expect(await usersService.count()).toBe(3);
-      },
-    );
-
-    it.each(['true', 'local'])(
-      'rejects anonymous local registration when REGISTRATION_DISABLED=%s',
-      async (registrationDisabled) => {
-        configService.set('REGISTRATION_DISABLED', registrationDisabled);
-
-        const registration = usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_2,
-          {},
-        );
-
-        await expect(registration).rejects.toBeInstanceOf(ForbiddenError);
-        await expect(registration).rejects.toHaveProperty(
-          'message',
-          'User registration is disabled. Please ask your system administrator to create the account.',
-        );
-        expect(await usersService.count()).toBe(2);
-      },
-    );
-
-    it.each(['true', 'local'])(
-      'allows the administrator ForceRegistration bypass when REGISTRATION_DISABLED=%s',
-      async (registrationDisabled) => {
-        configService.set('REGISTRATION_DISABLED', registrationDisabled);
-
-        const createdUser = await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_2,
-          { user: adminUser },
-        );
-
-        expect(createdUser).toEqual(
-          new UserDto(await usersService.findById(createdUser.id)),
-        );
-        expect(await usersService.count()).toBe(3);
-      },
-    );
-  });
-
   describe('Create function with registration enabled', () => {
+    // Tests the create function with valid dto (basic positive test)
+    it('should test the create function with valid dto', async () => {
+      expect.assertions(1);
+
+      const createdUser = await usersController.create(
+        CREATE_USER_DTO_TEST_OBJ_2,
+        {}
+      );
+      expect(createdUser).toEqual(
+        new UserDto(await usersService.findById(createdUser.id))
+      );
+    });
+
     // Tests the create function with dto that is missing email
     it('should test the create function with missing email field', async () => {
       expect.assertions(1);
@@ -217,6 +174,18 @@ describe('UsersController Unit Tests', () => {
           {}
         );
       }).rejects.toThrow(ValidationError);
+    });
+  });
+
+  describe('Create function with registration disabled', () => {
+    it('should test the create function with valid dto', async () => {
+      expect.assertions(1);
+
+      configService.set('REGISTRATION_DISABLED', 'true');
+
+      await expect(
+        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
+      ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
 

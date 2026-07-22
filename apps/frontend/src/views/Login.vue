@@ -17,23 +17,6 @@
                 </v-toolbar-title>
                 <v-spacer />
               </v-toolbar>
-              <v-alert
-                v-if="provisioningDeniedProvider"
-                id="account_not_provisioned_alert"
-                class="ma-4 mb-0"
-                border="left"
-                prominent
-                type="warning"
-              >
-                <div class="text-h6">
-                  Sign-in not completed
-                </div>
-                <div>
-                  Your {{ provisioningDeniedProvider }} identity was verified,
-                  but no Heimdall account exists for you. Contact your Heimdall
-                  administrator to request an account.
-                </div>
-              </v-alert>
               <v-tabs
                 active
                 :value="activeTab"
@@ -58,9 +41,7 @@
                   <LocalLogin />
                 </v-tab-item>
                 <v-tab-item value="login-ldap">
-                  <LDAPLogin
-                    @account-not-provisioned="showProvisioningDenial"
-                  />
+                  <LDAPLogin />
                 </v-tab-item>
               </v-tabs>
             </v-card>
@@ -80,9 +61,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
-const authenticationProvider = new LocalStorageVal<string>(
-  'authentication_provider',
-);
 
 @Component({
   components: {
@@ -96,7 +74,6 @@ export default class Login extends Vue {
   );
 
   logoffMessage = 'You have successfully logged off';
-  provisioningDeniedProvider: null | string = null;
 
   mounted() {
     this.checkLoggedIn();
@@ -110,33 +87,14 @@ export default class Login extends Vue {
   }
 
   checkForAuthenticationError() {
-    const authenticationError = this.$cookies.get('authenticationError');
-    const authenticationErrorCode = this.$cookies.get(
-      'authenticationErrorCode',
-    );
-    if (!authenticationError && !authenticationErrorCode) {
-      return;
-    }
-
-    this.$cookies.remove('authenticationError');
-    this.$cookies.remove('authenticationErrorCode');
-    const provider = authenticationProvider.getDefault('external provider');
-    authenticationProvider.clear();
-
-    if (authenticationErrorCode === 'account_not_provisioned') {
-      this.showProvisioningDenial(provider);
-      return;
-    }
-
-    if (authenticationError) {
+    if (this.$cookies.get('authenticationError')) {
       SnackbarModule.failure(
-        `Sorry, a problem occurred while signing you in. The reason given was: ${authenticationError}`,
+        `Sorry, a problem occurred while signing you in. The reason given was: ${this.$cookies.get(
+          'authenticationError'
+        )}`
       );
+      this.$cookies.remove('authenticationError');
     }
-  }
-
-  showProvisioningDenial(provider: string) {
-    this.provisioningDeniedProvider = provider;
   }
 
   signup() {
