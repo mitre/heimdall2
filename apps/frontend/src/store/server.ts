@@ -208,12 +208,24 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public async LoginLDAP(userInfo: {username: string; password: string}) {
-    return axios
-      .post<LoginData>('/authn/login/ldap', userInfo)
-      .then(({data}) => {
-        this.handleLogin(data);
-      });
+  public async LoginLDAP(userInfo: { password: string; username: string }) {
+    const response = await axios.post<LoginData>(
+      '/authn/login/ldap',
+      userInfo,
+      {
+        // Keep LDAP 401s out of the global response interceptor so the login
+        // component can choose the dedicated or generic rendering path.
+        validateStatus: status =>
+          status === 401 || (status >= 200 && status < 300),
+      },
+    );
+    if (response.status === 401) {
+      throw Object.assign(
+        new Error('LDAP authentication failed with status 401'),
+        { response },
+      );
+    }
+    await this.handleLogin(response.data);
   }
 
   @Action
