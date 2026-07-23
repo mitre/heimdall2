@@ -15,7 +15,8 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'IAM_PASSWORD_POLICY',
     AwsConfigRuleName: 'iam-password-policy',
-    'NIST-ID': 'AC-2(1)|AC-2(f)|AC-2(j)|IA-2|IA-5(1)(a)(d)(e)|IA-5(4)',
+    'NIST-ID':
+      'AC-2(1)|AC-2(f)|AC-2(j)|IA-2|IA-5(1)(a)|IA-5(1)(d)|IA-5(1)(e)|IA-5(4)',
     Rev: 4
   },
   {
@@ -34,52 +35,53 @@ export const data = [
     AwsConfigRuleSourceIdentifier: 'SECURITYHUB_ENABLED',
     AwsConfigRuleName: 'securityhub-enabled',
     'NIST-ID':
-      'AC-2(1)|AC-2(4)|AC-2(12)(a)|AC-2(g)|AC-17(1)|AU-6(1)(3)|CA-7(a)(b)|SA-10|SI-4(2)|SI-4(4)|SI-4(5)|SI-4(16)|SI-4(a)(b)(c)',
+      'AC-2(1)|AC-2(4)|AC-2(12)(a)|AC-2(g)|AC-17(1)|AU-6(1)|AU-6(3)|CA-7(a)|CA-7(b)|SA-10|SI-4(2)|SI-4(4)|SI-4(5)|SI-4(16)|SI-4(a)|SI-4(b)|SI-4(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'GUARDDUTY_ENABLED_CENTRALIZED',
     AwsConfigRuleName: 'guardduty-enabled-centralized',
     'NIST-ID':
-      'AC-2(1)|AC-2(4)|AC-2(12)(a)|AC-2(g)|AC-17(1)|AU-6(1)(3)|CA-7(a)(b)|RA-5|SA-10|SI-4(1)|SI-4(2)|SI-4(4)|SI-4(5)|SI-4(16)|SI-4(a)(b)(c)',
+      'AC-2(1)|AC-2(4)|AC-2(12)(a)|AC-2(g)|AC-17(1)|AU-6(1)|AU-6(3)|CA-7(a)|CA-7(b)|RA-5|SA-10|SI-4(1)|SI-4(2)|SI-4(4)|SI-4(5)|SI-4(16)|SI-4(a)|SI-4(b)|SI-4(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'CLOUD_TRAIL_CLOUD_WATCH_LOGS_ENABLED',
     AwsConfigRuleName: 'cloud-trail-cloud-watch-logs-enabled',
     'NIST-ID':
-      'AC-2(4)|AC-2(g)|AU-2(a)(d)|AU-3|AU-6(1)(3)|AU-7(1)|AU-12(a)(c)|CA-7(a)(b)|SI-4(2)|SI-4(4)|SI-4(5)|SI-4(a)(b)(c)',
+      'AC-2(4)|AC-2(g)|AU-2(a)|AU-2(d)|AU-3|AU-6(1)|AU-6(3)|AU-7(1)|AU-12(a)|AU-12(c)|CA-7(a)|CA-7(b)|SI-4(2)|SI-4(4)|SI-4(5)|SI-4(a)|SI-4(b)|SI-4(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'CLOUD_TRAIL_ENABLED',
     AwsConfigRuleName: 'cloudtrail-enabled',
-    'NIST-ID': 'AC-2(4)|AC-2(g)|AU-2(a)(d)|AU-3|AU-12(a)(c)',
+    'NIST-ID': 'AC-2(4)|AC-2(g)|AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'MULTI_REGION_CLOUD_TRAIL_ENABLED',
     AwsConfigRuleName: 'multi-region-cloudtrail-enabled',
-    'NIST-ID': 'AC-2(4)|AU-2(a)(d)|AU-3|AU-12(a)(c)',
+    'NIST-ID': 'AC-2(4)|AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'RDS_LOGGING_ENABLED',
     AwsConfigRuleName: 'rds-logging-enabled',
-    'NIST-ID': 'AC-2(4)|AC-2(g)|AU-2(a)(d)|AU-3|AU-12(a)(c)',
+    'NIST-ID': 'AC-2(4)|AC-2(g)|AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'CLOUDWATCH_ALARM_ACTION_CHECK',
     AwsConfigRuleName: 'cloudwatch-alarm-action-check',
     'NIST-ID':
-      'AC-2(4)|AU-6(1)(3)|AU-7(1)|CA-7(a)(b)|IR-4(1)|SI-4(2)|SI-4(4)|SI-4(5)|SI-4(a)(b)(c)',
+      'AC-2(4)|AU-6(1)|AU-6(3)|AU-7(1)|CA-7(a)|CA-7(b)|IR-4(1)|SI-4(2)|SI-4(4)|SI-4(5)|SI-4(a)|SI-4(b)|SI-4(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'REDSHIFT_CLUSTER_CONFIGURATION_CHECK',
     AwsConfigRuleName: 'redshift-cluster-configuration-check',
-    'NIST-ID': 'AC-2(4)|AC-2(g)|AU-2(a)(d)|AU-3|AU-12(a)(c)|SC-13|SC-28',
+    'NIST-ID':
+      'AC-2(4)|AC-2(g)|AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)|SC-13|SC-28',
     Rev: 4
   },
   {
@@ -91,19 +93,19 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'S3_BUCKET_LOGGING_ENABLED',
     AwsConfigRuleName: 's3-bucket-logging-enabled',
-    'NIST-ID': 'AC-2(g)|AU-2(a)(d)|AU-3|AU-12(a)(c)',
+    'NIST-ID': 'AC-2(g)|AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'CLOUDTRAIL_S3_DATAEVENTS_ENABLED',
     AwsConfigRuleName: 'cloudtrail-s3-dataevents-enabled',
-    'NIST-ID': 'AC-2(g)|AU-2(a)(d)|AU-3|AU-12(a)(c)',
+    'NIST-ID': 'AC-2(g)|AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'ROOT_ACCOUNT_MFA_ENABLED',
     AwsConfigRuleName: 'root-account-mfa-enabled',
-    'NIST-ID': 'AC-2(j)|IA-2(1)(11)',
+    'NIST-ID': 'AC-2(j)|IA-2(1)|IA-2(11)',
     Rev: 4
   },
   {
@@ -320,25 +322,26 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'API_GW_EXECUTION_LOGGING_ENABLED',
     AwsConfigRuleName: 'api-gw-execution-logging-enabled',
-    'NIST-ID': 'AU-2(a)(d)|AU-3|AU-12(a)(c)',
+    'NIST-ID': 'AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'ELB_LOGGING_ENABLED',
     AwsConfigRuleName: 'elb-logging-enabled',
-    'NIST-ID': 'AU-2(a)(d)|AU-3|AU-12(a)(c)',
+    'NIST-ID': 'AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'VPC_FLOW_LOGS_ENABLED',
     AwsConfigRuleName: 'vpc-flow-logs-enabled',
-    'NIST-ID': 'AU-2(a)(d)|AU-3|AU-12(a)(c)',
+    'NIST-ID': 'AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'WAFV2_LOGGING_ENABLED',
     AwsConfigRuleName: 'wafv2-logging-enabled',
-    'NIST-ID': 'AU-2(a)(d)|AU-3|AU-12(a)(c)|SC-7|SI-4(a)(b)(c)',
+    'NIST-ID':
+      'AU-2(a)|AU-2(d)|AU-3|AU-12(a)|AU-12(c)|SC-7|SI-4(a)|SI-4(b)|SI-4(c)',
     Rev: 4
   },
   {
@@ -368,13 +371,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'EC2_INSTANCE_DETAILED_MONITORING_ENABLED',
     AwsConfigRuleName: 'ec2-instance-detailed-monitoring-enabled',
-    'NIST-ID': 'CA-7(a)(b)|SI-4(2)|SI-4(a)(b)(c)',
+    'NIST-ID': 'CA-7(a)|CA-7(b)|SI-4(2)|SI-4(a)|SI-4(b)|SI-4(c)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'RDS_ENHANCED_MONITORING_ENABLED',
     AwsConfigRuleName: 'rds-enhanced-monitoring-enabled',
-    'NIST-ID': 'CA-7(a)(b)',
+    'NIST-ID': 'CA-7(a)|CA-7(b)',
     Rev: 4
   },
   {
@@ -498,25 +501,25 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'ROOT_ACCOUNT_HARDWARE_MFA_ENABLED',
     AwsConfigRuleName: 'root-account-hardware-mfa-enabled',
-    'NIST-ID': 'IA-2(1)(11)',
+    'NIST-ID': 'IA-2(1)|IA-2(11)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS',
     AwsConfigRuleName: 'mfa-enabled-for-iam-console-access',
-    'NIST-ID': 'IA-2(1)(2)(11)',
+    'NIST-ID': 'IA-2(1)|IA-2(2)|IA-2(11)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'IAM_USER_MFA_ENABLED',
     AwsConfigRuleName: 'iam-user-mfa-enabled',
-    'NIST-ID': 'IA-2(1)(2)(11)',
+    'NIST-ID': 'IA-2(1)|IA-2(2)|IA-2(11)',
     Rev: 4
   },
   {
     AwsConfigRuleSourceIdentifier: 'GUARDDUTY_NON_ARCHIVED_FINDINGS',
     AwsConfigRuleName: 'guardduty-non-archived-findings',
-    'NIST-ID': 'IR-4(1)|IR-6(1)|IR-7(1)|RA-5|SA-10|SI-4(a)(b)(c)',
+    'NIST-ID': 'IR-4(1)|IR-6(1)|IR-7(1)|RA-5|SA-10|SI-4(a)|SI-4(b)|SI-4(c)',
     Rev: 4
   },
   {
@@ -540,7 +543,7 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'ALB_WAF_ENABLED',
     AwsConfigRuleName: 'alb-waf-enabled',
-    'NIST-ID': 'SC-7|SI-4(a)(b)(c)',
+    'NIST-ID': 'SC-7|SI-4(a)|SI-4(b)|SI-4(c)',
     Rev: 4
   },
   {
