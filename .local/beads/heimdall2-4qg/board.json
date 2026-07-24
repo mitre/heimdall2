@@ -1,0 +1,503 @@
+{
+  "exported_at": "2026-07-14",
+  "source": "local clone of git+https://github.com/mitre/heimdall2.git refs/dolt/data",
+  "mode": "read-only/no-push",
+  "epic": {
+    "id": "heimdall2-4qg",
+    "title": "[EPIC] Implement scoped REGISTRATION_DISABLED — ADR-004 external-auth provisioning policy",
+    "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: [EPIC] Implement scoped REGISTRATION_DISABLED — ADR-004 external-auth provisioning policy\n\nDescription:\nImplement ADR-004 through 10 child cards covering configuration, SSO/LDAP provisioning, error transport and rendering, verification, migration documentation, and live OIDC testing. The children total 134 Claude-pace minutes; this epic is complete only when the full behavior matrix and both breaking-change cohorts have evidence.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §2, §5, §10\n\nFiles:\n- Create: none\n- Modify: none\n- Test: none\n\nFirst failing test:\nSee child cards\n\nAcceptance criteria:\n- [ ] All 10 child cards are closed after independent AC verification\n- [ ] Every row of ADR §5 is demonstrated, including LDAP and self-registration-under-`sso`\n- [ ] Both breaking-change cohorts in ADR §6.2 are covered by the shipped, version-pinned migration note\n- [ ] ADR §6.3's verified-email warning and operator guidance are implemented and verified\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing backend, frontend, and end-to-end tests\n- [ ] Live tested against the running app with the Phase 10 OIDC matrix; per-cell proof and light/dark alert screenshots are pasted in card notes before closing\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace @mitre/heimdall-lite test:ci && yarn workspace heimdall-server lint:ci && yarn workspace @mitre/heimdall-lite lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json && npx tsc --noEmit -p apps/frontend/tsconfig.json`\n\nDecision points:\n- Any proposed deviation from ADR-004's settled one-variable, four-value, fail-fast design must stop for maintainer approval\n- Implementing the entire feature in one card is the simpler shortcut, but it is wrong because it removes independently verifiable boundaries for the security policy, transport contract, UI behavior, and migration work\n- Pushing code or documentation to an external branch, wiki, or repository requires explicit approval from the relevant maintainer\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT collapse or bypass child-card verification to close the epic sooner\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Approval-queue provisioning, provider-specific controls, `iss`+`sub` identity binding, or local-registration email verification\n- Implementing the ADR-005 VitePress documentation site\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:13\nEstimate: 134 minutes, Claude-pace total across child cards\n",
+    "status": "open",
+    "priority": 1,
+    "issue_type": "epic",
+    "owner": "lippold@gmail.com",
+    "estimated_minutes": 134,
+    "created_at": "2026-07-10T04:12:02Z",
+    "created_by": "Aaron Lippold",
+    "updated_at": "2026-07-13T20:32:08Z",
+    "labels": [
+      "sp:13"
+    ],
+    "dependent_count": 10,
+    "dependency_count": 0,
+    "comment_count": 0
+  },
+  "cards": [
+    {
+      "id": "heimdall2-4qg.1",
+      "title": "Extend registration configuration — ADR-004 Phase 1",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Extend registration configuration — ADR-004 Phase 1\n\nDescription:\nExtend `ConfigService.isRegistrationAllowed()` with a defaulted local/SSO scope and case-insensitive, whitespace-trimmed enum handling. Add fail-fast bootstrap validation so unknown deny-policy values never silently enable account creation, while unset and whitespace-only values remain permissive for compatibility.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §3.1, §3.2, §7.1\n\nFiles:\n- Create: none\n- Modify: apps/backend/src/config/config.service.ts, apps/backend/src/main.ts\n- Test: apps/backend/src/config/config.service.spec.ts\n\nFirst failing test:\n`it('rejects SSO registration when REGISTRATION_DISABLED is sso')`\n\nAcceptance criteria:\n- [ ] `RegistrationScope` accepts only `local` or `sso`, defaults to `local`, and existing callers compile unchanged\n- [ ] The complete ADR §7.1 value/scope matrix is covered, including case variants and trimmed values\n- [ ] `validateRegistrationDisabled()` accepts unset/empty/whitespace and the four valid values, and rejects `1`, `yes`, `0`, `banana`, `ture`, and `sso-approval` with an error naming every valid value\n- [ ] Bootstrap invokes validation exactly once before the application begins listening\n- [ ] `frontendStartupSettings().registrationEnabled` is false for `true`/`local` and true for unset/`false`/`sso`\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested against the running backend: `REGISTRATION_DISABLED=banana` refuses boot with the exact error and `REGISTRATION_DISABLED=sso` boots; output is pasted in card notes\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace heimdall-server lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json`\n\nDecision points:\n- If configuration loading has another bootstrap path besides `apps/backend/src/main.ts`, stop and include it before claiming validation is complete\n- Treating unknown values as permissive is simpler, but it is wrong because a typo in a deny-policy variable would silently open both creation paths\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT preserve permissive behavior for non-empty unknown values\n- Do NOT duplicate enum parsing between validation and `isRegistrationAllowed()`\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Gating SSO user creation or emitting migration/security warnings\n- Updating environment-variable documentation\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:1\nEstimate: 8 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 8,
+      "created_at": "2026-07-10T04:12:55Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:19Z",
+      "labels": [
+        "sp:1"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.1",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:12:54Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 0,
+      "dependent_count": 5,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.2",
+      "title": "Gate SSO user creation — ADR-004 Phase 2",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Gate SSO user creation — ADR-004 Phase 2\n\nDescription:\nGate only the missing-user creation branch in `AuthnService.validateOrCreateUser()` with `isRegistrationAllowed('sso')`. Preserve existing-user login, normalize external email before lookup/create, distinguish missing email from provisioning denial, and propagate non-not-found database errors unchanged.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §3.3, §3.5, §5, §7.2\n\nFiles:\n- Create: apps/backend/src/authn/authn.service.spec.ts\n- Modify: apps/backend/src/authn/authn.service.ts\n- Test: apps/backend/src/authn/authn.service.spec.ts\n\nFirst failing test:\n`it('rejects a missing SSO user under REGISTRATION_DISABLED=sso without creating a user')`\n\nAcceptance criteria:\n- [ ] Missing users are created for unset/`false`/`local` and rejected for `true`/`sso`; every branch is tested\n- [ ] The denial is an `UnauthorizedException` with the exact body `{statusCode: 401, message, error: 'account_not_provisioned'}` required by ADR §3.3\n- [ ] `usersService.create()` is never called on a denied registration or a non-`NotFoundException` lookup failure\n- [ ] Missing/empty email is rejected before lookup with `external_identity_missing_email`, never `account_not_provisioned`\n- [ ] External email is trimmed and lowercased before lookup and create; mixed-case external email matches a lowercase pre-provisioned account without creating a duplicate\n- [ ] Existing-user profile and login-metadata behavior remains unchanged for every configuration value\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested against the running API with `curl` on the LDAP or OIDC path under `sso`; the 401 body and unchanged database row count are pasted in card notes\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace heimdall-server lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json`\n\nDecision points:\n- If `UsersService.findByEmail()` can signal absence with anything other than `NotFoundException`, stop and reconcile the service contract before changing the catch\n- A bare catch is simpler, but it is wrong because it converts database failures into policy denials and may create users after a failed lookup\n- If a maintained API schema is introduced before implementation, stop and add its response type and contract validation to this card atomically\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT throw a message-only exception; the machine-readable code is part of the transport contract\n- Do NOT normalize local registration or change database uniqueness in this card\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Structured audit logging, OAuth cookie transport, frontend rendering, or LDAP strategy error plumbing\n- Case-insensitive database uniqueness or `iss`+`sub` identity binding\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:2\nEstimate: 10 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 10,
+      "created_at": "2026-07-10T04:13:43Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:20Z",
+      "labels": [
+        "sp:2"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.2",
+          "depends_on_id": "heimdall2-4qg.1",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:13:43Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.2",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:13:42Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 1,
+      "dependent_count": 5,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.3",
+      "title": "Emit SSO provisioning audit event — ADR-004 Phase 3",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Emit SSO provisioning audit event — ADR-004 Phase 3\n\nDescription:\nEmit one single-line JSON audit event whenever SSO self-provisioning is rejected by policy. The event must use ADR §3.5's exact five-field shape and must not expose password, token, or additional profile material.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §3.5 item 3, §7.2 tests 8 and 11\n\nFiles:\n- Create: none\n- Modify: apps/backend/src/authn/authn.service.ts\n- Test: apps/backend/src/authn/authn.service.spec.ts\n\nFirst failing test:\n`it('logs exactly one five-field audit event when SSO provisioning is denied')`\n\nAcceptance criteria:\n- [ ] Parsed JSON has exactly `event`, `provider`, `email`, `reason`, and `timestamp` with the pinned event/reason strings\n- [ ] The email is the normalized external email and the timestamp is valid ISO-8601\n- [ ] The event is emitted only for `account_not_provisioned`, not missing email, database error, successful create, or existing-user login\n- [ ] The serialized event contains no password, token, or additional profile fields\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested against the running backend by triggering one denial; the exact stdout log line is pasted in card notes\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace heimdall-server lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json`\n\nDecision points:\n- If the existing Winston formatter cannot emit the pinned object as one JSON line, stop and make the smallest logger change that preserves other AuthnService logs\n- Free-form prose logging is simpler, but it is wrong because operators cannot reliably query the stable security event contract\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT add extra fields or use substring-only assertions for the pinned event\n- Do NOT move durable retention into the application; stdout remains the documented sink\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Exception-filter diagnostic redaction or frontend error transport\n- Deployment log retention and aggregation\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:1\nEstimate: 6 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 6,
+      "created_at": "2026-07-10T04:14:23Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:21Z",
+      "labels": [
+        "sp:1"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.3",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:14:22Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.3",
+          "depends_on_id": "heimdall2-4qg.2",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:14:23Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 1,
+      "dependent_count": 2,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.4",
+      "title": "Preserve authentication error code — ADR-004 Phase 4",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Preserve authentication error code — ADR-004 Phase 4\n\nDescription:\nPreserve `account_not_provisioned` through the OAuth callback by adding an `authenticationErrorCode` cookie while retaining the existing human-readable error cookie and redirect. Redact callback secrets from filter diagnostics so the newly frequent policy rejection path cannot log OAuth codes, state, cookies, or authorization headers.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §3.5 item 4, §7.5\n\nFiles:\n- Create: apps/backend/src/filters/authentication-exception.filter.spec.ts\n- Modify: apps/backend/src/filters/authentication-exception.filter.ts\n- Test: apps/backend/src/filters/authentication-exception.filter.spec.ts\n\nFirst failing test:\n`it('sets authenticationErrorCode for account_not_provisioned and redirects to root')`\n\nAcceptance criteria:\n- [ ] An `HttpException` response object with `error: 'account_not_provisioned'` produces an exact-value `authenticationErrorCode` cookie and a 302 redirect to `/`\n- [ ] A generic error without a structured code produces only the existing `authenticationError` cookie\n- [ ] Existing human-readable cookie behavior and cookie security flags are preserved\n- [ ] WARN diagnostics redact `code` and `state` query values and omit cookie/authorization headers; tests assert secrets are absent from serialized output\n- [ ] The LDAP/local POST path remains the exact 401 object from Phase 2 and does not use redirect cookies\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested against the running mock OIDC callback with `curl`; response cookies, redirect, and the redacted log line are pasted in card notes\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace heimdall-server lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json`\n\nDecision points:\n- If the existing cookie flags are unsafe, stop and raise that separately instead of silently changing legacy cookie behavior in this transport card\n- Logging the entire request and masking only one field is simpler, but it is wrong because callback headers and query parameters contain multiple credential classes\n- If a maintained API schema is introduced before implementation, stop and add cookie/401 transport documentation and contract validation atomically\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT log raw `request.headers`, `request.query`, OAuth `code`, or OAuth `state`\n- Do NOT replace the existing human-readable error cookie\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Rendering the dedicated alert or changing the Phase 2 exception body\n- General-purpose application logging redesign\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:2\nEstimate: 10 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 10,
+      "created_at": "2026-07-10T04:14:23Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:21Z",
+      "labels": [
+        "sp:2"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.4",
+          "depends_on_id": "heimdall2-4qg.2",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:14:23Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.4",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:14:23Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 1,
+      "dependent_count": 3,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.5",
+      "title": "Render provisioning denial alert — ADR-004 Phase 5",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Render provisioning denial alert — ADR-004 Phase 5\n\nDescription:\nRender `account_not_provisioned` as one dedicated, provider-named login alert for both OAuth-cookie and LDAP-401 transports while suppressing generic snackbars for the recognized code. Preserve generic fallback behavior, record the clicked OAuth provider client-side across the redirect, and verify the local Sign Up visibility matrix affected by the scoped configuration.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §3.2, §3.6, §7.6\n\nFiles:\n- Create: apps/frontend/tests/unit/Login.spec.ts, apps/frontend/tests/unit/LDAPLogin.spec.ts, apps/frontend/tests/unit/LocalLogin.spec.ts\n- Modify: apps/frontend/src/views/Login.vue, apps/frontend/src/components/global/login/LDAPLogin.vue, apps/frontend/src/components/global/login/LocalLogin.vue\n- Test: apps/frontend/tests/unit/Login.spec.ts, apps/frontend/tests/unit/LDAPLogin.spec.ts, apps/frontend/tests/unit/LocalLogin.spec.ts\n\nFirst failing test:\n`it('renders the dedicated alert and suppresses the generic snackbar for the OAuth account_not_provisioned cookie')`\n\nAcceptance criteria:\n- [ ] OAuth callback reads and clears both error cookies, renders only the dedicated alert for the recognized code, and retains generic behavior for unknown/no codes\n- [ ] OAuth provider selection is persisted before redirect, used in the alert, and cleared after handling\n- [ ] LDAP 401 `account_not_provisioned` renders the same alert naming LDAP and suppresses the generic interceptor/snackbar path\n- [ ] Alert copy contains administrator remediation and does not expose the policy value, enabled-provider list, or other configuration posture\n- [ ] Local Sign Up is visible for unset/`false`/`sso` and hidden for `true`/`local`; direct `/signup` remains protected by the backend\n- [ ] Design system compliance verified against `apps/frontend/src/plugins/vuetify.ts`; use Vuetify components and theme colors before adding custom styling\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested in the running app with Playwright screenshots in light and dark modes for the dedicated alert, plus both OAuth and LDAP transport proofs pasted in card notes\n\nVerification:\n`yarn workspace @mitre/heimdall-lite test:ci && yarn workspace @mitre/heimdall-lite lint:ci && npx tsc --noEmit -p apps/frontend/tsconfig.json`\n\nDecision points:\n- If provider identity cannot be retained using the existing `LocalStorageVal` utility without exposing configuration, stop before introducing a new persistence mechanism\n- Reusing the generic snackbar is simpler, but it is wrong because it discards the ADR's remediation and provider context\n- If a Vuetify component/theme token cannot satisfy the alert, stop before adding custom CSS or a new UI dependency\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT infer the provider from server configuration or reveal which providers permit provisioning\n- Do NOT leave the LDAP promise rejection to the global generic interceptor\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Backend transport changes or adding an i18n framework\n- Redesigning the full login page or adding a new design system\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:2\nEstimate: 12 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 12,
+      "created_at": "2026-07-10T04:15:04Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:22Z",
+      "labels": [
+        "sp:2"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.5",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:15:03Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.5",
+          "depends_on_id": "heimdall2-4qg.4",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:15:03Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 1,
+      "dependent_count": 2,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.6",
+      "title": "Emit startup policy warnings — ADR-004 Phase 6",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Emit startup policy warnings — ADR-004 Phase 6\n\nDescription:\nEmit the migration warning once per boot when `REGISTRATION_DISABLED=true` and any OAuth or LDAP strategy is enabled. Also implement ADR §6.3's security warning when pre-provisioning is paired with `OIDC_USES_VERIFIED_EMAIL=false`, because unverified email matching can bind an external identity to the wrong local account.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §3.7, §6.3, §7.1\n\nFiles:\n- Create: none\n- Modify: apps/backend/src/config/config.service.ts\n- Test: apps/backend/src/config/config.service.spec.ts\n\nFirst failing test:\n`it('warns once when REGISTRATION_DISABLED is true and LDAP is the only enabled external strategy')`\n\nAcceptance criteria:\n- [ ] The §3.7 warning fires for `true` plus OAuth-only and for `true` plus LDAP-only configurations\n- [ ] The §3.7 warning does not fire with no external strategy or with unset/`false`/`local`/`sso`\n- [ ] Repeated `isRegistrationAllowed()` calls do not repeat startup warnings; logger spies prove once-per-bootstrap behavior\n- [ ] Enabled-strategy detection is exactly `enabledOauthStrategies().length > 0 || LDAP_ENABLED=true`, not provider-class registration\n- [ ] A distinct security warning fires when `OIDC_USES_VERIFIED_EMAIL=false` is combined with `REGISTRATION_DISABLED=true` or `sso`, and not for safer combinations\n- [ ] Warning text states the migration/security consequences and remediation without logging secrets\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested by booting the backend with `true` plus LDAP-only and with `sso` plus unverified OIDC email; one instance of each expected warning is pasted in card notes\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace heimdall-server lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json`\n\nDecision points:\n- If warning evaluation cannot remain in the one-time bootstrap validation call, stop before introducing stateful suppression in ordinary config getters\n- Checking OAuth only is simpler, but it is wrong because LDAP is in the breaking cohort and shares the same provisioning gate\n- Reusing `isRegistrationAllowed()` to emit warnings is simpler, but it is wrong because normal reads would spam operators\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT detect enabled providers from unconditionally registered strategy classes\n- Do NOT omit ADR §6.3's unverified-email combination warning\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Fail-fast enum validation itself or release-note documentation\n- A reusable in-app administrator advisory system\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:1\nEstimate: 8 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 8,
+      "created_at": "2026-07-10T04:15:04Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:23Z",
+      "labels": [
+        "sp:1"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.6",
+          "depends_on_id": "heimdall2-4qg.1",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:15:04Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.6",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:15:04Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 1,
+      "dependent_count": 2,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.7",
+      "title": "Complete backend policy test matrices — ADR-004 Phase 7",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Complete backend policy test matrices — ADR-004 Phase 7\n\nDescription:\nMap every ADR §7.1, §7.2, §7.3, and §7.5 requirement to a concrete backend test and fill every gap left by Phases 1–6. Verify local registration under all scoped values, the administrator bypass, both startup-warning families, transport redaction, and failure behavior strong enough to catch broken implementations.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §7.1–§7.5\n\nFiles:\n- Create: none\n- Modify: apps/backend/src/config/config.service.ts, apps/backend/src/authn/authn.service.ts, apps/backend/src/filters/authentication-exception.filter.ts, apps/backend/src/users/users.controller.ts, apps/backend/src/config/config.service.spec.ts, apps/backend/src/authn/authn.service.spec.ts, apps/backend/src/filters/authentication-exception.filter.spec.ts, apps/backend/src/users/users.controller.spec.ts\n- Test: apps/backend/src/config/config.service.spec.ts, apps/backend/src/authn/authn.service.spec.ts, apps/backend/src/filters/authentication-exception.filter.spec.ts, apps/backend/src/users/users.controller.spec.ts\n\nFirst failing test:\n`it('allows anonymous local registration when REGISTRATION_DISABLED is sso')`\n\nAcceptance criteria:\n- [ ] A row-by-row map in card notes links every §7.1 row, all 14 §7.2 tests, all five §7.3 tests, and all three §7.5 tests to exact test names\n- [ ] Local registration is allowed for unset/`false`/`sso`, rejected for `true`/`local`, and the existing administrator `ForceRegistration` bypass remains unchanged\n- [ ] Config coverage includes `frontendStartupSettings().registrationEnabled`, fail-fast startup validation, the §3.7 migration warning, and the §6.3 unverified-email warning\n- [ ] Three representative tests are mutation-checked and fail when their guarded implementation is deliberately broken\n- [ ] All model callbacks traced for save/update calls — no callback-conflicts-endpoint bugs\n- [ ] All enum values tested for fields that trigger callbacks; if the current `User` model has none, that fact is evidenced in card notes\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested against the running API with real user data: `curl` proofs for local registration under `local` and `sso`, plus an administrator bypass proof, are pasted in card notes\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace heimdall-server lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json`\n\nDecision points:\n- If an ADR row cannot be tested as specified, stop and correct the ADR/card contract rather than silently omitting it\n- Skipping rows already covered indirectly is simpler, but it is wrong because indirect coverage does not prove the explicit security matrix\n- If mutation checks reveal a production gap, fix it in the listed production file rather than weakening the test\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT use substring/type-only assertions that still pass when the protected behavior is broken\n- Do NOT weaken or duplicate existing tests merely to make the checklist appear complete\n- Do NOT assume a model callback is harmless — trace it through every controller action that triggers it\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Frontend §7.6 tests or strategy/e2e §7.4 tests\n- New provisioning features beyond ADR-004\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:3\nEstimate: 15 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 15,
+      "created_at": "2026-07-10T04:15:49Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:24Z",
+      "labels": [
+        "sp:3"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.7",
+          "depends_on_id": "heimdall2-4qg.4",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:15:49Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.7",
+          "depends_on_id": "heimdall2-4qg.6",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:15:49Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.7",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:15:48Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.7",
+          "depends_on_id": "heimdall2-4qg.2",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:15:49Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.7",
+          "depends_on_id": "heimdall2-4qg.3",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:15:49Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.7",
+          "depends_on_id": "heimdall2-4qg.5",
+          "type": "blocks",
+          "created_at": "2026-07-13T16:33:30Z",
+          "created_by": "NickShumar",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.7",
+          "depends_on_id": "heimdall2-4qg.1",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:15:49Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 6,
+      "dependent_count": 1,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.8",
+      "title": "Fix LDAP rejection plumbing and integration coverage — ADR-004 Phase 8",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Fix LDAP rejection plumbing and integration coverage — ADR-004 Phase 8\n\nDescription:\nMake `LDAPStrategy.validate()` await `validateOrCreateUser()` and route rejection through Passport's `done(err)` contract instead of passing a pending promise as the user. Add OIDC and LDAP strategy tests plus a dedicated Cypress/CI deny-path proving `REGISTRATION_DISABLED=sso` rejects a valid external identity without creating a database row.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §3.3, §7.4\n\nFiles:\n- Create: apps/backend/src/authn/ldap.strategy.spec.ts, apps/backend/src/authn/oidc.strategy.spec.ts, test/integration/registration-policy.cy.ts\n- Modify: apps/backend/src/authn/ldap.strategy.ts, apps/backend/src/authn/oidc.strategy.ts, apps/backend/test/.env-ci, .github/workflows/e2e-ui-tests.yml\n- Test: apps/backend/src/authn/ldap.strategy.spec.ts, apps/backend/src/authn/oidc.strategy.spec.ts, test/integration/registration-policy.cy.ts\n\nFirst failing test:\n`it('passes account_not_provisioned to done when a valid LDAP user has no Heimdall account under sso')`\n\nAcceptance criteria:\n- [ ] LDAP awaits `validateOrCreateUser()`, calls `done(null, user)` on success, and calls `done(err)` on rejection\n- [ ] LDAP's first-value behavior for multi-valued mail attributes is preserved and missing/empty mail returns `external_identity_missing_email`\n- [ ] OIDC and LDAP strategy tests cover missing-user rejection for both `true` and `sso`, with no user creation\n- [ ] A dedicated CI execution starts the real stack with `REGISTRATION_DISABLED=sso`, performs a valid LDAP or OIDC authentication, asserts `account_not_provisioned`, and proves the `Users` row count is unchanged\n- [ ] The existing default-config Cypress LDAP JIT login continues to pass\n- [ ] CI environment plumbing isolates the deny-path config from the ordinary JIT-on job\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested against the LDAP test container with `curl`/browser authentication and a database count before and after; output is pasted in card notes\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace heimdall-server lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json && yarn test:ui --spec test/integration/registration-policy.cy.ts`\n\nDecision points:\n- The architecturally correct path is a dedicated real-stack CI execution using the repository's existing Postgres/LDAP/Cypress services; if workflow isolation cannot guarantee separate config, stop before sharing mutable state between jobs\n- A unit test alone is simpler, but it is wrong because it cannot prove the Passport transport and database no-create invariant together\n- If OIDC strategy behavior diverges from the shared service contract, fix the listed strategy rather than adding provider-specific policy logic\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT leave `done(null, promise)` or rely on guard promise adoption\n- Do NOT satisfy the database-backed AC with mocks or a service-only test\n- Do NOT add provider-specific registration policy outside `AuthnService.validateOrCreateUser()`\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Implementing the shared gate or testing every shipped OAuth provider against a live IdP\n- Changing LDAP attribute selection beyond the documented first-value rule\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:3\nEstimate: 18 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 18,
+      "created_at": "2026-07-10T04:15:50Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:24Z",
+      "labels": [
+        "sp:3"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.8",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:15:49Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.8",
+          "depends_on_id": "heimdall2-4qg.2",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:15:49Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 1,
+      "dependent_count": 1,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.9",
+      "title": "Update registration policy documentation — ADR-004 Phase 9",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Update registration policy documentation — ADR-004 Phase 9\n\nDescription:\nUpdate every in-repository environment surface and ship a dedicated upgrade note for the scoped enum and its two breaking-change cohorts. Draft the two required wiki updates in card notes and coordinate the out-of-repository packaging update without treating those external writes as implicitly authorized.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §3.4, §6.2, §6.3, §8\n\nFiles:\n- Create: docs/upgrade-notes/registration-disabled-enum.md\n- Modify: apps/backend/.env-example, manifest.yml.example, CHANGELOG\n- Test: none\n\nFirst failing test:\n`rg --fixed-strings \"#REGISTRATION_DISABLED: 'false'\" manifest.yml.example`\n\nAcceptance criteria:\n- [ ] `apps/backend/.env-example` describes unset/`false`/`true`/`local`/`sso`, the default, and that SSO includes LDAP\n- [ ] `manifest.yml.example` uses a quoted string value and explains the YAML boolean-typing hazard\n- [ ] `docs/upgrade-notes/registration-disabled-enum.md` is pinned to the release that first ships the change and covers both breaking cohorts, symptom, remediation, rolling-upgrade ordering, and rollback ordering\n- [ ] `CHANGELOG` links to the dedicated upgrade note and identifies the change as breaking; it is not the only migration channel\n- [ ] Operator guidance covers lowercase pre-provisioned email, LDAP first-mail-value behavior, administrator-controlled/verified IdP email, and the risk of `OIDC_USES_VERIFIED_EMAIL=false`\n- [ ] Exact draft text for both wiki pages is pasted in card notes for maintainer review\n- [ ] The `mitre/saf-packaging` `backend.env` update is explicitly handed off through an approved issue/PR or recorded as blocked pending authorization; the card is not closed with that deliverable silently deferred\n- [ ] The repository surface audit is rerun and confirms there is still no Helm chart or additional direct listing to update\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested against the running app: documented `true`, `local`, `sso`, and invalid-value behavior is compared to actual startup/login output and pasted in card notes\n\nVerification:\n`node -e \"require('yaml').parse(require('fs').readFileSync('manifest.yml.example', 'utf8'))\" && rg -n \"REGISTRATION_DISABLED|account_not_provisioned|OIDC_USES_VERIFIED_EMAIL\" apps/backend/.env-example manifest.yml.example CHANGELOG docs/upgrade-notes/registration-disabled-enum.md && git diff --check`\n\nDecision points:\n- If the target release number is unknown, stop and obtain it before writing the version-pinned upgrade-note heading\n- Wiki and `mitre/saf-packaging` writes require explicit maintainer authority; draft locally and request coordination rather than pushing implicitly\n- A changelog-only note is simpler, but it is wrong because it does not give operators a stable, version-pinned pre-upgrade checklist\n- If ADR-005 ships first, stop and move the approved wiki content into its exact VitePress page paths in the same reviewed change\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT write `REGISTRATION_DISABLED` as an unquoted YAML boolean in the manifest example\n- Do NOT omit the invalid-value cohort, mixed-version ordering, rollback ordering, or verified-email guidance\n- Do NOT perform external wiki/repository writes without explicit authorization\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Implementing the VitePress site or auditing downstream third-party charts\n- Redesigning release automation\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:2\nEstimate: 12 minutes, Claude-pace\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 12,
+      "created_at": "2026-07-10T04:16:40Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:25Z",
+      "labels": [
+        "sp:2"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.9",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:16:39Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.9",
+          "depends_on_id": "heimdall2-4qg.1",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:16:39Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 1,
+      "dependent_count": 1,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    },
+    {
+      "id": "heimdall2-4qg.10",
+      "title": "Run live OIDC policy matrix — ADR-004 Phase 10",
+      "description": "## Phase 0 — MANDATORY REMINDER (read before every card)\n**CORRECTNESS IS THE ONLY PRIORITY.** Best practices, standards, DRY, maintainable code — always. No shortcuts, no hacks, no workarounds. Card-close velocity is NOT a metric. Speed is NOT a goal. If an AC requires research, DO THE RESEARCH. If an AC requires a specific format (XLSX, YAML, etc.), implement THAT FORMAT — do not substitute. Read the ADR section referenced below BEFORE writing code. Every AC gets evidence before close. The `/project-ac-verify` gate blocks `bd close` mechanically — an independent reviewer checks your work.\n\n---\n\nTitle: Run live OIDC policy matrix — ADR-004 Phase 10\n\nDescription:\nExecute the complete registration-policy matrix against a running server and real OIDC provider after Phases 1–9 pass. Capture existing-user, missing-user, normalization, alert, startup-warning, and invalid-value evidence so provider-specific claim behavior cannot remain hidden behind mocks.\nDesign doc: docs/adr-004-external-auth-user-provisioning-policy.md §5, §8, §10 Phase 10\n\nFiles:\n- Create: none\n- Modify: none\n- Test: none\n\nFirst failing test:\n`Manual matrix: a valid unknown OIDC identity under REGISTRATION_DISABLED=sso is rejected with account_not_provisioned and creates no Users row`\n\nAcceptance criteria:\n- [ ] An existing OIDC user signs in successfully under unset/`false`/`true`/`local`/`sso`\n- [ ] An unknown OIDC user is created under unset/`false`/`local` and rejected without a row under `true`/`sso`\n- [ ] A mixed-case OIDC email matches a lowercase pre-provisioned account under `true` and `sso`\n- [ ] Dedicated provider-named alert is observed for both deny values, with Playwright screenshots in light and dark modes\n- [ ] The §3.7 migration warning appears once for `true` plus OIDC; the §6.3 warning appears for unverified-email pre-provisioning; neither appears in configurations where it is not specified\n- [ ] An invalid non-empty value refuses startup and names all valid values\n- [ ] Every matrix cell has fresh request, response, and database evidence in card notes\n- [ ] Any divergence is recorded on the epic and the ADR is corrected before this card closes\n- [ ] All work via TDD (failing test first)\n- [ ] No regressions on existing tests\n- [ ] Live tested against the running app — the complete OIDC matrix and screenshots are the required proof\n\nVerification:\n`yarn workspace heimdall-server test:ci && yarn workspace @mitre/heimdall-lite test:ci && yarn workspace heimdall-server lint:ci && yarn workspace @mitre/heimdall-lite lint:ci && npx tsc --noEmit -p apps/backend/tsconfig.json && npx tsc --noEmit -p apps/frontend/tsconfig.json`\n\nDecision points:\n- Any observed IdP claim, email, or transport behavior that contradicts ADR §1.2 or §6.3 must stop closure and be reconciled in the ADR\n- Sampling only one allow and one deny value is simpler, but it is wrong because the enum's compatibility semantics differ by path and value\n- If the deployed app cannot render a supported light-mode screenshot, stop and document the design-system limitation before deciding how to satisfy visual verification\n\nAnti-patterns:\n- Do NOT optimize for card-close velocity or speed\n- Do NOT infer matrix results from unit tests, old logs, or repeated use of the same user state\n- Do NOT skip database before/after checks on denied provisioning\n- Do NOT add `rubocop:disable`/`eslint-disable` to work around warnings — fix the root cause\n- Do NOT close this card with any AC unchecked — no deferrals, no \"lower priority\" exceptions\n\nNOT in scope:\n- Live testing every shipped provider; OIDC is the enterprise reference path\n- Implementing fixes without first adding the failing automated regression to the owning card scope\n\nBefore closing:\n- [ ] Re-read the Phase 0 preamble — correctness is the only priority\n- [ ] **EVERY AC checkbox verified with evidence — NO EXCEPTIONS, NO DEFERRALS**\n- [ ] Re-read Anti-patterns — confirm none violated\n- [ ] Run the exact Verification command — paste output\n- [ ] Live test proof pasted in card notes — method matches layer changed\n- [ ] AC verification gate resolved with evidence (never `--force` to bypass)\n- [ ] git diff shows ONLY files listed in Files section\n- [ ] Zero new linter disable comments in the diff\n- [ ] If closing 2+ cards in a row: STOP. Are you rushing? Verify each one fully.\n\nStory points: sp:2\nEstimate: 35 minutes, Claude-pace exception for live IdP round trips\n",
+      "status": "open",
+      "priority": 1,
+      "issue_type": "task",
+      "owner": "lippold@gmail.com",
+      "estimated_minutes": 35,
+      "created_at": "2026-07-10T04:16:40Z",
+      "created_by": "Aaron Lippold",
+      "updated_at": "2026-07-13T20:32:26Z",
+      "labels": [
+        "sp:2"
+      ],
+      "dependencies": [
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.2",
+          "type": "blocks",
+          "created_at": "2026-07-13T16:32:33Z",
+          "created_by": "NickShumar",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.1",
+          "type": "blocks",
+          "created_at": "2026-07-13T16:32:32Z",
+          "created_by": "NickShumar",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg",
+          "type": "parent-child",
+          "created_at": "2026-07-10T00:16:40Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.9",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:16:40Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.3",
+          "type": "blocks",
+          "created_at": "2026-07-13T16:32:34Z",
+          "created_by": "NickShumar",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.6",
+          "type": "blocks",
+          "created_at": "2026-07-13T16:32:36Z",
+          "created_by": "NickShumar",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.4",
+          "type": "blocks",
+          "created_at": "2026-07-13T16:32:35Z",
+          "created_by": "NickShumar",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.7",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:16:40Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.5",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:16:40Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        },
+        {
+          "issue_id": "heimdall2-4qg.10",
+          "depends_on_id": "heimdall2-4qg.8",
+          "type": "blocks",
+          "created_at": "2026-07-10T00:16:40Z",
+          "created_by": "Aaron Lippold",
+          "metadata": "{}"
+        }
+      ],
+      "dependency_count": 9,
+      "dependent_count": 0,
+      "comment_count": 0,
+      "parent": "heimdall2-4qg"
+    }
+  ]
+}
+
