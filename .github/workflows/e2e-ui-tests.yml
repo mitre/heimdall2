@@ -53,16 +53,16 @@ jobs:
       - name: Copy .env-ci to .env
         run: cp apps/backend/test/.env-ci apps/backend/.env
 
-      - name: Create/migrate db
-        run: |
-          yarn backend sequelize-cli db:create
-          yarn backend sequelize-cli db:migrate
-          yarn backend sequelize-cli db:seed:all
-
       - name: Build Heimdall
         run: yarn build
         env:
           NODE_ENV: production # want to install dev deps like cypress but test against the prod build of Heimdall
+
+      - name: Create/migrate db
+        run: |
+          yarn backend sequelize db:create
+          yarn backend sequelize db:migrate
+          yarn backend sequelize db:seed:all
 
       - name: Cypress run
         uses: cypress-io/github-action@v7

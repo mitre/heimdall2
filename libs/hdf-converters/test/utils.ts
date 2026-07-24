@@ -106,3 +106,7 @@ export function replaceXCCDFVersion(input: string): string {
     hdfConvertersVersion
   );
 }
+
+export function omitHTMLStyleTag(input: string): string {
+  return input.replace(/(<style>)[\s\S]*?(<\/style>)/, "$1$2");
+}

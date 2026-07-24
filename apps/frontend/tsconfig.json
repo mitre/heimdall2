@@ -5,13 +5,13 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "useDefineForClassFields": false,
 
-    "baseUrl": "./",
     "module": "esnext",
     "moduleResolution": "node",
-    "rootDir": ".",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "@/*": ["./src/*"]
+    },
+
+    "ignoreDeprecations": "6.0"
   },
 
   "include": ["**/*.ts", "**/*.vue"]

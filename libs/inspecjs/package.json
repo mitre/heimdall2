@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "2.12.6",
+  "version": "2.13.0",
   "license": "Apache-2.0",
   "description": "Schema definitions, classes on top, and utilities to deal with HDF files",
   "repository": {
@@ -24,7 +24,7 @@
     "validate-types": "git diff --exit-code HEAD -- schemas/ src/generated_parsers/"
   },
   "devDependencies": {
-    "@types/node": "^25.0.0",
+    "@types/node": "^26.0.0",
     "quicktype": "^15.0.260",
     "vitest": "^4.0.18"
   }

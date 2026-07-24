@@ -1,9 +1,9 @@
 export default class ResultsPageVerifier {
-  resultsFilenameCorrect(name: string): void {
+  resultsFilenameCorrect(name: string) {
     cy.get('[data-cy=fileinfo]').contains(`Filename: ${name}`);
   }
 
-  resultsDataCorrect(): void {
+  resultsDataCorrect() {
     const correctFileInfo: string[] = [
       'Acme Overlay Example',
       '4.19.2',
@@ -36,6 +36,10 @@ export default class ResultsPageVerifier {
     cy.get('[data-cy=cardText]').each((card) => {
       expect(card[0].innerText).to.be.oneOf(correctCards);
     });
+  }
+
+  resultsCodeTabCorrect() {
+    cy.get('pre').contains('# Profile name');
   }
 
   severityOverridesCorrect() {

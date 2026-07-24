@@ -1,6 +1,7 @@
 export {ASFFResults} from './src/asff-mapper/asff-mapper';
 export * as AwsConfigMappingData from './src/mappings/AwsConfigMappingData';
 export * as CciNistMappingData from './src/mappings/CciNistMappingData';
+export * as CheckovToCciAndNistMappingData from './src/mappings/CheckovToCciAndNistMappingData';
 export * as CweNistMappingData from './src/mappings/CweNistMappingData';
 export * as NessusPluginNistMappingData from './src/mappings/NessusPluginNistMappingData';
 export * as NiktoNistMappingData from './src/mappings/NiktoNistMappingData';
@@ -10,6 +11,7 @@ export * as ScoutsuiteNistMappingData from './src/mappings/ScoutsuiteNistMapping
 export * from './src/anchore-grype-mapper';
 export * from './src/aws-config-mapper';
 export * from './src/burpsuite-mapper';
+export * from './src/checkov-mapper';
 export * from './src/ckl-mapper/checklist-jsonix-converter';
 export * from './src/ckl-mapper/checklist-mapper';
 export * from './src/ckl-mapper/checklist-metadata-utils';

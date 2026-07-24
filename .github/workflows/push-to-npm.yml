@@ -3,6 +3,7 @@ name: Push Heimdall-Lite to NPM and GitHub Packages and Push InspecJs to NPM
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 permissions:
   id-token: write # required for trusted publishing's use of OIDC
@@ -26,9 +27,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
 
-      - name: Manually update npm to 11.5.1 or later which is the required version for trusted publishing to work # this step can be removed after the ubuntu runner has the correct minimum version of npm installed
-        run: npm install -g npm@latest
-
       - name: Install project dependencies
         run: yarn install --frozen-lockfile --production
 
@@ -37,15 +35,15 @@ jobs:
 
       - name: Publish Heimdall Lite to NPM
         if: always()
-        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        run: npx -y npm@latest publish --access public apps/frontend/mitre-heimdall-lite*.tgz
 
       - name: Publish InSpecJS to NPM
         if: always()
-        run: npm publish --access public libs/inspecjs/inspecjs*.tgz
+        run: npx -y npm@latest publish --access public libs/inspecjs/inspecjs*.tgz
 
       - name: Publish OHDF Converters to NPM
         if: always()
-        run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
+        run: npx -y npm@latest publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
 
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v6
@@ -58,6 +56,6 @@ jobs:
 
       - name: Publish Heimdall Lite to GitHub Packages
         if: always()
-        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        run: npx -y npm@latest publish --access public apps/frontend/mitre-heimdall-lite*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

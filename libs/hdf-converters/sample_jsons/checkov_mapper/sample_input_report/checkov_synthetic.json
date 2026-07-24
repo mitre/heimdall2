@@ -1,0 +1,190 @@
+{
+  "check_type": "terraform",
+  "results": {
+    "passed_checks": [
+      {
+        "check_id": "CKV_AWS_41",
+        "check_name": "Ensure no hard coded AWS access key and secret key exists in provider",
+        "check_result": {
+          "result": "PASSED",
+          "evaluated_keys": [
+            "access_key",
+            "secret_key"
+          ],
+          "entity": {}
+        },
+        "file_path": "/main.tf",
+        "file_line_range": [
+          1,
+          10
+        ],
+        "resource": "aws_provider.default",
+        "code_block": [
+          [
+            1,
+            "provider \"aws\" {\n"
+          ],
+          [
+            2,
+            "  region = \"us-east-1\"\n"
+          ],
+          [
+            3,
+            "}\n"
+          ]
+        ],
+        "severity": null,
+        "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-secrets-5",
+        "bc_check_id": "BC_AWS_SECRETS_5",
+        "resource_address": null,
+        "entity_tags": null,
+        "caller_file_path": null,
+        "caller_file_line_range": null,
+        "description": null,
+        "benchmarks": null,
+        "check_class": "checkov.terraform.checks.provider.credentials",
+        "file_abs_path": "/src/main.tf",
+        "repo_file_path": "/main.tf",
+        "definition_context_file_path": "/main.tf",
+        "details": [],
+        "bc_category": null,
+        "short_description": null,
+        "connected_node": null,
+        "fixed_definition": null,
+        "evaluations": null,
+        "check_len": null,
+        "vulnerability_details": null
+      }
+    ],
+    "failed_checks": [
+      {
+        "check_id": "CKV_AWS_150",
+        "check_name": "Ensure that Load Balancer has deletion protection enabled",
+        "check_result": {
+          "result": "FAILED",
+          "evaluated_keys": [
+            "enable_deletion_protection"
+          ],
+          "entity": {}
+        },
+        "file_path": "/alb/main.tf",
+        "file_line_range": [
+          1,
+          8
+        ],
+        "resource": "module.alb.aws_lb.main",
+        "resource_address": "module.alb.aws_lb.main",
+        "code_block": [
+          [
+            1,
+            "resource \"aws_lb\" \"main\" {\n"
+          ],
+          [
+            2,
+            "  name = \"test-alb\"\n"
+          ],
+          [
+            3,
+            "}\n"
+          ]
+        ],
+        "severity": "HIGH",
+        "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-150",
+        "bc_check_id": "BC_AWS_NETWORKING_62",
+        "entity_tags": {
+          "Name": "test-alb"
+        },
+        "caller_file_path": "/main.tf",
+        "caller_file_line_range": [
+          5,
+          10
+        ],
+        "description": null,
+        "benchmarks": {
+          "CIS AWS": [
+            "2.1.1"
+          ]
+        },
+        "check_class": "checkov.terraform.checks.resource.aws.ALBDeletionProtection",
+        "file_abs_path": "/src/alb/main.tf",
+        "repo_file_path": "/alb/main.tf",
+        "definition_context_file_path": "/alb/main.tf",
+        "details": [],
+        "bc_category": null,
+        "short_description": null,
+        "connected_node": null,
+        "fixed_definition": null,
+        "evaluations": null,
+        "check_len": null,
+        "vulnerability_details": null
+      }
+    ],
+    "skipped_checks": [
+      {
+        "check_id": "CKV_AWS_18",
+        "check_name": "Ensure the S3 bucket has access logging enabled",
+        "check_result": {
+          "result": "SKIPPED",
+          "evaluated_keys": [
+            "logging"
+          ],
+          "entity": {},
+          "suppress_comment": "Logging handled externally"
+        },
+        "file_path": "/s3/main.tf",
+        "file_line_range": [
+          1,
+          5
+        ],
+        "resource": "aws_s3_bucket.example",
+        "code_block": [
+          [
+            1,
+            "resource \"aws_s3_bucket\" \"example\" {\n"
+          ],
+          [
+            2,
+            "  bucket = \"test\"\n"
+          ],
+          [
+            3,
+            "}\n"
+          ]
+        ],
+        "severity": null,
+        "guideline": null,
+        "bc_check_id": "BC_AWS_S3_13",
+        "resource_address": null,
+        "entity_tags": null,
+        "caller_file_path": null,
+        "caller_file_line_range": null,
+        "description": null,
+        "benchmarks": null,
+        "check_class": "checkov.terraform.checks.resource.aws.S3AccessLogs",
+        "file_abs_path": "/src/s3/main.tf",
+        "repo_file_path": "/s3/main.tf",
+        "definition_context_file_path": "/s3/main.tf",
+        "details": [],
+        "bc_category": null,
+        "short_description": null,
+        "connected_node": null,
+        "fixed_definition": null,
+        "evaluations": null,
+        "check_len": null,
+        "vulnerability_details": null
+      }
+    ],
+    "parsing_errors": [
+      "/broken.tf"
+    ]
+  },
+  "summary": {
+    "passed": 1,
+    "failed": 1,
+    "skipped": 1,
+    "parsing_errors": 1,
+    "resource_count": 3,
+    "checkov_version": "3.2.506"
+  },
+  "url": "Add an API key --bc-api-key to see more detailed insights"
+}

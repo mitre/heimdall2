@@ -188,7 +188,7 @@ function controlMappingConveyor(): MappedTransform<
       size: {path: 'size'},
       type: {path: 'type'},
       nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
+      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS
     },
     source_location: {},
     results: [

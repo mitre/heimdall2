@@ -21,10 +21,10 @@ describe('XCCDF Results Reverse Mapper', () => {
     const converted = mapper.toXCCDF();
 
     // Write out to a file so we can do schema validation
-    fs.writeFileSync(
-      'sample_jsons/xccdf_reverse_mapper/output_report/rhel7-xccdf-results.xml',
-      converted
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/xccdf_reverse_mapper/rhel7-xccdf-results.xml',
+    //   converted
+    // );
 
     const expected = fs.readFileSync(
       'sample_jsons/xccdf_reverse_mapper/rhel7-xccdf-results.xml',
@@ -51,10 +51,10 @@ describe('XCCDF Results Reverse Mapper', () => {
     const converted = mapper.toXCCDF();
 
     // Write out to a file so we can do schema validation
-    fs.writeFileSync(
-      'sample_jsons/xccdf_reverse_mapper/output_report/example-3-layer-overlay-xccdf-results.xml',
-      converted
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/xccdf_reverse_mapper/example-3-layer-overlay-xccdf-results.xml',
+    //   converted
+    // );
 
     const expected = fs.readFileSync(
       'sample_jsons/xccdf_reverse_mapper/example-3-layer-overlay-xccdf-results.xml',

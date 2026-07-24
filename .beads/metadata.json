@@ -1,7 +1,0 @@
-{
-  "database": "dolt",
-  "backend": "dolt",
-  "dolt_mode": "server",
-  "dolt_database": "heimdall2",
-  "project_id": "4a2ff169-fd75-44a1-b8af-946beb192411"
-}

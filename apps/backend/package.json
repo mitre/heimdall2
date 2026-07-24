@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.12.6",
+  "version": "2.13.0",
   "license": "Apache-2.0",
   "description": "Heimdall's backend which allows for data persistence, authentication, RBAC, and API access",
   "repository": {
@@ -17,10 +17,8 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
-    "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
-    "sequelize-cli-windows": "tsx node_modules/sequelize-cli/lib/sequelize",
-    "sequelize-cli": "tsx node_modules/.bin/sequelize",
+    "lint": "eslint --fix",
+    "lint:ci": "eslint --max-warnings 0",
     "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
@@ -28,10 +26,10 @@
     "test:ci": "vitest run"
   },
   "dependencies": {
-    "@casl/ability": "^6.0.0",
+    "@casl/ability": "^7.0.0",
     "@govtechsg/passport-openidconnect": "^1.0.3",
-    "@heimdall/common": "^2.12.6",
-    "@heimdall/password-complexity": "^2.12.6",
+    "@heimdall/common": "^2.13.0",
+    "@heimdall/password-complexity": "^2.13.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/common": "^11.0.16",
     "@nestjs/core": "^11.1.6",
@@ -47,7 +45,7 @@
     "@types/js-levenshtein": "^1.1.0",
     "@types/ms": "^0.7.31",
     "@types/multer": "^2.0.0",
-    "@types/node": "^25.0.0",
+    "@types/node": "^26.0.0",
     "@types/passport-github": "^1.1.5",
     "@types/passport-jwt": "^4.0.0",
     "@types/passport-local": "^1.0.33",
@@ -62,7 +60,7 @@
     "express-rate-limit": "^8.0.0",
     "express-session": "^1.17.1",
     "helmet": "^8.0.0",
-    "https-proxy-agent": "^8.0.0",
+    "https-proxy-agent": "^9.0.0",
     "js-levenshtein": "^1.1.6",
     "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.23",
@@ -82,8 +80,7 @@
     "sequelize": "^6.31.0",
     "sequelize-cli": "^6.2.0",
     "sequelize-typescript": "^2.0.0",
-    "tsx": "^4.7.1",
-    "uuid": "^13.0.0",
+    "uuid": "^14.0.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
