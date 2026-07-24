@@ -1,6 +1,16 @@
-import {SequelizeOptions} from 'sequelize-typescript';
+import { AUTH_STRATEGY } from '@heimdall/common/interfaces';
+import type { AuthStrategy } from '@heimdall/common/interfaces';
+import type { SequelizeOptions } from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
-import {StartupSettingsDto} from './dto/startup-settings.dto';
+import { StartupSettingsDto } from './dto/startup-settings.dto';
+
+const OAUTH_AUTH_STRATEGIES = [
+  AUTH_STRATEGY.GITHUB,
+  AUTH_STRATEGY.GITLAB,
+  AUTH_STRATEGY.GOOGLE,
+  AUTH_STRATEGY.OKTA,
+  AUTH_STRATEGY.OIDC,
+] as const;
 
 export class ConfigService {
   private readonly appConfig: AppConfig;
@@ -34,14 +44,28 @@ export class ConfigService {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }
 
-  enabledOauthStrategies() {
-    const enabledOauth: string[] = [];
-    supportedOauth.forEach((oauthStrategy) => {
-      if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
-        enabledOauth.push(oauthStrategy);
-      }
-    });
-    return enabledOauth;
+  enabledAuthStrategies(): AuthStrategy[] {
+    const enabledAuthStrategies: AuthStrategy[] = [];
+    if (this.isLocalLoginAllowed()) {
+      enabledAuthStrategies.push(AUTH_STRATEGY.LOCAL);
+    }
+    if (this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true') {
+      enabledAuthStrategies.push(AUTH_STRATEGY.LDAP);
+    }
+    enabledAuthStrategies.push(
+      ...OAUTH_AUTH_STRATEGIES.filter(authStrategy =>
+        this.get(`${authStrategy.toUpperCase()}_CLIENTID`),
+      ),
+    );
+    if (
+      ['SAML_ENTRY_POINT', 'SAML_ISSUER', 'SAML_IDP_CERT'].every(setting =>
+        this.get(setting),
+      )
+    ) {
+      enabledAuthStrategies.push(AUTH_STRATEGY.SAML);
+    }
+
+    return enabledAuthStrategies;
   }
 
   frontendStartupSettings(): StartupSettingsDto {
@@ -53,12 +77,10 @@ export class ConfigService {
       classificationBannerText: this.get('CLASSIFICATION_BANNER_TEXT') || '',
       classificationBannerTextColor:
         this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
-      enabledOAuth: this.enabledOauthStrategies(),
+      enabledAuthStrategies: this.enabledAuthStrategies(),
       externalUrl: this.getExternalUrl(),
       oidcName: this.get('OIDC_NAME') || '',
-      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
       registrationEnabled: this.isRegistrationAllowed(),
-      localLoginEnabled: this.isLocalLoginAllowed(),
       tenableHostUrl: this.getTenableHostUrl(),
       forceTenableFrontend:
         this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',
@@ -94,10 +116,3 @@ export class ConfigService {
     return this.appConfig.get(key);
   }
 }
-export const supportedOauth: string[] = [
-  'github',
-  'gitlab',
-  'google',
-  'okta',
-  'oidc'
-];
