@@ -1,7 +1,9 @@
 import {
   ForbiddenException,
+  HttpStatus,
   Injectable,
-  UnauthorizedException
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcryptjs';
@@ -31,7 +33,9 @@ export class AuthnService {
       }),
       winston.format.printf(
         (info) =>
-          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
+          info.auditEvent === true
+            ? String(info.message)
+            : `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
       )
     )
   });
@@ -97,18 +101,51 @@ export class AuthnService {
   }
 
   async validateOrCreateUser(
-    email: string,
+    email: string | undefined,
     firstName: string,
     lastName: string,
     creationMethod: string
   ): Promise<User> {
+    const normalizedEmail = email?.trim().toLowerCase();
+    if (!normalizedEmail) {
+      throw new UnauthorizedException({
+        error: 'external_identity_missing_email',
+        message: 'External identity did not provide an email address.',
+        statusCode: HttpStatus.UNAUTHORIZED,
+      });
+    }
+
     let user: User;
     try {
-      user = await this.usersService.findByEmail(email);
-    } catch {
+      user = await this.usersService.findByEmail(normalizedEmail);
+    } catch (error) {
+      if (!(error instanceof NotFoundException)) {
+        throw error;
+      }
+
+      if (!this.configService.isRegistrationAllowed('sso')) {
+        const auditDetails = Object.fromEntries([
+          ['event', 'external_auth.login.rejected_not_provisioned'],
+          ['provider', creationMethod],
+          ['email', normalizedEmail],
+          ['reason', 'registrationDisabledForSso'],
+          ['timestamp', new Date().toISOString()],
+        ]);
+        this.logger.warn({
+          auditEvent: true,
+          message: JSON.stringify(auditDetails),
+        });
+        throw new UnauthorizedException({
+          error: 'account_not_provisioned',
+          message:
+            'No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.',
+          statusCode: HttpStatus.UNAUTHORIZED,
+        });
+      }
+
       const randomPass = crypto.randomBytes(128).toString('hex');
       const createUser: CreateUserDto = {
-        email: email,
+        email: normalizedEmail,
         password: randomPass,
         passwordConfirmation: randomPass,
         firstName: firstName,
@@ -119,7 +156,7 @@ export class AuthnService {
         creationMethod: creationMethod
       };
       await this.usersService.create(createUser);
-      user = await this.usersService.findByEmail(email);
+      user = await this.usersService.findByEmail(normalizedEmail);
     }
 
     if (user) {
