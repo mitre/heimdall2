@@ -76,7 +76,7 @@ jobs:
 
       - name: Cypress run (default JIT policy)
         if: matrix.configuration == 'default-jit'
-        uses: cypress-io/github-action@v7
+        uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7
         with:
           config: excludeSpecPattern=test/integration/registration-policy.cy.ts
           start: yarn start, yarn run cypress-test mock-json, yarn run cypress-test mock-openid
@@ -84,7 +84,7 @@ jobs:
 
       - name: Cypress run (SSO provisioning denied)
         if: matrix.configuration == 'registration-policy-sso'
-        uses: cypress-io/github-action@v7
+        uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7
         with:
           start: yarn start, yarn run cypress-test mock-json, yarn run cypress-test mock-openid
           wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
