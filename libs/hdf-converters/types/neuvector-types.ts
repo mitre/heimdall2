@@ -27,7 +27,7 @@ packages:
 // docker-compose.yml
 ```
 services:
-  # Generates neuvector/scanner TypeScript types from its Golang source code
+  # Generates neuvector/neuvector TypeScript types from its Golang source code
   go2ts:
     container_name: tygo
     volumes:
@@ -203,3 +203,10 @@ export type NeuVectorScanJson = {
   report: RESTScanRepoReport;
   error_message: string;
 };
+
+export enum DockerSecurityBenchCheckResult {
+  Pass = 'PASS',
+  Warn = 'WARN',
+  Note = 'NOTE',
+  Info = 'INFO'
+}
