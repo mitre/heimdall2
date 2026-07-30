@@ -1,12 +1,39 @@
 SPEC     := heimdall-server.spec
-NAME     := $(shell rpmspec -q --qf '%{name}' $(SPEC) 2>/dev/null | head -1)
-VERSION  := $(shell rpmspec -q --qf '%{version}' $(SPEC) 2>/dev/null | head -1)
 TOPDIR   := $(shell pwd)/rpmbuild
+
+# Version resolution is deliberately POSIX sed, not `rpmspec`.
+#
+# rpmspec only exists on RHEL-family hosts, which made every version-dependent
+# target unusable on a developer laptop and produced misleading errors ("tag v
+# not found") rather than an honest one.
+#
+# The repository VERSION file is canonical — it is what the release process and
+# release-drafter work from. The spec's own Version: field is read separately
+# and checked against it, so the two cannot silently drift. That drift is not
+# hypothetical: the copy of this spec on feat/rpm-build sat at 2.12.6 while the
+# shipped one tracked to 2.13.1.
+NAME         := $(shell sed -n 's/^Name:[[:space:]]*//p' $(SPEC) | head -1)
+SPEC_VERSION := $(shell sed -n 's/^Version:[[:space:]]*//p' $(SPEC) | head -1)
+VERSION      := $(shell sed -e 's/^v//' -e 's/[[:space:]]//g' ../../VERSION 2>/dev/null)
+
+# Fail fast when the spec and the repository disagree about the version.
+# Every version-dependent target depends on this.
+check-version:
+	@test -n "$(VERSION)" || { \
+	  echo "ERROR: could not read ../../VERSION"; exit 1; }
+	@test -n "$(SPEC_VERSION)" || { \
+	  echo "ERROR: could not read Version: from $(SPEC)"; exit 1; }
+	@test "$(VERSION)" = "$(SPEC_VERSION)" || { \
+	  echo "ERROR: version mismatch."; \
+	  echo "  VERSION file:  $(VERSION)"; \
+	  echo "  $(SPEC):  $(SPEC_VERSION)"; \
+	  echo "  Update the spec's Version: field to match the repository version."; \
+	  exit 1; }
 
 # Target architecture for cross-compilation (default: host arch)
 GOARCH   ?= $(shell go env GOARCH)
 
-.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm sources cli-src heimdall-cli man stage deps check-upstream bump-version
+.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version sources cli-src heimdall-cli man stage deps check-upstream bump-version
 
 # Upstream repo for `make check-upstream` (override for forks/mirrors).
 UPSTREAM_REPO ?= mitre/heimdall2
@@ -34,12 +61,7 @@ endif
 # Set DEV=1 to archive the working tree's HEAD instead. Development only —
 # the resulting RPM does not correspond to any released version.
 SRC_REF := v$(VERSION)
-sources:
-	@test -n "$(VERSION)" || { \
-	  echo "ERROR: could not read Version from $(SPEC)."; \
-	  echo "  'rpmspec' is required (rpm-build package) and is not available on macOS."; \
-	  echo "  Build RPMs on a RHEL-family host, or in a container."; \
-	  exit 1; }
+sources: check-version
 	@mkdir -p $(TOPDIR)/SOURCES
 ifeq ($(DEV),1)
 	@echo "WARNING: DEV=1 — archiving HEAD, not $(SRC_REF). Not a release build."
@@ -191,9 +213,8 @@ clean:
 # Compare the spec's Version against the latest GitHub release on UPSTREAM_REPO.
 # Read-only: never touches the spec. Useful before `make bump-version`.
 # Uses gh CLI if available, otherwise falls back to curl (always present on RHEL).
-check-upstream:
-	@command -v rpmspec >/dev/null 2>&1 || { echo "rpmspec required (rpm-build package)"; exit 1; }
-	@spec_ver=$$(rpmspec -q --qf '%{version}\n' $(SPEC) 2>/dev/null | head -1); \
+check-upstream: check-version
+	@spec_ver="$(VERSION)"; \
 	if command -v gh >/dev/null 2>&1; then \
 		gh_tag=$$(gh release view --repo $(UPSTREAM_REPO) --json tagName -q '.tagName' 2>/dev/null); \
 	else \
