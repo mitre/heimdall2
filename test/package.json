@@ -1,6 +1,7 @@
 {
   "name": "@heimdall/cypress-tests",
   "version": "2.13.0",
+  "license": "Apache-2.0",
   "private": true,
   "description": "",
   "scripts": {
