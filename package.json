@@ -2,6 +2,7 @@
   "name": "root",
   "version": "0.0.0",
   "license": "Apache-2.0",
+  "description": "Heimdall monorepo — security results viewer (server and lite), OHDF converters, and InSpecJS",
   "workspaces": [
     "apps/*",
     "libs/*",
