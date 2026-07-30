@@ -33,6 +33,23 @@ jobs:
       - name: Pack all items that are published as packages
         run: yarn pack:all
 
+      # The published packages rewrite "main" from src/index.ts to lib/index.js
+      # in prepack and restore it in postpack. Yarn 1 has no try/finally around
+      # those lifecycle scripts, so a failed pack skips the restore and leaves a
+      # mutated manifest behind. Running --parallel across three packages means
+      # one failure can strand another package's manifest. Fail loudly here
+      # rather than publish a tarball built from a corrupted tree.
+      - name: Verify manifests were restored after pack
+        run: |
+          if ! git diff --exit-code -- '*package.json'; then
+            echo "::error::package.json was left modified after pack:all — a prepack rewrite was not restored by postpack. Do not publish from this tree."
+            exit 1
+          fi
+          if git ls-files --others --exclude-standard | grep -q 'package.json.orig'; then
+            echo "::error::A stray package.json.orig remains after pack:all — postpack did not run."
+            exit 1
+          fi
+
       - name: Publish Heimdall Lite to NPM
         if: always()
         run: npx -y npm@latest publish --access public apps/frontend/mitre-heimdall-lite*.tgz
