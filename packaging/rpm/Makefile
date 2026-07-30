@@ -5,9 +5,8 @@ TOPDIR   := $(shell pwd)/rpmbuild
 
 # Target architecture for cross-compilation (default: host arch)
 GOARCH   ?= $(shell go env GOARCH)
-CLI_DIR  := ../heimdall-cli
 
-.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm sources heimdall-cli man stage deps check-upstream bump-version
+.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm sources cli-src heimdall-cli man stage deps check-upstream bump-version
 
 # Upstream repo for `make check-upstream` (override for forks/mirrors).
 UPSTREAM_REPO ?= mitre/heimdall2
@@ -24,43 +23,94 @@ else
   RPMBUILD_PREFIX :=
 endif
 
+# Source tarball, produced from the local repository at the TAG matching the
+# spec Version. RPMs are built from tagged points in time, never from mainline.
+#
+# This replaces the previous scripts/fetch-source.sh download: the packaging now
+# lives inside heimdall2, so the source is two directories up and there is no
+# reason to reach across the network for it. That also keeps airgapped builds
+# working without a mirror.
+#
+# Set DEV=1 to archive the working tree's HEAD instead. Development only —
+# the resulting RPM does not correspond to any released version.
+SRC_REF := v$(VERSION)
 sources:
-	@echo "Downloading source tarball for $(NAME)-$(VERSION)..."
+	@test -n "$(VERSION)" || { \
+	  echo "ERROR: could not read Version from $(SPEC)."; \
+	  echo "  'rpmspec' is required (rpm-build package) and is not available on macOS."; \
+	  echo "  Build RPMs on a RHEL-family host, or in a container."; \
+	  exit 1; }
 	@mkdir -p $(TOPDIR)/SOURCES
-	../scripts/fetch-source.sh \
-	  --package heimdall-server \
-	  --version $(VERSION) \
-	  --output-dir $(TOPDIR)/SOURCES
-	@# fetch-source.sh produces heimdall-server-VERSION.tar.gz; spec expects heimdall2-VERSION.tar.gz
-	mv $(TOPDIR)/SOURCES/heimdall-server-$(VERSION).tar.gz \
-	  $(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz
+ifeq ($(DEV),1)
+	@echo "WARNING: DEV=1 — archiving HEAD, not $(SRC_REF). Not a release build."
+	@git -C ../.. archive --format=tar.gz \
+	  --prefix=heimdall2-$(VERSION)/ HEAD \
+	  -o $(abspath $(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz)
+else
+	@git -C ../.. rev-parse --verify --quiet $(SRC_REF) >/dev/null || { \
+	  echo "ERROR: tag $(SRC_REF) not found in this repository."; \
+	  echo "  RPMs are built from tagged releases. Fetch tags with 'git fetch --tags',"; \
+	  echo "  or build a development RPM with 'make rpm DEV=1'."; \
+	  exit 1; }
+	@echo "Archiving $(NAME)-$(VERSION) from tag $(SRC_REF)..."
+	@git -C ../.. archive --format=tar.gz \
+	  --prefix=heimdall2-$(VERSION)/ $(SRC_REF) \
+	  -o $(abspath $(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz)
+endif
+
+# heimdall-cli source, cloned at a pinned ref.
+#
+# The CLI lives at github.com/mitre/heimdall-cli — it is a separate repository,
+# not a sibling directory, so it is fetched rather than referenced by path.
+#
+# HEIMDALL_CLI_REF is the contract carrier: it records exactly which CLI a given
+# RPM shipped. Release builds MUST override it with a tag. `main` is a
+# development default only.
+HEIMDALL_CLI_REPO ?= https://github.com/mitre/heimdall-cli.git
+HEIMDALL_CLI_REF  ?= main
+CLI_DIR           := $(TOPDIR)/heimdall-cli-src
+
+cli-src:
+	@mkdir -p $(TOPDIR)
+	@if [ -d "$(CLI_DIR)/.git" ]; then \
+	  git -C $(CLI_DIR) fetch --quiet --tags origin; \
+	else \
+	  git clone --quiet $(HEIMDALL_CLI_REPO) $(CLI_DIR); \
+	fi
+	@git -C $(CLI_DIR) checkout --quiet --detach $(HEIMDALL_CLI_REF) || { \
+	  echo "ERROR: ref '$(HEIMDALL_CLI_REF)' not found in $(HEIMDALL_CLI_REPO)"; exit 1; }
+	@echo "heimdall-cli source at $(HEIMDALL_CLI_REF) ($$(git -C $(CLI_DIR) rev-parse --short HEAD))"
 
 # Build Go CLI binary for the target platform (static, no CGO).
 # Produces a flat binary at rpmbuild/SOURCES/heimdall-cli (spec Source15).
 # All three version fields (Version/Commit/Date) are injected so
-# `heimdall-cli --version` shows real provenance — matches what the
-# heimdall-cli/Makefile injects for its own build target.
-CLI_COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null || echo none)
-CLI_DATE   := $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
-heimdall-cli:
+# `heimdall-cli --version` shows real provenance.
+#
+# CLI_COMMIT is resolved from the CLI checkout, not from heimdall2. The previous
+# `git rev-parse HEAD` ran in the packaging repo and stamped the wrong commit
+# into the binary's version output.
+CLI_DATE := $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+heimdall-cli: cli-src
 	@mkdir -p $(TOPDIR)/SOURCES
 	cd $(CLI_DIR) && GOOS=linux GOARCH=$(GOARCH) CGO_ENABLED=0 \
 	  go build -trimpath \
 	  -ldflags="-s -w \
 	    -X 'github.com/mitre/heimdall-cli/internal/version.Version=$(VERSION)' \
-	    -X 'github.com/mitre/heimdall-cli/internal/version.Commit=$(CLI_COMMIT)' \
+	    -X 'github.com/mitre/heimdall-cli/internal/version.Commit=$$(git rev-parse --short HEAD)' \
 	    -X 'github.com/mitre/heimdall-cli/internal/version.Date=$(CLI_DATE)'" \
 	  -o $(abspath $(TOPDIR)/SOURCES/heimdall-cli) \
 	  ./cmd/heimdall-cli
-	@echo "Built: $(TOPDIR)/SOURCES/heimdall-cli (linux/$(GOARCH), commit $(CLI_COMMIT))"
+	@echo "Built: $(TOPDIR)/SOURCES/heimdall-cli (linux/$(GOARCH), ref $(HEIMDALL_CLI_REF))"
 
-# Generate man pages from CLI command tree.
-man:
+# Generate man pages from the CLI command tree.
+# Generated from the same pinned checkout as the binary, so the pages can never
+# drift from the commands they document.
+man: cli-src
 	cd $(CLI_DIR) && go run ./cmd/gen-manpages $(abspath man/man1)
 
 # Install build dependencies (delegates to setup script).
 deps:
-	../scripts/setup-build-deps.sh
+	scripts/setup-build-deps.sh
 
 # Stage all source files into rpmbuild tree (Sources 0-21).
 # Single source of truth for which files go into the RPM.
