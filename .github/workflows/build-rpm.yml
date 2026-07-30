@@ -65,10 +65,15 @@ jobs:
             runner: ubuntu-24.04-arm
 
     steps:
-      - name: Install git (required before checkout in a bare container)
+      # A bare Rocky container has neither git nor make. actions/checkout needs
+      # git, and every subsequent step goes through the Makefile — including
+      # `make deps`, which is what installs the real build dependencies. Both
+      # have to be bootstrapped here or `make deps` cannot run itself.
+      - name: Bootstrap git and make
         run: |
-          dnf install -y git
+          dnf install -y git make
           git --version
+          make --version | head -1
 
       - uses: actions/checkout@v6
         with:
