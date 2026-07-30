@@ -691,6 +691,118 @@ Until (1)–(3) land, enabling the FIPS gate turns break-glass into a trap.
 **RPM packaging is now in-tree**, so §10's deployment changes and §16's Postgres
 detection are ordinary cards in this repo rather than cross-repo coordination.
 
+#### The build pipeline carries the contract
+
+The import (`35d47dee3`) left four references pointing at saf-packaging's layout,
+where `heimdall-server/`, `heimdall-cli/`, and `scripts/` were siblings. Repaired
+in `d2fca993e` and `7fb61561c`:
+
+| Was | Now |
+|---|---|
+| `scripts/fetch-source.sh` downloaded a release tarball | `git archive v$(VERSION)` from the local repository — no network, so airgapped builds work without a mirror |
+| `CLI_DIR := ../heimdall-cli` (sibling path) | clone at **`HEIMDALL_CLI_REF`** |
+| `man:` used the same broken sibling path | generated from the *same* pinned checkout as the binary, so pages cannot drift from the commands they document |
+| `NAME`/`VERSION` from `rpmspec` (RHEL-only) | POSIX `sed`; the repository `VERSION` file is canonical and `check-version` fails the build if the spec disagrees |
+
+**`HEIMDALL_CLI_REF` is where the §14 contract actually lives.** It records
+exactly which CLI a given RPM shipped. Release builds must pin a tag. Combined
+with `libs/password-hash-vectors/`'s `formatVersion`, a CLI that cannot produce
+the current hash format fails the build rather than shipping a break-glass tool
+that writes credentials the server refuses.
+
+Two bugs were fixed in passing: `CLI_COMMIT` was `git rev-parse HEAD` evaluated
+in the *packaging* repo, so `heimdall-cli --version` reported a heimdall2 commit
+as the CLI commit; and a spec/repository version mismatch had no detection at
+all — which is how the `feat/rpm-build` copy sat at 2.12.6 while the shipped one
+tracked to 2.13.1.
+
+**CI builds the RPM** (`987bfffc9`, `.github/workflows/build-rpm.yml`) for
+el8/el9 × x86_64/aarch64 on native runners, smoke-tests installation in a clean
+container with no build dependencies present, and attaches the artifacts to
+GitHub Releases with `actions/attest-build-provenance`. heimdall2 published no
+downloadable release assets before this.
+
+Note the RPM cannot use the usual SRPM-as-handoff idiom: `Source15` is a
+pre-built architecture-specific CLI binary, so an x86_64 SRPM cannot build an
+aarch64 RPM. Each architecture does a full native build, with sources identical
+by construction — same tag, same `HEIMDALL_CLI_REF`.
+
+**Not yet build-verified.** `rpmspec` does not exist on macOS and hosted runners
+are not FIPS-enabled, so the RPM has never actually been built from its new home.
+That verification gates removing saf-packaging's copies (`heimdall2-30c.5`), and
+belongs on the same FIPS-host trip as the §15 `[U]` questions.
+
+#### Distribution
+
+RPMs are built in two places, for two different reasons.
+
+**Fedora COPR is the build farm.** Project `mitresaf/saf`
+([copr.fedorainfracloud.org/coprs/mitresaf/saf](https://copr.fedorainfracloud.org/coprs/mitresaf/saf/),
+ID 249476) created 2026-07-30 with `epel-8` and `epel-9` chroots on x86_64 and
+aarch64. **[V]** As an open-source project we get real `mock` chroots on native
+multi-architecture builders at no cost — an authentic EL build environment
+rather than the approximation a container-on-Ubuntu CI job provides. The
+precedent is directly relevant: Caddy, which this RPM already `Recommends:`,
+ships via `dnf copr enable @caddy/caddy` as its official RHEL channel.
+
+Three operational facts, verified:
+
+- **`enable_net` must be on.** It has defaulted to *false* since June 2022, and
+  `%build` runs `yarn install`. Every build fails without it. Confirmed set on
+  the project (`enable_net: True`). **[V]**
+- **COPR is not durable storage.** One build per package is kept indefinitely;
+  everything older is deleted after 14 days, and all content is removed 180 days
+  after a chroot reaches EOL. **GitHub Releases is therefore the archival home**,
+  not an alternative to it. **[V]**
+- **COPR signs with its own per-project key**, published at
+  `results/mitresaf/saf/pubkey.gpg` — which does not exist until the first
+  successful build. **[V]**
+
+That last point resolves a real inconsistency: `saf.repo` currently sets
+`gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-SAF-MITRE` while
+`heimdall-server.repo` points at COPR's `pubkey.gpg`. **These disagree, and both
+reference a project namespace (`@mitre/saf`) that never existed.** Either users
+verify COPR's key, or artifacts are re-signed with the MITRE key on the way to
+GitHub Releases. Both files must be corrected once the first build publishes a
+key.
+
+**Signing, when it happens, uses RSA — not ed25519.** RHEL 9 ships rpm 4.16;
+EdDSA-signed RPMs sign successfully but will not install (rpm#1877). The key
+should be published over HTTPS at a MITRE URL *and* shipped inside a
+`heimdall-server-release` RPM to `/etc/pki/rpm-gpg/`, which is the pattern that
+survives air-gap. **[U]** — the RSA/EdDSA constraint is verified; whether MITRE
+wants detached GPG signatures in addition to COPR's is a security-team decision,
+not an engineering default.
+
+**EPEL proper is not a viable target.** Not because of bundled `node_modules` —
+Fedora made npm bundling the default in F34 — but mechanically: Koji builds are
+network-isolated and `%build` runs `yarn install --frozen-lockfile`. Submitting
+would require vendoring `node_modules` into the source tarball and generating the
+`Provides: bundled(npm(...))` manifest the spec explicitly declines to produce,
+then clearing first-package sponsorship. Quarters, not weeks. **[V]**
+
+**The air-gapped bundle matters more than the online repo.** DoD sites mirror
+internally regardless, so `airgap/build-bundle.sh` (createrepo_c output plus the
+key and a `file:///` `.repo`) is the artifact most deployments actually consume.
+RKE2 is the closest analogue — FIPS/government focus, an online repo plus air-gap
+tarballs in GitHub Releases — and it is worth following.
+
+**Resulting layers:**
+
+| Layer | Mechanism | Why |
+|---|---|---|
+| Build farm | COPR `mitresaf/saf` | free native multi-arch, real mock chroots |
+| Durable artifacts | GitHub Releases | COPR retention makes this mandatory |
+| Online convenience | COPR repo | `dnf copr enable mitresaf/saf` for current-version users |
+| Air-gapped | `airgap/build-bundle.sh` | the path the target deployments use |
+| CI | `.github/workflows/build-rpm.yml` | PR-time proof the spec builds and installs |
+
+**Sequencing note.** COPR generates the signing key and repository tree on first
+successful build, so the `.repo` corrections above are blocked until one lands.
+A first manual build (`copr-cli build mitresaf/saf <srpm>`) doubles as the
+verification that the packaging move works — in a real mock chroot on both
+architectures, which is stronger evidence than the OL9 VM would provide.
+
 ### 15. Platform
 
 `Dockerfile:1` sets `ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/nodejs-22-minimal:1`
