@@ -128,6 +128,13 @@ heimdall-cli: cli-src
 # Generated from the same pinned checkout as the binary, so the pages can never
 # drift from the commands they document.
 man: cli-src
+	@test -d $(CLI_DIR)/cmd/gen-manpages || { \
+	  echo "ERROR: $(HEIMDALL_CLI_REF) of heimdall-cli has no cmd/gen-manpages."; \
+	  echo "  The spec's %files claims %{_mandir}/man1/heimdall-cli*.1*, so the"; \
+	  echo "  build will fail without generated pages. The generator was not"; \
+	  echo "  carried over when heimdall-cli was extracted to its own repository."; \
+	  echo "  Tracked as a blocking cross-repo item in ADR-006 §14."; \
+	  exit 1; }
 	cd $(CLI_DIR) && go run ./cmd/gen-manpages $(abspath man/man1)
 
 # Install build dependencies (delegates to setup script).

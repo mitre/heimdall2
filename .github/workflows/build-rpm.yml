@@ -27,9 +27,6 @@ on:
         required: false
         default: 'main'
 
-permissions:
-  contents: read
-
 env:
   # Release builds must pin a tag. Everything else tracks main.
   # This value is what the RPM records as the CLI it shipped.
@@ -40,6 +37,8 @@ jobs:
     name: ${{ matrix.distro }} / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     container: ${{ matrix.image }}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -139,6 +138,8 @@ jobs:
     needs: build
     runs-on: ${{ matrix.runner }}
     container: ${{ matrix.image }}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -203,7 +204,9 @@ jobs:
         with:
           subject-path: 'rpms/**/*.rpm'
 
-      - uses: softprops/action-gh-release@v3
+      # Pinned to a commit SHA: this is a third-party action holding
+      # contents: write, and a mutable tag can be repointed at any time.
+      - uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228  # v3.0.2
         with:
           files: rpms/**/*.rpm
           fail_on_unmatched_files: true

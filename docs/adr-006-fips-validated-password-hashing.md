@@ -41,15 +41,22 @@ Two rules follow for anyone extending this:
 Heimdall hashes passwords with bcrypt via `bcryptjs` (pure JavaScript, cost 14)
 and stores API keys as bcrypt hashes of JWT signatures.
 
-**The problem is boundary, not strength.** bcrypt at cost 14 is strong.
-`bcryptjs` is pure JavaScript — it never calls `node:crypto` or OpenSSL, so on
-a FIPS-enabled host it runs *undetected and unblocked*, entirely outside the
-validated module **[V]**.
+**The problem is boundary, not strength.** bcrypt at cost 14 is strong. But
+`bcryptjs` computes its **hash in pure JavaScript** — the Blowfish key schedule
+and the digest never enter `node:crypto` or OpenSSL, so on a FIPS-enabled host
+hash generation runs *undetected and unblocked*, entirely outside the validated
+module **[V]**.
+
+Be precise about this: bcryptjs v3 *does* import `node:crypto`, using
+`crypto.randomBytes()` for salt generation. The claim is narrower than "it never
+touches crypto" — it is that the **hashing** is not performed by a validated
+module, which is exactly what V-222571's check text turns on. The conclusion is
+unchanged; the earlier phrasing overstated it. **[V]**
 
 **What this actually costs, stated precisely** — an earlier draft overstated it:
 
 - **V-222542** ("must only store cryptographic representations of passwords",
-  **CAT I**, CCI-004062/CCI-000196) requires "strong cryptographic hash
+  **CAT I**, CCI-004062) requires "strong cryptographic hash
   functions" with a random salt and prohibits MD5. **The phrase "FIPS-validated"
   appears nowhere in the rule.** bcrypt already satisfies it. **[V]**
 - **V-222571** (**CAT II**, CCI-002450) is the rule we fail, and its finding
@@ -75,13 +82,15 @@ measured non-FIPS behavior.** Corrected:
 
 | Project | In FIPS mode | Verified |
 |---|---|---|
-| **Keycloak** | **Refuses.** Provider never registers; affected users "will not be able to login after switch to the FIPS environment" — remedy is "ask users to reset the password." | **[V]** source + docs |
+| **Keycloak** | **Refuses.** The provider never registers, so verification is never reached; affected users "will not be able to login after switch to the FIPS environment" — remedy is "ask users to reset the password." Note the quotes describe **argon2** (Keycloak 25+ default), not bcrypt. The refuse-and-reset *pattern* is what transfers. | **[V]** source + docs |
 | **GitLab** | **Gates on FIPS mode.** "Bcrypt: Used by default. **PBKDF2+SHA512: Used when FIPS mode is enabled.**" Concedes bcrypt hashes "cannot be re-encrypted without user help." Issue **#360659** — "Force password resets for users with bcrypt login passwords" (closed 2022-07-27). | **[V]** |
-| **Mattermost** | Lazy migration, **and its documentation is inaccurate** — `bcrypt.go` has no FIPS build-tag exclusion while its FIPS/STIG doc claims "All application-level code uses only FIPS-approved algorithms." | **[V]** source + docs |
+| **Mattermost** | **Supporting precedent.** As of v11 it defaults to PBKDF2-HMAC-SHA256 @ 600,000 behind a `requirefips` build tag — the same shape as this design. | **[V]** |
 
-The prior draft's §3 was **weaker than both Keycloak and GitLab** — ungated,
-unconditional, no terminal state — i.e. it reproduced Mattermost's posture in a
-document asserting the opposite. That is the central correction here.
+All three now point the same way: **gate on FIPS mode, and define a terminal
+state.** Keycloak refuses outright, GitLab gates and drives toward forced resets,
+Mattermost ships a FIPS build that uses PBKDF2 by default. An ungated,
+unterminated bcrypt fallback — which is what an earlier draft of §3 specified —
+matches none of them.
 
 ### The Grafana lesson
 
@@ -127,7 +136,7 @@ So this is a **documentation obligation, not a design defect**. Two consequences
    scope limit.
 
 **Our parameters clear every bound the module enforces [V]** — policy
-`140sp4857.pdf`: salt ≥128 bits from the SP 800-90Ar1 DRBG, iterations ≥1000,
+`140sp4857.pdf`: **a portion of** the salt ≥128 bits from the SP 800-90Ar1 DRBG, iterations ≥1000,
 derived key ≥112 bits. The same policy lists "PBKDF2 (short password; short
 salt; insufficient iterations; <112-bit keys)" as a **non-approved service** —
 the failure mode is under-parameterisation, which we are well clear of.
@@ -495,13 +504,19 @@ applies to `PASSWORD_MAX_LENGTH`: capping on verify would lock out any user
 whose password exceeds it. If an oversized password reaches the rehash path,
 **skip the rehash and log it** — never fail the login (§7).
 
-**Configurable complexity is now in scope.** `libs/password-complexity` is
-hardcoded today, but **heimdall-cli already reads `PASSWORD_MIN_LENGTH`,
-`PASSWORD_REQUIRE_CLASSES`, and `PASSWORD_MAX_CONSECUTIVE`** from `backend.env`
-**[V]** — env vars the app does not support. The CLI and the app therefore
-disagree today about what a valid password is, which is the same class of bug as
-the hash format. The variable names above match the CLI's exactly; that is the
-contract.
+**Configurable complexity is now in scope, and neither side supports it yet.**
+`libs/password-complexity` hardcodes its rules, and so does the Go
+`heimdall-cli` — **[V]**. Only the *retired Python* CLI read
+`PASSWORD_MIN_LENGTH` / `PASSWORD_REQUIRE_CLASSES` / `PASSWORD_MAX_CONSECUTIVE`
+from `backend.env`; that capability was lost when the CLI was rewritten in Go,
+and an earlier draft of this ADR wrongly attributed it to the current binary.
+
+So the two implementations disagree about what a valid password is **by
+duplication**, not by configuration drift: each hardcodes its own copy of the
+rules, with nothing keeping them aligned. That is the same class of bug as the
+hash format, and it needs fixing on both sides — the variable names above are the
+contract, and **teaching the Go CLI to read them belongs on §14's blocking
+cross-repo list**, not to a later phase.
 
 ### 10. FIPS mode on RHEL — the prior draft had this backwards
 
@@ -552,7 +567,7 @@ Low/Low performance *regression*. **Both wrong.** Measured on Node 24:
 |---|---|---|---|
 | `bcryptjs` compare cost 14 (**current production**) | **1120 ms** | 0.9/sec | 788 ms |
 | PBKDF2-SHA512 @600k (**this ADR**) | **145 ms** | 20/sec | 1.4 ms |
-| PBKDF2-SHA512 @210k (OWASP) | 52 ms | ~55/sec | — |
+| PBKDF2-SHA512 @220k (OWASP floor) | ~55 ms | ~50/sec | — |
 
 **A 7.7× latency and 22× throughput improvement.** The prior draft buried its
 own strongest justification.
@@ -565,7 +580,10 @@ concurrency*, and the pool is shared with `fs`, `dns.lookup`, and `zlib` —
 must be set — and it is **not an application env var**; libuv reads it at first
 threadpool use, so it belongs in the Dockerfile, `cmd.sh`, or the systemd unit.
 
-**600k is defensible at 210k (OWASP) or at 600k only if `UV_THREADPOOL_SIZE` is
+**600k is well supported.** OWASP's floor for PBKDF2-SHA512 is 220,000, and its
+guidance now explicitly recommends "600,000 or more" in FIPS-140 contexts — so
+the chosen value sits on the recommendation, not above it. It remains defensible
+at 220k if latency matters more, but 600k is only safe if `UV_THREADPOOL_SIZE` is
 raised and a global KDF concurrency limit lands.** Keeping 600k while addressing
 neither is the one indefensible combination. Benchmark on the target RHEL
 container before finalizing.
@@ -685,8 +703,20 @@ implementations test against it; a mismatch is a **build failure**.
 2. Write PHC format, not bcrypt; **remove the bcrypt write path entirely**
 3. Consume the published vectors, asserting `formatVersion`
 4. Update `heimdall-cli-reset-password.1`, which documents bcrypt cost 14
+5. **Read the `PASSWORD_*` environment variables** (§9). The Go CLI hardcodes
+   its complexity rules, as does `libs/password-complexity` — each carries its
+   own copy with nothing keeping them aligned. Only the retired Python CLI read
+   them. **[V]**
+6. **Restore `cmd/gen-manpages`.** It did not survive the extraction to a
+   standalone repository, and the spec's `%files` claims
+   `%{_mandir}/man1/heimdall-cli*.1*` while the CLI's `.gitignore` excludes
+   `man/man1/` as generated output. So the pages are neither committed nor
+   generatable — the RPM cannot currently build. `packaging/rpm/Makefile`'s
+   `man:` target fails with an explicit message rather than a confusing
+   `go: cannot find main module`. **[V]**
 
-Until (1)–(3) land, enabling the FIPS gate turns break-glass into a trap.
+Until (1)–(3) land, enabling the FIPS gate turns break-glass into a trap. (6)
+blocks the RPM build outright.
 
 **RPM packaging is now in-tree**, so §10's deployment changes and §16's Postgres
 detection are ordinary cards in this repo rather than cross-repo coordination.
@@ -750,10 +780,10 @@ Three operational facts, verified:
 - **`enable_net` must be on.** It has defaulted to *false* since June 2022, and
   `%build` runs `yarn install`. Every build fails without it. Confirmed set on
   the project (`enable_net: True`). **[V]**
-- **COPR is not durable storage.** One build per package is kept indefinitely;
-  everything older is deleted after 14 days, and all content is removed 180 days
-  after a chroot reaches EOL. **GitHub Releases is therefore the archival home**,
-  not an alternative to it. **[V]**
+- **COPR is not durable storage.** `mitresaf/saf` uses the Pulp backend, which
+  retains only the **5 most recent successful builds per package**; content is
+  also removed 180 days after a chroot reaches EOL. **GitHub Releases is
+  therefore the archival home**, not an alternative to it. **[V]**
 - **COPR signs with its own per-project key**, published at
   `results/mitresaf/saf/pubkey.gpg` — which does not exist until the first
   successful build. **[V]**
@@ -766,8 +796,9 @@ verify COPR's key, or artifacts are re-signed with the MITRE key on the way to
 GitHub Releases. Both files must be corrected once the first build publishes a
 key.
 
-**Signing, when it happens, uses RSA — not ed25519.** RHEL 9 ships rpm 4.16;
-EdDSA-signed RPMs sign successfully but will not install (rpm#1877). The key
+**Signing, when it happens, uses RSA — not ed25519.** RHEL 9 ships rpm 4.16, which predates EdDSA
+verification support; EdDSA-signed RPMs sign but will not install (rpm#1877
+documents the behaviour on rpm 4.17/openSUSE). The key
 should be published over HTTPS at a MITRE URL *and* shipped inside a
 `heimdall-server-release` RPM to `/etc/pki/rpm-gpg/`, which is the pattern that
 survives air-gap. **[U]** — the RSA/EdDSA constraint is verified; whether MITRE
@@ -812,8 +843,31 @@ architectures, which is stronger evidence than the OL9 VM would provide.
   so it uses system OpenSSL rather than a bundled copy **[V]**
 - **`fips.so` is present** at `/usr/lib64/ossl-modules/` (1.3 MB), and the
   provider identifies as **"Red Hat Enterprise Linux 9 - OpenSSL FIPS Provider",
-  version 3.0.7-cda111b5812c30d4** **[V]** — that is the module name and version
-  an SSP must cite
+  version `3.0.7-cda111b5812c30d4`** **[V]**
+
+**That version is NOT the validated one, and it never will be.** Certificate
+#4857 validates version **`3.0.7-395c1a240fbfffd8`**; the string the running
+container reports appears in no CMVP record. This is not a mistake to fix by
+pinning — it is structural. Red Hat validated one specific openssl build and has
+shipped security errata since, so **any current UBI image carries a newer,
+non-validated maintenance build of the same module**, essentially always.
+
+Pinning the literally-validated build is the strictly worse option: it forgoes
+every CVE fix issued since validation, which contradicts this ADR's own
+security-over-compliance tiebreaker. The remedy is **documentation, not pinning**:
+
+1. Cite certificate **#4857** and its validated version `3.0.7-395c1a240fbfffd8`
+2. **Disclose the deployed build** as a Red Hat maintenance build of that module
+3. Self-affirm the operational environment under CMVP Management Manual **§7.9**
+   (Level 1 porting — see §14)
+4. Cite the FedRAMP *Policy for Cryptographic Module Selection and Use* — the
+   same document this ADR already cites for FRR8 — which directs CSPs to
+   prioritize security patching over remaining on a frozen validated binary
+
+This posture must be verified on the FIPS-host trip alongside the `[U]` items
+below. In particular, **whether the containerized provider activates at all
+without its own `fipsmodule.cnf` is upstream of any version-citation question** —
+if it does not activate, the version discussion is moot.
 - **`fipsmodule.cnf` is absent.** On a stock OpenSSL flow that file (from
   `openssl fipsinstall`) activates the provider; RHEL's patched OpenSSL instead
   keys off `/proc/sys/crypto/fips_enabled`. **Whether a container on a FIPS host
@@ -912,11 +966,11 @@ endpoint, or a forced-reset release has shipped.
 
 | Rule | Severity | Requirement | Status |
 |---|---|---|---|
-| **V-222542** | CAT I | Salted iterated hash; MD5 prohibited. **No FIPS mention.** | Already satisfied; remains so |
+| **V-222542** | CAT I | Salted iterated hash; MD5 prohibited. **No FIPS mention.** CCI-004062 | Already satisfied; remains so |
 | **V-222571** | CAT II | FIPS-validated modules **when generating hashes** | Satisfied once §3's gate lands and legacy hashes retire |
 | **V-222572** | CAT II | FIPS-validated modules for unclassified data | Same condition |
 | **V-222543** | CAT I | Passwords transmitted cryptographically protected | **NOT satisfied — prior draft claimed it was.** `main.ts:39-45` *explicitly removes* `upgrade-insecure-requests`; cookie `secure` only in production **[V]**. Requires a TLS reverse proxy — deployment requirement, not an application control |
-| **V-222570** | CAT II | FIPS-validated modules when **signing application components** (code signing) | **Mapping questionable** — the prior draft mapped JWT signing to a code-signing rule. Regardless, `apikey.service.ts:29` signs HS256 with an **empty-string key** when `API_KEY_SECRET` is unset, and `JWT_SECRET` is combined by **string concatenation** **[V]**. Carded separately. The rule offers an AoR path we do not have |
+| **V-222570** | CAT II | FIPS-validated modules when **signing application components** (code signing) | **Mapping questionable** — the prior draft mapped JWT signing to a code-signing rule. Regardless, `apikey.service.ts:29` signs HS256 with an **empty-string key** when `API_KEY_SECRET` is unset, and `JWT_SECRET` is combined by **string concatenation** **[V]**. Tracked as `heimdall2-0bi`. The rule offers an AoR path we do not have |
 | **V-230223** (RHEL 8) / **V-258241** (RHEL 9) | CAT I | System-wide FIPS crypto policy via `update-crypto-policies` | **Customer host responsibility.** No application change satisfies an OS rule. V-230223 is a RHEL **8** rule; our base is UBI **9** |
 
 **Supporting:** IA-5(1)(d) is the affirmative control **[V]**. SC-13 assessment
@@ -931,7 +985,7 @@ objects name validation certificates explicitly **[V]**.
   the requirement is not applicable." **[V]** The correct citation is SC-13 via
   CCI-002450 — implemented as **APSC-DV-002030**, which *is* V-222571.
 - **V-16793 — dropped. Retired.** Zero occurrences in the current ASD STIG
-  (V6R4, benchmark 2025-10-01); superseded by the 2016 move to `APSC-DV-*`
+  (V6R4, revised 2025-09-09); superseded by the 2016 move to `APSC-DV-*`
   rules. Nearest current coverage is APSC-DV-002380 (SC-4) and APSC-DV-002330
   (SC-28), both CAT II. **[V]**
 - **Memory zeroization — not applicable.** FIPS 140-3 AS09.28 requires zeroising
@@ -964,12 +1018,13 @@ checks. **[V]**:
 | #4754 "Red Hat FIPS 140-3 policy" | **RHEL 9 libgcrypt** | Wrong library, and **Historical**, superseded by #5366 |
 
 **Correct: #4857** — "Red Hat Enterprise Linux 9 - OpenSSL FIPS Provider",
-**Active**, validated 2024-10-29, sunset 2029-10-28. **#4746** covers RHEL 9.0
-but **sunsets 2026-07-30** — do not cite it as current.
+**Active**, validated 2024-10-29, sunset 2029-10-28. **#4746** covered RHEL 9.0 and went
+**Historical on 2026-07-30** — do not cite it.
 
-The running module self-identifies as **3.0.7-cda111b5812c30d4** (§15). The SSP
-must name module, version, certificate, **and** the certificate's tested
-operational environments.
+The running module self-identifies as `3.0.7-cda111b5812c30d4`, which is a
+Red Hat **maintenance build**, not the validated `3.0.7-395c1a240fbfffd8` (§15).
+The SSP must name the certificate and its validated version, disclose the
+deployed build, and self-affirm the operational environment.
 
 ## Scope
 
@@ -996,7 +1051,7 @@ methods; env vars including configurable complexity; startup assertion;
 4. **Removing `bcryptjs`** — required for legacy verification until §17's
    criterion is met.
 5. **Fixing V-222570** (empty-string JWT key, concatenated secret) — real,
-   verified, carded separately.
+   verified, tracked as `heimdall2-0bi`.
 6. **The `passwordChangedAt` column-type mismatch** — pre-existing (§7).
 7. **Elastic-style `pbkdf2_stretch`** — exists to defeat *bcrypt's 72-byte
    truncation*, which PBKDF2 does not have. (The prior draft justified excluding
