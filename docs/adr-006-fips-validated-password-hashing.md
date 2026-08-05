@@ -488,6 +488,7 @@ changes non-breaking. Recorded so a maintainer does not "fix" it accidentally.
 | `PASSWORD_MAX_LENGTH` | int ≤128 | `128` | §6 cap |
 | `PASSWORD_REQUIRE_CLASSES` | int | `4` | already read by heimdall-cli |
 | `PASSWORD_MAX_CONSECUTIVE` | int | `3` | already read by heimdall-cli |
+| `PASSWORD_KDF_CONCURRENCY` | int ≥1 | `2` | §11 limiter — max concurrent KDF ops; bounded queue rejects overflow to the generic auth failure |
 | `FIPS_MODE` | boolean | unset | assertion + fallback gate |
 | `PASSWORD_HASH_WRITE_ENABLED` | boolean | see §12 | rollout gate |
 
@@ -588,6 +589,20 @@ raised and a global KDF concurrency limit lands.** Keeping 600k while addressing
 neither is the one indefensible combination. Benchmark on the target RHEL
 container before finalizing.
 
+**Settled design (2026-08-05).** The limiter is a hand-rolled counting semaphore
+(~15 lines, zero dependencies) **inside `password.ts`**, wrapping every pbkdf2
+dispatch. It cannot live in the service layer: §5's pure-path callers (sites 3
+and 6) run in the server process too, and the seeder's bare-require constraint
+forbids dependencies — so a service-layer limiter would leak, and p-limit is not
+an option. Default concurrency 2 (leaves ≥2 of libuv's default 4 threads for
+`fs`/`dns`), overridable via `PASSWORD_KDF_CONCURRENCY` (§9). The pending queue
+is bounded (default 100); overflow rejects with a typed error the auth layer
+maps to the generic failure — unbounded queueing would convert the thread-
+starvation DoS into memory exhaustion, and a distinct error would leak state.
+`UV_THREADPOOL_SIZE=8` is set in the Dockerfile, `cmd.sh`, and the systemd unit
+— libuv reads it at first threadpool use, so it is not an application env var
+and cannot go through ConfigService.
+
 **Login is a DoS amplification vector [V]** — 20 req/min/IP on `/authn/login` is
 the only protection; no global cap, no account lockout (`loginCount` increments
 only on success).
@@ -627,10 +642,15 @@ catastrophic**, and `dnf downgrade` is one command.
    pre-N pod. Consequently §4's "fresh install → `bcrypt_remaining = 0`" AC
    applies from **N+1**, or the gate must be derived: enabled unconditionally on
    a fresh install (no pre-N peer can exist), defaulted off only on upgrade.
+   Settled (2026-08-05): the **derived form** — forced on for fresh installs,
+   default off on upgrade — so the fresh-install AC holds from release N.
 2. **A durable DB marker planted in release N**, recording that PBKDF2 writes
    have begun. **Planting trigger must be defined** — at install it records
    something untrue; on first write it flips during the canary while most rows
-   are still bcrypt. Define which, and who reads it.
+   are still bcrypt. Define which, and who reads it. Settled (2026-08-05):
+   planted on the **first PBKDF2 write** — the marker never records something
+   untrue — and its readers are mechanism 3's startup version check and §17's
+   authenticated health detail.
 3. **Enforcement is in the application, not RPM `%pre`.** The prior draft
    specified a `%pre` guard; **it cannot fire on the downgrades it targets** —
    on downgrade the `%pre` that runs belongs to the **older** package, built
@@ -670,6 +690,9 @@ costs more than rehashing. `serve-static` uses stat-based tags and no hash.
 **Runtime audit required.** Static analysis cannot see transitive dependencies.
 Unaudited: `passport-google-oauth` (bundles an OAuth 1.0a HMAC-SHA1 path),
 `passport-ldapauth` (SASL DIGEST-MD5 if configured), `express-session`.
+Carded (2026-08-05) as `heimdall2-e25.3`, executed on the FIPS host alongside
+the §15 spike — same trip, separate deliverable — and it exercises §16's
+pg-against-md5-auth failure case live.
 
 ### 14. Repository boundary and the cross-repo dependency
 
@@ -957,6 +980,33 @@ Plus the `ApiKeys` equivalent. Ship as `heimdall-cli report`, not a wiki snippet
 air-gapped operators cannot reach.
 - **Admin UI** — per-user legacy-hash badge, bulk force-password-change, and
   **bulk API-key invalidation** (keys are *regenerated*, not reset).
+
+**Admin surface, settled design (2026-08-05)** — built on plumbing that already
+exists, verified by code read:
+
+- **`passwordHashScheme`** (`bcrypt` | `pbkdf2` | `invalidated`) — derived from
+  the stored prefix via the crypto module's shared constant, never persisted,
+  and exposed **only on the admin list response**. The self-view and every
+  unauthenticated surface omit it — the Risks table's enumeration rule. Rendered
+  as a badge column in `UserManagement.vue`'s existing v-data-table.
+- **`POST /users/force-password-change`** — admin-only; `{userIds}` or
+  `{scheme: 'bcrypt'}`; one SQL UPDATE. `forcePasswordChange` is already plumbed
+  end-to-end (`update-user.dto.ts:40` accepts it, `users.service.ts:103` applies
+  it) **[V]** — the endpoint adds bulk, not new semantics.
+- **Bulk legacy API-key invalidation** — admin-only **deletion** of
+  `$2%`-prefixed `ApiKeys` rows; regeneration is the only recovery, per this
+  section's own rule.
+- **A fourth "Migration" admin tab** (`Admin.vue` already hosts Users / Groups /
+  Statistics tabs **[V]**) showing FIPS state, write-gate state, both tables'
+  counts, and the two bulk actions — fed by the authenticated health detail
+  endpoint, so the tab and the operator query share one source.
+- The `/health` split concretely: **`GET /health`** (unauthenticated liveness,
+  `{status, version}` only) and **`GET /health/details`** (JwtAuthGuard + CASL
+  admin, following `StatisticsController`'s existing pattern **[V]**).
+- Post-cutover recovery needs no new code: an admin sets a temporary password
+  through the existing `UserModal` admin path (which skips currentPassword) and
+  `forcePasswordChange` compels rotation at next login — documented in the
+  deployment runbook.
 
 **Restated removal criterion:** no earlier than N+3, and only after
 `bcrypt_remaining = 0` across **both tables** is confirmed via the health
