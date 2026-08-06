@@ -53,11 +53,19 @@ Host heimdall-fips
 ## Lifecycle
 
 ```bash
-tofu init && tofu apply           # create (~5 min to FIPS-on: update, agent, enable, reboot)
-aws ec2 stop-instances  --instance-ids <id>   # dev box idle — costs only EBS (~$4/mo @ 50GB)
-aws ec2 start-instances --instance-ids <id>   # public IP CHANGES on start — re-read it
-tofu destroy                       # ephemeral use — gone entirely
+tofu init && tofu apply    # create (~5 min to FIPS-on: update, agent, enable, reboot)
+bin/fips-box pause         # taking a break — stop now, don't wait for the idle alarm
+bin/fips-box wake          # start + wait until SSM is reachable (prints when ssh-ready)
+bin/fips-box status        # state, IP, idle-alarm state
+tofu destroy               # ephemeral use — gone entirely
 ```
+
+`fips-box` resolves the instance by Name tag, so it needs no edits across
+rebuilds. Stopped costs only EBS (~$4/mo @ 50GB). The **idle alarm** stops the
+box automatically after 45 min under 3% CPU (`idle_stop_minutes`, 0 disables) —
+`pause` is for when you know you're leaving and don't want to wait. Either way,
+`wake` brings it back; FIPS mode persists across stop/start (kernel args);
+running processes and tmux sessions do not.
 
 Two profiles, one module: ephemeral test host (apply → test → destroy) and
 persistent dev/test box (apply once, stop between sessions).
