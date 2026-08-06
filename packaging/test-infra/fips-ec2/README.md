@@ -15,7 +15,11 @@ an EC2 host and github.com). Session Manager tunnels over HTTPS/443 via the
 agent's outbound connection, so it works where SSH cannot.
 
 ```bash
-# interactive shell (needs: brew install --cask session-manager-plugin)
+# interactive shell — needs session-manager-plugin. The brew cask requires
+# admin elevation (blocked by corporate privilege management); the user-space
+# install needs none:
+#   curl -o /tmp/smp.zip https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac_arm64/sessionmanager-bundle.zip
+#   unzip /tmp/smp.zip -d /tmp && cp /tmp/sessionmanager-bundle/bin/session-manager-plugin ~/.local/bin/
 aws ssm start-session --target <instance-id>
 
 # one-shot command
