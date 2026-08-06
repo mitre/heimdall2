@@ -29,6 +29,27 @@ aws ssm send-command --instance-ids <id> --document-name AWS-RunShellScript \
 
 The key pair is still attached — plain SSH works from networks that permit it.
 
+**Real `ssh`/`scp` through the tunnel** — add to `~/.ssh/config` (before any
+`Host *` block). The wildcard entry serves any instance ID ever; the alias
+resolves the instance by Name tag at connect time, so it survives rebuilds,
+IP changes, and VPC changes without edits:
+
+```
+Host i-* mi-*
+  ProxyCommand aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'
+  User ec2-user
+  IdentityFile ~/.ssh/aaronl-aws.pem
+  UserKnownHostsFile /dev/null   # host keys churn on rebuild; SSM transport is already SigV4-authed + TLS
+  LogLevel ERROR
+
+Host heimdall-fips
+  ProxyCommand aws ssm start-session --target $(aws ec2 describe-instances --filters Name=tag:Name,Values=heimdall-fips-dev Name=instance-state-name,Values=running --query 'Reservations[0].Instances[0].InstanceId' --output text) --document-name AWS-StartSSHSession --parameters 'portNumber=%p'
+  User ec2-user
+  IdentityFile ~/.ssh/aaronl-aws.pem
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+```
+
 ## Lifecycle
 
 ```bash
