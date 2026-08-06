@@ -6,11 +6,14 @@
 #   fips-box status   instance state, IP, idle-alarm state
 #
 # The instance is resolved by Name tag at run time — rebuilds, IP changes,
-# and VPC changes never require edits. Note: pause is a power-off; disk and
-# FIPS mode persist, running processes and tmux sessions do not.
+# and VPC changes never require edits. The tag follows TF_VAR_name (the same
+# variable OpenTofu reads), so one export drives tofu, this script, and the
+# ssh alias. FIPS_BOX_NAME remains as a script-only override.
+# Note: pause is a power-off; disk and FIPS mode persist, running processes
+# and tmux sessions do not.
 set -euo pipefail
 
-NAME="${FIPS_BOX_NAME:-heimdall-fips-dev}"
+NAME="${FIPS_BOX_NAME:-${TF_VAR_name:-heimdall-fips}}"
 
 find_id() {
   aws ec2 describe-instances \

@@ -43,7 +43,7 @@ Host i-* mi-*
   LogLevel ERROR
 
 Host heimdall-fips
-  ProxyCommand aws ssm start-session --target $(aws ec2 describe-instances --filters Name=tag:Name,Values=heimdall-fips-dev Name=instance-state-name,Values=running --query 'Reservations[0].Instances[0].InstanceId' --output text) --document-name AWS-StartSSHSession --parameters 'portNumber=%p'
+  ProxyCommand aws ssm start-session --target $(aws ec2 describe-instances --filters Name=tag:Name,Values=${TF_VAR_name:-heimdall-fips} Name=instance-state-name,Values=running --query 'Reservations[0].Instances[0].InstanceId' --output text) --document-name AWS-StartSSHSession --parameters 'portNumber=%p'
   User ec2-user
   IdentityFile ~/.ssh/aaronl-aws.pem
   UserKnownHostsFile /dev/null
@@ -69,6 +69,23 @@ running processes and tmux sessions do not.
 
 Two profiles, one module: ephemeral test host (apply → test → destroy) and
 persistent dev/test box (apply once, stop between sessions).
+
+## Per-user boxes — one env var
+
+The Name tag is the single identity knob, driven by `TF_VAR_name` everywhere
+(OpenTofu reads it natively; `bin/fips-box` and the ssh alias follow the same
+variable). Default: `heimdall-fips`.
+
+```bash
+export TF_VAR_name=will-fips        # your box, your tools, no file edits
+export TF_VAR_key_name=will-aws     # REQUIRED per user — default is Aaron's key pair
+tofu apply                          # separate state dir = separate box
+```
+
+⚠️ **Renaming an EXISTING box replaces it** — the IAM profile name derives from
+`name`, and an instance-profile change forces instance replacement. Run
+`tofu plan` and read it before approving any apply against a box that carries
+work; the disk does not survive replacement.
 
 ## Sizing
 

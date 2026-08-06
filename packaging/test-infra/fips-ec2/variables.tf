@@ -47,9 +47,9 @@ variable "volume_gb" {
 }
 
 variable "name" {
-  description = "Name tag"
+  description = "Name tag — the single identity knob. Set via TF_VAR_name; fips-box and the ssh alias follow it through the same variable."
   type        = string
-  default     = "heimdall-fips-dev"
+  default     = "heimdall-fips"
 }
 
 variable "idle_stop_minutes" {
