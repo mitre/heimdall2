@@ -9,6 +9,9 @@ package_update: true
 packages:
   - podman
   - git
+  # Long-running work (RPM builds) must survive SSM session idle timeouts —
+  # run it in tmux and re-attach after reconnecting.
+  - tmux
 
 runcmd:
   # SSM agent — not bundled in RHEL AMIs (it is in Amazon Linux). Installed
