@@ -51,3 +51,15 @@ variable "name" {
   type        = string
   default     = "heimdall-fips-dev"
 }
+
+variable "idle_stop_minutes" {
+  description = "Auto-stop after this many minutes below the CPU threshold (multiple of 5; 0 disables). Restart with: aws ec2 start-instances"
+  type        = number
+  default     = 45
+}
+
+variable "idle_cpu_threshold" {
+  description = "CPU % considered idle"
+  type        = number
+  default     = 3
+}

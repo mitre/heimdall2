@@ -83,3 +83,25 @@ resource "aws_instance" "fips_host" {
     Purpose = var.fips ? "fips-test-host" : "test-host"
   }
 }
+
+# Idle auto-stop — the box must never run up a bill because someone walked
+# away. CPU < threshold for the full window -> EC2 stop action. Basic
+# monitoring reports in 5-minute periods, so idle_minutes should be a
+# multiple of 5. A build or test run burns CPU and can never be stopped
+# mid-job; a stop IS a power-off, so detached tmux sessions die with it.
+resource "aws_cloudwatch_metric_alarm" "idle_stop" {
+  count               = var.idle_stop_minutes > 0 ? 1 : 0
+  alarm_name          = "${var.name}-idle-stop"
+  alarm_description   = "Stop ${var.name} after ${var.idle_stop_minutes} min below ${var.idle_cpu_threshold}% CPU"
+  namespace           = "AWS/EC2"
+  metric_name         = "CPUUtilization"
+  statistic           = "Average"
+  period              = 300
+  evaluation_periods  = var.idle_stop_minutes / 5
+  threshold           = var.idle_cpu_threshold
+  comparison_operator = "LessThanThreshold"
+  treat_missing_data  = "notBreaching" # already stopped -> no data -> no flapping
+  dimensions          = { InstanceId = aws_instance.fips_host.id }
+  alarm_actions       = ["arn:aws:automate:${var.region}:ec2:stop"]
+  tags                = { Project = "heimdall2-fips" }
+}
