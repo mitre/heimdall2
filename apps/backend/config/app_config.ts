@@ -61,6 +61,19 @@ export default class AppConfig {
     }
   }
 
+  // Comma-separated allowlist of Tenable.SC hosts permitted for the login/proxy endpoints.
+  getTenableHostUrls(): string[] {
+    const tenable_host_urls = this.get('TENABLE_HOST_URLS');
+    if (tenable_host_urls !== undefined) {
+      return tenable_host_urls
+        .split(',')
+        .map((url) => url.trim())
+        .filter((url) => url.length > 0);
+    } else {
+      return [];
+    }
+  }
+
   getDatabaseName(): string {
     const databaseName = this.get('DATABASE_NAME');
     const nodeEnvironment = this.get('NODE_ENV');

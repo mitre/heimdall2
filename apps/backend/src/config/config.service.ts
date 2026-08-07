@@ -78,6 +78,10 @@ export class ConfigService {
     return this.appConfig.getTenableHostUrl();
   }
 
+  getTenableHostUrls(): string[] {
+    return this.appConfig.getTenableHostUrls();
+  }
+
   getDbConfig(): SequelizeOptions {
     return this.appConfig.getDbConfig();
   }

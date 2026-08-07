@@ -6,9 +6,12 @@ import {
   Body,
   HttpException,
   HttpStatus,
-  All
+  All,
+  UseGuards
 } from '@nestjs/common';
 import {TenableService} from './tenable.service';
+import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {ConfigService} from '../config/config.service';
 import axios from 'axios';
 import {Request, Response} from 'express';
 
@@ -30,8 +33,32 @@ const TENABLE_CSP_NOT_SET =
 // It allows users to log in with their Tenable credentials and then proxies all subsequent requests
 // to the Tenable API, handling authentication via session storage.
 @Controller('api/tenable')
+@UseGuards(JwtAuthGuard)
 export class TenableController {
-  constructor(private readonly tenableService: TenableService) {}
+  constructor(
+    private readonly tenableService: TenableService,
+    private readonly configService: ConfigService
+  ) {}
+
+  // Confirms host_url's origin matches an entry in the TENABLE_HOST_URLS allowlist.
+  private isAllowedHostUrl(host_url: string): boolean {
+    const allowlist = this.configService.getTenableHostUrls();
+    if (allowlist.length === 0) {
+      return false;
+    }
+    try {
+      const requestedOrigin = new URL(host_url).origin;
+      return allowlist.some((allowed) => {
+        try {
+          return new URL(allowed).origin === requestedOrigin;
+        } catch {
+          return false;
+        }
+      });
+    } catch {
+      return false;
+    }
+  }
 
   @Post('login')
   /**
@@ -50,6 +77,17 @@ export class TenableController {
 
     if (!host_url || !accesskey || !secretkey) {
       throw new HttpException('Missing credentials', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!this.isAllowedHostUrl(host_url)) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          message: 'Tenable host URL is not in the configured allowlist',
+          code: 'HOST_NOT_ALLOWED'
+        },
+        HttpStatus.FORBIDDEN
+      );
     }
 
     try {
