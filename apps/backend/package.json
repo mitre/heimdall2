@@ -84,6 +84,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "@heimdall/password-hash-vectors": "^2.13.0",
     "@nestjs/testing": "^11.0.1",
     "@swc/core": "^1.13.0",
     "@types/mock-fs": "^4.10.0",
