@@ -1,4 +1,4 @@
-import {IStartupSettings} from '@heimdall/common/interfaces';
+import type {AuthStrategy, IStartupSettings} from '@heimdall/common/interfaces';
 
 export class StartupSettingsDto implements IStartupSettings {
   readonly apiKeysEnabled: boolean;
@@ -6,15 +6,13 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly classificationBannerColor: string;
   readonly classificationBannerText: string;
   readonly classificationBannerTextColor: string;
-  readonly enabledOAuth: string[];
+  readonly enabledAuthStrategies: AuthStrategy[];
   readonly externalUrl: string;
-  readonly oidcName: string;
-  readonly ldap: boolean;
-  readonly registrationEnabled: boolean;
-  readonly localLoginEnabled: boolean;
-  readonly tenableHostUrl: string;
   readonly forceTenableFrontend: boolean;
+  readonly oidcName: string;
+  readonly registrationEnabled: boolean;
   readonly splunkHostUrl: string;
+  readonly tenableHostUrl: string;
 
   constructor(settings: IStartupSettings) {
     this.apiKeysEnabled = settings.apiKeysEnabled;
@@ -22,12 +20,10 @@ export class StartupSettingsDto implements IStartupSettings {
     this.classificationBannerColor = settings.classificationBannerColor;
     this.classificationBannerText = settings.classificationBannerText;
     this.classificationBannerTextColor = settings.classificationBannerTextColor;
-    this.enabledOAuth = settings.enabledOAuth;
+    this.enabledAuthStrategies = settings.enabledAuthStrategies;
     this.externalUrl = settings.externalUrl;
     this.oidcName = settings.oidcName;
-    this.ldap = settings.ldap;
     this.registrationEnabled = settings.registrationEnabled;
-    this.localLoginEnabled = settings.localLoginEnabled;
     this.tenableHostUrl = settings.tenableHostUrl;
     this.forceTenableFrontend = settings.forceTenableFrontend;
     this.splunkHostUrl = settings.splunkHostUrl;
