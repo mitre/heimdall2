@@ -562,7 +562,9 @@ FIPS` is a real denial.
 ### 11. Performance — measured, and it inverts the prior rating
 
 The prior draft asserted "≈ bcrypt cost 14 (~200-400 ms)" and rated the change a
-Low/Low performance *regression*. **Both wrong.** Measured on Node 24:
+Low/Low performance *regression*. **Both wrong.** Measured on Node 24 — **on a
+dev laptop; superseded for capacity planning by the on-target block below
+(2026-08-08), kept for the bcrypt-vs-PBKDF2 ratio it demonstrates:**
 
 | Operation | Latency | Throughput | Event-loop lag |
 |---|---|---|---|
@@ -587,7 +589,32 @@ the chosen value sits on the recommendation, not above it. It remains defensible
 at 220k if latency matters more, but 600k is only safe if `UV_THREADPOOL_SIZE` is
 raised and a global KDF concurrency limit lands.** Keeping 600k while addressing
 neither is the one indefensible combination. Benchmark on the target RHEL
-container before finalizing.
+container before finalizing. *(Done — the block below is that benchmark.)*
+
+**On-target measurement (2026-08-08, spike `docs/research/fips-host-spike.md`
+F4) — supersedes the laptop numbers above for capacity planning. [V]**
+On a FIPS-mode t3.medium (1 physical core / 2 HT):
+
+- Single op: **594.3 ms p50 / 600.7 ms p95** (40-sample sequential) at 600k (the
+  laptop's 145 ms was real but ~4× optimistic for commodity cloud hardware).
+- **Throughput ≈ 1.7 ops/sec × physical core** — flat across concurrency 1→32
+  and threadpool 4 vs 8; two isolated containers split the same aggregate.
+  The bound is silicon. **Size by physical cores, never vCPUs** (burstable
+  instances' "2 vCPU" = 2 HT siblings of one core).
+- **`fs.readFile` under SUSTAINED 8-deep KDF load: p50 12.1 s (threadpool 4)
+  → 4.1 s (threadpool 8)** — the starvation warning above holds on target
+  hardware far beyond the laptop's 337 ms, and both required mitigations now
+  carry measured justification (the limiter bounds how many pool slots KDFs
+  occupy; the larger pool cuts read-wait 3×).
+
+**Iteration default decided (Aaron, 2026-08-08): 600,000 stays.** The measured
+p95 exceeded the spike card's 500 ms review threshold and the decision was
+taken deliberately: the production deployment is SSO-dominant (Okta/Keycloak —
+external-auth users never invoke PBKDF2), leaving few, privileged local
+accounts as the only payers; deployments tune via `PASSWORD_HASH_ITERATIONS`;
+and parameters ride in each PHC hash, so a future change needs no migration.
+The API-key path — the one KDF consumer with real request volume — is being
+removed from iterated hashing entirely under its own ADR (ADR-007, carded).
 
 **Settled design (2026-08-05).** The limiter is a hand-rolled counting semaphore
 (~15 lines, zero dependencies) **inside `password.ts`**, wrapping every pbkdf2
@@ -891,11 +918,13 @@ This posture must be verified on the FIPS-host trip alongside the `[U]` items
 below. In particular, **whether the containerized provider activates at all
 without its own `fipsmodule.cnf` is upstream of any version-citation question** —
 if it does not activate, the version discussion is moot.
-- **`fipsmodule.cnf` is absent.** On a stock OpenSSL flow that file (from
-  `openssl fipsinstall`) activates the provider; RHEL's patched OpenSSL instead
-  keys off `/proc/sys/crypto/fips_enabled`. **Whether a container on a FIPS host
-  activates the provider without its own `fipsmodule.cnf` is unresolved** and
-  requires a FIPS host to settle. **[U]**
+- **`fipsmodule.cnf` is absent — and unnecessary. RESOLVED [V]** (spike,
+  2026-08-08, `docs/research/fips-host-spike.md` F1): on a FIPS-enabled RHEL 9.4
+  host, the container reports `getFips() === 1` with no `fipsmodule.cnf`
+  anywhere in the image — activation is pure host inheritance via
+  `/proc/sys/crypto/fips_enabled`, exactly the §10 model. The provider is
+  active and self-identifies as `3.0.7-cda111b5812c30d4` (F2), confirming the
+  maintenance-build posture above.
 
 **Four constraints:**
 
@@ -907,9 +936,12 @@ if it does not activate, the version discussion is moot.
    RHEL host is a hard requirement.**
 3. Node **never** reads `/proc/sys/crypto/fips_enabled`; RHEL's *OpenSSL* does.
    That runtime check **is** the inheritance mechanism.
-4. **Since RHEL 9.2 the FIPS provider ships as a separate RPM** **[U]** — the
-   package exists on Red Hat's UBI CDN, but the "since 9.2" claim could not be
-   retrieved.
+4. **The FIPS provider ships as a separate RPM [V]; "since 9.2" is refuted
+   [V]** (spike F3): `fips.so` is owned by
+   `openssl-fips-provider-3.0.7-2.el9.x86_64`, whose changelog shows initial
+   packaging 2024-01-24 — impossible for 9.2 (GA May 2023). The positive
+   placement ("9.4") is an inference from the date **[U]**, per the spike's
+   own grading; the load-bearing facts are the separate RPM and the refutation.
 
 Stock nodejs.org binaries **do** support FIPS — `BUILDING.md`: "It is not
 necessary to rebuild Node.js to enable support for FIPS" **[V]** — but require
