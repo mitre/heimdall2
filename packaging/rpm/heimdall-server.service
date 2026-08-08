@@ -1,0 +1,54 @@
+[Unit]
+Description=Heimdall Server
+Documentation=https://github.com/mitre/heimdall2
+Wants=network-online.target
+After=network-online.target postgresql.service
+
+[Service]
+Type=exec
+User=heimdall
+Group=heimdall
+WorkingDirectory=/usr/share/heimdall-server/apps/backend
+EnvironmentFile=-/etc/sysconfig/heimdall-server
+EnvironmentFile=-/etc/heimdall-server/backend.env
+Environment=NODE_ENV=production
+ExecStartPre=/usr/bin/test -x /usr/bin/node
+ExecStartPre=/usr/bin/heimdall-cli validate --skip-db
+ExecStart=/usr/bin/heimdall-server
+SyslogIdentifier=heimdall-server
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+UMask=0027
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/heimdall-server
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+ProtectClock=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectProc=invisible
+RemoveIPC=true
+RestrictRealtime=true
+SystemCallArchitectures=native
+# Do NOT enable SystemCallFilter or MemoryDenyWriteExecute — both break
+# Node.js V8 JIT which requires syscalls outside @system-service and W+X pages.
+CapabilityBoundingSet=
+AmbientCapabilities=
+LimitNOFILE=65536
+StateDirectory=heimdall-server
+LogsDirectory=heimdall-server
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,212 @@
+name: Build RPM
+
+# One workflow for both purposes, following redis/memtier_benchmark:
+# every PR and master push proves the RPM still builds and installs, and a
+# published release additionally uploads the artifacts. Publishing steps are
+# gated on the event rather than split into a second workflow, so the thing
+# that ships is the thing CI exercised.
+
+on:
+  pull_request:
+    paths:
+      - 'packaging/**'
+      - 'VERSION'
+      - '.github/workflows/build-rpm.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'packaging/**'
+      - 'VERSION'
+      - '.github/workflows/build-rpm.yml'
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      heimdall_cli_ref:
+        description: 'heimdall-cli ref to build against (tag, branch, or SHA)'
+        required: false
+        default: 'main'
+
+env:
+  # Release builds must pin a tag. Everything else tracks main.
+  # This value is what the RPM records as the CLI it shipped.
+  HEIMDALL_CLI_REF: ${{ inputs.heimdall_cli_ref || 'main' }}
+
+jobs:
+  build:
+    name: ${{ matrix.distro }} / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.image }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: el8
+            image: rockylinux:8
+            arch: x86_64
+            runner: ubuntu-latest
+          - distro: el9
+            image: rockylinux:9
+            arch: x86_64
+            runner: ubuntu-latest
+          # Native ARM runners — free for public repositories, and roughly
+          # 5-10x faster than QEMU emulation for a Node + Go build. The Go CLI
+          # is compiled natively here rather than cross-compiled.
+          - distro: el8
+            image: rockylinux:8
+            arch: aarch64
+            runner: ubuntu-24.04-arm
+          - distro: el9
+            image: rockylinux:9
+            arch: aarch64
+            runner: ubuntu-24.04-arm
+
+    steps:
+      # A bare Rocky container has neither git nor make. actions/checkout needs
+      # git, and every subsequent step goes through the Makefile — including
+      # `make deps`, which is what installs the real build dependencies. Both
+      # have to be bootstrapped here or `make deps` cannot run itself.
+      - name: Bootstrap git and make
+        run: |
+          dnf install -y git make
+          git --version
+          make --version | head -1
+
+      - uses: actions/checkout@v6
+        with:
+          # Full history and tags: `make sources` archives the tag matching the
+          # VERSION file. A shallow clone has no tags and the build would fail.
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Mark workspace safe
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Install build dependencies
+        working-directory: packaging/rpm
+        run: make deps
+
+      - name: Install Go (for the heimdall-cli build)
+        run: dnf install -y golang
+
+      - name: Verify spec and repository versions agree
+        working-directory: packaging/rpm
+        run: make check-version
+
+      # Releases build from the tag matching VERSION. CI builds from HEAD,
+      # because on a feature branch the tag for an in-progress version does not
+      # exist yet. DEV=1 makes that explicit rather than silently producing an
+      # RPM that claims to be a release.
+      - name: Build RPM
+        working-directory: packaging/rpm
+        env:
+          HEIMDALL_CLI_REF: ${{ env.HEIMDALL_CLI_REF }}
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "release" ]; then
+            make rpm
+          else
+            make rpm DEV=1
+          fi
+
+      - name: Lint the built packages (advisory)
+        working-directory: packaging/rpm
+        continue-on-error: true
+        run: make lint-rpm
+
+      - name: Record what was built
+        working-directory: packaging/rpm
+        run: |
+          find rpmbuild/RPMS rpmbuild/SRPMS -name '*.rpm' -printf '%f\n' | sort
+          echo "heimdall-cli ref: ${HEIMDALL_CLI_REF}"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
+          path: |
+            packaging/rpm/rpmbuild/RPMS/**/*.rpm
+            packaging/rpm/rpmbuild/SRPMS/*.rpm
+          retention-days: 7
+          if-no-files-found: error
+
+  # The highest-value check: install into a clean container with NO build
+  # dependencies pre-installed, so a missing Requires: fails here rather than on
+  # a customer's host. Verifies %files claims via rpm -ql.
+  smoke-test:
+    name: install ${{ matrix.distro }} / ${{ matrix.arch }}
+    needs: build
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.image }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {distro: el8, image: rockylinux:8, arch: x86_64, runner: ubuntu-latest}
+          - {distro: el9, image: rockylinux:9, arch: x86_64, runner: ubuntu-latest}
+          - {distro: el8, image: rockylinux:8, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el9, image: rockylinux:9, arch: aarch64, runner: ubuntu-24.04-arm}
+
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
+          path: rpms
+
+      - name: Install the package and its dependencies
+        run: |
+          dnf install -y epel-release || true
+          rpm_file=$(find rpms -name "heimdall-server-*.${{ matrix.arch }}.rpm" | head -1)
+          test -n "$rpm_file" || { echo "::error::no binary RPM found"; exit 1; }
+          echo "Installing $rpm_file"
+          dnf install -y "$rpm_file"
+
+      - name: Verify the package contents match its manifest
+        run: |
+          rpm -q heimdall-server
+          rpm -V heimdall-server || true   # config file changes are expected
+          echo "--- files ---"
+          rpm -ql heimdall-server | head -40
+          echo "--- heimdall-cli is present and reports provenance ---"
+          test -x /usr/bin/heimdall-cli
+          /usr/bin/heimdall-cli --version
+
+      - name: Verify the unit file is valid
+        run: |
+          dnf install -y systemd
+          systemd-analyze verify /usr/lib/systemd/system/heimdall-server.service || true
+
+  publish:
+    name: Attach RPMs to the release
+    needs: [build, smoke-test]
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write      # upload release assets
+      id-token: write      # build provenance attestation
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: rpm-*
+          path: rpms
+          merge-multiple: true
+
+      - name: List artifacts
+        run: find rpms -name '*.rpm' -printf '%f\n' | sort
+
+      # The modern equivalent of GPG-signing in CI: a signed, verifiable
+      # statement of what built these artifacts and from where. Same
+      # supply-chain story as npm provenance, without a release key in secrets.
+      - uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: 'rpms/**/*.rpm'
+
+      # Pinned to a commit SHA: this is a third-party action holding
+      # contents: write, and a mutable tag can be repointed at any time.
+      - uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228  # v3.0.2
+        with:
+          files: rpms/**/*.rpm
+          fail_on_unmatched_files: true

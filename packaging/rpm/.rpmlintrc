@@ -1,0 +1,11 @@
+# rpmlint configuration for heimdall-server.spec
+#
+# Suppress known false positives so CI / dev rpmlint runs are noise-free
+# and real issues stand out.
+
+# firewalld services live in /usr/lib/firewalld/services per Fedora
+# packaging guidelines for firewalld:
+#   https://docs.fedoraproject.org/en-US/packaging-guidelines/Firewalld/
+# rpmlint's hardcoded-library-path check fires on any /usr/lib/* path
+# without distinguishing arch-specific from noarch — false positive here.
+addFilter(r"hardcoded-library-path in %\{_prefix\}/lib/firewalld/services")

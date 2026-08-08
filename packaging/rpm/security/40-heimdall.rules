@@ -1,0 +1,33 @@
+## Heimdall Server audit rules (SAMPLE)
+##
+## To activate, copy to /etc/audit/rules.d/ and restart auditd:
+##   sudo cp /usr/share/heimdall-server/security/40-heimdall.rules /etc/audit/rules.d/
+##   sudo systemctl restart auditd
+##
+## These rules supplement the STIG baseline (30-stig.rules).
+## The 40- prefix loads after STIG rules but before 99-finalize.rules.
+##
+## Audit keys: search with ausearch -k heimdall-config, etc.
+
+## Configuration files containing credentials (DB passwords, JWT keys, OAuth secrets)
+-w /etc/heimdall-server/ -p wa -k heimdall-config
+-w /etc/sysconfig/heimdall-server -p wa -k heimdall-config
+
+## Application binaries (tampering detection)
+-w /usr/bin/heimdall-cli -p wa -k heimdall-bin
+-w /usr/bin/heimdall-server -p wa -k heimdall-bin
+
+## Data directory (backups contain database dump + credentials)
+-w /var/lib/heimdall-server/ -p wa -k heimdall-data
+
+## SELinux policy module
+-w /usr/share/selinux/packages/heimdall-server.pp -p wa -k heimdall-selinux
+
+## systemd unit file
+-w /usr/lib/systemd/system/heimdall-server.service -p wa -k heimdall-service
+
+## Admin CLI execution (human-initiated only, per OSPP v4.2 pattern)
+-a always,exit -F arch=b64 -F path=/usr/bin/heimdall-cli -F perm=x -F auid>=1000 -F auid!=unset -k heimdall-admin
+
+## Track admin CLI execution by root
+-a always,exit -F arch=b64 -F path=/usr/bin/heimdall-cli -F perm=x -F auid=0 -k heimdall-admin

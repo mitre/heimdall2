@@ -1,0 +1,35 @@
+#cloud-config
+# Provisioning for the Heimdall FIPS test host.
+# When fips=true: enable FIPS mode, then reboot — the RHEL model is host FIPS
+# mode -> OpenSSL enables -> everything inherits (never --force-fips; see
+# ADR-006 §10). The kernel fips=1 boot arg only takes effect on the reboot,
+# so the box is FIPS-on before anyone can ssh in.
+
+package_update: true
+packages:
+  - podman
+  - git
+  # Long-running work (RPM builds) must survive SSM session idle timeouts —
+  # run it in tmux and re-attach after reconnecting.
+  - tmux
+
+runcmd:
+  # SSM agent — not bundled in RHEL AMIs (it is in Amazon Linux). Installed
+  # and enabled BEFORE the FIPS reboot; systemd brings it back after. This is
+  # the only management path from the MITRE network (SSH protocol is filtered).
+  - dnf install -y https://s3.us-east-1.amazonaws.com/amazon-ssm-us-east-1/latest/linux_amd64/amazon-ssm-agent.rpm
+  - systemctl enable --now amazon-ssm-agent
+%{ if fips ~}
+  # fips-mode-setup is deprecated for SWITCHING on RHEL 9.5+ (the documented
+  # replacements are all install-time: kickstart fips=1, image builder, bootc).
+  # This AMI is RHEL 9.4, where post-install switching via this tool is the
+  # supported, documented method. Long term: move to a FIPS-enabled image.
+  - fips-mode-setup --enable
+%{ endif ~}
+  - touch /var/tmp/provision-complete
+
+%{ if fips ~}
+power_state:
+  mode: reboot
+  message: "Rebooting to enable FIPS mode (fips=1 kernel arg)"
+%{ endif ~}
