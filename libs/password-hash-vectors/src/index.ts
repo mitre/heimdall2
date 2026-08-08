@@ -1,3 +1,5 @@
+export { FORMAT_VERSION } from './format-version';
+
 /**
  * @heimdall/password-hash-vectors
  *
@@ -13,3 +15,11 @@ export {
   type MalformedExpected,
   type MalformedVector,
 } from './malformed-corpus';
+
+export {
+  BCRYPT_DEGRADATION_VECTOR,
+  type BcryptDegradationVector,
+  KNOWN_GOOD_VECTORS,
+  type KnownGoodVector,
+  type PasswordHashAlgorithm,
+} from './vectors';

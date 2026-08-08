@@ -14,12 +14,15 @@
     "node": ">=22.18.0"
   },
   "scripts": {
+    "gen:vectors": "tsx scripts/write-vectors.ts",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "bcryptjs": "^3.0.0",
+    "tsx": "^4.20.0",
     "vitest": "^4.0.18"
   }
 }

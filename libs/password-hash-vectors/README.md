@@ -9,11 +9,55 @@ that writes credentials the FIPS-gated server refuses (ADR-006 §14).
 
 ## Contents
 
-| Export             | Status                | Purpose                                                                                                                                                                                    |
-| ------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `MALFORMED_CORPUS` | **this card (e25.2)** | Every ADR-006 §6 input-validation trap and §3 dispatch case, as `{hash, expected, trap, note}` entries. Drives `verifyPassword`'s rejection tests (e25.7) and heimdall-cli's parity suite. |
-| known-good vectors | follow-on (e25.4)     | Reproducible password→hash pairs for all three digests.                                                                                                                                    |
-| `formatVersion`    | follow-on (e25.4)     | Integer stamp heimdall-cli asserts against at build time; bumped on any change to the PHC grammar, allowlist, or parameter bounds.                                                         |
+| Export                      | Purpose                                                                                                                                                                                                                                                                  |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MALFORMED_CORPUS`          | Every ADR-006 §6 input-validation trap and §3 dispatch case, as `{hash, expected, trap, note}` entries. Drives `verifyPassword`'s rejection tests (e25.7) and heimdall-cli's parity suite.                                                                               |
+| `KNOWN_GOOD_VECTORS`        | Reproducible `{password, hash, algorithm, iterations, label}` vectors covering all three digests. Each hash re-derives from its password via raw `node:crypto` `pbkdf2Sync` — implementation-independent ground truth both `hashPassword` and heimdall-cli test against. |
+| `BCRYPT_DEGRADATION_VECTOR` | A PBKDF2 hash paired with `expectedBcryptCompare: false` — the §12(4) rolling-deploy assertion that a pre-upgrade pod's `bcryptjs.compare` rejects a PBKDF2 hash cleanly. Consumed by the write-gate card (e25.21).                                                      |
+| `FORMAT_VERSION`            | Integer stamp both implementations assert **equality** against at build time.                                                                                                                                                                                            |
+
+## FORMAT_VERSION — the build-time contract
+
+`FORMAT_VERSION` is a single integer (starts at `1`). heimdall2 and heimdall-cli
+each assert equality against it at build time; a mismatch is a **build failure**
+(ADR-006 §14) — what stops heimdall-cli from shipping a break-glass tool that
+writes a hash format the FIPS-gated server refuses.
+
+**Bump it whenever any of these changes:** the PHC grammar
+(`$pbkdf2-<alg>$i=<n>$<b64-salt>$<b64-key>`), the algorithm allowlist
+(sha256 | sha384 | sha512), or the parameter bounds (iteration floor/ceiling,
+salt/key widths). It is a plain stamp, not a semver — §14 specifies equality.
+
+## Regenerating the known-good vectors
+
+`KNOWN_GOOD_VECTORS` is generated, never hand-edited:
+
+```sh
+yarn workspace @heimdall/password-hash-vectors gen:vectors
+```
+
+`scripts/generate-vectors.ts` is a pure module (safe to import); the script
+above renders it to `src/vectors.ts`.
+
+The generator uses raw `node:crypto` (never the app's `hashPassword` — circular)
+and **fixed salts** (never `crypto.randomBytes`), so regeneration is byte-for-byte
+identical. The spec asserts `buildVectors()` equals the committed vectors, so an
+un-regenerated seed change fails the build.
+
+### PHC encoding, per the [C2SP phc-strings spec](https://github.com/C2SP/C2SP/blob/main/phc-strings.md)
+
+- **Standard base64**, not base64url (alphabet `+/`, not `-_`).
+- **Padding stripped** from both salt and key (`=` removed).
+- Salt is 32 bytes; key width equals the digest width (32 / 48 / 64 bytes for
+  sha256 / sha384 / sha512).
+
+This matches the reference [`@phc/pbkdf2`](https://github.com/simonepri/phc-pbkdf2)
+/ [`@phc/format`](https://www.npmjs.com/package/@phc/format), which represent
+salt and hash as Node `Buffer`s. Base64 uses `Buffer` (not the newer
+`Uint8Array.fromBase64`/`toBase64`): that TC39 API is Stage 4 but **undefined at
+our Node runtime** (verified), so `Buffer` is the only working encoder. ESLint's
+`unicorn/prefer-uint8array-base64` flags this — a config-ahead-of-runtime false
+preference; migrate when Node ships the API.
 
 ## The corpus is executable documentation
 
@@ -31,8 +75,9 @@ don't reject), or `sentinel` (the §3 cutover-invalidation marker).
 
 ## Scope
 
-Data and types only — no crypto, no parsing logic. Consumed in-repo and by
-heimdall-cli via a pinned git ref; not published to npm.
+Runtime exports are data and types. The vector generator uses raw `node:crypto`,
+but that is a build-time script, not a runtime dependency. Consumed in-repo and
+by heimdall-cli via a pinned git ref; not published to npm.
 
 ## Test
 
