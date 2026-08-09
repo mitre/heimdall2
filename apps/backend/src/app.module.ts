@@ -9,6 +9,7 @@ import {AuthnModule} from './authn/authn.module';
 import {AuthzModule} from './authz/authz.module';
 import {CaslExceptionFilter} from './casl/casl-exception.filter';
 import {ConfigModule} from './config/config.module';
+import {CryptoModule} from './crypto/crypto.module';
 import {DatabaseModule} from './database/database.module';
 import {EvaluationTagsModule} from './evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from './evaluations/evaluations.module';
@@ -27,6 +28,7 @@ import {TenableModule} from './tenable/tenable.module';
       renderPath: '*splat'
     }),
     ConfigModule,
+    CryptoModule,
     ApiKeyModule,
     UsersModule,
     DatabaseModule,
