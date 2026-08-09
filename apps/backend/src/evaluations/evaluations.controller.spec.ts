@@ -1,3 +1,4 @@
+import {Readable} from 'node:stream';
 import {ForbiddenError} from '@casl/ability';
 import {NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
@@ -34,16 +35,26 @@ import {Evaluation} from './evaluation.model';
 import {EvaluationsController} from './evaluations.controller';
 import {EvaluationsService} from './evaluations.service';
 
-// This allows basic testing of the evaluations controller
-// interface without having to construct a full File object
-const mockFile: Express.Multer.File = {
-  originalname: 'abc.json',
-  buffer: Buffer.from('{}')
-};
-const secondMockFile: Express.Multer.File = {
-  originalname: 'cda.json',
-  buffer: Buffer.from('{}')
-};
+// A complete Multer File — the controller only reads originalname/buffer,
+// but a partial literal is a TS2740 under tsc --noEmit (the transpile-only
+// test runner never type checks, so the gap was invisible until then).
+function buildMockFile(originalname: string): Express.Multer.File {
+  const buffer = Buffer.from('{}');
+  return {
+    buffer,
+    destination: '',
+    encoding: '7bit',
+    fieldname: 'data',
+    filename: originalname,
+    mimetype: 'application/json',
+    originalname,
+    path: '',
+    size: buffer.length,
+    stream: Readable.from(buffer)
+  };
+}
+const mockFile = buildMockFile('abc.json');
+const secondMockFile = buildMockFile('cda.json');
 
 describe('EvaluationsController', () => {
   let evaluationsController: EvaluationsController;
