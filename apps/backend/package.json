@@ -91,5 +91,8 @@
     "mock-fs": "^5.0.0",
     "unplugin-swc": "^1.5.5",
     "vitest": "^4.0.18"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

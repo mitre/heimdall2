@@ -58,6 +58,11 @@ COPY --from=builder --chown=1001 /src/dist/ dist/
 
 COPY --chmod=755 cmd.sh /usr/local/bin/
 
+# ADR-006 §11: libuv reads UV_THREADPOOL_SIZE at first threadpool use, before
+# app config loads — it must be process environment, never ConfigService. 8
+# threads + the in-app KDF limiter (concurrency 2) keep fs/dns from starving.
+ENV UV_THREADPOOL_SIZE=8
+
 USER 1001
 
 CMD ["/usr/local/bin/cmd.sh"]
