@@ -4,6 +4,7 @@ import {AuthnService} from '../authn/authn.service';
 import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
+import {CryptoModule} from '../crypto/crypto.module';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
 import {TokenModule} from '../token/token.module';
@@ -18,6 +19,7 @@ import {ApiKeyService} from './apikey.service';
     SequelizeModule.forFeature([ApiKey, User, Group]),
     AuthzModule,
     ConfigModule,
+    CryptoModule,
     ApiKeyModule,
     TokenModule
   ],

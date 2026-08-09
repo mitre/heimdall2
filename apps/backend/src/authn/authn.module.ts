@@ -4,6 +4,7 @@ import {PassportModule} from '@nestjs/passport';
 import {AuthnController} from './authn.controller';
 import {ApiKeyModule} from '../apikeys/apikeys.module';
 import {ConfigModule} from '../config/config.module';
+import {CryptoModule} from '../crypto/crypto.module';
 import {GroupsModule} from '../groups/groups.module';
 import {TokenModule} from '../token/token.module';
 import {UsersModule} from '../users/users.module';
@@ -33,6 +34,7 @@ async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
     PassportModule,
     TokenModule,
     ConfigModule,
+    CryptoModule,
     GroupsModule
   ],
   providers: [
