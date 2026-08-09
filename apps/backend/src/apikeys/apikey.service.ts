@@ -45,6 +45,27 @@ export class ApiKeyService {
     return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
   }
 
+  /**
+   * ADR-006 §7: narrow compare-and-swap writer for lazy API-key rehash — the
+   * ApiKeys equivalent of UsersService.updateEncryptedPassword. Rewrites the
+   * `apiKey` hash column ONLY, gated on the stored value still matching
+   * `originalHash`, silent so updatedAt is not bumped. Same shape as the Users
+   * writer (§4 names the updateLoginMetadata/updateUserSecret precedent; the
+   * ApiKey field is `apiKey`, so the method is named for it). Returns affected
+   * count — 0 means another writer won; the caller does nothing.
+   */
+  async updateApiKeyHash(
+    id: string,
+    originalHash: string,
+    newHash: string
+  ): Promise<number> {
+    const [affected] = await this.apiKeyModel.update(
+      {apiKey: newHash},
+      {where: {id, apiKey: originalHash}, fields: ['apiKey'], silent: true}
+    );
+    return affected;
+  }
+
   async update(
     id: string,
     updateAPIKeyDto: UpdateAPIKeyDto

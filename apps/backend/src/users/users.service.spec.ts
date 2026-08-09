@@ -6,7 +6,15 @@ import {
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi
+} from 'vitest';
 import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
 import {
   CREATE_ADMIN_DTO,
@@ -37,6 +45,8 @@ import {
 import {AuthzModule} from '../authz/authz.module';
 import {AuthzService} from '../authz/authz.service';
 import {ConfigService} from '../config/config.service';
+import type * as PasswordCrypto from '../crypto/password';
+import {hashPassword, verifyPassword} from '../crypto/password';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -49,6 +59,15 @@ import {SlimUserDto} from './dto/slim-user.dto';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersService} from './users.service';
+
+// Pass-through wrap so the FIPS-refuse test can steer ONE verifyPassword
+// result (real host FIPS state cannot be entered in CI — §10 it is host-level;
+// verifyPassword's own FIPS behavior is proven in password.spec.ts with an
+// injected getFips). Every other call goes to the real implementation.
+vi.mock('../crypto/password', async (importOriginal) => {
+  const actual = await importOriginal<typeof PasswordCrypto>();
+  return {...actual, verifyPassword: vi.fn(actual.verifyPassword)};
+});
 
 describe('UsersService', () => {
   let authzService: AuthzService;
@@ -518,6 +537,45 @@ describe('UsersService', () => {
       ).rejects.toThrow(ForbiddenException);
     });
 
+    it('succeeds when the supplied password matches a PBKDF2-stored hash (site 3)', async () => {
+      // Overwrite the bcrypt hash create() wrote (site 1 — e25.12's card) with
+      // a PBKDF2 hash of the same password. remove() must verify it via the
+      // pure verifyPassword; bcryptjs.compare returns false on a PHC string.
+      // DeleteUserDto.password is optional; '' makes hashPassword throw, so a
+      // fixture that ever loses its password fails this test loudly.
+      await user.update({
+        encryptedPassword: await hashPassword(
+          DELETE_USER_DTO_TEST_OBJ.password ?? ''
+        )
+      });
+      const removedUser = await usersService.remove(
+        user,
+        DELETE_USER_DTO_TEST_OBJ,
+        abacPolicy
+      );
+      expect(removedUser.email).toEqual(user.email);
+      await expect(usersService.findByEmail(user.email)).rejects.toThrow(
+        NotFoundException
+      );
+    });
+
+    it('refuses deletion when verifyPassword returns the FIPS-refuse result (site 3 consumes .valid only)', async () => {
+      // Steer one result to the §3 refuse shape. remove() must read .valid
+      // alone — a refused bcrypt credential blocks deletion exactly like a
+      // wrong password. Clear first so the invocation assertion below cannot
+      // be satisfied by a prior test's call on the shared module mock.
+      vi.mocked(verifyPassword).mockClear();
+      vi.mocked(verifyPassword).mockResolvedValueOnce({
+        needsRehash: false,
+        requiresReset: true,
+        valid: false
+      });
+      await expect(
+        usersService.remove(user, DELETE_USER_DTO_TEST_OBJ, abacPolicy)
+      ).rejects.toThrow(ForbiddenException);
+      expect(verifyPassword).toHaveBeenCalled();
+    });
+
     it('should remove created user', async () => {
       const removedUser = await usersService.remove(
         user,
@@ -589,6 +647,71 @@ describe('UsersService', () => {
       expect(
         new UserDto(await usersService.remove(user, {}, adminAbacPolicy))
       ).toEqual(new UserDto(user));
+    });
+  });
+
+  // ADR-006 §7: narrow compare-and-swap writer for lazy rehash. Touches
+  // encryptedPassword ONLY, gated on the stored hash still matching, silent so
+  // updatedAt is not bumped. Takes a userId (not a User instance) so it cannot
+  // leak the new hash into the un-awaited updateLoginMetadata save (AC6 by
+  // construction).
+  describe('updateEncryptedPassword (§7 compare-and-swap)', () => {
+    let user: User;
+    const ORIGINAL = '$pbkdf2-sha512$i=600000$origOrigOrigOrigOrig$origKeyOrig';
+    const NEW = '$pbkdf2-sha512$i=600000$newnewnewnewnewnew$newKeyNewKey';
+
+    beforeEach(async () => {
+      const dto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const created = await User.findByPk<User>(dto.id);
+      if (created === null) {
+        throw new TypeError(errorString);
+      }
+      user = created;
+      // Seed a known stored hash directly (bypassing hashing — this card is
+      // persistence only). silent so the baseline updatedAt is stable.
+      await user.update({encryptedPassword: ORIGINAL}, {silent: true});
+    });
+
+    it('returns 0 and writes nothing when the stored hash no longer matches originalHash', async () => {
+      // The CAS-loses-the-race case (§7's damage scenario) — comes first.
+      const affected = await usersService.updateEncryptedPassword(
+        user.id,
+        'a-stale-hash-that-does-not-match',
+        NEW
+      );
+      expect(affected).toBe(0);
+      const reloaded = await User.findByPk<User>(user.id);
+      expect(reloaded?.encryptedPassword).toBe(ORIGINAL);
+    });
+
+    it('returns 1 and swaps encryptedPassword when originalHash matches', async () => {
+      const affected = await usersService.updateEncryptedPassword(
+        user.id,
+        ORIGINAL,
+        NEW
+      );
+      expect(affected).toBe(1);
+      const reloaded = await User.findByPk<User>(user.id);
+      expect(reloaded?.encryptedPassword).toBe(NEW);
+    });
+
+    it('does NOT bump updatedAt on a winning write (silent: true)', async () => {
+      const before = await User.findByPk<User>(user.id);
+      const beforeUpdatedAt = before?.updatedAt?.getTime();
+      await usersService.updateEncryptedPassword(user.id, ORIGINAL, NEW);
+      const after = await User.findByPk<User>(user.id);
+      expect(after?.updatedAt?.getTime()).toBe(beforeUpdatedAt);
+    });
+
+    it('does NOT touch passwordChangedAt or forcePasswordChange', async () => {
+      const before = await User.findByPk<User>(user.id);
+      // Type-agnostic capture (§7 wrinkle: column may be STRING or DATE).
+      const beforePwChanged = String(before?.passwordChangedAt);
+      const beforeForce = before?.forcePasswordChange;
+      await usersService.updateEncryptedPassword(user.id, ORIGINAL, NEW);
+      const after = await User.findByPk<User>(user.id);
+      expect(String(after?.passwordChangedAt)).toBe(beforePwChanged);
+      expect(after?.forcePasswordChange).toBe(beforeForce);
     });
   });
 });

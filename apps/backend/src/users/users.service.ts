@@ -6,12 +6,13 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {compare, hash} from 'bcryptjs';
+import {hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
+import {verifyPassword} from '../crypto/password';
 import {GroupsService} from '../groups/groups.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
@@ -116,21 +117,51 @@ export class UsersService {
     await user.save();
   }
 
+  /**
+   * ADR-006 §7: narrow compare-and-swap writer for lazy password rehash.
+   * Rewrites encryptedPassword ONLY, and only while the stored value still
+   * equals `originalHash` — so an in-flight password change (which the
+   * un-awaited updateLoginMetadata save at authn.service.ts races) is never
+   * silently reverted. `fields` restricts the write to the one column;
+   * `silent` suppresses the updatedAt bump so a mass rehash does not make
+   * every account look recently modified. Takes a userId (not a User
+   * instance) so the new hash cannot leak into that racing save. Returns the
+   * affected row count — 0 means another writer won; the caller does nothing.
+   */
+  async updateEncryptedPassword(
+    userId: string,
+    originalHash: string,
+    newHash: string
+  ): Promise<number> {
+    const [affected] = await this.userModel.update(
+      {encryptedPassword: newHash},
+      {
+        where: {id: userId, encryptedPassword: originalHash},
+        fields: ['encryptedPassword'],
+        silent: true
+      }
+    );
+    return affected;
+  }
+
   async remove(
     userToDelete: User,
     deleteUserDto: DeleteUserDto,
     abac: Ability
   ): Promise<User> {
-    if (
-      abac.cannot(Action.DeleteNoPassword, userToDelete) &&
-      !(await compare(
-        deleteUserDto.password || '',
-        userToDelete.encryptedPassword
-      ))
-    ) {
-      throw new ForbiddenException(
-        'Password was incorrect, could not delete account'
-      );
+    if (abac.cannot(Action.DeleteNoPassword, userToDelete)) {
+      // Site 3 (ADR-006 §4): verify-only — consumes .valid alone, never
+      // rehashes. Handles PBKDF2 and legacy bcrypt; refuses bcrypt under
+      // FIPS like any failed verification.
+      const {valid} = await verifyPassword({
+        hash: userToDelete.encryptedPassword,
+        password: deleteUserDto.password || ''
+      });
+      if (!valid) {
+        throw new ForbiddenException(
+          'Password was incorrect, could not delete account'
+        );
+      }
     }
 
     const adminCount = await this.userModel.count({where: {role: 'admin'}});
