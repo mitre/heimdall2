@@ -1,5 +1,13 @@
 'use strict';
-const bcrypt = require('bcryptjs');
+// ADR-006 §4 site 8: the admin bootstrap must hash through the SINGLE
+// FIPS-validated implementation, not bcrypt. This seeder is CommonJS, runs
+// outside Nest DI and the TS build, and executes on every container start
+// (cmd.sh runs db:seed:all), so it requires the COMPILED pure function. The
+// `dist/src/` segment is load-bearing — nest build infers rootDir across
+// src/db/config, emitting dist/src/crypto/password.js. `.sequelizerc` already
+// depends on build output; a bad path is a boot crash loop under cmd.sh's
+// `set -e`, not a degraded seed.
+const {hashPassword} = require('../dist/src/crypto/password');
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const fs = require('fs');
@@ -46,6 +54,7 @@ module.exports = {
         console.log('You should change this password on first login.');
       }
 
+      const encryptedPassword = await hashPassword(password);
       return queryInterface.bulkInsert(
         'Users',
         [
@@ -53,7 +62,7 @@ module.exports = {
             firstName: 'Admin',
             email: email,
             role: 'admin',
-            encryptedPassword: bcrypt.hashSync(password, 14),
+            encryptedPassword: encryptedPassword,
             creationMethod: adminUsesExternalAuth ? 'ldap' : 'local',
             passwordChangedAt: new Date(),
             forcePasswordChange: true,
