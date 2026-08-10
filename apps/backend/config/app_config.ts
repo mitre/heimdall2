@@ -62,16 +62,20 @@ export default class AppConfig {
   }
 
   // Comma-separated allowlist of Tenable.SC hosts permitted for the login/proxy endpoints.
+  // Falls back to (and merges with) the single-value TENABLE_HOST_URL for backward compatibility.
   getTenableHostUrls(): string[] {
     const tenable_host_urls = this.get('TENABLE_HOST_URLS');
-    if (tenable_host_urls !== undefined) {
-      return tenable_host_urls
-        .split(',')
-        .map((url) => url.trim())
-        .filter((url) => url.length > 0);
-    } else {
-      return [];
+    const list = tenable_host_urls
+      ? tenable_host_urls
+          .split(',')
+          .map((url) => url.trim())
+          .filter((url) => url.length > 0)
+      : [];
+    const singleHostUrl = this.getTenableHostUrl();
+    if (singleHostUrl && !list.includes(singleHostUrl)) {
+      list.push(singleHostUrl);
     }
+    return list;
   }
 
   getDatabaseName(): string {
