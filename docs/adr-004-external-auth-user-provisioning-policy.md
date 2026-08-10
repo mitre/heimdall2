@@ -274,8 +274,6 @@ Known surfaces in the current `master` checkout:
 | Docker Compose examples / generated `.env` docs | Update only if they list `REGISTRATION_DISABLED` directly; current `docker-compose.yml` delegates to `.env` |
 | Environment variables wiki | Update `REGISTRATION_DISABLED` wording and external-authentication behavior. Verified 2026-07-09 against a clone of `heimdall2.wiki.git`: exactly one page names the variable — `Environment-Variables-Configuration.md` describes it as the boolean local-registration control ("If public user registration should be allowed ... defaults to false") and needs the full enum description, not a touch-up. No wiki page currently documents JIT auto-creation at all |
 | Wiki: `Heimdall-Authentication-Methods` page | Add the pre-provisioning / `account_not_provisioned` explanation here — the login page's external-authentication help icon links directly to this page's `#external-authentication-only` section (`LocalLogin.vue`), making it where rejected users land |
-
-The wiki is the documentation channel **as of this writing**. ADR-005 (VitePress documentation site) proposes replacing it with an in-repo, PR-reviewable docs site; once that lands, the two wiki rows above become edits to the docs site's `getting-started/environment-variables` and auth-methods pages — shippable in the same PR as the code change, which is the review property this table's wiki rows inherently lack.
 | `mitre/saf-packaging` (separate repo) | The Heimdall Server RPM ships a `backend.env` configuration file; update its `REGISTRATION_DISABLED` description. Outside this repository, so outside the section 11 audit's scope — listed here so Phase 9 does not miss it |
 | Release notes / migration notes | Call out the new enum values |
 
@@ -772,7 +770,7 @@ The same upgrade-ordering rule applies (6.2): older code reads `sso` as fully pe
 
 ## 10. Work Order
 
-Tracked as epic **`heimdall2-4qg`** on the heimdall2 beads board; each phase below is child card `heimdall2-4qg.<phase>` (e.g. Phase 3 = `heimdall2-4qg.3`), with dependencies mirroring the Depends On column. The VitePress docs-site work referenced by Phase 9 is epic `heimdall2-yvx` (ADR-005) — a soft reference, not a blocking dependency.
+Tracked as epic **`heimdall2-4qg`** on the heimdall2 beads board; each phase below is child card `heimdall2-4qg.<phase>` (e.g. Phase 3 = `heimdall2-4qg.3`), with dependencies mirroring the Depends On column.
 
 **Board access:** the board is a shared Dolt database published at `refs/dolt/data` in this repository. Install `bd` from [gastownhall/beads](https://github.com/gastownhall/beads), then run `bd dolt pull` from a heimdall2 checkout with an existing beads clone, or `bd bootstrap` on a fresh machine. **Upgrade note (2026-07-10):** the board schema was migrated v49 → v54 — if you have a pre-existing beads clone, run `bd dolt pull` on your *current* bd binary **before** upgrading bd; if you upgraded first and bd refuses to start, `bd bootstrap` re-clones (push any local issues first). The team agent skills used to work these cards (card template, TDD gates, AC verification) live in [mitre/mitre-saf-skills](https://github.com/mitre/mitre-saf-skills).
 
@@ -835,7 +833,6 @@ The audit above is scoped to this repository. Known out-of-repo surfaces: the `m
 - `manifest.yml.example` - Cloud Foundry example environment variables
 - Heimdall2 wiki: Environment Variables Configuration
 - ADR-001 (GUI Attestation & Comment Engine), ADR-002 (DRY Refactoring of hdf-converters), ADR-003 (CKLB Converter) — other Heimdall ADRs; not present in this branch's `docs/`
-- ADR-005 (VitePress Documentation Site) — `docs/adr-005-vitepress-documentation-site.md`; supersedes the wiki as the documentation channel for 3.4/Phase 9 once implemented
 
 Standards and prior art (all verified against primary sources, 2026-07-09):
 
