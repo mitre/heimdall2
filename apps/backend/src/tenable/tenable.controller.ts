@@ -40,23 +40,26 @@ export class TenableController {
     private readonly configService: ConfigService
   ) {}
 
-  // Confirms host_url's origin matches an entry in the TENABLE_HOST_URLS allowlist.
-  private isAllowedHostUrl(host_url: string): boolean {
+  // Returns the matching allowlisted origin for host_url, or null if none match.
+  private resolveAllowedHostUrl(host_url: string): string | null {
     const allowlist = this.configService.getTenableHostUrls();
     if (allowlist.length === 0) {
-      return false;
+      return null;
     }
     try {
       const requestedOrigin = new URL(host_url).origin;
-      return allowlist.some((allowed) => {
+      const match = allowlist.find((allowed) => {
         try {
           return new URL(allowed).origin === requestedOrigin;
         } catch {
           return false;
         }
       });
+      // Use the parsed origin (not the raw client value) so any path/query/fragment
+      // supplied by the client is dropped rather than carried into later requests.
+      return match ? requestedOrigin : null;
     } catch {
-      return false;
+      return null;
     }
   }
 
@@ -79,7 +82,8 @@ export class TenableController {
       throw new HttpException('Missing credentials', HttpStatus.BAD_REQUEST);
     }
 
-    if (!this.isAllowedHostUrl(host_url)) {
+    const allowedHostUrl = this.resolveAllowedHostUrl(host_url);
+    if (!allowedHostUrl) {
       throw new HttpException(
         {
           status: HttpStatus.FORBIDDEN,
@@ -91,16 +95,16 @@ export class TenableController {
     }
 
     try {
-      // This helps prevent double slashes in the resulting URL if host_url ends with a slash.
-      const fullUrl = `${host_url.replace(/\/$/, '')}/rest/currentUser`;
+      // allowedHostUrl is the parsed origin, so no trailing slash to strip.
+      const fullUrl = `${allowedHostUrl}/rest/currentUser`;
       const result = await axios.get(fullUrl, {
         headers: {
           'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}`
         }
       });
 
-      // Assign the Tenable credentials to the session
-      req.session.tenable = {host_url, accesskey, secretkey};
+      // Store the normalized, allowlisted origin rather than the raw client value.
+      req.session.tenable = {host_url: allowedHostUrl, accesskey, secretkey};
 
       // Return the authenticated user data
       // Note: result.data is already a plain object, no need to convert it.
