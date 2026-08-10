@@ -40,24 +40,55 @@ export class TenableController {
     private readonly configService: ConfigService
   ) {}
 
-  // Returns the matching allowlisted origin for host_url, or null if none match.
+  // Returns the matching allowlisted origin for host_url, or null if none match
+  // or if host_url carries a path/query/fragment beyond a bare origin.
   private resolveAllowedHostUrl(host_url: string): string | null {
     const allowlist = this.configService.getTenableHostUrls();
     if (allowlist.length === 0) {
       return null;
     }
+    // Default to https when no scheme is provided, so "example.com" is treated
+    // the same as "https://example.com".
+    const trimmedInput = host_url.trim();
+    const normalizedInput = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmedInput)
+      ? trimmedInput
+      : `https://${trimmedInput}`;
     try {
-      const requestedOrigin = new URL(host_url).origin;
+      // Throws for unparseable input, caught below and treated as not allowed.
+      const parsed = new URL(normalizedInput);
+
+      // Reject any scheme other than http/https (e.g. file:, javascript:, ftp:).
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        return null;
+      }
+
+      // Reject anything beyond a bare origin rather than silently stripping it,
+      // so a tampered/malformed host_url fails loudly instead of being sanitized.
+      const hasExtra =
+        (parsed.pathname !== '' && parsed.pathname !== '/') ||
+        parsed.search !== '' ||
+        parsed.hash !== '';
+      if (hasExtra) {
+        return null;
+      }
+
+      // Compare origins (scheme + host + port) rather than raw strings so that
+      // equivalent URLs (default ports, trailing slash, casing) still match.
       const match = allowlist.find((allowed) => {
+        const trimmedAllowed = allowed.trim();
+        const normalizedAllowed = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmedAllowed)
+          ? trimmedAllowed
+          : `https://${trimmedAllowed}`;
         try {
-          return new URL(allowed).origin === requestedOrigin;
+          return new URL(normalizedAllowed).origin === parsed.origin;
         } catch {
           return false;
         }
       });
-      // Use the parsed origin (not the raw client value) so any path/query/fragment
-      // supplied by the client is dropped rather than carried into later requests.
-      return match ? requestedOrigin : null;
+
+      // Return the parsed origin (never the raw client value) so nothing beyond
+      // scheme+host+port ever propagates into the session or outbound requests.
+      return match ? parsed.origin : null;
     } catch {
       return null;
     }
