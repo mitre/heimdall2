@@ -482,6 +482,25 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
 This will start both the frontend and backend in development mode, meaning any changes you make to the source code will take effect immediately. Please note we already have a Visual Studio Code workspace file you can use to organize your workspace.
 
+### Run modes and ports
+
+Development mode (`yarn start:dev`) runs **two servers**:
+
+- **Backend (NestJS) — port `3000`:** API only — `/health`, `/server`, `/authn`, etc. It does **not** serve the UI in dev mode, so browsing `localhost:3000` returns a JSON 404 for `dist/frontend/index.html`. This is expected.
+- **Frontend (webpack dev server) — port `8080` by default:** **The app you browse.** Hot-reloads on code changes and proxies API calls to the backend (`API_PROXY_TARGET` in `apps/frontend/.env.development`). If 8080 is busy the dev server picks the next free port — **read the `Local: http://localhost:<port>` line it prints.**
+
+To run the whole app on **one URL** (`localhost:3000`, production-style, no hot-reload):
+
+```bash
+yarn start:built
+```
+
+This builds the frontend to `dist/frontend/` and the backend to `dist/`, then serves both from the backend on port 3000.
+
+> **Warning:** Do not set `PORT` in `apps/backend/.env` for local development. The backend already defaults to 3000. The frontend's port and proxy are configured independently in `apps/frontend/.env.development` (personal overrides go in the gitignored `apps/frontend/.env.development.local`).
+>
+> The backend's `.env` is for **development**. The backend test suite pins its own environment (`NODE_ENV=test`) and derives its own database (`heimdall-server-test` — create it once with `NODE_ENV=test yarn backend sequelize db:create db:migrate`), so running tests never requires editing `.env`.
+
 ### Debugging Heimdall Server
 
 If you are using Visual Studio Code, it is very simple to debug this application locally. First open up the Visual Studio Code workspace and ensure the [Node debugger Auto Attach](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_auto-attach) feature in Visual Studio Code is enabled. Next, open the integrated Visual Studio Code terminal and run:

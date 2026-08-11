@@ -26,14 +26,14 @@ module.exports = {
   lintOnSave: 'warning',
   publicPath: '/',
   devServer: {
-    // JWT_SECRET is a required secret for the backend. If it is sourced
-    // then it is safe to assume the app is in server mode in development.
-    //
-    // PORT is not required so use the default backend port value
-    // is used here if JWT_SECRET is applied but PORT is undefined
-    proxy: process.env.JWT_SECRET
-      ? `http://127.0.0.1:${process.env.PORT || 3000}`
-      : ''
+    // API_PROXY_TARGET (apps/frontend/.env.development) points this dev
+    // server's proxy at the backend — server-mode development. Unset/empty
+    // (e.g. via .env.development.local) means no proxy: GET /server fails and
+    // the app runs as heimdall-lite standalone (src/store/server.ts catches
+    // that path). The frontend owns this setting; it deliberately reads
+    // NOTHING from apps/backend/.env — reusing the backend's PORT here (as
+    // both the bind port and the proxy target) broke dev on 2026-08-10.
+    proxy: process.env.API_PROXY_TARGET || ''
   },
   outputDir: '../../dist/frontend',
   configureWebpack: {
