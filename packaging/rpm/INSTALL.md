@@ -124,7 +124,9 @@ To use an existing PostgreSQL server instead of a local one:
 1. Run `sudo heimdall-server-setup --interactive`
 2. Set `DATABASE_HOST` to your server's hostname or IP
 3. Set `DATABASE_PORT`, `DATABASE_USERNAME`, `DATABASE_PASSWORD` as needed
-4. The PostgreSQL bootstrap step is automatically skipped
+4. The PostgreSQL bootstrap step is automatically skipped — but the setup
+   still checks the role's password verifier for FIPS compatibility (see
+   "FIPS Hosts and md5 Password Verifiers" below)
 
 Or edit `/etc/heimdall-server/backend.env` directly and run:
 ```bash
@@ -145,6 +147,41 @@ The setup script automatically configures PostgreSQL with:
 - Peer authentication retained for the `postgres` superuser (admin tasks only)
 - Verification that the database role password is stored as SCRAM-SHA-256
   (setup exits with an error if not)
+
+### FIPS Hosts and md5 Password Verifiers
+
+A FIPS-mode host cannot complete md5 password authentication, so a database
+role whose stored verifier is still md5 makes the Heimdall server **fail to
+connect** the moment FIPS mode is enabled. This bites pre-existing databases:
+`password_encryption = scram-sha-256` only affects passwords set *after* the
+change — existing roles keep their old `md5...` verifier in `pg_authid`.
+
+Setup checks this automatically (for remote databases too) and prints a
+warning with the remediation. To run the check on its own:
+
+```bash
+sudo /usr/libexec/heimdall-server/postgres-setup.sh --check-auth
+```
+
+Reading `pg_authid` requires superuser; when the configured role cannot read
+it, the check prints the manual query to run as a superuser instead:
+
+```sql
+SELECT rolname, left(rolpassword, 14) FROM pg_authid WHERE rolname = 'heimdall';
+```
+
+If the result starts with `md5`, remediate as a PostgreSQL superuser (this
+rewrites the role's stored credential — schedule accordingly):
+
+```sql
+ALTER SYSTEM SET password_encryption = 'scram-sha-256';
+SELECT pg_reload_conf();
+ALTER ROLE heimdall WITH PASSWORD '<same or new>';   -- rewrites the verifier
+-- then change any md5 rules in pg_hba.conf to scram-sha-256 and reload
+```
+
+Setup never modifies your database's authentication configuration itself —
+the warning and this runbook are the intended remediation path.
 
 ### External Database (RDS, Azure DB, etc.)
 

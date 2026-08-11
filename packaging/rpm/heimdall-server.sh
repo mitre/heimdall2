@@ -7,7 +7,7 @@ ENV_FILE="/etc/heimdall-server/backend.env"
 
 if [[ -f "${ENV_FILE}" ]]; then
   set -a
-  # shellcheck disable=SC1091
+  # shellcheck disable=SC1090
   source "${ENV_FILE}"
   set +a
 fi

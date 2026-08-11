@@ -4,18 +4,29 @@ set -euo pipefail
 ENV_FILE="/etc/heimdall-server/backend.env"
 
 usage() {
-  echo "Usage: $0" >&2
+  echo "Usage: $0 [--check-auth]" >&2
+  echo "  --check-auth  Only check the configured role's password verifier" >&2
+  echo "                (ADR-006 §16 FIPS compatibility) and exit." >&2
 }
 
-if [[ $# -gt 0 ]]; then
-  if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-    usage
-    exit 0
-  fi
-  echo "Unknown option: $1" >&2
-  usage
-  exit 64
-fi
+CHECK_AUTH_ONLY=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --check-auth)
+      CHECK_AUTH_ONLY=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage
+      exit 64
+      ;;
+  esac
+done
 
 if [[ -f "${ENV_FILE}" ]]; then
   set -a
@@ -44,37 +55,133 @@ if [[ -z "${DATABASE_PASSWORD//[[:space:]]/}" ]]; then
   exit 1
 fi
 
-if [[ "${DATABASE_HOST}" != "127.0.0.1" && "${DATABASE_HOST}" != "localhost" ]]; then
-  echo "DATABASE_HOST=${DATABASE_HOST}; skipping local PostgreSQL bootstrap."
+# Locate a psql client: PGDG installations (18 down to 13) first, then the
+# system psql. Prints the path, or nothing when no client exists.
+find_psql_binary() {
+  local ver
+  for ver in 18 17 16 15 14 13; do
+    if [[ -x "/usr/pgsql-${ver}/bin/psql" ]]; then
+      echo "/usr/pgsql-${ver}/bin/psql"
+      return 0
+    fi
+  done
+  command -v psql || true
+}
+
+# ADR-006 §16: a FIPS-mode host cannot complete md5 password authentication,
+# so a role whose pg_authid verifier is still md5 makes the Heimdall server
+# fail to connect the moment FIPS mode is enabled. This check WARNS and prints
+# the remediation — it never modifies the database (the remediation rewrites
+# credentials; the operator decides).
+#
+# Three outcomes, all return 0 — detection must never crash the setup:
+#   SCRAM verifier  -> silent pass
+#   md5 verifier    -> loud warning + the exact §16 remediation sequence
+#   no pg_authid access / role absent -> prints the manual superuser check
+check_password_verifier() {
+  local psql_bin="$1"
+  local conninfo="$2"
+  local role="$3"
+  local row=""
+  local verifier=""
+  if ! row="$(PGPASSWORD="${DATABASE_PASSWORD}" "${psql_bin}" "${conninfo}" \
+    -v ON_ERROR_STOP=1 -tA -v db_user="${role}" 2>&1 <<'SQL'
+SELECT rolname, left(rolpassword, 14) FROM pg_authid WHERE rolname = :'db_user';
+SQL
+  )"; then
+    echo "NOTE: could not read pg_authid as role '${role}' (superuser required)."
+    echo "      The FIPS password-verifier check was skipped. To check manually,"
+    echo "      run as a PostgreSQL superuser:"
+    echo "        SELECT rolname, left(rolpassword, 14) FROM pg_authid WHERE rolname = '${role}';"
+    echo "      A result starting 'md5' will fail on FIPS-mode hosts; see the"
+    echo "      remediation in INSTALL.md (ADR-006 §16)."
+    return 0
+  fi
+  verifier="${row##*|}"
+  verifier="${verifier//[[:space:]]/}"
+  case "${verifier}" in
+    SCRAM-SHA-256*)
+      return 0
+      ;;
+    md5*)
+      echo "=============================================================================="
+      echo "WARNING: the PostgreSQL password verifier for role '${role}' is MD5."
+      echo "A FIPS-mode host cannot complete md5 password authentication, so the"
+      echo "Heimdall server will FAIL TO CONNECT to this database once FIPS mode is"
+      echo "enabled. Remediation (run as a PostgreSQL superuser; ADR-006 §16):"
+      echo ""
+      echo "  ALTER SYSTEM SET password_encryption = 'scram-sha-256';"
+      echo "  SELECT pg_reload_conf();"
+      echo "  ALTER ROLE ${role} WITH PASSWORD '<same or new>';  -- rewrites the verifier"
+      echo "  -- then change any md5 rules in pg_hba.conf to scram-sha-256 and reload"
+      echo ""
+      echo "This setup does NOT modify the database authentication configuration —"
+      echo "the ALTER ROLE rewrites stored credentials, so the operator decides."
+      echo "=============================================================================="
+      return 0
+      ;;
+    '')
+      echo "NOTE: role '${role}' was not found in pg_authid; the FIPS password-"
+      echo "      verifier check was skipped (the role may not exist yet)."
+      return 0
+      ;;
+    *)
+      echo "NOTE: unrecognized password verifier prefix for role '${role}': ${verifier}"
+      echo "      Verify it is SCRAM-SHA-256 before enabling FIPS mode (ADR-006 §16)."
+      return 0
+      ;;
+  esac
+}
+
+run_verifier_check_via_tcp() {
+  local psql_bin=""
+  psql_bin="$(find_psql_binary)"
+  if [[ -z "${psql_bin}" ]]; then
+    echo "NOTE: psql not found; the FIPS password-verifier check was skipped."
+    echo "      Install a PostgreSQL client, or run the manual superuser check"
+    echo "      from INSTALL.md (ADR-006 §16)."
+    return 0
+  fi
+  check_password_verifier "${psql_bin}" \
+    "postgresql://${DATABASE_USERNAME}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME:-postgres}" \
+    "${DATABASE_USERNAME}"
+}
+
+if [[ "${CHECK_AUTH_ONLY}" -eq 1 ]]; then
+  run_verifier_check_via_tcp
+  echo "Password-verifier check complete for role '${DATABASE_USERNAME}' on ${DATABASE_HOST}:${DATABASE_PORT}."
   exit 0
 fi
 
-# Detect PGDG installations (18 down to 13), then fall back to system psql.
-PSQL_BIN=""
+if [[ "${DATABASE_HOST}" != "127.0.0.1" && "${DATABASE_HOST}" != "localhost" ]]; then
+  echo "DATABASE_HOST=${DATABASE_HOST}; skipping local PostgreSQL bootstrap."
+  # ADR-006 §16: pre-existing remote/customer databases are exactly where an
+  # md5 verifier survives unnoticed — check before the app fails to connect.
+  run_verifier_check_via_tcp
+  exit 0
+fi
+
+# Local bootstrap: locate the client plus the version-specific setup paths.
+PSQL_BIN="$(find_psql_binary)"
 PG_SETUP_BIN=""
 PG_SERVICE=""
 PG_DATA_DIR=""
 
-for ver in 18 17 16 15 14 13; do
-  if [[ -x "/usr/pgsql-${ver}/bin/psql" ]]; then
-    PSQL_BIN="/usr/pgsql-${ver}/bin/psql"
-    PG_SETUP_BIN="/usr/pgsql-${ver}/bin/postgresql-${ver}-setup"
-    PG_SERVICE="postgresql-${ver}"
-    PG_DATA_DIR="/var/lib/pgsql/${ver}/data"
-    break
-  fi
-done
-
 if [[ -z "${PSQL_BIN}" ]]; then
-  if command -v psql >/dev/null 2>&1; then
-    PSQL_BIN="$(command -v psql)"
-    PG_SETUP_BIN="$(command -v postgresql-setup || true)"
-    PG_SERVICE="postgresql"
-    PG_DATA_DIR="/var/lib/pgsql/data"
-  else
-    echo "psql not found. Install a PostgreSQL client/server (13+) before running setup." >&2
-    exit 1
-  fi
+  echo "psql not found. Install a PostgreSQL client/server (13+) before running setup." >&2
+  exit 1
+fi
+
+if [[ "${PSQL_BIN}" == /usr/pgsql-*/bin/psql ]]; then
+  PG_VER="${PSQL_BIN#/usr/pgsql-}"
+  PG_VER="${PG_VER%%/*}"
+  PG_SETUP_BIN="/usr/pgsql-${PG_VER}/bin/postgresql-${PG_VER}-setup"
+  PG_SERVICE="postgresql-${PG_VER}"
+  PG_DATA_DIR="/var/lib/pgsql/${PG_VER}/data"
+else
+  PG_SETUP_BIN="$(command -v postgresql-setup || true)"
+  PG_SERVICE="postgresql"
+  PG_DATA_DIR="/var/lib/pgsql/data"
 fi
 
 PG_MAJOR="$("${PSQL_BIN}" --version | awk '{print $3}' | cut -d. -f1)"

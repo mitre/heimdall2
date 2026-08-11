@@ -101,6 +101,7 @@ write_key() {
   fi
 
   local escaped
+  # shellcheck disable=SC2016  # the single quotes are deliberate: sed must receive literal \$ patterns, not shell expansions
   escaped="$(printf "%s" "${value}" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\$/\\$/g' -e 's/`/\\`/g')"
   printf '%s="%s"\n' "${key}" "${escaped}" >>"${TMP_FILE}"
 }

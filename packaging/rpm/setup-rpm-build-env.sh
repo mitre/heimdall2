@@ -178,6 +178,7 @@ install_build_deps() {
       rpm_arch="$(rpm -E '%{_arch}')"
     fi
     if [[ -z "${el_major}" ]]; then
+      # shellcheck disable=SC1091  # runtime source of a system file — shellcheck cannot follow it
       el_major="$(. /etc/os-release && printf '%s' "${VERSION_ID%%.*}")"
     fi
     if [[ -z "${el_major}" ]]; then
@@ -298,7 +299,8 @@ fetch_source_tarball() {
         --version "${version}" \
         --output-dir "$(dirname "${dest}")"
       # fetch-source.sh names it heimdall-server-VERSION.tar.gz, rename to match spec
-      local fetched="$(dirname "${dest}")/heimdall-server-${version}.tar.gz"
+      local fetched
+      fetched="$(dirname "${dest}")/heimdall-server-${version}.tar.gz"
       if [[ -f "${fetched}" && "${fetched}" != "${dest}" ]]; then
         mv "${fetched}" "${dest}"
       fi

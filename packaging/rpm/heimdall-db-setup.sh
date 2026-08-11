@@ -32,7 +32,7 @@ done
 
 if [[ -f "${ENV_FILE}" ]]; then
   set -a
-  # shellcheck disable=SC1091
+  # shellcheck disable=SC1090
   if ! source "${ENV_FILE}"; then
     set +a
     echo "Failed to parse ${ENV_FILE}" >&2

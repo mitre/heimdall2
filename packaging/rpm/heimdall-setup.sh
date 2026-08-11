@@ -349,7 +349,8 @@ if [[ "${SKIP_TLS}" -eq 0 ]]; then
       elif rpm -q epel-release >/dev/null 2>&1; then
         echo "  Install Caddy with: sudo dnf install -y caddy"
       else
-        # Detect EL major version from os-release (more reliable than rpm -E)
+        # Detect EL major version from os-release (more reliable than rpm -E).
+        # shellcheck disable=SC1091  # runtime source of a system file — shellcheck cannot follow it (wiki-prescribed directive)
         el_ver="$(. /etc/os-release 2>/dev/null && echo "${VERSION_ID%%.*}")"
         el_ver="${el_ver:-9}"
         echo "  EPEL repository not found. Install EPEL and Caddy with:"
