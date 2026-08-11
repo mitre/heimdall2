@@ -52,6 +52,11 @@ jobs:
       - name: Start Mock Sonarqube Server
         run: yarn run cypress-test mock-json &
 
+      - name: Validate there are no changes between the Tailwind source and the generated assets
+        run: |
+          yarn hdf-converters prebuild
+          yarn hdf-converters validate-generated
+
       - name: Run unit tests
         run: yarn hdf-converters test:ci
         env:
