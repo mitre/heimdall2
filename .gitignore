@@ -80,3 +80,11 @@ data/*
 # Yarn 1's pack has no try/finally around the lifecycle scripts, so a failed
 # pack skips postpack and strands this file next to a mutated package.json.
 package.json.orig
+
+# VitePress documentation site (ADR-005). docs/ is deliberately OUTSIDE the yarn
+# workspaces globs ("apps/*", "libs/*", "test"), so it has its own package.json
+# and yarn.lock and root `yarn install` never sees it. Bare `node_modules` above
+# already covers docs/node_modules; VitePress's cache and build output do not.
+docs/node_modules
+docs/.vitepress/cache
+docs/.vitepress/dist

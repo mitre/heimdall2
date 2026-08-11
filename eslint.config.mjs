@@ -26,7 +26,19 @@ import vue from 'eslint-plugin-vue';
 
 export default defineConfig([
   {
-    ignores: ['**/dist', '**/lib', '**/node_modules', 'libs/inspecjs/src/generated_parsers/**'],
+    // `docs` is the VitePress documentation site (ADR-005 §2.1): an isolated
+    // project with its own package.json, lockfile and toolchain, deliberately
+    // outside the workspaces globs. This config's typed linting cannot parse
+    // its .vitepress sources (they belong to no tsconfig project), and its
+    // markdown answers to the docs build — `yarn build` inside docs/, with
+    // dead-link checking — not to the application's markdown rules.
+    ignores: [
+      '**/dist',
+      '**/lib',
+      '**/node_modules',
+      'libs/inspecjs/src/generated_parsers/**',
+      'docs/**',
+    ],
     name: 'global ignores',
   },
   {

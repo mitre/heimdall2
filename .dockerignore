@@ -3,3 +3,10 @@ apps/frontend/tests
 apps/backend/test
 test
 **/node_modules
+
+# VitePress documentation site (ADR-005 §2.1) — the app image builds from
+# explicit COPY paths, so docs/ never entered it implicitly; this makes the
+# exclusion explicit. NOTE: shipping the BUILT docs inside the app image for
+# offline/airgapped use (Aaron, 2026-08-11) is a separate packaging change and
+# will need this entry narrowed (source + node_modules out, built output in).
+docs
