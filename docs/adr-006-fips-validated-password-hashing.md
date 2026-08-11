@@ -1030,11 +1030,41 @@ exists, verified by code read:
   section's own rule.
 - **A fourth "Migration" admin tab** (`Admin.vue` already hosts Users / Groups /
   Statistics tabs **[V]**) showing FIPS state, write-gate state, both tables'
-  counts, and the two bulk actions — fed by the authenticated health detail
+  counts, and the two bulk actions — fed by the authenticated migration-status
   endpoint, so the tab and the operator query share one source.
 - The `/health` split concretely: **`GET /health`** (unauthenticated liveness,
   `{status, version}` only) and **`GET /health/details`** (JwtAuthGuard + CASL
   admin, following `StatisticsController`'s existing pattern **[V]**).
+
+**Endpoint policy, ratified 2026-08-10 (Aaron, health-endpoint review against
+Kubernetes probe guidance, Spring Boot Actuator's `show-details:
+when-authorized` pattern, and the Azure Health Endpoint Monitoring pattern) —
+this supersedes the prior bullet's naming:**
+
+| Purpose | Endpoint | Auth | Consumer |
+|---|---|---|---|
+| startupProbe / livenessProbe / LB target check / systemd smoke | `GET /health` | none | kubelet, load balancers, uptime monitors |
+| readinessProbe / compose healthcheck | `GET /health/ready` | none | kubelet, docker-compose (Terminus DB ping — the one hard dependency, nothing else) |
+| migration/ops report | `GET /admin/migration-status` | admin (JwtAuthGuard + CASL ViewStatistics) | Migration tab, operators |
+| login-page bootstrap | `GET /server` | none | frontend (pre-existing contract) |
+
+- **Renamed:** the migration report moved from `/health/details` to
+  `/admin/migration-status` — it is an admin report, not a health check, and
+  the old name invited probing it. The old path returns 404; nothing consumed
+  it before the rename.
+- **Liveness carries no dependency checks** (a DB outage must never restart
+  app pods) and **readiness checks only the hard dependency** (Postgres);
+  optional integrations (Splunk, Tenable) never gate either.
+- **`version` stays on unauthenticated `/health`**: the frontend bundle
+  already ships the exact version publicly (About modal), so removing it here
+  alone changes nothing real; revisit only as a two-surface change if the
+  accreditation posture demands it.
+- **The migration report is NEVER probed** — its counts are full table scans,
+  uncached by design.
+- **Deployment rule:** `/health/*` is probed from inside the boundary and not
+  routed through the public ingress/load-balancer path (documented in the
+  deployment runbook); a separate management port is deferred until a
+  `/metrics` endpoint exists.
 - Post-cutover recovery needs no new code: an admin sets a temporary password
   through the existing `UserModal` admin path (which skips currentPassword) and
   `forcePasswordChange` compels rotation at next login — documented in the
