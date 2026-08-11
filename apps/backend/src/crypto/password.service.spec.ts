@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ConfigService } from '../config/config.service';
+import { User } from '../users/user.model';
+import { HashMigrationMarker } from './hash-migration-marker.model';
+import { HashWriteGateService } from './hash-write-gate.service';
 import {
   configureKdfLimiter,
   hashPassword,
@@ -22,10 +25,19 @@ const KDF_CONCURRENCY_NAMED = /PASSWORD_KDF_CONCURRENCY/v;
 function serviceWith(
   values: Record<string, string | undefined>,
 ): PasswordService {
-  const lookup = new Map(Object.entries(values));
+  const lookup = new Map(
+    Object.entries({ PASSWORD_HASH_WRITE_ENABLED: 'true', ...values }),
+  );
   const config = new ConfigService();
   vi.spyOn(config, 'get').mockImplementation((key: string) => lookup.get(key));
-  return new PasswordService(config);
+  // §12: writes explicitly enabled and marker planting stubbed — the gate's
+  // own behavior is hash-write-gate.service.spec.ts's subject, and this spec
+  // must never reach for a database. The model classes are passed
+  // unregistered; with an explicit env value the derivation never queries
+  // them, and the plantMarker spy (not a cast) keeps the real types.
+  const gate = new HashWriteGateService(HashMigrationMarker, User, config);
+  vi.spyOn(gate, 'plantMarker').mockResolvedValue(undefined);
+  return new PasswordService(config, gate);
 }
 
 describe('PasswordService — §9 config binding + delegation', () => {

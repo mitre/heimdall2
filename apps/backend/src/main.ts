@@ -11,6 +11,8 @@ import postgresSessionStore = require('connect-pg-simple');
 import session = require('express-session');
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
+import { assertFipsMode } from './crypto/fips';
+import { HashWriteGateService } from './crypto/hash-write-gate.service';
 import {generateDefault} from './token/token.providers';
 
 const line = '_______________________________________________\n';
@@ -30,6 +32,16 @@ const logger = winston.createLogger({
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+  // ADR-006 §10: assert host FIPS state before anything else — logic lives in
+  // the testable module; this call site stays one line.
+  assertFipsMode({ fipsMode: configService.get('FIPS_MODE') });
+  // ADR-006 §12 mechanism 3: refuse to start against a database whose
+  // credential write epoch is newer than this build understands (a downgrade
+  // or a pg_dump restore from a newer system) — enforced here in the
+  // application because RPM %pre cannot fire on the downgrades it targets,
+  // and a container path has no scriptlet at all. The thrown error crashes
+  // bootstrap loudly with the operator remedy in the message.
+  await app.get(HashWriteGateService).assertMarkerCompatible();
   app.set('query parser', 'extended');
   app.enableShutdownHooks();
   app.use(helmet());

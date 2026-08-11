@@ -1,5 +1,8 @@
+import * as nodeCrypto from 'node:crypto';
 import { Injectable } from '@nestjs/common';
+import { hash as bcryptHashLegacy } from 'bcryptjs';
 import { ConfigService } from '../config/config.service';
+import { HashWriteGateService } from './hash-write-gate.service';
 import {
   configureKdfLimiter,
   hashPassword,
@@ -52,7 +55,10 @@ export class PasswordService {
   private readonly iterations: number;
   private readonly maxLength: number;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly hashWriteGate: HashWriteGateService,
+  ) {
     this.algorithm = this.readAlgorithm();
     this.iterations = this.readIntInRange(
       'PASSWORD_HASH_ITERATIONS',
@@ -81,19 +87,37 @@ export class PasswordService {
    * Hash a password using the configured algorithm and iterations. Enforces
    * the configured PASSWORD_MAX_LENGTH on this (hash) path only; the pure
    * function keeps its own absolute 128 cap as defense in depth.
+   *
+   * §12 rollout gate: while PBKDF2 writes are DISABLED (rolling-deploy
+   * window), a NEW credential must still be readable by a pre-N pod, so this
+   * falls back to bcrypt (cost 14, the historical parameter) and leaves
+   * rehash debt for after the gate opens. When writes are enabled, the first
+   * PBKDF2 hash plants the §12 durable marker.
    */
-  hash(password: string): Promise<string> {
+  async hash(password: string): Promise<string> {
     if (typeof password === 'string' && password.length > this.maxLength) {
-      return Promise.reject(
-        new PasswordHashError(
-          `password must be at most ${this.maxLength} characters`,
-        ),
+      throw new PasswordHashError(
+        `password must be at most ${this.maxLength} characters`,
       );
     }
-    return hashPassword(password, {
+    if (!(await this.hashWriteGate.writesEnabled())) {
+      // §3 / V-222571: bcrypt (pure JS, outside the validated module) must
+      // never GENERATE a hash while FIPS mode is active. Gate-off + FIPS-on
+      // is a self-contradictory deployment — §12's phase ordering enables
+      // FIPS only after cutover, when the gate is necessarily on.
+      if (nodeCrypto.getFips() === 1) {
+        throw new PasswordHashError(
+          'PASSWORD_HASH_WRITE_ENABLED=false is incompatible with FIPS mode: a bcrypt fallback hash cannot be generated inside the validated boundary (V-222571). Enable PBKDF2 writes or disable FIPS mode.',
+        );
+      }
+      return bcryptHashLegacy(password, 14);
+    }
+    const hashed = await hashPassword(password, {
       algorithm: this.algorithm,
       iterations: this.iterations,
     });
+    await this.hashWriteGate.plantMarker();
+    return hashed;
   }
 
   /**
@@ -106,6 +130,17 @@ export class PasswordService {
     password: string;
   }): Promise<PasswordVerifyResult> {
     return verifyPassword(arguments_);
+  }
+
+  /**
+   * §12: whether PBKDF2 credential writes are enabled for this process.
+   * The rehash call sites (sites 4 and 5) consult this to SKIP persistence
+   * while the gate is off — verifyPassword still reports needsRehash, but a
+   * rehash written during the rolling window would be unreadable by pre-N
+   * pods. Exposed here so callers need no direct gate dependency.
+   */
+  writesEnabled(): Promise<boolean> {
+    return this.hashWriteGate.writesEnabled();
   }
 
   private readAlgorithm(): PasswordHashAlgorithm {
