@@ -49,6 +49,34 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    # ADR-006 §17: probe the readiness endpoint only. /admin/migration-status
+    # is NEVER probed — its counts are full table scans.
+    #
+    # RELEASE COUPLING (deliberate, not hidden): this file pulls
+    # `release-latest`, and /health/ready ships with the next release. Both
+    # land in the same repo state, so release-latest consumers get them
+    # together; a git-pull user running a stale cached image will see
+    # "unhealthy" until `docker compose pull`. That status stays purely
+    # informational — see the nginx depends_on note below.
+    #
+    # The response body is matched, not just the HTTP status, because the app
+    # serves the SPA as a catch-all for unmatched routes: an image WITHOUT
+    # /health/ready answers 200 with index.html, which `curl -f` alone would
+    # accept as healthy. Matching the readiness envelope is what makes a stale
+    # image report unhealthy instead of silently lying.
+    #
+    # start_period exceeds the database's 80s because the server's first boot
+    # additionally runs migrations and seeding before it can serve traffic.
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS http://localhost:3000/health/ready | grep -q '\"status\":\"ok\"'"
+        ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 120s
 
   nginx:
     image: nginx:alpine
@@ -60,6 +88,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    # Deliberately NOT upgraded to `condition: service_healthy` (blast-radius
+    # control): until a release ships with /health/ready, a stale cached image
+    # would never report healthy and nginx would wait forever. Revisit only
+    # after the endpoints are in a published release.
     depends_on:
       - "server"
 

@@ -203,6 +203,45 @@ DATABASE_NAME=heimdall-server-production
 DATABASE_SSL=true
 ```
 
+## Post-Install Smoke Check
+
+Verify the service is actually serving before logging in. Both endpoints are
+unauthenticated by design so probes and load balancers can reach them.
+
+```bash
+# 1. Liveness — is the process up and serving? (no dependency checks)
+curl -fsS http://localhost:3000/health
+```
+
+```json
+{"status":"ok","version":"2.13.0"}
+```
+
+```bash
+# 2. Readiness — is the database reachable? (the one hard dependency)
+curl -fsS http://localhost:3000/health/ready
+```
+
+```json
+{"status":"ok","info":{"database":{"status":"up"}},"error":{},"details":{"database":{"status":"up"}}}
+```
+
+Both commands exit `0` on success. Interpreting failures:
+
+- **`curl: (7) Failed to connect`** — the service is not listening; check
+  `systemctl status heimdall-server`.
+- **`/health` succeeds but `/health/ready` returns 503** — the app is up but
+  the database is unreachable; check the `DATABASE_*` settings in
+  `/etc/heimdall-server/backend.env`.
+- **Both succeed** — the install is serving; proceed to Initial Login.
+
+If you changed the listen port (see _Changing the Listen Port_), substitute it
+for `3000` above.
+
+> **Note:** probe only these two endpoints. The migration report at
+> `/admin/migration-status` is authenticated and runs full table scans — it is
+> an operator report, never a health probe (ADR-006 §17).
+
 ## Initial Login
 
 After setup completes, the admin credentials are printed to the terminal:
