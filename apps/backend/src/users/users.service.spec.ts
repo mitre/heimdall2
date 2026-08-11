@@ -30,6 +30,7 @@ import {
   DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
   UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE,
   UPDATE_USER_DTO_TEST_OBJ,
+  UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
   UPDATE_USER_DTO_TEST_WITHOUT_EMAIL,
   UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME,
   UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
@@ -45,6 +46,7 @@ import {
 import {AuthzModule} from '../authz/authz.module';
 import {AuthzService} from '../authz/authz.service';
 import {ConfigService} from '../config/config.service';
+import { CryptoModule } from '../crypto/crypto.module';
 import type * as PasswordCrypto from '../crypto/password';
 import {hashPassword, verifyPassword} from '../crypto/password';
 import {DatabaseModule} from '../database/database.module';
@@ -69,6 +71,11 @@ vi.mock('../crypto/password', async (importOriginal) => {
   return {...actual, verifyPassword: vi.fn(actual.verifyPassword)};
 });
 
+// ADR-006 §2: exact prefix — algorithm AND iteration count pinned, never a
+// loose $pbkdf2-sha* match (the ADR anti-pattern). Module scope so the regex
+// is compiled once.
+const PHC_SHA512_600K_PREFIX = /^\$pbkdf2-sha512\$i=600000\$/v;
+
 describe('UsersService', () => {
   let authzService: AuthzService;
   let usersService: UsersService;
@@ -88,7 +95,8 @@ describe('UsersService', () => {
           Evaluation,
           EvaluationTag
         ]),
-        AuthzModule
+        AuthzModule,
+        CryptoModule
       ],
       providers: [
         AuthzService,
@@ -127,6 +135,46 @@ describe('UsersService', () => {
         USER_ONE_DTO.updatedAt.valueOf()
       );
       expect(user.role).toEqual(USER_ONE_DTO.role);
+    });
+
+    it('stores encryptedPassword as a PBKDF2 PHC string that round-trips through verifyPassword (ADR-006 §4 site 1)', async () => {
+      expect.assertions(3);
+      const created = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const stored = await User.findByPk<User>(created.id);
+      expect(stored?.encryptedPassword).toMatch(PHC_SHA512_600K_PREFIX);
+      const result = await verifyPassword({
+        hash: stored?.encryptedPassword ?? '',
+        password: CREATE_USER_DTO_TEST_OBJ.password,
+      });
+      expect(result.valid).toBe(true);
+      // A freshly written hash must already be at policy — no rehash debt.
+      expect(result.needsRehash).toBe(false);
+    });
+
+    it('accepts the 64-char external-auth placeholder password (ADR-006 §6 — regression pairing with e25.11)', async () => {
+      expect.assertions(1);
+      // validateOrCreateUser feeds randomBytes(32).toString('hex') — exactly
+      // 64 chars — through this path; it must clear the 128 cap.
+      const placeholder = 'ab'.repeat(32);
+      const created = await usersService.create({
+        ...CREATE_USER_DTO_TEST_OBJ,
+        password: placeholder,
+        passwordConfirmation: placeholder,
+      });
+      const stored = await User.findByPk<User>(created.id);
+      expect(stored?.encryptedPassword).toMatch(PHC_SHA512_600K_PREFIX);
+    });
+
+    it('rejects a password over the 128-char cap with BadRequestException (§6 approved range)', async () => {
+      expect.assertions(1);
+      const overCap = 'a'.repeat(129);
+      await expect(
+        usersService.create({
+          ...CREATE_USER_DTO_TEST_OBJ,
+          password: overCap,
+          passwordConfirmation: overCap,
+        }),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw an error when missing the email field', async () => {
@@ -293,6 +341,50 @@ describe('UsersService', () => {
       expect(user.forcePasswordChange).toEqual(
         UPDATE_USER_DTO_TEST_OBJ.forcePasswordChange
       );
+    });
+
+    it('stores a changed password as PBKDF2 PHC and preserves the lifecycle semantics (ADR-006 §4 site 2)', async () => {
+      expect.assertions(5);
+      // Seed force-change ON so the clear inside update()'s password branch
+      // is observable — with the fixture's false baseline the assertion below
+      // would pass even if the clear were deleted (AC-review round-1 finding).
+      await user.update({ forcePasswordChange: true }, { silent: true });
+      const preUpdate = await User.findByPk<User>(user.id);
+      const pre = preUpdate?.passwordChangedAt;
+      await usersService.update(
+        user,
+        UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
+        abacPolicy,
+      );
+      const stored = await User.findByPk<User>(user.id);
+      expect(stored?.encryptedPassword).toMatch(PHC_SHA512_600K_PREFIX);
+      const result = await verifyPassword({
+        hash: stored?.encryptedPassword ?? '',
+        password: UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD.password ?? '',
+      });
+      expect(result.valid).toBe(true);
+      expect(result.needsRehash).toBe(false);
+      // Genuine password change (users.service.ts:84-104 unchanged): the
+      // lifecycle fields still move — passwordChangedAt is stamped, and
+      // forcePasswordChange clears when the DTO does not re-raise it.
+      expect(String(stored?.passwordChangedAt)).not.toBe(String(pre));
+      expect(stored?.forcePasswordChange).toBe(false);
+    });
+
+    it('rejects a changed password over the 128-char cap with BadRequestException (§6 approved range)', async () => {
+      expect.assertions(1);
+      const overCap = 'a'.repeat(129);
+      await expect(
+        usersService.update(
+          user,
+          {
+            ...UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
+            password: overCap,
+            passwordConfirmation: overCap,
+          },
+          abacPolicy,
+        ),
+      ).rejects.toThrow(BadRequestException);
     });
 
     // Users should be able to update their account without updating their email

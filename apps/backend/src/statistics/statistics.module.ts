@@ -4,6 +4,7 @@ import {ApiKey} from '../apikeys/apikey.model';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
+import { CryptoModule } from '../crypto/crypto.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
@@ -25,7 +26,8 @@ import {StatisticsService} from './statistics.service';
       User,
       Group
     ]),
-    ConfigModule
+    ConfigModule,
+    CryptoModule
   ],
   providers: [
     StatisticsService,

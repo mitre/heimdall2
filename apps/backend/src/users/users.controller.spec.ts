@@ -25,6 +25,7 @@ import {
 import {AuthzService} from '../authz/authz.service';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
+import { CryptoModule } from '../crypto/crypto.module';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -54,6 +55,7 @@ describe('UsersController Unit Tests', () => {
       controllers: [UsersController],
       imports: [
         ConfigModule,
+        CryptoModule,
         DatabaseModule,
         SequelizeModule.forFeature([
           User,

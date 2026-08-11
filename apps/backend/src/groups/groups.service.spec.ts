@@ -12,6 +12,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
 import {ConfigService} from '../config/config.service';
+import { CryptoModule } from '../crypto/crypto.module';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto';
@@ -36,6 +37,7 @@ describe('GroupsService', () => {
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
+        CryptoModule,
         DatabaseModule,
         SequelizeModule.forFeature([
           Group,

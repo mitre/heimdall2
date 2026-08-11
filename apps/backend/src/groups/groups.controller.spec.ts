@@ -14,6 +14,7 @@ import {
 } from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
 import {ConfigModule} from '../config/config.module';
+import { CryptoModule } from '../crypto/crypto.module';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -43,6 +44,7 @@ describe('GroupsController', () => {
       controllers: [GroupsController],
       imports: [
         ConfigModule,
+        CryptoModule,
         DatabaseModule,
         SequelizeModule.forFeature([
           Group,

@@ -6,13 +6,13 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
 import {verifyPassword} from '../crypto/password';
+import { PasswordService } from '../crypto/password.service';
 import {GroupsService} from '../groups/groups.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
@@ -25,7 +25,8 @@ export class UsersService {
     @InjectModel(User)
     private readonly userModel: typeof User,
     private readonly configService: ConfigService,
-    private readonly groupsService: GroupsService
+    private readonly groupsService: GroupsService,
+    private readonly passwordService: PasswordService
   ) {}
 
   async adminFindAllUsers(): Promise<User[]> {
@@ -64,7 +65,11 @@ export class UsersService {
     user.role = createUserDto.role;
     user.creationMethod = createUserDto.creationMethod;
     try {
-      user.encryptedPassword = await hash(createUserDto.password, 14);
+      // ADR-006 §4 site 1: PBKDF2 via the validated module, PHC output (§2).
+      // PasswordHashError (missing password, over-cap length) maps to 400.
+      user.encryptedPassword = await this.passwordService.hash(
+        createUserDto.password
+      );
     } catch {
       throw new BadRequestException();
     }
@@ -87,7 +92,16 @@ export class UsersService {
     ) {
       throw new BadRequestException('You must change your password');
     } else if (updateUserDto.password) {
-      userToUpdate.encryptedPassword = await hash(updateUserDto.password, 14);
+      try {
+        // ADR-006 §4 site 2: PBKDF2 via the validated module, PHC output
+        // (§2). Over-cap length (§6 approved range) maps to 400, matching
+        // create(); bcryptjs silently truncated at 72 bytes instead.
+        userToUpdate.encryptedPassword = await this.passwordService.hash(
+          updateUserDto.password
+        );
+      } catch {
+        throw new BadRequestException();
+      }
       userToUpdate.passwordChangedAt = new Date();
       userToUpdate.forcePasswordChange = false;
     }

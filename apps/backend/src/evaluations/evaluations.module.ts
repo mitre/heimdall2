@@ -1,6 +1,7 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {ConfigModule} from '../config/config.module';
+import { CryptoModule } from '../crypto/crypto.module';
 import {DatabaseModule} from '../database/database.module';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
@@ -23,6 +24,7 @@ import {EvaluationsService} from './evaluations.service';
       GroupEvaluation
     ]),
     ConfigModule,
+    CryptoModule,
     DatabaseModule
   ],
   providers: [EvaluationsService, UsersService, GroupsService],

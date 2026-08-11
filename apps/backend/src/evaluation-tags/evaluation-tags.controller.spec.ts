@@ -11,6 +11,7 @@ import {
 } from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
 import {ConfigModule} from '../config/config.module';
+import { CryptoModule } from '../crypto/crypto.module';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {Evaluation} from '../evaluations/evaluation.model';
@@ -40,6 +41,7 @@ describe('EvaluationTagsController', () => {
       controllers: [EvaluationTagsController],
       imports: [
         ConfigModule,
+        CryptoModule,
         DatabaseModule,
         SequelizeModule.forFeature([
           Evaluation,
