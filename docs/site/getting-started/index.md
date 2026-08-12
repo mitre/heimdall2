@@ -8,6 +8,12 @@ The Heimdall documentation is moving from the GitHub wiki into this site
 migration.
 :::
 
+## Available now
+
+- [Environment Variables](/getting-started/environment-variables) — the
+  canonical reference for every variable Heimdall reads. Other pages link here
+  instead of restating variable descriptions.
+
 ## Pages planned for this section
 
 | Page | Source |
@@ -15,8 +21,6 @@ migration.
 | Quick start | Wiki: `Home` (docker-compose path) |
 | Installation | Wiki: `Home`, `Docker-Bake` |
 | Configuration | Wiki: `Environment-Variables-Configuration` (overview) |
-| Environment variables | Wiki: `Environment-Variables-Configuration` — the canonical reference every other page links to |
 | Troubleshooting | Wiki: `Troubleshooting` |
 
-Until then, see the [README](https://github.com/mitre/heimdall2#readme) and
-`apps/backend/.env-example` in the repository.
+Until then, see the [README](https://github.com/mitre/heimdall2#readme).

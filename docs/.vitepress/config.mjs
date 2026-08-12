@@ -53,7 +53,13 @@ export default defineConfig({
       '/getting-started/': [
         {
           text: 'Getting Started',
-          items: [{text: 'Overview', link: '/getting-started/'}]
+          items: [
+            {text: 'Overview', link: '/getting-started/'},
+            {
+              text: 'Environment Variables',
+              link: '/getting-started/environment-variables'
+            }
+          ]
         },
         {
           text: 'User Guide',
@@ -63,7 +69,13 @@ export default defineConfig({
       '/user-guide/': [
         {
           text: 'Getting Started',
-          items: [{text: 'Overview', link: '/getting-started/'}]
+          items: [
+            {text: 'Overview', link: '/getting-started/'},
+            {
+              text: 'Environment Variables',
+              link: '/getting-started/environment-variables'
+            }
+          ]
         },
         {
           text: 'User Guide',
