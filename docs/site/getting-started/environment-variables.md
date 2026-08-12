@@ -266,10 +266,23 @@ application itself.
 
 | Variable | Description | Where it applies | Default |
 | --- | --- | --- | --- |
+| `CYPRESS_TESTING` | `true` enables the end-to-end test support route. See the warning below before setting it. | Development and test only | unset |
+| `UV_THREADPOOL_SIZE` | Size of libuv's thread pool, which is what PBKDF2 hashing runs on. Read by the Node runtime, not by Heimdall. Set to `8` by the Dockerfile, `cmd.sh` and the systemd unit. Raising `PASSWORD_HASH_ITERATIONS` without a matching thread pool starves concurrent logins. | Any | `8` where Heimdall's own launchers apply, otherwise Node's default of `4` |
 | `NGINX_HOST` | Templated into the bundled NGINX configuration as `server_name`. Read by the setup scripts, never by the application. | Docker Compose, dev setup scripts | `localhost` |
 | `LOG_FILE` | When set, the launcher redirects stdout and stderr to this path. Unset means logging to journald. The directory must be writable by the `heimdall` user. | RPM only | unset (journald) |
 | `NODE_EXTRA_CA_CERTS` | Path to additional trusted CAs. Read by the Node runtime itself, not by Heimdall. Needed behind a TLS-inspecting proxy. | Any | none |
 | `API_PROXY_TARGET` | Backend URL the frontend dev server proxies to. Lives in `apps/frontend/.env.development`. Unset or empty means no proxy, and the frontend runs as standalone Heimdall Lite. | Development only | empty |
+
+::: danger CYPRESS_TESTING unlocks an endpoint that deletes every user
+Setting `CYPRESS_TESTING=true` while `NODE_ENV` is `development` or `test`
+enables `POST /users/clear`, which truncates the `Users` table. Both conditions
+must hold, and `development` is the value used for ordinary local work — so the
+one variable is what stands between a development instance and an unauthenticated
+route that empties user accounts.
+
+Set it only for an end-to-end test run, and never in an environment holding data
+you care about. It has no effect when `NODE_ENV=production`.
+:::
 
 ## Documentation build
 
