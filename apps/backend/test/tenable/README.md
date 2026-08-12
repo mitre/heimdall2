@@ -20,8 +20,11 @@ This project simulates a subset of the Tenable.sc REST API using [Prism](https:/
 ```bash
  > npm install -g @stoplight/prism-cli
 ```
+
 ### 2. Run the Mock Server
+
 Navigate to the folder containing tenable-sc-mock.yaml and run this command:
+
 ```bash
   > prism mock tenable-sc-mock.yaml
 ```
@@ -29,19 +32,26 @@ Navigate to the folder containing tenable-sc-mock.yaml and run this command:
 Server starts on: `http://localhost:4010`
 
 ### 3. Example Requests (using curl)
+
 ✅ Get Current User
+
 ```bash
   > curl -X GET http://localhost:4010/rest/currentUser -H "x-apikey: accesskey=abc123; secretkey=def456"
   Note: The `accesskey` and `secretkey` in the curl command can be any string.
 ```
+
 ✅ Get Scan Results
+
 ```bash
   > curl -G http://localhost:4010/rest/scanResult --data-urlencode "fields=name,description" --data-urlencode "startTime=2024-01-01" --data-urlencode "endTime=2024-02-01" -H "x-apikey: accesskey=abc123; secretkey=def456"
 ```
+
 ✅ Download Scan Result (binary response)
+
 ```bash
   > curl -X POST "http://localhost:4010/rest/scanResult/1234/download?downloadType=v2" \
       -H "x-apikey: accesskey=abc123; secretkey=def456" \
       --output result.zip
 ```
+
 Note: This will return mocked binary content (e.g. a placeholder).

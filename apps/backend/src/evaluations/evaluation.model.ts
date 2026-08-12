@@ -12,15 +12,38 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
+import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
+import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
+import { Group } from '../groups/group.model';
+import { User } from '../users/user.model';
 
 @Table
 export class Evaluation extends Model {
+  @CreatedAt
+  @AllowNull(false)
+  @Column
+  declare createdAt: Date;
+
+  @AllowNull(false)
+  @Column(DataType.JSON)
+  declare data: Record<string, unknown>;
+
+  @HasMany(() => EvaluationTag)
+  declare evaluationTags: EvaluationTag[];
+
+  @AllowNull(false)
+  @Column
+  declare filename: string;
+
+  @ForeignKey(() => Group)
+  @Column(DataType.BIGINT)
+  declare groupId: string;
+
+  @BelongsToMany(() => Group, () => GroupEvaluation)
+  declare groups: (Group & { GroupEvaluation: GroupEvaluation })[];
+
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
@@ -28,44 +51,19 @@ export class Evaluation extends Model {
   declare id: string;
 
   @AllowNull(false)
-  @Column
-  declare filename: string;
-
-  @AllowNull(false)
-  @Column(DataType.JSON)
-  declare data: Record<string, unknown>;
-
-  @AllowNull(false)
   @Default(false)
   @Column(DataType.BOOLEAN)
   declare public: boolean;
-
-  @ForeignKey(() => User)
-  @Column(DataType.BIGINT)
-  declare userId: string;
-
-  @ForeignKey(() => Group)
-  @Column(DataType.BIGINT)
-  declare groupId: string;
-
-  @BelongsTo(() => User, {
-    constraints: false
-  })
-  declare user: User;
-
-  @CreatedAt
-  @AllowNull(false)
-  @Column
-  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column
   declare updatedAt: Date;
 
-  @HasMany(() => EvaluationTag)
-  declare evaluationTags: EvaluationTag[];
+  @BelongsTo(() => User, { constraints: false })
+  declare user: User;
 
-  @BelongsToMany(() => Group, () => GroupEvaluation)
-  declare groups: Array<Group & {GroupEvaluation: GroupEvaluation}>;
+  @ForeignKey(() => User)
+  @Column(DataType.BIGINT)
+  declare userId: string;
 }

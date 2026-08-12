@@ -1,14 +1,14 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import jwt from 'jsonwebtoken';
-import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
-import {ConfigService} from '../config/config.service';
+import { CreateApiKeyDto } from '../apikeys/dto/create-apikey.dto';
+import { ConfigService } from '../config/config.service';
 import { PasswordService } from '../crypto/password.service';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
-import {ApiKey} from './apikey.model';
-import {APIKeyDto} from './dto/apikey.dto';
-import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
+import { Group } from '../groups/group.model';
+import { User } from '../users/user.model';
+import { ApiKey } from './apikey.model';
+import { APIKeyDto } from './dto/apikey.dto';
+import { UpdateAPIKeyDto } from './dto/update-apikey.dto';
 
 @Injectable()
 export class ApiKeyService {
@@ -16,7 +16,7 @@ export class ApiKeyService {
     @InjectModel(ApiKey)
     private readonly apiKeyModel: typeof ApiKey,
     private readonly configService: ConfigService,
-    private readonly passwordService: PasswordService
+    private readonly passwordService: PasswordService,
   ) {}
 
   async count(): Promise<number> {
@@ -24,30 +24,63 @@ export class ApiKeyService {
   }
 
   async create(
-    target: User | Group,
-    createApiKeyDto: CreateApiKeyDto
-  ): Promise<{id: string; name: string; apiKey: string}> {
+    target: Group | User,
+    createApiKeyDto: CreateApiKeyDto,
+  ): Promise<{ apiKey: string; id: string; name: string }> {
     const APIKeySecret = this.configService.get('API_KEY_SECRET') || '';
     const newApiKey = new ApiKey({
-      userId: target instanceof User ? target.id : undefined,
       groupId: target instanceof Group ? target.id : undefined,
       name: createApiKeyDto.name,
-      type: target instanceof User ? 'user' : 'group'
+      type: target instanceof User ? 'user' : 'group',
+      userId: target instanceof User ? target.id : undefined,
     });
     await newApiKey.save();
     const newJWT = jwt.sign(
-      {keyId: newApiKey.id, createdAt: new Date()},
-      APIKeySecret
+      { createdAt: new Date(), keyId: newApiKey.id },
+      APIKeySecret,
     );
     // ADR-006 §4 site 7: PBKDF2 via the validated module, PHC output (§2).
     // Only the JWT signature is hashed — originally because of bcrypt's
     // 72-byte limit, kept because changing what is hashed invalidates every
     // existing key (§11/Scope). The save is awaited: create() must not
     // resolve before the hash is persisted (found defect fixed in e25.12).
-    const JWTSignature = newJWT.split('.')[2];
+    const JWTSignature = newJWT.split('.', 3)[2];
     newApiKey.apiKey = await this.passwordService.hash(JWTSignature);
     await newApiKey.save();
-    return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
+    return { apiKey: newJWT, id: newApiKey.id, name: newApiKey.name };
+  }
+
+  async findAllForGroup(group: Group): Promise<APIKeyDto[]> {
+    const apiKeys = await this.apiKeyModel.findAll({ where: { groupId: group.id } });
+    return apiKeys.map(key => new APIKeyDto(key));
+  }
+
+  async findAllForUser(user: User): Promise<APIKeyDto[]> {
+    const apiKeys = await this.apiKeyModel.findAll({ where: { userId: user.id } });
+    return apiKeys.map(key => new APIKeyDto(key));
+  }
+
+  async findById(id: string): Promise<ApiKey> {
+    const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, { include: [User, Group] });
+    if (apiKey === null) {
+      throw new NotFoundException('API key with given id not found');
+    }
+    return apiKey;
+  }
+
+  async remove(id: string): Promise<APIKeyDto> {
+    const apiKeyToDestroy = await this.findById(id);
+    await apiKeyToDestroy.destroy();
+    return new APIKeyDto(apiKeyToDestroy);
+  }
+
+  async update(
+    id: string,
+    updateAPIKeyDto: UpdateAPIKeyDto,
+  ): Promise<APIKeyDto> {
+    const apiKey = await this.findById(id);
+    apiKey.name = updateAPIKeyDto.name;
+    return new APIKeyDto(await apiKey.save());
   }
 
   /**
@@ -62,52 +95,12 @@ export class ApiKeyService {
   async updateApiKeyHash(
     id: string,
     originalHash: string,
-    newHash: string
+    newHash: string,
   ): Promise<number> {
     const [affected] = await this.apiKeyModel.update(
-      {apiKey: newHash},
-      {where: {id, apiKey: originalHash}, fields: ['apiKey'], silent: true}
+      { apiKey: newHash },
+      { fields: ['apiKey'], silent: true, where: { apiKey: originalHash, id } },
     );
     return affected;
-  }
-
-  async update(
-    id: string,
-    updateAPIKeyDto: UpdateAPIKeyDto
-  ): Promise<APIKeyDto> {
-    const apiKey = await this.findById(id);
-    apiKey.name = updateAPIKeyDto.name;
-    return new APIKeyDto(await apiKey.save());
-  }
-
-  async remove(id: string): Promise<APIKeyDto> {
-    const apiKeyToDestroy = await this.findById(id);
-    await apiKeyToDestroy.destroy();
-    return new APIKeyDto(apiKeyToDestroy);
-  }
-
-  async findById(id: string): Promise<ApiKey> {
-    const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, {
-      include: [User, Group]
-    });
-    if (apiKey === null) {
-      throw new NotFoundException('API key with given id not found');
-    } else {
-      return apiKey;
-    }
-  }
-
-  async findAllForUser(user: User): Promise<APIKeyDto[]> {
-    const apiKeys = await this.apiKeyModel.findAll({
-      where: {userId: user.id}
-    });
-    return apiKeys.map((key) => new APIKeyDto(key));
-  }
-
-  async findAllForGroup(group: Group): Promise<APIKeyDto[]> {
-    const apiKeys = await this.apiKeyModel.findAll({
-      where: {groupId: group.id}
-    });
-    return apiKeys.map((key) => new APIKeyDto(key));
   }
 }

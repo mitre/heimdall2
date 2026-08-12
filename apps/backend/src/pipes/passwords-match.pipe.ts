@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, PipeTransform} from '@nestjs/common';
+import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
 export class PasswordsMatchPipe implements PipeTransform {
@@ -8,16 +8,15 @@ export class PasswordsMatchPipe implements PipeTransform {
     passwordConfirmation: string | undefined;
   }): Record<string, unknown> {
     if (
-      value.currentPassword != null &&
-      value.password == null &&
-      value.passwordConfirmation == null
+      value.currentPassword != null
+      && value.password == null
+      && value.passwordConfirmation == null
     ) {
       return value;
     }
     if (value.password === value.passwordConfirmation) {
       return value;
-    } else {
-      throw new BadRequestException('Passwords do not match');
     }
+    throw new BadRequestException('Passwords do not match');
   }
 }

@@ -1,18 +1,15 @@
-import {ICreateUser} from '@heimdall/common/interfaces';
-import {IsEmail, IsIn, IsNotEmpty, IsOptional, IsString} from 'class-validator';
+import { ICreateUser } from '@heimdall/common/interfaces';
+import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto implements ICreateUser {
+  @IsNotEmpty()
+  @IsString()
+  @IsIn(['local', 'ldap', 'github', 'gitlab', 'google', 'okta', 'ldap'])
+  readonly creationMethod!: string;
+
   @IsEmail()
   @IsNotEmpty()
   readonly email!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly password!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly passwordConfirmation!: string;
 
   @IsOptional()
   @IsString()
@@ -26,17 +23,20 @@ export class CreateUserDto implements ICreateUser {
   @IsString()
   readonly organization: string | undefined;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  readonly title: string | undefined;
+  readonly password!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly passwordConfirmation!: string;
 
   @IsNotEmpty()
   @IsString()
   @IsIn(['user'])
   readonly role!: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @IsIn(['local', 'ldap', 'github', 'gitlab', 'google', 'okta', 'ldap'])
-  readonly creationMethod!: string;
+  readonly title: string | undefined;
 }

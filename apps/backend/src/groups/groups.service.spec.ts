@@ -1,32 +1,32 @@
-import {ForbiddenException, NotFoundException} from '@nestjs/common';
-import {SequelizeModule} from '@nestjs/sequelize';
-import {Test} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Test } from '@nestjs/testing';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import {
   EVALUATION_1,
-  EVALUATION_WITH_TAGS_1
+  EVALUATION_WITH_TAGS_1,
 } from '../../test/constants/evaluations-test.constant';
-import {GROUP_1} from '../../test/constants/groups-test.constant';
+import { GROUP_1 } from '../../test/constants/groups-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  CREATE_USER_DTO_TEST_OBJ_2
+  CREATE_USER_DTO_TEST_OBJ_2,
 } from '../../test/constants/users-test.constant';
-import {ConfigService} from '../config/config.service';
+import { ConfigService } from '../config/config.service';
 import { CryptoModule } from '../crypto/crypto.module';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
-import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {EvaluationsService} from '../evaluations/evaluations.service';
-import {GroupEvaluationsModule} from '../group-evaluations/group-evaluations.module';
-import {GroupUser} from '../group-users/group-user.model';
-import {GroupUsersModule} from '../group-users/group-users.module';
-import {UserDto} from '../users/dto/user.dto';
-import {User} from '../users/user.model';
-import {UsersService} from '../users/users.service';
-import {Group} from './group.model';
-import {GroupsService} from './groups.service';
+import { DatabaseModule } from '../database/database.module';
+import { DatabaseService } from '../database/database.service';
+import { EvaluationTagDto } from '../evaluation-tags/dto/evaluation-tag.dto';
+import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
+import { Evaluation } from '../evaluations/evaluation.model';
+import { EvaluationsService } from '../evaluations/evaluations.service';
+import { GroupEvaluationsModule } from '../group-evaluations/group-evaluations.module';
+import { GroupUser } from '../group-users/group-user.model';
+import { GroupUsersModule } from '../group-users/group-users.module';
+import { UserDto } from '../users/dto/user.dto';
+import { User } from '../users/user.model';
+import { UsersService } from '../users/users.service';
+import { Group } from './group.model';
+import { GroupsService } from './groups.service';
 
 describe('GroupsService', () => {
   let groupsService: GroupsService;
@@ -44,18 +44,18 @@ describe('GroupsService', () => {
           GroupUser,
           Evaluation,
           EvaluationTag,
-          User
+          User,
         ]),
         GroupEvaluationsModule,
-        GroupUsersModule
+        GroupUsersModule,
       ],
       providers: [
         ConfigService,
         GroupsService,
         DatabaseService,
         UsersService,
-        EvaluationsService
-      ]
+        EvaluationsService,
+      ],
     }).compile();
 
     groupsService = module.get<GroupsService>(GroupsService);
@@ -84,7 +84,7 @@ describe('GroupsService', () => {
     it('should throw a not found exception when the given id is not found', async () => {
       expect.assertions(1);
       await expect(groupsService.findByPkBang('0')).rejects.toBeInstanceOf(
-        NotFoundException
+        NotFoundException,
       );
     });
 
@@ -92,7 +92,7 @@ describe('GroupsService', () => {
       const group = await groupsService.create(GROUP_1);
       await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const user = await usersService.findByEmail(
-        CREATE_USER_DTO_TEST_OBJ.email
+        CREATE_USER_DTO_TEST_OBJ.email,
       );
       await groupsService.addUserToGroup(group, user, 'owner');
       const foundGroup = await groupsService.findByPkBang(group.id);
@@ -105,7 +105,7 @@ describe('GroupsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       await groupsService.addEvaluationToGroup(group, evaluation);
       const foundGroup = await groupsService.findByPkBang(group.id);
@@ -118,7 +118,7 @@ describe('GroupsService', () => {
       const group = await groupsService.create(GROUP_1);
       await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const user = await usersService.findByEmail(
-        CREATE_USER_DTO_TEST_OBJ.email
+        CREATE_USER_DTO_TEST_OBJ.email,
       );
       await groupsService.addUserToGroup(group, user, 'owner');
       const groupUsers = await group.$get('users');
@@ -134,7 +134,7 @@ describe('GroupsService', () => {
       const group = await groupsService.create(GROUP_1);
       await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const groupOwner = await usersService.findByEmail(
-        CREATE_USER_DTO_TEST_OBJ.email
+        CREATE_USER_DTO_TEST_OBJ.email,
       );
       const groupMember = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(group, groupOwner, 'owner');
@@ -152,11 +152,11 @@ describe('GroupsService', () => {
       const group = await groupsService.create(GROUP_1);
       await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const groupOwner = await usersService.findByEmail(
-        CREATE_USER_DTO_TEST_OBJ.email
+        CREATE_USER_DTO_TEST_OBJ.email,
       );
       await groupsService.addUserToGroup(group, groupOwner, 'owner');
       await expect(
-        groupsService.removeUserFromGroup(group, groupOwner)
+        groupsService.removeUserFromGroup(group, groupOwner),
       ).rejects.toBeInstanceOf(ForbiddenException);
     });
   });
@@ -168,17 +168,15 @@ describe('GroupsService', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       await groupsService.addEvaluationToGroup(group, evaluation);
-      const groupEvaluations = await group.$get('evaluations', {
-        include: [{model: EvaluationTag}]
-      });
+      const groupEvaluations = await group.$get('evaluations', { include: [{ model: EvaluationTag }] });
       expect(groupEvaluations).toHaveLength(1);
       expect(groupEvaluations[0].filename).toEqual(evaluation.filename);
       expect(groupEvaluations[0].data).toEqual(evaluation.data);
       expect(
-        new EvaluationTagDto(groupEvaluations[0].evaluationTags[0])
+        new EvaluationTagDto(groupEvaluations[0].evaluationTags[0]),
       ).toEqual(new EvaluationTagDto(evaluation.evaluationTags[0]));
     });
   });
@@ -190,25 +188,23 @@ describe('GroupsService', () => {
       const evaluationOne = await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       const evaluationTwo = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         data: {},
-        userId: user.id
+        userId: user.id,
       });
       await groupsService.addEvaluationToGroup(group, evaluationOne);
       await groupsService.addEvaluationToGroup(group, evaluationTwo);
       expect(await group.$get('evaluations')).toHaveLength(2);
       await groupsService.removeEvaluationFromGroup(group, evaluationOne);
-      const groupEvaluations = await group.$get('evaluations', {
-        include: [{model: EvaluationTag}]
-      });
+      const groupEvaluations = await group.$get('evaluations', { include: [{ model: EvaluationTag }] });
       expect(groupEvaluations).toHaveLength(1);
       expect(groupEvaluations[0].filename).toEqual(evaluationTwo.filename);
       expect(groupEvaluations[0].data).toEqual(evaluationTwo.data);
       expect(
-        new EvaluationTagDto(groupEvaluations[0].evaluationTags[0])
+        new EvaluationTagDto(groupEvaluations[0].evaluationTags[0]),
       ).toEqual(new EvaluationTagDto(evaluationTwo.evaluationTags[0]));
     });
   });

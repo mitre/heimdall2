@@ -1,48 +1,47 @@
-import {IEvaluation} from '@heimdall/common/interfaces';
-import {EvaluationTagDto} from '../../evaluation-tags/dto/evaluation-tag.dto';
-import {GroupDto} from '../../groups/dto/group.dto';
-import {Group} from '../../groups/group.model';
-import {Evaluation} from '../evaluation.model';
+import type { IEvaluation } from '@heimdall/common/interfaces';
+import { EvaluationTagDto } from '../../evaluation-tags/dto/evaluation-tag.dto';
+import { GroupDto } from '../../groups/dto/group.dto';
+import type { Group } from '../../groups/group.model';
+import type { Evaluation } from '../evaluation.model';
+
+export type IEvaluationResponse = {
+  evaluations: EvaluationDto[];
+  totalCount: number;
+};
 
 export class EvaluationDto implements IEvaluation {
-  readonly id: string;
-  filename: string;
-  readonly data?: Record<string, unknown>;
-  readonly evaluationTags: EvaluationTagDto[];
-  readonly groups: GroupDto[];
-  readonly userId?: string;
-  readonly groupId?: string;
-  readonly public: boolean;
   readonly createdAt: Date;
-  readonly updatedAt: Date;
+  readonly data?: Record<string, unknown>;
   readonly editable: boolean;
+  readonly evaluationTags: EvaluationTagDto[];
+  filename: string;
+  readonly groupId?: string;
+  readonly groups: GroupDto[];
+  readonly id: string;
+  readonly public: boolean;
   readonly shareURL?: string;
+  readonly updatedAt: Date;
+  readonly userId?: string;
 
   constructor(
     evaluation: Evaluation,
     editable = false,
-    shareURL: string | undefined = undefined
+    shareURL?: string,
   ) {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
     this.data = evaluation.data;
-    if (
-      evaluation.evaluationTags === null ||
-      evaluation.evaluationTags === undefined
-    ) {
-      this.evaluationTags = [];
-    } else {
-      this.evaluationTags = evaluation.evaluationTags.map(
-        (tag) => new EvaluationTagDto(tag)
+    this.evaluationTags = evaluation.evaluationTags === null
+      || evaluation.evaluationTags === undefined
+      ? []
+      : evaluation.evaluationTags.map(
+        tag => new EvaluationTagDto(tag),
       );
-    }
-    if (evaluation.groups === null || evaluation.groups === undefined) {
-      this.groups = [];
-    } else {
-      this.groups = evaluation.groups.map(
-        (group) => new GroupDto(group as Group)
+    this.groups = evaluation.groups === null || evaluation.groups === undefined
+      ? []
+      : evaluation.groups.map(
+        group => new GroupDto(group as Group),
       );
-    }
     this.userId = evaluation.userId;
     this.groupId = evaluation.groupId;
     this.public = evaluation.public;
@@ -51,9 +50,4 @@ export class EvaluationDto implements IEvaluation {
     this.editable = editable;
     this.shareURL = shareURL;
   }
-}
-
-export interface IEvaluationResponse {
-  evaluations: EvaluationDto[];
-  totalCount: number;
 }

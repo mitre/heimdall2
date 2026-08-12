@@ -1,39 +1,39 @@
-import {Injectable} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import {Request} from 'express';
+import { Request } from 'express';
 
-interface TenableCredentials {
-  host_url: string;
+type TenableCredentials = {
   accesskey: string;
+  host_url: string;
   secretkey: string;
-}
+};
 
 // NestJS service that performs proxied requests to Tenable using credentials stored in the session
 @Injectable()
 export class TenableService {
-  async proxyRequest(req: Request, creds: TenableCredentials) {
+  async proxyRequest(request: Request, creds: TenableCredentials) {
     const axiosInstance = axios.create({
       baseURL: creds.host_url,
       headers: {
+        'Content-Type': request.get('content-type') || 'application/json',
         'x-apikey': `accesskey=${creds.accesskey}; secretkey=${creds.secretkey}`,
-        'Content-Type': req.get('content-type') || 'application/json'
-      }
+      },
     });
 
-    const method = req.method;
-    const url = req.originalUrl.replace('/api/tenable', '');
-    const data = req.body;
-    const params = req.query;
+    const method = request.method;
+    const url = request.originalUrl.replace('/api/tenable', '');
+    const data = request.body;
+    const parameters = request.query;
 
     return axiosInstance({
-      method,
-      url,
       data,
-      params,
+      method,
+      params: parameters,
       responseType:
-        method === 'POST' && req.get('content-type')?.includes('zip')
+        method === 'POST' && request.get('content-type')?.includes('zip')
           ? 'arraybuffer'
-          : 'json'
+          : 'json',
+      url,
     });
   }
 }

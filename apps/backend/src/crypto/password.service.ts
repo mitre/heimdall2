@@ -83,6 +83,45 @@ export class PasswordService {
     configureKdfLimiter({ concurrency });
   }
 
+  private readAlgorithm(): PasswordHashAlgorithm {
+    const raw = this.configService.get('PASSWORD_HASH_ALGORITHM');
+    if (raw === undefined || raw === '') {
+      return PasswordService.DEFAULT_ALGORITHM;
+    }
+    if (isAlgorithm(raw)) {
+      return raw;
+    }
+    throw new PasswordHashError(
+      `PASSWORD_HASH_ALGORITHM must be one of sha256, sha384, sha512 (got '${raw}')`,
+    );
+  }
+
+  private readIntInRange(
+    key: string,
+    fallback: number,
+    min: number,
+    max: number,
+  ): number {
+    const raw = this.configService.get(key);
+    if (raw === undefined || raw === '') {
+      return fallback;
+    }
+    // Decimal integers only — never parseInt/Number coercion (§6 step 4:
+    // parseInt('6e5') === 6, Number('0x10') === 16).
+    if (!DECIMAL_INTEGER.test(raw)) {
+      throw new PasswordHashError(
+        `${key} must be an integer within [${min}, ${max}] (got '${raw}')`,
+      );
+    }
+    const value = Number(raw);
+    if (!Number.isSafeInteger(value) || value < min || value > max) {
+      throw new PasswordHashError(
+        `${key} must be an integer within [${min}, ${max}] (got '${raw}')`,
+      );
+    }
+    return value;
+  }
+
   /**
    * Hash a password using the configured algorithm and iterations. Enforces
    * the configured PASSWORD_MAX_LENGTH on this (hash) path only; the pure
@@ -141,44 +180,5 @@ export class PasswordService {
    */
   writesEnabled(): Promise<boolean> {
     return this.hashWriteGate.writesEnabled();
-  }
-
-  private readAlgorithm(): PasswordHashAlgorithm {
-    const raw = this.configService.get('PASSWORD_HASH_ALGORITHM');
-    if (raw === undefined || raw === '') {
-      return PasswordService.DEFAULT_ALGORITHM;
-    }
-    if (isAlgorithm(raw)) {
-      return raw;
-    }
-    throw new PasswordHashError(
-      `PASSWORD_HASH_ALGORITHM must be one of sha256, sha384, sha512 (got '${raw}')`,
-    );
-  }
-
-  private readIntInRange(
-    key: string,
-    fallback: number,
-    min: number,
-    max: number,
-  ): number {
-    const raw = this.configService.get(key);
-    if (raw === undefined || raw === '') {
-      return fallback;
-    }
-    // Decimal integers only — never parseInt/Number coercion (§6 step 4:
-    // parseInt('6e5') === 6, Number('0x10') === 16).
-    if (!DECIMAL_INTEGER.test(raw)) {
-      throw new PasswordHashError(
-        `${key} must be an integer within [${min}, ${max}] (got '${raw}')`,
-      );
-    }
-    const value = Number(raw);
-    if (!Number.isSafeInteger(value) || value < min || value > max) {
-      throw new PasswordHashError(
-        `${key} must be an integer within [${min}, ${max}] (got '${raw}')`,
-      );
-    }
-    return value;
   }
 }

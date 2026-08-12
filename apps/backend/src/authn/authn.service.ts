@@ -26,12 +26,12 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthnService {
+  private readonly line = '_______________________________________________\n';
   // unicorn/consistent-class-member-order (privates-first) and
   // perfectionist/sort-classes (publics-first) are mutually exclusive on any
   // mixed class — documented floor class (password.service.ts carries the
   // same finding); perfectionist's order is kept.
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
-  private readonly line = '_______________________________________________\n';
   public logger = createLogger({
     format: format.combine(
       format.timestamp({ format: this.loggingTimeFormat }),
@@ -50,6 +50,39 @@ export class AuthnService {
     private readonly jwtService: JwtService,
     private readonly passwordService: PasswordService,
   ) {}
+
+  /**
+   * §11: the bounded KDF queue rejects with `KdfOverloadedError` when it is
+   * saturated, and the ADR assigns the mapping to "the auth layer" — this is
+   * that layer for site 4. Left unmapped the error escapes as a 500 alongside
+   * everyone else's 401, which is itself an enumeration oracle: under
+   * saturation the absent-user dummy consumes a KDF slot while a legacy
+   * `bcryptjs.compare` consumes none, separating "no such account" from
+   * "account still on bcrypt". Returns null on overload (caller fails
+   * generically); anything else is a real bug and propagates.
+   *
+   * `subject` is a pre-formatted label for the server-side log only — e.g.
+   * `User<ID: 5>` or `ApiKey<ID: 3>` — so both credential paths share this
+   * mapping without the helper knowing which one called it.
+   */
+  private async verifyOrGenericFailure(
+    arguments_: { hash: string; password: string },
+    subject?: string,
+  ): Promise<null | PasswordVerifyResult> {
+    try {
+      return await this.passwordService.verify(arguments_);
+    } catch (error) {
+      if (error instanceof KdfOverloadedError) {
+        this.logger.info({
+          message: `Credential verification rejected — KDF queue saturated${
+            subject === undefined ? '' : ` for ${subject}`
+          }; returning the generic authentication failure.`,
+        });
+        return null;
+      }
+      throw error;
+    }
+  }
 
   async login(user: {
     email: string;
@@ -369,38 +402,5 @@ export class AuthnService {
     // exists BECAUSE this save races; void marks the intent.
     void this.usersService.updateLoginMetadata(user);
     return user;
-  }
-
-  /**
-   * §11: the bounded KDF queue rejects with `KdfOverloadedError` when it is
-   * saturated, and the ADR assigns the mapping to "the auth layer" — this is
-   * that layer for site 4. Left unmapped the error escapes as a 500 alongside
-   * everyone else's 401, which is itself an enumeration oracle: under
-   * saturation the absent-user dummy consumes a KDF slot while a legacy
-   * `bcryptjs.compare` consumes none, separating "no such account" from
-   * "account still on bcrypt". Returns null on overload (caller fails
-   * generically); anything else is a real bug and propagates.
-   *
-   * `subject` is a pre-formatted label for the server-side log only — e.g.
-   * `User<ID: 5>` or `ApiKey<ID: 3>` — so both credential paths share this
-   * mapping without the helper knowing which one called it.
-   */
-  private async verifyOrGenericFailure(
-    arguments_: { hash: string; password: string },
-    subject?: string,
-  ): Promise<null | PasswordVerifyResult> {
-    try {
-      return await this.passwordService.verify(arguments_);
-    } catch (error) {
-      if (error instanceof KdfOverloadedError) {
-        this.logger.info({
-          message: `Credential verification rejected — KDF queue saturated${
-            subject === undefined ? '' : ` for ${subject}`
-          }; returning the generic authentication failure.`,
-        });
-        return null;
-      }
-      throw error;
-    }
   }
 }

@@ -1,11 +1,11 @@
-import {IApiKey} from '@heimdall/common/interfaces';
-import {ApiKey} from '../apikey.model';
+import type { IApiKey } from '@heimdall/common/interfaces';
+import type { ApiKey } from '../apikey.model';
 
 export class APIKeyDto implements IApiKey {
+  readonly createdAt!: Date;
   readonly id!: string;
   readonly name!: string;
   readonly type!: string;
-  readonly createdAt!: Date;
   readonly updatedAt!: Date;
 
   constructor(apiKey: ApiKey) {

@@ -1,7 +1,11 @@
-import {IUpdateUser} from '@heimdall/common/interfaces';
-import {IsBoolean, IsEmail, IsIn, IsOptional, IsString} from 'class-validator';
+import { IUpdateUser } from '@heimdall/common/interfaces';
+import { IsBoolean, IsEmail, IsIn, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto implements IUpdateUser {
+  @IsOptional()
+  @IsString()
+  readonly currentPassword?: string;
+
   @IsEmail()
   @IsOptional()
   readonly email: string | undefined;
@@ -9,6 +13,10 @@ export class UpdateUserDto implements IUpdateUser {
   @IsOptional()
   @IsString()
   readonly firstName!: string | undefined;
+
+  @IsOptional()
+  @IsBoolean()
+  readonly forcePasswordChange: boolean | undefined;
 
   @IsOptional()
   @IsString()
@@ -20,7 +28,11 @@ export class UpdateUserDto implements IUpdateUser {
 
   @IsOptional()
   @IsString()
-  readonly title!: string | undefined;
+  readonly password: string | undefined;
+
+  @IsOptional()
+  @IsString()
+  readonly passwordConfirmation: string | undefined;
 
   @IsOptional()
   @IsString()
@@ -29,17 +41,5 @@ export class UpdateUserDto implements IUpdateUser {
 
   @IsOptional()
   @IsString()
-  readonly password: string | undefined;
-
-  @IsOptional()
-  @IsString()
-  readonly passwordConfirmation: string | undefined;
-
-  @IsOptional()
-  @IsBoolean()
-  readonly forcePasswordChange: boolean | undefined;
-
-  @IsOptional()
-  @IsString()
-  readonly currentPassword?: string;
+  readonly title!: string | undefined;
 }

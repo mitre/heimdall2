@@ -1,5 +1,5 @@
-import {IDeleteApiKey} from '@heimdall/common/interfaces';
-import {IsOptional, IsString} from 'class-validator';
+import { IDeleteApiKey } from '@heimdall/common/interfaces';
+import { IsOptional, IsString } from 'class-validator';
 
 export class DeleteAPIKeyDto implements IDeleteApiKey {
   @IsString()

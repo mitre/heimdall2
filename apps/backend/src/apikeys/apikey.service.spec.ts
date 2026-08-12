@@ -1,5 +1,5 @@
-import {SequelizeModule} from '@nestjs/sequelize';
-import {Test} from '@nestjs/testing';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Test } from '@nestjs/testing';
 import {
   afterAll,
   afterEach,
@@ -10,19 +10,19 @@ import {
   it,
   vi,
 } from 'vitest';
-import {ConfigService} from '../config/config.service';
+import { ConfigService } from '../config/config.service';
 import { CryptoModule } from '../crypto/crypto.module';
 import { verifyPassword } from '../crypto/password';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
-import {GroupUser} from '../group-users/group-user.model';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
-import {ApiKey} from './apikey.model';
-import {ApiKeyService} from './apikey.service';
+import { DatabaseModule } from '../database/database.module';
+import { DatabaseService } from '../database/database.service';
+import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
+import { Evaluation } from '../evaluations/evaluation.model';
+import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { Group } from '../groups/group.model';
+import { User } from '../users/user.model';
+import { ApiKey } from './apikey.model';
+import { ApiKeyService } from './apikey.service';
 
 // ADR-006 §7: narrow compare-and-swap writer for lazy API-key rehash. Same
 // shape as UsersService.updateEncryptedPassword, against the ApiKeys.apiKey
@@ -49,11 +49,11 @@ describe('ApiKeyService.updateApiKeyHash (§7 compare-and-swap)', () => {
           Group,
           GroupEvaluation,
           Evaluation,
-          EvaluationTag
+          EvaluationTag,
         ]),
-        CryptoModule
+        CryptoModule,
       ],
-      providers: [ApiKeyService, ConfigService, DatabaseService]
+      providers: [ApiKeyService, ConfigService, DatabaseService],
     }).compile();
     apiKeyService = module.get<ApiKeyService>(ApiKeyService);
     databaseService = module.get<DatabaseService>(DatabaseService);
@@ -71,7 +71,7 @@ describe('ApiKeyService.updateApiKeyHash (§7 compare-and-swap)', () => {
     const created = await ApiKey.create({
       apiKey: ORIGINAL,
       name: 'cas-test',
-      type: 'user'
+      type: 'user',
     });
     apiKeyId = created.id;
   });
@@ -80,7 +80,7 @@ describe('ApiKeyService.updateApiKeyHash (§7 compare-and-swap)', () => {
     const affected = await apiKeyService.updateApiKeyHash(
       apiKeyId,
       'a-stale-hash-that-does-not-match',
-      NEW
+      NEW,
     );
     expect(affected).toBe(0);
     const reloaded = await ApiKey.findByPk<ApiKey>(apiKeyId);
@@ -91,7 +91,7 @@ describe('ApiKeyService.updateApiKeyHash (§7 compare-and-swap)', () => {
     const affected = await apiKeyService.updateApiKeyHash(
       apiKeyId,
       ORIGINAL,
-      NEW
+      NEW,
     );
     expect(affected).toBe(1);
     const reloaded = await ApiKey.findByPk<ApiKey>(apiKeyId);
@@ -205,7 +205,7 @@ describe('ApiKeyService.create (§4 site 7 — PBKDF2 hash of the JWT signature)
       currentPassword: 'unused-by-service-layer',
       name: 'awaited-key',
     });
-    expect(saveSpy.mock.settledResults.map((entry) => entry.type)).toEqual([
+    expect(saveSpy.mock.settledResults.map(entry => entry.type)).toEqual([
       'fulfilled',
       'fulfilled',
     ]);

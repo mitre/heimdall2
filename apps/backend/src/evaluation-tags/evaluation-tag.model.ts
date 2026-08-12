@@ -7,12 +7,23 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
-  Table
+  Table,
 } from 'sequelize-typescript';
-import {Evaluation} from '../evaluations/evaluation.model';
+import { Evaluation } from '../evaluations/evaluation.model';
 
 @Table
 export class EvaluationTag extends Model {
+  @AllowNull(false)
+  @Column
+  declare createdAt: Date;
+
+  @BelongsTo(() => Evaluation)
+  declare evaluation: Evaluation;
+
+  @ForeignKey(() => Evaluation)
+  @Column(DataType.BIGINT)
+  declare evaluationId: string;
+
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
@@ -21,20 +32,9 @@ export class EvaluationTag extends Model {
 
   @AllowNull(false)
   @Column
-  declare value: string;
-
-  @AllowNull(false)
-  @Column
-  declare createdAt: Date;
-
-  @AllowNull(false)
-  @Column
   declare updatedAt: Date;
 
-  @ForeignKey(() => Evaluation)
-  @Column(DataType.BIGINT)
-  declare evaluationId: string;
-
-  @BelongsTo(() => Evaluation)
-  declare evaluation: Evaluation;
+  @AllowNull(false)
+  @Column
+  declare value: string;
 }

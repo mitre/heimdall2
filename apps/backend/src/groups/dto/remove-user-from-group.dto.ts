@@ -1,5 +1,5 @@
-import {IRemoveUserFromGroup} from '@heimdall/common/interfaces';
-import {IsNotEmpty, IsString} from 'class-validator';
+import { IRemoveUserFromGroup } from '@heimdall/common/interfaces';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class RemoveUserFromGroupDto implements IRemoveUserFromGroup {
   @IsNotEmpty()

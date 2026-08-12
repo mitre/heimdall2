@@ -1,8 +1,8 @@
-import {Test} from '@nestjs/testing';
-import {afterAll, beforeAll, describe, expect, it} from 'vitest';
-import {DatabaseModule} from './database.module';
-import {DatabaseService} from './database.service';
-import {DeltaArgs} from './interfaces/delta-args.interface';
+import { Test } from '@nestjs/testing';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { DatabaseModule } from './database.module';
+import { DatabaseService } from './database.service';
+import type { DeltaArgs as DeltaArguments } from './interfaces/delta-args.interface';
 
 describe('DatabaseService', () => {
   let databaseService: DatabaseService;
@@ -10,7 +10,7 @@ describe('DatabaseService', () => {
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [DatabaseModule],
-      providers: [DatabaseService]
+      providers: [DatabaseService],
     }).compile();
 
     databaseService = module.get<DatabaseService>(DatabaseService);
@@ -23,8 +23,8 @@ describe('DatabaseService', () => {
 
   describe('getDelta', () => {
     it('returns the correct value when no items are given', async () => {
-      const source: DeltaArgs[] = [];
-      const updated: DeltaArgs[] = [];
+      const source: DeltaArguments[] = [];
+      const updated: DeltaArguments[] = [];
 
       const delta = databaseService.getDelta(source, updated);
       expect(delta.added.length).toEqual(0);
@@ -33,8 +33,8 @@ describe('DatabaseService', () => {
     });
 
     it('returns the correct value when an item is added', async () => {
-      const source = [{id: 1}, {id: 2}, {id: 3}];
-      const updated = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
+      const source = [{ id: 1 }, { id: 2 }, { id: 3 }];
+      const updated = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
       const delta = databaseService.getDelta(source, updated);
 
@@ -44,8 +44,8 @@ describe('DatabaseService', () => {
     });
 
     it('returns the correct value when an item is changed', async () => {
-      const source = [{id: 1, prop: 1}];
-      const updated = [{id: 1, prop: 2}];
+      const source = [{ id: 1, prop: 1 }];
+      const updated = [{ id: 1, prop: 2 }];
 
       const delta = databaseService.getDelta(source, updated);
 
@@ -57,8 +57,8 @@ describe('DatabaseService', () => {
     });
 
     it('returns the correct value when an item is deleted', async () => {
-      const source = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
-      const updated = [{id: 1}, {id: 2}, {id: 4}];
+      const source = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+      const updated = [{ id: 1 }, { id: 2 }, { id: 4 }];
 
       const delta = databaseService.getDelta(source, updated);
 
@@ -68,8 +68,8 @@ describe('DatabaseService', () => {
     });
 
     it('returns the correct value when all items are added', async () => {
-      const source: DeltaArgs[] = [];
-      const updated: DeltaArgs[] = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
+      const source: DeltaArguments[] = [];
+      const updated: DeltaArguments[] = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
       const delta = databaseService.getDelta(source, updated);
 
@@ -79,8 +79,8 @@ describe('DatabaseService', () => {
     });
 
     it('returns the correct value when all items are changed', async () => {
-      const source = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
-      const updated = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
+      const source = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+      const updated = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
       const delta = databaseService.getDelta(source, updated);
 
@@ -90,8 +90,8 @@ describe('DatabaseService', () => {
     });
 
     it('returns the correct value when all items are deleted', async () => {
-      const source = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
-      const updated: DeltaArgs[] = [];
+      const source = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+      const updated: DeltaArguments[] = [];
 
       const delta = databaseService.getDelta(source, updated);
 

@@ -1,12 +1,12 @@
-import {IUpdateGroupUser} from '@heimdall/common/interfaces';
-import {IsNotEmpty, IsString} from 'class-validator';
+import { IUpdateGroupUser } from '@heimdall/common/interfaces';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class UpdateGroupUserRoleDto implements IUpdateGroupUser {
   @IsNotEmpty()
   @IsString()
-  readonly userId!: string;
+  readonly groupRole!: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly groupRole!: string;
+  readonly userId!: string;
 }

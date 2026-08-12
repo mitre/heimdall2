@@ -1,7 +1,11 @@
-import {ICreateGroup} from '@heimdall/common/interfaces';
-import {IsBoolean, IsNotEmpty, IsOptional, IsString} from 'class-validator';
+import { ICreateGroup } from '@heimdall/common/interfaces';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateGroupDto implements ICreateGroup {
+  @IsOptional()
+  @IsString()
+  readonly desc!: string;
+
   @IsNotEmpty()
   @IsString()
   readonly name!: string;
@@ -9,8 +13,4 @@ export class CreateGroupDto implements ICreateGroup {
   @IsOptional()
   @IsBoolean()
   readonly public!: boolean;
-
-  @IsOptional()
-  @IsString()
-  readonly desc!: string;
 }

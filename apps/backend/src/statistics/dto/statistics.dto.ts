@@ -1,11 +1,11 @@
-import {IStatistics} from '@heimdall/common/interfaces';
+import type { IStatistics } from '@heimdall/common/interfaces';
 
 export class StatisticsDTO implements IStatistics {
   readonly apiKeyCount: number;
-  readonly userCount: number;
   readonly evaluationCount: number;
   readonly evaluationTagCount: number;
   readonly groupCount: number;
+  readonly userCount: number;
 
   constructor(statistics: StatisticsDTO) {
     this.apiKeyCount = statistics.apiKeyCount;

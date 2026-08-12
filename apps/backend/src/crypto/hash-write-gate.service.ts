@@ -25,13 +25,13 @@ export { SUPPORTED_HASH_MARKER_VERSION } from './hash-write-decision';
  */
 @Injectable()
 export class HashWriteGateService {
+  private derivation?: HashWriteDecision;
+
+  private markerPlanted = false;
   public logger = createLogger({
     format: format.printf(info => `[Hash Write Gate]: ${String(info.message)}`),
     transports: [new transports.Console()],
   });
-
-  private derivation?: HashWriteDecision;
-  private markerPlanted = false;
 
   constructor(
     @InjectModel(HashMigrationMarker)
@@ -44,6 +44,28 @@ export class HashWriteGateService {
     assertValidHashWriteSetting(
       this.configService.get('PASSWORD_HASH_WRITE_ENABLED'),
     );
+  }
+
+  private async derive(): Promise<HashWriteDecision> {
+    const explicitSetting = this.configService.get(
+      'PASSWORD_HASH_WRITE_ENABLED',
+    );
+    if (explicitSetting === 'true' || explicitSetting === 'false') {
+      // An explicit setting decides alone — no DB probes (the manual test
+      // constructions with unregistered model classes rely on this).
+      return deriveHashWriteState({
+        explicitSetting,
+        markerPresent: false,
+        usersPresent: false,
+      });
+    }
+    const hasMarker = (await this.markerModel.count()) > 0;
+    const hasUsers = (await this.userModel.count()) > 0;
+    return deriveHashWriteState({
+      explicitSetting,
+      markerPresent: hasMarker,
+      usersPresent: hasUsers,
+    });
   }
 
   /**
@@ -106,27 +128,5 @@ export class HashWriteGateService {
       });
     }
     return this.derivation.enabled;
-  }
-
-  private async derive(): Promise<HashWriteDecision> {
-    const explicitSetting = this.configService.get(
-      'PASSWORD_HASH_WRITE_ENABLED',
-    );
-    if (explicitSetting === 'true' || explicitSetting === 'false') {
-      // An explicit setting decides alone — no DB probes (the manual test
-      // constructions with unregistered model classes rely on this).
-      return deriveHashWriteState({
-        explicitSetting,
-        markerPresent: false,
-        usersPresent: false,
-      });
-    }
-    const hasMarker = (await this.markerModel.count()) > 0;
-    const hasUsers = (await this.userModel.count()) > 0;
-    return deriveHashWriteState({
-      explicitSetting,
-      markerPresent: hasMarker,
-      usersPresent: hasUsers,
-    });
   }
 }

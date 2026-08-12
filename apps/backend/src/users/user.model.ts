@@ -11,18 +11,21 @@ import {
   PrimaryKey,
   Table,
   Unique,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
-import {GroupUser} from '../group-users/group-user.model';
-import {Group} from '../groups/group.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { Group } from '../groups/group.model';
 
 @Table
 export class User extends Model {
-  @PrimaryKey
-  @AutoIncrement
+  @CreatedAt
   @AllowNull(false)
-  @Column(DataType.BIGINT)
-  declare id: string;
+  @Column(DataType.DATE)
+  declare createdAt: Date;
+
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  declare creationMethod: string;
 
   @Unique
   @IsEmail
@@ -30,38 +33,47 @@ export class User extends Model {
   @Column(DataType.STRING)
   declare email: string;
 
-  @AllowNull(true)
-  @Column(DataType.STRING)
-  declare firstName: string | undefined;
-
-  @AllowNull(true)
-  @Column(DataType.STRING)
-  declare lastName: string | undefined;
-
-  @AllowNull(true)
-  @Column(DataType.STRING)
-  declare organization: string | undefined;
-
-  @AllowNull(true)
-  @Column(DataType.STRING)
-  declare title: string | undefined;
-
   @AllowNull(false)
   @Column(DataType.STRING)
   declare encryptedPassword: string;
 
   @AllowNull(true)
+  @Column(DataType.STRING)
+  declare firstName: string | undefined;
+
+  @AllowNull(true)
   @Column(DataType.BOOLEAN)
   declare forcePasswordChange: boolean | undefined;
+
+  @BelongsToMany(() => Group, () => GroupUser)
+  declare groups: (Group & { GroupUser: GroupUser })[];
+
+  @PrimaryKey
+  @AutoIncrement
+  @AllowNull(false)
+  @Column(DataType.BIGINT)
+  declare id: string;
+
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  declare jwtSecret: string;
 
   @AllowNull(true)
   @Column(DataType.DATE)
   declare lastLogin: Date | undefined;
 
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  declare lastName: string | undefined;
+
   @AllowNull(false)
   @Default(0)
   @Column(DataType.BIGINT)
   declare loginCount: number;
+
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  declare organization: string | undefined;
 
   @AllowNull(true)
   @Column(DataType.DATE)
@@ -72,24 +84,12 @@ export class User extends Model {
   @Column(DataType.STRING)
   declare role: string;
 
-  @AllowNull(false)
-  @Column(DataType.STRING)
-  declare creationMethod: string;
-
   @AllowNull(true)
   @Column(DataType.STRING)
-  declare jwtSecret: string;
-
-  @CreatedAt
-  @AllowNull(false)
-  @Column(DataType.DATE)
-  declare createdAt: Date;
+  declare title: string | undefined;
 
   @UpdatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
   declare updatedAt: Date;
-
-  @BelongsToMany(() => Group, () => GroupUser)
-  declare groups: Array<Group & {GroupUser: GroupUser}>;
 }

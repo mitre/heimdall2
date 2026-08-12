@@ -8,31 +8,31 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {Group} from '../groups/group.model';
+import { Evaluation } from '../evaluations/evaluation.model';
+import { Group } from '../groups/group.model';
 
 @Table
 export class GroupEvaluation extends Model {
-  @PrimaryKey
-  @AutoIncrement
+  @CreatedAt
   @AllowNull(false)
-  @Column(DataType.BIGINT)
-  declare id: string;
-
-  @ForeignKey(() => Group)
-  @Column(DataType.BIGINT)
-  declare groupId: string;
+  @Column(DataType.DATE)
+  declare createdAt: Date;
 
   @ForeignKey(() => Evaluation)
   @Column(DataType.BIGINT)
   declare evaluationId: string;
 
-  @CreatedAt
+  @ForeignKey(() => Group)
+  @Column(DataType.BIGINT)
+  declare groupId: string;
+
+  @PrimaryKey
+  @AutoIncrement
   @AllowNull(false)
-  @Column(DataType.DATE)
-  declare createdAt: Date;
+  @Column(DataType.BIGINT)
+  declare id: string;
 
   @UpdatedAt
   @AllowNull(false)

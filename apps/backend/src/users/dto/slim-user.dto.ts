@@ -1,21 +1,10 @@
-import {ISlimUser} from '@heimdall/common/interfaces';
-import {IsOptional, IsString} from 'class-validator';
-import {User} from '../user.model';
+import { ISlimUser } from '@heimdall/common/interfaces';
+import { IsOptional, IsString } from 'class-validator';
+import { User } from '../user.model';
 
 export class SlimUserDto implements ISlimUser {
   @IsString()
-  readonly id: string;
-
-  @IsString()
   readonly email: string;
-
-  @IsOptional()
-  @IsString()
-  readonly title?: string;
-
-  @IsOptional()
-  @IsString()
-  readonly groupRole?: string;
 
   @IsOptional()
   @IsString()
@@ -23,9 +12,20 @@ export class SlimUserDto implements ISlimUser {
 
   @IsOptional()
   @IsString()
+  readonly groupRole?: string;
+
+  @IsString()
+  readonly id: string;
+
+  @IsOptional()
+  @IsString()
   readonly lastName?: string;
 
-  constructor(user: User, groupRole: string | undefined = undefined) {
+  @IsOptional()
+  @IsString()
+  readonly title?: string;
+
+  constructor(user: User, groupRole?: string) {
     this.id = user.id;
     this.email = user.email;
     this.title = user.title;
