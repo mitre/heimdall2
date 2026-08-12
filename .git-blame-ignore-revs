@@ -1,0 +1,13 @@
+# Commits that changed formatting only, and should be skipped by `git blame`.
+#
+# Enable locally (once per clone):
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# GitHub honours this file automatically in its blame view.
+#
+# Add the full 40-character SHA of a pure-formatting commit below, one per line,
+# with a comment naming it. Only add commits that changed NOTHING but formatting
+# — if a commit mixes formatting with behavior, blame must not skip it.
+
+# (none yet — the initial `yarn format` adoption commit belongs here once the
+#  repo-wide Prettier reformat lands)

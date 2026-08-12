@@ -1,0 +1,33 @@
+# Prettier owns formatting for SOURCE. Everything below is either build output,
+# third-party/generated content, or fixture data that is compared byte-for-byte
+# by tests — reformatting any of it changes meaning, not just appearance.
+
+# Build output and dependencies
+**/dist
+**/lib
+**/node_modules
+yarn.lock
+package-lock.json
+
+# Test fixture corpora. 365 MB across 249 files; the mapper specs read these
+# with readFileSync/JSON.parse and compare results against them, so reformatting
+# would both take enormous time and risk changing what the tests assert.
+libs/hdf-converters/sample_jsons/
+
+# Generated assets guarded by the `validate-generated` script, which fails the
+# build if their committed bytes change (tailwind style.css + the embedded
+# strings derived from it).
+libs/hdf-converters/data/
+
+# Generated sources — same set the ESLint config ignores, kept in sync.
+libs/inspecjs/src/generated_parsers/
+libs/hdf-converters/src/ckl-mapper/jsonixMapping.ts
+
+# Static data tables, not code: giant literal maps with no logic. Formatting
+# them produces enormous diffs and zero benefit.
+**/*MappingData.ts
+apps/frontend/src/utilities/cci_util.ts
+
+# The documentation site is an isolated project (ADR-005 §2.1) with its own
+# package.json and toolchain; it is not formatted by the application's tooling.
+docs/
