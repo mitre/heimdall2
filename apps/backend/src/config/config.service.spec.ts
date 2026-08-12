@@ -1,28 +1,31 @@
 import * as dotenv from 'dotenv';
-import mock from 'mock-fs';
-import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
+import mock, { file, load, restore } from 'mock-fs';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   DATABASE_URL_MOCK_ENV,
   ENV_MOCK_FILE,
-  SIMPLE_ENV_MOCK_FILE
-} from '../../test/constants/env-test.constant';
-import {ConfigService} from './config.service';
+  GITLAB_BOTH_SECRETS_ENV,
+  GITLAB_CANONICAL_SECRET_ENV,
+  GITLAB_EMPTY_CANONICAL_SECRET_ENV,
+  GITLAB_LEGACY_SECRET_ENV,
+  SIMPLE_ENV_MOCK_FILE,
+} from '../../test/constants/environment_test.constant';
+import { ConfigService } from './config.service';
 
 // If you run the test without --silent , you need to add console.log() before you mock out the file system in the beforeAll() or it'll throw an error (this is a documented bug which can be found at https://github.com/tschaub/mock-fs/issues/234). If you run the test with --silent (which we do by default), you don't need the log statement.
 describe('Config Service', () => {
-  beforeAll(async () => {
-    // eslint-disable-next-line no-console
+  beforeAll(() => {
     console.log();
     // Used as an empty file system
     mock({
       // No files created (.env file does not exist yet), but pull through node_modules so the testing framework can run
-      node_modules: mock.load('node_modules')
+      node_modules: load('node_modules'),
     });
   });
 
   afterAll(() => {
     // Restore the fs binding to the real file system
-    mock.restore();
+    restore();
   });
 
   describe('Tests the get function when .env file does not exist', () => {
@@ -36,10 +39,10 @@ describe('Config Service', () => {
       // Used to make sure logs are outputted
       new ConfigService();
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Unable to read configuration file `.env`!'
+        'Unable to read configuration file `.env`!',
       );
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Falling back to environment or undefined values!'
+        'Falling back to environment or undefined values!',
       );
     });
   });
@@ -47,9 +50,7 @@ describe('Config Service', () => {
   describe('Tests the get function when .env file does exist', () => {
     beforeAll(() => {
       // Mock .env file
-      mock({
-        '.env': ENV_MOCK_FILE
-      });
+      mock({ '.env': ENV_MOCK_FILE });
     });
 
     it('should return the correct database name', () => {
@@ -60,7 +61,7 @@ describe('Config Service', () => {
       expect(configService.get('DATABASE_USERNAME')).toEqual('postgres');
       expect(configService.get('DATABASE_PASSWORD')).toEqual('postgres');
       expect(configService.get('DATABASE_NAME')).toEqual(
-        'heimdallts_vitest_testing_service_db'
+        'heimdallts_vitest_testing_service_db',
       );
       expect(configService.get('JWT_SECRET')).toEqual('abc123');
       expect(configService.get('NODE_ENV')).toEqual('test');
@@ -75,11 +76,9 @@ describe('Config Service', () => {
   describe('Tests the get function when environment file is sourced externally', () => {
     beforeAll(() => {
       // Mock .env file
-      mock({
-        '.env-loaded-externally': SIMPLE_ENV_MOCK_FILE
-      });
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      dotenv.config({path: '.env-loaded-externally'});
+      mock({ '.env-loaded-externally': SIMPLE_ENV_MOCK_FILE });
+
+      dotenv.config({ path: '.env-loaded-externally' });
     });
 
     it('should return the correct database port', () => {
@@ -95,22 +94,20 @@ describe('Config Service', () => {
 
   describe('When using DATABASE_URL', () => {
     beforeAll(() => {
-      mock({
-        '.env': DATABASE_URL_MOCK_ENV
-      });
+      mock({ '.env': DATABASE_URL_MOCK_ENV });
     });
 
     it('should correctly parse DATABASE_URL into its components', () => {
       const configService = new ConfigService();
       expect(configService.get('DATABASE_HOST')).toEqual(
-        'ec2-00-000-11-123.compute-1.amazonaws.com'
+        'ec2-00-000-11-123.compute-1.amazonaws.com',
       );
       expect(configService.get('DATABASE_PORT')).toEqual('5432');
       expect(configService.get('DATABASE_USERNAME')).toEqual(
-        'abcdefghijk123456'
+        'abcdefghijk123456',
       );
       expect(configService.get('DATABASE_PASSWORD')).toEqual(
-        '000011112222333344455556666777778889999aaaabbbbccccddddeeeffff'
+        '000011112222333344455556666777778889999aaaabbbbccccddddeeeffff',
       );
       expect(configService.get('DATABASE_NAME')).toEqual('database01');
     });
@@ -120,20 +117,18 @@ describe('Config Service', () => {
     it('should throw an EACCES error', () => {
       expect.assertions(1);
       mock({
-        '.env': mock.file({
+        '.env': file({
           content: 'DATABASE_NAME=heimdallts_vitest_testing_service_db',
-          mode: 0o000 // Set file system permissions to none
-        })
+          mode: 0o000, // Set file system permissions to none
+        }),
       });
       expect(() => new ConfigService()).toThrowError(
-        "EACCES, permission denied '.env'"
+        "EACCES, permission denied '.env'",
       );
     });
 
     it('should throw an error in the get function', () => {
-      mock({
-        '.env': ENV_MOCK_FILE
-      });
+      mock({ '.env': ENV_MOCK_FILE });
       const configService = new ConfigService();
       vi.spyOn(configService, 'get').mockImplementationOnce(() => {
         throw new Error('Test error');
@@ -147,6 +142,43 @@ describe('Config Service', () => {
       const configService = new ConfigService();
       configService.set('test', 'value');
       expect(configService.get('test')).toBe('value');
+    });
+  });
+
+  // GITLAB_CLIENTSECRET is canonical — it matches GITHUB_CLIENTSECRET /
+  // GOOGLE_CLIENTSECRET / OKTA_CLIENTSECRET and is the name .env-example and
+  // the RPM man page have always documented. GITLAB_SECRET is the legacy name
+  // gitlab.strategy.ts actually read, so both must resolve or every deployment
+  // configured from either source breaks.
+  describe('getGitlabClientSecret', () => {
+    it('should resolve the canonical GITLAB_CLIENTSECRET', () => {
+      mock({ '.env': GITLAB_CANONICAL_SECRET_ENV });
+      const configService = new ConfigService();
+      expect(configService.getGitlabClientSecret()).toEqual('canonical-secret');
+    });
+
+    it('should resolve the legacy GITLAB_SECRET when the canonical name is unset', () => {
+      mock({ '.env': GITLAB_LEGACY_SECRET_ENV });
+      const configService = new ConfigService();
+      expect(configService.getGitlabClientSecret()).toEqual('legacy-secret');
+    });
+
+    it('should prefer the canonical name when both are set', () => {
+      mock({ '.env': GITLAB_BOTH_SECRETS_ENV });
+      const configService = new ConfigService();
+      expect(configService.getGitlabClientSecret()).toEqual('canonical-secret');
+    });
+
+    it('should treat an empty canonical value as unset and fall back to the legacy name', () => {
+      mock({ '.env': GITLAB_EMPTY_CANONICAL_SECRET_ENV });
+      const configService = new ConfigService();
+      expect(configService.getGitlabClientSecret()).toEqual('legacy-secret');
+    });
+
+    it('should return undefined when neither name is set', () => {
+      mock({ '.env': SIMPLE_ENV_MOCK_FILE });
+      const configService = new ConfigService();
+      expect(configService.getGitlabClientSecret()).toBe(undefined);
     });
   });
 });

@@ -1,46 +1,34 @@
-import {SequelizeOptions} from 'sequelize-typescript';
+import type { SequelizeOptions } from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
-import {StartupSettingsDto} from './dto/startup-settings.dto';
+import { StartupSettingsDto } from './dto/startup-settings.dto';
 
 export class ConfigService {
   private readonly appConfig: AppConfig;
-  public defaultGithubBaseURL = 'https://github.com/';
+
   public defaultGithubAPIURL = 'https://api.github.com/';
+  public defaultGithubBaseURL = 'https://github.com/';
+  public sensitiveKeys = [
+    /cookie/iv,
+    /passw(?:or)?d/iv,
+    /^pw$/v,
+    /^pass$/iv,
+    /secret/iv,
+    /token/iv,
+    /api[\-._]?key/iv,
+    /data/iv,
+  ];
 
   constructor() {
     this.appConfig = new AppConfig();
   }
 
-  public sensitiveKeys = [
-    /cookie/i,
-    /passw(or)?d/i,
-    /^pw$/,
-    /^pass$/i,
-    /secret/i,
-    /token/i,
-    /api[-._]?key/i,
-    /data/i
-  ];
-
-  isRegistrationAllowed(): boolean {
-    return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
-  }
-
-  isLocalLoginAllowed(): boolean {
-    return this.get('LOCAL_LOGIN_DISABLED')?.toLowerCase() !== 'true';
-  }
-
-  isInProductionMode(): boolean {
-    return this.get('NODE_ENV')?.toLowerCase() === 'production';
-  }
-
   enabledOauthStrategies() {
     const enabledOauth: string[] = [];
-    supportedOauth.forEach((oauthStrategy) => {
+    for (const oauthStrategy of supportedOauth) {
       if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
         enabledOauth.push(oauthStrategy);
       }
-    });
+    }
     return enabledOauth;
   }
 
@@ -55,43 +43,70 @@ export class ConfigService {
         this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
       enabledOAuth: this.enabledOauthStrategies(),
       externalUrl: this.getExternalUrl(),
-      oidcName: this.get('OIDC_NAME') || '',
-      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
-      registrationEnabled: this.isRegistrationAllowed(),
-      localLoginEnabled: this.isLocalLoginAllowed(),
-      tenableHostUrl: this.getTenableHostUrl(),
       forceTenableFrontend:
         this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',
-      splunkHostUrl: this.getSplunkHostUrl()
+      ldap: (this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true'),
+      localLoginEnabled: this.isLocalLoginAllowed(),
+      oidcName: this.get('OIDC_NAME') || '',
+      registrationEnabled: this.isRegistrationAllowed(),
+      splunkHostUrl: this.getSplunkHostUrl(),
+      tenableHostUrl: this.getTenableHostUrl(),
     });
   }
 
-  getExternalUrl(): string {
-    return this.appConfig.getExternalUrl();
-  }
-
-  getSplunkHostUrl(): string {
-    return this.appConfig.getSplunkHostUrl();
-  }
-
-  getTenableHostUrl(): string {
-    return this.appConfig.getTenableHostUrl();
+  get(key: string): string | undefined {
+    return this.appConfig.get(key);
   }
 
   getDbConfig(): SequelizeOptions {
     return this.appConfig.getDbConfig();
   }
 
+  getExternalUrl(): string {
+    return this.appConfig.getExternalUrl();
+  }
+
+  /**
+   * GitLab's client secret accepts two names. GITLAB_CLIENTSECRET is canonical:
+   * it matches GITHUB_CLIENTSECRET / GOOGLE_CLIENTSECRET / OKTA_CLIENTSECRET,
+   * and it is the name apps/backend/.env-example and the RPM man page have
+   * always documented. GITLAB_SECRET is the legacy name this application
+   * actually read, so it stays supported — dropping it would break every
+   * deployment configured from the code rather than the docs.
+   *
+   * The canonical name wins when both are set. An empty value counts as unset,
+   * matching AppConfig.get's own truthiness fallback.
+   */
+  getGitlabClientSecret(): string | undefined {
+    return this.get('GITLAB_CLIENTSECRET') || this.get('GITLAB_SECRET');
+  }
+
+  getSplunkHostUrl(): string {
+    return this.appConfig.getSplunkHostUrl();
+  }
+
   getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
   }
 
-  set(key: string, value: string | undefined): void {
-    this.appConfig.set(key, value);
+  getTenableHostUrl(): string {
+    return this.appConfig.getTenableHostUrl();
   }
 
-  get(key: string): string | undefined {
-    return this.appConfig.get(key);
+  isInProductionMode(): boolean {
+    return this.get('NODE_ENV')?.toLowerCase() === 'production';
+  }
+
+  isLocalLoginAllowed(): boolean {
+    return this.get('LOCAL_LOGIN_DISABLED')?.toLowerCase() !== 'true';
+  }
+
+  isRegistrationAllowed(): boolean {
+    return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
+  }
+
+  set(key: string, value: string | undefined): void {
+    this.appConfig.set(key, value);
   }
 }
 export const supportedOauth: string[] = [
@@ -99,5 +114,5 @@ export const supportedOauth: string[] = [
   'gitlab',
   'google',
   'okta',
-  'oidc'
+  'oidc',
 ];
