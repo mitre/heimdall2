@@ -18,7 +18,7 @@ ADR-004 made this concrete: its breaking change to `REGISTRATION_DISABLED` names
 Additional forces:
 
 - The wiki is 26 pages (24 content pages + `_Sidebar`/`_Footer`) of plain Markdown — already portable.
-- Repo-level docs (`README.md`, `apps/backend/README.md`, `libs/*/README.md`, `CODE_OF_CONDUCT.md`) and ADRs (`docs/adr-004`, this document) have no published home; ADRs in particular are invisible to deployers.
+- Repo-level user-facing docs (`README.md`, `apps/backend/README.md`, `libs/*/README.md`, `CODE_OF_CONDUCT.md`) have no published home. **Corrected 2026-08-11 (Aaron):** this bullet originally added ADRs to that list and argued they were "invisible to deployers" — the premise that produced the `decisions/` site section. ADRs are internal project records, not deployer documentation; they are deliberately never published and live in `docs/adrs/` beside the site (§2.3).
 - `mitre/vulcan` solved this exact problem with VitePress; its setup was read directly this session (`docs/.vitepress/config.mjs`, `.github/workflows/docs.yml`) and serves as the reference implementation.
 - **Hard constraint:** Heimdall is a Yarn-workspaces monorepo (`workspaces: ["apps/*", "libs/*", "test"]`) with a Vue 2 frontend. A docs toolchain on Vue 3 must be invisible to the app build. Modifying the root `package.json` workspaces configuration is prohibited (a past `nohoist` change broke the entire frontend build).
 
@@ -26,14 +26,14 @@ Additional forces:
 
 1. Documentation changes are PR-reviewable and can ship in the same PR as code changes.
 2. The Vue 3 docs toolchain and the Vue 2 app are mutually invisible — no shared dependency resolution, no root `package.json` changes.
-3. Existing content (wiki pages, repo Markdown, ADRs) migrates rather than being rewritten.
-4. Publishing is automatic on merge (no manual copy step to forget).
+3. External user-facing content is written to current practice rather than moved verbatim. **Corrected 2026-08-11 (Aaron):** the original requirement read "existing content (wiki pages, repo Markdown, ADRs) migrates rather than being rewritten"; a full 56-document inventory found the wiki largely stale, so it is rewritten section by section (§2.3), and ADRs never enter the site at all.
+4. Publishing is automated with no manual copy step (triggered by `release: published` + `workflow_dispatch` per §2.2.1 — corrected 2026-08-11 from "automatic on merge").
 
 ---
 
 ## 2. Decision
 
-Adopt **VitePress**, following the `mitre/vulcan` pattern: a self-contained `docs/` directory inside `mitre/heimdall2` with its own `package.json` and `docs/yarn.lock`, built and deployed to GitHub Pages by a dedicated workflow, publishing the migrated wiki content, repo Markdown, and ADRs. The docs site supersedes the wiki as the canonical documentation channel; the wiki is reduced to pointer stubs.
+Adopt **VitePress**, following the `mitre/vulcan` pattern: a self-contained `docs/` directory inside `mitre/heimdall2` with its own `package.json` and `docs/yarn.lock`, built and deployed to GitHub Pages by a dedicated workflow, publishing **external user-facing documentation only** — the rewritten wiki content and the user-facing repo Markdown. Internal project records (ADRs, plans, research) stay in `docs/` beside the site and are never published (§2.3). The docs site supersedes the wiki as the canonical documentation channel; the wiki is reduced to pointer stubs.
 
 ### 2.1 Isolation Design (the load-bearing detail)
 
@@ -150,7 +150,19 @@ Two consequences worth carrying forward:
 
 ### 2.3 Proposed Structure and Content Migration
 
-All 24 wiki content pages map into the site; existing repo Markdown is symlinked or included, never duplicated. Migration is move-and-organize: content is **not rewritten** in the migration pass (except the `REGISTRATION_DISABLED` page, owned by ADR-004 Phase 9), and license/notice/attribution files move **verbatim**.
+> **Amended 2026-08-11 (Aaron), governing rule for this whole section:**
+> **`site/` carries EXTERNAL USER-FACING documentation only.** Internal project
+> records — ADRs, plans, research notes — are never published: they live beside
+> the site under `docs/`, where `srcDir: 'site'` makes them structurally
+> unbuildable into it. The original `decisions/` row (published ADRs) is removed
+> accordingly, and Phase 4 carries only user-facing repo files (README,
+> CODE_OF_CONDUCT, LICENSE, attributions), not ADRs.
+>
+> The internal trees are `docs/adrs/`, `docs/plans/` and `docs/research/` —
+> Vulcan's `docs/{decisions,plans,research,site}` layout, with `adrs/` in place
+> of its `decisions/` per the owner. Nothing outside `docs/site/` is published.
+
+The 24 wiki content pages map into the site sections below; existing repo Markdown is symlinked or included, never duplicated. **Amended 2026-08-11 (Aaron): content is REWRITTEN, not moved** — the inventory found the wiki largely stale, so each section is authored fresh against the current product by its own card (§5.3), using the wiki as source material rather than as text to relocate. Two rules survive that change unaltered: license/notice/attribution files move **verbatim**, and the `REGISTRATION_DISABLED` content is owned by ADR-004 Phase 9.
 
 | Site section | Content | Source |
 |---|---|---|
@@ -161,7 +173,6 @@ All 24 wiki content pages map into the site; existing repo Markdown is symlinked
 | `converters/` | HDF converter docs | Wiki: HDF-Converter-Mappings, HDF-Converters-How-Tos, CCI-Converter |
 | `api/` | API documentation | Wiki: Heimdall-API-Documentation (vitepress-openapi rendering of a machine-readable spec is an investigation item, not a commitment) |
 | `security/` | Security control responses | Wiki: Heimdall-Server-Security-Control-Responses |
-| `decisions/` | Published ADRs | Repo: `docs/adr-004-*`, `docs/adr-005-*` (this file), future ADRs |
 | `about/` | Attributions, code of conduct, license | Wiki: Technology-Attributions (verbatim); repo: `CODE_OF_CONDUCT.md`, `LICENSE.md`, `README.md` (symlinked) |
 | Landing (`index.md`) | Home + navigation | Wiki: Home, _Sidebar (becomes the sidebar config) |
 
@@ -196,6 +207,9 @@ docs/                           # the docs PROJECT (own package.json + yarn.lock
 │   ├── config.mjs              # nav/sidebar, srcDir: site, local search, dead-link check on
 │   ├── target.mjs              # per-target base/inApp/outboundChrome (pages | local | app)
 │   └── theme/                  # minimal — SAF logo, theme color only
+├── adrs/                       # INTERNAL — architecture decision records; NEVER published
+├── plans/                      # INTERNAL — implementation plans; NEVER published
+├── research/                   # INTERNAL — research notes; NEVER published
 └── site/                       # the PUBLISHED tree — only this builds
     ├── public/                 # migrated images, saf-logo.svg
     ├── index.md                # landing page (spec below)
@@ -243,10 +257,6 @@ docs/                           # the docs PROJECT (own package.json + yarn.lock
 │                                 only if a maintained machine-readable spec exists — §4.3)
 ├── security/
 │   └── control-responses.md    ← Heimdall-Server-Security-Control-Responses.md
-├── decisions/
-│   ├── index.md                # NEW — ADR index, one-line summary each
-│   ├── adr-004-external-auth-user-provisioning-policy.md   (moved from docs/ root)
-│   └── adr-005-vitepress-documentation-site.md
 ├── release-notes/              # NEW section — versioned upgrade/migration notes; the
 │   └── index.md                  ADR-004 breaking-change note is its first durable entry
 │                                 (GitLab upgrade-notes pattern; wiki has no equivalent)
@@ -262,7 +272,7 @@ VitePress `layout: home` hero + features:
 
 - **Hero:** name "Heimdall", text "Visualize and analyze your security results", tagline covering InSpec + the 30+ formats via hdf-converters, SAF logo. Actions: Quick Start → `/getting-started/quick-start`, Live Demo → the demo URL currently in `README.md` (taken from there, not invented), Environment Variables → the canonical reference.
 - **Features (4):** View & Analyze (upload HDF, filter, drill into controls) · 30+ Converters · Deploy Anywhere (Docker, RPM, cloud, enterprise SSO/LDAP) · Compliance-Ready (NIST 800-53 views, attestations, exports).
-- **Top nav:** Guide · Deploy · Converters · Developers · API · Decisions, plus GitHub link.
+- **Top nav:** Guide · Deploy · Converters · Developers · API, plus GitHub link. (Corrected 2026-08-11: the `Decisions` entry was removed with the `decisions/` section — §2.3.)
 
 #### 2.3.3 Site capabilities
 
@@ -287,7 +297,7 @@ Wikis cannot redirect, so each migrated wiki page is edited down to a one-line p
 
 Move wiki pages into `docs/` and rely on GitHub's Markdown rendering.
 **Pros:** PR-reviewable, zero toolchain, zero isolation concerns.
-**Cons:** no navigation/search/landing page for deployers; ADRs and 24+ pages become a flat file listing; no versioned public URL to point the login page's help link at. **Rejected** — solves review but not publication.
+**Cons:** no navigation/search/landing page for deployers; 24+ user-facing pages become a flat file listing; no versioned public URL to point the login page's help link at. **Rejected** — solves review but not publication.
 
 ### Option C: Keep the wiki, sync from repo via GitHub Action
 
@@ -305,7 +315,7 @@ Author docs in-repo, push to the wiki repo on merge.
 **Pros:** mature, React-based, versioned docs built in.
 **Cons:** React toolchain in a Vue shop; heavier than needed; same isolation question with a larger surface. **Rejected.**
 
-**Why VitePress:** Node/Vue-native (matches the team), the isolation problem is already solved and proven in-house (`mitre/vulcan` — same Vue 2 app + Vue 3 docs split, config and deploy workflow read directly and reusable nearly verbatim), and it publishes ADRs as first-class pages (Vulcan's `decisions/` section).
+**Why VitePress:** Node/Vue-native (matches the team), the isolation problem is already solved and proven in-house (`mitre/vulcan` — same Vue 2 app + Vue 3 docs split, config and deploy workflow read directly and reusable nearly verbatim), and its `srcDir` makes the published tree structural, so internal records cannot leak into the site (§2.3). (Corrected 2026-08-11: this reason originally read "it publishes ADRs as first-class pages (Vulcan's `decisions/` section)" — the superseded premise.)
 
 ---
 
@@ -314,7 +324,7 @@ Author docs in-repo, push to the wiki repo on merge.
 ### 4.1 Positive
 
 - Documentation changes ship in the same reviewed PR as code (ADR-004 Phase 9's wiki row is superseded the moment this lands — the `REGISTRATION_DISABLED` page becomes an in-PR `getting-started/environment-variables.md` edit).
-- ADRs get a published, linkable home (`decisions/`).
+- Internal records (ADRs, plans, research) sit beside the site in the same reviewed repo, so a decision and the documentation it changes ship in one PR — without exposing project internals to end users. **Corrected 2026-08-11 (Aaron):** this line originally claimed ADRs gain "a published, linkable home (`decisions/`)"; they are not published (§2.3).
 - The login page's help link points at a reviewed, versioned page instead of a wiki page anyone with write access can alter.
 - Publishing is automatic; there is no manual copy step to forget at release time.
 
@@ -328,7 +338,8 @@ Author docs in-repo, push to the wiki repo on merge.
 ### 4.3 Out of Scope
 
 - Custom domain (GitHub Pages project URL is sufficient to start)
-- Rewriting/modernizing page content during migration (move-and-organize only; content rewrites are follow-on work per page)
+- ~~Rewriting/modernizing page content during migration (move-and-organize only)~~ — **reversed 2026-08-11 (Aaron):** rewriting is now the work itself. Each site section is authored fresh against the current product by its own card (§5.3), with the wiki as source material.
+- Publishing ADRs, plans or research (§2.3 — internal records never enter `site/`)
 - Versioned docs (per-release snapshots)
 - vitepress-openapi API rendering (investigation item — depends on a maintained machine-readable API spec)
 
@@ -355,26 +366,53 @@ Author docs in-repo, push to the wiki repo on merge.
 
 ### 5.3 Phases
 
-Tracked as epic **`heimdall2-yvx`** on the heimdall2 beads board; each phase below is child card `heimdall2-yvx.<phase>` (e.g. Phase 3 = `heimdall2-yvx.3`), with dependencies mirroring the Depends on column. ADR-004's Phase 9 card (`heimdall2-4qg.9`) soft-references this epic: once the docs site is live, its wiki deliverables become docs-site page edits.
+Tracked as epic **`heimdall2-yvx`** on the heimdall2 beads board; every row below is a child card (`heimdall2-yvx.<n>`), and the Depends on column mirrors the board's own dependencies. ADR-004's Phase 9 card (`heimdall2-4qg.9`) soft-references this epic: once the docs site is live, its wiki deliverables become docs-site page edits.
 
 **Board access:** the board is a shared Dolt database published at `refs/dolt/data` in this repository. Install `bd` from [gastownhall/beads](https://github.com/gastownhall/beads), then run `bd dolt pull` from a heimdall2 checkout with an existing beads clone, or `bd bootstrap` on a fresh machine. **Upgrade note (2026-07-10):** the board schema was migrated v49 → v54 — if you have a pre-existing beads clone, run `bd dolt pull` on your *current* bd binary **before** upgrading bd; if you upgraded first and bd refuses to start, `bd bootstrap` re-clones (push any local issues first). The team agent skills used to work these cards (card template, TDD gates, AC verification) live in [mitre/mitre-saf-skills](https://github.com/mitre/mitre-saf-skills).
 
-> **Phase list amended 2026-08-11.** A new **Phase 7** carries the in-app
-> deployment (§2.2 target A), which had no phase of its own. Phase 2's hosting
-> shape is an open decision (§2.2.1); phase ORDER is not settled here. No
-> dependency changes: Phase 6 still waits on Phase 5, which still waits on
-> Phase 2 — that is what keeps the public wiki alive until a public site
-> replaces it.
+> **Phase list REPLACED 2026-08-11 (Aaron).** The original six phases assumed a
+> move-and-organize migration, so all 24 wiki pages sat on one card. After the
+> 56-document inventory and the rewrite-not-move ruling (§2.3), the epic was
+> re-planned from 6 cards to 17: one card per site section, plus the `docs/`
+> reorganization that establishes the internal-vs-published contract, the
+> canonical environment-variables reference every other page links to, the
+> Kubernetes/Helm documentation that exists nowhere today, and in-app serving
+> for airgapped installs. Card numbers are identifiers, not an order — read the
+> Depends on column. What did NOT change: the wiki stays alive until a public
+> site replaces it, so `yvx.6` runs last, behind `yvx.5` and `yvx.2`.
 
-| Phase | Scope | Depends on | Estimate |
+Foundation:
+
+| Card | Scope | Depends on | Size |
 |---|---|---|---|
-| 1 | Scaffold: `docs/` with own package.json/yarn.lock, VitePress config (srcDir `site`, target seam, cleanUrls, lastUpdated, dead-link check), minimal theme, landing page, section skeleton, `.gitignore`/`.dockerignore`/eslint-ignore entries. AC: root install/build byte-identical | — | sp:3 |
-| 2 | Deploy: `docs.yml` workflow (`release: published` + `workflow_dispatch`, SHA-pinned, Node from `.nvmrc`, yarn cache on `docs/yarn.lock`), hosting shape per §2.2.1 chosen without clobbering Heimdall Lite, site live | 1 | sp:2 |
-| 7 | In-app documentation for offline/airgapped installs: build the `app` target, serve it from NestJS at `/docs/` (static mount ordered ahead of the SPA catch-all), resolve the CSP conflict with VitePress's inline theme scripts, and ship the built output in the RPM and container images | 1 | sp:5 |
-| 3 | Content migration: 24 wiki pages into the §2.3 structure, nav/sidebar wired, internal links rewritten, images moved into `docs/public/` | 1 | sp:5 |
-| 4 | Repo Markdown + ADRs: symlink root files (README, CODE_OF_CONDUCT, LICENSE verbatim), publish `decisions/` with ADR-004/ADR-005, include `apps/backend` and `libs/*` READMEs | 3 | sp:2 |
-| 5 | Product link updates: `LocalLogin.vue` help URL, `.env-example` header, `README.md` wiki references → docs-site URLs | 2, 3 | sp:1 |
-| 6 | Wiki decommission: every migrated page reduced to a pointer stub, wiki editing restricted, final content-parity check against the wiki clone | 3, 4, 5 | sp:2 |
+| `yvx.1` ✅ | Scaffold: `docs/` with own package.json/yarn.lock, VitePress config (srcDir `site`, target seam, cleanUrls, lastUpdated, dead-link check), minimal theme, landing page, section skeleton, `.gitignore`/`.dockerignore`/eslint-ignore entries. AC: root install/build byte-identical | — | sp:3 |
+| `yvx.7` | Reorganize `docs/` into internal (`adrs/`, `plans/`, `research/`) and published (`site/`) trees; amend this ADR to state that contract | — | sp:2 |
+| `yvx.8` | The canonical `environment-variables.md` — heimdall2 has no environment-variables document at all today, and two competing partial references (a wiki page and the 489-line RPM man page) that will drift | 7 | sp:5 |
+
+Content — one card per site section, written fresh against the current product:
+
+| Card | Scope | Depends on | Size |
+|---|---|---|---|
+| `yvx.9` | `getting-started/` — quick start, install index, configuration, troubleshooting | 8 | sp:5 |
+| `yvx.10` | `user-guide/` — how to actually use the Heimdall UI (compare, treemap, filters, exports, tags). The largest gap: documented nowhere today | 7 | sp:5 |
+| `yvx.11` | `deployment/` — one page per install method, each linking to the method's own runbook rather than duplicating it, plus hardening, backup and upgrade | 8 | sp:5 |
+| `yvx.12` | `deployment/kubernetes.md` — the `mitre/heimdall-helm` chart, undocumented everywhere today. Includes the probe caveat: the SPA catch-all returns 200 for any unmatched route, so a status-only `httpGet` probe reports false-healthy | 11 | sp:5 |
+| `yvx.13` | `converters/` — supported formats, how-tos, CCI converter | 7 | sp:3 |
+| `yvx.14` | `developers/` — architecture, setup, code style, release process | 7 | sp:3 |
+| `yvx.15` | `api/`, `security/`, `about/` — the remaining sections | 8 | sp:3 |
+
+Delivery and decommission:
+
+| Card | Scope | Depends on | Size |
+|---|---|---|---|
+| `yvx.17` | In-app documentation for offline/airgapped installs: build the `app` target, serve it from NestJS at `/docs/` (static mount ordered ahead of the SPA catch-all), resolve the CSP conflict with VitePress's inline theme scripts, ship the output in the RPM and container images | — | sp:5 |
+| `yvx.2` | Publication: one `actions/deploy-pages` artifact per §2.2.1 — Heimdall Lite at `/`, docs at `/docs/`, on `release: published` + `workflow_dispatch`, SHA-pinned, without clobbering Lite | 1 | sp:3 |
+| `yvx.4` | User-facing repo Markdown symlinked into the site (README, CODE_OF_CONDUCT, LICENSE verbatim, attributions); the ADR half of this card was removed when §2.3 made internal records unpublishable | 3 | sp:2 |
+| `yvx.5` | Product link updates: `LocalLogin.vue` help URL, `.env-example` header, `README.md` wiki references → docs-site URLs | 2, 3 | sp:1 |
+| `yvx.6` | Wiki decommission: every page reduced to a pointer stub, editing restricted, final parity check against the wiki clone | 3, 4, 5 | sp:2 |
+| `yvx.16` | Correct the FIPS posture statement — gated on the FIPS release actually shipping, because the current statement is TRUE for the released product | 11 | sp:1 |
+
+`yvx.3` (migrate all 24 wiki pages as one card) is **closed as superseded** by the rewrite ruling and the per-section cards above.
 
 ---
 

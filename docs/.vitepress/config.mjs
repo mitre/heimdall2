@@ -36,13 +36,17 @@ export default defineConfig({
     // migrates the 24 wiki pages into it. Section landing pages exist so the
     // structure is navigable — and so the dead-link check has something real
     // to check — while their content is explicitly Phase 3's.
+    //
+    // site/ carries EXTERNAL USER-FACING documentation only (Aaron,
+    // 2026-08-11). Internal project records — ADRs, plans, research — live
+    // beside the site under docs/ and are structurally unpublishable because
+    // srcDir points at site/. There is deliberately no "decisions" section.
     nav: [
       {text: 'Guide', link: '/getting-started/'},
       {text: 'Deploy', link: '/deployment/'},
       {text: 'Converters', link: '/converters/'},
       {text: 'Developers', link: '/developers/'},
-      {text: 'API', link: '/api/'},
-      {text: 'Decisions', link: '/decisions/'}
+      {text: 'API', link: '/api/'}
     ],
 
     sidebar: {
@@ -89,9 +93,6 @@ export default defineConfig({
       ],
       '/security/': [
         {text: 'Security', items: [{text: 'Overview', link: '/security/'}]}
-      ],
-      '/decisions/': [
-        {text: 'Decisions', items: [{text: 'Overview', link: '/decisions/'}]}
       ],
       '/release-notes/': [
         {
