@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import jwt from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { CreateApiKeyDto } from '../apikeys/dto/create-apikey.dto';
 import { ConfigService } from '../config/config.service';
 import { PasswordService } from '../crypto/password.service';
@@ -35,7 +35,7 @@ export class ApiKeyService {
       userId: target instanceof User ? target.id : undefined,
     });
     await newApiKey.save();
-    const newJWT = jwt.sign(
+    const newJWT = sign(
       { createdAt: new Date(), keyId: newApiKey.id },
       APIKeySecret,
     );

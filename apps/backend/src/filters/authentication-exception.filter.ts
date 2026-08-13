@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import _ from 'lodash';
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 import { ConfigService } from '../config/config.service';
 
 @Catch(Error)
@@ -9,15 +9,15 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
 
   configService = new ConfigService();
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
-  public logger = winston.createLogger({
-    format: winston.format.combine(
-      winston.format.timestamp({ format: this.loggingTimeFormat }),
-      winston.format.printf(
+  public logger = createLogger({
+    format: format.combine(
+      format.timestamp({ format: this.loggingTimeFormat }),
+      format.printf(
         info =>
           `${this.line}[${String([info.timestamp])}] (Authentication Exception Filter): ${String(info.message)}`,
       ),
     ),
-    transports: [new winston.transports.Console()],
+    transports: [new transports.Console()],
   });
 
   catch(exception: Error, host: ArgumentsHost): void {

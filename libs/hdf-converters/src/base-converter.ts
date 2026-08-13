@@ -2,7 +2,7 @@ import {createHash} from 'crypto';
 import {XMLParser} from 'fast-xml-parser';
 import type {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
-import Papa from 'papaparse';
+import {parse} from 'papaparse';
 
 export interface ILookupPath {
   shortcircuit?: boolean;
@@ -76,7 +76,7 @@ export function parseXml(
 }
 
 export function parseCsv(csv: string): unknown[] {
-  const result = Papa.parse(csv.trim(), {header: true});
+  const result = parse(csv.trim(), {header: true});
 
   if (result.errors.length > 0) {
     throw result.errors;

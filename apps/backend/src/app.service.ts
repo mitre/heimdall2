@@ -5,7 +5,7 @@ import {
   OnApplicationBootstrap,
   OnApplicationShutdown,
 } from '@nestjs/common';
-import winston from 'winston';
+import { addColors, createLogger, format, transports } from 'winston';
 
 @Injectable()
 export class AppService
@@ -13,7 +13,7 @@ implements
     BeforeApplicationShutdown,
     OnApplicationBootstrap,
     OnApplicationShutdown {
-  private colors = winston.addColors({
+  private colors = addColors({
     error: 'red',
     info: 'cyan',
     verbose: 'blue',
@@ -22,18 +22,18 @@ implements
 
   private readonly line = '____________________________________________\n';
 
-  public logger = winston.createLogger({
-    format: winston.format.combine(
-      winston.format.colorize({ all: true }),
-      winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
-      winston.format.errors({ stack: true }),
-      winston.format.align(),
-      winston.format.printf(
+  public logger = createLogger({
+    format: format.combine(
+      format.colorize({ all: true }),
+      format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
+      format.errors({ stack: true }),
+      format.align(),
+      format.printf(
         info =>
           `${this.line}[${String([info.timestamp])}] (App Service): ${String(info.message)}`,
       ),
     ),
-    transports: [new winston.transports.Console()],
+    transports: [new transports.Console()],
   });
 
   beforeApplicationShutdown(signal: string): void {

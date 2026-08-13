@@ -1,8 +1,8 @@
 import fs from 'fs';
 import _ from 'lodash';
-import xml2js from 'xml2js';
+import {Parser} from 'xml2js';
 
-const parser = new xml2js.Parser();
+const parser = new Parser();
 const pathToInfile = process.argv[2];
 const pathToOutfile = process.argv[3];
 

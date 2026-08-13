@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 import { ConfigService } from '../config/config.service';
 import { AuthenticationExceptionFilter } from '../filters/authentication-exception.filter';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
@@ -23,15 +23,15 @@ import { AuthnService } from './authn.service';
 export class AuthnController {
   private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
-  public logger = winston.createLogger({
-    format: winston.format.combine(
-      winston.format.timestamp({ format: this.loggingTimeFormat }),
-      winston.format.printf(
+  public logger = createLogger({
+    format: format.combine(
+      format.timestamp({ format: this.loggingTimeFormat }),
+      format.printf(
         info =>
           `${this.line}[${String([info.timestamp])}] (Authn Controller): ${String(info.message)}`,
       ),
     ),
-    transports: [new winston.transports.Console()],
+    transports: [new transports.Console()],
   });
 
   constructor(

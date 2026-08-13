@@ -7,7 +7,7 @@ import {
 import { Request } from 'express';
 import _ from 'lodash';
 import { Observable } from 'rxjs';
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 import { ConfigService } from '../config/config.service';
 import { SlimUserDto } from '../users/dto/slim-user.dto';
 import { UserDto } from '../users/dto/user.dto';
@@ -18,17 +18,17 @@ export class LoggingInterceptor implements NestInterceptor {
   private readonly configService: ConfigService;
   private readonly line = '___________________________________________\n';
 
-  public logger = winston.createLogger({
-    format: winston.format.combine(
-      winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
-      winston.format.printf(
+  public logger = createLogger({
+    format: format.combine(
+      format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
+      format.printf(
         info =>
           `${this.line}[${String([info.timestamp])}] (Interceptor): ${String(info.ip)} ${String(
             info.referer
           )} ${String(info.userAgent)} ${String(info.user)} ${String(info.message)}`,
       ),
     ),
-    transports: [new winston.transports.Console()],
+    transports: [new transports.Console()],
   });
 
   constructor(configService: ConfigService) {

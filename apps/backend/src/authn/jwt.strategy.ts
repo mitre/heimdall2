@@ -1,7 +1,7 @@
 import { IUser } from '@heimdall/common/interfaces';
 import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import jwt from 'jsonwebtoken';
+import { decode } from 'jsonwebtoken';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '../config/config.service';
 import { UsersService } from '../users/users.service';
@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         jwtToken: string,
         done: (exception: HttpException | null, secret?: string) => unknown,
       ) => {
-        const decodedToken = jwt.decode(jwtToken) as { sub: string };
+        const decodedToken = decode(jwtToken) as { sub: string };
         try {
           const user = await usersService.findById(decodedToken.sub);
           done(null, configService.get('JWT_SECRET') + user.jwtSecret);

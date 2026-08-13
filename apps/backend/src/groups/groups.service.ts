@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions, Op } from 'sequelize';
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 import AppConfig from '../../config/app-config';
 import { Evaluation } from '../evaluations/evaluation.model';
 import { GroupUser } from '../group-users/group-user.model';
@@ -16,15 +16,15 @@ import { Group } from './group.model';
 @Injectable()
 export class GroupsService {
   private readonly line = '_______________________________________________\n';
-  public logger = winston.createLogger({
-    format: winston.format.combine(
-      winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
-      winston.format.printf(
+  public logger = createLogger({
+    format: format.combine(
+      format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
+      format.printf(
         info =>
           `${this.line}[${String([info.timestamp])}] (Group Service): ${String(info.message)}`,
       ),
     ),
-    transports: [new winston.transports.Console()],
+    transports: [new transports.Console()],
   });
 
   constructor(

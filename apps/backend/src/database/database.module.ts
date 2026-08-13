@@ -1,23 +1,23 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
 import { DatabaseService } from './database.service';
 
 const line = '________________________________________________\n';
-const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.colorize({ all: true }),
-    winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
-    winston.format.errors({ stack: true }),
-    winston.format.align(),
-    winston.format.printf(
+const logger = createLogger({
+  format: format.combine(
+    format.colorize({ all: true }),
+    format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
+    format.errors({ stack: true }),
+    format.align(),
+    format.printf(
       info =>
         `${line}[${String(info.timestamp)}] Query(${String(info.queryType)}): ${String(info.message)}`,
     ),
   ),
-  transports: [new winston.transports.Console()],
+  transports: [new transports.Console()],
 });
 
 const localConfigService = new ConfigService();

@@ -2,7 +2,7 @@ import type { Agent } from 'http';
 import { Strategy } from '@govtechsg/passport-openidconnect';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 import { ConfigService } from '../config/config.service';
 import { GroupsService } from '../groups/groups.service';
 import { AuthnService } from './authn.service';
@@ -27,15 +27,15 @@ type OIDCProfile = {
 export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
   private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
-  public logger = winston.createLogger({
-    format: winston.format.combine(
-      winston.format.timestamp({ format: this.loggingTimeFormat }),
-      winston.format.printf(
+  public logger = createLogger({
+    format: format.combine(
+      format.timestamp({ format: this.loggingTimeFormat }),
+      format.printf(
         info =>
           `${this.line}[${String([info.timestamp])}] (Authn Service): ${String(info.message)}`,
       ),
     ),
-    transports: [new winston.transports.Console()],
+    transports: [new transports.Console()],
   });
 
   constructor(

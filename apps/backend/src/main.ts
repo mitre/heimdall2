@@ -5,10 +5,10 @@ import postgresSessionStore = require('connect-pg-simple');
 import { json } from 'express';
 import rateLimit from 'express-rate-limit';
 import session = require('express-session');
-import helmet from 'helmet';
+import helmet, { contentSecurityPolicy } from 'helmet';
 import multer from 'multer';
 import passport = require('passport');
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';
 import { assertFipsMode } from './crypto/fips';
@@ -17,15 +17,15 @@ import { generateDefault } from './token/token.providers';
 
 const line = '_______________________________________________\n';
 const loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
-const logger = winston.createLogger({
-  format: winston.format.combine(
-    winston.format.timestamp({ format: loggingTimeFormat }),
-    winston.format.printf(
+const logger = createLogger({
+  format: format.combine(
+    format.timestamp({ format: loggingTimeFormat }),
+    format.printf(
       info =>
         `${line}[${String([info.timestamp])}] (Authn Service): ${String(info.message)}`,
     ),
   ),
-  transports: [new winston.transports.Console()],
+  transports: [new transports.Console()],
 });
 
 async function bootstrap() {
@@ -45,13 +45,13 @@ async function bootstrap() {
   app.enableShutdownHooks();
   app.use(helmet());
   app.use(
-    helmet.contentSecurityPolicy({
+    contentSecurityPolicy({
       directives: {
         // These are the defaults from helmet, except upgrade-insecure-requests
         // is removed since it causes issues for users trying to run over http
         // https://github.com/mitre/heimdall2/issues/787
         // This whole block can be changed back to
-        // ...helmet.contentSecurityPolicy.getDefaultDirectives()
+        // ...contentSecurityPolicy.getDefaultDirectives()
         // If heimdall begins providing users with an easy way to generate a SSL
         // certificate as part of deployment.
         'base-uri': ["'self'"],
