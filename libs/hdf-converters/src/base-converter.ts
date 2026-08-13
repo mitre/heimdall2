@@ -16,7 +16,7 @@ export interface ILookupPath {
 export type ObjectEntryValue<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 /* eslint-disable @typescript-eslint/ban-types */
 export type MappedTransform<T, U extends ILookupPath> = {
-  [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
+  [K in keyof T]: Exclude<T[K], undefined | null> extends any[]
     ? MappedTransform<T[K], U>
     : T[K] extends Function
       ? T[K]
@@ -25,7 +25,7 @@ export type MappedTransform<T, U extends ILookupPath> = {
         : T[K] | U;
 };
 export type MappedReform<T, U> = {
-  [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
+  [K in keyof T]: Exclude<T[K], undefined | null> extends any[]
     ? MappedReform<T[K], U>
     : T[K] extends object
       ? MappedReform<T[K] & U, U>
@@ -99,10 +99,10 @@ export function impactMapping(
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function collapseDuplicates<T extends object>(
-  array: Array<T>,
+  array: T[],
   key: string,
   collapseResults: boolean
-): Array<T> {
+): T[] {
   const seen = new Map<string, number>();
   const newArray: T[] = [];
   let counter = 0;
@@ -180,7 +180,7 @@ export class BaseConverter<D = Record<string, unknown>> {
     }
   }
 
-  objectMap<T extends Array<unknown>, V>(
+  objectMap<T extends unknown[], V>(
     obj: T,
     fn: (v: ObjectEntryValue<T>) => V
   ): {[K in keyof T]: V} {
@@ -213,8 +213,8 @@ export class BaseConverter<D = Record<string, unknown>> {
 
   evaluate<T>(
     file: Record<string, unknown>,
-    v: T | Array<T>
-  ): T | Array<T> | MappedReform<T, ILookupPath> {
+    v: T | T[]
+  ): T | T[] | MappedReform<T, ILookupPath> {
     if (v === undefined) {
       return v;
     }
@@ -294,12 +294,12 @@ export class BaseConverter<D = Record<string, unknown>> {
 
   handleArray<T>(
     file: Record<string, unknown>,
-    v: Array<T & ILookupPath>
-  ): Array<T> {
+    v: (T & ILookupPath)[]
+  ): T[] {
     if (v.length === 0) {
       return [];
     }
-    const resultingData: Array<T> = [];
+    const resultingData: T[] = [];
     for (const lookupPath of v) {
       if (lookupPath.path === undefined) {
         const arrayTransformer = lookupPath.arrayTransformer?.bind(this);
@@ -308,7 +308,7 @@ export class BaseConverter<D = Record<string, unknown>> {
             ? (_.omit(element, ['arrayTransformer']) as T & ILookupPath)
             : element;
         });
-        let output: Array<T> = [];
+        let output: T[] = [];
         output.push(this.evaluate(file, lookupPath) as T);
         if (arrayTransformer !== undefined) {
           if (Array.isArray(arrayTransformer)) {

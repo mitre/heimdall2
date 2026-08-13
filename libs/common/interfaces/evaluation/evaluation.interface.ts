@@ -23,8 +23,8 @@ export interface IEvaluationResponse {
 export interface IEvalPaginationParams {
   offset: number;
   limit: number;
-  order: Array<string>;
+  order: string[];
   useClause?: boolean;
   operator?: string;
-  searchFields?: Array<string>;
+  searchFields?: string[];
 }

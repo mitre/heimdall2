@@ -39,7 +39,7 @@ export class Evaluation extends VuexModule {
   page: number = 1;
   offset: number = 0;
   limit: number = 10;
-  order: Array<string> = ['createdAt', 'DESC'];
+  order: string[] = ['createdAt', 'DESC'];
   loading = true;
 
   get evaluationForFile(): Function {

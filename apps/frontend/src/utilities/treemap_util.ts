@@ -52,7 +52,7 @@ export type D3TreemapNode = HierarchyNode<TreemapNode>;
  * @param controls The controls to build into a nist node map
  */
 function controls_to_nist_node_data(
-  contextualizedControls: Readonly<ContextualizedControl[]>,
+  contextualizedControls: readonly ContextualizedControl[],
   colors: ColorHack
 ): TreemapNodeLeaf[] {
   return contextualizedControls.flatMap((cc) => {
@@ -226,7 +226,7 @@ function node_data_to_tree_map(
 
 /** Does all the steps */
 export function build_nist_tree_map(
-  data: Readonly<ContextualizedControl[]>,
+  data: readonly ContextualizedControl[],
   colors: ColorHack
 ): D3TreemapNode {
   const leaves = controls_to_nist_node_data(data, colors);

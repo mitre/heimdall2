@@ -23,7 +23,7 @@ type CheckovCheck = {
   file_path: string;
   file_line_range: number[];
   resource: string;
-  code_block: Array<[number, string]>;
+  code_block: [number, string][];
   check_class: string;
   file_abs_path: string;
   repo_file_path: string;

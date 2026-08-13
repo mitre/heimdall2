@@ -36,10 +36,10 @@ let logger = createWinstonLogger('Splunk2HDF');
 
 // Groups items by using the provided key function
 export function groupBy<T>(
-  items: Array<T>,
+  items: T[],
   keyGetter: (v: T) => string
-): Hash<Array<T>> {
-  const result: Hash<Array<T>> = {};
+): Hash<T[]> {
+  const result: Hash<T[]> = {};
   for (const i of items) {
     // Get the items key
     const key = keyGetter(i);

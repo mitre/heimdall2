@@ -67,7 +67,7 @@ describe('Datatable', () => {
       (
         controlTableWrapper.vm as Vue & {
            
-          items: Array<any>;
+          items: any[];
         }
       ).items.length
     ).toBe(expected);
@@ -94,7 +94,7 @@ describe('Datatable', () => {
       (
         controlTableWrapper.vm as Vue & {
            
-          items: Array<any>;
+          items: any[];
         }
       ).items.length
     ).toBe(expected);
@@ -115,7 +115,7 @@ describe('Datatable', () => {
       (
         controlTableWrapper.vm as Vue & {
            
-          items: Array<any>;
+          items: any[];
         }
       ).items
         .map((item: ListElt) => item.control.data.id)
@@ -149,7 +149,7 @@ describe('Datatable', () => {
       (
         controlTableWrapper.vm as Vue & {
            
-          items: Array<any>;
+          items: any[];
         }
       ).items.length
     ).toBe(3); // the file loaded includes 3 controls with severity override tags

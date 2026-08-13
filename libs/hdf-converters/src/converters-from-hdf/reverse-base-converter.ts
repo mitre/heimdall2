@@ -39,7 +39,7 @@ export class FromHdfBaseConverter {
   }
 
   // Preforms fn() on all entries inside the passed obj
-  objectMap<T extends Array<unknown>, V>(
+  objectMap<T extends unknown[], V>(
     obj: T,
     fn: (v: ObjectEntryValue<T>) => V
   ): {[K in keyof T]: V} {
@@ -51,8 +51,8 @@ export class FromHdfBaseConverter {
   // Used to get the data located at the paths
   evaluate<T extends object & ILookupPathFH>(
     file: object,
-    v: T | Array<T>
-  ): T | Array<T> | MappedReform<T, ILookupPathFH> {
+    v: T | T[]
+  ): T | T[] | MappedReform<T, ILookupPathFH> {
     const transformer = _.get(v, 'transformer') as any;
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
@@ -92,13 +92,13 @@ export class FromHdfBaseConverter {
 
   handleArray<T extends ILookupPathFH>(
     file: object,
-    v: Array<T & ILookupPathFH>
-  ): Array<T> {
-    const resultingData: Array<T> = [];
+    v: (T & ILookupPathFH)[]
+  ): T[] {
+    const resultingData: T[] = [];
     // Looks through parsed data file using the mapping setup in V
     if (v[0] && !v[0].path) {
       const arrayTransformer = v[0].arrayTransformer; // does nothing since null
-      let output: Array<T> = v.map(
+      let output: T[] = v.map(
         (element) => this.evaluate(file, element) as T
       );
       if (arrayTransformer) {

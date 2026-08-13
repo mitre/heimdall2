@@ -248,7 +248,7 @@ export default class S3Reader extends Vue {
   }
 
   /** Callback on got files */
-  gotFiles(files: Array<FileID>) {
+  gotFiles(files: FileID[]) {
     this.$emit('got-files', files);
   }
 }

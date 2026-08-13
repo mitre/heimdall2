@@ -3824,7 +3824,7 @@ export type PurpleInputType = {
   /**
    * Inputs that have the form of parameters with names and values.
    */
-  environmentVars?: Array<LightweightNameValuePairObject | string>;
+  environmentVars?: (LightweightNameValuePairObject | string)[];
   /**
    * Inputs that have the form of parameters with names and values.
    */
@@ -3909,7 +3909,7 @@ export type PurpleOutputType = {
   /**
    * Outputs that have the form of environment variables.
    */
-  environmentVars?: Array<LightweightNameValuePairObject | string>;
+  environmentVars?: (LightweightNameValuePairObject | string)[];
   properties?: LightweightNameValuePairObject[];
   /**
    * A reference to an independent resource generated as output by the task.
@@ -8001,7 +8001,7 @@ export type FluffyInputType = {
   /**
    * Inputs that have the form of parameters with names and values.
    */
-  environmentVars?: Array<LightweightNameValuePairClass | string>;
+  environmentVars?: (LightweightNameValuePairClass | string)[];
   /**
    * Inputs that have the form of parameters with names and values.
    */
@@ -8095,7 +8095,7 @@ export type FluffyOutputType = {
   /**
    * Outputs that have the form of environment variables.
    */
-  environmentVars?: Array<LightweightNameValuePairClass | string>;
+  environmentVars?: (LightweightNameValuePairClass | string)[];
   /**
    * Provides the ability to document properties in a name-value store. This provides
    * flexibility to include data not officially supported in the standard without having to

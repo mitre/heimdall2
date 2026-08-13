@@ -120,7 +120,7 @@ export default class ExportNIST extends Vue {
 
   export_nist() {
     // Get files we plan on exporting
-    const files: Array<FileID | undefined> = [
+    const files: (FileID | undefined)[] = [
       undefined,
       ...FilteredDataModule.selected_file_ids
     ];

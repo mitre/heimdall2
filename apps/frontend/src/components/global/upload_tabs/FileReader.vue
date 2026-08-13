@@ -147,7 +147,7 @@ interface VueFileAgentRecord {
  */
 @Component
 export default class FileReader extends mixins(ServerMixin) {
-  fileRecords: Array<VueFileAgentRecord> = [];
+  fileRecords: VueFileAgentRecord[] = [];
   loading = false;
   percent = 0;
   isActiveDialog = false;

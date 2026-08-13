@@ -17,7 +17,7 @@ export class FromAnyBaseConverter extends FromHdfBaseConverter {
   }
 
   // Preforms fn() on all entries inside the passed obj
-  objectMap<T extends Array<unknown>, V>(
+  objectMap<T extends unknown[], V>(
     obj: T,
     fn: (v: ObjectEntryValue<T>) => V
   ): {[K in keyof T]: V} {

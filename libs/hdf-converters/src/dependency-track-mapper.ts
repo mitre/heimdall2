@@ -115,7 +115,7 @@ export class DependencyTrackMapper extends BaseConverter {
               vulnerabilitySubtitle: {path: 'vulnerability.subtitle'},
               vulnerabilityAliases: {
                 path: 'vulnerability.aliases',
-                transformer: (aliases: Array<Record<string, string>>): string =>
+                transformer: (aliases: Record<string, string>[]): string =>
                   JSON.stringify(aliases, null, 2)
               },
               vulnerabilityCvssV2BaseScore: {

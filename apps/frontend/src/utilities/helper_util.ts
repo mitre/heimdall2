@@ -11,8 +11,8 @@ import * as _ from 'lodash';
  * if a is lexicographically after  b, return > 1
  */
 export function compareArrays<T>(
-  a: Array<T>,
-  b: Array<T>,
+  a: T[],
+  b: T[],
   comparator: (a: T, b: T) => number
 ) {
   // Compare element-wise
