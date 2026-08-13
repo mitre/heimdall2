@@ -197,7 +197,7 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
     /^(failed|passed|skipped|error) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*?))?$/s;
 
   // check if code_desc is empty or does not match the above regular expression
-  if (!RegExp(regex).exec(findingDetails)) {
+  if (!new RegExp(regex).exec(findingDetails)) {
     return [
       {
         status: findings[0].status,
@@ -246,7 +246,7 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
     ];
   } else {
     for (const section of commentString.split(/\n(?=[A-Z]+ ::)/)) {
-      const matches = RegExp(/([A-Z]+) :: (.+)/s).exec(section);
+      const matches = new RegExp(/([A-Z]+) :: (.+)/s).exec(section);
       if (matches) {
         const [, label, data] = matches;
         if (data) {

@@ -9,10 +9,10 @@ const validators = [
     name: 'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters',
     check: function hasClasses(password) {
         const checks = [
-          RegExp('[a-z]'), // Lowercase characters
-          RegExp('[A-Z]'), // Uppercase characters
-          RegExp('[0-9]'), // Numbers
-          RegExp(/[^0-9A-Za-z]/) // Special characters (Non Alphanumeric)
+          new RegExp('[a-z]'), // Lowercase characters
+          new RegExp('[A-Z]'), // Uppercase characters
+          new RegExp('[0-9]'), // Numbers
+          new RegExp(/[^0-9A-Za-z]/) // Special characters (Non Alphanumeric)
         ];
         return (
           checks.filter((expr) => expr.test(password)).length ===
@@ -24,11 +24,11 @@ const validators = [
     name: 'Password must not contain 4 consecutive characters of the same character class',
     check: function noRepeats(password) {
         const checks = [
-          RegExp(/(.)\1{3,}/), // 4 or more repeating of the same exact character
-          RegExp('[a-z]{4,}'), // 5 or more of lowercase characters in a row
-          RegExp('[A-Z]{4,}'), // 5 or more of uppercase characters in a row
-          RegExp('[0-9]{4,}'), // 5 or more numbers in a row
-          RegExp(/[^0-9A-Za-z]{4,}/) // 5 or more special characters in a row
+          new RegExp(/(.)\1{3,}/), // 4 or more repeating of the same exact character
+          new RegExp('[a-z]{4,}'), // 5 or more of lowercase characters in a row
+          new RegExp('[A-Z]{4,}'), // 5 or more of uppercase characters in a row
+          new RegExp('[0-9]{4,}'), // 5 or more numbers in a row
+          new RegExp(/[^0-9A-Za-z]{4,}/) // 5 or more special characters in a row
         ];
         return checks.filter((expr) => expr.test(password)).length === 0;
       }

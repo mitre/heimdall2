@@ -79,7 +79,7 @@ export default class Treemap extends Vue {
       for (; depth < this.value.length; depth++) {
         // If the current has no children, then just bail here
         if (curr.children === undefined) {
-          throw Error('no children to go into');
+          throw new Error('no children to go into');
         }
 
         // Fetch the next path spec
@@ -101,10 +101,10 @@ export default class Treemap extends Vue {
           if (newCurr.children && newCurr.children.length > 0) {
             curr = newCurr;
           } else {
-            throw Error('empty');
+            throw new Error('empty');
           }
         } else {
-          throw Error('truncate');
+          throw new Error('truncate');
         }
       }
     } catch (someTraversalError) {

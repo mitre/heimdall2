@@ -70,9 +70,9 @@ export class FromHDFToCAATMapper {
 
   static formatDate(date: Date, delimiter: string): string {
     return [
-      Intl.DateTimeFormat('en-US', {month: '2-digit'}),
-      Intl.DateTimeFormat('en-US', {day: '2-digit'}),
-      Intl.DateTimeFormat('en-US', {year: 'numeric'})
+      new Intl.DateTimeFormat('en-US', {month: '2-digit'}),
+      new Intl.DateTimeFormat('en-US', {day: '2-digit'}),
+      new Intl.DateTimeFormat('en-US', {year: 'numeric'})
     ]
       .map((formatter) => formatter.format(date))
       .join(delimiter);

@@ -124,7 +124,7 @@ export class CciNistTwoWayMapper {
         // first try the pattern as is
         const regexPattern = new RegExp(`^${pattern}`);
         if (
-          RegExp(regexPattern).exec(reference['@_index']) &&
+          new RegExp(regexPattern).exec(reference['@_index']) &&
           item.type === 'technical'
         ) {
           matchingIds.push(item['@_id']);
@@ -136,7 +136,7 @@ export class CciNistTwoWayMapper {
             `${/\w\w-\d\d?\d?/g.exec(pattern)}`
           );
           if (
-            RegExp(regexEditedPattern).exec(reference['@_index']) &&
+            new RegExp(regexEditedPattern).exec(reference['@_index']) &&
             item.type === 'technical'
           ) {
             matchingIds.push(item['@_id']);
