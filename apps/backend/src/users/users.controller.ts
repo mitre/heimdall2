@@ -57,7 +57,9 @@ export class UsersController {
   @UseGuards(TestGuard)
   @Post('/clear')
   async clear(): Promise<void> {
-    User.truncate({ cascade: true });
+    // Awaited: the endpoint used to answer 200 while the truncate was still
+    // in flight, racing the test run that called it.
+    await User.truncate({ cascade: true });
   }
 
   @Post()

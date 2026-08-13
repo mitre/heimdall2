@@ -145,4 +145,9 @@ async function bootstrap() {
 
   await app.listen(configService.get('PORT') || 3000);
 }
-bootstrap();
+bootstrap().catch((error) => {
+  // A failed boot must exit nonzero and say why, not surface as an
+  // unhandled rejection.
+  console.error(error);
+  process.exit(1);
+});

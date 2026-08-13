@@ -351,9 +351,14 @@ export class EvaluationsService {
     const evaluation = await this.findByPkBang(id, { include: [EvaluationTag] });
     await this.databaseService.sequelize.transaction(async (transaction) => {
       if (evaluation.evaluationTags !== null) {
-        await evaluation.evaluationTags.map(async (evaluationTag) => {
-          await evaluationTag.destroy({ transaction });
-        });
+        // Promise.all, not a bare await of the ARRAY (a no-op): the tag
+        // destroys must settle before this callback returns, or the
+        // transaction can commit while they are still in flight.
+        await Promise.all(
+          evaluation.evaluationTags.map((evaluationTag) =>
+            evaluationTag.destroy({ transaction }),
+          ),
+        );
       }
       return evaluation.destroy({ transaction });
     });
