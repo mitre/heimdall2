@@ -76,7 +76,7 @@ function filter_overlays(
     }
   });
 
-  return Array.from(idHash.values());
+  return [...idHash.values()];
 }
 
 export function createProfileInfoFinding(

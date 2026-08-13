@@ -56,6 +56,11 @@ export function valueToSeverity(severity: string): Severity {
   }
 }
 
+/** Normalizes the ADD_* mutations' scalar-or-array payloads for spreading. */
+function asArray<T>(value: T | T[]): T[] {
+  return Array.isArray(value) ? value : [value];
+}
+
 /** Matches `field:"value"` occurrences of one search category in the bar. */
 function fieldFilterPattern(field: string): RegExp {
   /* eslint-disable-next-line security/detect-non-literal-regexp -- No code
@@ -191,18 +196,17 @@ class Search extends VuexModule implements ISearchState {
         const replaceRegex = fieldFilterPattern(searchPayload.field);
         const newSearch = this.searchTerm.replace(
           replaceRegex,
-          `${searchPayload.field}:"${searchPayload.previousValues
-            .concat(searchPayload.value)
-            .join(',')}"`
+          `${searchPayload.field}:"${[
+            ...searchPayload.previousValues,
+            searchPayload.value
+          ].join(',')}"`
         );
         this.context.commit('SET_SEARCH', newSearch);
       } // We have a filter already, but it doesn't include the field
       else {
         const newSearch = `${this.searchTerm} ${
           searchPayload.field
-        }:"${searchPayload.previousValues
-          .concat(searchPayload.value)
-          .join(',')}"`;
+        }:"${[...searchPayload.previousValues, searchPayload.value].join(',')}"`;
         this.context.commit('SET_SEARCH', newSearch);
       }
     }
@@ -261,7 +265,7 @@ class Search extends VuexModule implements ISearchState {
   /** Adds a status filter */
   @Mutation
   ADD_STATUS(status: ExtendedControlStatus | ExtendedControlStatus[]) {
-    this.statusFilter = this.statusFilter.concat(status);
+    this.statusFilter = [...this.statusFilter, ...asArray(status)];
   }
 
   /** Removes a status filter */
@@ -307,7 +311,7 @@ class Search extends VuexModule implements ISearchState {
 
   @Mutation
   ADD_SEVERITY(severity: Severity | Severity[]) {
-    this.severityFilter = this.severityFilter.concat(severity);
+    this.severityFilter = [...this.severityFilter, ...asArray(severity)];
   }
 
   @Mutation
@@ -339,7 +343,7 @@ class Search extends VuexModule implements ISearchState {
 
   @Mutation
   ADD_ID(id: string | string[]) {
-    this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
+    this.controlIdSearchTerms = [...this.controlIdSearchTerms, ...asArray(id)];
   }
 
   /** Sets the control IDs filter */
@@ -364,7 +368,7 @@ class Search extends VuexModule implements ISearchState {
 
   @Mutation
   ADD_TITLE(title: string | string[]) {
-    this.titleSearchTerms = this.titleSearchTerms.concat(title);
+    this.titleSearchTerms = [...this.titleSearchTerms, ...asArray(title)];
   }
 
   /** Sets the title filters */
@@ -389,7 +393,7 @@ class Search extends VuexModule implements ISearchState {
 
   @Mutation
   ADD_NIST(NISTId: string | string[]) {
-    this.NISTIdFilter = this.NISTIdFilter.concat(NISTId);
+    this.NISTIdFilter = [...this.NISTIdFilter, ...asArray(NISTId)];
   }
 
   /** Clears all NIST ID filters */
@@ -409,8 +413,10 @@ class Search extends VuexModule implements ISearchState {
   /** Adds a description to the filter */
   @Mutation
   ADD_DESCRIPTION(description: string | string[]) {
-    this.descriptionSearchTerms =
-      this.descriptionSearchTerms.concat(description);
+    this.descriptionSearchTerms = [
+      ...this.descriptionSearchTerms,
+      ...asArray(description)
+    ];
   }
 
   /** Clears all description from the filters */
@@ -429,7 +435,7 @@ class Search extends VuexModule implements ISearchState {
 
   @Mutation
   ADD_CODE(code: string | string[]) {
-    this.codeSearchTerms = this.codeSearchTerms.concat(code);
+    this.codeSearchTerms = [...this.codeSearchTerms, ...asArray(code)];
   }
 
   /** Clears all code filters */
@@ -448,7 +454,7 @@ class Search extends VuexModule implements ISearchState {
 
   @Mutation
   ADD_TAG(tag: string | string[]) {
-    this.tagFilter = this.tagFilter.concat(tag);
+    this.tagFilter = [...this.tagFilter, ...asArray(tag)];
   }
 
   /** Clears all code filters */

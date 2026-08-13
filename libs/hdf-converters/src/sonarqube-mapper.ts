@@ -335,6 +335,12 @@ const IMPACT_MAPPING = new Map<string, number>([
 const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING = new OwaspNistMapping();
 
+// concat-equivalent append for paged-result merging: adds srcValue to the
+// accumulated array, flattening when it is itself an array.
+function appendMerged(target: unknown[], addition: unknown): unknown[] {
+  return [...target, ...(_.isArray(addition) ? addition : [addition])];
+}
+
 function parseOwaspInSysTags<T extends SonarqubeVersion>(
   issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
 ): string[] {
@@ -358,7 +364,7 @@ function parseOwaspTags<T extends SonarqubeVersion>(
     ...searchSpace.matchAll(/> ?OWASP.*?(Top .*?A\d\d?)/gu)
   ].map((m) => m[1]); // get the capture group which looks like 'Top 10 2021 Category A1'
   const sysTagMatches = parseOwaspInSysTags<T>(issue);
-  const totalMatches = searchSpaceMatches.concat(sysTagMatches);
+  const totalMatches = [...searchSpaceMatches, ...sysTagMatches];
 
   if (totalMatches.length > 0) {
     return totalMatches;
@@ -388,16 +394,15 @@ function parseCweTags<T extends SonarqubeVersion>(
 function parseNistTags<T extends SonarqubeVersion>(
   issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
 ): string[] | undefined {
-  const uniqueNist = _.uniq(
-    (parseCweTags<T>(issue) ?? [])
-      .flatMap((t) => CWE_NIST_MAPPING.nistFilter(t.split('-', 2)[1]))
-      .concat(
-        // adding in the systags' owasp tag since in older sonarqube versions sometimes no other guidance alignment is provided
-        (parseOwaspInSysTags<T>(issue) ?? []).flatMap((t) =>
-          OWASP_NIST_MAPPING.nistFilterNoDefault(t)
-        )
-      )
-  );
+  const uniqueNist = _.uniq([
+    ...(parseCweTags<T>(issue) ?? []).flatMap((t) =>
+      CWE_NIST_MAPPING.nistFilter(t.split('-', 2)[1])
+    ),
+    // adding in the systags' owasp tag since in older sonarqube versions sometimes no other guidance alignment is provided
+    ...parseOwaspInSysTags<T>(issue).flatMap((t) =>
+      OWASP_NIST_MAPPING.nistFilterNoDefault(t)
+    )
+  ]);
 
   if (uniqueNist.length > 0) {
     return uniqueNist;
@@ -1113,7 +1118,7 @@ export class SonarqubeResults {
         }
         const {data} = response;
         _.mergeWith(results, data, (objValue, srcValue) =>
-          _.isArray(objValue) ? objValue.concat(srcValue) : undefined
+          _.isArray(objValue) ? appendMerged(objValue, srcValue) : undefined
         );
         // only need to check if it exceeds the upper limit, if it's less than the upper limit and we request a page that goes past the page total then it just returns fewer results without throwing an error
         paging =
@@ -1156,7 +1161,7 @@ export class SonarqubeResults {
         }
         const {data} = response;
         _.mergeWith(results, data, (objValue, srcValue) =>
-          _.isArray(objValue) ? objValue.concat(srcValue) : undefined
+          _.isArray(objValue) ? appendMerged(objValue, srcValue) : undefined
         );
         paging =
           data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
@@ -1188,7 +1193,7 @@ export class SonarqubeResults {
 
       const componentResults = await collectPagedSearch(component);
       _.mergeWith(results, componentResults, (objValue, srcValue) =>
-        _.isArray(objValue) ? objValue.concat(srcValue) : objValue
+        _.isArray(objValue) ? appendMerged(objValue, srcValue) : objValue
       );
     }
 

@@ -39,10 +39,12 @@ export default class ExportCaat extends Vue {
       ).find((f) => f.uniqueId === fileId);
       const data = file?.evaluation ?? '';
       const filename = file?.filename || fileId;
-      const controls = FilteredDataModule.controls({
-        ...this.filter,
-        fromFile: [fileId]
-      }).slice();
+      const controls = [
+        ...FilteredDataModule.controls({
+          ...this.filter,
+          fromFile: [fileId]
+        })
+      ];
       return {data, filename, controls};
     });
     const caat = new FromHDFToCAATMapper(inputData).toCAAT(false);

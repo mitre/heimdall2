@@ -246,14 +246,15 @@ export default class GroupManagement extends Vue {
   get groupData(): (IGroup & {members: ISlimUser[]; owners: ISlimUser[]})[] {
     let groups: IGroup[];
     if (this.adminPanel) {
-      groups = GroupsModule.myGroups.concat(
-        GroupsModule.allGroups.filter(
+      groups = [
+        ...GroupsModule.myGroups,
+        ...GroupsModule.allGroups.filter(
           (group) =>
             !GroupsModule.myGroups
               .map((myGroup) => myGroup.id)
               .includes(group.id)
         )
-      );
+      ];
     } else {
       groups = GroupsModule.myGroups;
     }

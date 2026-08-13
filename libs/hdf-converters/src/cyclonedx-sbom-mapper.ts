@@ -228,7 +228,7 @@ export class CycloneDXSBOMResults {
       vulnerability.affectedComponents = [];
 
       vulnerability.affectedComponents.push(
-        ...Array.from(data.components.entries())
+        ...[...data.components.entries()]
           // Find every component that is affected via listed bom-refs
           .filter(([_index, component]) =>
             vulnerability.affects

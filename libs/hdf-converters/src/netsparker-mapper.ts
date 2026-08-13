@@ -43,7 +43,7 @@ function nistTag(classification: Record<string, unknown>): string[] {
   }
   const cwe = CWE_NIST_MAPPING.nistFilter(cweTag as string[]);
   const owasp = OWASP_NIST_MAPPING.nistFilterNoDefault(owaspTag as string[]);
-  const result = cwe.concat(owasp);
+  const result = [...cwe, ...owasp];
   if (result.length > 0) {
     return result;
   } else {

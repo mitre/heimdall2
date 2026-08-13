@@ -47,7 +47,7 @@ export const statusCounts = {
     });
 
     // Return the set of keys
-    return Array.from(Object.values(idHash));
+    return Object.values(idHash);
   },
 
   count_exec_1_0: (x: ExecJSON.Execution): Counts => {

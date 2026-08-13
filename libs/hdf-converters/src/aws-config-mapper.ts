@@ -332,11 +332,10 @@ export class AwsConfigMapper {
       defaultMatch = AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier]);
     }
     if (Array.isArray(defaultMatch) && defaultMatch.length > 0) {
-      result = _.set(
-        result,
-        'nist',
-        (_.get(result, 'nist') as unknown as string[]).concat(defaultMatch)
-      );
+      result = _.set(result, 'nist', [
+        ...(_.get(result, 'nist') as unknown as string[]),
+        ...defaultMatch
+      ]);
     }
     return result;
   }

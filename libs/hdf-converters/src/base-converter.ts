@@ -135,20 +135,16 @@ function collapseDuplicates<T extends object>(
               _.get(item, 'results[0].code_desc') as string
             )
           ) {
-            _.set(
-              existing,
-              'results',
-              oldResult.concat(
-                _.get(item, 'results') as ExecJSON.ControlResult[]
-              )
-            );
+            _.set(existing, 'results', [
+              ...oldResult,
+              ...(_.get(item, 'results') as ExecJSON.ControlResult[])
+            ]);
           }
         } else {
-          _.set(
-            existing,
-            'results',
-            oldResult.concat(_.get(item, 'results') as ExecJSON.ControlResult[])
-          );
+          _.set(existing, 'results', [
+            ...oldResult,
+            ...(_.get(item, 'results') as ExecJSON.ControlResult[])
+          ]);
         }
       }
     }

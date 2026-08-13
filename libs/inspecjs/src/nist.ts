@@ -219,7 +219,7 @@ export function parse_nist(rawNist: string): ParseNist {
   // Filter garbage from subspecsRaw
   let subspecsSplit = subspecsRaw.split(SPEC_SPLITTER);
   subspecsSplit = subspecsSplit.filter((s) => s !== '');
-  return new NistControl(subSpecs.concat(subspecsSplit), rawNist);
+  return new NistControl([...subSpecs, ...subspecsSplit], rawNist);
 }
 
 /** Simple discriminators */

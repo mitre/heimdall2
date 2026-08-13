@@ -394,7 +394,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   get evaluationFiles(): SourcedContextualizedEvaluation[] {
-    return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(
+    return [...FilteredDataModule.evaluations(this.file_filter)].sort(
       compare_times
     );
   }

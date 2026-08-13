@@ -111,11 +111,10 @@ export class AnchoreGrypeMapper extends BaseConverter {
               relatedVulnerabilities as Record<string, unknown>[]
             ).map((element) => element.urls) as Record<string, unknown>[];
           }
-          return (
-            vuln_urls.concat(
-              ...relatedVulnerabilitiesUrls
-            )
-          ).map((element) => ({url: element}));
+          return [
+            ...vuln_urls,
+            ...relatedVulnerabilitiesUrls.flat()
+          ].map((element) => ({url: element}));
         }
       } as unknown as ExecJSON.Reference[],
       source_location: {},

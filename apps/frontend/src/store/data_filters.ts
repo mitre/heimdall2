@@ -323,7 +323,7 @@ export class FilteredData extends VuexModule {
         this.profiles_for_evaluations(filter.fromFile);
 
       // Get profiles from loaded Profiles
-      profiles = profiles.concat(this.profiles(filter.fromFile));
+      profiles = [...profiles, ...this.profiles(filter.fromFile)];
 
       // And all the controls they contain
       let controls: readonly ContextualizedControl[] = profiles.flatMap(

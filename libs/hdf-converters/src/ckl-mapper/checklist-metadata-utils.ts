@@ -126,7 +126,7 @@ export function validateChecklistMetadata(
     targetkey: null
   });
   if (!assetResult.ok) {
-    invalid = invalid.concat(assetResult.error.invalid);
+    invalid = [...invalid, ...assetResult.error.invalid];
     messages.push(assetResult.error.message);
   }
 

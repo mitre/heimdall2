@@ -92,7 +92,7 @@ export class InspecData extends VuexModule {
   }
 
   get allProfiles(): readonly SourcedContextualizedProfile[] {
-    return this.contextualProfiles.concat(this.contextualExecutionProfiles);
+    return [...this.contextualProfiles, ...this.contextualExecutionProfiles];
   }
 
   /**

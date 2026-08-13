@@ -143,6 +143,13 @@ export default defineConfig([
       // flags are the correct code today. Revisit when the floor includes the
       // API (2026-08-13 triage, Aaron).
       'unicorn/prefer-uint8array-base64': 'off',
+      // Same runtime-floor class, plus a direct conflict: this rule and
+      // prefer-spread both fire on iterator-to-array conversions, and the
+      // only form satisfying both is Iterator.prototype.toArray() — which
+      // the browser floor lacks (frontend, hdf-converters and inspecjs all
+      // ship in the browser bundle). Spread is the correct code today;
+      // revisit when the browser floor includes iterator helpers.
+      'unicorn/prefer-iterator-to-array': 'off',
       '@typescript-eslint/consistent-type-exports': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-explicit-any': 'off',

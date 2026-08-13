@@ -361,9 +361,9 @@ export default class Compare extends Vue {
   }
 
   get show_sets(): [string, ControlSeries][] {
-    const sets: [string, ControlSeries][] = Array.from(
-      this.changedOnly ? this.delta_sets : this.searched_sets
-    );
+    const sets: [string, ControlSeries][] = [
+      ...(this.changedOnly ? this.delta_sets : this.searched_sets)
+    ];
     let searchModifier = -1;
 
     if (this.ascending) {
@@ -379,14 +379,15 @@ export default class Compare extends Vue {
       if ('passthrough' in file.evaluation.data) {
         const passthroughData = _.get(file.evaluation.data, 'passthrough');
         if (_.isObject(passthroughData)) {
-          this.compareItems = this.compareItems.concat(
-            Object.keys(passthroughData)
+          this.compareItems = [
+            ...this.compareItems,
+            ...Object.keys(passthroughData)
               .filter(
                 (key) =>
                   !this.compareItems.includes(`Passthrough Field: ${key}`)
               )
               .map((key) => `Passthrough Field: ${key}`)
-          );
+          ];
         }
       }
     }
@@ -435,9 +436,9 @@ export default class Compare extends Vue {
   }
 
   get files(): EvaluationFile[] {
-    const fileList = Array.from(
-      FilteredDataModule.evaluations(FilteredDataModule.selected_file_ids)
-    );
+    const fileList = [
+      ...FilteredDataModule.evaluations(FilteredDataModule.selected_file_ids)
+    ];
 
     switch (this.sortControlSetsBy) {
       case '':

@@ -353,7 +353,8 @@ function mapping(
                     ];
 
                     return _.has(findingTypes, 'HDF2ASFF-converter.warning')
-                      ? ret.concat([
+                      ? [
+                          ...ret,
                           {
                             code_desc: '',
                             start_time: '',
@@ -361,7 +362,7 @@ function mapping(
                             skip_message:
                               'Warning: Entry was truncated when converted to ASFF (AWS Security Hub)'
                           }
-                        ])
+                        ]
                       : ret;
                   })()
                 } as ExecJSON.Control;

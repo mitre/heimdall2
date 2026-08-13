@@ -26,7 +26,7 @@ export class AwsConfigMapping {
             if (
               identifier.toLowerCase().toLowerCase().includes(awsConfigRuleName)
             ) {
-              matches = matches.concat(NISTTags);
+              matches = [...matches, ...NISTTags];
             }
           });
         }
@@ -40,7 +40,7 @@ export class AwsConfigMapping {
                 .toLowerCase()
                 .includes(awsConfigRuleSourceIdentifier.toLowerCase())
             ) {
-              matches = matches.concat(NISTTags);
+              matches = [...matches, ...NISTTags];
             }
           });
         }
