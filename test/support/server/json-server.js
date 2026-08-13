@@ -30,7 +30,7 @@ server.use((req, res, next) => {
   } else if (req.originalUrl.startsWith('/user')) {
     res.send({
       login: 'example',
-      id: 66680985,
+      id: 66_680_985,
       node_id: '',
       avatar_url: 'https://avatars.githubusercontent.com/u/66680985?v=4',
       gravatar_id: '',

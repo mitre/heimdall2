@@ -47,7 +47,7 @@ export type CAATRow = Partial<
 >;
 
 export class FromHDFToCAATMapper {
-  static readonly MaxCellSize = 32000;
+  static readonly MaxCellSize = 32_000;
   static readonly MaxSheetNameLength = 31;
 
   static readonly NistCanonizationConfig: CanonizationConfig = {

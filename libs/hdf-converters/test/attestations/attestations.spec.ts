@@ -155,31 +155,31 @@ const attestations_for_overlay: Attestation[] = [
 describe('advanceDate', () => {
   it('Should return a date two weeks from now when given "fortnightly" as an input', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), 'fortnightly').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), 'fortnightly').toISOString(true)
     ).toEqual('2022-09-23T21:29:02.000+00:00');
   });
 
   it('Should return correct date when given custom number of days to advance by', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '200d').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), '200d').toISOString(true)
     ).toEqual('2023-03-28T21:29:02.000+00:00');
   });
 
   it('Should return correct date when given custom number of weeks to advance by', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '12w').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), '12w').toISOString(true)
     ).toEqual('2022-12-02T21:29:02.000+00:00');
   });
 
   it('Should return correct date when given custom number of months to advance by', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '4m').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), '4m').toISOString(true)
     ).toEqual('2023-01-09T21:29:02.000+00:00');
   });
 
   it('Should return correct date when given custom number of years to advance by', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '5y').toISOString(true)
+      advanceDate(moment.utc(1_662_758_942_000), '5y').toISOString(true)
     ).toEqual('2027-09-09T21:29:02.000+00:00');
   });
 });

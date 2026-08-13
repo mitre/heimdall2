@@ -1018,7 +1018,7 @@ export class SonarqubeResults {
   async getSearchResults<T extends SonarqubeVersion>(
     sonarqubeVersion: string
   ): Promise<Search<T>> {
-    const UPPER_LIMIT = 10000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
+    const UPPER_LIMIT = 10_000; // there is an upper limit of 10000 search results provided for any given search query (i.e. everything aside from the paging information): https://community.sonarsource.com/t/cannot-get-more-than-10000-results-through-web-api/3662
     const discoveredStatuses =
       await this.discoverIssueStatuses(sonarqubeVersion);
     const PAGE_SIZE = 100;

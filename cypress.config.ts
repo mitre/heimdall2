@@ -16,8 +16,8 @@ export default defineConfig({
     specPattern: 'test/integration/**/*.cy.{js,jsx,ts,tsx}'
   },
   // Extends timeout counter to 60s
-  defaultCommandTimeout: 60000,
-  requestTimeout: 30000,
+  defaultCommandTimeout: 60_000,
+  requestTimeout: 30_000,
   // Forces failed tests to retry up to 3 times
   retries: {runMode: 3}
 });

@@ -187,7 +187,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
   // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in AssumeRolePolicyDocument and FindingProviderFields.Types for now.
   restrictionAttributesLessThan32KiB(finding: IFindingASFF): IFindingASFF {
-    const ATTRIBUTE_CHARACTER_LIMIT = 30000;
+    const ATTRIBUTE_CHARACTER_LIMIT = 30_000;
     if (finding.Resources.length > 1) {
       _.set(
         finding,
@@ -227,7 +227,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     numRemoved: number,
     numTruncated: number
   ): [IFindingASFF | undefined, number, number] {
-    const SIZE_CAP = 200000;
+    const SIZE_CAP = 200_000;
     const originalSize = new TextEncoder().encode(
       JSON.stringify(finding)
     ).length;

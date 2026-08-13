@@ -2,8 +2,8 @@ import {defineConfig} from 'vitest/config';
 
 export default defineConfig({
   test: {
-    hookTimeout: 10000,
-    testTimeout: 10000,
+    hookTimeout: 10_000,
+    testTimeout: 10_000,
     sequence: {
       concurrent: true
     }

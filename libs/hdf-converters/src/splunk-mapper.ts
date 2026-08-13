@@ -216,7 +216,7 @@ export class SplunkMapper {
     ]);
     // Arbitrary time values for waiting (in ms), change as necessary
     // Time to wait until killing search job
-    const searchJobTimeout = 120000;
+    const searchJobTimeout = 120_000;
     // Time interval between checking on status of search job
     const searchJobPing = 50;
     let queryStatus: AxiosResponse;
