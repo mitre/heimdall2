@@ -74,13 +74,11 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
-      return Promise.all([
-        queryInterface.changeColumn('Groups', 'name', {
-          type: Sequelize.STRING,
-          allowNull: false,
-          unique: false
-        }, { transaction: t })
-      ])
+      return queryInterface.changeColumn('Groups', 'name', {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: false
+      }, { transaction: t })
     })
   }
 };
