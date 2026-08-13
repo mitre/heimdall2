@@ -1,7 +1,8 @@
 import {isFQDN, isIP, isMACAddress} from 'validator';
-import {Result} from '../utils/result';
-import {ChecklistMetadata, StigMetadata} from './checklist-jsonix-converter';
-import {Asset, Assettype, Role, Techarea} from './checklistJsonix';
+import type {Result} from '../utils/result';
+import type {ChecklistMetadata, StigMetadata} from './checklist-jsonix-converter';
+import type {Asset} from './checklistJsonix';
+import { Assettype, Role, Techarea} from './checklistJsonix';
 import * as Revalidator from 'revalidator';
 import _ from 'lodash';
 

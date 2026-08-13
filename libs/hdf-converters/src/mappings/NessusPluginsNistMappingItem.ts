@@ -1,4 +1,4 @@
-import {INESSUSJSONID} from './NessusPluginsNistMapping';
+import type {INESSUSJSONID} from './NessusPluginsNistMapping';
 
 export class NessusPluginsNistMappingItem {
   pluginFamily: string;

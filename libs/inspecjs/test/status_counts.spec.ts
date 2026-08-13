@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import {expect, test} from 'vitest';
-import {ConversionResult, convertFile} from '../src/fileparse';
+import type {ConversionResult} from '../src/fileparse';
+import { convertFile} from '../src/fileparse';
 import {statusCounts} from './status_counts';
 
 test('Returns proper status counts for sample file in parse_testbed', () => {

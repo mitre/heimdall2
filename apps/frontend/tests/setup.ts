@@ -1,5 +1,6 @@
 import {vi} from 'vitest';
-import Vue, {CreateElement} from 'vue';
+import type {CreateElement} from 'vue';
+import Vue from 'vue';
 import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);

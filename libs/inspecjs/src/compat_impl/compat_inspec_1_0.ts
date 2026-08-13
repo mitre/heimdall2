@@ -2,25 +2,27 @@
  * A lot of information/behaviour is shared between the profile and result version so we use a single abstract superclass
  */
 
-import {
+import type {
   ControlStatus,
   HDFControl,
   HDFControlSegment,
   SegmentStatus,
-  Severity,
+  Severity} from '../compat_wrappers';
+import {
   convertImpactToSeverity,
   severities
 } from '../compat_wrappers';
-import {
+import type {
   ControlResult as ControlResult_1_0,
   ExecJSONControl as ResultControl_1_0
 } from '../generated_parsers/v_1_0/exec-json';
-import {ProfileJSONControl as ProfileControl_1_0} from '../generated_parsers/v_1_0/profile-json';
-import {
+import type {ProfileJSONControl as ProfileControl_1_0} from '../generated_parsers/v_1_0/profile-json';
+import type {
   CanonizationConfig,
-  is_control,
   NistControl,
-  NistRevision,
+  NistRevision} from '../nist';
+import {
+  is_control,
   parse_nist
 } from '../nist';
 

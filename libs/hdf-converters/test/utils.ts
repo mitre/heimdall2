@@ -1,7 +1,7 @@
-import {ExecJSON} from 'inspecjs';
+import type {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
-import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import type {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
+import type {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import {version as hdfConvertersVersion} from '../package.json';
 
 export function omitVersions(

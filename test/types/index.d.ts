@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {CreateUserDto} from '../../apps/backend/src/users/dto/create-user.dto';
+import type {CreateUserDto} from '../../apps/backend/src/users/dto/create-user.dto';
 
 declare global {
   namespace Cypress {

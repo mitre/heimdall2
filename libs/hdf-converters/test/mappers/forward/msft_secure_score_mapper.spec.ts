@@ -1,8 +1,10 @@
 import fs from 'fs';
 import {describe, expect, it} from 'vitest';
-import {
-  MsftSecureScoreResults,
+import type {
   CombinedResponse
+} from '../../../src/msft-secure-score-mapper';
+import {
+  MsftSecureScoreResults
 } from '../../../src/msft-secure-score-mapper';
 import {omitVersions} from '../../utils';
 

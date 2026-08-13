@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import {describe, expect, it} from 'vitest';
-import {ContextualizedEvaluation, ContextualizedProfile} from './context';
+import type {ContextualizedEvaluation, ContextualizedProfile} from './context';
+import type {
+  ConversionResult} from './fileparse';
 import {
-  ConversionResult,
   convertFile,
   convertFileContextual,
   isContextualizedEvaluation,

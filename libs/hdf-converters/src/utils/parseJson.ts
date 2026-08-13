@@ -1,4 +1,4 @@
-import {Result} from './result';
+import type {Result} from './result';
 
 export type JSONValue =
   | string

@@ -1,11 +1,12 @@
-import {
+import type {
   SecureScore,
   ControlScore,
   SecureScoreControlProfile
 } from '@microsoft/microsoft-graph-types';
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import type { ILookupPath, MappedTransform} from './base-converter';
+import {BaseConverter} from './base-converter';
 import * as _ from 'lodash';
 import {
   conditionallyProvideAttribute,

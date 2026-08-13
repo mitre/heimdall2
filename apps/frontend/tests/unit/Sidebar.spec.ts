@@ -1,12 +1,13 @@
 import Sidebar from '@/components/global/Sidebar.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
-import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils';
+import type { Wrapper} from '@vue/test-utils';
+import {createLocalVue, shallowMount} from '@vue/test-utils';
 import {beforeAll, describe, expect, it} from 'vitest';
-import Vue from 'vue';
+import type Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
-import {EvaluationFile, ProfileFile} from '../../src/store/report_intake';
+import type {EvaluationFile, ProfileFile} from '../../src/store/report_intake';
 import {loadAll} from '../util/testingUtils';
 
 const vuetify = new Vuetify();

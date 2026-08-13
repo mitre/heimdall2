@@ -2,10 +2,10 @@ import {
   ExecControl as HDFExecControl_1_0,
   ProfileControl as HDFProfileControl_1_0
 } from './compat_impl/compat_inspec_1_0';
-import * as parse from './fileparse';
-import {ExecJSONControl as ResultControl_1_0} from './generated_parsers/v_1_0/exec-json';
-import {ProfileJSONControl as ProfileControl_1_0} from './generated_parsers/v_1_0/profile-json';
-import {CanonizationConfig, NistControl, NistRevision} from './nist';
+import type * as parse from './fileparse';
+import type {ExecJSONControl as ResultControl_1_0} from './generated_parsers/v_1_0/exec-json';
+import type {ProfileJSONControl as ProfileControl_1_0} from './generated_parsers/v_1_0/profile-json';
+import type {CanonizationConfig, NistControl, NistRevision} from './nist';
 
 // These types are used throughout for control/result status and impact
 

@@ -1,6 +1,6 @@
 /** For helper functions that don't belong anywhere else */
 
-import {ExecJSON} from 'inspecjs';
+import type {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 
 /** Compares arrays a and b, returning a number indicating their lexicographic ordering

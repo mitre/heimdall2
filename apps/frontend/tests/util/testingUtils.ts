@@ -1,6 +1,7 @@
 import {InspecDataModule} from '@/store/data_store';
 import {InspecIntakeModule} from '@/store/report_intake';
-import {Sample, samples} from '@/utilities/sample_util';
+import type {Sample} from '@/utilities/sample_util';
+import { samples} from '@/utilities/sample_util';
 import {readFileSync} from 'fs';
 import {AllRaw} from './fs';
 

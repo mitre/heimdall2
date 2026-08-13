@@ -1,7 +1,8 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import type { ILookupPath, MappedTransform} from './base-converter';
+import {BaseConverter} from './base-converter';
 import {data as MappingData} from './mappings/CheckovToCciAndNistMappingData';
 
 // Map view over the generated table: check_id arrives from the scan file, and

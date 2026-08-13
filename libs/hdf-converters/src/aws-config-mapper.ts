@@ -1,11 +1,12 @@
-import {
+import type {
   ComplianceByConfigRule,
   ConfigRule,
-  ConfigService,
   ConfigServiceClientConfig,
   DescribeConfigRulesCommandInput,
   DescribeConfigRulesResponse,
-  EvaluationResult,
+  EvaluationResult} from '@aws-sdk/client-config-service';
+import {
+  ConfigService,
   ResourceType
 } from '@aws-sdk/client-config-service';
 import {NodeHttpHandler} from '@smithy/node-http-handler';

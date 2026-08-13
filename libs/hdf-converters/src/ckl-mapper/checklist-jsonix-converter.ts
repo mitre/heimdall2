@@ -3,22 +3,23 @@ import _ from 'lodash';
 import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
 import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
 import {getDescription} from '../utils/global';
-import {
+import type {
   Asset,
-  Assettype,
   Checklist,
   Istig,
-  LocalPartEnum,
   Name,
-  Role,
-  Severityoverride,
   Sidata,
   Sidname,
   Status,
   Stigdata,
   StigdatumElement,
+  Vuln} from './checklistJsonix';
+import {
+  Assettype,
+  LocalPartEnum,
+  Role,
+  Severityoverride,
   Techarea,
-  Vuln,
   Vulnattribute
 } from './checklistJsonix';
 import {coerce} from 'semver';

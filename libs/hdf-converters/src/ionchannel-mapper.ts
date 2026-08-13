@@ -1,16 +1,18 @@
-import axios, {AxiosInstance} from 'axios';
-import {ExecJSON} from 'inspecjs';
+import type {AxiosInstance} from 'axios';
+import axios from 'axios';
+import type {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {
+import type {
   ContextualizedDependency,
   Dependency,
   IonChannelAnalysisResponse,
   ScanSummary
 } from '../types/ionchannelAnalysis';
-import {Project} from '../types/ionchannelProjects';
-import {Team} from '../types/ionchannelTeams';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import type {Project} from '../types/ionchannelProjects';
+import type {Team} from '../types/ionchannelTeams';
+import type { ILookupPath, MappedTransform} from './base-converter';
+import {BaseConverter} from './base-converter';
 import {
   DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS,
   getCCIsForNISTTags

@@ -1,5 +1,6 @@
 import JSZip from 'jszip';
-import axios, {AxiosInstance} from 'axios';
+import type {AxiosInstance} from 'axios';
+import axios from 'axios';
 import {ServerModule} from '@/store/server';
 
 /** represents the information of the current used */

@@ -1,4 +1,4 @@
-import {ControlStatus} from './compat_wrappers';
+import type {ControlStatus} from './compat_wrappers';
 import {ALL_NIST_CONTROL_NUMBERS, ALL_NIST_FAMILIES} from './raw_nist';
 
 // Regexes.

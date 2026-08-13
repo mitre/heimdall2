@@ -1,5 +1,5 @@
-import {IEvaluationTag} from '..';
-import {IGroup} from '../group/group.interface';
+import type {IEvaluationTag} from '..';
+import type {IGroup} from '../group/group.interface';
 
 export interface IEvaluation {
   id: string;

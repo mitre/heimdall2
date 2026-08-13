@@ -3,10 +3,11 @@ import {ExecJSON} from 'inspecjs';
 import moment from 'moment';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import yaml from 'yaml';
+import type {
+  Attestation} from '../../src/utils/attestations';
 import {
   addAttestationToHDF,
   advanceDate,
-  Attestation,
   createAttestationMessage,
   parseXLSXAttestations,
   convertAttestationToSegment

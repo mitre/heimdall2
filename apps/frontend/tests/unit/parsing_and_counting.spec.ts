@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import {describe, expect, it} from 'vitest';
 import {InspecDataModule} from '@/store/data_store';
 import {InspecIntakeModule} from '@/store/report_intake';
-import {ControlStatusHash, StatusCountModule} from '@/store/status_counts';
+import type {ControlStatusHash} from '@/store/status_counts';
+import { StatusCountModule} from '@/store/status_counts';
 import {AllRaw} from '../util/fs';
 
 describe('Parsing', async () => {

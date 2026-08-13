@@ -1,13 +1,14 @@
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
-import {ILookupPath, MappedTransform} from '../base-converter';
+import type {ILookupPath, MappedTransform} from '../base-converter';
 import {
   conditionallyProvideAttribute,
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   FROM_ASFF_TYPES_SLASH_REPLACEMENT
 } from '../utils/global';
-import {ASFFMapper, consolidate, SpecialCasing} from './asff-mapper';
+import type {ASFFMapper} from './asff-mapper';
+import { consolidate, SpecialCasing} from './asff-mapper';
 
 function replaceTypesSlashes<T>(type: T): T | string {
   if (!_.isString(type)) {

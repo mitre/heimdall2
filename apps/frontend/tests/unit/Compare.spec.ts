@@ -1,11 +1,13 @@
 import {FilteredDataModule} from '@/store/data_filters';
 import {SearchModule} from '@/store/search';
 import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
-import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
+import type { ControlSeries} from '@/utilities/delta_util';
+import {ComparisonContext} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
-import {shallowMount, Wrapper} from '@vue/test-utils';
+import type { Wrapper} from '@vue/test-utils';
+import {shallowMount} from '@vue/test-utils';
 import {beforeEach, describe, expect, it} from 'vitest';
-import Vue from 'vue';
+import type Vue from 'vue';
 import Vuetify from 'vuetify';
 import {loadSample, removeAllFiles} from '../util/testingUtils';
 

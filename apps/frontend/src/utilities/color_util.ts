@@ -3,7 +3,7 @@
  * Not written with an eye towards efficiency - prefer that these be done statically
  */
 import Chroma from 'chroma-js';
-import {VuetifyParsedThemeItem} from 'vuetify/types/services/theme';
+import type {VuetifyParsedThemeItem} from 'vuetify/types/services/theme';
 
 //
 export const colorOnColorLookupTable: Record<string, string> = {

@@ -1,11 +1,13 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
+import type {
+  ILookupPath,
+  MappedTransform
+} from './base-converter';
 import {
   BaseConverter,
-  ILookupPath,
-  impactMapping,
-  MappedTransform
+  impactMapping
 } from './base-converter';
 
 const IMPACT_MAPPING = new Map<string, number>([

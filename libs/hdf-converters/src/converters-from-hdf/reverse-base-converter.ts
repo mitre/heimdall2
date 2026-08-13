@@ -1,6 +1,6 @@
-import {ExecJSON} from 'inspecjs';
+import type {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
-import {
+import type {
   MappedReform,
   MappedTransform,
   ObjectEntryValue

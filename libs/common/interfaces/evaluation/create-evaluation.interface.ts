@@ -1,4 +1,4 @@
-import {ICreateEvaluationTag} from '..';
+import type {ICreateEvaluationTag} from '..';
 
 export interface ICreateEvaluation {
   readonly filename: string;

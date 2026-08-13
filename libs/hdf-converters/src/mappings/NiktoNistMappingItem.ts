@@ -1,4 +1,4 @@
-import {INIKJSONID} from './NiktoNistMapping';
+import type {INIKJSONID} from './NiktoNistMapping';
 
 export class NiktoNistMappingItem {
   id: number;

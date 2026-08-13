@@ -1,5 +1,5 @@
-import {HDFControlSegment} from 'inspecjs';
-import {ILookupPathFH} from '../src/converters-from-hdf/reverse-base-converter';
+import type {HDFControlSegment} from 'inspecjs';
+import type {ILookupPathFH} from '../src/converters-from-hdf/reverse-base-converter';
 
 export type SplunkControl = {
   meta: Meta;

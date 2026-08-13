@@ -1,11 +1,12 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
+import type {
+  ILookupPath,
+  MappedTransform} from './base-converter';
 import {
   BaseConverter,
-  ILookupPath,
   impactMapping,
-  MappedTransform,
   parseXml
 } from './base-converter';
 import {

@@ -1,15 +1,18 @@
-import axios, {AxiosError, AxiosInstance} from 'axios';
+import type {AxiosError, AxiosInstance} from 'axios';
+import axios from 'axios';
 import * as rax from 'retry-axios';
 import * as _ from 'lodash';
 import {coerce, lt} from 'semver';
 import {ExecJSON} from 'inspecjs';
 import {inspect} from 'util';
 import {version as HeimdallToolsVersion} from '../package.json';
+import type {
+  ILookupPath,
+  MappedTransform
+} from './base-converter';
 import {
   BaseConverter,
-  ILookupPath,
-  impactMapping,
-  MappedTransform
+  impactMapping
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';

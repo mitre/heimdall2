@@ -2,22 +2,25 @@ import {ExecJSON, severities} from 'inspecjs';
 import _ from 'lodash';
 import xmlFormat from 'xml-formatter';
 import {version as HeimdallToolsVersion} from '../../package.json';
-import {
-  BaseConverter,
-  generateHash,
+import type {
   ILookupPath,
   MappedTransform
 } from '../base-converter';
+import {
+  BaseConverter,
+  generateHash
+} from '../base-converter';
 import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
+import type {
+  ChecklistObject,
+  ChecklistVuln} from './checklist-jsonix-converter';
 import {
   ChecklistJsonixConverter,
-  ChecklistObject,
-  ChecklistVuln,
   EmptyChecklistObject,
   updateChecklistWithMetadata
 } from './checklist-jsonix-converter';
-import {Checklist} from './checklistJsonix';
+import type {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
 import {throwIfInvalidAssetMetadata} from './checklist-metadata-utils';
 import {parseJson} from '../utils/parseJson';

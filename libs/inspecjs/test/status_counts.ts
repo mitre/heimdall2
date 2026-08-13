@@ -1,6 +1,7 @@
 // Get filesystem
-import {ControlStatus, HDFControl, hdfWrapControl} from '../src';
-import {ExecJSON} from '../src/versions/v_1_0';
+import type {ControlStatus, HDFControl} from '../src';
+import { hdfWrapControl} from '../src';
+import type {ExecJSON} from '../src/versions/v_1_0';
 
 type Counts = Record<ControlStatus, number>;
 

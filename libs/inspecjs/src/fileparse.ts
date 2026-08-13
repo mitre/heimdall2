@@ -1,8 +1,9 @@
 // Import all of our parsers
 // V 1.0
-import {
+import type {
   ContextualizedEvaluation,
-  ContextualizedProfile,
+  ContextualizedProfile} from './context';
+import {
   contextualizeEvaluation,
   contextualizeProfile
 } from './context';

@@ -1,8 +1,9 @@
-import {contextualizeEvaluation, ExecJSON} from 'inspecjs';
+import type { ExecJSON} from 'inspecjs';
+import {contextualizeEvaluation} from 'inspecjs';
 import * as _ from 'lodash';
-import {MappedTransform} from '../../base-converter';
+import type {MappedTransform} from '../../base-converter';
 import {FromHdfBaseConverter} from '../reverse-base-converter';
-import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
+import type {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
 import {
   createProfileInfoFinding,
   getAllLayers,

@@ -1,11 +1,12 @@
 import * as XLSX from '@e965/xlsx';
-import {
+import type {
   CanonizationConfig,
   ContextualizedControl,
   ContextualizedEvaluation,
-  convertFileContextual,
   ExecJSON,
-  HDFControl,
+  HDFControl} from 'inspecjs';
+import {
+  convertFileContextual,
   isContextualizedEvaluation
 } from 'inspecjs';
 import * as _ from 'lodash';

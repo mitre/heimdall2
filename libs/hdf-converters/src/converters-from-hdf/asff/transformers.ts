@@ -1,20 +1,24 @@
 import {createHash} from 'crypto';
-import {
+import type {
   ContextualizedControl,
   ContextualizedEvaluation,
-  contextualizeEvaluation,
-  convertFile,
   ExecJSON
+} from 'inspecjs';
+import {
+  contextualizeEvaluation,
+  convertFile
 } from 'inspecjs';
 import * as _ from 'lodash';
 import moment from 'moment';
 import {version as HeimdallToolsVersion} from '../../../package.json';
 import {getDescription} from '../../utils/global';
-import {IFindingASFF, IOptions} from './asff-types';
-import {
-  escapeForwardSlashes,
+import type {IFindingASFF, IOptions} from './asff-types';
+import type {
   FromHdfToAsffMapper,
   SegmentedControl
+} from './reverse-asff-mapper';
+import {
+  escapeForwardSlashes
 } from './reverse-asff-mapper';
 
 // FromHdfToAsff mapper transformers

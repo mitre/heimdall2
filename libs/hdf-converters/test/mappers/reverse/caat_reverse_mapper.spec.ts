@@ -2,7 +2,8 @@ import * as XLSX from '@e965/xlsx';
 import fs from 'fs';
 import * as _ from 'lodash';
 import {describe, expect, it} from 'vitest';
-import {CAATRow, FromHDFToCAATMapper} from '../../../index';
+import type {CAATRow} from '../../../index';
+import { FromHDFToCAATMapper} from '../../../index';
 
 describe('CAAT Results Reverse Mapper', () => {
   it('Successfully converts two RHEL HDF and a RHEL triple overlay HDF into CAAT', () => {

@@ -1,10 +1,11 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import type { ILookupPath, MappedTransform} from './base-converter';
+import {BaseConverter} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {filterString, getCCIsForNISTTags} from './utils/global';
-import {
+import type {
   CycloneDXSoftwareBillOfMaterialSpecification,
   CycloneDXSoftwareBillOfMaterialsStandard,
   CycloneDXBillOfMaterialsStandardVulnerability,

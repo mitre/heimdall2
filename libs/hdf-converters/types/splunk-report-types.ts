@@ -1,4 +1,4 @@
-import {ExecJSON} from 'inspecjs';
+import type {ExecJSON} from 'inspecjs';
 
 export type SplunkReport = {
   meta: Meta;

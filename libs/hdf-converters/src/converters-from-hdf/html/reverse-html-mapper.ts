@@ -7,11 +7,12 @@ import {
   mdiEqualBox,
   mdiMinusCircle
 } from '@mdi/js';
-import {
+import type {
   ContextualizedControl,
   ContextualizedEvaluation,
+  HDFControlSegment} from 'inspecjs';
+import {
   convertFileContextual,
-  HDFControlSegment,
   isContextualizedEvaluation
 } from 'inspecjs';
 import _ from 'lodash';
@@ -19,7 +20,7 @@ import Mustache from 'mustache';
 import sanitize from 'sanitize-html';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
 import {html, js, css} from './embedded-assets';
-import {
+import type {
   IDetail,
   IOutputData,
   IResultSeverity,

@@ -1,6 +1,6 @@
 import {createHash} from 'crypto';
 import {XMLParser} from 'fast-xml-parser';
-import {ExecJSON} from 'inspecjs';
+import type {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import Papa from 'papaparse';
 

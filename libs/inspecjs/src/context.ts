@@ -3,8 +3,9 @@
  * Especially useful for handling overlay/wrapper profiles.
  */
 
-import {HDFControl, hdfWrapControl} from './compat_wrappers';
-import {
+import type {HDFControl} from './compat_wrappers';
+import { hdfWrapControl} from './compat_wrappers';
+import type {
   AnyControl,
   AnyEval,
   AnyEvalControl,

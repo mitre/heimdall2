@@ -1,4 +1,4 @@
-import {ICWEJSONID} from './CweNistMapping';
+import type {ICWEJSONID} from './CweNistMapping';
 
 export class CweNistMappingItem {
   id: number;

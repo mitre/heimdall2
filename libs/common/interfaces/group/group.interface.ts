@@ -1,4 +1,4 @@
-import {ISlimUser} from '../user/slim-user.interface';
+import type {ISlimUser} from '../user/slim-user.interface';
 export interface IGroup {
   id: string;
   readonly name: string;

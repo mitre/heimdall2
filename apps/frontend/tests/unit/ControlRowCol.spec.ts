@@ -1,7 +1,8 @@
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
-import {mount, Wrapper} from '@vue/test-utils';
+import type { Wrapper} from '@vue/test-utils';
+import {mount} from '@vue/test-utils';
 import {beforeEach, describe, expect, it} from 'vitest';
-import Vue from 'vue';
+import type Vue from 'vue';
 import Vuetify from 'vuetify';
 import {addElemWithDataAppToBody} from '../util/testingUtils';
 

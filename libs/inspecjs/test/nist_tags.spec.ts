@@ -1,7 +1,9 @@
 import * as fs from 'fs';
 import {expect, test} from 'vitest';
-import {HDFControl, hdfWrapControl} from '../src';
-import {ConversionResult, convertFile} from '../src/fileparse';
+import type {HDFControl} from '../src';
+import { hdfWrapControl} from '../src';
+import type {ConversionResult} from '../src/fileparse';
+import { convertFile} from '../src/fileparse';
 
 test('Returns proper status counts for sample file in parse_testbed', () => {
   const content = fs.readFileSync(

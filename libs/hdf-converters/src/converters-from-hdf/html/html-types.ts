@@ -1,6 +1,6 @@
 // Interface for HTML template data rendering
 
-import {ContextualizedControl} from 'inspecjs';
+import type {ContextualizedControl} from 'inspecjs';
 
 // Basic info for exported files; lvl 1
 export interface IFileInfo {

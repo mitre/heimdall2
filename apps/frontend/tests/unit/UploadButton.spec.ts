@@ -1,9 +1,10 @@
 import UploadButton from '@/components/generic/UploadButton.vue';
 import Modal from '@/components/global/Modal.vue';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-import {mount, Wrapper} from '@vue/test-utils';
+import type { Wrapper} from '@vue/test-utils';
+import {mount} from '@vue/test-utils';
 import {beforeEach, describe, expect, it} from 'vitest';
-import Vue from 'vue';
+import type Vue from 'vue';
 import Vuetify from 'vuetify';
 import {addElemWithDataAppToBody} from '../util/testingUtils';
 

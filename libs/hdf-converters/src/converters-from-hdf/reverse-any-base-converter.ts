@@ -1,5 +1,6 @@
-import {MappedReform, ObjectEntryValue} from '../base-converter';
-import {FromHdfBaseConverter, ILookupPathFH} from './reverse-base-converter';
+import type {MappedReform, ObjectEntryValue} from '../base-converter';
+import type { ILookupPathFH} from './reverse-base-converter';
+import {FromHdfBaseConverter} from './reverse-base-converter';
 
 // Base converter used to support conversions from HDF to Any Format
 export class FromAnyBaseConverter extends FromHdfBaseConverter {

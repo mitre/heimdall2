@@ -1,6 +1,6 @@
 import * as XLSX from '@e965/xlsx';
 import {ExecJSON} from 'inspecjs';
-import {
+import type {
   AttestationData,
   ControlResultStatus,
   ControlAttestationStatus

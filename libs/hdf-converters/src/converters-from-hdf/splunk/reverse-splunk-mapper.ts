@@ -1,17 +1,18 @@
-import axios, {AxiosInstance, AxiosResponse} from 'axios';
-import {
+import type {AxiosInstance, AxiosResponse} from 'axios';
+import axios from 'axios';
+import type {
   ContextualizedControl,
   ContextualizedEvaluation,
   ContextualizedProfile,
   ExecJSON
 } from 'inspecjs';
 import * as _ from 'lodash';
-import {Logger} from 'winston';
-import {SplunkConfig} from '../../../types/splunk-config-types';
-import {SplunkControl} from '../../../types/splunk-control-types';
-import {SplunkProfile} from '../../../types/splunk-profile-types';
-import {SplunkReport} from '../../../types/splunk-report-types';
-import {MappedTransform} from '../../base-converter';
+import type {Logger} from 'winston';
+import type {SplunkConfig} from '../../../types/splunk-config-types';
+import type {SplunkControl} from '../../../types/splunk-control-types';
+import type {SplunkProfile} from '../../../types/splunk-profile-types';
+import type {SplunkReport} from '../../../types/splunk-report-types';
+import type {MappedTransform} from '../../base-converter';
 import {
   createWinstonLogger,
   ensureContextualizedEvaluation
@@ -22,7 +23,7 @@ import {
   handleSplunkErrorResponse
 } from '../../utils/splunk-tools';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
-import {ILookupPathFH} from '../reverse-base-converter';
+import type {ILookupPathFH} from '../reverse-base-converter';
 
 const HDF_SPLUNK_SCHEMA = '1.1';
 const MAPPER_NAME = 'HDF2Splunk';

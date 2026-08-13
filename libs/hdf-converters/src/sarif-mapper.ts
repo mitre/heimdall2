@@ -1,7 +1,8 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import type { ILookupPath, MappedTransform} from './base-converter';
+import {BaseConverter} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,

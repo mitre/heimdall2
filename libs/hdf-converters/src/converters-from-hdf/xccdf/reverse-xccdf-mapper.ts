@@ -1,9 +1,9 @@
-import {ExecJSON} from 'inspecjs';
+import type {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import moment from 'moment';
 import Mustache from 'mustache';
 import {version as HeimdallToolsVersion} from '../../../package.json';
-import {
+import type {
   MappedXCCDFtoHDF,
   TestResultStatus,
   XCCDFSeverity

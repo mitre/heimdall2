@@ -1,4 +1,4 @@
-import {IOWASPJSONID} from './OwaspNistMapping';
+import type {IOWASPJSONID} from './OwaspNistMapping';
 
 export class OwaspNistMappingItem {
   id: string;

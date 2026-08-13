@@ -2,14 +2,17 @@
  * Tools used for generating the treemaps consumed by, of course, the Treemap card and associated components.
  */
 
-import {ColorHack} from '@/store/color_hack';
+import type {ColorHack} from '@/store/color_hack';
 import Chroma from 'chroma-js';
-import {hierarchy, HierarchyNode} from 'd3-hierarchy';
-import {
+import type { HierarchyNode} from 'd3-hierarchy';
+import {hierarchy} from 'd3-hierarchy';
+import type {
   ContextualizedControl,
-  FULL_NIST_HIERARCHY,
-  NistControl,
   NistHierarchyNode
+} from 'inspecjs';
+import {
+  FULL_NIST_HIERARCHY,
+  NistControl
 } from 'inspecjs';
 import {control_unique_key} from './format_util';
 

@@ -1,7 +1,8 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import type { ILookupPath, MappedTransform} from './base-converter';
+import {BaseConverter} from './base-converter';
 import {NiktoNistMapping} from './mappings/NiktoNistMapping';
 import {getCCIsForNISTTags} from './utils/global';
 
