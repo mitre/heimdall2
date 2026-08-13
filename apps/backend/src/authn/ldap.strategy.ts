@@ -4,6 +4,7 @@ import _ from 'lodash';
 import Strategy from 'passport-ldapauth';
 import { resolveSslMaterial } from '../../config/app-config';
 import { ConfigService } from '../config/config.service';
+import type { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
 
 @Injectable()
@@ -61,7 +62,11 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
     });
   }
 
-  async validate(user: unknown, done: any) {
+  // The PassportStrategy mixin awaits this and hands the resolved user to
+  // passport's done() itself — the contract every sibling strategy follows.
+  // Calling done() here directly passed the UNAWAITED promise as req.user
+  // and fired done() a second time when the mixin completed.
+  validate(user: unknown): Promise<User> {
     const { firstName, lastName } = this.authnService.splitName(
       _.get(user, this.configService.get('LDAP_NAMEFIELD') || 'name'),
     );
@@ -69,7 +74,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       user,
       this.configService.get('LDAP_MAILFIELD') || 'mail',
     );
-    const validatedUser = this.authnService.validateOrCreateUser(
+    return this.authnService.validateOrCreateUser(
       // `.at(0)` returns `string | undefined`, but validateOrCreateUser
       // requires `string`. Index access keeps the exact runtime behavior this
       // has always had. Closing the gap properly means deciding what should
@@ -81,6 +86,5 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       lastName,
       'ldap',
     );
-    return done(null, validatedUser);
   }
 }
