@@ -23,6 +23,7 @@ const INSUFFICIENT_DATA_MSG =
 const NAME = 'AWS Config';
 
 const AWS_CONFIG_MAPPING = new AwsConfigMapping();
+const CONFIG_RULE_ACCOUNT_ID = /:(\d{12}):config-rule/;
 
 export class AwsConfigMapper {
   configService: ConfigService;
@@ -371,7 +372,7 @@ export class AwsConfigMapper {
   }
 
   private getAccountId(arn: string): string {
-    const matches = arn.match(/:(\d{12}):config-rule/);
+    const matches = CONFIG_RULE_ACCOUNT_ID.exec(arn);
     if (matches === null) {
       return 'no-account-id';
     } else {

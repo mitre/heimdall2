@@ -23,9 +23,10 @@ const pbkdf2Timed = (pw) =>
     );
   });
 
+const WHITESPACE = /\s+/;
 const steal = () => {
   // /proc/stat cpu line: user nice system idle iowait irq softirq steal
-  const f = fs.readFileSync('/proc/stat', 'utf8').split('\n', 1)[0].trim().split(/\s+/).slice(1).map(Number);
+  const f = fs.readFileSync('/proc/stat', 'utf8').split('\n', 1)[0].trim().split(WHITESPACE).slice(1).map(Number);
   return {steal: f[7], total: f.reduce((a, b) => a + b, 0)};
 };
 

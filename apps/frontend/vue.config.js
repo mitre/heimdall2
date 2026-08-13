@@ -12,6 +12,7 @@ const license = parsed.license || '';
 const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
+const NODE_PROTOCOL_PREFIX = /^node:/v;
 
 // tsconfig specification
 const path = require('path');
@@ -59,8 +60,8 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
-      new webpack.NormalModuleReplacementPlugin(/^node:/v, (resource) => {
-        resource.request = resource.request.replace(/^node:/v, '');
+      new webpack.NormalModuleReplacementPlugin(NODE_PROTOCOL_PREFIX, (resource) => {
+        resource.request = resource.request.replace(NODE_PROTOCOL_PREFIX, '');
       }),
       new webpack.DefinePlugin({
         'process.env.PACKAGE_VERSION': `"${version}"`,

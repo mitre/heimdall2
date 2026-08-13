@@ -95,6 +95,8 @@ export enum StatusMapping {
   Not_Reviewed = 'Not Reviewed'
 }
 
+const MULTI_VALUE_SEPARATOR = /[,;|]/;
+
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
   ['high', 0.7],
@@ -497,7 +499,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       ).find((key) => key.toLowerCase() === attributeName.toLowerCase());
       if (keyFoundInVulnattribute) {
         if (separateElementNames.includes(keyFoundInVulnattribute)) {
-          const dataStrings = data?.toString().split(/[,;|]/) ?? [];
+          const dataStrings = data?.toString().split(MULTI_VALUE_SEPARATOR) ?? [];
           for (const dataString of dataStrings) {
             stigdata.push({
               vulnattribute:

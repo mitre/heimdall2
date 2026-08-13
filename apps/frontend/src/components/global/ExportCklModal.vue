@@ -326,6 +326,9 @@ type FileData = {
 };
 
 const isNotSelected: CustomRule = (_, file) => !file.selected;
+
+const RELEASE_INFO_PATTERN =
+  /Release: (?<release>\d+)\D+(?:\d.*?)?Date: (?<date>\d{1,2} \w{3} \d{4})/v;
 function validateField(prop: string): CustomRule {
   return (_, file: ExtendedEvaluationFile) => {
     let results = validateChecklistMetadata(file);
@@ -537,9 +540,7 @@ export default class ExportCKLModal extends Vue {
 
   splitReleaseInfo(info: string): string[] {
     const defaultReturn = ['', ''];
-    const pattern =
-      /Release: (?<release>\d+)\D+(?:\d.*?)?Date: (?<date>\d{1,2} \w{3} \d{4})/v;
-    const matches = new RegExp(pattern).exec(info);
+    const matches = RELEASE_INFO_PATTERN.exec(info);
     if (matches && matches.groups) {
       return [matches.groups.release, matches.groups.date];
     }

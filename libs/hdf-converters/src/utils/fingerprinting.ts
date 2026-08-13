@@ -1,5 +1,10 @@
 import * as _ from 'lodash';
 
+// Keys matching (hopefully) all xccdf formats
+const XCCDF_XMLNS_PATTERN = /xmlns.*http.*\/xccdf/;
+const NETSPARKER_GENERATED_PATTERN = /<netsparker-.*generated.*>/;
+const INVICTI_GENERATED_PATTERN = /<invicti-.*generated.*>/;
+
 export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
@@ -134,13 +139,13 @@ export function fingerprint(guessOptions: {
     if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
       return INPUT_TYPES.NESSUS;
     } else if (
-      guessOptions.data.match(/xmlns.*http.*\/xccdf/) || // Keys matching (hopefully) all xccdf formats
+      XCCDF_XMLNS_PATTERN.test(guessOptions.data) ||
       guessOptions.filename.toLowerCase().includes('xccdf')
     ) {
       return INPUT_TYPES.XCCDF;
     } else if (
-      guessOptions.data.match(/<netsparker-.*generated.*>/) ||
-      guessOptions.data.match(/<invicti-.*generated.*>/)
+      NETSPARKER_GENERATED_PATTERN.test(guessOptions.data) ||
+      INVICTI_GENERATED_PATTERN.test(guessOptions.data)
     ) {
       return INPUT_TYPES.NETSPARKER;
     } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {

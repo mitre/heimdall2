@@ -4,6 +4,10 @@ import {CCI_List} from '../utils/cci-list';
 import {data} from './CciNistMappingData';
 import {CciNistMappingItem} from './CciNistMappingItem';
 
+// two letters, hyphen, then one to three digits — the control-family prefix
+// of a NIST control identifier
+const CONTROL_FAMILY_PREFIX = /\w\w-\d\d?\d?/;
+
 type Reference = {
   '@_creator': string;
   '@_title': string;
@@ -131,7 +135,7 @@ export class CciNistTwoWayMapper {
         }
         // if there were no matches using the original pattern, try using only 2 letters hyphen followed by one or two numbers
         if (matchingIds.length === 0) {
-          const editedPattern = /\w\w-\d\d?\d?/.exec(pattern)?.[0];
+          const editedPattern = CONTROL_FAMILY_PREFIX.exec(pattern)?.[0];
           if (
             editedPattern !== undefined &&
             reference['@_index'].startsWith(editedPattern) &&

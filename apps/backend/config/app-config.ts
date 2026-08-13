@@ -26,6 +26,12 @@ export function resolveSslMaterial(
   }
 }
 
+// DATABASE_URL anatomy: scheme://user:password@host:port/name?query
+const DATABASE_URL_PATTERN
+  = /^(?:([^\s#/:?]+):\/{2})?(?:([^\s#/?@]+)@)?([^\s#/?]+)?(?:\/([^\s#?]*))?(?:\?([^\s#]+))?\S*$/;
+// The host:port boundary — the colon directly before a trailing port number.
+const HOST_PORT_SEPARATOR = /:(?=\d+$)/v;
+
 export default class AppConfig {
   private envConfig: Map<string, string | undefined>;
 
@@ -146,9 +152,7 @@ export default class AppConfig {
     if (url === undefined) {
       return false;
     } else {
-      const pattern
-        = /^(?:([^\s#/:?]+):\/{2})?(?:([^\s#/?@]+)@)?([^\s#/?]+)?(?:\/([^\s#?]*))?(?:\?([^\s#]+))?\S*$/;
-      const matches = pattern.exec(url);
+      const matches = DATABASE_URL_PATTERN.exec(url);
 
       if (matches === null) {
         return false;
@@ -164,7 +168,7 @@ export default class AppConfig {
       );
       this.set(
         'DATABASE_HOST',
-        matches[3] === undefined ? undefined : matches[3].split(/:(?=\d+$)/v, 1)[0],
+        matches[3] === undefined ? undefined : matches[3].split(HOST_PORT_SEPARATOR, 1)[0],
       );
       this.set(
         'DATABASE_NAME',
@@ -172,7 +176,7 @@ export default class AppConfig {
       );
       this.set(
         'DATABASE_PORT',
-        matches[3] === undefined ? undefined : matches[3].split(/:(?=\d+$)/v, 2)[1],
+        matches[3] === undefined ? undefined : matches[3].split(HOST_PORT_SEPARATOR, 2)[1],
       );
       return true;
     }

@@ -44,6 +44,19 @@ export enum SpecialCasing {
   Default = 'Default'
 }
 
+const FIREWALL_MANAGER_ARN =
+  /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/;
+const GUARDDUTY_ARN =
+  /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/guardduty$/;
+const INSPECTOR_ARN =
+  /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/;
+const PROWLER_ARN =
+  /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/;
+const SECURITY_HUB_ARN =
+  /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/;
+const TRIVY_ARN =
+  /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/;
+
 // typically you can just look at the ProductArn field to get information on the product type but we also support some custom formats/products that require alternative means of identification
 function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   const productArn = _.get(finding, 'ProductArn') as string;
@@ -52,17 +65,9 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     _.get(finding, 'GeneratorId') === 'cms.Chef Inspec'
   ) {
     return SpecialCasing.CMSInSpec;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/
-    )
-  ) {
+  } else if (FIREWALL_MANAGER_ARN.test(productArn)) {
     return SpecialCasing.FirewallManager;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/guardduty$/
-    )
-  ) {
+  } else if (GUARDDUTY_ARN.test(productArn)) {
     return SpecialCasing.GuardDuty;
   } else if (
     _.some(
@@ -78,29 +83,13 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     )
   ) {
     return SpecialCasing.PreviouslyHDF;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/
-    )
-  ) {
+  } else if (INSPECTOR_ARN.test(productArn)) {
     return SpecialCasing.Inspector;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
-    )
-  ) {
+  } else if (PROWLER_ARN.test(productArn)) {
     return SpecialCasing.Prowler;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/
-    )
-  ) {
+  } else if (SECURITY_HUB_ARN.test(productArn)) {
     return SpecialCasing.SecurityHub;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/
-    )
-  ) {
+  } else if (TRIVY_ARN.test(productArn)) {
     return SpecialCasing.Trivy;
   } else {
     return SpecialCasing.Default;

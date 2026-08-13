@@ -150,6 +150,7 @@ import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
 // and bracket access on a plain object resolves prototype keys.
 const NIST_DESCRIPTION_LOOKUP = new Map(Object.entries(NIST_DESCRIPTIONS));
 const CCI_DESCRIPTION_LOOKUP = new Map(Object.entries(CCI_DESCRIPTIONS));
+const REVISION_TAG = /rev.*\d/iv;
 import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
@@ -241,7 +242,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   get nistTags(): Tag[] {
     let nistTags = this.control.hdf.rawNistTags;
-    nistTags = nistTags.filter((tag) => tag.search(/rev.*\d/iv) === -1);
+    nistTags = nistTags.filter((tag) => tag.search(REVISION_TAG) === -1);
     return nistTags.map((tag) => {
       const nisted = parse_nist(tag);
       let url = '';

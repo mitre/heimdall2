@@ -69,6 +69,7 @@ import Component from 'vue-class-component';
 const localAccesskey = new LocalStorageVal<string>('tenable_accesskey');
 const localSecretkey = new LocalStorageVal<string>('tenable_secretkey');
 const localHostname = new LocalStorageVal<string>('tenable_hostname');
+const URL_SCHEME = /^https?:\/\//v;
 
 @Component({
   components: {
@@ -106,7 +107,7 @@ export default class AuthStep extends Vue {
     }
 
     // If the protocol (https) is missing add it
-    if (!/^https?:\/\//v.test(this.hostname)) {
+    if (!URL_SCHEME.test(this.hostname)) {
       this.hostname = `https://${this.hostname}`;
     }
 

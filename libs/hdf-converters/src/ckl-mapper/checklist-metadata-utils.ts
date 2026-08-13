@@ -8,6 +8,9 @@ import _ from 'lodash';
 
 export class InvalidChecklistMetadataException extends Error {}
 
+// Address lists are separated by newline, space, or comma.
+const ADDRESS_SEPARATOR = /[\s,]+/;
+
 const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
   properties: {
     hostfqdn: {
@@ -21,7 +24,7 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
       conform: (ip: string) => {
         if (!ip) return true; // Allow empty input
         // Split the input string by newline, space, or comma
-        const ipAddresses = ip.split(/[\s,]+/);
+        const ipAddresses = ip.split(ADDRESS_SEPARATOR);
         // Check each IP address using the isIP function
         return ipAddresses.every((address) => isIP(address));
       },
@@ -33,7 +36,7 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
       conform: (mac: string) => {
         if (!mac) return true; // Allow empty input
         // Split the input string by newline, space, or comma
-        const macAddresses = mac.split(/[\s,]+/);
+        const macAddresses = mac.split(ADDRESS_SEPARATOR);
         // Check each MAC address using the isMACAddress function
         return macAddresses.every((address) => isMACAddress(address));
       },

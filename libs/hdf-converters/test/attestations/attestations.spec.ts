@@ -13,6 +13,9 @@ import {
   convertAttestationToSegment
 } from '../../src/utils/attestations';
 
+const ATTESTATION_MESSAGE_PREFIX = /^Attestation/;
+const EXPIRED_MESSAGE_PREFIX = /^Expired/;
+
 const validPassingAttestation_skippedControl: Attestation[] = [
   {
     control_id: 'SV-230223',
@@ -195,7 +198,7 @@ describe('CreateAttestationMessage', () => {
     );
 
     expect(unexpiredAttestationMessage).toEqual(
-      expect.stringMatching(/^Attestation/)
+      expect.stringMatching(ATTESTATION_MESSAGE_PREFIX)
     );
   });
 
@@ -206,7 +209,7 @@ describe('CreateAttestationMessage', () => {
     );
 
     expect(expiredAttestationMessage).toEqual(
-      expect.stringMatching(/^Expired/)
+      expect.stringMatching(EXPIRED_MESSAGE_PREFIX)
     );
   });
 });

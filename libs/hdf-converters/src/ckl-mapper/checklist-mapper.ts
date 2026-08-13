@@ -193,15 +193,25 @@ function checkMessage(
  * @param input - array of one element consisting of {code_desc, status, start_time}
  * @returns ExecJSON.ControlResult
  */
+// regex of four groups (five if you count the full match) consisting of the
+// four possible status values, followed by any number of characters after
+// :: TEST which represents the code_desc, followed by an optional :: MESSAGE
+// or SKIP_MESSAGE representing the message type, followed by any number of
+// characters representing the message
+const FINDING_DETAILS_PATTERN =
+  /^(failed|passed|skipped|error) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*?))?$/s;
+
+// Comment sections look like "LABEL :: text", one per line.
+const COMMENT_SECTION_SEPARATOR = /\n(?=[A-Z]+ ::)/;
+const COMMENT_PATTERN = /([A-Z]+) :: (.+)/s;
+
 function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const findings = input as unknown as ExecJSON.ControlResult[];
   const results: ExecJSON.ControlResult[] = [];
   const findingDetails = findings[0].code_desc;
-  const regex =
-    /^(failed|passed|skipped|error) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*?))?$/s;
 
   // check if code_desc is empty or does not match the above regular expression
-  if (!new RegExp(regex).exec(findingDetails)) {
+  if (!FINDING_DETAILS_PATTERN.exec(findingDetails)) {
     return [
       {
         status: findings[0].status,
@@ -214,12 +224,8 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
     for (const details of findingDetails.split(
       '\n--------------------------------\n'
     )) {
-      // regex of four groups (five if you count the full match) consisting of the four possible status
-      // followed by any number of characters after :: TEST which represents the code_desc
-      // followed by an optionally :: MESSAGE or SKIP_MESSAGE representing the message type
-      // followed by any number of characters representing the message
       // split details for status
-      const match = regex.exec(details.trim());
+      const match = FINDING_DETAILS_PATTERN.exec(details.trim());
       if (match) {
         const [, mStatus, mCode_dec, messageType, mMessage] = match;
         results.push({
@@ -249,8 +255,8 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
       }
     ];
   } else {
-    for (const section of commentString.split(/\n(?=[A-Z]+ ::)/)) {
-      const matches = new RegExp(/([A-Z]+) :: (.+)/s).exec(section);
+    for (const section of commentString.split(COMMENT_SECTION_SEPARATOR)) {
+      const matches = COMMENT_PATTERN.exec(section);
       if (matches) {
         const [, label, data] = matches;
         if (data) {

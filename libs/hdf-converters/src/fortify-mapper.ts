@@ -14,6 +14,7 @@ import {getCCIsForNISTTags} from './utils/global';
 const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';
 const DEFAULT_NIST_TAG: string[] = [];
+const NIST_CONTROL_PATTERN = /[A-Za-z][A-Za-z]-\d{1,2}/;
 
 let parseHtml: (input: unknown) => string;
 
@@ -40,7 +41,7 @@ function nistTag(rule: Record<string, unknown>): string[] {
     if (tag === null || tag === undefined) {
       return DEFAULT_NIST_TAG;
     } else {
-      return _.get(tag, 'Title').match(/[A-Za-z][A-Za-z]-\d{1,2}/);
+      return _.get(tag, 'Title').match(NIST_CONTROL_PATTERN);
     }
   }
   return [];

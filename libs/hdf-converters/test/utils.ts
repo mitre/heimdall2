@@ -4,6 +4,10 @@ import type {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 import type {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import {version as hdfConvertersVersion} from '../package.json';
 
+const CKL_VERSION_COMMENT = /(?<=<!--Heimdall Version :: )\S+(?=-->)/;
+const XCCDF_VERSION_ELEMENT = /(?<=<version>)\S+(?=<\/version>)/;
+const HTML_STYLE_TAG = /(<style>)[\s\S]*?(<\/style>)/;
+
 export function omitVersions(
   input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
     profiles?: Partial<ExecJSONProfile>[];
@@ -92,21 +96,15 @@ export function omitHDFTimes(
 // replaces the version in the checklist file with the
 // actual hdf-converters version
 export function replaceCKLVersion(input: string): string {
-  return input.replace(
-    /(?<=<!--Heimdall Version :: )\S+(?=-->)/,
-    hdfConvertersVersion
-  );
+  return input.replace(CKL_VERSION_COMMENT, hdfConvertersVersion);
 }
 
 // replaces the version in the checklist file with the
 // actual hdf-converters version
 export function replaceXCCDFVersion(input: string): string {
-  return input.replace(
-    /(?<=<version>)\S+(?=<\/version>)/,
-    hdfConvertersVersion
-  );
+  return input.replace(XCCDF_VERSION_ELEMENT, hdfConvertersVersion);
 }
 
 export function omitHTMLStyleTag(input: string): string {
-  return input.replace(/(<style>)[\s\S]*?(<\/style>)/, "$1$2");
+  return input.replace(HTML_STYLE_TAG, "$1$2");
 }

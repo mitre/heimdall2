@@ -74,6 +74,7 @@ const localPassword = new LocalStorageVal<string>('splunk_password');
 const localSplunk2HDFIndex = new LocalStorageVal<string>('splunk2hdf_index');
 const localHDF2SplunkIndex = new LocalStorageVal<string>('hdf2splunk_index');
 const localHostname = new LocalStorageVal<string>('splunk_hostname');
+const URL_SCHEME = /^https?:\/\//v;
 
 @Component({
   components: {
@@ -98,7 +99,7 @@ export default class AuthStep extends Vue {
     }
 
     // Check for scheme inclusion
-    if (!/^https?:\/\//v.test(this.hostname)) {
+    if (!URL_SCHEME.test(this.hostname)) {
       this.hostname = `https://${this.hostname}`;
     }
 

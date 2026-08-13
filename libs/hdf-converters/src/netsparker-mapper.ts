@@ -28,6 +28,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING = new OwaspNistMapping();
+const FIRST_CHARACTER = /^./;
 
 let parseHtml: (input: unknown) => string;
 
@@ -158,7 +159,7 @@ export class NetsparkerMapper extends BaseConverter {
   defineMappings(
     toolname: string
   ): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
-    const capitalizedToolname = toolname.replace(/^./, (firstLetter) =>
+    const capitalizedToolname = toolname.replace(FIRST_CHARACTER, (firstLetter) =>
       firstLetter.toUpperCase()
     );
     return {
@@ -175,9 +176,7 @@ export class NetsparkerMapper extends BaseConverter {
           title: {
             path: `${toolname}-enterprise.target`,
             transformer: (input: unknown): string => {
-              return `${toolname.replace(/^./, (firstLetter) =>
-                firstLetter.toUpperCase()
-              )} Enterprise Scan ID: ${_.get(input, 'scan-id')} URL: ${_.get(
+              return `${capitalizedToolname} Enterprise Scan ID: ${_.get(input, 'scan-id')} URL: ${_.get(
                 input,
                 'url'
               )}`;

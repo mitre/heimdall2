@@ -2,6 +2,7 @@ import {encode} from 'html-entities';
 import * as _ from 'lodash';
 import {AwsConfigMapping} from '../mappings/AwsConfigMapping';
 const FINDING_STANDARDS_CONTROL_ARN = 'ProductFields.StandardsControlArn';
+const WHITESPACE = /\s+/;
 
 function correspondingControl(controls: unknown[], finding: unknown) {
   return controls.find(
@@ -144,7 +145,7 @@ function productName(
       .split('/')
       .slice(-4)[0]
       .replaceAll(/-/gi, ' ')
-      .split(/\s+/)
+      .split(WHITESPACE)
       .map((element: string) => {
         return element.charAt(0).toUpperCase() + element.slice(1);
       })

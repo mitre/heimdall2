@@ -24,6 +24,7 @@ const IMPACT_MAPPING = new Map<string, number>([
 ]);
 
 const CCI_NIST_MAPPING = new CciNistMapping();
+const CCI_REGEX = /CCI-(\d*)/;
 
 let parseHtml: (input: unknown) => string;
 
@@ -140,8 +141,6 @@ interface IIdent {
 
 function extractCci(input: IIdent | IIdent[]): string[] {
   const inputArray = asArray(input);
-
-  const CCI_REGEX = /CCI-(\d*)/;
 
   const output: string[] = [];
   for (const element of inputArray) {

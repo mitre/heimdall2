@@ -25,6 +25,8 @@ import type {
 } from '../types/cyclonedx';
 
 const cvssMethods = ['CVSSv2', 'CVSSv3', 'CVSSv31', 'CVSSv4'] as const;
+// tags.ratings joins entries as `severity - method, severity - method`.
+const RATING_SEPARATOR = / - |, /;
 type CVSSMethodEnum = Extract<MethodEnum, (typeof cvssMethods)[number]>;
 
 type IntermediaryComponent = Omit<
@@ -115,7 +117,7 @@ function skipSeverityInfoOrUnknown(controls: unknown[]): unknown[] {
       // Filter to controls whose highest rating severity is either `info` or `unknown`
       .filter((control) => {
         const ratings = (_.get(control, 'tags.ratings', '') as string).split(
-          / - |, /
+          RATING_SEPARATOR
         );
         return (
           (ratings.includes('info') || ratings.includes('unknown')) &&

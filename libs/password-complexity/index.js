@@ -1,3 +1,18 @@
+const characterClassChecks = [
+  /[a-z]/, // Lowercase characters
+  /[A-Z]/, // Uppercase characters
+  /[0-9]/, // Numbers
+  /[^0-9A-Za-z]/ // Special characters (Non Alphanumeric)
+];
+
+const consecutiveRunChecks = [
+  /(.)\1{3,}/, // 4 or more repeating of the same exact character
+  /[a-z]{4,}/, // 4 or more lowercase characters in a row
+  /[A-Z]{4,}/, // 4 or more uppercase characters in a row
+  /[0-9]{4,}/, // 4 or more numbers in a row
+  /[^0-9A-Za-z]{4,}/ // 4 or more special characters in a row
+];
+
 const validators = [
   {
     name: 'Password must be at least 15 characters',
@@ -8,29 +23,16 @@ const validators = [
   {
     name: 'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters',
     check: function hasClasses(password) {
-        const checks = [
-          new RegExp('[a-z]'), // Lowercase characters
-          new RegExp('[A-Z]'), // Uppercase characters
-          new RegExp('[0-9]'), // Numbers
-          new RegExp(/[^0-9A-Za-z]/) // Special characters (Non Alphanumeric)
-        ];
         return (
-          checks.filter((expr) => expr.test(password)).length ===
-          checks.length
+          characterClassChecks.filter((expr) => expr.test(password)).length ===
+          characterClassChecks.length
         );
       }
   },
   {
     name: 'Password must not contain 4 consecutive characters of the same character class',
     check: function noRepeats(password) {
-        const checks = [
-          new RegExp(/(.)\1{3,}/), // 4 or more repeating of the same exact character
-          new RegExp('[a-z]{4,}'), // 5 or more of lowercase characters in a row
-          new RegExp('[A-Z]{4,}'), // 5 or more of uppercase characters in a row
-          new RegExp('[0-9]{4,}'), // 5 or more numbers in a row
-          new RegExp(/[^0-9A-Za-z]{4,}/) // 5 or more special characters in a row
-        ];
-        return checks.filter((expr) => expr.test(password)).length === 0;
+        return consecutiveRunChecks.filter((expr) => expr.test(password)).length === 0;
       }
   }
 ]

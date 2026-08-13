@@ -12,6 +12,8 @@ import axios from 'axios';
 import { Request, Response } from 'express';
 import { TenableService } from './tenable.service';
 
+const TRAILING_SLASH = /\/$/v;
+
 // Extend express-session types to include 'tenable'.
 // This MUST stay an `interface`: module augmentation works by declaration
 // merging, and only interfaces merge. Written as `type SessionData = {...}` it
@@ -61,7 +63,7 @@ export class TenableController {
 
     try {
       // This helps prevent double slashes in the resulting URL if host_url ends with a slash.
-      const fullUrl = `${host_url.replace(/\/$/v, '')}/rest/currentUser`;
+      const fullUrl = `${host_url.replace(TRAILING_SLASH, '')}/rest/currentUser`;
       const result = await axios.get(fullUrl, { headers: { 'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}` } });
 
       // Assign the Tenable credentials to the session

@@ -1,17 +1,14 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 import levenshtein from 'js-levenshtein';
 
+// Safe to share: matchAll iterates an internal clone and never advances the
+// source regex's lastIndex.
+const CHARACTER_CLASS_MATCHERS = [/[a-z]/gv, /[A-Z]/gv, /\d/g, /[^\s\w]/g];
+
 @Injectable()
 export class PasswordChangePipe implements PipeTransform {
   classesChanged(future: string, current: string): boolean {
-    const validators = [
-      new RegExp('[a-z]', 'gv'),
-      new RegExp('[A-Z]', 'gv'),
-      new RegExp(/\d/, 'g'),
-      new RegExp(/[^\s\w]/, 'g'),
-    ];
-
-    for (const validator of validators) {
+    for (const validator of CHARACTER_CLASS_MATCHERS) {
       const currentMatch = [...current.matchAll(validator)];
       const futureMatch = [...future.matchAll(validator)];
       if (JSON.stringify(currentMatch) === JSON.stringify(futureMatch)) {
