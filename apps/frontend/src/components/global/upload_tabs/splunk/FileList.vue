@@ -151,20 +151,25 @@ export default class FileList extends Vue {
     this.loading = true;
     const files = this.selectedExecutions.map(
       async (execution: Partial<FileMetaData>) => {
-        const hdf = await this.splunkConverter
-          ?.toHdf(execution.guid || '')
-          .catch((error) => {
-            SnackbarModule.failure(error);
-            this.loading = false;
-            throw error;
-          });
+        let hdf;
+        try {
+          hdf = await this.splunkConverter?.toHdf(execution.guid || '');
+        } catch (error) {
+          SnackbarModule.failure(String(error));
+          this.loading = false;
+          throw error;
+        }
         if (hdf) {
-          return InspecIntakeModule.loadText({
-            text: JSON.stringify(hdf),
-            filename: _.get(hdf, 'meta.filename') as unknown as string
-          }).catch((error) => {
+          try {
+            return await InspecIntakeModule.loadText({
+              text: JSON.stringify(hdf),
+              filename: _.get(hdf, 'meta.filename') as unknown as string
+            });
+          } catch (error) {
+            // A failed load reports and yields nothing for this execution.
             SnackbarModule.failure(String(error));
-          });
+            return undefined;
+          }
         } else {
           SnackbarModule.failure('Attempted to load an undefined execution');
           throw new Error('Attempted to load an undefined execution');

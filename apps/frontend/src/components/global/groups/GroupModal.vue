@@ -219,7 +219,7 @@ export default class GroupModal extends Vue {
     }
   }
 
-  async cancel(): Promise<void> {
+  cancel(): void {
     this.dialog = false;
     this.groupInfo = _.cloneDeep(this.group); // Reset the working state of the edit operation
   }
@@ -271,11 +271,9 @@ export default class GroupModal extends Vue {
       };
       return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
     });
-    return Promise.all([...addedUserPromises, ...updatedUserPromises]).then(
-      () => {
-        return Promise.all(removedUserPromises);
-      }
-    );
+    // Adds and role updates land before any removals run.
+    await Promise.all([...addedUserPromises, ...updatedUserPromises]);
+    return Promise.all(removedUserPromises);
   }
 }
 </script>

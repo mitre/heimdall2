@@ -42,11 +42,10 @@ export default class Statistics extends Vue {
     void this.updateStatistics();
   }
 
-  updateStatistics() {
-    return axios.get<IStatistics>(`/statistics`).then(({data}) => {
-      this.statistics = data;
-      this.loading = false;
-    });
+  async updateStatistics(): Promise<void> {
+    const {data} = await axios.get<IStatistics>(`/statistics`);
+    this.statistics = data;
+    this.loading = false;
   }
 
   toCapitalizedWords(variable: string) {

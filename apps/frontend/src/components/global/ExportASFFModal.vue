@@ -134,14 +134,14 @@ export default class ExportASFFModal extends Vue {
   async exportASFF(): Promise<void> {
     const ids = FilteredDataModule.selected_file_ids;
     const fileData: FileData[] = [];
-    FilteredDataModule.evaluations(ids).forEach(async (evaluation) => {
+    FilteredDataModule.evaluations(ids).forEach((evaluation) => {
       const findings = new FromHdfToAsffMapper(evaluation.data, {
         input: evaluation.from_file.filename,
         awsAccountId: this.awsAccountId,
         target: this.target,
         region: this.region
       }).toAsff() as unknown as Record<string, unknown>[];
-      this.sliceIntoChunks(findings, 100).forEach(async (chunk, index) => {
+      this.sliceIntoChunks(findings, 100).forEach((chunk, index) => {
         fileData.push({
           filename: `${evaluation.from_file.filename}.p${index}.json`,
           data: JSON.stringify(chunk)

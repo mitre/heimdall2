@@ -117,47 +117,44 @@ export default class S3Reader extends Vue {
    * Handle a basic login.
    * Gets a session token
    */
-  handleBasic() {
+  async handleBasic(): Promise<void> {
     // Attempt to assume role based on if we've determined 2fa necessary
-    getSessionToken(
-      this.accessToken,
-      this.secretToken,
-      this.region || 'us-east-1',
-      AUTH_DURATION
-    ).then(
-      // Success of get session token - now need to determine if MFA necessary
-      (success) => {
-        this.assumedRole = success;
-        this.step = 3;
-      },
-
+    let success;
+    try {
+      success = await getSessionToken(
+        this.accessToken,
+        this.secretToken,
+        this.region || 'us-east-1',
+        AUTH_DURATION
+      );
+    } catch (error) {
       // Failure of initial get session token: want to set error normally
-      (error) => {
-        this.handleError(error);
-      }
-    );
+      this.handleError(error);
+      return;
+    }
+    // Success of get session token - now need to determine if MFA necessary
+    this.assumedRole = success;
+    this.step = 3;
   }
 
   /** If the user tries to login by going to MFA, first check that the account is valid */
-  handleGotoMfa() {
+  async handleGotoMfa(): Promise<void> {
     // Attempt to assume role based on if we've determined 2fa necessary
     // Don't need the duration to be very long
-    getSessionToken(
-      this.accessToken,
-      this.secretToken,
-      this.region || 'us-east-1',
-      10
-    ).then(
-      // Success of get session token - now need to determine if MFA necessary
-      () => {
-        this.step = 2;
-      },
-
+    try {
+      await getSessionToken(
+        this.accessToken,
+        this.secretToken,
+        this.region || 'us-east-1',
+        10
+      );
+    } catch (error) {
       // Failure of initial get session token: want to set error normally
-      (error) => {
-        this.handleError(error);
-      }
-    );
+      this.handleError(error);
+      return;
+    }
+    // Success of get session token - now need to determine if MFA necessary
+    this.step = 2;
   }
 
   handleCancelMfa() {
@@ -176,7 +173,7 @@ export default class S3Reader extends Vue {
   /** Handle an MFA login.
    * Determine whether further action is necessary
    */
-  handleProceedMFA() {
+  async handleProceedMFA(): Promise<void> {
     // Build our mfa params
     const mfa: MFAInfo = {
       SerialNumber: this.mfaSerial || null,
@@ -184,22 +181,22 @@ export default class S3Reader extends Vue {
     };
 
     // Attempt to assume role based on if we've determined 2fa necessary
-    getSessionToken(
-      this.accessToken,
-      this.secretToken,
-      this.region || 'us-east-1',
-      AUTH_DURATION,
-      mfa
-    ).then(
-      (success) => {
-        // Keep them
-        this.assumedRole = success;
-        this.step = 3;
-      },
-      (error) => {
-        this.handleError(error);
-      }
-    );
+    let success;
+    try {
+      success = await getSessionToken(
+        this.accessToken,
+        this.secretToken,
+        this.region || 'us-east-1',
+        AUTH_DURATION,
+        mfa
+      );
+    } catch (error) {
+      this.handleError(error);
+      return;
+    }
+    // Keep them
+    this.assumedRole = success;
+    this.step = 3;
   }
 
   /** On mount, try to look up stored auth info */

@@ -90,7 +90,8 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     if (this.file?.database_id) {
       SnackbarModule.failure('This file is already in the database.');
     } else if (this.file) {
-      this.save_to_database(this.file);
+      // Fire-and-forget: save_to_database reports its own outcome.
+      void this.save_to_database(this.file);
     }
   }
 
@@ -99,7 +100,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     return typeof this.file?.database_id !== 'undefined' || this.saving;
   }
 
-  save_to_database(file: EvaluationFile | ProfileFile) {
+  async save_to_database(file: EvaluationFile | ProfileFile): Promise<void> {
     this.saving = true;
 
     const createEvaluationDto: ICreateEvaluation = {
@@ -133,23 +134,24 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
         })
       );
     }
-    axios
-      .post<IEvaluation>('/evaluations', formData)
-      .then(async (response) => {
-        SnackbarModule.notify('File saved successfully');
-        file.database_id = parseInt(response.data.id);
-        await EvaluationModule.loadEvaluation(response.data.id);
-        const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-        this.navigateWithNoErrors(
-          `/${this.current_route}/${loadedDatabaseIds}`
-        );
-      })
-      .catch((error) => {
-        SnackbarModule.failure(error.response.data.message);
-      })
-      .finally(() => {
-        this.saving = false;
-      });
+    try {
+      const response = await axios.post<IEvaluation>('/evaluations', formData);
+      SnackbarModule.notify('File saved successfully');
+      file.database_id = parseInt(response.data.id);
+      await EvaluationModule.loadEvaluation(response.data.id);
+      const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
+      this.navigateWithNoErrors(`/${this.current_route}/${loadedDatabaseIds}`);
+    } catch (error) {
+      // A network failure has no response body; the old chain crashed
+      // reading it and reported nothing.
+      SnackbarModule.failure(
+        axios.isAxiosError<{message?: string}>(error)
+          ? (error.response?.data?.message ?? error.message)
+          : String(error)
+      );
+    } finally {
+      this.saving = false;
+    }
   }
 
   // gives different icons for a file if it is just a profile

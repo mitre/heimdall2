@@ -31,10 +31,9 @@ export interface Sample {
   path: string;
 }
 
-export function fetchSample(sample: Sample): Promise<File> {
-  return axios
-    .get(sample.path, {responseType: 'blob'})
-    .then(({data}) => new File([data], sample.filename));
+export async function fetchSample(sample: Sample): Promise<File> {
+  const {data} = await axios.get(sample.path, {responseType: 'blob'});
+  return new File([data], sample.filename);
 }
 
 export const samples: Sample[] = [

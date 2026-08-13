@@ -164,15 +164,15 @@ export default class SampleList extends Vue {
   };
 
   // Fires when user selects entries and loads them into the visualization panel
-  load_samples(selectedSamples: Sample[]) {
+  async load_samples(selectedSamples: Sample[]): Promise<void> {
     if (selectedSamples.length > 0) {
-      const promises: Promise<FileID | FileID[]>[] = [];
       this.loading = true;
       SpinnerModule.reset();
       SpinnerModule.visibility(true);
       let index = 1;
-      for (const sample of selectedSamples) {
-        const requestFile = fetchSample(sample).then(async (data: File) => {
+      const promises: Promise<FileID | FileID[]>[] = selectedSamples.map(
+        async (sample) => {
+          const data = await fetchSample(sample);
           const done = await InspecIntakeModule.loadFile({
             file: data,
             filename: sample.filename
@@ -181,22 +181,19 @@ export default class SampleList extends Vue {
           const value = Math.floor((index++ / selectedSamples.length) * 100);
           SpinnerModule.setValue(value);
           return done;
-        });
-        promises.push(requestFile);
-      }
+        }
+      );
 
-      Promise.all(promises)
-        .then((fileIds: (FileID | FileID[])[]) => {
-          this.$emit('got-files', fileIds.flat(2));
-        })
-        .catch((error) => {
-          SnackbarModule.failure(String(error));
-        })
-        .finally(() => {
-          this.loading = false;
-          SpinnerModule.visibility(false);
-          this.selectedFiles = [];
-        });
+      try {
+        const fileIds = await Promise.all(promises);
+        this.$emit('got-files', fileIds.flat(2));
+      } catch (error) {
+        SnackbarModule.failure(String(error));
+      } finally {
+        this.loading = false;
+        SpinnerModule.visibility(false);
+        this.selectedFiles = [];
+      }
     } else {
       SnackbarModule.notify(
         'Please select a sample for viewing in the visualization panel'

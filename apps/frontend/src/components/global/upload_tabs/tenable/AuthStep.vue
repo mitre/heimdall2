@@ -117,21 +117,20 @@ export default class AuthStep extends Vue {
       host_url: this.hostname
     };
 
-    await new TenableUtil(config)
-      .loginToTenable()
-      .then(() => {
-        localAccesskey.set(this.accesskey);
-        localSecretkey.set(this.secretkey);
-        localHostname.set(this.hostname);
-        SnackbarModule.notify('You have successfully signed in');
-        this.$emit('authenticated', config);
-      })
-      .catch((error: string) => {
-        if (error !== 'Incorrect Access or Secret key') {
-          this.$emit('error');
-        }
-        SnackbarModule.failure(error);
-      });
+    try {
+      await new TenableUtil(config).loginToTenable();
+      localAccesskey.set(this.accesskey);
+      localSecretkey.set(this.secretkey);
+      localHostname.set(this.hostname);
+      SnackbarModule.notify('You have successfully signed in');
+      this.$emit('authenticated', config);
+    } catch (error) {
+      // TenableUtil rejects with plain message strings.
+      if (error !== 'Incorrect Access or Secret key') {
+        this.$emit('error');
+      }
+      SnackbarModule.failure(String(error));
+    }
   }
 
   /** Init our fields */

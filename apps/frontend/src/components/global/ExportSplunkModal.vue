@@ -149,25 +149,29 @@ export default class ExportSplunkModal extends Vue {
     this.splunkConfig = null;
   }
 
-  async convertAndUpload() {
+  async convertAndUpload(): Promise<void> {
     const ids = FilteredDataModule.selected_file_ids;
-    FilteredDataModule.evaluations(ids).forEach(async (evaluation) => {
-      this.statusLog += `Starting Upload of File: ${evaluation.from_file.filename}\n`;
-      if (this.splunkConfig) {
-        new FromHDFToSplunkMapper(evaluation, this.logger as Logger)
-          .toSplunk(this.splunkConfig, evaluation.from_file.filename)
-          .then(() => {
+    // Uploads still run concurrently; each logs its own outcome.
+    await Promise.all(
+      FilteredDataModule.evaluations(ids).map(async (evaluation) => {
+        this.statusLog += `Starting Upload of File: ${evaluation.from_file.filename}\n`;
+        if (this.splunkConfig) {
+          try {
+            await new FromHDFToSplunkMapper(
+              evaluation,
+              this.logger as Logger
+            ).toSplunk(this.splunkConfig, evaluation.from_file.filename);
             this.statusLog += `Sucessfully uploaded file ${evaluation.from_file.filename}\n`;
-          })
-          .catch((error) => {
-            this.statusLog += `Failed to upload file ${evaluation.from_file.filename}:\n\t${error}\n`;
-          });
-      } else {
-        SnackbarModule.failure(
-          'Failed to upload to Splunk: Invalid Configuration (undefined)'
-        );
-      }
-    });
+          } catch (error) {
+            this.statusLog += `Failed to upload file ${evaluation.from_file.filename}:\n\t${String(error)}\n`;
+          }
+        } else {
+          SnackbarModule.failure(
+            'Failed to upload to Splunk: Invalid Configuration (undefined)'
+          );
+        }
+      })
+    );
   }
 }
 </script>
