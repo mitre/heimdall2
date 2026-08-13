@@ -198,9 +198,12 @@ export default class RegistrationModal extends Vue {
   }
 
   async register(): Promise<void> {
-    this.buttonLoading = true;
     // checking if the input is valid
-    if ((this.$refs.form as HTMLFormElement).validate()) {
+    if (!(this.$refs.form as HTMLFormElement).validate()) {
+      return;
+    }
+    this.buttonLoading = true;
+    try {
       const creds: SignupHash = {
         firstName: this.firstName,
         lastName: this.lastName,
@@ -226,6 +229,7 @@ export default class RegistrationModal extends Vue {
           'You have successfully registered, please sign in'
         );
       }
+    } finally {
       this.buttonLoading = false;
     }
   }
