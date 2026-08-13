@@ -3,6 +3,12 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {data as MappingData} from './mappings/CheckovToCciAndNistMappingData';
+
+// Map view over the generated table: check_id arrives from the scan file, and
+// bracket access on the plain object would resolve prototype keys (a check_id
+// of "constructor" is truthy and breaks the string[] contract). Map.get
+// answers undefined for unknown and prototype keys alike.
+const CHECKOV_MAPPING = new Map(Object.entries(MappingData));
 import {
   conditionallyProvideAttribute,
   DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
@@ -212,14 +218,14 @@ controlMapping(): MappedTransform<
       cci: {
         path: 'check_id',
         transformer: (checkId: CheckovCheck['check_id']): string[] => {
-          const mapping = MappingData[checkId];
+          const mapping = CHECKOV_MAPPING.get(checkId);
           return mapping ? mapping.cci : DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS;
         }
       },
       nist: {
         path: 'check_id',
         transformer: (checkId: CheckovCheck['check_id']): string[] => {
-          const mapping = MappingData[checkId];
+          const mapping = CHECKOV_MAPPING.get(checkId);
           return mapping ? mapping.nist : DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
         }
       },

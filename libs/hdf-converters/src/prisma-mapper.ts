@@ -26,13 +26,18 @@ export type PrismaControl = {
   Cause?: string;
 };
 
-const SEVERITY_LOOKUP: Record<string, number> = {
-  low: 0.3,
-  moderate: 0.5,
-  high: 0.7,
-  important: 0.9,
-  critical: 1
-};
+// Map, not Record: the key arrives from the scan file, and bracket access on
+// a plain object would resolve prototype keys — a severity of "constructor"
+// would return a function as the impact. Map.get answers undefined for
+// unknown and prototype keys alike, identical to the old behavior for every
+// real severity string.
+const SEVERITY_LOOKUP = new Map<string, number>([
+  ['low', 0.3],
+  ['moderate', 0.5],
+  ['high', 0.7],
+  ['important', 0.9],
+  ['critical', 1]
+]);
 
 export function nistTag(cveTag: string | undefined) {
   if (!cveTag) {
@@ -105,7 +110,7 @@ export class PrismaControlMapper extends BaseConverter {
               path: 'Severity',
               transformer: (severity: string) => {
                 if (severity) {
-                  return SEVERITY_LOOKUP[severity];
+                  return SEVERITY_LOOKUP.get(severity);
                 } else {
                   return 0.5;
                 }

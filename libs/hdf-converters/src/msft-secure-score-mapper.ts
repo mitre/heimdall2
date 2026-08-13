@@ -63,15 +63,21 @@ export class MsftSecureScoreMapper extends BaseConverter {
   getProfiles: (controlName: string) => SecureScoreControlProfile[];
 
   memoizedGetProfiles(): (controlName: string) => SecureScoreControlProfile[] {
-    const cache: Record<string, SecureScoreControlProfile[]> = {};
+    // Map, not Record: controlName arrives from scan data, and writing a key
+    // like '__proto__' to a plain object hits the prototype setter instead of
+    // storing — the old hasOwnProperty guard protected reads but not writes.
+    const cache = new Map<string, SecureScoreControlProfile[]>();
 
     return (controlName: string): SecureScoreControlProfile[] => {
-      if (Object.prototype.hasOwnProperty.call(cache, controlName)) {
-        return cache[controlName];
+      const cached = cache.get(controlName);
+      if (cached !== undefined) {
+        return cached;
       }
-      return (cache[controlName] = this.rawData.profiles.value.filter(
+      const profiles = this.rawData.profiles.value.filter(
         (profile) => profile.id === controlName
-      ));
+      );
+      cache.set(controlName, profiles);
+      return profiles;
     };
   }
 
