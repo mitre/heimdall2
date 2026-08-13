@@ -50,10 +50,10 @@ export class GroupsService {
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
-    if (
-      (await this.groupModel.findAll({ where: { name: createGroupDto.name } }))
-        .length > 0
-    ) {
+    const sameNamedGroups = await this.groupModel.findAll({
+      where: { name: createGroupDto.name },
+    });
+    if (sameNamedGroups.length > 0) {
       throw new ForbiddenException(
         'Duplicate key detected. The names of groups must be unique.',
       );
@@ -67,7 +67,8 @@ export class GroupsService {
     group: Group,
     user: GroupUser | User,
   ): Promise<void> {
-    const owners = (await group.$get('users')).filter(
+    const groupUsers = await group.$get('users');
+    const owners = groupUsers.filter(
       userOnGroup => userOnGroup.GroupUser.role === 'owner',
     );
     // If there are no more owners, set an admin to owner
@@ -92,7 +93,8 @@ export class GroupsService {
       } else {
         // If admin is in the group, promote it. If not, add as owner
         const adminId = admin.id;
-        const adminInGroup = (await group.$get('users')).find(
+        const usersInGroup = await group.$get('users');
+        const adminInGroup = usersInGroup.find(
           userOnGroup => userOnGroup.id === adminId,
         );
         adminInGroup
@@ -211,9 +213,10 @@ export class GroupsService {
   }
 
   async update(groupToUpdate: Group, groupDto: CreateGroupDto): Promise<Group> {
-    if (
-      (await this.groupModel.findAll({ where: { name: groupDto.name } })).length > 1
-    ) {
+    const sameNamedGroups = await this.groupModel.findAll({
+      where: { name: groupDto.name },
+    });
+    if (sameNamedGroups.length > 1) {
       throw new ForbiddenException(
         'Duplicate key detected. The names of groups must be unique.',
       );

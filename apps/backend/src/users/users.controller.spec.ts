@@ -116,9 +116,8 @@ describe('UsersController Unit Tests', () => {
     // Tests the findAll function with valid ID (basic positive test)
     it('should list all users for an admin', async () => {
       expect.assertions(1);
-      const serviceFoundUsers = (await usersService.adminFindAllUsers()).map(
-        user => new UserDto(user),
-      );
+      const allUsers = await usersService.adminFindAllUsers();
+      const serviceFoundUsers = allUsers.map(user => new UserDto(user));
       const controllerFoundUsers = await usersController.adminFindAllUsers({ user: adminUser });
       // In the case of admin, they should be equal becuase admin can see all
       expect(controllerFoundUsers).toEqual(serviceFoundUsers);

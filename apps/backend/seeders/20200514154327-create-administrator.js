@@ -94,7 +94,8 @@ module.exports = {
 
       let encryptedPassword;
       let plantMarker = false;
-      if ((await hashWriteDecision(queryInterface, envConfig)).enabled) {
+      const writeDecision = await hashWriteDecision(queryInterface, envConfig);
+      if (writeDecision.enabled) {
         encryptedPassword = await hashPassword(password);
         plantMarker = true;
       } else {

@@ -333,9 +333,10 @@ export class EvaluationsService {
   }
 
   async groups(id: string): Promise<Group[]> {
-    return (
-      await this.findByPkBang(id, { include: { include: [User], model: Group } })
-    ).groups;
+    const evaluation = await this.findByPkBang(id, {
+      include: { include: [User], model: Group },
+    });
+    return evaluation.groups;
   }
 
   async remove(id: string): Promise<Evaluation> {

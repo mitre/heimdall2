@@ -380,7 +380,8 @@ export class AwsConfigMapper {
   }
 
   private async getControls(): Promise<ExecJSON.Control[]> {
-    return (await this.issues).map((issue: ConfigRule, index) => {
+    const issues = await this.issues;
+    return issues.map((issue: ConfigRule, index) => {
       const control: ExecJSON.Control = {
         id: issue.ConfigRuleId || '',
         title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${

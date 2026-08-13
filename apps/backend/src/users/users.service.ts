@@ -117,8 +117,9 @@ export class UsersService {
       );
     }
     // Clean up groups owned by user
+    const allGroups = await this.groupsService.findAll();
     await Promise.all(
-      (await this.groupsService.findAll()).map(async (group) => {
+      allGroups.map(async (group) => {
         if (group.users.some(user => user.id === userToDelete.id)) {
           await this.groupsService.ensureGroupHasOwner(group, userToDelete);
         }

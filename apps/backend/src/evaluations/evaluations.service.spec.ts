@@ -197,7 +197,8 @@ describe('EvaluationsService', () => {
         CREATE_EVALUATION_DTO_WITHOUT_TAGS.filename,
       );
       expect(evaluation.evaluationTags).not.toBeDefined();
-      expect((await evaluationTagsService.findAll()).length).toBe(0);
+      const allTags = await evaluationTagsService.findAll();
+      expect(allTags.length).toBe(0);
     });
 
     it('should throw an error when missing the filename field', async () => {

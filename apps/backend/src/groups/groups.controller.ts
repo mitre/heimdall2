@@ -113,7 +113,8 @@ export class GroupsController {
   async findForUser(@Request() request: { user: User }): Promise<GroupDto[]> {
     const groups = await request.user.$get('groups', { include: [User] });
     const groupIds = new Set(groups.map(g => g.id));
-    const publicGroups = (await this.groupsService.findAll()).filter(
+    const allGroups = await this.groupsService.findAll();
+    const publicGroups = allGroups.filter(
       group => group.public && !groupIds.has(group.id),
     );
     return [...groups

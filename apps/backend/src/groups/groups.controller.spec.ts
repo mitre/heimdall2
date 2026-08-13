@@ -123,7 +123,8 @@ describe('GroupsController', () => {
     it('findForUser should return groups the user is a member of', async () => {
       expect.assertions(1);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
-      const publicGroups = (await groupsService.findAll()).filter(
+      const allGroups = await groupsService.findAll();
+      const publicGroups = allGroups.filter(
         group => group.public && group.id !== privateGroup.id,
       );
       const groups = await groupsController.findForUser({ user: basicUser });
@@ -325,13 +326,15 @@ describe('GroupsController', () => {
       });
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
-      expect((await privateGroup.$get('evaluations')).length).toEqual(1);
+      const evaluationsBeforeRemove = await privateGroup.$get('evaluations');
+      expect(evaluationsBeforeRemove.length).toEqual(1);
       await groupsController.removeEvaluationFromGroup(
         privateGroup.id,
         { user: basicUser },
         { id: evaluation.id },
       );
-      expect((await privateGroup.$get('evaluations')).length).toEqual(0);
+      const evaluationsAfterRemove = await privateGroup.$get('evaluations');
+      expect(evaluationsAfterRemove.length).toEqual(0);
     });
 
     it('should prevent non-members from removing an evaluation', async () => {
@@ -360,13 +363,15 @@ describe('GroupsController', () => {
       await groupsService.addUserToGroup(privateGroup, basicUser, 'owner');
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, user, 'member');
-      expect((await privateGroup.$get('users')).length).toEqual(2);
+      const usersBeforeRemove = await privateGroup.$get('users');
+      expect(usersBeforeRemove.length).toEqual(2);
       await groupsController.removeUserFromGroup(
         privateGroup.id,
         { user: basicUser },
         { userId: user.id },
       );
-      expect((await privateGroup.$get('users')).length).toEqual(1);
+      const usersAfterRemove = await privateGroup.$get('users');
+      expect(usersAfterRemove.length).toEqual(1);
     });
 
     it('should allow owners to remove owners', async () => {
@@ -374,13 +379,15 @@ describe('GroupsController', () => {
       await groupsService.addUserToGroup(privateGroup, basicUser, 'owner');
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, user, 'owner');
-      expect((await privateGroup.$get('users')).length).toEqual(2);
+      const usersBeforeRemove = await privateGroup.$get('users');
+      expect(usersBeforeRemove.length).toEqual(2);
       await groupsController.removeUserFromGroup(
         privateGroup.id,
         { user: basicUser },
         { userId: user.id },
       );
-      expect((await privateGroup.$get('users')).length).toEqual(1);
+      const usersAfterRemove = await privateGroup.$get('users');
+      expect(usersAfterRemove.length).toEqual(1);
     });
 
     it('should prevent non-owners from removing members', async () => {
