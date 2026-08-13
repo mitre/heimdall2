@@ -20,10 +20,10 @@ import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-export type FileData = {
+export interface FileData {
   filename: string;
   data: string;
-};
+}
 
 @Component({
   components: {

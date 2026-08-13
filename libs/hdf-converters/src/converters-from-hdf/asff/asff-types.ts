@@ -1,18 +1,18 @@
 /// //Interfaces for ExecJSON focused on ASFF
 
-export interface IOptions {
+export type IOptions = {
   input: string;
   awsAccountId: string;
   target: string;
   region: string;
   regionAttribute?: boolean;
-}
+};
 
-export interface IExecJSONASFF {
+export type IExecJSONASFF = {
   Findings: IFindingASFF[];
-}
+};
 
-export interface IFindingASFF {
+export type IFindingASFF = {
   SchemaVersion: string;
   Id: string;
   ProductArn: string;
@@ -37,20 +37,20 @@ export interface IFindingASFF {
   Workflow?: {Status: string};
   RecordState?: string;
   FindingProviderFields: IFindingProviderFieldsASFF;
-}
+};
 
-export interface ISeverityASFF {
+export type ISeverityASFF = {
   Product?: number;
   Label: string;
   Normalized?: number;
   Original?: string;
-}
+};
 
-export interface IRemediationASFF {
+export type IRemediationASFF = {
   Recommendation: {Text: string; Url?: string};
-}
+};
 
-export interface IProductFieldsASFF {
+export type IProductFieldsASFF = {
   Check?: string | Record<string, unknown>;
   StandardsGuideArn?: string;
   StandardsGuideSubscriptionArn?: string;
@@ -62,9 +62,9 @@ export interface IProductFieldsASFF {
   'aws/securityhub/annotation'?: string;
   'Resources:0/Id'?: string;
   'aws/securityhub/FindingId'?: string;
-}
+};
 
-export interface IResourcesASFF {
+export type IResourcesASFF = {
   Type: string;
   Id: string;
   Partition?: string;
@@ -72,17 +72,17 @@ export interface IResourcesASFF {
   Details?: {
     AwsIamRole: {AssumeRolePolicyDocument: string | Record<string, unknown>};
   };
-}
+};
 
-export interface IComplianceASFF {
+export type IComplianceASFF = {
   Status: string;
   StatusReasons?: ({
     ReasonCode: string | null;
     Description: string | null;
   } | null)[];
   RelatedRequirements?: string[] | Record<string, unknown>;
-}
-export interface IFindingProviderFieldsASFF {
+};
+export type IFindingProviderFieldsASFF = {
   Severity: {Label: string; Original?: string};
   Types: string[] | Record<string, unknown>;
-}
+};

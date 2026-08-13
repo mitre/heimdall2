@@ -2,10 +2,10 @@ import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
 import {data} from './ScoutsuiteNistMappingData';
 import {ScoutsuiteNistMappingItem} from './ScoutsuiteNistMappingItem';
 
-export interface ISCOUTSUITEJSONID {
+export type ISCOUTSUITEJSONID = {
   RULE: string;
   'NIST-ID': string;
-}
+};
 
 export class ScoutsuiteNistMapping {
   data: ScoutsuiteNistMappingItem[];

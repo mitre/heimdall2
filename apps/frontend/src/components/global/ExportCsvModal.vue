@@ -90,10 +90,10 @@ const fieldNames = [
 
 type ControlSetRow = Record<string, unknown>;
 
-type File = {
+interface File {
   filename: string;
   data: string;
-};
+}
 
 type ControlSetRows = ControlSetRow[];
 

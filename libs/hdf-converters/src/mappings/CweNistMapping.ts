@@ -1,13 +1,13 @@
 import {data} from './CweNistMappingData';
 import {CweNistMappingItem} from './CweNistMappingItem';
 
-export interface ICWEJSONID {
+export type ICWEJSONID = {
   'CWE-ID': number;
   'CWE Name': string;
   'NIST-ID': string;
   Rev: number;
   'NIST Name': string;
-}
+};
 
 export class CweNistMapping {
   data: CweNistMappingItem[];

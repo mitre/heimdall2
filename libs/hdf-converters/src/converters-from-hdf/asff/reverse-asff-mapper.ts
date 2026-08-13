@@ -44,7 +44,7 @@ export type SegmentedControl = ExecJSON.Control & {
   })[];
 };
 
-export interface ILookupPathASFF {
+export type ILookupPathASFF = {
   path?: string;
   transformer?: (
     value: SegmentedControl,
@@ -53,7 +53,7 @@ export interface ILookupPathASFF {
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
-}
+};
 
 export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   mappings: () => MappedTransform<IExecJSONASFF, ILookupPathASFF> = () => ({

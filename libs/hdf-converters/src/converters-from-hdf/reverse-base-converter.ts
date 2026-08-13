@@ -6,14 +6,14 @@ import type {
   ObjectEntryValue
 } from '../base-converter';
 
-export interface ILookupPathFH {
+export type ILookupPathFH = {
   path?: string;
   transformer?: (value: any, context?: any) => unknown;
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
   default?: any;
-}
+};
 
 // Base converter used to support conversions from HDF to Any Format
 export class FromHdfBaseConverter {

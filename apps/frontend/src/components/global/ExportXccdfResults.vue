@@ -22,10 +22,10 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {saveSingleOrMultipleFiles} from '../../utilities/export_util';
-export type FileData = {
+export interface FileData {
   filename: string;
   data: string;
-};
+}
 @Component({
   components: {
     IconLinkItem

@@ -1,11 +1,11 @@
 import {data} from './NessusPluginNistMappingData';
 import {NessusPluginsNistMappingItem} from './NessusPluginsNistMappingItem';
 
-export interface INESSUSJSONID {
+export type INESSUSJSONID = {
   pluginFamily: string;
   pluginID: string | number;
   'NIST-ID': string;
-}
+};
 
 export class NessusPluginsNistMapping {
   data: NessusPluginsNistMappingItem[];

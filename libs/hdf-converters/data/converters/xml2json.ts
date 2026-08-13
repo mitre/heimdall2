@@ -7,7 +7,7 @@ const pathToInfile = process.argv[2];
 const pathToOutfile = process.argv[3];
 
 // XML Structure after conversion
-export interface ICCIList {
+export type ICCIList = {
   cci_list: {
     cci_items: {
       cci_item: {
@@ -20,7 +20,7 @@ export interface ICCIList {
       }[];
     }[];
   };
-}
+};
 
 if (!pathToInfile || !pathToOutfile) {
   console.error(`You must provide the path to both an input and ouput file.`);

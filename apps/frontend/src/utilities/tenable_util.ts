@@ -11,7 +11,7 @@ export interface AuthInfo {
 }
 
 /** represents the scan results data returned from the /scanResults API endpoint */
-export type ScanResults = {
+export interface ScanResults {
   id: string;
   name: string;
   description?: string;
@@ -21,7 +21,7 @@ export type ScanResults = {
   startTime: string;
   finishTime: string;
   status: string;
-};
+}
 
 const LOGIN_TIMEOUT = 60_000; // 60 seconds
 export const LOGIN_TIMEOUT_MSG =

@@ -303,11 +303,14 @@ export default defineConfig([
     // 40:16, inspecjs 43:1 and common are interface codebases; backend (21:0
     // type) and hdf-converters (39:29 type) keep the global 'type'. The
     // interface->type fixer is the one that broke declare-module before —
-    // never run it across module augmentations.
+    // never run it across module augmentations. The cypress tree (test/) is
+    // interface-mode structurally: its Cypress.Chainable global augmentation
+    // works ONLY through interface declaration merging.
     files: [
       'apps/frontend/**/*.{ts,vue}',
       'libs/common/**/*.ts',
       'libs/inspecjs/**/*.ts',
+      'test/**/*.ts',
     ],
     name: 'ts/interface-packages',
     rules: {

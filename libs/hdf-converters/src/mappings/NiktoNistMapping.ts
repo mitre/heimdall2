@@ -1,11 +1,11 @@
 import {data} from './NiktoNistMappingData';
 
-export interface INIKJSONID {
+export type INIKJSONID = {
   'NIKTO-ID': number;
   'PLUGIN-CATEGORY': string;
   'NIST-ID': string;
   OSVDB: number;
-}
+};
 const DEFAULT_NIST_TAG = ['AC-3', 'SA-11', 'RA-5'];
 
 // Map view over the generated table: the id arrives from the scan file, and

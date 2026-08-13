@@ -57,7 +57,7 @@ import {SnackbarModule} from './snackbar';
 export type FileID = string;
 
 /** Represents the minimum data to represent an uploaded file handle. */
-export type InspecFile = {
+export interface InspecFile {
   /**
    * Unique identifier for this file. Used to encode which file is currently selected, etc.
    *
@@ -75,7 +75,7 @@ export type InspecFile = {
 
   createdAt?: Date;
   updatedAt?: Date;
-};
+}
 
 /** Modify our contextual types to sort of have back-linking to sourced from files */
 export interface SourcedContextualizedEvaluation extends ContextualizedEvaluation {
@@ -96,14 +96,14 @@ export type ProfileFile = InspecFile & {
   profile: SourcedContextualizedProfile;
 };
 
-export type FileLoadOptions = {
+export interface FileLoadOptions {
   /** The file to load */
   file?: File;
   filename?: string;
   data?: string;
-};
+}
 
-export type TextLoadOptions = {
+export interface TextLoadOptions {
   /** The filename to denote this object with */
   filename: string;
   database_id?: string;
@@ -113,9 +113,9 @@ export type TextLoadOptions = {
 
   /** The text to use for it. */
   text: string;
-};
+}
 
-export type ExecJSONLoadOptions = {
+export interface ExecJSONLoadOptions {
   /** The filename to denote this object with */
   filename: string;
   database_id?: string;
@@ -123,7 +123,7 @@ export type ExecJSONLoadOptions = {
   updatedAt?: Date;
   tags?: Tag[];
   data: ExecJSON.Execution;
-};
+}
 
 /**
  * Whether the given data looks like HDF (an execution or a profile).

@@ -27,7 +27,7 @@ export interface Category<C extends string> {
 }
 
 // Options for Apex Total in donut chart
-type ApexTotalType = {
+interface ApexTotalType {
   show?: boolean;
   showAlways?: boolean;
   fontFamily?: string;
@@ -36,9 +36,9 @@ type ApexTotalType = {
   label?: string;
   color?: string;
   // Formatter can take any parameter as defined by ApexCharts
-   
+
   formatter?(w: any): string;
-};
+}
 
 /**
  * Emits "category-selected" with payload of type Category whenever a category is selected.

@@ -15,10 +15,10 @@ import {
   getCCIsForNISTTags
 } from './utils/global';
 
-interface ICweEntry {
+type ICweEntry = {
   cweId: number;
   name: string;
-}
+};
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],

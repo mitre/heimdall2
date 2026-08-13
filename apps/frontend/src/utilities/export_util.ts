@@ -1,10 +1,10 @@
 import JSZip from 'jszip';
 import {saveAs} from 'file-saver';
 
-type ExportFile = {
+interface ExportFile {
   filename: string;
   data: ArrayBuffer | Uint8Array | Blob | string;
-};
+}
 export async function saveSingleOrMultipleFiles(
   files: ExportFile[],
   filetype: string

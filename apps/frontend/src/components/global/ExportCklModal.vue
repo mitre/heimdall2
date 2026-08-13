@@ -320,10 +320,10 @@ type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) &
     gidexample: string;
   };
 
-type FileData = {
+interface FileData {
   filename: string;
   data: string;
-};
+}
 
 const isNotSelected: CustomRule = (_, file) => !file.selected;
 

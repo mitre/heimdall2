@@ -4,14 +4,14 @@ import type {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {parse} from 'papaparse';
 
-export interface ILookupPath {
+export type ILookupPath = {
   shortcircuit?: boolean;
   path?: string | string[];
   transformer?: (value: any) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
   pathTransform?: (value: unknown, file: any) => unknown;
   key?: string;
-}
+};
 
 export type ObjectEntryValue<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 /* eslint-disable @typescript-eslint/ban-types */
