@@ -200,7 +200,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get wasViewed(): boolean {
-    return this.viewedControls.indexOf(control_unique_key(this.control)) !== -1;
+    return this.viewedControls.includes(control_unique_key(this.control));
   }
 
   set wasViewed(_value: boolean) {

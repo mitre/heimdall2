@@ -175,7 +175,7 @@ class Search extends VuexModule implements ISearchState {
     if (this.searchTerm.trim() !== '') {
       // If our current filters include the field
       if (
-        this.searchTerm.toLowerCase().indexOf(`${searchPayload.field}:`) !== -1
+        this.searchTerm.toLowerCase().includes(`${searchPayload.field}:`)
       ) {
         const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
         const newSearch = this.searchTerm.replace(

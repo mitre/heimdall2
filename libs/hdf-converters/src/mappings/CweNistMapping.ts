@@ -42,7 +42,7 @@ export class CweNistMapping {
           item !== null &&
           item !== undefined &&
           item.nistId !== '' &&
-          matches.indexOf(item.nistId) === -1
+          !matches.includes(item.nistId)
         ) {
           matches.push(item.nistId);
         }

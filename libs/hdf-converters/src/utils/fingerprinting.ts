@@ -135,7 +135,7 @@ export function fingerprint(guessOptions: {
       return INPUT_TYPES.NESSUS;
     } else if (
       guessOptions.data.match(/xmlns.*http.*\/xccdf/) || // Keys matching (hopefully) all xccdf formats
-      guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
+      guessOptions.filename.toLowerCase().includes('xccdf')
     ) {
       return INPUT_TYPES.XCCDF;
     } else if (
@@ -146,18 +146,18 @@ export function fingerprint(guessOptions: {
     } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
       return INPUT_TYPES.FORTIFY;
     } else if (
-      guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
-      guessOptions.data.indexOf('"SchemaVersion"') !== -1
+      guessOptions.data.includes('"AwsAccountId"') &&
+      guessOptions.data.includes('"SchemaVersion"')
     ) {
       return INPUT_TYPES.ASFF;
-    } else if (guessOptions.data.indexOf('issues burpVersion') !== -1) {
+    } else if (guessOptions.data.includes('issues burpVersion')) {
       return INPUT_TYPES.BURP;
-    } else if (guessOptions.data.indexOf('scoutsuite_results') !== -1) {
+    } else if (guessOptions.data.includes('scoutsuite_results')) {
       return INPUT_TYPES.SCOUTSUITE;
     } else if (
-      guessOptions.data.indexOf('Policy') !== -1 &&
-      guessOptions.data.indexOf('Job Name') !== -1 &&
-      guessOptions.data.indexOf('Check ID') !== -1 &&
+      guessOptions.data.includes('Policy') &&
+      guessOptions.data.includes('Job Name') &&
+      guessOptions.data.includes('Check ID') &&
       guessOptions.data.indexOf('Result Status')
     ) {
       return INPUT_TYPES.DB_PROTECT;
@@ -178,14 +178,14 @@ export function fingerprint(guessOptions: {
     ) {
       return INPUT_TYPES.TRUFFLEHOG;
     } else if (
-      guessOptions.data.indexOf('veracode') !== -1 &&
-      guessOptions.data.indexOf('detailedreport') !== -1
+      guessOptions.data.includes('veracode') &&
+      guessOptions.data.includes('detailedreport')
     ) {
       return INPUT_TYPES.VERACODE;
     } else if (
-      guessOptions.data.indexOf('<CHECKLIST>') !== -1 &&
-      guessOptions.data.indexOf('<STIGS>') !== -1 &&
-      guessOptions.data.indexOf('<STIG_INFO>') !== -1
+      guessOptions.data.includes('<CHECKLIST>') &&
+      guessOptions.data.includes('<STIGS>') &&
+      guessOptions.data.includes('<STIG_INFO>')
     ) {
       return INPUT_TYPES.CHECKLIST;
     }

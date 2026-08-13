@@ -175,12 +175,12 @@ export class AwsConfigMapper {
       completedControlResult.map((completedControl) => {
         for (const extractedResourceName in extractedResourceNames) {
           if (
-            completedControl.code_desc.indexOf(
+            completedControl.code_desc.includes(
               JSON.stringify(extractedResourceName)
                 .replaceAll(/\"/gi, '')
                 .replaceAll(/{/gi, '')
                 .replaceAll(/}/gi, '')
-            ) !== -1
+            )
           ) {
             return {
               ...completedControl,

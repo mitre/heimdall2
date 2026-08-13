@@ -23,7 +23,7 @@
     </v-col>
     <v-col
       v-if="
-        profileErrorProps.number && currentStatusFilter.indexOf('Waived') == -1
+        profileErrorProps.number && !currentStatusFilter.includes('Waived')
       "
       cols="12"
     >
@@ -43,7 +43,7 @@
         </div>
         <v-card-actions>
           <v-btn
-            :disabled="filter.status.indexOf('Profile Error') !== -1"
+            :disabled="filter.status.includes('Profile Error')"
             @click="$emit('show-errors')"
           >
             Filter to Errors
@@ -54,7 +54,7 @@
     <v-col
       v-if="
         waivedProfiles.number &&
-        currentStatusFilter.indexOf('Profile Error') == -1
+        !currentStatusFilter.includes('Profile Error')
       "
       cols="12"
     >
@@ -74,7 +74,7 @@
         </div>
         <v-card-actions>
           <v-btn
-            :disabled="filter.status.indexOf('Waived') !== -1"
+            :disabled="filter.status.includes('Waived')"
             @click="$emit('show-waived')"
           >
             Filter to Waived

@@ -218,7 +218,7 @@ export default class FileList extends Vue {
                   // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
                   const loadedMap = new Map(
                     loadedFiles.map((obj) => [
-                      obj.filename.indexOf('-') != -1
+                      obj.filename.includes('-')
                         ? obj.filename.substring(0, obj.filename.indexOf('-'))
                         : obj.filename.substring(0, obj.filename.indexOf('.')),
                       obj.uniqueId

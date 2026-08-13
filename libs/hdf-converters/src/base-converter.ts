@@ -124,9 +124,9 @@ function collapseDuplicates<T extends object>(
         );
         if (collapseResults) {
           if (
-            descriptions.indexOf(
+            !descriptions.includes(
               _.get(item, 'results[0].code_desc') as string
-            ) === -1
+            )
           ) {
             _.set(
               newArray[index],

@@ -174,7 +174,7 @@ export class CciNistMapping {
       const item = this.data.find((element) => element.cci === id);
       if (item && item.nistId) {
         if (collapse) {
-          if (matches.indexOf(item.nistId) === -1) {
+          if (!matches.includes(item.nistId)) {
             matches.push(item.nistId);
           }
         } else {

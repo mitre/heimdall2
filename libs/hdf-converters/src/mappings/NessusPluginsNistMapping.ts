@@ -35,7 +35,7 @@ export class NessusPluginsNistMapping {
       item !== null &&
       item !== undefined &&
       item.nistId !== '' &&
-      matches.indexOf(item.nistId) === -1
+      !matches.includes(item.nistId)
     ) {
       item.nistId.split('|').forEach((element) => {
         matches.push(element);

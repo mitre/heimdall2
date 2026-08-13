@@ -21,7 +21,7 @@
           <v-btn
             :disabled="
               filter.tagFilter &&
-              filter.tagFilter.indexOf('severityoverride') !== -1
+              filter.tagFilter.includes('severityoverride')
             "
             @click="$emit('show-severity-overrides')"
           >
