@@ -595,15 +595,15 @@ export class ASFFMapper extends BaseConverter {
                       const statusReason = this.statusReason(finding);
                       switch (_.get(finding, COMPLIANCE_STATUS)) {
                         case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
-                          return undefined;
+                          return;
                         case 'PASSED':
                           return statusReason;
                         case 'WARNING':
-                          return undefined;
+                          return;
                         case 'FAILED':
                           return statusReason;
                         case 'NOT_AVAILABLE':
-                          return undefined;
+                          return;
                         default:
                           return statusReason;
                       }
@@ -622,16 +622,16 @@ export class ASFFMapper extends BaseConverter {
                       case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
                         return statusReason;
                       case 'PASSED':
-                        return undefined;
+                        return;
                       case 'WARNING':
                         return statusReason;
                       case 'FAILED':
-                        return undefined;
+                        return;
                       case 'NOT_AVAILABLE':
                         // primary meaning is that the check could not be performed due to a service outage or API error, but it's also overloaded to mean NOT_APPLICABLE so technically 'skipped' or 'error' could be applicable, but AWS seems to do the equivalent of skipped
                         return statusReason;
                       default:
-                        return undefined;
+                        return;
                     }
                   })();
                   return {
@@ -692,7 +692,7 @@ export class ASFFMapper extends BaseConverter {
   constructor(
     asff: Record<string, unknown>,
     supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
-    meta: Record<string, string | undefined> | undefined = undefined
+    meta?: Record<string, string | undefined> | undefined
   ) {
     super(asff);
     this.meta = meta;
@@ -709,8 +709,8 @@ export class ASFFResults {
   supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
   constructor(
     asffJson: string,
-    securityhubStandardsJsonArray: undefined | string[] = undefined,
-    meta: Record<string, string | undefined> | undefined = undefined
+    securityhubStandardsJsonArray?: undefined | string[],
+    meta?: Record<string, string | undefined> | undefined
   ) {
     this.meta = meta;
     this.supportingDocs = new Map<
