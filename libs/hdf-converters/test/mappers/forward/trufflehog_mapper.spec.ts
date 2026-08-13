@@ -8,7 +8,7 @@ describe('trufflehog_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -23,7 +23,7 @@ describe('trufflehog_mapper', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -37,7 +37,7 @@ describe('trufflehog_mapper_withraw', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -53,7 +53,7 @@ describe('trufflehog_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -67,7 +67,7 @@ describe('trufflehog_docker_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_docker_example.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -82,7 +82,7 @@ describe('trufflehog_docker_mapper', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-docker-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -96,7 +96,7 @@ describe('trufflehog_docker_mapper_withraw', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_docker_example.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -112,7 +112,7 @@ describe('trufflehog_docker_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-docker-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -126,7 +126,7 @@ describe('trufflehog_saf_example_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_saf_example.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -141,7 +141,7 @@ describe('trufflehog_saf_example_mapper', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-saf-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -155,7 +155,7 @@ describe('trufflehog_saf_example_mapper_withraw', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_saf_example.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -171,7 +171,7 @@ describe('trufflehog_saf_example_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-saf-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -185,7 +185,7 @@ describe('trufflehog_example_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog-report-example.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       false
     );
@@ -201,7 +201,7 @@ describe('trufflehog_example_mapper', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -215,7 +215,7 @@ describe('trufflehog_example_mapper', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog-report-example.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -231,7 +231,7 @@ describe('trufflehog_example_mapper', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -245,7 +245,7 @@ describe('trufflehog_dup_ndjson', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_dup.ndjson',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       false
     );
@@ -261,7 +261,7 @@ describe('trufflehog_dup_ndjson', () => {
           fs.readFileSync(
             'sample_jsons/trufflehog_mapper/trufflehog-ndjson-dup-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

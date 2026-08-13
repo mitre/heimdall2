@@ -6,7 +6,7 @@ import {ConversionResult, convertFile} from '../src/fileparse';
 test('Returns proper status counts for sample file in parse_testbed', () => {
   const content = fs.readFileSync(
     'parse_testbed/rhel7-nist-string.json',
-    'utf-8'
+    'utf8'
   );
   const result: ConversionResult = convertFile(content);
   if (result['1_0_ExecJson'] !== undefined) {

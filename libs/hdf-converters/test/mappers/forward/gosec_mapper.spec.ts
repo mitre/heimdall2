@@ -8,7 +8,7 @@ describe('gosec_mapper_grype', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Grype_gosec_results.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -21,7 +21,7 @@ describe('gosec_mapper_grype', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/gosec_mapper/grype-gosec-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )
@@ -32,7 +32,7 @@ describe('gosec_mapper_grype', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Grype_gosec_results.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -48,7 +48,7 @@ describe('gosec_mapper_grype', () => {
           fs.readFileSync(
             'sample_jsons/gosec_mapper/grype-gosec-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -62,7 +62,7 @@ describe('gosec_mapper_go_ethereum_external_suppressed', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_external_suppressed.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -77,7 +77,7 @@ describe('gosec_mapper_go_ethereum_external_suppressed', () => {
           fs.readFileSync(
             'sample_jsons/gosec_mapper/go-ethereum-external-unsuppressed-gosec-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -89,7 +89,7 @@ describe('gosec_mapper_go_ethereum_external_suppressed', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_external_suppressed.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -105,7 +105,7 @@ describe('gosec_mapper_go_ethereum_external_suppressed', () => {
           fs.readFileSync(
             'sample_jsons/gosec_mapper/go-ethereum-external-unsuppressed-gosec-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -119,7 +119,7 @@ describe('gosec_mapper_go_ethereum_all_suppressed', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_all_suppressed.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -134,7 +134,7 @@ describe('gosec_mapper_go_ethereum_all_suppressed', () => {
           fs.readFileSync(
             'sample_jsons/gosec_mapper/go-ethereum-all-unsuppressed-gosec-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -146,7 +146,7 @@ describe('gosec_mapper_go_ethereum_all_suppressed', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_all_suppressed.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -162,7 +162,7 @@ describe('gosec_mapper_go_ethereum_all_suppressed', () => {
           fs.readFileSync(
             'sample_jsons/gosec_mapper/go-ethereum-all-unsuppressed-gosec-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

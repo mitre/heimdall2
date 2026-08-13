@@ -7,7 +7,7 @@ describe('veracode_mapper', () => {
     const mapper = new VeracodeMapper(
       fs.readFileSync(
         'sample_jsons/veracode_mapper/sample_input_report/veracode.xml',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -20,7 +20,7 @@ describe('veracode_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/veracode_mapper/veracode-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )

@@ -270,7 +270,7 @@ describe.sequential('addAttestationToHDF', () => {
     inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json',
-        'utf-8'
+        'utf8'
       )
     ) as ExecJSON.Execution;
 
@@ -422,7 +422,7 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
   const inputDataWithEmptyResults = JSON.parse(
     fs.readFileSync(
       'sample_jsons/attestations/triple_overlay_profile_sample.json',
-      'utf-8'
+      'utf8'
     )
   ) as ExecJSON.Execution;
 

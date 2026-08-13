@@ -11,7 +11,7 @@ import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checkli
 // );
 
 const readFile = (path: fs.PathOrFileDescriptor) =>
-  fs.readFileSync(path, {encoding: 'utf-8'});
+  fs.readFileSync(path, {encoding: 'utf8'});
 const parseJsonFile = (path: fs.PathOrFileDescriptor) =>
   JSON.parse(readFile(path));
 

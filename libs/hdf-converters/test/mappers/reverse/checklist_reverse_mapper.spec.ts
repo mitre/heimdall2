@@ -13,7 +13,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     const mapper = new ChecklistResults(hdfData);
     const expected = fs.readFileSync(
       'sample_jsons/checklist_mapper/converted-RHEL8V1R3.ckl',
-      'utf-8'
+      'utf8'
     );
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
@@ -26,7 +26,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     const mapper = new ChecklistResults(hdfData);
     const expected = fs.readFileSync(
       'sample_jsons/checklist_mapper/converted-three-stig-checklist.ckl',
-      'utf-8'
+      'utf8'
     );
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
@@ -41,7 +41,7 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
     const mapper = new ChecklistResults(hdfData);
     const expected = fs.readFileSync(
       'sample_jsons/checklist_mapper/converted-nessus.ckl',
-      'utf-8'
+      'utf8'
     );
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
@@ -56,7 +56,7 @@ describe('Small RHEL8 HDF file', () => {
     const mapper = new ChecklistResults(hdfData);
     const expected = fs.readFileSync(
       'sample_jsons/checklist_mapper/converted-rhel8_sample_oneOfEachControlStatus.ckl',
-      'utf-8'
+      'utf8'
     );
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
@@ -71,7 +71,7 @@ describe('Small RHEL 7 with severity and severity override tags', () => {
     const mapper = new ChecklistResults(hdfData);
     const expected = fs.readFileSync(
       'sample_jsons/checklist_mapper/converted-rhel7_overrides.ckl',
-      'utf-8'
+      'utf8'
     );
     const converted = mapper.toCkl();
     expect(converted).toEqual(replaceCKLVersion(expected));
@@ -142,7 +142,7 @@ describe('checklist_mapper_severity_mapping', () => {
  * @returns Parsed data.
  */
 function loadJsonFile(filePath: string): any {
-  return JSON.parse(fs.readFileSync(filePath, {encoding: 'utf-8'}));
+  return JSON.parse(fs.readFileSync(filePath, {encoding: 'utf8'}));
 }
 /**
  * Extract the severity string for a specific control from the mapper.

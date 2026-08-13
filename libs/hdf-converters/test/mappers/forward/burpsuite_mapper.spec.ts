@@ -8,7 +8,7 @@ describe('burpsuite_mapper', () => {
     const mapper = new BurpSuiteResults(
       fs.readFileSync(
         'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -21,7 +21,7 @@ describe('burpsuite_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/burpsuite_mapper/burpsuite-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )
@@ -34,7 +34,7 @@ describe('burpsuite_mapper_withraw', () => {
     const mapper = new BurpSuiteResults(
       fs.readFileSync(
         'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -50,7 +50,7 @@ describe('burpsuite_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/burpsuite_mapper/burpsuite-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

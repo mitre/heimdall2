@@ -23,7 +23,7 @@ describe('sonarqube_mapper', () => {
             fs.readFileSync(
               'sample_jsons/sonarqube_mapper/sonarqube-hdf.json',
               {
-                encoding: 'utf-8'
+                encoding: 'utf8'
               }
             )
           )
@@ -52,7 +52,7 @@ describe('sonarqube_mapper', () => {
             fs.readFileSync(
               'sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json',
               {
-                encoding: 'utf-8'
+                encoding: 'utf8'
               }
             )
           )
@@ -82,7 +82,7 @@ describe('sonarqube_mapper', () => {
             fs.readFileSync(
               'sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json',
               {
-                encoding: 'utf-8'
+                encoding: 'utf8'
               }
             )
           )

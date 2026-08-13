@@ -7,7 +7,7 @@ describe('conveyor_mapper', () => {
     const mapper = new ConveyorResults(
       fs.readFileSync(
         'sample_jsons/conveyor_mapper/sample_input_report/sample-results.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
     const mapped = mapper.toHdf();
@@ -37,7 +37,7 @@ describe('conveyor_mapper', () => {
           fs.readFileSync(
             'sample_jsons/conveyor_mapper/conveyor-moldy-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -49,7 +49,7 @@ describe('conveyor_mapper', () => {
           fs.readFileSync(
             'sample_jsons/conveyor_mapper/conveyor-stigma-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -61,7 +61,7 @@ describe('conveyor_mapper', () => {
           fs.readFileSync(
             'sample_jsons/conveyor_mapper/conveyor-clamav-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

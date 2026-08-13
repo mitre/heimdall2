@@ -12,7 +12,7 @@ describe('Describe Splunk Reverse Mapper', () => {
     const inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 

@@ -7,7 +7,7 @@ it('correctly detects an overlayed profile', () => {
   expect.assertions(3);
   const content = fs.readFileSync(
     'parse_testbed/aws-ami-results.json',
-    'utf-8'
+    'utf8'
   );
   const result: ConversionResult = convertFile(content);
   expect(result).toHaveProperty('1_0_ExecJson');

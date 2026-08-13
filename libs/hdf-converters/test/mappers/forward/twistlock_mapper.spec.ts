@@ -8,7 +8,7 @@ describe('twistlock_mapper', () => {
     const mapper = new TwistlockResults(
       fs.readFileSync(
         'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -21,7 +21,7 @@ describe('twistlock_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/twistlock_mapper/twistlock-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )
@@ -34,7 +34,7 @@ describe('twistlock_mapper_code_repo', () => {
     const mapper = new TwistlockResults(
       fs.readFileSync(
         'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-coderepo-scan-sample.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -49,7 +49,7 @@ describe('twistlock_mapper_code_repo', () => {
           fs.readFileSync(
             'sample_jsons/twistlock_mapper/twistlock-coderepo-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -63,7 +63,7 @@ describe('twistlock_mapper_withraw', () => {
     const mapper = new TwistlockResults(
       fs.readFileSync(
         'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -79,7 +79,7 @@ describe('twistlock_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/twistlock_mapper/twistlock-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -93,7 +93,7 @@ describe('twistlock_mapper_withraw', () => {
     const mapper = new TwistlockResults(
       fs.readFileSync(
         'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-coderepo-scan-sample.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -109,7 +109,7 @@ describe('twistlock_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/twistlock_mapper/twistlock-coderepo-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

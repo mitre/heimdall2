@@ -8,7 +8,7 @@ describe('sarif_mapper', () => {
     const mapper = new SarifMapper(
       fs.readFileSync(
         'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -21,7 +21,7 @@ describe('sarif_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/sarif_mapper/sarif-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )
@@ -33,7 +33,7 @@ describe('sarif_mapper_withraw', () => {
     const mapper = new SarifMapper(
       fs.readFileSync(
         'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -47,7 +47,7 @@ describe('sarif_mapper_withraw', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/sarif_mapper/sarif-hdf-withraw.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )

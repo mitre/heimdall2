@@ -8,7 +8,7 @@ describe('netsparker_mapper_check', () => {
     const mapper = new NetsparkerResults(
       fs.readFileSync(
         'sample_jsons/netsparker_mapper/sample_input_report/sample-netsparker-invicti.xml',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -23,7 +23,7 @@ describe('netsparker_mapper_check', () => {
           fs.readFileSync(
             'sample_jsons/netsparker_mapper/netsparker-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -37,7 +37,7 @@ describe('netsparker_mapper_check_withraw', () => {
     const mapper = new NetsparkerResults(
       fs.readFileSync(
         'sample_jsons/netsparker_mapper/sample_input_report/sample-netsparker-invicti.xml',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -53,7 +53,7 @@ describe('netsparker_mapper_check_withraw', () => {
           fs.readFileSync(
             'sample_jsons/netsparker_mapper/netsparker-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

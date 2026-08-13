@@ -8,7 +8,7 @@ describe('neuvector_mapper', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-caldera.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -22,7 +22,7 @@ describe('neuvector_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-caldera.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -33,7 +33,7 @@ describe('neuvector_mapper', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-heimdall.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -47,7 +47,7 @@ describe('neuvector_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -58,7 +58,7 @@ describe('neuvector_mapper', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-heimdall2.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -72,7 +72,7 @@ describe('neuvector_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall2.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -83,7 +83,7 @@ describe('neuvector_mapper', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-vulcan.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -97,7 +97,7 @@ describe('neuvector_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-vulcan.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -110,7 +110,7 @@ describe('neuvector_mapper_withraw', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-caldera.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -125,7 +125,7 @@ describe('neuvector_mapper_withraw', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-caldera.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -136,7 +136,7 @@ describe('neuvector_mapper_withraw', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-heimdall.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -151,7 +151,7 @@ describe('neuvector_mapper_withraw', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -162,7 +162,7 @@ describe('neuvector_mapper_withraw', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-heimdall2.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -177,7 +177,7 @@ describe('neuvector_mapper_withraw', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall2.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -188,7 +188,7 @@ describe('neuvector_mapper_withraw', () => {
     const mapper = new NeuVectorMapper(
       fs.readFileSync(
         'sample_jsons/neuvector_mapper/sample_input_report/neuvector-mitre-vulcan.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -203,7 +203,7 @@ describe('neuvector_mapper_withraw', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-vulcan.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )

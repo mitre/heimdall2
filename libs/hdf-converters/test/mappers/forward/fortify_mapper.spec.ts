@@ -8,7 +8,7 @@ describe('fortify_mapper', () => {
     const mapper = new FortifyResults(
       fs.readFileSync(
         'sample_jsons/fortify_mapper/sample_input_report/fortify_webgoat_results.fvdl',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -22,7 +22,7 @@ describe('fortify_mapper', () => {
         omitVersions(
           JSON.parse(
             fs.readFileSync('sample_jsons/fortify_mapper/fortify-hdf.json', {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             })
           )
         )
@@ -36,7 +36,7 @@ describe('fortify_mapper_withraw', () => {
     const mapper = new FortifyResults(
       fs.readFileSync(
         'sample_jsons/fortify_mapper/sample_input_report/fortify_webgoat_results.fvdl',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -53,7 +53,7 @@ describe('fortify_mapper_withraw', () => {
             fs.readFileSync(
               'sample_jsons/fortify_mapper/fortify-hdf-withraw.json',
               {
-                encoding: 'utf-8'
+                encoding: 'utf8'
               }
             )
           )

@@ -9,7 +9,7 @@ describe('xccdf_mapper', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-scc-rhel7.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
 
@@ -23,7 +23,7 @@ describe('xccdf_mapper', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-scc-rhel7-hdf.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )
@@ -33,7 +33,7 @@ describe('xccdf_mapper', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-scc-rhel8.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
 
@@ -47,7 +47,7 @@ describe('xccdf_mapper', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-scc-rhel8-hdf.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )
@@ -59,7 +59,7 @@ describe('xccdf_mapper', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-openscap-ComplianceAsCode-ubuntu1804.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
 
@@ -73,7 +73,7 @@ describe('xccdf_mapper', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-openscap-ComplianceAsCode-ubuntu1804-hdf.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )
@@ -83,7 +83,7 @@ describe('xccdf_mapper', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-openscap-rhel7.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
 
@@ -97,7 +97,7 @@ describe('xccdf_mapper', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-openscap-rhel7-hdf.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )
@@ -107,7 +107,7 @@ describe('xccdf_mapper', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-openscap-rhel8.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
 
@@ -121,7 +121,7 @@ describe('xccdf_mapper', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-openscap-rhel8-hdf.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )
@@ -136,7 +136,7 @@ describe('xccdf_mapper_withraw', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-scc-rhel7.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         ),
         true
       );
@@ -151,7 +151,7 @@ describe('xccdf_mapper_withraw', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-scc-rhel7-hdf-withraw.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )
@@ -161,7 +161,7 @@ describe('xccdf_mapper_withraw', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-scc-rhel8.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         ),
         true
       );
@@ -176,7 +176,7 @@ describe('xccdf_mapper_withraw', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-scc-rhel8-hdf-withraw.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )
@@ -188,7 +188,7 @@ describe('xccdf_mapper_withraw', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-openscap-rhel7.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         ),
         true
       );
@@ -203,7 +203,7 @@ describe('xccdf_mapper_withraw', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-openscap-rhel7-hdf-withraw.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )
@@ -213,7 +213,7 @@ describe('xccdf_mapper_withraw', () => {
       const mapper = new XCCDFResultsResults(
         fs.readFileSync(
           'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-openscap-rhel8.xml',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         ),
         true
       );
@@ -228,7 +228,7 @@ describe('xccdf_mapper_withraw', () => {
           JSON.parse(
             fs.readFileSync(
               'sample_jsons/xccdf_results_mapper/xccdf-openscap-rhel8-hdf-withraw.json',
-              {encoding: 'utf-8'}
+              {encoding: 'utf8'}
             )
           )
         )

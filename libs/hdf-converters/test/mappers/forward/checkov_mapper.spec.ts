@@ -9,7 +9,7 @@ describe('checkov_mapper', () => {
     const mapper = new CheckovMapper(
       fs.readFileSync(
         'sample_jsons/checkov_mapper/sample_input_report/checkov_json.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -21,7 +21,7 @@ describe('checkov_mapper', () => {
       const expected = JSON.parse(
         fs.readFileSync(
           'sample_jsons/checkov_mapper/checkov_json-hdf.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
       expect(omitVersions(mapper.toHdf())).toEqual(omitVersions(expected));
@@ -34,7 +34,7 @@ describe('checkov_mapper', () => {
     const mapper = new CheckovMapper(
       fs.readFileSync(
         'sample_jsons/checkov_mapper/sample_input_report/checkov_json.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -47,7 +47,7 @@ describe('checkov_mapper', () => {
       const expected = JSON.parse(
         fs.readFileSync(
           'sample_jsons/checkov_mapper/checkov_json-withraw-hdf.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
       expect(omitVersions(mapper.toHdf())).toEqual(omitVersions(expected));
@@ -60,7 +60,7 @@ describe('checkov_mapper', () => {
     const mapper = new CheckovMapper(
       fs.readFileSync(
         'sample_jsons/checkov_mapper/sample_input_report/checkov_sample.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -72,7 +72,7 @@ describe('checkov_mapper', () => {
       const expected = JSON.parse(
         fs.readFileSync(
           'sample_jsons/checkov_mapper/checkov_sample-hdf.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
       expect(omitVersions(mapper.toHdf())).toEqual(omitVersions(expected));
@@ -84,7 +84,7 @@ describe('checkov_mapper', () => {
     const mapper = new CheckovMapper(
       fs.readFileSync(
         'sample_jsons/checkov_mapper/sample_input_report/checkov_with_skips.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -96,7 +96,7 @@ describe('checkov_mapper', () => {
       const expected = JSON.parse(
         fs.readFileSync(
           'sample_jsons/checkov_mapper/checkov_with_skips-hdf.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
       expect(omitVersions(mapper.toHdf())).toEqual(omitVersions(expected));
@@ -108,7 +108,7 @@ describe('checkov_mapper', () => {
     const mapper = new CheckovMapper(
       fs.readFileSync(
         'sample_jsons/checkov_mapper/sample_input_report/checkov_synthetic.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -120,7 +120,7 @@ describe('checkov_mapper', () => {
       const expected = JSON.parse(
         fs.readFileSync(
           'sample_jsons/checkov_mapper/checkov_synthetic-hdf.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       );
       expect(omitVersions(mapper.toHdf())).toEqual(omitVersions(expected));

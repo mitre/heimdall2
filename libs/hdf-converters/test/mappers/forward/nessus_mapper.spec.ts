@@ -9,7 +9,7 @@ describe('nessus_mapper', () => {
     const mapper = new NessusResults(
       fs.readFileSync(
         'sample_jsons/nessus_mapper/sample_input_report/sample.nessus',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -33,17 +33,17 @@ describe('nessus_mapper', () => {
     const expectedSet = [
       JSON.parse(
         fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json', {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         })
       ),
       JSON.parse(
         fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.2.json', {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         })
       ),
       JSON.parse(
         fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.1.json', {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         })
       )
     ];
@@ -65,7 +65,7 @@ describe('nessus_mapper_withraw', () => {
     const mapper = new NessusResults(
       fs.readFileSync(
         'sample_jsons/nessus_mapper/sample_input_report/sample.nessus',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -92,7 +92,7 @@ describe('nessus_mapper_withraw', () => {
         fs.readFileSync(
           'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3-withraw.json',
           {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           }
         )
       ),
@@ -100,7 +100,7 @@ describe('nessus_mapper_withraw', () => {
         fs.readFileSync(
           'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.2-withraw.json',
           {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           }
         )
       ),
@@ -108,7 +108,7 @@ describe('nessus_mapper_withraw', () => {
         fs.readFileSync(
           'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.1-withraw.json',
           {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           }
         )
       )

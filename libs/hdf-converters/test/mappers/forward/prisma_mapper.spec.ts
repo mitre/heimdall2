@@ -8,7 +8,7 @@ describe('prisma_mapper', () => {
     const mapper = new PrismaMapper(
       fs.readFileSync(
         'sample_jsons/prisma_mapper/sample_input_report/prismacloud_sample.csv',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
     Object.entries(mapper.toHdf()).forEach(([, obj]) => {
@@ -20,7 +20,7 @@ describe('prisma_mapper', () => {
         omitVersions(
           JSON.parse(
             fs.readFileSync(fileName, {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             })
           )
         )

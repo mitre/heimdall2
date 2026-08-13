@@ -8,7 +8,7 @@ describe('dependency_track_mapper', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-default.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -23,7 +23,7 @@ describe('dependency_track_mapper', () => {
           fs.readFileSync(
             'sample_jsons/dependency_track_mapper/hdf-default.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -37,7 +37,7 @@ describe('dependency_track_mapper_withraw', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-default.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -53,7 +53,7 @@ describe('dependency_track_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/dependency_track_mapper/hdf-default-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -67,7 +67,7 @@ describe('dependency_track_mapper_optional_attributes', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-optional-attributes.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -82,7 +82,7 @@ describe('dependency_track_mapper_optional_attributes', () => {
           fs.readFileSync(
             'sample_jsons/dependency_track_mapper/hdf-optional-attributes.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -96,7 +96,7 @@ describe('dependency_track_mapper_no_vulnerabilities', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-no-vulnerabilities.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -111,7 +111,7 @@ describe('dependency_track_mapper_no_vulnerabilities', () => {
           fs.readFileSync(
             'sample_jsons/dependency_track_mapper/hdf-no-vulnerabilities.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -125,7 +125,7 @@ describe('dependency_track_mapper_with_attributions', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-with-attributions.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -140,7 +140,7 @@ describe('dependency_track_mapper_with_attributions', () => {
           fs.readFileSync(
             'sample_jsons/dependency_track_mapper/hdf-with-attributions.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -154,7 +154,7 @@ describe('dependency_track_mapper_info_vulnerability', () => {
     const mapper = new DependencyTrackMapper(
       fs.readFileSync(
         'sample_jsons/dependency_track_mapper/sample_input_report/fpf-info-vulnerability.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -169,7 +169,7 @@ describe('dependency_track_mapper_info_vulnerability', () => {
           fs.readFileSync(
             'sample_jsons/dependency_track_mapper/hdf-info-vulnerability.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

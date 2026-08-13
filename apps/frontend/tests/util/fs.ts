@@ -23,7 +23,7 @@ export function read_files(dirName: string): FileResult[] {
 
   // Read them all
   return files.map((filename) => {
-    const content = fs.readFileSync(dirName + filename, 'utf-8');
+    const content = fs.readFileSync(dirName + filename, 'utf8');
     return {
       name: filename,
       content

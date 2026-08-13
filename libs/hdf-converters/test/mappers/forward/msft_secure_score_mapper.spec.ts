@@ -11,7 +11,7 @@ describe('msft_secure_score_mapper', () => {
     const mapper = new MsftSecureScoreResults(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -23,7 +23,7 @@ describe('msft_secure_score_mapper', () => {
     const expectedHdfReports = JSON.parse(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/secure_score-hdfs.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -40,7 +40,7 @@ describe('msft_secure_score_mapper_withraw', () => {
     const mapper = new MsftSecureScoreResults(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -53,7 +53,7 @@ describe('msft_secure_score_mapper_withraw', () => {
     const expectedHdfReports = JSON.parse(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/secure_score-hdf-withraws.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -71,13 +71,13 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
       profiles: JSON.parse(
         fs.readFileSync(
           'sample_jsons/msft_secure_score_mapper/sample_input_report/profiles.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       ),
       secureScore: JSON.parse(
         fs.readFileSync(
           'sample_jsons/msft_secure_score_mapper/sample_input_report/secureScore-multiple.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       )
     };
@@ -92,7 +92,7 @@ describe('msft_secure_score_mapper_multiple_reports', () => {
     const expectedHdfReports = JSON.parse(
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/secure_score-hdf-multi.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 

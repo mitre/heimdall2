@@ -8,7 +8,7 @@ describe('zap_mapper', () => {
     const mapper = new ZapResults(
       fs.readFileSync(
         'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       'http://mymac.com:8191'
     );
@@ -22,7 +22,7 @@ describe('zap_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/zap_mapper/zap-webgoat-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )
@@ -32,7 +32,7 @@ describe('zap_mapper', () => {
     const mapper = new ZapResults(
       fs.readFileSync(
         'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       'http://zero.webappsecurity.com'
     );
@@ -47,7 +47,7 @@ describe('zap_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/zap_mapper/zap-webappsecurity-hdf.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -60,7 +60,7 @@ describe('zap_mapper', () => {
     const mapper = new ZapResults(
       fs.readFileSync(
         'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       'http://mymac.com:8191',
       true
@@ -77,7 +77,7 @@ describe('zap_mapper', () => {
           fs.readFileSync(
             'sample_jsons/zap_mapper/zap-webgoat-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -88,7 +88,7 @@ describe('zap_mapper', () => {
     const mapper = new ZapResults(
       fs.readFileSync(
         'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       'http://zero.webappsecurity.com',
       true
@@ -104,7 +104,7 @@ describe('zap_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/zap_mapper/zap-webappsecurity-hdf-withraw.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )

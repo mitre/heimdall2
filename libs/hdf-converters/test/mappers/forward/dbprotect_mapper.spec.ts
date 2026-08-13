@@ -8,7 +8,7 @@ describe('dbprotect_mapper_check', () => {
     const mapper = new DBProtectMapper(
       fs.readFileSync(
         'sample_jsons/dbprotect_mapper/sample_input_report/DbProtect-Check-Results-Details-XML-Sample.xml',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -23,7 +23,7 @@ describe('dbprotect_mapper_check', () => {
           fs.readFileSync(
             'sample_jsons/dbprotect_mapper/dbprotect-check-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -37,7 +37,7 @@ describe('dbprotect_mapper_findings', () => {
     const mapper = new DBProtectMapper(
       fs.readFileSync(
         'sample_jsons/dbprotect_mapper/sample_input_report/DbProtect-Findings-Detail-XML-Sample.xml',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -52,7 +52,7 @@ describe('dbprotect_mapper_findings', () => {
           fs.readFileSync(
             'sample_jsons/dbprotect_mapper/dbprotect-findings-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -66,7 +66,7 @@ describe('dbprotect_mapper_check_withraw', () => {
     const mapper = new DBProtectMapper(
       fs.readFileSync(
         'sample_jsons/dbprotect_mapper/sample_input_report/DbProtect-Check-Results-Details-XML-Sample.xml',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -82,7 +82,7 @@ describe('dbprotect_mapper_check_withraw', () => {
           fs.readFileSync(
             'sample_jsons/dbprotect_mapper/dbprotect-check-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -96,7 +96,7 @@ describe('dbprotect_mapper_findings_withraw', () => {
     const mapper = new DBProtectMapper(
       fs.readFileSync(
         'sample_jsons/dbprotect_mapper/sample_input_report/DbProtect-Findings-Detail-XML-Sample.xml',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -112,7 +112,7 @@ describe('dbprotect_mapper_findings_withraw', () => {
           fs.readFileSync(
             'sample_jsons/dbprotect_mapper/dbprotect-findings-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

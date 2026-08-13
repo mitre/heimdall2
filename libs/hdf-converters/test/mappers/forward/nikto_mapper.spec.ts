@@ -8,7 +8,7 @@ describe('nikto_mapper', () => {
     const mapper = new NiktoMapper(
       fs.readFileSync(
         'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -21,7 +21,7 @@ describe('nikto_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/nikto_mapper/nikto-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )
@@ -34,7 +34,7 @@ describe('nikto_mapper_withraw', () => {
     const mapper = new NiktoMapper(
       fs.readFileSync(
         'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -48,7 +48,7 @@ describe('nikto_mapper_withraw', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/nikto_mapper/nikto-hdf-withraw.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )

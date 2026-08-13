@@ -6,7 +6,7 @@ import {statusCounts} from './status_counts';
 test('Returns proper status counts for sample file in parse_testbed', () => {
   const content = fs.readFileSync(
     'parse_testbed/aws-ami-results.json',
-    'utf-8'
+    'utf8'
   );
   const result: ConversionResult = convertFile(content);
   if (result['1_0_ExecJson'] !== undefined) {

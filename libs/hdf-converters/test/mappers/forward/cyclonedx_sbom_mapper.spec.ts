@@ -8,7 +8,7 @@ describe('sbom_mapper_saf', () => {
     const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/generated-saf-sbom.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -23,7 +23,7 @@ describe('sbom_mapper_saf', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-saf-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -35,7 +35,7 @@ describe('sbom_mapper_saf', () => {
     const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/generated-saf-sbom.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -51,7 +51,7 @@ describe('sbom_mapper_saf', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-saf-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -65,7 +65,7 @@ describe('sbom_mapper_dropwizard_vulns', () => {
     const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/dropwizard-vulns.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -80,7 +80,7 @@ describe('sbom_mapper_dropwizard_vulns', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-dropwizard-vulns-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -92,7 +92,7 @@ describe('sbom_mapper_dropwizard_vulns', () => {
     const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/dropwizard-vulns.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -108,7 +108,7 @@ describe('sbom_mapper_dropwizard_vulns', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-dropwizard-vulns-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -122,7 +122,7 @@ describe('sbom_mapper_dropwizard_no_vulns', () => {
     const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/dropwizard-no-vulns.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -137,7 +137,7 @@ describe('sbom_mapper_dropwizard_no_vulns', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-dropwizard-no-vulns-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -149,7 +149,7 @@ describe('sbom_mapper_dropwizard_no_vulns', () => {
     const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/dropwizard-no-vulns.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -165,7 +165,7 @@ describe('sbom_mapper_dropwizard_no_vulns', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-dropwizard-no-vulns-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -179,7 +179,7 @@ describe('sbom_mapper_dropwizard_vex', () => {
     const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/dropwizard-vex.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -194,7 +194,7 @@ describe('sbom_mapper_dropwizard_vex', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-dropwizard-vex-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -206,7 +206,7 @@ describe('sbom_mapper_dropwizard_vex', () => {
     const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/dropwizard-vex.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -222,7 +222,7 @@ describe('sbom_mapper_dropwizard_vex', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-dropwizard-vex-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -237,7 +237,7 @@ describe('sbom_mapper_vex', () => {
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/vex.json',
         {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         }
       )
     );
@@ -253,7 +253,7 @@ describe('sbom_mapper_vex', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-vex-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -266,7 +266,7 @@ describe('sbom_mapper_vex', () => {
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/vex.json',
         {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         }
       ),
       true
@@ -283,7 +283,7 @@ describe('sbom_mapper_vex', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-vex-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -298,7 +298,7 @@ describe('sbom_mapper_syft_alpine_container', () => {
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/syft-scan-alpine-container.json',
         {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         }
       )
     );
@@ -314,7 +314,7 @@ describe('sbom_mapper_syft_alpine_container', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-syft-alpine-container-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -327,7 +327,7 @@ describe('sbom_mapper_syft_alpine_container', () => {
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/syft-scan-alpine-container.json',
         {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         }
       ),
       true
@@ -344,7 +344,7 @@ describe('sbom_mapper_syft_alpine_container', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-syft-alpine-container-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -359,7 +359,7 @@ describe('sbom_mapper_converted_spdx', () => {
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/spdx-to-cyclonedx.json',
         {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         }
       )
     );
@@ -375,7 +375,7 @@ describe('sbom_mapper_converted_spdx', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-converted-spdx-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -388,7 +388,7 @@ describe('sbom_mapper_converted_spdx', () => {
       fs.readFileSync(
         'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/spdx-to-cyclonedx.json',
         {
-          encoding: 'utf-8'
+          encoding: 'utf8'
         }
       ),
       true
@@ -405,7 +405,7 @@ describe('sbom_mapper_converted_spdx', () => {
           fs.readFileSync(
             'sample_jsons/cyclonedx_sbom_mapper/sbom-converted-spdx-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

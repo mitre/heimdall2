@@ -9,7 +9,7 @@ describe('snyk_mapper', () => {
       JSON.parse(
         fs.readFileSync(
           'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-local.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       )
     );
@@ -25,7 +25,7 @@ describe('snyk_mapper', () => {
           fs.readFileSync(
             'sample_jsons/snyk_mapper/nodejs-goof-local-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -37,7 +37,7 @@ describe('snyk_mapper', () => {
       JSON.parse(
         fs.readFileSync(
           'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-remote.json',
-          {encoding: 'utf-8'}
+          {encoding: 'utf8'}
         )
       )
     );
@@ -53,7 +53,7 @@ describe('snyk_mapper', () => {
           fs.readFileSync(
             'sample_jsons/snyk_mapper/nodejs-goof-remote-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

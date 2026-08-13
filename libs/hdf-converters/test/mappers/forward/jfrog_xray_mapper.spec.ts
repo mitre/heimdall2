@@ -8,7 +8,7 @@ describe('jfrog_xray_mapper', () => {
     const mapper = new JfrogXrayMapper(
       fs.readFileSync(
         'sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -21,7 +21,7 @@ describe('jfrog_xray_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/jfrog_xray_mapper/jfrog-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf8'
           })
         )
       )
@@ -34,7 +34,7 @@ describe('jfrog_xray_mapper_withraw', () => {
     const mapper = new JfrogXrayMapper(
       fs.readFileSync(
         'sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -50,7 +50,7 @@ describe('jfrog_xray_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/jfrog_xray_mapper/jfrog-hdf-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

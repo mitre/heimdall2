@@ -8,7 +8,7 @@ describe('scoutsuite_mapper', () => {
     const mapper = new ScoutsuiteMapper(
       fs.readFileSync(
         'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -22,7 +22,7 @@ describe('scoutsuite_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )
@@ -35,7 +35,7 @@ describe('scoutsuite_mapper_withraw', () => {
     const mapper = new ScoutsuiteMapper(
       fs.readFileSync(
         'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -50,7 +50,7 @@ describe('scoutsuite_mapper_withraw', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/scoutsuite_mapper/scoutsuite-hdf-withraw.json',
-            {encoding: 'utf-8'}
+            {encoding: 'utf8'}
           )
         )
       )

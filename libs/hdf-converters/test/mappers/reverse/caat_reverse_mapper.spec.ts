@@ -10,11 +10,11 @@ describe('CAAT Results Reverse Mapper', () => {
 
     const rhelData = fs.readFileSync(
       'sample_jsons/caat_reverse_mapper/sample_input_report/red_hat_good.json',
-      {encoding: 'utf-8'}
+      {encoding: 'utf8'}
     );
     const tripleData = fs.readFileSync(
       'sample_jsons/caat_reverse_mapper/sample_input_report/triple_overlay_profile_example.json',
-      {encoding: 'utf-8'}
+      {encoding: 'utf8'}
     );
 
     const mapper = new FromHDFToCAATMapper([

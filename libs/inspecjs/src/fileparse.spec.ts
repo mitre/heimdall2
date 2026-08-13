@@ -17,7 +17,7 @@ describe.sequential('fileparse', () => {
     const filenames = fs.readdirSync(testbed);
     expect(() => {
       filenames.forEach((filename) => {
-        const content = fs.readFileSync(testbed + filename, 'utf-8');
+        const content = fs.readFileSync(testbed + filename, 'utf8');
         const result: ConversionResult = convertFile(content);
         expect(result).toHaveProperty('1_0_ExecJson');
       });
@@ -29,7 +29,7 @@ describe.sequential('fileparse', () => {
     const filenames = fs.readdirSync(testbed);
     expect(() => {
       filenames.forEach((filename) => {
-        const content = fs.readFileSync(testbed + filename, 'utf-8');
+        const content = fs.readFileSync(testbed + filename, 'utf8');
         const result: ContextualizedEvaluation | ContextualizedProfile =
           convertFileContextual(content);
         const isContextEval = isContextualizedEvaluation(result);
@@ -43,7 +43,7 @@ describe.sequential('fileparse', () => {
     const filenames = fs.readdirSync(testbed);
     expect(() => {
       filenames.forEach((filename) => {
-        const content = fs.readFileSync(testbed + filename, 'utf-8');
+        const content = fs.readFileSync(testbed + filename, 'utf8');
         const result: ContextualizedEvaluation | ContextualizedProfile =
           convertFileContextual(content);
         const isContextEval = isContextualizedProfile(result);

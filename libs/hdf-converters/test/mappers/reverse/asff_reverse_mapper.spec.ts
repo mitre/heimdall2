@@ -8,7 +8,7 @@ describe('ASFF Reverse Mapper', () => {
     const inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -34,14 +34,14 @@ describe('ASFF Reverse Mapper', () => {
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
     const expectedProfileInfo = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -59,7 +59,7 @@ describe('ASFF Reverse Mapper', () => {
     const inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/sample_input_report/example-3-layer-overlay_03062022.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -85,14 +85,14 @@ describe('ASFF Reverse Mapper', () => {
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
     const expectedProfileInfo = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json.p0.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -110,7 +110,7 @@ describe('ASFF Reverse Mapper', () => {
     const inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/sample_input_report/snyk-no-results.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -129,7 +129,7 @@ describe('ASFF Reverse Mapper', () => {
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/snyk-no-results.asff.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -142,7 +142,7 @@ describe('ASFF Reverse Mapper', () => {
     const inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/sample_input_report/restrictions-test-rhel7-results.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -161,7 +161,7 @@ describe('ASFF Reverse Mapper', () => {
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/restrictions-test-results.asff.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 

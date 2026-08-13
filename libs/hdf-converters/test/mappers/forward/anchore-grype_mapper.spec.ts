@@ -8,7 +8,7 @@ describe('anchore-grype_mapper', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/anchore_grype.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -23,7 +23,7 @@ describe('anchore-grype_mapper', () => {
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/anchore-grype-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -37,7 +37,7 @@ describe('anchore-grype_mapper_withraw', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/anchore_grype.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -53,7 +53,7 @@ describe('anchore-grype_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/anchore-grype-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -67,7 +67,7 @@ describe('anchore-grype_mapper', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/amazon.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -82,7 +82,7 @@ describe('anchore-grype_mapper', () => {
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/amazon-grype-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -96,7 +96,7 @@ describe('anchore-grype_mapper_withraw', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/amazon.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -112,7 +112,7 @@ describe('anchore-grype_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/amazon-grype-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -126,7 +126,7 @@ describe('anchore-grype_mapper', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/tensorflow.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       )
     );
 
@@ -141,7 +141,7 @@ describe('anchore-grype_mapper', () => {
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/tensorflow-grype-hdf.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )
@@ -155,7 +155,7 @@ describe('anchore-grype_mapper_withraw', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
         'sample_jsons/anchore_grype_mapper/sample_input_report/tensorflow.json',
-        {encoding: 'utf-8'}
+        {encoding: 'utf8'}
       ),
       true
     );
@@ -171,7 +171,7 @@ describe('anchore-grype_mapper_withraw', () => {
           fs.readFileSync(
             'sample_jsons/anchore_grype_mapper/tensorflow-grype-withraw.json',
             {
-              encoding: 'utf-8'
+              encoding: 'utf8'
             }
           )
         )

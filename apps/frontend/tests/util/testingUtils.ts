@@ -72,7 +72,7 @@ export function expectedCount(
   InspecDataModule.executionFiles.forEach((file) => {
     // Get the corresponding count file
     const countFilename = `tests/hdf_data/counts/${file.filename}.info.counts`;
-    const countFileContent = readFileSync(countFilename, 'utf-8');
+    const countFileContent = readFileSync(countFilename, 'utf8');
      
     const counts: Record<string, any> = JSON.parse(countFileContent);
 
