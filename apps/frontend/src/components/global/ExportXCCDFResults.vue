@@ -35,39 +35,38 @@ export default class ExportXCCDF extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, required: true}) readonly isResultView!: boolean;
   // exports .zip of XCCDFs if multiple are selected, if one is selected it will export that single file
-  exportXCCDF() {
-    axios
-      .get<string>(`/static/export/xccdfTemplate.xml`)
-      .then(({data: template}) => {
-        const convertedFiles: {
-          filename: string;
-          data: string;
-        }[] = [];
-        const ids = FilteredDataModule.selected_file_ids;
-        for (const evaluation of FilteredDataModule.evaluations(ids)) {
-          const convertedData = new FromHDFToXCCDFMapper(
-            JSON.stringify(evaluation.data),
-            template
-          ).toXCCDF();
-          convertedFiles.push({
-            filename: evaluation.from_file.filename + '.xml',
-            data: convertedData
-          });
-        }
-
-        for (const profile of FilteredDataModule.profiles(ids)) {
-          const convertedData = new FromHDFToXCCDFMapper(
-            JSON.stringify({profiles: [profile.data]}),
-            template
-          ).toXCCDF();
-          convertedFiles.push({
-            filename: profile.from_file.filename + '.xml',
-            data: convertedData
-          });
-        }
-
-        saveSingleOrMultipleFiles(convertedFiles, 'xccdf');
+  async exportXCCDF(): Promise<void> {
+    const {data: template} = await axios.get<string>(
+      `/static/export/xccdfTemplate.xml`
+    );
+    const convertedFiles: {
+      filename: string;
+      data: string;
+    }[] = [];
+    const ids = FilteredDataModule.selected_file_ids;
+    for (const evaluation of FilteredDataModule.evaluations(ids)) {
+      const convertedData = new FromHDFToXCCDFMapper(
+        JSON.stringify(evaluation.data),
+        template
+      ).toXCCDF();
+      convertedFiles.push({
+        filename: evaluation.from_file.filename + '.xml',
+        data: convertedData
       });
+    }
+
+    for (const profile of FilteredDataModule.profiles(ids)) {
+      const convertedData = new FromHDFToXCCDFMapper(
+        JSON.stringify({profiles: [profile.data]}),
+        template
+      ).toXCCDF();
+      convertedFiles.push({
+        filename: profile.from_file.filename + '.xml',
+        data: convertedData
+      });
+    }
+
+    await saveSingleOrMultipleFiles(convertedFiles, 'xccdf');
   }
 }
 </script>

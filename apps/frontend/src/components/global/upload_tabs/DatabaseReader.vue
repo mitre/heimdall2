@@ -141,13 +141,15 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
     if (newRefreshValue === true) {
-      // Whenever refresh is set to true, call refresh on the database results
-      this.get_all_results();
+      // Whenever refresh is set to true, call refresh on the database results.
+      // Fire-and-forget: HTTP failures surface via the interceptor snackbar.
+      void this.get_all_results();
     }
   }
 
   mounted() {
-    this.get_all_results();
+    // Fire-and-forget: HTTP failures surface via the interceptor snackbar.
+    void this.get_all_results();
   }
 
   async get_all_results(): Promise<void> {
@@ -159,7 +161,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
       order: EvaluationModule.order
     };
     // Stores results in the Evaluation class field pagedEvaluations
-    EvaluationModule.getAllEvaluations(params);
+    await EvaluationModule.getAllEvaluations(params);
   }
 
   // Loading is initially set to true in Evaluation class.
@@ -181,15 +183,14 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     if (evaluations.length > 0) {
       SpinnerModule.reset();
       SpinnerModule.visibility(true);
-      EvaluationModule.load_results(
-        evaluations.map((evaluation) => evaluation.id)
-      )
-        .then((fileIds: (FileID | void)[]) => {
-          this.$emit('got-files', fileIds.filter(Boolean));
-        })
-        .finally(() => {
-          SpinnerModule.visibility(false);
-        });
+      try {
+        const fileIds: (FileID | void)[] = await EvaluationModule.load_results(
+          evaluations.map((evaluation) => evaluation.id)
+        );
+        this.$emit('got-files', fileIds.filter(Boolean));
+      } finally {
+        SpinnerModule.visibility(false);
+      }
     } else {
       SnackbarModule.notify(
         'Please select an entry for viewing in the visualization panel'

@@ -131,7 +131,7 @@ export default class ExportASFFModal extends Vue {
     return res;
   }
 
-  exportASFF() {
+  async exportASFF(): Promise<void> {
     const ids = FilteredDataModule.selected_file_ids;
     const fileData: FileData[] = [];
     FilteredDataModule.evaluations(ids).forEach(async (evaluation) => {
@@ -148,11 +148,10 @@ export default class ExportASFFModal extends Vue {
         });
       });
     });
-    saveSingleOrMultipleFiles(fileData, 'ASFF').then(() => {
-      // Preserve AWS Account ID and Region across exports
-      this.target = '';
-      this.closeModal();
-    });
+    await saveSingleOrMultipleFiles(fileData, 'ASFF');
+    // Preserve AWS Account ID and Region across exports
+    this.target = '';
+    this.closeModal();
   }
 }
 </script>

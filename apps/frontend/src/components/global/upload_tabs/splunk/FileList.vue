@@ -100,10 +100,12 @@ export default class FileList extends Vue {
     // On first load we update the search field which triggers this function, instead of waiting this time we can just search right away
     if (!this.initalSearchDone) {
       this.initalSearchDone = true;
-      this.updateSearch();
+      await this.updateSearch();
     } else if (!this.awaitingSearch) {
       setTimeout(() => {
-        this.updateSearch();
+        // Fire-and-forget: updateSearch reports failures via its own
+        // snackbar handling.
+        void this.updateSearch();
         this.awaitingSearch = false;
       }, 1000); // Wait for user input for 1 second before executing our query
       this.awaitingSearch = true;
@@ -122,18 +124,25 @@ export default class FileList extends Vue {
     this.splunkConfig.index = this.index;
     this.search = `search index="${this.index}" meta.subtype="header"`;
     this.splunkConverter = new SplunkMapper(this.splunkConfig);
-    const results = await this.splunkConverter.queryData(this.search);
-    this.executions = [];
-    for (const result of results) {
-      // Only get header objects
-      if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
-        this.executions.push(result.meta);
+    try {
+      const results = await this.splunkConverter.queryData(this.search);
+      this.executions = [];
+      for (const result of results) {
+        // Only get header objects
+        if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
+          this.executions.push(result.meta);
+        }
       }
+    } catch (error) {
+      // SplunkMapper talks to Splunk directly, so the axios interceptor
+      // never sees these failures.
+      SnackbarModule.failure(String(error));
+    } finally {
+      this.loading = false;
     }
-    this.loading = false;
   }
 
-  async mounted() {
+  mounted() {
     this.search = `search index="${this.splunkConfig.index}" meta.subtype="header"`;
     this.index = this.splunkConfig.index;
   }

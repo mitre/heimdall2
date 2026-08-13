@@ -136,7 +136,8 @@ export default class ExportSplunkModal extends Vue {
   onAuthenticationComplete(splunkConfig: SplunkConfig) {
     this.splunkConfig = splunkConfig;
     this.step = 2;
-    this.convertAndUpload();
+    // Fire-and-forget: progress and failures surface in the modal status log.
+    void this.convertAndUpload();
   }
 
   got_files(files: FileID[]) {

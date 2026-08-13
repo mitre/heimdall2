@@ -139,21 +139,22 @@ export default class EditEvaluationModal extends mixins(EvaluationMixin) {
     return this.convertGroupsToIVuetifyItems(GroupsModule.myGroups);
   }
 
-  async getGroupsForEvaluation(): Promise<void> {
+  getGroupsForEvaluation(): void {
     this.originalGroups = this.groups = this.convertGroupsToIVuetifyItems(
       this.active.groups
     );
   }
 
   async update(): Promise<void> {
-    Promise.all([
+    // Close the modal immediately; failures surface via the axios
+    // interceptor snackbar.
+    this.$emit('close');
+    await Promise.all([
       EvaluationModule.updateEvaluation(this.activeEvaluation),
       this.updateGroups()
-    ]).then(() => {
-      SnackbarModule.notify('Evaluation Updated Successfully');
-      EvaluationModule.loadEvaluation(this.active.id);
-    });
-    this.$emit('close');
+    ]);
+    SnackbarModule.notify('Evaluation Updated Successfully');
+    await EvaluationModule.loadEvaluation(this.active.id);
   }
 
   cancel(): void {
@@ -183,7 +184,7 @@ export default class EditEvaluationModal extends mixins(EvaluationMixin) {
       });
     });
 
-    Promise.all(addedGroupPromises.concat(removeGroupPromises));
+    await Promise.all([...addedGroupPromises, ...removeGroupPromises]);
   }
 }
 </script>

@@ -105,7 +105,7 @@ export default class TagRow extends Vue {
     this.search = '';
   }
 
-  save() {
+  async save() {
     const original = this.evaluationTagsToStrings();
     const toAdd: string[] = this.tags.filter((tag) => !original.includes(tag));
     const toRemove: IEvaluationTag[] = this.evaluation.evaluationTags.filter(
@@ -119,20 +119,23 @@ export default class TagRow extends Vue {
       EvaluationModule.deleteTag(tag)
     );
 
-    Promise.all(addedTagPromises.concat(removedTagPromises))
-      .then(() => SnackbarModule.notify('Successfully updated tags.'))
-      .finally(() => {
-        if (this.onLoadingPanel) {
-          EvaluationModule.getAllEvaluations(this.params);
-          if (
-            EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
-          ) {
-            EvaluationModule.loadEvaluation(this.evaluation.id);
-          }
-        } else {
-          EvaluationModule.loadEvaluation(this.evaluation.id);
+    try {
+      await Promise.all([...addedTagPromises, ...removedTagPromises]);
+      SnackbarModule.notify('Successfully updated tags.');
+    } finally {
+      // Refresh even when a tag call failed (the axios interceptor snackbar
+      // reports the failure) so the list shows the actual server state.
+      if (this.onLoadingPanel) {
+        await EvaluationModule.getAllEvaluations(this.params);
+        if (
+          EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
+        ) {
+          await EvaluationModule.loadEvaluation(this.evaluation.id);
         }
-      });
+      } else {
+        await EvaluationModule.loadEvaluation(this.evaluation.id);
+      }
+    }
   }
 
   // Used to update the Tags in the v-combobox
@@ -144,28 +147,28 @@ export default class TagRow extends Vue {
     return this.evaluation.evaluationTags.map((tag) => tag.value) || [];
   }
 
-  async deleteTag(tag: IEvaluationTag) {
+  deleteTag(tag: IEvaluationTag) {
     this.activeTag = tag;
     this.deleteTagDialog = true;
   }
 
-  deleteTagConfirm() {
-    EvaluationModule.deleteTag(this.activeTag).then(() => {
-      SnackbarModule.notify('Deleted tag successfully.');
-      if (this.onLoadingPanel) {
-        EvaluationModule.getAllEvaluations(this.params);
-        if (
-          EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
-        ) {
-          EvaluationModule.loadEvaluation(this.evaluation.id);
-        }
-      } else {
-        EvaluationModule.loadEvaluation(this.evaluation.id).then(() => {
-          this.syncEvaluationTags();
-        });
-      }
-    });
+  async deleteTagConfirm() {
+    // Close the dialog immediately; the delete proceeds in the background
+    // and failures surface via the axios interceptor snackbar.
     this.deleteTagDialog = false;
+    await EvaluationModule.deleteTag(this.activeTag);
+    SnackbarModule.notify('Deleted tag successfully.');
+    if (this.onLoadingPanel) {
+      await EvaluationModule.getAllEvaluations(this.params);
+      if (
+        EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
+      ) {
+        await EvaluationModule.loadEvaluation(this.evaluation.id);
+      }
+    } else {
+      await EvaluationModule.loadEvaluation(this.evaluation.id);
+      this.syncEvaluationTags();
+    }
   }
 
   get allEvaluationTags(): string[] {

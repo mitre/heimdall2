@@ -340,7 +340,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
 
   async getEvaluations(params: IEvalPaginationParams): Promise<void> {
     document.body.style.cursor = 'wait';
-    EvaluationModule.getAllEvaluations(params);
+    await EvaluationModule.getAllEvaluations(params);
   }
 
   clearSearchItemsClicked() {
@@ -380,7 +380,9 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   endSearchLoadPage() {
     this.searching = false;
     if (this.page == 1) {
-      this.updateDisplayPage();
+      // Fire-and-forget refresh: HTTP failures surface via the axios
+      // interceptor snackbar, and nothing here depends on completion.
+      void this.updateDisplayPage();
     } else {
       this.page = 1; // Reload the page
     }
@@ -432,7 +434,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
       }
 
       this.searching = true;
-      this.getSearchEvaluation();
+      await this.getSearchEvaluation();
     }
   }
 
@@ -539,7 +541,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     this.updatingPage = true;
 
     if (this.searching) {
-      this.getSearchEvaluation();
+      await this.getSearchEvaluation();
     } else {
       this.itemsPerPageShowing = this.pagination.itemsPerPage;
 
@@ -572,7 +574,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
       const action = this.getAction();
       if (action == 'query') {
         if (this.searching) {
-          this.getSearchEvaluation();
+          await this.getSearchEvaluation();
         } else {
           this.itemsPerPageShowing = this.pagination.itemsPerPage;
 
@@ -632,9 +634,8 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
 
   async updateEvaluations() {
     const params = this.getQueryParams();
-    this.getEvaluations(params).then(() => {
-      this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
-    });
+    await this.getEvaluations(params);
+    this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
   }
 
   editItem(item: IEvaluation) {
@@ -653,24 +654,25 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   }
 
   async deleteItemConfirm(): Promise<void> {
-    EvaluationModule.deleteEvaluation(this.activeItem).then(async () => {
-      SnackbarModule.notify('Deleted evaluation successfully.');
-      this.updateEvaluations();
-      // Remove the file from the visualization panel if it is loaded.
-      const fileId = await InspecDataModule.loadedFileIsForDatabaseIds(
-        Number(this.activeItem.id)
-      );
-      if (FilteredDataModule.selected_file_ids.includes(fileId)) {
-        // removes uploaded file from the currently observed files
-        EvaluationModule.removeEvaluation(fileId);
-        InspecDataModule.removeFile(fileId);
-        // Remove any database files that may have been in the URL
-        // by calling the router and causing it to write the appropriate
-        // route to the URL bar
-        this.navigateWithNoErrors(`/${this.current_route}`);
-      }
-    });
+    // Close the dialog immediately; the delete proceeds in the background
+    // and failures surface via the axios interceptor snackbar.
     this.deleteItemDialog = false;
+    await EvaluationModule.deleteEvaluation(this.activeItem);
+    SnackbarModule.notify('Deleted evaluation successfully.');
+    await this.updateEvaluations();
+    // Remove the file from the visualization panel if it is loaded.
+    const fileId = await InspecDataModule.loadedFileIsForDatabaseIds(
+      Number(this.activeItem.id)
+    );
+    if (FilteredDataModule.selected_file_ids.includes(fileId)) {
+      // removes uploaded file from the currently observed files
+      await EvaluationModule.removeEvaluation(fileId);
+      InspecDataModule.removeFile(fileId);
+      // Remove any database files that may have been in the URL
+      // by calling the router and causing it to write the appropriate
+      // route to the URL bar
+      this.navigateWithNoErrors(`/${this.current_route}`);
+    }
   }
 
   createShareLink(item: IEvaluation) {

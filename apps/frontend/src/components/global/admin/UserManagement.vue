@@ -109,7 +109,8 @@ export default class UserManagement extends Vue {
   ];
 
   mounted() {
-    this.getUsers();
+    // Fire-and-forget: HTTP failures surface via the interceptor snackbar.
+    void this.getUsers();
   }
 
   deleteUserDialog(user: IUser): void {
@@ -117,19 +118,21 @@ export default class UserManagement extends Vue {
     this.dialogDelete = true;
   }
 
-  deleteUserConfirm(): void {
+  async deleteUserConfirm(): Promise<void> {
     if (this.editedUser) {
-      axios
-        .delete<IUser>(`/users/${this.editedUser.id}`)
-        .then((response) => {
-          SnackbarModule.notify(
-            `Successfully deleted user ${response.data.email}`
-          );
-        })
-        .finally(() => {
-          this.getUsers();
-          this.closeActionDialog();
-        });
+      try {
+        const response = await axios.delete<IUser>(
+          `/users/${this.editedUser.id}`
+        );
+        SnackbarModule.notify(
+          `Successfully deleted user ${response.data.email}`
+        );
+      } finally {
+        // Refresh even when the delete failed (the interceptor snackbar
+        // reports it) so the table shows the actual server state.
+        await this.getUsers();
+        this.closeActionDialog();
+      }
     }
   }
 
@@ -145,15 +148,13 @@ export default class UserManagement extends Vue {
     }
   }
 
-  getUsers(): void {
-    axios
-      .get<IUser[]>('/users')
-      .then((response) => {
-        this.users = response.data;
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+  async getUsers(): Promise<void> {
+    try {
+      const response = await axios.get<IUser[]>('/users');
+      this.users = response.data;
+    } finally {
+      this.loading = false;
+    }
   }
 }
 </script>

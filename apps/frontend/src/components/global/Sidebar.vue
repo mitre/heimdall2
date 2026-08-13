@@ -139,28 +139,32 @@ export default class Sidebar extends mixins(RouteMixin) {
     }
   }
 
-  removeSelectedEvaluations(): void {
+  async removeSelectedEvaluations(): Promise<void> {
     const selectedFiles = FilteredDataModule.selected_evaluation_ids;
-    selectedFiles.forEach((fileId) => {
-      EvaluationModule.removeEvaluation(fileId);
+    for (const fileId of selectedFiles) {
+      // The evaluation lookup reads the file entry, so it must finish
+      // before removeFile deletes that entry.
+      await EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL
       // by calling the router and causing it to write the appropriate
       // route to the URL bar
       this.navigateWithNoErrors(`/${this.current_route}`);
-    });
+    }
   }
 
-  removeSelectedProfiles(): void {
+  async removeSelectedProfiles(): Promise<void> {
     const selectedFiles = FilteredDataModule.selected_profile_ids;
-    selectedFiles.forEach((fileId) => {
-      EvaluationModule.removeEvaluation(fileId);
+    for (const fileId of selectedFiles) {
+      // The evaluation lookup reads the file entry, so it must finish
+      // before removeFile deletes that entry.
+      await EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL
       // by calling the router and causing it to write the appropriate
       // route to the URL bar
       this.navigateWithNoErrors(`/${this.current_route}`);
-    });
+    }
   }
 }
 </script>

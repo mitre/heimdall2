@@ -69,15 +69,15 @@ export default class LDAPLogin extends Vue {
   username = '';
   password = '';
 
-  ldapLogin() {
+  async ldapLogin(): Promise<void> {
     const creds: LDAPLoginHash = {
       username: this.username,
       password: this.password
     };
-    ServerModule.LoginLDAP(creds).then(() => {
-      this.$router.push('/');
-      SnackbarModule.notify('You have successfully signed in.');
-    });
+    await ServerModule.LoginLDAP(creds);
+    // vue-router 3 rejects benign duplicate navigation; nothing depends on it.
+    void this.$router.push('/');
+    SnackbarModule.notify('You have successfully signed in.');
   }
 }
 </script>

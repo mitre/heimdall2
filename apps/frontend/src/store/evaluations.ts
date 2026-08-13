@@ -68,6 +68,11 @@ export class Evaluation extends VuexModule {
     });
   }
 
+  get evaluationLoaded(): (evalId: string) => IEvaluation | undefined {
+    return (evalId) =>
+      this.allEvaluations.find((evaluation) => evaluation.id === evalId);
+  }
+
   @Action
   async getAllEvaluations(params: IEvalPaginationParams): Promise<void> {
     this.context.commit('SET_LOADING', true);
@@ -139,13 +144,6 @@ export class Evaluation extends VuexModule {
     );
     document.body.style.cursor = 'default';
     return loadedIds;
-  }
-
-  @Action
-  evaluationLoaded(evalId: string) {
-    return this.allEvaluations.find((obj) => {
-      return obj.id === evalId;
-    });
   }
 
   @Action

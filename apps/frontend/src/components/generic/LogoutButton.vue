@@ -23,7 +23,8 @@ import Component, {mixins} from 'vue-class-component';
 })
 export default class LogoutButton extends mixins(ServerMixin) {
   logOut() {
-    ServerModule.Logout();
+    // Fire-and-forget: Logout clears state and navigates on its own schedule.
+    void ServerModule.Logout();
   }
 }
 </script>

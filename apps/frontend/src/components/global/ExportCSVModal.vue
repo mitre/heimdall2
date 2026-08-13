@@ -315,7 +315,7 @@ export default class ExportCSVModal extends Vue {
     return _.truncate(string, {length: 100});
   }
 
-  async convertData(file: EvaluationFile | ProfileFile) {
+  convertData(file: EvaluationFile | ProfileFile): void {
     // Convert all controls from a file to ControlSetRows
     let rows: ControlSetRows = [];
     rows = this.convertRows(file);
@@ -332,20 +332,21 @@ export default class ExportCSVModal extends Vue {
     });
   }
 
-  exportCSV() {
+  async exportCSV(): Promise<void> {
     this.files = [];
-    const fileConvertPromises = this.filter.fromFile.map((fileId) => {
-      const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
-      if (file) {
-        return this.convertData(file);
+    try {
+      for (const fileId of this.filter.fromFile) {
+        const file = InspecDataModule.allFiles.find(
+          (f) => f.uniqueId === fileId
+        );
+        if (file) {
+          this.convertData(file);
+        }
       }
-      return null;
-    });
-    Promise.all(fileConvertPromises)
-      .then(() => saveSingleOrMultipleFiles(this.files, 'csv'))
-      .finally(() => {
-        this.closeModal();
-      });
+      await saveSingleOrMultipleFiles(this.files, 'csv');
+    } finally {
+      this.closeModal();
+    }
   }
 
   cleanUpFilename(filename: string): string {

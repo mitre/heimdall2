@@ -352,15 +352,17 @@ export default class UserModal extends Vue {
           passwordConfirmation: this.passwordConfirmation
         };
       }
-      ServerModule.updateUserInfo({id: this.user.id, info: updateUserInfo})
-        .then((data) => {
-          SnackbarModule.notify('User updated successfully.');
-          this.$emit('update-user', data);
-          this.dialog = false;
-        })
-        .finally(() => {
-          this.buttonLoading = false;
+      try {
+        const data = await ServerModule.updateUserInfo({
+          id: this.user.id,
+          info: updateUserInfo
         });
+        SnackbarModule.notify('User updated successfully.');
+        this.$emit('update-user', data);
+        this.dialog = false;
+      } finally {
+        this.buttonLoading = false;
+      }
     }
   }
 

@@ -728,7 +728,7 @@ export default class ExportCKLModal extends Vue {
     );
   }
 
-  exportCKL(): void {
+  async exportCKL(): Promise<void> {
     if (this.selected.length === 0) {
       return SnackbarModule.failure('No files have been loaded.');
     }
@@ -753,7 +753,7 @@ export default class ExportCKLModal extends Vue {
         });
       }
     }
-    saveSingleOrMultipleFiles(fileData, 'ckl');
+    await saveSingleOrMultipleFiles(fileData, 'ckl');
     this.closeModal();
   }
 

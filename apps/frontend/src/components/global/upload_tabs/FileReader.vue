@@ -154,44 +154,45 @@ export default class FileReader extends mixins(ServerMixin) {
 
   filesSelected() {
     this.loading = true;
-    this.commit_files(this.fileRecords.map((record) => record.file));
+    // Fire-and-forget: per-file failures surface via the snackbar inside
+    // commit_files.
+    void this.commit_files(this.fileRecords.map((record) => record.file));
     this.fileRecords = [];
   }
 
   /** Callback for our file reader */
-  commit_files(files: File[]) {
+  async commit_files(files: File[]): Promise<void> {
     const totalFiles = files.length;
     let index = 1;
     document.body.style.cursor = 'wait';
-    Promise.all(
-      files.map(async (file) => {
-        try {
-          const fileId = await InspecIntakeModule.loadFile({file});
-          this.percent = Math.floor((index++ / totalFiles) * 100);
-          return fileId;
-        } catch (error) {
-          SnackbarModule.failure(String(error));
-          document.body.style.cursor = 'default';
-        }
-      })
-    )
-      // Since some HDF converters can return multiple results sets, we can sometimes have multiple file IDs returned
-      .then((fileIds: (FileID | FileID[] | void)[]) => {
-        const allIds: FileID[] = [];
-        fileIds.forEach((fileId) => {
-          if (Array.isArray(fileId)) {
-            allIds.push(...fileId.filter(Boolean));
-          } else if (fileId) {
-            allIds.push(fileId);
+    try {
+      const fileIds: (FileID | FileID[] | void)[] = await Promise.all(
+        files.map(async (file) => {
+          try {
+            const fileId = await InspecIntakeModule.loadFile({file});
+            this.percent = Math.floor((index++ / totalFiles) * 100);
+            return fileId;
+          } catch (error) {
+            SnackbarModule.failure(String(error));
+            document.body.style.cursor = 'default';
           }
-        });
-        this.$emit('got-files', allIds);
-      })
-      .finally(() => {
-        this.loading = false;
-        this.percent = 0;
-        document.body.style.cursor = 'default';
+        })
+      );
+      // Since some HDF converters can return multiple results sets, we can sometimes have multiple file IDs returned
+      const allIds: FileID[] = [];
+      fileIds.forEach((fileId) => {
+        if (Array.isArray(fileId)) {
+          allIds.push(...fileId.filter(Boolean));
+        } else if (fileId) {
+          allIds.push(fileId);
+        }
       });
+      this.$emit('got-files', allIds);
+    } finally {
+      this.loading = false;
+      this.percent = 0;
+      document.body.style.cursor = 'default';
+    }
   }
 
   get title_class(): string[] {

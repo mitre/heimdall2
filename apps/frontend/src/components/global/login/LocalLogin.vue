@@ -184,20 +184,21 @@ export default class LocalLogin extends Vue {
   buttonLoading = false;
   showPassword = false;
 
-  login() {
+  async login(): Promise<void> {
     this.buttonLoading = true;
     const creds: LoginHash = {
       email: this.email,
       password: this.password
     };
-    ServerModule.Login(creds)
-      .then(() => {
-        this.$router.push('/');
-        SnackbarModule.notify('You have successfully signed in.');
-      })
-      .finally(() => {
-        this.buttonLoading = false;
-      });
+    try {
+      await ServerModule.Login(creds);
+      // vue-router 3 rejects benign duplicate navigation; nothing depends
+      // on it.
+      void this.$router.push('/');
+      SnackbarModule.notify('You have successfully signed in.');
+    } finally {
+      this.buttonLoading = false;
+    }
   }
 
   get showAlternateAuth() {

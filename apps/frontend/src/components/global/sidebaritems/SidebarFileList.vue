@@ -74,8 +74,10 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   }
 
   // removes uploaded file from the currently observed files
-  remove_file() {
-    EvaluationModule.removeEvaluation(this.file.uniqueId);
+  async remove_file(): Promise<void> {
+    // The evaluation lookup reads the file entry, so it must finish
+    // before removeFile deletes that entry.
+    await EvaluationModule.removeEvaluation(this.file.uniqueId);
     InspecDataModule.removeFile(this.file.uniqueId);
     // Remove any database files that may have been in the URL
     // by calling the router and causing it to write the appropriate
@@ -133,10 +135,10 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
     axios
       .post<IEvaluation>('/evaluations', formData)
-      .then((response) => {
+      .then(async (response) => {
         SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
-        EvaluationModule.loadEvaluation(response.data.id);
+        await EvaluationModule.loadEvaluation(response.data.id);
         const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
         this.navigateWithNoErrors(
           `/${this.current_route}/${loadedDatabaseIds}`

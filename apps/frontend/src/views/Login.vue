@@ -82,7 +82,9 @@ export default class Login extends Vue {
 
   checkLoggedIn() {
     if (ServerModule.token) {
-      this.$router.push('/');
+      // vue-router 3 rejects benign duplicate navigation; nothing depends
+      // on it.
+      void this.$router.push('/');
     }
   }
 
@@ -98,7 +100,8 @@ export default class Login extends Vue {
   }
 
   signup() {
-    this.$router.push('/signup');
+    // vue-router 3 rejects benign duplicate navigation; nothing depends on it.
+    void this.$router.push('/signup');
   }
 
   get anyAuthProvidersAvailable() {

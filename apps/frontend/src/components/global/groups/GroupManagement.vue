@@ -210,15 +210,14 @@ export default class GroupManagement extends Vue {
     this.dialogDelete = true;
   }
 
-  deleteGroupConfirm(): void {
+  async deleteGroupConfirm(): Promise<void> {
     if (this.editedGroup) {
-      GroupsModule.DeleteGroup(this.editedGroup)
-        .then((data) => {
-          SnackbarModule.notify(`Successfully deleted group ${data.name}`);
-        })
-        .finally(() => {
-          this.closeActionDialog();
-        });
+      try {
+        const data = await GroupsModule.DeleteGroup(this.editedGroup);
+        SnackbarModule.notify(`Successfully deleted group ${data.name}`);
+      } finally {
+        this.closeActionDialog();
+      }
     }
   }
 

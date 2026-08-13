@@ -193,7 +193,8 @@ export default class RegistrationModal extends Vue {
   @Prop({default: false}) readonly visible!: boolean;
 
   login() {
-    this.$router.push('/login');
+    // vue-router 3 rejects benign duplicate navigation; nothing depends on it.
+    void this.$router.push('/login');
   }
 
   async register(): Promise<void> {
@@ -218,7 +219,9 @@ export default class RegistrationModal extends Vue {
         this.$emit('close-modal');
         this.$emit('update-user-table');
       } else {
-        this.$router.push('/login');
+        // vue-router 3 rejects benign duplicate navigation; nothing depends
+        // on it.
+        void this.$router.push('/login');
         SnackbarModule.notify(
           'You have successfully registered, please sign in'
         );

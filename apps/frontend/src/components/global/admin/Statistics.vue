@@ -38,7 +38,8 @@ export default class Statistics extends Vue {
   loading = true;
 
   mounted() {
-    this.updateStatistics();
+    // Fire-and-forget: HTTP failures surface via the interceptor snackbar.
+    void this.updateStatistics();
   }
 
   updateStatistics() {

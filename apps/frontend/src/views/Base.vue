@@ -96,20 +96,26 @@ export default class Base extends Vue {
   addFile(event: DragEvent) {
     const droppedFiles = event.dataTransfer?.files;
     if (droppedFiles) {
-      [...droppedFiles].forEach(async (file) => {
-        return InspecIntakeModule.loadFile({file}).catch((error) => {
+      for (const file of droppedFiles) {
+        // Each load reports its own failure; loads proceed independently.
+        void InspecIntakeModule.loadFile({file}).catch((error) => {
           SnackbarModule.failure(String(error));
         });
-      });
+      }
     }
   }
 
   mounted() {
-    InspecIntakeModule.detectAndLoadPredefinedJSON().then((resultLoaded) => {
-      if (resultLoaded) {
-        this.$router.push('/results');
-      }
-    });
+    // Fire-and-forget: detectAndLoadPredefinedJSON reports its own failures.
+    void this.loadPredefinedJson();
+  }
+
+  async loadPredefinedJson(): Promise<void> {
+    if (await InspecIntakeModule.detectAndLoadPredefinedJSON()) {
+      // vue-router 3 rejects benign duplicate navigation; nothing depends
+      // on it.
+      void this.$router.push('/results');
+    }
   }
 }
 </script>

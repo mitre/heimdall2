@@ -81,22 +81,20 @@ export default class FileList extends Vue {
     }
 
     // Fetch it from s3, and promise to submit it to be loaded afterwards
-    await fetchS3File(this.auth, file.Key!, this.formBucketName).then(
-      (content) => {
-        try {
-          JSON.parse(content);
-        } catch (parseError) {
-          SnackbarModule.failure(
-            `Selected file: ${file.Key} is not a valid formatted json file.`
-          );
-          return;
-        }
-        InspecIntakeModule.loadText({
-          text: content,
-          filename: file.Key!
-        }).then((uniqueId) => this.$emit('got-files', [uniqueId]));
-      }
-    );
+    const content = await fetchS3File(this.auth, file.Key!, this.formBucketName);
+    try {
+      JSON.parse(content);
+    } catch (parseError) {
+      SnackbarModule.failure(
+        `Selected file: ${file.Key} is not a valid formatted json file.`
+      );
+      return;
+    }
+    const uniqueId = await InspecIntakeModule.loadText({
+      text: content,
+      filename: file.Key!
+    });
+    this.$emit('got-files', [uniqueId]);
   }
 
   /** Recalls the last entered bucket name.  */

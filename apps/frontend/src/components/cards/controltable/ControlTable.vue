@@ -331,7 +331,8 @@ export default class ControlTable extends Vue {
   jump_to_key(key: string) {
     if (!this.$vuetify.breakpoint.smAndDown) {
       this.$nextTick(() => {
-        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {
+        // Fire-and-forget scroll animation; nothing depends on completion.
+        void this.$vuetify.goTo(`#${this.striptoChars(key)}`, {
           offset: this.topOfPage,
           duration: 300
         });
