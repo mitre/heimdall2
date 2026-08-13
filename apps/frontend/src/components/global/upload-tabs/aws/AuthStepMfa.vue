@@ -37,6 +37,7 @@ import {requireFieldRule} from '@/utilities/upload_util';
 
 /** Localstorage keys */
 const localMFASerial = new LocalStorageVal<string>('aws_s3_mfa_serial');
+const MFA_CODE = /^\d{6}$/;
 
 /**
  * File reader component for taking in inspec JSON data.
@@ -56,7 +57,7 @@ export default class S3Reader extends Vue {
   reqRule = requireFieldRule;
 
   mfaRule = (v: string | null | undefined) =>
-    (v || '').trim().match('^\\d{6}$') !== null ||
+    MFA_CODE.test((v || '').trim()) ||
     'Field must be the 6 number code from a valid authenticator device';
 
   /** On mount, try to look up stored auth info */

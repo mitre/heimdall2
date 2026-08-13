@@ -191,19 +191,19 @@ export class NistRevision {
 
 export function parse_nist(rawNist: string): ParseNist {
   // Is it a revision? Get the match, continuing if none
-  const revMatch = rawNist.match(REV_RE);
+  const revMatch = REV_RE.exec(rawNist);
   if (revMatch) {
     return new NistRevision(Number.parseInt(revMatch[1]));
   }
   // Is it just a family?
   // Get the match, failing out if we can't
-  const famMatch = rawNist.match(NIST_FAMILY_RE);
+  const famMatch = NIST_FAMILY_RE.exec(rawNist);
   if (famMatch) {
     return new NistControl([famMatch[0]], famMatch[0]);
   }
 
   // Next try it as a full control
-  const fullMatch = rawNist.match(NIST_CONTROL_RE);
+  const fullMatch = NIST_CONTROL_RE.exec(rawNist);
   if (!fullMatch) {
     return null;
   }
