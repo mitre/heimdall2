@@ -31,7 +31,7 @@ export function read_files(dirName: string): FileResult[] {
   });
 }
 
-export type FileHash = {[key: string]: FileResult};
+export type FileHash = Record<string, FileResult>;
 export function populate_hash(results: FileResult[]) {
   const hash: FileHash = {};
   results.forEach((f) => {

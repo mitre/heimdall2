@@ -88,9 +88,7 @@ const fieldNames = [
   'Waiver Data'
 ];
 
-type ControlSetRow = {
-  [key: string]: unknown;
-};
+type ControlSetRow = Record<string, unknown>;
 
 type File = {
   filename: string;
@@ -132,7 +130,7 @@ export default class ExportCSVModal extends Vue {
   descriptionsToString(
     descriptions?:
       | ExecJSON.ControlDescription[]
-      | {[key: string]: string}
+      | Record<string, string>
       | null
   ): string {
     let result = '';

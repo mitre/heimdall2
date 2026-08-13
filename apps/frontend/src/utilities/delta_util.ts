@@ -208,10 +208,10 @@ function extract_top_level_controls(
 }
 
 /** An object of contextualized controls with the same V-ID */
-export type ControlSeries = {[key: string]: ContextualizedControl};
+export type ControlSeries = Record<string, ContextualizedControl>;
 
 /** Matches ControlID keys to Arrays of Controls */
-export type ControlSeriesLookup = {[key: string]: ControlSeries};
+export type ControlSeriesLookup = Record<string, ControlSeries>;
 
 /** Helps manage comparing change(s) between one or more profile executions */
 export class ComparisonContext {

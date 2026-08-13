@@ -14,9 +14,7 @@ import {LRUCache} from 'lru-cache';
 import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 // The hash that we will generally be working with herein
-export type ControlStatusHash = {
-  [key in ControlStatus | 'Waived']: number;
-};
+export type ControlStatusHash = Record<ControlStatus | 'Waived', number>;
 export type StatusHash = ControlStatusHash & {
   PassedTests: number; // from passed controls
   FailedTests: number;

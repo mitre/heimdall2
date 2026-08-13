@@ -81,7 +81,7 @@ function controls_to_nist_node_data(
 function recursive_nist_map(
   parent: TreemapNodeParent | null,
   node: Readonly<NistHierarchyNode>,
-  controlLookup: {[key: string]: TreemapNodeParent},
+  controlLookup: Record<string, TreemapNodeParent>,
   maxDepth: number
 ): TreemapNodeParent {
   // Init child list
@@ -142,7 +142,7 @@ function lookup_key_for(x: NistControl, maxDepth: number): string {
 
 /** Populates a treemap using the given lookup table */
 function populate_tree_map(
-  lookup: {[key: string]: TreemapNodeParent},
+  lookup: Record<string, TreemapNodeParent>,
   leaves: TreemapNodeLeaf[],
   maxDepth: number
 ) {
@@ -169,7 +169,7 @@ function populate_tree_map(
  */
 function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
   // Build our scaffold
-  const lookup: {[key: string]: TreemapNodeParent} = {};
+  const lookup: Record<string, TreemapNodeParent> = {};
   const rootChildren: TreemapNodeParent[] = [];
   const root: TreemapNodeParent = {
     key: 'tree_root',

@@ -44,9 +44,7 @@ export function createWinstonLogger(mapperName: string, level = 'debug') {
 /** Get description from Array of descriptions or Key/Value pairs */
 export function getDescription(
   descriptions:
-    | {
-        [key: string]: string;
-      }
+    | Record<string, string>
     | ExecJSON.ControlDescription[],
   key: string
 ): string | undefined {

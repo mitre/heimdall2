@@ -52,7 +52,7 @@ export function getRunTime(hdf: ExecJSON.Execution): string {
 function filter_overlays(
   controls: ContextualizedControl[]
 ): ContextualizedControl[] {
-  const idHash: {[key: string]: ContextualizedControl} = {};
+  const idHash: Record<string, ContextualizedControl> = {};
   controls.forEach((c) => {
     const id = c.hdf.wraps.id;
     const old: ContextualizedControl | undefined = idHash[id];

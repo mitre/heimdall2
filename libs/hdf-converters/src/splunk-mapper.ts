@@ -11,7 +11,7 @@ import {
   handleSplunkErrorResponse
 } from './utils/splunk-tools';
 
-export type Hash<T> = {[key: string]: T};
+export type Hash<T> = Record<string, T>;
 
 export type SplunkConfigNoIndex = Omit<SplunkConfig, 'index'>;
 
@@ -79,7 +79,7 @@ export function consolidatePayloads(
 export function replaceKeyValueDescriptions(
   controls: (ExecJSON.Control &
     GenericPayloadWithMetaData & {
-      descriptions?: {[key: string]: string} | ExecJSON.ControlDescription[];
+      descriptions?: Record<string, string> | ExecJSON.ControlDescription[];
     })[]
 ) {
   return controls.map((control) => {
@@ -140,7 +140,7 @@ function consolidateFilePayloads(
         corrControls as unknown as (ExecJSON.Control &
           GenericPayloadWithMetaData & {
             descriptions?:
-              | {[key: string]: string}
+              | Record<string, string>
               | ExecJSON.ControlDescription[];
           })[]
       )

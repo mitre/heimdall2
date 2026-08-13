@@ -35,7 +35,7 @@ abstract class HDFControl10 implements HDFControl {
   readonly waived: boolean;
   readonly attested: boolean;
   readonly attestationStatus?: 'passed' | 'failed';
-  readonly descriptions: {[key: string]: string} = {};
+  readonly descriptions: Record<string, string> = {};
   readonly isProfile: boolean;
 
   // We use this as a reference

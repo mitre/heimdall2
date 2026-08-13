@@ -22,12 +22,10 @@ export interface ISearchState {
   severityFilter: Severity[];
 }
 
-export interface SearchQuery {
-  [key: string]: {
+export type SearchQuery = Record<string, {
     include?: string;
     exclude?: string;
-  };
-}
+  }>;
 
 export const statusTypes = [
   'Not Applicable',

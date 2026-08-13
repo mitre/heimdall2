@@ -287,7 +287,7 @@ function getAttributes(input: unknown[]) {
 function getHdfSpecificDataAttribute(
   attribute: string,
   input: string
-): {[key: string]: any}[] | string | undefined {
+): Record<string, any>[] | string | undefined {
   const data = parseJson(input);
   if (!data.ok) return undefined;
   const hdfSpecificData = _.get(data.value, 'hdfSpecificData');

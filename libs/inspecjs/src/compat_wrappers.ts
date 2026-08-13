@@ -173,7 +173,7 @@ export interface HDFControl {
   isProfile: boolean;
 
   /** Maps string labels to description items. */
-  descriptions: {[key: string]: string};
+  descriptions: Record<string, string>;
 
   /** Returns whether this control was waived. */
   waived: boolean;

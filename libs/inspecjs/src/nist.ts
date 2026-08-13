@@ -325,7 +325,7 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
   });
 
   // Init our map, which maps _key_for of controls to their corresponding hierarchy nodes
-  const map: {[key: string]: NistHierarchyNode} = {};
+  const map: Record<string, NistHierarchyNode> = {};
 
   // Add roots to the map
   roots.forEach((r) => {

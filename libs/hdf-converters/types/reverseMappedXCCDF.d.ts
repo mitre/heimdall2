@@ -15,7 +15,7 @@ export type Benchmark = {
     endTime: string;
     hasAttributes: boolean;
     // Any as defined by InSpec Inputs, matching InSpecJS
-    attributes: {[key: string]: any}[];
+    attributes: Record<string, any>[];
     results: TestResult[];
   };
 };

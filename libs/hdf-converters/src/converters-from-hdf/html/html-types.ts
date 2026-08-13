@@ -70,9 +70,7 @@ export interface IResultSet {
 }
 
 // All used icons; lvl 1
-export interface IIcons {
-  [key: string]: string;
-}
+export type IIcons = Record<string, string>;
 
 // Top level interface; lvl 0
 export interface IOutputData {

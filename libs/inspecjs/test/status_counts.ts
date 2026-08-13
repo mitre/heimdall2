@@ -2,7 +2,7 @@
 import {ControlStatus, HDFControl, hdfWrapControl} from '../src';
 import {ExecJSON} from '../src/versions/v_1_0';
 
-type Counts = {[key in ControlStatus]: number};
+type Counts = Record<ControlStatus, number>;
 
 export const statusCounts = {
   /** Instantiates a counts objects with all keys set to 0 */
@@ -28,7 +28,7 @@ export const statusCounts = {
 
   /** Trivial overlay filter that just takes the version of the control that has results from amongst all identical ids */
   filter_overlays: (controls: HDFControl[]): HDFControl[] => {
-    const idHash: {[key: string]: HDFControl} = {};
+    const idHash: Record<string, HDFControl> = {};
     controls.forEach((c) => {
       const id = c.wraps.id;
       const old: HDFControl | undefined = idHash[id];

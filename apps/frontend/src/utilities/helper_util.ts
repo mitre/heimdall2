@@ -88,9 +88,7 @@ export class LocalStorageVal<T> {
 /** Get description from Array of descriptions or Key/String pair */
 export function getDescription(
   descriptions:
-    | {
-        [key: string]: string;
-      }
+    | Record<string, string>
     | ExecJSON.ControlDescription[],
   key: string
 ): string | undefined {
@@ -108,7 +106,7 @@ export function getDescription(
 }
 
 /** A useful shorthand */
-export type Hash<T> = {[key: string]: T};
+export type Hash<T> = Record<string, T>;
 
 /** Converts a simple, single level json dict into uri params */
 export function toURIParams(params: Hash<string | number | boolean>) {

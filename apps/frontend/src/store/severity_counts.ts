@@ -14,7 +14,7 @@ import {LRUCache} from 'lru-cache';
 import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 // The hash that we will generally be working with herein
-type SeverityHash = {[key in Severity]: number};
+type SeverityHash = Record<Severity, number>;
 
 // Helper function for counting a status in a list of controls
 function count_severities(data: FilteredData, filter: Filter): SeverityHash {

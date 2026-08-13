@@ -15,7 +15,7 @@ const TESTING_DATE_OVERRIDE = '1970-01-01';
 const TESTING_DATETIME_OVERRIDE = '2022-05-06T21:46:47.939Z';
 
 function arrayifyObjectDescriptions(
-  descriptions?: {[key: string]: any} | ExecJSON.ControlDescription[] | null
+  descriptions?: Record<string, any> | ExecJSON.ControlDescription[] | null
 ): ExecJSON.ControlDescription[] {
   if (!descriptions) {
     return [];

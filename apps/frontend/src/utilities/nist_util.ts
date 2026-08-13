@@ -6,7 +6,7 @@ export const nistCanonConfig = {
   add_periods: false,
   add_parens: false
 };
-export const NIST_DESCRIPTIONS: {[tag: string]: string} = {
+export const NIST_DESCRIPTIONS: Record<string, string> = {
   'AC-01': 'ACCESS CONTROL POLICY AND PROCEDURES',
   'AC-01 a':
     'Develops, documents, and disseminates to [Assignment: organization-defined personnel or roles]:',

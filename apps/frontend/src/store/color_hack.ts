@@ -44,7 +44,7 @@ export class ColorHack extends VuexModule {
    */
   get lookupColor(): (colorName: string) => string {
     // Establish a cache
-    const localCache: {[key: string]: string} = {};
+    const localCache: Record<string, string> = {};
 
     // Establish to vue that we vary on any changes to the theme
     // let _depends: any = this.
