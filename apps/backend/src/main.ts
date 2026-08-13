@@ -21,7 +21,8 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp({ format: loggingTimeFormat }),
     winston.format.printf(
-      info => `${line}[${[info.timestamp]}] (Authn Service): ${info.message}`,
+      info =>
+        `${line}[${String([info.timestamp])}] (Authn Service): ${String(info.message)}`,
     ),
   ),
   transports: [new winston.transports.Console()],

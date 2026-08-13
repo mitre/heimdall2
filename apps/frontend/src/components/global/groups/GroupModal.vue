@@ -215,7 +215,7 @@ export default class GroupModal extends Vue {
       await GroupsModule.FetchGroupData();
       SnackbarModule.notify(`Group Successfully Saved`);
     } catch (error) {
-      SnackbarModule.failure(`Failed to Save Group: ${error}`);
+      SnackbarModule.failure(`Failed to Save Group: ${String(error)}`);
     }
   }
 

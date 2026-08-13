@@ -23,9 +23,9 @@ export class LoggingInterceptor implements NestInterceptor {
       winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
       winston.format.printf(
         info =>
-          `${this.line}[${[info.timestamp]}] (Interceptor): ${info.ip} ${
+          `${this.line}[${String([info.timestamp])}] (Interceptor): ${String(info.ip)} ${String(
             info.referer
-          } ${info.userAgent} ${info.user} ${info.message}`,
+          )} ${String(info.userAgent)} ${String(info.user)} ${String(info.message)}`,
       ),
     ),
     transports: [new winston.transports.Console()],

@@ -30,7 +30,7 @@ implements
       winston.format.align(),
       winston.format.printf(
         info =>
-          `${this.line}[${[info.timestamp]}] (App Service): ${info.message}`,
+          `${this.line}[${String([info.timestamp])}] (App Service): ${String(info.message)}`,
       ),
     ),
     transports: [new winston.transports.Console()],

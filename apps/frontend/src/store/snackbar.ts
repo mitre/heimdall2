@@ -60,7 +60,7 @@ export class Snackbar extends VuexModule {
           .join(', ')
       );
     } else {
-      this.failure(`${nestedError || error}`);
+      this.failure(String(nestedError || error));
     }
   }
 

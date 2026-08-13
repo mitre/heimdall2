@@ -14,7 +14,7 @@ export class AuthenticationExceptionFilter implements ExceptionFilter {
       winston.format.timestamp({ format: this.loggingTimeFormat }),
       winston.format.printf(
         info =>
-          `${this.line}[${[info.timestamp]}] (Authentication Exception Filter): ${info.message}`,
+          `${this.line}[${String([info.timestamp])}] (Authentication Exception Filter): ${String(info.message)}`,
       ),
     ),
     transports: [new winston.transports.Console()],

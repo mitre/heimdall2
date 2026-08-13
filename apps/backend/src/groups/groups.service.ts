@@ -21,7 +21,7 @@ export class GroupsService {
       winston.format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
       winston.format.printf(
         info =>
-          `${this.line}[${[info.timestamp]}] (Group Service): ${info.message}`,
+          `${this.line}[${String([info.timestamp])}] (Group Service): ${String(info.message)}`,
       ),
     ),
     transports: [new winston.transports.Console()],
@@ -170,7 +170,7 @@ export class GroupsService {
       try {
         await this.removeUserFromGroup(groupToLeave, user);
       } catch (error) {
-        this.logger.warn(`Failed to remove user from group: ${error}`);
+        this.logger.warn(`Failed to remove user from group: ${String(error)}`);
       }
     }
 

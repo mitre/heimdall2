@@ -28,7 +28,7 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
       winston.format.timestamp({ format: this.loggingTimeFormat }),
       winston.format.printf(
         info =>
-          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`,
+          `${this.line}[${String([info.timestamp])}] (Authn Service): ${String(info.message)}`,
       ),
     ),
     transports: [new winston.transports.Console()],

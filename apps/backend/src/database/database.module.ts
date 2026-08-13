@@ -14,7 +14,7 @@ const logger = winston.createLogger({
     winston.format.align(),
     winston.format.printf(
       info =>
-        `${line}[${info.timestamp}] Query(${info.queryType}): ${info.message}`,
+        `${line}[${String(info.timestamp)}] Query(${String(info.queryType)}): ${String(info.message)}`,
     ),
   ),
   transports: [new winston.transports.Console()],

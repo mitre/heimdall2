@@ -41,7 +41,7 @@ export default class CopyButton extends Vue {
       }
       SnackbarModule.notify('Text copied to your clipboard');
     } catch (error) {
-      SnackbarModule.failure(`Failed to copy to your clipboard: ${error}`);
+      SnackbarModule.failure(`Failed to copy to your clipboard: ${String(error)}`);
     }
   }
 

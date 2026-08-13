@@ -28,7 +28,7 @@ export class AuthnController {
       winston.format.timestamp({ format: this.loggingTimeFormat }),
       winston.format.printf(
         info =>
-          `${this.line}[${[info.timestamp]}] (Authn Controller): ${info.message}`,
+          `${this.line}[${String([info.timestamp])}] (Authn Controller): ${String(info.message)}`,
       ),
     ),
     transports: [new winston.transports.Console()],
