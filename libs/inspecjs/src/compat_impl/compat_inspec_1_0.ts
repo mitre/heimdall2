@@ -12,6 +12,7 @@ import {
   convertImpactToSeverity,
   severities
 } from '../compat_wrappers';
+import {ControlResultStatus} from '../generated_parsers/v_1_0/exec-json';
 import type {
   ControlResult as ControlResult_1_0,
   ExecJSONControl as ResultControl_1_0
@@ -271,13 +272,13 @@ export class ExecControl extends HDFControl10 implements HDFControl {
 
   private static to_message_line(r: ControlResult_1_0): string {
     switch (r.status) {
-      case 'skipped':
+      case ControlResultStatus.Skipped:
         return `SKIPPED -- ${r.skip_message}\n`;
-      case 'failed':
+      case ControlResultStatus.Failed:
         return `FAILED -- Test: ${r.code_desc}\nMessage: ${r.message}\n`;
-      case 'passed':
+      case ControlResultStatus.Passed:
         return `PASSED -- ${r.code_desc}\n"`;
-      case 'error':
+      case ControlResultStatus.Error:
         return `ERROR -- Test: ${r.code_desc}\nMessage: ${r.message}`;
       default:
         return `Exception: ${r.exception}\n`;

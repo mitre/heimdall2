@@ -88,7 +88,7 @@ export type ChecklistVuln = Omit<Vuln, 'stigdata' | 'status'> & {
 };
 
 // Status mapping for going to and from checklist
-enum StatusMapping {
+export enum StatusMapping {
   NotAFinding = 'Passed',
   Open = 'Failed',
   Not_Applicable = 'Not Applicable',

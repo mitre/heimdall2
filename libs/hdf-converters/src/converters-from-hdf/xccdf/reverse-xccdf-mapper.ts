@@ -1,4 +1,4 @@
-import type {ExecJSON} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import moment from 'moment';
 import Mustache from 'mustache';
@@ -41,15 +41,27 @@ function getXCCDFResult(control: ExecJSON.Control): TestResultStatus {
     return 'unknown';
   }
 
-  if (control.results.every((result) => result.status === 'passed')) {
+  if (
+    control.results.every(
+      (result) => result.status === ExecJSON.ControlResultStatus.Passed
+    )
+  ) {
     return 'pass';
   }
 
-  if (control.results.every((result) => result.status === 'skipped')) {
+  if (
+    control.results.every(
+      (result) => result.status === ExecJSON.ControlResultStatus.Skipped
+    )
+  ) {
     return 'notchecked';
   }
 
-  if (control.results.some((result) => result.status === 'failed')) {
+  if (
+    control.results.some(
+      (result) => result.status === ExecJSON.ControlResultStatus.Failed
+    )
+  ) {
     return 'fail';
   }
 
@@ -65,13 +77,13 @@ function getXCCDFResultMessageSeverity(segments: ExecJSON.ControlResult[]) {
 
 function toMessageLine(segment: ExecJSON.ControlResult): string {
   switch (segment.status) {
-    case 'skipped':
+    case ExecJSON.ControlResultStatus.Skipped:
       return `SKIPPED -- ${segment.skip_message}\n`;
-    case 'failed':
+    case ExecJSON.ControlResultStatus.Failed:
       return `FAILED -- Test: ${segment.code_desc}\nMessage: ${segment.message}\n`;
-    case 'passed':
+    case ExecJSON.ControlResultStatus.Passed:
       return `PASSED -- ${segment.code_desc}"`;
-    case 'error':
+    case ExecJSON.ControlResultStatus.Error:
       return `ERROR -- Test: ${segment.code_desc}\nMessage: ${segment.message}`;
     default:
       return `Exception: ${segment.exception}`;

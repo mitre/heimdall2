@@ -15,6 +15,14 @@ enum scannerType {
   Stigma = 'Stigma'
 }
 
+// Enum values widened to strings for comparison with scan-supplied names.
+const FULL_DESC_SCANNERS: string[] = [
+  scannerType.Moldy,
+  scannerType.Stigma,
+  scannerType.ClamAV
+];
+const CODE_QUALITY_SCANNER: string = scannerType.CodeQuality;
+
 /*
 Uses score to determine pass or fail. Non-zero score is fail
 */
@@ -90,9 +98,7 @@ function createDescription(
 ): Record<string, unknown> {
   const desc = () => {
     if (
-      scannerName === scannerType.Moldy ||
-      scannerName === scannerType.Stigma ||
-      scannerName === scannerType.ClamAV
+      FULL_DESC_SCANNERS.includes(scannerName)
     ) {
       return `title_text:${_.get(data, 'title_text') as string}
       body:${String(_.get(data, 'body'))}
@@ -105,7 +111,7 @@ function createDescription(
         '\\"',
         ''
       );
-    } else if (scannerName === scannerType.CodeQuality) {
+    } else if (scannerName === CODE_QUALITY_SCANNER) {
       return `body:${String(_.get(data, 'body'))}
       body_format:${_.get(data, 'body_format') as string}
       classificaton:${_.get(data, 'classification') as string}

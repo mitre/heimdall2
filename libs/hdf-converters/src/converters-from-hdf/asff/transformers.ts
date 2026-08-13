@@ -1,12 +1,12 @@
 import {createHash} from 'crypto';
 import type {
   ContextualizedControl,
-  ContextualizedEvaluation,
-  ExecJSON
+  ContextualizedEvaluation
 } from 'inspecjs';
 import {
   contextualizeEvaluation,
-  convertFile
+  convertFile,
+  ExecJSON
 } from 'inspecjs';
 import * as _ from 'lodash';
 import moment from 'moment';
@@ -669,9 +669,9 @@ export function setupControlStatus(control: SegmentedControl) {
     return 'NOT_AVAILABLE';
   }
   const status: string | boolean =
-    control.result.status === 'skipped'
+    control.result.status === ExecJSON.ControlResultStatus.Skipped
       ? 'WARNING'
-      : control.result.status === 'passed';
+      : control.result.status === ExecJSON.ControlResultStatus.Passed;
   if (typeof status === 'boolean') {
     return status ? 'PASSED' : 'FAILED';
   }

@@ -212,7 +212,7 @@ function attestationCanBeAdded(
     return false;
   }
 
-  if (control.results[0].status === 'skipped') {
+  if (control.results[0].status === ExecJSON.ControlResultStatus.Skipped) {
     // The attestation can be added if the control results show 'skipped', meaning it needs Manual Review.
     return true;
   }
