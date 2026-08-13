@@ -490,7 +490,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     */
     if (sortField.length === 0) {
       this.pagination.sortDesc[0] =
-        this.sortOrder[this.sortOrder.length - 1] == 'DESC' ? false : true;
+        this.sortOrder.at(-1) == 'DESC' ? false : true;
       this.pagination.sortBy[0] = this.sortByField;
       const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
       this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
