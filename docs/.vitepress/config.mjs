@@ -55,9 +55,16 @@ export default defineConfig({
           text: 'Getting Started',
           items: [
             {text: 'Overview', link: '/getting-started/'},
+            {text: 'Quick Start', link: '/getting-started/quick-start'},
+            {text: 'Installation', link: '/getting-started/installation'},
+            {text: 'Configuration', link: '/getting-started/configuration'},
             {
               text: 'Environment Variables',
               link: '/getting-started/environment-variables'
+            },
+            {
+              text: 'Troubleshooting',
+              link: '/getting-started/troubleshooting'
             }
           ]
         },
@@ -71,9 +78,16 @@ export default defineConfig({
           text: 'Getting Started',
           items: [
             {text: 'Overview', link: '/getting-started/'},
+            {text: 'Quick Start', link: '/getting-started/quick-start'},
+            {text: 'Installation', link: '/getting-started/installation'},
+            {text: 'Configuration', link: '/getting-started/configuration'},
             {
               text: 'Environment Variables',
               link: '/getting-started/environment-variables'
+            },
+            {
+              text: 'Troubleshooting',
+              link: '/getting-started/troubleshooting'
             }
           ]
         },
