@@ -2,16 +2,16 @@ import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 
 export default class AppConfig {
-  private envConfig: Record<string, string | undefined>;
+  private envConfig: Map<string, string | undefined>;
 
   constructor() {
     console.log('Attempting to read configuration file `.env`!');
     try {
-      this.envConfig = dotenv.parse(fs.readFileSync('.env'));
+      this.envConfig = new Map(Object.entries(dotenv.parse(fs.readFileSync('.env'))));
       console.log('Read config!');
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-        this.envConfig = {};
+        this.envConfig = new Map();
         // File probably does not exist
         console.log('Unable to read configuration file `.env`!');
         console.log('Falling back to environment or undefined values!');
@@ -27,7 +27,12 @@ export default class AppConfig {
   }
 
   get(key: string): string | undefined {
-    return process.env[key] || this.envConfig[key];
+    /* eslint-disable-next-line security/detect-object-injection --
+       No code fix exists: process.env is the platform's exotic object with no
+       .get(), and reading a dynamically named variable requires bracket
+       access. Every caller passes a compile-time constant name; values are
+       operator-set. */
+    return process.env[key] || this.envConfig.get(key);
   }
 
   getDatabaseName(): string {
@@ -176,6 +181,6 @@ export default class AppConfig {
   }
 
   set(key: string, value: string | undefined): void {
-    this.envConfig[key] = value;
+    this.envConfig.set(key, value);
   }
 }

@@ -36,12 +36,19 @@ export class LoggingInterceptor implements NestInterceptor {
   }
 
   getRealIP(request: Request): string | unknown {
-    const realIP = Object.keys(request.headers).find(
-      header =>
+    const forwarded = Object.entries(request.headers).find(
+      ([header]) =>
         header.toLowerCase() === 'x-forwarded-for'
         || header.toLowerCase() === 'x-real-ip',
     );
-    return realIP ? `${request.headers[realIP]} -> ${request.ip}` : request.ip;
+    if (!forwarded) {
+      return request.ip;
+    }
+    // Node models repeated headers as string[]; a comma join is the HTTP
+    // semantics for that case and keeps the template expression a string.
+    const [, value] = forwarded;
+    const proxyIP = Array.isArray(value) ? value.join(', ') : value;
+    return `${proxyIP} -> ${request.ip}`;
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<void> {
@@ -75,12 +82,17 @@ export class LoggingInterceptor implements NestInterceptor {
   }
 
   redactObject(object: Record<string, unknown>): Record<string, unknown> {
-    for (const key of Object.keys(object)) {
-      if (this.configService.sensitiveKeys.some(regex => regex.test(key))) {
-        object[key] = '[REDACTED]';
-      }
-    }
-    return object;
+    // Rebuilt rather than mutated in place: no computed-key write exists for
+    // an attacker-shaped key to reach. Entries preserves own enumerable keys
+    // only, so an own __proto__ from JSON.parse rides through as data — it
+    // can never hit the prototype setter here.
+    return Object.fromEntries(
+      Object.entries(object).map(([key, value]) =>
+        this.configService.sensitiveKeys.some(regex => regex.test(key))
+          ? [key, '[REDACTED]']
+          : [key, value],
+      ),
+    );
   }
 
   userToString(user?: SlimUserDto | User | UserDto): string {
