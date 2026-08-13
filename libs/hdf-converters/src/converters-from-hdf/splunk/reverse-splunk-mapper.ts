@@ -213,7 +213,7 @@ export function createControlMapping(
         const descObjects: Record<string, string> = {};
         if (Array.isArray(data)) {
           for (const item of data) {
-            descObjects[item['label']] = item['data'];
+            descObjects[item.label] = item.data;
           }
         }
         return descObjects;
@@ -335,8 +335,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     splunkData: SplunkData
   ): Promise<void> {
     const hostname = generateHostname(config);
-    this.axiosInstance.defaults.params['sourcetype'] = MAPPER_NAME;
-    this.axiosInstance.defaults.params['index'] = targetIndex.name;
+    this.axiosInstance.defaults.params.sourcetype = MAPPER_NAME;
+    this.axiosInstance.defaults.params.index = targetIndex.name;
 
     try {
       // Upload execution event
@@ -397,7 +397,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
     // Attempt to authenticate using given credentials
     const authResponse = await checkSplunkCredentials(config);
-    this.axiosInstance.defaults.headers.common['Authorization'] =
+    this.axiosInstance.defaults.headers.common.Authorization =
       `Bearer ${authResponse}`;
 
     // Request all available indexes

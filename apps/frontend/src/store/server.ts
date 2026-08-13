@@ -93,7 +93,7 @@ class Server extends VuexModule implements IServerState {
   SET_TOKEN(newToken: string) {
     this.token = newToken;
     localToken.set(newToken);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+    axios.defaults.headers.common.Authorization = `Bearer ${newToken}`;
   }
 
   @Mutation

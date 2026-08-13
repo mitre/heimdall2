@@ -31,7 +31,7 @@ describe('conveyor_mapper', () => {
     //  'sample_jsons/conveyor_mapper/conveyor-hdf.json',
     //  JSON.stringify(mapped, null, 2)
     // );
-    expect(omitVersions(mapped['Moldy'])).toEqual(
+    expect(omitVersions(mapped.Moldy)).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync(
@@ -43,7 +43,7 @@ describe('conveyor_mapper', () => {
         )
       )
     );
-    expect(omitVersions(mapped['Stigma'])).toEqual(
+    expect(omitVersions(mapped.Stigma)).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync(
@@ -55,7 +55,7 @@ describe('conveyor_mapper', () => {
         )
       )
     );
-    expect(omitVersions(mapped['Clamav'])).toEqual(
+    expect(omitVersions(mapped.Clamav)).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync(

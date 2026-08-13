@@ -502,7 +502,7 @@ export class ChecklistMapper extends BaseConverter {
                 // not follow above naming conventions
                 const severityOverride = findSeverityOverride(input);
                 if (severityOverride) {
-                  fullTags['severityoverride'] = severityOverride;
+                  fullTags.severityoverride = severityOverride;
                 }
                 return fullTags;
               }

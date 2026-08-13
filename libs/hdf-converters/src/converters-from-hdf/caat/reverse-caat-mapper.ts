@@ -182,7 +182,7 @@ export class FromHDFToCAATMapper {
           row['Finding Description'] = FromHDFToCAATMapper.fix(hdf.wraps.title);
           row['Weakness Description'] = this.newCaveat(hdf);
           row['Control Weakness Type'] = 'Security';
-          row['Source'] = 'Self-Assessment';
+          row.Source = 'Self-Assessment';
           row['Test Method'] = 'Test';
           row['Test Objective'] = FromHDFToCAATMapper.fix(
             hdf.descriptions.check ?? hdf.wraps.tags.check
@@ -194,7 +194,7 @@ export class FromHDFToCAATMapper {
           row['Recommended Corrective Action(s)'] = FromHDFToCAATMapper.fix(
             hdf.descriptions.fix ?? hdf.wraps.tags.fix
           );
-          row['Impact'] = this.newImpact(hdf);
+          row.Impact = this.newImpact(hdf);
           return row;
         })
     );

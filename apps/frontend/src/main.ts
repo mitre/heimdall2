@@ -55,7 +55,7 @@ new Vue({
 // places to edit Prism variables, but could not locate them. Namely this is
 // the Prism library variables, and not the Prism component variables
 // @ts-ignore
-Prism.languages['rb'] = {
+Prism.languages.rb = {
   'token-name': {
     pattern:
       /(?<quote>["'])(?:\k<quote>|(?:(?![^\\]\k<quote>)[\s\S])*[^\\]\k<quote>)/gv

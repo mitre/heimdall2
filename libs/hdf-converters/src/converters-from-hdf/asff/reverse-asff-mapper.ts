@@ -384,9 +384,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       let resList: IFindingASFF[] = this.controlsToSegments().map(
         (segment, index) => {
           this.index = index;
-          return this.convertInternal(segment, this.mappings())[
-            'Findings'
-          ][0] as IFindingASFF;
+          return this.convertInternal(segment, this.mappings()).Findings[0] as IFindingASFF;
         }
       );
       resList.push(createProfileInfoFinding(this.data, this.ioptions));

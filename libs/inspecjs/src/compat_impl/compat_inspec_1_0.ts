@@ -109,7 +109,7 @@ abstract class HDFControl10 implements HDFControl {
   private static compute_raw_nist_tags(
     raw: ResultControl_1_0 | ProfileControl_1_0
   ): string[] | string {
-    const fetched: string[] | string | undefined | null = raw.tags['nist'];
+    const fetched: string[] | string | undefined | null = raw.tags.nist;
     if (!fetched) {
       return ['UM-1'];
     } else {
@@ -167,12 +167,12 @@ abstract class HDFControl10 implements HDFControl {
     raw: ResultControl_1_0 | ProfileControl_1_0
   ): Severity {
     // use severity override tag if it exists
-    if (severities.includes(raw.tags['severityoverride']?.toLowerCase()))
-      return raw.tags['severityoverride'];
+    if (severities.includes(raw.tags.severityoverride?.toLowerCase()))
+      return raw.tags.severityoverride;
 
     // use severity tag if it exists
-    if (severities.includes(raw.tags['severity']?.toLowerCase()))
-      return raw.tags['severity'];
+    if (severities.includes(raw.tags.severity?.toLowerCase()))
+      return raw.tags.severity;
 
     // otherwise, compute severity with impact
     return convertImpactToSeverity(raw.impact);

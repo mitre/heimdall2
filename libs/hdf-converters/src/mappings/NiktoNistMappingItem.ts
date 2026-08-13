@@ -24,6 +24,6 @@ export class NiktoNistMappingItem {
     } else {
       this.nistId = values['NIST-ID'];
     }
-    this.osvdb = values['OSVDB'];
+    this.osvdb = values.OSVDB;
   }
 }

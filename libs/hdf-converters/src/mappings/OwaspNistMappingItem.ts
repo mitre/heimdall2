@@ -23,7 +23,7 @@ export class OwaspNistMappingItem {
     } else {
       this.nistId = values['NIST-ID'];
     }
-    this.rev = values['Rev'];
+    this.rev = values.Rev;
     if (values['NIST Name'] === undefined) {
       throw new Error('OWASP Nist Mapping Data must contain a nist name.');
     } else {

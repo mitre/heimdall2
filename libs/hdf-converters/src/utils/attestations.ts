@@ -174,7 +174,7 @@ export async function parseXLSXAttestations(
     const workbook = XLSX.read(attestationXLSX, {
       cellDates: true
     });
-    const sheet = workbook.Sheets['attestations'];
+    const sheet = workbook.Sheets.attestations;
     const data: Record<string, Date | string>[] =
       XLSX.utils.sheet_to_json(sheet);
     const attestations: Attestation[] = data.map((attestation) => {

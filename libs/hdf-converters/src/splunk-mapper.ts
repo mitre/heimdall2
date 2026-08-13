@@ -100,11 +100,11 @@ function consolidateFilePayloads(
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
   const subtypes = groupBy(filePayloads, (event) => event.meta.subtype);
-  const execEvents = (subtypes['header'] ||
+  const execEvents = (subtypes.header ||
     []) as Partial<ExecJSON.Execution>[];
-  const profileEvents = (subtypes['profile'] ||
+  const profileEvents = (subtypes.profile ||
     []) as unknown as (ExecJSON.Profile & GenericPayloadWithMetaData)[];
-  const controlEvents = (subtypes['control'] ||
+  const controlEvents = (subtypes.control ||
     []) as unknown as (ExecJSON.Control & GenericPayloadWithMetaData)[];
 
   logger.debug(`Have ${execEvents.length} execution events`);
@@ -351,7 +351,7 @@ export class SplunkMapper {
 
     // Request session key for Axios instance
     const authToken = await checkSplunkCredentials(this.config);
-    this.axiosInstance.defaults.headers.common['Authorization'] =
+    this.axiosInstance.defaults.headers.common.Authorization =
       `Bearer ${authToken}`;
 
     // Create new search job from given query

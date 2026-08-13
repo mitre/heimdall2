@@ -265,7 +265,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   showLegacy(control: ContextualizedControl) {
-    let legacyTag = control.data.tags['legacy'];
+    let legacyTag = control.data.tags.legacy;
     if (!legacyTag) {
       return '';
     }

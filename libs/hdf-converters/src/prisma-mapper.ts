@@ -121,8 +121,8 @@ export class PrismaControlMapper extends BaseConverter {
                   transformer: (obj: PrismaControl) => {
                     let result = '';
                     if (obj.Type === 'image') {
-                      if (obj['Packages'] !== '') {
-                        result += `Version check of package: ${obj['Packages']}`;
+                      if (obj.Packages !== '') {
+                        result += `Version check of package: ${obj.Packages}`;
                       }
                     } else if (obj.Type === 'linux') {
                       if (obj.Distro !== '') {
@@ -174,9 +174,9 @@ export class PrismaMapper {
     const executions: ExecJSON.Execution[] = [];
     const hostnameToControls: Record<string, PrismaControl[]> = {};
     this.data.forEach((record: PrismaControl) => {
-      hostnameToControls[record['Hostname']] =
-        hostnameToControls[record['Hostname']] || [];
-      hostnameToControls[record['Hostname']].push(record);
+      hostnameToControls[record.Hostname] =
+        hostnameToControls[record.Hostname] || [];
+      hostnameToControls[record.Hostname].push(record);
     });
     Object.entries(hostnameToControls).forEach(([hostname, controls]) => {
       const converted = new PrismaControlMapper(controls).toHdf();

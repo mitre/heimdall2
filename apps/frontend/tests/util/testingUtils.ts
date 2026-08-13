@@ -76,11 +76,11 @@ export function expectedCount(
      
     const counts: Record<string, any> = JSON.parse(countFileContent);
 
-    statuses['failed'] += counts.failed.total;
-    statuses['passed'] += counts.passed.total;
-    statuses['notReviewed'] += counts.skipped.total;
-    statuses['notApplicable'] += counts.no_impact.total;
-    statuses['profileError'] += counts.error.total;
+    statuses.failed += counts.failed.total;
+    statuses.passed += counts.passed.total;
+    statuses.notReviewed += counts.skipped.total;
+    statuses.notApplicable += counts.no_impact.total;
+    statuses.profileError += counts.error.total;
   });
 
   return statuses[status];
