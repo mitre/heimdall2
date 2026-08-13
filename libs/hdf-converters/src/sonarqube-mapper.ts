@@ -941,7 +941,7 @@ export class SonarqubeResults {
             `Raw param data: ${JSON.stringify(statusParam)}`
         );
       }
-    } catch (e) {
+    } catch (error) {
       // Step 2: Fallback to hardcoded full status list if discovery fails
       allStatuses = isLegacy
         ? ['OPEN', 'REOPENED', 'CONFIRMED', 'RESOLVED', 'CLOSED']
@@ -956,7 +956,7 @@ export class SonarqubeResults {
       logger.warn(
         `Could not discover statuses from server, using fallback: ${allStatuses.join(',')}`
       );
-      logger.debug(inspect(e, {depth: 3}));
+      logger.debug(inspect(error, {depth: 3}));
     }
 
     // Step 3: Determine which deny-list to use
@@ -1102,8 +1102,8 @@ export class SonarqubeResults {
               data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
             page += 1;
           })
-          .catch((e) => {
-            this.logAxiosError(e);
+          .catch((error) => {
+            this.logAxiosError(error);
             throw new Error('Failed at retrieving Sonarqube issues');
           });
         if (page * PAGE_SIZE > UPPER_LIMIT) {
@@ -1141,8 +1141,8 @@ export class SonarqubeResults {
               data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
             page += 1;
           })
-          .catch((e) => {
-            this.logAxiosError(e);
+          .catch((error) => {
+            this.logAxiosError(error);
             throw new Error('Failed at retrieving the list of components');
           });
         if (page * PAGE_SIZE > UPPER_LIMIT) {
@@ -1212,8 +1212,8 @@ export class SonarqubeResults {
           responseType: 'text'
         })
         .then(({data}) => data)
-        .catch((e) => {
-          this.logAxiosError(e);
+        .catch((error) => {
+          this.logAxiosError(error);
           return Promise.reject(
             new Error(
               `Failed at getting Sonarqube code snippet for ${component}`
@@ -1310,8 +1310,8 @@ export class SonarqubeResults {
           }
         })
         .then(({data}) => data)
-        .catch((e) => {
-          this.logAxiosError(e);
+        .catch((error) => {
+          this.logAxiosError(error);
           return Promise.reject(
             new Error(`Failed at getting Sonarqube rule: ${rule}`)
           );

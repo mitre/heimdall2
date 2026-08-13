@@ -127,8 +127,8 @@ export class TenableUtil {
               reject(this.getRejectConnectionMessage(error));
             });
         }
-      } catch (e) {
-        reject(`Unknown error: ${e}`);
+      } catch (error) {
+        reject(`Unknown error: ${error}`);
       }
     });
   }
@@ -271,8 +271,8 @@ export class TenableUtil {
           .catch((error) => {
             reject(this.getRejectMessage(error));
           });
-      } catch (e) {
-        reject(e);
+      } catch (error) {
+        reject(error);
       }
     });
   }
@@ -318,15 +318,15 @@ export class TenableUtil {
               const text = await firstFile.async('text');
 
               resolve(text);
-            } catch (unzipErr) {
-              reject(unzipErr);
+            } catch (error) {
+              reject(error);
             }
           })
           .catch((error) => {
             reject(this.getRejectMessage(error));
           });
-      } catch (e) {
-        reject(e);
+      } catch (error) {
+        reject(error);
       }
     });
   }

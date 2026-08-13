@@ -169,8 +169,8 @@ export default class FileReader extends mixins(ServerMixin) {
           const fileId = await InspecIntakeModule.loadFile({file});
           this.percent = Math.floor((index++ / totalFiles) * 100);
           return fileId;
-        } catch (err) {
-          SnackbarModule.failure(String(err));
+        } catch (error) {
+          SnackbarModule.failure(String(error));
           document.body.style.cursor = 'default';
         }
       })

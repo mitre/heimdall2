@@ -41,24 +41,24 @@ export function convertFile(
   try {
     result['1_0_ExecJson'] = EXEC_JSON_1_0.Convert.toExecJSON(jsonText);
     return result;
-  } catch (e) {
-    errors['1_0_ExecJson'] = e;
+  } catch (error) {
+    errors['1_0_ExecJson'] = error;
   }
 
   try {
     result['1_0_ExecJsonMin'] =
       EXEC_JSON_MIN_1_0.Convert.toExecJsonmin(jsonText);
     return result;
-  } catch (e) {
-    errors['1_0_ExecJsonMin'] = e;
+  } catch (error) {
+    errors['1_0_ExecJsonMin'] = error;
   }
 
   try {
     result['1_0_ProfileJson'] =
       PROFILE_JSON_1_0.Convert.toProfileJSON(jsonText);
     return result;
-  } catch (e) {
-    errors['1_0_ProfileJson'] = e;
+  } catch (error) {
+    errors['1_0_ProfileJson'] = error;
   }
 
   if (keepErrors) {

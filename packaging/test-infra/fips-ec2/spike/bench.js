@@ -91,7 +91,7 @@ const steal = () => {
   stop = true;
 
   console.log(`fs.readFile ms — baseline p50=${pct(base, 50).toFixed(2)} p95=${pct(base, 95).toFixed(2)} | under sustained 8-KDF load p50=${pct(loaded, 50).toFixed(2)} p95=${pct(loaded, 95).toFixed(2)}`);
-})().catch((e) => {
-  console.error('BENCH FAILED:', e.message);
+})().catch((error) => {
+  console.error('BENCH FAILED:', error.message);
   process.exit(1);
 });

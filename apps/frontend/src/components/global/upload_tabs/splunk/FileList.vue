@@ -153,8 +153,8 @@ export default class FileList extends Vue {
           return InspecIntakeModule.loadText({
             text: JSON.stringify(hdf),
             filename: _.get(hdf, 'meta.filename') as unknown as string
-          }).catch((err) => {
-            SnackbarModule.failure(String(err));
+          }).catch((error) => {
+            SnackbarModule.failure(String(error));
           });
         } else {
           SnackbarModule.failure('Attempted to load an undefined execution');

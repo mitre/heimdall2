@@ -48,7 +48,7 @@ export class Evaluation extends VuexModule {
         return this.allEvaluations.find((e) => {
           return e.id === file.database_id?.toString();
         });
-      } catch (err) {
+      } catch (error) {
         return false;
       }
     };
@@ -110,8 +110,8 @@ export class Evaluation extends VuexModule {
                 tags: [] // Tags are not yet implemented, so for now the value is passed in empty
               })
                 .then((fileId) => loadedIds.push(fileId))
-                .catch((err) => {
-                  SnackbarModule.failure(err);
+                .catch((error) => {
+                  SnackbarModule.failure(error);
                 });
             } else if (evaluation.data) {
               const inputFile: FileLoadOptions = {
@@ -132,8 +132,8 @@ export class Evaluation extends VuexModule {
               SnackbarModule.failure(`Empty File: ${evaluation.filename}`);
             }
           })
-          .catch((err) => {
-            SnackbarModule.failure(err);
+          .catch((error) => {
+            SnackbarModule.failure(error);
           })
       )
     );

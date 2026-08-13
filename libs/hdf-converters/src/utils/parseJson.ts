@@ -11,11 +11,11 @@ export type JSONValue =
 export function parseJson(str: string): Result<JSONValue, Error> {
   try {
     return {ok: true, value: JSON.parse(str)};
-  } catch (e) {
-    if (e instanceof Error) {
-    return {ok: false, error: e};
+  } catch (error) {
+    if (error instanceof Error) {
+    return {ok: false, error: error};
     } else {
-    return {ok: false, error: new Error(String(e))};
+    return {ok: false, error: new Error(String(error))};
     }
   }
 }

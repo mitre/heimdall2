@@ -10,7 +10,7 @@ export class TrufflehogResults {
     let parsedData = {};
     try {
       parsedData = JSON.parse(trufflehogJson.trim());
-    } catch (e) {
+    } catch (error) {
       parsedData = trufflehogJson
         .trim()
         .split('\n')

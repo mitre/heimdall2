@@ -239,8 +239,8 @@ export default class FileList extends Vue {
                       };
                       // .loadFile evaluates to data if file is not provided
                       return await InspecIntakeModule.loadFile(textFile);
-                    } catch (err) {
-                      SnackbarModule.failure(String(err));
+                    } catch (error) {
+                      SnackbarModule.failure(String(error));
                     }
                   }
                 } else {

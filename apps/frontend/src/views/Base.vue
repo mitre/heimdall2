@@ -97,8 +97,8 @@ export default class Base extends Vue {
     const droppedFiles = event.dataTransfer?.files;
     if (droppedFiles) {
       [...droppedFiles].forEach(async (file) => {
-        return InspecIntakeModule.loadFile({file}).catch((err) => {
-          SnackbarModule.failure(String(err));
+        return InspecIntakeModule.loadFile({file}).catch((error) => {
+          SnackbarModule.failure(String(error));
         });
       });
     }

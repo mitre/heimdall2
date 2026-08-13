@@ -132,8 +132,8 @@ export default class S3Reader extends Vue {
       },
 
       // Failure of initial get session token: want to set error normally
-      (failure) => {
-        this.handleError(failure);
+      (error) => {
+        this.handleError(error);
       }
     );
   }
@@ -154,8 +154,8 @@ export default class S3Reader extends Vue {
       },
 
       // Failure of initial get session token: want to set error normally
-      (failure) => {
-        this.handleError(failure);
+      (error) => {
+        this.handleError(error);
       }
     );
   }
@@ -196,8 +196,8 @@ export default class S3Reader extends Vue {
         this.assumedRole = success;
         this.step = 3;
       },
-      (failure) => {
-        this.handleError(failure);
+      (error) => {
+        this.handleError(error);
       }
     );
   }
@@ -227,8 +227,8 @@ export default class S3Reader extends Vue {
         })
       );
       this.files = response.Contents || [];
-    } catch (err) {
-      this.handleError(err);
+    } catch (error) {
+      this.handleError(error);
     }
   }
 
