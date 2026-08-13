@@ -194,7 +194,7 @@ When using an external database, ensure:
 
 Configure external database in `/etc/heimdall-server/backend.env`:
 
-```
+```text
 DATABASE_HOST=your-rds-endpoint.region.rds.amazonaws.com
 DATABASE_PORT=5432
 DATABASE_USERNAME=heimdall
@@ -246,7 +246,7 @@ for `3000` above.
 
 After setup completes, the admin credentials are printed to the terminal:
 
-```
+```text
 New administrator email is: admin@heimdall.local
 New administrator password is: <random-password>
 ```
@@ -390,7 +390,7 @@ sudo heimdall-server-setup --skip-db
 | **BYO cert** | Edit Caddyfile: `tls /path/to/cert.pem /path/to/key.pem` |
 
 Caddy's internal CA root cert is at:
-```
+```text
 /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt
 ```
 Import this into client trust stores to avoid browser warnings.
@@ -405,7 +405,7 @@ Add an A record in your internal DNS pointing the hostname to the server IP.
 
 #### Option 2: Client /etc/hosts
 Add to each client's `/etc/hosts`:
-```
+```text
 192.168.1.100  heimdall.internal
 ```
 
@@ -434,7 +434,7 @@ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keyc
 ```
 
 Self-signed certs (IP-based) are stored at:
-```
+```text
 /etc/pki/heimdall-server/server.crt
 /etc/pki/heimdall-server/server.key
 ```

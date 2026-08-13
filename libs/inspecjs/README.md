@@ -2,7 +2,7 @@
 
 To update schemas install `quicktype` with `npm install -g quicktype` and use `npm run gen-types`
 
-### Local Testing
+## Local Testing
 
 In order to test your inspecjs changes in another application (for example Heimdall), perform the following steps:
 

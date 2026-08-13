@@ -134,7 +134,7 @@ These are installed by the RPM and active by default:
 
 ## Logging Architecture
 
-```
+```text
 NestJS app (stdout/stderr)
   → systemd (captures)
     → journald (primary storage, automatic)

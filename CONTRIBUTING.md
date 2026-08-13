@@ -136,7 +136,7 @@ excessive, but it must reflect the format accurately.
 Use conventional prefixes — `feat:`, `fix:`, `test:`, `docs:`, `chore:`,
 `build:`, `refactor:` — with a body explaining *why*, not just what.
 
-```
+```text
 feat: add support for Foo scanner output
 
 - Maps Foo severity levels onto OHDF impact

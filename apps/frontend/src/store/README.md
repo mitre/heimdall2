@@ -66,7 +66,7 @@ Though we could theoretically at this point just use the data straight out of th
 - Furthermore, it quickly becomes baffling as to what data is coming from where.
 You have a control - great. What profile is it coming from? What platform was it run on? These require data from Profile and Execution objects.
 
-One solution would be to pass these as a bundled context of [AnyExec, AnyProfile, AnyControl], but this swiftly becomes unwieldy.
+One solution would be to pass these as a bundled context of `[AnyExec, AnyProfile, AnyControl]`, but this swiftly becomes unwieldy.
 What if there is no Execution (in the case of a ProfileJSON file)?
 Our type signature for a list of these things would end up looking like `Array<[null | AnyExec, AnyProfile, AnyControl]>` but I don't think anyone would be particularly happy with that. 
 
@@ -84,7 +84,7 @@ They can be accessed as a group by the (private) method `getContextStore`, but a
 The old functionality for filtering still exists, but under a new name: `filteredProfiles` and `filteredControls`. 
 See the `Filter` type for possible filter values.
 
-# Examples / common problems and their solutions
+## Examples / common problems and their solutions
 
 > I have a control; how do I know if another control overrides it in an overlay?
 

@@ -53,6 +53,7 @@ export default defineConfig([
       'libs/hdf-converters/schemas/**/jsonix-compiler-output/**', // same generator as jsonixMapping.ts
       'libs/hdf-converters/data/reverse-html-mapper/tw-elements.min.js', // vendored minified bundle
       'libs/hdf-converters/sample_jsons/**', // mapper fixture corpus — inputs under test, not code
+      '**/.terraform/**', // provider binaries and docs vendored by tofu/terraform init
     ],
     name: 'global ignores',
   },
@@ -607,6 +608,19 @@ export default defineConfig([
       // renderers treat it as a raw HTML tag. A fixer that produces invalid
       // markdown from valid markdown cannot be trusted on any file.
       'markdown-preferences/prefer-autolinks': 'off',
+    },
+  },
+  {
+    // GitHub issue templates use square-bracket placeholders ([e.g. iOS],
+    // [...]) — GitHub's own stock template convention, which the label-ref
+    // rule reads as broken reference links. Placed AFTER the markdown block:
+    // its preset extension would otherwise re-enable the rule.
+    files: ['.github/ISSUE_TEMPLATE/**/*.md'],
+    language: 'markdown/gfm',
+    name: 'markdown/issue-template-placeholders',
+    plugins: { markdown },
+    rules: {
+      'markdown/no-missing-label-refs': 'off',
     },
   },
   // MUST BE LAST. eslint-config-prettier only turns rules OFF — every

@@ -26,7 +26,9 @@ hardening.
 
 After installing the RPM, complete the initial setup by running:
 
-    sudo heimdall-cli setup
+```bash
+sudo heimdall-cli setup
+```
 
 This performs seven steps: generates secrets and configuration, bootstraps
 a local PostgreSQL database (if applicable), tests the database connection,
@@ -48,30 +50,42 @@ exclusively through **systemctl**(1) or **heimdall-cli**(1).
 
 Start the service:
 
-    sudo systemctl start heimdall-server
+```bash
+sudo systemctl start heimdall-server
+```
 
 Stop the service:
 
-    sudo systemctl stop heimdall-server
+```bash
+sudo systemctl stop heimdall-server
+```
 
 Restart after configuration changes:
 
-    sudo systemctl restart heimdall-server
+```bash
+sudo systemctl restart heimdall-server
+```
 
 Check service status:
 
-    sudo systemctl status heimdall-server
+```bash
+sudo systemctl status heimdall-server
+```
 
 View logs:
 
-    sudo journalctl -u heimdall-server -f
+```bash
+sudo journalctl -u heimdall-server -f
+```
 
 Or use the admin CLI for service control:
 
-    sudo heimdall-cli start
-    sudo heimdall-cli stop
-    sudo heimdall-cli restart
-    sudo heimdall-cli status
+```bash
+sudo heimdall-cli start
+sudo heimdall-cli stop
+sudo heimdall-cli restart
+sudo heimdall-cli status
+```
 
 ## FILES
 
@@ -183,11 +197,15 @@ The RPM ships a custom policy module that confines the service to the
 **heimdall_server_port_t**. If the listen port is changed, register the
 new port:
 
-    sudo semanage port -a -t heimdall_server_port_t -p tcp 8443
+```bash
+sudo semanage port -a -t heimdall_server_port_t -p tcp 8443
+```
 
 The policy includes a tunable for PostgreSQL connectivity:
 
-    getsebool heimdall_server_connect_postgresql
+```bash
+getsebool heimdall_server_connect_postgresql
+```
 
 ### fapolicyd
 

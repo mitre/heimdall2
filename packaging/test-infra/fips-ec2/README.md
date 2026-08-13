@@ -34,7 +34,7 @@ The key pair is still attached — plain SSH works from networks that permit it.
 resolves the instance by Name tag at connect time, so it survives rebuilds,
 IP changes, and VPC changes without edits:
 
-```
+```text
 Host i-* mi-*
   ProxyCommand aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'
   User ec2-user

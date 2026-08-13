@@ -23,7 +23,9 @@ authentication settings, and all other runtime parameters belong in
 The file uses shell-compatible **KEY=value** syntax. Lines beginning with
 **#** are comments. Changes take effect after restarting the service:
 
-    sudo systemctl restart heimdall-server
+```bash
+sudo systemctl restart heimdall-server
+```
 
 ## CONFIGURATION PRIORITY
 
@@ -92,8 +94,8 @@ file.
     which is useful in environments with maintenance windows or when
     upgrades require manual database migration steps.
 
-    This follows the same pattern used by Grafana and other enterprise
-    services that ship sysconfig files for restart control.
+This follows the same pattern used by Grafana and other enterprise
+services that ship sysconfig files for restart control.
 
 ## UPGRADE BEHAVIOR
 
@@ -113,16 +115,22 @@ upgrades without manual intervention.
 
 Override the data directory to use a dedicated volume:
 
-    HEIMDALL_DATA_DIR=/data/heimdall-server
+```text
+HEIMDALL_DATA_DIR=/data/heimdall-server
+```
 
 Disable automatic restart during upgrades:
 
-    RESTART_ON_UPGRADE=false
+```text
+RESTART_ON_UPGRADE=false
+```
 
 Point the configuration to a non-standard location:
 
-    HEIMDALL_CONFIG_DIR=/opt/heimdall/etc
-    HEIMDALL_ENV_FILE=/opt/heimdall/etc/backend.env
+```text
+HEIMDALL_CONFIG_DIR=/opt/heimdall/etc
+HEIMDALL_ENV_FILE=/opt/heimdall/etc/backend.env
+```
 
 ## SEE ALSO
 

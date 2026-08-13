@@ -54,7 +54,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 ### Video
 
-![](https://github.com/mitre/docs-mitre-inspec/raw/master/images/Heimdall_demo.gif)
+![Heimdall demo animation](https://github.com/mitre/docs-mitre-inspec/raw/master/images/Heimdall_demo.gif)
 
 ### Hosted
 
@@ -81,7 +81,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
 </a> 
 <br />
 
-[Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/) &nbsp;&nbsp; <a href="https://www.heroku.com/"><img src="https://www.herokucdn.com/deploy/button.svg" height="25"/></a>
+[Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/) &nbsp;&nbsp; <a href="https://www.heroku.com/"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy to Heroku" height="25"/></a>
 
 ## Heimdall (Lite) vs Heimdall with Backend (Server)
 
@@ -184,7 +184,7 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
    ./setup-docker-env.bat
    ```
 
-> [!TIP]
+> **Tip:**
 > If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the `setup-docker-env.sh` or `setup-docker-env.bat` scripts
 
 6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
@@ -250,19 +250,19 @@ Cloud.gov is a [FEDRAMP moderate Platform-as-a-Service (PaaS)](https://marketpla
 2. Install the cf-cli - https://cloud.gov/docs/getting-started/setup/
 
 3. Run the following commands in a terminal window from the Heimdall source directory.
-```
+```bash
 $ cd ~/Documents/Github/Heimdall2
 $ cf login -a api.fr.cloud.gov  --sso 
 # Follow the link to copy the Temporary Authentication Code when prompted
 ```
 
 4. Setup a demo application space
-```
+```bash
 $ cf target -o sandbox-rename create-space heimdall2-rename
 ```
 
 5. Create a PostgreSQL database
-```
+```bash
 # Update manifest.yml file to rename application and database key name
 $ cf marketplace
 $ cf create-service aws-rds medium-psql heimdall2-rename
@@ -457,7 +457,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    You can also manually edit the `apps/backend/.env` file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
-> [!NOTE]
+> **Note:**
 > The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations.
 
 6. Build the project:
@@ -505,7 +505,7 @@ This builds the frontend to `dist/frontend/` and the backend to `dist/`, then se
 
 If you are using Visual Studio Code, it is very simple to debug this application locally. First open up the Visual Studio Code workspace and ensure the [Node debugger Auto Attach](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_auto-attach) feature in Visual Studio Code is enabled. Next, open the integrated Visual Studio Code terminal and run:
 
-```
+```bash
 yarn backend start:debug
 ```
 
@@ -515,26 +515,34 @@ Visual Studio Code will then automatically attach a debugger and stop and any br
 
 If you only want to make changes to the frontend (heimdall-lite) use the following command:
 
-    yarn frontend start:dev
+```bash
+yarn frontend start:dev
+```
 
 ### Lint and fix files
 
 To validate and lint your code run:
 
-    yarn run lint
+```bash
+yarn run lint
+```
 
 ### Compile and minify the frontend and backend for production
 
-    yarn build
+```bash
+yarn build
+```
 
 ### Run tests
 
 To test your code to make sure everything still works:
 
-    # Run Frontend Vue Tests
-    yarn frontend test
-    # Run Backend Nest Tests (see note)
-    yarn backend test:ci-cov
+```bash
+# Run Frontend Vue Tests
+yarn frontend test
+# Run Backend Nest Tests (see note)
+yarn backend test:ci-cov
+```
 
 <span style="color:red">**NOTE:**</span> The `Backend Nest Tests` will remove (BULKDELETE) all entries in the configured PostgreSQL server for the following tables:
  - EvaluationTags
@@ -549,12 +557,14 @@ To test your code to make sure everything still works:
 
 The application includes an End-to-End (E2E) frontend and Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
 
-    CYPRESS_TESTING=true yarn start:dev
-    CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open
+```bash
+CYPRESS_TESTING=true yarn start:dev
+CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open
+```
 
 The first command will start an instance of Heimdall Server and exposes additional routes required to allow the tests to run. The second will open the Cypress UI which will run the tests any time code changes are made.
 
-> [!NOTE] 
+> **Note:**
 > When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes.
 
 #### Building the Heimdall Docker containers locally
