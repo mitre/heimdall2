@@ -317,8 +317,7 @@ export default class ExportCSVModal extends Vue {
 
   convertData(file: EvaluationFile | ProfileFile): void {
     // Convert all controls from a file to ControlSetRows
-    let rows: ControlSetRows = [];
-    rows = this.convertRows(file);
+    const rows: ControlSetRows = this.convertRows(file);
     // Convert rows to CSV
     const csvBody = stringify(rows);
     // Generate headers for CSV

@@ -8,7 +8,7 @@ export class TrufflehogResults {
   data: Record<string, unknown>;
   withRaw: boolean;
   constructor(trufflehogJson: string, withRaw = false) {
-    let parsedData = {};
+    let parsedData: unknown;
     try {
       parsedData = JSON.parse(trufflehogJson.trim());
     } catch {

@@ -590,7 +590,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     // note: some mappers can produce non-lowercase severity tags
     switch (severityTag?.toLowerCase()) {
       case 'none':
-      // if none, it will be added to Checklist's thirdPartyTools section
+      // falls through: 'none' is carried in Checklist's thirdPartyTools section
       case 'low':
         return Severity.Low;
       case 'medium':

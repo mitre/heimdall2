@@ -306,7 +306,7 @@ function wrapWithFindingsObject(
 function fixFileInput(
   asffJson: string
 ): Record<string, Record<string, unknown>[]> {
-  let output = {};
+  let output: Parameters<typeof wrapWithFindingsObject>[0];
   try {
     output = JSON.parse(asffJson);
   } catch {

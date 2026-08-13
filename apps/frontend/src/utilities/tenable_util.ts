@@ -129,7 +129,7 @@ export class TenableUtil {
     if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
       return LOGIN_TIMEOUT_MSG;
     }
-    let rejectMsg = '';
+    let rejectMsg: string;
     const DEFAULT_REJECT_MSG =
       `${error.name}: ${(error.response?.data?.message ?? error.message)}, 
        ${error.response?.data?.code ?? error.code}`;
@@ -309,7 +309,7 @@ export class TenableUtil {
     if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
       return LOGIN_TIMEOUT_MSG;
     }
-    let rejectMsg = '';
+    let rejectMsg: string;
     if (error.code == 'ERR_BAD_REQUEST') {
       if (error.status == 401) {
         rejectMsg = 'Not authenticated with Tenable or CSP not set';
