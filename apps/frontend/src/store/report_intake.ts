@@ -299,30 +299,28 @@ export class InspecIntake extends VuexModule {
     const queryString = globalThis.location.search;
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.get('predefinedLoad')?.toLowerCase() === 'true') {
-      return axios
-        .get('/dynamic/predefinedload.json', {
+      try {
+        const {data} = await axios.get('/dynamic/predefinedload.json', {
           headers: {
             Accept: 'application/json'
           }
-        })
-        .then(async ({data}) => {
-          // Promise.all over map: forEach discards the async callbacks, so
-          // this used to resolve true before a single file had loaded.
-          await Promise.all(
-            data.map((file: {filename: string; data: string}) =>
-              InspecIntakeModule.loadFile({
-                file: new File([new Blob([file.data])], file.filename)
-              })
-            )
-          );
-          return true;
-        })
-        .catch((error) => {
-          SnackbarModule.failure(
-            `An error ocurred while loading your pre-defined file: ${error}`
-          );
-          return false;
         });
+        // Promise.all over map: forEach discards the async callbacks, so
+        // this used to resolve true before a single file had loaded.
+        await Promise.all(
+          data.map((file: {filename: string; data: string}) =>
+            InspecIntakeModule.loadFile({
+              file: new File([new Blob([file.data])], file.filename)
+            })
+          )
+        );
+        return true;
+      } catch (error) {
+        SnackbarModule.failure(
+          `An error ocurred while loading your pre-defined file: ${String(error)}`
+        );
+        return false;
+      }
     } else {
       return false;
     }

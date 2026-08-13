@@ -321,12 +321,13 @@ export default class UserModal extends Vue {
   newPassword = '';
   passwordConfirmation = '';
   buttonLoading = false;
-  updateCallback = () => {
+  updateCallback: () => void | Promise<void> = () => {
     return;
   };
 
   mounted() {
-    this.getAPIKeys();
+    // Fire-and-forget: getAPIKeys reports its own failures.
+    void this.getAPIKeys();
   }
 
   async updateUserInfo(): Promise<void> {
@@ -374,142 +375,143 @@ export default class UserModal extends Vue {
     this.showAPIKeys = !this.showAPIKeys;
   }
 
-  getAPIKeys() {
+  async getAPIKeys(): Promise<void> {
     if (this.apiKeysEnabled) {
       this.apiKeyTableLoading = true;
-      axios
-        .create()
-        .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}})
-        .then(({data}) => {
-          this.apiKeys = data;
-        })
-        .catch((error) => {
-          if (error.response) {
-            SnackbarModule.failure('Unable to get API Keys');
-          }
-        });
+      try {
+        // axios.create() skips the default interceptors set up in main.ts
+        const {data} = await axios
+          .create()
+          .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}});
+        this.apiKeys = data;
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          SnackbarModule.failure('Unable to get API Keys');
+        }
+      } finally {
+        // The old chain cleared this flag synchronously, so the table
+        // never actually showed its loading state.
+        this.apiKeyTableLoading = false;
+      }
+    }
+  }
+
+  async addAPIKey(): Promise<void> {
+    this.inputPasswordDialog = false;
+    this.apiKeyTableLoading = true;
+    try {
+      const {data} = await axios.post<IApiKey>(`/apikeys`, {
+        userId: this.user.id,
+        name: this.activeAPIKey?.name,
+        currentPassword: this.currentPassword
+      });
+      this.apiKeys.push(data);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        this.updateCallback = this.addAPIKey;
+        this.inputPasswordDialog = true;
+      }
+      throw error;
+    } finally {
+      this.activeAPIKey = null;
       this.apiKeyTableLoading = false;
     }
   }
 
-  addAPIKey() {
+  async deleteAPIKey(item: IApiKey): Promise<void> {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
     this.inputPasswordDialog = false;
-    this.apiKeyTableLoading = true;
-    axios
-      .post<IApiKey>(`/apikeys`, {
-        userId: this.user.id,
-        name: this.activeAPIKey?.name,
+    // Capture before the synchronous reset below, matching the old
+    // chain-building order.
+    const activeKey = this.activeAPIKey;
+    this.activeAPIKey = null;
+    try {
+      await axios.delete<IApiKey>(`/apikeys/${activeKey?.id}`, {
+        data: {...activeKey, currentPassword: this.currentPassword}
+      });
+      this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        this.updateCallback = this.deleteAPIKeyConfirm;
+        this.inputPasswordDialog = true;
+      }
+      throw error;
+    }
+  }
+
+  async deleteAPIKeyConfirm(): Promise<void> {
+    this.inputPasswordDialog = false;
+    try {
+      const {data} = await axios.delete<IApiKey>(
+        `/apikeys/${this.activeAPIKey?.id}`,
+        {
+          data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+        }
+      );
+      this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        this.inputPasswordDialog = true;
+      }
+      throw error;
+    }
+  }
+
+  async updateAPIKey(item?: IApiKey): Promise<void> {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    // Capture before the synchronous reset below, matching the old
+    // chain-building order.
+    const activeKey = this.activeAPIKey;
+    this.activeAPIKey = null;
+    try {
+      await axios.put<IApiKey>(`/apikeys/${activeKey?.id}`, {
+        name: activeKey?.name,
         currentPassword: this.currentPassword
-      })
-      .then(({data}) => this.apiKeys.push(data))
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.updateCallback = this.addAPIKey;
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
-      })
-      .finally(() => {
-        this.activeAPIKey = null;
-        this.apiKeyTableLoading = false;
       });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        this.updateCallback = this.updateAPIKey;
+        this.inputPasswordDialog = true;
+      }
+      throw error;
+    }
   }
 
-  deleteAPIKey(item: IApiKey) {
+  async refreshAPIKey(item: IApiKey): Promise<void> {
     if (typeof item === 'object') {
       this.activeAPIKey = item;
     }
     this.inputPasswordDialog = false;
-    axios
-      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
-        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
-      })
-      .then(() => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.updateCallback = this.deleteAPIKeyConfirm;
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
-      });
+    // Capture before the synchronous reset below, matching the old
+    // chain-building order.
+    const activeKey = this.activeAPIKey;
     this.activeAPIKey = null;
-  }
-
-  deleteAPIKeyConfirm() {
-    this.inputPasswordDialog = false;
-    axios
-      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
-        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
-      })
-      .then(({data}) => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id);
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
+    try {
+      await axios.delete<IApiKey>(`/apikeys/${activeKey?.id}`, {
+        data: {...activeKey, currentPassword: this.currentPassword}
       });
-  }
-
-  updateAPIKey(item?: IApiKey) {
-    if (typeof item === 'object') {
-      this.activeAPIKey = item;
+      this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+      // Fire-and-forget re-create: addAPIKey drives its own 403 retry
+      // dialog, so its failure must not reach this catch.
+      void this.addAPIKey();
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 403) {
+        this.updateCallback = this.refreshAPIKeyConfirm;
+        this.inputPasswordDialog = true;
+      }
+      throw error;
     }
-    this.inputPasswordDialog = false;
-    axios
-      .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
-        name: this.activeAPIKey?.name,
-        currentPassword: this.currentPassword
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.updateCallback = this.updateAPIKey;
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
-      });
-    this.activeAPIKey = null;
-  }
-
-  refreshAPIKey(item: IApiKey) {
-    if (typeof item === 'object') {
-      this.activeAPIKey = item;
-    }
-    this.inputPasswordDialog = false;
-    axios
-      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
-        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
-      })
-      .then(() => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
-        this.addAPIKey();
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.updateCallback = this.refreshAPIKeyConfirm;
-            this.inputPasswordDialog = true;
-          }
-        }
-        throw error;
-      });
-    this.activeAPIKey = null;
   }
 
   refreshAPIKeyConfirm() {
-    this.deleteAPIKeyConfirm();
-    this.addAPIKey();
+    // Both run concurrently as before; each drives its own 403 retry dialog.
+    void this.deleteAPIKeyConfirm();
+    void this.addAPIKey();
   }
 
   updateCurrentPassword(password: string): void {

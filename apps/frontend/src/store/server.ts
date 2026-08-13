@@ -164,33 +164,30 @@ class Server extends VuexModule implements IServerState {
       return null;
     }
 
-    return axios
-      .get(`/server`)
-      .then((response) => {
-        if (response.status === 200) {
-          // This means the server successfully responded and we are therefore in server mode
-          this.context.commit('SET_SERVER');
-          this.context.commit('SET_STARTUP_SETTINGS', response.data);
-          const token = localToken.get() || Vue.$cookies.get('accessToken');
-          const userID = localUserID.get() || Vue.$cookies.get('userID');
-          Vue.$cookies.remove('accessToken');
-          Vue.$cookies.remove('userID');
-          if (token !== null) {
-            this.context.commit('SET_TOKEN', token);
-          }
-          if (userID !== null) {
-            this.context.commit('SET_USERID', userID);
-          }
-          return this.GetUserInfo();
+    try {
+      const response = await axios.get(`/server`);
+      if (response.status === 200) {
+        // This means the server successfully responded and we are therefore in server mode
+        this.context.commit('SET_SERVER');
+        this.context.commit('SET_STARTUP_SETTINGS', response.data);
+        const token = localToken.get() || Vue.$cookies.get('accessToken');
+        const userID = localUserID.get() || Vue.$cookies.get('userID');
+        Vue.$cookies.remove('accessToken');
+        Vue.$cookies.remove('userID');
+        if (token !== null) {
+          this.context.commit('SET_TOKEN', token);
         }
-      })
-      .catch((_) => {
-        // If a error code is received from the server, this means the app is not in server mode
-        // and there is therefore no action is required.
-      })
-      .then((_) => {
-        this.context.commit('SET_LOADING', false);
-      });
+        if (userID !== null) {
+          this.context.commit('SET_USERID', userID);
+        }
+        await this.GetUserInfo();
+      }
+    } catch {
+      // If a error code is received from the server, this means the app is not in server mode
+      // and there is therefore no action is required.
+    } finally {
+      this.context.commit('SET_LOADING', false);
+    }
   }
 
   @Action
@@ -241,12 +238,11 @@ class Server extends VuexModule implements IServerState {
     id: string;
     info: IUpdateUser;
   }): Promise<IUser> {
-    return axios.put<IUser>(`/users/${user.id}`, user.info).then(({data}) => {
-      if (this.userInfo.id === data.id) {
-        this.context.commit('SET_USER_INFO', data);
-      }
-      return data;
-    });
+    const {data} = await axios.put<IUser>(`/users/${user.id}`, user.info);
+    if (this.userInfo.id === data.id) {
+      this.context.commit('SET_USER_INFO', data);
+    }
+    return data;
   }
 
   @Action
@@ -266,29 +262,30 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public FetchAllUsers() {
-    return axios.get<ISlimUser[]>(`/users/user-find-all`).then(({data}) => {
-      this.context.commit('SET_ALL_USERS', data);
-    });
+  public async FetchAllUsers(): Promise<void> {
+    const {data} = await axios.get<ISlimUser[]>(`/users/user-find-all`);
+    this.context.commit('SET_ALL_USERS', data);
   }
 
   @Action
-  public Logout(): Promise<void> {
-    return axios
-      .create() // Call axios.create() to skip the default interceptors setup in main.ts
-      .post(`/users/logout`)
-      .then(() => {
-        this.CLEAR_USERID();
-        this.CLEAR_TOKEN();
-        location.replace('/login?logoff=true');
-      })
-      .catch((error) => {
-        this.CLEAR_USERID();
-        this.CLEAR_TOKEN();
-        location.replace(
-          `/login?logoff=true&error=${error.response.data.message}`
-        );
-      });
+  public async Logout(): Promise<void> {
+    try {
+      await axios
+        .create() // Call axios.create() to skip the default interceptors setup in main.ts
+        .post(`/users/logout`);
+      this.CLEAR_USERID();
+      this.CLEAR_TOKEN();
+      location.replace('/login?logoff=true');
+    } catch (error) {
+      this.CLEAR_USERID();
+      this.CLEAR_TOKEN();
+      // A network failure has no response body; the old chain crashed
+      // reading it and skipped the redirect entirely.
+      const message = axios.isAxiosError<{message?: string}>(error)
+        ? error.response?.data?.message
+        : String(error);
+      location.replace(`/login?logoff=true&error=${message}`);
+    }
   }
 }
 

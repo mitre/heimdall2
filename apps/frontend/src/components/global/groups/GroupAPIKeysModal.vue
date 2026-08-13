@@ -161,119 +161,87 @@ export default class GroupAPIKeysModal extends Vue {
   ];
 
   mounted() {
-    this.updateAPIKeys();
+    // Fire-and-forget: HTTP failures surface via the interceptor snackbar.
+    void this.updateAPIKeys();
   }
 
-  updateAPIKeys() {
+  async updateAPIKeys(): Promise<void> {
     this.loading = true;
-    axios
-      .get<IApiKey[]>(`/apikeys`, {
+    try {
+      const {data} = await axios.get<IApiKey[]>(`/apikeys`, {
         params: {
           groupId: this.group.id
         }
-      })
-      .then(({data}) => {
-        this.apiKeys = data;
-        this.loading = false;
-      })
-      .catch((error) => {
-        this.loading = false;
-        // Default error handling works fine
-        throw error;
       });
+      this.apiKeys = data;
+    } finally {
+      this.loading = false;
+    }
   }
 
-  refreshAPIKey(item: IApiKey) {
+  async refreshAPIKey(item: IApiKey): Promise<void> {
     this.loading = true;
-    axios
-      .delete<IApiKey>(`/apikeys/${item.id}`, {
+    try {
+      await axios.delete<IApiKey>(`/apikeys/${item.id}`, {
         data: {
           currentPassword: this.password
         }
-      })
-      .then(() => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
-
-        // Re-create the key
-        axios
-          .post('/apikeys', {
-            groupId: this.group.id,
-            name: item.name,
-            currentPassword: this.password
-          })
-          .then(({data}) => {
-            this.apiKeys.push(data);
-            SnackbarModule.notify('API Key recreated successfully');
-            this.loading = false;
-          })
-          .catch((error) => {
-            this.loading = false;
-            // Default error handling works fine
-            throw error;
-          });
-      })
-      .catch((error) => {
-        this.loading = false;
-        // Default error handling works fine
-        throw error;
       });
-  }
+      this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
 
-  addAPIKey() {
-    this.loading = true;
-    axios
-      .post<IApiKey>('/apikeys', {
+      // Re-create the key
+      const {data} = await axios.post('/apikeys', {
         groupId: this.group.id,
-        currentPassword: this.password
-      })
-      .then(({data}) => {
-        this.apiKeys.push(data);
-        SnackbarModule.notify('API Key added successfully');
-        this.loading = false;
-      })
-      .catch((error) => {
-        this.loading = false;
-        // Default error handling works fine
-        throw error;
-      });
-  }
-
-  setKeyName(item: IApiKey) {
-    this.loading = true;
-    axios
-      .put(`/apikeys/${item.id}`, {
         name: item.name,
         currentPassword: this.password
-      })
-      .then(() => {
-        SnackbarModule.notify('API Key name updated successfully');
-        this.loading = false;
-      })
-      .catch((error) => {
-        this.loading = false;
-        // Default error handling works fine
-        throw error;
       });
+      this.apiKeys.push(data);
+      SnackbarModule.notify('API Key recreated successfully');
+    } finally {
+      this.loading = false;
+    }
   }
 
-  deleteAPIKey(item: IApiKey) {
+  async addAPIKey(): Promise<void> {
     this.loading = true;
-    axios
-      .delete<IApiKey>(`/apikeys/${item.id}`, {
+    try {
+      const {data} = await axios.post<IApiKey>('/apikeys', {
+        groupId: this.group.id,
+        currentPassword: this.password
+      });
+      this.apiKeys.push(data);
+      SnackbarModule.notify('API Key added successfully');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async setKeyName(item: IApiKey): Promise<void> {
+    this.loading = true;
+    try {
+      await axios.put(`/apikeys/${item.id}`, {
+        name: item.name,
+        currentPassword: this.password
+      });
+      SnackbarModule.notify('API Key name updated successfully');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async deleteAPIKey(item: IApiKey): Promise<void> {
+    this.loading = true;
+    try {
+      const {data} = await axios.delete<IApiKey>(`/apikeys/${item.id}`, {
         data: {
           currentPassword: this.password
         }
-      })
-      .then(({data}) => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id);
-        SnackbarModule.notify('API Key deleted successfully');
-        this.loading = false;
-      })
-      .catch((error) => {
-        this.loading = false;
-        // Default error handling works fine
-        throw error;
       });
+      this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id);
+      SnackbarModule.notify('API Key deleted successfully');
+    } finally {
+      this.loading = false;
+    }
   }
 }
 </script>
