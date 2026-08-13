@@ -349,7 +349,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                       parseXml(description),
                       'VulnDiscussion',
                       description
-                    ) as string
+                    )
                   )
               },
               group_id: {path: 'group.id'},
@@ -362,7 +362,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                       parseXml(description),
                       'GroupDescription',
                       description
-                    ) as string
+                    )
                   )
               },
               rule_id: {path: 'id'},
@@ -401,7 +401,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                           parseXml(description),
                           'ProfileDescription',
                           description
-                        ) as string
+                        )
                       )
                   },
                   title: {path: ['title.text', 'title']}
@@ -495,7 +495,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                     parseXml(description),
                     'ProfileDescription',
                     description
-                  ) as string
+                  )
                 )
             },
             descriptions: [
@@ -584,7 +584,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                         parseXml(description),
                         'VulnDiscussion',
                         description
-                      ) as string
+                      )
                     )
                 },
                 start_time: {

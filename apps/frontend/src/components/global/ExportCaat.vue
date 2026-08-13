@@ -36,7 +36,7 @@ export default class ExportCaat extends Vue {
   exportCaat() {
     const inputData = this.filter.fromFile.map((fileId: string) => {
       const file = (
-        InspecDataModule.allEvaluationFiles as EvaluationFile[]
+        InspecDataModule.allEvaluationFiles
       ).find((f) => f.uniqueId === fileId);
       const data = file?.evaluation ?? '';
       const filename = file?.filename || fileId;

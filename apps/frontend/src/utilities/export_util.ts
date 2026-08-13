@@ -17,7 +17,7 @@ export async function saveSingleOrMultipleFiles(
             d.byteOffset,
             d.byteOffset + d.byteLength
           ) as ArrayBuffer)
-        : (d as BlobPart);
+        : (d);
     const blob = new Blob([part]);
     saveAs(blob, cleanUpFilename(`${files[0]?.filename}`));
   } else {

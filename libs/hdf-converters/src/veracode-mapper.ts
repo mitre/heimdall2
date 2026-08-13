@@ -257,7 +257,7 @@ function componentListCreate(input: unknown): Record<string, unknown>[] {
   if (!Array.isArray(component)) {
     component = [component];
   }
-  for (const value of component as Record<string, unknown>[]) {
+  for (const value of component) {
     if (_.get(value, '@_.vulnerabilities') !== '0') {
       componentList.push(value);
     }

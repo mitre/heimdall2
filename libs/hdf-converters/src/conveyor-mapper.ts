@@ -145,7 +145,7 @@ function preprocessObject(
       _.get(result, 'result.sections') as Record<string, unknown>[],
       (section) =>
         createDescription(
-          section as Record<string, unknown>,
+          section,
           _.get(result, 'result.score') as number,
           _.get(result, 'response.milestones.service_started') as string,
           _.get(result, 'response.service_name') as string,

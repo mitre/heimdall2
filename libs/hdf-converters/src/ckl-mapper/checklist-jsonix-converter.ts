@@ -283,11 +283,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       hostip: _.get(jsonixData, 'value.asset.hostip') as unknown as string,
       hostmac: _.get(jsonixData, 'value.asset.hostmac') as unknown as string,
       hostfqdn: _.get(jsonixData, 'value.asset.hostfqdn') as unknown as string,
-      marking: _.get(jsonixData, 'value.asset.marking') as unknown as string,
+      marking: _.get(jsonixData, 'value.asset.marking'),
       targetcomment: _.get(
         jsonixData,
         'value.asset.targetcomment'
-      ) as unknown as string,
+      ),
       techarea: _.get(
         jsonixData,
         'value.asset.techarea'
@@ -297,9 +297,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         'value.asset.targetkey'
       ) as unknown as string,
       webordatabase: [true, 'true'].includes(
-        _.get(jsonixData, 'value.asset.webordatabase', false) as
-          | string
-          | boolean
+        _.get(jsonixData, 'value.asset.webordatabase', false)
       ),
       webdbsite: _.get(
         jsonixData,
@@ -320,7 +318,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const stigInfo: Sidata[] = _.get(
         stig,
         'stiginfo.sidata'
-      ) as unknown as Sidata[];
+      );
       const header: StigHeader = {
         version: this.getValueFromAttributeName<Sidata>(stigInfo, 'version'),
         classification: this.getValueFromAttributeName<Sidata>(
@@ -405,7 +403,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           documentable: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Documentable'
-          ) as unknown as string,
+          ),
           mitigations: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Mitigations'
@@ -515,7 +513,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
             Vulnattribute[
               keyFoundInVulnattribute as keyof typeof Vulnattribute
             ],
-          attributedata: data as string
+          attributedata: data
         });
       }
     }
@@ -846,10 +844,13 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
    */
   hdfToIntermediateObject(hdf: ExecJSON.Execution): ChecklistObject {
     const stigs: ChecklistStig[] = [];
-    const metadata: ChecklistMetadata | undefined = _.get(
-      hdf,
-      'passthrough.metadata'
-    ) as unknown as ChecklistMetadata | undefined;
+    // `passthrough` exists on no ExecJSON type — the old code reached it with
+    // _.get plus an as-unknown-as double cast. One assertion widening hdf to
+    // carry an optional passthrough is the honest minimum: required by the
+    // compiler, so the no-unnecessary-type-assertion rule accepts it too.
+    const metadata: ChecklistMetadata | undefined = (
+      hdf as { passthrough?: { metadata?: ChecklistMetadata } }
+    ).passthrough?.metadata;
     for (const profile of hdf.profiles) {
       // if profile is overlay or parent profile, skip
       if (profile.depends?.length) {
@@ -913,9 +914,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         webdbinstance: _.get(hdf, 'passthrough.metadata.webdbinstance', ''),
         webdbsite: _.get(hdf, 'passthrough.metadata.webdbsite', ''),
         webordatabase: [true, 'true'].includes(
-          _.get(hdf, 'passthrough.metadata.webordatabase', false) as
-            | string
-            | boolean
+          _.get(hdf, 'passthrough.metadata.webordatabase', false)
         )
       },
       stigs: stigs

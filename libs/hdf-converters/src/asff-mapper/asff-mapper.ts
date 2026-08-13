@@ -249,7 +249,7 @@ function handleIdGroup(
       JSON.stringify({Findings: findings}, null, 2)
     ),
     results: group.map((d) => d.results).flat()
-  } as ExecJSON.Control;
+  };
 }
 
 // consolidate the array of controls which were generated 1:1 with findings in order to have subfindings/results
@@ -446,7 +446,7 @@ export class ASFFMapper extends BaseConverter {
                   finding,
                   'findingTags',
                   {}
-                ) as Record<string, unknown>,
+                ),
               cci: {
                 transformer: (finding: Record<string, unknown>): string[] => {
                   const tags = externalProductHandler(
@@ -548,7 +548,7 @@ export class ASFFMapper extends BaseConverter {
                       finding,
                       'subfindingsStatus',
                       defaultFunc
-                    ) as ExecJSON.ControlResultStatus;
+                    );
                   }
                 },
                 code_desc: {
@@ -686,7 +686,7 @@ export class ASFFMapper extends BaseConverter {
       this,
       'mapping',
       this.defaultMappings
-    ) as MappedTransform<ExecJSON.Execution, ILookupPath>;
+    );
   }
 
   constructor(
@@ -760,7 +760,7 @@ export class ASFFResults {
           wrapped,
           'preprocessingASFF',
           wrapped
-        ) as Record<string, unknown>,
+        ),
         externalProductHandler(
           this,
           whichSpecialCase(
@@ -778,7 +778,7 @@ export class ASFFResults {
           undefined,
           'meta',
           this.meta
-        ) as Record<string, string>
+        )
       ).toHdf();
     });
   }

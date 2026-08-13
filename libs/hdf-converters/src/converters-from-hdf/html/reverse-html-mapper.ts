@@ -193,8 +193,8 @@ export class FromHDFToHTMLMapper {
     // Set file profile data
     this.outputData.files.push({
       filename: file.fileName,
-      toolVersion: _.get(file.data, 'data.version') as unknown as string,
-      platform: _.get(file.data, 'data.platform.name') as unknown as string,
+      toolVersion: _.get(file.data, 'data.version'),
+      platform: _.get(file.data, 'data.platform.name'),
       duration: _.get(
         file.data,
         'data.statistics.duration'

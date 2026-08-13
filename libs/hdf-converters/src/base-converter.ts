@@ -278,7 +278,7 @@ export class BaseConverter<D = Record<string, unknown>> {
     }
 
     if (hasTransformer) {
-      return transformer(hasPath ? pathV : (file as T | T[])) as
+      return transformer(hasPath ? pathV : (file)) as
         | T
         | T[]
         | MappedReform<T, ILookupPath>;

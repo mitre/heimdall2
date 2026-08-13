@@ -416,7 +416,7 @@ export default class Compare extends Vue {
     ) {
       if (typeof aPassthroughField === 'string') {
         return (aPassthroughField as string).localeCompare(
-          bPassthroughField as string
+          bPassthroughField
         );
       } else if (typeof aPassthroughField === 'number') {
         return aPassthroughField - Number(bPassthroughField);

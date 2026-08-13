@@ -49,7 +49,7 @@ function getVersion(): string {
 function getId(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
     return parseRef(
-      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      _.get(item, COMPLIANCE_PATH),
       'Vuln-ID'
     )[0];
   } else {
@@ -58,7 +58,7 @@ function getId(item: unknown): string {
 }
 function getTitle(item: unknown): string {
   if (_.has(item, COMPLIANCE_CHECK_NAME)) {
-    return _.get(item, COMPLIANCE_CHECK_NAME) as unknown as string;
+    return _.get(item, COMPLIANCE_CHECK_NAME);
   } else {
     return _.get(item, 'pluginName') as unknown as string;
   }
@@ -94,7 +94,7 @@ function parseRef(input: string, key: string): string[] {
 function getImpact(item: unknown): number {
   if (_.has(item, COMPLIANCE_PATH)) {
     return impactMapping(IMPACT_MAPPING)(
-      parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'CAT').join(
+      parseRef(_.get(item, COMPLIANCE_PATH), 'CAT').join(
         ''
       )
     );
@@ -121,14 +121,14 @@ function getFix(item: unknown): string {
 
 function getNist(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return cciNistTag(_.get(item, COMPLIANCE_PATH) as unknown as string);
+    return cciNistTag(_.get(item, COMPLIANCE_PATH));
   } else {
     return pluginNistTag(item);
   }
 }
 function getCci(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'CCI');
+    return parseRef(_.get(item, COMPLIANCE_PATH), 'CCI');
   } else {
     return [];
   }
@@ -136,7 +136,7 @@ function getCci(item: unknown): string[] {
 function getRid(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
     return parseRef(
-      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      _.get(item, COMPLIANCE_PATH),
       'Rule-ID'
     ).join(',');
   } else {
@@ -146,7 +146,7 @@ function getRid(item: unknown): string {
 function getStig(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
     return parseRef(
-      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      _.get(item, COMPLIANCE_PATH),
       'STIG-ID'
     ).join(',');
   } else {

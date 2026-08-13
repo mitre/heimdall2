@@ -102,9 +102,7 @@ export default class ProfileInfo extends Vue {
   ];
 
   get from_file(): string | undefined {
-    return _.get(this.profile, 'sourcedFrom.from_file.filename') as unknown as
-      | string
-      | undefined;
+    return _.get(this.profile, 'sourcedFrom.from_file.filename');
   }
 
   get version(): string | undefined {
@@ -112,7 +110,7 @@ export default class ProfileInfo extends Vue {
   }
 
   get sha256_hash(): string | undefined {
-    return _.get(this.profile, 'data.sha256') as unknown as string | undefined;
+    return _.get(this.profile, 'data.sha256');
   }
 
   get maintainer(): string | undefined {

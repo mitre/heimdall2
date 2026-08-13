@@ -241,7 +241,7 @@ export class CycloneDXSBOMResults {
         if (!data.components[index].affectingVulnerabilities) {
           data.components[index].affectingVulnerabilities = [];
         }
-        (data.components[index].affectingVulnerabilities as string[]).push(
+        (data.components[index].affectingVulnerabilities).push(
           _.get(vulnerability, 'bom-ref') as unknown as string
         );
       }
@@ -256,7 +256,7 @@ export class CycloneDXSBOMResults {
       ...(_.cloneDeep(data.raw.vulnerabilities) as
         | CycloneDXBillOfMaterialsStandardVulnerability[]
         | CycloneDXSoftwareBillOfMaterialsStandardVulnerability[])
-    ] as unknown as IntermediaryVulnerability[];
+    ];
 
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = vulnerability.affects?.map((id) => {
