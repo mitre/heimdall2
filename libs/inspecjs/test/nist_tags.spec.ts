@@ -12,10 +12,9 @@ test('Returns proper status counts for sample file in parse_testbed', () => {
   );
   const result: ConversionResult = convertFile(content);
   if (result['1_0_ExecJson'] !== undefined) {
-    const controls: HDFControl[] = [];
     // Get all controls
-    result['1_0_ExecJson'].profiles.forEach((p) =>
-      controls.push(...p.controls.map((c) => hdfWrapControl(c)))
+    const controls: HDFControl[] = result['1_0_ExecJson'].profiles.flatMap(
+      (p) => p.controls.map((c) => hdfWrapControl(c))
     );
     expect(controls[0].rawNistTags).toEqual(['AC-17 (2)']);
   }

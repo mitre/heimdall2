@@ -158,7 +158,7 @@ export class AwsConfigMapper {
               return [];
           }
         } else {
-          return ruleData.push(result);
+          ruleData.push(result);
         }
       });
     }
@@ -314,9 +314,7 @@ export class AwsConfigMapper {
       if (response.ComplianceByConfigRules === undefined) {
         throw new Error('No compliance data was returned');
       } else {
-        response.ComplianceByConfigRules?.forEach((compliance) =>
-          complianceResults.push(compliance)
-        );
+        complianceResults.push(...(response.ComplianceByConfigRules ?? []));
       }
     }
     return complianceResults;

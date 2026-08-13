@@ -15,8 +15,12 @@ export default class UserValidatorMixin extends Vue {
     if (!dirty) {
       return [];
     }
-    !required && errors.push('Email is required.');
-    !email && errors.push('Must be valid email');
+    if (!required) {
+      errors.push('Email is required.');
+    }
+    if (!email) {
+      errors.push('Must be valid email');
+    }
     return errors;
   }
 
@@ -27,7 +31,9 @@ export default class UserValidatorMixin extends Vue {
     if (!dirty) {
       return [];
     }
-    !required && errors.push(`${name} is required.`);
+    if (!required) {
+      errors.push(`${name} is required.`);
+    }
     return errors;
   }
 }

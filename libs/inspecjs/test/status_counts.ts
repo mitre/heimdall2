@@ -51,10 +51,9 @@ export const statusCounts = {
   },
 
   count_exec_1_0: (x: ExecJSON.Execution): Counts => {
-    let controls: HDFControl[] = [];
     // Get all controls
-    x.profiles.forEach((p) =>
-      controls.push(...p.controls.map((c) => hdfWrapControl(c)))
+    let controls: HDFControl[] = x.profiles.flatMap((p) =>
+      p.controls.map((c) => hdfWrapControl(c))
     );
     // Filter overlays
     controls = statusCounts.filter_overlays(controls);

@@ -611,6 +611,27 @@ export default defineConfig([
     },
   },
   {
+    // vue-router's push shares Array#push's name, and these files' push
+    // calls are ALL router navigations whose promise handling
+    // no-floating-promises requires (void for benign duplicate-navigation
+    // rejections, await inside try/catch) — the two rules collide head-on
+    // on every site. The syntactic rule cannot see receivers; real array
+    // pushes stay linted everywhere else.
+    files: [
+      'apps/frontend/src/mixins/RouteMixin.ts',
+      'apps/frontend/src/components/global/RegistrationModal.vue',
+      'apps/frontend/src/components/global/login/LDAPLogin.vue',
+      'apps/frontend/src/components/global/login/LocalLogin.vue',
+      'apps/frontend/src/views/Base.vue',
+      'apps/frontend/src/views/Login.vue',
+    ],
+    name: 'unicorn/router-push-not-array-push',
+    plugins: { unicorn },
+    rules: {
+      'unicorn/no-return-array-push': 'off',
+    },
+  },
+  {
     // GitHub issue templates use square-bracket placeholders ([e.g. iOS],
     // [...]) — GitHub's own stock template convention, which the label-ref
     // rule reads as broken reference links. Placed AFTER the markdown block:

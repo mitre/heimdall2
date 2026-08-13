@@ -130,9 +130,10 @@ export function createProfileInfoFinding(
 }
 
 export function statusCount(evaluation: ContextualizedEvaluation): Counts {
-  let controls: ContextualizedControl[] = [];
   // Get all controls
-  evaluation.contains.forEach((p) => controls.push(...p.contains));
+  let controls: ContextualizedControl[] = evaluation.contains.flatMap(
+    (p) => p.contains
+  );
   controls = filter_overlays(controls);
   const statusCounts: Counts = {
     Passed: 0,
