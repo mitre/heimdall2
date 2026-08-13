@@ -76,17 +76,17 @@ export class Evaluation extends VuexModule {
   @Action
   async getAllEvaluations(params: IEvalPaginationParams): Promise<void> {
     this.context.commit('SET_LOADING', true);
-    return axios
-      .get<IEvaluationResponse>('/evaluations', {params})
-      .then(({data}) => {
-        const {totalCount, evaluations} = data;
-        this.context.commit('UPDATE_PARAMS', params);
-        this.context.commit('SET_PAGED_EVALUATIONS', evaluations);
-        this.context.commit('SET_ALL_EVALUATION_COUNT', totalCount);
-      })
-      .finally(() => {
-        this.context.commit('SET_LOADING', false);
+    try {
+      const {data} = await axios.get<IEvaluationResponse>('/evaluations', {
+        params
       });
+      const {totalCount, evaluations} = data;
+      this.context.commit('UPDATE_PARAMS', params);
+      this.context.commit('SET_PAGED_EVALUATIONS', evaluations);
+      this.context.commit('SET_ALL_EVALUATION_COUNT', totalCount);
+    } finally {
+      this.context.commit('SET_LOADING', false);
+    }
   }
 
   @Action
@@ -99,70 +99,70 @@ export class Evaluation extends VuexModule {
     let index = 1;
     const loadedIds: FileID[] = [];
     await Promise.all(
-      unloadedIds.map(async (id) =>
-        this.loadEvaluation(id)
-          .then(async (evaluation) => {
-            SpinnerModule.setMessage(`Loading: ${evaluation.filename}`);
-            const value = Math.floor((index++ / evaluationIds.length) * 100);
-            SpinnerModule.setValue(value);
-            if (await InspecIntakeModule.isHDF(evaluation.data)) {
-              InspecIntakeModule.loadText({
+      unloadedIds.map(async (id) => {
+        try {
+          const evaluation = await this.loadEvaluation(id);
+          SpinnerModule.setMessage(`Loading: ${evaluation.filename}`);
+          const value = Math.floor((index++ / evaluationIds.length) * 100);
+          SpinnerModule.setValue(value);
+          if (await InspecIntakeModule.isHDF(evaluation.data)) {
+            try {
+              const fileId = await InspecIntakeModule.loadText({
                 text: JSON.stringify(evaluation.data),
                 filename: evaluation.filename,
                 database_id: evaluation.id,
                 createdAt: evaluation.createdAt,
                 updatedAt: evaluation.updatedAt,
                 tags: [] // Tags are not yet implemented, so for now the value is passed in empty
-              })
-                .then((fileId) => loadedIds.push(fileId))
-                .catch((error) => {
-                  SnackbarModule.failure(error);
-                });
-            } else if (evaluation.data) {
-              const inputFile: FileLoadOptions = {
-                filename: evaluation.filename
-              };
-              if (
-                'originalResultsData' in evaluation.data &&
-                evaluation.data.originalResultsData
-              ) {
-                inputFile.data = evaluation.data.originalResultsData;
-              } else {
-                inputFile.data = JSON.stringify(evaluation.data);
-              }
-
-              const fileIds = await InspecIntakeModule.loadFile(inputFile);
-              loadedIds.push(...fileIds);
-            } else {
-              SnackbarModule.failure(`Empty File: ${evaluation.filename}`);
+              });
+              loadedIds.push(fileId);
+            } catch (error) {
+              // A failed text load reports and moves on to the next file.
+              SnackbarModule.failure(String(error));
             }
-          })
-          .catch((error) => {
-            SnackbarModule.failure(error);
-          })
-      )
+          } else if (evaluation.data) {
+            const inputFile: FileLoadOptions = {
+              filename: evaluation.filename
+            };
+            if (
+              'originalResultsData' in evaluation.data &&
+              evaluation.data.originalResultsData
+            ) {
+              inputFile.data = evaluation.data.originalResultsData;
+            } else {
+              inputFile.data = JSON.stringify(evaluation.data);
+            }
+
+            const fileIds = await InspecIntakeModule.loadFile(inputFile);
+            loadedIds.push(...fileIds);
+          } else {
+            SnackbarModule.failure(`Empty File: ${evaluation.filename}`);
+          }
+        } catch (error) {
+          SnackbarModule.failure(String(error));
+        }
+      })
     );
     document.body.style.cursor = 'default';
     return loadedIds;
   }
 
   @Action
-  async loadEvaluation(id: string) {
-    return axios.get<IEvaluation>(`/evaluations/${id}`).then(({data}) => {
-      this.context.commit('SAVE_EVALUATION', data);
-      this.context.commit('SAVE_PAGED_EVALUATION', data);
-      return data;
-    });
+  async loadEvaluation(id: string): Promise<IEvaluation> {
+    const {data} = await axios.get<IEvaluation>(`/evaluations/${id}`);
+    this.context.commit('SAVE_EVALUATION', data);
+    this.context.commit('SAVE_PAGED_EVALUATION', data);
+    return data;
   }
 
   @Action
-  async updateEvaluation(evaluation: IEvaluation) {
-    return axios
-      .put<IEvaluation>(`/evaluations/${evaluation.id}`, evaluation)
-      .then(({data}) => {
-        this.context.commit('SAVE_EVALUATION', data);
-        return data;
-      });
+  async updateEvaluation(evaluation: IEvaluation): Promise<IEvaluation> {
+    const {data} = await axios.put<IEvaluation>(
+      `/evaluations/${evaluation.id}`,
+      evaluation
+    );
+    this.context.commit('SAVE_EVALUATION', data);
+    return data;
   }
 
   @Action
