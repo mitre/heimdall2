@@ -69,17 +69,17 @@ export class FromHdfBaseConverter {
     }
 
     if (typeof transformer === 'function') {
-      if (!v.path) {
-        if (v.passParent) {
-          return transformer(file, this);
-        } else {
-          return transformer(file);
-        }
-      } else {
+      if (v.path) {
         if (v.passParent) {
           return transformer(this.handlePath(file, v.path), this);
         } else {
           return transformer(this.handlePath(file, v.path));
+        }
+      } else {
+        if (v.passParent) {
+          return transformer(file, this);
+        } else {
+          return transformer(file);
         }
       }
     } else {

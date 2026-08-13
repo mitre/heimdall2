@@ -28,10 +28,10 @@ export class CweNistMapping {
       identifiers = [identifiers];
     }
     if (identifiers.length === 0) {
-      if (DEFAULT_NIST_TAG !== undefined) {
-        return DEFAULT_NIST_TAG;
-      } else {
+      if (DEFAULT_NIST_TAG === undefined) {
         return [];
+      } else {
+        return DEFAULT_NIST_TAG;
       }
     } else {
       const matches: string[] = [];

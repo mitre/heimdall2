@@ -187,35 +187,33 @@ class Search extends VuexModule implements ISearchState {
     value: string;
     previousValues: (string | ExtendedControlStatus)[];
   }) {
-    // If we already have search filtering
-    if (this.searchTerm.trim() !== '') {
-      // If our current filters include the field
-      if (
-        this.searchTerm.toLowerCase().includes(`${searchPayload.field}:`)
-      ) {
-        const replaceRegex = fieldFilterPattern(searchPayload.field);
-        const newSearch = this.searchTerm.replace(
-          replaceRegex,
-          `${searchPayload.field}:"${[
-            ...searchPayload.previousValues,
-            searchPayload.value
-          ].join(',')}"`
-        );
-        this.context.commit('SET_SEARCH', newSearch);
-      } // We have a filter already, but it doesn't include the field
-      else {
-        const newSearch = `${this.searchTerm} ${
-          searchPayload.field
-        }:"${[...searchPayload.previousValues, searchPayload.value].join(',')}"`;
-        this.context.commit('SET_SEARCH', newSearch);
-      }
-    }
     // We don't have any search yet
-    else {
+    if (this.searchTerm.trim() === '') {
       this.context.commit(
         'SET_SEARCH',
         `${searchPayload.field}:"${searchPayload.value}"`
       );
+    }
+    // If our current filters include the field
+    else if (
+      this.searchTerm.toLowerCase().includes(`${searchPayload.field}:`)
+    ) {
+      const replaceRegex = fieldFilterPattern(searchPayload.field);
+      const newSearch = this.searchTerm.replace(
+        replaceRegex,
+        `${searchPayload.field}:"${[
+          ...searchPayload.previousValues,
+          searchPayload.value
+        ].join(',')}"`
+      );
+      this.context.commit('SET_SEARCH', newSearch);
+    }
+    // We have a filter already, but it doesn't include the field
+    else {
+      const newSearch = `${this.searchTerm} ${
+        searchPayload.field
+      }:"${[...searchPayload.previousValues, searchPayload.value].join(',')}"`;
+      this.context.commit('SET_SEARCH', newSearch);
     }
     this.parseSearch();
   }

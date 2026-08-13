@@ -92,10 +92,10 @@ abstract class HDFControl10 implements HDFControl {
       case profileError:
         if (!this.status_list || this.status_list.length === 0) {
           return 'No describe blocks were run in this control';
-        } else if (this.message !== undefined) {
-          return `Exception:\n\n${this.message}\n`;
-        } else {
+        } else if (this.message === undefined) {
           return `No details available for this control.`;
+        } else {
+          return `Exception:\n\n${this.message}\n`;
         }
       case 'From Profile':
         return 'No tests are run in a profile json.';
@@ -117,10 +117,10 @@ abstract class HDFControl10 implements HDFControl {
     raw: ResultControl_1_0 | ProfileControl_1_0
   ): string[] | string {
     const fetched: string[] | string | undefined | null = raw.tags.nist;
-    if (!fetched) {
-      return ['UM-1'];
-    } else {
+    if (fetched) {
       return fetched;
+    } else {
+      return ['UM-1'];
     }
   }
 
@@ -230,12 +230,12 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   }
 
   private static compute_message(control: ResultControl_1_0): string {
-    if (control.impact !== 0) {
-      // If it has any impact, convert each result to a message line and chain them all together
-      return control.results.map((r) => ExecControl.to_message_line(r)).join('');
-    } else {
+    if (control.impact === 0) {
       // If it's no impact, just post the description (if it exists)
       return control.desc || 'No message found.';
+    } else {
+      // If it has any impact, convert each result to a message line and chain them all together
+      return control.results.map((r) => ExecControl.to_message_line(r)).join('');
     }
   }
 

@@ -85,17 +85,17 @@ export class Groups extends VuexModule implements IGroupState {
   @Action
   public UpdateGroup(group: IGroup): Promise<void> {
     const myGroupId = this.myGroups.findIndex((g) => g.id === group.id);
-    if (myGroupId !== -1) {
-      this.UPDATE_MY_GROUPS({idx: myGroupId, updated: group});
-    } else {
+    if (myGroupId === -1) {
       this.ADD_TO_MY_GROUPS(group);
+    } else {
+      this.UPDATE_MY_GROUPS({idx: myGroupId, updated: group});
     }
 
     const allGroupsId = this.allGroups.findIndex((g) => g.id === group.id);
-    if (allGroupsId !== -1) {
-      this.UPDATE_ALL_GROUPS({idx: allGroupsId, updated: group});
-    } else {
+    if (allGroupsId === -1) {
       this.ADD_TO_ALL_GROUPS(group);
+    } else {
+      this.UPDATE_ALL_GROUPS({idx: allGroupsId, updated: group});
     }
     return Promise.resolve();
   }

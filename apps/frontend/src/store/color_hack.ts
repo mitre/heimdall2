@@ -55,24 +55,23 @@ export class ColorHack extends VuexModule {
       const cached = localCache.get(colorName);
       if (cached !== undefined) {
         return cached;
-      } else {
-        // If not calculate it
-        // We first try class colors, assuming base.
-        let color = calculateColor(`var(--v-${colorName}-base)`);
-
-        // Failing that, we try class colors but without assuming base (in case they did info-darken or something)
-        if (color === '#000000') {
-          color = calculateColor(`var(--v-${colorName}`);
-        }
-
-        // Then we fall back to non-class builtins
-        if (color === '#000000') {
-          color = calculateColor(colorName);
-        }
-
-        localCache.set(colorName, color);
-        return color;
       }
+      // If not calculate it
+      // We first try class colors, assuming base.
+      let color = calculateColor(`var(--v-${colorName}-base)`);
+
+      // Failing that, we try class colors but without assuming base (in case they did info-darken or something)
+      if (color === '#000000') {
+        color = calculateColor(`var(--v-${colorName}`);
+      }
+
+      // Then we fall back to non-class builtins
+      if (color === '#000000') {
+        color = calculateColor(colorName);
+      }
+
+      localCache.set(colorName, color);
+      return color;
     };
   }
 

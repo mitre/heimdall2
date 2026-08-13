@@ -153,7 +153,7 @@ export default class Treemap extends Vue {
     if (is_leaf(n.data)) {
       const id = n.data.control.data.id;
       this.syncedSelectedControl =
-        id !== this.syncedSelectedControl ? id : null;
+        id === this.syncedSelectedControl ? null : id;
     } else {
       // Otherwise, dive away. Set course for the leading title
       const cntrl = n.data.nist_control;

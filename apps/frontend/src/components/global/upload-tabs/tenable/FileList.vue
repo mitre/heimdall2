@@ -274,9 +274,9 @@ export default class FileList extends Vue {
   }
 
   epochToDate(date: string): string {
-    return Number(date) !== -1
-      ? new Date(Number(date) * 1000).toLocaleString()
-      : '';
+    return Number(date) === -1
+      ? ''
+      : new Date(Number(date) * 1000).toLocaleString();
   }
 
   formatNumberOfScans(value: string | undefined): string {

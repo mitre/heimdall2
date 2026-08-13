@@ -41,11 +41,9 @@ const SEVERITY_LOOKUP = new Map<string, number>([
 ]);
 
 export function nistTag(cveTag: string | undefined) {
-  if (!cveTag) {
-    return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
-  } else {
-    return DEFAULT_UPDATE_REMEDIATION_NIST_TAGS;
-  }
+  return cveTag
+    ? DEFAULT_UPDATE_REMEDIATION_NIST_TAGS
+    : DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
 }
 
 export class PrismaControlMapper extends BaseConverter {
@@ -133,8 +131,6 @@ export class PrismaControlMapper extends BaseConverter {
                     } else if (obj.Type === 'linux') {
                       if (obj.Distro !== '') {
                         result += `Configuration check for ${obj.Distro}`;
-                      } else {
-                        result += ``;
                       }
                     } else {
                       result += `${obj.Type} check for ${obj.Hostname}`;
@@ -146,14 +142,14 @@ export class PrismaControlMapper extends BaseConverter {
                 message: {
                   transformer: (obj: PrismaControl) => {
                     let result = '';
-                    if (obj['Fix Status'] !== '' && obj.Cause !== '') {
-                      result += `Fix Status: ${obj['Fix Status']}\n\n${obj.Cause}`;
-                    } else if (obj['Fix Status'] !== '') {
+                    if (obj['Fix Status'] === '' && obj.Cause === '') {
+                      result += 'Unknown';
+                    } else if (obj.Cause === '') {
                       result += `Fix Status: ${obj['Fix Status']}`;
-                    } else if (obj.Cause !== '') {
+                    } else if (obj['Fix Status'] === '') {
                       result += `Cause: ${obj.Cause}`;
                     } else {
-                      result += 'Unknown';
+                      result += `Fix Status: ${obj['Fix Status']}\n\n${obj.Cause}`;
                     }
                     return result;
                   }

@@ -110,11 +110,7 @@ function collapseDuplicates<T extends object>(
     const propertyValue = _.get(item, key);
     if (typeof propertyValue === 'string') {
       const index = seen.get(propertyValue) || 0;
-      if (!seen.has(propertyValue)) {
-        newArray.push(item);
-        seen.set(propertyValue, counter);
-        counter++;
-      } else {
+      if (seen.has(propertyValue)) {
         // The index was recorded by `seen` at push time, so .at() cannot
         // miss; the guard states that invariant. _.set mutates the fetched
         // object, so working through the reference is identical to indexing.
@@ -146,6 +142,10 @@ function collapseDuplicates<T extends object>(
             ...(_.get(item, 'results') as ExecJSON.ControlResult[])
           ]);
         }
+      } else {
+        newArray.push(item);
+        seen.set(propertyValue, counter);
+        counter++;
       }
     }
   });

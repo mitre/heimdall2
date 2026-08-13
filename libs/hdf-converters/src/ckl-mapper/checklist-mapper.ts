@@ -219,23 +219,22 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
         start_time: ''
       }
     ];
-  } else {
-    // split into multiple findings details using heimdall2 CKLExport functionality
-    for (const details of findingDetails.split(
-      '\n--------------------------------\n'
-    )) {
-      // split details for status
-      const match = FINDING_DETAILS_PATTERN.exec(details.trim());
-      if (match) {
-        const [, mStatus, mCode_dec, messageType, mMessage] = match;
-        results.push({
-          status: getStatus(mStatus),
-          code_desc: mCode_dec,
-          message: checkMessage('MESSAGE', messageType, mMessage),
-          start_time: '',
-          skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage)
-        });
-      }
+  }
+  // split into multiple findings details using heimdall2 CKLExport functionality
+  for (const details of findingDetails.split(
+    '\n--------------------------------\n'
+  )) {
+    // split details for status
+    const match = FINDING_DETAILS_PATTERN.exec(details.trim());
+    if (match) {
+      const [, mStatus, mCode_dec, messageType, mMessage] = match;
+      results.push({
+        status: getStatus(mStatus),
+        code_desc: mCode_dec,
+        message: checkMessage('MESSAGE', messageType, mMessage),
+        start_time: '',
+        skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage)
+      });
     }
   }
   return results;
@@ -247,21 +246,21 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   const commentString = descriptions[0].data;
   if (!commentString) {
     return results;
-  } else if (!commentString.includes(' :: ')) {
+  }
+  if (!commentString.includes(' :: ')) {
     return [
       {
         label: descriptions[0].label,
         data: descriptions[0].data
       }
     ];
-  } else {
-    for (const section of commentString.split(COMMENT_SECTION_SEPARATOR)) {
-      const matches = COMMENT_PATTERN.exec(section);
-      if (matches) {
-        const [, label, data] = matches;
-        if (data) {
-          results.push({data, label: label.toLowerCase()});
-        }
+  }
+  for (const section of commentString.split(COMMENT_SECTION_SEPARATOR)) {
+    const matches = COMMENT_PATTERN.exec(section);
+    if (matches) {
+      const [, label, data] = matches;
+      if (data) {
+        results.push({data, label: label.toLowerCase()});
       }
     }
   }
@@ -289,9 +288,8 @@ function getAttributes(input: unknown[]) {
   const data = passthrough[0].data;
   if (!data) {
     return [];
-  } else {
-    return JSON.parse(data).hdfSpecificData?.attributes || [];
   }
+  return JSON.parse(data).hdfSpecificData?.attributes || [];
 }
 
 function getHdfSpecificDataAttribute(

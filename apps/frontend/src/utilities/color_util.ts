@@ -81,24 +81,23 @@ export const colorShiftLookupTable: Record<string, string> = {
 export function visible_against(colorHex: string): string {
   // Somehow, chroma-js does not always import properly. This is not a good solution, but it works in the meantime.
   // https://github.com/mitre/heimdall2/issues/2350
-  if (typeof Chroma !== 'undefined') {
-    // Get the color
-    let color = Chroma(colorHex);
-
-    // Rotate 50 degrees in hue (arbitrary # but seems nice)
-    color = color.set('hsl.h', '+180');
-
-    // Now set its luminance to the opposite extreme
-    const lum = color.luminance();
-    if (lum < 0.5) {
-      color = color.luminance(0.8);
-    } else {
-      color = color.luminance(0.03);
-    }
-    return color.hex();
-  } else {
+  if (typeof Chroma === 'undefined') {
     return COLOR_ON_COLOR_LOOKUP.get(colorHex) || '#000000';
   }
+  // Get the color
+  let color = Chroma(colorHex);
+
+  // Rotate 50 degrees in hue (arbitrary # but seems nice)
+  color = color.set('hsl.h', '+180');
+
+  // Now set its luminance to the opposite extreme
+  const lum = color.luminance();
+  if (lum < 0.5) {
+    color = color.luminance(0.8);
+  } else {
+    color = color.luminance(0.03);
+  }
+  return color.hex();
 }
 
 /** Bounds luminance so it never quite reaches 0 or 1 */
@@ -115,15 +114,14 @@ function lum_sigmoid(t: number, move: number) {
 
 /** Shifts a colors luminance by the specified amount */
 export function shift(baseColor: string, amount: number): string {
-  if (typeof Chroma !== 'undefined') {
-    const c = Chroma(baseColor);
-    const baseL = c.luminance();
-    const newL = lum_sigmoid(baseL, amount);
-    const newC = c.luminance(newL);
-    return newC.hex();
-  } else {
+  if (typeof Chroma === 'undefined') {
     return colorShiftLookupTable[`${baseColor}+${amount}`];
   }
+  const c = Chroma(baseColor);
+  const baseL = c.luminance();
+  const newL = lum_sigmoid(baseL, amount);
+  const newC = c.luminance(newL);
+  return newC.hex();
 }
 
 /** Gen variations on a color */

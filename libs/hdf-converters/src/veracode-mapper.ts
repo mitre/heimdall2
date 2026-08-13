@@ -240,10 +240,10 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
     input = [input];
   }
   for (const value of input) {
-    if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
-      flawArr.push(_.get(value, STATIC_FLAWS) as string);
-    } else {
+    if (Array.isArray(_.get(value, STATIC_FLAWS))) {
       flawArr.push(...(_.get(value, STATIC_FLAWS) as string[]));
+    } else {
+      flawArr.push(_.get(value, STATIC_FLAWS) as string);
     }
   }
   return flawArr.map((value) => _.get(value, '@_.sourcefile')).join('\n');
@@ -400,12 +400,7 @@ function componentPass(component: Record<string, unknown>) {
   const vulnList: string[] = [];
   _.set(component, 'control_ids', vulnList);
   if (_.get(component, 'vulnerabilities') !== '') {
-    if (!Array.isArray(_.get(component, 'vulnerabilities.vulnerability'))) {
-      vulnList.push(
-        _.get(component, 'vulnerabilities.vulnerability.@_.cve_id') as string
-      );
-      _.set(component, 'control_ids', vulnList);
-    } else {
+    if (Array.isArray(_.get(component, 'vulnerabilities.vulnerability'))) {
       vulnList.push(
         ...(
           _.get(component, 'vulnerabilities.vulnerability') as Record<
@@ -415,6 +410,11 @@ function componentPass(component: Record<string, unknown>) {
         ).map(
           (vuln: Record<string, unknown>) => _.get(vuln, '@_.cve_id') as string
         )
+      );
+      _.set(component, 'control_ids', vulnList);
+    } else {
+      vulnList.push(
+        _.get(component, 'vulnerabilities.vulnerability.@_.cve_id') as string
       );
       _.set(component, 'control_ids', vulnList);
     }
@@ -535,10 +535,10 @@ export class VeracodeMapper extends BaseConverter {
       (control: {category: unknown; level: string}) => {
         if (Array.isArray(control.category)) {
           return {level: control.level, category: control.category};
-        } else if (!control.category) {
-          return {level: control.level};
-        } else {
+        } else if (control.category) {
           return {level: control.level, category: [control.category]};
+        } else {
+          return {level: control.level};
         }
       }
     );

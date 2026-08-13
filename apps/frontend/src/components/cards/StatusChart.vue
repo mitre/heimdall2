@@ -82,14 +82,14 @@ export default class StatusChart extends Vue {
   }
 
   onSelect(status: Category<ControlStatus>) {
-    if (SearchModule.statusFilter?.indexOf(status.value) !== -1) {
-      SearchModule.removeSearchFilter({
+    if (SearchModule.statusFilter?.indexOf(status.value) === -1) {
+      SearchModule.addSearchFilter({
         field: 'status',
         value: status.value,
         previousValues: this.value || []
       });
     } else {
-      SearchModule.addSearchFilter({
+      SearchModule.removeSearchFilter({
         field: 'status',
         value: status.value,
         previousValues: this.value || []

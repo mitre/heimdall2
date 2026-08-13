@@ -32,8 +32,10 @@ export const INCORRECT_CREDENTIALS_MSG =
 export class TenableUtil {
   hostConfig: AuthInfo;
   axios_instance: AxiosInstance;
-  // If Heimdall Server AND FORCE_TENABLE_FRONTEND=FALSE(default) set to false, otherwise true (uses backend proxy) 
-  isServer: boolean = !ServerModule.serverMode ? false : ServerModule.forceTenableFrontend ? false: true; 
+  // Use the backend proxy when running against Heimdall Server, unless
+  // FORCE_TENABLE_FRONTEND (default false) forces direct frontend requests.
+  isServer: boolean =
+    ServerModule.serverMode && !ServerModule.forceTenableFrontend;
 
   /**
    * Initializes the TenableUtil with the provided host configuration.
@@ -204,21 +206,19 @@ export class TenableUtil {
         if (TENABLE_HOST_URL) {
           // If the URL is listed in the allows domains
           // (.env variable TENABLE_HOST_URL) check if they match
-          if (!error.config.baseURL.includes(TENABLE_HOST_URL)) {
-            if (error.config.baseURL) {
-              rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL)
-            } else {
-              // we assume that the connection was rejected, most likely is that the network path does not exist
-              rejectMsg = 'Connection refused by host, or broken network path'
-            }
-          } else {
+          if (error.config.baseURL.includes(TENABLE_HOST_URL)) {
             // CSP url did match, check for port match - reject appropriately
             const portNumber = parseInt(this.hostConfig.host_url.split(':', 3)[2]);
-            if (portNumber != 443) {
-              rejectMsg = `Invalid SSL/TSL port number used: ${portNumber} must be 443.`;
-            } else {
+            if (portNumber == 443) {
               rejectMsg = corsReject;
+            } else {
+              rejectMsg = `Invalid SSL/TSL port number used: ${portNumber} must be 443.`;
             }
+          } else if (error.config.baseURL) {
+            rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL)
+          } else {
+            // we assume that the connection was rejected, most likely is that the network path does not exist
+            rejectMsg = 'Connection refused by host, or broken network path'
           }
         } else if (ServerModule.serverMode) {
           // The URL is not listed in the allows domains (CSP) and Heimdall instance is a server

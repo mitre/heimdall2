@@ -366,12 +366,7 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
     const parent = _control_parent(asControl);
 
     // If parent is null, add to roots.
-    if (!parent) {
-      roots.push({
-        control: asControl,
-        children: []
-      });
-    } else {
+    if (parent) {
       // Valid parent; look it up and append us to it
       const parentKey = _key_for(parent);
       const parentNode = map.get(parentKey);
@@ -386,6 +381,11 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
           children: [asNode] // "Us"
         });
       }
+    } else {
+      roots.push({
+        control: asControl,
+        children: []
+      });
     }
   });
 
