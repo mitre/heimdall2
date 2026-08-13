@@ -73,7 +73,7 @@ function findingImpact(
     // severity is required, but must include either 'label' or 'normalized' internally with 'label' being preferred.  other values can be in here too such as the original severity rating.
     impact =
       _.get(finding, 'Severity.Label') ||
-      (_.get(finding, 'Severity.Normalized') as unknown as number) / 100.0;
+      (_.get(finding, 'Severity.Normalized') as unknown as number) / 100;
     // securityhub asff file does not contain accurate severity information by setting things that shouldn't be informational to informational: when additional context, i.e. standards, is not provided, set informational to medium.
     if (typeof impact === 'string' && impact === 'INFORMATIONAL') {
       impact = 'MEDIUM';

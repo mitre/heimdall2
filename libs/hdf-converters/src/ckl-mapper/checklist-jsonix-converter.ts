@@ -99,7 +99,7 @@ const IMPACT_MAPPING = new Map<string, number>([
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3],
-  ['none', 0.0]
+  ['none', 0]
 ]);
 
 export enum Severity {
@@ -681,7 +681,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       ((computedImpact !== undefined && computedImpact !== impact) ||
         impact < 0.1 ||
         impact >= 0.9) &&
-      impact !== 0.0
+      impact !== 0
     ) {
       hdfSpecificData.impact = control.impact;
     }

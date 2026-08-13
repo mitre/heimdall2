@@ -17,12 +17,12 @@ import {
 } from './utils/global';
 
 const IMPACT_MAPPING = new Map<string, number>([
-  ['critical', 1.0],
+  ['critical', 1],
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3],
-  ['best_practice', 0.0],
-  ['information', 0.0]
+  ['best_practice', 0],
+  ['information', 0]
 ]);
 
 const CWE_NIST_MAPPING = new CweNistMapping();

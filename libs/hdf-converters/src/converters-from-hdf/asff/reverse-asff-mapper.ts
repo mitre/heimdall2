@@ -141,7 +141,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     [0.7, 'HIGH'],
     [0.5, 'MEDIUM'],
     [0.3, 'LOW'],
-    [0.0, 'INFORMATIONAL']
+    [0, 'INFORMATIONAL']
   ]);
 
   constructor(hdfObj: ExecJSON.Execution, options: IOptions | undefined) {

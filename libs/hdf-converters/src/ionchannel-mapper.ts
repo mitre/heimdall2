@@ -321,7 +321,7 @@ export class IonChannelMapper extends BaseConverter {
               }
             },
             desc: '',
-            impact: 0.0,
+            impact: 0,
             code: {
               transformer: (dependency: Dependency) =>
                 JSON.stringify(dependency, null, 2)

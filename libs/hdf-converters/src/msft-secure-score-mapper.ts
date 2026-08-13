@@ -131,7 +131,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 }
 
                 const highMaxScore = Math.max(...knownMaxScores);
-                return highMaxScore / 10.0;
+                return highMaxScore / 10;
               }
             },
             refs: [],

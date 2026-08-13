@@ -20,7 +20,7 @@ const IMPACT_MAPPING = new Map<string, number>([
   ['3', 0.5],
   ['2', 0.3],
   ['1', 0.1],
-  ['0', 0.0]
+  ['0', 0]
 ]);
 
 function impactMapping(severity: number | string): number {

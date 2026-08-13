@@ -13,7 +13,7 @@ const IMPACT_MAPPING = new Map<string, number>([
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3],
-  ['negligible', 0.0],
+  ['negligible', 0],
   ['unknown', 0.5]
 ]);
 

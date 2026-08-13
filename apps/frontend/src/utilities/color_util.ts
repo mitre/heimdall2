@@ -130,7 +130,7 @@ export function shift(baseColor: string, amount: number): string {
 const BASE_SPREAD = 0.5;
 export function gen_variants(
   baseColor: string,
-  spread = 1.0
+  spread = 1
 ): VuetifyParsedThemeItem {
   // Re-scale
   spread = spread * BASE_SPREAD;

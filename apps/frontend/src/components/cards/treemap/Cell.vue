@@ -67,7 +67,7 @@ export default class Cell extends Vue {
   @Prop({type: Number, default: 0}) readonly depth!: number;
   @Prop({type: Object, default: 0}) readonly scales!: XYScale;
 
-  scale = 1.0;
+  scale = 1;
 
   /** Are we a control? Use treemap util type checker */
   get is_control(): boolean {

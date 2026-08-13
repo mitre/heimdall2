@@ -218,7 +218,7 @@ function node_data_to_tree_map(
           return 1;
         }
       } else if (root.parent !== null) {
-        return 1.0 / root.parent.children.length;
+        return 1 / root.parent.children.length;
       }
       return 0;
     });

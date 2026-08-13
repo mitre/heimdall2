@@ -126,7 +126,7 @@ function computeSeverity(vuln: ChecklistVuln): string {
  * @returns impact - number
  */
 function transformImpact(vuln: ChecklistVuln): number {
-  if (vuln.status === 'Not Applicable') return 0.0;
+  if (vuln.status === 'Not Applicable') return 0;
   const severity = computeSeverity(vuln);
   let impact: number = ImpactMapping[severity as keyof typeof ImpactMapping];
   const hdfExistingData = parseJson(vuln.thirdPartyTools);

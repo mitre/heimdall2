@@ -322,11 +322,11 @@ type Data<T extends SonarqubeVersion> = {
 
 // https://docs.sonarsource.com/sonarqube-server/latest/user-guide/rules/overview/#how-severities-are-assigned
 const IMPACT_MAPPING = new Map<string, number>([
-  ['blocker', 1.0],
+  ['blocker', 1],
   ['critical', 0.7],
   ['major', 0.5],
   ['minor', 0.3],
-  ['info', 0.0]
+  ['info', 0]
 ]);
 
 const CWE_NIST_MAPPING = new CweNistMapping();

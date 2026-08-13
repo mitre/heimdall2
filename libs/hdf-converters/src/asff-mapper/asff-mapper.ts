@@ -25,7 +25,7 @@ const IMPACT_MAPPING = new Map<string, number>([
   ['HIGH', 0.7],
   ['MEDIUM', 0.5],
   ['LOW', 0.3],
-  ['INFORMATIONAL', 0.0]
+  ['INFORMATIONAL', 0]
 ]);
 
 const SEVERITY_LABEL = 'Severity.Label';
@@ -422,7 +422,7 @@ export class ASFFMapper extends BaseConverter {
                     (_.get(finding, SEVERITY_LABEL) as string | undefined)
                       ? (_.get(finding, SEVERITY_LABEL) as string)
                       : (_.get(finding, 'Severity.Normalized') as number) /
-                        100.0;
+                        100;
                   impact = externalProductHandler<string | number>(
                     this,
                     whichSpecialCase(finding),

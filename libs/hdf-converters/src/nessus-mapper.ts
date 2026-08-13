@@ -21,7 +21,7 @@ const IMPACT_MAPPING = new Map<string, number>([
   ['ii', 0.5],
   ['1', 0.3],
   ['iii', 0.3],
-  ['0', 0.0]
+  ['0', 0]
 ]);
 const COMPLIANCE_PATH = 'compliance-reference';
 const COMPLIANCE_CHECK_NAME = 'compliance-check-name';
