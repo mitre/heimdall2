@@ -34,8 +34,8 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
   }
 
   async validate(
-    accessToken: string,
-    refreshToken: string,
+    _accessToken: string,
+    _refreshToken: string,
     profile: GoogleProfile,
   ): Promise<User> {
     const { emails, name } = profile;

@@ -11,7 +11,7 @@ export class TrufflehogResults {
     let parsedData = {};
     try {
       parsedData = JSON.parse(trufflehogJson.trim());
-    } catch (error) {
+    } catch {
       parsedData = trufflehogJson
         .trim()
         .split('\n')

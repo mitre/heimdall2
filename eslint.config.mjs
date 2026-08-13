@@ -148,6 +148,20 @@ export default defineConfig([
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-redundant-type-constituents': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
+      // The underscore prefix is the ecosystem's explicit intentionally-unused
+      // marker and this codebase already uses it (interface-conforming params,
+      // watcher signatures, mock methods). Honoring it is the rule's own
+      // documented configuration; unmarked unused vars still flag.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
@@ -245,7 +259,7 @@ export default defineConfig([
       // ~31 shipped migrations never use the second param. Editing historical
       // migrations is churn on files nobody should touch (Aaron, 2026-08-13
       // triage) — ignore that one name here; real unused vars still flag.
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^Sequelize$' }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_|^Sequelize$' }],
       // A migration's filename is an identifier stored in the SequelizeMeta
       // table on every deployment (seeders likewise in SequelizeData) —
       // renaming one causes it to re-run. The names are frozen data, not a

@@ -23,7 +23,6 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {Filter, FilteredDataModule} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
-import {EvaluationFile} from '../../store/report_intake';
 
 @Component({
   components: {

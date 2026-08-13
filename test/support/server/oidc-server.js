@@ -11,7 +11,7 @@
 
   // Start the server
   await server.start(8082, 'localhost');
-  server.service.on('beforeUserinfo', (userInfoResponse, req) => {
+  server.service.on('beforeUserinfo', (userInfoResponse, _req) => {
     userInfoResponse.body = {
       email: 'example@example.com',
       email_verified: isVerified,

@@ -8,7 +8,7 @@ export default defineConfig({
   video: true,
   chromeWebSecurity: false,
   e2e: {
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on, _config) {
       installLogsPrinter(on)
     },
     baseUrl: 'http://127.0.0.1:3000',

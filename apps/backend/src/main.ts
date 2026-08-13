@@ -138,7 +138,7 @@ async function bootstrap() {
     }),
   );
 
-  app.use((request: any, res: any, next: any) => {
+  app.use((request: any, _res: any, next: any) => {
     logger.debug('Url:', request.url);
     logger.debug('Session:', JSON.stringify(request.session, null, 2));
     next();

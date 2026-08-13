@@ -107,7 +107,7 @@ export default class Treemap extends Vue {
           throw new Error('truncate');
         }
       }
-    } catch (someTraversalError) {
+    } catch {
       // Slice to last successful depth. Slice is non inclusive so this works
       this.set_path(this.value.slice(0, depth));
     }

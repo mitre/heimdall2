@@ -84,7 +84,7 @@ export default class FileList extends Vue {
     const content = await fetchS3File(this.auth, file.Key!, this.formBucketName);
     try {
       JSON.parse(content);
-    } catch (parseError) {
+    } catch {
       SnackbarModule.failure(
         `Selected file: ${file.Key} is not a valid formatted json file.`
       );

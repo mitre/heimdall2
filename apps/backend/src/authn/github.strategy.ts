@@ -44,7 +44,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   }
 
   async validate(
-    request: Record<string, unknown>,
+    _request: Record<string, unknown>,
     accessToken: string,
   ): Promise<User> {
     // Get user's linked emails from Github

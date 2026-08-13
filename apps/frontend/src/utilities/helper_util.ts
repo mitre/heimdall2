@@ -58,7 +58,7 @@ export class LocalStorageVal<T> {
     // Then try parsing. On fail, clear and go null
     try {
       return JSON.parse(s);
-    } catch (error) {
+    } catch {
       this.clear();
       return null;
     }

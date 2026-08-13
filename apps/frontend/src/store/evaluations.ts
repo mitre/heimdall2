@@ -49,7 +49,7 @@ export class Evaluation extends VuexModule {
         return this.allEvaluations.find((e) => {
           return e.id === file.database_id?.toString();
         });
-      } catch (error) {
+      } catch {
         return false;
       }
     };

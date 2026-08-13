@@ -28,8 +28,8 @@ export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
   }
 
   async validate(
-    accessToken: string,
-    refreshToken: string,
+    _accessToken: string,
+    _refreshToken: string,
     profile: GitlabProfile,
   ): Promise<User> {
     const email = profile.emails[0].value;

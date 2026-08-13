@@ -4,7 +4,7 @@ const sequelize = require("sequelize");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction((t) => {
+    return queryInterface.sequelize.transaction((_t) => {
       return Promise.all([
         queryInterface.addColumn('Users', 'creationMethod', {
           type: sequelize.STRING,

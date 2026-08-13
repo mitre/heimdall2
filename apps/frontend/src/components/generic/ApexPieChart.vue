@@ -93,7 +93,7 @@ export default class ApexPieChart extends Vue {
 
       // Format the data label to show the actual value instead of percentage
       dataLabels: {
-        formatter: (val, opts) => {
+        formatter: (_val, opts) => {
           if (!opts) {
             throw new Error('Missing configuration options for dataLabels');
           }
