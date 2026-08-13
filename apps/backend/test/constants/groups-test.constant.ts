@@ -24,59 +24,59 @@ export const UPDATE_GROUP: CreateGroupDto = {
 };
 
 export const GROUPS_SERVICE_MOCK = {
-  async addEvaluationToGroup(
+  addEvaluationToGroup(
     _group: Group,
     _evaluation: Evaluation,
   ): Promise<void> {
-    return;
+    return Promise.resolve();
   },
-  async addUserToGroup(
+  addUserToGroup(
     _group: Group,
     _user: User,
     _role: string,
   ): Promise<void> {
-    return;
+    return Promise.resolve();
   },
-  async count(): Promise<number> {
-    return 1;
+  count(): Promise<number> {
+    return Promise.resolve(1);
   },
-  async create(_createGroupDto: CreateGroupDto): Promise<Group> {
-    return new Group();
+  create(_createGroupDto: CreateGroupDto): Promise<Group> {
+    return Promise.resolve(new Group());
   },
-  async ensureGroupHasOwner(): Promise<void> {
-    return;
+  ensureGroupHasOwner(): Promise<void> {
+    return Promise.resolve();
   },
-  async findAll(): Promise<Group[]> {
-    return [];
+  findAll(): Promise<Group[]> {
+    return Promise.resolve([]);
   },
-  async findByIds(_id: string[]): Promise<Group[]> {
-    return [];
+  findByIds(_id: string[]): Promise<Group[]> {
+    return Promise.resolve([]);
   },
-  async findByPkBang(_id: string): Promise<Group> {
-    return new Group();
+  findByPkBang(_id: string): Promise<Group> {
+    return Promise.resolve(new Group());
   },
-  async remove(_groupToDelete: Group): Promise<Group> {
-    return new Group();
+  remove(_groupToDelete: Group): Promise<Group> {
+    return Promise.resolve(new Group());
   },
-  async removeEvaluationFromGroup(
+  removeEvaluationFromGroup(
     _group: Group,
     _evaluation: Evaluation,
   ): Promise<Group> {
-    return new Group();
+    return Promise.resolve(new Group());
   },
-  async removeUserFromGroup(group: Group, user: User): Promise<Group> {
+  removeUserFromGroup(group: Group, user: User): Promise<Group> {
     return group.$remove('user', user);
   },
-  async update(
+  update(
     _groupToUpdate: Group,
     _groupDto: CreateGroupDto,
   ): Promise<Group> {
-    return new Group();
+    return Promise.resolve(new Group());
   },
-  async updateGroupUserRole(
+  updateGroupUserRole(
     _group: Group,
     _updateGroupUser: UpdateGroupUserRoleDto,
   ): Promise<GroupUser | undefined> {
-    return undefined;
+    return Promise.resolve(undefined);
   },
 };

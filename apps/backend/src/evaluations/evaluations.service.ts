@@ -202,15 +202,12 @@ export class EvaluationsService {
   }
 
   async getEvaluationIdsForTagName(tagValue: string): Promise<string[]> {
-    let evaluationIds: string[] = [];
-    await EvaluationTag.findAll({
+    const evaluationTags = await EvaluationTag.findAll({
       attributes: ['evaluationId'],
       raw: true,
       where: { value: { [Op.iRegexp]: tagValue } },
-    }).then(async (evalIds) => {
-      evaluationIds = evalIds.map(evalIds => evalIds.evaluationId);
     });
-    return evaluationIds;
+    return evaluationTags.map(tag => tag.evaluationId);
   }
 
   async getEvaluationsWithClause(

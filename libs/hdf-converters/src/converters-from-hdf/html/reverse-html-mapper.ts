@@ -507,7 +507,8 @@ export class FromHDFToHTMLMapper {
   }
 
   // Prompt HTML generation from data pulled from file during constructor initialization
-  async toHTML(): Promise<string> {
+  // Promise-returning for API compatibility; the rendering itself is synchronous.
+  toHTML(): Promise<string> {
     // Pull export template + styles and create outputData object containing data to fill template with
     const template = html;
     this.outputData.tailwindStyles = css;
@@ -517,6 +518,6 @@ export class FromHDFToHTMLMapper {
       ''
     );
     // Render template and return generated HTML file
-    return Mustache.render(template, this.outputData);
+    return Promise.resolve(Mustache.render(template, this.outputData));
   }
 }

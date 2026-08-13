@@ -22,7 +22,7 @@ describe('DatabaseService', () => {
   });
 
   describe('getDelta', () => {
-    it('returns the correct value when no items are given', async () => {
+    it('returns the correct value when no items are given', () => {
       const source: DeltaArguments[] = [];
       const updated: DeltaArguments[] = [];
 
@@ -32,7 +32,7 @@ describe('DatabaseService', () => {
       expect(delta.deleted.length).toEqual(0);
     });
 
-    it('returns the correct value when an item is added', async () => {
+    it('returns the correct value when an item is added', () => {
       const source = [{ id: 1 }, { id: 2 }, { id: 3 }];
       const updated = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
@@ -43,7 +43,7 @@ describe('DatabaseService', () => {
       expect(delta.deleted.length).toEqual(0);
     });
 
-    it('returns the correct value when an item is changed', async () => {
+    it('returns the correct value when an item is changed', () => {
       const source = [{ id: 1, prop: 1 }];
       const updated = [{ id: 1, prop: 2 }];
 
@@ -56,7 +56,7 @@ describe('DatabaseService', () => {
       expect(delta.changed[0].prop).toEqual(updated[0].prop);
     });
 
-    it('returns the correct value when an item is deleted', async () => {
+    it('returns the correct value when an item is deleted', () => {
       const source = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
       const updated = [{ id: 1 }, { id: 2 }, { id: 4 }];
 
@@ -67,7 +67,7 @@ describe('DatabaseService', () => {
       expect(delta.deleted.length).toEqual(1);
     });
 
-    it('returns the correct value when all items are added', async () => {
+    it('returns the correct value when all items are added', () => {
       const source: DeltaArguments[] = [];
       const updated: DeltaArguments[] = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
@@ -78,7 +78,7 @@ describe('DatabaseService', () => {
       expect(delta.deleted.length).toEqual(0);
     });
 
-    it('returns the correct value when all items are changed', async () => {
+    it('returns the correct value when all items are changed', () => {
       const source = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
       const updated = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
 
@@ -89,7 +89,7 @@ describe('DatabaseService', () => {
       expect(delta.deleted.length).toEqual(0);
     });
 
-    it('returns the correct value when all items are deleted', async () => {
+    it('returns the correct value when all items are deleted', () => {
       const source = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
       const updated: DeltaArguments[] = [];
 

@@ -2,7 +2,7 @@ import { CanActivate, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TestGuard implements CanActivate {
-  async canActivate(): Promise<boolean> {
+  canActivate(): boolean {
     const environment = process.env.NODE_ENV;
     return (
       environment !== undefined

@@ -23,8 +23,8 @@ const redHatControlCount = 247;
 const nginxControlCount = 41;
 const nginxDelta = 3;
 
-describe.sequential('Compare', async () => {
-  describe('Compare table data', async () => {
+describe.sequential('Compare', () => {
+  describe('Compare table data', () => {
     beforeEach(async () => {
       removeAllFiles();
 

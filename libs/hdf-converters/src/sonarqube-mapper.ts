@@ -862,7 +862,7 @@ export class SonarqubeResults {
     const MAX_RETRIES = 5;
     this.axiosClient.defaults.raxConfig = {
       retry: MAX_RETRIES,
-      onError: async (e) => {
+      onError: (e) => {
         const cfg = rax.getConfig(e);
         if (
           cfg?.currentRetryAttempt !== null &&

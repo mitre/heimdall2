@@ -657,51 +657,51 @@ export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
 export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
 
 export const USERS_SERVICE_MOCK = {
-  async adminFindAllUsers(): Promise<User[]> {
-    return [];
+  adminFindAllUsers(): Promise<User[]> {
+    return Promise.resolve([]);
   },
-  async count(): Promise<number> {
-    return 1;
+  count(): Promise<number> {
+    return Promise.resolve(1);
   },
-  async create(_createUserDto: CreateUserDto): Promise<User> {
-    return new User();
+  create(_createUserDto: CreateUserDto): Promise<User> {
+    return Promise.resolve(new User());
   },
-  async findAllUsers(): Promise<User[]> {
-    return [];
+  findAllUsers(): Promise<User[]> {
+    return Promise.resolve([]);
   },
-  async findByEmail(_email: string): Promise<User> {
-    return new User();
+  findByEmail(_email: string): Promise<User> {
+    return Promise.resolve(new User());
   },
-  async findById(_id: string): Promise<User> {
-    return new User();
+  findById(_id: string): Promise<User> {
+    return Promise.resolve(new User());
   },
-  async findByPkBang(
+  findByPkBang(
     _identifier: Buffer | number | string | undefined,
   ): Promise<User> {
-    return new User();
+    return Promise.resolve(new User());
   },
-  async findOneBang(_options: FindOptions | undefined): Promise<User> {
-    return new User();
+  findOneBang(_options: FindOptions | undefined): Promise<User> {
+    return Promise.resolve(new User());
   },
-  async remove(
+  remove(
     _userToDelete: User,
     _deleteUserDto: DeleteUserDto,
     _abac: MongoAbility,
   ): Promise<User> {
-    return new User();
+    return Promise.resolve(new User());
   },
-  async update(
+  update(
     _userToUpdate: User,
     _updateUserDto: UpdateUserDto,
     _abac: MongoAbility,
   ): Promise<User> {
-    return new User();
+    return Promise.resolve(new User());
   },
-  async updateLoginMetadata(_user: User): Promise<void> {
-    return;
+  updateLoginMetadata(_user: User): Promise<void> {
+    return Promise.resolve();
   },
-  async updateUserSecret(_user: User): Promise<void> {
-    return;
+  updateUserSecret(_user: User): Promise<void> {
+    return Promise.resolve();
   },
 };
 

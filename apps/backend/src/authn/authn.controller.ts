@@ -46,7 +46,7 @@ export class AuthnController {
     this.logger.debug('in the github login callback func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     const session = await this.authnService.login(request.user as User);
-    await this.setSessionCookies(request, session);
+    this.setSessionCookies(request, session);
   }
 
   @Get('gitlab/callback')
@@ -56,7 +56,7 @@ export class AuthnController {
     this.logger.debug('in the gitlab login callback func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     const session = await this.authnService.login(request.user as User);
-    await this.setSessionCookies(request, session);
+    this.setSessionCookies(request, session);
   }
 
   @Get('google/callback')
@@ -66,7 +66,7 @@ export class AuthnController {
     this.logger.debug('in the google login callback func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     const session = await this.authnService.login(request.user as User);
-    await this.setSessionCookies(request, session);
+    this.setSessionCookies(request, session);
   }
 
   @Get('oidc_callback')
@@ -76,7 +76,7 @@ export class AuthnController {
     this.logger.debug('in the oidc login callback func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     const session = await this.authnService.login(request.user as User);
-    await this.setSessionCookies(request, session);
+    this.setSessionCookies(request, session);
   }
 
   @Get('okta_callback')
@@ -86,7 +86,7 @@ export class AuthnController {
     this.logger.debug('in the okta login callback func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     const session = await this.authnService.login(request.user as User);
-    await this.setSessionCookies(request, session);
+    this.setSessionCookies(request, session);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -169,13 +169,13 @@ export class AuthnController {
     return this.authnService.login(request.user as User);
   }
 
-  async setSessionCookies(
+  setSessionCookies(
     request: Request,
     session: {
       accessToken: string;
       userID: string;
     },
-  ): Promise<void> {
+  ): void {
     request.res?.cookie('userID', session.userID, { secure: this.configService.isInProductionMode() });
     request.res?.cookie('accessToken', session.accessToken, { secure: this.configService.isInProductionMode() });
     request.res?.redirect('/');

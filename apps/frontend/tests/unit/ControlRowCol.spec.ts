@@ -27,11 +27,11 @@ describe('The Topbar', () => {
     });
   });
 
-  it('displays the result message', async () => {
+  it('displays the result message', () => {
     expect(wrapper.text()).toContain('This is the message');
   });
 
-  it('displays the proper status', async () => {
+  it('displays the proper status', () => {
     expect(wrapper.get('button.statuspassed').text()).toEqual('PASSED');
   });
 });

@@ -7,7 +7,7 @@ import type {ControlStatusHash} from '@/store/status_counts';
 import { StatusCountModule} from '@/store/status_counts';
 import {AllRaw} from '../util/fs';
 
-describe('Parsing', async () => {
+describe('Parsing', () => {
   it('Report intake can read every raw file in hdf_data', async () => {
     const raw = AllRaw();
 

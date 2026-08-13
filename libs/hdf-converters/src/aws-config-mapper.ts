@@ -168,7 +168,7 @@ export class AwsConfigMapper {
     );
   }
 
-  private async appendResourceNamesToResults(
+  private appendResourceNamesToResults(
     completedControlResults: ExecJSON.ControlResult[][],
     extractedResourceNames: Map<string, string>
   ) {
