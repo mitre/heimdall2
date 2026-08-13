@@ -172,9 +172,9 @@ export default class FileList extends Vue {
         'Successfully queried Tenable.sc for available scan results'
       );
     } catch (error) {
-      // TenableUtil rejects with plain message strings.
+      const message = error instanceof Error ? error.message : String(error);
       SnackbarModule.failure(
-        `Failed to retrieve scan results from the Tenable server. ${String(error)}`
+        `Failed to retrieve scan results from the Tenable server. ${message}`
       );
     } finally {
       this.loading = false;
@@ -254,8 +254,10 @@ export default class FileList extends Vue {
             } catch (error) {
               // Also catches the undefined-execution throw above, exactly
               // as the old outer .catch did.
+              const message =
+                error instanceof Error ? error.message : String(error);
               SnackbarModule.failure(
-                `Failed to load scan results for execution. Scan Id: ${execution.id}, ${String(error)}`
+                `Failed to load scan results for execution. Scan Id: ${execution.id}, ${message}`
               );
             }
           }

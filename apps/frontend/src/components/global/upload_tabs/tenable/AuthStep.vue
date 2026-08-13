@@ -55,7 +55,11 @@ import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {AuthInfo, TenableUtil} from '@/utilities/tenable_util';
+import {
+  AuthInfo,
+  INCORRECT_CREDENTIALS_MSG,
+  TenableUtil
+} from '@/utilities/tenable_util';
 import {requireFieldRule} from '@/utilities/upload_util';
 
 import Vue from 'vue';
@@ -125,11 +129,11 @@ export default class AuthStep extends Vue {
       SnackbarModule.notify('You have successfully signed in');
       this.$emit('authenticated', config);
     } catch (error) {
-      // TenableUtil rejects with plain message strings.
-      if (error !== 'Incorrect Access or Secret key') {
+      const message = error instanceof Error ? error.message : String(error);
+      if (message !== INCORRECT_CREDENTIALS_MSG) {
         this.$emit('error');
       }
-      SnackbarModule.failure(String(error));
+      SnackbarModule.failure(message);
     }
   }
 

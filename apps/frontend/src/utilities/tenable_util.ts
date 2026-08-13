@@ -23,8 +23,10 @@ export type ScanResults = {
 };
 
 const LOGIN_TIMEOUT = 60_000; // 60 seconds
-const LOGIN_TIMEOUT_MSG =
+export const LOGIN_TIMEOUT_MSG =
   'Login timed out. Ensure the provided credentials and domain/URL are valid and try again.';
+export const INCORRECT_CREDENTIALS_MSG =
+  'Incorrect Access or Secret key provided. Please check your credentials.';
 
 export class TenableUtil {
   hostConfig: AuthInfo;
@@ -55,10 +57,13 @@ export class TenableUtil {
 
     this.axios_instance = axios.create(
       {
-        withCredentials: true, 
+        withCredentials: true,
         maxBodyLength: Infinity,
         baseURL,
-        headers
+        headers,
+        // Native axios timeout aborts the request itself; the old
+        // hand-rolled Promise race left the HTTP request running.
+        timeout: LOGIN_TIMEOUT
       });
 
      
@@ -68,73 +73,61 @@ export class TenableUtil {
   }
 
   async loginToTenable(): Promise<boolean> {
-     
-    console.info(`Connecting to Tenable Client`);
-    return new Promise((resolve, reject) => {
-      setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
 
+    console.info(`Connecting to Tenable Client`);
+    const url = this.isServer ? '/api/tenable/login' : '/rest/currentUser';
+    if (this.isServer) {
+      // If running on the server, use the backend proxy endpoint
+
+      console.info(`Using Server-Mode: ${url}`);
+      let response;
       try {
-        const url = this.isServer ? '/api/tenable/login' : '/rest/currentUser';
-        if (this.isServer) {
-          // If running on the server, use the backend proxy endpoint
-           
-          console.info(`Using Server-Mode: ${url}`);
-          this.axios_instance
-            .post(url, {
-              host_url: this.hostConfig.host_url,
-              accesskey: this.hostConfig.accesskey,
-              secretkey: this.hostConfig.secretkey
-            })
-            .then((response) => {
-              if (response.data.success) {
-                resolve(true);
-              } else {
-                reject(response.data.message);
-              }
-            })
-            .catch((error) => {
-               
-              console.error(
-                `Processing (Server-Mode) connection error -> ${error}`
-              );
-              reject(this.getRejectConnectionMessage(error));
-            });
-        } else {
-          // If running in Lite mode, connect directly to Tenable
-           
-          console.info(`Using Lite-Mode`);
-          this.axios_instance
-            .get(url)
-            .then((response) => {
-              if (response.status === 200) {
-                 
-                console.info('Processing (Lite-Mode) connected successfully');
-                resolve(true);
-              } else {
-                const msg =
-                  response.data?.message ||
-                  'Unexpected response structure from Tenable';
-                 
-                console.error(
-                  `Processing (Lite-Mode) connection failed: ${msg}`
-                );
-                reject(msg);
-              }
-            })
-            .catch((error) => {
-               
-              console.error(`Processing (Lite-Mode) connecting error: ${error}`);
-              reject(this.getRejectConnectionMessage(error));
-            });
-        }
+        response = await this.axios_instance.post(url, {
+          host_url: this.hostConfig.host_url,
+          accesskey: this.hostConfig.accesskey,
+          secretkey: this.hostConfig.secretkey
+        });
       } catch (error) {
-        reject(`Unknown error: ${error}`);
+
+        console.error(`Processing (Server-Mode) connection error -> ${String(error)}`);
+        throw new Error(this.getRejectConnectionMessage(error), {cause: error});
       }
-    });
+      if (response.data.success) {
+        return true;
+      }
+      throw new Error(response.data.message);
+    } else {
+      // If running in Lite mode, connect directly to Tenable
+
+      console.info(`Using Lite-Mode`);
+      let response;
+      try {
+        response = await this.axios_instance.get(url);
+      } catch (error) {
+
+        console.error(`Processing (Lite-Mode) connecting error: ${String(error)}`);
+        throw new Error(this.getRejectConnectionMessage(error), {cause: error});
+      }
+      if (response.status === 200) {
+
+        console.info('Processing (Lite-Mode) connected successfully');
+        return true;
+      }
+      const msg =
+        response.data?.message || 'Unexpected response structure from Tenable';
+
+      console.error(`Processing (Lite-Mode) connection failed: ${msg}`);
+      throw new Error(msg);
+    }
   }
 
    
   getRejectConnectionMessage(error: any): string {
+    // Native axios timeouts reject with ECONNABORTED (or ETIMEDOUT when
+    // clarifyTimeoutError is set) before any response arrives.
+    if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
+      return LOGIN_TIMEOUT_MSG;
+    }
     let rejectMsg = '';
     const DEFAULT_REJECT_MSG =
       `${error.name}: ${(error.response?.data?.message ?? error.message)}, 
@@ -147,7 +140,7 @@ export class TenableUtil {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
       if (error.response.data.error_code == 74 || error.status === 403) {
-        rejectMsg = 'Incorrect Access or Secret key provided. Please check your credentials.';
+        rejectMsg = INCORRECT_CREDENTIALS_MSG;
       } else if (error.code == 'ERR_BAD_REQUEST') {
         if (error.status == 400) {
           // If the error code is 400, it means the request was malformed
@@ -252,29 +245,20 @@ export class TenableUtil {
    *   name,description,scannedIPs,startTime,finishTime,status
    */
   async getScans(startTime: number, endTime: number): Promise<[]> {
-     
+
     console.info(`Getting scans from Tenable Client`);
-    return new Promise((resolve, reject) => {
-      setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
+    const url = this.buildTenableUrl(
+      `/rest/scanResult?fields=name,description,details,scannedIPs,totalChecks,startTime,finishTime,status&startTime=${startTime}&endTime=${endTime}`,
+      this.isServer
+    );
 
-      try {
-        const url = this.buildTenableUrl(
-          `/rest/scanResult?fields=name,description,details,scannedIPs,totalChecks,startTime,finishTime,status&startTime=${startTime}&endTime=${endTime}`,
-          this.isServer
-        );
-
-        this.axios_instance
-          .get(url)
-          .then((response) => {
-            resolve(response.data.response.usable);
-          })
-          .catch((error) => {
-            reject(this.getRejectMessage(error));
-          });
-      } catch (error) {
-        reject(error);
-      }
-    });
+    let response;
+    try {
+      response = await this.axios_instance.get(url);
+    } catch (error) {
+      throw new Error(this.getRejectMessage(error), {cause: error});
+    }
+    return response.data.response.usable;
   }
 
   /**
@@ -286,53 +270,44 @@ export class TenableUtil {
    *   For type "diagnostic", the file is a diagnostic database file.
    */
   async getVulnerabilities(scanId: string): Promise<string> {
-     
+
     console.info(`Getting vulnerabilities from Tenable Client`);
-    return new Promise((resolve, reject) => {
-      setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
+    const url = this.buildTenableUrl(
+      `/rest/scanResult/${scanId}/download?downloadType=v2`,
+      this.isServer
+    );
 
-      try {
-        const url = this.buildTenableUrl(
-          `/rest/scanResult/${scanId}/download?downloadType=v2`,
-          this.isServer
-        );
+    let response;
+    try {
+      response = await this.axios_instance.post(url, {}, {responseType: 'arraybuffer', headers: {'Content-Type': 'application/zip'}});
+    } catch (error) {
+      throw new Error(this.getRejectMessage(error), {cause: error});
+    }
 
-        this.axios_instance
-          .post(url, {}, {responseType: 'arraybuffer', headers: {'Content-Type': 'application/zip'}})
-          .then(async (response) => {
-            // Unzip response in memory
-            try {
-              // Convert arraybuffer response to a JSZip instance
-              const zip = await JSZip.loadAsync(response.data);
+    // Unzip response in memory
+    // Convert arraybuffer response to a JSZip instance
+    const zip = await JSZip.loadAsync(response.data);
 
-              // Get a list of file names inside the ZIP archive
-              const fileNames = Object.keys(zip.files);
-              if (fileNames.length === 0) {
-                return reject(new Error('ZIP file is empty.'));
-              }
+    // Get a list of file names inside the ZIP archive
+    const fileNames = Object.keys(zip.files);
+    if (fileNames.length === 0) {
+      throw new Error('ZIP file is empty.');
+    }
 
-              // Access the first file in the archive
-              const firstFile = zip.files[fileNames[0]];
+    // Access the first file in the archive
+    const firstFile = zip.files[fileNames[0]];
 
-              // Read its contents as text
-              const text = await firstFile.async('text');
-
-              resolve(text);
-            } catch (error) {
-              reject(error);
-            }
-          })
-          .catch((error) => {
-            reject(this.getRejectMessage(error));
-          });
-      } catch (error) {
-        reject(error);
-      }
-    });
+    // Read its contents as text
+    return firstFile.async('text');
   }
 
    
   getRejectMessage(error: any): string {
+    // Native axios timeouts reject with ECONNABORTED (or ETIMEDOUT when
+    // clarifyTimeoutError is set) before any response arrives.
+    if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
+      return LOGIN_TIMEOUT_MSG;
+    }
     let rejectMsg = '';
     if (error.code == 'ERR_BAD_REQUEST') {
       if (error.status == 401) {
