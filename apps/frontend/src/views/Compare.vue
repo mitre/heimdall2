@@ -455,7 +455,7 @@ export default class Compare extends Vue {
         break;
       default:
         if (this.sortControlSetsBy.startsWith('Passthrough Field')) {
-          fileList.sort(this.comparePassthrough);
+          fileList.sort((a, b) => this.comparePassthrough(a, b));
         }
         break;
     }

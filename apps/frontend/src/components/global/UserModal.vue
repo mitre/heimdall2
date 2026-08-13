@@ -408,7 +408,7 @@ export default class UserModal extends Vue {
       this.apiKeys.push(data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 403) {
-        this.updateCallback = this.addAPIKey;
+        this.updateCallback = () => this.addAPIKey();
         this.inputPasswordDialog = true;
       }
       throw error;
@@ -434,7 +434,7 @@ export default class UserModal extends Vue {
       this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 403) {
-        this.updateCallback = this.deleteAPIKeyConfirm;
+        this.updateCallback = () => this.deleteAPIKeyConfirm();
         this.inputPasswordDialog = true;
       }
       throw error;
@@ -475,7 +475,7 @@ export default class UserModal extends Vue {
       });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 403) {
-        this.updateCallback = this.updateAPIKey;
+        this.updateCallback = () => this.updateAPIKey();
         this.inputPasswordDialog = true;
       }
       throw error;
@@ -501,7 +501,7 @@ export default class UserModal extends Vue {
       void this.addAPIKey();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 403) {
-        this.updateCallback = this.refreshAPIKeyConfirm;
+        this.updateCallback = () => this.refreshAPIKeyConfirm();
         this.inputPasswordDialog = true;
       }
       throw error;

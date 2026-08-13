@@ -1334,7 +1334,7 @@ export class SonarqubeResults {
 
     const rulesAndOrgs: [string, string | undefined][] = _.uniqWith(
       issues.map((issue) => [issue.rule, issue.organization]),
-      _.isEqual
+      (a, b) => _.isEqual(a, b)
     );
     const fullRulePromises = await Promise.all(
       rulesAndOrgs.map((ruleAndOrg) => getRule(...ruleAndOrg))

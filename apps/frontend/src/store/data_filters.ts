@@ -103,7 +103,7 @@ function contains_term(
     asHDF.severity,
     asHDF.status,
     asHDF.finding_details
-  ].filter(_.isString);
+  ].filter((value) => _.isString(value));
 
   return searchables.some((s) => s.toLowerCase().includes(term));
 }

@@ -112,10 +112,10 @@ export default class ExportSplunkModal extends Vue {
   splunkConfig: SplunkConfig | null = null;
 
   logger: unknown = {
-    info: this.addLogMessage,
-    debug: this.addLogMessage,
-    verbose: this.addLogMessage,
-    error: this.addLogMessage
+    info: (message: string) => this.addLogMessage(message),
+    debug: (message: string) => this.addLogMessage(message),
+    verbose: (message: string) => this.addLogMessage(message),
+    error: (message: string) => this.addLogMessage(message)
   };
 
   addLogMessage(message: string) {

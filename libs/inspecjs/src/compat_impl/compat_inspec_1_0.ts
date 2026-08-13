@@ -232,7 +232,7 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   private static compute_message(control: ResultControl_1_0): string {
     if (control.impact !== 0) {
       // If it has any impact, convert each result to a message line and chain them all together
-      return control.results.map(ExecControl.to_message_line).join('');
+      return control.results.map((r) => ExecControl.to_message_line(r)).join('');
     } else {
       // If it's no impact, just post the description (if it exists)
       return control.desc || 'No message found.';
