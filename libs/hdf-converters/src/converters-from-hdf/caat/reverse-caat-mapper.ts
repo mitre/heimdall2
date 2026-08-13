@@ -243,12 +243,10 @@ export class FromHDFToCAATMapper {
         const root = control.root;
 
         // Overlay profiles will usually share controls
-        if (processedControls.has(root.hdf.wraps.id)) {
-          continue;
+        if (!processedControls.has(root.hdf.wraps.id)) {
+          processedControls.add(root.hdf.wraps.id);
+          rows.push(...this.getRow(root, d.filename));
         }
-
-        processedControls.add(root.hdf.wraps.id);
-        rows.push(...this.getRow(root, d.filename));
       }
 
       rows.sort(

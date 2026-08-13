@@ -118,33 +118,44 @@ export class CciNistTwoWayMapper {
     return highestVersionControl;
   }
 
+  // Whether any of the item's references match: first the pattern as is (a
+  // literal prefix match on the index), then — only while nothing has
+  // matched anywhere yet — its two-letters-hyphen-digits control-family
+  // prefix.
+  private itemReferencesMatch(
+    item: CciNistData['cci_list']['cci_items']['cci_item'][number],
+    pattern: string,
+    allowPrefixFallback: boolean
+  ): boolean {
+    for (const reference of item.references.reference) {
+      if (
+        reference['@_index'].startsWith(pattern) &&
+        item.type === 'technical'
+      ) {
+        return true;
+      }
+      if (allowPrefixFallback) {
+        const editedPattern = CONTROL_FAMILY_PREFIX.exec(pattern)?.[0];
+        if (
+          editedPattern !== undefined &&
+          reference['@_index'].startsWith(editedPattern) &&
+          item.type === 'technical'
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   private findMatchingCciIdsByNistControl(pattern: string): string[] {
     const matchingIds: string[] = [];
 
     const {cci_item} = this.data.cci_list.cci_items;
 
     for (const item of cci_item) {
-      for (const reference of item.references.reference) {
-        // first try the pattern as is: a literal prefix match on the index
-        if (
-          reference['@_index'].startsWith(pattern) &&
-          item.type === 'technical'
-        ) {
-          matchingIds.push(item['@_id']);
-          break;
-        }
-        // if there were no matches using the original pattern, try using only 2 letters hyphen followed by one or two numbers
-        if (matchingIds.length === 0) {
-          const editedPattern = CONTROL_FAMILY_PREFIX.exec(pattern)?.[0];
-          if (
-            editedPattern !== undefined &&
-            reference['@_index'].startsWith(editedPattern) &&
-            item.type === 'technical'
-          ) {
-            matchingIds.push(item['@_id']);
-            break;
-          }
-        }
+      if (this.itemReferencesMatch(item, pattern, matchingIds.length === 0)) {
+        matchingIds.push(item['@_id']);
       }
     }
 

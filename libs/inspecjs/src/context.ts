@@ -218,18 +218,17 @@ export function contextualizeEvaluation(
 
       // Get the profile(s) that this control's owning profile is extending
       // For a wrapper profile, there might be many of these!
-      // We don't know which one it will be, so we iterate
-      for (const extendedProfile of cc.sourcedFrom.extendsFrom) {
-        // Hunt for its ancestor in the extended profile
-        const ancestor = extendedProfile.contains.find(
-          (c) => c.data.id === cc.data.id
-        );
-        // First one we find with a matching id we assume is the root (or at least, closer to root)
-        if (ancestor) {
-          ancestor.extendedBy.push(cc);
-          cc.extendsFrom.push(ancestor);
-          break; // Note that we're in a nested loop here
-        }
+      // We don't know which one it will be, so we hunt for an ancestor in
+      // each extended profile in order. The first one we find with a
+      // matching id we assume is the root (or at least, closer to root).
+      const ancestor = cc.sourcedFrom.extendsFrom
+        .map((extendedProfile) =>
+          extendedProfile.contains.find((c) => c.data.id === cc.data.id)
+        )
+        .find((candidate) => candidate !== undefined);
+      if (ancestor) {
+        ancestor.extendedBy.push(cc);
+        cc.extendsFrom.push(ancestor);
       }
       // If it's not found, then we just assume it does not exist!
     } else {

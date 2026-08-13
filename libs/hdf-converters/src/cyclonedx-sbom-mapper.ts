@@ -244,12 +244,11 @@ export class CycloneDXSBOMResults {
         // Indices were derived from data.components itself just above, so
         // .at() cannot miss; the guard states that invariant.
         const component = data.components.at(index);
-        if (component === undefined) {
-          continue;
+        if (component !== undefined) {
+          (component.affectingVulnerabilities ??= []).push(
+            _.get(vulnerability, 'bom-ref') as unknown as string
+          );
         }
-        (component.affectingVulnerabilities ??= []).push(
-          _.get(vulnerability, 'bom-ref') as unknown as string
-        );
       }
     }
   }

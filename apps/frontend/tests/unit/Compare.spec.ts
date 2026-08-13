@@ -143,21 +143,22 @@ describe.sequential('Compare', () => {
         FilteredDataModule.selected_file_ids
       );
       const currDelta = new ComparisonContext(selectedData);
-      for (const pairing of Object.values(currDelta.pairings)) {
-        for (const ctrl of Object.values(pairing)) {
-          if (ctrl === null) {
-            continue;
-          } else if (ctrl.root.hdf.status === 'Passed') {
-            passed++;
-          } else if (ctrl.root.hdf.status === 'Failed') {
-            failed++;
-          } else if (ctrl.root.hdf.status === 'Not Applicable') {
-            na++;
-          } else if (ctrl.root.hdf.status === 'Not Reviewed') {
-            nr++;
-          } else if (ctrl.root.hdf.status === 'Profile Error') {
-            pe++;
-          }
+      const pairedControls = Object.values(currDelta.pairings).flatMap(
+        (pairing) => Object.values(pairing)
+      );
+      for (const ctrl of pairedControls) {
+        if (ctrl === null) {
+          continue;
+        } else if (ctrl.root.hdf.status === 'Passed') {
+          passed++;
+        } else if (ctrl.root.hdf.status === 'Failed') {
+          failed++;
+        } else if (ctrl.root.hdf.status === 'Not Applicable') {
+          na++;
+        } else if (ctrl.root.hdf.status === 'Not Reviewed') {
+          nr++;
+        } else if (ctrl.root.hdf.status === 'Profile Error') {
+          pe++;
         }
       }
       const expected = {

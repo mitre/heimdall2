@@ -70,6 +70,48 @@ function fieldFilterPattern(field: string): RegExp {
   return new RegExp(`${_.escapeRegExp(field)}:"(.*?)"`, 'gm');
 }
 
+/** Applies one parsed search field to the matching filter action. */
+function applyParsedField(
+  search: Search,
+  prop: string,
+  include: string | string[]
+): void {
+  switch (prop) {
+    case 'status':
+      search.addStatusFilter(
+        include as ExtendedControlStatus | ExtendedControlStatus[]
+      );
+      break;
+    case 'severity':
+      search.addSeverityFilter(include as Severity | Severity[]);
+      break;
+    case 'id':
+      search.addIdFilter(lowercaseAll(include));
+      break;
+    case 'title':
+      search.addTitleFilter(lowercaseAll(include));
+      break;
+    case 'nist':
+      search.addNISTIdFilter(lowercaseAll(include));
+      break;
+    case 'desc':
+    case 'description':
+      search.addDescriptionFilter(lowercaseAll(include));
+      break;
+    case 'code':
+      search.addCodeFilter(lowercaseAll(include));
+      break;
+    case 'tags':
+      search.addTagFilter(lowercaseAll(include));
+      break;
+    case 'text':
+      if (typeof include === 'string') {
+        search.setFreesearch(include);
+      }
+      break;
+  }
+}
+
 @Module({
   namespaced: true,
   dynamic: true,
@@ -122,40 +164,7 @@ class Search extends VuexModule implements ISearchState {
     } else {
       for (const [prop, rawInclude] of Object.entries(searchResult)) {
         const include: string | string[] = rawInclude || '';
-        switch (prop) {
-          case 'status':
-            this.addStatusFilter(
-              include as ExtendedControlStatus | ExtendedControlStatus[]
-            );
-            break;
-          case 'severity':
-            this.addSeverityFilter(include as Severity | Severity[]);
-            break;
-          case 'id':
-            this.addIdFilter(lowercaseAll(include));
-            break;
-          case 'title':
-            this.addTitleFilter(lowercaseAll(include));
-            break;
-          case 'nist':
-            this.addNISTIdFilter(lowercaseAll(include));
-            break;
-          case 'desc':
-          case 'description':
-            this.addDescriptionFilter(lowercaseAll(include));
-            break;
-          case 'code':
-            this.addCodeFilter(lowercaseAll(include));
-            break;
-          case 'tags':
-            this.addTagFilter(lowercaseAll(include));
-            break;
-          case 'text':
-            if (typeof include === 'string') {
-              this.setFreesearch(include);
-            }
-            break;
-        }
+        applyParsedField(this, prop, include);
       }
     }
   }

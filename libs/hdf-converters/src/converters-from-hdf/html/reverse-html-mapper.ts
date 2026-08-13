@@ -53,6 +53,73 @@ export enum FileExportTypes {
 // Expand as needed
 const ILLEGAL_CHARACTER_SET: [RegExp, string][] = [[/\./g, '___PERIOD___']];
 
+type StatusTally = {
+  passed: number;
+  failed: number;
+  notApplicable: number;
+  notReviewed: number;
+  profileError: number;
+  passedTests: number;
+  failedTests: number;
+  passingTestsFailedResult: number;
+};
+
+type SeverityTally = {
+  none: number;
+  low: number;
+  medium: number;
+  high: number;
+  critical: number;
+};
+
+function countStatus(result: ContextualizedControl, tally: StatusTally): void {
+  switch (result.root.hdf.status) {
+    case 'Passed':
+      tally.passed++;
+      tally.passedTests += (result.root.hdf.segments || []).length;
+      break;
+    case 'Failed':
+      tally.failed++;
+      tally.passingTestsFailedResult += (
+        result.root.hdf.segments || []
+      ).filter((subStatus) => subStatus.status === 'passed').length;
+      tally.failedTests += (result.root.hdf.segments || []).filter(
+        (subStatus) => subStatus.status === 'failed'
+      ).length;
+      break;
+    case 'Not Applicable':
+      tally.notApplicable++;
+      break;
+    case 'Not Reviewed':
+      tally.notReviewed++;
+      break;
+    case 'Profile Error':
+      tally.profileError++;
+  }
+}
+
+function countSeverity(
+  result: ContextualizedControl,
+  tally: SeverityTally
+): void {
+  switch (result.root.hdf.severity) {
+    case 'none':
+      tally.none++;
+      break;
+    case 'low':
+      tally.low++;
+      break;
+    case 'medium':
+      tally.medium++;
+      break;
+    case 'high':
+      tally.high++;
+      break;
+    case 'critical':
+      tally.critical++;
+  }
+}
+
 export class FromHDFToHTMLMapper {
   // Generated injectable HTML for icons
   // NOTE: Icons colors should align with Vue colors used in general dashboard from apps/frontend/src/store/color_hack.ts
@@ -241,87 +308,58 @@ export class FromHDFToHTMLMapper {
 
   // Set attributes for high level generalized profile details
   addProfileDetails(results: ContextualizedControl[]) {
-    let passed = 0;
-    let failed = 0;
-    let notApplicable = 0;
-    let notReviewed = 0;
-    let profileError = 0;
-    let none = 0;
-    let low = 0;
-    let medium = 0;
-    let high = 0;
-    let critical = 0;
-    let passedTests = 0;
-    let failedTests = 0;
-    let passingTestsFailedResult = 0;
-    // Count out statuses and sub-statuses
+    const statusTally: StatusTally = {
+      passed: 0,
+      failed: 0,
+      notApplicable: 0,
+      notReviewed: 0,
+      profileError: 0,
+      passedTests: 0,
+      failedTests: 0,
+      passingTestsFailedResult: 0
+    };
+    const severityTally: SeverityTally = {
+      none: 0,
+      low: 0,
+      medium: 0,
+      high: 0,
+      critical: 0
+    };
+    // Count out statuses, sub-statuses, and severities
     for (const result of results) {
-      switch (result.root.hdf.status) {
-        case 'Passed':
-          passed++;
-          passedTests += (result.root.hdf.segments || []).length;
-          break;
-        case 'Failed':
-          failed++;
-          passingTestsFailedResult += (result.root.hdf.segments || []).filter(
-            (subStatus) => subStatus.status === 'passed'
-          ).length;
-          failedTests += (result.root.hdf.segments || []).filter(
-            (subStatus) => subStatus.status === 'failed'
-          ).length;
-          break;
-        case 'Not Applicable':
-          notApplicable++;
-          break;
-        case 'Not Reviewed':
-          notReviewed++;
-          break;
-        case 'Profile Error':
-          profileError++;
-      }
-      // Count out severities
-      switch (result.root.hdf.severity) {
-        case 'none':
-          none++;
-          break;
-        case 'low':
-          low++;
-          break;
-        case 'medium':
-          medium++;
-          break;
-        case 'high':
-          high++;
-          break;
-        case 'critical':
-          critical++;
-      }
+      countStatus(result, statusTally);
+      countSeverity(result, severityTally);
     }
 
     // Set following attributes from existing file data
     this.outputData.statistics = {
-      passed: this.outputData.statistics.passed + passed,
-      failed: this.outputData.statistics.failed + failed,
-      notApplicable: this.outputData.statistics.notApplicable + notApplicable,
-      notReviewed: this.outputData.statistics.notReviewed + notReviewed,
-      profileError: this.outputData.statistics.profileError + profileError,
+      passed: this.outputData.statistics.passed + statusTally.passed,
+      failed: this.outputData.statistics.failed + statusTally.failed,
+      notApplicable:
+        this.outputData.statistics.notApplicable + statusTally.notApplicable,
+      notReviewed:
+        this.outputData.statistics.notReviewed + statusTally.notReviewed,
+      profileError:
+        this.outputData.statistics.profileError + statusTally.profileError,
       totalResults: this.outputData.statistics.totalResults + results.length,
-      passedTests: this.outputData.statistics.passedTests + passedTests,
+      passedTests:
+        this.outputData.statistics.passedTests + statusTally.passedTests,
       passingTestsFailedResult:
         this.outputData.statistics.passingTestsFailedResult +
-        passingTestsFailedResult,
-      failedTests: this.outputData.statistics.failedTests + failedTests,
+        statusTally.passingTestsFailedResult,
+      failedTests:
+        this.outputData.statistics.failedTests + statusTally.failedTests,
       totalTests:
         this.outputData.statistics.totalTests +
-        passingTestsFailedResult +
-        failedTests
+        statusTally.passingTestsFailedResult +
+        statusTally.failedTests
     };
     this.outputData.severity = {
-      none: this.outputData.severity.none + none,
-      low: this.outputData.severity.low + low,
-      medium: this.outputData.severity.medium + medium,
-      high: this.outputData.severity.high + high,
-      critical: this.outputData.severity.critical + critical
+      none: this.outputData.severity.none + severityTally.none,
+      low: this.outputData.severity.low + severityTally.low,
+      medium: this.outputData.severity.medium + severityTally.medium,
+      high: this.outputData.severity.high + severityTally.high,
+      critical: this.outputData.severity.critical + severityTally.critical
     };
 
     // Calculate & set compliance level and color from result statuses
