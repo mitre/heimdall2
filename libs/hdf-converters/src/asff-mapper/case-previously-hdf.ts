@@ -168,7 +168,7 @@ function mapping(
     'execution'
   );
   const executionTypes = objectifyTypesArray(
-    execution as Record<string, unknown>
+    execution!
   );
   const profileNames = Object.keys(executionTypes || {}).filter(
     (type) =>

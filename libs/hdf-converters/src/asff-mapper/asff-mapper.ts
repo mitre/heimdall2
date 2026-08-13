@@ -362,7 +362,7 @@ export class ASFFMapper extends BaseConverter {
         version: '',
         title: {
           transformer: (): string => {
-            return (_.get(this.meta, 'title') as string) || 'ASFF Findings';
+            return (_.get(this.meta, 'title')!) || 'ASFF Findings';
           }
         },
         maintainer: null,

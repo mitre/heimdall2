@@ -765,16 +765,16 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         checkContent:
           _.get(control.tags, 'check') ??
           (getDescription(
-            control.descriptions as ExecJSON.ControlDescription[],
+            control.descriptions!,
             'check'
-          ) as string) ??
+          )!) ??
           '',
         fixText:
           _.get(control.tags, 'fix') ??
           (getDescription(
-            control.descriptions as ExecJSON.ControlDescription[],
+            control.descriptions!,
             'fix'
-          ) as string) ??
+          )!) ??
           '',
         falsePositives: _.get(control.tags, 'False_Positives', ''),
         falseNegatives: _.get(control.tags, 'False_Negatives', ''),
@@ -800,7 +800,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           _.get(control.tags, 'cci') ??
           this.matchNistToCcis(_.get(control.tags, 'nist')),
         comments: this.getComments(
-          control.descriptions as ExecJSON.ControlDescription[]
+          control.descriptions!
         ),
         findingdetails: this.getFindingDetails(control.results) ?? '',
         severityjustification: _.get(

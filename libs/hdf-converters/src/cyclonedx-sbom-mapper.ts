@@ -230,7 +230,7 @@ export class CycloneDXSBOMResults {
           .filter(([_index, component]) =>
             vulnerability.affects
               ?.map((id) => id.ref.toString())
-              .includes(component['bom-ref'] as string)
+              .includes(component['bom-ref']!)
           )
           // Add the index of that affected component to the corresponding vulnerability object
           .map(([index, _component]) => index)
