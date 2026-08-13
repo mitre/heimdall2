@@ -370,9 +370,14 @@ export default defineConfig([
     // attacker input by construction, and lint:ci's --max-warnings 0
     // escalates the rule's deliberate warn severity into a hard failure.
     // Production code keeps the warning.
-    files: ['**/*.spec.ts', '**/*.spec.js', 'test/**', '**/test/**'],
+    files: ['**/*.spec.ts', '**/*.spec.js', 'test/**', '**/test/**', '**/tests/**'],
     name: 'security/spec-fixture-paths',
-    rules: { 'security/detect-non-literal-fs-filename': 'off' },
+    rules: {
+      'security/detect-non-literal-fs-filename': 'off',
+      // Same reasoning: test code indexes its own fixtures with its own loop
+      // counters — there is no attacker input in a spec by construction.
+      'security/detect-object-injection': 'off',
+    },
   },
   {
     // unicorn/prefer-module exists to drive ESM migration and forbids
