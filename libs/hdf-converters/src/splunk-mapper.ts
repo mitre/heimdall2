@@ -39,31 +39,32 @@ export function groupBy<T>(
   items: T[],
   keyGetter: (v: T) => string
 ): Hash<T[]> {
-  const result: Hash<T[]> = {};
+  // Grouped through a Map because the keys come from Splunk data: on a plain
+  // object a key like 'constructor' resolves a prototype FUNCTION (whose
+  // .push then throws), and '__proto__' hits the prototype setter instead of
+  // storing. Object.fromEntries emits own data properties, so the returned
+  // Hash keeps the published shape while every key stays inert data.
+  const result = new Map<string, T[]>();
   for (const i of items) {
-    // Get the items key
     const key = keyGetter(i);
-
-    // Get the list it should go in
-    const corrList = result[key];
+    const corrList = result.get(key);
     if (corrList) {
-      // If list exists, place
       corrList.push(i);
     } else {
-      // List does not exist; create and put
-      result[key] = [i];
+      result.set(key, [i]);
     }
   }
-  return result;
+  return Object.fromEntries(result);
 }
 
 // Maps a hash to a new hash, with the same keys but each value replaced with a new (mapped) value
 export function mapHash<T, G>(old: Hash<T>, mapFunction: (v: T) => G): Hash<G> {
-  const result: Hash<G> = {};
-  for (const key in old) {
-    result[key] = mapFunction(old[key]);
-  }
-  return result;
+  // Object.entries iterates OWN keys only (for-in also walked inherited
+  // enumerables) and fromEntries writes own data properties — no computed
+  // write remains for a hostile key to abuse.
+  return Object.fromEntries(
+    Object.entries(old).map(([key, value]) => [key, mapFunction(value)])
+  );
 }
 
 export function consolidatePayloads(
@@ -125,16 +126,19 @@ function consolidateFilePayloads(
   exec.profiles?.push(...profileEvents);
 
   // Group controls, and then put them into the profiles
-  const shaGroupedControls = groupBy(
-    controlEvents,
-    (ctrl) => ctrl.meta.profile_sha256
+  // Map view for the dynamic read below: the sha comes from Splunk data, and
+  // bracket access on the Hash would resolve prototype keys.
+  const shaGroupedControls = new Map(
+    Object.entries(
+      groupBy(controlEvents, (ctrl) => ctrl.meta.profile_sha256)
+    )
   );
   for (const profile of profileEvents) {
     profile.controls = [];
     // Get the corresponding controls, and put them into the profile
     const sha = profile.meta.profile_sha256;
     logger.debug(`Adding controls for profile with SHA256: ${sha}`);
-    const corrControls = shaGroupedControls[sha] || [];
+    const corrControls = shaGroupedControls.get(sha) ?? [];
     profile.controls.push(
       ...replaceKeyValueDescriptions(
         corrControls as unknown as (ExecJSON.Control &
@@ -288,7 +292,10 @@ export class SplunkMapper {
 
   parseSplunkResponse(
     query: string,
-    results: {fields: string[]; rows: string[]}
+    // rows is an array of ROWS (each an array of column strings) — the old
+    // string[] annotation only compiled because indexing a string also
+    // typechecks; JSON.parse below consumes a whole column value.
+    results: {fields: string[]; rows: string[][]}
   ): SplunkReport[] {
     logger.info(`Got results for query: ${query}`);
 
@@ -321,7 +328,9 @@ export class SplunkMapper {
     for (const value of results.rows) {
       let object;
       try {
-        object = JSON.parse(value[rawDataIndex]);
+        // .at() with a '' fallback: an out-of-range index lands in this
+        // same catch exactly as the old undefined-coercion path did.
+        object = JSON.parse(value.at(rawDataIndex) ?? '');
       } catch {
         throw new Error(
           'Unable to parse file. Have you configured EVENT_BREAKER? See https://github.com/mitre/saf/wiki/Splunk-Configuration'
@@ -333,7 +342,7 @@ export class SplunkMapper {
         _.set(
           object,
           'meta.parse_time',
-          unixTimeToDate(value[indexTimeIndex]).toISOString()
+          unixTimeToDate(value.at(indexTimeIndex) ?? '').toISOString()
         );
       } catch {
         // Parsing dates can be tricky sometimes

@@ -301,20 +301,26 @@ export class XCCDFResultsMapper extends BaseConverter {
               ['TestResult.title'],
               ['TestResult.version']
             ];
-            const fullDescription: Record<string, unknown> = {};
+            // Collected as entries and materialized with fromEntries —
+            // own data properties only, no computed assignment (the paths
+            // are the literal list above; last write wins either way).
+            const descriptionEntries: [string, unknown][] = [];
             for (const paths of descriptionPaths) {
               for (const path of paths) {
                 const item = _.get(input, path);
                 if (item !== undefined) {
-                  if (typeof item === 'string') {
-                    fullDescription[path] = parseHtml(item);
-                  } else {
-                    fullDescription[path] = item;
-                  }
+                  descriptionEntries.push([
+                    path,
+                    typeof item === 'string' ? parseHtml(item) : item
+                  ]);
                 }
               }
             }
-            return JSON.stringify(fullDescription, null, 2);
+            return JSON.stringify(
+              Object.fromEntries(descriptionEntries),
+              null,
+              2
+            );
           }
         },
         license: {path: 'Benchmark.notice.id'},

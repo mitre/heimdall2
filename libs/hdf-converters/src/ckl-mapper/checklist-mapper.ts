@@ -490,13 +490,16 @@ export class ChecklistMapper extends BaseConverter {
                   // because it could be used in other converters
                   ['severityjustification', 'severityjustification']
                 ];
-                const fullTags: Record<string, unknown> = {};
-                for (const [key, path] of tags) {
-                  const tagValue = _.get(input, path);
-                  if (tagValue && tagValue !== '; ') {
-                    fullTags[key] = tagValue;
-                  }
-                }
+                // fromEntries writes own data properties, so no computed
+                // assignment remains (the keys are this literal list anyway).
+                const fullTags: Record<string, unknown> = Object.fromEntries(
+                  tags.flatMap(([key, path]) => {
+                    const tagValue = _.get(input, path);
+                    return tagValue && tagValue !== '; '
+                      ? [[key, tagValue]]
+                      : [];
+                  })
+                );
 
                 // another special case that does
                 // not follow above naming conventions

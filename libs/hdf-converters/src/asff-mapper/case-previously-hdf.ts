@@ -119,8 +119,17 @@ function filename(
     findingInfo[0] as {Id: string}
   );
 
+  // Guard BEFORE .at(): findIndex returns -1 on no match, and .at(-1) would
+  // silently take the LAST finding where the old bracket access crashed on
+  // undefined. Same failure condition, now stated instead of cryptic.
+  const executionFinding = index >= 0 ? findingInfo[1].at(index) : undefined;
+  if (executionFinding === undefined) {
+    throw new TypeError(
+      'PreviouslyHDF data has no execution finding to derive a filename from'
+    );
+  }
   const target = replaceTypesSlashes(
-    (_.get(findingInfo[1][index], 'Id') as string).split('/', 1)[0]
+    (_.get(executionFinding, 'Id') as string).split('/', 1)[0]
   );
   const finding = findingInfo[0];
   return `${_.get(objectifyTypesArray(finding), 'File.Input')}-${target}.json`;
@@ -130,7 +139,9 @@ function getCodeForProfileLayer(
   finding: Record<string, unknown>,
   profileName: string
 ) {
-  const profileLayerToCodeMapping: Record<string, string> = {};
+  // Map, not Record: profile names are parsed out of the ASFF finding, and
+  // the old `in` membership test consulted the prototype chain.
+  const profileLayerToCodeMapping = new Map<string, string>();
   (
     _.get(finding, 'Resources') as {
       Type: string;
@@ -149,15 +160,12 @@ function getCodeForProfileLayer(
       const [profileLevel, code] = codeLayer.split(
         '\n=========================================================\n\n'
       );
-      profileLayerToCodeMapping[profileLevel] = code
-        .split('Test Description:', 1)[0]
-        .trim();
+      profileLayerToCodeMapping.set(
+        profileLevel,
+        code.split('Test Description:', 1)[0].trim()
+      );
     });
-  if (profileName in profileLayerToCodeMapping) {
-    return profileLayerToCodeMapping[profileName];
-  } else {
-    return '';
-  }
+  return profileLayerToCodeMapping.get(profileName) ?? '';
 }
 
 function mapping(

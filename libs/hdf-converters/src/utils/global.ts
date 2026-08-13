@@ -11,8 +11,13 @@ import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
 // SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
 export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
 
-export const DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS =
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS.flatMap((tag) => NistCciMappingData[tag]);
+// Literal keys, deliberately mirroring DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+// above: the tags are this module's own constants, so no dynamic key ever
+// reaches the generated table.
+export const DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS = [
+  ...NistCciMappingData['SA-11'],
+  ...NistCciMappingData['RA-5']
+];
 
 // REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
 // SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
