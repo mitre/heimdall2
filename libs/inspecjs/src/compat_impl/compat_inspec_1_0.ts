@@ -35,7 +35,11 @@ abstract class HDFControl10 implements HDFControl {
   readonly waived: boolean;
   readonly attested: boolean;
   readonly attestationStatus?: 'passed' | 'failed';
-  readonly descriptions: Record<string, string> = {};
+  // Not readonly: derived constructors rebind it wholesale via
+  // Object.fromEntries (assigning per key through [[Set]] is exactly the
+  // prototype hazard being removed), and TS bars derived-constructor
+  // assignment to a base readonly field. Contents were always mutable.
+  descriptions: Record<string, string> = {};
   readonly isProfile: boolean;
 
   // We use this as a reference
@@ -196,10 +200,12 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       control.attestation_data?.status
     );
 
-    // Build descriptions
+    // Build descriptions. fromEntries writes own data properties, so a
+    // scan-file label of '__proto__' can no longer replace the object's
+    // prototype the way per-key assignment could.
     if (control.descriptions) {
-      control.descriptions.forEach(
-        (x) => (this.descriptions[x.label] = x.data)
+      this.descriptions = Object.fromEntries(
+        control.descriptions.map((x) => [x.label, x.data])
       );
     }
 
@@ -306,13 +312,15 @@ export class ProfileControl extends HDFControl10 implements HDFControl {
 
   constructor(control: ProfileControl_1_0) {
     super(control, true, false, false);
-    // Build descriptions
+    // Build descriptions — same fromEntries rationale as above; the filter
+    // preserves the old typeof check, and the assertion records what that
+    // filter guarantees at runtime.
     if (control.descriptions) {
-      for (const key of Object.keys(control.descriptions)) {
-        if (typeof control.descriptions[key] === 'string') {
-          this.descriptions[key] = control.descriptions[key];
-        }
-      }
+      this.descriptions = Object.fromEntries(
+        Object.entries(control.descriptions).filter(
+          ([, value]) => typeof value === 'string'
+        )
+      ) as Record<string, string>;
     }
   }
 

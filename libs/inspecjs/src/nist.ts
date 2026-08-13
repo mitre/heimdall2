@@ -80,7 +80,9 @@ export class NistControl {
     // After that we just need to iterate
     for (let i = 0; i < this.subSpecifiers.length; i++) {
       // If our subspec differentiate at any point, then we do not match
-      if (this.subSpecifiers[i] !== other.subSpecifiers[i]) {
+      // Both sides proven in range: the length guard above returned -1
+      // unless other is at least as long, and i is bounded by this.length.
+      if (this.subSpecifiers.at(i)! !== other.subSpecifiers.at(i)!) {
         return -1;
       }
     }
@@ -98,8 +100,9 @@ export class NistControl {
     const bChain = other.subSpecifiers;
     for (let i = 0; i < aChain.length && i < bChain.length; i++) {
       // Compare corresponding elements of the chain
-      const idA = aChain[i];
-      const idB = bChain[i];
+      // Non-null proven by the loop bound (i below both lengths).
+      const idA = aChain.at(i)!;
+      const idB = bChain.at(i)!;
 
       // Return only if significant
       const lc = idA.localeCompare(idB, 'en', {numeric: true});
@@ -139,7 +142,8 @@ export class NistControl {
     }
 
     for (let i = 1; i < ss.length && i < config.max_specifiers; i++) {
-      let spec = ss[i];
+      // Non-null proven by the loop bound.
+      let spec = ss.at(i)!;
 
       // Handle numbers
       if (!Number.isNaN(Number.parseInt(spec))) {
@@ -325,11 +329,13 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
   });
 
   // Init our map, which maps _key_for of controls to their corresponding hierarchy nodes
-  const map: Record<string, NistHierarchyNode> = {};
+  // Map, not Record: keys derive from canonized control ids out of scan
+  // data, and plain-object node registration resolves prototype keys.
+  const map = new Map<string, NistHierarchyNode>();
 
   // Add roots to the map
   roots.forEach((r) => {
-    map[_key_for(r.control)] = r;
+    map.set(_key_for(r.control), r);
   });
 
   // Iterate over all controls
@@ -342,8 +348,9 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
     // If our node has already been created, replace the temporary control with the "real" one
     const key = _key_for(asControl);
     let asNode: NistHierarchyNode;
-    if (map[key]) {
-      asNode = map[key];
+    const existingNode = map.get(key);
+    if (existingNode) {
+      asNode = existingNode;
       asNode.control = asControl;
     } else {
       // Make it fresh
@@ -353,7 +360,7 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
       };
 
       // Register in map
-      map[key] = asNode;
+      map.set(key, asNode);
     }
 
     const parent = _control_parent(asControl);
@@ -367,17 +374,17 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
     } else {
       // Valid parent; look it up and append us to it
       const parentKey = _key_for(parent);
-      const parentNode = map[parentKey];
+      const parentNode = map.get(parentKey);
 
       // If parent has been explored already, simply append this node to that
       if (parentNode) {
         parentNode.children.push(asNode);
       } else {
         // It's not? make a stub
-        map[parentKey] = {
+        map.set(parentKey, {
           control: parent,
           children: [asNode] // "Us"
-        };
+        });
       }
     }
   });
