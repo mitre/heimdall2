@@ -145,6 +145,11 @@ import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
+
+// Map views over the generated tables: the tag arrives from the scan file,
+// and bracket access on a plain object resolves prototype keys.
+const NIST_DESCRIPTION_LOOKUP = new Map(Object.entries(NIST_DESCRIPTIONS));
+const CCI_DESCRIPTION_LOOKUP = new Map(Object.entries(CCI_DESCRIPTIONS));
 import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
@@ -221,12 +226,15 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     const nisted = parse_nist(tag);
     if (is_control(nisted)) {
       const canon = nisted.canonize(nistCanonConfig);
-      const found = NIST_DESCRIPTIONS[canon];
+      const found = NIST_DESCRIPTION_LOOKUP.get(canon);
       if (found) {
         return found;
       }
-    } else if (CCI_DESCRIPTIONS[tag.toUpperCase()]) {
-      return CCI_DESCRIPTIONS[tag.toUpperCase()].def;
+    } else {
+      const cci = CCI_DESCRIPTION_LOOKUP.get(tag.toUpperCase());
+      if (cci) {
+        return cci.def;
+      }
     }
     return 'Unrecognized Tag';
   }

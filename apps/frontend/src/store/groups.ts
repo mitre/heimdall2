@@ -47,7 +47,12 @@ export class Groups extends VuexModule implements IGroupState {
 
   @Mutation
   UPDATE_MY_GROUPS({idx, updated}: {idx: number; updated: IGroup}) {
-    Object.assign(this.myGroups[idx], updated);
+    const target = this.myGroups.at(idx);
+    if (target === undefined) {
+      // The old blind index made Object.assign throw here too — stated now.
+      throw new TypeError(`No group at index ${idx} to update`);
+    }
+    Object.assign(target, updated);
   }
 
   @Mutation
@@ -62,7 +67,12 @@ export class Groups extends VuexModule implements IGroupState {
 
   @Mutation
   UPDATE_ALL_GROUPS({idx, updated}: {idx: number; updated: IGroup}) {
-    Object.assign(this.allGroups[idx], updated);
+    const target = this.allGroups.at(idx);
+    if (target === undefined) {
+      // The old blind index made Object.assign throw here too — stated now.
+      throw new TypeError(`No group at index ${idx} to update`);
+    }
+    Object.assign(target, updated);
   }
 
   @Mutation

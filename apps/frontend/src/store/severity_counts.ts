@@ -27,21 +27,23 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
   // Get the controls
   const controls = data.controls(newFilter);
 
-  // Count 'em out
-  const hash: SeverityHash = {
-    none: 0,
-    low: 0,
-    medium: 0,
-    high: 0,
-    critical: 0
-  };
+  // Counted through a Map: the severity string comes from the parsed scan
+  // file, so the Severity type is a boundary lie — a hostile or malformed
+  // value used to become an own NaN entry on the hash (undefined + 1) or be
+  // lost to the prototype setter. Unknown values now simply do not count.
+  const counts = new Map<Severity, number>();
   controls.forEach((c) => {
     const severity: Severity = c.root.hdf.severity;
-    hash[severity] += 1;
+    counts.set(severity, (counts.get(severity) ?? 0) + 1);
   });
 
-  // And we're done
-  return hash;
+  return {
+    none: counts.get('none') ?? 0,
+    low: counts.get('low') ?? 0,
+    medium: counts.get('medium') ?? 0,
+    high: counts.get('high') ?? 0,
+    critical: counts.get('critical') ?? 0
+  };
 }
 
 @Module({

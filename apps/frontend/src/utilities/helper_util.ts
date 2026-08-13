@@ -17,7 +17,8 @@ export function compareArrays<T>(
 ) {
   // Compare element-wise
   for (let i = 0; i < a.length && i < b.length; i++) {
-    const x = comparator(a[i], b[i]);
+    // Non-null is proven by the loop bound (i < both lengths).
+    const x = comparator(a.at(i)!, b.at(i)!);
     if (x) {
       return x;
     }
@@ -111,8 +112,8 @@ export type Hash<T> = Record<string, T>;
 /** Converts a simple, single level json dict into uri params */
 export function toURIParams(params: Hash<string | number | boolean>) {
   const esc = encodeURIComponent;
-  return Object.keys(params)
-    .map((k) => `${esc(k)}=${esc(params[k])}`)
+  return Object.entries(params)
+    .map(([k, v]) => `${esc(k)}=${esc(v)}`)
     .join('&');
 }
 

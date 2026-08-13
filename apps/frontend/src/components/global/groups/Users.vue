@@ -150,7 +150,12 @@ export default class Users extends Vue {
       ...editedUser,
       groupRole: newRole
     };
-    this.currentUsers[userToUpdate] = updatedGroupUser;
+    // splice, not index assignment: Vue 2 cannot observe arr[i] = x at all
+    // (this write was silently non-reactive), and indexOf's -1 used to create
+    // a stray '-1' own property instead of updating anyone.
+    if (userToUpdate !== -1) {
+      this.currentUsers.splice(userToUpdate, 1, updatedGroupUser);
+    }
 
     if (this.numberOfOwners() < 1) {
       saveable = false;
@@ -177,10 +182,11 @@ export default class Users extends Vue {
   deleteUserConfirm(): boolean {
     let saveable = true;
     const userToDelete = this.currentUsers.indexOf(this.getEditedUser());
-    if (
-      this.currentUsers[userToDelete].groupRole === 'owner' &&
-      this.numberOfOwners() < 2
-    ) {
+    // Guard BEFORE .at(): indexOf's -1 would read the LAST user via .at(-1)
+    // where the old blind index crashed on undefined.
+    const userBeingDeleted =
+      userToDelete === -1 ? undefined : this.currentUsers.at(userToDelete);
+    if (userBeingDeleted?.groupRole === 'owner' && this.numberOfOwners() < 2) {
       saveable = false;
     }
     if (this.editedUserID !== '0') {

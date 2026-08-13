@@ -269,9 +269,12 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       }
     });
 
-    for (const prop in this.control.hdf.descriptions) {
+    // Object.entries: own keys only, no computed read of scan-file data.
+    for (const [prop, description] of Object.entries(
+      this.control.hdf.descriptions
+    )) {
       if (!detailsMap.has(_.capitalize(prop))) {
-        detailsMap.set(_.startCase(prop), this.control.hdf.descriptions[prop]);
+        detailsMap.set(_.startCase(prop), description);
       }
     }
 

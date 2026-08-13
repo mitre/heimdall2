@@ -97,7 +97,7 @@ export function visible_against(colorHex: string): string {
     }
     return color.hex();
   } else {
-    return colorOnColorLookupTable[colorHex] || '#000000';
+    return COLOR_ON_COLOR_LOOKUP.get(colorHex) || '#000000';
   }
 }
 
@@ -152,13 +152,18 @@ export function gen_variants(
 /** Replaces all colors in a VuetifyParsedThemeItem with
  * a variant that will be visible against the original color.
  */
+// Map view for lookups — computed hex strings never touch prototype keys.
+const COLOR_ON_COLOR_LOOKUP = new Map(Object.entries(colorOnColorLookupTable));
+
 export function gen_visibilities(
   colorset: VuetifyParsedThemeItem
 ): VuetifyParsedThemeItem {
-  const c: VuetifyParsedThemeItem = {...colorset};
-  let key: keyof VuetifyParsedThemeItem;
-  for (key in c) {
-    c[key] = visible_against(c[key]);
-  }
-  return c;
+  // fromEntries writes own data properties; the assertion restores the
+  // concrete shape fromEntries cannot carry through (its known typing limit).
+  return Object.fromEntries(
+    Object.entries(colorset).map(([key, value]) => [
+      key,
+      visible_against(value)
+    ])
+  ) as VuetifyParsedThemeItem;
 }

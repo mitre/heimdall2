@@ -55,7 +55,8 @@ export default class ExportNIST extends Vue {
       // Just construct as best we can
       let base = `${control.subSpecifiers[0]}-${control.subSpecifiers[1]}`;
       for (let i = 2; i < control.subSpecifiers.length; i++) {
-        base += control.subSpecifiers[i];
+        // Non-null proven by the loop bound.
+        base += control.subSpecifiers.at(i)!;
       }
       return base;
     }
@@ -149,10 +150,10 @@ export default class ExportNIST extends Vue {
         newName += appendage;
         i++;
       }
-      wb.SheetNames.push(newName);
-
       const ws = XLSX.utils.aoa_to_sheet(sheet.data);
-      wb.Sheets[newName] = ws;
+      // The library's own API registers name and sheet atomically, replacing
+      // the manual SheetNames.push plus a computed-key write into Sheets.
+      XLSX.utils.book_append_sheet(wb, ws, newName);
     });
 
     const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});

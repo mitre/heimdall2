@@ -46,10 +46,14 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
     PassingTestsFailedControl: 0,
     Waived: 0
   };
+  // The dynamic status increment goes through a Map (the status string
+  // comes from the parsed scan file; the union type is a boundary lie), and
+  // is materialized onto the typed hash with literal keys after the loop.
+  const statusCounts = new Map<ControlStatus, number>();
   controls.forEach((c) => {
     c = c.root;
     const status: ControlStatus = c.hdf.status;
-    ++hash[status];
+    statusCounts.set(status, (statusCounts.get(status) ?? 0) + 1);
     if (status === 'Passed') {
       hash.PassedTests += (c.hdf.segments || []).length;
     } else if (status === 'Failed') {
@@ -63,6 +67,12 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
       hash.Waived += c.hdf.segments?.length || 0;
     }
   });
+  hash.Failed = statusCounts.get('Failed') ?? 0;
+  hash['From Profile'] = statusCounts.get('From Profile') ?? 0;
+  hash['Not Applicable'] = statusCounts.get('Not Applicable') ?? 0;
+  hash['Not Reviewed'] = statusCounts.get('Not Reviewed') ?? 0;
+  hash.Passed = statusCounts.get('Passed') ?? 0;
+  hash['Profile Error'] = statusCounts.get('Profile Error') ?? 0;
   // And we're done
   return hash;
 }
@@ -108,7 +118,10 @@ export class StatusCount extends VuexModule {
   }
 
   get countOf(): (filter: Filter, category: keyof StatusHash) => number {
-    return (filter, category) => this.hash(filter)[category];
+    // Entries view for the read: category is keyof-typed (code-controlled
+    // callers), so the ?? 0 branch is unreachable — stated, not assumed.
+    return (filter, category) =>
+      new Map(Object.entries(this.hash(filter))).get(category) ?? 0;
   }
 }
 

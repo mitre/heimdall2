@@ -53,10 +53,7 @@ export function cleanUpFilename(filename: string): string {
 
 /** Converts a string to an array buffer */
 export function s2ab(s: string) {
-  const buf = new ArrayBuffer(s.length); // convert s to arrayBuffer
-  const view = new Uint8Array(buf); // create uint8array as viewer
-  for (let i = 0; i < s.length; i++) {
-    view[i] = s.charCodeAt(i) & 0xff; // convert to octet
-  }
-  return buf;
+  // Uint8Array.from maps each char to an octet without an index-write loop.
+  // (NOT TextEncoder: that would emit UTF-8, changing bytes above 0x7f.)
+  return Uint8Array.from(s, (ch) => ch.charCodeAt(0) & 0xff).buffer;
 }

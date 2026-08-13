@@ -37,7 +37,8 @@ export class ControlChange {
   get valid(): boolean {
     let firstSelected = -1;
     for (let i = 0; i < this.values.length; i++) {
-      if (this.values[i] !== NOT_SELECTED) {
+      // Non-null proven by the loop bound.
+      if (this.values.at(i)! !== NOT_SELECTED) {
         firstSelected = i;
         break;
       }
@@ -45,11 +46,11 @@ export class ControlChange {
     if (firstSelected === -1) {
       return false;
     }
+    const first = this.values.at(firstSelected)!;
     for (let i = firstSelected + 1; i < this.values.length; i++) {
-      if (
-        this.values[i] !== this.values[firstSelected] &&
-        this.values[i] !== NOT_SELECTED
-      ) {
+      // Non-null proven by the loop bound (and firstSelected >= 0 above).
+      const value = this.values.at(i)!;
+      if (value !== first && value !== NOT_SELECTED) {
         return true;
       }
     }

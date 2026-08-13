@@ -104,8 +104,8 @@ class Search extends VuexModule implements ISearchState {
     if (typeof searchResult === 'string') {
       this.setFreesearch(searchResult);
     } else {
-      for (const prop in searchResult) {
-        const include: string | string[] = searchResult[prop] || '';
+      for (const [prop, rawInclude] of Object.entries(searchResult)) {
+        const include: string | string[] = rawInclude || '';
         switch (prop) {
           case 'status':
             this.addStatusFilter(

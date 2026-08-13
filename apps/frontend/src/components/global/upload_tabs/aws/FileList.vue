@@ -73,8 +73,12 @@ export default class FileList extends Vue {
    * Loads it into our system.
    */
   async loadFile(index: number): Promise<void> {
-    // Get it out of the list
-    const file = this.files[index];
+    // Get it out of the list — index comes from the template's own v-for;
+    // the old blind index crashed later on undefined in the same case.
+    const file = this.files.at(index);
+    if (file === undefined) {
+      throw new TypeError(`No S3 file at index ${index}`);
+    }
 
     // Fetch it from s3, and promise to submit it to be loaded afterwards
     await fetchS3File(this.auth, file.Key!, this.formBucketName).then(

@@ -44,14 +44,17 @@ export class ColorHack extends VuexModule {
    */
   get lookupColor(): (colorName: string) => string {
     // Establish a cache
-    const localCache: Record<string, string> = {};
+    // Map cache: `in` walked the prototype chain and computed writes could
+    // reach the prototype setter.
+    const localCache = new Map<string, string>();
 
     // Establish to vue that we vary on any changes to the theme
     // let _depends: any = this.
     return (colorName: string) => {
       // Check if we have this cached:
-      if (colorName in localCache) {
-        return localCache[colorName];
+      const cached = localCache.get(colorName);
+      if (cached !== undefined) {
+        return cached;
       } else {
         // If not calculate it
         // We first try class colors, assuming base.
@@ -67,7 +70,7 @@ export class ColorHack extends VuexModule {
           color = calculateColor(colorName);
         }
 
-        localCache[colorName] = color;
+        localCache.set(colorName, color);
         return color;
       }
     };

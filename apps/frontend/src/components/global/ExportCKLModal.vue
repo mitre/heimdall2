@@ -396,14 +396,29 @@ export default class ExportCKLModal extends Vue {
     this.selected = [];
   }
 
+  // Fetch-and-guard for the repeated files[i].profiles[j] path: indices come
+  // from the template's own v-for, so the guard states an invariant — the old
+  // blind chain crashed on undefined in the same impossible case.
+  profileAt(fileIndex: number, profileIndex: number) {
+    const profile = this.files.at(fileIndex)?.profiles.at(profileIndex);
+    if (profile === undefined) {
+      throw new TypeError(
+        `No profile at file ${fileIndex}, profile ${profileIndex}`
+      );
+    }
+    return profile;
+  }
+
   setDateSelection(fileIndex: number, profileIndex: number, date: string) {
-    this.files[fileIndex].profiles[profileIndex].releasedate = date;
-    this.files[fileIndex].profiles[profileIndex].showCalendar = false;
+    const profile = this.profileAt(fileIndex, profileIndex);
+    profile.releasedate = date;
+    profile.showCalendar = false;
   }
 
   clearDateSelection(fileIndex: number, profileIndex: number) {
-    this.files[fileIndex].profiles[profileIndex].releasedate = '';
-    this.files[fileIndex].profiles[profileIndex].showCalendar = false;
+    const profile = this.profileAt(fileIndex, profileIndex);
+    profile.releasedate = '';
+    profile.showCalendar = false;
   }
 
   // Get our evaluation info for our export table
@@ -629,7 +644,7 @@ export default class ExportCKLModal extends Vue {
     }
 
     // Update the file title for the profile being processed
-    this.files[fileIndex].profiles[profileIndex].title = newName;
+    this.profileAt(fileIndex, profileIndex).title = newName;
 
     return newName;
   }
@@ -639,7 +654,7 @@ export default class ExportCKLModal extends Vue {
     const index = fileIndex + profileIndex;
     if (this.originalProfileTitle.has(index)) {
       newName = this.originalProfileTitle.get(index)!;
-      this.files[fileIndex].profiles[profileIndex].title = newName;
+      this.profileAt(fileIndex, profileIndex).title = newName;
     }
     return newName;
   }
