@@ -158,12 +158,18 @@ const COLOR_ON_COLOR_LOOKUP = new Map(Object.entries(colorOnColorLookupTable));
 export function gen_visibilities(
   colorset: VuetifyParsedThemeItem
 ): VuetifyParsedThemeItem {
-  // fromEntries writes own data properties; the assertion restores the
-  // concrete shape fromEntries cannot carry through (its known typing limit).
-  return Object.fromEntries(
-    Object.entries(colorset).map(([key, value]) => [
-      key,
-      visible_against(value)
-    ])
-  ) as VuetifyParsedThemeItem;
+  // Literal keys keep the concrete shape (mirroring gen_variants above);
+  // fromEntries would widen to an index signature the interface rejects.
+  return {
+    base: visible_against(colorset.base),
+    lighten5: visible_against(colorset.lighten5),
+    lighten4: visible_against(colorset.lighten4),
+    lighten3: visible_against(colorset.lighten3),
+    lighten2: visible_against(colorset.lighten2),
+    lighten1: visible_against(colorset.lighten1),
+    darken1: visible_against(colorset.darken1),
+    darken2: visible_against(colorset.darken2),
+    darken3: visible_against(colorset.darken3),
+    darken4: visible_against(colorset.darken4)
+  };
 }
