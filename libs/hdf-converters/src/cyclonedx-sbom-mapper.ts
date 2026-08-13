@@ -379,7 +379,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   ? license.license.name
                   : license?.license?.id
               )
-              .filter((identifier) => identifier)
+              .filter(Boolean)
               .join(', ');
           }
         },
@@ -453,7 +453,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   input
                     ? input.individuals
                         ?.map((individual) => individual.name)
-                        .filter((name) => name)
+                        .filter(Boolean)
                         .join(', ')
                     : undefined
               },
@@ -472,7 +472,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   if (Array.isArray(input)) {
                     return input
                       .map((tool) => tool.name)
-                      .filter((name) => name)
+                      .filter(Boolean)
                       .join(', ');
                   }
                   return [
@@ -540,7 +540,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                         label: 'check'
                       }
                     : undefined
-                ].filter((subdescription) => subdescription);
+                ].filter(Boolean);
               }
             } as unknown as ExecJSON.ControlDescription[],
             refs: [

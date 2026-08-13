@@ -120,7 +120,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   return titles.join('\n');
                 } else {
                   return [data.controlCategory || '', data.controlName || '']
-                    .filter((title) => title)
+                    .filter(Boolean)
                     .join(':');
                 }
               }
@@ -152,7 +152,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   (() => {
                     const result = this.getProfiles(data.controlName || '')
                       .map((profile) => profile.controlCategory)
-                      .filter((v) => Boolean(v));
+                      .filter(Boolean);
                     return result.length > 0;
                   })()
                 ),
@@ -164,7 +164,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   (() => {
                     const result = this.getProfiles(data.controlName || '')
                       .map((profile) => profile.maxScore)
-                      .filter((v) => Boolean(v));
+                      .filter(Boolean);
                     return result.length > 0;
                   })()
                 ),
@@ -176,7 +176,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   (() => {
                     const result = this.getProfiles(data.controlName || '')
                       .map((profile) => profile.rank)
-                      .filter((v) => Boolean(v));
+                      .filter(Boolean);
                     return result.length > 0;
                   })()
                 ),
@@ -188,7 +188,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   (() => {
                     const result = this.getProfiles(data.controlName || '')
                       .map((profile) => profile.tier)
-                      .filter((v) => Boolean(v));
+                      .filter(Boolean);
                     return result.length > 0;
                   })()
                 ),
@@ -202,7 +202,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   (() => {
                     const result = this.getProfiles(data.controlName || '')
                       .map((profile) => profile.threats)
-                      .filter((v) => Boolean(v));
+                      .filter(Boolean);
                     return result.length > 0;
                   })()
                 ),
@@ -216,7 +216,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   (() => {
                     const result = this.getProfiles(data.controlName || '')
                       .map((profile) => profile.service)
-                      .filter((v) => Boolean(v));
+                      .filter(Boolean);
                     return result.length > 0;
                   })()
                 ),
@@ -230,7 +230,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   (() => {
                     const result = this.getProfiles(data.controlName || '')
                       .map((profile) => profile.userImpact)
-                      .filter((v) => Boolean(v));
+                      .filter(Boolean);
                     return result.length > 0;
                   })()
                 )

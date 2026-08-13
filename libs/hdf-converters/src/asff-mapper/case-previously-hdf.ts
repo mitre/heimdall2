@@ -156,7 +156,7 @@ function getCodeForProfileLayer(
     ?.Details?.AwsIamRole?.AssumeRolePolicyDocument.split(
       '=========================================================\n# Profile name: '
     )
-    .filter((codeLayer) => codeLayer)
+    .filter(Boolean)
     .forEach((codeLayer) => {
       const [profileLevel, code] = codeLayer.split(
         '\n=========================================================\n\n'

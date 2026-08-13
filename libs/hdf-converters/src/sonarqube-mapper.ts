@@ -442,7 +442,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
             const org = data.organization
               ? ` organization ${data.organization}`
               : '';
-            return `SonarQube Scan of project ${data.projectKey} on ${data.sonarqubeHost} at ${new Date().toISOString()}${data.branchName || data.pullRequestID || data.organization ? ' using' : ''}${[branch, pullrequest, org].filter((s) => s).join(',')}`;
+            return `SonarQube Scan of project ${data.projectKey} on ${data.sonarqubeHost} at ${new Date().toISOString()}${data.branchName || data.pullRequestID || data.organization ? ' using' : ''}${[branch, pullrequest, org].filter(Boolean).join(',')}`;
           }
         },
         supports: [],
