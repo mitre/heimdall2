@@ -80,8 +80,10 @@ export class Groups extends VuexModule implements IGroupState {
     this.allGroups.splice(this.allGroups.indexOf(group), 1);
   }
 
+  // @Action wraps the body in dispatch, so Promise<void> is the truthful
+  // signature even though nothing inside awaits.
   @Action
-  public async UpdateGroup(group: IGroup) {
+  public UpdateGroup(group: IGroup): Promise<void> {
     const myGroupId = this.myGroups.findIndex((g) => g.id === group.id);
     if (myGroupId !== -1) {
       this.UPDATE_MY_GROUPS({idx: myGroupId, updated: group});
@@ -95,6 +97,7 @@ export class Groups extends VuexModule implements IGroupState {
     } else {
       this.ADD_TO_ALL_GROUPS(group);
     }
+    return Promise.resolve();
   }
 
   @Action

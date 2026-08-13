@@ -52,15 +52,14 @@ export class AppInfo extends VuexModule implements IAppInfoState {
     this.checkedForUpdates = value;
   }
 
+  // Best-effort check: callers that must not block on it void the call
+  // (see router.ts); the action itself completes its work before resolving.
   @Action
   public async CheckForUpdates() {
     if (this.checkedForUpdates === false) {
-      // Call axios.create() to skip the default interceptors setup in main.ts
-      // Deliberately unawaited: the update check is best-effort and must
-      // stay silent when offline or airgapped.
-      void axios
-        .create()
-        .get<{name: string}[]>(
+      try {
+        // Call axios.create() to skip the default interceptors setup in main.ts
+        const {data} = await axios.create().get<{name: string}[]>(
           'https://api.github.com/repos/mitre/heimdall2/tags',
           {
             // Null out the request headers for this request
@@ -68,21 +67,18 @@ export class AppInfo extends VuexModule implements IAppInfoState {
             // to Github.
             headers: new axios.AxiosHeaders({common: ''})
           }
-        )
-        .then(({data}) => {
-          const latest = data[0].name.replace('v', '');
-          this.context.commit('SET_VERSION', latest);
-          if (latest !== this.version) {
-            this.context.commit('SET_UPDATE_NOTIFICATION', true);
-          }
-        })
-        .catch(() => {
-          // Offline or airgapped — the check is best-effort by design.
-        })
-        .finally(() => {
-          // Guard to stop checking for updates every tab change
-          this.context.commit('SET_CHECKED_FOR_UPDATES', true);
-        });
+        );
+        const latest = data[0].name.replace('v', '');
+        this.context.commit('SET_VERSION', latest);
+        if (latest !== this.version) {
+          this.context.commit('SET_UPDATE_NOTIFICATION', true);
+        }
+      } catch {
+        // Offline or airgapped — the check is best-effort by design.
+      } finally {
+        // Guard to stop checking for updates every tab change
+        this.context.commit('SET_CHECKED_FOR_UPDATES', true);
+      }
     }
   }
 

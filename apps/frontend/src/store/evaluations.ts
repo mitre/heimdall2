@@ -22,6 +22,7 @@ import {
   FileID,
   FileLoadOptions,
   InspecIntakeModule,
+  isHDF,
   ProfileFile
 } from './report_intake';
 import {SnackbarModule} from './snackbar';
@@ -105,7 +106,7 @@ export class Evaluation extends VuexModule {
           SpinnerModule.setMessage(`Loading: ${evaluation.filename}`);
           const value = Math.floor((index++ / evaluationIds.length) * 100);
           SpinnerModule.setValue(value);
-          if (await InspecIntakeModule.isHDF(evaluation.data)) {
+          if (isHDF(evaluation.data)) {
             try {
               const fileId = await InspecIntakeModule.loadText({
                 text: JSON.stringify(evaluation.data),
@@ -171,9 +172,11 @@ export class Evaluation extends VuexModule {
     return axios.delete(`/evaluations/${evaluation.id}`);
   }
 
+  // @Action wraps the body in dispatch, so Promise<void> is the truthful
+  // signature even though nothing inside awaits.
   @Action
-  async removeEvaluation(fileId: FileID) {
-    const dbId = await InspecDataModule.loadedDatabaseIdsForFileId(fileId);
+  removeEvaluation(fileId: FileID): Promise<void> {
+    const dbId = InspecDataModule.loadedDatabaseIdsForFileId(fileId);
     const evaluation = this.allEvaluations.find((obj) => {
       return obj.id === dbId;
     });
@@ -181,6 +184,7 @@ export class Evaluation extends VuexModule {
     if (evaluation != undefined) {
       this.context.commit('REMOVE_EVALUATION', evaluation);
     }
+    return Promise.resolve();
   }
 
   @Action

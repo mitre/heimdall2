@@ -125,6 +125,40 @@ export type ExecJSONLoadOptions = {
   data: ExecJSON.Execution;
 };
 
+/**
+ * Whether the given data looks like HDF (an execution or a profile).
+ * A pure predicate — it reads no store state and commits nothing,
+ * so it lives outside the module.
+ */
+export function isHDF(
+  data: string | Record<string, unknown> | undefined
+): boolean {
+  if (typeof data === 'string') {
+    try {
+      // If our data loads correctly it could be HDF
+      const parsed = JSON.parse(data);
+      return (
+        Array.isArray(parsed.profiles) || // Execution JSON
+        (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
+      );
+    } catch {
+      // HDF isn't valid json, we have a different format
+      return false;
+    }
+  } else if (typeof data === 'object') {
+    return (
+      Array.isArray(data.profiles) || // Execution JSON
+      (Boolean(data.controls) && Boolean(data.sha256)) // Profile JSON
+    );
+  } else if (data === undefined) {
+    SnackbarModule.failure('Missing data to convert to validate HDF');
+    return false;
+  } else {
+    SnackbarModule.failure('Unknown file data type');
+    return false;
+  }
+}
+
 @Module({
   namespaced: true,
   dynamic: true,
@@ -147,7 +181,7 @@ export class InspecIntake extends VuexModule {
     } else {
       throw new Error('No file or data passed to report intake');
     }
-    if (await this.isHDF(read)) {
+    if (isHDF(read)) {
       return this.loadText({
         text: read,
         filename: filename
@@ -180,36 +214,6 @@ export class InspecIntake extends VuexModule {
       } else {
         return [];
       }
-    }
-  }
-
-  @Action
-  async isHDF(
-    data: string | Record<string, unknown> | undefined
-  ): Promise<boolean> {
-    if (typeof data === 'string') {
-      try {
-        // If our data loads correctly it could be HDF
-        const parsed = JSON.parse(data);
-        return (
-          Array.isArray(parsed.profiles) || // Execution JSON
-          (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
-        );
-      } catch {
-        // HDF isn't valid json, we have a different format
-        return false;
-      }
-    } else if (typeof data === 'object') {
-      return (
-        Array.isArray(data.profiles) || // Execution JSON
-        (Boolean(data.controls) && Boolean(data.sha256)) // Profile JSON
-      );
-    } else if (data === undefined) {
-      SnackbarModule.failure('Missing data to convert to validate HDF');
-      return false;
-    } else {
-      SnackbarModule.failure('Unknown file data type');
-      return false;
     }
   }
 
@@ -326,8 +330,10 @@ export class InspecIntake extends VuexModule {
     }
   }
 
+  // @Action wraps the body in dispatch, so Promise<FileID> is the truthful
+  // signature even though nothing inside awaits.
   @Action
-  async loadText(options: TextLoadOptions): Promise<FileID> {
+  loadText(options: TextLoadOptions): Promise<FileID> {
     // Convert it
     const fileID: FileID = uuid();
     const result: ConversionResult = convertFile(options.text, true);
@@ -380,12 +386,14 @@ export class InspecIntake extends VuexModule {
         "Couldn't parse data. See developer's tools for more details."
       );
     }
-    return fileID;
+    return Promise.resolve(fileID);
   }
 
   // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
+  // @Action wraps the body in dispatch, so Promise<FileID> is the truthful
+  // signature even though nothing inside awaits.
   @Action
-  async loadExecJson(options: ExecJSONLoadOptions) {
+  loadExecJson(options: ExecJSONLoadOptions): Promise<FileID> {
     // Convert it
     const fileID: FileID = uuid();
     // A bit of chicken and egg here, this will be our circular JSON structure
@@ -410,7 +418,7 @@ export class InspecIntake extends VuexModule {
     InspecDataModule.addExecution(evalFile);
     FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
 
-    return fileID;
+    return Promise.resolve(fileID);
   }
 }
 

@@ -661,7 +661,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     SnackbarModule.notify('Deleted evaluation successfully.');
     await this.updateEvaluations();
     // Remove the file from the visualization panel if it is loaded.
-    const fileId = await InspecDataModule.loadedFileIsForDatabaseIds(
+    const fileId = InspecDataModule.loadedFileIsForDatabaseIds(
       Number(this.activeItem.id)
     );
     if (FilteredDataModule.selected_file_ids.includes(fileId)) {
