@@ -114,23 +114,22 @@ export class Groups extends VuexModule implements IGroupState {
 
   @Action
   public async FetchGroupData() {
-    this.FetchAllGroups();
-    this.FetchMyGroups();
+    // Awaited: the loading flag used to flip off before either fetch had
+    // completed, so the UI reported ready while the lists were still empty.
+    await Promise.all([this.FetchAllGroups(), this.FetchMyGroups()]);
     this.context.commit('SET_LOADING', false);
   }
 
   @Action
   public async FetchAllGroups() {
-    this.FetchEndpoint('/groups').then(({data}) => {
-      this.context.commit('SET_ALL_GROUPS', data);
-    });
+    const {data} = await this.FetchEndpoint('/groups');
+    this.context.commit('SET_ALL_GROUPS', data);
   }
 
   @Action
   public async FetchMyGroups() {
-    this.FetchEndpoint('/groups/my').then(({data}) => {
-      this.context.commit('SET_MY_GROUPS', data);
-    });
+    const {data} = await this.FetchEndpoint('/groups/my');
+    this.context.commit('SET_MY_GROUPS', data);
   }
 
   @Action

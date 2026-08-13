@@ -197,36 +197,31 @@ class Server extends VuexModule implements IServerState {
   public async handleLogin(data: LoginData) {
     this.context.commit('SET_USERID', data.userID);
     this.context.commit('SET_TOKEN', data.accessToken);
-    this.GetUserInfo();
+    // Awaited: Login resolved before the profile fetch finished, racing the
+    // post-login navigation that callers chain onto it.
+    await this.GetUserInfo();
   }
 
   @Action
   public async Login(userInfo: {email: string; password: string}) {
-    return axios.post<LoginData>('/authn/login', userInfo).then(({data}) => {
-      this.handleLogin(data);
-    });
+    const {data} = await axios.post<LoginData>('/authn/login', userInfo);
+    await this.handleLogin(data);
   }
 
   @Action
   public async LoginLDAP(userInfo: {username: string; password: string}) {
-    return axios
-      .post<LoginData>('/authn/login/ldap', userInfo)
-      .then(({data}) => {
-        this.handleLogin(data);
-      });
+    const {data} = await axios.post<LoginData>('/authn/login/ldap', userInfo);
+    await this.handleLogin(data);
   }
 
   @Action
   public async LoginGithub(callbackCode: string | null) {
-    return axios
-      .get<LoginData>(`/authn/github/callback`, {
-        params: {
-          code: callbackCode
-        }
-      })
-      .then(({data}) => {
-        this.handleLogin(data);
-      });
+    const {data} = await axios.get<LoginData>(`/authn/github/callback`, {
+      params: {
+        code: callbackCode
+      }
+    });
+    await this.handleLogin(data);
   }
 
   @Action
@@ -263,7 +258,7 @@ class Server extends VuexModule implements IServerState {
       } catch {
         // If an error occurs fetching the users profile
         // then clear their token and refresh the page
-        this.Logout();
+        await this.Logout();
       }
       await this.FetchAllUsers();
       await GroupsModule.FetchGroupData();

@@ -80,9 +80,13 @@ const router = new Router({
   ]
 });
 
-router.beforeEach((to, _, next) => {
-  ServerModule.CheckForServer().then(() => {
-    AppInfoModule.CheckForUpdates();
+router.beforeEach(async (to, _, next) => {
+  // Awaited: if CheckForServer rejected inside the old .then chain, next()
+  // was never called and navigation hung silently.
+  await ServerModule.CheckForServer();
+  {
+    // Deliberately unawaited: best-effort update check.
+    void AppInfoModule.CheckForUpdates();
     if (to.matched.some((record) => record.meta.requiresAuth)) {
       if (ServerModule.serverMode && !ServerModule.token) {
         next('/login');
@@ -96,7 +100,9 @@ router.beforeEach((to, _, next) => {
       }
     }
     if (to.params.id && to.params.id !== 'all') {
-      EvaluationModule.load_results(to.params.id.split(','));
+      // Deliberately unawaited prefetch: the results view watches the store's
+      // own loading state, and navigation must not block on data.
+      void EvaluationModule.load_results(to.params.id.split(','));
     }
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
     // For any URL that displays IDs of the currently loaded database files at the end of it
@@ -114,7 +120,7 @@ router.beforeEach((to, _, next) => {
       return;
     }
     next();
-  });
+  }
 });
 
 export default router;

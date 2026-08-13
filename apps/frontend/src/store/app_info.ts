@@ -56,7 +56,9 @@ export class AppInfo extends VuexModule implements IAppInfoState {
   public async CheckForUpdates() {
     if (this.checkedForUpdates === false) {
       // Call axios.create() to skip the default interceptors setup in main.ts
-      axios
+      // Deliberately unawaited: the update check is best-effort and must
+      // stay silent when offline or airgapped.
+      void axios
         .create()
         .get<{name: string}[]>(
           'https://api.github.com/repos/mitre/heimdall2/tags',
@@ -73,6 +75,9 @@ export class AppInfo extends VuexModule implements IAppInfoState {
           if (latest !== this.version) {
             this.context.commit('SET_UPDATE_NOTIFICATION', true);
           }
+        })
+        .catch(() => {
+          // Offline or airgapped — the check is best-effort by design.
         })
         .finally(() => {
           // Guard to stop checking for updates every tab change

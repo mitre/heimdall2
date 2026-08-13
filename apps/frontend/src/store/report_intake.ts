@@ -306,11 +306,15 @@ export class InspecIntake extends VuexModule {
           }
         })
         .then(async ({data}) => {
-          data.forEach(async (file: {filename: string; data: string}) => {
-            InspecIntakeModule.loadFile({
-              file: new File([new Blob([file.data])], file.filename)
-            });
-          });
+          // Promise.all over map: forEach discards the async callbacks, so
+          // this used to resolve true before a single file had loaded.
+          await Promise.all(
+            data.map((file: {filename: string; data: string}) =>
+              InspecIntakeModule.loadFile({
+                file: new File([new Blob([file.data])], file.filename)
+              })
+            )
+          );
           return true;
         })
         .catch((error) => {

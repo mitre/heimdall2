@@ -40,7 +40,9 @@ new Vue({
           error?.response?.status === 401
         ) {
           // if we catch a 401 error
-          ServerModule.Logout();
+          // Deliberately unawaited: the interceptor must return the
+          // rejection promptly; Logout clears state on its own schedule.
+          void ServerModule.Logout();
         } else {
           SnackbarModule.HTTPFailure(error);
         }
