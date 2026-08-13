@@ -453,7 +453,17 @@ export default defineConfig([
     // `**ADMIN_EMAIL**=_admin@heimdall.local_`.
     // Remove this ignore once the upstream fix lands and @eslint/markdown is
     // bumped; verify with the five-line reproduction above.
-    ignores: ['packaging/rpm/man/heimdall-server-backend.env.5.md'],
+    ignores: [
+      'packaging/rpm/man/heimdall-server-backend.env.5.md',
+      // Copies of external standards (MITRE SAF license text, Contributor
+      // Covenant). Matching upstream BYTE-FOR-BYTE is their requirement, so
+      // no markdown rule can legitimately fire on them — and fixers must
+      // never rewrite them. A layout `--fix` pass converted LICENSE.md's
+      // Apache URL line to a fenced block on 2026-08-13 before this ignore
+      // existed; the files were restored from HEAD.
+      '**/LICENSE.md',
+      'CODE_OF_CONDUCT.md',
+    ],
     language: 'markdown/gfm',
     name: 'markdown',
     plugins: { markdown },
@@ -476,6 +486,12 @@ export default defineConfig([
       'markdown-preferences/padding-line-between-blocks': 'off',
       'markdown-preferences/table-pipe-alignment': 'off',
       'markdown-preferences/table-pipe-spacing': 'off',
+      // Its fixer converts RELATIVE links — [SECURITY.md](SECURITY.md) became
+      // <SECURITY.md> on 2026-08-13 — but angle-bracket autolinks require an
+      // absolute URI with a scheme, so the output is not a link at all;
+      // renderers treat it as a raw HTML tag. A fixer that produces invalid
+      // markdown from valid markdown cannot be trusted on any file.
+      'markdown-preferences/prefer-autolinks': 'off',
     },
   },
   // MUST BE LAST. eslint-config-prettier only turns rules OFF — every
