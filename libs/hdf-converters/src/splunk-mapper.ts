@@ -210,6 +210,11 @@ export class SplunkMapper {
     }
   }
 
+  // queryData awaits this before fetching results, so it must not resolve
+  // until Splunk reports the job DONE. The previous implementation resolved
+  // immediately while a detached setInterval kept polling — results could be
+  // fetched for an unfinished job, and every throw inside the timer
+  // callbacks was an unhandled rejection the caller never saw.
   async trackJob(job: string): Promise<void> {
     // All documented potential error states for a search job
     // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTTUT/RESTsearches#Tips_on_accessing_searches
@@ -226,26 +231,26 @@ export class SplunkMapper {
     const searchJobTimeout = 120_000;
     // Time interval between checking on status of search job
     const searchJobPing = 50;
-    let queryStatus: AxiosResponse;
-    let continuePing = true;
+    const deadline = Date.now() + searchJobTimeout;
 
-    // Kill query after 2 minute of waiting
-    // Arbitrary time used, change as needed
-    const queryTimer = setTimeout(() => {
-      continuePing = false;
-      clearTimeout(queryTimer);
-      throw new Error('Search job timed out - Unable to retrieve query');
-    }, searchJobTimeout);
-
-    // Ping Splunk instance every 50 ms on status of search job
-    const awaitJob = setInterval(async () => {
+    while (Date.now() < deadline) {
+      let queryStatus: AxiosResponse;
       try {
         queryStatus = await this.axiosInstance.get(
-          `${this.hostname}/services/search/jobs/${job}`
+          `${this.hostname}/services/search/jobs/${job}`,
+          // Bound each poll by the remaining budget so a hung request cannot
+          // outlive the overall search job timeout.
+          {timeout: Math.max(1, deadline - Date.now())}
         );
       } catch (error) {
-        clearTimeout(queryTimer);
-        clearInterval(awaitJob);
+        if (
+          _.get(error, 'code') === 'ECONNABORTED' ||
+          _.get(error, 'code') === 'ETIMEDOUT'
+        ) {
+          throw new Error('Search job timed out - Unable to retrieve query', {
+            cause: error
+          });
+        }
         throw new Error(
           `Failed search job - ${handleSplunkErrorResponse(error)}`,
           {cause: error}
@@ -253,45 +258,32 @@ export class SplunkMapper {
       }
 
       // Check if response schema is malformed
-      if (_.has(queryStatus, 'data.entry[0].content')) {
-        if (queryStatus.data.entry.length !== 1) {
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-          throw new Error(
-            `Failed search job - Detected malformed entry field length ${queryStatus.data.entry.length}`
-          );
-        }
-
-        // If search job is complete, kill interval loop and exit
-        if (
-          queryStatus.data.entry[0].content.dispatchState === 'DONE' &&
-          queryStatus.data.entry[0].content.isDone
-        ) {
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-        } else if (
-          badState.has(queryStatus.data.entry[0].content.dispatchState)
-        ) {
-          // If search job returns a bad state result, kill interval loop and fail the query
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-          throw new Error(
-            `Failed search job - Detected dispatch state ${queryStatus.data.entry[0].content.dispatchState}`
-          );
-        }
-      } else {
-        clearTimeout(queryTimer);
-        clearInterval(awaitJob);
+      if (!_.has(queryStatus, 'data.entry[0].content')) {
         throw new Error(
           'Failed search job - Malformed search job response received'
         );
       }
-
-      // Kill loop if search job times out
-      if (!continuePing) {
-        clearInterval(awaitJob);
+      if (queryStatus.data.entry.length !== 1) {
+        throw new Error(
+          `Failed search job - Detected malformed entry field length ${queryStatus.data.entry.length}`
+        );
       }
-    }, searchJobPing);
+
+      const {dispatchState, isDone} = queryStatus.data.entry[0].content;
+      // If search job is complete, exit
+      if (dispatchState === 'DONE' && isDone) {
+        return;
+      }
+      // If search job returns a bad state result, fail the query
+      if (badState.has(dispatchState)) {
+        throw new Error(
+          `Failed search job - Detected dispatch state ${dispatchState}`
+        );
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, searchJobPing));
+    }
+    throw new Error('Search job timed out - Unable to retrieve query');
   }
 
   parseSplunkResponse(
