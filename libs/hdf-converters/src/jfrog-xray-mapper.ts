@@ -98,8 +98,8 @@ function nistTag(identifier: Record<string, unknown>): string[] {
   const identifiers: string[] = [];
   if (Array.isArray(identifier)) {
     identifier.forEach((element) => {
-      if (element.split('CWE-')[1]) {
-        identifiers.push(element.split('CWE-')[1]);
+      if (element.split('CWE-', 2)[1]) {
+        identifiers.push(element.split('CWE-', 2)[1]);
       }
     });
   }

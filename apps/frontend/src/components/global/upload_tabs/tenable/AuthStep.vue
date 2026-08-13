@@ -107,7 +107,7 @@ export default class AuthStep extends Vue {
     }
 
     // If the SSL/TLS port is missing add default 443
-    if (!this.hostname.split(':')[2]) {
+    if (!this.hostname.split(':', 3)[2]) {
       this.hostname = `${this.hostname}:443`;
     }
 

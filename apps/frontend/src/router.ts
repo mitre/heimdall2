@@ -108,7 +108,7 @@ router.beforeEach((to, _, next) => {
       to.params.id !== loadedDatabaseIds
     ) {
       next({
-        path: `/${to.path.split('/')[1]}/${loadedDatabaseIds}`,
+        path: `/${to.path.split('/', 2)[1]}/${loadedDatabaseIds}`,
         replace: true
       });
       return;

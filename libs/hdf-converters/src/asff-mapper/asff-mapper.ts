@@ -72,7 +72,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
         if (!_.startsWith(type, 'MITRE/SAF/')) {
           return false;
         }
-        const version = type.split('/').pop()?.split('-')[0] ?? '';
+        const version = type.split('/').pop()?.split('-', 1)[0] ?? '';
         return validate(version) && compare(version, '2.6.20', '>'); // older versions aren't supported by the 'PreviouslyHDF' specialcasing and instead use the default casing
       }
     )

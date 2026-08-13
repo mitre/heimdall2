@@ -219,7 +219,7 @@ export class TenableUtil {
             }
           } else {
             // CSP url did match, check for port match - reject appropriately
-            const portNumber = parseInt(this.hostConfig.host_url.split(':')[2]);
+            const portNumber = parseInt(this.hostConfig.host_url.split(':', 3)[2]);
             if (portNumber != 443) {
               rejectMsg = `Invalid SSL/TSL port number used: ${portNumber} must be 443.`;
             } else {

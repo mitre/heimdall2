@@ -66,7 +66,7 @@ function formatCweId(input: string): string {
 function nistTag(input: string): string[] {
   let cwe = formatCweId(input).split('CWE-');
   cwe.shift();
-  cwe = cwe.map((x) => x.split(':')[0]);
+  cwe = cwe.map((x) => x.split(':', 1)[0]);
   return CWE_NIST_MAPPING.nistFilter(
     cwe,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS

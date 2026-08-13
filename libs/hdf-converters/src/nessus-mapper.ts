@@ -89,7 +89,7 @@ function cciNistTag(input: string): string[] {
 
 function parseRef(input: string, key: string): string[] {
   const matches = input.split(',').filter((element) => element.startsWith(key));
-  return matches.map((element) => element.split('|')[1]);
+  return matches.map((element) => element.split('|', 2)[1]);
 }
 function getImpact(item: unknown): number {
   if (_.has(item, COMPLIANCE_PATH)) {

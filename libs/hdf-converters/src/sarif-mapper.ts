@@ -39,7 +39,7 @@ function formatCodeDesc(input: unknown): string {
 }
 function nistTag(text: string): string[] {
   let identifiers = extractCwe(text);
-  identifiers = identifiers.map((element) => element.split('-')[1]);
+  identifiers = identifiers.map((element) => element.split('-', 2)[1]);
   return CWE_NIST_MAPPING.nistFilter(
     identifiers,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
@@ -107,7 +107,7 @@ export class SarifMapper extends BaseConverter {
               path: MESSAGE_TEXT,
               transformer: (text: unknown): string => {
                 if (typeof text === 'string') {
-                  return text.split(': ')[0];
+                  return text.split(': ', 1)[0];
                 } else {
                   return '';
                 }
@@ -118,7 +118,7 @@ export class SarifMapper extends BaseConverter {
               path: MESSAGE_TEXT,
               transformer: (text: unknown): string => {
                 if (typeof text === 'string') {
-                  return text.split(': ')[1];
+                  return text.split(': ', 2)[1];
                 } else {
                   return '';
                 }

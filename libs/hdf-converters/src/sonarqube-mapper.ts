@@ -387,7 +387,7 @@ function parseNistTags<T extends SonarqubeVersion>(
 ): string[] | undefined {
   const uniqueNist = _.uniq(
     (parseCweTags<T>(issue) ?? [])
-      .flatMap((t) => CWE_NIST_MAPPING.nistFilter(t.split('-')[1]))
+      .flatMap((t) => CWE_NIST_MAPPING.nistFilter(t.split('-', 2)[1]))
       .concat(
         // adding in the systags' owasp tag since in older sonarqube versions sometimes no other guidance alignment is provided
         (parseOwaspInSysTags<T>(issue) ?? []).flatMap((t) =>
