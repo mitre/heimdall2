@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import JSZip from 'jszip';
 import axios, {AxiosInstance} from 'axios';
 import {ServerModule} from '@/store/server';
@@ -62,14 +61,14 @@ export class TenableUtil {
         headers
       });
 
-    // eslint-disable-next-line no-console
+     
     console.info(
       `Tenable Client initialized in ${this.isServer ? 'Server' : 'Lite'} mode`
     );
   }
 
   async loginToTenable(): Promise<boolean> {
-    // eslint-disable-next-line no-console
+     
     console.info(`Connecting to Tenable Client`);
     return new Promise((resolve, reject) => {
       setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
@@ -78,7 +77,7 @@ export class TenableUtil {
         const url = this.isServer ? '/api/tenable/login' : '/rest/currentUser';
         if (this.isServer) {
           // If running on the server, use the backend proxy endpoint
-          // eslint-disable-next-line no-console
+           
           console.info(`Using Server-Mode: ${url}`);
           this.axios_instance
             .post(url, {
@@ -94,7 +93,7 @@ export class TenableUtil {
               }
             })
             .catch((error) => {
-              // eslint-disable-next-line no-console
+               
               console.error(
                 `Processing (Server-Mode) connection error -> ${error}`
               );
@@ -102,20 +101,20 @@ export class TenableUtil {
             });
         } else {
           // If running in Lite mode, connect directly to Tenable
-          // eslint-disable-next-line no-console
+           
           console.info(`Using Lite-Mode`);
           this.axios_instance
             .get(url)
             .then((response) => {
               if (response.status === 200) {
-                // eslint-disable-next-line no-console
+                 
                 console.info('Processing (Lite-Mode) connected successfully');
                 resolve(true);
               } else {
                 const msg =
                   response.data?.message ||
                   'Unexpected response structure from Tenable';
-                // eslint-disable-next-line no-console
+                 
                 console.error(
                   `Processing (Lite-Mode) connection failed: ${msg}`
                 );
@@ -123,7 +122,7 @@ export class TenableUtil {
               }
             })
             .catch((error) => {
-              // eslint-disable-next-line no-console
+               
               console.error(`Processing (Lite-Mode) connecting error: ${error}`);
               reject(this.getRejectConnectionMessage(error));
             });
@@ -134,7 +133,7 @@ export class TenableUtil {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   getRejectConnectionMessage(error: any): string {
     let rejectMsg = '';
     const DEFAULT_REJECT_MSG =
@@ -253,7 +252,7 @@ export class TenableUtil {
    *   name,description,scannedIPs,startTime,finishTime,status
    */
   async getScans(startTime: number, endTime: number): Promise<[]> {
-    // eslint-disable-next-line no-console
+     
     console.info(`Getting scans from Tenable Client`);
     return new Promise((resolve, reject) => {
       setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
@@ -287,7 +286,7 @@ export class TenableUtil {
    *   For type "diagnostic", the file is a diagnostic database file.
    */
   async getVulnerabilities(scanId: string): Promise<string> {
-    // eslint-disable-next-line no-console
+     
     console.info(`Getting vulnerabilities from Tenable Client`);
     return new Promise((resolve, reject) => {
       setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
@@ -332,7 +331,7 @@ export class TenableUtil {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   getRejectMessage(error: any): string {
     let rejectMsg = '';
     if (error.code == 'ERR_BAD_REQUEST') {

@@ -76,12 +76,12 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       this.configService.get('LDAP_MAILFIELD') || 'mail',
     );
     const validatedUser = this.authnService.validateOrCreateUser(
-      // eslint-disable-next-line unicorn/prefer-at -- `.at(0)` returns
-      // `string | undefined`, but validateOrCreateUser requires `string`.
-      // Index access keeps the exact runtime behavior this has always had.
-      // Closing the gap properly means deciding what should happen when an
-      // LDAP user has no email address — an authentication behavior change,
-      // not a lint fix. Tracked separately.
+      // `.at(0)` returns `string | undefined`, but validateOrCreateUser
+      // requires `string`. Index access keeps the exact runtime behavior this
+      // has always had. Closing the gap properly means deciding what should
+      // happen when an LDAP user has no email address — an authentication
+      // behavior change, not a lint fix. Tracked separately.
+      // eslint-disable-next-line unicorn/prefer-at
       Array.isArray(email) ? email[0] : email,
       firstName,
       lastName,

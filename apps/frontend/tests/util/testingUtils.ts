@@ -73,7 +73,7 @@ export function expectedCount(
     // Get the corresponding count file
     const countFilename = `tests/hdf_data/counts/${file.filename}.info.counts`;
     const countFileContent = readFileSync(countFilename, 'utf-8');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const counts: Record<string, any> = JSON.parse(countFileContent);
 
     statuses['failed'] += counts.failed.total;

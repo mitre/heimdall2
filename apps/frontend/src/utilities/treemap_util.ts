@@ -155,7 +155,7 @@ function populate_tree_map(
       parent.children.push(leaf);
       leaf.parent = parent;
     } else {
-      // eslint-disable-next-line no-console
+       
       console.warn(
         `Warning: unable to assign control ${leaf.nist_control.rawText} to valid treemap leaf`
       );

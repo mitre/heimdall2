@@ -66,7 +66,7 @@ describe('Datatable', () => {
     expect(
       (
         controlTableWrapper.vm as Vue & {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           items: Array<any>;
         }
       ).items.length
@@ -93,7 +93,7 @@ describe('Datatable', () => {
     expect(
       (
         controlTableWrapper.vm as Vue & {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           items: Array<any>;
         }
       ).items.length
@@ -114,7 +114,7 @@ describe('Datatable', () => {
     expect(
       (
         controlTableWrapper.vm as Vue & {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           items: Array<any>;
         }
       ).items
@@ -148,7 +148,7 @@ describe('Datatable', () => {
     expect(
       (
         controlTableWrapper.vm as Vue & {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           items: Array<any>;
         }
       ).items.length

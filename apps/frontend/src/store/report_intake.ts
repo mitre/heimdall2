@@ -372,7 +372,7 @@ export class InspecIntake extends VuexModule {
       InspecDataModule.addProfile(profileFile);
       FilteredDataModule.toggle_profile(profileFile.uniqueId);
     } else {
-      // eslint-disable-next-line no-console
+       
       console.error(result.errors);
       throw new Error(
         "Couldn't parse data. See developer's tools for more details."

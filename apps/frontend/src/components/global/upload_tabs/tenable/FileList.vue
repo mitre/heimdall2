@@ -190,7 +190,6 @@ export default class FileList extends Vue {
             SnackbarModule.failure(
               `Scan ${execution.id} hasn't finished, wait until completed before loading for viewing.`
             );
-            // eslint-disable-next-line prettier/prettier
           } else if (execution.status === 'Failed' || execution.status === 'Error') {
             SnackbarModule.failure(
               `Scan ${execution.id} has failed, please check the Tenable.sc for more details.`

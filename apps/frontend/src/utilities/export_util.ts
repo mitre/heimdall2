@@ -34,7 +34,7 @@ export async function saveSingleOrMultipleFiles(
         // Convert Blob to ArrayBuffer asynchronously
         binaryData = await file.data.arrayBuffer();
       } else {
-        // eslint-disable-next-line no-console
+         
         console.warn(`Unsupported file type for ${file.filename}`);
         continue;
       }
@@ -42,7 +42,6 @@ export async function saveSingleOrMultipleFiles(
       zip.file(file.filename, binaryData);
     }
 
-    // eslint-disable-next-line prettier/prettier
     const content = await zip.generateAsync({type: 'blob'});
     saveAs(content, `exported_${filetype}s.zip`);
   }
