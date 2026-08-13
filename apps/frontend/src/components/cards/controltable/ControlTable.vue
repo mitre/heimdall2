@@ -340,7 +340,7 @@ export default class ControlTable extends Vue {
   }
 
   striptoChars(key: string) {
-    return key.replace(/[^0-9a-z]/giv, '');
+    return key.replaceAll(/[^0-9a-z]/giv, '');
   }
 
   /** Return items as key, value pairs */

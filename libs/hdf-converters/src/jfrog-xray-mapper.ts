@@ -48,8 +48,8 @@ function formatDesc(vulnerability: unknown): string {
     const re2 = /,/gi;
     text.push(
       `cves: ${JSON.stringify(_.get(vulnerability, 'cves'))
-        .replace(re1, '"=>')
-        .replace(re2, ', ')}`
+        .replaceAll(re1, '"=>')
+        .replaceAll(re2, ', ')}`
     );
   }
   return text.join('<br>');
@@ -92,7 +92,7 @@ function formatCodeDesc(vulnerability: unknown): string {
   } else {
     codeDescArray.push('provider : ');
   }
-  return codeDescArray.join('\n').replace(re, ', ');
+  return codeDescArray.join('\n').replaceAll(re, ', ');
 }
 function nistTag(identifier: Record<string, unknown>): string[] {
   const identifiers: string[] = [];

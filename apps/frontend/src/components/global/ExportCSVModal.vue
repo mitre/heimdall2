@@ -349,7 +349,7 @@ export default class ExportCSVModal extends Vue {
   }
 
   cleanUpFilename(filename: string): string {
-    return filename.replace(/\s+/gv, '_');
+    return filename.replaceAll(/\s+/gv, '_');
   }
 }
 </script>

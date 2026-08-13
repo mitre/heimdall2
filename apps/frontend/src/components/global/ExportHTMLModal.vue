@@ -159,7 +159,7 @@ export default class ExportHTMLModal extends Vue {
 
     saveAs(
       new Blob([body], {type: 'text/html;charset=utf-8'}),
-      `${this.exportType}_Report_${new Date().toString()}.html`.replace(
+      `${this.exportType}_Report_${new Date().toString()}.html`.replaceAll(
         /[ :]/gv,
         '_'
       )

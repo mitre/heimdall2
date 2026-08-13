@@ -312,8 +312,8 @@ function fixFileInput(
   } catch {
     const fixedInput = `[${asffJson
       .trim()
-      .replace(/}\n/g, '},\n')
-      .replace(/\},\n\$/g, '')}]`;
+      .replaceAll('}\n', '},\n')
+      .replaceAll('},\n$', '')}]`;
     output = JSON.parse(fixedInput);
   }
   return wrapWithFindingsObject(output);

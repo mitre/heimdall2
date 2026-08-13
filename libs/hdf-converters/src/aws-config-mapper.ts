@@ -177,9 +177,9 @@ export class AwsConfigMapper {
           if (
             completedControl.code_desc.indexOf(
               JSON.stringify(extractedResourceName)
-                .replace(/\"/gi, '')
-                .replace(/{/gi, '')
-                .replace(/}/gi, '')
+                .replaceAll(/\"/gi, '')
+                .replaceAll(/{/gi, '')
+                .replaceAll(/}/gi, '')
             ) !== -1
           ) {
             return {
@@ -253,9 +253,9 @@ export class AwsConfigMapper {
       output = JSON.stringify(
         result.EvaluationResultIdentifier.EvaluationResultQualifier
       )
-        .replace(/\"/gi, '')
-        .replace(/{/gi, '')
-        .replace(/}/gi, '');
+        .replaceAll(/\"/gi, '')
+        .replaceAll(/{/gi, '')
+        .replaceAll(/}/gi, '');
     }
     return output;
   }
@@ -345,8 +345,8 @@ export class AwsConfigMapper {
       configRule.InputParameters !== undefined &&
       configRule.InputParameters !== '{}'
     ) {
-      params = configRule.InputParameters.replace(/{/gi, '')
-        .replace(/}/gi, '')
+      params = configRule.InputParameters.replaceAll(/{/gi, '')
+        .replaceAll(/}/gi, '')
         .split(',');
     }
     const checkText = [];
@@ -355,7 +355,7 @@ export class AwsConfigMapper {
       `Source Identifier: ${configRule.Source?.SourceIdentifier || 'N/A'}`
     );
     if (params.length > 0) {
-      checkText.push(`${params.join('<br/>').replace(/\"/gi, '')}`);
+      checkText.push(`${params.join('<br/>').replaceAll(/\"/gi, '')}`);
     }
     return checkText.join('<br/>');
   }
@@ -386,8 +386,8 @@ export class AwsConfigMapper {
         title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${
           issue.ConfigRuleName
         }`
-          .replace(/:/gi, '')
-          .replace(/config-rule/gi, ''),
+          .replaceAll(/:/gi, '')
+          .replaceAll(/config-rule/gi, ''),
         desc: issue.Description || null,
         impact: this.getImpact(issue),
         tags: this.hdfTags(issue),

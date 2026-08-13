@@ -179,7 +179,7 @@ export async function parseXLSXAttestations(
       XLSX.utils.sheet_to_json(sheet);
     const attestations: Attestation[] = data.map((attestation) => {
       const lowerAttestation = _.mapKeys(attestation, (_v, k) => {
-        return k.toLowerCase().replace(/\s/g, '_');
+        return k.toLowerCase().replaceAll(/\s/g, '_');
       });
       return {
         control_id: getFirstPath(lowerAttestation, [

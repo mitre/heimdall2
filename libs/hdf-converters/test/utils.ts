@@ -79,7 +79,7 @@ export function omitHDFTimes(
             results: control.results.map((result) => {
               return {
                 ..._.omit(result, 'start_time'),
-                message: result.message?.replace(/Updated:.*\n/g, '')
+                message: result.message?.replaceAll(/Updated:.*\n/g, '')
               };
             })
           };

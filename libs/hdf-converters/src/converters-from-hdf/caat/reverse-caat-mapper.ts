@@ -81,7 +81,7 @@ export class FromHDFToCAATMapper {
   // ensure we're using Windows style newlines and fit within the maximum length
   static fix(str?: string | null): string {
     return (str ?? '')
-      .replace(/(\r\n|\n|\r)/gmu, '\r\n')
+      .replaceAll(/(\r\n|\n|\r)/gmu, '\r\n')
       .slice(0, FromHDFToCAATMapper.MaxCellSize);
   }
 

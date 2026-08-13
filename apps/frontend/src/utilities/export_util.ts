@@ -48,7 +48,7 @@ export async function saveSingleOrMultipleFiles(
 }
 
 export function cleanUpFilename(filename: string): string {
-  return filename.replace(/\s+/gv, '_');
+  return filename.replaceAll(/\s+/gv, '_');
 }
 
 /** Converts a string to an array buffer */

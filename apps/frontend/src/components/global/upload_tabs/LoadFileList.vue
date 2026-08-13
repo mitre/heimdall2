@@ -440,7 +440,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     const delimiterChr = searchValue.indexOf(',') > 0 ? ',' : ' ';
     if (delimiterChr == ',') {
       // Remove any blank spaces
-      searchValue = searchValue.replace(/\s/gv, '');
+      searchValue = searchValue.replaceAll(/\s/gv, '');
     }
     const searchParam = searchValue.split(delimiterChr).join('|');
     return `(${searchParam})`;

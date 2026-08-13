@@ -184,7 +184,7 @@ export function createAssumeRolePolicyDocument(
 // Gets rid of extra spacing + newlines as these aren't shown in Security Hub
 export function cleanText(text?: string | null): string | undefined {
   if (text) {
-    return text.replace(/  +/g, ' ');
+    return text.replaceAll(/  +/g, ' ');
   } else {
     return undefined;
   }
@@ -258,7 +258,7 @@ export function createCode(
   return `=========================================================\n# Profile name: ${
     control.profileInfo?.name
   }\n=========================================================\n\n${
-    control.code ? control.code?.replace(/\\\"/g, '"') : noCodeValue
+    control.code ? control.code?.replaceAll('\\"', '"') : noCodeValue
   }`;
 }
 
