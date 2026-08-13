@@ -128,23 +128,23 @@ function productName(
     (_.get(finding, 'Types[0]') as string)
       .split('/')
       .slice(-1)[0]
-      .replaceAll(/-/gi, ' ')
+      .replaceAll(/-/g, ' ')
       .toLowerCase() ===
     (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)
       .split('/')
       .slice(-4)[0]
-      .replaceAll(/-/gi, ' ')
+      .replaceAll(/-/g, ' ')
       .toLowerCase()
   ) {
     standardName = (_.get(finding, 'Types[0]') as string)
       .split('/')
       .slice(-1)[0]
-      .replaceAll(/-/gi, ' ');
+      .replaceAll(/-/g, ' ');
   } else {
     standardName = (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)
       .split('/')
       .slice(-4)[0]
-      .replaceAll(/-/gi, ' ')
+      .replaceAll(/-/g, ' ')
       .split(WHITESPACE)
       .map((element: string) => {
         return element.charAt(0).toUpperCase() + element.slice(1);

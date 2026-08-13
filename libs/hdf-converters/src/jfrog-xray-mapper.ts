@@ -46,8 +46,8 @@ function formatDesc(vulnerability: unknown): string {
     );
   }
   if (_.has(vulnerability, 'cves')) {
-    const re1 = /":/gi;
-    const re2 = /,/gi;
+    const re1 = /":/g;
+    const re2 = /,/g;
     text.push(
       `cves: ${JSON.stringify(_.get(vulnerability, 'cves'))
         .replaceAll(re1, '"=>')
@@ -58,7 +58,7 @@ function formatDesc(vulnerability: unknown): string {
 }
 function formatCodeDesc(vulnerability: unknown): string {
   const codeDescArray: string[] = [];
-  const re = /,/gi;
+  const re = /,/g;
   if (_.has(vulnerability, 'source_comp_id')) {
     codeDescArray.push(
       `source_comp_id : ${String(_.get(vulnerability, 'source_comp_id'))}`
