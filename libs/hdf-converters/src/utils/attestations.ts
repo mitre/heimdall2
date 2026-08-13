@@ -234,7 +234,8 @@ function getFirstPath(
       `Attestation is missing one of these paths: ${paths.join(', ')}`
     );
   }
-  const stringOrDate = _.get(object, paths[index]);
+  // findIndex's -1 case threw above, so .at() cannot miss here.
+  const stringOrDate = _.get(object, paths.at(index) ?? '');
   if (_.isString(stringOrDate)) {
     return stringOrDate;
   }

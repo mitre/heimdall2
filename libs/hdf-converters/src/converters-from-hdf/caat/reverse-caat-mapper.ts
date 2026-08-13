@@ -232,8 +232,6 @@ export class FromHDFToCAATMapper {
       }
       takenSheetNames.push(sheetName);
 
-      // Create a new Sheet
-      workBook.SheetNames.push(sheetName);
       workBook.Props = FromHDFToCAATMapper.FileSettings;
 
       // Get the controls for the current evaluation
@@ -263,7 +261,10 @@ export class FromHDFToCAATMapper {
         rows,
         FromHDFToCAATMapper.SheetOptions
       );
-      workBook.Sheets[sheetName] = workSheet;
+      // book_append_sheet is the library's own API for this: it registers
+      // the name and the sheet atomically, replacing the manual
+      // SheetNames.push above plus a computed-key write into Sheets.
+      XLSX.utils.book_append_sheet(workBook, workSheet, sheetName);
     }
 
     if (returnWorkBook) {

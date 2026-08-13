@@ -115,8 +115,15 @@ function collapseDuplicates<T extends object>(
         seen.set(propertyValue, counter);
         counter++;
       } else {
+        // The index was recorded by `seen` at push time, so .at() cannot
+        // miss; the guard states that invariant. _.set mutates the fetched
+        // object, so working through the reference is identical to indexing.
+        const existing = newArray.at(index);
+        if (existing === undefined) {
+          return;
+        }
         const oldResult = _.get(
-          newArray[index],
+          existing,
           'results'
         ) as ExecJSON.ControlResult[];
         const descriptions = oldResult.map((element) =>
@@ -129,7 +136,7 @@ function collapseDuplicates<T extends object>(
             )
           ) {
             _.set(
-              newArray[index],
+              existing,
               'results',
               oldResult.concat(
                 _.get(item, 'results') as ExecJSON.ControlResult[]
@@ -138,7 +145,7 @@ function collapseDuplicates<T extends object>(
           }
         } else {
           _.set(
-            newArray[index],
+            existing,
             'results',
             oldResult.concat(_.get(item, 'results') as ExecJSON.ControlResult[])
           );
@@ -388,13 +395,16 @@ export class BaseConverter<D = Record<string, unknown>> {
 
     const index = _.findIndex(pathArray, (p) => this.hasPath(file, p));
 
-    if (index === -1) {
+    // Guard BEFORE .at(): findIndex returns -1 on no match, and .at(-1)
+    // would silently read the LAST path where the old code returned ''.
+    const matchedPath = index === -1 ? undefined : pathArray.at(index);
+    if (matchedPath === undefined) {
       // should probably throw error here, but instead are providing a default value to match current behavior
       return '';
-    } else if (pathArray[index].startsWith('$.')) {
-      return _.get(this.data, pathArray[index].slice(2)) || ''; // having default values implemented like this also prevents 'null' from being passed through
+    } else if (matchedPath.startsWith('$.')) {
+      return _.get(this.data, matchedPath.slice(2)) || ''; // having default values implemented like this also prevents 'null' from being passed through
     } else {
-      return _.get(file, pathArray[index]) ?? '';
+      return _.get(file, matchedPath) ?? '';
     }
   }
 

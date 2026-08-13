@@ -52,25 +52,27 @@ export function getRunTime(hdf: ExecJSON.Execution): string {
 function filter_overlays(
   controls: ContextualizedControl[]
 ): ContextualizedControl[] {
-  const idHash: Record<string, ContextualizedControl> = {};
+  // Map, not Record: control ids come from the HDF being converted, and
+  // plain-object accumulation resolves prototype keys ('constructor' reads a
+  // function as the "old" control; '__proto__' writes hit the setter).
+  const idHash = new Map<string, ContextualizedControl>();
   controls.forEach((c) => {
     const id = c.hdf.wraps.id;
-    const old: ContextualizedControl | undefined = idHash[id];
+    const old = idHash.get(id);
     // If old, gotta check if our new status list is "better than" old
     if (old) {
       const newSignificant = c.hdf.status_list && c.hdf.status_list.length > 0;
       if (newSignificant) {
         // Overwrite
-        idHash[id] = c;
+        idHash.set(id, c);
       }
     } else {
       // First time seeing this id
-      idHash[id] = c;
+      idHash.set(id, c);
     }
   });
 
-  // Return the set of keys
-  return Array.from(Object.values(idHash));
+  return Array.from(idHash.values());
 }
 
 export function createProfileInfoFinding(
@@ -519,15 +521,14 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
 }
 
 function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
-  const typesArr: string[] = [];
-  for (const tag in control.tags) {
-    typesArr.push(
+  // Object.entries iterates OWN keys only (for-in also walked inherited
+  // enumerables) and hands over the value, so no computed read remains.
+  return Object.entries(control.tags).map(
+    ([tag, value]) =>
       `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
-        JSON.stringify(control.tags[tag])
+        JSON.stringify(value)
       )}`
-    );
-  }
-  return typesArr;
+  );
 }
 
 function createDescriptionInfo(control: ExecJSON.Control): string[] {

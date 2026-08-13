@@ -238,10 +238,13 @@ export class CycloneDXSBOMResults {
 
       // Also record the ID of the vulnerability in the component for use in bidirectional traversal
       for (const index of vulnerability.affectedComponents) {
-        if (!data.components[index].affectingVulnerabilities) {
-          data.components[index].affectingVulnerabilities = [];
+        // Indices were derived from data.components itself just above, so
+        // .at() cannot miss; the guard states that invariant.
+        const component = data.components.at(index);
+        if (component === undefined) {
+          continue;
         }
-        (data.components[index].affectingVulnerabilities).push(
+        (component.affectingVulnerabilities ??= []).push(
           _.get(vulnerability, 'bom-ref') as unknown as string
         );
       }
@@ -288,7 +291,9 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
     index: number,
     keys: string[]
   ): Record<string, unknown> {
-    return _.pick(this.data.components[index], keys);
+    // _.pick tolerates undefined (returns {}), matching what the old typed
+    // lie produced for an out-of-range index.
+    return _.pick(this.data.components.at(index), keys);
   }
 
   mappings: MappedTransform<
@@ -627,11 +632,11 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                         'copyright'
                       ]
                     );
-                    const msg = Object.keys(selectComponentValues)
-                      .map((key) => {
-                        return Array.isArray(selectComponentValues[key])
-                          ? `\n\n- ${_.capitalize(key)}: ${JSON.stringify(selectComponentValues[key], null, 2)}`
-                          : `\n\n- ${_.capitalize(key)}: ${selectComponentValues[key]}`;
+                    const msg = Object.entries(selectComponentValues)
+                      .map(([key, value]) => {
+                        return Array.isArray(value)
+                          ? `\n\n- ${_.capitalize(key)}: ${JSON.stringify(value, null, 2)}`
+                          : `\n\n- ${_.capitalize(key)}: ${value}`;
                       })
                       .join('');
                     return `-Component Summary-${msg}`;

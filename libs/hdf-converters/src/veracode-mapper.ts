@@ -289,7 +289,13 @@ function componentTransform(input: unknown): Record<string, unknown>[] {
       if (index === -1) {
         return [...acc, cur];
       } else {
-        (_.get(acc[index], 'components') as Record<string, unknown>[]).push(
+        // findIndex already excluded -1, so .at() cannot miss; the guard
+        // states the invariant instead of indexing blind.
+        const existing = acc.at(index);
+        if (existing === undefined) {
+          return acc;
+        }
+        (_.get(existing, 'components') as Record<string, unknown>[]).push(
           ...(_.get(cur, 'components') as Record<string, unknown>[])
         );
         return acc;

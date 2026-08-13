@@ -1227,13 +1227,23 @@ export class SonarqubeResults {
         .map((l, i) => `${i + 1} ${l}`)
         .join('\n');
     const getContextualizedSnippet = (
-      fullFiles: Record<string, string>,
+      // Map, not Record: component keys arrive from the SonarQube API, and
+      // bracket access on a plain object resolves prototype keys.
+      fullFiles: Map<string, string | undefined>,
       component: string,
       startLine: number,
       endLine: number,
       msg?: string
     ): string => {
-      const linenumberedFile = applyLineNumber(fullFiles[component]);
+      const fullFile = fullFiles.get(component);
+      if (fullFile === undefined) {
+        // The old typed lie crashed inside applyLineNumber on a missing
+        // component; same failure condition, now stated.
+        throw new TypeError(
+          `SonarQube returned no source for component ${component}`
+        );
+      }
+      const linenumberedFile = applyLineNumber(fullFile);
       const snippet = linenumberedFile
         .split('\n')
         .slice(Math.max(startLine - 3, 0), endLine + 3) // slice wraps around if the start is less than 0 so we want to put a bounds check there to ensure we start at the top of the file; however, if the end is past the end of the array then it just goes until the end of the array so no bounds check is required there
@@ -1256,7 +1266,9 @@ export class SonarqubeResults {
     const fullFilePromises = await Promise.all(
       components.map((component) => getFullFile(component))
     );
-    const fullFiles = Object.fromEntries(_.zip(components, fullFilePromises));
+    const fullFiles = new Map(
+      _.zip(components, fullFilePromises) as [string, string | undefined][]
+    );
 
     const snippets = issues.map((issue) => {
       if (issue.flows.length > 0) {
@@ -1355,11 +1367,19 @@ export class SonarqubeResults {
       organization: this.organization,
       search: {
         ...searchResults,
-        issues: searchResults.issues.map((issue, index) => ({
-          ...issue,
-          codeSnippet: codeSnippets[index],
-          ruleInformation: rules[index]
-        }))
+        issues: searchResults.issues.map((issue, index) => {
+          // Parallel arrays awaited from the same issues list; the guard
+          // states that invariant (the old indexing let undefined flow
+          // silently into the output on divergence).
+          const codeSnippet = codeSnippets.at(index);
+          const ruleInformation = rules.at(index);
+          if (codeSnippet === undefined || ruleInformation === undefined) {
+            throw new TypeError(
+              'SonarQube issue, snippet and rule arrays diverged'
+            );
+          }
+          return {...issue, codeSnippet, ruleInformation};
+        })
       }
     };
     return new SonarqubeMapper<T>(data, this.withRaw).toHdf();
