@@ -49,11 +49,13 @@ function nistTag(rule: Record<string, unknown>): string[] {
 
 function processEntry(input: unknown): string {
   const output = [];
-  output.push(`${_.get(input, 'id')}<=SNIPPET`);
-  output.push(`\nPath: ${_.get(input, 'File')}\n`);
-  output.push(`StartLine: ${_.get(input, 'StartLine')}, `);
-  output.push(`EndLine: ${_.get(input, 'EndLine')}\n`);
-  output.push(`Code:\n${(_.get(input, 'Text') as unknown as string).trim()}`);
+  output.push(
+    `${_.get(input, 'id')}<=SNIPPET`,
+    `\nPath: ${_.get(input, 'File')}\n`,
+    `StartLine: ${_.get(input, 'StartLine')}, `,
+    `EndLine: ${_.get(input, 'EndLine')}\n`,
+    `Code:\n${(_.get(input, 'Text') as unknown as string).trim()}`
+  );
 
   return output.join('');
 }

@@ -33,9 +33,11 @@ function impactMapping(severity: unknown): number {
 }
 function formatCodeDesc(input: unknown): string {
   const output = [];
-  output.push(`URL : ${_.get(input, 'artifactLocation.uri')}`);
-  output.push(`LINE : ${_.get(input, 'region.startLine')}`);
-  output.push(`COLUMN : ${_.get(input, 'region.startColumn')}`);
+  output.push(
+    `URL : ${_.get(input, 'artifactLocation.uri')}`,
+    `LINE : ${_.get(input, 'region.startLine')}`,
+    `COLUMN : ${_.get(input, 'region.startColumn')}`
+  );
   return output.join(' ');
 }
 function nistTag(text: string): string[] {

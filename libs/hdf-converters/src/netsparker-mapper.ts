@@ -131,15 +131,19 @@ function formatFix(vulnerability: unknown): string {
 }
 function formatCodeDesc(request: unknown): string {
   const text: string[] = [];
-  text.push(`http-request : ${_.get(request, 'content')}`);
-  text.push(`method : ${_.get(request, 'method')}`);
+  text.push(
+    `http-request : ${_.get(request, 'content')}`,
+    `method : ${_.get(request, 'method')}`
+  );
   return text.join('\n');
 }
 function formatMessage(response: unknown): string {
   const text: string[] = [];
-  text.push(`http-response : ${_.get(response, 'content')}`);
-  text.push(`duration : ${_.get(response, 'duration')}`);
-  text.push(`status-code  : ${_.get(response, 'status-code')}`);
+  text.push(
+    `http-response : ${_.get(response, 'content')}`,
+    `duration : ${_.get(response, 'duration')}`,
+    `status-code  : ${_.get(response, 'status-code')}`
+  );
   return text.join('\n');
 }
 

@@ -59,9 +59,11 @@ function nistTag(cweid: string): string[] {
 }
 function checkText(input: Record<string, unknown>): string {
   const text = [];
-  text.push(_.get(input, 'solution'));
-  text.push(_.get(input, 'otherinfo'));
-  text.push(_.get(input, 'otherinfo'));
+  text.push(
+    _.get(input, 'solution'),
+    _.get(input, 'otherinfo'),
+    _.get(input, 'otherinfo')
+  );
   return text.join('\n');
 }
 function formatCodeDesc(input: unknown): string {

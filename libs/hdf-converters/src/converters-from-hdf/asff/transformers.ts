@@ -572,12 +572,14 @@ export function setupFindingType(
     `File/Input/${getFilename(context?.ioptions)}`
   ];
 
-  // Add control metadata to the Finding Provider Fields
-  typesArr.push(...createControlMetadata(control));
-  // Add segment/result information to Finding Provider Fields
-  typesArr.push(...createSegmentInfo(control.result));
-  // Add Tags to Finding Provider Fields
-  typesArr.push(...createTagInfo(control));
+  typesArr.push(
+    // Add control metadata to the Finding Provider Fields
+    ...createControlMetadata(control),
+    // Add segment/result information to Finding Provider Fields
+    ...createSegmentInfo(control.result),
+    // Add Tags to Finding Provider Fields
+    ...createTagInfo(control)
+  );
 
   // nist tag, then subdescriptions, then remaining tags
   const nistTagIndex = typesArr.findIndex((typeString) =>

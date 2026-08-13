@@ -78,8 +78,8 @@ export function getDependencies(
     if (profile.data.depends) {
       for (const dependency of profile.data.depends) {
         if (dependency.name) {
-          dependencies.push(dependency.name);
           dependencies.push(
+            dependency.name,
             ...getDependencies(
               execution.contains.find(
                 (execProfile) => execProfile.data.name === dependency.name

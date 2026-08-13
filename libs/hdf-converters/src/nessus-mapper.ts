@@ -73,9 +73,11 @@ function getDesc(item: unknown): string {
 }
 function formatDesc(issue: unknown): string {
   const desc = [];
-  desc.push(`Plugin Family: ${_.get(issue, 'pluginFamily')}`);
-  desc.push(`Port: ${_.get(issue, 'port')}`);
-  desc.push(`Protocol: ${_.get(issue, 'protocol')}`);
+  desc.push(
+    `Plugin Family: ${_.get(issue, 'pluginFamily')}`,
+    `Port: ${_.get(issue, 'port')}`,
+    `Protocol: ${_.get(issue, 'protocol')}`
+  );
   return desc.join('; ') + ';';
 }
 function pluginNistTag(item: unknown): string[] {

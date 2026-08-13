@@ -258,9 +258,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       (finding.FindingProviderFields.Types as string[]).push(
         new TextDecoder().decode(
           new TextEncoder().encode(popped).subarray(0, SIZE_CAP - size)
-        )
-      );
-      (finding.FindingProviderFields.Types as string[]).push(
+        ),
         'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
       );
       console.error(

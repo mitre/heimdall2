@@ -106,8 +106,8 @@ export class ControlDelta {
     // Init the list
     const headerChanges: ControlChange[] = [];
 
-    // Change in... ID? Theoretically possible!
     headerChanges.push(
+      // Change in... ID? Theoretically possible!
       new ControlChange(
         'ID',
         this.controlsandnull.map((c) => {
@@ -116,11 +116,8 @@ export class ControlDelta {
           }
           return c.data.id;
         })
-      )
-    );
-
-    // And severity! Why not
-    headerChanges.push(
+      ),
+      // And severity! Why not
       new ControlChange(
         'Severity',
         this.controlsandnull.map((c) => {
@@ -129,11 +126,8 @@ export class ControlDelta {
           }
           return c.hdf.severity;
         })
-      )
-    );
-
-    // Change in nist tags!
-    headerChanges.push(
+      ),
+      // Change in nist tags!
       new ControlChange(
         'NIST Tags',
         this.controlsandnull.map((c) => {

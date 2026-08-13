@@ -351,8 +351,8 @@ export class AwsConfigMapper {
         .split(',');
     }
     const checkText = [];
-    checkText.push(`ARN: ${configRule.ConfigRuleArn || 'N/A'}`);
     checkText.push(
+      `ARN: ${configRule.ConfigRuleArn || 'N/A'}`,
       `Source Identifier: ${configRule.Source?.SourceIdentifier || 'N/A'}`
     );
     if (params.length > 0) {

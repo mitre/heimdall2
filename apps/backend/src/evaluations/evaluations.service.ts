@@ -279,16 +279,18 @@ export class EvaluationsService {
     if (role === 'admin') {
       baseCriteria.push({ public: { [Op.eq]: 'false' } });
     } else {
-      baseCriteria.push({ '$user.email$': { [Op.like]: email } });
-      baseCriteria.push({
-        [Op.and]: {
-          '$groups->users.id$': {
-            [Op.eq]: Sequelize.literal(
-              `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`,
-            ),
+      baseCriteria.push(
+        { '$user.email$': { [Op.like]: email } },
+        {
+          [Op.and]: {
+            '$groups->users.id$': {
+              [Op.eq]: Sequelize.literal(
+                `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`,
+              ),
+            },
           },
         },
-      });
+      );
     }
     return baseCriteria;
   }
