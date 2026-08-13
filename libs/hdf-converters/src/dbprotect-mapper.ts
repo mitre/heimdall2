@@ -44,8 +44,7 @@ function compileFindings(
   return Object.fromEntries([['data', output]]);
 }
 function formatSummary(entry: unknown): string {
-  const text = [];
-  text.push(
+  const text = [
     `Organization : ${_.get(entry, 'Organization')}`,
     `Asset : ${_.get(entry, 'Check Asset')}`,
     `Asset Type : ${_.get(entry, 'Asset Type')}`,
@@ -54,15 +53,14 @@ function formatSummary(entry: unknown): string {
       entry,
       'IP Address, Port, Instance'
     )} `
-  );
+  ];
   return text.join('\n');
 }
 function formatDesc(entry: unknown): string {
-  const text = [];
-  text.push(
+  const text = [
     `Task : ${_.get(entry, 'Task')}`,
     `Check Category : ${_.get(entry, 'Check Category')}`
-  );
+  ];
   return text.join('; ');
 }
 function getStatus(input: unknown): ExecJSON.ControlResultStatus {

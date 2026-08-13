@@ -22,11 +22,12 @@ import {
 function extractAllDependencies(
   dependency: Dependency
 ): ContextualizedDependency[] {
-  const result: ContextualizedDependency[] = [];
-  result.push({
-    ...dependency,
-    parentDependencies: []
-  });
+  const result: ContextualizedDependency[] = [
+    {
+      ...dependency,
+      parentDependencies: []
+    }
+  ];
   if (Array.isArray(dependency.dependencies)) {
     dependency.dependencies.forEach((subDependency) => {
       result.push(...extractAllDependencies(subDependency));

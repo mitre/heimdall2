@@ -350,11 +350,10 @@ export class AwsConfigMapper {
         .replaceAll(/\}/g, '')
         .split(',');
     }
-    const checkText = [];
-    checkText.push(
+    const checkText = [
       `ARN: ${configRule.ConfigRuleArn || 'N/A'}`,
       `Source Identifier: ${configRule.Source?.SourceIdentifier || 'N/A'}`
-    );
+    ];
     if (params.length > 0) {
       checkText.push(params.join('<br/>').replaceAll(/"/g, ''));
     }

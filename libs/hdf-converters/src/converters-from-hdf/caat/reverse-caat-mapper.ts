@@ -166,36 +166,37 @@ export class FromHDFToCAATMapper {
             return;
           }
 
-          const row: CAATRow = {};
-          row['Control Number'] = formattedNistTag;
-          row['Finding Title'] = `Test ${FromHDFToCAATMapper.fix(
-            hdf.wraps.id
-          )} - ${FromHDFToCAATMapper.fix(hdf.wraps.title)}`;
-          if (hdf.start_time) {
-            row['Date Identified'] = FromHDFToCAATMapper.formatDate(
-              new Date(hdf.start_time),
-              '/'
-            );
-          }
-          row['Finding ID'] = `${filename} - Test ${FromHDFToCAATMapper.fix(
-            hdf.wraps.id
-          )}`;
-          row['Finding Description'] = FromHDFToCAATMapper.fix(hdf.wraps.title);
-          row['Weakness Description'] = this.newCaveat(hdf);
-          row['Control Weakness Type'] = 'Security';
-          row.Source = 'Self-Assessment';
-          row['Test Method'] = 'Test';
-          row['Test Objective'] = FromHDFToCAATMapper.fix(
-            hdf.descriptions.check ?? hdf.wraps.tags.check
-          );
-          row['Test Result Description'] = FromHDFToCAATMapper.fix(
-            this.newTestResultDescription(hdf)
-          );
-          row['Test Result'] = this.newTestResult(hdf);
-          row['Recommended Corrective Action(s)'] = FromHDFToCAATMapper.fix(
-            hdf.descriptions.fix ?? hdf.wraps.tags.fix
-          );
-          row.Impact = this.newImpact(hdf);
+          const row: CAATRow = {
+            'Control Number': formattedNistTag,
+            'Finding Title': `Test ${FromHDFToCAATMapper.fix(
+              hdf.wraps.id
+            )} - ${FromHDFToCAATMapper.fix(hdf.wraps.title)}`,
+            ...(hdf.start_time && {
+              'Date Identified': FromHDFToCAATMapper.formatDate(
+                new Date(hdf.start_time),
+                '/'
+              )
+            }),
+            'Finding ID': `${filename} - Test ${FromHDFToCAATMapper.fix(
+              hdf.wraps.id
+            )}`,
+            'Finding Description': FromHDFToCAATMapper.fix(hdf.wraps.title),
+            'Weakness Description': this.newCaveat(hdf),
+            'Control Weakness Type': 'Security',
+            Source: 'Self-Assessment',
+            'Test Method': 'Test',
+            'Test Objective': FromHDFToCAATMapper.fix(
+              hdf.descriptions.check ?? hdf.wraps.tags.check
+            ),
+            'Test Result Description': FromHDFToCAATMapper.fix(
+              this.newTestResultDescription(hdf)
+            ),
+            'Test Result': this.newTestResult(hdf),
+            'Recommended Corrective Action(s)': FromHDFToCAATMapper.fix(
+              hdf.descriptions.fix ?? hdf.wraps.tags.fix
+            ),
+            Impact: this.newImpact(hdf)
+          };
           return row;
         })
     );

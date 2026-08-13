@@ -72,12 +72,11 @@ function getDesc(item: unknown): string {
   }
 }
 function formatDesc(issue: unknown): string {
-  const desc = [];
-  desc.push(
+  const desc = [
     `Plugin Family: ${_.get(issue, 'pluginFamily')}`,
     `Port: ${_.get(issue, 'port')}`,
     `Protocol: ${_.get(issue, 'protocol')}`
-  );
+  ];
   return desc.join('; ') + ';';
 }
 function pluginNistTag(item: unknown): string[] {

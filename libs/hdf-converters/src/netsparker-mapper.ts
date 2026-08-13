@@ -130,20 +130,18 @@ function formatFix(vulnerability: unknown): string {
   return text.join('<br>');
 }
 function formatCodeDesc(request: unknown): string {
-  const text: string[] = [];
-  text.push(
+  const text: string[] = [
     `http-request : ${_.get(request, 'content')}`,
     `method : ${_.get(request, 'method')}`
-  );
+  ];
   return text.join('\n');
 }
 function formatMessage(response: unknown): string {
-  const text: string[] = [];
-  text.push(
+  const text: string[] = [
     `http-response : ${_.get(response, 'content')}`,
     `duration : ${_.get(response, 'duration')}`,
     `status-code  : ${_.get(response, 'status-code')}`
-  );
+  ];
   return text.join('\n');
 }
 

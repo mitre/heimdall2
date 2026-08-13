@@ -569,17 +569,14 @@ export function setupFindingType(
   // typesArr needs to be ordered so that attributes that are likely to be bloated and/or contain less necessary information end up at the bottom so that they don't expand and push more attributes outside of the list which is capped at 50 items
   const typesArr = [
     `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
-    `File/Input/${getFilename(context?.ioptions)}`
-  ];
-
-  typesArr.push(
+    `File/Input/${getFilename(context?.ioptions)}`,
     // Add control metadata to the Finding Provider Fields
     ...createControlMetadata(control),
     // Add segment/result information to Finding Provider Fields
     ...createSegmentInfo(control.result),
     // Add Tags to Finding Provider Fields
     ...createTagInfo(control)
-  );
+  ];
 
   // nist tag, then subdescriptions, then remaining tags
   const nistTagIndex = typesArr.findIndex((typeString) =>

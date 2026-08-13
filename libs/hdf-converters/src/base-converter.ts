@@ -311,8 +311,7 @@ export class BaseConverter<D = Record<string, unknown>> {
             ? (_.omit(element, ['arrayTransformer']) as T & ILookupPath)
             : element;
         });
-        let output: T[] = [];
-        output.push(this.evaluate(file, lookupPath) as T);
+        let output: T[] = [this.evaluate(file, lookupPath) as T];
         if (arrayTransformer !== undefined) {
           if (Array.isArray(arrayTransformer)) {
             output = arrayTransformer[0].apply(arrayTransformer[1], [

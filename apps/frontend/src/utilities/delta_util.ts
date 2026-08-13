@@ -103,10 +103,7 @@ export class ControlDelta {
 
   /** Returns the changes in "header" elements of a control. E.g. name, status, etc. */
   get headerChanges(): ControlChangeGroup {
-    // Init the list
-    const headerChanges: ControlChange[] = [];
-
-    headerChanges.push(
+    const headerChanges: ControlChange[] = [
       // Change in... ID? Theoretically possible!
       new ControlChange(
         'ID',
@@ -137,7 +134,7 @@ export class ControlDelta {
           return c.hdf.rawNistTags.join(', ');
         })
       )
-    );
+    ];
 
     // Make the group and clean it
     const result = new ControlChangeGroup('Control Details', headerChanges);

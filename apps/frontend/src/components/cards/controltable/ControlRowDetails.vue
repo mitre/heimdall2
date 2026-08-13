@@ -206,42 +206,40 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   get details(): Detail[] {
-    const detailsMap = new Map();
-
-    detailsMap.set('Control', this.control.data.id);
-    detailsMap.set('Title', this.control.data.title);
-    detailsMap.set('Caveat', this.control.hdf.descriptions.caveat);
-    detailsMap.set('Desc', this.control.data.desc);
-    detailsMap.set('Rationale', this.control.hdf.descriptions.rationale);
-    // default to showing severity tag, otherwise show the computed severity (based on impact or severityoverride)
-    detailsMap.set(
-      'Severity',
-      _.get(
-        this.control.root.data.tags,
-        'severity',
-        this.control.root.hdf.severity
-      )
-    );
-    detailsMap.set(
-      'Severity Override',
-      _.get(this.control.root.data.tags, 'severityoverride')
-    );
-    detailsMap.set(
-      'Severity Override Justification',
-      _.get(this.control.root.data.tags, 'severityjustification')
-    );
-    detailsMap.set('Impact', this.control.data.impact);
-    detailsMap.set('NIST Controls', this.control.hdf.rawNistTags.join(', '));
-    detailsMap.set('CCI Controls', this.cciControlString);
-    detailsMap.set('CWE ID', this.cweControlString);
-    detailsMap.set(
-      'Check',
-      this.control.hdf.descriptions.check || this.control.data.tags.check
-    );
-    detailsMap.set(
-      'Fix',
-      this.control.hdf.descriptions.fix || this.control.data.tags.fix
-    );
+    const initialDetails: [string, unknown][] = [
+      ['Control', this.control.data.id],
+      ['Title', this.control.data.title],
+      ['Caveat', this.control.hdf.descriptions.caveat],
+      ['Desc', this.control.data.desc],
+      ['Rationale', this.control.hdf.descriptions.rationale],
+      // default to showing severity tag, otherwise show the computed severity (based on impact or severityoverride)
+      [
+        'Severity',
+        _.get(
+          this.control.root.data.tags,
+          'severity',
+          this.control.root.hdf.severity
+        )
+      ],
+      [
+        'Severity Override',
+        _.get(this.control.root.data.tags, 'severityoverride')
+      ],
+      [
+        'Severity Override Justification',
+        _.get(this.control.root.data.tags, 'severityjustification')
+      ],
+      ['Impact', this.control.data.impact],
+      ['NIST Controls', this.control.hdf.rawNistTags.join(', ')],
+      ['CCI Controls', this.cciControlString],
+      ['CWE ID', this.cweControlString],
+      [
+        'Check',
+        this.control.hdf.descriptions.check || this.control.data.tags.check
+      ],
+      ['Fix', this.control.hdf.descriptions.fix || this.control.data.tags.fix]
+    ];
+    const detailsMap = new Map<string, unknown>(initialDetails);
 
     const sparseControl = _.omit(this.control, [
       'data.tags.nist',
@@ -288,9 +286,14 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       );
     }
 
-    return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
-      (v) => v.value !== undefined
-    );
+    // Render-identical normalization for the honest value type: undefined
+    // rows were always dropped, and null always rendered as blank.
+    return [...detailsMap]
+      .filter(([, value]) => value !== undefined)
+      .map(([name, value]) => ({
+        name,
+        value: value === null ? '' : String(value)
+      }));
   }
 
   // for zebra background

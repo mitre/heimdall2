@@ -39,9 +39,7 @@ export class InspecData extends VuexModule {
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
-    const result: (EvaluationFile | ProfileFile)[] = [];
-    result.push(...this.executionFiles, ...this.profileFiles);
-    return result;
+    return [...this.executionFiles, ...this.profileFiles];
   }
 
   /* Return all evaluation files only */
