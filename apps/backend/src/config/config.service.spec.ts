@@ -9,7 +9,7 @@ import {
   GITLAB_EMPTY_CANONICAL_SECRET_ENV,
   GITLAB_LEGACY_SECRET_ENV,
   SIMPLE_ENV_MOCK_FILE,
-} from '../../test/constants/environment_test.constant';
+} from '../../test/constants/environment-test.constant';
 import { ConfigService } from './config.service';
 
 // If you run the test without --silent , you need to add console.log() before you mock out the file system in the beforeAll() or it'll throw an error (this is a documented bug which can be found at https://github.com/tschaub/mock-fs/issues/234). If you run the test with --silent (which we do by default), you don't need the log statement.

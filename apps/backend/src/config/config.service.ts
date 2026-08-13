@@ -1,5 +1,5 @@
 import type { SequelizeOptions } from 'sequelize-typescript';
-import AppConfig from '../../config/app_config';
+import AppConfig from '../../config/app-config';
 import { StartupSettingsDto } from './dto/startup-settings.dto';
 
 export class ConfigService {

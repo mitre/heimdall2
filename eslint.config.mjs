@@ -358,6 +358,22 @@ export default defineConfig([
     },
   },
   {
+    // Data, not code (2026-08-13 triage, Aaron: rename code, ignore data):
+    // inspecjs parse_testbed fixtures and the vendor-shaped .d.ts type files
+    // keep their upstream-derived names; README.md is the ecosystem
+    // convention. Renaming data and docs is churn with no value.
+    files: [
+      '**/README.md',
+      'libs/hdf-converters/types/**',
+      'libs/inspecjs/parse_testbed/**',
+    ],
+    name: 'unicorn/filename-data',
+    plugins: { unicorn },
+    rules: {
+      'unicorn/filename-case': 'off',
+    },
+  },
+  {
     // import-x/no-named-as-default-member cautions that `plugin.configs` may
     // not survive some CJS/ESM interop paths. In this file the pattern
     // (`tseslint.configs...`, `yml.configs...`) is the flat-config idiom every

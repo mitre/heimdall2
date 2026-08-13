@@ -9,7 +9,7 @@ import {shallowMount} from '@vue/test-utils';
 import {beforeEach, describe, expect, it} from 'vitest';
 import type Vue from 'vue';
 import Vuetify from 'vuetify';
-import {loadSample, removeAllFiles} from '../util/testingUtils';
+import {loadSample, removeAllFiles} from '../util/testing-utils';
 
 const vuetify = new Vuetify();
 const wrapper: Wrapper<Vue> = shallowMount(Compare, {vuetify, propsData: {}});

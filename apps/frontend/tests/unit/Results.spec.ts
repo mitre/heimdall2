@@ -14,7 +14,7 @@ import {
   loadSample,
   removeAllFiles,
   DataLoadApproach
-} from '../util/testingUtils';
+} from '../util/testing-utils';
 
 interface ListElt {
   // A unique id to be used as a key.

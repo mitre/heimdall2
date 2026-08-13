@@ -271,16 +271,16 @@ import InfoCardRow from '@/components/cards/InfoCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
+import ExportASFFModal from '@/components/global/ExportAsffModal.vue';
 import ExportCaat from '@/components/global/ExportCaat.vue';
-import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
-import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
-import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
+import ExportCKLModal from '@/components/global/ExportCklModal.vue';
+import ExportCSVModal from '@/components/global/ExportCsvModal.vue';
+import ExportHTMLModal from '@/components/global/ExportHtmlModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import PrintButton from '@/components/global/PrintButton.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
-import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
+import ExportXCCDFResults from '@/components/global/ExportXccdfResults.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import {
   ExtendedControlStatus,
