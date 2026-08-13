@@ -20,7 +20,10 @@ export function loadSample(
   if (sample === undefined) {
     return null;
   }
-  const data: string = require(`../../public${sample.path}`);
+  // Parse like require() did, so the stringified payload below is unchanged.
+  const data: unknown = JSON.parse(
+    readFileSync(`public${sample.path}`, 'utf8')
+  );
   return dataLoadApproach === DataLoadApproach.Text
     ? InspecIntakeModule.loadText({
         filename: sampleName,

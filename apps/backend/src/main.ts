@@ -1,13 +1,13 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
-import postgresSessionStore = require('connect-pg-simple');
+import postgresSessionStore from 'connect-pg-simple';
 import { json } from 'express';
 import rateLimit from 'express-rate-limit';
-import session = require('express-session');
+import session from 'express-session';
 import helmet, { contentSecurityPolicy } from 'helmet';
 import multer from 'multer';
-import passport = require('passport');
+import passport from 'passport';
 import { createLogger, format, transports } from 'winston';
 import { AppModule } from './app.module';
 import { ConfigService } from './config/config.service';

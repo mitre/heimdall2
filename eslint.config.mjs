@@ -267,6 +267,8 @@ export default defineConfig([
       // migrations is churn on files nobody should touch (Aaron, 2026-08-13
       // triage) — ignore that one name here; real unused vars still flag.
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_|^Sequelize$' }],
+      // CommonJS scripts: require() IS their module system.
+      '@typescript-eslint/no-require-imports': 'off',
       // A migration's filename is an identifier stored in the SequelizeMeta
       // table on every deployment (seeders likewise in SequelizeData) —
       // renaming one causes it to re-run. The names are frozen data, not a
@@ -302,7 +304,11 @@ export default defineConfig([
     ],
     name: 'unicorn/loose-cjs-prefer-module',
     plugins: { unicorn },
-    rules: { 'unicorn/prefer-module': 'off' },
+    rules: {
+      'unicorn/prefer-module': 'off',
+      // Same contract: require() IS these scripts' module system.
+      '@typescript-eslint/no-require-imports': 'off',
+    },
   },
   {
     // consistent-type-definitions per MEASURED package majority (2026-08-13
