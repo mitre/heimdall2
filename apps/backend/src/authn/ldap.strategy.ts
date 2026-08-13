@@ -1,8 +1,8 @@
-import * as fs from 'fs';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import _ from 'lodash';
 import Strategy from 'passport-ldapauth';
+import { resolveSslMaterial } from '../../config/app-config';
 import { ConfigService } from '../config/config.service';
 import { AuthnService } from './authn.service';
 
@@ -20,15 +20,9 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       throw new Error('SSL CA file or path to file not provided');
     }
     if (!sslCA.includes('-BEGIN')) {
-      if (fs.statSync(sslCA).isFile()) {
-        sslCA = fs.readFileSync(sslCA);
-        if (!sslCA.includes('-BEGIN')) {
-          throw new Error('SSL CA file at given path was not a certificate');
-        }
-      } else {
-        throw new Error(
-          'SSL CA file is neither a certificate nor is it a path to one',
-        );
+      sslCA = resolveSslMaterial(sslCA, 'CA');
+      if (!sslCA.includes('-BEGIN')) {
+        throw new Error('SSL CA file at given path was not a certificate');
       }
     }
 

@@ -1,6 +1,31 @@
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
 
+/**
+ * Resolves TLS material from a deployer-supplied value that is either inline
+ * PEM (contains -BEGIN) or a path to a PEM file. The label names the material
+ * in error messages (Key, Cert, CA).
+ */
+export function resolveSslMaterial(
+  value: string,
+  label: string,
+): Buffer | string {
+  if (value.includes('-BEGIN')) {
+    return value;
+  }
+  try {
+    /* eslint-disable-next-line security/detect-non-literal-fs-filename -- No
+       code fix exists: reading the deployer-specified certificate path is
+       this function's purpose. The value comes from the host environment,
+       which the process owner controls — it is never request input. */
+    return fs.readFileSync(value);
+  } catch (error) {
+    throw new Error(`SSL ${label} file does not exist or is unreadable`, {
+      cause: error,
+    });
+  }
+}
+
 export default class AppConfig {
   private envConfig: Map<string, string | undefined>;
 
@@ -90,42 +115,15 @@ export default class AppConfig {
     let sslCA, sslCert, sslKey;
 
     if (typeof this.get('DATABASE_SSL_KEY') === 'string') {
-      if (this.get('DATABASE_SSL_KEY')?.indexOf('-BEGIN') === -1) {
-        // Verify file exists
-        if (fs.statSync(this.get('DATABASE_SSL_KEY')!).isFile()) {
-          sslKey = fs.readFileSync(this.get('DATABASE_SSL_KEY')!);
-        } else {
-          throw new Error('SSL Key file does not exist');
-        }
-      } else {
-        sslKey = this.get('DATABASE_SSL_KEY');
-      }
+      sslKey = resolveSslMaterial(this.get('DATABASE_SSL_KEY')!, 'Key');
     }
 
     if (typeof this.get('DATABASE_SSL_CERT') === 'string') {
-      if (this.get('DATABASE_SSL_CERT')?.indexOf('-BEGIN') === -1) {
-        // Verify file exists
-        if (fs.statSync(this.get('DATABASE_SSL_CERT')!).isFile()) {
-          sslCert = fs.readFileSync(this.get('DATABASE_SSL_CERT')!);
-        } else {
-          throw new Error('SSL Cert file does not exist');
-        }
-      } else {
-        sslCert = this.get('DATABASE_SSL_CERT');
-      }
+      sslCert = resolveSslMaterial(this.get('DATABASE_SSL_CERT')!, 'Cert');
     }
 
     if (typeof this.get('DATABASE_SSL_CA') === 'string') {
-      if (this.get('DATABASE_SSL_CA')?.indexOf('-BEGIN') === -1) {
-        // Verify file exists
-        if (fs.statSync(this.get('DATABASE_SSL_CA')!).isFile()) {
-          sslCA = fs.readFileSync(this.get('DATABASE_SSL_CA')!);
-        } else {
-          throw new Error('SSL CA file does not exist');
-        }
-      } else {
-        sslCA = this.get('DATABASE_SSL_CA');
-      }
+      sslCA = resolveSslMaterial(this.get('DATABASE_SSL_CA')!, 'CA');
     }
 
     return {

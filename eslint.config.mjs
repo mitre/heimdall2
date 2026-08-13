@@ -372,6 +372,17 @@ export default defineConfig([
     },
   },
   {
+    // Cypress specs assert through cy.should chains and page-object
+    // verifiers, which the vitest heuristic cannot see — vitest's
+    // expectation rules do not apply to Cypress files.
+    files: ['**/*.cy.ts'],
+    name: 'vitest-off-for-cypress',
+    plugins: { vitest },
+    rules: {
+      'vitest/expect-expect': 'off',
+    },
+  },
+  {
     // Data, not code (2026-08-13 triage, Aaron: rename code, ignore data):
     // inspecjs parse_testbed fixtures and the vendor-shaped .d.ts type files
     // keep their upstream-derived names; README.md is the ecosystem
@@ -412,6 +423,16 @@ export default defineConfig([
       // Same reasoning: test code indexes its own fixtures with its own loop
       // counters — there is no attacker input in a spec by construction.
       'security/detect-object-injection': 'off',
+    },
+  },
+  {
+    // Maintainer-run fixture conversion tooling (csv2json/xml2json): the
+    // path arguments are the operator's own CLI inputs on their own machine —
+    // never request data.
+    files: ['libs/hdf-converters/data/**'],
+    name: 'security/maintainer-data-tooling',
+    rules: {
+      'security/detect-non-literal-fs-filename': 'off',
     },
   },
   {

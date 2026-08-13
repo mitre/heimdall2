@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {describe, it} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {FromHDFToSplunkMapper} from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
 
 export function delay(ms: number): Promise<void> {
@@ -16,8 +16,9 @@ describe('Describe Splunk Reverse Mapper', () => {
       )
     );
 
-    // Currently tests are to make sure there are no errors during upload to Splunk
-    await new FromHDFToSplunkMapper(inputData).toSplunk(
+    // Currently tests are to make sure there are no errors during upload to
+    // Splunk; toSplunk resolves with the upload's GUID string.
+    const guid = await new FromHDFToSplunkMapper(inputData).toSplunk(
       {
         host: '127.0.0.1',
         username: 'admin',
@@ -27,5 +28,6 @@ describe('Describe Splunk Reverse Mapper', () => {
       },
       'rhel7-results.json'
     );
+    expect(guid).toBeTypeOf('string');
   });
 });

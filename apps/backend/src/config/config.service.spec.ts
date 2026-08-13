@@ -11,6 +11,7 @@ import {
   SIMPLE_ENV_MOCK_FILE,
 } from '../../test/constants/environment-test.constant';
 import { ConfigService } from './config.service';
+import { resolveSslMaterial } from '../../config/app-config';
 
 // If you run the test without --silent , you need to add console.log() before you mock out the file system in the beforeAll() or it'll throw an error (this is a documented bug which can be found at https://github.com/tschaub/mock-fs/issues/234). If you run the test with --silent (which we do by default), you don't need the log statement.
 describe('Config Service', () => {
@@ -180,5 +181,28 @@ describe('Config Service', () => {
       const configService = new ConfigService();
       expect(configService.getGitlabClientSecret()).toBe(undefined);
     });
+  });
+});
+
+describe('resolveSslMaterial', () => {
+  const PEM
+    = '-----BEGIN CERTIFICATE-----\nMIIB\n-----END CERTIFICATE-----';
+
+  it('passes inline PEM material through untouched', () => {
+    expect(resolveSslMaterial(PEM, 'CA')).toBe(PEM);
+  });
+
+  it('reads PEM material from a deployer-specified path', () => {
+    mock({ '/certs/ca.pem': PEM });
+    expect(resolveSslMaterial('/certs/ca.pem', 'CA').toString()).toBe(PEM);
+    restore();
+  });
+
+  it('throws a labeled error for a missing file', () => {
+    mock({});
+    expect(() => resolveSslMaterial('/certs/missing.pem', 'CA')).toThrowError(
+      'SSL CA file does not exist or is unreadable',
+    );
+    restore();
   });
 });
