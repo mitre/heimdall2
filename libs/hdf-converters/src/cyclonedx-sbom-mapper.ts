@@ -73,7 +73,7 @@ function formatCWETags(
   addPrefix = true
 ): string[] {
   return input && Array.isArray(input)
-    ? input.map((cwe) => (addPrefix ? `CWE-${cwe}` : `${cwe}`))
+    ? input.map((cwe) => (addPrefix ? `CWE-${cwe}` : String(cwe)))
     : [];
 }
 
@@ -232,7 +232,7 @@ export class CycloneDXSBOMResults {
           // Find every component that is affected via listed bom-refs
           .filter(([_index, component]) =>
             vulnerability.affects
-              ?.map((id) => id.ref.toString())
+              ?.map((id) => id.ref)
               .includes(component['bom-ref']!)
           )
           // Add the index of that affected component to the corresponding vulnerability object
@@ -268,8 +268,8 @@ export class CycloneDXSBOMResults {
       vulnerability.affectedComponents = vulnerability.affects?.map((id) => {
         // Build a dummy component for each bom-ref identified as being affected by the vulnerability
         const dummy: IntermediaryComponent = {
-          name: `${id.ref}`,
-          'bom-ref': `${id.ref}`,
+          name: id.ref,
+          'bom-ref': id.ref,
           isDummy: true,
           type: 'application' // a type must be provided, and "application" is the default classification
         };
@@ -448,11 +448,14 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                 transformer: (
                   input: FluffyCredits | PurpleCredits
                 ): string | undefined =>
+                  // No template wrap: the optional chain is string | undefined,
+                  // and the old wrap rendered the missing case as the literal
+                  // string 'undefined' instead of leaving the field unset.
                   input
-                    ? `${input.individuals
+                    ? input.individuals
                         ?.map((individual) => individual.name)
                         .filter((name) => name)
-                        .join(', ')}`
+                        .join(', ')
                     : undefined
               },
               tools: {
@@ -562,7 +565,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   | CycloneDXBillOfMaterialsStandardVulnerability
                   | CycloneDXSoftwareBillOfMaterialsStandardVulnerability
               ): string =>
-                input.description ? `${input.description}` : `${input.id}`
+                input.description ? input.description : String(input.id)
             },
             id: {path: 'id'},
             desc: {

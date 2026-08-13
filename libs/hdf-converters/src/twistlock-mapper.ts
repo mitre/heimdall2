@@ -77,12 +77,10 @@ export class TwistlockMapper extends BaseConverter {
         summary: {
           transformer: (data: Record<string, unknown>): string => {
             const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
-              ? `${JSON.stringify(
-                  _.get(data, 'vulnerabilityDistribution.total')
-                )}`
+              ? JSON.stringify(_.get(data, 'vulnerabilityDistribution.total'))
               : 'N/A';
             const complianceTotal = _.has(data, 'complianceDistribution')
-              ? `${JSON.stringify(_.get(data, 'complianceDistribution.total'))}`
+              ? JSON.stringify(_.get(data, 'complianceDistribution.total'))
               : 'N/A';
             return `Package Vulnerability Summary: ${vulnerabilityTotal} Application Compliance Issue Total: ${complianceTotal}`;
           }
@@ -120,10 +118,10 @@ export class TwistlockMapper extends BaseConverter {
                 code_desc: {
                   transformer: (data: Record<string, unknown>): string => {
                     const packageName = _.has(data, 'packageName')
-                      ? `${JSON.stringify(_.get(data, 'packageName'))}`
+                      ? JSON.stringify(_.get(data, 'packageName'))
                       : 'N/A';
                     const impactedVersions = _.has(data, 'impactedVersions')
-                      ? `${JSON.stringify(_.get(data, 'impactedVersions'))}`
+                      ? JSON.stringify(_.get(data, 'impactedVersions'))
                       : 'N/A';
                     return `Package ${packageName} should be updated to latest version above impacted versions ${impactedVersions}`;
                   }
@@ -131,10 +129,10 @@ export class TwistlockMapper extends BaseConverter {
                 message: {
                   transformer: (data: Record<string, unknown>): string => {
                     const packageName = _.has(data, 'packageName')
-                      ? `${JSON.stringify(_.get(data, 'packageName'))}`
+                      ? JSON.stringify(_.get(data, 'packageName'))
                       : 'N/A';
                     const packageVersion = _.has(data, 'packageVersion')
-                      ? `${JSON.stringify(_.get(data, 'packageVersion'))}`
+                      ? JSON.stringify(_.get(data, 'packageVersion'))
                       : 'N/A';
                     return `Expected latest version of ${packageName}\nDetected vulnerable version ${packageVersion} of ${packageName}`;
                   }

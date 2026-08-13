@@ -518,7 +518,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   getSortClause(field: string, order: string): string[] {
     //  Map sorted fields to database names.
     if (field == 'filename' || field == 'createdAt') {
-      return new Array(`${field}`, `${order}`);
+      return new Array(field, order);
     } else if (field == 'groups') {
       return new Array('groups', 'name', order);
     } else if (field == 'evaluationTags') {

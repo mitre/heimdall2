@@ -277,7 +277,7 @@ export class IonChannelMapper extends BaseConverter {
                         DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS
                       ),
                       dependencies: dependency.dependencies.map(
-                        (subDependency) => `${subDependency.name}`
+                        (subDependency) => subDependency.name
                       )
                     }
                   : {

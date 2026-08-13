@@ -168,7 +168,7 @@ export default class ExportNIST extends Vue {
 
   /** Outputs the given number as a 2-digit string. Brittle **/
   pad_two_digits(s: number): string {
-    return s < 10 ? `0${s}` : `${s}`;
+    return s < 10 ? `0${s}` : String(s);
   }
 
   convertDate(d: Date, delimiter: string): string {

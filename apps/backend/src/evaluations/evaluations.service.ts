@@ -117,7 +117,7 @@ export class EvaluationsService {
         where: {
           [Op.or]: [
             { public: { [Op.eq]: 'true' } },
-            { '$user.email$': { [Op.like]: `${userEmail}` } },
+            { '$user.email$': { [Op.like]: userEmail } },
             {
               [Op.and]: {
                 '$groups->users.id$': {
@@ -279,7 +279,7 @@ export class EvaluationsService {
     if (role === 'admin') {
       baseCriteria.push({ public: { [Op.eq]: 'false' } });
     } else {
-      baseCriteria.push({ '$user.email$': { [Op.like]: `${email}` } });
+      baseCriteria.push({ '$user.email$': { [Op.like]: email } });
       baseCriteria.push({
         [Op.and]: {
           '$groups->users.id$': {
@@ -304,21 +304,21 @@ export class EvaluationsService {
     const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
 
     if (fields[0] !== '()') {
-      searchFields.push({ filename: { [Op.iRegexp]: `${fields[0]}` } });
+      searchFields.push({ filename: { [Op.iRegexp]: fields[0] } });
     }
     if (fields[1] !== '()') {
-      searchFields.push({ '$groups.name$': { [Op.iRegexp]: `${fields[1]}` } });
+      searchFields.push({ '$groups.name$': { [Op.iRegexp]: fields[1] } });
     }
     if (fields[2] !== '()') {
       if (action === 'count') {
-        searchFields.push({ '$evaluationTags.value$': { [Op.iRegexp]: `${fields[2]}` } });
+        searchFields.push({ '$evaluationTags.value$': { [Op.iRegexp]: fields[2] } });
       } else {
         const evaluationIds = await this.getEvaluationIdsForTagName(fields[2]);
 
         searchFields.push({
           [Op.or]: [
             { id: { [Op.in]: evaluationIds } },
-            { '$evaluationTags.value$': { [Op.iRegexp]: `${fields[2]}` } },
+            { '$evaluationTags.value$': { [Op.iRegexp]: fields[2] } },
           ],
         });
       }

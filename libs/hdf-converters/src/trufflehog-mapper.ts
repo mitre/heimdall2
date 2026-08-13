@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import type { ILookupPath, MappedTransform} from './base-converter';
 import {BaseConverter} from './base-converter';
+import {stringifyOrUndefinedString} from './utils/global';
 
 export class TrufflehogResults {
   data: Record<string, unknown>;
@@ -80,11 +81,11 @@ export class TrufflehogMapper extends BaseConverter {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
                   transformer: (data: Record<string, unknown>): string =>
-                    `${JSON.stringify(_.get(data, 'SourceMetadata'), null, 2)}`
+                    stringifyOrUndefinedString(_.get(data, 'SourceMetadata'))
                 },
                 message: {
                   transformer: (data: Record<string, unknown>): string =>
-                    `${JSON.stringify(
+                    JSON.stringify(
                       _.omitBy(
                         _.pick(data, [
                           'Verified',
@@ -99,7 +100,7 @@ export class TrufflehogMapper extends BaseConverter {
                       ),
                       null,
                       2
-                    )}`
+                    )
                 },
                 start_time: ''
               }

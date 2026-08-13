@@ -356,7 +356,7 @@ export class AwsConfigMapper {
       `Source Identifier: ${configRule.Source?.SourceIdentifier || 'N/A'}`
     );
     if (params.length > 0) {
-      checkText.push(`${params.join('<br/>').replaceAll(/\"/gi, '')}`);
+      checkText.push(params.join('<br/>').replaceAll(/\"/gi, ''));
     }
     return checkText.join('<br/>');
   }

@@ -132,14 +132,14 @@ export default class ProfileInfo extends Vue {
   }
 
   get control_count(): string | undefined {
-    return `${
+    return String(
       (
         _.get(this.profile, 'data.controls') as unknown as Record<
           string,
           unknown
         >[]
       ).length
-    }`;
+    );
   }
 
   get inputs(): Attribute[] {

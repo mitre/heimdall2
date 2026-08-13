@@ -218,9 +218,8 @@ export class FromHDFToCAATMapper {
     for (const d of this.data) {
       // Ensure sheet name uniqueness
       let renameCount = 2;
-      const fullName = `${
-        d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'
-      }`;
+      const fullName =
+        d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON';
       let sheetName: string = fullName.substring(
         0,
         FromHDFToCAATMapper.MaxSheetNameLength

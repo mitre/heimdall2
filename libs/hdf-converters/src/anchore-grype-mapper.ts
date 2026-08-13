@@ -9,6 +9,7 @@ import {
   BaseConverter,
   impactMapping
 } from './base-converter';
+import {stringifyOrUndefinedString} from './utils/global';
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
@@ -90,7 +91,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
           data: {
             path: 'relatedVulnerabilities',
             transformer: (data: Record<string, unknown>): string =>
-              `${JSON.stringify(_.get(data, 'cvss'), null, 2)}`
+              stringifyOrUndefinedString(_.get(data, 'cvss'))
           },
           label: 'check'
         }
@@ -134,14 +135,14 @@ export class AnchoreGrypeMapper extends BaseConverter {
       },
       code: {
         transformer: (data: Record<string, unknown>): string =>
-          `${JSON.stringify(
+          JSON.stringify(
             _.omitBy(
               _.pick(data, ['vulnerability', 'relatedVulnerabilities']),
               (value) => value === null || value === ''
             ),
             null,
             2
-          )}`
+          )
       },
       arrayTransformer: skipSeverityNegligibleOrUnknown,
       results: [
@@ -149,7 +150,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
           status: ExecJSON.ControlResultStatus.Failed,
           code_desc: {
             transformer: (data: Record<string, unknown>): string =>
-              `${JSON.stringify(_.get(data, 'matchDetails'), null, 2)}`
+              stringifyOrUndefinedString(_.get(data, 'matchDetails'))
           },
           message: {
             transformer: resultMessageTransformer
@@ -197,7 +198,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
                   `Grype/${String(_.get(data, 'vulnerability.id'))}`,
                 impactMapping(IMPACT_MAPPING),
                 (data: Record<string, unknown>): string =>
-                  `${JSON.stringify(_.get(data, 'artifact'), null, 2)}`
+                  stringifyOrUndefinedString(_.get(data, 'artifact'))
               )
             },
             {

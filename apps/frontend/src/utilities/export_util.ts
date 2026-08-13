@@ -19,7 +19,7 @@ export async function saveSingleOrMultipleFiles(
           ) as ArrayBuffer)
         : (d);
     const blob = new Blob([part]);
-    saveAs(blob, cleanUpFilename(`${files[0]?.filename}`));
+    saveAs(blob, cleanUpFilename(files[0]?.filename));
   } else {
     const zip = new JSZip();
 

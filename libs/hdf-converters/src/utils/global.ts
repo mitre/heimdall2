@@ -95,6 +95,14 @@ export function conditionallyProvideAttribute(
   return {[attributeName]: attribute};
 }
 
+// Renders a value exactly as `${JSON.stringify(value, null, 2)}` historically
+// did: an absent value becomes the literal string 'undefined'. That garbage
+// output is fixture-pinned; heimdall2-vf4 tracks removing the class
+// deliberately, with fixture regeneration.
+export function stringifyOrUndefinedString(value: unknown): string {
+  return value === undefined ? 'undefined' : JSON.stringify(value, null, 2);
+}
+
 export function ensureContextualizedEvaluation(
   data: ExecJSON.Execution | ContextualizedEvaluation
 ) {

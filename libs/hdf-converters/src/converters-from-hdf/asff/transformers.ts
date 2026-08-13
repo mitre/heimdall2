@@ -367,7 +367,7 @@ export function setupSevLabel(
 }
 
 export function setupSevOriginal(control: SegmentedControl) {
-  return `${control.impact}`;
+  return String(control.impact);
 }
 
 function createControlMetadata(control: SegmentedControl) {
