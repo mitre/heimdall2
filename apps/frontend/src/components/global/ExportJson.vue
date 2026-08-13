@@ -57,7 +57,10 @@ export default class ExportJSON extends Vue {
 
   cleanup_filename(filename: string): string {
     filename = filename.replaceAll(/\s+/gv, '_');
-    if (filename.substring(filename.length - 6) !== '.json') {
+    // endsWith, not a substring compare: the old check took the last SIX
+    // characters and compared them to the five-character '.json', so it
+    // could never match and every export gained a second extension.
+    if (!filename.endsWith('.json')) {
       filename = filename + '.json';
     }
     return filename;

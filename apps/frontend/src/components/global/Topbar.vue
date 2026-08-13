@@ -72,7 +72,7 @@ export default class Topbar extends mixins(ServerMixin) {
 
   get elipsisTitle() {
     return this.title.length > 50
-      ? `${this.title.substring(0, 50)}...`
+      ? `${this.title.slice(0, 50)}...`
       : this.title;
   }
 }

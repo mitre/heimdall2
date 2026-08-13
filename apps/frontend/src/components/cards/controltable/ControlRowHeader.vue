@@ -190,7 +190,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   get truncated_title(): string {
     if (this.control.data.title && this.control.data.title.length > 80) {
-      return this.control.data.title.substr(0, 80) + '...';
+      return this.control.data.title.slice(0, 80) + '...';
     } else {
       return this.control.data.title || 'Untitled';
     }

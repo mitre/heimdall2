@@ -221,13 +221,13 @@ export class FromHDFToCAATMapper {
       let renameCount = 2;
       const fullName =
         d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON';
-      let sheetName: string = fullName.substring(
+      let sheetName: string = fullName.slice(
         0,
         FromHDFToCAATMapper.MaxSheetNameLength
       );
       while (takenSheetNames.includes(sheetName)) {
         sheetName =
-          fullName.substring(0, FromHDFToCAATMapper.MaxSheetNameLength - 5) +
+          fullName.slice(0, FromHDFToCAATMapper.MaxSheetNameLength - 5) +
           ` (${renameCount})`; // space for up to a 2 digit number; there's no check to stop it going past other than the workbook failing to be created, but that should be fine since the likelihood of someone having that many dupes is very slim
         renameCount++;
       }

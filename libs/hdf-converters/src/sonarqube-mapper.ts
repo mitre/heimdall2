@@ -346,7 +346,7 @@ function parseOwaspInSysTags<T extends SonarqubeVersion>(
 ): string[] {
   return issue.ruleInformation.rule.sysTags
     .filter((s) => s.toLowerCase().startsWith('owasp-'))
-    .map((t) => t.substring('owasp-'.length).toUpperCase()); // this will just look like 'A3'
+    .map((t) => t.slice('owasp-'.length).toUpperCase()); // this will just look like 'A3'
 }
 
 function parseOwaspTags<T extends SonarqubeVersion>(

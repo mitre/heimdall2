@@ -54,7 +54,7 @@ export default class Statistics extends Vue {
   }
 
   capitalize(word: string) {
-    return word.charAt(0).toUpperCase() + word.substring(1);
+    return word.charAt(0).toUpperCase() + word.slice(1);
   }
 }
 </script>

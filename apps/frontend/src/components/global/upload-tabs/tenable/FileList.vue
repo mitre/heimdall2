@@ -219,12 +219,20 @@ export default class FileList extends Vue {
                 // if they are, just use the scanId for the Map key. If the scan contains a single
                 // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
                 const loadedMap = new Map(
-                  loadedFiles.map((obj) => [
-                    obj.filename.includes('-')
-                      ? obj.filename.substring(0, obj.filename.indexOf('-'))
-                      : obj.filename.substring(0, obj.filename.indexOf('.')),
-                    obj.uniqueId
-                  ])
+                  loadedFiles.map((obj) => {
+                    const separatorIndex = obj.filename.includes('-')
+                      ? obj.filename.indexOf('-')
+                      : obj.filename.indexOf('.');
+                    // substring treated a missing separator (-1) as 0 and
+                    // yielded ''; slice would take all-but-last, so keep the
+                    // empty-name behavior explicit.
+                    return [
+                      separatorIndex === -1
+                        ? ''
+                        : obj.filename.slice(0, separatorIndex),
+                      obj.uniqueId
+                    ];
+                  })
                 );
 
                 isLoaded =

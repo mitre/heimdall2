@@ -324,7 +324,7 @@ function controlMappingCve(): MappedTransform<
           }
 
           return CWE_NIST_MAPPING.nistFilter(
-            value.map((val: string) => val.substring(4)),
+            value.map((val: string) => val.slice(4)),
             DEFAULT_NIST_TAG
           );
         }
