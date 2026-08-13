@@ -168,36 +168,33 @@ export class EvaluationsService {
     };
     const whereClause = this.getWhereClauseAll(role, email);
 
-    await this.evaluationModel
-      .findAll<Evaluation>({
-        attributes: { exclude: ['data'] },
-        include: [EvaluationTag, User, { include: [User], model: Group }],
-        limit: Number(parameters.limit) * this.totalGroupMembers,
-        offset: parameters.offset,
-        order:
-          parameters.order.length === 2
-            ? [[parameters.order[0], parameters.order[1]]]
-            : [[parameters.order[0], parameters.order[1], parameters.order[2]]],
-        subQuery: false, // enable where clause to reference attributes from the included models
-        where: whereClause,
-      })
-      .then(async (data) => {
-        const totalItems = await this.evaluationCount(email, role);
+    const data = await this.evaluationModel.findAll<Evaluation>({
+      attributes: { exclude: ['data'] },
+      include: [EvaluationTag, User, { include: [User], model: Group }],
+      limit: Number(parameters.limit) * this.totalGroupMembers,
+      offset: parameters.offset,
+      order:
+        parameters.order.length === 2
+          ? [[parameters.order[0], parameters.order[1]]]
+          : [[parameters.order[0], parameters.order[1], parameters.order[2]]],
+      subQuery: false, // enable where clause to reference attributes from the included models
+      where: whereClause,
+    });
+    const totalItems = await this.evaluationCount(email, role);
 
-        const totalPages = Math.ceil(totalItems / parameters.limit);
-        const totalReturned = Number(parameters.offset) + Number(parameters.limit);
-        const onPage = Math.ceil(
-          totalReturned / 100 / (Number(parameters.limit) / 100),
-        );
-        if (onPage == totalPages) {
-          const returnCnt = totalItems - Number(parameters.offset);
-          // Return from the back of the array
-          queryResponse.evaluations = data.slice(-returnCnt);
-        } else {
-          queryResponse.evaluations = data.slice(0, parameters.limit);
-        }
-        queryResponse.totalItems = totalItems;
-      });
+    const totalPages = Math.ceil(totalItems / parameters.limit);
+    const totalReturned = Number(parameters.offset) + Number(parameters.limit);
+    const onPage = Math.ceil(
+      totalReturned / 100 / (Number(parameters.limit) / 100),
+    );
+    if (onPage == totalPages) {
+      const returnCnt = totalItems - Number(parameters.offset);
+      // Return from the back of the array
+      queryResponse.evaluations = data.slice(-returnCnt);
+    } else {
+      queryResponse.evaluations = data.slice(0, parameters.limit);
+    }
+    queryResponse.totalItems = totalItems;
     return queryResponse;
   }
 
@@ -236,36 +233,33 @@ export class EvaluationsService {
       whereClauseParameters.role,
       whereClauseParameters.action,
     );
-    await this.evaluationModel
-      .findAll<Evaluation>({
-        attributes: { exclude: ['data'] },
-        include: [EvaluationTag, User, { include: [User], model: Group }],
-        limit: Number(parameters.limit) * this.totalGroupMembers,
-        offset: parameters.offset,
-        order:
-          parameters.order.length === 2
-            ? [[parameters.order[0], parameters.order[1]]]
-            : [[parameters.order[0], parameters.order[1], parameters.order[2]]],
-        subQuery: false,
-        where: whereClause,
-      })
-      .then(async (data) => {
-        const totalItems = await this.searchItemsCount(whereClauseParameters);
+    const data = await this.evaluationModel.findAll<Evaluation>({
+      attributes: { exclude: ['data'] },
+      include: [EvaluationTag, User, { include: [User], model: Group }],
+      limit: Number(parameters.limit) * this.totalGroupMembers,
+      offset: parameters.offset,
+      order:
+        parameters.order.length === 2
+          ? [[parameters.order[0], parameters.order[1]]]
+          : [[parameters.order[0], parameters.order[1], parameters.order[2]]],
+      subQuery: false,
+      where: whereClause,
+    });
+    const totalItems = await this.searchItemsCount(whereClauseParameters);
 
-        const totalPages = Math.ceil(totalItems / parameters.limit);
-        const totalReturned = Number(parameters.offset) + Number(parameters.limit);
-        const onPage = Math.ceil(
-          totalReturned / 100 / (Number(parameters.limit) / 100),
-        );
-        if (onPage === totalPages) {
-          const returnCnt = totalItems - Number(parameters.offset);
-          // Return from the back of the array
-          queryResponse.evaluations = data.slice(-returnCnt);
-        } else {
-          queryResponse.evaluations = data.slice(0, parameters.limit);
-        }
-        queryResponse.totalItems = totalItems;
-      });
+    const totalPages = Math.ceil(totalItems / parameters.limit);
+    const totalReturned = Number(parameters.offset) + Number(parameters.limit);
+    const onPage = Math.ceil(
+      totalReturned / 100 / (Number(parameters.limit) / 100),
+    );
+    if (onPage === totalPages) {
+      const returnCnt = totalItems - Number(parameters.offset);
+      // Return from the back of the array
+      queryResponse.evaluations = data.slice(-returnCnt);
+    } else {
+      queryResponse.evaluations = data.slice(0, parameters.limit);
+    }
+    queryResponse.totalItems = totalItems;
 
     return queryResponse;
   }

@@ -341,14 +341,14 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
     try {
       // Upload execution event
-      const execEvents = splunkData.reports.map((report) => {
-        return this.axiosInstance
-          .post(`${hostname}/services/receivers/simple`, JSON.stringify(report))
-          .then(() => {
-            logger.verbose(
-              `Successfully uploaded execution for ${report.meta.filename}`
-            );
-          });
+      const execEvents = splunkData.reports.map(async (report) => {
+        await this.axiosInstance.post(
+          `${hostname}/services/receivers/simple`,
+          JSON.stringify(report)
+        );
+        logger.verbose(
+          `Successfully uploaded execution for ${report.meta.filename}`
+        );
       });
       await Promise.all(execEvents);
 
@@ -365,15 +365,12 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
       // Upload control event(s)
       const controlEvents = _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE).map(
-        (chunk) => {
-          return this.axiosInstance
-            .post(
-              `${hostname}/services/receivers/simple`,
-              chunk.map((control) => JSON.stringify(control)).join('\n')
-            )
-            .then(() =>
-              logger.verbose(`Successfully uploaded ${chunk.length} control(s)`)
-            );
+        async (chunk) => {
+          await this.axiosInstance.post(
+            `${hostname}/services/receivers/simple`,
+            chunk.map((control) => JSON.stringify(control)).join('\n')
+          );
+          logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
         }
       );
       await Promise.all(controlEvents);

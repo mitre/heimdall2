@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('EvaluationTags', {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.createTable('EvaluationTags', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -35,23 +35,19 @@ module.exports = {
         allowNull: false
       }
     })
-    .then(() => {
-      return queryInterface.addColumn('Evaluations', 'evaluationTagId', {
-        type: Sequelize.BIGINT,
-        references: {
-          model: 'EvaluationTags',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-      })
+    return queryInterface.addColumn('Evaluations', 'evaluationTagId', {
+      type: Sequelize.BIGINT,
+      references: {
+        model: 'EvaluationTags',
+        key: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL'
     })
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn('Evaluations', 'evaluationTagId')
-    .then(() => {
-      return queryInterface.dropTable('EvaluationTags')
-    });
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.removeColumn('Evaluations', 'evaluationTagId')
+    return queryInterface.dropTable('EvaluationTags')
   }
 };

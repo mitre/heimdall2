@@ -48,29 +48,21 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     accessToken: string,
   ): Promise<User> {
     // Get user's linked emails from Github
-    const githubEmails = await axios
-      .get<GithubEmail[]>(
-        `${
-          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL')
-          || this.configService.defaultGithubAPIURL
-        }user/emails`,
-        { headers: { Authorization: `token ${accessToken}` } },
-      )
-      .then(({ data }) => {
-        return data;
-      });
+    const { data: githubEmails } = await axios.get<GithubEmail[]>(
+      `${
+        this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL')
+        || this.configService.defaultGithubAPIURL
+      }user/emails`,
+      { headers: { Authorization: `token ${accessToken}` } },
+    );
     // Get user's info
-    const userInfoResponse = await axios
-      .get<GithubProfile>(
-        `${
-          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL')
-          || this.configService.defaultGithubAPIURL
-        }user`,
-        { headers: { Authorization: `token ${accessToken}` } },
-      )
-      .then(({ data }) => {
-        return data;
-      });
+    const { data: userInfoResponse } = await axios.get<GithubProfile>(
+      `${
+        this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL')
+        || this.configService.defaultGithubAPIURL
+      }user`,
+      { headers: { Authorization: `token ${accessToken}` } },
+    );
     let firstName = userInfoResponse.login;
     let lastName = '';
     if (typeof userInfoResponse.name === 'string') {

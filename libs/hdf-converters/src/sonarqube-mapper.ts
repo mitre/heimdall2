@@ -1,5 +1,5 @@
-import type {AxiosError, AxiosInstance} from 'axios';
-import axios from 'axios';
+import type {AxiosInstance} from 'axios';
+import axios, {isAxiosError} from 'axios';
 import * as rax from 'retry-axios';
 import * as _ from 'lodash';
 import {coerce, lt} from 'semver';
@@ -879,7 +879,14 @@ export class SonarqubeResults {
     rax.attach(this.axiosClient);
   }
 
-  logAxiosError(e: AxiosError): void {
+  // unknown, not AxiosError: callers hand this whatever their request path
+  // rejected with, and non-axios failures (programming errors, aborted
+  // sockets) must still get logged rather than crash the logger.
+  logAxiosError(e: unknown): void {
+    if (!isAxiosError(e)) {
+      logger.debug('Error', inspect(e, {depth: 3}));
+      return;
+    }
     if (e.response) {
       logger.debug('response');
       logger.debug(e.response.status);
@@ -1095,20 +1102,23 @@ export class SonarqubeResults {
       };
       while (sizeCheck ? page === 1 : paging) {
         console.log(results);
-        await createSearch(component, page)
-          .then(({data}) => {
-            _.mergeWith(results, data, (objValue, srcValue) =>
-              _.isArray(objValue) ? objValue.concat(srcValue) : undefined
-            );
-            // only need to check if it exceeds the upper limit, if it's less than the upper limit and we request a page that goes past the page total then it just returns fewer results without throwing an error
-            paging =
-              data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
-            page += 1;
-          })
-          .catch((error) => {
-            this.logAxiosError(error);
-            throw new Error('Failed at retrieving Sonarqube issues');
+        let response: Awaited<ReturnType<typeof createSearch>>;
+        try {
+          response = await createSearch(component, page);
+        } catch (error) {
+          this.logAxiosError(error);
+          throw new Error('Failed at retrieving Sonarqube issues', {
+            cause: error
           });
+        }
+        const {data} = response;
+        _.mergeWith(results, data, (objValue, srcValue) =>
+          _.isArray(objValue) ? objValue.concat(srcValue) : undefined
+        );
+        // only need to check if it exceeds the upper limit, if it's less than the upper limit and we request a page that goes past the page total then it just returns fewer results without throwing an error
+        paging =
+          data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
+        page += 1;
         if (page * PAGE_SIZE > UPPER_LIMIT) {
           logger.warn(
             `Exceeded SonarQube cap of ${UPPER_LIMIT} results for findings of or under the ${component} component.  Remaining findings may be truncated.`
@@ -1135,19 +1145,22 @@ export class SonarqubeResults {
         components: []
       };
       while (paging) {
-        await createComponentSearch(component, page)
-          .then(({data}) => {
-            _.mergeWith(results, data, (objValue, srcValue) =>
-              _.isArray(objValue) ? objValue.concat(srcValue) : undefined
-            );
-            paging =
-              data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
-            page += 1;
-          })
-          .catch((error) => {
-            this.logAxiosError(error);
-            throw new Error('Failed at retrieving the list of components');
+        let response: Awaited<ReturnType<typeof createComponentSearch>>;
+        try {
+          response = await createComponentSearch(component, page);
+        } catch (error) {
+          this.logAxiosError(error);
+          throw new Error('Failed at retrieving the list of components', {
+            cause: error
           });
+        }
+        const {data} = response;
+        _.mergeWith(results, data, (objValue, srcValue) =>
+          _.isArray(objValue) ? objValue.concat(srcValue) : undefined
+        );
+        paging =
+          data.paging.pageIndex * data.paging.pageSize <= data.paging.total;
+        page += 1;
         if (page * PAGE_SIZE > UPPER_LIMIT) {
           logger.warn(
             `Exceeded SonarQube cap of ${UPPER_LIMIT} results for the search for children of the ${component} component.  Remaining set of components may be truncated.`
@@ -1199,30 +1212,32 @@ export class SonarqubeResults {
     issues: SonarqubeVersionMapping[T]['issue'][]
   ): Promise<string[]> {
     const getFullFile = async (component: string): Promise<string> => {
-      return this.axiosClient
-        .get<string>(`${this.sonarqubeHost}/api/sources/raw`, {
-          ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
-            auth: {username: this.userToken, password: ''}
-          }),
-          ...(this.authMethod === AuthenticationMethod.BearerToken && {
-            headers: {Authorization: `Bearer ${this.userToken}`}
-          }),
-          params: {
-            key: component,
-            ...(this.branchName && {branch: this.branchName}),
-            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
-          },
-          responseType: 'text'
-        })
-        .then(({data}) => data)
-        .catch((error) => {
-          this.logAxiosError(error);
-          return Promise.reject(
-            new Error(
-              `Failed at getting Sonarqube code snippet for ${component}`
-            )
-          );
-        });
+      try {
+        const {data} = await this.axiosClient.get<string>(
+          `${this.sonarqubeHost}/api/sources/raw`,
+          {
+            ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
+              auth: {username: this.userToken, password: ''}
+            }),
+            ...(this.authMethod === AuthenticationMethod.BearerToken && {
+              headers: {Authorization: `Bearer ${this.userToken}`}
+            }),
+            params: {
+              key: component,
+              ...(this.branchName && {branch: this.branchName}),
+              ...(this.pullRequestID && {pullRequest: this.pullRequestID})
+            },
+            responseType: 'text'
+          }
+        );
+        return data;
+      } catch (error) {
+        this.logAxiosError(error);
+        throw new Error(
+          `Failed at getting Sonarqube code snippet for ${component}`,
+          {cause: error}
+        );
+      }
     };
     const applyLineNumber = (snippet: string): string =>
       snippet
@@ -1308,29 +1323,33 @@ export class SonarqubeResults {
     const getRule = async (
       rule: string,
       organization?: string
-    ): Promise<Rule<T>> =>
-      this.axiosClient
-        .get<Rule<T>>(`${this.sonarqubeHost}/api/rules/show`, {
-          ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
-            auth: {username: this.userToken, password: ''}
-          }),
-          ...(this.authMethod === AuthenticationMethod.BearerToken && {
-            headers: {Authorization: `Bearer ${this.userToken}`}
-          }),
-          params: {
-            key: rule,
-            ...((organization || this.organization) && {
-              organization: organization || this.organization
-            }) // seems to be required for sonarcloud at least
+    ): Promise<Rule<T>> => {
+      try {
+        const {data} = await this.axiosClient.get<Rule<T>>(
+          `${this.sonarqubeHost}/api/rules/show`,
+          {
+            ...(this.authMethod === AuthenticationMethod.TokenAsUsername && {
+              auth: {username: this.userToken, password: ''}
+            }),
+            ...(this.authMethod === AuthenticationMethod.BearerToken && {
+              headers: {Authorization: `Bearer ${this.userToken}`}
+            }),
+            params: {
+              key: rule,
+              ...((organization || this.organization) && {
+                organization: organization || this.organization
+              }) // seems to be required for sonarcloud at least
+            }
           }
-        })
-        .then(({data}) => data)
-        .catch((error) => {
-          this.logAxiosError(error);
-          return Promise.reject(
-            new Error(`Failed at getting Sonarqube rule: ${rule}`)
-          );
+        );
+        return data;
+      } catch (error) {
+        this.logAxiosError(error);
+        throw new Error(`Failed at getting Sonarqube rule: ${rule}`, {
+          cause: error
         });
+      }
+    };
 
     const rulesAndOrgs: [string, string | undefined][] = _.uniqWith(
       issues.map((issue) => [issue.rule, issue.organization]),
@@ -1389,9 +1408,9 @@ export class SonarqubeResults {
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    const sonarqubeVersion = await this.axiosClient
-      .get<string>(`${this.sonarqubeHost}/api/server/version`)
-      .then(({data}) => data);
+    const {data: sonarqubeVersion} = await this.axiosClient.get<string>(
+      `${this.sonarqubeHost}/api/server/version`
+    );
     logger.debug(
       `Generating HDF for ${this.sonarqubeHost} version: ${sonarqubeVersion}`
     );

@@ -410,6 +410,22 @@ export default defineConfig([
     rules: { 'import-x/no-named-as-default-member': 'off' },
   },
   {
+    // CommonJS entry scripts: nest builds the backend to CJS and the EC2
+    // test-infra harnesses are plain CJS scripts, so top-level await does
+    // not exist for them — `entry().catch(...)` is the entry idiom that
+    // keeps a failed boot exiting nonzero instead of surfacing as an
+    // unhandled rejection. File-scoped because that is eslint's granularity;
+    // these files are thin entry shells, with the real logic in modules
+    // that keep both rules.
+    files: ['apps/backend/src/main.ts', 'packaging/test-infra/**/*.js'],
+    name: 'unicorn/cjs-entry-points',
+    plugins: { unicorn },
+    rules: {
+      'unicorn/prefer-await': 'off',
+      'unicorn/prefer-top-level-await': 'off',
+    },
+  },
+  {
     // security/detect-non-literal-fs-filename flags OWASP path traversal:
     // fs calls whose path an attacker might influence. In spec files the
     // paths are the test's own fixtures (tmpdir + literals) — there is no

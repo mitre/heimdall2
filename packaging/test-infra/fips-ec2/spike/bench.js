@@ -74,21 +74,18 @@ const steal = () => {
   const base = [];
   for (let i = 0; i < 50; i++) base.push(await readOnce());
 
-  let active = 0;
   let stop = false;
-  const refill = () => {
-    while (!stop && active < 8) {
-      active++;
-      pbkdf2Timed('load').then(() => {
-        active--;
-        refill();
-      });
+  // 8 refilled workers: each starts its next KDF the moment the previous one
+  // finishes — the same sustained-8-concurrent load as the original pump.
+  const workers = Array.from({length: 8}, async () => {
+    while (!stop) {
+      await pbkdf2Timed('load');
     }
-  };
-  refill();
+  });
   const loaded = [];
   for (let i = 0; i < 50; i++) loaded.push(await readOnce());
   stop = true;
+  await Promise.all(workers);
 
   console.log(`fs.readFile ms — baseline p50=${pct(base, 50).toFixed(2)} p95=${pct(base, 95).toFixed(2)} | under sustained 8-KDF load p50=${pct(loaded, 50).toFixed(2)} p95=${pct(loaded, 95).toFixed(2)}`);
 })().catch((error) => {
