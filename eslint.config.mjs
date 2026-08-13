@@ -372,14 +372,28 @@ export default defineConfig([
     },
   },
   {
-    // Cypress specs assert through cy.should chains and page-object
-    // verifiers, which the vitest heuristic cannot see — vitest's
-    // expectation rules do not apply to Cypress files.
-    files: ['**/*.cy.ts'],
+    // Cypress specs assert through cy.should chains, chai expect().to
+    // matchers, and page-object verifiers — none of which are vitest tests,
+    // so vitest's expectation heuristics misfire across the whole e2e tree
+    // (test/ at the repo root), not just the .cy.ts specs.
+    files: ['**/*.cy.ts', 'test/**'],
     name: 'vitest-off-for-cypress',
     plugins: { vitest },
     rules: {
       'vitest/expect-expect': 'off',
+      'vitest/no-standalone-expect': 'off',
+      'vitest/valid-expect': 'off',
+      'vitest/valid-title': 'off',
+    },
+  },
+  {
+    // Cypress .then() is a Chainable continuation, not a Promise — its
+    // callbacks assert and return nothing by design, so the promise
+    // plugin's then-shape rules misfire on every page-object verifier.
+    files: ['**/*.cy.ts', 'test/support/**'],
+    name: 'promise-off-for-cypress-chainables',
+    rules: {
+      'promise/always-return': 'off',
     },
   },
   {

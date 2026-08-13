@@ -16,10 +16,10 @@ const pct = (a, p) => {
   return s[Math.min(s.length - 1, Math.floor((p / 100) * s.length))];
 };
 const pbkdf2Timed = (pw) =>
-  new Promise((res, rej) => {
+  new Promise((resolve, reject) => {
     const t = process.hrtime.bigint();
     crypto.pbkdf2(pw, crypto.randomBytes(32), ITER, 64, 'sha512', (e) =>
-      e ? rej(e) : res(Number(process.hrtime.bigint() - t) / 1e6)
+      e ? reject(e) : resolve(Number(process.hrtime.bigint() - t) / 1e6)
     );
   });
 
@@ -67,9 +67,9 @@ const steal = () => {
   // fs.readFile under sustained KDF load (8 concurrent, refilled) vs baseline
   fs.writeFileSync('/tmp/bench-probe', 'x'.repeat(4096));
   const readOnce = () =>
-    new Promise((res) => {
+    new Promise((resolve) => {
       const t = process.hrtime.bigint();
-      fs.readFile('/tmp/bench-probe', () => res(Number(process.hrtime.bigint() - t) / 1e6));
+      fs.readFile('/tmp/bench-probe', () => resolve(Number(process.hrtime.bigint() - t) / 1e6));
     });
   const base = [];
   for (let i = 0; i < 50; i++) base.push(await readOnce());
