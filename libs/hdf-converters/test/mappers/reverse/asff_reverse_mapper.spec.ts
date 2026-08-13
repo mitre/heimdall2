@@ -12,7 +12,7 @@ describe('ASFF Reverse Mapper', () => {
       )
     );
 
-    //The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
+    // The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
     const converted = new FromHdfToAsffMapper(inputData, {
       input: 'rhel7-results.json',
       awsAccountId: '12345678910',
@@ -63,7 +63,7 @@ describe('ASFF Reverse Mapper', () => {
       )
     );
 
-    //The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
+    // The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
     const converted = new FromHdfToAsffMapper(inputData, {
       input: 'example-3-layer-overlay_03062022.json',
       awsAccountId: '12345678910',

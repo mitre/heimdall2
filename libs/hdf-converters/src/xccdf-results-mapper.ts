@@ -630,6 +630,7 @@ export class XCCDFResultsMapper extends BaseConverter {
       }
     }
   };
+
   constructor(scapXml: string, withRaw = false) {
     super(
       parseXml(scapXml, {

@@ -19,7 +19,7 @@ import {
 } from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
 
-/** We make some new variant types of the Contextual types, to include their files*/
+/** We make some new variant types of the Contextual types, to include their files */
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
   return p.sourcedFrom === null;
 }

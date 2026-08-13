@@ -116,6 +116,7 @@ export class TrufflehogMapper extends BaseConverter {
       }
     }
   };
+
   constructor(trufflehogJson: Record<string, unknown>, withRaw = false) {
     super(trufflehogJson, true);
     this.withRaw = withRaw;

@@ -670,6 +670,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
       }
     }
   };
+
   constructor(exportJson: DataStorage, withRaw = false) {
     super(exportJson, true);
     this.withRaw = withRaw;

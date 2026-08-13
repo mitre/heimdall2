@@ -1,4 +1,4 @@
-/////Interfaces for ExecJSON focused on ASFF
+/// //Interfaces for ExecJSON focused on ASFF
 
 export interface IOptions {
   input: string;

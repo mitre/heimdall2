@@ -15,7 +15,7 @@ export interface ILookupPathFH {
   default?: any;
 }
 
-//Base converter used to support conversions from HDF to Any Format
+// Base converter used to support conversions from HDF to Any Format
 export class FromHdfBaseConverter {
   data: ExecJSON.Execution;
   mappings?: MappedTransform<any, ILookupPathFH>;
@@ -30,7 +30,7 @@ export class FromHdfBaseConverter {
     this.mappings = mappings;
   }
 
-  //Called over and over to iterate through objects assigned to keys too
+  // Called over and over to iterate through objects assigned to keys too
   convertInternal<T>(file: object, fields: T): MappedReform<T, ILookupPathFH> {
     const result = this.objectMap(fields as T[], (v) =>
       this.evaluate(file, v as T & object & ILookupPathFH)
@@ -48,7 +48,7 @@ export class FromHdfBaseConverter {
     ) as Record<keyof T, V>;
   }
 
-  //Used to get the data located at the paths
+  // Used to get the data located at the paths
   evaluate<T extends object & ILookupPathFH>(
     file: object,
     v: T | Array<T>
@@ -97,7 +97,7 @@ export class FromHdfBaseConverter {
     const resultingData: Array<T> = [];
     // Looks through parsed data file using the mapping setup in V
     if (v[0] && !v[0].path) {
-      const arrayTransformer = v[0].arrayTransformer; //does nothing since null
+      const arrayTransformer = v[0].arrayTransformer; // does nothing since null
       let output: Array<T> = v.map(
         (element) => this.evaluate(file, element) as T
       );
@@ -110,7 +110,7 @@ export class FromHdfBaseConverter {
       const arrayTransformer = v[0].arrayTransformer;
       const transformer = v[0].transformer;
       if (this.hasPath(file, path)) {
-        const pathVal = this.handlePath(file, path); //Any matches in the path even if more than one, will grab an array of results
+        const pathVal = this.handlePath(file, path); // Any matches in the path even if more than one, will grab an array of results
         if (Array.isArray(pathVal)) {
           v = pathVal.map(
             (element: Record<string, unknown>) =>
@@ -143,7 +143,7 @@ export class FromHdfBaseConverter {
     return uniqueResults;
   }
 
-  //Gets the value at the path using lodash and path stored in object
+  // Gets the value at the path using lodash and path stored in object
   handlePath(file: object, path: string): unknown {
     if (path.startsWith('$.')) {
       return _.get(this.data, path.slice(2));
@@ -151,6 +151,7 @@ export class FromHdfBaseConverter {
       return _.get(file, path);
     }
   }
+
   hasPath(file: object, path: string): boolean {
     if (path.startsWith('$.')) {
       return _.has(this.data, path.slice(2));

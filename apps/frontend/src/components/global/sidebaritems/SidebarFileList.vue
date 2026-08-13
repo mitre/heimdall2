@@ -68,12 +68,12 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  //checks if file is selected
+  // checks if file is selected
   get selected(): boolean {
     return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
   }
 
-  //removes uploaded file from the currently observed files
+  // removes uploaded file from the currently observed files
   remove_file() {
     EvaluationModule.removeEvaluation(this.file.uniqueId);
     InspecDataModule.removeFile(this.file.uniqueId);
@@ -83,7 +83,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     this.navigateWithNoErrors(`/${this.current_route}`);
   }
 
-  //saves file to database
+  // saves file to database
   save_file() {
     if (this.file?.database_id) {
       SnackbarModule.failure('This file is already in the database.');
@@ -92,7 +92,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  //determines if the use can save the file
+  // determines if the use can save the file
   get disable_saving() {
     return typeof this.file?.database_id !== 'undefined' || this.saving;
   }
@@ -150,7 +150,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       });
   }
 
-  //gives different icons for a file if it is just a profile
+  // gives different icons for a file if it is just a profile
   get icon(): string {
     if (this.file.hasOwnProperty('profile')) {
       return 'mdi-note';

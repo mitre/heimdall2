@@ -9,7 +9,7 @@ const NIST_FAMILY_RE =
 const NIST_CONTROL_RE =
   /^(A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])-(\d+)(.{0,60})$/;
 const SPEC_SPLITTER = /[\s\(\)\.]+/; // Includes all whitespace, periods, and parenthesis
-const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
+const REV_RE = /^rev[\s._]+(\d+)$/i; // Matches Rev_5 etc
 type ParseNist = NistControl | NistRevision | null;
 
 export interface CanonizationConfig {
@@ -346,7 +346,7 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
       asNode = map[key];
       asNode.control = asControl;
     } else {
-      //Make it fresh
+      // Make it fresh
       asNode = {
         control: asControl,
         children: []

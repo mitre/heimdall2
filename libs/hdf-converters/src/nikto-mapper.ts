@@ -99,6 +99,7 @@ export class NiktoMapper extends BaseConverter {
       }
     }
   };
+
   constructor(niktoJson: string, withRaw = false) {
     super(JSON.parse(niktoJson));
     this.withRaw = withRaw;

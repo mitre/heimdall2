@@ -374,7 +374,7 @@ function parseCweTags<T extends SonarqubeVersion>(
   if (rule.descriptionSections) {
     searchSpace += rule.descriptionSections.map((s) => s.content).join('');
   }
-  const uniqueCwes = _.uniq(searchSpace.match(/CWE-\d\d\d?\d?\d?\d?\d/gi)); // CWE IDs are embedded inside of the HTML
+  const uniqueCwes = _.uniq(searchSpace.match(/cwe-\d\d\d?\d?\d?\d?\d/gi)); // CWE IDs are embedded inside of the HTML
 
   if (uniqueCwes.length) {
     return uniqueCwes;

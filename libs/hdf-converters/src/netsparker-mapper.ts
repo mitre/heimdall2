@@ -269,6 +269,7 @@ export class NetsparkerMapper extends BaseConverter {
       }
     };
   }
+
   constructor(netsparkerXml: string, withRaw = false) {
     super(parseXml(netsparkerXml));
     this.withRaw = withRaw;

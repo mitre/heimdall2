@@ -12,7 +12,7 @@ const validators = [
           RegExp('[a-z]'), // Lowercase characters
           RegExp('[A-Z]'), // Uppercase characters
           RegExp('[0-9]'), // Numbers
-          RegExp(/[^A-Za-z0-9]/) // Special characters (Non Alphanumeric)
+          RegExp(/[^0-9A-Za-z]/) // Special characters (Non Alphanumeric)
         ];
         return (
           checks.filter((expr) => expr.test(password)).length ===
@@ -28,7 +28,7 @@ const validators = [
           RegExp('[a-z]{4,}'), // 5 or more of lowercase characters in a row
           RegExp('[A-Z]{4,}'), // 5 or more of uppercase characters in a row
           RegExp('[0-9]{4,}'), // 5 or more numbers in a row
-          RegExp(/[^A-Za-z0-9]{4,}/) // 5 or more special characters in a row
+          RegExp(/[^0-9A-Za-z]{4,}/) // 5 or more special characters in a row
         ];
         return checks.filter((expr) => expr.test(password)).length === 0;
       }

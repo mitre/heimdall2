@@ -188,6 +188,7 @@ export class BaseConverter<D = Record<string, unknown>> {
       Object.entries(obj).map(([k, v]) => [k, fn(v as ObjectEntryValue<T>)])
     ) as Record<keyof T, V>;
   }
+
   convertInternal<T>(
     file: Record<string, unknown>,
     fields: T
@@ -396,6 +397,7 @@ export class BaseConverter<D = Record<string, unknown>> {
       return _.get(file, pathArray[index]) ?? '';
     }
   }
+
   hasPath(file: Record<string, unknown>, path: string | string[]): boolean {
     let pathArray;
     if (typeof path === 'string') {

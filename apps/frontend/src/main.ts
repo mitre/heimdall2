@@ -54,7 +54,7 @@ new Vue({
 // The following line is a hot patch to add regex support, there are better
 // places to edit Prism variables, but could not locate them. Namely this is
 // the Prism library variables, and not the Prism component variables
-//@ts-ignore
+// @ts-ignore
 Prism.languages['rb'] = {
   'token-name': {
     pattern:

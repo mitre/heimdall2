@@ -419,7 +419,7 @@ export class AwsConfigMapper {
       },
       version: HeimdallToolsVersion,
       statistics: {
-        //aws_config_sdk_version: ConfigService., // How do i get the sdk version?
+        // aws_config_sdk_version: ConfigService., // How do i get the sdk version?
         duration: null
       },
       profiles: [

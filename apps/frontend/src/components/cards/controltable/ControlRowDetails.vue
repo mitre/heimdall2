@@ -93,14 +93,14 @@ import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {ContextualizedControl} from 'inspecjs';
 import * as _ from 'lodash';
-//TODO: add line numbers
+// TODO: add line numbers
 import 'prismjs';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-makefile.js';
 import 'prismjs/components/prism-ruby.js';
 import 'prismjs/themes/prism-tomorrow.css';
 import Component, {mixins} from 'vue-class-component';
-//@ts-ignore
+// @ts-ignore
 import Prism from 'vue-prism-component';
 import {Prop, Watch} from 'vue-property-decorator';
 
@@ -290,7 +290,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     );
   }
 
-  //for zebra background
+  // for zebra background
   zebra(ix: number): string {
     if (ix % 2 === 0) {
       return 'zebra-table';

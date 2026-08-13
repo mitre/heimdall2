@@ -187,6 +187,7 @@ export class NeuVectorMapper extends BaseConverter {
       }
     }
   };
+
   constructor(exportJson: string, withRaw = false) {
     const rawParams = JSON.parse(exportJson);
     super(rawParams);

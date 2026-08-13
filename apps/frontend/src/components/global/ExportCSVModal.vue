@@ -225,7 +225,7 @@ export default class ExportCSVModal extends Vue {
         case fieldNames[3]:
           result[fieldNames[3]] = control.data.title;
           break;
-        //Description
+        // Description
         case fieldNames[4]:
           result[fieldNames[4]] = control.data.desc;
           break;

@@ -342,6 +342,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
       }
     }
   };
+
   constructor(secureScore_and_profiles_combined: string, withRaw = false) {
     const rawParams = JSON.parse(secureScore_and_profiles_combined);
     super(rawParams.secureScore.value[0]);

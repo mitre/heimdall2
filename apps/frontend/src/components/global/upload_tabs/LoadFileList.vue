@@ -408,7 +408,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     return {offset, limit};
   }
 
-  //--------------------------------------------------------------------
+  // --------------------------------------------------------------------
   // Called when the Search button is invoked (@click="executeSearch()")
   async executeSearch() {
     // Clearing the fields using the clearable icon sets the model to null
@@ -474,7 +474,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     this.evaluationsCount = EvaluationModule.evaluationsCount;
   }
 
-  //-------------------------------------------------------------------
+  // -------------------------------------------------------------------
   // Called when any of the sorted fields are invoked (@update:sort-by)
   async updateSortBy(sortField: string) {
     /* Hack: Implementing custom headers slots, the v-data-table sorting is
@@ -526,7 +526,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  //------------------------------------------------------------------------
+  // ------------------------------------------------------------------------
   // Called when page navigation arrows are invoked (@update:items-per-page)
   // or when the Rows per page is invoked (@update:page) and not in Page 1
   // or when the page variable is programmatically set.
@@ -552,13 +552,13 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     this.updatingPage = false;
   }
 
-  //----------------------------------------------------
+  // ----------------------------------------------------
   // Called when Rows per page is invoked (@update:page)
   // Note: If not on Page 1 the @update:items-per-page
   //       is invoked first, hence the need for the flag
   async updateItemsPerPage(itemsCount: number) {
     // Updating the page reset to Page 1
-    //this.page = 1;
+    // this.page = 1;
     if (this.updatingPage) {
       return;
     } else {
@@ -661,7 +661,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
         Number(this.activeItem.id)
       );
       if (FilteredDataModule.selected_file_ids.includes(fileId)) {
-        //removes uploaded file from the currently observed files
+        // removes uploaded file from the currently observed files
         EvaluationModule.removeEvaluation(fileId);
         InspecDataModule.removeFile(fileId);
         // Remove any database files that may have been in the URL

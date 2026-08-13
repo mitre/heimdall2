@@ -17,7 +17,7 @@ import {
   SegmentedControl
 } from './reverse-asff-mapper';
 
-//FromHdfToAsff mapper transformers
+// FromHdfToAsff mapper transformers
 type Counts = {
   Passed: number;
   PassedTests: number;

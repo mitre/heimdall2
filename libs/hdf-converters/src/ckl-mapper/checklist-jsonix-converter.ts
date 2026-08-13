@@ -498,7 +498,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       ).find((key) => key.toLowerCase() === attributeName.toLowerCase());
       if (keyFoundInVulnattribute) {
         if (separateElementNames.includes(keyFoundInVulnattribute)) {
-          const dataStrings = data?.toString().split(/[,|;]/) ?? [];
+          const dataStrings = data?.toString().split(/[,;|]/) ?? [];
           for (const dataString of dataStrings) {
             stigdata.push({
               vulnattribute:

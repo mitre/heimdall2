@@ -131,7 +131,7 @@ export default class ProfileData extends Vue {
     return (result || this.file) as SourcedContextualizedProfile;
   }
 
-  //the single root tree item
+  // the single root tree item
   get root_tree(): TreeItem[] {
     const tree = new TreeItem(this.file_root_profile);
     tree.children = [];

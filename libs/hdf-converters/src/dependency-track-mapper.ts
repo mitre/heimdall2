@@ -196,6 +196,7 @@ export class DependencyTrackMapper extends BaseConverter {
       }
     }
   };
+
   constructor(dtJson: string, withRaw = false) {
     super(JSON.parse(dtJson));
     this.withRaw = withRaw;

@@ -533,7 +533,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     return this.$router.currentRoute.path.replaceAll(/[^a-z]/giv, '');
   }
 
-  //changes width of eval info if it is in server mode and needs more room for tags
+  // changes width of eval info if it is in server mode and needs more room for tags
   get info_width(): number {
     if (ServerModule.serverMode) {
       return 500;
@@ -541,7 +541,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     return 300;
   }
 
-  //basically a v-model for the eval info cards when there is no slide group
+  // basically a v-model for the eval info cards when there is no slide group
   toggle_profile(
     file: SourcedContextualizedEvaluation | SourcedContextualizedProfile
   ) {

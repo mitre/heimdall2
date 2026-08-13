@@ -39,7 +39,7 @@ function nistTag(rule: Record<string, unknown>): string[] {
     if (tag === null || tag === undefined) {
       return DEFAULT_NIST_TAG;
     } else {
-      return _.get(tag, 'Title').match(/[a-zA-Z][a-zA-Z]-\d{1,2}/);
+      return _.get(tag, 'Title').match(/[A-Za-z][A-Za-z]-\d{1,2}/);
     }
   }
   return [];
@@ -222,6 +222,7 @@ export class FortifyMapper extends BaseConverter {
       }
     }
   };
+
   constructor(fvdl: string, withRaw = false) {
     super(
       parseXml(fvdl, {
