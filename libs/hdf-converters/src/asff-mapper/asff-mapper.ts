@@ -228,7 +228,7 @@ function handleIdGroup(
       .filter((element) => _.get(element, 'url') !== undefined),
     source_location: ((): ExecJSON.SourceLocation => {
       const locs = _.uniq(group.map((d) => d.source_location)).filter(
-        (loc) => Object.keys(loc || {}).length !== 0
+        (loc) => Object.keys(loc || {}).length > 0
       );
       if (locs.length === 0) {
         return {};
@@ -238,7 +238,7 @@ function handleIdGroup(
         return {ref: JSON.stringify(locs)};
       }
     })(),
-    ...(Object.keys(waiverData || {}).length !== 0 && {
+    ...(Object.keys(waiverData || {}).length > 0 && {
       waiver_data: waiverData
     }),
     code: externalProductHandler(

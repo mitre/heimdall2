@@ -55,7 +55,7 @@
           <v-card-title>
             <div class="mb-2">Inputs for {{ profile.data.title }}</div>
           </v-card-title>
-          <div v-if="inputs.length !== 0">
+          <div v-if="inputs.length > 0">
             <v-data-table :headers="headers" :items="inputs"
               ><template #[`item.options`]="{item}">
                 {{ item.options.value }}

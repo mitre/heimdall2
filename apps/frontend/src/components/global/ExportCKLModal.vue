@@ -270,7 +270,7 @@
         <v-btn
           color="primary"
           text
-          :disabled="!selected.length || $v.$invalid"
+          :disabled="selected.length === 0 || $v.$invalid"
           @click="exportCKL"
         >
           Export
@@ -544,7 +544,7 @@ export default class ExportCKLModal extends Vue {
     );
     for (const profileStig of profileOrStigs) {
       const depends = _.get(profileStig, 'depends') as unknown as Dependency[];
-      if (Array.isArray(depends) && depends.length !== 0) {
+      if (Array.isArray(depends) && depends.length > 0) {
         continue;
       }
       const [releasenumber, releasedate] = this.splitReleaseInfo(

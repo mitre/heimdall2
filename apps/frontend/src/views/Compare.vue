@@ -539,7 +539,7 @@ export default class Compare extends Vue {
   }
 
   get total_failed(): number {
-    if (this.files.length < 1) {
+    if (this.files.length === 0) {
       return 0;
     }
     let highestFailed = 0;

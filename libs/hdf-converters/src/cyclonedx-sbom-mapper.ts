@@ -656,7 +656,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
           auxiliary_data: [
             {
               name: 'SBOM',
-              components: components.length ? components : undefined,
+              components: components.length > 0 ? components : undefined,
               dependencies: _.get(input, 'raw.dependencies'),
               data: _.omit(input.raw, [
                 'components',

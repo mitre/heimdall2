@@ -156,7 +156,7 @@ export function get_eval_start_time(
 ): string | null {
   for (const prof of ev.contains) {
     for (const ctrl of prof.contains) {
-      if (ctrl.hdf.segments!.length) {
+      if (ctrl.hdf.segments!.length > 0) {
         return ctrl.hdf.segments![0].start_time;
       }
     }

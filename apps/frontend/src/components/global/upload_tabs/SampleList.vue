@@ -165,7 +165,7 @@ export default class SampleList extends Vue {
 
   // Fires when user selects entries and loads them into the visualization panel
   load_samples(selectedSamples: Sample[]) {
-    if (selectedSamples.length != 0) {
+    if (selectedSamples.length > 0) {
       const promises: Promise<FileID | FileID[]>[] = [];
       this.loading = true;
       SpinnerModule.reset();

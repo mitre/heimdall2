@@ -108,7 +108,7 @@ class ContextualizedControlImp implements ContextualizedControl {
   }
 
   get root(): ContextualizedControl {
-    if (this.extendsFrom.length) {
+    if (this.extendsFrom.length > 0) {
       return this.extendsFrom[0].root;
     }
     return this;
@@ -125,7 +125,7 @@ class ContextualizedControlImp implements ContextualizedControl {
 
   get full_code(): string {
     // If we extend from something, we behave slightly differently
-    if (this.extendsFrom.length) {
+    if (this.extendsFrom.length > 0) {
       const ancestor = this.extendsFrom[0];
       if (this.is_redundant) {
         return ancestor.full_code;
@@ -208,7 +208,7 @@ export function contextualizeEvaluation(
   // Link each contextualized control
   for (const cc of allControls) {
     // Behavior changes based on if we have well-formed or malformed profile dependency
-    if (cc.sourcedFrom.extendsFrom.length || cc.sourcedFrom.extendedBy.length) {
+    if (cc.sourcedFrom.extendsFrom.length > 0 || cc.sourcedFrom.extendedBy.length > 0) {
       // Our profile is a baseline! No need to continue - children will make connections for us
       // If we aren't extended from something we just drop. Our children will make connections for us
       if (cc.sourcedFrom.extendsFrom.length === 0) {

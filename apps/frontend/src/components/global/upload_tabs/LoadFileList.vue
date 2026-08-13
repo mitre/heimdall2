@@ -417,9 +417,9 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     this.searchTags = this.searchTags == null ? '' : this.searchTags;
 
     if (
-      this.searchItems.trim().length == 0 &&
-      this.searchGroups.trim().length == 0 &&
-      this.searchTags.trim().length == 0
+      this.searchItems.trim().length === 0 &&
+      this.searchGroups.trim().length === 0 &&
+      this.searchTags.trim().length === 0
     ) {
       SnackbarModule.notify(
         'No search criteria provided (provide a file, group, or tag name)!'
@@ -488,7 +488,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
        The else block of the this.pagination.sortBy[0] == sortField is never
        executed. Leaving it here incase we rectify the implementation.
     */
-    if (sortField.length == 0) {
+    if (sortField.length === 0) {
       this.pagination.sortDesc[0] =
         this.sortOrder[this.sortOrder.length - 1] == 'DESC' ? false : true;
       this.pagination.sortBy[0] = this.sortByField;

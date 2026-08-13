@@ -178,7 +178,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
 
   // Fires when user selects entries and loads them into the visualization panel
   async load_results(evaluations: IEvaluation[]): Promise<void> {
-    if (evaluations.length != 0) {
+    if (evaluations.length > 0) {
       SpinnerModule.reset();
       SpinnerModule.visibility(true);
       EvaluationModule.load_results(

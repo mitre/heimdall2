@@ -329,7 +329,7 @@ export class AwsConfigMapper {
     if (sourceIdentifier !== undefined) {
       defaultMatch = AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier]);
     }
-    if (Array.isArray(defaultMatch) && defaultMatch.length !== 0) {
+    if (Array.isArray(defaultMatch) && defaultMatch.length > 0) {
       result = _.set(
         result,
         'nist',
@@ -354,7 +354,7 @@ export class AwsConfigMapper {
     checkText.push(
       `Source Identifier: ${configRule.Source?.SourceIdentifier || 'N/A'}`
     );
-    if (params.length !== 0) {
+    if (params.length > 0) {
       checkText.push(`${params.join('<br/>').replace(/\"/gi, '')}`);
     }
     return checkText.join('<br/>');

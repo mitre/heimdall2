@@ -240,7 +240,7 @@
       color="warning"
       top
     >
-      <span v-if="file_filter.length" class="subtitle-2">
+      <span v-if="file_filter.length > 0" class="subtitle-2">
         All results are filtered out. Use the
         <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
         filters and show all.
@@ -484,13 +484,13 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      SearchModule.severityFilter.length !== 0 ||
-      SearchModule.statusFilter.length !== 0 ||
-      SearchModule.controlIdSearchTerms.length !== 0 ||
-      SearchModule.codeSearchTerms.length !== 0 ||
-      SearchModule.tagFilter.length !== 0 ||
+      SearchModule.severityFilter.length > 0 ||
+      SearchModule.statusFilter.length > 0 ||
+      SearchModule.controlIdSearchTerms.length > 0 ||
+      SearchModule.codeSearchTerms.length > 0 ||
+      SearchModule.tagFilter.length > 0 ||
       this.searchTerm ||
-      this.treeFilters.length
+      this.treeFilters.length > 0
     ) {
       result = true;
     } else {

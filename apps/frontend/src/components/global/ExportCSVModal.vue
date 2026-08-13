@@ -140,7 +140,7 @@ export default class ExportCSVModal extends Vue {
       const caveats = descriptions.filter(
         (description) => description.label === 'caveat'
       );
-      if (caveats.length) {
+      if (caveats.length > 0) {
         descriptions = descriptions.filter(
           (description) => description.label !== 'caveat'
         );

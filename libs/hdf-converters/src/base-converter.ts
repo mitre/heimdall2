@@ -78,7 +78,7 @@ export function parseXml(
 export function parseCsv(csv: string): unknown[] {
   const result = Papa.parse(csv.trim(), {header: true});
 
-  if (result.errors.length) {
+  if (result.errors.length > 0) {
     throw result.errors;
   }
 

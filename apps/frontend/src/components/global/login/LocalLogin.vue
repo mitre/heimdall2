@@ -201,7 +201,7 @@ export default class LocalLogin extends Vue {
   }
 
   get showAlternateAuth() {
-    return ServerModule.enabledOAuth.length !== 0;
+    return ServerModule.enabledOAuth.length > 0;
   }
 
   get localLoginEnabled() {

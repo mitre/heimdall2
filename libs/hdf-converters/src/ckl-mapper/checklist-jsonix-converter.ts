@@ -698,7 +698,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       hdfSpecificData.code = control.code;
     }
 
-    const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
+    const hdfDataExist = Object.keys(hdfSpecificData).length > 0;
 
     return hdfDataExist
       ? JSON.stringify({hdfSpecificData: hdfSpecificData}, null, 2)
@@ -718,7 +718,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   addHdfProfileSpecificData(profile: ExecJSON.Profile): string {
     const hdfSpecificData: Record<string, unknown> = {};
-    if (profile.attributes.length) {
+    if (profile.attributes.length > 0) {
       hdfSpecificData.attributes = profile.attributes;
     }
     if (profile.copyright) {
@@ -734,7 +734,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       hdfSpecificData.version = profile.version;
     }
 
-    const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
+    const hdfDataExist = Object.keys(hdfSpecificData).length > 0;
     return hdfDataExist ? JSON.stringify({hdfSpecificData}) : '';
   }
 

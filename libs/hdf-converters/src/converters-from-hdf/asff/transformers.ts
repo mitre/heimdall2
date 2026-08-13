@@ -33,7 +33,7 @@ export function getRunTime(hdf: ExecJSON.Execution): string {
   hdf.profiles.forEach((profile) => {
     if (
       profile.controls[0] &&
-      profile.controls[0].results.length &&
+      profile.controls[0].results.length > 0 &&
       profile.controls[0].results[0].start_time
     ) {
       try {

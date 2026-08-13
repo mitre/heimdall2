@@ -116,7 +116,7 @@ export class NistControl {
    * Quick accessor to the leading family letters for the nsit control
    */
   get family(): string | undefined {
-    if (this.subSpecifiers.length) {
+    if (this.subSpecifiers.length > 0) {
       return this.subSpecifiers[0];
     } else {
       return undefined;
@@ -302,7 +302,7 @@ export interface NistHierarchyNode {
 export type NistHierarchy = NistHierarchyNode[];
 
 function _control_parent(c: NistControl): NistControl | null {
-  if (c.subSpecifiers.length) {
+  if (c.subSpecifiers.length > 0) {
     return new NistControl(
       c.subSpecifiers.slice(0, c.subSpecifiers.length - 1)
     );

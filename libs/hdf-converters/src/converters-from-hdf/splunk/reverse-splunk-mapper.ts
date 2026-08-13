@@ -187,7 +187,7 @@ export function createControlMapping(
         transformer: (data: ContextualizedControl) => {
           if (
             data.hdf.segments?.length === 0 &&
-            data.extendsFrom.length !== 0
+            data.extendsFrom.length > 0
           ) {
             return 'Overlaid Control';
           } else {
@@ -423,7 +423,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
     // Report provided indexes
     const indexes = indexResponse.data.entry;
-    if (indexes.length <= 0) {
+    if (indexes.length === 0) {
       throw new Error(
         'Unable to retrieve available indexes, double-check your scheme configuration and try again'
       );

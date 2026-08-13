@@ -357,7 +357,7 @@ function parseOwaspTags<T extends SonarqubeVersion>(
   const sysTagMatches = parseOwaspInSysTags<T>(issue);
   const totalMatches = searchSpaceMatches.concat(sysTagMatches);
 
-  if (totalMatches.length) {
+  if (totalMatches.length > 0) {
     return totalMatches;
   }
   return undefined;
@@ -376,7 +376,7 @@ function parseCweTags<T extends SonarqubeVersion>(
   }
   const uniqueCwes = _.uniq(searchSpace.match(/cwe-\d\d\d?\d?\d?\d?\d/gi)); // CWE IDs are embedded inside of the HTML
 
-  if (uniqueCwes.length) {
+  if (uniqueCwes.length > 0) {
     return uniqueCwes;
   }
   return undefined;
@@ -396,7 +396,7 @@ function parseNistTags<T extends SonarqubeVersion>(
       )
   );
 
-  if (uniqueNist.length) {
+  if (uniqueNist.length > 0) {
     return uniqueNist;
   }
 
@@ -515,7 +515,7 @@ export class SonarqubeMapper<T extends SonarqubeVersion> extends BaseConverter<
                 ...conditionallyProvideAttribute(
                   'Actives',
                   issue.ruleInformation.actives,
-                  issue.ruleInformation.actives.length !== 0
+                  issue.ruleInformation.actives.length > 0
                 ),
                 ...conditionallyProvideAttribute(
                   'Clean Code Attribute',
@@ -1246,7 +1246,7 @@ export class SonarqubeResults {
 
     const components = _.uniq(
       issues.flatMap((issue) =>
-        issue.flows.length
+        issue.flows.length > 0
           ? issue.flows.flatMap((flow) =>
               flow.locations.map((location) => location.component)
             )
@@ -1259,7 +1259,7 @@ export class SonarqubeResults {
     const fullFiles = Object.fromEntries(_.zip(components, fullFilePromises));
 
     const snippets = issues.map((issue) => {
-      if (issue.flows.length) {
+      if (issue.flows.length > 0) {
         return issue.flows
           .flatMap((flow) =>
             flow.locations.map((location) =>

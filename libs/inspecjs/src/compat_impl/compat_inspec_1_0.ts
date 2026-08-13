@@ -214,7 +214,7 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   }
 
   get start_time(): string | undefined {
-    if (this.segments && this.segments.length) {
+    if (this.segments && this.segments.length > 0) {
       return this.segments[0].start_time;
     }
     return undefined;

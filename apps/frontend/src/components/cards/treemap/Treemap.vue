@@ -98,7 +98,7 @@ export default class Treemap extends Vue {
           }
         });
         if (newCurr) {
-          if (newCurr.children && newCurr.children.length) {
+          if (newCurr.children && newCurr.children.length > 0) {
             curr = newCurr;
           } else {
             throw Error('empty');
@@ -165,7 +165,7 @@ export default class Treemap extends Vue {
 
   /** Submits an event to go up one node */
   up(): void {
-    if (this.value.length) {
+    if (this.value.length > 0) {
       // Slice and dice, baybee
       this.set_path(this.value.slice(0, -1));
 

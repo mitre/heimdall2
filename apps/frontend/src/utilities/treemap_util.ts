@@ -124,7 +124,7 @@ function colorize_tree_map(root: TreemapNodeParent) {
     .map((c) => c.color)
     .filter((c): c is Chroma.Color => !!c);
   // If we have any, then set our color
-  if (childColors.length) {
+  if (childColors.length > 0) {
     // Set the color
     const avgColor = Chroma.average(childColors);
     root.color = avgColor;

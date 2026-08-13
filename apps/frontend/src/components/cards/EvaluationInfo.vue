@@ -15,7 +15,7 @@
         <TagRow v-if="evaluation.id" :evaluation="evaluation" />
       </div>
       <div
-        v-if="evaluation && evaluation.groups.length !== 0"
+        v-if="evaluation && evaluation.groups.length > 0"
         class="d-flex flex-nowrap"
       >
         <strong class="pt-2 pr-1">Groups:</strong>

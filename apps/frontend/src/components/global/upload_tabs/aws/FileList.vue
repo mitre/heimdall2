@@ -9,7 +9,7 @@
         />
         <v-btn
           title="Query the S3 bucket"
-          :disabled="formBucketName.length < 1"
+          :disabled="formBucketName.length === 0"
           class="fill-height pa-0"
           @click="load"
         >

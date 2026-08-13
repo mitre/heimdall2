@@ -119,7 +119,7 @@ export default class Cell extends Vue {
     const s: string[] = [];
     if (this.is_parent) {
       s.push('parent');
-      if (!this.node.children || !this.node.children.length) {
+      if (!this.node.children || this.node.children.length === 0) {
         s.push('empty');
       }
     } else {
