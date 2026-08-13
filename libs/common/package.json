@@ -13,5 +13,8 @@
   "scripts": {
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

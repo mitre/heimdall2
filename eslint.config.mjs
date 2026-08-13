@@ -138,6 +138,11 @@ export default defineConfig([
       // regexp/prefer-regexp-test (regexp plugin) and unicorn/prefer-array-some.
       'e18e/prefer-regex-test': 'off',
       'e18e/prefer-array-some': 'off',
+      // Uint8Array.fromBase64/toBase64 is TC39 Stage 4 but UNDEFINED at this
+      // repo's Node floor (22.18; 24.x in use) — the Buffer forms the rule
+      // flags are the correct code today. Revisit when the floor includes the
+      // API (2026-08-13 triage, Aaron).
+      'unicorn/prefer-uint8array-base64': 'off',
       '@typescript-eslint/consistent-type-exports': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-explicit-any': 'off',
@@ -433,6 +438,14 @@ export default defineConfig([
     language: 'json/json',
     name: 'package.json',
     plugins: { json },
+    rules: {
+      // Dependency migrations (axios→fetch, lodash→native, moment→dayjs,
+      // jsonwebtoken→jose, uuid/rimraf/dotenv→native) are engineering
+      // projects, not lint fixes. Captured as the dependency-modernization
+      // epic on the board; rule returns when that epic is worked
+      // (2026-08-13 triage, Aaron).
+      'e18e/ban-dependencies': 'off',
+    },
   },
   {
     extends: [
