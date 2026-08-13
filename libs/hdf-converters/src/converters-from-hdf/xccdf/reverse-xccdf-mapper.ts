@@ -137,11 +137,11 @@ export class FromHDFToXCCDFMapper {
         'xccdf_hdf_group_' +
         control.id
           .replaceAll('_', '-') // Prevents STIG Viewer from parsing IDs incorrectly when there is underscores after group_
-          .replaceAll(/[^\w-.]/g, '_'), // Change everything that isn't a word, underscore, or dash into an underscore
+          .replaceAll(/[^\w\-.]/g, '_'), // Change everything that isn't a word, underscore, or dash into an underscore
       id:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replaceAll('_', '-').replaceAll(/[^\w-.]/g, '_') + '_rule'),
+          control.id.replaceAll('_', '-').replaceAll(/[^\w\-.]/g, '_') + '_rule'),
       version: control.tags.stig_id || '',
       gtitle: control.tags.gtitle || control.title,
       title: control.title || '',
@@ -215,7 +215,7 @@ export class FromHDFToXCCDFMapper {
         (control.tags.rid ||
           control.id
             .replaceAll('_', '-') // Prevent STIG Viewer from parsing IDs incorrectly when there is underscores after rule_
-            .replaceAll(/[^\w-.]/g, '_') + '_rule'),
+            .replaceAll(/[^\w\-.]/g, '_') + '_rule'),
       result: getXCCDFResult(control),
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
@@ -264,7 +264,7 @@ export class FromHDFToXCCDFMapper {
         id:
           'xccdf_mitre.hdf-converters_profile_hdf2xccdf_' +
           // Replace all non-word characters and spaces with underscores
-          (profile.title?.replaceAll(/[^\w-.]/g, '_') || 'profile_missing_title'),
+          (profile.title?.replaceAll(/[^\w\-.]/g, '_') || 'profile_missing_title'),
         title: profile.title || '',
         description: profile.description || '',
         // All control IDs
@@ -272,7 +272,7 @@ export class FromHDFToXCCDFMapper {
           (control) =>
             'xccdf_hdf_rule_' +
             (control.tags.rid ||
-              control.id.replaceAll('_', '-').replaceAll(/[^\w-.]/g, '_') + '_rule')
+              control.id.replaceAll('_', '-').replaceAll(/[^\w\-.]/g, '_') + '_rule')
         )
       });
       mappedData.Benchmark.TestResult.attributes.push(

@@ -31,7 +31,7 @@ export const DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS = [
 ];
 
 // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
-export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{slash}}}/gi;
+export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /\{\{\{slash\}\}\}/gi;
 
 export function createWinstonLogger(mapperName: string, level = 'debug') {
   return createLogger({
