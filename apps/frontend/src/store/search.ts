@@ -1,5 +1,6 @@
 import Store from '@/store/store';
 import {Severity, severities} from 'inspecjs';
+import * as _ from 'lodash';
 import {parse} from 'search-query-parser';
 import {
   Action,
@@ -54,6 +55,16 @@ export function valueToSeverity(severity: string): Severity {
     return 'none';
   }
 }
+
+/** Matches `field:"value"` occurrences of one search category in the bar. */
+function fieldFilterPattern(field: string): RegExp {
+  /* eslint-disable-next-line security/detect-non-literal-regexp -- No code
+     fix exists: the pattern must embed the parser's keyword. The field is
+     one of the store's fixed search categories, and it is escaped
+     defensively so no input can alter the pattern's structure. */
+  return new RegExp(`${_.escapeRegExp(field)}:"(.*?)"`, 'gm');
+}
+
 @Module({
   namespaced: true,
   dynamic: true,
@@ -177,7 +188,7 @@ class Search extends VuexModule implements ISearchState {
       if (
         this.searchTerm.toLowerCase().includes(`${searchPayload.field}:`)
       ) {
-        const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
+        const replaceRegex = fieldFilterPattern(searchPayload.field);
         const newSearch = this.searchTerm.replace(
           replaceRegex,
           `${searchPayload.field}:"${searchPayload.previousValues
@@ -214,7 +225,7 @@ class Search extends VuexModule implements ISearchState {
     searchPayload.previousValues = searchPayload.previousValues.filter(
       (filter) => filter.toLowerCase() !== searchPayload.value.toLowerCase()
     );
-    const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
+    const replaceRegex = fieldFilterPattern(searchPayload.field);
     if (searchPayload.previousValues.length > 0) {
       // If we still have any filters
       const newSearch = this.searchTerm.replace(

@@ -51,7 +51,7 @@ export enum FileExportTypes {
 // Illegal characters which are not accepted by HTML id attribute
 // Generally includes everything that is not alphanumeric or characters [-,_]
 // Expand as needed
-const ILLEGAL_CHARACTER_SET = [['\\.', '___PERIOD___']];
+const ILLEGAL_CHARACTER_SET: [RegExp, string][] = [[/\./g, '___PERIOD___']];
 
 export class FromHDFToHTMLMapper {
   // Generated injectable HTML for icons
@@ -501,10 +501,7 @@ export class FromHDFToHTMLMapper {
   // Replace all found illegal characters in string with compliant string equivalent
   replaceIllegalCharacters(text: string): string {
     for (const illegalCharacter of ILLEGAL_CHARACTER_SET) {
-      text = text.replaceAll(
-        new RegExp(`${illegalCharacter[0]}`, 'g'),
-        illegalCharacter[1]
-      );
+      text = text.replaceAll(illegalCharacter[0], illegalCharacter[1]);
     }
     return text;
   }

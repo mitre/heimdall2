@@ -7,7 +7,7 @@ export class PasswordChangePipe implements PipeTransform {
     const validators = [
       new RegExp('[a-z]', 'gv'),
       new RegExp('[A-Z]', 'gv'),
-      new RegExp(String.raw`\d`, 'g'),
+      new RegExp(/\d/, 'g'),
       new RegExp(/[^\s\w]/, 'g'),
     ];
 
