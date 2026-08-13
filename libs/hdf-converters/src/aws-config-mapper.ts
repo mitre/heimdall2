@@ -169,11 +169,11 @@ export class AwsConfigMapper {
 
   private async appendResourceNamesToResults(
     completedControlResults: ExecJSON.ControlResult[][],
-    extractedResourceNames: Record<string, string>
+    extractedResourceNames: Map<string, string>
   ) {
     return completedControlResults.map((completedControlResult) =>
       completedControlResult.map((completedControl) => {
-        for (const extractedResourceName in extractedResourceNames) {
+        for (const [extractedResourceName, resourceName] of extractedResourceNames) {
           if (
             completedControl.code_desc.includes(
               JSON.stringify(extractedResourceName)
@@ -184,7 +184,7 @@ export class AwsConfigMapper {
           ) {
             return {
               ...completedControl,
-              code_desc: `${completedControl.code_desc}, resource_name: ${extractedResourceNames[extractedResourceName]}`
+              code_desc: `${completedControl.code_desc}, resource_name: ${resourceName}`
             };
           }
         }
@@ -196,10 +196,13 @@ export class AwsConfigMapper {
   private async extractResourceNamesFromIds(
     evaluationResults: EvaluationResult[]
   ) {
-    // Map of resource types to resource IDs {resourceType: ResourceId[]}
-    const resourceMap: Partial<Record<ResourceType, string[]>> = {};
+    // Maps, not Records: resource types and ids arrive from the AWS
+    // response, and plain-object accumulation is where a hostile key reaches
+    // prototype state ('__proto__' writes hit the setter; `in` walks the
+    // prototype chain).
+    const resourceMap = new Map<ResourceType, string[]>();
     // Map of resource IDs to resource names
-    const resolvedResourcesMap: Record<string, string> = {};
+    const resolvedResourcesMap = new Map<string, string>();
     // Extract resource Ids
     evaluationResults.forEach((result) => {
       const resourceType: ResourceType =
@@ -213,21 +216,18 @@ export class AwsConfigMapper {
         result,
         'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId'
       ) as unknown as string;
-      if (resourceType in resourceMap) {
-        if (
-          !resourceMap[resourceType]?.includes(resourceId) &&
-          typeof resourceId === 'string'
-        ) {
-          resourceMap[resourceType]?.push(resourceId);
+      const existingIds = resourceMap.get(resourceType);
+      if (existingIds) {
+        if (!existingIds.includes(resourceId) && typeof resourceId === 'string') {
+          existingIds.push(resourceId);
         }
       } else {
-        resourceMap[resourceType] = [resourceId];
+        resourceMap.set(resourceType, [resourceId]);
       }
     });
     // Resolve resource names from AWS
-    let resourceType: ResourceType;
-    for (resourceType in resourceMap) {
-      const resourceIDSlices = _.chunk(resourceMap[resourceType], 20);
+    for (const [resourceType, resourceIds] of resourceMap) {
+      const resourceIDSlices = _.chunk(resourceIds, 20);
       for (const slice of resourceIDSlices) {
         await this.delay(150);
         const resources = await this.configService.listDiscoveredResources({
@@ -236,7 +236,7 @@ export class AwsConfigMapper {
         });
         resources.resourceIdentifiers?.forEach((resource) => {
           if (resource.resourceId && resource.resourceName) {
-            resolvedResourcesMap[resource.resourceId] = resource.resourceName;
+            resolvedResourcesMap.set(resource.resourceId, resource.resourceName);
           }
         });
       }
@@ -379,8 +379,7 @@ export class AwsConfigMapper {
   }
 
   private async getControls(): Promise<ExecJSON.Control[]> {
-    let index = 0;
-    return (await this.issues).map((issue: ConfigRule) => {
+    return (await this.issues).map((issue: ConfigRule, index) => {
       const control: ExecJSON.Control = {
         id: issue.ConfigRuleId || '',
         title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${
@@ -395,9 +394,10 @@ export class AwsConfigMapper {
         refs: [],
         source_location: {ref: issue.ConfigRuleArn, line: 1},
         code: '',
-        results: this.results[index]
+        // Parallel array built from the same source: the map callback's own
+        // index addresses it; [] can only occur if the arrays ever diverge.
+        results: this.results.at(index) ?? []
       };
-      index++;
       return control;
     });
   }
