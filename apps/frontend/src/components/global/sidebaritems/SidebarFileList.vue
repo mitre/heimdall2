@@ -53,17 +53,17 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   saving = false;
 
   select_file() {
-    if (this.file.hasOwnProperty('evaluation')) {
+    if (Object.hasOwn(this.file, 'evaluation')) {
       FilteredDataModule.toggle_evaluation(this.file.uniqueId);
-    } else if (this.file.hasOwnProperty('profile')) {
+    } else if (Object.hasOwn(this.file, 'profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
     }
   }
 
   select_file_exclusive() {
-    if (this.file.hasOwnProperty('evaluation')) {
+    if (Object.hasOwn(this.file, 'evaluation')) {
       FilteredDataModule.select_exclusive_evaluation(this.file.uniqueId);
-    } else if (this.file.hasOwnProperty('profile')) {
+    } else if (Object.hasOwn(this.file, 'profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.uniqueId);
     }
   }
@@ -119,7 +119,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       }
     }
     // Add evaluation data to the form
-    if (file.hasOwnProperty('evaluation')) {
+    if (Object.hasOwn(file, 'evaluation')) {
       formData.append(
         'data',
         new Blob([JSON.stringify(_.get(file, 'evaluation.data'))], {
@@ -156,7 +156,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
 
   // gives different icons for a file if it is just a profile
   get icon(): string {
-    if (this.file.hasOwnProperty('profile')) {
+    if (Object.hasOwn(this.file, 'profile')) {
       return 'mdi-note';
     } else {
       return 'mdi-google-analytics';

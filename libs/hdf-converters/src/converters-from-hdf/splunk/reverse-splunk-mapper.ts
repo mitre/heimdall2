@@ -378,7 +378,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       );
       await Promise.all(controlEvents);
     } catch (error) {
-      throw new Error(handleSplunkErrorResponse(error));
+      throw new Error(handleSplunkErrorResponse(error), {cause: error});
     }
   }
 
@@ -411,7 +411,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       );
     } catch (error) {
       throw new Error(
-        `Failed to request indexes - ${handleSplunkErrorResponse(error)}`
+        `Failed to request indexes - ${handleSplunkErrorResponse(error)}`,
+        {cause: error}
       );
     }
 
@@ -448,7 +449,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
           await this.uploadSplunkData(config, targetIndex, splunkData);
         } catch (error) {
           throw new Error(
-            `Failed to upload to Splunk - ${handleSplunkErrorResponse(error)}`
+            `Failed to upload to Splunk - ${handleSplunkErrorResponse(error)}`,
+            {cause: error}
           );
         }
         logger.info(`Successfully uploaded to ${config.index}`);

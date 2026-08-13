@@ -546,7 +546,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                 ): Record<string, unknown> => {
                   const searchFor = ['source', 'references', 'advisories'];
                   const ref = searchFor
-                    .filter((key) => input.hasOwnProperty(key))
+                    .filter((key) => Object.hasOwn(input, key))
                     .map((key) => _.pick(input, key));
                   return {ref: ref};
                 }

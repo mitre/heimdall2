@@ -123,7 +123,7 @@ export default class ProfileData extends Vue {
 
   get file_root_profile(): SourcedContextualizedProfile {
     let result: ContextualizedProfile | undefined;
-    if (this.file.from_file.hasOwnProperty('evaluation')) {
+    if (Object.hasOwn(this.file.from_file, 'evaluation')) {
       result = (
         this.file as SourcedContextualizedEvaluation
       ).from_file.evaluation.contains.find((p) => p.extendedBy.length === 0);
