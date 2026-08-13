@@ -19,7 +19,7 @@ const INSPEC_INPUTS_MAPPING = {
   boolean: 'Boolean',
   any: 'Any'
 };
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['danger', 0.7],
   ['warning', 0.5]
 ]);

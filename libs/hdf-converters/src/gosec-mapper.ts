@@ -11,7 +11,7 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3]

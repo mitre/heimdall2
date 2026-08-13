@@ -14,7 +14,7 @@ const SEVERITY = 'detailedreport.severity';
 const FILE_PATH_VALUE = 'file_paths.file_path.@_.value';
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['5', 0.9],
   ['4', 0.7],
   ['3', 0.5],

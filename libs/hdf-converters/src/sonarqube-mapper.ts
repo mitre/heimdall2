@@ -321,7 +321,7 @@ type Data<T extends SonarqubeVersion> = {
 };
 
 // https://docs.sonarsource.com/sonarqube-server/latest/user-guide/rules/overview/#how-severities-are-assigned
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['blocker', 1.0],
   ['critical', 0.7],
   ['major', 0.5],

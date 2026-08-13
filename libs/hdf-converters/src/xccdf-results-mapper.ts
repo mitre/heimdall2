@@ -15,7 +15,7 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
 } from './utils/global';
 
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
   ['high', 0.7],
   ['medium', 0.5],

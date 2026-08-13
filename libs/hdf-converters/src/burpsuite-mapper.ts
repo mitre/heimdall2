@@ -16,7 +16,7 @@ import {
 } from './utils/global';
 
 // Constant
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3],

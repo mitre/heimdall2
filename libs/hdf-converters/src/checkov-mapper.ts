@@ -84,7 +84,7 @@ type CheckovReport = {
 // Severity is only populated when passing in an API key via --bc-api-key, otherwise it is null
 // Default to medium - treat null/unknown risk as moderate until a formal risk assessment is performed.
 const MEDIUM_SEVERITY = 0.6;
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 1],
   ['high', 0.8],
   ['important', 0.8],

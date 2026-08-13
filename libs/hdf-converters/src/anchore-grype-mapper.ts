@@ -8,7 +8,7 @@ import {
   MappedTransform
 } from './base-converter';
 
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
   ['high', 0.7],
   ['medium', 0.5],

@@ -136,7 +136,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   ioptions: IOptions;
   index?: number;
 
-  impactMapping: Map<number, string> = new Map([
+  impactMapping = new Map<number, string>([
     [0.9, 'CRITICAL'],
     [0.7, 'HIGH'],
     [0.5, 'MEDIUM'],

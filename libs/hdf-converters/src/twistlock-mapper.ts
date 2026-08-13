@@ -12,7 +12,7 @@ import {
   getCCIsForNISTTags
 } from './utils/global';
 
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
   ['important', 0.9],
   ['high', 0.7],

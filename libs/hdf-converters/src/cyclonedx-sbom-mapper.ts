@@ -52,7 +52,7 @@ type DataStorage = {
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 1.0],
   ['high', 0.7],
   ['medium', 0.5],

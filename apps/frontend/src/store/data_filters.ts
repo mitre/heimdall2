@@ -304,8 +304,8 @@ export class FilteredData extends VuexModule {
    */
   get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */
-    const localCache: LRUCache<string, readonly ContextualizedControl[]> =
-      new LRUCache({max: MAX_CACHE_ENTRIES});
+    const localCache =
+      new LRUCache<string, readonly ContextualizedControl[]>({max: MAX_CACHE_ENTRIES});
 
     return (filter: Filter) => {
       // Generate a hash for cache purposes.

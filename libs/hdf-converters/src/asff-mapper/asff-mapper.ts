@@ -20,7 +20,7 @@ import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
 import {getTrivy} from './case-trivy';
 
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['CRITICAL', 0.9],
   ['HIGH', 0.7],
   ['MEDIUM', 0.5],
@@ -107,11 +107,11 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   }
 }
 
-const SPECIAL_CASE_MAPPING: Map<
+const SPECIAL_CASE_MAPPING = new Map<
   SpecialCasing,
   // eslint-disable-next-line @typescript-eslint/ban-types
   Record<string, Function>
-> = new Map([
+>([
   [SpecialCasing.CMSInSpec, getCMSInSpec()],
   [SpecialCasing.FirewallManager, getFirewallManager()],
   [SpecialCasing.GuardDuty, getGuardDuty()],

@@ -13,7 +13,7 @@ import {CciNistMapping} from './mappings/CciNistMapping';
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping';
 
 // Constants
-const IMPACT_MAPPING: Map<string, number> = new Map([
+const IMPACT_MAPPING = new Map<string, number>([
   ['4', 0.9],
   ['3', 0.7],
   ['i', 0.7],
