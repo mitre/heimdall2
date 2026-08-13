@@ -127,13 +127,13 @@ export class ZapMapper extends BaseConverter {
         title: {
           path: 'site.@host',
           transformer: (input: unknown): string => {
-            return `OWASP ZAP Scan of Host: ${input}`;
+            return `OWASP ZAP Scan of Host: ${String(input)}`;
           }
         },
         summary: {
           path: 'site.@host',
           transformer: (input: unknown): string => {
-            return `OWASP ZAP Scan of Host: ${input}`;
+            return `OWASP ZAP Scan of Host: ${String(input)}`;
           }
         },
         supports: [],

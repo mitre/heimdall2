@@ -40,7 +40,7 @@ export function createWinstonLogger(mapperName: string, level = 'debug') {
         format: 'MMM-DD-YYYY HH:mm:ss Z'
       }),
       format.printf(
-        (info) => `[${[info.timestamp]}] ${mapperName} ${info.message}`
+        (info) => `[${String([info.timestamp])}] ${mapperName} ${String(info.message)}`
       )
     )
   });

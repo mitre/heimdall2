@@ -44,7 +44,7 @@ export class NiktoMapper extends BaseConverter {
         summary: {
           path: 'banner',
           transformer: (input: unknown): string => {
-            return `Banner: ${input}`;
+            return `Banner: ${String(input)}`;
           }
         },
         supports: [],

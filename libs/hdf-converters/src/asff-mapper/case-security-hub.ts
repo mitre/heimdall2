@@ -23,7 +23,7 @@ function securityhubSupportingDocs(standards: string[] | undefined) {
     }
   } catch (error) {
     throw new Error(
-      `Invalid supporting docs for Security Hub:\nException: ${error}`
+      `Invalid supporting docs for Security Hub:\nException: ${String(error)}`
     );
   }
   const AWS_CONFIG_MAPPING = new AwsConfigMapping();

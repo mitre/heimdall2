@@ -724,7 +724,7 @@ export class ASFFResults {
         'securityhubSupportingDocs',
         (standards: string[] | undefined) => {
           throw new Error(
-            `supportingDocs function should've been defined: ${standards}`
+            `supportingDocs function should've been defined: ${String(standards)}`
           );
         }
       )(securityhubStandardsJsonArray)

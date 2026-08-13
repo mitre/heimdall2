@@ -337,13 +337,13 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
           ): string | undefined => {
             // Find organization of authors if possible
             const manufacturer = _.has(input, 'manufacturer')
-              ? ` (${(input.manufacturer as Record<string, unknown>).name})`
+              ? ` (${String((input.manufacturer as Record<string, unknown>).name)})`
               : '';
             // Check through every single possible field which may hold ownership over this component
             if (_.has(input, 'authors')) {
               // Join list of component authors
               return (input.authors as Record<string, unknown>[])
-                .map((author) => `${author.name}${manufacturer}`)
+                .map((author) => `${String(author.name)}${manufacturer}`)
                 .join(', ');
             } else if (input.author) {
               // `author` is deprecated in v1.6 but may still appear
@@ -602,12 +602,12 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                       ['group', 'version', 'name']
                     );
                     const group = _.has(selectComponentValues, 'group')
-                      ? `${selectComponentValues.group}/`
+                      ? `${String(selectComponentValues.group)}/`
                       : '';
                     const version = _.has(selectComponentValues, 'version')
-                      ? `@${selectComponentValues.version}`
+                      ? `@${String(selectComponentValues.version)}`
                       : '';
-                    return `Component ${group}${_.get(selectComponentValues, 'name')}${version} is vulnerable`;
+                    return `Component ${group}${String(_.get(selectComponentValues, 'name'))}${version} is vulnerable`;
                   }
                 },
                 message: {
@@ -636,7 +636,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                       .map(([key, value]) => {
                         return Array.isArray(value)
                           ? `\n\n- ${_.capitalize(key)}: ${JSON.stringify(value, null, 2)}`
-                          : `\n\n- ${_.capitalize(key)}: ${value}`;
+                          : `\n\n- ${_.capitalize(key)}: ${String(value)}`;
                       })
                       .join('');
                     return `-Component Summary-${msg}`;

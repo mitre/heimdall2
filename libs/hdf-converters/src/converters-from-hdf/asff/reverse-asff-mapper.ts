@@ -29,13 +29,10 @@ import {
 
 export const TO_ASFF_TYPES_SLASH_REPLACEMENT = '{{{SLASH}}}'; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
 
-export function escapeForwardSlashes<T>(s: T): T {
+export function escapeForwardSlashes(s: unknown): string {
   return _.isString(s)
-    ? (s.replaceAll('/', TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
-    : (JSON.stringify(s).replaceAll(
-        '/',
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      ) as unknown as T);
+    ? s.replaceAll('/', TO_ASFF_TYPES_SLASH_REPLACEMENT)
+    : JSON.stringify(s).replaceAll('/', TO_ASFF_TYPES_SLASH_REPLACEMENT);
 }
 
 export type SegmentedControl = ExecJSON.Control & {
@@ -243,7 +240,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     if (size > SIZE_CAP) {
       console.error(
         `Warning: Normalized entry could not be sufficiently reduced in size to meet AWS Security Hub requirements and so will not be provided in the results set.  Entry could not be minimized more than as follows:
-            ${finding}`
+            ${JSON.stringify(finding, null, 2)}`
       );
       if (finding.Id === profileInfoFindingId) {
         console.error(
@@ -312,7 +309,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     ) {
       console.error(
         `Warning: Normalized entry contained data that is duplicated (i.e. a subsection of a string by happenstance has the same values) which means this entry does not meet AWS Security Hub requirements and so will not be provided in the results set.  Entry that contains duplicate data is as follows:
-            ${finding}`
+            ${JSON.stringify(finding, null, 2)}`
       );
       if (finding.Id === profileInfoFindingId) {
         console.error(

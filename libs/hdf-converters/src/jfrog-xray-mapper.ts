@@ -59,7 +59,7 @@ function formatCodeDesc(vulnerability: unknown): string {
   const re = /,/gi;
   if (_.has(vulnerability, 'source_comp_id')) {
     codeDescArray.push(
-      `source_comp_id : ${_.get(vulnerability, 'source_comp_id')}`
+      `source_comp_id : ${String(_.get(vulnerability, 'source_comp_id'))}`
     );
   } else {
     codeDescArray.push('source_comp_id : ');
@@ -83,12 +83,14 @@ function formatCodeDesc(vulnerability: unknown): string {
     codeDescArray.push('fixed_versions : ');
   }
   if (_.has(vulnerability, 'issue_type')) {
-    codeDescArray.push(`issue_type : ${_.get(vulnerability, 'issue_type')}`);
+    codeDescArray.push(
+      `issue_type : ${String(_.get(vulnerability, 'issue_type'))}`
+    );
   } else {
     codeDescArray.push('issue_type : ');
   }
   if (_.has(vulnerability, 'provider')) {
-    codeDescArray.push(`provider : ${_.get(vulnerability, 'provider')}`);
+    codeDescArray.push(`provider : ${String(_.get(vulnerability, 'provider'))}`);
   } else {
     codeDescArray.push('provider : ');
   }

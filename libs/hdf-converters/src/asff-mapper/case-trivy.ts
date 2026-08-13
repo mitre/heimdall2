@@ -5,9 +5,11 @@ import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from '../utils/global';
 
 function findingId(finding: unknown): string {
   const generatorId = _.get(finding, 'GeneratorId');
-  const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
+  // lodash types _.get on unknown input as undefined, which the typeof
+  // guard below would narrow to never; unknown lets it narrow to string.
+  const cveId: unknown = _.get(finding, 'Resources[0].Details.Other.CVE ID');
   if (typeof cveId === 'string') {
-    return encode(`${generatorId}/${cveId}`);
+    return encode(`${String(generatorId)}/${cveId}`);
   } else {
     const id = _.get(finding, 'Id');
     return encode(`${generatorId}/${id}`);
@@ -15,7 +17,9 @@ function findingId(finding: unknown): string {
 }
 
 function findingNistTag(finding: unknown): string[] {
-  const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
+  // lodash types _.get on unknown input as undefined, which the typeof
+  // guard below would narrow to never; unknown lets it narrow to string.
+  const cveId: unknown = _.get(finding, 'Resources[0].Details.Other.CVE ID');
   if (typeof cveId === 'string') {
     return DEFAULT_UPDATE_REMEDIATION_NIST_TAGS;
   } else {
@@ -28,7 +32,9 @@ function subfindingsStatus(): ExecJSON.ControlResultStatus {
 }
 
 function subfindingsMessage(finding: unknown): string | undefined {
-  const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
+  // lodash types _.get on unknown input as undefined, which the typeof
+  // guard below would narrow to never; unknown lets it narrow to string.
+  const cveId: unknown = _.get(finding, 'Resources[0].Details.Other.CVE ID');
   if (typeof cveId === 'string') {
     const patchedPackage = _.get(
       finding,

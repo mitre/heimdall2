@@ -32,7 +32,7 @@ function formatCodeDesc(issue: unknown): string {
   const text = [];
   if (_.has(issue, 'host.ip') && _.has(issue, 'host.text')) {
     text.push(
-      `Host: ip: ${_.get(issue, 'host.ip')}, url: ${_.get(issue, 'host.text')}`
+      `Host: ip: ${String(_.get(issue, 'host.ip'))}, url: ${String(_.get(issue, 'host.text'))}`
     );
   } else {
     text.push('Host: ip: , url: ');

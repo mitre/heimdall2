@@ -69,7 +69,7 @@ export class TwistlockMapper extends BaseConverter {
             const projectName = Array.isArray(projectArr)
               ? projectArr.join(' / ')
               : projectArr;
-            return `Twistlock Project: ${projectName}`;
+            return `Twistlock Project: ${String(projectName)}`;
           }
         },
         summary: {

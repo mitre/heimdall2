@@ -79,7 +79,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
             path: 'vulnerability.fix',
             transformer: (data: Record<string, unknown>): string =>
               data.state == 'fixed'
-                ? `vulnerability is ${_.get(data, 'state')} for versions ${(_.get(data, 'versions') as string[]).join(', ')}`
+                ? `vulnerability is ${String(_.get(data, 'state'))} for versions ${(_.get(data, 'versions') as string[]).join(', ')}`
                 : `vulnerability is not known to be fixed in any versions`
           },
           label: 'fix'
@@ -119,7 +119,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
       source_location: {},
       title: {
         transformer: (data: Record<string, unknown>): string =>
-          `Grype found a vulnerability to ${_.get(data, 'vulnerability.id')} in ${_.get(this.metadata, 'source.target.userInput') as string}`
+          `Grype found a vulnerability to ${String(_.get(data, 'vulnerability.id'))} in ${_.get(this.metadata, 'source.target.userInput') as string}`
       },
       id: {
         transformer: idTransformer
@@ -193,7 +193,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
               ...this.controlMatches(
                 'wrapper.matches',
                 (data: Record<string, unknown>): string =>
-                  `Grype/${_.get(data, 'vulnerability.id')}`,
+                  `Grype/${String(_.get(data, 'vulnerability.id'))}`,
                 impactMapping(IMPACT_MAPPING),
                 (data: Record<string, unknown>): string =>
                   `${JSON.stringify(_.get(data, 'artifact'), null, 2)}`
@@ -203,7 +203,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
               ...this.controlMatches(
                 'wrapper.ignoredMatches',
                 (data: Record<string, unknown>): string =>
-                  `Grype-Ignored-Match/${_.get(data, 'vulnerability.id')}`,
+                  `Grype-Ignored-Match/${String(_.get(data, 'vulnerability.id'))}`,
                 () => 0,
                 (data: Record<string, unknown>): string =>
                   `This finding is ignored due to the following applied ignored rules:\n${JSON.stringify(_.get(data, 'appliedIgnoreRules'), null, 2)}\nArtifact Information:\n${JSON.stringify(_.get(data, 'artifact'), null, 2)}`

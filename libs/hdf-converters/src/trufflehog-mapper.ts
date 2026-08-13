@@ -47,7 +47,7 @@ export class TrufflehogMapper extends BaseConverter {
         name: {
           path: 'wrapper[0]',
           transformer: (data: Record<string, unknown>): string =>
-            `Source ID: ${_.get(data, 'SourceID')}, Source Name: ${_.get(data, 'SourceName')}`
+            `Source ID: ${String(_.get(data, 'SourceID'))}, Source Name: ${String(_.get(data, 'SourceName'))}`
         },
         title: {path: 'wrapper[0].SourceName'},
         supports: [],
@@ -67,11 +67,11 @@ export class TrufflehogMapper extends BaseConverter {
             source_location: {},
             title: {
               transformer: (data: Record<string, unknown>): string =>
-                `Found ${_.get(data, 'DetectorName')} secret using ${_.get(data, 'DecoderName')} decoder`
+                `Found ${String(_.get(data, 'DetectorName'))} secret using ${String(_.get(data, 'DecoderName'))} decoder`
             },
             id: {
               transformer: (data: Record<string, unknown>): string =>
-                `${_.get(data, 'DetectorName')} ${_.get(data, 'DecoderName')}`
+                `${String(_.get(data, 'DetectorName'))} ${String(_.get(data, 'DecoderName'))}`
             },
             impact: 0.5,
             results: [

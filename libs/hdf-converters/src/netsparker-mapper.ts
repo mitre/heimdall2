@@ -56,7 +56,7 @@ function formatControlDesc(vulnerability: unknown): string {
   }
   const exploitationSkills = _.get(vulnerability, 'exploitation-skills');
   if (exploitationSkills) {
-    text.push(`Exploitation-skills: ${exploitationSkills}`);
+    text.push(`Exploitation-skills: ${String(exploitationSkills)}`);
   }
   const extraInformation = _.get(vulnerability, 'extra-information');
   if (extraInformation) {
@@ -75,27 +75,27 @@ function formatControlDesc(vulnerability: unknown): string {
   }
   const impact = _.get(vulnerability, 'impact');
   if (impact) {
-    text.push(`Impact: ${impact}`);
+    text.push(`Impact: ${String(impact)}`);
   }
   const firstSeenDate = _.get(vulnerability, 'FirstSeenDate');
   if (firstSeenDate) {
-    text.push(`FirstSeenDate: ${firstSeenDate}`);
+    text.push(`FirstSeenDate: ${String(firstSeenDate)}`);
   }
   const lastSeenDate = _.get(vulnerability, 'LastSeenDate');
   if (lastSeenDate) {
-    text.push(`LastSeenDate: ${lastSeenDate}`);
+    text.push(`LastSeenDate: ${String(lastSeenDate)}`);
   }
   const certainty = _.get(vulnerability, 'certainty');
   if (certainty) {
-    text.push(`Certainty: ${certainty}`);
+    text.push(`Certainty: ${String(certainty)}`);
   }
   const type = _.get(vulnerability, 'type');
   if (type) {
-    text.push(`Type: ${type}`);
+    text.push(`Type: ${String(type)}`);
   }
   const confirmed = _.get(vulnerability, 'confirmed');
   if (confirmed) {
-    text.push(`Confirmed: ${confirmed}`);
+    text.push(`Confirmed: ${String(confirmed)}`);
   }
   return text.join('<br>');
 }
@@ -103,11 +103,11 @@ function formatCheck(vulnerability: unknown): string {
   const text: string[] = [];
   const exploitationSkills = _.get(vulnerability, 'exploitation-skills');
   if (exploitationSkills) {
-    text.push(`Exploitation-skills: ${exploitationSkills}`);
+    text.push(`Exploitation-skills: ${String(exploitationSkills)}`);
   }
   const proofOfConcept = _.get(vulnerability, 'proof-of-concept');
   if (proofOfConcept) {
-    text.push(`Proof-of-concept: ${proofOfConcept}`);
+    text.push(`Proof-of-concept: ${String(proofOfConcept)}`);
   }
   return parseHtml(text.join('<br>'));
 }
@@ -115,15 +115,15 @@ function formatFix(vulnerability: unknown): string {
   const text: string[] = [];
   const remedialActions = _.get(vulnerability, 'remedial-actions');
   if (remedialActions) {
-    text.push(`Remedial-actions: ${remedialActions}`);
+    text.push(`Remedial-actions: ${String(remedialActions)}`);
   }
   const remedialProcedure = _.get(vulnerability, 'remedial-procedure');
   if (remedialProcedure) {
-    text.push(`Remedial-procedure: ${remedialProcedure}`);
+    text.push(`Remedial-procedure: ${String(remedialProcedure)}`);
   }
   const remedyReferences = _.get(vulnerability, 'remedy-references');
   if (remedyReferences) {
-    text.push(`Remedy-references: ${remedyReferences}`);
+    text.push(`Remedy-references: ${String(remedyReferences)}`);
   }
   return text.join('<br>');
 }

@@ -151,7 +151,7 @@ export class FortifyMapper extends BaseConverter {
         summary: {
           path: 'FVDL.UUID',
           transformer: (uuid: unknown): string => {
-            return `Fortify Static Analyzer Scan of UUID: ${uuid}`;
+            return `Fortify Static Analyzer Scan of UUID: ${String(uuid)}`;
           }
         },
         supports: [],
@@ -229,9 +229,8 @@ export class FortifyMapper extends BaseConverter {
         stopNodes: ['FVDL.Description.Abstract', 'FVDL.Description.Explanation']
       })
     );
-    this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
-      this.data,
-      'FVDL.CreatedTS.time'
+    this.startTime = `${String(_.get(this.data, 'FVDL.CreatedTS.date'))} ${String(
+      _.get(this.data, 'FVDL.CreatedTS.time')
     )}`;
     this.withRaw = withRaw;
   }
