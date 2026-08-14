@@ -250,8 +250,12 @@ export function createNote(segment: ExecJSON.ControlResult) {
 }
 
 function cleanObjectValues<T>(value: T): boolean {
+  // Arrays are never dropped. The original test was `value.length < 0`, which
+  // can never be true; this states that outcome without the impossible
+  // comparison. Whether an EMPTY array should be dropped changes emitted ASFF
+  // and its fixtures, so it is heimdall2-puf rather than a decision made here.
   if (Array.isArray(value)) {
-    return value.length < 0;
+    return false;
   }
   return !value;
 }

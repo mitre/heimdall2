@@ -16,7 +16,7 @@ export type Attestation = Omit<AttestationData, 'status'> & {
 // a number followed by d/w/m/y, with or without spaces in between
 // 10 character limit on number of digits and characters to prevent security issues with regex
 const UPDATE_FREQUENCY_PATTERN =
-  /(?<number>\d{1,10}(?:.\d{0,10})?)\s{0,10}(?<unit>[a-z])/;
+  /(?<number>\d{1,10}(?:\.\d{0,10})?)\s{0,10}(?<unit>[a-z])/;
 
 export function advanceDate(
   date: moment.Moment,

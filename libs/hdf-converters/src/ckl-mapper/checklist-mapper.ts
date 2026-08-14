@@ -203,7 +203,10 @@ const FINDING_DETAILS_PATTERN =
 
 // Comment sections look like "LABEL :: text", one per line.
 const COMMENT_SECTION_SEPARATOR = /\n(?=[A-Z]+ ::)/;
-const COMMENT_PATTERN = /(?<label>[A-Z]+) :: (?<data>.+)/s;
+// Anchored: the separator above splits immediately before each label, so a
+// section's label is always at its start. Searching for one further in would
+// rescan every position of a section that has none.
+const COMMENT_PATTERN = /^(?<label>[A-Z]+) :: (?<data>.+)/s;
 
 function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const findings = input as unknown as ExecJSON.ControlResult[];
