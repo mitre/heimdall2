@@ -439,6 +439,19 @@ export default defineConfig([
     },
   },
   {
+    // These URLs are data, not endpoints this project calls. The ZAP fixtures
+    // pass a scanned host through the mapper and compare against stored
+    // output, so changing the scheme changes the expected result; and the
+    // CycloneDX schema identifier is http in the upstream specification, which
+    // is what the type mirrors.
+    files: ['libs/hdf-converters/test/**', 'libs/hdf-converters/types/**'],
+    name: 'unicorn/fixture-and-schema-urls',
+    plugins: { unicorn },
+    rules: {
+      'unicorn/prefer-https': 'off',
+    },
+  },
+  {
     // import-x/no-named-as-default-member cautions that `plugin.configs` may
     // not survive some CJS/ESM interop paths. In this file the pattern
     // (`tseslint.configs...`, `yml.configs...`) is the flat-config idiom every
@@ -463,6 +476,23 @@ export default defineConfig([
     rules: {
       'unicorn/prefer-await': 'off',
       'unicorn/prefer-top-level-await': 'off',
+    },
+  },
+  {
+    // Vue 2 installs plugins by calling Vue.use() at module scope, and it must
+    // run before the Router and Store instances these modules construct and
+    // export. Registering the global navigation guard is likewise what
+    // router.ts is FOR. The side effect is the module's purpose here, not an
+    // accident of one; the rest of the frontend keeps the rule.
+    files: [
+      'apps/frontend/src/router.ts',
+      'apps/frontend/src/store/store.ts',
+      'apps/frontend/src/components/global/upload-tabs/FileReader.vue',
+    ],
+    name: 'unicorn/vue-plugin-installation',
+    plugins: { unicorn },
+    rules: {
+      'unicorn/no-top-level-side-effects': 'off',
     },
   },
   {
