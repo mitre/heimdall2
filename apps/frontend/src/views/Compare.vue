@@ -361,15 +361,16 @@ export default class Compare extends Vue {
   }
 
   get show_sets(): [string, ControlSeries][] {
-    const sets: [string, ControlSeries][] = [
-      ...(this.changedOnly ? this.delta_sets : this.searched_sets)
-    ];
+    // toSorted copies, so the old protective spread of the source is gone
+    const sets: [string, ControlSeries][] = this.changedOnly
+      ? this.delta_sets
+      : this.searched_sets;
     let searchModifier = -1;
 
     if (this.ascending) {
       searchModifier = 1;
     }
-    return sets.sort(
+    return sets.toSorted(
       ([a, _seriesA], [b, _seriesB]) => a.localeCompare(b) * searchModifier
     );
   }

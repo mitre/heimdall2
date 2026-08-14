@@ -100,7 +100,7 @@ export default class ExportNIST extends Vue {
     });
 
     // Sort them
-    nistControls = nistControls.sort((a, b) => a.localCompare(b));
+    nistControls = nistControls.toSorted((a, b) => a.localCompare(b));
 
     // Turn to strings
     const asStringsMostly = nistControls.map((c) => this.format_tag(c));

@@ -68,7 +68,7 @@ abstract class HDFControl10 implements HDFControl {
     });
 
     // Sort the tags
-    parsedNistTags = parsedNistTags.sort((a, b) => a.localCompare(b));
+    parsedNistTags = parsedNistTags.toSorted((a, b) => a.localCompare(b));
 
     // Stub if necessary
     if (parsedNistTags.length === 0) {

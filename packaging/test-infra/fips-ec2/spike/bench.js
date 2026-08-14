@@ -12,7 +12,7 @@ const os = require('node:os');
 
 const ITER = Number(process.env.BENCH_ITER || 600_000);
 const pct = (a, p) => {
-  const s = [...a].sort((x, y) => x - y);
+  const s = a.toSorted((x, y) => x - y);
   return s[Math.min(s.length - 1, Math.floor((p / 100) * s.length))];
 };
 const pbkdf2Timed = (pw) =>

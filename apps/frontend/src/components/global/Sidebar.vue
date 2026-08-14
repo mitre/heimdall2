@@ -85,14 +85,15 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // get all visible (uploaded) evaluation files
   get visible_evaluation_files(): EvaluationFile[] {
+    // toSorted: sorting in place here silently reordered the store's array
     const files = InspecDataModule.allEvaluationFiles;
-    return files.sort((a, b) => a.filename.localeCompare(b.filename));
+    return files.toSorted((a, b) => a.filename.localeCompare(b.filename));
   }
 
   // get all visible (uploaded) profile files
   get visible_profile_files(): ProfileFile[] {
     const files = InspecDataModule.allProfileFiles;
-    return files.sort((a, b) => a.filename.localeCompare(b.filename));
+    return files.toSorted((a, b) => a.filename.localeCompare(b.filename));
   }
 
   get all_evaluations_selected(): Trinary {

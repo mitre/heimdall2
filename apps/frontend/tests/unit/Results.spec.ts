@@ -120,14 +120,14 @@ describe('Datatable', () => {
         }
       ).items
         .map((item: ListElt) => item.control.data.id)
-        .sort()
+        .toSorted()
     ).toEqual(
       FilteredDataModule.controls({
         fromFile: FilteredDataModule.selected_file_ids,
         omit_overlayed_controls: true
       })
         .map((c) => c.data.id)
-        .sort()
+        .toSorted()
     );
   });
 

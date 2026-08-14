@@ -6,7 +6,7 @@ export function list_files(dirPath: string) {
   const result = fs.readdirSync(dirPath);
 
   // Sort by filename
-  return result.sort();
+  return result.toSorted();
 }
 
 export interface FileResult {

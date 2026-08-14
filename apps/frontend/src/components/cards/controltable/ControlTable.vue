@@ -427,7 +427,7 @@ export default class ControlTable extends Vue {
     }
 
     if (sort === true) {
-      items = items.sort((a, b) => cmp(a, b) * factor);
+      items = items.toSorted((a, b) => cmp(a, b) * factor);
     }
 
     return items;
