@@ -618,10 +618,11 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     let action = 'none';
     if (this.pagination.itemsPerPage < this.itemsPerPageShowing) {
       action = 'slice';
-    } else if (this.pagination.itemsPerPage > this.itemsPerPageShowing) {
-      if (this.itemsPerPageShowing <= this.evaluationsCount) {
-        action = 'query';
-      }
+    } else if (
+      this.pagination.itemsPerPage > this.itemsPerPageShowing &&
+      this.itemsPerPageShowing <= this.evaluationsCount
+    ) {
+      action = 'query';
     }
 
     return action;

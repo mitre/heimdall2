@@ -106,11 +106,7 @@ export default class ExportASFFModal extends Vue {
   }
 
   get exportDisabled() {
-    if (this.awsAccountId && this.target && this.region) {
-      return false;
-    } else {
-      return true;
-    }
+    return !(this.awsAccountId && this.target && this.region);
   }
 
   openRegionDocumentation() {

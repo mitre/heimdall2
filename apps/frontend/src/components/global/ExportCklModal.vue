@@ -369,7 +369,7 @@ export default class ExportCKLModal extends Vue {
 
   @Watch('showingModal')
   onModalChange(newState: boolean) {
-    if (newState === false) {
+    if (!newState) {
       this.closeModal();
     }
   }

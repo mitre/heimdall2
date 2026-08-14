@@ -56,7 +56,7 @@ export class AppInfo extends VuexModule implements IAppInfoState {
   // (see router.ts); the action itself completes its work before resolving.
   @Action
   public async CheckForUpdates() {
-    if (this.checkedForUpdates === false) {
+    if (!this.checkedForUpdates) {
       try {
         // Call axios.create() to skip the default interceptors setup in main.ts
         const {data} = await axios.create().get<{name: string}[]>(

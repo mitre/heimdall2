@@ -57,19 +57,20 @@ function formatRecommendations(input: Record<string, unknown>): string {
       );
     }
   }
-  if (_.has(input, 'recommendations.para.bulletitem')) {
-    if (Array.isArray(_.get(input, `recommendations.para.bulletitem`))) {
-      text.push(
-        ...(
-          _.get(input, `recommendations.para.bulletitem`) as Record<
-            string,
-            unknown
-          >[]
-        ).map(
-          (value: Record<string, unknown>) => _.get(value, '@_.text') as string
-        )
-      );
-    }
+  if (
+    _.has(input, 'recommendations.para.bulletitem') &&
+    Array.isArray(_.get(input, `recommendations.para.bulletitem`))
+  ) {
+    text.push(
+      ...(
+        _.get(input, `recommendations.para.bulletitem`) as Record<
+          string,
+          unknown
+        >[]
+      ).map(
+        (value: Record<string, unknown>) => _.get(value, '@_.text') as string
+      )
+    );
   }
   return text.join('\n');
 }

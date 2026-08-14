@@ -2,19 +2,21 @@
 
 // Export types and helper functions
 export {
-  ControlStatus,
   controlStatuses,
+  convertImpactToSeverity,
+  hdfWrapControl,
+  lowercasedControlStatuses,
+  severities,
+  titleCasedSeverities
+} from './compat_wrappers';
+export type {
+  ControlStatus,
   HDFControl,
   HDFControlSegment,
-  hdfWrapControl,
   LowercasedControlStatus,
-  lowercasedControlStatuses,
   SegmentStatus,
-  severities,
   Severity,
-  titleCasedSeverities,
-  TitleCasedSeverity,
-  convertImpactToSeverity
+  TitleCasedSeverity
 } from './compat_wrappers';
 // Export Conversion functions
 export * from './context';

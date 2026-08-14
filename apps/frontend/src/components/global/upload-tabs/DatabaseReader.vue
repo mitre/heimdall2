@@ -140,7 +140,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
 
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
-    if (newRefreshValue === true) {
+    if (newRefreshValue) {
       // Whenever refresh is set to true, call refresh on the database results.
       // Fire-and-forget: HTTP failures surface via the interceptor snackbar.
       void this.get_all_results();

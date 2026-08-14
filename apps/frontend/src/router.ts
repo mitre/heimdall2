@@ -87,17 +87,20 @@ router.beforeEach(async (to, _, next) => {
   {
     // Deliberately unawaited: best-effort update check.
     void AppInfoModule.CheckForUpdates();
-    if (to.matched.some((record) => record.meta.requiresAuth)) {
-      if (ServerModule.serverMode && !ServerModule.token) {
-        next('/login');
-        return;
-      }
+    if (
+      to.matched.some((record) => record.meta.requiresAuth) &&
+      ServerModule.serverMode &&
+      !ServerModule.token
+    ) {
+      next('/login');
+      return;
     }
-    if (to.matched.some((record) => record.meta.requiresAdmin)) {
-      if (ServerModule.userInfo.role !== 'admin') {
-        next('/');
-        return;
-      }
+    if (
+      to.matched.some((record) => record.meta.requiresAdmin) &&
+      ServerModule.userInfo.role !== 'admin'
+    ) {
+      next('/');
+      return;
     }
     if (to.params.id && to.params.id !== 'all') {
       // Deliberately unawaited prefetch: the results view watches the store's

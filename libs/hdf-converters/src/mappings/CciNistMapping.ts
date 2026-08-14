@@ -60,13 +60,7 @@ export class CciNistTwoWayMapper {
     const alwaysArray = new Set(['cci_item', 'reference']);
     const options = {
       ignoreAttributes: false,
-      isArray: (tagName: string) => {
-        if (alwaysArray.has(tagName)) {
-          return true;
-        } else {
-          return false;
-        }
-      }
+      isArray: (tagName: string) => alwaysArray.has(tagName)
     };
     const parser = new XMLParser(options);
     this.data = parser.parse(CCI_List);

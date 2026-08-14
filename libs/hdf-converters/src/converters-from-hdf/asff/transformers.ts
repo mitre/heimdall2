@@ -265,7 +265,7 @@ export function createCode(
   return `=========================================================\n# Profile name: ${
     String(control.profileInfo?.name)
   }\n=========================================================\n\n${
-    control.code ? control.code?.replaceAll('\\"', '"') : noCodeValue
+    control.code ? control.code?.replaceAll(String.raw`\"`, '"') : noCodeValue
   }`;
 }
 

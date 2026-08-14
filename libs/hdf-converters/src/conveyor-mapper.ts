@@ -106,7 +106,7 @@ function createDescription(
       heuristic_heur_id:${_.get(data, 'heuristic.heur_id') as string}
       heuristic_score:${_.get(data, 'heuristic.score') as string}
       heuristic_name:${_.get(data, 'heuristic.name') as string}`.replace(
-        '\\"',
+        String.raw`\"`,
         ''
       );
     } else if (scannerName === CODE_QUALITY_SCANNER) {
@@ -114,9 +114,9 @@ function createDescription(
       body_format:${_.get(data, 'body_format') as string}
       classificaton:${_.get(data, 'classification') as string}
       depth:${_.get(data, 'depth') as string}
-      title_text:${_.get(data, 'title_text') as string}`.replace('\\"', '');
+      title_text:${_.get(data, 'title_text') as string}`.replace(String.raw`\"`, '');
     } else {
-      return JSON.stringify(data).replace('\\"', '');
+      return JSON.stringify(data).replace(String.raw`\"`, '');
     }
   };
   return {

@@ -225,20 +225,14 @@ export function parse_nist(rawNist: string): ParseNist {
 export function is_control(
   x: NistControl | NistRevision | null
 ): x is NistControl {
-  if (x && (x as NistControl).subSpecifiers !== undefined) {
-    return true;
-  }
-  return false;
+  return Boolean(x) && (x as NistControl).subSpecifiers !== undefined;
 }
 
 /** Simple discriminators */
 export function is_revision(
   x: NistControl | NistRevision | null
 ): x is NistRevision {
-  if (x && (x as NistRevision).revNum !== undefined) {
-    return true;
-  }
-  return false;
+  return Boolean(x) && (x as NistRevision).revNum !== undefined;
 }
 
 /** All a control in a nist hash really needs is a status */
