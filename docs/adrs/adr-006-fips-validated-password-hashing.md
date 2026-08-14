@@ -322,19 +322,36 @@ the hash. Hence:
 - `apps/backend/src/crypto/crypto.module.ts` — **required**: `ConfigModule` is
   *not* `@Global()` **[V]**.
 
+**As built (2026-08-14).** §10 and §12 added their own files to the same module;
+this is the current layout, and `crypto.module.ts` is self-contained (it provides
+the models and the gate service) so DI changes do not ripple through spec modules:
+
+- `fips.ts` — §10's `assertFipsMode`, with the same injectable-`getFips` seam.
+- `hash-write-decision.ts` — §12's derived write gate and
+  `SUPPORTED_HASH_MARKER_VERSION`, the write **epoch** integer. It is deliberately
+  not a package version: those are unreliable here (root is `0.0.0`, backend and
+  frontend skew) and semver strings compare wrongly as text.
+- `hash-write-gate.service.ts` — plants the marker via `findOrCreate` on the first
+  PBKDF2 write (§12 mechanism 2) and implements mechanism 3's refusal to start when
+  the database records an epoch newer than this build understands.
+- `hash-migration-marker.model.ts` — the marker row itself; the migration is
+  `apps/backend/migrations/20260810133411-create-hash-migration-marker.js`.
+
 ```ts
+// Declared with `type`, not `interface` — the lint config enforces
+// @typescript-eslint/consistent-type-definitions: 'type'.
 export type PasswordHashAlgorithm = 'sha256' | 'sha384' | 'sha512';
 
-export interface PasswordHashOptions {
+export type PasswordHashOptions = {
   algorithm?: PasswordHashAlgorithm;   // default 'sha512'
   iterations?: number;                 // default 600000
-}
+};
 
-export interface PasswordVerifyResult {
+export type PasswordVerifyResult = {
   valid: boolean;
   needsRehash: boolean;                // required, always present
   requiresReset?: boolean;             // bcrypt encountered while FIPS on
-}
+};
 
 export function hashPassword(
   password: string,
@@ -346,6 +363,13 @@ export function verifyPassword(args: {
   password: string;
   getFips?: () => number;              // default crypto.getFips — INJECTABLE
 }): Promise<PasswordVerifyResult>;
+
+// Also exported as built (2026-08-14):
+//   hashPasswordWithSalt(...)   — deterministic-salt form, for the §6 validation
+//                                 vectors and libs/password-hash-vectors
+//   configureKdfLimiter(...)    — bounds concurrent PBKDF2 work (§7); at 600k
+//                                 iterations an unbounded queue is a DoS surface
+//   kdfLimiterState()           — {active, queued}, read by §17's health detail
 ```
 
 **`getFips` must be injectable.** §10's `assertFipsMode` already is; without the
