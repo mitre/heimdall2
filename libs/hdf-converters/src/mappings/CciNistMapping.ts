@@ -57,11 +57,11 @@ export class CciNistTwoWayMapper {
   data: CciNistData;
 
   constructor() {
-    const alwaysArray = ['cci_item', 'reference'];
+    const alwaysArray = new Set(['cci_item', 'reference']);
     const options = {
       ignoreAttributes: false,
       isArray: (tagName: string) => {
-        if (alwaysArray.includes(tagName)) {
+        if (alwaysArray.has(tagName)) {
           return true;
         } else {
           return false;

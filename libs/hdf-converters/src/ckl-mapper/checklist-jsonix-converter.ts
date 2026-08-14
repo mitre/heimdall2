@@ -491,14 +491,14 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   expandVulns(checklistVuln: ChecklistVuln): StigdatumElement[] {
-    const separateElementNames: string[] = ['CciRef', 'IAControls', 'LegacyID'];
+    const separateElementNames = new Set(['CciRef', 'IAControls', 'LegacyID']);
     const stigdata: StigdatumElement[] = [];
     for (const [attributeName, data] of Object.entries(checklistVuln)) {
       const keyFoundInVulnattribute: string | undefined = Object.keys(
         Vulnattribute
       ).find((key) => key.toLowerCase() === attributeName.toLowerCase());
       if (keyFoundInVulnattribute) {
-        if (separateElementNames.includes(keyFoundInVulnattribute)) {
+        if (separateElementNames.has(keyFoundInVulnattribute)) {
           const dataStrings = data?.toString().split(MULTI_VALUE_SEPARATOR) ?? [];
           for (const dataString of dataStrings) {
             stigdata.push({

@@ -16,11 +16,11 @@ enum scannerType {
 }
 
 // Enum values widened to strings for comparison with scan-supplied names.
-const FULL_DESC_SCANNERS: string[] = [
+const FULL_DESC_SCANNERS = new Set<string>([
   scannerType.Moldy,
   scannerType.Stigma,
   scannerType.ClamAV
-];
+]);
 const CODE_QUALITY_SCANNER: string = scannerType.CodeQuality;
 
 /*
@@ -97,9 +97,7 @@ function createDescription(
   endTime: string
 ): Record<string, unknown> {
   const desc = () => {
-    if (
-      FULL_DESC_SCANNERS.includes(scannerName)
-    ) {
+    if (FULL_DESC_SCANNERS.has(scannerName)) {
       return `title_text:${_.get(data, 'title_text') as string}
       body:${String(_.get(data, 'body'))}
       body_format:${_.get(data, 'body_format') as string}

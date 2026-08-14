@@ -118,7 +118,7 @@ export class FromHDFToXCCDFMapper {
   }
 
   getControlInfo(control: ExecJSON.Control) {
-    const knownDescriptions = [
+    const knownDescriptions = new Set([
       'default',
       'check',
       'fix',
@@ -130,7 +130,7 @@ export class FromHDFToXCCDFMapper {
       'satisfies',
       'fix_id',
       'documentable'
-    ];
+    ]);
 
     return {
       groupId:
@@ -155,7 +155,7 @@ export class FromHDFToXCCDFMapper {
         '',
       documentable: control.tags.documentable || false,
       descriptions: arrayifyObjectDescriptions(control.descriptions).filter(
-        (description) => !knownDescriptions.includes(description.label)
+        (description) => !knownDescriptions.has(description.label)
       ),
       waiver: control.waiver_data ? JSON.stringify(control.waiver_data) : '',
       checkContent:
@@ -163,7 +163,7 @@ export class FromHDFToXCCDFMapper {
         control.tags.check ||
         '',
       tags: Object.entries(control.tags)
-        .filter(([key]) => !knownDescriptions.includes(key))
+        .filter(([key]) => !knownDescriptions.has(key))
         .map(([key, value]) => `${key}: ${value}`),
       code: control.code || '',
       fixid: control.tags.fix_id,

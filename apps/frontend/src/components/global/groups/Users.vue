@@ -208,11 +208,11 @@ export default class Users extends Vue {
 
   // Filter out users that are already in the group from the user search
   get availableUsers(): IVuetifyItems[] {
-    const currentUserIds: string[] = this.currentUsers.map((user) => user.id);
+    const currentUserIds = new Set(this.currentUsers.map((user) => user.id));
     const users: IVuetifyItems[] = [];
     for (const user of ServerModule.allUsers) {
       if (
-        !currentUserIds.includes(user.id) &&
+        !currentUserIds.has(user.id) &&
         (user.id !== ServerModule.userInfo.id || this.admin || !this.create)
       ) {
         users.push({

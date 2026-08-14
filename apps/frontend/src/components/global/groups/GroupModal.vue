@@ -116,7 +116,6 @@ import {
   IUpdateGroupUser
 } from '@heimdall/common/interfaces';
 import axios, {AxiosResponse} from 'axios';
-import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -155,7 +154,7 @@ export default class GroupModal extends Vue {
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
   dialog = false;
   changePassword = false;
-  groupInfo: IGroup = _.cloneDeep(this.group);
+  groupInfo: IGroup = structuredClone(this.group);
 
   currentPassword = '';
   newPassword = '';
@@ -222,7 +221,7 @@ export default class GroupModal extends Vue {
 
   cancel(): void {
     this.dialog = false;
-    this.groupInfo = _.cloneDeep(this.group); // Reset the working state of the edit operation
+    this.groupInfo = structuredClone(this.group); // Reset the working state of the edit operation
   }
 
   async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {
@@ -236,13 +235,13 @@ export default class GroupModal extends Vue {
   }
 
   async syncUsersWithGroup(group: IGroup) {
-    const originalIds = this.group.users.map((user) => user.id);
-    const changedIds = this.groupInfo.users.map((user) => user.id);
+    const originalIds = new Set(this.group.users.map((user) => user.id));
+    const changedIds = new Set(this.groupInfo.users.map((user) => user.id));
     const toAdd: ISlimUser[] = this.groupInfo.users.filter(
-      (user) => !originalIds.includes(user.id)
+      (user) => !originalIds.has(user.id)
     );
     const toRemove: ISlimUser[] = this.group.users.filter(
-      (user) => !changedIds.includes(user.id)
+      (user) => !changedIds.has(user.id)
     );
     const toUpdate: ISlimUser[] = this.groupInfo.users.filter((newUser) =>
       this.group.users.some(

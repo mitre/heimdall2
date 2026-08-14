@@ -116,17 +116,19 @@ function skipSeverityInfoOrUnknown(controls: unknown[]): unknown[] {
     (controls as ExecJSON.Control[])
       // Filter to controls whose highest rating severity is either `info` or `unknown`
       .filter((control) => {
-        const ratings = (_.get(control, 'tags.ratings', '') as string).split(
-          RATING_SEPARATOR
+        const ratings = new Set(
+          (_.get(control, 'tags.ratings', '') as string).split(
+            RATING_SEPARATOR
+          )
         );
         return (
-          (ratings.includes('info') || ratings.includes('unknown')) &&
+          (ratings.has('info') || ratings.has('unknown')) &&
           !(
-            ratings.includes('critical') ||
-            ratings.includes('high') ||
-            ratings.includes('medium') ||
-            ratings.includes('low') ||
-            ratings.includes('none')
+            ratings.has('critical') ||
+            ratings.has('high') ||
+            ratings.has('medium') ||
+            ratings.has('low') ||
+            ratings.has('none')
           )
         );
       })
@@ -173,7 +175,7 @@ export class CycloneDXSBOMResults {
   // Flatten any arbitrarily nested components list
   flattenComponents(data: DataStorage) {
     // Pull components from raw data
-    data.components = _.cloneDeep(
+    data.components = structuredClone(
       data.raw.components
     ) as IntermediaryComponent[];
 
@@ -220,7 +222,7 @@ export class CycloneDXSBOMResults {
   */
   generateIntermediary(data: DataStorage) {
     // Pull vulnerabilities from raw data
-    data.vulnerabilities = _.cloneDeep(
+    data.vulnerabilities = structuredClone(
       data.raw.vulnerabilities
     ) as IntermediaryVulnerability[];
 
@@ -258,7 +260,7 @@ export class CycloneDXSBOMResults {
   formatVEX(data: DataStorage) {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
-      ...(_.cloneDeep(data.raw.vulnerabilities) as
+      ...(structuredClone(data.raw.vulnerabilities) as
         | CycloneDXBillOfMaterialsStandardVulnerability[]
         | CycloneDXSoftwareBillOfMaterialsStandardVulnerability[])
     ];
