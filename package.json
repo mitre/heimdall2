@@ -46,6 +46,8 @@
     "@eslint/markdown": "^8.0.1",
     "@stylistic/eslint-plugin": "^5.9.0",
     "@vitest/eslint-plugin": "^1.6.14",
+    "cypress": "15.17.0",
+    "cypress-terminal-report": "^7.1.0",
     "dotenv-cli": "^11.0.0",
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",

@@ -9325,7 +9325,7 @@ express-urlrewrite@^1.4.0:
     debug "*"
     path-to-regexp "^1.0.3"
 
-express@5.2.1, express@^5.1.0:
+express@5.2.1, express@^5.1.0, express@^5.2.1:
   version "5.2.1"
   resolved "https://registry.npmjs.org/express/-/express-5.2.1.tgz#8f21d15b6d327f92b4794ecf8cb08a72f956ac04"
   integrity sha512-hIS4idWWai69NezIdRt2xFVofaF4j+6INOpJlVOLDO8zXGpUVEVzIYk12UUi2JzjEzWL3IOAxcTubgz9Po0yXw==
@@ -13745,6 +13745,16 @@ multer@2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/multer/-/multer-2.1.1.tgz#122d819244fbdfee1efddd9147426691014385b7"
   integrity sha512-mo+QTzKlx8R7E5ylSXxWzGoXoZbOsRMpyitcht8By2KHvMbf3tjwosZ/Mu/XYU6UuJ3VZnODIrak5ZrPiPyB6A==
+  dependencies:
+    append-field "^1.0.0"
+    busboy "^1.6.0"
+    concat-stream "^2.0.0"
+    type-is "^1.6.18"
+
+multer@^2.1.1:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/multer/-/multer-2.2.0.tgz#f005268ca816324ba7335e3b48166896a3fa5d79"
+  integrity sha512-6rdyFg2kLrMh9Jee7/BMPuV9lEAd7lLW2YUpF9/YxR7njyoUwwQ0ZPh3TaIY50Sw6vlyD2HW3wGOkTS4P79xrQ==
   dependencies:
     append-field "^1.0.0"
     busboy "^1.6.0"
