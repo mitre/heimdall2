@@ -1,28 +1,21 @@
-/**
- * AWS Config managed rule -> NIST SP 800-53 mappings.
- *
- * Sources, in precedence order -- a row's controls come from exactly one:
- *   1. AWS Config "Operational Best Practices for NIST 800-53" (Rev 4 and Rev 5)
- *   2. Security Hub's NIST 800-53 r5 standard control pages (Rev 5 only)
- *   3. A rule whose name matches a strong theme (encryption/TLS/logging/public
- *      access) inherits the NIST core AWS assigned to >=75% of the same-theme
- *      rules it did map. Never invents a control, only reuses one.
- * Rules AWS maps for only one revision get the other revision cross-filled from
- * the NIST catalogs: a control is kept when that revision defines it, otherwise
- * it widens to its base control, and is dropped when the revision has no such
- * control. Rev 4 statement letters (AC-2(j)) do not survive to Rev 5, which
- * renumbered control statements.
- *
- * Collapsed sub-part tokens are expanded per #8458: AWS shorthand like
- * IA-2(1)(11) is the sibling pair IA-2(1) + IA-2(11), and IA-5(1)(a)(d)(e)
- * distributes its enhancement over each part. A genuine enhancement-plus-part
- * control (AC-2(12)(a)) is one control and stays intact.
- *
- * Row order is load-bearing: rules are alphabetical, and within a rule Rev 5
- * comes first and Rev 4 last. AwsConfigMapping keys its lookup by rule name and
- * source identifier with last-write-wins, so Rev 4 is what searchNIST resolves
- * to. Reordering the revisions silently switches every lookup to Rev 5.
- */
+// AWS Config managed rule to NIST SP 800-53 mappings.
+//
+// Sources, in precedence order; a row's controls come from exactly one:
+//   1. AWS Config "Operational Best Practices for NIST 800-53" (Rev 4 and Rev 5)
+//   2. Security Hub's NIST 800-53 r5 standard control pages (Rev 5 only)
+//   3. A rule whose name matches a strong theme (encryption/TLS/logging/public
+//      access) inherits the NIST core AWS assigned to >=75% of the same-theme
+//      rules it did map. Never invents a control, only reuses one.
+// Rules AWS maps for only one revision get the other revision cross-filled from
+// the NIST catalogs: a control is kept when that revision defines it, otherwise
+// it widens to its base control, and is dropped when the revision has no such
+// control. Rev 4 statement letters (AC-2(j)) do not survive to Rev 5, which
+// renumbered control statements.
+//
+// Row order is load-bearing: rules are alphabetical, and within a rule Rev 5
+// comes first and Rev 4 last. AwsConfigMapping keys its lookup by rule name and
+// source identifier with last-write-wins, so Rev 4 is what searchNIST resolves
+// to. Reordering the revisions silently switches every lookup to Rev 5.
 export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'ACCESS_KEYS_ROTATED',
