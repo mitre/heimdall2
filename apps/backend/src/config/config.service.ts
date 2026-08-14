@@ -1,24 +1,15 @@
 import {SequelizeOptions} from 'sequelize-typescript';
-import { createLogger, format, transports } from 'winston';
 import AppConfig from '../../config/app_config';
 import {StartupSettingsDto} from './dto/startup-settings.dto';
 
-export type RegistrationScope = 'local' | 'sso';
-
 export class ConfigService {
-  private static readonly VALID_REGISTRATION_VALUES = new Set([
-    'false',
-    'local',
-    'sso',
-    'true',
-  ]);
-
-  public defaultGithubAPIURL = 'https://api.github.com/';
+  private readonly appConfig: AppConfig;
   public defaultGithubBaseURL = 'https://github.com/';
-  public logger = createLogger({
-    format: format.simple(),
-    transports: [new transports.Console()],
-  });
+  public defaultGithubAPIURL = 'https://api.github.com/';
+
+  constructor() {
+    this.appConfig = new AppConfig();
+  }
 
   public sensitiveKeys = [
     /cookie/i,
@@ -31,53 +22,8 @@ export class ConfigService {
     /data/i
   ];
 
-  private readonly appConfig: AppConfig;
-
-  constructor() {
-    this.appConfig = new AppConfig();
-  }
-
-  isRegistrationAllowed(scope: RegistrationScope = 'local'): boolean {
-    const registrationDisabled = this.registrationDisabledValue()?.normalized;
-    return registrationDisabled !== 'true' && registrationDisabled !== scope;
-  }
-
-  validateRegistrationDisabled(): void {
-    const registrationDisabled = this.registrationDisabledValue();
-    if (registrationDisabled === undefined) {
-      return;
-    }
-
-    if (
-      !ConfigService.VALID_REGISTRATION_VALUES.has(
-        registrationDisabled.normalized,
-      )
-    ) {
-      throw new Error(
-        `Invalid REGISTRATION_DISABLED value "${registrationDisabled.raw}". Valid values: false, true, local, sso (case-insensitive).`,
-      );
-    }
-
-    const isExternalAuthenticationEnabled
-      = this.enabledOauthStrategies().length > 0
-        || this.get('LDAP_ENABLED')?.toLowerCase() === 'true';
-    if (
-      registrationDisabled.normalized === 'true'
-      && isExternalAuthenticationEnabled
-    ) {
-      this.logger.warn(
-        'REGISTRATION_DISABLED=true disables SSO/LDAP auto-account creation as well as local registration. New external-authentication users will be rejected until an administrator pre-creates their accounts. Set REGISTRATION_DISABLED=local for the previous behavior (local registration disabled, SSO auto-creation enabled). If pre-provisioned-only access is intended, no action is needed.',
-      );
-    }
-
-    if (
-      ['sso', 'true'].includes(registrationDisabled.normalized)
-      && this.get('OIDC_USES_VERIFIED_EMAIL') === 'false'
-    ) {
-      this.logger.warn(
-        'OIDC_USES_VERIFIED_EMAIL=false allows an unverified OIDC email claim to bind to a pre-provisioned Heimdall account when REGISTRATION_DISABLED=true or sso, which can enable account takeover. Set OIDC_USES_VERIFIED_EMAIL=true and require administrator-controlled email claims at the identity provider before using pre-provisioned access.',
-      );
-    }
+  isRegistrationAllowed(): boolean {
+    return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
   }
 
   isLocalLoginAllowed(): boolean {
@@ -146,13 +92,6 @@ export class ConfigService {
 
   get(key: string): string | undefined {
     return this.appConfig.get(key);
-  }
-
-  private registrationDisabledValue():
-    | undefined
-    | { normalized: string; raw: string } {
-    const raw = this.get('REGISTRATION_DISABLED')?.trim();
-    return raw ? { normalized: raw.toLowerCase(), raw } : undefined;
   }
 }
 export const supportedOauth: string[] = [

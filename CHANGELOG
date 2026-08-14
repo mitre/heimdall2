@@ -1,9 +1,3 @@
-v2.13.2
-
-## Breaking Changes
-
-- **BREAKING:** `REGISTRATION_DISABLED` is now a fail-fast, scoped enum. `true` disables local registration and SSO/LDAP just-in-time account creation; previously tolerated invalid values now prevent startup. Review the [v2.13.2 registration policy upgrade note](docs/upgrade-notes/registration-disabled-enum.md) before upgrading.
-
 v2.13.1
 
 ## What's New

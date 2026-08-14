@@ -30,7 +30,6 @@ const logger = winston.createLogger({
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
-  configService.validateRegistrationDisabled();
   app.set('query parser', 'extended');
   app.enableShutdownHooks();
   app.use(helmet());

@@ -11,20 +11,10 @@ permissions:
 
 jobs:
   build:
-    name: E2E (${{ matrix.configuration }})
     runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - configuration: default-jit
-            registration_disabled: ''
-          - configuration: registration-policy-sso
-            registration_disabled: sso
     env:
       CYPRESS_TESTING: true
       NODE_ENV: test
-      REGISTRATION_DISABLED: ${{ matrix.registration_disabled }}
     services:
       postgres:
         image: postgres:latest
@@ -74,27 +64,17 @@ jobs:
           yarn backend sequelize db:migrate
           yarn backend sequelize db:seed:all
 
-      - name: Cypress run (default JIT policy)
-        if: matrix.configuration == 'default-jit'
-        uses: cypress-io/github-action@v7
-        with:
-          config: excludeSpecPattern=test/integration/registration-policy.cy.ts
-          start: yarn start, yarn run cypress-test mock-json, yarn run cypress-test mock-openid
-          wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
-
-      - name: Cypress run (SSO provisioning denied)
-        if: matrix.configuration == 'registration-policy-sso'
+      - name: Cypress run
         uses: cypress-io/github-action@v7
         with:
           start: yarn start, yarn run cypress-test mock-json, yarn run cypress-test mock-openid
           wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
-          spec: test/integration/registration-policy.cy.ts
 
       - name: Upload test screenshots and videos
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: cypress-recording-${{ matrix.configuration }}
+          name: cypress-recording
           path: |
             test/screenshots
             test/videos

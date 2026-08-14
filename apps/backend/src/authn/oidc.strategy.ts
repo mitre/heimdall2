@@ -5,7 +5,6 @@ import {Strategy} from '@govtechsg/passport-openidconnect';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
-import { User } from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 interface OIDCProfile {
@@ -24,7 +23,8 @@ interface OIDCProfile {
 }
 
 @Injectable()
-export class OidcStrategy extends PassportStrategy(Strategy, 'oidc', 9) {
+//eslint-disable-next-line @typescript-eslint/no-explicit-any -- Passport v11 changed their types and many 3rd party strategies are not compatible with the types despite actually still working just fine
+export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
   private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   public logger = winston.createLogger({
@@ -46,42 +46,70 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc', 9) {
     private readonly groupsService: GroupsService,
     private readonly httpsAgent?: Agent
   ) {
-    super({
-      issuer: configService.get('OIDC_ISSUER') || 'disabled',
-      authorizationURL:
-        configService.get('OIDC_AUTHORIZATION_URL') || 'disabled',
-      tokenURL: configService.get('OIDC_TOKEN_URL') || 'disabled',
-      userInfoURL: configService.get('OIDC_USER_INFO_URL') || 'disabled',
-      clientID: configService.get('OIDC_CLIENTID') || 'disabled',
-      clientSecret: configService.get('OIDC_CLIENT_SECRET') || 'disabled',
-      callbackURL: `${configService.getExternalUrl()}/authn/oidc_callback`,
-      pkce:
-        configService.get('OIDC_USES_PKCE_S256') === 'true'
-          ? 'S256'
-          : configService.get('OIDC_USES_PKCE_PLAIN') === 'true'
-            ? 'plain'
+    super(
+      {
+        issuer: configService.get('OIDC_ISSUER') || 'disabled',
+        authorizationURL:
+          configService.get('OIDC_AUTHORIZATION_URL') || 'disabled',
+        tokenURL: configService.get('OIDC_TOKEN_URL') || 'disabled',
+        userInfoURL: configService.get('OIDC_USER_INFO_URL') || 'disabled',
+        clientID: configService.get('OIDC_CLIENTID') || 'disabled',
+        clientSecret: configService.get('OIDC_CLIENT_SECRET') || 'disabled',
+        callbackURL: `${configService.getExternalUrl()}/authn/oidc_callback`,
+        pkce:
+          configService.get('OIDC_USES_PKCE_S256') === 'true'
+            ? 'S256'
+            : configService.get('OIDC_USES_PKCE_PLAIN') === 'true'
+              ? 'plain'
+              : undefined,
+        scope: ['openid', 'email', 'profile'],
+        skipUserProfile: false,
+        proxy:
+          configService.get('OIDC_USE_HTTPS_PROXY') === 'true'
+            ? true
             : undefined,
-      scope: ['openid', 'email', 'profile'],
-      skipUserProfile: false,
-      proxy:
-        configService.get('OIDC_USE_HTTPS_PROXY') === 'true'
-          ? true
-          : undefined,
-      agent: httpsAgent
-    });
+        agent: httpsAgent
+      },
+      // using the 9-arity function so that we can access the underlying JSON response and extract the 'email_verified' attribute
+      async (
+        _issuer: string,
+        uiProfile: OIDCProfile,
+        _idProfile: object,
+        _context: object,
+        _idToken: string,
+        _accessToken: string,
+        _refreshToken: string,
+        _params: object,
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
+        done: any
+      ) => {
+        return this.validate(
+          _issuer,
+          uiProfile,
+          _idProfile,
+          _context,
+          _idToken,
+          _accessToken,
+          _refreshToken,
+          _params,
+          done
+        );
+      }
+    );
   }
 
-  async validate(...parameters: [
-    string,
-    OIDCProfile,
-    object,
-    object,
-    string,
-    string,
-    string,
-    object,
-  ]): Promise<User> {
-    const [, uiProfile] = parameters;
+  async validate(
+    _issuer: string,
+    uiProfile: OIDCProfile,
+    _idProfile: object,
+    _context: object,
+    _idToken: string,
+    _accessToken: string,
+    _refreshToken: string,
+    _params: object,
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    done: any
+  ) {
     this.logger.debug('in oidc strategy file');
     this.logger.debug(JSON.stringify(uiProfile, null, 2));
     const userData = uiProfile._json;
@@ -104,10 +132,12 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc', 9) {
         await this.groupsService.syncUserGroups(user, groups);
       }
 
-      return user;
+      return done(null, user);
     }
-    throw new UnauthorizedException(
-      'Please verify your name and email with your identity provider before logging into Heimdall.'
+    return done(
+      new UnauthorizedException(
+        'Please verify your name and email with your identity provider before logging into Heimdall.'
+      )
     );
   }
 }

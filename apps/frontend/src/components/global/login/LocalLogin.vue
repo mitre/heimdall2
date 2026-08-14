@@ -155,28 +155,17 @@
   </v-card>
 </template>
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {email, required} from 'vuelidate/lib/validators';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import { LocalStorageVal as LocalStorageValue } from '../../../utilities/helper_util';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {email, required} from 'vuelidate/lib/validators';
 
 interface LoginHash {
   email: string;
   password: string;
 }
-
-const authenticationProvider = new LocalStorageValue<string>(
-  'authentication_provider',
-);
-const oauthProviderNames = new Map([
-  ['github', 'GitHub'],
-  ['gitlab', 'GitLab'],
-  ['google', 'Google'],
-  ['okta', 'Okta'],
-]);
 @Component({
   mixins: [UserValidatorMixin],
   validations: {
@@ -230,11 +219,6 @@ export default class LocalLogin extends Vue {
   }
 
   oauthLogin(site: string) {
-    const providerName
-      = site === 'oidc'
-        ? this.oidcName || 'OIDC'
-        : oauthProviderNames.get(site) ?? site;
-    authenticationProvider.set(providerName);
     window.location.href = `/authn/${site}`;
   }
 

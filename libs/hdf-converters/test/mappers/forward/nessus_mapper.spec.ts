@@ -125,3 +125,13 @@ describe('nessus_mapper_withraw', () => {
     }
   });
 });
+
+describe('nessus_mapper_entity_expansion_limit', () => {
+  it('accepts a custom entity expansion limit', () => {
+    expect(
+      () => new NessusResults('<root>&quot;&quot;</root>', false, 1),
+    ).toThrow(
+      '[EntityReplacer] Entity expansion count limit exceeded: 2 > 1',
+    );
+  });
+});

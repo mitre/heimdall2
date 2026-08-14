@@ -1,5 +1,6 @@
 import {createHash} from 'crypto';
-import {XMLParser} from 'fast-xml-parser';
+import type { ProcessEntitiesOptions, X2jOptions } from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import Papa from 'papaparse';
@@ -57,9 +58,17 @@ export async function buildParseHtmlFunc(): Promise<(input: unknown) => string> 
   };
 }
 
+export const DEFAULT_XML_PROCESS_ENTITIES_OPTIONS = {
+  enabled: true,
+  maxEntityCount: 100,
+  maxEntitySize: 10_000,
+  maxExpandedLength: 100_000,
+  maxTotalExpansions: 10_000_000,
+} satisfies ProcessEntitiesOptions;
+
 export function parseXml(
   xml: string,
-  additionalOptions?: Record<string, unknown>
+  additionalOptions?: X2jOptions,
 ): Record<string, unknown> {
   const options = {
     attributeNamePrefix: '',
@@ -68,15 +77,9 @@ export function parseXml(
     ignoreDeclaration: true,
     parseAttributeValue: false,
     parseTagValue: false,
+    processEntities: DEFAULT_XML_PROCESS_ENTITIES_OPTIONS,
     removeNSPrefix: true,
-    processEntities: {
-      enabled: true,
-      maxEntitySize: 10000,
-      maxTotalExpansions: 10000000,
-      maxExpandedLength: 100000,
-      maxEntityCount: 100
-    },
-    ...additionalOptions
+    ...additionalOptions,
   };
   const parser = new XMLParser(options);
   return parser.parse(xml);

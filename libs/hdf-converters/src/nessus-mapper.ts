@@ -3,11 +3,12 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
-  ILookupPath,
-  impactMapping,
-  MappedTransform,
   buildParseHtmlFunc,
-  parseXml
+  DEFAULT_XML_PROCESS_ENTITIES_OPTIONS,
+  type ILookupPath,
+  impactMapping,
+  type MappedTransform,
+  parseXml,
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping';
@@ -33,6 +34,7 @@ const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG: string[] = [];
+const DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS = 1_000_000_000;
 
 let parseHtml: (input: unknown) => string;
 
@@ -213,8 +215,17 @@ export class NessusResults {
   data: Record<string, unknown>;
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   withRaw: boolean;
-  constructor(nessusXml: string, withRaw = false) {
-    this.data = parseXml(nessusXml);
+  constructor(
+    nessusXml: string,
+    withRaw = false,
+    maxTotalExpansions = DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS,
+  ) {
+    this.data = parseXml(nessusXml, {
+      processEntities: {
+        ...DEFAULT_XML_PROCESS_ENTITIES_OPTIONS,
+        maxTotalExpansions,
+      },
+    });
     this.withRaw = withRaw;
   }
 
