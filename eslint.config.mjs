@@ -199,6 +199,13 @@ export default defineConfig([
       // consumer of hdf-converters would have to follow, for no behavior gain.
       'unicorn/consistent-compound-words': 'off',
       'unicorn/no-null': 'off',
+      // safe-regex's star-height heuristic, which cannot tell an ambiguous
+      // pattern from a merely nested one. The regexp plugin's
+      // no-super-linear-backtracking and no-super-linear-move model actual
+      // backtracking, are enabled, and report these same patterns clean — the
+      // DATABASE_URL tail and the ASFF quantifiers in this branch were found
+      // and fixed by THEM. Keeping both means acting on the cruder signal.
+      'security/detect-unsafe-regex': 'off',
       'unicorn/no-process-exit': 'off',
       // The same check from a second plugin. Leaving it on would silently
       // undo the line above, and its advice is wrong at the entry points that
@@ -606,6 +613,15 @@ export default defineConfig([
     files: ['apps/frontend/**/*.{js,mjs,cjs,ts,mts,cts,vue}'],
     name: 'n/frontend-browser-globals',
     rules: { 'n/no-unsupported-features/node-builtins': 'off' },
+  },
+  {
+    // helmet and vue-cookies are CommonJS packages whose default export IS the
+    // middleware/plugin, and whose interop also surfaces it under its own
+    // name. Importing the default is deliberate here — the rule's suggestion
+    // would swap a value that works for one that only looks tidier.
+    files: ['apps/backend/src/main.ts', 'apps/frontend/src/main.ts'],
+    name: 'import-x/cjs-default-plugins',
+    rules: { 'import-x/no-named-as-default': 'off' },
   },
   {
     // The direct element replacement this rule prefers is exactly the bug that
