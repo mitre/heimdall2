@@ -341,8 +341,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   treeFilters: TreeMapState = [];
   controlSelection: string | null = null;
 
-  gotStatus: boolean = false;
-  gotSeverity: boolean = false;
+  gotStatus = false;
+  gotSeverity = false;
 
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;

@@ -93,7 +93,7 @@ export default class Users extends Vue {
   @Prop({type: Boolean, required: false, default: false})
   readonly admin!: boolean;
 
-  editedUserID: string = '0'; // Default to '0', as the id indices start at '1'
+  editedUserID = '0'; // Default to '0', as the id indices start at '1'
   usersToAdd: string[] = [];
 
   dialogDelete = false;

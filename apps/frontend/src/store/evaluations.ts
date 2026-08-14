@@ -36,10 +36,10 @@ import {SnackbarModule} from './snackbar';
 export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
   pagedEvaluations: IEvaluation[] = [];
-  evaluationsCount: number = 0;
-  page: number = 1;
-  offset: number = 0;
-  limit: number = 10;
+  evaluationsCount = 0;
+  page = 1;
+  offset = 0;
+  limit = 10;
   order: string[] = ['createdAt', 'DESC'];
   loading = true;
 

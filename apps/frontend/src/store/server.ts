@@ -65,12 +65,12 @@ class Server extends VuexModule implements IServerState {
   localLoginEnabled = true;
   loading = true;
   enabledOAuth: string[] = [];
-  externalUrl: string = '';
+  externalUrl = '';
   allUsers: ISlimUser[] = [];
   oidcName = '';
-  tenableHostUrl: string = '';
+  tenableHostUrl = '';
   forceTenableFrontend = false; // If true, the frontend will use Tenable.SC Lite features
-  splunkHostUrl: string = '';
+  splunkHostUrl = '';
   /** Our currently granted JWT token */
   token = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
