@@ -22,9 +22,11 @@ const wrapper: Wrapper<Vue> = shallowMount(Sidebar, {
   propsData: {}
 });
 
-describe('Sidebar tests', () => {
-  beforeAll(() => {
-    loadAll();
+// Sequential for the same reason as Datatable and Compare: one shared store
+// under vitest's concurrent default.
+describe.sequential('Sidebar tests', () => {
+  beforeAll(async () => {
+    await loadAll();
   });
 
   it('has the correct number of sidebar links', () => {

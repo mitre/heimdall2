@@ -35,15 +35,18 @@ export function loadSample(
       });
 }
 
-export function loadAll(): void {
+export async function loadAll(): Promise<void> {
   const data = AllRaw();
-  Object.values(data).forEach((fileResult) => {
-    // Do intake
-    InspecIntakeModule.loadText({
-      filename: fileResult.name,
-      text: fileResult.content
-    });
-  });
+  // Awaited, not fire-and-forget: an intake that settles after the next
+  // test's removeAllFiles() puts this test's files into that one's state.
+  await Promise.all(
+    Object.values(data).map((fileResult) =>
+      InspecIntakeModule.loadText({
+        filename: fileResult.name,
+        text: fileResult.content
+      })
+    )
+  );
 }
 
 export function removeAllFiles(): void {

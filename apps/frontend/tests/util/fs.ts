@@ -1,12 +1,23 @@
 import * as fs from 'fs';
 
+/** Orders by UTF-16 code unit, which is what a bare sort() does. */
+function byCodeUnit(a: string, b: string): number {
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+}
+
 /** Returns sorted list of files in a directory */
 export function list_files(dirPath: string) {
   // Init result array
   const result = fs.readdirSync(dirPath);
 
   // Sort by filename
-  return result.toSorted();
+  return result.toSorted(byCodeUnit);
 }
 
 export interface FileResult {

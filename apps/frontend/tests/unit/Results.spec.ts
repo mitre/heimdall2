@@ -42,13 +42,16 @@ const wrapper: Wrapper<Vue> = shallowMount(Results, {
   propsData: {}
 });
 
-describe('Datatable', () => {
+// Sequential, like Compare: these tests share one store, and vitest is
+// configured to run tests concurrently, so any await in a test body would
+// otherwise let a sibling's loaded files appear in this one's assertions.
+describe.sequential('Datatable', () => {
   beforeEach(() => {
     removeAllFiles();
   });
 
-  it('displays correct number of controls with many files', () => {
-    loadAll();
+  it('displays correct number of controls with many files', async () => {
+    await loadAll();
     const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
@@ -75,7 +78,12 @@ describe('Datatable', () => {
   });
 
   it('displays correct number of controls with many files generated from a single sample file while using the loadFile method', () => {
-    loadSample('Conveyor Sample', DataLoadApproach.File);
+    // Deliberately not awaited, unlike its siblings. Awaiting it makes
+    // expectedCount ask for per-file counts fixtures that do not exist for the
+    // files this sample splits into, which exposes that the assertion below
+    // currently compares zero against zero. Tracked as heimdall2-0tp, which
+    // has to decide what this test should assert before it can be awaited.
+    void loadSample('Conveyor Sample', DataLoadApproach.File);
     const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
@@ -101,8 +109,8 @@ describe('Datatable', () => {
     ).toBe(expected);
   });
 
-  it('control row and table data is correct', () => {
-    loadAll();
+  it('control row and table data is correct', async () => {
+    await loadAll();
     const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
@@ -120,19 +128,19 @@ describe('Datatable', () => {
         }
       ).items
         .map((item: ListElt) => item.control.data.id)
-        .toSorted()
+        .toSorted((a, b) => a.localeCompare(b))
     ).toEqual(
       FilteredDataModule.controls({
         fromFile: FilteredDataModule.selected_file_ids,
         omit_overlayed_controls: true
       })
         .map((c) => c.data.id)
-        .toSorted()
+        .toSorted((a, b) => a.localeCompare(b))
     );
   });
 
-  it('it can properly filter overridden results', () => {
-    loadSample('Small Profile With Severity Overrides');
+  it('it can properly filter overridden results', async () => {
+    await loadSample('Small Profile With Severity Overrides');
     const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
