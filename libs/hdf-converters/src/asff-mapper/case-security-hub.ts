@@ -16,9 +16,9 @@ function securityhubSupportingDocs(standards: string[] | undefined) {
   let controls: null | unknown[];
   try {
     if (Array.isArray(standards)) {
-      controls = standards
-        .map((standard) => _.get(JSON.parse(standard), 'Controls'))
-        .flat();
+      controls = standards.flatMap((standard) =>
+        _.get(JSON.parse(standard), 'Controls')
+      );
     } else {
       controls = null;
     }

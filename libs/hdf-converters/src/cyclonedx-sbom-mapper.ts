@@ -65,24 +65,19 @@ const IMPACT_MAPPING = new Map<string, number>([
   ['unknown', 0.5]
 ]);
 
+// Both CycloneDX schema variants declare the same shape for a vulnerability's
+// CWE list, so these mappers take one alias rather than a duplicated union.
+type VulnerabilityCwes = CycloneDXBillOfMaterialsStandardVulnerability['cwes'];
+
 // Convert object type to string[] and prepend `CWE` if used directly for tag display
-function formatCWETags(
-  input:
-    | CycloneDXBillOfMaterialsStandardVulnerability['cwes']
-    | CycloneDXSoftwareBillOfMaterialsStandardVulnerability['cwes'],
-  withPrefix = true
-): string[] {
+function formatCWETags(input: VulnerabilityCwes, withPrefix = true): string[] {
   return input && Array.isArray(input)
     ? input.map((cwe) => (withPrefix ? `CWE-${cwe}` : String(cwe)))
     : [];
 }
 
 // Convert gathered CWEs to corresponding NIST 800-53s
-function getNISTTags(
-  input:
-    | CycloneDXBillOfMaterialsStandardVulnerability['cwes']
-    | CycloneDXSoftwareBillOfMaterialsStandardVulnerability['cwes']
-): string[] {
+function getNISTTags(input: VulnerabilityCwes): string[] {
   return CWE_NIST_MAPPING.nistFilter(
     formatCWETags(input, false),
     DEFAULT_NIST_TAG
@@ -383,11 +378,8 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               },
               cci: {
                 path: 'cwes',
-                transformer: (
-                  input:
-                    | CycloneDXBillOfMaterialsStandardVulnerability['cwes']
-                    | CycloneDXSoftwareBillOfMaterialsStandardVulnerability['cwes']
-                ): string[] => getCCIsForNISTTags(getNISTTags(input))
+                transformer: (input: VulnerabilityCwes): string[] =>
+                  getCCIsForNISTTags(getNISTTags(input))
               },
               cwe: {path: 'cwes', transformer: formatCWETags},
               'bom-ref': {

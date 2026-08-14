@@ -199,8 +199,7 @@ function handleIdGroup(
       _.uniq(group.map((d) => d.desc)).join('\n')
     ),
     descriptions: group
-      .map((d) => d.descriptions)
-      .flat()
+      .flatMap((d) => d.descriptions)
       .filter(
         (element, index, arr) =>
           element &&
@@ -211,8 +210,7 @@ function handleIdGroup(
             ) // https://stackoverflow.com/a/36744732/645647
       ) as ExecJSON.ControlDescription[],
     refs: group
-      .map((d) => d.refs)
-      .flat()
+      .flatMap((d) => d.refs)
       .filter((element) => _.get(element, 'url') !== undefined),
     source_location: ((): ExecJSON.SourceLocation => {
       const locs = _.uniq(group.map((d) => d.source_location)).filter(
@@ -236,7 +234,7 @@ function handleIdGroup(
       'code',
       JSON.stringify({Findings: findings}, null, 2)
     ),
-    results: group.map((d) => d.results).flat()
+    results: group.flatMap((d) => d.results)
   };
 }
 
@@ -646,7 +644,7 @@ export class ASFFMapper extends BaseConverter {
   constructor(
     asff: Record<string, unknown>,
     supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
-    meta?: Record<string, string | undefined> | undefined
+    meta?: Record<string, string | undefined>
   ) {
     super(asff);
     this.meta = meta;
@@ -697,8 +695,8 @@ export class ASFFResults {
   supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
   constructor(
     asffJson: string,
-    securityhubStandardsJsonArray?: undefined | string[],
-    meta?: Record<string, string | undefined> | undefined
+    securityhubStandardsJsonArray?: string[],
+    meta?: Record<string, string | undefined>
   ) {
     this.meta = meta;
     this.supportingDocs = new Map<

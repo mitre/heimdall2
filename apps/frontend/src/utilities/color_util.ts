@@ -5,6 +5,11 @@
 import Chroma from 'chroma-js';
 import type {VuetifyParsedThemeItem} from 'vuetify/types/services/theme';
 
+// chroma-js does not always import properly, so the binding is held as
+// possibly missing and every caller falls back to the lookup tables below.
+// https://github.com/mitre/heimdall2/issues/2350
+const chroma: typeof Chroma | undefined = Chroma;
+
 //
 export const colorOnColorLookupTable: Record<string, string> = {
   '#005568': '#efe5e3',
@@ -81,11 +86,11 @@ export const colorShiftLookupTable: Record<string, string> = {
 export function visible_against(colorHex: string): string {
   // Somehow, chroma-js does not always import properly. This is not a good solution, but it works in the meantime.
   // https://github.com/mitre/heimdall2/issues/2350
-  if (typeof Chroma === 'undefined') {
+  if (chroma === undefined) {
     return COLOR_ON_COLOR_LOOKUP.get(colorHex) || '#000000';
   }
   // Get the color
-  let color = Chroma(colorHex);
+  let color = chroma(colorHex);
 
   // Rotate 50 degrees in hue (arbitrary # but seems nice)
   color = color.set('hsl.h', '+180');
@@ -114,10 +119,10 @@ function lum_sigmoid(t: number, move: number) {
 
 /** Shifts a colors luminance by the specified amount */
 export function shift(baseColor: string, amount: number): string {
-  if (typeof Chroma === 'undefined') {
+  if (chroma === undefined) {
     return colorShiftLookupTable[`${baseColor}+${amount}`];
   }
-  const c = Chroma(baseColor);
+  const c = chroma(baseColor);
   const baseL = c.luminance();
   const newL = lum_sigmoid(baseL, amount);
   const newC = c.luminance(newL);

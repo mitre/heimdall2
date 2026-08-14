@@ -228,7 +228,7 @@ export class FromHDFToXCCDFMapper {
     let passthroughString = '';
     if (typeof passthrough === 'object') {
       passthroughString = JSON.stringify(passthrough);
-    } else if (typeof passthrough !== 'undefined') {
+    } else if (passthrough !== undefined) {
       passthroughString = String(passthrough);
     }
 

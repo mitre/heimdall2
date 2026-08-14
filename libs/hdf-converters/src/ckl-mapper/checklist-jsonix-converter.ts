@@ -622,7 +622,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   getFindingDetails(results: ExecJSON.ControlResult[]): string {
-    if (typeof results === 'undefined') {
+    if (results === undefined) {
       return '';
     } else {
       return results

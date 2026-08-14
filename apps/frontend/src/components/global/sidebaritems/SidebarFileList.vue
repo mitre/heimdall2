@@ -97,7 +97,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
 
   // determines if the use can save the file
   get disable_saving() {
-    return typeof this.file?.database_id !== 'undefined' || this.saving;
+    return this.file?.database_id !== undefined || this.saving;
   }
 
   async save_to_database(file: EvaluationFile | ProfileFile): Promise<void> {
@@ -114,7 +114,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     const formData = new FormData();
     // Add the DTO objects to form data
     for (const [key, value] of Object.entries(createEvaluationDto)) {
-      if (typeof value !== 'undefined') {
+      if (value !== undefined) {
         formData.append(key, value);
       }
     }

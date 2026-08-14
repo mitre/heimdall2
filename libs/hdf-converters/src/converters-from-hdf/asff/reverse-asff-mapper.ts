@@ -203,7 +203,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     finding.FindingProviderFields.Types = (
       finding.FindingProviderFields.Types as string[]
     )
-      .map((typeString) => {
+      .flatMap((typeString) => {
         if (typeString.length <= ATTRIBUTE_CHARACTER_LIMIT) {
           return typeString;
         }
@@ -213,8 +213,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
           ATTRIBUTE_CHARACTER_LIMIT -
             (type.length + attribute.length + 2) /* the slashes */
         ).map((chunk) => `${type}/${attribute}/${chunk.join('')}`);
-      })
-      .flat();
+      });
     return finding;
   }
 

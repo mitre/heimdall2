@@ -269,7 +269,7 @@ function componentTransform(input: unknown): Record<string, unknown>[] {
   const componentList: Record<string, unknown>[] = componentListCreate(input);
 
   const flattened: Record<string, unknown>[] = componentList
-    .map((component) => {
+    .flatMap((component) => {
       let vulnerability = _.get(component, 'vulnerabilities.vulnerability') as
         | Record<string, unknown>
         | Record<string, unknown>[];
@@ -281,8 +281,7 @@ function componentTransform(input: unknown): Record<string, unknown>[] {
         components: [component]
       }));
       return vulnerability;
-    })
-    .flat();
+    });
   // Deduplicate by CVE id, merging components into the first occurrence; the
   // Map's insertion order keeps the original first-seen ordering.
   const vulnsByCveId = new Map<unknown, Record<string, unknown>>();
