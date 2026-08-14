@@ -165,13 +165,14 @@ export default class Treemap extends Vue {
 
   /** Submits an event to go up one node */
   up(): void {
-    if (this.value.length > 0) {
-      // Slice and dice, baybee
-      this.set_path(this.value.slice(0, -1));
-
-      // Also clear selected
-      this.syncedSelectedControl = null;
+    if (this.value.length === 0) {
+      return;
     }
+    // Slice and dice, baybee
+    this.set_path(this.value.slice(0, -1));
+
+    // Also clear selected
+    this.syncedSelectedControl = null;
   }
 
   /** Typed method to wrap changes in the depth */

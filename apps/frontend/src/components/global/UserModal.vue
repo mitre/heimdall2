@@ -376,23 +376,24 @@ export default class UserModal extends Vue {
   }
 
   async getAPIKeys(): Promise<void> {
-    if (this.apiKeysEnabled) {
-      this.apiKeyTableLoading = true;
-      try {
-        // axios.create() skips the default interceptors set up in main.ts
-        const {data} = await axios
-          .create()
-          .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}});
-        this.apiKeys = data;
-      } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-          SnackbarModule.failure('Unable to get API Keys');
-        }
-      } finally {
-        // The old chain cleared this flag synchronously, so the table
-        // never actually showed its loading state.
-        this.apiKeyTableLoading = false;
+    if (!this.apiKeysEnabled) {
+      return;
+    }
+    this.apiKeyTableLoading = true;
+    try {
+      // axios.create() skips the default interceptors set up in main.ts
+      const {data} = await axios
+        .create()
+        .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}});
+      this.apiKeys = data;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        SnackbarModule.failure('Unable to get API Keys');
       }
+    } finally {
+      // The old chain cleared this flag synchronously, so the table
+      // never actually showed its loading state.
+      this.apiKeyTableLoading = false;
     }
   }
 

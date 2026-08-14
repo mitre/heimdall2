@@ -180,22 +180,23 @@ function getStartTime(tag: unknown): string {
 function cleanData(control: unknown[]): ExecJSON.Control[] {
   const filteredControl = control as ExecJSON.Control[];
   filteredControl.forEach((element) => {
-    if (element instanceof Object) {
-      if (_.get(element.tags, 'cci').length === 0) {
-        element.tags = _.omit(element.tags, 'cci');
-      }
-      if (_.get(element.tags, 'rid') === '') {
-        element.tags = _.omit(element.tags, 'rid');
-      }
-      if (_.get(element.tags, 'stig_id') === '') {
-        element.tags = _.omit(element.tags, 'stig_id');
-      }
-      element.refs = element.refs.filter((ref) => ref.url);
-      if (element.descriptions !== undefined && element.descriptions !== null) {
-        element.descriptions = element.descriptions.filter(
-          (description) => description && description.data
-        );
-      }
+    if (!(element instanceof Object)) {
+      return;
+    }
+    if (_.get(element.tags, 'cci').length === 0) {
+      element.tags = _.omit(element.tags, 'cci');
+    }
+    if (_.get(element.tags, 'rid') === '') {
+      element.tags = _.omit(element.tags, 'rid');
+    }
+    if (_.get(element.tags, 'stig_id') === '') {
+      element.tags = _.omit(element.tags, 'stig_id');
+    }
+    element.refs = element.refs.filter((ref) => ref.url);
+    if (element.descriptions !== undefined && element.descriptions !== null) {
+      element.descriptions = element.descriptions.filter(
+        (description) => description && description.data
+      );
     }
   });
   return filteredControl;

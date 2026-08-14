@@ -177,10 +177,11 @@ export default class GroupModal extends Vue {
   }
 
   updateSaveState(saveable: boolean) {
-    if (!this.create) {
-      if (!saveable) SnackbarModule.failure(`Must have at least 1 owner`);
-      this.saveable = saveable;
+    if (this.create) {
+      return;
     }
+    if (!saveable) SnackbarModule.failure(`Must have at least 1 owner`);
+    this.saveable = saveable;
   }
 
   checkUniqueName(name: string) {

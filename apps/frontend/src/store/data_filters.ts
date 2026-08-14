@@ -353,15 +353,16 @@ export class FilteredData extends VuexModule {
       // Filter by tags
       if (filter.tagFilter && filter.tagFilter.length > 0) {
         controls = controls.filter((control) => {
-          if (filter.tagFilter) {
-            // every tag in the filter must be contained in the control's tags
-            const tags = new Set(
-              Object.keys(control.data.tags).map((t) => t.toLowerCase())
-            );
-            return filter.tagFilter.every((tag) => {
-              return tags.has(tag);
-            });
+          if (!filter.tagFilter) {
+            return;
           }
+          // every tag in the filter must be contained in the control's tags
+          const tags = new Set(
+            Object.keys(control.data.tags).map((t) => t.toLowerCase())
+          );
+          return filter.tagFilter.every((tag) => {
+            return tags.has(tag);
+          });
         });
       }
 
