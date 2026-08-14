@@ -61,7 +61,7 @@ function preprocessIonChannelData(ionchannelData: string) {
   result.metadata = _.omit(parsed, 'scan_summaries');
 
   if (!Array.isArray(scanSummaries)) {
-    throw new Error(
+    throw new TypeError(
       `Ion Channel scan_summaries invalid summary data (expecting array, got ${typeof scanSummaries})`
     );
   }

@@ -6,7 +6,7 @@ import {version as hdfConvertersVersion} from '../package.json';
 
 const CKL_VERSION_COMMENT = /(?<=<!--Heimdall Version :: )\S+(?=-->)/;
 const XCCDF_VERSION_ELEMENT = /(?<=<version>)\S+(?=<\/version>)/;
-const HTML_STYLE_TAG = /(?<open><style>)[\s\S]*?(?<close><\/style>)/;
+const HTML_STYLE_TAG = /(?<=<style>)[\s\S]*?(?=<\/style>)/;
 
 export function omitVersions(
   input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
@@ -106,5 +106,5 @@ export function replaceXCCDFVersion(input: string): string {
 }
 
 export function omitHTMLStyleTag(input: string): string {
-  return input.replace(HTML_STYLE_TAG, '$<open>$<close>');
+  return input.replace(HTML_STYLE_TAG, '');
 }

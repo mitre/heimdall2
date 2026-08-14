@@ -133,7 +133,7 @@ export function validateChecklistMetadata(
   for (const profile of metadata.profiles) {
     const profileResult = validateChecklistProfileMetadata(profile);
     if (!profileResult.ok) {
-      invalid = invalid.concat(profileResult.error.invalid);
+      invalid.push(...profileResult.error.invalid);
       messages.push(
         `In profile ${profile.name}:\n${profileResult.error.message.split(':\n').at(-1)}`
       );

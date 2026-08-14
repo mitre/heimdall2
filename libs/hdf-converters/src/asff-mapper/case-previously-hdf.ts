@@ -37,7 +37,9 @@ function objectifyTypesArray(
         );
         try {
           parsed = JSON.parse(parsed);
-        } catch {}
+        } catch {
+          // Not JSON — keep the string exactly as it arrived.
+        }
         return {[type]: {[attribute]: parsed}};
       })()
     );

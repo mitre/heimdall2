@@ -180,8 +180,7 @@ export class PrismaMapper {
     const executions: ExecJSON.Execution[] = [];
     const hostnameToControls: Record<string, PrismaControl[]> = {};
     this.data.forEach((record: PrismaControl) => {
-      hostnameToControls[record.Hostname] =
-        hostnameToControls[record.Hostname] || [];
+      hostnameToControls[record.Hostname] ||= [];
       hostnameToControls[record.Hostname].push(record);
     });
     Object.entries(hostnameToControls).forEach(([hostname, controls]) => {

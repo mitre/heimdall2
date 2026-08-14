@@ -360,9 +360,10 @@ function parseOwaspTags<T extends SonarqubeVersion>(
   if (rule.descriptionSections) {
     searchSpace += rule.descriptionSections.map((s) => s.content).join('');
   }
-  const searchSpaceMatches = [
-    ...searchSpace.matchAll(/> ?OWASP.*?(?<category>Top .*?A\d\d?)/gu)
-  ].map((m) => m.groups!.category); // looks like 'Top 10 2021 Category A1'
+  const searchSpaceMatches = Array.from(
+    searchSpace.matchAll(/> ?OWASP.*?(?<category>Top .*?A\d\d?)/gu),
+    (m) => m.groups!.category
+  ); // looks like 'Top 10 2021 Category A1'
   const sysTagMatches = parseOwaspInSysTags<T>(issue);
   const totalMatches = [...searchSpaceMatches, ...sysTagMatches];
 

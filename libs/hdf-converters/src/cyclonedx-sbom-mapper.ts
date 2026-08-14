@@ -124,8 +124,8 @@ function skipSeverityInfoOrUnknown(controls: unknown[]): unknown[] {
         );
       })
       // For every result contained by that control, set the status to skipped and request a manual review
-      .map((control) =>
-        control.results.map((result) => {
+      .forEach((control) =>
+        control.results.forEach((result) => {
           result.status = ExecJSON.ControlResultStatus.Skipped;
           result.skip_message =
             'Manual review required because a CycloneDX rating severity is set to `info` or `unknown`.';
@@ -396,14 +396,12 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   input: FluffyRating[] | PurpleRating[]
                 ): string | undefined =>
                   input
-                    ? [...input]
-                        .map((rating) => {
-                          const ratingSource = rating.source?.name
-                            ? `${rating.source?.name} - `
-                            : 'Unidentified Source - ';
-                          return `${ratingSource}${rating.severity}`;
-                        })
-                        .join(', ')
+                    ? Array.from(input, (rating) => {
+                        const ratingSource = rating.source?.name
+                          ? `${rating.source?.name} - `
+                          : 'Unidentified Source - ';
+                        return `${ratingSource}${rating.severity}`;
+                      }).join(', ')
                     : undefined
               },
               created: {

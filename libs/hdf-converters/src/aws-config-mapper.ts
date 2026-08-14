@@ -166,7 +166,7 @@ export class AwsConfigMapper {
     }
 
     return this.appendResourceNamesToResults(
-      await Promise.all(ruleData),
+      ruleData,
       await this.extractResourceNamesFromIds(allRulesResolved)
     );
   }

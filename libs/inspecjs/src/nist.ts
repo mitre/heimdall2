@@ -300,9 +300,7 @@ export type NistHierarchy = NistHierarchyNode[];
 
 function _control_parent(c: NistControl): NistControl | null {
   if (c.subSpecifiers.length > 0) {
-    return new NistControl(
-      c.subSpecifiers.slice(0, c.subSpecifiers.length - 1)
-    );
+    return new NistControl(c.subSpecifiers.slice(0, -1));
   } else {
     return null; // Can't get any shorter
   }

@@ -44,7 +44,8 @@ function getVersion(file: unknown): string {
 
 function getTitle(finding: unknown) {
   const title = _.get(finding, 'vulnerability.title');
-  return `${_.get(finding, 'component.purl')}${title ? ' - ' + title : ''}`;
+  const titleSuffix = title ? ` - ${String(title)}` : '';
+  return `${_.get(finding, 'component.purl')}${titleSuffix}`;
 }
 
 function getCweIds(cwes: ICweEntry[] | undefined) {

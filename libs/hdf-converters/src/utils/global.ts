@@ -68,14 +68,17 @@ export function getDescription(
   return found;
 }
 
+// Two letters, a hyphen, and one to three digits — the control-family prefix.
+const NIST_BASE_TAG = /\w{2}-\d{1,3}/;
+
 export function getCCIsForNISTTags(nistTags: string[]): string[] {
   const cciTags: string[] = [];
   for (const nistTag of nistTags) {
-    const baseTag = /\w{2}-\d{1,3}/.exec(nistTag);
+    const baseTag = NIST_BASE_TAG.exec(nistTag);
     if (
       Array.isArray(baseTag) &&
       baseTag.length > 0 &&
-      baseTag[0] in NistCciMappingData
+      Object.hasOwn(NistCciMappingData, baseTag[0])
     ) {
       cciTags.push(...NistCciMappingData[baseTag[0]]);
     }

@@ -135,7 +135,7 @@ export class FromHdfBaseConverter {
     const uniqueResults: T[] = [];
     resultingData.forEach((result) => {
       if (
-        !uniqueResults.some((uniqueResult) => _.isEqual(result, uniqueResult))
+        uniqueResults.every((uniqueResult) => !_.isEqual(result, uniqueResult))
       ) {
         uniqueResults.push(result);
       }

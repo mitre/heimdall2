@@ -115,7 +115,7 @@ export function createProfileMapping(
       is_baseline: {
         path: 'data.depends[0].name',
         transformer: (value?: string) => {
-          return !Boolean(value);
+          return !value;
         }
       },
       profile_sha256: {
@@ -433,9 +433,9 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
       // Parse available indexes for user desired index
       if (indexNames.includes(config.index)) {
-        const targetIndex = indexes.filter(
+        const targetIndex = indexes.find(
           (index: {name: string}) => index.name === config.index
-        )[0];
+        )!;
         this.logger.verbose(`Found index: ${targetIndex.name}`);
 
         // Post given file(s) to identified index

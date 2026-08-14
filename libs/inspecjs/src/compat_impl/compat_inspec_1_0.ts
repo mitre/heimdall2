@@ -195,7 +195,7 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       return control.desc || 'No message found.';
     } else {
       // If it has any impact, convert each result to a message line and chain them all together
-      return control.results.map((r) => ExecControl.to_message_line(r)).join('');
+      return control.results.map((r) => this.to_message_line(r)).join('');
     }
   }
 
@@ -318,14 +318,13 @@ export class ProfileControl extends HDFControl10 implements HDFControl {
   constructor(control: ProfileControl_1_0) {
     super(control, true, false, false);
     // Build descriptions — same fromEntries rationale as above; the filter
-    // preserves the old typeof check, and the assertion records what that
-    // filter guarantees at runtime.
+    // preserves the old typeof check.
     if (control.descriptions) {
       this.descriptions = Object.fromEntries(
         Object.entries(control.descriptions).filter(
           ([, value]) => typeof value === 'string'
         )
-      ) as Record<string, string>;
+      );
     }
   }
 
