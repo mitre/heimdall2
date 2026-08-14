@@ -586,9 +586,9 @@ export default class ExportCKLModal extends Vue {
         ),
         version: version?.major ?? 0,
         versionplaceholder: (version?.major ?? 0).toString(),
-        releasenumber: parseInt(releasenumber, 10) || version?.minor || 0,
+        releasenumber: Number(releasenumber) || version?.minor || 0,
         releasenumberplaceholder: (
-          parseInt(releasenumber, 10) ||
+          Number(releasenumber) ||
           version?.minor ||
           0
         ).toString(),
@@ -621,10 +621,11 @@ export default class ExportCKLModal extends Vue {
     // Only format for UCs where the name ends with values contained in the baselineArray
     const baselineArray = ['stig-baseline', 'cis-baseline', 'srg-baseline'];
     for (const baseline of baselineArray) {
-      if (name.indexOf(baseline) > 0) {
-        index = name.indexOf(baseline);
-        break;
+      if (name.indexOf(baseline) <= 0) {
+        continue;
       }
+      index = name.indexOf(baseline);
+      break;
     }
 
     // We need to format the name

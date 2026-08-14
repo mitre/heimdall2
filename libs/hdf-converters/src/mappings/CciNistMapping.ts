@@ -81,7 +81,7 @@ export class CciNistTwoWayMapper {
 
     if (targetItem) {
       for (const reference of targetItem.references.reference) {
-        const version = parseFloat(reference['@_version']);
+        const version = Number(reference['@_version']);
         if (version > highestVersion) {
           highestVersion = version;
           highestVersionControl = reference['@_index'];

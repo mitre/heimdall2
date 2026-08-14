@@ -22,9 +22,9 @@ function impactMapping(input: Record<string, unknown>, id: string): number {
     const matches = input.find((element) => {
       return _.get(element, 'ClassInfo.ClassID') === id;
     });
-    return parseFloat(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5;
+    return Number(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5;
   } else {
-    return parseFloat(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
+    return Number(_.get(input, 'ClassInfo.DefaultSeverity')) / 5;
   }
 }
 

@@ -235,11 +235,12 @@ export class Evaluation extends VuexModule {
   SAVE_EVALUATION(evaluationToSave: IEvaluation) {
     let found = false;
     for (const [index, evaluation] of this.allEvaluations.entries()) {
-      if (evaluationToSave.id === evaluation.id) {
-        this.allEvaluations.splice(index, 1, evaluationToSave);
-        found = true;
-        break;
+      if (evaluationToSave.id !== evaluation.id) {
+        continue;
       }
+      this.allEvaluations.splice(index, 1, evaluationToSave);
+      found = true;
+      break;
     }
     if (!found) {
       this.allEvaluations.push(evaluationToSave);
@@ -252,11 +253,12 @@ export class Evaluation extends VuexModule {
   SAVE_PAGED_EVALUATION(evaluationToSave: IEvaluation) {
     let found = false;
     for (const [index, evaluation] of this.pagedEvaluations.entries()) {
-      if (evaluationToSave.id === evaluation.id) {
-        this.pagedEvaluations.splice(index, 1, evaluationToSave);
-        found = true;
-        break;
+      if (evaluationToSave.id !== evaluation.id) {
+        continue;
       }
+      this.pagedEvaluations.splice(index, 1, evaluationToSave);
+      found = true;
+      break;
     }
     if (!found) {
       this.pagedEvaluations.push(evaluationToSave);

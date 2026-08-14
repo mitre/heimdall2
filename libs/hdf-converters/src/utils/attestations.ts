@@ -137,6 +137,28 @@ export function convertAttestationToSegment(
   }
 }
 
+function applyAttestationToControls(
+  attestation: Attestation,
+  controls: ExecJSON.Control[]
+): boolean {
+  let foundControl = false;
+  for (const control of controls) {
+    if (!attestationCanBeAdded(attestation, control)) {
+      continue;
+    }
+    foundControl = true;
+    if (['passed', 'failed'].includes(attestation.status)) {
+      control.attestation_data = attestation as unknown as AttestationData;
+      control.results.push(convertAttestationToSegment(attestation));
+    } else {
+      console.error(
+        `Invalid attestation status for Control ${control.id}: ${attestation.status} - Status must be passed or failed. To make this control 'not applicable', use a waiver.`
+      );
+    }
+  }
+  return foundControl;
+}
+
 export function addAttestationToHDF(
   hdf: ExecJSON.Execution,
   attestations: Attestation[]
@@ -144,19 +166,8 @@ export function addAttestationToHDF(
   for (const attestation of attestations) {
     let found_control = false;
     for (const profile of hdf.profiles) {
-      for (const control of profile.controls) {
-        if (attestationCanBeAdded(attestation, control)) {
-          found_control = true;
-          if (['passed', 'failed'].includes(attestation.status)) {
-            control.attestation_data =
-              attestation as unknown as AttestationData;
-            control.results.push(convertAttestationToSegment(attestation));
-          } else {
-            console.error(
-              `Invalid attestation status for Control ${control.id}: ${attestation.status} - Status must be passed or failed. To make this control 'not applicable', use a waiver.`
-            );
-          }
-        }
+      if (applyAttestationToControls(attestation, profile.controls)) {
+        found_control = true;
       }
     }
     if (!found_control) {

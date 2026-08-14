@@ -377,20 +377,21 @@ export default class Compare extends Vue {
 
   getPassthroughFields() {
     for (const file of this.files) {
-      if ('passthrough' in file.evaluation.data) {
-        const passthroughData = _.get(file.evaluation.data, 'passthrough');
-        if (_.isObject(passthroughData)) {
-          this.compareItems = [
-            ...this.compareItems,
-            ...Object.keys(passthroughData)
-              .filter(
-                (key) =>
-                  !this.compareItems.includes(`Passthrough Field: ${key}`)
-              )
-              .map((key) => `Passthrough Field: ${key}`)
-          ];
-        }
+      if (!('passthrough' in file.evaluation.data)) {
+        continue;
       }
+      const passthroughData = _.get(file.evaluation.data, 'passthrough');
+      if (!_.isObject(passthroughData)) {
+        continue;
+      }
+      this.compareItems = [
+        ...this.compareItems,
+        ...Object.keys(passthroughData)
+          .filter(
+            (key) => !this.compareItems.includes(`Passthrough Field: ${key}`)
+          )
+          .map((key) => `Passthrough Field: ${key}`)
+      ];
     }
   }
 

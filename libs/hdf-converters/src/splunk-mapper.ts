@@ -161,8 +161,10 @@ function consolidateFilePayloads(
 }
 
 function unixTimeToDate(unixTime: string): Date {
-  // Splunk only currently returns ints but this could be a decimal for more precision
-  return new Date(parseFloat(unixTime) * 1000);
+  // Splunk only currently returns ints but this could be a decimal for more
+  // precision. Number('') is 0, but a missing timestamp must stay an invalid
+  // date so the caller's fallback fires — hence the explicit empty guard.
+  return new Date(unixTime ? Number(unixTime) * 1000 : NaN);
 }
 
 export class SplunkMapper {

@@ -205,6 +205,23 @@ export const EmptyChecklistObject: ChecklistObject = {
   ]
 };
 
+function applyProfileMetadataToStig(
+  stig: ChecklistObject['stigs'][number],
+  profiles: ChecklistMetadata['profiles']
+): void {
+  for (const profile of profiles) {
+    if (stig.header.title !== profile.name) {
+      continue;
+    }
+    stig.header.title = profile.title || profile.name;
+    stig.header.version = profile.version.toString();
+    stig.header.releaseinfo = `Release: ${profile.releasenumber} Benchmark Date: ${profile.releasedate}`;
+    for (const vuln of stig.vulns) {
+      vuln.stigRef = `${stig.header.title} :: Version ${stig.header.version}, ${stig.header.releaseinfo}`;
+    }
+  }
+}
+
 export function updateChecklistWithMetadata(
   file: ExecJSON.Execution
 ): ChecklistObject {
@@ -232,16 +249,7 @@ export function updateChecklistWithMetadata(
   checklist.asset.webdbinstance = metadata.webdbinstance;
 
   for (const stig of checklist.stigs) {
-    for (const profile of metadata.profiles) {
-      if (stig.header.title === profile.name) {
-        stig.header.title = profile.title || profile.name;
-        stig.header.version = profile.version.toString();
-        stig.header.releaseinfo = `Release: ${profile.releasenumber} Benchmark Date: ${profile.releasedate}`;
-        for (const vuln of stig.vulns) {
-          vuln.stigRef = `${stig.header.title} :: Version ${stig.header.version}, ${stig.header.releaseinfo}`;
-        }
-      }
-    }
+    applyProfileMetadataToStig(stig, metadata.profiles);
   }
 
   return checklist;

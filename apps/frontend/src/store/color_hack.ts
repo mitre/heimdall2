@@ -17,7 +17,7 @@ function calculateColor(colorName: string): string {
 
   // Parse out the colors
   const rawColors = style.color.match(/\d+/gv) as RegExpExecArray; // We know this will succeed - we've already given the colors
-  const colors = rawColors.map((a: string) => parseInt(a, 10));
+  const colors = rawColors.map(Number);
 
   // Cleanup
   document.body.removeChild(elt);

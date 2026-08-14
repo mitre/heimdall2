@@ -38,10 +38,12 @@ export class ControlChange {
     let firstSelected = -1;
     for (let i = 0; i < this.values.length; i++) {
       // Non-null proven by the loop bound.
-      if (this.values.at(i)! !== NOT_SELECTED) {
-        firstSelected = i;
-        break;
+      const value = this.values.at(i)!;
+      if (value === NOT_SELECTED) {
+        continue;
       }
+      firstSelected = i;
+      break;
     }
     if (firstSelected === -1) {
       return false;

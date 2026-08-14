@@ -178,11 +178,12 @@ export class CycloneDXSBOMResults {
     // Look through every component at the top level of the list
     for (const component of data.components) {
       // Identify if subcomponents exist
-      if (component.components) {
-        // If so, pull out the subcomponents and push them to end of top level component list for further flattening
-        data.components.push(...component.components);
-        delete component.components;
+      if (!component.components) {
+        continue;
       }
+      // Pull out the subcomponents and push them to end of top level component list for further flattening
+      data.components.push(...component.components);
+      delete component.components;
     }
   }
 
