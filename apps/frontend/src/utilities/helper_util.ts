@@ -50,7 +50,7 @@ export class LocalStorageVal<T> {
   /** Retrieves the currently held item, as resolved by JSON.parse */
   get(): T | null {
     // Fetch the string, failing early if not set
-    const s = window.localStorage.getItem(this.storageKey);
+    const s = localStorage.getItem(this.storageKey);
     if (!s) {
       return null;
     }
@@ -77,12 +77,12 @@ export class LocalStorageVal<T> {
   /** Sets the local storage value to the given value, stringified */
   set(val: T): void {
     const nv = JSON.stringify(val);
-    window.localStorage.setItem(this.storageKey, nv);
+    localStorage.setItem(this.storageKey, nv);
   }
 
   /** Clears the local storage value */
   clear(): void {
-    window.localStorage.removeItem(this.storageKey);
+    localStorage.removeItem(this.storageKey);
   }
 }
 

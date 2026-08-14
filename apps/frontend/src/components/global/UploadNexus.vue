@@ -122,7 +122,7 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     SnackbarModule.visibility(false);
     localTab.set(newTab);
     // Forces the v-group-slider to recalculate its position to prevent getting stuck between S3 and Samples
-    setTimeout(() => window.dispatchEvent(new Event('resize')), 250);
+    setTimeout(() => dispatchEvent(new Event('resize')), 250);
   }
 
   get warning_banner(): string {

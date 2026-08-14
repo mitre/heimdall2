@@ -120,7 +120,7 @@ export default class Login extends Vue {
   }
 
   get logoffFailure() {
-    const queryString = window.location.search;
+    const queryString = location.search;
     const urlParams = new URLSearchParams(queryString);
     return (
       urlParams.get('logoff')?.toLowerCase() === 'true' &&
@@ -129,7 +129,7 @@ export default class Login extends Vue {
   }
 
   get logoffSnackbar() {
-    const queryString = window.location.search;
+    const queryString = location.search;
     const urlParams = new URLSearchParams(queryString);
     if (
       !this.logoffFailure &&

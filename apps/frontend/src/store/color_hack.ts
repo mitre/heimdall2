@@ -13,7 +13,7 @@ function calculateColor(colorName: string): string {
   elt.style.color = colorName;
 
   // Add it to the doc and get the resulting style
-  const style = window.getComputedStyle(document.body.appendChild(elt));
+  const style = getComputedStyle(document.body.appendChild(elt));
 
   // Parse out the colors
   const rawColors = style.color.match(/\d+/gv) as RegExpExecArray; // We know this will succeed - we've already given the colors

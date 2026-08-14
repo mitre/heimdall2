@@ -676,7 +676,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   }
 
   createShareLink(item: IEvaluation) {
-    return `${window.location.origin}/results/${item.id}`;
+    return `${location.origin}/results/${item.id}`;
   }
 }
 </script>
