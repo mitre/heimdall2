@@ -196,6 +196,11 @@ export default defineConfig([
       'unicorn/consistent-boolean-name': 'off',
       'unicorn/no-null': 'off',
       'unicorn/no-process-exit': 'off',
+      // The same check from a second plugin. Leaving it on would silently
+      // undo the line above, and its advice is wrong at the entry points that
+      // trip it: throwing inside bootstrap().catch() produces the unhandled
+      // rejection those handlers exist to prevent.
+      'n/no-process-exit': 'off',
       // 2026-08-13 triage (Aaron): style family dropped — zero correctness
       // value and every fixer is suggestion-type (AST-rewriting).
       // no-useless-else's fixer DESTROYS continue statements (inspecjs stack
@@ -411,6 +416,10 @@ export default defineConfig([
     name: 'promise-off-for-cypress-chainables',
     rules: {
       'promise/always-return': 'off',
+      // innerText is the rendered, user-visible text — which is precisely what
+      // an end-to-end verifier asserts about. textContent would also return
+      // text from hidden nodes, quietly weakening every one of these checks.
+      'unicorn/prefer-dom-node-text-content': 'off',
     },
   },
   {
@@ -536,7 +545,25 @@ export default defineConfig([
     // resolver. The backend keeps the rule — it is the actual Node app.
     files: ['libs/**/*.ts'],
     name: 'n/lib-source-tsc-resolution',
-    rules: { 'n/no-missing-import': 'off' },
+    rules: {
+      'n/no-missing-import': 'off',
+      // Same source-vs-compiled mismatch, other direction: these packages
+      // publish lib/ (see each package.json "files"), so every import of a
+      // sibling SOURCE file reads as unpublished to the rule. What ships is
+      // lib/index.js importing lib/compat_wrappers.js, which is published.
+      'n/no-unpublished-import': 'off',
+    },
+  },
+  {
+    // eslint-plugin-n models the NODE runtime, where navigator and
+    // localStorage are recent/experimental builtins. apps/frontend is a
+    // BROWSER app: these are long-standing DOM APIs there, and the bare
+    // spelling is the form both prefer-global-this and
+    // no-unnecessary-global-this accept. The backend keeps the rule — it is
+    // the actual Node app.
+    files: ['apps/frontend/**/*.{js,mjs,cjs,ts,mts,cts,vue}'],
+    name: 'n/frontend-browser-globals',
+    rules: { 'n/no-unsupported-features/node-builtins': 'off' },
   },
   {
     extends: [json.configs.recommended],
@@ -544,6 +571,17 @@ export default defineConfig([
     ignores: ['package-lock.json', 'parse_testbed/**', 'schemas/**'],
     language: 'json/json',
     name: 'json',
+  },
+  {
+    // Captured scanner output, not authored JSON: real InSpec runs emit a
+    // control's `check`/`fix` keys more than once, and last-wins is exactly
+    // what the parser under test sees. Editing a fixture to satisfy the rule
+    // would stop it matching the tool it was captured from.
+    files: ['apps/frontend/tests/hdf_data/**/*.json'],
+    language: 'json/json',
+    name: 'json/captured-fixtures',
+    plugins: { json },
+    rules: { 'json/no-duplicate-keys': 'off' },
   },
   {
     // VS Code config files are JSONC — comments are part of the format. The
