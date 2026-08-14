@@ -194,6 +194,10 @@ export default defineConfig([
       // prefix enforcement renames public-ish booleans (Vue props, mapper
       // options) for zero behavior gain.
       'unicorn/consistent-boolean-name': 'off',
+      // Same class again: its three hits rename EXPORTED types of a published
+      // package (FileMetaData, GenericPayloadWithMetaData), which every
+      // consumer of hdf-converters would have to follow, for no behavior gain.
+      'unicorn/consistent-compound-words': 'off',
       'unicorn/no-null': 'off',
       'unicorn/no-process-exit': 'off',
       // The same check from a second plugin. Leaving it on would silently
@@ -598,6 +602,26 @@ export default defineConfig([
     files: ['apps/frontend/**/*.{js,mjs,cjs,ts,mts,cts,vue}'],
     name: 'n/frontend-browser-globals',
     rules: { 'n/no-unsupported-features/node-builtins': 'off' },
+  },
+  {
+    // The direct element replacement this rule prefers is exactly the bug that
+    // was fixed here: Vue 2 cannot observe `arr[i] = x`, so the write lands
+    // silently and nothing re-renders. splice IS the reactive replacement, and
+    // the call sites say so in their own comments.
+    files: ['apps/frontend/**/*.{js,ts,vue}'],
+    name: 'unicorn/vue2-reactive-array-writes',
+    plugins: { unicorn },
+    rules: { 'unicorn/no-confusing-array-splice': 'off' },
+  },
+  {
+    // These regexes ARE the STIG password rules, and their siblings depend on
+    // case being significant (separate lowercase and uppercase checks). Folding
+    // two of them onto an `i` flag makes the set read as though case does not
+    // matter, in a published package that ships no tests to catch a later
+    // mistake. Left explicit on purpose.
+    files: ['libs/password-complexity/**'],
+    name: 'regexp/password-rules-stay-explicit',
+    rules: { 'regexp/use-ignore-case': 'off' },
   },
   {
     extends: [json.configs.recommended],
