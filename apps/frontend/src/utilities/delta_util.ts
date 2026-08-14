@@ -215,7 +215,9 @@ export class ComparisonContext {
   constructor(executions: readonly SourcedContextualizedEvaluation[]) {
     // Get all of the "top level" controls from each execution, IE those that actually ran
     // grouped by their files unique id.
-    const allControls = executions.map(extract_top_level_controls);
+    const allControls = executions.map((execution) =>
+      extract_top_level_controls(execution)
+    );
     // Organize the controls by ID
     // The structure this returns is as follows:
     // {{"V-XXX": {"unique_file_id_1": control, "unique_file_id_2": control, ...}}}

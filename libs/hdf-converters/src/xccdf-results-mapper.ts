@@ -162,7 +162,7 @@ function nistTag(input: IIdent | IIdent[]): string[] {
     ...asArray(input)
       .filter((x) => !!x)
       .map((x) => x.text)
-      .map(parse_nist)
+      .map((text) => parse_nist(text))
       .filter((x) => !!x)
       .filter(is_control)
       .map((x) => x.canonize())
@@ -523,7 +523,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[]
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(this.parseHtml).join('\n'),
+                  data: asArray(data).map((element) => this.parseHtml(element)).join('\n'),
                   label: 'fix'
                 })
               } as unknown as ExecJSON.ControlDescription,
@@ -532,7 +532,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[]
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(this.parseHtml).join('\n'),
+                  data: asArray(data).map((element) => this.parseHtml(element)).join('\n'),
                   label: 'rationale'
                 })
               } as unknown as ExecJSON.ControlDescription,
@@ -541,7 +541,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[]
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(this.parseHtml).join('\n'),
+                  data: asArray(data).map((element) => this.parseHtml(element)).join('\n'),
                   label: 'warning'
                 })
               } as unknown as ExecJSON.ControlDescription

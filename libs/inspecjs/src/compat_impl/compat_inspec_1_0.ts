@@ -53,7 +53,9 @@ abstract class HDFControl10 implements HDFControl {
     const seenSpecs = new Set<string>(); // Used to track duplication
 
     // Process item by item
-    (Array.isArray(raw) ? raw : [raw]).map(parse_nist).forEach((x) => {
+    (Array.isArray(raw) ? raw : [raw])
+      .map((tag) => parse_nist(tag))
+      .forEach((x) => {
       if (!x) {
         return;
       } else if (is_control(x)) {

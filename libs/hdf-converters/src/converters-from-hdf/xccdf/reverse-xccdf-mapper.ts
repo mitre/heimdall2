@@ -91,7 +91,7 @@ function toMessageLine(segment: ExecJSON.ControlResult): string {
 }
 
 function getMessages(segments: ExecJSON.ControlResult[]) {
-  return segments.map(toMessageLine).join('\n\n');
+  return segments.map((segment) => toMessageLine(segment)).join('\n\n');
 }
 
 export class FromHDFToXCCDFMapper {
