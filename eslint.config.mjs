@@ -478,7 +478,11 @@ export default defineConfig([
     // unhandled rejection. File-scoped because that is eslint's granularity;
     // these files are thin entry shells, with the real logic in modules
     // that keep both rules.
-    files: ['apps/backend/src/main.ts', 'packaging/test-infra/**/*.js'],
+    files: [
+      'apps/backend/src/main.ts',
+      'packaging/test-infra/**/*.js',
+      'test/support/server/**/*.js',
+    ],
     name: 'unicorn/cjs-entry-points',
     plugins: { unicorn },
     rules: {
