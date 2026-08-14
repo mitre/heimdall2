@@ -242,7 +242,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   get nistTags(): Tag[] {
     let nistTags = this.control.hdf.rawNistTags;
-    nistTags = nistTags.filter((tag) => tag.search(REVISION_TAG) === -1);
+    nistTags = nistTags.filter((tag) => !REVISION_TAG.test(tag));
     return nistTags.map((tag) => {
       const nisted = parse_nist(tag);
       let url = '';

@@ -49,11 +49,11 @@ export function lowercaseAll(input: string | string[]): string | string[] {
 }
 
 export function valueToSeverity(severity: string): Severity {
-  if (severities.find((severity) => severity === severity.toLowerCase())) {
-    return severity as Severity;
-  } else {
-    return 'none';
+  const candidate = severity.toLowerCase();
+  if ((severities as readonly string[]).includes(candidate)) {
+    return candidate as Severity;
   }
+  return 'none';
 }
 
 /** Normalizes the ADD_* mutations' scalar-or-array payloads for spreading. */

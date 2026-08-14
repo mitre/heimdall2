@@ -180,10 +180,7 @@ export class AwsConfigMapper {
         for (const [extractedResourceName, resourceName] of extractedResourceNames) {
           if (
             completedControl.code_desc.includes(
-              JSON.stringify(extractedResourceName)
-                .replaceAll('"', '')
-                .replaceAll('{', '')
-                .replaceAll('}', '')
+              JSON.stringify(extractedResourceName).replaceAll(/["{}]/g, '')
             )
           ) {
             return {
@@ -255,10 +252,7 @@ export class AwsConfigMapper {
     ) {
       output = JSON.stringify(
         result.EvaluationResultIdentifier.EvaluationResultQualifier
-      )
-        .replaceAll('"', '')
-        .replaceAll('{', '')
-        .replaceAll('}', '');
+      ).replaceAll(/["{}]/g, '');
     }
     return output;
   }
@@ -344,9 +338,7 @@ export class AwsConfigMapper {
       configRule.InputParameters !== undefined &&
       configRule.InputParameters !== '{}'
     ) {
-      params = configRule.InputParameters.replaceAll('{', '')
-        .replaceAll('}', '')
-        .split(',');
+      params = configRule.InputParameters.replaceAll(/[{}]/g, '').split(',');
     }
     const checkText = [
       `ARN: ${configRule.ConfigRuleArn || 'N/A'}`,

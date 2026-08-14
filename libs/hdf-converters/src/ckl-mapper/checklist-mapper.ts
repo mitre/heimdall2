@@ -114,7 +114,7 @@ function computeSeverity(vuln: ChecklistVuln): string {
   let computed = severity;
   if (severityOverride) computed = severityOverride;
 
-  if (!severities.find((severity) => severity === computed))
+  if (!(severities as readonly string[]).includes(computed))
     throw new Error(
       `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
         vuln.vulnNum
@@ -211,7 +211,7 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const findingDetails = findings[0].code_desc;
 
   // check if code_desc is empty or does not match the above regular expression
-  if (!FINDING_DETAILS_PATTERN.exec(findingDetails)) {
+  if (!FINDING_DETAILS_PATTERN.test(findingDetails)) {
     return [
       {
         status: findings[0].status,

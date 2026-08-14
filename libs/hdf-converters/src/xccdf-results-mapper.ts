@@ -122,7 +122,7 @@ function getProfiles(
         | Record<string, unknown>[]
     );
     if (
-      selects.find(
+      selects.some(
         (select) =>
           ids.includes(_.get(select, 'idref') as string) &&
           _.get(select, 'selected') === 'true'
@@ -145,7 +145,7 @@ function extractCci(input: IIdent | IIdent[]): string[] {
   const output: string[] = [];
   for (const element of inputArray) {
     const text = _.get(element, 'text');
-    if (!!text && CCI_REGEX.exec(text)) {
+    if (!!text && CCI_REGEX.test(text)) {
       output.push(text);
     }
   }
