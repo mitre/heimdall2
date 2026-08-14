@@ -30,6 +30,14 @@ describe('nessus_mapper', () => {
     );
     */
 
+    // Throw rather than assert-and-narrow: an assertion inside the narrowing
+    // `if` would let a non-array conversion pass this test silently.
+    if (!Array.isArray(converted)) {
+      throw new TypeError(
+        'Expected the nessus mapper to produce one execution per host'
+      );
+    }
+
     const expectedSet = [
       JSON.parse(
         fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json', {
@@ -48,15 +56,11 @@ describe('nessus_mapper', () => {
       )
     ];
 
-    expect(Array.isArray(converted)).toBe(true);
-
-    if (Array.isArray(converted)) {
-      expect(converted.map((resultsSet) => omitVersions(resultsSet))).toEqual(
-        expectedSet.map((resultsSet: ExecJSON.Execution) =>
-          omitVersions(resultsSet)
-        )
-      );
-    }
+    expect(converted.map((resultsSet) => omitVersions(resultsSet))).toEqual(
+      expectedSet.map((resultsSet: ExecJSON.Execution) =>
+        omitVersions(resultsSet)
+      )
+    );
   });
 });
 
@@ -87,6 +91,14 @@ describe('nessus_mapper_withraw', () => {
     );
     */
 
+    // Throw rather than assert-and-narrow: an assertion inside the narrowing
+    // `if` would let a non-array conversion pass this test silently.
+    if (!Array.isArray(converted)) {
+      throw new TypeError(
+        'Expected the nessus mapper to produce one execution per host'
+      );
+    }
+
     const expectedSet = [
       JSON.parse(
         fs.readFileSync(
@@ -114,14 +126,10 @@ describe('nessus_mapper_withraw', () => {
       )
     ];
 
-    expect(Array.isArray(converted)).toBe(true);
-
-    if (Array.isArray(converted)) {
-      expect(converted.map((resultsSet) => omitVersions(resultsSet))).toEqual(
-        expectedSet.map((resultsSet: ExecJSON.Execution) =>
-          omitVersions(resultsSet)
-        )
-      );
-    }
+    expect(converted.map((resultsSet) => omitVersions(resultsSet))).toEqual(
+      expectedSet.map((resultsSet: ExecJSON.Execution) =>
+        omitVersions(resultsSet)
+      )
+    );
   });
 });

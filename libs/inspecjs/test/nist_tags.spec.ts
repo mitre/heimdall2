@@ -11,11 +11,16 @@ test('Returns proper status counts for sample file in parse_testbed', () => {
     'utf8'
   );
   const result: ConversionResult = convertFile(content);
-  if (result['1_0_ExecJson'] !== undefined) {
-    // Get all controls
-    const controls: HDFControl[] = result['1_0_ExecJson'].profiles.flatMap(
-      (p) => p.controls.map((c) => hdfWrapControl(c))
-    );
-    expect(controls[0].rawNistTags).toEqual(['AC-17 (2)']);
+  const execJson = result['1_0_ExecJson'];
+  // Throw rather than assert inside the narrowing check: a fixture that stopped
+  // converting would otherwise pass this test without asserting anything.
+  if (execJson === undefined) {
+    throw new TypeError('Expected the fixture to convert to a 1.0 ExecJson');
   }
+
+  // Get all controls
+  const controls: HDFControl[] = execJson.profiles.flatMap((p) =>
+    p.controls.map((c) => hdfWrapControl(c))
+  );
+  expect(controls[0].rawNistTags).toEqual(['AC-17 (2)']);
 });

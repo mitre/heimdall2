@@ -10,14 +10,19 @@ test('Returns proper status counts for sample file in parse_testbed', () => {
     'utf8'
   );
   const result: ConversionResult = convertFile(content);
-  if (result['1_0_ExecJson'] !== undefined) {
-    expect(statusCounts.count_exec_1_0(result['1_0_ExecJson'])).toEqual({
-      'From Profile': 0,
-      'Not Applicable': 0,
-      'Not Reviewed': 6,
-      'Profile Error': 2,
-      Failed: 28,
-      Passed: 16
-    });
+  const execJson = result['1_0_ExecJson'];
+  // Throw rather than assert inside the narrowing check: a fixture that stopped
+  // converting would otherwise pass this test without asserting anything.
+  if (execJson === undefined) {
+    throw new TypeError('Expected the fixture to convert to a 1.0 ExecJson');
   }
+
+  expect(statusCounts.count_exec_1_0(execJson)).toEqual({
+    'From Profile': 0,
+    'Not Applicable': 0,
+    'Not Reviewed': 6,
+    'Profile Error': 2,
+    Failed: 28,
+    Passed: 16
+  });
 });
