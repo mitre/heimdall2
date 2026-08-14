@@ -83,7 +83,6 @@
 <script lang="ts">
 import {InspecIntakeModule, FileLoadOptions} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {FileMetaData} from '@mitre/hdf-converters';
 import {AuthInfo, ScanResults, TenableUtil} from '@/utilities/tenable_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -94,8 +93,8 @@ import {InspecDataModule} from '@/store/data_store';
 export default class FileList extends Vue {
   @Prop({type: Object, required: true}) readonly tenableConfig!: AuthInfo;
 
-  executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
-  selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+  executions: ScanResults[] = [];
+  selectedExecutions: ScanResults[] = [];
 
   loading = false;
 
