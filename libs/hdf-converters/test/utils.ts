@@ -96,13 +96,13 @@ export function omitHDFTimes(
 // replaces the version in the checklist file with the
 // actual hdf-converters version
 export function replaceCKLVersion(input: string): string {
-  return input.replace(CKL_VERSION_COMMENT, hdfConvertersVersion);
+  return input.replace(CKL_VERSION_COMMENT, () => hdfConvertersVersion);
 }
 
 // replaces the version in the checklist file with the
 // actual hdf-converters version
 export function replaceXCCDFVersion(input: string): string {
-  return input.replace(XCCDF_VERSION_ELEMENT, hdfConvertersVersion);
+  return input.replace(XCCDF_VERSION_ELEMENT, () => hdfConvertersVersion);
 }
 
 export function omitHTMLStyleTag(input: string): string {

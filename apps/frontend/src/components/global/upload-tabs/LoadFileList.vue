@@ -414,9 +414,9 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   // Called when the Search button is invoked (@click="executeSearch()")
   async executeSearch() {
     // Clearing the fields using the clearable icon sets the model to null
-    this.searchItems = this.searchItems == null ? '' : this.searchItems;
-    this.searchGroups = this.searchGroups == null ? '' : this.searchGroups;
-    this.searchTags = this.searchTags == null ? '' : this.searchTags;
+    this.searchItems ??= '';
+    this.searchGroups ??= '';
+    this.searchTags ??= '';
 
     if (
       this.searchItems.trim().length === 0 &&

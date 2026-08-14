@@ -49,7 +49,7 @@ function formatSkipMessage(input: Record<string, unknown>): string | undefined {
   return suppressions
     .map(
       (suppression) =>
-        `${suppression.justification ? suppression.justification : 'No justification provided'} (${suppression.kind})`
+        `${suppression.justification || 'No justification provided'} (${suppression.kind})`
     )
     .join('\n');
 }

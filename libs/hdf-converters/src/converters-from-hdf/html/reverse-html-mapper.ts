@@ -539,7 +539,7 @@ export class FromHDFToHTMLMapper {
   // Replace all found illegal characters in string with compliant string equivalent
   replaceIllegalCharacters(text: string): string {
     for (const illegalCharacter of ILLEGAL_CHARACTER_SET) {
-      text = text.replaceAll(illegalCharacter[0], illegalCharacter[1]);
+      text = text.replaceAll(illegalCharacter[0], () => illegalCharacter[1]);
     }
     return text;
   }

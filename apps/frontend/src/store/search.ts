@@ -208,12 +208,15 @@ class Search extends VuexModule implements ISearchState {
       this.searchTerm.toLowerCase().includes(`${searchPayload.field}:`)
     ) {
       const replaceRegex = fieldFilterPattern(searchPayload.field);
+      // Function replacement: the values come from user search input, so a
+      // string replacement would interpret any $-patterns they contain.
       const newSearch = this.searchTerm.replace(
         replaceRegex,
-        `${searchPayload.field}:"${[
-          ...searchPayload.previousValues,
-          searchPayload.value
-        ].join(',')}"`
+        () =>
+          `${searchPayload.field}:"${[
+            ...searchPayload.previousValues,
+            searchPayload.value
+          ].join(',')}"`
       );
       this.context.commit('SET_SEARCH', newSearch);
     }
@@ -241,7 +244,7 @@ class Search extends VuexModule implements ISearchState {
       // If we still have any filters
       const newSearch = this.searchTerm.replace(
         replaceRegex,
-        `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`
+        () => `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`
       );
       this.context.commit('SET_SEARCH', newSearch);
     } // Otherwise just remove the text from the search bar

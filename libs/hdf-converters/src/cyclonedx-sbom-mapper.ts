@@ -366,11 +366,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             // Certain license reports only provide the license name in the `name` field
             // Check there first and then default to `id`
             return input.licenses
-              ?.map((license) =>
-                license?.license?.name
-                  ? license.license.name
-                  : license?.license?.id
-              )
+              ?.map((license) => license?.license?.name || license?.license?.id)
               .filter(Boolean)
               .join(', ');
           }
@@ -556,7 +552,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   | CycloneDXBillOfMaterialsStandardVulnerability
                   | CycloneDXSoftwareBillOfMaterialsStandardVulnerability
               ): string =>
-                input.description ? input.description : String(input.id)
+                input.description || String(input.id)
             },
             id: {path: 'id'},
             desc: {

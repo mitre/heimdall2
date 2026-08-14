@@ -32,8 +32,8 @@ export const TO_ASFF_TYPES_SLASH_REPLACEMENT = '{{{SLASH}}}'; // The "Types" fie
 
 export function escapeForwardSlashes(s: unknown): string {
   return _.isString(s)
-    ? s.replaceAll('/', TO_ASFF_TYPES_SLASH_REPLACEMENT)
-    : JSON.stringify(s).replaceAll('/', TO_ASFF_TYPES_SLASH_REPLACEMENT);
+    ? s.replaceAll('/', () => TO_ASFF_TYPES_SLASH_REPLACEMENT)
+    : JSON.stringify(s).replaceAll('/', () => TO_ASFF_TYPES_SLASH_REPLACEMENT);
 }
 
 export type SegmentedControl = ExecJSON.Control & {
