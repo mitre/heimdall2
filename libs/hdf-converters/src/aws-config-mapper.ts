@@ -66,7 +66,7 @@ export class AwsConfigMapper {
     if (response.ConfigRules === undefined) {
       throw new Error('No data was returned');
     } else {
-      while (response !== undefined && response.ConfigRules !== undefined) {
+      while (response?.ConfigRules !== undefined) {
         response.ConfigRules.forEach((rule) => {
           configRules.push(rule);
         });
@@ -251,8 +251,7 @@ export class AwsConfigMapper {
   private getCodeDesc(result: EvaluationResult): string {
     let output = '';
     if (
-      result.EvaluationResultIdentifier !== undefined &&
-      result.EvaluationResultIdentifier.EvaluationResultQualifier !== undefined
+      result.EvaluationResultIdentifier?.EvaluationResultQualifier !== undefined
     ) {
       output = JSON.stringify(
         result.EvaluationResultIdentifier.EvaluationResultQualifier

@@ -195,7 +195,7 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
     element.refs = element.refs.filter((ref) => ref.url);
     if (element.descriptions !== undefined && element.descriptions !== null) {
       element.descriptions = element.descriptions.filter(
-        (description) => description && description.data
+        (description) => description?.data
       );
     }
   });

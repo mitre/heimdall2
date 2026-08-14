@@ -239,7 +239,7 @@ export function contextualizeEvaluation(
       const sameId = allControls.filter((c) => c.data.id === cc.data.id);
       // Find which of them, if any, is populated with results.
       let sameIdPopulated = sameId.find(
-        (c) => c.hdf.segments && c.hdf.segments.length
+        (c) => c.hdf.segments?.length
       );
 
       // If found a populated base, use that. If not, we substitute in the first found element in sameId. This is arbitrary.

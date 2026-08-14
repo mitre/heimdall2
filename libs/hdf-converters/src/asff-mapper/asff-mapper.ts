@@ -208,7 +208,7 @@ function handleIdGroup(
           element.data !== '' &&
           index ===
             arr.findIndex(
-              (e) => e !== null && e !== undefined && e.data === element.data
+              (e) => e?.data === element.data
             ) // https://stackoverflow.com/a/36744732/645647
       ) as ExecJSON.ControlDescription[],
     refs: group

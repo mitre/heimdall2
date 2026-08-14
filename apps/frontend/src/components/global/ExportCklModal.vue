@@ -540,7 +540,7 @@ export default class ExportCKLModal extends Vue {
   splitReleaseInfo(info: string): string[] {
     const defaultReturn = ['', ''];
     const matches = RELEASE_INFO_PATTERN.exec(info);
-    if (matches && matches.groups) {
+    if (matches?.groups) {
       return [matches.groups.release, matches.groups.date];
     }
     return defaultReturn;
