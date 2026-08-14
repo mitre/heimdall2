@@ -92,13 +92,14 @@ export class TenableController {
 
     const allowedHostUrl = this.resolveAllowedHostUrl(host_url);
     if (!allowedHostUrl) {
+      // 400, not 403: the frontend treats any 403 here as a credentials error.
       throw new HttpException(
         {
-          status: HttpStatus.FORBIDDEN,
+          status: HttpStatus.BAD_REQUEST,
           message: 'Tenable host URL is not in the configured allowlist',
           code: 'HOST_NOT_ALLOWED'
         },
-        HttpStatus.FORBIDDEN
+        HttpStatus.BAD_REQUEST
       );
     }
 

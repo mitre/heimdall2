@@ -159,6 +159,8 @@ export class TenableUtil {
           if (this.isServer) {
             if (error.response?.data?.code === 'INVALID_HOST_URL') { // Custom set in the backend
               rejectMsg = (error.response?.data?.message ?? 'Tenable host URL to IP address resolution failed');
+            } else if (error.response?.data?.code === 'HOST_NOT_ALLOWED') { // Custom set in the backend
+              rejectMsg = (error.response?.data?.message ?? 'Tenable host URL is not in the configured allowlist');
             } else if (error.response?.data?.message) {
               rejectMsg = this.getCSPErrorMsg(this.hostConfig.host_url, TENABLE_HOST_URLS)
             } else {
