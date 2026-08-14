@@ -491,7 +491,7 @@ describe('parseXLSXAttestations', () => {
   });
 });
 
-describe('parseXLSXAttestations', () => {
+describe('YAML attestation parsing', () => {
   const yamlInputFile = fs.readFileSync(
     'sample_jsons/attestations/attestations_yamlFormat.yaml',
     'utf8'

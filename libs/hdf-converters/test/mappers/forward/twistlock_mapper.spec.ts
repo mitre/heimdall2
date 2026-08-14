@@ -88,7 +88,7 @@ describe('twistlock_mapper_withraw', () => {
   });
 });
 
-describe('twistlock_mapper_withraw', () => {
+describe('twistlock_mapper_code_repo_withraw', () => {
   it('Successfully converts withRaw flagged Twistlock code repo scan', () => {
     const mapper = new TwistlockResults(
       fs.readFileSync(

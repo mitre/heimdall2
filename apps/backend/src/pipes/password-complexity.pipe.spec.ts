@@ -93,7 +93,7 @@ describe('PasswordComplexityPipe', () => {
         expect(validatePassword('1078')).toContain(validators[2].name);
       });
 
-      it('should fail because there is more than 3 consecutive repeating numbers in the password', () => {
+      it('should fail because there is more than 3 consecutive repeating special characters in the password', () => {
         expect(validatePassword('$$$$')).toContain(validators[2].name);
       });
 

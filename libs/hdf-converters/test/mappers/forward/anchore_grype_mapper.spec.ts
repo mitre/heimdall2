@@ -62,7 +62,7 @@ describe('anchore-grype_mapper_withraw', () => {
   });
 });
 
-describe('anchore-grype_mapper', () => {
+describe('anchore-grype_mapper_amazon', () => {
   it('Successfully converts amazon.json targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
@@ -91,7 +91,7 @@ describe('anchore-grype_mapper', () => {
   });
 });
 
-describe('anchore-grype_mapper_withraw', () => {
+describe('anchore-grype_mapper_amazon_withraw', () => {
   it('Successfully converts withraw flagged amazon.json targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
@@ -121,7 +121,7 @@ describe('anchore-grype_mapper_withraw', () => {
   });
 });
 
-describe('anchore-grype_mapper', () => {
+describe('anchore-grype_mapper_tensorflow', () => {
   it('Successfully converts tensorflow.json targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(
@@ -150,7 +150,7 @@ describe('anchore-grype_mapper', () => {
   });
 });
 
-describe('anchore-grype_mapper_withraw', () => {
+describe('anchore-grype_mapper_tensorflow_withraw', () => {
   it('Successfully converts withraw flagged tensorflow.json targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
       fs.readFileSync(

@@ -181,7 +181,7 @@ describe('trufflehog_saf_example_mapper_withraw', () => {
 });
 
 describe('trufflehog_example_mapper', () => {
-  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
+  it('Successfully converts trufflehog targeted at a local/cloned repository data', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
         'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog-report-example.json',
@@ -210,7 +210,7 @@ describe('trufflehog_example_mapper', () => {
   });
 });
 
-describe('trufflehog_example_mapper', () => {
+describe('trufflehog_example_mapper_withraw', () => {
   it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
     const mapper = new TrufflehogResults(
       fs.readFileSync(
