@@ -4,6 +4,32 @@ import {FromHdfToAsffMapper} from '../../../src/converters-from-hdf/asff/reverse
 import {omitASFFTimes, omitASFFTitle, omitASFFVersions} from '../../utils';
 
 describe('ASFF Reverse Mapper', () => {
+  it('Leaves the control order of the HDF it was given untouched', () => {
+    const inputData = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
+        {encoding: 'utf8'}
+      )
+    );
+    const idsBefore = inputData.profiles[0].controls.map(
+      (control: {id: string}) => control.id
+    );
+
+    new FromHdfToAsffMapper(inputData, {
+      input: 'rhel7-results.json',
+      awsAccountId: '12345678910',
+      target: 'reverse-proxy',
+      region: 'us-east-2'
+    }).toAsff();
+
+    // The mapper walks the controls in reverse. Doing that with .reverse()
+    // reordered the caller's own array in place; the fixtures could not see it
+    // because they only compare the mapper's output.
+    expect(
+      inputData.profiles[0].controls.map((control: {id: string}) => control.id)
+    ).toEqual(idsBefore);
+  });
+
   it('Successfully converts a one-layer HDF into ASFF', () => {
     const inputData = JSON.parse(
       fs.readFileSync(
