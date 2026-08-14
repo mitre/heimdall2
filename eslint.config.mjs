@@ -527,6 +527,18 @@ export default defineConfig([
     rules: { 'n/no-missing-import': 'off' },
   },
   {
+    // Same rule, same reason, for the published libs' TypeScript sources:
+    // Node only ever resolves their COMPILED output (lib/**/index.js exists
+    // after build), while the TS-source directory imports and the types-only
+    // @microsoft/microsoft-graph-types package (no JS entry by design) are
+    // resolved by tsc/vitest. The rule's Node-runtime model cannot see either,
+    // and import-x/no-unresolved already checks these files with the TS
+    // resolver. The backend keeps the rule — it is the actual Node app.
+    files: ['libs/**/*.ts'],
+    name: 'n/lib-source-tsc-resolution',
+    rules: { 'n/no-missing-import': 'off' },
+  },
+  {
     extends: [json.configs.recommended],
     files: ['**/*.json'],
     ignores: ['package-lock.json', 'parse_testbed/**', 'schemas/**'],
