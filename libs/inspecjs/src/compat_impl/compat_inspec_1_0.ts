@@ -30,6 +30,69 @@ import {
 const profileError = 'Profile Error';
 
 abstract class HDFControl10 implements HDFControl {
+  // Static helpers for computing our properties
+
+  private static compute_raw_nist_tags(
+    raw: ResultControl_1_0 | ProfileControl_1_0
+  ): string[] | string {
+    const fetched: string[] | string | undefined | null = raw.tags.nist;
+    if (fetched) {
+      return fetched;
+    } else {
+      return ['UM-1'];
+    }
+  }
+
+  /** Generates the nist tags, as needed. */
+  private static compute_proper_nist_tags(
+    raw: string[] | string
+  ): [NistControl[], NistRevision | null] {
+    // Initialize
+    let parsedNistTags: NistControl[] = [];
+    let parsedNistRevision: NistRevision | null = null;
+    const seenSpecs = new Set<string>(); // Used to track duplication
+
+    // Process item by item
+    (Array.isArray(raw) ? raw : [raw]).map(parse_nist).forEach((x) => {
+      if (!x) {
+        return;
+      } else if (is_control(x)) {
+        const specChain = x.subSpecifiers.join('-');
+        if (!seenSpecs.has(specChain)) {
+          seenSpecs.add(specChain);
+          parsedNistTags.push(x);
+        }
+      } else {
+        parsedNistRevision = x;
+      }
+    });
+
+    // Sort the tags
+    parsedNistTags = parsedNistTags.sort((a, b) => a.localCompare(b));
+
+    // Stub if necessary
+    if (parsedNistTags.length === 0) {
+      parsedNistTags.push(parse_nist('UM-1') as NistControl);
+    }
+
+    return [parsedNistTags, parsedNistRevision];
+  }
+
+  private static compute_severity(
+    raw: ResultControl_1_0 | ProfileControl_1_0
+  ): Severity {
+    // use severity override tag if it exists
+    if (severities.includes(raw.tags.severityoverride?.toLowerCase()))
+      return raw.tags.severityoverride;
+
+    // use severity tag if it exists
+    if (severities.includes(raw.tags.severity?.toLowerCase()))
+      return raw.tags.severity;
+
+    // otherwise, compute severity with impact
+    return convertImpactToSeverity(raw.impact);
+  }
+
   // Declare all properties expected
   readonly rawNistTags: string[];
   readonly parsedNistTags: NistControl[];
@@ -111,54 +174,6 @@ abstract class HDFControl10 implements HDFControl {
     }
   }
 
-  // Everything below here are helpers for computing our properties
-
-  private static compute_raw_nist_tags(
-    raw: ResultControl_1_0 | ProfileControl_1_0
-  ): string[] | string {
-    const fetched: string[] | string | undefined | null = raw.tags.nist;
-    if (fetched) {
-      return fetched;
-    } else {
-      return ['UM-1'];
-    }
-  }
-
-  /** Generates the nist tags, as needed. */
-  private static compute_proper_nist_tags(
-    raw: string[] | string
-  ): [NistControl[], NistRevision | null] {
-    // Initialize
-    let parsedNistTags: NistControl[] = [];
-    let parsedNistRevision: NistRevision | null = null;
-    const seenSpecs = new Set<string>(); // Used to track duplication
-
-    // Process item by item
-    (Array.isArray(raw) ? raw : [raw]).map(parse_nist).forEach((x) => {
-      if (!x) {
-        return;
-      } else if (is_control(x)) {
-        const specChain = x.subSpecifiers.join('-');
-        if (!seenSpecs.has(specChain)) {
-          seenSpecs.add(specChain);
-          parsedNistTags.push(x);
-        }
-      } else {
-        parsedNistRevision = x;
-      }
-    });
-
-    // Sort the tags
-    parsedNistTags = parsedNistTags.sort((a, b) => a.localCompare(b));
-
-    // Stub if necessary
-    if (parsedNistTags.length === 0) {
-      parsedNistTags.push(parse_nist('UM-1') as NistControl);
-    }
-
-    return [parsedNistTags, parsedNistRevision];
-  }
-
   canonized_nist(config: CanonizationConfig): string[] {
     const result: string[] = [];
     for (const v of this.parsedNistTags) {
@@ -169,66 +184,9 @@ abstract class HDFControl10 implements HDFControl {
     }
     return result;
   }
-
-  private static compute_severity(
-    raw: ResultControl_1_0 | ProfileControl_1_0
-  ): Severity {
-    // use severity override tag if it exists
-    if (severities.includes(raw.tags.severityoverride?.toLowerCase()))
-      return raw.tags.severityoverride;
-
-    // use severity tag if it exists
-    if (severities.includes(raw.tags.severity?.toLowerCase()))
-      return raw.tags.severity;
-
-    // otherwise, compute severity with impact
-    return convertImpactToSeverity(raw.impact);
-  }
 }
 
 export class ExecControl extends HDFControl10 implements HDFControl {
-  // Store message - it duplicates data but is very expensive to make,
-  // and in general we can afford ram more than anything else
-  readonly message: string;
-  readonly segments: HDFControlSegment[];
-  readonly status: ControlStatus;
-
-  constructor(control: ResultControl_1_0) {
-    // Waived is true if skipped_due_to_waiver is true
-    super(
-      control,
-      false,
-      Boolean(control.waiver_data?.skipped_due_to_waiver),
-      Boolean(control.attestation_data),
-      control.attestation_data?.status
-    );
-
-    // Build descriptions. fromEntries writes own data properties, so a
-    // scan-file label of '__proto__' can no longer replace the object's
-    // prototype the way per-key assignment could.
-    if (control.descriptions) {
-      this.descriptions = Object.fromEntries(
-        control.descriptions.map((x) => [x.label, x.data])
-      );
-    }
-
-    // Build message
-    this.message = ExecControl.compute_message(control);
-
-    // Build segments
-    this.segments = ExecControl.compute_segments(control);
-
-    // Build status (using segments! Must be after that!!)
-    this.status = this.compute_status();
-  }
-
-  get start_time(): string | undefined {
-    if (this.segments && this.segments.length > 0) {
-      return this.segments[0].start_time;
-    }
-    return undefined;
-  }
-
   private static compute_message(control: ResultControl_1_0): string {
     if (control.impact === 0) {
       // If it's no impact, just post the description (if it exists)
@@ -236,37 +194,6 @@ export class ExecControl extends HDFControl10 implements HDFControl {
     } else {
       // If it has any impact, convert each result to a message line and chain them all together
       return control.results.map((r) => ExecControl.to_message_line(r)).join('');
-    }
-  }
-
-  // I didn't make this one static because, frankly, it was annoying and unnecessary
-  // Just do it last
-  private compute_status(): ControlStatus {
-    if (
-      this.attested &&
-      this.attestationStatus &&
-      !['failed', 'passed'].includes(this.attestationStatus)
-    ) {
-      throw new Error(
-        `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`
-      );
-    }
-
-    if (!this.status_list || this.status_list.includes('error')) {
-      return profileError;
-    } else if (this.waived || this.wraps.impact === 0) {
-      // We interject this between profile error conditions because an empty-result waived control is still NA
-      return 'Not Applicable';
-    } else if (this.status_list.length === 0) {
-      return profileError;
-    } else if (this.status_list.includes('failed')) {
-      return 'Failed';
-    } else if (this.status_list.includes('passed')) {
-      return 'Passed';
-    } else if (this.status_list.includes('skipped')) {
-      return 'Not Reviewed';
-    } else {
-      return profileError; // Shouldn't get here, but might as well have fallback
     }
   }
 
@@ -305,6 +232,79 @@ export class ExecControl extends HDFControl10 implements HDFControl {
         resource: result.resource || undefined
       };
     });
+  }
+
+  // Store message - it duplicates data but is very expensive to make,
+  // and in general we can afford ram more than anything else
+  readonly message: string;
+  readonly segments: HDFControlSegment[];
+  readonly status: ControlStatus;
+
+  constructor(control: ResultControl_1_0) {
+    // Waived is true if skipped_due_to_waiver is true
+    super(
+      control,
+      false,
+      Boolean(control.waiver_data?.skipped_due_to_waiver),
+      Boolean(control.attestation_data),
+      control.attestation_data?.status
+    );
+
+    // Build descriptions. fromEntries writes own data properties, so a
+    // scan-file label of '__proto__' can no longer replace the object's
+    // prototype the way per-key assignment could.
+    if (control.descriptions) {
+      this.descriptions = Object.fromEntries(
+        control.descriptions.map((x) => [x.label, x.data])
+      );
+    }
+
+    // Build message
+    this.message = ExecControl.compute_message(control);
+
+    // Build segments
+    this.segments = ExecControl.compute_segments(control);
+
+    // Build status (using segments! Must be after that!!)
+    this.status = this.compute_status();
+  }
+
+  // I didn't make this one static because, frankly, it was annoying and unnecessary
+  // Just do it last
+  private compute_status(): ControlStatus {
+    if (
+      this.attested &&
+      this.attestationStatus &&
+      !['failed', 'passed'].includes(this.attestationStatus)
+    ) {
+      throw new Error(
+        `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`
+      );
+    }
+
+    if (!this.status_list || this.status_list.includes('error')) {
+      return profileError;
+    } else if (this.waived || this.wraps.impact === 0) {
+      // We interject this between profile error conditions because an empty-result waived control is still NA
+      return 'Not Applicable';
+    } else if (this.status_list.length === 0) {
+      return profileError;
+    } else if (this.status_list.includes('failed')) {
+      return 'Failed';
+    } else if (this.status_list.includes('passed')) {
+      return 'Passed';
+    } else if (this.status_list.includes('skipped')) {
+      return 'Not Reviewed';
+    } else {
+      return profileError; // Shouldn't get here, but might as well have fallback
+    }
+  }
+
+  get start_time(): string | undefined {
+    if (this.segments && this.segments.length > 0) {
+      return this.segments[0].start_time;
+    }
+    return undefined;
   }
 }
 

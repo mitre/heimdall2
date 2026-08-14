@@ -160,6 +160,11 @@ export default class GroupModal extends Vue {
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
+  // Upon user role update, the child component will emit whether the current state is acceptable
+  saveable = true;
+  // Upon group name change, the component will detect whether the current state is acceptable
+  duplicateName = false;
+
   get title(): string {
     if (this.create) {
       return 'Create a New Group';
@@ -172,8 +177,6 @@ export default class GroupModal extends Vue {
     return ServerModule.apiKeysEnabled;
   }
 
-  // Upon user role update, the child component will emit whether the current state is acceptable
-  saveable = true;
   updateSaveState(saveable: boolean) {
     if (!this.create) {
       if (!saveable) SnackbarModule.failure(`Must have at least 1 owner`);
@@ -181,8 +184,6 @@ export default class GroupModal extends Vue {
     }
   }
 
-  // Upon group name change, the component will detect whether the current state is acceptable
-  duplicateName = false;
   checkUniqueName(name: string) {
     this.duplicateName = GroupsModule.allGroups.some(
       (group) => group.name === name && group.id !== this.groupInfo.id

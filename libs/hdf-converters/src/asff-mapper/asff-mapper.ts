@@ -644,6 +644,17 @@ export class ASFFMapper extends BaseConverter {
     ]
   };
 
+  constructor(
+    asff: Record<string, unknown>,
+    supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
+    meta?: Record<string, string | undefined> | undefined
+  ) {
+    super(asff);
+    this.meta = meta;
+    this.supportingDocs = supportingDocs;
+    this.setMappings();
+  }
+
   statusReason(finding: unknown): string | undefined {
     const statusReasons = _.get(finding, 'Compliance.StatusReasons') as
       | Record<string, string>[]
@@ -676,17 +687,6 @@ export class ASFFMapper extends BaseConverter {
       'mapping',
       this.defaultMappings
     );
-  }
-
-  constructor(
-    asff: Record<string, unknown>,
-    supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
-    meta?: Record<string, string | undefined> | undefined
-  ) {
-    super(asff);
-    this.meta = meta;
-    this.supportingDocs = supportingDocs;
-    this.setMappings();
   }
 }
 

@@ -165,6 +165,23 @@ export class NetsparkerMapper extends BaseConverter {
   withRaw: boolean;
   parseHtml: ParseHtmlFunc;
 
+  constructor(
+    netsparkerXml: string,
+    parseHtml: ParseHtmlFunc,
+    withRaw = false
+  ) {
+    super(parseXml(netsparkerXml));
+    this.parseHtml = parseHtml;
+    this.withRaw = withRaw;
+    this.setMappings(
+      this.defineMappings(
+        Object.keys(this.data).some((k) => k.includes('netsparker'))
+          ? 'netsparker'
+          : 'invicti'
+      )
+    );
+  }
+
   defineMappings(
     toolname: string
   ): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
@@ -280,22 +297,5 @@ export class NetsparkerMapper extends BaseConverter {
         }
       }
     };
-  }
-
-  constructor(
-    netsparkerXml: string,
-    parseHtml: ParseHtmlFunc,
-    withRaw = false
-  ) {
-    super(parseXml(netsparkerXml));
-    this.parseHtml = parseHtml;
-    this.withRaw = withRaw;
-    this.setMappings(
-      this.defineMappings(
-        Object.keys(this.data).some((k) => k.includes('netsparker'))
-          ? 'netsparker'
-          : 'invicti'
-      )
-    );
   }
 }

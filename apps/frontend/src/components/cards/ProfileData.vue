@@ -96,6 +96,10 @@ export default class ProfileData extends Vue {
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile;
 
+  /** Models selected item ids */
+  active: string[] = [];
+  stopActivePropagation = false;
+
   // auto select the root profile on file change
   @Watch('file')
   onFileChanged(_newValue: boolean, _oldValue: boolean) {
@@ -107,9 +111,6 @@ export default class ProfileData extends Vue {
     this.setDefault();
   }
 
-  /** Models selected item ids */
-  active: string[] = [];
-  stopActivePropagation = false;
   /** Models all loaded profiles */
   get children(): TreeItem[] {
     return new TreeItem(this.file_root_profile).children;

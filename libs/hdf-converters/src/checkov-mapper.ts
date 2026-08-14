@@ -209,6 +209,11 @@ export class CheckovMapper extends BaseConverter<CheckovReport> {
     }
   };
 
+  constructor(checkovJson: string, withRaw = false) {
+    super(JSON.parse(checkovJson) as CheckovReport);
+    this.withRaw = withRaw;
+  }
+
 controlMapping(): MappedTransform<
   ExecJSON.Control & ILookupPath,
   ILookupPath
@@ -288,9 +293,4 @@ controlMapping(): MappedTransform<
     ]
   };
 }
-
-  constructor(checkovJson: string, withRaw = false) {
-    super(JSON.parse(checkovJson) as CheckovReport);
-    this.withRaw = withRaw;
-  }
 }

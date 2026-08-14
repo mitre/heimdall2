@@ -288,16 +288,6 @@ export class CycloneDXSBOMResults {
 export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
   withRaw: boolean;
 
-  // Pull any keys from a given index for the stored components listing
-  getComponentValueAtIndex(
-    index: number,
-    keys: string[]
-  ): Record<string, unknown> {
-    // _.pick tolerates undefined (returns {}), matching what the old typed
-    // lie produced for an out-of-range index.
-    return _.pick(this.data.components.at(index), keys);
-  }
-
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -684,5 +674,15 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
   constructor(exportJson: DataStorage, withRaw = false) {
     super(exportJson, true);
     this.withRaw = withRaw;
+  }
+
+  // Pull any keys from a given index for the stored components listing
+  getComponentValueAtIndex(
+    index: number,
+    keys: string[]
+  ): Record<string, unknown> {
+    // _.pick tolerates undefined (returns {}), matching what the old typed
+    // lie produced for an out-of-range index.
+    return _.pick(this.data.components.at(index), keys);
   }
 }

@@ -72,33 +72,6 @@ export class CciNistTwoWayMapper {
     this.data = parser.parse(CCI_List);
   }
 
-  nistFilter(
-    identifiers: string[],
-    defaultNist: string[],
-    collapse = true
-  ): string[] {
-    const DEFAULT_NIST_TAGS = defaultNist;
-    let matches: string[] = [];
-    for (const id of identifiers) {
-      const nistRef = this.findHighestVersionNistControlByCci(id);
-      if (nistRef) {
-        matches.push(nistRef);
-      }
-    }
-    if (collapse) {
-      matches = _.uniq(matches);
-    }
-    return matches ?? DEFAULT_NIST_TAGS;
-  }
-
-  cciFilter(identifiers: string[], defaultCci: string[]): string[] {
-    const matches: string[] = [];
-    for (const id of identifiers) {
-      matches.push(...this.findMatchingCciIdsByNistControl(id));
-    }
-    return matches ?? defaultCci;
-  }
-
   private findHighestVersionNistControlByCci(targetId: string): string | null {
     let highestVersionControl: string | null = null;
     let highestVersion = -1;
@@ -160,6 +133,33 @@ export class CciNistTwoWayMapper {
     }
 
     return matchingIds;
+  }
+
+  nistFilter(
+    identifiers: string[],
+    defaultNist: string[],
+    collapse = true
+  ): string[] {
+    const DEFAULT_NIST_TAGS = defaultNist;
+    let matches: string[] = [];
+    for (const id of identifiers) {
+      const nistRef = this.findHighestVersionNistControlByCci(id);
+      if (nistRef) {
+        matches.push(nistRef);
+      }
+    }
+    if (collapse) {
+      matches = _.uniq(matches);
+    }
+    return matches ?? DEFAULT_NIST_TAGS;
+  }
+
+  cciFilter(identifiers: string[], defaultCci: string[]): string[] {
+    const matches: string[] = [];
+    for (const id of identifiers) {
+      matches.push(...this.findMatchingCciIdsByNistControl(id));
+    }
+    return matches ?? defaultCci;
   }
 }
 

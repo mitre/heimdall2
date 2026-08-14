@@ -37,27 +37,6 @@ export class NeuVectorMapper extends BaseConverter {
   rawData: NeuVectorScanJson;
   getModules: (moduleName: string) => RESTScanModule['source'] | undefined;
 
-  memoizedGetModules(): (
-    moduleName: string
-  ) => RESTScanModule['source'] | undefined {
-    // Map, not Record: moduleName arrives from scan data, and writing a key
-    // like '__proto__' to a plain object hits the prototype setter instead of
-    // storing. has() rather than a get-undefined check because undefined is a
-    // legitimate cached result here.
-    const cache = new Map<string, RESTScanModule['source'] | undefined>();
-
-    return (moduleName: string) => {
-      if (cache.has(moduleName)) {
-        return cache.get(moduleName);
-      }
-      const source = (this.data as NeuVectorScanJson).report.modules?.find(
-        (value) => value.name === moduleName
-      )?.source;
-      cache.set(moduleName, source);
-      return source;
-    };
-  }
-
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -200,5 +179,26 @@ export class NeuVectorMapper extends BaseConverter {
     this.withRaw = withRaw;
     this.rawData = rawParams;
     this.getModules = this.memoizedGetModules();
+  }
+
+  memoizedGetModules(): (
+    moduleName: string
+  ) => RESTScanModule['source'] | undefined {
+    // Map, not Record: moduleName arrives from scan data, and writing a key
+    // like '__proto__' to a plain object hits the prototype setter instead of
+    // storing. has() rather than a get-undefined check because undefined is a
+    // legitimate cached result here.
+    const cache = new Map<string, RESTScanModule['source'] | undefined>();
+
+    return (moduleName: string) => {
+      if (cache.has(moduleName)) {
+        return cache.get(moduleName);
+      }
+      const source = (this.data as NeuVectorScanJson).report.modules?.find(
+        (value) => value.name === moduleName
+      )?.source;
+      cache.set(moduleName, source);
+      return source;
+    };
   }
 }

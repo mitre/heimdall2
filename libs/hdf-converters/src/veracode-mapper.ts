@@ -424,6 +424,34 @@ function componentPass(component: Record<string, unknown>) {
 
 export class VeracodeMapper extends BaseConverter {
   originalData: unknown;
+
+  constructor(xml: string, withRaw = false) {
+    // the default textNodeName that we're using ('text') clobbers any attributes that also are named 'text' of which there are many in this format
+    // the attribute group names are necessary since there are many times that attributes and inner tags share the same name within a tag (ex. 'vulnerabilities' the attribute is a count whereas as an inner tag it is an array detailing the vulnerabilities) where it seems that the attribute clobbers the inner tag
+    const parsedXML = parseXml(xml, {
+      attributesGroupName: '@_',
+      textNodeName: 'text_'
+    });
+    if (_.has(parsedXML, 'summaryreport')) {
+      throw new Error('Current mapper does not accept summary reports');
+    }
+    const arrayedControls = (_.get(parsedXML, SEVERITY) as []).map(
+      (control: {category: unknown; level: string}) => {
+        if (Array.isArray(control.category)) {
+          return {level: control.level, category: control.category};
+        } else if (control.category) {
+          return {level: control.level, category: [control.category]};
+        } else {
+          return {level: control.level};
+        }
+      }
+    );
+    _.set(parsedXML, SEVERITY, arrayedControls);
+    super(parsedXML);
+    this.originalData = xml;
+    this.setMappings(this.defaultMapping(withRaw));
+  }
+
   defaultMapping(
     withRaw = false
   ): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
@@ -519,32 +547,5 @@ export class VeracodeMapper extends BaseConverter {
         }
       ]
     };
-  }
-
-  constructor(xml: string, withRaw = false) {
-    // the default textNodeName that we're using ('text') clobbers any attributes that also are named 'text' of which there are many in this format
-    // the attribute group names are necessary since there are many times that attributes and inner tags share the same name within a tag (ex. 'vulnerabilities' the attribute is a count whereas as an inner tag it is an array detailing the vulnerabilities) where it seems that the attribute clobbers the inner tag
-    const parsedXML = parseXml(xml, {
-      attributesGroupName: '@_',
-      textNodeName: 'text_'
-    });
-    if (_.has(parsedXML, 'summaryreport')) {
-      throw new Error('Current mapper does not accept summary reports');
-    }
-    const arrayedControls = (_.get(parsedXML, SEVERITY) as []).map(
-      (control: {category: unknown; level: string}) => {
-        if (Array.isArray(control.category)) {
-          return {level: control.level, category: control.category};
-        } else if (control.category) {
-          return {level: control.level, category: [control.category]};
-        } else {
-          return {level: control.level};
-        }
-      }
-    );
-    _.set(parsedXML, SEVERITY, arrayedControls);
-    super(parsedXML);
-    this.originalData = xml;
-    this.setMappings(this.defaultMapping(withRaw));
   }
 }

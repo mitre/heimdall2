@@ -851,6 +851,12 @@ enum AuthenticationMethod {
 }
 
 export class SonarqubeResults {
+  // Default statuses to exclude from results (deny-list approach)
+  // Pre-10.4 legacy: CLOSED issues are end-of-life (rule deleted/disabled or component removed)
+  // 10.4+: FALSE_POSITIVE (user says not real), FIXED (no longer in code, purged after 30 days)
+  static readonly DEFAULT_DENY_LIST_LEGACY = ['CLOSED'];
+  static readonly DEFAULT_DENY_LIST_MODERN = ['FALSE_POSITIVE', 'FIXED'];
+
   authMethod?: AuthenticationMethod;
   axiosClient: AxiosInstance;
   constructor(
@@ -906,12 +912,6 @@ export class SonarqubeResults {
       logger.debug('Error', e.message);
     }
   }
-
-  // Default statuses to exclude from results (deny-list approach)
-  // Pre-10.4 legacy: CLOSED issues are end-of-life (rule deleted/disabled or component removed)
-  // 10.4+: FALSE_POSITIVE (user says not real), FIXED (no longer in code, purged after 30 days)
-  static readonly DEFAULT_DENY_LIST_LEGACY = ['CLOSED'];
-  static readonly DEFAULT_DENY_LIST_MODERN = ['FALSE_POSITIVE', 'FIXED'];
 
   async discoverIssueStatuses(sonarqubeVersion: string): Promise<string> {
     const isLegacy = isBeforeSonarqubeVersion(sonarqubeVersion, '10.4.0');

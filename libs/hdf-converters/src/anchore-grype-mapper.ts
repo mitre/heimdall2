@@ -62,6 +62,14 @@ export class AnchoreGrypeMapper extends BaseConverter {
   withRaw: boolean;
   metadata: Record<string, unknown>;
 
+  constructor(exportJson: string, withRaw = false) {
+    const temp = JSON.parse(exportJson);
+    super({wrapper: _.pick(temp, ['matches', 'ignoredMatches'])});
+    this.metadata = _.omit(temp, ['matches', 'ignoredMatches']);
+    this.withRaw = withRaw;
+    this.setMappings(this.mapping());
+  }
+
   controlMatches(
     matchesPath: string,
     idTransformer: (value: any) => unknown,
@@ -224,13 +232,5 @@ export class AnchoreGrypeMapper extends BaseConverter {
         }
       }
     };
-  }
-
-  constructor(exportJson: string, withRaw = false) {
-    const temp = JSON.parse(exportJson);
-    super({wrapper: _.pick(temp, ['matches', 'ignoredMatches'])});
-    this.metadata = _.omit(temp, ['matches', 'ignoredMatches']);
-    this.withRaw = withRaw;
-    this.setMappings(this.mapping());
   }
 }

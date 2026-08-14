@@ -365,6 +365,7 @@ export default class ExportCKLModal extends Vue {
   types = Object.values(Assettype);
   techareas = Object.values(Techarea);
   files: ExtendedEvaluationFile[] = this.evaluations(this.filter.fromFile);
+  selected: ExtendedEvaluationFile[] = [];
 
   @Watch('showingModal')
   onModalChange(newState: boolean) {
@@ -377,8 +378,6 @@ export default class ExportCKLModal extends Vue {
   onFilterChange(newFilter: Filter) {
     this.files = this.evaluations(newFilter.fromFile);
   }
-
-  selected: ExtendedEvaluationFile[] = [];
 
   /**
    * Invoked when file(s) are loaded.

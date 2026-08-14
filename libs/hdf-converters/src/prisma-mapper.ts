@@ -172,6 +172,10 @@ export class PrismaControlMapper extends BaseConverter {
 export class PrismaMapper {
   data: PrismaControl[] = [];
 
+  constructor(prismaCsv: string) {
+    this.data = parseCsv(prismaCsv) as PrismaControl[];
+  }
+
   toHdf(): ExecJSON.Execution[] {
     const executions: ExecJSON.Execution[] = [];
     const hostnameToControls: Record<string, PrismaControl[]> = {};
@@ -186,9 +190,5 @@ export class PrismaMapper {
       executions.push(converted);
     });
     return executions;
-  }
-
-  constructor(prismaCsv: string) {
-    this.data = parseCsv(prismaCsv) as PrismaControl[];
   }
 }

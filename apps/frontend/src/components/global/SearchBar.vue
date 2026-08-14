@@ -51,17 +51,6 @@ export default class SearchBar extends Vue {
     search: HTMLInputElement;
   };
 
-  /**
-   * The current search terms, as modeled by the search bar
-   */
-  get searchTerm(): string {
-    return SearchModule.searchTerm;
-  }
-
-  set searchTerm(term: string) {
-    SearchModule.updateSearch(term);
-  }
-
   /** If we are currently showing the search help modal */
   showSearchHelp = false;
 
@@ -74,6 +63,17 @@ export default class SearchBar extends Vue {
   typingTimer = setTimeout(() => {
     return;
   }, 0);
+
+  /**
+   * The current search terms, as modeled by the search bar
+   */
+  get searchTerm(): string {
+    return SearchModule.searchTerm;
+  }
+
+  set searchTerm(term: string) {
+    SearchModule.updateSearch(term);
+  }
 
   /**
    * Handles focusing on the search bar

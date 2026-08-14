@@ -108,6 +108,8 @@ export default class ExportCSVModal extends Vue {
   showingModal = false;
   fields = _.clone(fieldNames);
   fieldsToAdd: string[] = _.clone(fieldNames);
+  files: File[] = [];
+  rows: ControlSetRows = [];
 
   closeModal() {
     this.showingModal = false;
@@ -123,9 +125,6 @@ export default class ExportCSVModal extends Vue {
       return {text: field, sortable: false, value: field};
     });
   }
-
-  files: File[] = [];
-  rows: ControlSetRows = [];
 
   descriptionsToString(
     descriptions?:

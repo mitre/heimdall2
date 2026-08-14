@@ -305,10 +305,6 @@ export default class UserModal extends Vue {
   ];
 
   apiKeys: IApiKey[] = [];
-  get apiKeysEnabled(): boolean {
-    return ServerModule.apiKeysEnabled;
-  }
-
   apiKeyTableLoading = false;
   activeAPIKey: IApiKey | null = null;
   inputPasswordDialog = false;
@@ -324,6 +320,10 @@ export default class UserModal extends Vue {
   updateCallback: () => void | Promise<void> = () => {
     return;
   };
+
+  get apiKeysEnabled(): boolean {
+    return ServerModule.apiKeysEnabled;
+  }
 
   mounted() {
     // Fire-and-forget: getAPIKeys reports its own failures.
