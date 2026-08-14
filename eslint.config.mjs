@@ -420,6 +420,10 @@ export default defineConfig([
       // an end-to-end verifier asserts about. textContent would also return
       // text from hidden nodes, quietly weakening every one of these checks.
       'unicorn/prefer-dom-node-text-content': 'off',
+      // chai states some assertions as properties rather than calls
+      // (`.to.exist`, `.to.be.true`); that is its documented API, not a
+      // statement someone forgot to finish.
+      '@typescript-eslint/no-unused-expressions': 'off',
     },
   },
   {
