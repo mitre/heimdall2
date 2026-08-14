@@ -186,6 +186,24 @@ describe('advanceDate', () => {
       advanceDate(utc(1_662_758_942_000), '5y').toISOString(true)
     ).toEqual('2027-09-09T21:29:02.000+00:00');
   });
+
+  // The separator inside the number must be a LITERAL decimal point. While it
+  // was written unescaped it matched any character, so '1,5d' parsed its
+  // number as '1,5' — which moment ignores — and the date silently never
+  // advanced at all.
+  it('Should not swallow a non-decimal separator into the number', () => {
+    const start = utc(1_662_758_942_000).valueOf();
+    expect(
+      advanceDate(utc(1_662_758_942_000), '1,5d').valueOf()
+    ).toBeGreaterThan(start);
+  });
+
+  it('Should still accept a genuine decimal number of days', () => {
+    const oneDay = advanceDate(utc(1_662_758_942_000), '1d').valueOf();
+    expect(
+      advanceDate(utc(1_662_758_942_000), '1.5d').valueOf()
+    ).toBeGreaterThan(oneDay);
+  });
 });
 
 // Attestation messages are what is displayed in Heimdall for a given control test
