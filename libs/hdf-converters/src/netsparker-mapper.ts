@@ -63,7 +63,7 @@ function formatControlDesc(vulnerability: unknown): string {
   if (extraInformation) {
     text.push(
       `Extra-information: ${JSON.stringify(extraInformation).replaceAll(
-        /:/g,
+        ':',
         '=>'
       )}`
     );
@@ -71,7 +71,7 @@ function formatControlDesc(vulnerability: unknown): string {
   const classification = _.get(vulnerability, 'classification');
   if (classification) {
     text.push(
-      `Classification: ${JSON.stringify(classification).replaceAll(/:/g, '=>')}`
+      `Classification: ${JSON.stringify(classification).replaceAll(':', '=>')}`
     );
   }
   const impact = _.get(vulnerability, 'impact');

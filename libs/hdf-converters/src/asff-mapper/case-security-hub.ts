@@ -126,23 +126,23 @@ function productName(
     (_.get(finding, 'Types[0]') as string)
       .split('/')
       .at(-1)!
-      .replaceAll(/-/g, ' ')
+      .replaceAll('-', ' ')
       .toLowerCase() ===
     (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)
       .split('/')
       .slice(-4)[0]
-      .replaceAll(/-/g, ' ')
+      .replaceAll('-', ' ')
       .toLowerCase()
   ) {
     standardName = (_.get(finding, 'Types[0]') as string)
       .split('/')
       .at(-1)!
-      .replaceAll(/-/g, ' ');
+      .replaceAll('-', ' ');
   } else {
     standardName = (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)
       .split('/')
       .slice(-4)[0]
-      .replaceAll(/-/g, ' ')
+      .replaceAll('-', ' ')
       .split(WHITESPACE)
       .map((element: string) => {
         return element.charAt(0).toUpperCase() + element.slice(1);
