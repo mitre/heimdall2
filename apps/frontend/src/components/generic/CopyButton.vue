@@ -55,7 +55,7 @@ export default class CopyButton extends Vue {
     tempTextArea.style.position = 'absolute';
     tempTextArea.style.left = '-9999px';
 
-    document.body.appendChild(tempTextArea);
+    document.body.append(tempTextArea);
     tempTextArea.focus();
     tempTextArea.select();
     const successfulReturn = document.execCommand('copy');
@@ -64,7 +64,7 @@ export default class CopyButton extends Vue {
         'The execCommand returned false, meaning the command is unsupported or disabled'
       );
     }
-    document.body.removeChild(tempTextArea);
+    tempTextArea.remove();
   }
 }
 </script>

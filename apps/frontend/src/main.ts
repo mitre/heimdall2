@@ -30,7 +30,7 @@ new Vue({
       (response) => response, // simply return the response
       (error) => {
         const origin =
-          URL.parse(error?.config?.url, globalThis.location.origin)?.origin ??
+          URL.parse(error?.config?.url, location.origin)?.origin ??
           '';
         // If there is no backend token then it is safe to assume this request
         // originated from the login page and should not perform the logout action.
@@ -56,7 +56,7 @@ new Vue({
 // The following line is a hot patch to add regex support, there are better
 // places to edit Prism variables, but could not locate them. Namely this is
 // the Prism library variables, and not the Prism component variables
-// @ts-ignore
+// @ts-expect-error Prism ships no typing for adding a language definition
 Prism.languages.rb = {
   'token-name': {
     pattern:

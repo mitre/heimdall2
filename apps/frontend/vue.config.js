@@ -3,8 +3,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 // lookup constants
 const fs = require('fs');
-const packageJson = fs.readFileSync('./package.json');
-const parsed = JSON.parse(packageJson);
+const parsed = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
 const version = parsed.version || 0;
 const description = parsed.description || '';
 const repository = parsed.repository.url || '';

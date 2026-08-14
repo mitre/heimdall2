@@ -13,14 +13,15 @@ function calculateColor(colorName: string): string {
   elt.style.color = colorName;
 
   // Add it to the doc and get the resulting style
-  const style = getComputedStyle(document.body.appendChild(elt));
+  document.body.append(elt);
+  const style = getComputedStyle(elt);
 
   // Parse out the colors
   const rawColors = style.color.match(/\d+/gv) as RegExpExecArray; // We know this will succeed - we've already given the colors
   const colors = rawColors.map(Number);
 
   // Cleanup
-  document.body.removeChild(elt);
+  elt.remove();
   if (colors.length >= 3) {
     // Make a (padded) integer representing the hex code
     const value = (1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2];

@@ -2,25 +2,10 @@
 
 /** Provides the resulting text of reading a file as a promise */
 export async function readFileAsync(file: File): Promise<string> {
-  const reader = new FileReader();
-  return new Promise((resolve, reject) => {
-    reader.onerror = () => {
-      reader.abort();
-      reject(new DOMException('Problem parsing input file.'));
-    };
-
-    reader.onload = () => {
-      // readAsText always yields a string; anything else (an ArrayBuffer from a
-      // different read mode, or nothing at all) would stringify to a useless
-      // '[object ArrayBuffer]' rather than the file's contents.
-      if (typeof reader.result === 'string') {
-        resolve(reader.result);
-      } else {
-        reject(new DOMException('Problem parsing input file.'));
-      }
-    };
-    reader.readAsText(file);
-  });
+  // Blob#text is the same read as FileReader.readAsText, minus the event
+  // plumbing — and it can only ever yield a string, so there is no longer a
+  // non-string result to guard against.
+  return file.text();
 }
 
 /** Checks that a value is not null or undefined at a singular point.
