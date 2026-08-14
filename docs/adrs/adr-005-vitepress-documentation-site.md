@@ -386,14 +386,14 @@ Foundation:
 | Card | Scope | Depends on | Size |
 |---|---|---|---|
 | `yvx.1` ✅ | Scaffold: `docs/` with own package.json/yarn.lock, VitePress config (srcDir `site`, target seam, cleanUrls, lastUpdated, dead-link check), minimal theme, landing page, section skeleton, `.gitignore`/`.dockerignore`/eslint-ignore entries. AC: root install/build byte-identical | — | sp:3 |
-| `yvx.7` | Reorganize `docs/` into internal (`adrs/`, `plans/`, `research/`) and published (`site/`) trees; amend this ADR to state that contract | — | sp:2 |
-| `yvx.8` | The canonical `environment-variables.md` — heimdall2 has no environment-variables document at all today, and two competing partial references (a wiki page and the 489-line RPM man page) that will drift | 7 | sp:5 |
+| `yvx.7` ✅ | Reorganize `docs/` into internal (`adrs/`, `plans/`, `research/`) and published (`site/`) trees; amend this ADR to state that contract | — | sp:2 |
+| `yvx.8` ✅ | The canonical `environment-variables.md` — heimdall2 has no environment-variables document at all today, and two competing partial references (a wiki page and the 489-line RPM man page) that will drift | 7 | sp:5 |
 
 Content — one card per site section, written fresh against the current product:
 
 | Card | Scope | Depends on | Size |
 |---|---|---|---|
-| `yvx.9` | `getting-started/` — quick start, install index, configuration, troubleshooting | 8 | sp:5 |
+| `yvx.9` ✅ | `getting-started/` — quick start, install index, configuration, troubleshooting | 8 | sp:5 |
 | `yvx.10` | `user-guide/` — how to actually use the Heimdall UI (compare, treemap, filters, exports, tags). The largest gap: documented nowhere today | 7 | sp:5 |
 | `yvx.11` | `deployment/` — one page per install method, each linking to the method's own runbook rather than duplicating it, plus hardening, backup and upgrade | 8 | sp:5 |
 | `yvx.12` | `deployment/kubernetes.md` — the `mitre/heimdall-helm` chart, undocumented everywhere today. Includes the probe caveat: the SPA catch-all returns 200 for any unmatched route, so a status-only `httpGet` probe reports false-healthy | 11 | sp:5 |
@@ -413,6 +413,13 @@ Delivery and decommission:
 | `yvx.16` | Correct the FIPS posture statement — gated on the FIPS release actually shipping, because the current statement is TRUE for the released product | 11 | sp:1 |
 
 `yvx.3` (migrate all 24 wiki pages as one card) is **closed as superseded** by the rewrite ruling and the per-section cards above.
+
+**Cross-epic dependency added 2026-08-14.** Every content card above, plus `yvx.4`
+and `yvx.17`, additionally depends on **`heimdall2-fhtn`** — the repo-wide Prettier
+reformat (~576 files). Prettier formats Markdown, so pages written before that
+commit would simply be rewritten by it, costing a second review of the same lines.
+The Depends-on column above lists intra-epic order only; the board carries the
+`fhtn` edges.
 
 ---
 
