@@ -568,22 +568,16 @@ export default class ExportCKLModal extends Vue {
       const version = coerce(
         _.get(profileStig, 'header.version', _.get(profileStig, 'version', ''))
       );
+      const fallbackName = _.get(profileStig, 'name', '');
+      const stigTitle = _.get(
+        profileStig,
+        'header.title',
+        _.get(profileStig, 'title', fallbackName)
+      );
       results.push({
-        name: _.get(
-          profileStig,
-          'header.title',
-          _.get(profileStig, 'name', '')
-        ),
-        title: _.get(
-          profileStig,
-          'header.title',
-          _.get(profileStig, 'title', _.get(profileStig, 'name', ''))
-        ),
-        titleplaceholder: _.get(
-          profileStig,
-          'header.title',
-          _.get(profileStig, 'title', _.get(profileStig, 'name', ''))
-        ),
+        name: _.get(profileStig, 'header.title', fallbackName),
+        title: stigTitle,
+        titleplaceholder: stigTitle,
         version: version?.major ?? 0,
         versionplaceholder: (version?.major ?? 0).toString(),
         releasenumber: Number(releasenumber) || version?.minor || 0,

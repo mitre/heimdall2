@@ -119,21 +119,14 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       }
     }
     // Add evaluation data to the form
-    if (Object.hasOwn(file, 'evaluation')) {
-      formData.append(
-        'data',
-        new Blob([JSON.stringify(_.get(file, 'evaluation.data'))], {
-          type: 'text/plain'
-        })
-      );
-    } else {
-      formData.append(
-        'data',
-        new Blob([JSON.stringify(_.get(file, 'profile.data'))], {
-          type: 'text/plain'
-        })
-      );
-    }
+    const dataPath = Object.hasOwn(file, 'evaluation')
+      ? 'evaluation.data'
+      : 'profile.data';
+    const serializedData = JSON.stringify(_.get(file, dataPath));
+    formData.append(
+      'data',
+      new Blob([serializedData], {type: 'text/plain'})
+    );
     try {
       const response = await axios.post<IEvaluation>('/evaluations', formData);
       SnackbarModule.notify('File saved successfully');

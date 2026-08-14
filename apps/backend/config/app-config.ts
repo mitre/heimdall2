@@ -38,7 +38,8 @@ export default class AppConfig {
   constructor() {
     console.log('Attempting to read configuration file `.env`!');
     try {
-      this.envConfig = new Map(Object.entries(dotenv.parse(fs.readFileSync('.env'))));
+      const parsedConfig = dotenv.parse(fs.readFileSync('.env'));
+      this.envConfig = new Map(Object.entries(parsedConfig));
       console.log('Read config!');
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') {

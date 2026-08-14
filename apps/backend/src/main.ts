@@ -83,6 +83,16 @@ async function bootstrap() {
     configService.enabledOauthStrategies().length > 0
     || configService.getTenableHostUrl().length > 0
   ) {
+    const PostgresSessionStore = postgresSessionStore(session);
+    const sessionStore = new PostgresSessionStore({
+      conObject: {
+        ...configService.getDbConfig(),
+        /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
+          those are equal to the dialectOptions passed to sequelize */
+        ssl: configService.getSSLConfig(),
+      },
+      tableName: 'session',
+    });
     app.use(
       session({
         cookie: {
@@ -93,15 +103,7 @@ async function bootstrap() {
         resave: false,
         saveUninitialized: false,
         secret: generateDefault(),
-        store: new (postgresSessionStore(session))({
-          conObject: {
-            ...configService.getDbConfig(),
-            /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
-          those are equal to the dialectOptions passed to sequelize */
-            ssl: configService.getSSLConfig(),
-          },
-          tableName: 'session',
-        }),
+        store: sessionStore,
       }),
     );
     if (configService.isInProductionMode()) {
