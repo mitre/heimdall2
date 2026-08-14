@@ -15,7 +15,7 @@ import {getCCIsForNISTTags} from './utils/global';
 const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';
 const DEFAULT_NIST_TAG: string[] = [];
-const NIST_CONTROL_PATTERN = /[A-Za-z][A-Za-z]-\d{1,2}/;
+const NIST_CONTROL_PATTERN = /[a-z]{2}-\d{1,2}/i;
 
 function impactMapping(input: Record<string, unknown>, id: string): number {
   if (Array.isArray(input)) {

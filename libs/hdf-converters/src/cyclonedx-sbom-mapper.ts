@@ -170,16 +170,20 @@ export class CycloneDXSBOMResults {
       data.raw.components
     ) as IntermediaryComponent[];
 
-    // Look through every component at the top level of the list
-    for (const component of data.components) {
-      // Identify if subcomponents exist
-      if (!component.components) {
-        continue;
+    // Flatten the tree breadth-first. Subcomponents join the queue and are
+    // visited in turn, which is the algorithm rather than an accidental
+    // mutation of the list being walked.
+    const queue = [...data.components];
+    const flattened: IntermediaryComponent[] = [];
+    while (queue.length > 0) {
+      const component = queue.shift()!;
+      if (component.components) {
+        queue.push(...component.components);
+        delete component.components;
       }
-      // Pull out the subcomponents and push them to end of top level component list for further flattening
-      data.components.push(...component.components);
-      delete component.components;
+      flattened.push(component);
     }
+    data.components = flattened;
   }
 
   /*

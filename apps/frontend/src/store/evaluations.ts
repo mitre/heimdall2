@@ -235,17 +235,14 @@ export class Evaluation extends VuexModule {
   // Save an evaluation or update it if is already saved.
   @Mutation
   SAVE_EVALUATION(evaluationToSave: IEvaluation) {
-    let found = false;
-    for (const [index, evaluation] of this.allEvaluations.entries()) {
-      if (evaluationToSave.id !== evaluation.id) {
-        continue;
-      }
-      this.allEvaluations.splice(index, 1, evaluationToSave);
-      found = true;
-      break;
-    }
-    if (!found) {
+    const index = this.allEvaluations.findIndex(
+      (evaluation) => evaluation.id === evaluationToSave.id
+    );
+    if (index === -1) {
       this.allEvaluations.push(evaluationToSave);
+    } else {
+      // splice, not index assignment: Vue 2 cannot observe `arr[i] = x`.
+      this.allEvaluations.splice(index, 1, evaluationToSave);
     }
   }
 
@@ -253,17 +250,14 @@ export class Evaluation extends VuexModule {
   // to the paged variable. Update it if is already saved.
   @Mutation
   SAVE_PAGED_EVALUATION(evaluationToSave: IEvaluation) {
-    let found = false;
-    for (const [index, evaluation] of this.pagedEvaluations.entries()) {
-      if (evaluationToSave.id !== evaluation.id) {
-        continue;
-      }
-      this.pagedEvaluations.splice(index, 1, evaluationToSave);
-      found = true;
-      break;
-    }
-    if (!found) {
+    const index = this.pagedEvaluations.findIndex(
+      (evaluation) => evaluation.id === evaluationToSave.id
+    );
+    if (index === -1) {
       this.pagedEvaluations.push(evaluationToSave);
+    } else {
+      // splice, not index assignment: Vue 2 cannot observe `arr[i] = x`.
+      this.pagedEvaluations.splice(index, 1, evaluationToSave);
     }
   }
 
