@@ -150,7 +150,42 @@ because lint regenerates and feature work does not.
 
 ---
 
-## 6. Method notes worth keeping
+## 6. Likely next direction after this PR (or the one after)
+
+**pnpm + Vitest + Playwright**, retiring Cypress and Yarn 1.
+
+The Playwright migration is **already largely done and is not in this repo's history** — it lives
+in a separate clone:
+
+```
+/Users/alippold/github/mitre/heimdall-clean
+  branch feature/vue3-nuxtui-migration
+  969cf2db  2025-10-15  ci: modernize GitHub Actions for pnpm + Vitest + Playwright
+  test/playwright.config.ts
+  test/e2e/{login,registration,groups,results,database-results,splunk}.spec.ts   399 lines
+  test/fixtures/  + test/support/                                                37 files
+```
+
+All six Cypress specs are ported, using proper Playwright structure — page objects injected as
+test fixtures (`test('...', async ({page, loginPageVerifier, toastVerifier}) => ...)`). **The
+selectors are app-agnostic** (`input[name=email]`, `#login_button`), not Nuxt UI internals, so they
+should work against the current Vue 2 app despite living on a Vue 3 branch.
+
+Three things to know before reusing it:
+
+- **One real gap:** `cy.register` was never ported. `login.spec.ts` carries
+  `// TODO: Implement register via API call` with `page.FIXME_register(...)` commented out, so
+  `beforeEach` does not create the user and every spec needing a registered user fails as-is.
+- It is a **pnpm** branch — that commit does pnpm, Vitest and Playwright together, so the config
+  and workflow need translating if this repo is still on Yarn 1 at the time.
+- It is ~10 months old and predates everything in this PR.
+
+Rough size once ported: **1–2 hours**, plus the usual unknown debugging tail of getting e2e green
+against a live stack. Retiring Cypress also removes four dependencies and both Cypress carve-outs
+from `eslint.config.mjs`. Related open card: `heimdall2-30c.4` (decide package manager — Yarn 1 is
+end-of-life).
+
+## 7. Method notes worth keeping
 
 - **A lint exit code of zero does not mean the code was fixed.** It can mean the rule was disabled.
   Check the *effective* config with `eslint --print-config <file>`, not by grepping
