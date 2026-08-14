@@ -243,7 +243,7 @@ function cleanObjectValues<T>(value: T): boolean {
   if (Array.isArray(value)) {
     return value.length < 0;
   }
-  return !Boolean(value);
+  return !value;
 }
 
 export function createCode(

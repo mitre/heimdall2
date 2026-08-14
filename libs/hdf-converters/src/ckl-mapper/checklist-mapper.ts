@@ -199,7 +199,7 @@ function checkMessage(
 // or SKIP_MESSAGE representing the message type, followed by any number of
 // characters representing the message
 const FINDING_DETAILS_PATTERN =
-  /^(?<status>failed|passed|skipped|error) :: TEST (?<codeDesc>.*?)(?: :: (?<messageType>MESSAGE|SKIP_MESSAGE) (?<message>.*?))?$/s;
+  /^(?<status>error|failed|passed|skipped) :: TEST (?<codeDesc>.*?)(?: :: (?<messageType>MESSAGE|SKIP_MESSAGE) (?<message>.*))?$/s;
 
 // Comment sections look like "LABEL :: text", one per line.
 const COMMENT_SECTION_SEPARATOR = /\n(?=[A-Z]+ ::)/;
@@ -576,11 +576,9 @@ export class ChecklistMapper extends BaseConverter {
     passthrough: {
       transformer: (data: ChecklistObject): Record<string, unknown> => {
         return {
-          ...{
-            checklist: {
-              asset: data.asset,
-              stigs: data.stigs
-            }
+          checklist: {
+            asset: data.asset,
+            stigs: data.stigs
           },
           ...(this.withRaw && {raw: data.jsonixData})
         };

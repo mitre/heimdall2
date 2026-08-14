@@ -82,7 +82,10 @@ export function parseCsv(csv: string): unknown[] {
   const result = parse(csv.trim(), {header: true});
 
   if (result.errors.length > 0) {
-    throw result.errors;
+    throw new Error(
+      `Failed to parse CSV: ${result.errors.map((error) => error.message).join('; ')}`,
+      {cause: result.errors}
+    );
   }
 
   return result.data;
@@ -321,7 +324,10 @@ export class BaseConverter<D = Record<string, unknown>> {
               this.data
             ]);
           } else {
-            output = arrayTransformer.apply(null, [output, this.data]) as T[];
+            output = Reflect.apply(arrayTransformer, null, [
+              output,
+              this.data
+            ]) as T[];
           }
         }
         resultingData.push(...output);
@@ -363,7 +369,7 @@ export class BaseConverter<D = Record<string, unknown>> {
                   this.data
                 ]);
               } else {
-                v = arrayTransformer.apply(null, [v, this.data]) as any;
+                v = Reflect.apply(arrayTransformer, null, [v, this.data]) as any;
               }
             }
             if (key !== undefined) {

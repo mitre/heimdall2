@@ -83,7 +83,7 @@ export class FromHDFToCAATMapper {
   static fix(str?: string | null): string {
     return (str ?? '')
       .replaceAll(/\r\n|\n|\r/gu, '\r\n')
-      .slice(0, FromHDFToCAATMapper.MaxCellSize);
+      .slice(0, this.MaxCellSize);
   }
 
   data: Data[];
@@ -205,10 +205,11 @@ export class FromHDFToCAATMapper {
 
   // returnWorkBook: true -> raw workbook class
   // returnWorkBook: false | undefined -> binary string by default otherwise whatever is specified in the options parameter
-  toCAAT(
-    returnWorkBook = false,
-    options: XLSX.WritingOptions = {bookType: 'xlsx', type: 'binary'}
-  ) {
+  toCAAT(returnWorkBook = false, options?: XLSX.WritingOptions) {
+    const writingOptions: XLSX.WritingOptions = options ?? {
+      bookType: 'xlsx',
+      type: 'binary'
+    };
     // Sheet names must be unique across the workbook
     const takenSheetNames: string[] = [];
 
@@ -239,8 +240,9 @@ export class FromHDFToCAATMapper {
       const processedControls = new Set();
       const rows: CAATRow[] = [];
       // Convert them into rows
-      for (const control of d.controls ??
-        d.data.contains.flatMap((profile) => profile.contains)) {
+      const controls =
+        d.controls ?? d.data.contains.flatMap((profile) => profile.contains);
+      for (const control of controls) {
         const root = control.root;
 
         // Overlay profiles will usually share controls
@@ -269,6 +271,6 @@ export class FromHDFToCAATMapper {
     if (returnWorkBook) {
       return workBook;
     }
-    return XLSX.write(workBook, options);
+    return XLSX.write(workBook, writingOptions);
   }
 }

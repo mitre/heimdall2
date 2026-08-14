@@ -31,9 +31,10 @@ import {
 export const TO_ASFF_TYPES_SLASH_REPLACEMENT = '{{{SLASH}}}'; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
 
 export function escapeForwardSlashes(s: unknown): string {
-  return _.isString(s)
-    ? s.replaceAll('/', () => TO_ASFF_TYPES_SLASH_REPLACEMENT)
-    : JSON.stringify(s).replaceAll('/', () => TO_ASFF_TYPES_SLASH_REPLACEMENT);
+  return (_.isString(s) ? s : JSON.stringify(s)).replaceAll(
+    '/',
+    () => TO_ASFF_TYPES_SLASH_REPLACEMENT
+  );
 }
 
 export type SegmentedControl = ExecJSON.Control & {
@@ -158,17 +159,11 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     };
   }
 
-  setMappings(
-    customMappings: MappedTransform<IExecJSONASFF, ILookupPathASFF>
-  ): void {
-    super.setMappings(customMappings);
-  }
-
   // Security hub currently works at the sub-control level, meaning we need to create our mapped data based off control.results
   controlsToSegments() {
     const segments: SegmentedControl[] = [];
     this.data.profiles.forEach((profile) => {
-      profile.controls.reverse().forEach((control) => {
+      profile.controls.toReversed().forEach((control) => {
         control.results.forEach((segment) => {
           // Ensure that the UpdatedAt time is different across findings (to match the order in HDF)
           segments.push({

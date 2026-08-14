@@ -31,13 +31,13 @@ function skipSeverityNegligibleOrUnknown(controls: unknown[]): unknown[] {
         return rating === 'Negligible' || rating === 'Unknown';
       })
       // For every result contained by that control, set the status to skipped and request a manual review
-      .map((control) =>
-        control.results.map((result) => {
+      .forEach((control) => {
+        control.results.forEach((result) => {
           result.status = ExecJSON.ControlResultStatus.Skipped;
           result.skip_message =
             'Manual review required because a Anchore Grype rating severity is set to `negligible` or `unknown`.';
-        })
-      );
+        });
+      });
   }
   return controls;
 }
@@ -49,9 +49,9 @@ function description(data: Record<string, unknown>): string {
     unknown
   >[];
   if (!vulnerability.description && relatedVulnerabilities.length > 0) {
-    return relatedVulnerabilities.filter(
+    return relatedVulnerabilities.find(
       (relatedVulnerability) => relatedVulnerability.id === vulnerability.id
-    )[0].description as string;
+    )!.description as string;
   } else if (vulnerability.description) {
     return vulnerability.description as string;
   }
