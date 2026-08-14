@@ -6,7 +6,7 @@ const characterClassChecks = [
 ];
 
 const consecutiveRunChecks = [
-  /(.)\1{3,}/, // 4 or more repeating of the same exact character
+  /(?<char>.)\k<char>{3,}/, // 4 or more repeating of the same exact character
   /[a-z]{4,}/, // 4 or more lowercase characters in a row
   /[A-Z]{4,}/, // 4 or more uppercase characters in a row
   /[0-9]{4,}/, // 4 or more numbers in a row

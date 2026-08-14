@@ -176,11 +176,11 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
 
 function checkMessage(
   typeCheck: string,
-  messageType: string,
-  message: string
+  messageType: string | undefined,
+  message: string | undefined
 ): string | null {
   if (typeCheck === messageType) {
-    return message;
+    return message ?? null;
   } else {
     return null;
   }
@@ -199,11 +199,11 @@ function checkMessage(
 // or SKIP_MESSAGE representing the message type, followed by any number of
 // characters representing the message
 const FINDING_DETAILS_PATTERN =
-  /^(failed|passed|skipped|error) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*?))?$/s;
+  /^(?<status>failed|passed|skipped|error) :: TEST (?<codeDesc>.*?)(?: :: (?<messageType>MESSAGE|SKIP_MESSAGE) (?<message>.*?))?$/s;
 
 // Comment sections look like "LABEL :: text", one per line.
 const COMMENT_SECTION_SEPARATOR = /\n(?=[A-Z]+ ::)/;
-const COMMENT_PATTERN = /([A-Z]+) :: (.+)/s;
+const COMMENT_PATTERN = /(?<label>[A-Z]+) :: (?<data>.+)/s;
 
 function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const findings = input as unknown as ExecJSON.ControlResult[];
@@ -227,13 +227,15 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
     // split details for status
     const match = FINDING_DETAILS_PATTERN.exec(details.trim());
     if (match) {
-      const [, mStatus, mCode_dec, messageType, mMessage] = match;
+      // status and codeDesc always participate in a successful match; the
+      // messageType/message pair is genuinely optional.
+      const {status, codeDesc, messageType, message} = match.groups ?? {};
       results.push({
-        status: getStatus(mStatus),
-        code_desc: mCode_dec,
-        message: checkMessage('MESSAGE', messageType, mMessage),
+        status: getStatus(status),
+        code_desc: codeDesc,
+        message: checkMessage('MESSAGE', messageType, message),
         start_time: '',
-        skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage)
+        skip_message: checkMessage('SKIP_MESSAGE', messageType, message)
       });
     }
   }
@@ -258,7 +260,8 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   for (const section of commentString.split(COMMENT_SECTION_SEPARATOR)) {
     const matches = COMMENT_PATTERN.exec(section);
     if (matches) {
-      const [, label, data] = matches;
+      // Both groups always participate in a successful match.
+      const {label, data} = matches.groups!;
       if (data) {
         results.push({data, label: label.toLowerCase()});
       }

@@ -7,9 +7,9 @@ const NIST_FAMILY_RE =
   /^(?:A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])$/;
 // Limit length of children to avoid potential DoS on malicious NIST Control strings
 const NIST_CONTROL_RE =
-  /^(A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])-(\d+)(.{0,60})$/;
+  /^(?<family>A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])-(?<controlNum>\d+)(?<subspecs>.{0,60})$/;
 const SPEC_SPLITTER = /[\s\(\)\.]+/; // Includes all whitespace, periods, and parenthesis
-const REV_RE = /^rev[\s._]+(\d+)$/i; // Matches Rev_5 etc
+const REV_RE = /^rev[\s._]+(?<number>\d+)$/i; // Matches Rev_5 etc
 type ParseNist = NistControl | NistRevision | null;
 
 export interface CanonizationConfig {
@@ -193,7 +193,7 @@ export function parse_nist(rawNist: string): ParseNist {
   // Is it a revision? Get the match, continuing if none
   const revMatch = REV_RE.exec(rawNist);
   if (revMatch) {
-    return new NistRevision(Number.parseInt(revMatch[1]));
+    return new NistRevision(Number.parseInt(revMatch.groups!.number));
   }
   // Is it just a family?
   // Get the match, failing out if we can't
@@ -209,9 +209,8 @@ export function parse_nist(rawNist: string): ParseNist {
   }
 
   // Parse sub-elements
-  const family = fullMatch[1];
-  const controlNum = fullMatch[2];
-  const subspecsRaw = (fullMatch[3] || '').trim();
+  const {family, controlNum} = fullMatch.groups!;
+  const subspecsRaw = (fullMatch.groups!.subspecs || '').trim();
 
   // Init sub-specs
   const subSpecs: string[] = [family, controlNum];

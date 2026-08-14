@@ -23,7 +23,9 @@ const INSUFFICIENT_DATA_MSG =
 const NAME = 'AWS Config';
 
 const AWS_CONFIG_MAPPING = new AwsConfigMapping();
-const CONFIG_RULE_ACCOUNT_ID = /:(\d{12}):config-rule/;
+// The consumer reads the whole match (matches[0]), so the digits need no
+// capture group.
+const CONFIG_RULE_ACCOUNT_ID = /:\d{12}:config-rule/;
 
 export class AwsConfigMapper {
   configService: ConfigService;

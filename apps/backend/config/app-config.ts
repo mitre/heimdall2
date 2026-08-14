@@ -28,7 +28,7 @@ export function resolveSslMaterial(
 
 // DATABASE_URL anatomy: scheme://user:password@host:port/name?query
 const DATABASE_URL_PATTERN
-  = /^(?:([^\s#/:?]+):\/{2})?(?:([^\s#/?@]+)@)?([^\s#/?]+)?(?:\/([^\s#?]*))?(?:\?([^\s#]+))?\S*$/;
+  = /^(?:[^\s#/:?]+:\/{2})?(?:(?<userinfo>[^\s#/?@]+)@)?(?<hostPort>[^\s#/?]+)?(?:\/(?<name>[^\s#?]*))?(?:\?[^\s#]+)?\S*$/;
 // The host:port boundary — the colon directly before a trailing port number.
 const HOST_PORT_SEPARATOR = /:(?=\d+$)/v;
 
@@ -157,26 +157,27 @@ export default class AppConfig {
       if (matches === null) {
         return false;
       }
+      const {userinfo, hostPort, name} = matches.groups ?? {};
 
       this.set(
         'DATABASE_USERNAME',
-        matches[2] === undefined ? undefined : matches[2].split(':', 1)[0],
+        userinfo === undefined ? undefined : userinfo.split(':', 1)[0],
       );
       this.set(
         'DATABASE_PASSWORD',
-        matches[2] === undefined ? undefined : matches[2].split(':', 2)[1],
+        userinfo === undefined ? undefined : userinfo.split(':', 2)[1],
       );
       this.set(
         'DATABASE_HOST',
-        matches[3] === undefined ? undefined : matches[3].split(HOST_PORT_SEPARATOR, 1)[0],
+        hostPort === undefined ? undefined : hostPort.split(HOST_PORT_SEPARATOR, 1)[0],
       );
       this.set(
         'DATABASE_NAME',
-        matches[4] === undefined ? undefined : matches[4].split('/', 1)[0],
+        name === undefined ? undefined : name.split('/', 1)[0],
       );
       this.set(
         'DATABASE_PORT',
-        matches[3] === undefined ? undefined : matches[3].split(HOST_PORT_SEPARATOR, 2)[1],
+        hostPort === undefined ? undefined : hostPort.split(HOST_PORT_SEPARATOR, 2)[1],
       );
       return true;
     }

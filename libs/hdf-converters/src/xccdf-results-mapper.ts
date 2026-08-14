@@ -25,7 +25,8 @@ const IMPACT_MAPPING = new Map<string, number>([
 ]);
 
 const CCI_NIST_MAPPING = new CciNistMapping();
-const CCI_REGEX = /CCI-(\d*)/;
+// Used only as an existence test — nothing consumes the digits.
+const CCI_REGEX = /CCI-\d*/;
 
 function asArray<T>(arg: T | T[]): T[] {
   if (Array.isArray(arg)) {
