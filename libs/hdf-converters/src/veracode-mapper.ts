@@ -268,7 +268,7 @@ function componentListCreate(input: unknown): Record<string, unknown>[] {
 function componentTransform(input: unknown): Record<string, unknown>[] {
   const componentList: Record<string, unknown>[] = componentListCreate(input);
 
-  const vulns: Record<string, unknown>[] = componentList
+  const flattened: Record<string, unknown>[] = componentList
     .map((component) => {
       let vulnerability = _.get(component, 'vulnerabilities.vulnerability') as
         | Record<string, unknown>
@@ -282,26 +282,22 @@ function componentTransform(input: unknown): Record<string, unknown>[] {
       }));
       return vulnerability;
     })
-    .flat()
-    .reduce((acc: Record<string, unknown>[], cur: Record<string, unknown>) => {
-      const cveId = _.get(cur, '@_.cve_id');
-      const index = acc.findIndex((vuln) => cveId === _.get(vuln, '@_.cve_id'));
-      if (index === -1) {
-        return [...acc, cur];
-      } else {
-        // findIndex already excluded -1, so .at() cannot miss; the guard
-        // states the invariant instead of indexing blind.
-        const existing = acc.at(index);
-        if (existing === undefined) {
-          return acc;
-        }
-        (_.get(existing, 'components') as Record<string, unknown>[]).push(
-          ...(_.get(cur, 'components') as Record<string, unknown>[])
-        );
-        return acc;
-      }
-    }, []);
-  return vulns;
+    .flat();
+  // Deduplicate by CVE id, merging components into the first occurrence; the
+  // Map's insertion order keeps the original first-seen ordering.
+  const vulnsByCveId = new Map<unknown, Record<string, unknown>>();
+  for (const cur of flattened) {
+    const cveId = _.get(cur, '@_.cve_id');
+    const existing = vulnsByCveId.get(cveId);
+    if (existing === undefined) {
+      vulnsByCveId.set(cveId, cur);
+    } else {
+      (_.get(existing, 'components') as Record<string, unknown>[]).push(
+        ...(_.get(cur, 'components') as Record<string, unknown>[])
+      );
+    }
+  }
+  return [...vulnsByCveId.values()];
 }
 
 function controlMappingCve(): MappedTransform<

@@ -92,8 +92,9 @@ function getNISTTags(
 // A single SBOM vulnerability can contain multiple security ratings
 // Find the max of any existing ratings and then pass to `impact`
 function maxImpact(ratings: FluffyRating[] | PurpleRating[]): number {
-  return ratings
-    .map((rating) =>
+  return Math.max(
+    0,
+    ...ratings.map((rating) =>
       rating.score &&
       rating.method &&
       cvssMethods.includes(rating.method as CVSSMethodEnum) // cast required since .includes expects the parameter to be a subtype
@@ -102,12 +103,7 @@ function maxImpact(ratings: FluffyRating[] | PurpleRating[]): number {
         : // Else interpret it from `severity` field, defaulting to medium/0.5
           (IMPACT_MAPPING.get(rating.severity?.toLowerCase() ?? '') ?? 0.5)
     )
-    .reduce(
-      (maxValue, newValue) =>
-        // Find max of existing ratings
-        maxValue > newValue ? maxValue : newValue,
-      0
-    );
+  );
 }
 
 // If the highest rating severity for a control is `info` or `unknown`, set the results to skipped and request a manual review

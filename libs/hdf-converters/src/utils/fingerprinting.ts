@@ -117,21 +117,17 @@ export function fingerprint(guessOptions: {
   try {
     const parsed = JSON.parse(guessOptions.data);
     const object = Array.isArray(parsed) ? parsed[0] : parsed;
-    // Find the fingerprints that have the most matches
-    const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
-      (a, b) => {
-        return a[1].filter((value) => _.get(object, value)).length >
-          b[1].filter((value) => _.get(object, value)).length
-          ? {...a, count: a[1].filter((value) => _.get(object, value)).length}
-          : {
-              ...b,
-              count: b[1].filter((value) => _.get(object, value)).length
-            };
+    // Find the fingerprint that has the most matches; >= keeps the reduce's
+    // later-entry-wins-ties behavior
+    let best: {type: INPUT_TYPES; count: number} | undefined;
+    for (const [type, paths] of Object.entries(fileTypeFingerprints)) {
+      const count = paths.filter((value) => _.get(object, value)).length;
+      if (best === undefined || count >= best.count) {
+        best = {type: type as INPUT_TYPES, count};
       }
-    ) as unknown as INPUT_TYPES[] & {count: number};
-    const result = fingerprinted[0];
-    if (fingerprinted.count !== 0) {
-      return result;
+    }
+    if (best && best.count !== 0) {
+      return best.type;
     }
   } catch {
     const splitLines = guessOptions.data.trim().split('\n');

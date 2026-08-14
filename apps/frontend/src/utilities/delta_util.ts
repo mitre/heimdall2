@@ -217,21 +217,17 @@ export class ComparisonContext {
     // Organize the controls by ID
     // The structure this returns is as follows:
     // {{"V-XXX": {"unique_file_id_1": control, "unique_file_id_2": control, ...}}}
-    const matched = allControls.reduce(
-      (acc: ControlSeriesLookup, evaluation: ResultControls) => {
-        evaluation.controls.forEach((control) => {
-          // Group initialization
-          if (!acc[control.data.id]) {
-            acc[control.data.id] = {};
-          }
-          // Grouping
-          acc[control.data.id][evaluation.uniqueId] = control;
-        });
-
-        return acc;
-      },
-      {}
-    );
+    const matched: ControlSeriesLookup = {};
+    for (const evaluation of allControls) {
+      evaluation.controls.forEach((control) => {
+        // Group initialization
+        if (!matched[control.data.id]) {
+          matched[control.data.id] = {};
+        }
+        // Grouping
+        matched[control.data.id][evaluation.uniqueId] = control;
+      });
+    }
     // Store
     this.pairings = matched;
   }

@@ -24,14 +24,25 @@ function filterSite<T>(input: T[], name?: string) {
       (element) => (_.get(element, '@name') as unknown as string) === name
     );
   }
-  // Otherwise choose the site with the most alerts
+  // Otherwise choose the site with the most alerts (<= keeps the reduce's
+  // later-site-wins-ties behavior)
   else {
-    return input.reduce((a, b) =>
-      (_.get(a, 'alerts') as unknown as Record<string, unknown>[]).length >
-      (_.get(b, 'alerts') as unknown as Record<string, unknown>[]).length
-        ? a
-        : b
-    );
+    let siteWithMostAlerts = input[0];
+    for (const site of input.slice(1)) {
+      const currentCount = (
+        _.get(siteWithMostAlerts, 'alerts') as unknown as Record<
+          string,
+          unknown
+        >[]
+      ).length;
+      const candidateCount = (
+        _.get(site, 'alerts') as unknown as Record<string, unknown>[]
+      ).length;
+      if (currentCount <= candidateCount) {
+        siteWithMostAlerts = site;
+      }
+    }
+    return siteWithMostAlerts;
   }
 }
 function impactMapping(input: unknown): number {
