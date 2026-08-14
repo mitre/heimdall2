@@ -1,8 +1,11 @@
+import type { AddressInfo } from 'node:net';
 import {Readable} from 'node:stream';
 import {ForbiddenError} from '@casl/ability';
+import type { ExecutionContext, INestApplication } from '@nestjs/common';
 import {NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
-import {Test, TestingModule} from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import {Test} from '@nestjs/testing';
 import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
@@ -29,6 +32,8 @@ import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
+import { APIKeyOrJwtAuthGuard } from '../guards/api-key-or-jwt-auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {EvaluationDto} from './dto/evaluation.dto';
@@ -266,7 +271,7 @@ describe('EvaluationsController', () => {
       );
       expect(evaluation).toBeDefined();
       if (Array.isArray(evaluation)) {
-        throw new Error(
+        throw new TypeError(
           'Returned evaluation for one file upload should not be an array'
         );
       }
@@ -283,7 +288,7 @@ describe('EvaluationsController', () => {
       );
       expect(evaluation).toBeDefined();
       if (Array.isArray(evaluation)) {
-        throw new Error(
+        throw new TypeError(
           'Returned evaluation for one file upload should not be an array'
         );
       }
@@ -298,7 +303,7 @@ describe('EvaluationsController', () => {
       );
       expect(evaluations).toBeDefined();
       if (!Array.isArray(evaluations)) {
-        throw new Error(
+        throw new TypeError(
           'Returned evaluation for multiple file upload should be an array'
         );
       }
@@ -464,5 +469,137 @@ describe('EvaluationsController', () => {
       );
       expect(foundGroups.length).toEqual(0);
     });
+  });
+});
+
+// Route resolution is a ROUTER concern, not a handler concern: calling
+// evaluationsController.findAll() directly succeeds no matter what order the
+// decorators are declared in, so the unit tests above cannot detect route
+// shadowing. These tests boot the real Nest application and issue real HTTP
+// requests so the actual registered routing table is what gets exercised.
+// Node's built-in fetch is used deliberately — supertest is not a dependency
+// of this repo and adding one to reach a routing assertion is not warranted.
+describe('EvaluationsController route resolution', () => {
+  let app: INestApplication;
+  let baseUrl: string;
+  let module: TestingModule;
+  let databaseService: DatabaseService;
+  let usersService: UsersService;
+  let evaluationsService: EvaluationsService;
+  // The overridden guards read this at request time, so each test's freshly
+  // created user is the one ABAC sees.
+  let currentUser: User;
+
+  const allowWithCurrentUser = {
+    canActivate: (context: ExecutionContext): boolean => {
+      context.switchToHttp().getRequest<{ user: User }>().user = currentUser;
+      return true;
+    },
+  };
+
+  beforeAll(async () => {
+    module = await Test.createTestingModule({
+      controllers: [EvaluationsController],
+      imports: [
+        CryptoModule,
+        DatabaseModule,
+        SequelizeModule.forFeature([
+          EvaluationTag,
+          Evaluation,
+          User,
+          GroupEvaluation,
+          GroupUser,
+          Group,
+        ]),
+      ],
+      providers: [
+        AuthzService,
+        ConfigService,
+        DatabaseService,
+        UsersService,
+        EvaluationsService,
+        GroupsService,
+      ],
+    })
+      // Auth is not what these tests are about; the routing table is.
+      .overrideGuard(APIKeyOrJwtAuthGuard)
+      .useValue(allowWithCurrentUser)
+      .overrideGuard(JwtAuthGuard)
+      .useValue(allowWithCurrentUser)
+      .compile();
+
+    databaseService = module.get<DatabaseService>(DatabaseService);
+    usersService = module.get<UsersService>(UsersService);
+    evaluationsService = module.get<EvaluationsService>(EvaluationsService);
+
+    app = module.createNestApplication();
+    await app.init();
+    // Port 0 = ephemeral, so this never collides with a dev server.
+    await app.listen(0);
+    const address = app.getHttpServer().address() as AddressInfo;
+    baseUrl = `http://127.0.0.1:${String(address.port)}`;
+  });
+
+  afterAll(async () => {
+    // Order matters: app.close() tears down the Nest app INCLUDING its
+    // Sequelize connection, so the cleanup query has to run first or it hits
+    // "ConnectionManager.getConnection was called after the connection manager
+    // was closed". app.close() also makes a separate closeConnection() call
+    // redundant.
+    await databaseService.cleanAll();
+    await app.close();
+  });
+
+  beforeEach(async () => {
+    await databaseService.cleanAll();
+    // ABAC needs a real model instance, and create() returns a DTO — so the
+    // row is re-read rather than cast.
+    const createdUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    const persisted = await User.findByPk<User>(createdUser.id);
+    if (persisted === null) {
+      throw new TypeError('test user was not persisted');
+    }
+    currentUser = persisted;
+  });
+
+  it('routes GET /evaluations/e2e to findAll, not to the :id handler', async () => {
+    expect.assertions(2);
+    const response = await fetch(`${baseUrl}/evaluations/e2e`);
+
+    // If ':id' is declared first, Nest dispatches this to findById, which
+    // hands the literal string "e2e" to Postgres as a bigint and 500s with
+    // 'invalid input syntax for type bigint'.
+    expect(response.status).toBe(200);
+    // findAll returns a LIST; findById returns a single object.
+    expect(Array.isArray(await response.json())).toBe(true);
+  });
+
+  it('still routes GET /evaluations/:id to findById for a real numeric id', async () => {
+    expect.assertions(2);
+    const created = await evaluationsService.create({
+      ...EVALUATION_1,
+      data: mockFile,
+      userId: currentUser.id
+    });
+
+    const response = await fetch(`${baseUrl}/evaluations/${created.id}`);
+
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as {id: string};
+    expect(body.id).toBe(created.id);
+  });
+
+  it('still routes GET /evaluations/:id/groups to groupsForEvaluation', async () => {
+    expect.assertions(2);
+    const created = await evaluationsService.create({
+      ...EVALUATION_1,
+      data: mockFile,
+      userId: currentUser.id
+    });
+
+    const response = await fetch(`${baseUrl}/evaluations/${created.id}/groups`);
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(await response.json())).toBe(true);
   });
 });

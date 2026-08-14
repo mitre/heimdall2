@@ -44,6 +44,27 @@ export class EvaluationsController {
     private readonly authz: AuthzService
   ) {}
 
+  // NestJS matches routes in declaration order, so every LITERAL path must be
+  // declared before the parameterised ':id' route. Declared after it, '/e2e'
+  // was captured by findById and reached Postgres as a bigint id
+  // ("invalid input syntax for type bigint: e2e" -> HTTP 500), making this
+  // endpoint unreachable. Guarded by a routing test in the controller spec.
+  @UseGuards(APIKeyOrJwtAuthGuard)
+  @Get('e2e')
+  async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    let evaluations = await this.evaluationsService.findAll();
+
+    evaluations = evaluations.filter((evaluation) =>
+      abac.can(Action.Read, evaluation)
+    );
+
+    return evaluations.map(
+      (evaluation) =>
+        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+    );
+  }
+
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Get(':id')
   async findById(
@@ -73,53 +94,30 @@ export class EvaluationsController {
   }
 
   @UseGuards(APIKeyOrJwtAuthGuard)
-  @Get('e2e')
-  async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
-    const abac = this.authz.abac.createForUser(request.user);
-    let evaluations = await this.evaluationsService.findAll();
-
-    evaluations = evaluations.filter((evaluation) =>
-      abac.can(Action.Read, evaluation)
-    );
-
-    return evaluations.map(
-      (evaluation) =>
-        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-    );
-  }
-
-  @UseGuards(APIKeyOrJwtAuthGuard)
   @Get()
   async findAndCountAll(
     @Query() params: IEvalPaginationParams,
     @Request() request: {user: User}
   ): Promise<IEvaluationResponse> {
     const abac = this.authz.abac.createForUser(request.user);
-    let evaluations: Evaluation[] = [];
-    let totalItems = 0;
 
-    if (params.useClause) {
-      const response = await this.evaluationsService.getEvaluationsWithClause(
-        params,
-        request.user.email,
-        request.user.role
-      );
-      evaluations = response.evaluations;
-      totalItems = response.totalItems;
-    } else {
-      const response = await this.evaluationsService.getAllEvaluations(
-        params,
-        request.user.email,
-        request.user.role
-      );
-      evaluations = response.evaluations;
-      totalItems = response.totalItems;
-    }
+    const response = params.useClause
+      ? await this.evaluationsService.getEvaluationsWithClause(
+          params,
+          request.user.email,
+          request.user.role
+        )
+      : await this.evaluationsService.getAllEvaluations(
+          params,
+          request.user.email,
+          request.user.role
+        );
+    const totalItems = response.totalItems;
 
     // Perform an policy-based access control (AKA Attribute-based access control)
     // Show public evaluations, evaluations that belong to a group the logged-in user
     // belongs too, or those created by logged-in user.
-    evaluations = evaluations.filter((evaluation: Subject) =>
+    const evaluations = response.evaluations.filter((evaluation: Subject) =>
       abac.can(Action.Read, evaluation)
     );
 
@@ -151,10 +149,12 @@ export class EvaluationsController {
         serializedDta = {originalResultsData: file.buffer.toString('utf8')};
       }
 
+      let createdDto: EvaluationDto;
       // If the "user" is a group, we'll add the evaluation to the group, and ignore any other groups
       if (request.user instanceof Group) {
-        const evaluation = await this.evaluationsService
-          .create({
+        let evaluation: Evaluation;
+        try {
+          evaluation = await this.evaluationsService.create({
             // Only respect custom file names for single file uploads
             filename:
               data.length > 1
@@ -164,21 +164,17 @@ export class EvaluationsController {
             public: createEvaluationDto.public,
             data: serializedDta,
             groupId: request.user.id
-          })
-          .then(async (evaluation) => {
-            const group = await this.groupsService.findByPkBang(
-              request.user.id
-            );
-            this.groupsService.addEvaluationToGroup(group, evaluation);
-            return evaluation;
-          })
-          .catch((err) => {
-            throw new BadRequestException(err.message);
           });
+          const group = await this.groupsService.findByPkBang(request.user.id);
+          // Awaited: dropping this promise meant a failed group attach could
+          // only surface as an unhandled rejection, after the response had
+          // already reported success.
+          await this.groupsService.addEvaluationToGroup(group, evaluation);
+        } catch (error) {
+          throw new BadRequestException((error as Error).message);
+        }
 
-        const createdDto = new EvaluationDto(evaluation, true);
-
-        return _.omit(createdDto, 'data');
+        createdDto = new EvaluationDto(evaluation, true);
       } else {
         let groups: Group[] = createEvaluationDto.groups
           ? await this.groupsService.findByIds(createEvaluationDto.groups)
@@ -188,31 +184,29 @@ export class EvaluationsController {
         groups = groups.filter((group) => {
           return abac.can(Action.AddEvaluation, group);
         });
-        const evaluation = await this.evaluationsService
-          .create({
-            // Only respect custom file names for single file uploads
-            filename:
-              data.length > 1
-                ? file.originalname
-                : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
-            evaluationTags: createEvaluationDto.evaluationTags || [],
-            public: createEvaluationDto.public,
-            data: serializedDta,
-            userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
-          })
-          .then((createdEvaluation) => {
-            groups.forEach((group) =>
-              this.groupsService.addEvaluationToGroup(group, createdEvaluation)
-            );
-            return createdEvaluation;
-          });
-        const createdDto: EvaluationDto = new EvaluationDto(
+        const evaluation = await this.evaluationsService.create({
+          // Only respect custom file names for single file uploads
+          filename:
+            data.length > 1 ? file.originalname : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
+          evaluationTags: createEvaluationDto.evaluationTags || [],
+          public: createEvaluationDto.public,
+          data: serializedDta,
+          userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+        });
+        // Awaited: forEach discarded each promise, so the response could report
+        // success before the evaluation had joined its groups.
+        await Promise.all(
+          groups.map((group) =>
+            this.groupsService.addEvaluationToGroup(group, evaluation)
+          )
+        );
+        createdDto = new EvaluationDto(
           evaluation,
           true,
           `${this.configService.getExternalUrl()}/results/${evaluation.id}`
         );
-        return _.omit(createdDto, 'data');
       }
+      return _.omit(createdDto, 'data');
     });
     if (uploadedFiles.length === 1) {
       return uploadedFiles[0];
