@@ -35,10 +35,3 @@ jobs:
 
       - name: Run lint
         run: yarn run lint:ci
-        # Reports without blocking. The lint configuration was repaired
-        # separately, taking the repo from 58,124 problems to 5,754, but the
-        # remaining backlog is its own change and does not belong to whichever
-        # PR happens to run next. Problems still appear in the job output and
-        # as a step annotation. Delete this line — not the step — once
-        # `yarn lint:ci` exits 0.
-        continue-on-error: true
