@@ -10,8 +10,11 @@ export async function readFileAsync(file: File): Promise<string> {
     };
 
     reader.onload = () => {
-      if (reader.result !== null && reader.result !== undefined) {
-        resolve(reader.result.toString());
+      // readAsText always yields a string; anything else (an ArrayBuffer from a
+      // different read mode, or nothing at all) would stringify to a useless
+      // '[object ArrayBuffer]' rather than the file's contents.
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
       } else {
         reject(new DOMException('Problem parsing input file.'));
       }

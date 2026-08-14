@@ -320,10 +320,10 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   pagination = {
     page: this.page,
     itemsPerPage: this.totalItemsPerPage,
-    sortBy: ([] = ['createdAt']),
-    sortDesc: ([] = [true]),
-    groupBy: ([] = []),
-    groupDesc: ([] = []),
+    sortBy: ['createdAt'],
+    sortDesc: [true],
+    groupBy: [],
+    groupDesc: [],
     mustSort: false,
     multiSort: false
   };

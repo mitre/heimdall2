@@ -97,9 +97,11 @@ export class GroupsService {
         const adminInGroup = usersInGroup.find(
           userOnGroup => userOnGroup.id === adminId,
         );
-        adminInGroup
-          ? await adminInGroup.GroupUser.update({ role: 'owner' })
-          : await this.addUserToGroup(group, admin, 'owner');
+        if (adminInGroup) {
+          await adminInGroup.GroupUser.update({ role: 'owner' });
+        } else {
+          await this.addUserToGroup(group, admin, 'owner');
+        }
       }
     }
   }

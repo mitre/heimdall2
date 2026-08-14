@@ -290,10 +290,21 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     // rows were always dropped, and null always rendered as blank.
     return [...detailsMap]
       .filter(([, value]) => value !== undefined)
-      .map(([name, value]) => ({
-        name,
-        value: value === null ? '' : String(value)
-      }));
+      .map(([name, value]) => {
+        // Same normalization the tag loop above applies: null renders blank,
+        // and a structured value renders as formatted JSON instead of the
+        // useless '[object Object]'.
+        if (value === null) {
+          return {name, value: ''};
+        }
+        if (typeof value === 'string') {
+          return {name, value};
+        }
+        if (typeof value === 'number' || typeof value === 'boolean') {
+          return {name, value: String(value)};
+        }
+        return {name, value: JSON.stringify(value, null, 2) ?? ''};
+      });
   }
 
   // for zebra background
