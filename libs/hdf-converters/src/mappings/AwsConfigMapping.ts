@@ -1,13 +1,9 @@
 import * as _ from 'lodash';
 import {data as AWSConfigMappingData} from './AwsConfigMappingData';
 
-/** The NIST SP 800-53 revisions AwsConfigMappingData carries a row for. */
 export type AwsConfigRev = 4 | 5;
 
-/**
- * Rev 4 stays the default so existing callers keep the tags they have today.
- * Ask for Rev 5 explicitly, per instance or per lookup.
- */
+// Rev 4 stays the default so existing callers keep the tags they have today.
 export const DEFAULT_AWS_CONFIG_REV: AwsConfigRev = 4;
 
 type RevisionMappings = {
@@ -15,19 +11,11 @@ type RevisionMappings = {
   sourceIdentifier: Record<string, string[]>;
 };
 
-const emptyMappings = (): RevisionMappings => ({
-  ruleName: {},
-  sourceIdentifier: {}
-});
-
 export class AwsConfigMapping {
-  /** The revision this instance resolves lookups against by default. */
   readonly rev: AwsConfigRev;
 
-  /**
-   * Lookups for `rev`. Kept as public fields because callers outside this
-   * package read them; the per-revision tables behind them are private.
-   */
+  // Public because callers outside this package read them; the per-revision
+  // tables behind them are private.
   awsConfigRuleNameMappings: Record<string, string[]>;
   awsConfigRuleSourceIdentifierMappings: Record<string, string[]>;
 
@@ -35,11 +23,12 @@ export class AwsConfigMapping {
 
   constructor(rev: AwsConfigRev = DEFAULT_AWS_CONFIG_REV) {
     this.rev = rev;
-    this.mappingsByRev = {4: emptyMappings(), 5: emptyMappings()};
+    this.mappingsByRev = {
+      4: {ruleName: {}, sourceIdentifier: {}},
+      5: {ruleName: {}, sourceIdentifier: {}}
+    };
 
-    // The table holds one row per rule per revision. Keying by revision is what
-    // keeps them apart -- a single flat lookup would let whichever row came
-    // last overwrite the other.
+    // Keying by revision keeps a rule's two rows from overwriting each other.
     AWSConfigMappingData.forEach((mapping) => {
       const revision = this.mappingsByRev[mapping.Rev as AwsConfigRev];
       if (revision === undefined) {
