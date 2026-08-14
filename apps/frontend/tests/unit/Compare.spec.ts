@@ -149,7 +149,8 @@ describe.sequential('Compare', () => {
       for (const ctrl of pairedControls) {
         if (ctrl === null) {
           continue;
-        } else if (ctrl.root.hdf.status === 'Passed') {
+        }
+        if (ctrl.root.hdf.status === 'Passed') {
           passed++;
         } else if (ctrl.root.hdf.status === 'Failed') {
           failed++;

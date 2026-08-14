@@ -240,18 +240,17 @@ class Search extends VuexModule implements ISearchState {
       (filter) => filter.toLowerCase() !== searchPayload.value.toLowerCase()
     );
     const replaceRegex = fieldFilterPattern(searchPayload.field);
-    if (searchPayload.previousValues.length > 0) {
-      // If we still have any filters
-      const newSearch = this.searchTerm.replace(
-        replaceRegex,
-        () => `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`
-      );
-      this.context.commit('SET_SEARCH', newSearch);
-    } // Otherwise just remove the text from the search bar
-    else {
-      const newSearch = this.searchTerm.replace(replaceRegex, '');
-      this.context.commit('SET_SEARCH', newSearch);
-    }
+    // Keep the filters that remain, or otherwise remove the field's text from
+    // the search bar entirely.
+    const newSearch =
+      searchPayload.previousValues.length > 0
+        ? this.searchTerm.replace(
+            replaceRegex,
+            () =>
+              `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`
+          )
+        : this.searchTerm.replace(replaceRegex, '');
+    this.context.commit('SET_SEARCH', newSearch);
     this.parseSearch();
   }
 

@@ -494,8 +494,6 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
       this.pagination.sortDesc[0] =
         this.sortOrder.at(-1) == 'DESC' ? false : true;
       this.pagination.sortBy[0] = this.sortByField;
-      const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
-      this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
     } else {
       if (this.pagination.sortBy[0] == sortField) {
         this.pagination.sortDesc[0] = !this.pagination.sortDesc[0];
@@ -504,9 +502,9 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
         this.pagination.sortDesc[0] = false;
       }
       this.sortByField = sortField;
-      const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
-      this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
     }
+    const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
+    this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
 
     // Call the Database - update display
     const params = this.getQueryParams();

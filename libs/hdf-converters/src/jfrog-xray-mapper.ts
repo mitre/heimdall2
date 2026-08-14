@@ -31,7 +31,7 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 function hashId(vulnerability: unknown): string {
   if (_.get(vulnerability, 'id') === '') {
     return generateHash(
-      (_.get(vulnerability, 'summary') as unknown as string).toString(),
+      _.get(vulnerability, 'summary') as unknown as string,
       'md5'
     );
   } else {
@@ -41,9 +41,7 @@ function hashId(vulnerability: unknown): string {
 function formatDesc(vulnerability: unknown): string {
   const text = [];
   if (_.has(vulnerability, 'description')) {
-    text.push(
-      (_.get(vulnerability, 'description') as unknown as string).toString()
-    );
+    text.push(_.get(vulnerability, 'description'));
   }
   if (_.has(vulnerability, 'cves')) {
     const re1 = /":/g;

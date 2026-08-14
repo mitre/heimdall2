@@ -407,13 +407,12 @@ function componentPass(component: Record<string, unknown>) {
           (vuln: Record<string, unknown>) => _.get(vuln, '@_.cve_id') as string
         )
       );
-      _.set(component, 'control_ids', vulnList);
     } else {
       vulnList.push(
         _.get(component, 'vulnerabilities.vulnerability.@_.cve_id') as string
       );
-      _.set(component, 'control_ids', vulnList);
     }
+    _.set(component, 'control_ids', vulnList);
   }
   return _.omit(component, 'vulnerabilities');
 }

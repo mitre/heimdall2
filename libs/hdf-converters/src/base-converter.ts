@@ -51,7 +51,7 @@ export async function buildParseHtmlFunc(): Promise<ParseHtmlFunc> {
         data.push(text);
       }
     });
-    parser.write(String(input));
+    parser.write(input);
     parser.end();
     return data.join('');
   };

@@ -136,7 +136,7 @@ export function gen_variants(
   spread = 1
 ): VuetifyParsedThemeItem {
   // Re-scale
-  spread = spread * BASE_SPREAD;
+  spread *= BASE_SPREAD;
 
   return {
     darken4: shift(baseColor, -4 * spread),

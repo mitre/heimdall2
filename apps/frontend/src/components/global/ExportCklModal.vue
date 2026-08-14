@@ -502,15 +502,19 @@ export default class ExportCKLModal extends Vue {
               Techarea.Empty
             )
           ),
-          webordatabase: _.get(
-            file,
-            'evaluation.data.passthrough.checklist.asset.webordatabase',
+          // Checklists carry this flag as a boolean, so it is stringified
+          // rather than assumed to be text; the default matches that shape.
+          webordatabase: String(
             _.get(
               file,
-              'evaluation.data.passthrough.metadata.webordatabase',
-              'false'
-            )
-          ).toString(),
+              'evaluation.data.passthrough.checklist.asset.webordatabase'
+            ) ??
+              _.get(
+                file,
+                'evaluation.data.passthrough.metadata.webordatabase',
+                false
+              )
+          ),
           webdbsite: _.get(
             file,
             'evaluation.data.passthrough.checklist.asset.webdbsite',
@@ -635,7 +639,7 @@ export default class ExportCKLModal extends Vue {
       newName = newName.replaceAll(/^\w|[A-Z]|\b\w/gv, function (word) {
         return word.toUpperCase();
       });
-      newName = newName + 'Security Technical Implementation Guide';
+      newName += 'Security Technical Implementation Guide';
     }
 
     // Update the file title for the profile being processed

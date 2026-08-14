@@ -290,10 +290,9 @@ export default class ExportCSVModal extends Vue {
       const root = ctrl.root;
       if (hitIds.has(root.hdf.wraps.id)) {
         continue;
-      } else {
-        hitIds.add(root.hdf.wraps.id);
-        rows.push(this.convertRow(file, root));
       }
+      hitIds.add(root.hdf.wraps.id);
+      rows.push(this.convertRow(file, root));
     }
     return rows;
   }

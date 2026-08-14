@@ -61,7 +61,7 @@ export default class ExportJSON extends Vue {
     // characters and compared them to the five-character '.json', so it
     // could never match and every export gained a second extension.
     if (!filename.endsWith('.json')) {
-      filename = filename + '.json';
+      filename += '.json';
     }
     return filename;
   }
