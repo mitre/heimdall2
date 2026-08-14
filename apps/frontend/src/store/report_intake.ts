@@ -300,7 +300,7 @@ export class InspecIntake extends VuexModule {
   @Action
   async detectAndLoadPredefinedJSON() {
     // On page load, check for the flag to load the preloaded JSON file
-    const queryString = globalThis.location.search;
+    const queryString = location.search;
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.get('predefinedLoad')?.toLowerCase() === 'true') {
       try {

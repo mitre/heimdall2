@@ -82,7 +82,10 @@ export default class StatusChart extends Vue {
   }
 
   onSelect(status: Category<ControlStatus>) {
-    if (SearchModule.statusFilter?.indexOf(status.value) === -1) {
+    // Bound first: an absent filter must not take this branch, which a bare
+    // negated includes would do.
+    const statusFilter = SearchModule.statusFilter;
+    if (statusFilter && !statusFilter.includes(status.value)) {
       SearchModule.addSearchFilter({
         field: 'status',
         value: status.value,

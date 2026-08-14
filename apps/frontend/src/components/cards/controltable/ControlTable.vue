@@ -319,7 +319,7 @@ export default class ControlTable extends Vue {
     } else {
       // Add or remove it from the set, as appropriate. Shortcut this by only adding if delete fails
       const i = this.expanded.indexOf(key);
-      if (i < 0) {
+      if (i === -1) {
         this.expanded.push(key);
         this.jump_to_key(key);
       } else {

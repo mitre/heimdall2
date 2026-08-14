@@ -186,7 +186,10 @@ export default class SampleList extends Vue {
 
       try {
         const fileIds = await Promise.all(promises);
-        this.$emit('got-files', fileIds.flat(2));
+        // Each sample resolves to an array of ids per contained profile, so the
+        // settled results nest two levels deep.
+        const SAMPLE_ID_NESTING = 2;
+        this.$emit('got-files', fileIds.flat(SAMPLE_ID_NESTING));
       } catch (error) {
         SnackbarModule.failure(String(error));
       } finally {

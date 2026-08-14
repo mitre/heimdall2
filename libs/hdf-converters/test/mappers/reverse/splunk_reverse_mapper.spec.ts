@@ -2,7 +2,7 @@ import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {FromHDFToSplunkMapper} from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
 
-describe('Describe Splunk Reverse Mapper', () => {
+describe('Splunk Reverse Mapper', () => {
   it('Successfully converts HDF into Splunk', async () => {
     // The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
     const inputData = JSON.parse(

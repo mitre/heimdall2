@@ -225,7 +225,7 @@ export class ComparisonContext {
     for (const evaluation of allControls) {
       evaluation.controls.forEach((control) => {
         // Group initialization
-        if (!matched[control.data.id]) {
+        if (!Object.hasOwn(matched, control.data.id)) {
           matched[control.data.id] = {};
         }
         // Grouping

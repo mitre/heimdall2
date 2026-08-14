@@ -33,13 +33,12 @@ export interface FileData {
 export default class ExportJSON extends Vue {
   populate_files(): FileData[] {
     const ids = FilteredDataModule.selected_file_ids;
-    const fileData: FileData[] = [];
-    for (const evaluation of FilteredDataModule.evaluations(ids)) {
-      fileData.push({
+    const fileData: FileData[] = FilteredDataModule.evaluations(ids).map(
+      (evaluation) => ({
         filename: this.cleanup_filename(evaluation.from_file.filename),
         data: JSON.stringify(evaluation.data)
-      });
-    }
+      })
+    );
     for (const prof of FilteredDataModule.profiles(ids)) {
       fileData.push({
         filename: prof.from_file.filename,

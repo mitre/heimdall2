@@ -58,7 +58,7 @@ export default class ComplianceChart extends Vue {
   get series(): number[] {
     try {
       const val = calculateCompliance(this.filter);
-      if (isNaN(val) || typeof val !== 'number') return [];
+      if (Number.isNaN(val) || typeof val !== 'number') return [];
       return [val];
     } catch {
       return [];

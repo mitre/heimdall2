@@ -90,8 +90,8 @@ export default class ExportNIST extends Vue {
       const tags = c.root.hdf.parsedNistTags;
       tags.forEach((t) => {
         if (
-          !nistControls.some(
-            (otherTag) => this.format_tag(otherTag) === this.format_tag(t)
+          nistControls.every(
+            (otherTag) => this.format_tag(otherTag) !== this.format_tag(t)
           )
         ) {
           nistControls.push(t);

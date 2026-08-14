@@ -142,7 +142,7 @@ export function gen_variants(
     darken4: shift(baseColor, -4 * spread),
     darken3: shift(baseColor, -3 * spread),
     darken2: shift(baseColor, -2 * spread),
-    darken1: shift(baseColor, -1 * spread),
+    darken1: shift(baseColor, -spread),
     base: baseColor,
     lighten1: shift(baseColor, 1 * spread),
     lighten2: shift(baseColor, 2 * spread),

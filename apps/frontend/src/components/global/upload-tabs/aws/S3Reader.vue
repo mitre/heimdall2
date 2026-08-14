@@ -238,7 +238,7 @@ export default class S3Reader extends Vue {
   /** Callback to handle an AWS error.
    * Sets shown error.
    */
-  handleError(error: {name: string; message: string} | unknown): void {
+  handleError(error: unknown): void {
     const formattedError = transcribeError(error);
     // Toast whatever error we got
     SnackbarModule.failure(formattedError);

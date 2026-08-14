@@ -55,5 +55,5 @@ export function cleanUpFilename(filename: string): string {
 export function s2ab(s: string) {
   // Uint8Array.from maps each char to an octet without an index-write loop.
   // (NOT TextEncoder: that would emit UTF-8, changing bytes above 0x7f.)
-  return Uint8Array.from(s, (ch) => ch.charCodeAt(0) & 0xff).buffer;
+  return Uint8Array.from(s, (ch) => ch.codePointAt(0)! & 0xff).buffer;
 }

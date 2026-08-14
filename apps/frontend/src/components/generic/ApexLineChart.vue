@@ -45,11 +45,7 @@ export default class ApexLineChart extends Vue {
   sevColors: string[] = ['#FFEB3B', '#FF9800', '#FF5722', '#F44336'];
 
   get label_colors(): string[] {
-    const colors = [];
-    for (let i = 0; i < this.categories.length; i++) {
-      colors.push('#FFFFFF');
-    }
-    return colors;
+    return this.categories.map(() => '#FFFFFF');
   }
 
   // creates differing number of ticks based on number of controls

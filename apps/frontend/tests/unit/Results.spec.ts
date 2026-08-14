@@ -139,7 +139,7 @@ describe.sequential('Datatable', () => {
     );
   });
 
-  it('it can properly filter overridden results', async () => {
+  it('can properly filter overridden results', async () => {
     await loadSample('Small Profile With Severity Overrides');
     const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
