@@ -53,9 +53,7 @@ function findingId(
     return encode(_.get(finding, 'ProductFields.RuleId'));
   } else {
     return encode(
-      (_.get(finding, 'GeneratorId') as unknown as string)
-        .split('/')
-        .slice(-1)[0]
+      (_.get(finding, 'GeneratorId') as unknown as string).split('/').at(-1)
     );
   }
 }
@@ -127,7 +125,7 @@ function productName(
   if (
     (_.get(finding, 'Types[0]') as string)
       .split('/')
-      .slice(-1)[0]
+      .at(-1)!
       .replaceAll(/-/g, ' ')
       .toLowerCase() ===
     (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)
@@ -138,7 +136,7 @@ function productName(
   ) {
     standardName = (_.get(finding, 'Types[0]') as string)
       .split('/')
-      .slice(-1)[0]
+      .at(-1)!
       .replaceAll(/-/g, ' ');
   } else {
     standardName = (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)

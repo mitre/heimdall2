@@ -196,7 +196,7 @@ export class InspecIntake extends VuexModule {
         // Default to .json if not found
         let originalFileType = '.json';
         if (originalFileSplit.length > 1) {
-          originalFileType = originalFileSplit[originalFileSplit.length - 1];
+          originalFileType = originalFileSplit.at(-1)!;
         }
         return Promise.all(
           converted.map((evaluation) => {

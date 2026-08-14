@@ -325,7 +325,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
   // ASFF has several written and unwritten restrictions that cap how much information can be put into a finding
   restrictToSchemaSizes(resList: IFindingASFF[]): IFindingASFF[] {
-    const profileInfoFindingId = resList.slice(-1)[0].Id;
+    const profileInfoFindingId = resList.at(-1)!.Id;
     let numRemoved = 0;
     let numTruncated = 0;
     const restrictedResults: IFindingASFF[] = [];
@@ -360,10 +360,10 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
     if (
       (numRemoved > 0 || numTruncated > 0) &&
-      restrictedResults.slice(-1)[0].Id === profileInfoFindingId
+      restrictedResults.at(-1)!.Id === profileInfoFindingId
     ) {
-      restrictedResults.slice(-1)[0].Description = `${
-        restrictedResults.slice(-1)[0].Description
+      restrictedResults.at(-1)!.Description = `${
+        restrictedResults.at(-1)!.Description
       } ---- MITRE SAF HDF2ASFF converter warnings -- Entries truncated: ${numTruncated} (Truncated to fit AWS Security Hub restrictions) --- Entries removed: ${numRemoved} (Could not fit due to AWS Security Hub restrictions)`;
     }
 

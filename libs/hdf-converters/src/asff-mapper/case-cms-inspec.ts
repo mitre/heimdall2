@@ -5,7 +5,7 @@ function findingId(finding: Record<string, unknown>): string {
   return encode(
     (_.get(finding, 'ProductFields.aws/securityhub/FindingId') as string)
       .split('/')
-      .slice(-1)[0]
+      .at(-1)!
       .split('-')
       .slice(0, -1)
       .join('-')

@@ -18,9 +18,9 @@ const MESSAGE_TEXT = 'message.text';
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 function extractCwe(text: string): string[] {
-  let output = text.split('(').slice(-1)[0].slice(0, -2).split(', ');
+  let output = text.split('(').at(-1)!.slice(0, -2).split(', ');
   if (output.length === 1) {
-    output = text.split('(').slice(-1)[0].slice(0, -2).split('!/');
+    output = text.split('(').at(-1)!.slice(0, -2).split('!/');
   }
   return output;
 }

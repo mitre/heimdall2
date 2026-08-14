@@ -151,7 +151,7 @@ function handleIdGroup(
 
   const productInfo = (_.get(findings[0], 'ProductArn') as string)
     .split(':')
-    .slice(-1)[0]
+    .at(-1)!
     .split('/');
   const productName = externalProductHandler(
     context,
@@ -322,7 +322,7 @@ export class ASFFMapper extends BaseConverter {
             _.get(record, 'Findings[0].ProductArn') as string
           )
             .split(':')
-            .slice(-1)[0]
+            .at(-1)!
             .split('/');
           const defaultTargetId = `${productInfo[1]} - ${productInfo[2]}`;
           return externalProductHandler(
@@ -724,7 +724,7 @@ export class ASFFResults {
     this.data = _.groupBy(findings, (finding) => {
       const productInfo = (_.get(finding, 'ProductArn') as string)
         .split(':')
-        .slice(-1)[0]
+        .at(-1)!
         .split('/');
       const defaultFilename = `${productInfo[1]} - ${productInfo[2]}.json`;
       return externalProductHandler(

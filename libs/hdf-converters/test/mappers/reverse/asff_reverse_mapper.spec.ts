@@ -20,7 +20,7 @@ describe('ASFF Reverse Mapper', () => {
       region: 'us-east-2'
     }).toAsff();
 
-    const profileInformation = [converted[converted.length - 1] || {}];
+    const profileInformation = [converted.at(-1) || {}];
 
     // fs.writeFileSync(
     //   'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
@@ -71,7 +71,7 @@ describe('ASFF Reverse Mapper', () => {
       region: 'us-east-2'
     }).toAsff();
 
-    const profileInformation = [converted[converted.length - 1] || {}];
+    const profileInformation = [converted.at(-1) || {}];
 
     // fs.writeFileSync(
     //   'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json',
