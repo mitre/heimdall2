@@ -70,10 +70,10 @@ function formatCWETags(
   input:
     | CycloneDXBillOfMaterialsStandardVulnerability['cwes']
     | CycloneDXSoftwareBillOfMaterialsStandardVulnerability['cwes'],
-  addPrefix = true
+  withPrefix = true
 ): string[] {
   return input && Array.isArray(input)
-    ? input.map((cwe) => (addPrefix ? `CWE-${cwe}` : String(cwe)))
+    ? input.map((cwe) => (withPrefix ? `CWE-${cwe}` : String(cwe)))
     : [];
 }
 

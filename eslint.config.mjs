@@ -457,6 +457,20 @@ export default defineConfig([
     },
   },
   {
+    // NestJS's documented convention names a DTO parameter after its class —
+    // `createCatDto: CreateCatDto` (docs.nestjs.com/controllers) — and every
+    // generator and sibling Nest codebase reads this way. The rule's only
+    // option is WHICH verbs to check (no suffix or pattern exemption), so the
+    // framework convention cannot be carved out more narrowly than the tree
+    // that follows it.
+    files: ['apps/backend/src/**/*.ts'],
+    name: 'unicorn/nest-dto-parameter-names',
+    plugins: { unicorn },
+    rules: {
+      'unicorn/no-non-function-verb-prefix': 'off',
+    },
+  },
+  {
     // security/detect-non-literal-fs-filename flags OWASP path traversal:
     // fs calls whose path an attacker might influence. In spec files the
     // paths are the test's own fixtures (tmpdir + literals) — there is no

@@ -133,16 +133,16 @@ export class FilteredData extends VuexModule {
   }
 
   @Mutation
-  CLEAR_EVALUATION(removeId: FileID): void {
+  CLEAR_EVALUATION(fileId: FileID): void {
     this.selectedEvaluationIds = this.selectedEvaluationIds.filter(
-      (ids) => ids !== removeId
+      (ids) => ids !== fileId
     );
   }
 
   @Mutation
-  CLEAR_PROFILE(removeId: FileID): void {
+  CLEAR_PROFILE(fileId: FileID): void {
     this.selectedProfileIds = this.selectedProfileIds.filter(
-      (ids) => ids !== removeId
+      (ids) => ids !== fileId
     );
   }
 
