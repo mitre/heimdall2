@@ -138,9 +138,9 @@ export default class AuthStep extends Vue {
   mounted() {
     this.accesskey = localAccesskey.getDefault('');
     this.secretkey = localSecretkey.getDefault('');
-    // If the hostname is not set, use the default from the server module
+    // If the hostname is not set, use the first configured default from the server module
     // (if not running in server mode the default is empty)
-    this.hostname = localHostname.getDefault(ServerModule.tenableHostUrl);
+    this.hostname = localHostname.getDefault(ServerModule.tenableHostUrl[0] ?? '');
   }
 }
 </script>

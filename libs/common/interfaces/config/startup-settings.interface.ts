@@ -10,7 +10,7 @@ export interface IStartupSettings {
   readonly ldap: boolean;
   readonly registrationEnabled: boolean;
   readonly localLoginEnabled: boolean;
-  readonly tenableHostUrl: string;
+  readonly tenableHostUrl: string[];
   readonly forceTenableFrontend: boolean;
   readonly splunkHostUrl: string;
 }

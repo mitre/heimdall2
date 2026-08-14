@@ -43,7 +43,7 @@ export class TenableController {
   // Returns the matching allowlisted origin for host_url, or null if none match
   // or if host_url carries a path/query/fragment beyond a bare origin.
   private resolveAllowedHostUrl(host_url: string): string | null {
-    const allowlist = this.configService.getTenableHostUrls();
+    const allowlist = this.configService.getTenableHostUrl();
     if (allowlist.length === 0) {
       return null;
     }

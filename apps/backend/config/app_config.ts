@@ -52,30 +52,18 @@ export default class AppConfig {
     }
   }
 
-  getTenableHostUrl(): string {
+  // Newline-separated allowlist of Tenable.SC hosts permitted for the login/proxy endpoints.
+  // Newlines are used instead of commas since commas are valid, unencoded URI characters.
+  // A single host works the same as before since there's just one entry to split.
+  getTenableHostUrl(): string[] {
     const tenable_host_url = this.get('TENABLE_HOST_URL');
-    if (tenable_host_url !== undefined) {
-      return tenable_host_url;
-    } else {
-      return '';
+    if (tenable_host_url === undefined) {
+      return [];
     }
-  }
-
-  // Comma-separated allowlist of Tenable.SC hosts permitted for the login/proxy endpoints.
-  // Falls back to (and merges with) the single-value TENABLE_HOST_URL for backward compatibility.
-  getTenableHostUrls(): string[] {
-    const tenable_host_urls = this.get('TENABLE_HOST_URLS');
-    const list = tenable_host_urls
-      ? tenable_host_urls
-          .split(',')
-          .map((url) => url.trim())
-          .filter((url) => url.length > 0)
-      : [];
-    const singleHostUrl = this.getTenableHostUrl();
-    if (singleHostUrl && !list.includes(singleHostUrl)) {
-      list.push(singleHostUrl);
-    }
-    return list;
+    return tenable_host_url
+      .split(/\r?\n/)
+      .map((url) => url.trim())
+      .filter((url) => url.length > 0);
   }
 
   getDatabaseName(): string {

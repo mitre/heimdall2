@@ -74,12 +74,8 @@ export class ConfigService {
     return this.appConfig.getSplunkHostUrl();
   }
 
-  getTenableHostUrl(): string {
+  getTenableHostUrl(): string[] {
     return this.appConfig.getTenableHostUrl();
-  }
-
-  getTenableHostUrls(): string[] {
-    return this.appConfig.getTenableHostUrls();
   }
 
   getDbConfig(): SequelizeOptions {
