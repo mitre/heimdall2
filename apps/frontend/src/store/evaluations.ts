@@ -43,14 +43,16 @@ export class Evaluation extends VuexModule {
   order: string[] = ['createdAt', 'DESC'];
   loading = true;
 
-  get evaluationForFile(): Function {
+  get evaluationForFile(): (
+    file: EvaluationFile | ProfileFile
+  ) => IEvaluation | undefined {
     return (file: EvaluationFile | ProfileFile) => {
       try {
         return this.allEvaluations.find((e) => {
           return e.id === file.database_id?.toString();
         });
       } catch {
-        return false;
+        return;
       }
     };
   }

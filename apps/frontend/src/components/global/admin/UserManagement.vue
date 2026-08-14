@@ -94,7 +94,7 @@ export default class UserManagement extends Vue {
   createUserDialog = false;
   search = '';
   users: IUser[] = [];
-  headers: Object[] = [
+  headers: object[] = [
     {
       text: 'Email',
       align: 'start',

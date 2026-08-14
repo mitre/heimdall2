@@ -290,7 +290,7 @@ import RouteMixin from '@/mixins/RouteMixin';
   }
 })
 export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
-  @Prop({required: true}) readonly headers!: Object[];
+  @Prop({required: true}) readonly headers!: object[];
   @Prop({type: Boolean, default: false}) loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
   @Prop({required: true}) evaluationsLoaded!: IEvaluation[];
@@ -518,13 +518,13 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   getSortClause(field: string, order: string): string[] {
     //  Map sorted fields to database names.
     if (field == 'filename' || field == 'createdAt') {
-      return new Array(field, order);
+      return [field, order];
     } else if (field == 'groups') {
-      return new Array('groups', 'name', order);
+      return ['groups', 'name', order];
     } else if (field == 'evaluationTags') {
-      return new Array('evaluationTags', 'value', order);
+      return ['evaluationTags', 'value', order];
     } else {
-      return new Array(field, order);
+      return [field, order];
     }
   }
 

@@ -91,7 +91,7 @@ export default class ProfileInfo extends Vue {
     | SourcedContextualizedProfile
     | undefined;
 
-  headers: Object[] = [
+  headers: object[] = [
     {
       text: 'Name',
       align: 'start',

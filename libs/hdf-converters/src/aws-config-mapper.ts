@@ -321,7 +321,6 @@ export class AwsConfigMapper {
     return complianceResults;
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
   private hdfTags(configRule: ConfigRule): Record<string, unknown> {
     let result = {};
     const sourceIdentifier = configRule.Source?.SourceIdentifier;

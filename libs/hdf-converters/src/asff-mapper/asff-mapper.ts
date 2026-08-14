@@ -98,8 +98,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
 
 const SPECIAL_CASE_MAPPING = new Map<
   SpecialCasing,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  Record<string, Function>
+  Record<string, (...inputs: any) => any>
 >([
   [SpecialCasing.CMSInSpec, getCMSInSpec()],
   [SpecialCasing.FirewallManager, getFirewallManager()],

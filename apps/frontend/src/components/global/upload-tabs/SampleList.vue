@@ -140,7 +140,7 @@ export default class SampleList extends Vue {
   selectedFiles: Sample[] = [];
 
   isActiveDialog = false;
-  headers: Object[] = [
+  headers: object[] = [
     {
       text: 'Filename',
       align: 'left',

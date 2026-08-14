@@ -14,11 +14,10 @@ export type ILookupPath = {
 };
 
 export type ObjectEntryValue<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
-/* eslint-disable @typescript-eslint/ban-types */
 export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends any[]
     ? MappedTransform<T[K], U>
-    : T[K] extends Function
+    : T[K] extends (...args: never[]) => unknown
       ? T[K]
       : T[K] extends object
         ? MappedTransform<T[K] & U, U>
@@ -31,7 +30,6 @@ export type MappedReform<T, U> = {
       ? MappedReform<T[K] & U, U>
       : Exclude<T[K], U>;
 };
-/* eslint-enable @typescript-eslint/ban-types */
 
 // Hashing Function
 export function generateHash(data: string, algorithm = 'sha256'): string {
@@ -99,7 +97,6 @@ export function impactMapping(
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 function collapseDuplicates<T extends object>(
   array: T[],
   key: string,

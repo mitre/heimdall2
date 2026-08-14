@@ -110,7 +110,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
 
   isActiveDialog = false;
 
-  headers: Object[] = [
+  headers: object[] = [
     {
       text: 'Filename',
       value: 'filename',
