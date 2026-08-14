@@ -33,8 +33,6 @@ export type FileMetaData = {
 
 const MAPPER_NAME = 'Splunk2HDF';
 
-let logger = createWinstonLogger('Splunk2HDF');
-
 // Groups items by using the provided key function
 export function groupBy<T>(
   items: T[],
@@ -69,12 +67,15 @@ export function mapHash<T, G>(old: Hash<T>, mapFunction: (v: T) => G): Hash<G> {
 }
 
 export function consolidatePayloads(
-  payloads: SplunkReport[]
+  payloads: SplunkReport[],
+  logger: Logger = createWinstonLogger(MAPPER_NAME)
 ): ExecJSON.Execution[] {
   // Group by exec id
   const grouped = groupBy(payloads, (pl) => pl.meta.guid);
 
-  const built = mapHash(grouped, consolidateFilePayloads);
+  const built = mapHash(grouped, (filePayloads) =>
+    consolidateFilePayloads(filePayloads, logger)
+  );
   return Object.values(built);
 }
 
@@ -97,7 +98,8 @@ export function replaceKeyValueDescriptions(
 }
 
 function consolidateFilePayloads(
-  filePayloads: SplunkReport[]
+  filePayloads: SplunkReport[],
+  logger: Logger
 ): ExecJSON.Execution {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
@@ -167,6 +169,7 @@ export class SplunkMapper {
   config: SplunkConfig;
   axiosInstance: AxiosInstance;
   hostname: string;
+  logger: Logger;
 
   constructor(
     config: SplunkConfig,
@@ -176,16 +179,13 @@ export class SplunkMapper {
     this.config = config;
     this.axiosInstance = axios.create({params: {output_mode: 'json'}});
     this.hostname = generateHostname(config);
-    if (logService) {
-      logger = logService;
-    } else {
-      logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
-    }
-    logger.debug(`Initialized ${this.constructor.name} successfully`);
+    this.logger =
+      logService ?? createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
+    this.logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
   async createJob(query: string): Promise<string> {
-    logger.debug(`Creating job for query: ${query}`);
+    this.logger.debug(`Creating job for query: ${query}`);
     // Post to {host}/services/search/jobs endpoint to queue search job for given query
     let jobSID: AxiosResponse;
     try {
@@ -293,7 +293,7 @@ export class SplunkMapper {
     // typechecks; JSON.parse below consumes a whole column value.
     results: {fields: string[]; rows: string[][]}
   ): SplunkReport[] {
-    logger.info(`Got results for query: ${query}`);
+    this.logger.info(`Got results for query: ${query}`);
 
     // Our data parsed as Key/Value pairs
     const objects: SplunkReport[] = [];
@@ -303,11 +303,11 @@ export class SplunkMapper {
     );
 
     if (rawDataIndex === -1) {
-      logger.error(`Field _raw not found, using default index 3`);
+      this.logger.error(`Field _raw not found, using default index 3`);
       rawDataIndex = 3;
     }
 
-    logger.debug(`Got field _raw at index ${rawDataIndex}`);
+    this.logger.debug(`Got field _raw at index ${rawDataIndex}`);
 
     // Find _indextime, this is when the data was imported into splunk
     let indexTimeIndex = results?.fields.findIndex(
@@ -315,12 +315,14 @@ export class SplunkMapper {
     );
 
     if (indexTimeIndex === -1) {
-      logger.error(`Field _indextime not found, using default index 2`);
+      this.logger.error(`Field _indextime not found, using default index 2`);
       indexTimeIndex = 2;
     }
 
-    logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
-    logger.verbose(`Parsing data returned by Splunk and appending timestamps`);
+    this.logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
+    this.logger.verbose(
+      `Parsing data returned by Splunk and appending timestamps`
+    );
     for (const value of results.rows) {
       let object;
       try {
@@ -347,7 +349,7 @@ export class SplunkMapper {
 
       objects.push(object);
     }
-    logger.debug('Successfully parsed and added timestamps');
+    this.logger.debug('Successfully parsed and added timestamps');
     return objects;
   }
 
@@ -395,19 +397,19 @@ export class SplunkMapper {
   }
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
-    logger.info(`Starting conversion of GUID ${guid}`);
+    this.logger.info(`Starting conversion of GUID ${guid}`);
     // Preliminary check of credentials
     // Not used for later logins
     await checkSplunkCredentials(this.config);
-    logger.info(`Credentials valid, querying data for ${guid}`);
+    this.logger.info(`Credentials valid, querying data for ${guid}`);
 
     // Start search job for query
     const executionData = await this.queryData(
       `search index="*" meta.guid="${guid}"`
     );
-    logger.info(
+    this.logger.info(
       `Data received, consolidating payloads for ${executionData.length} items`
     );
-    return consolidatePayloads(executionData)[0];
+    return consolidatePayloads(executionData, this.logger)[0];
   }
 }

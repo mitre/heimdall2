@@ -33,7 +33,6 @@ const $router = {
   }
 };
 const vuetify = new Vuetify();
-let controlTableWrapper: Wrapper<Vue>;
 
 const wrapper: Wrapper<Vue> = shallowMount(Results, {
   vuetify,
@@ -50,7 +49,7 @@ describe('Datatable', () => {
 
   it('displays correct number of controls with many files', () => {
     loadAll();
-    controlTableWrapper = shallowMount(ControlTable, {
+    const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
         $router
@@ -77,7 +76,7 @@ describe('Datatable', () => {
 
   it('displays correct number of controls with many files generated from a single sample file while using the loadFile method', () => {
     loadSample('Conveyor Sample', DataLoadApproach.File);
-    controlTableWrapper = shallowMount(ControlTable, {
+    const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
         $router
@@ -104,7 +103,7 @@ describe('Datatable', () => {
 
   it('control row and table data is correct', () => {
     loadAll();
-    controlTableWrapper = shallowMount(ControlTable, {
+    const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
         $router
@@ -134,7 +133,7 @@ describe('Datatable', () => {
 
   it('it can properly filter overridden results', () => {
     loadSample('Small Profile With Severity Overrides');
-    controlTableWrapper = shallowMount(ControlTable, {
+    const controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
       mocks: {
         $router

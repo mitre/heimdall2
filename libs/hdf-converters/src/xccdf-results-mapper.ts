@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import type {
   ILookupPath,
-  MappedTransform} from './base-converter';
+  MappedTransform,
+  ParseHtmlFunc} from './base-converter';
 import {
   BaseConverter,
   impactMapping,
@@ -25,8 +26,6 @@ const IMPACT_MAPPING = new Map<string, number>([
 
 const CCI_NIST_MAPPING = new CciNistMapping();
 const CCI_REGEX = /CCI-(\d*)/;
-
-let parseHtml: (input: unknown) => string;
 
 function asArray<T>(arg: T | T[]): T[] {
   if (Array.isArray(arg)) {
@@ -230,14 +229,19 @@ export class XCCDFResultsResults {
   constructor(readonly scapXml: string, readonly withRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    const parseHtml = await buildParseHtmlFunc();
 
-    return (new XCCDFResultsMapper(this.scapXml, this.withRaw)).toHdf();
+    return new XCCDFResultsMapper(
+      this.scapXml,
+      parseHtml,
+      this.withRaw
+    ).toHdf();
   }
 }
 
 export class XCCDFResultsMapper extends BaseConverter {
   withRaw: boolean;
+  parseHtml: ParseHtmlFunc;
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -262,7 +266,7 @@ export class XCCDFResultsMapper extends BaseConverter {
         },
         summary: {
           path: ['Benchmark.description.text', 'Benchmark.description'],
-          transformer: parseHtml
+          transformer: (input: unknown) => this.parseHtml(input)
         },
         description: {
           path: 'Benchmark',
@@ -310,7 +314,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 if (item !== undefined) {
                   descriptionEntries.push([
                     path,
-                    typeof item === 'string' ? parseHtml(item) : item
+                    typeof item === 'string' ? this.parseHtml(item) : item
                   ]);
                 }
               }
@@ -349,7 +353,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               description: {
                 path: ['description.text', 'description'],
                 transformer: (description: string): string =>
-                  parseHtml(
+                  this.parseHtml(
                     _.get(
                       parseXml(description),
                       'VulnDiscussion',
@@ -362,7 +366,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               group_description: {
                 path: ['group.description.text', 'group.description'],
                 transformer: (description: string): string =>
-                  parseHtml(
+                  this.parseHtml(
                     _.get(
                       parseXml(description),
                       'GroupDescription',
@@ -380,7 +384,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               fix_id: {path: 'fix.id'},
               fixtext_fixref: {
                 path: ['fixtext.fixref.text', 'fixtext.fixref'],
-                transformer: (text: string) => parseHtml(text) || undefined
+                transformer: (text: string) => this.parseHtml(text) || undefined
               },
               ident: {
                 path: 'ident',
@@ -401,7 +405,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                   description: {
                     path: ['description.text', 'description'],
                     transformer: (description: string): string =>
-                      parseHtml(
+                      this.parseHtml(
                         _.get(
                           parseXml(description),
                           'ProfileDescription',
@@ -422,11 +426,11 @@ export class XCCDFResultsMapper extends BaseConverter {
                 ) =>
                   asArray(values).map((value) => ({
                     title: _.get(value, 'title.text') || _.get(value, 'title'),
-                    description: parseHtml(
+                    description: this.parseHtml(
                       _.get(value, 'description.text') ||
                         _.get(value, 'description')
                     ),
-                    warning: parseHtml(
+                    warning: this.parseHtml(
                       _.get(value, 'warning.text') || _.get(value, 'warning')
                     ),
                     value: _.get(value, 'value'),
@@ -495,7 +499,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             desc: {
               path: ['description.text', 'description'],
               transformer: (description: string): string =>
-                parseHtml(
+                this.parseHtml(
                   _.get(
                     parseXml(description),
                     'ProfileDescription',
@@ -518,7 +522,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[]
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(parseHtml).join('\n'),
+                  data: asArray(data).map(this.parseHtml).join('\n'),
                   label: 'fix'
                 })
               } as unknown as ExecJSON.ControlDescription,
@@ -527,7 +531,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[]
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(parseHtml).join('\n'),
+                  data: asArray(data).map(this.parseHtml).join('\n'),
                   label: 'rationale'
                 })
               } as unknown as ExecJSON.ControlDescription,
@@ -536,7 +540,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: (
                   data: string | string[]
                 ): ExecJSON.ControlDescription => ({
-                  data: asArray(data).map(parseHtml).join('\n'),
+                  data: asArray(data).map(this.parseHtml).join('\n'),
                   label: 'warning'
                 })
               } as unknown as ExecJSON.ControlDescription
@@ -584,7 +588,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 code_desc: {
                   path: ['description.text', 'description'],
                   transformer: (description: string): string =>
-                    parseHtml(
+                    this.parseHtml(
                       _.get(
                         parseXml(description),
                         'VulnDiscussion',
@@ -636,7 +640,7 @@ export class XCCDFResultsMapper extends BaseConverter {
     }
   };
 
-  constructor(scapXml: string, withRaw = false) {
+  constructor(scapXml: string, parseHtml: ParseHtmlFunc, withRaw = false) {
     super(
       parseXml(scapXml, {
         stopNodes: [
@@ -649,6 +653,7 @@ export class XCCDFResultsMapper extends BaseConverter {
         ]
       })
     );
+    this.parseHtml = parseHtml;
     this.withRaw = withRaw;
   }
 }

@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import type {
   ILookupPath,
-  MappedTransform} from './base-converter';
+  MappedTransform,
+  ParseHtmlFunc} from './base-converter';
 import {
   BaseConverter,
   buildParseHtmlFunc,
@@ -15,8 +16,6 @@ const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';
 const DEFAULT_NIST_TAG: string[] = [];
 const NIST_CONTROL_PATTERN = /[A-Za-z][A-Za-z]-\d{1,2}/;
-
-let parseHtml: (input: unknown) => string;
 
 function impactMapping(input: Record<string, unknown>, id: string): number {
   if (Array.isArray(input)) {
@@ -126,15 +125,16 @@ export class FortifyResults {
   constructor(readonly fvdl: string, readonly withRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    const parseHtml = await buildParseHtmlFunc();
 
-    return (new FortifyMapper(this.fvdl, this.withRaw)).toHdf();
+    return new FortifyMapper(this.fvdl, parseHtml, this.withRaw).toHdf();
   }
 }
 
 export class FortifyMapper extends BaseConverter {
   startTime: string;
   withRaw: boolean;
+  parseHtml: ParseHtmlFunc;
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -175,9 +175,16 @@ export class FortifyMapper extends BaseConverter {
             },
             refs: [],
             source_location: {},
-            title: {path: 'Abstract', transformer: parseHtml}, // there are embedded nodes that do not show up properly
+            title: {
+              path: 'Abstract',
+              // there are embedded nodes that do not show up properly
+              transformer: (input: unknown) => this.parseHtml(input)
+            },
             id: {path: 'classID'},
-            desc: {path: 'Explanation', transformer: parseHtml},
+            desc: {
+              path: 'Explanation',
+              transformer: (input: unknown) => this.parseHtml(input)
+            },
             impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
@@ -226,12 +233,13 @@ export class FortifyMapper extends BaseConverter {
     }
   };
 
-  constructor(fvdl: string, withRaw = false) {
+  constructor(fvdl: string, parseHtml: ParseHtmlFunc, withRaw = false) {
     super(
       parseXml(fvdl, {
         stopNodes: ['FVDL.Description.Abstract', 'FVDL.Description.Explanation']
       })
     );
+    this.parseHtml = parseHtml;
     this.startTime = `${String(_.get(this.data, 'FVDL.CreatedTS.date'))} ${String(
       _.get(this.data, 'FVDL.CreatedTS.time')
     )}`;

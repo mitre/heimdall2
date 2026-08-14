@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import type {
   ILookupPath,
-  MappedTransform} from './base-converter';
+  MappedTransform,
+  ParseHtmlFunc} from './base-converter';
 import {
   BaseConverter,
   impactMapping,
@@ -26,10 +27,8 @@ const IMPACT_MAPPING = new Map<string, number>([
 const NAME = 'BurpSuite Pro Scan';
 const CWE_NIST_MAPPING = new CweNistMapping();
 
-let parseHtml: (input: unknown) => string;
-
 // Transformation Functions
-function formatCodeDesc(issue: unknown): string {
+function formatCodeDesc(parseHtml: ParseHtmlFunc, issue: unknown): string {
   const text = [];
   if (_.has(issue, 'host.ip') && _.has(issue, 'host.text')) {
     text.push(
@@ -60,12 +59,12 @@ function idToString(id: unknown): string {
     return '';
   }
 }
-function formatCweId(input: string): string {
+function formatCweId(parseHtml: ParseHtmlFunc, input: string): string {
   return parseHtml(input).slice(1, -1).trimStart();
 }
 
-function nistTag(input: string): string[] {
-  let cwe = formatCweId(input).split('CWE-');
+function nistTag(parseHtml: ParseHtmlFunc, input: string): string[] {
+  let cwe = formatCweId(parseHtml, input).split('CWE-');
   cwe.shift();
   cwe = cwe.map((x) => x.split(':', 1)[0]);
   return CWE_NIST_MAPPING.nistFilter(
@@ -78,14 +77,15 @@ export class BurpSuiteResults {
   constructor(readonly burpsXml: string, readonly withRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    const parseHtml = await buildParseHtmlFunc();
 
-    return (new BurpSuiteMapper(this.burpsXml, this.withRaw)).toHdf();
+    return new BurpSuiteMapper(this.burpsXml, parseHtml, this.withRaw).toHdf();
   }
 }
 
 export class BurpSuiteMapper extends BaseConverter {
   withRaw: boolean;
+  parseHtml: ParseHtmlFunc;
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -114,15 +114,17 @@ export class BurpSuiteMapper extends BaseConverter {
             tags: {
               nist: {
                 path: 'vulnerabilityClassifications',
-                transformer: nistTag
+                transformer: (input: string) => nistTag(this.parseHtml, input)
               },
               cweid: {
                 path: 'vulnerabilityClassifications',
-                transformer: formatCweId
+                transformer: (input: string) =>
+                  formatCweId(this.parseHtml, input)
               },
               cci: {
                 path: 'vulnerabilityClassifications',
-                transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
+                transformer: (data: string) =>
+                  getCCIsForNISTTags(nistTag(this.parseHtml, data))
               },
               confidence: {path: 'confidence'}
             },
@@ -130,14 +132,23 @@ export class BurpSuiteMapper extends BaseConverter {
             source_location: {},
             title: {path: 'name'},
             id: {path: 'type', transformer: idToString},
-            desc: {path: 'issueBackground', transformer: parseHtml},
+            desc: {
+              path: 'issueBackground',
+              transformer: (input: unknown) => this.parseHtml(input)
+            },
             descriptions: [
               {
-                data: {path: 'issueBackground', transformer: parseHtml},
+                data: {
+                  path: 'issueBackground',
+                  transformer: (input: unknown) => this.parseHtml(input)
+                },
                 label: 'check'
               },
               {
-                data: {path: 'remediationBackground', transformer: parseHtml},
+                data: {
+                  path: 'remediationBackground',
+                  transformer: (input: unknown) => this.parseHtml(input)
+                },
                 label: 'fix'
               }
             ],
@@ -152,7 +163,10 @@ export class BurpSuiteMapper extends BaseConverter {
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {transformer: formatCodeDesc},
+                code_desc: {
+                  transformer: (issue: unknown) =>
+                    formatCodeDesc(this.parseHtml, issue)
+                },
                 start_time: {path: '$.issues.exportTime'}
               }
             ]
@@ -170,8 +184,9 @@ export class BurpSuiteMapper extends BaseConverter {
     }
   };
 
-  constructor(burpsXml: string, withRaw = false) {
+  constructor(burpsXml: string, parseHtml: ParseHtmlFunc, withRaw = false) {
     super(parseXml(burpsXml));
+    this.parseHtml = parseHtml;
     this.withRaw = withRaw;
   }
 }

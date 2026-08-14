@@ -35,7 +35,6 @@ export type SplunkData = {
   reports: SplunkReport[];
 };
 
-let logger = createWinstonLogger('HDF2Splunk', 'INFO');
 
 export function createGUID(length: number) {
   let result = '';
@@ -278,20 +277,18 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   declare mappings?: MappedTransform<SplunkData, ILookupPathFH>;
   contextualizedEvaluation?: ContextualizedEvaluation;
   axiosInstance: AxiosInstance;
+  logger: Logger;
 
   constructor(
     data: ExecJSON.Execution | ContextualizedEvaluation,
     logService?: Logger,
     loggingLevel?: string
   ) {
-    if (logService) {
-      logger = logService;
-    } else {
-      logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
-    }
     super(ensureContextualizedEvaluation(data));
+    this.logger =
+      logService ?? createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     this.axiosInstance = axios.create({params: {output_mode: 'json'}});
-    logger.debug(`Initialized ${this.constructor.name} successfully`);
+    this.logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
   createSplunkData(guid: string, filename: string) {
@@ -346,7 +343,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
           `${hostname}/services/receivers/simple`,
           JSON.stringify(report)
         );
-        logger.verbose(
+        this.logger.verbose(
           `Successfully uploaded execution for ${report.meta.filename}`
         );
       });
@@ -359,7 +356,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
         `${hostname}/services/receivers/simple`,
         splunkData.profiles.map((profile) => JSON.stringify(profile)).join('\n')
       );
-      logger.verbose(
+      this.logger.verbose(
         `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
       );
 
@@ -370,7 +367,9 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             `${hostname}/services/receivers/simple`,
             chunk.map((control) => JSON.stringify(control)).join('\n')
           );
-          logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
+          this.logger.verbose(
+            `Successfully uploaded ${chunk.length} control(s)`
+          );
         }
       );
       await Promise.all(controlEvents);
@@ -386,12 +385,12 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     const returnCount = 0;
     let indexResponse: AxiosResponse;
 
-    logger.info(
+    this.logger.info(
       `Logging into Splunk instance at ${hostname} with user ${config.username}`
     );
-    logger.verbose(`Found designated file to transfer: ${filename}`);
+    this.logger.verbose(`Found designated file to transfer: ${filename}`);
     const guid = createGUID(30);
-    logger.verbose(`Using GUID: ${guid}`);
+    this.logger.verbose(`Using GUID: ${guid}`);
 
     // Attempt to authenticate using given credentials
     const authResponse = await checkSplunkCredentials(config);
@@ -430,14 +429,14 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       const indexNames: string[] = indexes.map(
         (index: {name: string}) => index.name
       );
-      logger.verbose(`Available indexes: ${indexNames.join(', ')}`);
+      this.logger.verbose(`Available indexes: ${indexNames.join(', ')}`);
 
       // Parse available indexes for user desired index
       if (indexNames.includes(config.index)) {
         const targetIndex = indexes.filter(
           (index: {name: string}) => index.name === config.index
         )[0];
-        logger.verbose(`Found index: ${targetIndex.name}`);
+        this.logger.verbose(`Found index: ${targetIndex.name}`);
 
         // Post given file(s) to identified index
         const splunkData = this.createSplunkData(guid, filename);
@@ -450,7 +449,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             {cause: error}
           );
         }
-        logger.info(`Successfully uploaded to ${config.index}`);
+        this.logger.info(`Successfully uploaded to ${config.index}`);
         return guid;
       } else {
         throw new Error(`Invalid index - ${config.index}`);

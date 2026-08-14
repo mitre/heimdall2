@@ -39,7 +39,9 @@ export function generateHash(data: string, algorithm = 'sha256'): string {
   return hash.update(data).digest('hex');
 }
 
-export async function buildParseHtmlFunc(): Promise<(input: unknown) => string> {
+export type ParseHtmlFunc = (input: unknown) => string;
+
+export async function buildParseHtmlFunc(): Promise<ParseHtmlFunc> {
   const htmlparser = await import('htmlparser2');
   return (input: unknown): string => {
     if (!_.isString(input)) {

@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import type {
   ILookupPath,
-  MappedTransform} from './base-converter';
+  MappedTransform,
+  ParseHtmlFunc} from './base-converter';
 import {
   BaseConverter,
   impactMapping,
@@ -35,18 +36,6 @@ const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG: string[] = [];
 
-let parseHtml: (input: unknown) => string;
-
-let policyName: string;
-let version: string;
-
-function getPolicyName(): string {
-  return 'Nessus ' + policyName;
-}
-function getVersion(): string {
-  return version;
-}
-
 function getId(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
     return parseRef(
@@ -64,7 +53,7 @@ function getTitle(item: unknown): string {
     return _.get(item, 'pluginName') as unknown as string;
   }
 }
-function getDesc(item: unknown): string {
+function getDesc(parseHtml: ParseHtmlFunc, item: unknown): string {
   if (_.has(item, COMPLIANCE_INFO)) {
     return parseHtml(_.get(item, COMPLIANCE_INFO));
   } else {
@@ -105,7 +94,7 @@ function getImpact(item: unknown): number {
   }
 }
 
-function getCheck(item: unknown): string {
+function getCheck(parseHtml: ParseHtmlFunc, item: unknown): string {
   if (_.has(item, COMPLIANCE_SOLUTION)) {
     return parseHtml(_.get(item, COMPLIANCE_SOLUTION));
   } else {
@@ -168,7 +157,7 @@ function getStatus(item: unknown): ExecJSON.ControlResultStatus {
       return ExecJSON.ControlResultStatus.Failed;
   }
 }
-function formatCodeDesc(item: unknown): string {
+function formatCodeDesc(parseHtml: ParseHtmlFunc, item: unknown): string {
   if (_.has(item, 'description')) {
     return parseHtml(_.get(item, 'description') || NA_PLUGIN_OUTPUT);
   } else {
@@ -221,10 +210,10 @@ export class NessusResults {
   }
 
   async toHdf(): Promise<ExecJSON.Execution[] | ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    const parseHtml = await buildParseHtmlFunc();
 
     const results: ExecJSON.Execution[] = [];
-    policyName = _.get(
+    const policyName = _.get(
       this.data,
       'NessusClientData_v2.Policy.policyName'
     ) as string;
@@ -232,6 +221,7 @@ export class NessusResults {
       this.data,
       'NessusClientData_v2.Policy.Preferences.ServerPreferences.preference'
     );
+    let version: string | undefined;
     if (Array.isArray(preference)) {
       version =
         _.get(
@@ -247,7 +237,13 @@ export class NessusResults {
     );
     if (Array.isArray(reportHost)) {
       reportHost.forEach((element: Record<string, unknown>) => {
-        const entry = new NessusMapper(element, this.withRaw);
+        const entry = new NessusMapper(
+          element,
+          parseHtml,
+          policyName,
+          version,
+          this.withRaw
+        );
         if (this.customMapping !== undefined) {
           entry.setMappings(this.customMapping);
         }
@@ -257,6 +253,9 @@ export class NessusResults {
     } else {
       const result = new NessusMapper(
         reportHost as Record<string, unknown>,
+        parseHtml,
+        policyName,
+        version,
         this.withRaw
       );
       if (this.customMapping !== undefined) {
@@ -269,6 +268,9 @@ export class NessusResults {
 
 export class NessusMapper extends BaseConverter {
   withRaw: boolean;
+  parseHtml: ParseHtmlFunc;
+  policyName: string;
+  version: string | undefined;
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -283,10 +285,10 @@ export class NessusMapper extends BaseConverter {
     statistics: {},
     profiles: [
       {
-        name: {transformer: getPolicyName},
-        version: {transformer: getVersion},
-        title: {transformer: getPolicyName},
-        summary: {transformer: getPolicyName},
+        name: {transformer: () => this.getPolicyName()},
+        version: {transformer: () => this.version},
+        title: {transformer: () => this.getPolicyName()},
+        summary: {transformer: () => this.getPolicyName()},
         supports: [],
         attributes: [],
         groups: [],
@@ -318,10 +320,12 @@ export class NessusMapper extends BaseConverter {
             source_location: {},
             title: {transformer: getTitle},
             id: {transformer: getId},
-            desc: {transformer: getDesc},
+            desc: {transformer: (item: unknown) => getDesc(this.parseHtml, item)},
             descriptions: [
               {
-                data: {transformer: getCheck},
+                data: {
+                  transformer: (item: unknown) => getCheck(this.parseHtml, item)
+                },
                 label: 'check'
               },
               {
@@ -337,7 +341,10 @@ export class NessusMapper extends BaseConverter {
             results: [
               {
                 status: {transformer: getStatus},
-                code_desc: {transformer: formatCodeDesc},
+                code_desc: {
+                  transformer: (item: unknown) =>
+                    formatCodeDesc(this.parseHtml, item)
+                },
                 message: {
                   path: ['plugin_output', COMPLIANCE_ACTUAL_VALUE],
                   transformer: (value: unknown) => {
@@ -373,8 +380,21 @@ export class NessusMapper extends BaseConverter {
     }
   };
 
-  constructor(nessusJson: Record<string, unknown>, withRaw = false) {
+  constructor(
+    nessusJson: Record<string, unknown>,
+    parseHtml: ParseHtmlFunc,
+    policyName: string,
+    version: string | undefined,
+    withRaw = false
+  ) {
     super(nessusJson);
+    this.parseHtml = parseHtml;
+    this.policyName = policyName;
+    this.version = version;
     this.withRaw = withRaw;
+  }
+
+  getPolicyName(): string {
+    return 'Nessus ' + this.policyName;
   }
 }

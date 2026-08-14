@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import type {
   ILookupPath,
-  MappedTransform} from './base-converter';
+  MappedTransform,
+  ParseHtmlFunc} from './base-converter';
 import {
   BaseConverter,
   buildParseHtmlFunc,
@@ -15,8 +16,6 @@ import {
 } from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
-
-let parseHtml: (input: unknown) => string;
 
 function filterSite<T>(input: T[], name?: string) {
   // Choose passed site if provided
@@ -103,14 +102,20 @@ export class ZapResults {
   constructor(readonly zapJson: string, readonly name?: string, readonly withRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    const parseHtml = await buildParseHtmlFunc();
 
-    return (new ZapMapper(this.zapJson, this.name, this.withRaw)).toHdf();
+    return new ZapMapper(
+      this.zapJson,
+      parseHtml,
+      this.name,
+      this.withRaw
+    ).toHdf();
   }
 }
 
 export class ZapMapper extends BaseConverter {
   withRaw: boolean;
+  parseHtml: ParseHtmlFunc;
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -162,7 +167,10 @@ export class ZapMapper extends BaseConverter {
             source_location: {},
             title: {path: 'name'},
             id: {path: 'pluginid'},
-            desc: {path: 'desc', transformer: parseHtml},
+            desc: {
+              path: 'desc',
+              transformer: (input: unknown) => this.parseHtml(input)
+            },
             descriptions: [
               {
                 data: {transformer: checkText},
@@ -202,7 +210,12 @@ export class ZapMapper extends BaseConverter {
     }
   };
 
-  constructor(zapJson: string, name?: string, withRaw = false) {
+  constructor(
+    zapJson: string,
+    parseHtml: ParseHtmlFunc,
+    name?: string,
+    withRaw = false
+  ) {
     super(
       _.set(
         JSON.parse(zapJson),
@@ -211,6 +224,7 @@ export class ZapMapper extends BaseConverter {
       ),
       false
     );
+    this.parseHtml = parseHtml;
     this.withRaw = withRaw;
   }
 

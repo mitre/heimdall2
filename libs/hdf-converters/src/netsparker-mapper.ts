@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import type {
   ILookupPath,
-  MappedTransform} from './base-converter';
+  MappedTransform,
+  ParseHtmlFunc} from './base-converter';
 import {
   BaseConverter,
   impactMapping,
@@ -29,8 +30,6 @@ const IMPACT_MAPPING = new Map<string, number>([
 const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING = new OwaspNistMapping();
 const FIRST_CHARACTER = /^./;
-
-let parseHtml: (input: unknown) => string;
 
 function nistTag(classification: Record<string, unknown>): string[] {
   let cweTag = _.get(classification, 'cwe');
@@ -101,7 +100,10 @@ function formatControlDesc(vulnerability: unknown): string {
   }
   return text.join('<br>');
 }
-function formatCheck(vulnerability: unknown): string {
+function formatCheck(
+  parseHtml: ParseHtmlFunc,
+  vulnerability: unknown
+): string {
   const text: string[] = [];
   const exploitationSkills = _.get(vulnerability, 'exploitation-skills');
   if (exploitationSkills) {
@@ -149,14 +151,19 @@ export class NetsparkerResults {
   constructor(readonly netsparkerXml: string, readonly withRaw = false) {}
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    parseHtml = await buildParseHtmlFunc();
+    const parseHtml = await buildParseHtmlFunc();
 
-    return (new NetsparkerMapper(this.netsparkerXml, this.withRaw)).toHdf();
+    return new NetsparkerMapper(
+      this.netsparkerXml,
+      parseHtml,
+      this.withRaw
+    ).toHdf();
   }
 }
 
 export class NetsparkerMapper extends BaseConverter {
   withRaw: boolean;
+  parseHtml: ParseHtmlFunc;
 
   defineMappings(
     toolname: string
@@ -208,7 +215,10 @@ export class NetsparkerMapper extends BaseConverter {
               desc: {transformer: formatControlDesc},
               descriptions: [
                 {
-                  data: {transformer: formatCheck},
+                  data: {
+                    transformer: (vulnerability: unknown) =>
+                      formatCheck(this.parseHtml, vulnerability)
+                  },
                   label: 'check'
                 },
                 {
@@ -272,8 +282,13 @@ export class NetsparkerMapper extends BaseConverter {
     };
   }
 
-  constructor(netsparkerXml: string, withRaw = false) {
+  constructor(
+    netsparkerXml: string,
+    parseHtml: ParseHtmlFunc,
+    withRaw = false
+  ) {
     super(parseXml(netsparkerXml));
+    this.parseHtml = parseHtml;
     this.withRaw = withRaw;
     this.setMappings(
       this.defineMappings(
