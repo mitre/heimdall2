@@ -41,6 +41,12 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Watch} from 'vue-property-decorator';
 
+// Placeholder callback so typingTimer always holds a timer handle; the first
+// keystroke clears it and installs the real one.
+const noOp = () => {
+  return;
+};
+
 @Component({
   components: {
     SearchHelpModal
@@ -60,9 +66,7 @@ export default class SearchBar extends Vue {
   /**
    * If the user is currently typing in the search bar
    */
-  typingTimer = setTimeout(() => {
-    return;
-  }, 0);
+  typingTimer = setTimeout(noOp, 0);
 
   /**
    * The current search terms, as modeled by the search bar

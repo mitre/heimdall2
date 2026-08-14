@@ -14,7 +14,7 @@ import {loadSample, removeAllFiles} from '../util/testing-utils';
 const vuetify = new Vuetify();
 const wrapper: Wrapper<Vue> = shallowMount(Compare, {vuetify, propsData: {}});
 
-export interface SeriesItem {
+interface SeriesItem {
   name: string;
   data: number[];
 }

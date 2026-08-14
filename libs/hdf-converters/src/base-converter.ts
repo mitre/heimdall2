@@ -39,6 +39,9 @@ export function generateHash(data: string, algorithm = 'sha256'): string {
 
 export type ParseHtmlFunc = (input: unknown) => string;
 
+// Used when a lookup path declares no transformer of its own.
+const identityTransformer = (value: unknown): unknown => value;
+
 export async function buildParseHtmlFunc(): Promise<ParseHtmlFunc> {
   const htmlparser = await import('htmlparser2');
   return (input: unknown): string => {
@@ -223,7 +226,7 @@ export class BaseConverter<D = Record<string, unknown>> {
 
     const hasTransformer =
       _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
-    let transformer = (val: unknown) => val;
+    let transformer = identityTransformer;
     if (hasTransformer) {
       transformer = _.get(v, 'transformer') as any;
       v = _.omit(v as object, 'transformer') as T;

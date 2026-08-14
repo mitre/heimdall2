@@ -29,6 +29,22 @@ import {
 
 const MAX_CACHE_ENTRIES = 20;
 
+// Bodies of the parameterized getters below. They close over nothing, so they
+// are built once here instead of on every getter access.
+const evaluationsFromFiles = (
+  files: FileID[]
+): readonly SourcedContextualizedEvaluation[] =>
+  InspecDataModule.contextualExecutions.filter((e) =>
+    files.includes(e.from_file.uniqueId)
+  );
+
+const profilesFromFiles = (
+  files: FileID[]
+): readonly SourcedContextualizedProfile[] =>
+  InspecDataModule.contextualProfiles.filter((e) =>
+    files.includes(e.from_file.uniqueId)
+  );
+
 export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
 /** Contains common filters on data from the store. */
@@ -221,11 +237,7 @@ export class FilteredData extends VuexModule {
   get evaluations(): (
     files: FileID[]
   ) => readonly SourcedContextualizedEvaluation[] {
-    return (files: FileID[]) => {
-      return InspecDataModule.contextualExecutions.filter((e) =>
-        files.includes(e.from_file.uniqueId)
-      );
-    };
+    return evaluationsFromFiles;
   }
 
   get profiles_for_evaluations(): (
@@ -244,11 +256,7 @@ export class FilteredData extends VuexModule {
    * Get all profiles from the specified file ids.
    */
   get profiles(): (files: FileID[]) => readonly SourcedContextualizedProfile[] {
-    return (files: FileID[]) => {
-      return InspecDataModule.contextualProfiles.filter((e) => {
-        return files.includes(e.from_file.uniqueId);
-      });
-    };
+    return profilesFromFiles;
   }
 
   get selected_file_ids(): FileID[] {

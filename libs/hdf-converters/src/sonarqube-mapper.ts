@@ -372,6 +372,13 @@ function parseOwaspTags<T extends SonarqubeVersion>(
   return undefined;
 }
 
+// Prefixes each line of a fetched snippet with its 1-based line number.
+const applyLineNumber = (snippet: string): string =>
+  snippet
+    .split('\n')
+    .map((l, i) => `${i + 1} ${l}`)
+    .join('\n');
+
 function parseCweTags<T extends SonarqubeVersion>(
   issue: SonarqubeVersionMapping[T]['issue'] & IssueExtensions<T>
 ): string[] | undefined {
@@ -1244,11 +1251,6 @@ export class SonarqubeResults {
         );
       }
     };
-    const applyLineNumber = (snippet: string): string =>
-      snippet
-        .split('\n')
-        .map((l, i) => `${i + 1} ${l}`)
-        .join('\n');
     const getContextualizedSnippet = (
       // Map, not Record: component keys arrive from the SonarQube API, and
       // bracket access on a plain object resolves prototype keys.

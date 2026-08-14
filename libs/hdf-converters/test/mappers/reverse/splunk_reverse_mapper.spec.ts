@@ -2,10 +2,6 @@ import fs from 'fs';
 import {describe, expect, it} from 'vitest';
 import {FromHDFToSplunkMapper} from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
 
-export function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 describe('Describe Splunk Reverse Mapper', () => {
   it('Successfully converts HDF into Splunk', async () => {
     // The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
