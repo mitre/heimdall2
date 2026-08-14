@@ -186,24 +186,34 @@ export default class FileList extends Vue {
     const files = this.selectedExecutions.map(
       async (execution: Partial<ScanResults>) => {
         if (execution.id) {
-          if (execution.status === 'Running') {
-            SnackbarModule.failure(
-              `Scan ${execution.id} hasn't finished, wait until completed before loading for viewing.`
-            );
-          } else if (execution.status === 'Failed' || execution.status === 'Error') {
-            SnackbarModule.failure(
-              `Scan ${execution.id} has failed, please check the Tenable.sc for more details.`
-            );
-          } else if (execution.status === 'Cancelled') {
-            SnackbarModule.failure(
-              `Scan ${execution.id} has been cancelled, please check the Tenable.sc for more details.`
-            );
-          } else if (execution.status === 'Paused') {
-            SnackbarModule.failure(
-              `Scan ${execution.id} is paused, please check the Tenable.sc for more details.`
-            );
+          switch (execution.status) {
+            case 'Running': {
+              SnackbarModule.failure(
+                `Scan ${execution.id} hasn't finished, wait until completed before loading for viewing.`
+              );
+              break;
+            }
+            case 'Failed':
+            case 'Error': {
+              SnackbarModule.failure(
+                `Scan ${execution.id} has failed, please check the Tenable.sc for more details.`
+              );
+              break;
+            }
+            case 'Cancelled': {
+              SnackbarModule.failure(
+                `Scan ${execution.id} has been cancelled, please check the Tenable.sc for more details.`
+              );
+              break;
+            }
+            case 'Paused': {
+              SnackbarModule.failure(
+                `Scan ${execution.id} is paused, please check the Tenable.sc for more details.`
+              );
+              break;
+            }
             // If the scan is completed, we can load the results
-          } else {
+            default: {
             try {
               const resultData: unknown = await new TenableUtil(
                 this.tenableConfig
@@ -267,6 +277,7 @@ export default class FileList extends Vue {
                 `Failed to load scan results for execution. Scan Id: ${execution.id}, ${message}`
               );
             }
+            }
           }
         }
       }
@@ -290,7 +301,7 @@ export default class FileList extends Vue {
     const num = Number(value);
 
     // Handle undefined, null, empty string, or invalid numbers
-    if (!value || isNaN(num) || num === -1) {
+    if (!value || Number.isNaN(num) || num === -1) {
       return '-';
     }
 

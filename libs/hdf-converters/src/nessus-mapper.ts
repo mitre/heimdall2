@@ -354,9 +354,16 @@ export class NessusMapper extends BaseConverter {
                     }
                     // A structured plugin_output renders as JSON rather than
                     // the useless '[object Object]'.
-                    return typeof value === 'object'
-                      ? JSON.stringify(value)
-                      : String(value);
+                    if (typeof value === 'string') {
+                      return value;
+                    }
+                    if (
+                      typeof value === 'number' ||
+                      typeof value === 'boolean'
+                    ) {
+                      return String(value);
+                    }
+                    return JSON.stringify(value);
                   }
                 },
                 start_time: {

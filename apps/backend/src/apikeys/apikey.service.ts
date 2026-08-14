@@ -62,7 +62,7 @@ export class ApiKeyService {
 
   async findById(id: string): Promise<ApiKey> {
     const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, { include: [User, Group] });
-    if (apiKey === null) {
+    if (!apiKey) {
       throw new NotFoundException('API key with given id not found');
     }
     return apiKey;

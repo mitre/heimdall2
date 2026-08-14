@@ -100,7 +100,7 @@ import 'prismjs/components/prism-makefile.js';
 import 'prismjs/components/prism-ruby.js';
 import 'prismjs/themes/prism-tomorrow.css';
 import Component, {mixins} from 'vue-class-component';
-// @ts-ignore
+// @ts-expect-error vue-prism-component ships no type declarations
 import Prism from 'vue-prism-component';
 import {Prop, Watch} from 'vue-property-decorator';
 

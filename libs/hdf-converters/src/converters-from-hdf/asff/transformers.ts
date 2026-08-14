@@ -145,21 +145,31 @@ export function statusCount(evaluation: ContextualizedEvaluation): Counts {
     NotReviewed: 0
   };
   controls.forEach((control) => {
-    if (control.hdf.status === 'Passed') {
-      statusCounts.Passed += 1;
-      statusCounts.PassedTests += (control.hdf.segments || []).length;
-    } else if (control.hdf.status === 'Failed') {
-      statusCounts.PassingTestsFailedControl += (
-        control.hdf.segments || []
-      ).filter((s) => s.status === 'passed').length;
-      statusCounts.FailedTests += (control.hdf.segments || []).filter(
-        (s) => s.status === 'failed'
-      ).length;
-      statusCounts.Failed += 1;
-    } else if (control.hdf.status === 'Not Applicable') {
-      statusCounts.NotApplicable += 1;
-    } else if (control.hdf.status === 'Not Reviewed') {
-      statusCounts.NotReviewed += 1;
+    switch (control.hdf.status) {
+      case 'Passed': {
+        statusCounts.Passed += 1;
+        statusCounts.PassedTests += (control.hdf.segments || []).length;
+        break;
+      }
+      case 'Failed': {
+        statusCounts.PassingTestsFailedControl += (
+          control.hdf.segments || []
+        ).filter((s) => s.status === 'passed').length;
+        statusCounts.FailedTests += (control.hdf.segments || []).filter(
+          (s) => s.status === 'failed'
+        ).length;
+        statusCounts.Failed += 1;
+        break;
+      }
+      case 'Not Applicable': {
+        statusCounts.NotApplicable += 1;
+        break;
+      }
+      case 'Not Reviewed': {
+        statusCounts.NotReviewed += 1;
+        break;
+      }
+      // Any other status contributes to none of these counts.
     }
   });
   return statusCounts;

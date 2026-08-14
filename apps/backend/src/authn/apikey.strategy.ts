@@ -22,6 +22,6 @@ export class APIKeyStrategy extends PassportStrategy(
     ) => unknown,
   ) {
     const auth = this.authnService.validateApiKey(apikey);
-    return (await auth) ? done(null, auth) : done(new ForbiddenException('Bad Api-Key'), auth);
+    return done((await auth) ? null : new ForbiddenException('Bad Api-Key'), auth);
   }
 }

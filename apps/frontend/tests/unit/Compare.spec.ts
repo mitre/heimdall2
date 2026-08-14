@@ -146,22 +146,34 @@ describe.sequential('Compare', () => {
       const pairedControls = Object.values(currDelta.pairings).flatMap(
         (pairing) => Object.values(pairing)
       );
-      for (const ctrl of pairedControls) {
+      pairedControls.forEach((ctrl) => {
         if (ctrl === null) {
-          continue;
+          return;
         }
-        if (ctrl.root.hdf.status === 'Passed') {
-          passed++;
-        } else if (ctrl.root.hdf.status === 'Failed') {
-          failed++;
-        } else if (ctrl.root.hdf.status === 'Not Applicable') {
-          na++;
-        } else if (ctrl.root.hdf.status === 'Not Reviewed') {
-          nr++;
-        } else if (ctrl.root.hdf.status === 'Profile Error') {
-          pe++;
+        switch (ctrl.root.hdf.status) {
+          case 'Passed': {
+            passed++;
+            break;
+          }
+          case 'Failed': {
+            failed++;
+            break;
+          }
+          case 'Not Applicable': {
+            na++;
+            break;
+          }
+          case 'Not Reviewed': {
+            nr++;
+            break;
+          }
+          case 'Profile Error': {
+            pe++;
+            break;
+          }
+          // Any other status is not counted here.
         }
-      }
+      });
       const expected = {
         Failed: StatusCountModule.hash({
           omit_overlayed_controls: true,

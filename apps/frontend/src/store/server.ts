@@ -174,10 +174,10 @@ class Server extends VuexModule implements IServerState {
         const userID = localUserID.get() || Vue.$cookies.get('userID');
         Vue.$cookies.remove('accessToken');
         Vue.$cookies.remove('userID');
-        if (token !== null) {
+        if (token) {
           this.context.commit('SET_TOKEN', token);
         }
-        if (userID !== null) {
+        if (userID) {
           this.context.commit('SET_USERID', userID);
         }
         await this.GetUserInfo();

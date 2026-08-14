@@ -25,8 +25,12 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
     private readonly configService: ConfigService,
   ) {
     super({
-      callbackURL:
-        `${configService.getExternalUrl()}/authn/google/callback` || 'disabled',
+      // The template is always truthy, so the sibling `|| 'disabled'` fallback
+      // never fired here; without an external URL there is no callback to
+      // build, which is exactly the disabled case.
+      callbackURL: configService.getExternalUrl()
+        ? `${configService.getExternalUrl()}/authn/google/callback`
+        : 'disabled',
       clientID: configService.get('GOOGLE_CLIENTID') || 'disabled',
       clientSecret: configService.get('GOOGLE_CLIENTSECRET') || 'disabled',
       scope: ['email', 'profile'],
