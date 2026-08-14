@@ -47,15 +47,10 @@ export class TenableController {
     if (allowlist.length === 0) {
       return null;
     }
-    // Default to https when no scheme is provided, so "example.com" is treated
-    // the same as "https://example.com".
-    const trimmedInput = host_url.trim();
-    const normalizedInput = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmedInput)
-      ? trimmedInput
-      : `https://${trimmedInput}`;
+    // Require the client to supply a complete URL (protocol included)
     try {
       // Throws for unparseable input, caught below and treated as not allowed.
-      const parsed = new URL(normalizedInput);
+      const parsed = new URL(host_url);
 
       // Reject any scheme other than http/https (e.g. file:, javascript:, ftp:).
       if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
@@ -72,19 +67,8 @@ export class TenableController {
         return null;
       }
 
-      // Compare origins (scheme + host + port) rather than raw strings so that
-      // equivalent URLs (default ports, trailing slash, casing) still match.
-      const match = allowlist.find((allowed) => {
-        const trimmedAllowed = allowed.trim();
-        const normalizedAllowed = /^[a-z][a-z\d+.-]*:\/\//i.test(trimmedAllowed)
-          ? trimmedAllowed
-          : `https://${trimmedAllowed}`;
-        try {
-          return new URL(normalizedAllowed).origin === parsed.origin;
-        } catch {
-          return false;
-        }
-      });
+      // allowlist entries are already normalized origins (validated in AppConfig).
+      const match = allowlist.includes(parsed.origin);
 
       // Return the parsed origin (never the raw client value) so nothing beyond
       // scheme+host+port ever propagates into the session or outbound requests.

@@ -52,9 +52,9 @@ export default class AppConfig {
     }
   }
 
-  // Newline-separated allowlist of Tenable.SC hosts permitted for the login/proxy endpoints.
-  // Newlines are used instead of commas since commas are valid, unencoded URI characters.
-  // A single host works the same as before since there's just one entry to split.
+  // Newline-separated allowlist of Tenable.SC hosts for the login/proxy endpoints
+  // (commas are valid, unencoded URI characters, so they can't be the delimiter).
+  // Entries must include a protocol; malformed entries throw at startup.
   getTenableHostUrl(): string[] {
     const tenable_host_url = this.get('TENABLE_HOST_URL');
     if (tenable_host_url === undefined) {
@@ -63,7 +63,23 @@ export default class AppConfig {
     return tenable_host_url
       .split(/\r?\n/)
       .map((url) => url.trim())
-      .filter((url) => url.length > 0);
+      .filter((url) => url.length > 0)
+      .map((url) => {
+        let parsed: URL;
+        try {
+          parsed = new URL(url);
+        } catch {
+          throw new Error(
+            `Invalid TENABLE_HOST_URL entry "${url}": must be a complete URL including protocol (e.g. https://example.com)`
+          );
+        }
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+          throw new Error(
+            `Invalid TENABLE_HOST_URL entry "${url}": protocol must be http or https`
+          );
+        }
+        return parsed.origin;
+      });
   }
 
   getDatabaseName(): string {
