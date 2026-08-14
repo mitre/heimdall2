@@ -10,11 +10,11 @@ export default class UserValidatorMixin extends Vue {
   emailErrors(field: typeof ValidationProperties) {
     const errors: string[] = [];
     const dirty = _.get(field, '$dirty');
-    const required = _.get(field, 'required');
-    const email = _.get(field, 'email');
     if (!dirty) {
       return [];
     }
+    const required = _.get(field, 'required');
+    const email = _.get(field, 'email');
     if (!required) {
       errors.push('Email is required.');
     }
@@ -27,10 +27,10 @@ export default class UserValidatorMixin extends Vue {
   requiredFieldError(field: typeof ValidationProperties, name: string) {
     const errors: string[] = [];
     const dirty = _.get(field, '$dirty');
-    const required = _.get(field, 'required');
     if (!dirty) {
       return [];
     }
+    const required = _.get(field, 'required');
     if (!required) {
       errors.push(`${name} is required.`);
     }

@@ -28,7 +28,7 @@ export function resolveSslMaterial(
 
 // DATABASE_URL anatomy: scheme://user:password@host:port/name?query
 const DATABASE_URL_PATTERN
-  = /^(?:[^\s#/:?]+:\/{2})?(?:(?<userinfo>[^\s#/?@]+)@)?(?<hostPort>[^\s#/?]+)?(?:\/(?<name>[^\s#?]*))?(?:\?[^\s#]+)?\S*$/;
+  = /^(?:[^\s#/:?]+:\/{2})?(?:(?<userinfo>[^\s#/?@]+)@)?(?<hostPort>[^\s#/?]+)?(?:\/(?<name>[^\s#?]*))?(?:\?[^\s#]*)?(?:#\S*)?$/;
 // The host:port boundary — the colon directly before a trailing port number.
 const HOST_PORT_SEPARATOR = /:(?=\d+$)/v;
 
@@ -69,11 +69,11 @@ export default class AppConfig {
 
   getDatabaseName(): string {
     const databaseName = this.get('DATABASE_NAME');
-    const nodeEnvironment = this.get('NODE_ENV');
 
     if (databaseName !== undefined) {
       return databaseName;
     }
+    const nodeEnvironment = this.get('NODE_ENV');
     if (nodeEnvironment === undefined) {
       throw new TypeError(
         'NODE_ENV and DATABASE_NAME are undefined. Unable to set database or use the default based on environment.',

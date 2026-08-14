@@ -105,11 +105,11 @@ export class ApiKeyController {
     @Query('userId') userId: string,
     @Query('groupId') groupId: string,
   ): Promise<APIKeyDto[]> {
-    const abac = this.authz.abac.createForUser(request.user);
-
     if (userId && groupId) {
       throw new BadRequestException('Cannot specify both userId and groupId');
     }
+
+    const abac = this.authz.abac.createForUser(request.user);
 
     if (groupId) {
       const group = await this.groupsService.findByPkBang(groupId);

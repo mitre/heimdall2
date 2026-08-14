@@ -3,6 +3,7 @@ import mock, { file, load, restore } from 'mock-fs';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   DATABASE_URL_MOCK_ENV,
+  DATABASE_URL_WITH_QUERY_MOCK_ENV,
   ENV_MOCK_FILE,
   GITLAB_BOTH_SECRETS_ENV,
   GITLAB_CANONICAL_SECRET_ENV,
@@ -111,6 +112,21 @@ describe('Config Service', () => {
         '000011112222333344455556666777778889999aaaabbbbccccddddeeeffff',
       );
       expect(configService.get('DATABASE_NAME')).toEqual('database01');
+    });
+  });
+
+  describe('When DATABASE_URL carries query parameters', () => {
+    beforeAll(() => {
+      mock({ '.env': DATABASE_URL_WITH_QUERY_MOCK_ENV });
+    });
+
+    it('should parse every component and keep the query out of them', () => {
+      const configService = new ConfigService();
+      expect(configService.get('DATABASE_HOST')).toEqual('db.internal.example');
+      expect(configService.get('DATABASE_PORT')).toEqual('6432');
+      expect(configService.get('DATABASE_USERNAME')).toEqual('queryuser');
+      expect(configService.get('DATABASE_PASSWORD')).toEqual('querypass');
+      expect(configService.get('DATABASE_NAME')).toEqual('database02');
     });
   });
 

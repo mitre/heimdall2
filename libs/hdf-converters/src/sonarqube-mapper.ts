@@ -75,13 +75,13 @@ function isSonarqubeVersionTen(
 function isSonarqubeVersionTwenty_five(
   version: string
 ): version is SonarqubeVersion.Twenty_five {
-  const nextHigherVersion = '2026.0.0'; // using 26 for now, but I am unsure what the actual next major version will be - this function can be changed once we identify the next version that contains impactful breaking changes
   const v = coerce(version);
   if (v === null) {
     throw new Error(
       `Was not able to coerce ${version} into a semver compatible version string`
     );
   }
+  const nextHigherVersion = '2026.0.0'; // using 26 for now, but I am unsure what the actual next major version will be - this function can be changed once we identify the next version that contains impactful breaking changes
   return lt(v, nextHigherVersion);
 }
 
@@ -383,7 +383,7 @@ function parseCweTags<T extends SonarqubeVersion>(
   if (rule.descriptionSections) {
     searchSpace += rule.descriptionSections.map((s) => s.content).join('');
   }
-  const uniqueCwes = _.uniq(searchSpace.match(/cwe-\d\d\d?\d?\d?\d?\d/gi)); // CWE IDs are embedded inside of the HTML
+  const uniqueCwes = _.uniq(searchSpace.match(/cwe-\d{3,7}/gi)); // CWE IDs are embedded inside of the HTML
 
   if (uniqueCwes.length > 0) {
     return uniqueCwes;

@@ -6,7 +6,7 @@ import {CciNistMappingItem} from './CciNistMappingItem';
 
 // two letters, hyphen, then one to three digits — the control-family prefix
 // of a NIST control identifier
-const CONTROL_FAMILY_PREFIX = /\w\w-\d\d?\d?/;
+const CONTROL_FAMILY_PREFIX = /\w{2}-\d{1,3}/;
 
 type Reference = {
   '@_creator': string;

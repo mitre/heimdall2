@@ -71,7 +71,7 @@ export function getDescription(
 export function getCCIsForNISTTags(nistTags: string[]): string[] {
   const cciTags: string[] = [];
   for (const nistTag of nistTags) {
-    const baseTag = /\w\w-\d\d?\d?/.exec(nistTag);
+    const baseTag = /\w{2}-\d{1,3}/.exec(nistTag);
     if (
       Array.isArray(baseTag) &&
       baseTag.length > 0 &&

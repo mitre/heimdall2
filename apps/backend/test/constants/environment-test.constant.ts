@@ -13,6 +13,11 @@ export const SIMPLE_ENV_MOCK_FILE = 'PORT=8001\n';
 export const DATABASE_URL_MOCK_ENV
   = 'DATABASE_URL=postgres://abcdefghijk123456:000011112222333344455556666777778889999aaaabbbbccccddddeeeffff@ec2-00-000-11-123.compute-1.amazonaws.com:5432/database01';
 
+// Connection URLs commonly carry query parameters (sslmode, application_name).
+// They belong to no component and must never leak into the database name.
+export const DATABASE_URL_WITH_QUERY_MOCK_ENV
+  = 'DATABASE_URL=postgres://queryuser:querypass@db.internal.example:6432/database02?sslmode=require&application_name=heimdall';
+
 // GitLab's client secret has two accepted spellings. GITLAB_CLIENTSECRET is
 // canonical — it matches GITHUB_CLIENTSECRET / GOOGLE_CLIENTSECRET /
 // OKTA_CLIENTSECRET and is what .env-example and the RPM man page have always
