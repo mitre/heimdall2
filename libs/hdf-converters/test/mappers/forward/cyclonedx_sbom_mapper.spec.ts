@@ -413,3 +413,33 @@ describe('sbom_mapper_converted_spdx', () => {
     );
   });
 });
+
+describe('sbom_mapper_credits', () => {
+  // Pins the removal of the template wrap around the credits optional chain.
+  // The wrap rendered a missing `individuals` as the LITERAL STRING 'undefined'
+  // rather than leaving the tag unset. No fixture covers this: vex.json's only
+  // credited vulnerability HAS individuals, so the golden output never exercises
+  // the missing branch. This test builds that case from the real document so the
+  // only variable is the absent `individuals` array.
+  it('leaves credits unset when a vulnerability has credits but no individuals', () => {
+    const raw = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/vex.json',
+        {encoding: 'utf8'}
+      )
+    );
+    const credited = raw.vulnerabilities.find(
+      (vulnerability: {credits?: unknown}) => vulnerability.credits
+    );
+    expect(credited).toBeDefined();
+    // The credits object stays truthy — only the individuals list goes away,
+    // which is exactly the branch the optional chain guards.
+    delete credited.credits.individuals;
+
+    const hdf = new CycloneDXSBOMResults(JSON.stringify(raw)).toHdf();
+    const tags = hdf.profiles[0].controls[0].tags;
+
+    expect(tags.credits).not.toBe('undefined');
+    expect(tags.credits).toBeUndefined();
+  });
+});

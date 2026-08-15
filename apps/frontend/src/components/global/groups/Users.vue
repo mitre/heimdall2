@@ -116,14 +116,20 @@ export default class Users extends Vue {
     }
   ];
 
-  get displayedHeaders() {
-    // If the user is editing the group, then display the actions column.
+  get displayedHeaders(): DataTableHeader[] {
+    // A computed must not mutate its own dependency. Pushing into this.headers
+    // marked the computed dirty, so every re-evaluation — each toggle of
+    // `editable` — appended another Actions column (5, 6, 7, ...). Return a new
+    // array instead and leave this.headers as the fixed base set.
     if (this.editable) {
-      this.headers.push({
-        text: 'Actions',
-        value: 'actions',
-        sortable: false
-      });
+      return [
+        ...this.headers,
+        {
+          text: 'Actions',
+          value: 'actions',
+          sortable: false
+        }
+      ];
     }
     return this.headers;
   }

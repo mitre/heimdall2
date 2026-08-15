@@ -2,11 +2,11 @@ import type { AddressInfo } from 'node:net';
 import {Readable} from 'node:stream';
 import {ForbiddenError} from '@casl/ability';
 import type { ExecutionContext, INestApplication } from '@nestjs/common';
-import {NotFoundException} from '@nestjs/common';
+import {BadRequestException, NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import type { TestingModule } from '@nestjs/testing';
 import {Test} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import {afterAll, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   EVALUATION_1,
@@ -312,6 +312,47 @@ describe('EvaluationsController', () => {
       expect(evaluations[1].filename).toEqual(secondMockFile.originalname);
       // Creating an evaluation should return a DTO without data.
       expect(evaluations[0].data).not.toBeDefined();
+    });
+
+    // These two pin the awaited group attach on BOTH create paths. They induce
+    // the failure deliberately: a discarded promise is indistinguishable from an
+    // awaited one until the attach REJECTS. Without the await the rejection
+    // becomes an unhandled rejection AFTER create has already resolved, so the
+    // caller is told the upload succeeded. The route-resolution tests elsewhere
+    // in this file pass either way and do not pin this.
+    it('surfaces a failed group attach instead of reporting success (user path)', async () => {
+      const group = await groupsService.create(PRIVATE_GROUP);
+      await groupsService.addUserToGroup(group, user, 'owner');
+      const attach = vi
+        .spyOn(groupsService, 'addEvaluationToGroup')
+        .mockRejectedValue(new Error('group attach exploded'));
+
+      await expect(
+        evaluationsController.create(
+          {...CREATE_EVALUATION_DTO_WITHOUT_TAGS, groups: [group.id]},
+          [mockFile],
+          {user: user}
+        )
+      ).rejects.toThrow('group attach exploded');
+
+      attach.mockRestore();
+    });
+
+    it('surfaces a failed group attach on the group-upload path', async () => {
+      const group = await groupsService.create(PRIVATE_GROUP);
+      const attach = vi
+        .spyOn(groupsService, 'addEvaluationToGroup')
+        .mockRejectedValue(new Error('group attach exploded'));
+
+      await expect(
+        evaluationsController.create(
+          CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+          [mockFile],
+          {user: group}
+        )
+      ).rejects.toThrow(BadRequestException);
+
+      attach.mockRestore();
     });
   });
 
