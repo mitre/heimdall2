@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { Request } from 'express';
+import { ConfigService } from '../config/config.service';
+import { createTenableAgents } from './tenable-filtering-agent';
 
 type TenableCredentials = {
   accesskey: string;
@@ -11,7 +13,15 @@ type TenableCredentials = {
 // NestJS service that performs proxied requests to Tenable using credentials stored in the session
 @Injectable()
 export class TenableService {
+  constructor(private readonly configService: ConfigService) {}
+
   async proxyRequest(request: Request, creds: TenableCredentials) {
+    // Both agents, because axios selects by the target's protocol. Configured
+    // here as well as on the login probe in tenable.controller.ts — two axios
+    // configurations, and filtering one does not filter the other.
+    const { httpAgent, httpsAgent } = createTenableAgents({
+      allowPrivateAddresses: this.configService.isTenablePrivateAddressAllowed(),
+    });
     const axiosInstance = axios.create({
       baseURL: creds.host_url,
       headers: {
@@ -31,6 +41,8 @@ export class TenableService {
       // tenable.controller.ts. They are two axios configurations and fixing one
       // does not fix the other.
       maxRedirects: 0,
+      httpAgent,
+      httpsAgent,
     });
 
     const method = request.method;

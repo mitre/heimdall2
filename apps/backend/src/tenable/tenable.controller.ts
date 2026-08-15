@@ -14,6 +14,10 @@ import { Request, Response } from 'express';
 import { ConfigService } from '../config/config.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import {
+  ADDRESS_REFUSED_CODE,
+  createTenableAgents,
+} from './tenable-filtering-agent';
+import {
   buildAllowedOrigins,
   checkTenableHost,
 } from './tenable-host-allowlist';
@@ -136,8 +140,19 @@ export class TenableController {
     try {
       // This helps prevent double slashes in the resulting URL if host_url ends with a slash.
       const fullUrl = `${host_url.replace(TRAILING_SLASH, '')}/rest/currentUser`;
+      // BOTH agents: axios picks between them by the target's protocol, so
+      // supplying only one would leave the other scheme unfiltered. The agents
+      // refuse to connect to private/loopback/link-local addresses, which is
+      // what stops this allowlisted NAME being pointed at an internal service
+      // (heimdall2-86f6.13).
+      const { httpAgent, httpsAgent } = createTenableAgents({
+        allowPrivateAddresses:
+          this.configService.isTenablePrivateAddressAllowed(),
+      });
       const result = await axios.get(fullUrl, {
         headers: { 'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}` },
+        httpAgent,
+        httpsAgent,
         // See REFUSED_REDIRECT_* above: the allowlist approved this host by
         // NAME, and following its redirect would land the request somewhere it
         // never approved. Configured here as well as in tenable.service.ts —
@@ -156,6 +171,21 @@ export class TenableController {
         // Before every other classification: a refused redirect is not a
         // transport failure and must not fall through to the default branch,
         // which would answer with the upstream's own 3xx status.
+        // The filtering agent refuses before any bytes are exchanged, so this
+        // is a transport-level error carrying our own code rather than an HTTP
+        // response. Classified first, for the same reason as the redirect case:
+        // the default branch would report it as a generic proxy failure and
+        // hide the fact that a permitted name resolved somewhere it must not.
+        if (error.code === ADDRESS_REFUSED_CODE) {
+          throw new HttpException(
+            {
+              code: ADDRESS_REFUSED_CODE,
+              message: error.message,
+              status: HttpStatus.BAD_GATEWAY,
+            },
+            HttpStatus.BAD_GATEWAY,
+          );
+        }
         if (isRefusedRedirect(error)) {
           throw new HttpException(
             {
@@ -305,6 +335,21 @@ export class TenableController {
         // reason: this branch forwards `error.response?.status` and the upstream
         // BODY straight to the caller, so an unclassified 3xx would answer a
         // redirect this API never authored.
+        // The filtering agent refuses before any bytes are exchanged, so this
+        // is a transport-level error carrying our own code rather than an HTTP
+        // response. Classified first, for the same reason as the redirect case:
+        // the default branch would report it as a generic proxy failure and
+        // hide the fact that a permitted name resolved somewhere it must not.
+        if (error.code === ADDRESS_REFUSED_CODE) {
+          throw new HttpException(
+            {
+              code: ADDRESS_REFUSED_CODE,
+              message: error.message,
+              status: HttpStatus.BAD_GATEWAY,
+            },
+            HttpStatus.BAD_GATEWAY,
+          );
+        }
         if (isRefusedRedirect(error)) {
           throw new HttpException(
             {

@@ -97,6 +97,17 @@ export class ConfigService {
     return this.appConfig.getTenableAdditionalHostUrls();
   }
 
+  // Outbound Tenable connections refuse to land in private, loopback and
+  // link-local address space by default (heimdall2-86f6.13), which is what stops
+  // an allowlisted name being pointed at an internal service. A deployment whose
+  // Security Center genuinely lives on private space opts back in here — an
+  // explicit operator decision, never the default.
+  isTenablePrivateAddressAllowed(): boolean {
+    return (
+      this.get('TENABLE_ALLOW_PRIVATE_ADDRESSES')?.toLowerCase() === 'true'
+    );
+  }
+
   isInProductionMode(): boolean {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }

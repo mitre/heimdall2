@@ -1,6 +1,7 @@
 # ADR-009: The Tenable Proxy Needs Three Independent Controls, Not One
 
-**Status:** Accepted — three controls implemented, the fourth open as `heimdall2-86f6.13`
+**Status:** Accepted — implemented: guard `86f6.5`, allowlist `86f6.6`, redirects `86f6.12`,
+address filter `86f6.13`
 **Date:** 2026-08-15
 **Author:** Aaron Lippold
 **Branch:** `feature/fips-compliant-password-hashing`
@@ -112,16 +113,48 @@ reports `status: error.response?.status` — Heimdall would answer the **upstrea
 status code, on behalf of a host it had just refused to follow. It is therefore answered as
 `502 UPSTREAM_REDIRECT_REFUSED`, before any other classification.
 
-### 4. Check the resolved address — `heimdall2-86f6.13`, still open
+### 4. Filter the connection's own resolved address — `heimdall2-86f6.13`
 
 OWASP requires that after validating the domain, the application resolve the A/AAAA records and
 apply the same checks to the resolved addresses. A name on the allowlist can still resolve into
 link-local or private space, and can resolve differently between the check and the request (DNS
 rebinding).
 
-**This control applies to request-supplied hosts, not to the operator-configured one.** An operator
-running Security Center on a private address has made a deployment decision; an attacker steering a
-request-supplied name into private space has not.
+**The check runs inside the connection's own DNS lookup, not as a separate resolve-then-request
+step.** This is the correction that matters, and it was made after the first version of this ADR
+was written. Resolving separately and then handing the NAME to the HTTP client leaves the client to
+resolve again when it connects, and the second answer can differ from the validated one — that gap
+IS the rebinding window the control exists to close. Node lets a connection supply its own resolver
+(`lookup` on `socket.connect`, documented as "Custom lookup function. Default: `dns.lookup()`"), so
+validating there makes the address that was checked the same address the socket uses.
+
+This is the established community pattern, taken from `azu/request-filtering-agent`, which
+subclasses `http.Agent`, overrides `createConnection`, and injects a filtering `lookup`. Read from
+its source on 2026-08-15 rather than recalled. At the network layer the equivalent control is an
+egress proxy such as Stripe's `smokescreen`; that is a deployment decision and out of scope here.
+
+**Implemented in-repo rather than by adding the dependency.** `request-filtering-agent` has ~26
+stars; adding it as a supply-chain dependency of a MITRE product for a security control is a worse
+trade than implementing the same ~60-line pattern on the standard library. Classification uses
+`node:net` `BlockList`, which parses addresses and understands CIDR, so no dotted-quad regex or
+mask arithmetic appears anywhere — and which maps IPv4-mapped IPv6 (`::ffff:169.254.169.254`) onto
+the IPv4 rules, verified by test rather than assumed.
+
+**Both agents are supplied at both call sites**, because axios selects between `httpAgent` and
+`httpsAgent` by the target's protocol; supplying one leaves the other scheme unfiltered.
+
+**Default-deny with an explicit operator opt-out.** The earlier framing of this control — "applies
+to request-supplied hosts, not to the operator-configured one" — does not survive contact with
+control 2: the allowlist has already reduced every permitted host to a configured origin, so
+exempting configured origins would exempt everything and the control would do nothing. What an
+operator actually needs is the ability to say "my Security Center really is on private space", which
+is `TENABLE_ALLOW_PRIVATE_ADDRESSES`, default false. That matches how the community libraries expose
+the same choice (`allowPrivateIPAddress`).
+
+**Residual exposure, stated precisely.** There is no second resolution to disagree with the first,
+so the classic rebinding window is closed for these agents. A name may still resolve to a permitted
+address on one connection and a blocked one on the next — each connection is judged on its own
+resolution, which is correct behaviour rather than a gap.
 
 ### The rule this ADR exists to state
 
@@ -173,7 +206,14 @@ setting and is not a comparison against a boolean literal. Both rules satisfied 
 - **A deployment with no `TENABLE_HOST_URL` cannot use the Tenable integration at all.** This is
   deliberate: refuse over allow. It is also a behaviour change for anyone who was relying on the
   endpoint accepting an arbitrary host.
-- **`502 UPSTREAM_REDIRECT_REFUSED` is a new response code** on both Tenable paths.
-- **The SSRF is not closed until `heimdall2-86f6.13` lands.**
+- **`502 UPSTREAM_REDIRECT_REFUSED` and `502 UPSTREAM_ADDRESS_REFUSED` are new response codes** on
+  both Tenable paths, deliberately distinct from each other and from the allowlist's
+  `400 HOST_NOT_ALLOWED`, so an operator can tell which control refused.
+- **`TENABLE_ALLOW_PRIVATE_ADDRESSES` defaults to false.** A deployment whose Security Center runs
+  on private address space must set it to true, and will otherwise see `UPSTREAM_ADDRESS_REFUSED`
+  after upgrading. This is the one operator-visible behaviour change in the set.
+- **All three controls are now in place.** That is not the same as "SSRF is impossible here" —
+  it means the three failure modes this ADR names are each closed by a control with its own tests
+  and its own mutation evidence. Any future change to these paths inherits the same obligation.
 - Each control is pinned by mutation testing, and each card carries live evidence against a running
   server, because the whole class of defect is one a green unit suite cannot see.

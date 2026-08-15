@@ -109,6 +109,12 @@ describe('outbound Tenable requests do not follow redirects', () => {
             // is about the control that still has to hold once the name check
             // has already said yes.
             getTenableHostUrl: () => redirectorUrl,
+            // DELIBERATE OPT-OUT, not an accident. Both servers in this spec
+            // are on 127.0.0.1, which the address filter (heimdall2-86f6.13)
+            // refuses by default. This spec measures REDIRECT behaviour, so it
+            // opts out of address filtering to keep the two controls
+            // independently testable — the address filter has its own spec.
+            isTenablePrivateAddressAllowed: () => true,
           },
         },
         {
@@ -204,7 +210,11 @@ describe('outbound Tenable requests do not follow redirects', () => {
 
   it('does not follow a 302 from the proxy path', async () => {
     expect.assertions(2);
-    const service = new TenableService();
+    // Same deliberate opt-out as the module stub above: this test is about
+    // redirects, and its servers are on loopback.
+    const service = new TenableService({
+      isTenablePrivateAddressAllowed: () => true,
+    } as unknown as ConfigService);
     // The proxy builds its own axios instance, entirely separately from the
     // login probe. Fixing one does not fix the other, so this is asserted
     // against the service directly rather than inferred from the test above.
