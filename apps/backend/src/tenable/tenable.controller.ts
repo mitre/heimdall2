@@ -42,6 +42,37 @@ declare module 'express-session' {
 const TENABLE_CSP_NOT_SET
   = "Cannot set properties of undefined (setting 'tenable')";
 
+// The SECOND of three SSRF controls (heimdall2-86f6.12). Both outbound paths
+// set `maxRedirects: 0`, and axios then settles a 3xx as an ERROR rather than
+// following it, because its default validateStatus accepts 2xx only. That
+// arrives in the catch blocks below as an ordinary AxiosError carrying the 3xx
+// response — indistinguishable from any other upstream failure unless it is
+// classified explicitly.
+//
+// Classifying it is not cosmetic. Left to the default branch, `status:
+// error.response?.status` would re-emit the UPSTREAM's 302 as this API's own
+// status code: Heimdall would answer a redirect it never authored, on behalf of
+// a host it just refused to follow.
+const REDIRECT_STATUS_MIN = 300;
+const REDIRECT_STATUS_MAX = 400;
+// The message deliberately does not name the redirect target. It is supplied by
+// the upstream host, and reflecting it turns this endpoint into a probe oracle —
+// the same reasoning as the allowlist's rejection reasons (heimdall2-86f6.6).
+const REFUSED_REDIRECT_MESSAGE
+  = 'The Tenable host attempted to redirect the request, which is not permitted';
+
+function isRefusedRedirect(error: unknown): boolean {
+  if (!axios.isAxiosError(error)) {
+    return false;
+  }
+  const status = error.response?.status;
+  return (
+    status !== undefined
+    && status >= REDIRECT_STATUS_MIN
+    && status < REDIRECT_STATUS_MAX
+  );
+}
+
 // NestJS controller that handles Tenable authentication and proxying requests to Tenable
 // It allows users to log in with their Tenable credentials and then proxies all subsequent requests
 // to the Tenable API, handling authentication via session storage.
@@ -105,7 +136,14 @@ export class TenableController {
     try {
       // This helps prevent double slashes in the resulting URL if host_url ends with a slash.
       const fullUrl = `${host_url.replace(TRAILING_SLASH, '')}/rest/currentUser`;
-      const result = await axios.get(fullUrl, { headers: { 'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}` } });
+      const result = await axios.get(fullUrl, {
+        headers: { 'x-apikey': `accesskey=${accesskey}; secretkey=${secretkey}` },
+        // See REFUSED_REDIRECT_* above: the allowlist approved this host by
+        // NAME, and following its redirect would land the request somewhere it
+        // never approved. Configured here as well as in tenable.service.ts —
+        // two axios configurations, two fixes.
+        maxRedirects: 0,
+      });
 
       // Assign the Tenable credentials to the session
       request.session.tenable = { accesskey, host_url, secretkey };
@@ -115,6 +153,19 @@ export class TenableController {
       return { success: true, user: result.data }; // Return plain object
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        // Before every other classification: a refused redirect is not a
+        // transport failure and must not fall through to the default branch,
+        // which would answer with the upstream's own 3xx status.
+        if (isRefusedRedirect(error)) {
+          throw new HttpException(
+            {
+              code: 'UPSTREAM_REDIRECT_REFUSED',
+              message: REFUSED_REDIRECT_MESSAGE,
+              status: HttpStatus.BAD_GATEWAY,
+            },
+            HttpStatus.BAD_GATEWAY,
+          );
+        }
         if (error.message.includes(TENABLE_CSP_NOT_SET)) {
           throw new HttpException(
             {
@@ -250,6 +301,20 @@ export class TenableController {
       );
 
       if (axios.isAxiosError(error)) {
+        // Same classification as the login probe, and needed here for a second
+        // reason: this branch forwards `error.response?.status` and the upstream
+        // BODY straight to the caller, so an unclassified 3xx would answer a
+        // redirect this API never authored.
+        if (isRefusedRedirect(error)) {
+          throw new HttpException(
+            {
+              code: 'UPSTREAM_REDIRECT_REFUSED',
+              message: REFUSED_REDIRECT_MESSAGE,
+              status: HttpStatus.BAD_GATEWAY,
+            },
+            HttpStatus.BAD_GATEWAY,
+          );
+        }
         if (error.message.includes(cspMessage)) {
           throw new HttpException(
             {
