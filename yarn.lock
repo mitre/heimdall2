@@ -216,14 +216,14 @@
     "@smithy/types" "^4.16.1"
     tslib "^2.6.2"
 
-"@aws-sdk/client-config-service@3.1107.0":
-  version "3.1107.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1107.0.tgz#dd42ce9efbb84b307eb36214550dc246f79bab25"
-  integrity sha512-VU+5lBdrEQgx3/iSNSt2nx9keeMd0n8Ur2rQCx+qMdAPmEkEDWzzMkRa69yM/Weun4mSO9pgsR+BjzH8yzRJTg==
+"@aws-sdk/client-config-service@3.1108.0":
+  version "3.1108.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1108.0.tgz#eed8ced07c2fc73098a71bf10ba19defc4baa7a1"
+  integrity sha512-C6HErWPm0ZesiRzAtSfWXaVOJKfWETWpb0nTIZXHqJHH/kJzdjqCJlv07wW6uGVPJNDdVfITfga5Pb/IGu59Ag==
   dependencies:
-    "@aws-sdk/core" "^3.977.6"
-    "@aws-sdk/credential-provider-node" "^3.972.78"
-    "@aws-sdk/types" "^3.974.2"
+    "@aws-sdk/core" "^3.977.7"
+    "@aws-sdk/credential-provider-node" "^3.972.79"
+    "@aws-sdk/types" "^3.974.3"
     "@smithy/core" "^3.31.1"
     "@smithy/fetch-http-handler" "^5.6.13"
     "@smithy/node-http-handler" "^4.9.13"
@@ -262,7 +262,7 @@
     "@smithy/types" "^4.16.1"
     tslib "^2.6.2"
 
-"@aws-sdk/core@^3.977.6", "@aws-sdk/core@^3.977.7", "@aws-sdk/core@^3.977.8":
+"@aws-sdk/core@^3.977.7", "@aws-sdk/core@^3.977.8":
   version "3.977.8"
   resolved "https://registry.yarnpkg.com/@aws-sdk/core/-/core-3.977.8.tgz#b2860d6d6bd4b147dbf906c5e3c8155337742657"
   integrity sha512-7+Kcrkvrk9lM/m7jRhHpT4jCdvzGHsuaSRbF8TdzzkY1mRzp/Ogwf9c7H29k4gGhey0BBWhCWr16+t0J61gwmg==
@@ -331,7 +331,7 @@
     "@smithy/types" "^4.16.1"
     tslib "^2.6.2"
 
-"@aws-sdk/credential-provider-node@^3.972.78", "@aws-sdk/credential-provider-node@^3.972.79":
+"@aws-sdk/credential-provider-node@^3.972.79":
   version "3.972.80"
   resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.972.80.tgz#1a3db0a35091468c5cd32d869f031fc6a2420d8e"
   integrity sha512-bE2qh8ww4iClO1jHsBXdOE8FUgzDbdxbyorNjSCoPSkQd51k3jODItuPZfuwcLHZqDXsH+bI4AMHhqtuyR7mSg==
@@ -432,7 +432,7 @@
     "@smithy/types" "^4.16.1"
     tslib "^2.6.2"
 
-"@aws-sdk/types@^3.974.2", "@aws-sdk/types@^3.974.3", "@aws-sdk/types@^3.974.4":
+"@aws-sdk/types@^3.974.3", "@aws-sdk/types@^3.974.4":
   version "3.974.4"
   resolved "https://registry.yarnpkg.com/@aws-sdk/types/-/types-3.974.4.tgz#c68582caa8568de90d106e4717f1559164b6949a"
   integrity sha512-dSFDNG00MEz0/xl5gxL62giLd1iYyJsTxZ1I1DOj6lC+bbgLB4TRsYClJg3b62dhXT1uATzsTNXPnC+33EJV3A==
