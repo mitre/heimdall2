@@ -116,9 +116,15 @@ export class Groups extends VuexModule implements IGroupState {
 
   @Action
   public async FetchGroupData() {
-    // Awaited: the loading flag used to flip off before either fetch had
-    // completed, so the UI reported ready while the lists were still empty.
-    await Promise.all([this.FetchAllGroups(), this.FetchMyGroups()]);
+    // Re-entered on every fetch: the flag initializes true and used to be
+    // cleared exactly once, so every refetch after the first rendered
+    // "loaded, empty" while the lists were still in flight.
+    this.context.commit('SET_LOADING', true);
+    // Settled rather than fail-fast: one list rejecting must not discard the
+    // other, and must not propagate out of GetUserInfo to deny a session
+    // (ADR-008). The flag still flips only after both have finished, which is
+    // the defect 14c13a0e9 fixed — that intent is preserved, not reverted.
+    await Promise.allSettled([this.FetchAllGroups(), this.FetchMyGroups()]);
     this.context.commit('SET_LOADING', false);
   }
 

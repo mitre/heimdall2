@@ -20,6 +20,16 @@ import {GroupsModule} from './groups';
 const localToken = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
 
+/**
+ * Rejection handler for a deliberately unawaited fetch. The response
+ * interceptor (main.ts:48) already raises a snackbar for every failed request,
+ * so handling one here would double-report; this exists solely to keep the
+ * promise from floating.
+ */
+function absorbAlreadyReportedFailure(): void {
+  return;
+}
+
 export interface IServerState {
   serverMode: boolean;
   serverUrl: string;
@@ -258,8 +268,17 @@ class Server extends VuexModule implements IServerState {
       // then clear their token and refresh the page
       await this.Logout();
     }
-    await this.FetchAllUsers();
-    await GroupsModule.FetchGroupData();
+    // Deliberately unawaited (ADR-008): login completes when credentials are
+    // exchanged, and application data must never block or deny it. Every entry
+    // path — local, LDAP, all five OAuth providers and page reload — funnels
+    // through here, so this is the one place that covers all of them.
+    //
+    // .catch() rather than a bare void: 14c13a0e9 was legitimately removing
+    // floating promises, and that intent is preserved. Nothing is reported
+    // here because the response interceptor (main.ts:48) already raises a
+    // snackbar for every failed request — a second one would double-report.
+    void this.FetchAllUsers().catch(absorbAlreadyReportedFailure);
+    void GroupsModule.FetchGroupData().catch(absorbAlreadyReportedFailure);
   }
 
   @Action
