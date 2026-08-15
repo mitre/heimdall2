@@ -274,6 +274,11 @@ export default defineConfig([
     extends: [tseslint.configs.disableTypeChecked],
     files: [
       'apps/backend/migrations/**/*.js',
+      // Support modules for the seeders. They live OUTSIDE seeders/ because
+      // sequelize-cli loads every file in that directory as a seeder and calls
+      // up() on it, but they are the same class of file for linting: plain CJS
+      // outside every tsconfig.
+      'apps/backend/seed-support/**/*.js',
       'apps/backend/seeders/**/*.js',
     ],
     languageOptions: { parserOptions: { projectService: false } },

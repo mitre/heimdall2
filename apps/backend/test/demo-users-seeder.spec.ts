@@ -25,6 +25,15 @@ const PBKDF2_SHA512 = /^\$pbkdf2-sha512\$i=\d+\$/;
 
 const byText = (a: string, b: string): number => a.localeCompare(b);
 
+/**
+ * SEED_PASSWORD override fixture. Another shift/unshift column walk, so it
+ * satisfies the app's own policy — the previous fixture did not, which a
+ * reviewer measured. A card about seeding policy-valid credentials should not
+ * use a credential the product would refuse; the assertion below keeps it
+ * from drifting back.
+ */
+const OVERRIDE_PASSWORD = '2wsx3edc@WSX#EDC';
+
 type FakeQueryInterface = {
   bulkDelete: ReturnType<typeof vi.fn>;
   bulkInsert: ReturnType<typeof vi.fn>;
@@ -207,8 +216,11 @@ describe('demo user seeder — roster', () => {
   });
 
   it('honours SEED_PASSWORD when set', async () => {
+    // The override fixture must itself be a credential this app would accept,
+    // or the test quietly models something the product forbids.
+    expect(validatePasswordBoolean(OVERRIDE_PASSWORD)).toBe(true);
     vi.stubEnv('NODE_ENV', 'development');
-    vi.stubEnv('SEED_PASSWORD', 'Overridden!Password9');
+    vi.stubEnv('SEED_PASSWORD', OVERRIDE_PASSWORD);
     const queryInterface = fakeQueryInterface();
 
     await seeder().up(queryInterface);
@@ -226,7 +238,7 @@ describe('demo user seeder — roster', () => {
     await expect(
       verifyPassword({
         hash: seeded.encryptedPassword,
-        password: 'Overridden!Password9',
+        password: OVERRIDE_PASSWORD,
       }),
     ).resolves.toMatchObject({ valid: true });
   });

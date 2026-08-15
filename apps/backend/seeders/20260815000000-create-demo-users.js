@@ -20,7 +20,11 @@ const {
   hashOptions,
   readEnvConfig,
   resolvePassword
-} = require('./demo-seed-helpers');
+  // Lives OUTSIDE seeders/ deliberately: sequelize-cli loads every .js in that
+  // directory as a seeder and calls up() on it, so a support module parked
+  // there kills `db:seed:all` — which cmd.sh runs under `set -e` before
+  // starting the app. Guarded by test/seeders-directory-guard.spec.ts.
+} = require('../seed-support/demo-seed-helpers');
 
 module.exports = {
   DEMO_EMAILS,

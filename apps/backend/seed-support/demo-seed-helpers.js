@@ -73,6 +73,32 @@ const DEMO_USERS = [
 const DEMO_EMAILS = DEMO_USERS.map((user) => user.email);
 
 /**
+ * One demo group, so the GROUP-SCOPED authorization paths are reachable.
+ * `Groups.name` is NOT NULL and UNIQUE (migration 20230725092535), `desc` is
+ * NOT NULL with a '' default (20230712110759), and `public` is NOT NULL — all
+ * three are supplied explicitly rather than relying on defaults.
+ */
+const DEMO_GROUP = {
+  desc: 'Seeded demo group. Development and test only — see the seed system docs.',
+  name: 'Demo Group',
+  public: false
+};
+
+/**
+ * Memberships REUSE the accounts from the user seeder rather than minting
+ * group-specific ones, following Vulcan's `05_memberships.rb`, which assigns
+ * memberships to its existing demo users.
+ *
+ * `role` here is GroupUsers.role — owner|member, scoped to one group. That is
+ * a different column from Users.role (admin|user) above, and confusing the two
+ * produces a seed that looks correct and exercises nothing.
+ */
+const DEMO_MEMBERSHIPS = [
+  {email: 'admin@example.com', role: 'owner'},
+  {email: 'user@example.com', role: 'member'}
+];
+
+/**
  * Read `.env` and overlay the real environment, exactly as the administrator
  * seeder does — process.env wins.
  */
@@ -121,6 +147,8 @@ function hashOptions(envConfig) {
 
 module.exports = {
   DEMO_EMAILS,
+  DEMO_GROUP,
+  DEMO_MEMBERSHIPS,
   DEMO_PASSWORD,
   DEMO_USERS,
   demoSeedEnabled,
