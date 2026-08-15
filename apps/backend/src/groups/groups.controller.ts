@@ -97,18 +97,14 @@ export class GroupsController {
     return groups.map(group => new GroupDto(group));
   }
 
-  @Get(':id')
-  async findById(
-    @Request() request: { user: User },
-    @Param('id') id: string,
-  ): Promise<GroupDto> {
-    const abac = this.authz.abac.createForUser(request.user);
-    const group = await this.groupsService.findByPkBang(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Read, group);
-
-    return new GroupDto(group, 'owner');
-  }
-
+  // DECLARATION ORDER IS SEMANTIC HERE — DO NOT SORT THIS CLASS BY MEMBER NAME.
+  // Nest registers routes in the order their handlers are declared, so this
+  // literal '/my' route MUST stay above the parameterized ':id' route below.
+  // Alphabetizing the class puts findById first, which makes every
+  // GET /groups/my resolve to findById('my') and 500 on
+  // `invalid input syntax for type bigint: "my"` — that regression shipped in
+  // 3bdd1f146 and broke GUI login outright, because the login handler calls
+  // this endpoint. Pinned by the 'GroupsController route resolution' tests.
   @Get('/my')
   async findForUser(@Request() request: { user: User }): Promise<GroupDto[]> {
     const groups = await request.user.$get('groups', { include: [User] });
@@ -119,6 +115,18 @@ export class GroupsController {
     );
     return [...groups
       .map(group => new GroupDto(group)), ...publicGroups.map(group => new GroupDto(group))];
+  }
+
+  @Get(':id')
+  async findById(
+    @Request() request: { user: User },
+    @Param('id') id: string,
+  ): Promise<GroupDto> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const group = await this.groupsService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, group);
+
+    return new GroupDto(group, 'owner');
   }
 
   @Delete(':id')

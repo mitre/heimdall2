@@ -1,4 +1,6 @@
+import type { AddressInfo } from 'node:net';
 import { ForbiddenError } from '@casl/ability';
+import type { ExecutionContext, INestApplication } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
@@ -23,6 +25,7 @@ import { Evaluation } from '../evaluations/evaluation.model';
 import { EvaluationsService } from '../evaluations/evaluations.service';
 import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
 import { GroupUser } from '../group-users/group-user.model';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { SlimUserDto } from '../users/dto/slim-user.dto';
 import { User } from '../users/user.model';
 import { UsersService } from '../users/users.service';
@@ -403,5 +406,116 @@ describe('GroupsController', () => {
         ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
+  });
+});
+
+// Route resolution is a ROUTER concern, not a handler concern: calling
+// groupsController.findForUser() directly succeeds no matter what order the
+// decorators are declared in, so the unit tests above cannot detect route
+// shadowing. These tests boot the real Nest application and issue real HTTP
+// requests so the actual registered routing table is what gets exercised.
+// Node's built-in fetch is used deliberately — supertest is not a dependency
+// of this repo and adding one to reach a routing assertion is not warranted.
+describe('GroupsController route resolution', () => {
+  let app: INestApplication;
+  let baseUrl: string;
+  let module: TestingModule;
+  let databaseService: DatabaseService;
+  let usersService: UsersService;
+  let groupsService: GroupsService;
+  // The overridden guard reads this at request time, so each test's freshly
+  // created user is the one ABAC sees.
+  let currentUser: User;
+
+  const allowWithCurrentUser = {
+    canActivate: (context: ExecutionContext): boolean => {
+      context.switchToHttp().getRequest<{ user: User }>().user = currentUser;
+      return true;
+    },
+  };
+
+  beforeAll(async () => {
+    module = await Test.createTestingModule({
+      controllers: [GroupsController],
+      imports: [
+        ConfigModule,
+        CryptoModule,
+        DatabaseModule,
+        SequelizeModule.forFeature([
+          Group,
+          GroupUser,
+          GroupEvaluation,
+          Evaluation,
+          EvaluationTag,
+          User,
+        ]),
+      ],
+      providers: [
+        AuthzService,
+        DatabaseService,
+        GroupsService,
+        UsersService,
+        EvaluationsService,
+      ],
+    })
+      // Auth is not what these tests are about; the routing table is.
+      .overrideGuard(JwtAuthGuard)
+      .useValue(allowWithCurrentUser)
+      .compile();
+
+    databaseService = module.get<DatabaseService>(DatabaseService);
+    usersService = module.get<UsersService>(UsersService);
+    groupsService = module.get<GroupsService>(GroupsService);
+
+    app = module.createNestApplication();
+    await app.init();
+    // Port 0 = ephemeral, so this never collides with a dev server.
+    await app.listen(0);
+    const address = app.getHttpServer().address() as AddressInfo;
+    baseUrl = `http://127.0.0.1:${String(address.port)}`;
+  });
+
+  afterAll(async () => {
+    // Order matters: app.close() tears down the Nest app INCLUDING its
+    // Sequelize connection, so the cleanup query has to run first.
+    await databaseService.cleanAll();
+    await app.close();
+  });
+
+  beforeEach(async () => {
+    await databaseService.cleanAll();
+    // ABAC needs a real model instance, and create() returns a DTO — so the
+    // row is re-read rather than cast.
+    const createdUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    const persisted = await User.findByPk<User>(createdUser.id);
+    if (persisted === null) {
+      throw new TypeError('test user was not persisted');
+    }
+    currentUser = persisted;
+  });
+
+  it('routes GET /groups/my to findForUser, not to the :id handler', async () => {
+    expect.assertions(2);
+    const response = await fetch(`${baseUrl}/groups/my`);
+
+    // If ':id' is declared first, Nest dispatches this to findById, which
+    // hands the literal string "my" to Postgres as a bigint and 500s with
+    // 'invalid input syntax for type bigint'. That is the exact regression
+    // ESLint's class-member sorting introduced in 3bdd1f146 — and it broke
+    // GUI login outright, because the login handler calls /groups/my.
+    expect(response.status).toBe(200);
+    // findForUser returns a LIST; findById returns a single object.
+    expect(Array.isArray(await response.json())).toBe(true);
+  });
+
+  it('still routes GET /groups/:id to findById for a real numeric id', async () => {
+    expect.assertions(2);
+    const created = await groupsService.create(GROUP_1);
+
+    const response = await fetch(`${baseUrl}/groups/${created.id}`);
+
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as { id: string };
+    expect(body.id).toBe(created.id);
   });
 });
