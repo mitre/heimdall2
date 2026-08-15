@@ -248,8 +248,27 @@ deployments need no change. When both are set, `GITLAB_CLIENTSECRET` wins.
 | Variable | Description | Required | Default |
 | --- | --- | --- | --- |
 | `SPLUNK_HOST_URL` | Splunk host URL, without a port. Enables the Splunk integration in the frontend. | No | empty |
-| `TENABLE_HOST_URL` | Tenable.SC host URL, without a port. Enables the Tenable integration in the frontend. | No | empty |
+| `TENABLE_HOST_URL` | Tenable.SC host URL, without a port. Enables the Tenable integration in the frontend, and is the first entry on the outbound allowlist. | No | empty |
+| `TENABLE_ADDITIONAL_HOST_URLS` | Further Tenable.SC hosts this server may contact, separated by commas or spaces. `TENABLE_HOST_URL` is always permitted; a request naming any other host is refused. | No | empty |
+| `TENABLE_ALLOW_PRIVATE_ADDRESSES` | `true` permits outbound Tenable connections to private, loopback and link-local addresses. Leave it `false` unless your Tenable.SC genuinely runs on internal address space — see the note below. | No | `false` |
 | `FORCE_TENABLE_FRONTEND` | `true` forces the Tenable interface in the frontend. | No | `false` |
+
+::: warning Outbound Tenable requests are restricted
+The Tenable proxy takes its destination from the request, so it is guarded on three sides. A request
+is refused unless the caller has a Heimdall session; unless the host it names is one of the origins
+configured above, compared on scheme, host and port rather than by substring; and unless the address
+that host resolves to is outside private, loopback and link-local space. Redirects are never
+followed, so a permitted host cannot move the request elsewhere.
+
+Each refusal answers with its own code, so you can tell which check fired: `HOST_NOT_ALLOWED` (400)
+for a host that is not configured, `UPSTREAM_ADDRESS_REFUSED` (502) for one that resolves into
+blocked address space, and `UPSTREAM_REDIRECT_REFUSED` (502) for a host that tried to redirect.
+
+**Upgrading with Tenable.SC on an internal network:** the address check is new, and it defaults to
+refusing private space. If your Tenable.SC is reachable only on an internal address you must set
+`TENABLE_ALLOW_PRIVATE_ADDRESSES=true`, or the integration will answer `UPSTREAM_ADDRESS_REFUSED`
+after the upgrade. Design and rationale: ADR-009.
+:::
 
 ## Classification banner
 
