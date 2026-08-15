@@ -88,3 +88,9 @@ package.json.orig
 docs/node_modules
 docs/.vitepress/cache
 docs/.vitepress/dist
+
+# Playwright MCP writes console logs and page snapshots into the repository as
+# it drives the browser — one directory per session, created unconditionally
+# and never cleaned up. Live-test evidence belongs in card notes, not in the
+# tree, so this is ignored rather than committed.
+.playwright-mcp/

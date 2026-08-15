@@ -7,9 +7,11 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import axios from 'axios';
 import { Request, Response } from 'express';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { TenableService } from './tenable.service';
 
 const TRAILING_SLASH = /\/$/v;
@@ -38,7 +40,13 @@ const TENABLE_CSP_NOT_SET
 // NestJS controller that handles Tenable authentication and proxying requests to Tenable
 // It allows users to log in with their Tenable credentials and then proxies all subsequent requests
 // to the Tenable API, handling authentication via session storage.
+// Guarded at the CLASS level, not per route: @All('*splat') below means any
+// future route on this controller is reachable the moment it is declared, and a
+// per-route guard list would silently miss it. Both handlers accept a caller-
+// supplied Tenable host and return what that host answered, so an unauthenticated
+// request here is an outbound-request primitive with a readable response.
 @Controller('api/tenable')
+@UseGuards(JwtAuthGuard)
 export class TenableController {
   constructor(private readonly tenableService: TenableService) {}
 
