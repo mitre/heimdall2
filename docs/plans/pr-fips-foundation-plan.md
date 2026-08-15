@@ -1,4 +1,4 @@
-# PR Plan — FIPS + RPM + VitePress docs + lint
+# PR Plan — FIPS + RPM + VitePress docs + lint + backend security
 
 **Status:** active
 **Branch:** `feature/fips-compliant-password-hashing`
@@ -10,7 +10,7 @@
 
 ## 1. What this PR is
 
-One branch, one pull request, four workstreams — deliberately bundled:
+One branch, one pull request, five workstreams — deliberately bundled:
 
 | # | Workstream | Epic | State |
 |---|---|---|---|
@@ -18,9 +18,10 @@ One branch, one pull request, four workstreams — deliberately bundled:
 | 2 | RPM / packaging | inside `e25` | `.26` `.32` closed; `.27` `.28` `.33` open — **~40%** |
 | 3 | VitePress documentation (ADR-005) | `heimdall2-yvx` | 5/17 closed — **29%** |
 | 4 | Repo-wide ESLint cleanup | `heimdall2-4qm` | complete by its own subject |
+| 5 | Backend security + contract detectability (ADR-008, ADR-009) | `heimdall2-86f6` + `heimdall2-sked` | 4/13 and 2/3 closed — added 2026-08-15 |
 
 Forked from master at `2e1649c9e` (2026-06-23). Linear history, zero merge commits.
-150 commits unpushed. **Push only on Aaron's word.**
+165 commits unpushed. **Push only on Aaron's word.**
 
 ### Why the lint work is here
 
@@ -32,6 +33,52 @@ same PR rather than deferred. Recorded three times:
   the FIPS/docs PR isn't failed."* The escape was later removed in `1e57fee7d` once the repo hit
   zero, so CI lint is now **blocking**.
 - Aaron, 2026-08-13 20:09 — agreeing the order: after 4qm → vf4 → yvx.17 + docs → `yarn format` → push.
+
+### Why the security work is here — added 2026-08-15, and it is in scope for review
+
+This stream was not in the original four. It exists *because of* this PR's own lint work, and it
+splits into two halves a reviewer should judge by different standards.
+
+**Self-inflicted on this branch, and fixed here.** Two ESLint autofixes changed runtime behaviour:
+
+- `3bdd1f146` alphabetized `GroupsController` members, so `@Get(':id')` was declared before
+  `@Get('/my')` and swallowed it — GUI login broke for every user. Decorator order is semantic in
+  NestJS and no linter can see it.
+- `14c13a0e9` turned a fire-and-forget call into an awaited chain, coupling login to unrelated
+  application data. ADR-008 records the decision that came out of it.
+
+Neither commit is an ancestor of `origin/master` — both are branch-local, introduced here and
+fixed here. Check with `git merge-base --is-ancestor <sha> origin/master`, which fails for both.
+
+**Pre-existing on master, found by the audit those breaks triggered.** Asking what else that class
+of invisible contract could hide produced epic `heimdall2-86f6`, and the audit found the Tenable
+proxy defects. These are not this branch's doing and they are live on master today:
+
+```bash
+git show origin/master:apps/backend/src/tenable/tenable.controller.ts
+# @Controller('api/tenable') with NO @UseGuards, and no maxRedirects on either call site
+```
+
+They shipped in `a23b7dbef` "Tenable Interface Refactor (#7032)".
+
+**The Tenable chain** is the largest security change in the PR. `POST /api/tenable/login` took a
+caller-supplied `host_url`, fetched it, and returned the upstream response to the caller. Three
+independent controls, one card each, none sufficient alone:
+
+- `86f6.5` closed — authentication guard; the endpoint was reachable unauthenticated
+- `86f6.6` closed — name allowlist; any authenticated user could aim it at any host
+- `86f6.12` closed — no redirect following; an allowlisted host could `302` the request away
+- `86f6.13` **open** — resolved-address check; a permitted name can still resolve into blocked
+  address space (DNS rebinding)
+
+ADR-009 records the design. **The SSRF is not fully closed until `86f6.13` lands** — do not read
+the closed cards as "SSRF fixed"; each card and the module header say so explicitly.
+
+Also in this stream: `heimdall2-sked` seeds stable dev/test users behind a production guard
+(`3a09a5894`, `c7532b7c5`), which is what makes the live-test evidence on these cards reproducible.
+
+Every card in this stream carries live-test evidence and a mutation run in its notes, because the
+defects are all of the form "a green unit suite cannot see this".
 
 ### The rule
 
