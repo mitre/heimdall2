@@ -1,0 +1,250 @@
+SPEC     := heimdall-server.spec
+TOPDIR   := $(shell pwd)/rpmbuild
+
+# Version resolution is deliberately POSIX sed, not `rpmspec`.
+#
+# rpmspec only exists on RHEL-family hosts, which made every version-dependent
+# target unusable on a developer laptop and produced misleading errors ("tag v
+# not found") rather than an honest one.
+#
+# The repository VERSION file is canonical — it is what the release process and
+# release-drafter work from. The spec's own Version: field is read separately
+# and checked against it, so the two cannot silently drift. That drift is not
+# hypothetical: the copy of this spec on feat/rpm-build sat at 2.12.6 while the
+# shipped one tracked to 2.13.1.
+NAME         := $(shell sed -n 's/^Name:[[:space:]]*//p' $(SPEC) | head -1)
+SPEC_VERSION := $(shell sed -n 's/^Version:[[:space:]]*//p' $(SPEC) | head -1)
+VERSION      := $(shell sed -e 's/^v//' -e 's/[[:space:]]//g' ../../VERSION 2>/dev/null)
+
+# Fail fast when the spec and the repository disagree about the version.
+# Every version-dependent target depends on this.
+check-version:
+	@test -n "$(VERSION)" || { \
+	  echo "ERROR: could not read ../../VERSION"; exit 1; }
+	@test -n "$(SPEC_VERSION)" || { \
+	  echo "ERROR: could not read Version: from $(SPEC)"; exit 1; }
+	@test "$(VERSION)" = "$(SPEC_VERSION)" || { \
+	  echo "ERROR: version mismatch."; \
+	  echo "  VERSION file:  $(VERSION)"; \
+	  echo "  $(SPEC):  $(SPEC_VERSION)"; \
+	  echo "  Update the spec's Version: field to match the repository version."; \
+	  exit 1; }
+
+# Target architecture for cross-compilation (default: host arch)
+GOARCH   ?= $(shell go env GOARCH)
+
+.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version sources cli-src heimdall-cli man stage deps check-upstream bump-version
+
+# Upstream repo for `make check-upstream` (override for forks/mirrors).
+UPSTREAM_REPO ?= mitre/heimdall2
+
+# Yarn cache for fast local rebuilds. Off by default so `make rpm`
+# matches CI/mock/COPR (clean stateless build, deterministic).
+# Enable with `make rpm CACHE=1` — yarn keeps its disk cache between
+# builds so `yarn install` skips re-downloading every dep from npm.
+CACHE      ?= 0
+YARN_CACHE ?= $(HOME)/.cache/yarn-heimdall
+ifeq ($(CACHE),1)
+  RPMBUILD_PREFIX := YARN_CACHE_FOLDER=$(YARN_CACHE)
+else
+  RPMBUILD_PREFIX :=
+endif
+
+# Source tarball, produced from the local repository at the TAG matching the
+# spec Version. RPMs are built from tagged points in time, never from mainline.
+#
+# This replaces the previous scripts/fetch-source.sh download: the packaging now
+# lives inside heimdall2, so the source is two directories up and there is no
+# reason to reach across the network for it. That also keeps airgapped builds
+# working without a mirror.
+#
+# Set DEV=1 to archive the working tree's HEAD instead. Development only —
+# the resulting RPM does not correspond to any released version.
+SRC_REF := v$(VERSION)
+sources: check-version
+	@mkdir -p $(TOPDIR)/SOURCES
+ifeq ($(DEV),1)
+	@echo "WARNING: DEV=1 — archiving HEAD, not $(SRC_REF). Not a release build."
+	@git -C ../.. archive --format=tar.gz \
+	  --prefix=heimdall2-$(VERSION)/ HEAD \
+	  -o $(abspath $(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz)
+else
+	@git -C ../.. rev-parse --verify --quiet $(SRC_REF) >/dev/null || { \
+	  echo "ERROR: tag $(SRC_REF) not found in this repository."; \
+	  echo "  RPMs are built from tagged releases. Fetch tags with 'git fetch --tags',"; \
+	  echo "  or build a development RPM with 'make rpm DEV=1'."; \
+	  exit 1; }
+	@echo "Archiving $(NAME)-$(VERSION) from tag $(SRC_REF)..."
+	@git -C ../.. archive --format=tar.gz \
+	  --prefix=heimdall2-$(VERSION)/ $(SRC_REF) \
+	  -o $(abspath $(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz)
+endif
+
+# heimdall-cli source, cloned at a pinned ref.
+#
+# The CLI lives at github.com/mitre/heimdall-cli — it is a separate repository,
+# not a sibling directory, so it is fetched rather than referenced by path.
+#
+# HEIMDALL_CLI_REF is the contract carrier: it records exactly which CLI a given
+# RPM shipped. Release builds MUST override it with a tag. `main` is a
+# development default only.
+HEIMDALL_CLI_REPO ?= https://github.com/mitre/heimdall-cli.git
+HEIMDALL_CLI_REF  ?= main
+CLI_DIR           := $(TOPDIR)/heimdall-cli-src
+
+cli-src:
+	@mkdir -p $(TOPDIR)
+	@if [ -d "$(CLI_DIR)/.git" ]; then \
+	  git -C $(CLI_DIR) fetch --quiet --tags origin; \
+	else \
+	  git clone --quiet $(HEIMDALL_CLI_REPO) $(CLI_DIR); \
+	fi
+	@git -C $(CLI_DIR) checkout --quiet --detach $(HEIMDALL_CLI_REF) || { \
+	  echo "ERROR: ref '$(HEIMDALL_CLI_REF)' not found in $(HEIMDALL_CLI_REPO)"; exit 1; }
+	@echo "heimdall-cli source at $(HEIMDALL_CLI_REF) ($$(git -C $(CLI_DIR) rev-parse --short HEAD))"
+
+# Build Go CLI binary for the target platform (static, no CGO).
+# Produces a flat binary at rpmbuild/SOURCES/heimdall-cli (spec Source15).
+# All three version fields (Version/Commit/Date) are injected so
+# `heimdall-cli --version` shows real provenance.
+#
+# CLI_COMMIT is resolved from the CLI checkout, not from heimdall2. The previous
+# `git rev-parse HEAD` ran in the packaging repo and stamped the wrong commit
+# into the binary's version output.
+CLI_DATE := $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
+heimdall-cli: cli-src
+	@mkdir -p $(TOPDIR)/SOURCES
+	cd $(CLI_DIR) && GOOS=linux GOARCH=$(GOARCH) CGO_ENABLED=0 \
+	  go build -trimpath \
+	  -ldflags="-s -w \
+	    -X 'github.com/mitre/heimdall-cli/internal/version.Version=$(VERSION)' \
+	    -X 'github.com/mitre/heimdall-cli/internal/version.Commit=$$(git rev-parse --short HEAD)' \
+	    -X 'github.com/mitre/heimdall-cli/internal/version.Date=$(CLI_DATE)'" \
+	  -o $(abspath $(TOPDIR)/SOURCES/heimdall-cli) \
+	  ./cmd/heimdall-cli
+	@echo "Built: $(TOPDIR)/SOURCES/heimdall-cli (linux/$(GOARCH), ref $(HEIMDALL_CLI_REF))"
+
+# Generate man pages from the CLI command tree.
+# Generated from the same pinned checkout as the binary, so the pages can never
+# drift from the commands they document.
+man: cli-src
+	@test -d $(CLI_DIR)/cmd/gen-manpages || { \
+	  echo "ERROR: $(HEIMDALL_CLI_REF) of heimdall-cli has no cmd/gen-manpages."; \
+	  echo "  The spec's %files claims %{_mandir}/man1/heimdall-cli*.1*, so the"; \
+	  echo "  build will fail without generated pages. The generator was not"; \
+	  echo "  carried over when heimdall-cli was extracted to its own repository."; \
+	  echo "  Tracked as a blocking cross-repo item in ADR-006 §14."; \
+	  exit 1; }
+	cd $(CLI_DIR) && go run ./cmd/gen-manpages $(abspath man/man1)
+
+# Install build dependencies (delegates to setup script).
+deps:
+	scripts/setup-build-deps.sh
+
+# Stage all source files into rpmbuild tree (Sources 0-21).
+# Single source of truth for which files go into the RPM.
+stage: sources heimdall-cli man
+	@mkdir -p $(TOPDIR)/{SPECS,BUILD,RPMS,SRPMS}
+	cp $(SPEC) $(TOPDIR)/SPECS/
+	@# Source 9-11: SELinux policy
+	cp selinux/* $(TOPDIR)/SOURCES/
+	@# (fapolicyd helper script retired — handled by `heimdall-cli fapolicyd`)
+	@# Source 13: firewalld service definition
+	cp firewalld/* $(TOPDIR)/SOURCES/
+	@# Sources 1-8, 14, 16-19: service, config, scripts
+	cp heimdall-backend.env heimdall-server.service heimdall-server.sh \
+	   heimdall-configure.sh heimdall-postgres-setup.sh heimdall-setup.sh \
+	   heimdall-db-setup.sh heimdall-server-tmpfiles.conf heimdall-server.repo \
+	   heimdall-Caddyfile heimdall-sysconfig \
+	   heimdall-rsyslog.conf heimdall-logrotate.conf \
+	   $(TOPDIR)/SOURCES/
+	@# Sources 20-21: security samples
+	cp security/40-heimdall.rules security/SECURITY.md $(TOPDIR)/SOURCES/
+	@# Man pages (generated by the man target above)
+	mkdir -p $(TOPDIR)/BUILD/man/man1
+	cp man/man1/*.1 $(TOPDIR)/BUILD/man/man1/ 2>/dev/null || true
+
+srpm: stage
+	rpmbuild -bs --define "_topdir $(TOPDIR)" $(TOPDIR)/SPECS/$(SPEC)
+	@echo "SRPM: $$(ls $(TOPDIR)/SRPMS/*.src.rpm)"
+
+rpm: stage
+	@$(if $(filter 1,$(CACHE)),mkdir -p $(YARN_CACHE),true)
+	$(RPMBUILD_PREFIX) rpmbuild -ba --define "_topdir $(TOPDIR)" $(TOPDIR)/SPECS/$(SPEC)
+	@echo "RPMs: $$(ls $(TOPDIR)/RPMS/*/*.rpm)"
+
+# Iterate fast on spec edits — skips %prep + %build (no tarball
+# extraction, no `yarn install`, no node build) and re-runs only
+# %install + %check + %files + binary packaging against the BUILD
+# tree from the previous `make rpm`. Use after editing %install,
+# %files, %post/%postun scriptlets, or any spec metadata.
+# Requires a prior successful `make rpm`.
+rpm-install:
+	rpmbuild --short-circuit -bi --define "_topdir $(TOPDIR)" $(TOPDIR)/SPECS/$(SPEC)
+	@echo "RPMs: $$(ls $(TOPDIR)/RPMS/*/*.rpm)"
+
+# Fastest possible iteration — skips %prep + %build + %install,
+# re-runs only %check + %files selection + binary packaging against
+# the existing BUILDROOT. Use after editing only %files / %changelog
+# / metadata when the BUILDROOT contents themselves don't need to
+# change. If BUILDROOT has been cleaned (a full `make rpm` does this
+# at the end of packaging on most rpmbuild versions), falls back to
+# `rpm-install` automatically so the target always works.
+rpm-package:
+	@buildroot_dir="$(TOPDIR)/BUILDROOT"; \
+	if [ ! -d "$$buildroot_dir" ] || [ -z "$$(ls -A "$$buildroot_dir" 2>/dev/null)" ]; then \
+		echo "BUILDROOT empty (cleaned by previous build) — running rpm-install first"; \
+		$(MAKE) rpm-install; \
+	else \
+		rpmbuild --short-circuit -bb --define "_topdir $(TOPDIR)" $(TOPDIR)/SPECS/$(SPEC); \
+		echo "RPMs: $$(ls $(TOPDIR)/RPMS/*/*.rpm)"; \
+	fi
+
+lint:
+	rpmlint -f .rpmlintrc $(SPEC)
+
+# Lint built RPMs (run after 'make rpm')
+lint-rpm:
+	@if ls $(TOPDIR)/RPMS/*/*.rpm >/dev/null 2>&1; then \
+		rpmlint -f .rpmlintrc $(TOPDIR)/RPMS/*/*.rpm; \
+	else \
+		echo "No RPMs found — run 'make rpm' first"; exit 1; \
+	fi
+	@if ls $(TOPDIR)/SRPMS/*.src.rpm >/dev/null 2>&1; then \
+		rpmlint -f .rpmlintrc $(TOPDIR)/SRPMS/*.src.rpm; \
+	fi
+
+clean:
+	rm -rf $(TOPDIR)
+
+# Compare the spec's Version against the latest GitHub release on UPSTREAM_REPO.
+# Read-only: never touches the spec. Useful before `make bump-version`.
+# Uses gh CLI if available, otherwise falls back to curl (always present on RHEL).
+check-upstream: check-version
+	@spec_ver="$(VERSION)"; \
+	if command -v gh >/dev/null 2>&1; then \
+		gh_tag=$$(gh release view --repo $(UPSTREAM_REPO) --json tagName -q '.tagName' 2>/dev/null); \
+	else \
+		gh_tag=$$(curl -sfL -o /dev/null -w '%{url_effective}\n' \
+			https://github.com/$(UPSTREAM_REPO)/releases/latest \
+			| sed 's|.*/tag/||'); \
+	fi; \
+	gh_ver=$${gh_tag#v}; \
+	echo "spec:   $$spec_ver"; \
+	echo "github: $$gh_ver  ($(UPSTREAM_REPO))"; \
+	if [ "$$spec_ver" = "$$gh_ver" ]; then \
+		echo "✓ in sync"; \
+	else \
+		echo "✗ spec is behind — run: make bump-version VERSION=$$gh_ver"; \
+		exit 1; \
+	fi
+
+# Bump the spec to a new upstream version using rpmdev-bumpspec.
+# Sets new Version, resets Release to 1, prepends a dated changelog entry.
+# Stages a single edit you commit; does NOT build.
+bump-version:
+	@command -v rpmdev-bumpspec >/dev/null 2>&1 || { echo "rpmdev-bumpspec required (rpmdevtools package)"; exit 1; }
+	@test -n "$(VERSION)" || { echo "Usage: make bump-version VERSION=X.Y.Z"; exit 1; }
+	rpmdev-bumpspec --new=$(VERSION) -c "Update to $(VERSION)" $(SPEC)
+	@echo
+	@echo "Spec bumped. Review: git diff $(SPEC)"

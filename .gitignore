@@ -72,3 +72,11 @@ certs/*.pem
 
 # Database Content
 data/*
+
+# prepack/postpack manifest backup.
+# The published packages rewrite "main" from src/index.ts to lib/index.js at
+# pack time (npm has never supported publishConfig manifest overrides, and
+# npm 13 will hard-error on them, so the rewrite is the only option).
+# Yarn 1's pack has no try/finally around the lifecycle scripts, so a failed
+# pack skips postpack and strands this file next to a mutated package.json.
+package.json.orig

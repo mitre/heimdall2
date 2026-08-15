@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# fips-box — pause/wake/status for the Heimdall FIPS test host.
+#
+#   fips-box pause    stop now (don't wait for the 45-min idle alarm)
+#   fips-box wake     start and wait until SSM is reachable (ssh-ready)
+#   fips-box status   instance state, IP, idle-alarm state
+#
+# The instance is resolved by Name tag at run time — rebuilds, IP changes,
+# and VPC changes never require edits. The tag follows TF_VAR_name (the same
+# variable OpenTofu reads), so one export drives tofu, this script, and the
+# ssh alias. FIPS_BOX_NAME remains as a script-only override.
+# Note: pause is a power-off; disk and FIPS mode persist, running processes
+# and tmux sessions do not.
+set -euo pipefail
+
+NAME="${FIPS_BOX_NAME:-${TF_VAR_name:-heimdall-fips}}"
+
+find_id() {
+  aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=${NAME}" \
+              "Name=instance-state-name,Values=pending,running,stopping,stopped" \
+    --query 'Reservations[].Instances[] | [0].InstanceId' --output text
+}
+
+id="$(find_id)"
+if [ -z "$id" ] || [ "$id" = "None" ]; then
+  echo "No instance tagged Name=${NAME} found (is it built? tofu apply)" >&2
+  exit 1
+fi
+
+state() {
+  aws ec2 describe-instances --instance-ids "$id" \
+    --query 'Reservations[0].Instances[0].State.Name' --output text
+}
+
+case "${1:-status}" in
+  pause)
+    echo "Pausing ${NAME} (${id})..."
+    aws ec2 stop-instances --instance-ids "$id" --output text --query 'StoppingInstances[0].CurrentState.Name'
+    aws ec2 wait instance-stopped --instance-ids "$id"
+    echo "Paused. Costs only EBS while stopped. Wake with: fips-box wake"
+    ;;
+  wake)
+    s="$(state)"
+    if [ "$s" = "stopping" ]; then
+      echo "Instance is still stopping — waiting for it to settle..."
+      aws ec2 wait instance-stopped --instance-ids "$id"
+    fi
+    echo "Waking ${NAME} (${id})..."
+    aws ec2 start-instances --instance-ids "$id" --output text --query 'StartingInstances[0].CurrentState.Name'
+    aws ec2 wait instance-running --instance-ids "$id"
+    echo "Running — waiting for SSM agent (this is what makes ssh work)..."
+    for _ in $(seq 1 30); do
+      ping="$(aws ssm describe-instance-information \
+        --filters "Key=InstanceIds,Values=${id}" \
+        --query 'InstanceInformationList[0].PingStatus' --output text 2>/dev/null || true)"
+      if [ "$ping" = "Online" ]; then
+        ip="$(aws ec2 describe-instances --instance-ids "$id" \
+          --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)"
+        echo "Awake and reachable: ssh heimdall-fips   (public IP now ${ip})"
+        exit 0
+      fi
+      sleep 10
+    done
+    echo "Instance is running but SSM has not registered after 5 min — check: aws ssm describe-instance-information" >&2
+    exit 1
+    ;;
+  status)
+    ip="$(aws ec2 describe-instances --instance-ids "$id" \
+      --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)"
+    alarm="$(aws cloudwatch describe-alarms --alarm-names "${NAME}-idle-stop" \
+      --query 'MetricAlarms[0].StateValue' --output text 2>/dev/null || echo none)"
+    echo "instance: ${id}"
+    echo "state:    $(state)"
+    echo "ip:       ${ip}"
+    echo "idle-stop alarm: ${alarm}"
+    ;;
+  *)
+    echo "usage: fips-box [pause|wake|status]" >&2
+    exit 2
+    ;;
+esac

@@ -1,0 +1,44 @@
+# /etc/sysconfig/heimdall-server — service-level configuration
+#
+# NOTE: All paths below must be absolute (starting with /) and the
+# directories must exist with correct ownership before starting the
+# service. The RPM %post scriptlet creates default directories owned
+# by the heimdall user/group. If you change a path here, ensure the
+# new directory exists and is owned appropriately:
+#   install -d -o heimdall -g heimdall -m 0750 /new/path
+#
+# These settings control HOW the service runs (paths, user, restart behavior).
+# For APPLICATION settings (database, ports, JWT), edit:
+#   /etc/heimdall-server/backend.env
+#
+# Changes here take effect after: systemctl restart heimdall-server
+#
+# All values can also be set via the heimdall-cli command:
+#   heimdall-cli setup --app-dir=/custom/path
+#
+# Or via environment variables with the HEIMDALL_ prefix:
+#   export HEIMDALL_APP_DIR=/custom/path
+
+# Application install directory (Node.js app files)
+HEIMDALL_APP_DIR=/usr/share/heimdall-server
+
+# Variable data directory (backups, uploads)
+HEIMDALL_DATA_DIR=/var/lib/heimdall-server
+
+# Configuration directory
+HEIMDALL_CONFIG_DIR=/etc/heimdall-server
+
+# Helper scripts directory
+HEIMDALL_LIBEXEC_DIR=/usr/libexec/heimdall-server
+
+# Log directory
+HEIMDALL_LOG_DIR=/var/log/heimdall-server
+
+# TLS certificate directory
+HEIMDALL_CERT_DIR=/etc/pki/heimdall-server
+
+# Environment file (application configuration)
+HEIMDALL_ENV_FILE=/etc/heimdall-server/backend.env
+
+# Restart service automatically on package upgrade (true/false)
+RESTART_ON_UPGRADE=true

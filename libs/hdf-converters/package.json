@@ -3,10 +3,29 @@
   "version": "2.13.0",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
+  "keywords": [
+    "hdf",
+    "ohdf",
+    "inspec",
+    "converter",
+    "sarif",
+    "asff",
+    "checklist",
+    "xccdf",
+    "security",
+    "compliance",
+    "mitre-saf"
+  ],
+  "homepage": "https://github.com/mitre/heimdall2#readme",
+  "bugs": "https://github.com/mitre/heimdall2/issues",
+  "author": "MITRE Corporation",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mitre/heimdall2",
+    "url": "git+https://github.com/mitre/heimdall2.git",
     "directory": "libs/hdf-converters"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "lib"
