@@ -93,6 +93,10 @@ export class ConfigService {
     return this.appConfig.getTenableHostUrl();
   }
 
+  getTenableAdditionalHostUrls(): string {
+    return this.appConfig.getTenableAdditionalHostUrls();
+  }
+
   isInProductionMode(): boolean {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }

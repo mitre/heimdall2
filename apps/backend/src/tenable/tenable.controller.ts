@@ -11,7 +11,12 @@ import {
 } from '@nestjs/common';
 import axios from 'axios';
 import { Request, Response } from 'express';
+import { ConfigService } from '../config/config.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import {
+  buildAllowedOrigins,
+  checkTenableHost,
+} from './tenable-host-allowlist';
 import { TenableService } from './tenable.service';
 
 const TRAILING_SLASH = /\/$/v;
@@ -48,7 +53,10 @@ const TENABLE_CSP_NOT_SET
 @Controller('api/tenable')
 @UseGuards(JwtAuthGuard)
 export class TenableController {
-  constructor(private readonly tenableService: TenableService) {}
+  constructor(
+    private readonly tenableService: TenableService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('login')
   /**
@@ -67,6 +75,31 @@ export class TenableController {
 
     if (!host_url || !accesskey || !secretkey) {
       throw new HttpException('Missing credentials', HttpStatus.BAD_REQUEST);
+    }
+
+    // BEFORE any outbound request. Rejecting afterwards would still have
+    // performed the forgery and still have returned the upstream response to
+    // the caller, so the ordering here is the control, not a formality.
+    const decision = checkTenableHost(
+      host_url,
+      buildAllowedOrigins(
+        this.configService.getTenableHostUrl(),
+        this.configService.getTenableAdditionalHostUrls(),
+      ),
+    );
+    // Narrowed on the string tag, never on truthiness: this repo does not enable
+    // strictNullChecks, so `if (!decision.allowed)` would compile under vitest
+    // (transpile-only) and then fail `nest build` on `decision.reason`. See the
+    // HostDecision declaration for why the tag is a string rather than a boolean.
+    if (decision.kind === 'rejected') {
+      throw new HttpException(
+        {
+          code: 'HOST_NOT_ALLOWED',
+          message: decision.reason,
+          status: HttpStatus.BAD_REQUEST,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     try {

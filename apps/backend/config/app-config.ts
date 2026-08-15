@@ -148,6 +148,14 @@ export default class AppConfig {
     return tenable_host_url === undefined ? '' : tenable_host_url;
   }
 
+  // Additional Tenable hosts a deployment is permitted to contact, beyond
+  // TENABLE_HOST_URL. One delimited string rather than a list, because every
+  // setting in this file is a single string; the allowlist module splits it.
+  getTenableAdditionalHostUrls(): string {
+    const additional = this.get('TENABLE_ADDITIONAL_HOST_URLS');
+    return additional === undefined ? '' : additional;
+  }
+
   parseDatabaseUrl() {
     const url = this.get('DATABASE_URL');
     if (url === undefined) {

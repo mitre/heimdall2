@@ -7,6 +7,10 @@ import {
 import JSZip from 'jszip';
 import {describe, expect, it, vi} from 'vitest';
 
+// The wording the 400 branch used to substitute for the backend's own message.
+// Hoisted to module scope so it is compiled once (e18e/prefer-static-regex).
+const CSP_WORDING = /Content Security Policy/;
+
 const config: AuthInfo = {
   accesskey: 'test-access-key',
   secretkey: 'test-secret-key',
@@ -62,6 +66,33 @@ describe('TenableUtil', () => {
     await expect(util.loginToTenable()).rejects.toThrowError(
       'backend says no'
     );
+  });
+
+  // The backend refuses an off-allowlist host with a coded 400
+  // (HOST_NOT_ALLOWED, heimdall2-86f6.6). Before this test the 400 branch
+  // recognised only INVALID_HOST_URL, so every other coded rejection fell
+  // through to the Content Security Policy explanation — telling the operator
+  // their browser policy blocked a request the SERVER had refused. Asserting
+  // the absence of the CSP wording is what makes this test discriminating: the
+  // exact-message assertion alone would not say which explanation was wrong.
+  it('surfaces a server-side host rejection instead of blaming the browser CSP', async () => {
+    const util = new TenableUtil(config);
+    util.isServer = true;
+    util.axios_instance.post = vi.fn().mockRejectedValue({
+      code: 'ERR_BAD_REQUEST',
+      response: {
+        data: {
+          code: 'HOST_NOT_ALLOWED',
+          message: 'The requested Tenable host is not permitted by this server',
+          status: 400
+        }
+      },
+      status: 400
+    });
+    await expect(util.loginToTenable()).rejects.toThrowError(
+      'The requested Tenable host is not permitted by this server'
+    );
+    await expect(util.loginToTenable()).rejects.not.toThrowError(CSP_WORDING);
   });
 
   it('unzips the first file of a downloaded scan result', async () => {

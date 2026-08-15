@@ -31,6 +31,16 @@ const TEST_USER = {
 // handler — which is exactly what the guard must prevent.
 const HANDLER_SESSION_REJECTION = 'Not authenticated with Tenable';
 
+// The only host this deployment is configured to talk to.
+const TEST_TENABLE_HOST = 'https://tenable.example.com';
+
+// The handler's ENOTFOUND branch (tenable.controller.ts). A `.invalid` host is
+// reserved by RFC 2606 and never resolves, so this code appears if and only if
+// control reached axios and a request was actually attempted. Its ABSENCE is
+// the evidence that the allowlist rejected the host first — asserting the
+// status alone cannot tell the two rejections apart, because both answer 400.
+const HANDLER_DNS_FAILURE = 'INVALID_HOST_URL';
+
 describe('TenableController authentication', () => {
   let app: INestApplication;
   let baseUrl: string;
@@ -46,8 +56,13 @@ describe('TenableController authentication', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: (key: string) =>
-              key === 'JWT_SECRET' ? TEST_JWT_SECRET : undefined,
+            get: (key: string) => {
+              if (key === 'JWT_SECRET') return TEST_JWT_SECRET;
+              if (key === 'TENABLE_HOST_URL') return TEST_TENABLE_HOST;
+              return;
+            },
+            getTenableAdditionalHostUrls: () => '',
+            getTenableHostUrl: () => TEST_TENABLE_HOST,
           },
         },
         {
@@ -130,5 +145,36 @@ describe('TenableController authentication', () => {
     // request and the feature still works for a signed-in user.
     expect(response.status).toBe(400);
     expect(body.message).toBe('Missing credentials');
+  });
+
+  it('rejects a host absent from the allowlist before any request is made', async () => {
+    expect.assertions(2);
+    const token = sign(
+      { email: TEST_USER.email, role: TEST_USER.role, sub: TEST_USER.id },
+      TEST_JWT_SECRET + TEST_USER.jwtSecret,
+      { expiresIn: '1h' },
+    );
+
+    const response = await fetch(`${baseUrl}/api/tenable/login`, {
+      body: JSON.stringify({
+        accesskey: 'irrelevant',
+        host_url: 'https://attacker.invalid',
+        secretkey: 'irrelevant',
+      }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+    const body = await response.text();
+
+    expect(response.status).toBe(400);
+    // The load-bearing assertion. Both the allowlist rejection and the
+    // handler's DNS failure answer 400, so the status cannot discriminate. If
+    // this string is present the server attempted the outbound request, which
+    // is the forgery itself — rejecting AFTER the request would still be a
+    // vulnerability.
+    expect(body).not.toContain(HANDLER_DNS_FAILURE);
   });
 });

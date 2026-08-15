@@ -152,10 +152,20 @@ export class TenableUtil {
           // and we can display a more user-friendly error message. Otherwise, we display the error
           // message as is (e.g. the server is not reachable, the request is not allowed, etc)
           if (this.isServer) {
-            if (error.response?.data?.code === 'INVALID_HOST_URL') { // Custom set in the backend
-              rejectMsg = (error.response?.data?.message ?? 'Tenable host URL to IP address resolution failed');
-            } else if (error.response?.data?.message) {
-              rejectMsg = this.getCSPErrorMsg(this.hostConfig.host_url, TENABLE_HOST_URL)
+            // A 400 that carries a body is the BACKEND's own coded rejection
+            // (HOST_NOT_ALLOWED, INVALID_HOST_URL, ...), so its message is the
+            // accurate explanation and is shown as written. A Content Security
+            // Policy violation cannot reach here: in server mode the request
+            // goes to Heimdall's own origin, and a CSP-blocked request arrives
+            // with no response at all — that is the `error.request` branch
+            // below, which reports CSP correctly. This branch used to answer
+            // every coded rejection other than INVALID_HOST_URL with the CSP
+            // message, which told an operator to fix a browser policy that was
+            // never involved in a refusal the server had made (heimdall2-86f6.6).
+            if (error.response?.data?.message) {
+              rejectMsg = error.response.data.message;
+            } else if (error.response?.data?.code === 'INVALID_HOST_URL') { // Custom set in the backend
+              rejectMsg = 'Tenable host URL to IP address resolution failed';
             } else {
               rejectMsg = DEFAULT_REJECT_MSG
             }
