@@ -79,7 +79,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       // requires `string`. Index access keeps the exact runtime behavior this
       // has always had. Closing the gap properly means deciding what should
       // happen when an LDAP user has no email address — an authentication
-      // behavior change, not a lint fix. Tracked separately.
+      // behavior change, not a lint fix. Tracked as heimdall2-86f6.14.
       // eslint-disable-next-line unicorn/prefer-at
       Array.isArray(email) ? email[0] : email,
       firstName,
