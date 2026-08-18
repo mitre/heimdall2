@@ -53,15 +53,14 @@ export default class AppConfig {
   }
 
   // Newline-separated allowlist of Tenable.SC hosts for the login/proxy endpoints
-  // (commas are valid, unencoded URI characters, so they can't be the delimiter).
-  // Entries must include a protocol; malformed entries throw at startup.
+  // Entries must include a protocol and may include a port; malformed entries throw at startup.
   getTenableHostUrl(): string[] {
     const tenable_host_url = this.get('TENABLE_HOST_URL');
     if (tenable_host_url === undefined) {
       return [];
     }
     return tenable_host_url
-      .split(/\r?\n/)
+      .split('\n')
       .map((url) => url.trim())
       .filter((url) => url.length > 0)
       .map((url) => {
@@ -76,6 +75,17 @@ export default class AppConfig {
         if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
           throw new Error(
             `Invalid TENABLE_HOST_URL entry "${url}": protocol must be http or https`
+          );
+        }
+        // Only protocol + hostname + port are allowed; ports are permitted since
+        // Tenable.SC may run on a non-default port.
+        const hasExtra =
+          (parsed.pathname !== '' && parsed.pathname !== '/') ||
+          parsed.search !== '' ||
+          parsed.hash !== '';
+        if (hasExtra) {
+          throw new Error(
+            `Invalid TENABLE_HOST_URL entry "${url}": must contain only a protocol, hostname, and optional port (no path, query, or fragment)`
           );
         }
         return parsed.origin;

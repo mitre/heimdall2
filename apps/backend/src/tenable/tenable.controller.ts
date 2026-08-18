@@ -15,6 +15,9 @@ import {ConfigService} from '../config/config.service';
 import axios from 'axios';
 import {Request, Response} from 'express';
 
+// Populated by JwtAuthGuard/passport; only the fields we rely on are typed here.
+type AuthenticatedRequest = Request & {user: {id: string}};
+
 // Extend express-session types to include 'tenable'
 declare module 'express-session' {
   interface SessionData {
@@ -22,6 +25,7 @@ declare module 'express-session' {
       host_url: string;
       accesskey: string;
       secretkey: string;
+      userId: string;
     };
   }
 }
@@ -49,12 +53,16 @@ export class TenableController {
     try {
       const parsed = new URL(host_url); // requires a protocol; throws otherwise
 
+      // This URL becomes the target of an outbound HTTP request to Tenable
+      // So only http/https are meaningful
       if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
         return null;
       }
 
-      // Reject extra path/query/fragment
+      // Reject anything beyond protocol, hostname, and port.
       const hasExtra =
+        parsed.username !== '' ||
+        parsed.password !== '' ||
         (parsed.pathname !== '' && parsed.pathname !== '/') ||
         parsed.search !== '' ||
         parsed.hash !== '';
@@ -62,10 +70,14 @@ export class TenableController {
         return null;
       }
 
-      const match = allowlist.includes(parsed.origin);
+      // Restricting to the allowlist prevents Server-Side Request Forgery (SSRF),
+      // where an attacker supplies host_url to make this server call internal/
+      // unintended hosts
+      const allowedEntry = allowlist.find((entry) => entry === parsed.origin);
 
-      // Only the parsed origin (never the raw input) is used downstream
-      return match ? parsed.origin : null;
+      // Return the matched allowlist entry itself (never a value derived from
+      // the raw input) so the output is always exactly the admin-approved string.
+      return allowedEntry ?? null;
     } catch {
       return null;
     }
@@ -81,7 +93,7 @@ export class TenableController {
    * @throws {HttpException} If any credentials are missing or if authentication fails.
    */
   async login(
-    @Req() req: Request,
+    @Req() req: AuthenticatedRequest,
     @Body() body: {host_url: string; accesskey: string; secretkey: string}
   ) {
     const {host_url, accesskey, secretkey} = body;
@@ -112,8 +124,14 @@ export class TenableController {
         }
       });
 
-      // Store the normalized, allowlisted origin rather than the raw client value.
-      req.session.tenable = {host_url: allowedHostUrl, accesskey, secretkey};
+      // Bind these credentials to the current Heimdall user so a later user
+      // reusing this session can't inherit them (see proxy()).
+      req.session.tenable = {
+        host_url: allowedHostUrl,
+        accesskey,
+        secretkey,
+        userId: req.user.id
+      };
 
       // Return the authenticated user data
       // Note: result.data is already a plain object, no need to convert it.
@@ -219,6 +237,13 @@ export class TenableController {
     }
   }
 
+  @Post('logout')
+  // Clears any stored Tenable credentials for the current session.
+  logout(@Req() req: Request): {success: true} {
+    delete req.session.tenable;
+    return {success: true};
+  }
+
   @All('*splat')
   /**
    * Proxies a request to the Tenable service using the user's session credentials.
@@ -231,12 +256,19 @@ export class TenableController {
    * @throws 404 if user session content is not available.
    * @throws 500 or the proxied error status if the proxy request fails.
    */
-  async proxy(@Req() req: Request, @Res() res: Response) {
+  async proxy(@Req() req: AuthenticatedRequest, @Res() res: Response) {
     try {
       const creds = req.session.tenable;
 
       // If credentials are missing, user is not authenticated, send 401 Unauthorized.
       if (!creds) {
+        return res.status(401).json({error: 'Not authenticated with Tenable'});
+      }
+
+      // The session's Tenable credentials must belong to the currently
+      // authenticated Heimdall user, not a previous user of this session.
+      if (creds.userId !== req.user.id) {
+        delete req.session.tenable;
         return res.status(401).json({error: 'Not authenticated with Tenable'});
       }
 
