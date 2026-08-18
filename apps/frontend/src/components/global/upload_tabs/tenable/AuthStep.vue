@@ -61,9 +61,8 @@ import {requireFieldRule} from '@/utilities/upload_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-// Our saved fields
-const localAccesskey = new LocalStorageVal<string>('tenable_accesskey');
-const localSecretkey = new LocalStorageVal<string>('tenable_secretkey');
+// Only the hostname is persisted; access/secret keys are credentials and
+// must not be saved to localStorage where any user of this browser could read them.
 const localHostname = new LocalStorageVal<string>('tenable_hostname');
 
 @Component({
@@ -120,8 +119,6 @@ export default class AuthStep extends Vue {
     await new TenableUtil(config)
       .loginToTenable()
       .then(() => {
-        localAccesskey.set(this.accesskey);
-        localSecretkey.set(this.secretkey);
         localHostname.set(this.hostname);
         SnackbarModule.notify('You have successfully signed in');
         this.$emit('authenticated', config);
@@ -136,8 +133,6 @@ export default class AuthStep extends Vue {
 
   /** Init our fields */
   mounted() {
-    this.accesskey = localAccesskey.getDefault('');
-    this.secretkey = localSecretkey.getDefault('');
     // If the hostname is not set, use the first configured default from the server module
     // (if not running in server mode the default is empty)
     this.hostname = localHostname.getDefault(ServerModule.tenableHostUrl[0] ?? '');
