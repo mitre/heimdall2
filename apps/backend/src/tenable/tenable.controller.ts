@@ -12,11 +12,9 @@ import {
 import {TenableService} from './tenable.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {ConfigService} from '../config/config.service';
+import {User} from '../users/user.model';
 import axios from 'axios';
 import {Request, Response} from 'express';
-
-// Populated by JwtAuthGuard/passport; only the fields we rely on are typed here.
-type AuthenticatedRequest = Request & {user: {id: string}};
 
 // Extend express-session types to include 'tenable'
 declare module 'express-session' {
@@ -93,7 +91,7 @@ export class TenableController {
    * @throws {HttpException} If any credentials are missing or if authentication fails.
    */
   async login(
-    @Req() req: AuthenticatedRequest,
+    @Req() req: Request,
     @Body() body: {host_url: string; accesskey: string; secretkey: string}
   ) {
     const {host_url, accesskey, secretkey} = body;
@@ -124,13 +122,14 @@ export class TenableController {
         }
       });
 
-      // Bind these credentials to the current Heimdall user so a later user
-      // reusing this session can't inherit them (see proxy()).
+      // Store the normalized, allowlisted origin rather than the raw client value.
+      // Tagged with the authenticated user so a different user on the same
+      // browser session can't reuse these credentials (see proxy()).
       req.session.tenable = {
         host_url: allowedHostUrl,
         accesskey,
         secretkey,
-        userId: req.user.id
+        userId: (req.user as User).id
       };
 
       // Return the authenticated user data
@@ -237,13 +236,6 @@ export class TenableController {
     }
   }
 
-  @Post('logout')
-  // Clears any stored Tenable credentials for the current session.
-  logout(@Req() req: Request): {success: true} {
-    delete req.session.tenable;
-    return {success: true};
-  }
-
   @All('*splat')
   /**
    * Proxies a request to the Tenable service using the user's session credentials.
@@ -256,7 +248,7 @@ export class TenableController {
    * @throws 404 if user session content is not available.
    * @throws 500 or the proxied error status if the proxy request fails.
    */
-  async proxy(@Req() req: AuthenticatedRequest, @Res() res: Response) {
+  async proxy(@Req() req: Request, @Res() res: Response) {
     try {
       const creds = req.session.tenable;
 
@@ -265,10 +257,9 @@ export class TenableController {
         return res.status(401).json({error: 'Not authenticated with Tenable'});
       }
 
-      // The session's Tenable credentials must belong to the currently
-      // authenticated Heimdall user, not a previous user of this session.
-      if (creds.userId !== req.user.id) {
-        delete req.session.tenable;
+      // Reject if these credentials belong to a different Heimdall user than
+      // the one currently authenticated (e.g. a shared/reused browser session).
+      if (creds.userId !== (req.user as User).id) {
         return res.status(401).json({error: 'Not authenticated with Tenable'});
       }
 
