@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "lerna": "^10.0.0",
-    "typescript": "^6.0.2"
+    "typescript": "^7.0.2"
   },
   "devDependencies": {
     "@e18e/eslint-plugin": "^0.8.0",
