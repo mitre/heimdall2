@@ -172,6 +172,27 @@ export class AuthnController {
     await this.setSessionCookies(req, session);
   }
 
+  @Get('saml')
+  @UseFilters(new AuthenticationExceptionFilter())
+  @UseGuards(AuthGuard('saml'))
+  async loginToSAML(
+    @Req() req: Request,
+  ): Promise<{ accessToken: string; userID: string }> {
+    this.logger.debug('in the saml login func');
+    this.logger.debug(JSON.stringify(req.session, null, 2));
+    return this.authnService.login(req.user as User);
+  }
+
+  @Post('saml/callback')
+  @UseFilters(new AuthenticationExceptionFilter())
+  @UseGuards(AuthGuard('saml'))
+  async getUserFromSAML(@Req() req: Request): Promise<void> {
+    this.logger.debug('in the saml login callback func');
+    this.logger.debug(JSON.stringify(req.session, null, 2));
+    const session = await this.authnService.login(req.user as User);
+    await this.setSessionCookies(req, session);
+  }
+
   async setSessionCookies(
     req: Request,
     session: {

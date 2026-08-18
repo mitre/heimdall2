@@ -1,6 +1,7 @@
 import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {
+import type {
+  AuthStrategy,
   ISlimUser,
   IStartupSettings,
   IUpdateUser,
@@ -29,12 +30,10 @@ export interface IServerState {
   classificationBannerColor: string;
   classificationBannerText: string;
   classificationBannerTextColor: string;
-  enabledOAuth: string[];
+  enabledAuthStrategies: AuthStrategy[];
   externalUrl: string;
   registrationEnabled: boolean;
   oidcName: string;
-  ldap: boolean;
-  localLoginEnabled: boolean;
   userInfo: IUser;
   tenableHostUrl: string;
   forceTenableFrontend: boolean;
@@ -58,13 +57,11 @@ class Server extends VuexModule implements IServerState {
   classificationBannerColor = '';
   classificationBannerText = '';
   classificationBannerTextColor = '';
-  ldap = false;
+  enabledAuthStrategies: AuthStrategy[] = ['local'];
   serverUrl = '';
   serverMode = false;
   registrationEnabled = true;
-  localLoginEnabled = true;
   loading = true;
-  enabledOAuth: string[] = [];
   externalUrl: string = '';
   allUsers: ISlimUser[] = [];
   oidcName = '';
@@ -109,12 +106,10 @@ class Server extends VuexModule implements IServerState {
     this.classificationBannerText = settings.classificationBannerText;
     this.classificationBannerColor = settings.classificationBannerColor;
     this.classificationBannerTextColor = settings.classificationBannerTextColor;
-    this.enabledOAuth = settings.enabledOAuth;
+    this.enabledAuthStrategies = settings.enabledAuthStrategies;
     this.externalUrl = settings.externalUrl;
     this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;
-    this.ldap = settings.ldap;
-    this.localLoginEnabled = settings.localLoginEnabled;
     this.tenableHostUrl = settings.tenableHostUrl;
     this.forceTenableFrontend = settings.forceTenableFrontend;
     this.splunkHostUrl = settings.splunkHostUrl;
@@ -236,7 +231,7 @@ class Server extends VuexModule implements IServerState {
     email: string;
     password: string;
     passwordConfirmation: string;
-    creationMethod: string;
+    creationMethod: AuthStrategy;
   }) {
     return axios.post('/users', userInfo);
   }

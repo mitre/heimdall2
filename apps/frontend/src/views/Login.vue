@@ -103,16 +103,15 @@ export default class Login extends Vue {
 
   get anyAuthProvidersAvailable() {
     return (
-      ServerModule.localLoginEnabled || ServerModule.enabledOAuth.length !== 0
+      ServerModule.enabledAuthStrategies.includes('local') ||
+      ServerModule.enabledAuthStrategies.some(
+        (strategy) => strategy !== 'local' && strategy !== 'ldap'
+      )
     );
   }
 
   get ldapenabled() {
-    return ServerModule.ldap;
-  }
-
-  get localLoginEnabled() {
-    return ServerModule.localLoginEnabled;
+    return ServerModule.enabledAuthStrategies.includes('ldap');
   }
 
   get logoffFailure() {

@@ -1,3 +1,4 @@
+import type {AuthStrategy} from '@heimdall/common/interfaces';
 import {
   ForbiddenException,
   Injectable,
@@ -100,7 +101,7 @@ export class AuthnService {
     email: string,
     firstName: string,
     lastName: string,
-    creationMethod: string
+    creationMethod: AuthStrategy
   ): Promise<User> {
     let user: User;
     try {
