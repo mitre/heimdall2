@@ -69,6 +69,9 @@ export type InspecFile = {
   /** The filename that this file was uploaded under. */
   filename: string;
 
+  /** True when local edits have not been exported or saved back to the server. */
+  hasUnsavedChanges?: boolean;
+
   database_id?: number;
 
   tags?: Tag[];
