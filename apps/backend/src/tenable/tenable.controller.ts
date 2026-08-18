@@ -13,6 +13,7 @@ import {TenableService} from './tenable.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
+import {parseHostUrl} from '../utils/url_validation';
 import axios from 'axios';
 import {Request, Response} from 'express';
 
@@ -48,37 +49,20 @@ export class TenableController {
     if (allowlist.length === 0) {
       return null;
     }
-    try {
-      const parsed = new URL(host_url); // requires a protocol; throws otherwise
 
-      // This URL becomes the target of an outbound HTTP request to Tenable
-      // So only http/https are meaningful
-      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-        return null;
-      }
-
-      // Reject anything beyond protocol, hostname, and port.
-      const hasExtra =
-        parsed.username !== '' ||
-        parsed.password !== '' ||
-        (parsed.pathname !== '' && parsed.pathname !== '/') ||
-        parsed.search !== '' ||
-        parsed.hash !== '';
-      if (hasExtra) {
-        return null;
-      }
-
-      // Restricting to the allowlist prevents Server-Side Request Forgery (SSRF),
-      // where an attacker supplies host_url to make this server call internal/
-      // unintended hosts
-      const allowedEntry = allowlist.find((entry) => entry === parsed.origin);
-
-      // Return the matched allowlist entry itself (never a value derived from
-      // the raw input) so the output is always exactly the admin-approved string.
-      return allowedEntry ?? null;
-    } catch {
+    const parsed = parseHostUrl(host_url);
+    if (!parsed) {
       return null;
     }
+
+    // Restricting to the allowlist prevents Server-Side Request Forgery (SSRF),
+    // where an attacker supplies host_url to make this server call internal/
+    // unintended hosts
+    const allowedEntry = allowlist.find((entry) => entry === parsed.origin);
+
+    // Return the matched allowlist entry itself 
+    // so the output is always exactly the admin-approved string
+    return allowedEntry ?? null;
   }
 
   @Post('login')

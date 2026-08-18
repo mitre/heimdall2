@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import {parseHostUrl} from '../src/utils/url_validation';
 
 export default class AppConfig {
   private envConfig: {[key: string]: string | undefined};
@@ -64,28 +65,10 @@ export default class AppConfig {
       .map((url) => url.trim())
       .filter((url) => url.length > 0)
       .map((url) => {
-        let parsed: URL;
-        try {
-          parsed = new URL(url);
-        } catch {
+        const parsed = parseHostUrl(url);
+        if (!parsed) {
           throw new Error(
-            `Invalid TENABLE_HOST_URL entry "${url}": must be a complete URL including protocol (e.g. https://example.com)`
-          );
-        }
-        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
-          throw new Error(
-            `Invalid TENABLE_HOST_URL entry "${url}": protocol must be http or https`
-          );
-        }
-        // Only protocol + hostname + port are allowed; ports are permitted since
-        // Tenable.SC may run on a non-default port.
-        const hasExtra =
-          (parsed.pathname !== '' && parsed.pathname !== '/') ||
-          parsed.search !== '' ||
-          parsed.hash !== '';
-        if (hasExtra) {
-          throw new Error(
-            `Invalid TENABLE_HOST_URL entry "${url}": must contain only a protocol, hostname, and optional port (no path, query, or fragment)`
+            `Invalid TENABLE_HOST_URL entry "${url}": must be a complete http(s) URL containing only protocol, hostname, and optional port`
           );
         }
         return parsed.origin;
