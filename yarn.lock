@@ -3806,6 +3806,11 @@
   resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.8.tgz#958b91c991b1867ced318bedea0e215ee050726e"
   integrity sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==
 
+"@types/estree@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.9.tgz#cf3f0e876d7bee15a93ab925b82bf570a3904a24"
+  integrity sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==
+
 "@types/express-serve-static-core@*", "@types/express-serve-static-core@^5.0.0":
   version "5.1.1"
   resolved "https://registry.npmjs.org/@types/express-serve-static-core/-/express-serve-static-core-5.1.1.tgz#1a77faffee9572d39124933259be2523837d7eaa"
@@ -8754,14 +8759,14 @@ eslint-plugin-promise@^7.2.1:
     "@eslint-community/eslint-utils" "^4.4.0"
 
 eslint-plugin-regexp@^3.1.0:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-regexp/-/eslint-plugin-regexp-3.1.1.tgz#da92859fe4470da6980444c088fd4d847eb44735"
-  integrity sha512-MxR5nqoQCtVWmJwia0D2+NlXX1xzdpkslsVOZLEYQ4PQWEaL65PCZXURxaBc3lPnkNFpNxzMIRmYVxdl8giXRA==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-regexp/-/eslint-plugin-regexp-3.2.0.tgz#c1e7f8479623c347e79bbbede2456a653d3230b4"
+  integrity sha512-4yq47CnLxyfHFKJEo5kvNaiJ0aDtBxSJWk4M2LiamplUXdWxdlzDYqImb/ZVCp+2BqkQjBAmw4Xc07Q8SXVDZg==
   dependencies:
     "@eslint-community/eslint-utils" "^4.2.0"
     "@eslint-community/regexpp" "^4.11.0"
     comment-parser "^1.4.0"
-    jsdoc-type-pratt-parser "^7.0.0"
+    jsdoc-type-pratt-parser "^9.0.0"
     refa "^0.12.1"
     regexp-ast-analysis "^0.7.1"
     scslre "^0.3.0"
@@ -11585,10 +11590,12 @@ jscodeshift@^0.11.0:
     temp "^0.8.1"
     write-file-atomic "^2.3.0"
 
-jsdoc-type-pratt-parser@^7.0.0:
-  version "7.2.0"
-  resolved "https://registry.npmjs.org/jsdoc-type-pratt-parser/-/jsdoc-type-pratt-parser-7.2.0.tgz#0a29c27bd4e01e85e4617625e34e797be1486a9b"
-  integrity sha512-dh140MMgjyg3JhJZY/+iEzW+NO5xR2gpbDFKHqotCmexElVntw7GjWjt511+C/Ef02RU5TKYrJo/Xlzk+OLaTw==
+jsdoc-type-pratt-parser@^9.0.0:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/jsdoc-type-pratt-parser/-/jsdoc-type-pratt-parser-9.1.2.tgz#8b3488a0ec1d6141c1252542c0abfd2587e16336"
+  integrity sha512-9EXymowgk1mb9RY1VxuwKc+AhaxfBk2CV0dWxgGM+l5RURTtiUoAx7MlKwcsiVcEXK5HEPa7FeH/tsRpqjEPRg==
+  dependencies:
+    "@types/estree" "^1.0.9"
 
 jsdom@^30.0.1:
   version "30.0.1"
