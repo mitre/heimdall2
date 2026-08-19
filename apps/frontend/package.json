@@ -41,7 +41,7 @@
     "@types/file-saver": "^2.0.1",
     "@types/lodash": "^4.14.161",
     "@types/luxon": "^3.3.1",
-    "@types/node": "^25.0.0",
+    "@types/node": "^26.0.0",
     "@types/prismjs": "^1.16.1",
     "@types/sanitize-html": "^2.3.1",
     "@types/vuelidate": "^0.7.13",
@@ -95,7 +95,7 @@
     "@vitejs/plugin-vue2": "^2.3.4",
     "@vue/test-utils": "^1.0.3",
     "esbuild": "^0.28.0",
-    "jsdom": "^29.0.0",
+    "jsdom": "^30.0.1",
     "vite-svg-loader": "^5.1.0",
     "vitest": "^4.0.18"
   },
