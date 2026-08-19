@@ -74,7 +74,7 @@ export class ConfigService {
     return this.appConfig.getSplunkHostUrl();
   }
 
-  getTenableHostUrl(): string {
+  getTenableHostUrl(): string[] {
     return this.appConfig.getTenableHostUrl();
   }
 

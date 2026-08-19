@@ -159,6 +159,8 @@ export class TenableUtil {
           if (this.isServer) {
             if (error.response?.data?.code === 'INVALID_HOST_URL') { // Custom set in the backend
               rejectMsg = (error.response?.data?.message ?? 'Tenable host URL to IP address resolution failed');
+            } else if (error.response?.data?.code === 'HOST_NOT_ALLOWED') { // Custom set in the backend
+              rejectMsg = (error.response?.data?.message ?? 'Tenable host URL is not in the configured allowlist');
             } else if (error.response?.data?.message) {
               rejectMsg = this.getCSPErrorMsg(this.hostConfig.host_url, TENABLE_HOST_URL)
             } else {
@@ -173,7 +175,7 @@ export class TenableUtil {
             'Unauthorized (missing or not accepted credentials): ' +
             (error.response?.data?.message ?? error.message);
         } else if (error.status == 404) {
-          if (this.isServer && !TENABLE_HOST_URL) {
+          if (this.isServer && !TENABLE_HOST_URL.length) {
             rejectMsg = TENABLE_CSP_NOT_SET;
           } else {
             rejectMsg = `Network Error -> ${DEFAULT_REJECT_MSG}`;    
@@ -208,10 +210,10 @@ export class TenableUtil {
       if (error.code == 'ERR_NETWORK') {
         // Check if the tenable url was provided - Content Security Policy (CSP)
         const corsReject = `Possible access blocked by CORS or connection refused by the host: ${error.config.baseURL}. See Help for additional instructions. Received Error: ${error.message}`;
-        if (TENABLE_HOST_URL) {
-          // If the URL is listed in the allows domains
+        if (TENABLE_HOST_URL.length) {
+          // If the URL is listed in the allowed domains
           // (.env variable TENABLE_HOST_URL) check if they match
-          if (!error.config.baseURL.includes(TENABLE_HOST_URL)) {
+          if (!TENABLE_HOST_URL.some((url) => error.config.baseURL.includes(url))) {
             if (error.config.baseURL) {
               rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL)
             } else {
@@ -375,11 +377,11 @@ export class TenableUtil {
    * Generates an error message indicating a Content Security Policy (CSP) violation.
    *
    * @param baseURL - The hostname that triggered the CSP violation.
-   * @param tenableUrl - The hostname allowed by the CSP.
+   * @param tenableUrls - The hostnames allowed by the CSP.
    * @returns A string describing the CSP violation, including the offending and allowed hostnames.
    */
-  getCSPErrorMsg(baseURL: string, tenableUrl: string): string {
-    return `Hostname: ${baseURL?.trim() || 'Unknown host'} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl?.trim() || 'Host not set'}`;
+  getCSPErrorMsg(baseURL: string, tenableUrls: string[]): string {
+    return `Hostname: ${baseURL?.trim() || 'Unknown host'} violates the Content Security Policy (CSP). The host(s) allowed by the CSP: ${tenableUrls.length ? tenableUrls.join(', ') : 'Host not set'}`;
   }
 
 }
