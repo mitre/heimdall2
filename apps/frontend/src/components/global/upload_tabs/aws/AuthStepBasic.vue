@@ -2,6 +2,8 @@
   <v-stepper-content step="1">
     <v-form v-model="valid">
       <v-text-field
+        id="access_token"
+        data-cy="s3AccessToken"
         :value="accessToken"
         label="User Account Access Token"
         lazy-validation="lazy"
@@ -9,6 +11,8 @@
         @input="change_access_token"
       />
       <v-text-field
+        id="secret_token"
+        data-cy="s3SecretToken"
         :value="secretToken"
         label="User Account Secret Token"
         type="password"
