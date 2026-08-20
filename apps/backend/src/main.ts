@@ -6,9 +6,9 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import multer from 'multer';
 import winston from 'winston';
-import passport = require('passport');
-import postgresSessionStore = require('connect-pg-simple');
-import session = require('express-session');
+import passport from 'passport';
+import postgresSessionStore from 'connect-pg-simple';
+import session from 'express-session';
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
 import {generateDefault} from './token/token.providers';
@@ -30,6 +30,7 @@ const logger = winston.createLogger({
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+  configService.validateRegistrationDisabled();
   app.set('query parser', 'extended');
   app.enableShutdownHooks();
   app.use(helmet());
