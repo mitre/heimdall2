@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-report-level="administrator">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
@@ -264,7 +264,6 @@ html { scrollbar-gutter: stable; overflow-y: scroll; }
 /* === Layout === */
 .report-header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--pico-muted-border-color); padding-top: 1.5rem; padding-bottom: .5rem; margin-bottom: 0; }
 .report-header > hgroup { flex: 1; }
-.report-header > .btn-icon { flex: none; margin-top: .5rem; }
 /* .report-nav removed — using Blades native nav + nav[aria-label] overrides */
 .report-filters { background: var(--report-stripe-bg); border-bottom: 1px solid var(--pico-muted-border-color); padding: .5rem .75rem; }
 [data-jump-to="top"] { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 5; padding: .4rem .7rem; border-radius: .5rem; background: var(--report-stripe-bg); border: 1px solid var(--report-border); font-size: .8rem; text-decoration: none; opacity: .6; transition: opacity .15s; }
@@ -356,11 +355,21 @@ pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
 [data-theme="dark"] .shiki span { color: var(--shiki-dark) !important; }
 
 /* === Nav overrides (Blades nav provides flex layout natively) === */
-nav[aria-label="Report controls"] { position: sticky; top: 0; z-index: 10; background: var(--report-cap-bg); border-bottom: 1px solid var(--pico-muted-border-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: .35rem .75rem; }
+nav[aria-label="Report controls"] { position: sticky; top: 0; z-index: 10; background: var(--report-cap-bg); border-bottom: 1px solid var(--pico-muted-border-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: .35rem .75rem; flex-wrap: wrap; }
 nav[aria-label="Report controls"] form[role="search"] { margin: 0; }
 nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
-.btn-icon { margin: 0; padding: .3rem .5rem; font-size: .9rem; width: auto; }
+.btn-icon { margin: 0; padding: .25rem .4rem; font-size: .85rem; width: auto; line-height: 1; }
+.btn-icon svg { display: block; }
+#theme-toggle .icon-sun { display: none; }
+#theme-toggle .icon-moon { display: block; }
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) #theme-toggle .icon-sun { display: block; }
+  :root:not([data-theme]) #theme-toggle .icon-moon { display: none; }
+}
+[data-theme="dark"] #theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] #theme-toggle .icon-moon { display: none; }
 .mobile-only { display: none; }
+.search-hint { width: 100%; opacity: .5; font-size: .65rem; text-align: right; margin: 0; padding: .1rem 0 0; }
 
 /* === Filter chips (M3 filter chip pattern + SonarQube counts) === */
 .filtered-out { display: none; }
@@ -403,6 +412,8 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
   /* Nav: Blades handles layout, just ensure 44px touch targets + static positioning */
   .btn-icon { min-width: 2.75rem; min-height: 2.75rem; }
   nav[aria-label="Report controls"] { position: static; }
+  nav[aria-label="Report controls"] > ul:first-child { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  nav[aria-label="Report controls"] > ul:first-child::-webkit-scrollbar { display: none; }
 
   /* Chips: 44px touch targets on mobile */
   .chip { min-height: 2.75rem; padding: .5rem .8rem; }
@@ -419,18 +430,41 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
   #profile-info td code { overflow-wrap: anywhere; text-align: right; }
 }
 
+/* === View-level toggle — Exec/Mgr/Admin CSS visibility === */
+.header-actions { display: flex; gap: .35rem; align-items: stretch; flex: none; margin-top: .5rem; }
+.header-actions > .btn-icon { padding: .25rem .4rem; font-size: .7rem; }
+.header-actions > .btn-icon svg { width: 14px; height: 14px; }
+.view-toggle { display: flex; gap: 0; align-items: stretch; }
+.view-toggle button { border-radius: 0; font-size: .7rem; padding: .25rem .5rem; margin: 0; line-height: 1; }
+.view-toggle button:first-child { border-radius: .25rem 0 0 .25rem; }
+.view-toggle button:last-child { border-radius: 0 .25rem .25rem 0; }
+.view-toggle button[aria-current="true"] { background: var(--pico-primary-background); border-color: var(--pico-primary); color: var(--pico-primary-inverse); }
+[data-report-level="executive"] [data-report-section="controls"] { display: none !important; }
+[data-report-level="executive"] #filter-bar { display: none !important; }
+[data-report-level="executive"] nav[aria-label="Report controls"] form[role="search"] { display: none !important; }
+[data-report-level="executive"] #nav-filter-toggle { display: none !important; }
+[data-report-level="manager"] [data-report-section="code"] { display: none !important; }
+
 /* === Corrected @media print — ADR §9.2 === */
 @media print {
-  /* Force light — beats Blades data-theme dark specificity */
-  :root, :root[data-theme="dark"], :root[data-theme="light"] { color-scheme: light !important; }
-  html, body { background: var(--pico-contrast-inverse, #fff) !important; color: var(--pico-contrast, #000) !important; }
+  /* Force light — JS beforeprint removes data-theme so Blades variables
+     resolve to their light-mode :root values. These overrides handle the
+     CSS-only fallback (JS disabled + prefers-color-scheme: dark). */
+  :root, :root[data-theme="dark"], :root[data-theme="light"] {
+    color-scheme: light !important;
+    --report-emphasis-rgb: 0, 0, 0;
+    --report-print-bg: #fff;
+    --report-print-fg: #000;
+  }
+  html, body { background: var(--report-print-bg) !important; color: var(--report-print-fg) !important; }
 
   /* Print backgrounds (inherited from :root) */
   :root { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
   /* Reveal closed <details> — CSS fallback; JS beforeprint handler is primary (n3v.12) */
   details::details-content { content-visibility: visible !important; }
-  summary { cursor: default; }
+  summary { cursor: default; list-style: none; }
+  summary::marker, summary::-webkit-details-marker { display: none; }
 
   /* Un-defer lazy controls */
   article.control { content-visibility: visible !important; contain-intrinsic-size: auto !important; }
@@ -449,10 +483,28 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
 
   /* Hide interactive chrome */
   nav, .no-print, #filter-bar, button, [role="button"] { display: none !important; }
+  .profile-toggle { display: none !important; }
+  td:has(.profile-toggle) { display: none !important; }
+  th:first-child:empty { display: none !important; }
 
   /* Expand link URLs */
   a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 90%; color: var(--print-muted); word-break: break-all; }
   a[href^="#"]::after, a[href^="mailto:"]::after { content: ""; }
+
+  /* Shiki: force light theme in print (override dark mode vars) */
+  pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
+  .shiki span { color: var(--shiki-default, inherit) !important; }
+
+  /* Status bar: preserve colors on color printers + B&W fallback borders */
+  .bar-seg { -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid rgba(0,0,0,.3); }
+
+  /* Profile Info: force table layout in print (override mobile stack-to-card) */
+  #profile-info table { display: table; }
+  #profile-info thead { display: table-header-group; position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+  #profile-info tbody { display: table-row-group; }
+  #profile-info tr { display: table-row; border: none; border-radius: 0; margin-bottom: 0; padding: 0; }
+  #profile-info td { display: table-cell; }
+  #profile-info td::before { content: none; }
 
   /* Cards */
   article { box-shadow: none !important; border: 1px solid var(--print-border); }
@@ -481,7 +533,15 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
         <h1>Heimdall Administrator Report</h1>
         <p>Self-contained security compliance report</p>
       </hgroup>
-      <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme" data-tooltip="Toggle light/dark theme" data-placement="bottom">&#9788;/&#9790;</button>
+      <div class="header-actions">
+        <div role="group" aria-label="Report detail level" class="view-toggle">
+          <button type="button" class="outline" data-view-level="executive" data-tooltip="Summary only">Exec</button>
+          <button type="button" class="outline" data-view-level="manager" data-tooltip="Controls + test results">Mgr</button>
+          <button type="button" class="outline" data-view-level="administrator" aria-current="true" data-tooltip="Full report with code">Admin</button>
+        </div>
+        <button type="button" class="outline btn-icon" id="btn-print" aria-label="Print or save as PDF" data-tooltip="Print / PDF" data-placement="bottom"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+        <button type="button" class="contrast btn-icon" id="theme-toggle" aria-label="Toggle light/dark theme" data-tooltip="Toggle theme" data-placement="bottom"><svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+      </div>
     </header>
 
     <nav class="no-print" aria-label="Report controls">
@@ -494,6 +554,7 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
         <li><form role="search"><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title"></form></li>
         <li><button class="btn-icon mobile-only" id="nav-filter-toggle" aria-label="Toggle filters" aria-expanded="false">&#9776;</button></li>
       </ul>
+      <small class="search-hint">Search: type terms + Enter &middot; <code>"quotes"</code> for phrases &middot; multiple terms use AND logic</small>
     </nav>
     <div class="no-print report-filters" id="filter-bar" aria-label="Control filters" hidden>
       <div role="group" aria-label="Filter by status">
@@ -595,10 +656,52 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
   </details>
 </section>
 
-      <section id="file-1" aria-labelledby="file-1-h">
+      <section id="file-1" aria-labelledby="file-1-h" data-report-section="controls">
         <details open>
           <summary><h2 id="file-1-h" style="display:inline;">sonarqube-hdf.json</h2></summary>
-          <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High" data-families="SI">
+          <article class="control" id="javascript:S2819" data-status="Failed" data-severity="High" data-families="SI" data-search="javascript:s2819 origins should be verified during cross-origin communications browsers allow message exchanges between window objects of
+different origins.
+because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:
+
+   when sending message with postmessage method, the identity’s receiver should be defined (the wildcard keyword (*) should not be
+  used). 
+   when receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. 
+
+noncompliant code example
+when sending message:
+
+var iframe = document.getelementbyid(&#34;testiframe&#34;);
+iframe.contentwindow.postmessage(&#34;secret&#34;, &#34;*&#34;); // noncompliant: * is used
+
+when receiving message:
+
+window.addeventlistener(&#34;message&#34;, function(event) { // noncompliant: no checks are done on the origin property.
+      console.log(event.data);
+ });
+
+compliant solution
+when sending message:
+
+var iframe = document.getelementbyid(&#34;testsecureiframe&#34;);
+iframe.contentwindow.postmessage(&#34;hello&#34;, &#34;https://secure.example.com&#34;); // compliant
+
+when receiving message:
+
+window.addeventlistener(&#34;message&#34;, function(event) {
+
+  if (event.origin !== &#34;http://example.org&#34;) // compliant
+    return;
+
+  console.log(event.data)
+});
+
+see
+
+   owasp top 10 2021 category a1 - broken access control 
+   owasp top 10 2017 category a3 -
+  broken authentication and session management 
+   developer.mozilla.org - postmessage api 
+ si-11 cci-001312">
   <details>
     <summary><span class="badge status--failed"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg> Failed</span>
       <span class="badge sev--high"><svg style="width:24px; height:24px" viewBox="0 0 24 24" role="img" aria-hidden="true"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/></svg> High</span>
@@ -744,7 +847,8 @@ window.addEventListener("message", function(event) {
       <dt>Nist Controls</dt>
       <dd>SI-11</dd>
     </dl>
-    <figure>
+
+    <figure data-report-section="code">
       <figcaption>Source Code</figcaption>
       <pre class="shiki shiki-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8" tabindex="0"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">=========================================================</span></span>
 <span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># Profile name: SonarQube Scan</span></span>
@@ -772,7 +876,7 @@ window.addEventListener("message", function(event) {
   var h = document.documentElement;
   var controls = [].slice.call(document.querySelectorAll('article.control'));
   var total = controls.length;
-  var activeStatus = {}, activeSeverity = {}, activeFamilies = {}, searchTerm = '';
+  var activeStatus = {}, activeSeverity = {}, activeFamilies = {};
   var countEl = document.getElementById('filter-count');
   var tokensEl = document.getElementById('active-tokens');
   var clearBtn = document.getElementById('btn-clear-filters');
@@ -781,13 +885,25 @@ window.addEventListener("message", function(event) {
   var familyTrigger = document.getElementById('nist-family-trigger');
   var familyList = document.getElementById('nist-family-list');
   var debounceTimer;
+  var searchTerms = [];
+
+  function parseQuery(q) {
+    var terms = [];
+    var re = /"([^"]+)"/g, m;
+    while ((m = re.exec(q)) !== null) terms.push(m[1].toLowerCase());
+    var rest = q.replace(/"[^"]*"/g, '').trim().toLowerCase();
+    if (rest) {
+      rest.split(/\s+/).forEach(function(t) { if (t) terms.push(t); });
+    }
+    return terms;
+  }
 
   function applyFilters() {
     var visible = 0;
     var hasStatus = Object.keys(activeStatus).length > 0;
     var hasSeverity = Object.keys(activeSeverity).length > 0;
     var hasFamily = Object.keys(activeFamilies).length > 0;
-    var q = searchTerm.toLowerCase();
+    var allSearch = searchTerms.concat(searchInput ? parseQuery(searchInput.value) : []);
     for (var i = 0; i < controls.length; i++) {
       var c = controls[i];
       var st = c.getAttribute('data-status');
@@ -801,14 +917,14 @@ window.addEventListener("message", function(event) {
         for (var j = 0; j < fams.length; j++) { if (activeFamilies[fams[j]]) { match = true; break; } }
         if (!match) show = false;
       }
-      if (show && q) {
-        var text = (c.getAttribute('id') + ' ' + c.textContent).toLowerCase();
-        if (text.indexOf(q) === -1) show = false;
+      if (show && allSearch.length) {
+        var s = c.dataset.search || '';
+        for (var ti = 0; ti < allSearch.length; ti++) { if (s.indexOf(allSearch[ti]) === -1) { show = false; break; } }
       }
       c.classList.toggle('filtered-out', !show);
       if (show) visible++;
     }
-    var hasAny = hasStatus || hasSeverity || hasFamily || q;
+    var hasAny = hasStatus || hasSeverity || hasFamily || allSearch.length;
     if (countEl) countEl.textContent = hasAny ? visible + ' of ' + total + ' controls' : total + ' controls';
     var countForStatus = {}, countForSeverity = {}, countForFamily = {};
     for (var k = 0; k < controls.length; k++) {
@@ -818,7 +934,7 @@ window.addEventListener("message", function(event) {
       var cfams = (ck.getAttribute('data-families') || '').split(',');
       var passSev = !hasSeverity || activeSeverity[csv];
       var passFam = !hasFamily || cfams.some(function(f) { return activeFamilies[f]; });
-      var passQ = !q || (ck.getAttribute('id') + ' ' + ck.textContent).toLowerCase().indexOf(q) !== -1;
+      var passQ = !allSearch.length || allSearch.every(function(t) { return (ck.dataset.search || '').indexOf(t) !== -1; });
       if (passSev && passFam && passQ) countForStatus[cst] = (countForStatus[cst] || 0) + 1;
       var passSt = !hasStatus || activeStatus[cst];
       if (passSt && passFam && passQ) countForSeverity[csv] = (countForSeverity[csv] || 0) + 1;
@@ -843,9 +959,10 @@ window.addEventListener("message", function(event) {
     Object.keys(activeStatus).forEach(function(s) { parts.push('<button class="active-token" data-remove-status="' + s + '">&times; ' + s + '</button>'); });
     Object.keys(activeSeverity).forEach(function(s) { parts.push('<button class="active-token" data-remove-severity="' + s + '">&times; ' + s + '</button>'); });
     Object.keys(activeFamilies).forEach(function(f) { parts.push('<button class="active-token" data-remove-family="' + f + '">&times; ' + f + '</button>'); });
+    searchTerms.forEach(function(t) { parts.push('<button class="active-token" data-remove-search="' + t + '">&times; ' + t + '</button>'); });
     tokensEl.innerHTML = parts.join('');
     tokensEl.hidden = parts.length === 0;
-    if (clearBtn) clearBtn.hidden = parts.length === 0 && !searchTerm;
+    if (clearBtn) clearBtn.hidden = parts.length === 0;
   }
 
   function toggleChip(btn, map, key) {
@@ -870,9 +987,39 @@ window.addEventListener("message", function(event) {
     if (rv) { var k2 = rv.getAttribute('data-remove-severity'); delete activeSeverity[k2]; var c2 = document.querySelector('.chip[data-filter-severity="' + k2 + '"]'); if (c2) c2.removeAttribute('aria-current'); applyFilters(); return; }
     var rf = e.target.closest ? e.target.closest('[data-remove-family]') : null;
     if (rf) { var fk = rf.getAttribute('data-remove-family'); delete activeFamilies[fk]; var cb = document.querySelector('#nist-family-list input[value="' + fk + '"]'); if (cb) cb.checked = false; applyFilters(); return; }
+    var rq = e.target.closest ? e.target.closest('[data-remove-search]') : null;
+    if (rq) { var term = rq.getAttribute('data-remove-search'); searchTerms = searchTerms.filter(function(t) { return t !== term; }); if (searchInput) searchInput.value = searchTerms.map(function(t) { return t.indexOf(' ') !== -1 ? '"' + t + '"' : t; }).join(' '); applyFilters(); return; }
   });
 
-  if (searchInput) searchInput.addEventListener('input', function() { clearTimeout(debounceTimer); debounceTimer = setTimeout(function() { searchTerm = searchInput.value; applyFilters(); }, 200); });
+  var committing = false;
+
+  function commitSearch() {
+    committing = true;
+    var newTerms = parseQuery(searchInput.value);
+    if (newTerms.length) {
+      newTerms.forEach(function(t) { if (searchTerms.indexOf(t) === -1) searchTerms.push(t); });
+      searchInput.value = '';
+    }
+    committing = false;
+    applyFilters();
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      if (committing) return;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function() { applyFilters(); }, 200);
+    });
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); clearTimeout(debounceTimer); commitSearch(); }
+    });
+    searchInput.addEventListener('blur', function() {
+      clearTimeout(debounceTimer);
+      if (searchInput.value.trim()) commitSearch();
+    });
+    var searchForm = searchInput.closest('form');
+    if (searchForm) searchForm.addEventListener('submit', function(e) { e.preventDefault(); });
+  }
 
   if (familyList) {
     var cbs = familyList.querySelectorAll('input[type="checkbox"]');
@@ -896,7 +1043,7 @@ window.addEventListener("message", function(event) {
   });
 
   if (clearBtn) clearBtn.addEventListener('click', function() {
-    activeStatus = {}; activeSeverity = {}; activeFamilies = {}; searchTerm = '';
+    activeStatus = {}; activeSeverity = {}; activeFamilies = {}; searchTerms = [];
     if (searchInput) searchInput.value = '';
     document.querySelectorAll('.chip[aria-current]').forEach(function(c) { c.removeAttribute('aria-current'); });
     document.querySelectorAll('#nist-family-list input').forEach(function(cb) { cb.checked = false; });
@@ -907,8 +1054,20 @@ window.addEventListener("message", function(event) {
 
   var expandBtn = document.getElementById('btn-expand-all');
   var collapseBtn = document.getElementById('btn-collapse-all');
-  if (expandBtn) expandBtn.addEventListener('click', function() { controls.forEach(function(c) { if (!c.classList.contains('filtered-out')) { var d = c.querySelector('details'); if (d) d.open = true; } }); });
-  if (collapseBtn) collapseBtn.addEventListener('click', function() { controls.forEach(function(c) { var d = c.querySelector('details'); if (d) d.open = false; }); });
+  if (expandBtn) expandBtn.addEventListener('click', function() { [].slice.call(document.querySelectorAll('#main details')).forEach(function(d) { var parent = d.closest('.filtered-out'); if (!parent) d.open = true; }); });
+  if (collapseBtn) collapseBtn.addEventListener('click', function() { [].slice.call(document.querySelectorAll('#main details')).forEach(function(d) { d.open = false; }); });
+
+  var viewBtns = [].slice.call(document.querySelectorAll('[data-view-level]'));
+  viewBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      viewBtns.forEach(function(b) { b.removeAttribute('aria-current'); });
+      btn.setAttribute('aria-current', 'true');
+      h.setAttribute('data-report-level', btn.getAttribute('data-view-level'));
+    });
+  });
+
+  var printBtn = document.getElementById('btn-print');
+  if (printBtn) printBtn.addEventListener('click', function() { window.print(); });
 
   var themeBtn = document.getElementById('theme-toggle');
   if (themeBtn) themeBtn.addEventListener('click', function() { h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); });
@@ -921,9 +1080,9 @@ window.addEventListener("message", function(event) {
     window.addEventListener('resize', function() { if (window.innerWidth > 768) { filterBar.hidden = false; filterToggle.setAttribute('aria-expanded', 'true'); } });
   }
 
-  var savedOpen = [];
-  function beforePrint() { savedOpen = []; controls.forEach(function(c) { var d = c.querySelector('details'); if (d) { savedOpen.push({el: d, was: d.open}); d.open = true; } }); }
-  function afterprint() { savedOpen.forEach(function(s) { s.el.open = s.was; }); savedOpen = []; }
+  var savedOpen = [], savedTheme = null;
+  function beforePrint() { savedOpen = []; savedTheme = h.getAttribute('data-theme'); h.removeAttribute('data-theme'); [].slice.call(document.querySelectorAll('details')).forEach(function(d) { savedOpen.push({el: d, was: d.open}); d.open = true; }); }
+  function afterprint() { savedOpen.forEach(function(s) { s.el.open = s.was; }); savedOpen = []; if (savedTheme) h.setAttribute('data-theme', savedTheme); savedTheme = null; }
   window.addEventListener('beforeprint', beforePrint);
   window.addEventListener('afterprint', afterprint);
   if (window.matchMedia) { var mql = window.matchMedia('print'); if (mql.addEventListener) mql.addEventListener('change', function(e) { if (e.matches) beforePrint(); else afterprint(); }); }
