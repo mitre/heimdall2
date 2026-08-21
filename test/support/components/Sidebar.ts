@@ -1,6 +1,6 @@
 export default class Sidebar {
   openClose(): void {
-    cy.get('[data-cy=openSidebar]').click({force: true});
+    cy.get('[data-cy=openSidebar]').click({ force: true });
   }
 
   save(name: string): void {

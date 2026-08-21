@@ -1,6 +1,6 @@
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  LOGIN_AUTHENTICATION
+  LOGIN_AUTHENTICATION,
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
 import GroupPage from '../support/pages/GroupPage';
@@ -44,7 +44,7 @@ context('Groups', () => {
       groupPage.createGroup(groupName3);
       groupPage.deleteGroup(groupName3);
       toastVerifier.toastTextContains(
-        `Successfully deleted group ${groupName3}`
+        `Successfully deleted group ${groupName3}`,
       );
       dataTableVerifier.verifyTextPresent('No groups match current selection.');
     });

@@ -1,7 +1,7 @@
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
+  CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
 } from '../../apps/backend/test/constants/users-test.constant';
 import RegistrationPage from '../support/pages/RegistrationPage';
 import RegistrationVerifier from '../support/verifiers/RegistrationPageVerifier';
@@ -24,7 +24,7 @@ context('Registration', () => {
       registrationVerifier.registerFormPresent();
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       toastVerifier.toastTextContains(
-        'You have successfully registered, please sign in'
+        'You have successfully registered, please sign in',
       );
     });
 
@@ -44,14 +44,14 @@ context('Registration', () => {
       });
 
       registrationPage.registerNoSubmit(
-        CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD
+        CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
       );
       registrationVerifier.registerButtonDisabled();
     });
 
     it('rejects mismatching passwords', () => {
       registrationPage.registerNoSubmit(
-        CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
+        CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
       );
       registrationVerifier.registerButtonDisabled();
     });

@@ -1,8 +1,8 @@
 export default class SplunkPage {
   splunkLogin(user: {
-    username: string;
-    password: string;
     hostname: string;
+    password: string;
+    username: string;
   }): void {
     cy.get('[data-cy=splunkusername]').clear();
     cy.get('[data-cy=splunkusername]').type(user.username);

@@ -1,6 +1,6 @@
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  LOGIN_AUTHENTICATION
+  LOGIN_AUTHENTICATION,
 } from '../../apps/backend/test/constants/users-test.constant';
 import Sidebar from '../support/components/Sidebar';
 import UploadModal from '../support/components/UploadModal';
@@ -64,7 +64,7 @@ context('Database results', () => {
       uploadModal.switchToTab('database');
       databasePage.deleteResult(sampleToLoad);
       dataTableVerifier.verifyTextPresent(
-        'No data found - try changing the search filter(s)'
+        'No data found - try changing the search filter(s)',
       );
     });
   });

@@ -13,9 +13,7 @@ beforeEach(function () {
   // This mocks the 'check for updates' functionality to avoid
   // 403 errors on testing
   cy.intercept('https://api.github.com/repos/mitre/heimdall2/tags', [
-    {
-      name: 'v9.9.9'
-    }
+    { name: 'v9.9.9' },
   ]);
 
   databaseHelper.clear();
@@ -29,7 +27,7 @@ Cypress.on('uncaught:exception', (err) => {
   return !err.message.includes('getBoundingClientRect');
 });
 
-Cypress.Commands.add('login', ({email, password}) => {
+Cypress.Commands.add('login', ({ email, password }) => {
   cy.get('input[name=email]').clear();
   cy.get('input[name=email]').type(email);
   cy.get('input[name=password]').clear();

@@ -1,4 +1,4 @@
-import {UpdateUserDto} from '../../../apps/backend/src/users/dto/update-user.dto';
+import { type UpdateUserDto } from '../../../apps/backend/src/users/dto/update-user.dto';
 
 export default class Dropdown {
   openGroupsPage(): void {

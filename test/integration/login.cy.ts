@@ -3,7 +3,7 @@ import {
   BAD_LOGIN_AUTHENTICATION,
   CREATE_USER_DTO_TEST_OBJ,
   LDAP_AUTHENTICATION,
-  LOGIN_AUTHENTICATION
+  LOGIN_AUTHENTICATION,
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
 import LoginPage from '../support/pages/LoginPage';
@@ -73,7 +73,7 @@ context('Login', () => {
       it('fails to authenticate an oidc user with unverified email', () => {
         loginPage.loginOauth('oidc');
         toastVerifier.toastTextContains(
-          'Please verify your name and email with your identity provider before logging into Heimdall.'
+          'Please verify your name and email with your identity provider before logging into Heimdall.',
         );
       });
       it('fails to authenticate an ldap user with invalid credentials', () => {

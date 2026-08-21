@@ -2,7 +2,7 @@ import {
   BAD_SPLUNK_AUTHENTICATION,
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION,
-  SPLUNK_AUTHENTICATION
+  SPLUNK_AUTHENTICATION,
 } from '../../apps/backend/test/constants/users-test.constant';
 import UploadModal from '../support/components/UploadModal';
 import SplunkPage from '../support/pages/SplunkPage';
@@ -39,7 +39,7 @@ context('Splunk', () => {
       splunkTabVerifier.splunkPresent();
       splunkPage.splunkLogin(BAD_SPLUNK_AUTHENTICATION);
       toastVerifier.toastTextContains(
-        'Failed to login - Incorrect username or password'
+        'Failed to login - Incorrect username or password',
       );
     });
   });

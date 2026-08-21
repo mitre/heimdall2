@@ -1,7 +1,7 @@
 import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION,
-  UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD
+  UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
 import UploadModal from '../support/components/UploadModal';
@@ -48,7 +48,7 @@ context('Results', () => {
       resultsPageVerifier.resultsCodeTabCorrect();
     });
 
-    it('it displays severity override indicators when present', () => {
+    it('displays severity override indicators when present', () => {
       // Load sample with severity overrides
       uploadModal.loadSample('Small Profile With Severity Overrides');
       // Open profile info
