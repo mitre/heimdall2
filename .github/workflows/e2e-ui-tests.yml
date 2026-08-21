@@ -28,14 +28,29 @@ jobs:
           - 10389:10389
       splunk:
         image: splunk/splunk
-        volumes:
-          - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
-        ports:
-          - 8089:8089
         env:
           SPLUNK_START_ARGS: --accept-license
           SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
           SPLUNK_PASSWORD: Valid_password!
+        volumes:
+          - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
+        ports:
+          - 8089:8089
+      versitygw:
+        image: versity/versitygw:latest
+        env:
+          ROOT_ACCESS_KEY: myaccesskey
+          ROOT_SECRET_KEY: mysecretkey
+          VGW_CORS_ALLOW_ORIGIN: "*"
+          VGW_PORT: ":7070"
+          VGW_VERSIONING_DIR: /data/versioning
+          VGW_BACKEND: posix
+          VGW_BACKEND_ARGS: /data/s3
+        volumes:
+          - /tmp/vgw-data/s3:/data/s3
+          - /tmp/vgw-data/versioning:/data/versioning
+        ports:
+          - 7070:7070
 
     steps:
       - uses: actions/checkout@v6
@@ -63,6 +78,16 @@ jobs:
           yarn backend sequelize db:create
           yarn backend sequelize db:migrate
           yarn backend sequelize db:seed:all
+
+      - name: Upload sample data for custom S3 endpoints
+        env:
+          AWS_ACCESS_KEY_ID: myaccesskey
+          AWS_SECRET_ACCESS_KEY: mysecretkey
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          aws --endpoint-url http://127.0.0.1:7070 s3 mb s3://mybucket
+          aws --endpoint-url http://127.0.0.1:7070 s3 cp libs/hdf-converters/sample_jsons/nessus_mapper/nessus-hdf-10.0.0.1.json s3://mybucket/nessus-hdf.json
+          aws --endpoint-url http://127.0.0.1:7070 s3 ls s3://mybucket
 
       - name: Cypress run
         uses: cypress-io/github-action@v7
