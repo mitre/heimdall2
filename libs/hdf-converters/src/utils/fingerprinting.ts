@@ -15,6 +15,7 @@ export enum INPUT_TYPES {
   MSFT_SEC_SCORE = 'msft_secure_score',
   NIKTO = 'nikto',
   SARIF = 'sarif',
+  SEMGREP = 'semgrep',
   CYCLONEDX_SBOM = 'cyclonedx_sbom',
   SNYK = 'snyk',
   TRUFFLEHOG = 'trufflehog',
@@ -69,6 +70,14 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   ],
   [INPUT_TYPES.NIKTO]: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
   [INPUT_TYPES.SARIF]: ['$schema', 'version', 'runs'],
+  [INPUT_TYPES.SEMGREP]: [
+    'paths.scanned',
+    'engine_requested',
+    'skipped_rules',
+    'results[0].check_id',
+    'results[0].extra.metadata',
+    'results[0].extra.severity'
+  ],
   [INPUT_TYPES.SNYK]: [
     'projectName',
     'policy',

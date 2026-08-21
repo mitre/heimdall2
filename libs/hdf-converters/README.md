@@ -29,14 +29,15 @@ OHDF Converters supplies several methods to convert various types of security to
 21. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
 22. [**sarif-mapper**] - SARIF JSON file
 23. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
-24. [**snyk-mapper**] - Snyk results JSON file
-25. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
-26. [**splunk-mapper**] - Splunk instance
-27. [**trufflehog-mapper**] - Trufflehog results json file
-28. [**twistlock-mapper**] - Twistlock CLI output file
-29. [**veracode-mapper**] - Veracode Scan Results XML file
-30. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-31. [**zap-mapper**] - OWASP ZAP results JSON
+24. [**semgrep-mapper**] - Semgrep static analysis results JSON file
+25. [**snyk-mapper**] - Snyk results JSON file
+26. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+27. [**splunk-mapper**] - Splunk instance
+28. [**trufflehog-mapper**] - Trufflehog results json file
+29. [**twistlock-mapper**] - Twistlock CLI output file
+30. [**veracode-mapper**] - Veracode Scan Results XML file
+31. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+32. [**zap-mapper**] - OWASP ZAP results JSON
 
 ### NOTICE
 
