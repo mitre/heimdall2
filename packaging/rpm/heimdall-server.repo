@@ -1,0 +1,5 @@
+[heimdall-server]
+name=Heimdall Server - $releasever - $basearch
+baseurl=https://saf.mitre.org/rpms/el$releasever/$basearch/
+enabled=1
+gpgcheck=0

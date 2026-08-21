@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+"""Heimdall CLI — admin tool for Heimdall Server."""
+import os
+import sys
+
+# The CLI module and vendored plac live alongside this script
+cli_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'lib',
+                       'heimdall-cli')
+sys.path.insert(0, cli_dir)
+
+from heimdall_cli import main  # noqa: E402
+main()

@@ -1,0 +1,20 @@
+# SELinux file contexts for heimdall-server
+
+# Systemd unit file
+/usr/lib/systemd/system/heimdall-server\.service   --  gen_context(system_u:object_r:heimdall_server_unit_file_t,s0)
+
+# Config directory
+/etc/heimdall-server(/.*)?                     gen_context(system_u:object_r:heimdall_server_conf_t,s0)
+
+# Application + bundled Node.js binary
+/usr/share/heimdall-server(/.*)?               gen_context(system_u:object_r:heimdall_server_exec_t,s0)
+
+# Data directory
+/var/lib/heimdall-server(/.*)?                 gen_context(system_u:object_r:heimdall_server_var_lib_t,s0)
+
+# Log directory
+/var/log/heimdall-server(/.*)?                 gen_context(system_u:object_r:heimdall_server_log_t,s0)
+
+# Runtime directory
+/run/heimdall-server(/.*)?                     gen_context(system_u:object_r:heimdall_server_var_run_t,s0)
+/var/run/heimdall-server(/.*)?                 gen_context(system_u:object_r:heimdall_server_var_run_t,s0)

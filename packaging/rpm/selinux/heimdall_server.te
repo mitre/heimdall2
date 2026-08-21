@@ -1,0 +1,152 @@
+policy_module(heimdall_server, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+## <desc>
+## <p>
+## Allow heimdall-server to connect to PostgreSQL (TCP port 5432).
+## Enabled by default for localhost database deployments.
+## </p>
+## </desc>
+gen_tunable(heimdall_server_connect_postgresql, true)
+
+type heimdall_server_t;
+type heimdall_server_exec_t;
+init_daemon_domain(heimdall_server_t, heimdall_server_exec_t)
+# Required when systemd unit has NoNewPrivileges=yes
+init_nnp_daemon_domain(heimdall_server_t)
+
+# Systemd unit file label
+type heimdall_server_unit_file_t;
+systemd_unit_file(heimdall_server_unit_file_t)
+
+# /etc/heimdall-server/
+type heimdall_server_conf_t;
+files_config_file(heimdall_server_conf_t)
+
+# /var/lib/heimdall-server/
+type heimdall_server_var_lib_t;
+files_type(heimdall_server_var_lib_t)
+
+# /var/log/heimdall-server/
+type heimdall_server_log_t;
+logging_log_file(heimdall_server_log_t)
+
+# /run/heimdall-server/
+type heimdall_server_var_run_t;
+files_pid_file(heimdall_server_var_run_t)
+
+# Temporary files
+type heimdall_server_tmp_t;
+files_tmp_file(heimdall_server_tmp_t)
+
+type heimdall_server_tmpfs_t;
+files_tmpfs_file(heimdall_server_tmpfs_t)
+
+# TCP port (3000 by default, registered via semanage)
+type heimdall_server_port_t;
+corenet_port(heimdall_server_port_t)
+
+########################################
+#
+# heimdall_server local policy
+#
+
+# Node.js V8 JIT requires execmem (writable+executable pages).
+# Non-negotiable — V8 crashes without it.
+allow heimdall_server_t self:process execmem;
+
+# Socket permissions
+allow heimdall_server_t self:tcp_socket create_stream_socket_perms;
+allow heimdall_server_t self:udp_socket create_stream_socket_perms;
+allow heimdall_server_t self:unix_stream_socket { create_stream_socket_perms connectto };
+allow heimdall_server_t self:unix_dgram_socket create_socket_perms;
+allow heimdall_server_t self:fifo_file rw_fifo_file_perms;
+
+# Netlink for DNS/network queries
+allow heimdall_server_t self:netlink_route_socket { create bind getattr nlmsg_read };
+
+# Bind to heimdall_server_port_t (labeled via semanage port)
+allow heimdall_server_t heimdall_server_port_t:tcp_socket { name_bind name_connect };
+corenet_tcp_bind_generic_node(heimdall_server_t)
+
+# Config files: /etc/heimdall-server/
+manage_dirs_pattern(heimdall_server_t, heimdall_server_conf_t, heimdall_server_conf_t)
+manage_files_pattern(heimdall_server_t, heimdall_server_conf_t, heimdall_server_conf_t)
+
+# Data: /var/lib/heimdall-server/
+manage_dirs_pattern(heimdall_server_t, heimdall_server_var_lib_t, heimdall_server_var_lib_t)
+manage_files_pattern(heimdall_server_t, heimdall_server_var_lib_t, heimdall_server_var_lib_t)
+manage_lnk_files_pattern(heimdall_server_t, heimdall_server_var_lib_t, heimdall_server_var_lib_t)
+files_var_lib_filetrans(heimdall_server_t, heimdall_server_var_lib_t, { dir file })
+
+# Logs: /var/log/heimdall-server/
+manage_dirs_pattern(heimdall_server_t, heimdall_server_log_t, heimdall_server_log_t)
+manage_files_pattern(heimdall_server_t, heimdall_server_log_t, heimdall_server_log_t)
+logging_log_filetrans(heimdall_server_t, heimdall_server_log_t, { dir file })
+
+# Runtime: /run/heimdall-server/
+manage_dirs_pattern(heimdall_server_t, heimdall_server_var_run_t, heimdall_server_var_run_t)
+manage_files_pattern(heimdall_server_t, heimdall_server_var_run_t, heimdall_server_var_run_t)
+manage_sock_files_pattern(heimdall_server_t, heimdall_server_var_run_t, heimdall_server_var_run_t)
+files_pid_filetrans(heimdall_server_t, heimdall_server_var_run_t, { dir file sock_file })
+
+# Temp files
+manage_dirs_pattern(heimdall_server_t, heimdall_server_tmp_t, heimdall_server_tmp_t)
+manage_files_pattern(heimdall_server_t, heimdall_server_tmp_t, heimdall_server_tmp_t)
+files_tmp_filetrans(heimdall_server_t, heimdall_server_tmp_t, { dir file })
+
+manage_dirs_pattern(heimdall_server_t, heimdall_server_tmpfs_t, heimdall_server_tmpfs_t)
+manage_files_pattern(heimdall_server_t, heimdall_server_tmpfs_t, heimdall_server_tmpfs_t)
+fs_tmpfs_filetrans(heimdall_server_t, heimdall_server_tmpfs_t, { dir file })
+
+# Execute bundled Node.js and native .node modules
+allow heimdall_server_t heimdall_server_exec_t:file { execute execute_no_trans map };
+
+# System access
+sysnet_read_config(heimdall_server_t)
+files_read_etc_files(heimdall_server_t)
+auth_read_passwd(heimdall_server_t)
+miscfiles_read_localization(heimdall_server_t)
+miscfiles_read_generic_certs(heimdall_server_t)
+kernel_read_net_sysctls(heimdall_server_t)
+kernel_read_system_state(heimdall_server_t)
+dev_read_sysfs(heimdall_server_t)
+logging_send_syslog_msg(heimdall_server_t)
+domain_use_interactive_fds(heimdall_server_t)
+
+# Outbound HTTP/HTTPS (OAuth callbacks, external APIs)
+corenet_tcp_connect_http_port(heimdall_server_t)
+corenet_tcp_connect_http_cache_port(heimdall_server_t)
+
+# PostgreSQL — enabled by tunable (default: true)
+tunable_policy(`heimdall_server_connect_postgresql',`
+    corenet_tcp_connect_postgresql_port(heimdall_server_t)
+')
+
+# PostgreSQL UNIX socket (same-host)
+optional_policy(`
+    require {
+        type postgresql_t;
+        type postgresql_var_run_t;
+    }
+    allow heimdall_server_t postgresql_t:unix_stream_socket connectto;
+    allow heimdall_server_t postgresql_var_run_t:sock_file write;
+')
+
+# cgroup access (Node.js diagnostics)
+optional_policy(`
+    require {
+        type cgroup_t;
+    }
+    allow heimdall_server_t cgroup_t:dir search;
+    allow heimdall_server_t cgroup_t:file { open read };
+')
+
+# systemd private tmp
+optional_policy(`
+    systemd_private_tmp(heimdall_server_tmp_t)
+')
