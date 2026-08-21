@@ -471,8 +471,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get can_clear(): boolean {
     // Return if any params not null/empty
-    let result: boolean;
-    result = SearchModule.severityFilter.length > 0
+    let isResult: boolean;
+    isResult = SearchModule.severityFilter.length > 0
       || SearchModule.statusFilter.length > 0
       || SearchModule.controlIdSearchTerms.length > 0
       || SearchModule.codeSearchTerms.length > 0
@@ -486,7 +486,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.filterSnackbar = FilteredDataModule.controls(this.all_filter).length === 0 ? true : false;
 
     // Finally, return our result
-    return result;
+    return isResult;
   }
 
   /**

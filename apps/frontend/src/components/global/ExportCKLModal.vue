@@ -723,12 +723,12 @@ export default class ExportCKLModal extends Vue {
         this.originalProfileTitle.set(originalTitleIndex, name);
       }
       // Get the name value up to the index, replace dashes with spaces
-      newName = name.slice(0, Math.max(0, index)).split('-').join(' ');
+      newName = name.slice(0, Math.max(0, index)).replaceAll('-', ' ');
       // Convert the first letter of each word into uppercase
       newName = newName.replaceAll(/^\w|[A-Z]|\b\w/gv, function (word) {
         return word.toUpperCase();
       });
-      newName = newName + 'Security Technical Implementation Guide';
+      newName += 'Security Technical Implementation Guide';
     }
 
     // Update the file title for the profile being processed

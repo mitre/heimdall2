@@ -93,11 +93,13 @@ export default class AuthStep extends Vue {
       SnackbarModule.failure('The Access Token (key) is required');
       this.$refs.access_Key.focus();
       return;
-    } else if (!this.secretkey) {
+    }
+    if (!this.secretkey) {
       SnackbarModule.failure('The Secret Token (key) is required');
       this.$refs.secret_Key.focus();
       return;
-    } else if (!this.hostname) {
+    }
+    if (!this.hostname) {
       SnackbarModule.failure('The Tenable.Sc URL is required');
       this.$refs.hostname_value.focus();
       return;
@@ -109,7 +111,7 @@ export default class AuthStep extends Vue {
     }
 
     // If the SSL/TLS port is missing add default 443
-    if (!this.hostname.split(':')[2]) {
+    if (!this.hostname.split(':', 3)[2]) {
       this.hostname = `${this.hostname}:443`;
     }
 

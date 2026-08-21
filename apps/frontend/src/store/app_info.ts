@@ -64,12 +64,12 @@ export class AppInfo extends VuexModule implements IAppInfoState {
 
   /** The project name of the repo url, e.g. heimdall-lite */
   get repo_name(): string {
-    return this.repository.split('/')[4];
+    return this.repository.split('/', 5)[4];
   }
 
   /** The username/org part of the repo url, e.g. mitre */
   get repo_org(): string {
-    return this.repository.split('/')[3];
+    return this.repository.split('/', 4)[3];
   }
 
   /** The full app repository url, e.g. "https://github.com/mitre/heimdall-lite" */

@@ -2,7 +2,7 @@
 const fs = require('fs');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const webpack = require('webpack');
-const packageJson = fs.readFileSync('./package.json');
+const packageJson = fs.readFileSync('./package.json', 'utf8');
 const parsed = JSON.parse(packageJson);
 const version = parsed.version || 0;
 const description = parsed.description || '';

@@ -164,11 +164,8 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     const cci = this.control.hdf.wraps.tags.cci;
     if (!cci) {
       return null;
-    } else if (Array.isArray(cci)) {
-      return cci.join(', ');
-    } else {
-      return cci;
     }
+    return Array.isArray(cci) ? cci.join(', ') : cci;
   }
 
   get comments(): string | undefined {
@@ -179,11 +176,8 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     const cwe = this.control.hdf.wraps.tags.cweid;
     if (!cwe) {
       return null;
-    } else if (Array.isArray(cwe)) {
-      return cwe.join(', ');
-    } else {
-      return cwe;
     }
+    return Array.isArray(cwe) ? cwe.join(', ') : cwe;
   }
 
   get details(): Detail[] {

@@ -166,7 +166,7 @@ export class TenableUtil {
           // (.env variable TENABLE_HOST_URL) check if they match
           if (error.config.baseURL.includes(TENABLE_HOST_URL)) {
             // CSP url did match, check for port match - reject appropriately
-            const portNumber = Number.parseInt(this.hostConfig.host_url.split(':')[2]);
+            const portNumber = Number.parseInt(this.hostConfig.host_url.split(':', 3)[2]);
             rejectMsg = portNumber == 443 ? corsReject : `Invalid SSL/TSL port number used: ${portNumber} must be 443.`;
           } else {
             if (error.config.baseURL) {

@@ -17,7 +17,7 @@ export function cleanUpFilename(
       'i',
     );
     cleaned = cleaned.replace(extPattern, '');
-    cleaned = cleaned + targetExtension;
+    cleaned += targetExtension;
   }
 
   return cleaned;

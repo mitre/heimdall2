@@ -239,7 +239,7 @@ export class InspecIntake extends VuexModule {
   @Action
   async detectAndLoadPredefinedJSON() {
     // On page load, check for the flag to load the preloaded JSON file
-    const queryString = globalThis.location.search;
+    const queryString = location.search;
     const urlParams = new URLSearchParams(queryString);
     return urlParams.get('predefinedLoad')?.toLowerCase() === 'true'
       ? axios
@@ -375,15 +375,14 @@ export class InspecIntake extends VuexModule {
             });
           }),
         );
-      } else if (converted) {
-        return this.loadExecJson({
+      }
+      return converted
+        ? this.loadExecJson({
           data: converted,
           filename: filename,
           sourceFormat: typeGuess,
-        });
-      } else {
-        return [];
-      }
+        })
+        : [];
     }
   }
 

@@ -59,8 +59,8 @@ export default class CopyButton extends Vue {
     document.body.append(tempTextArea);
     tempTextArea.focus();
     tempTextArea.select();
-    const successfulReturn = document.execCommand('copy');
-    if (!successfulReturn) {
+    const isSuccessfulReturn = document.execCommand('copy');
+    if (!isSuccessfulReturn) {
       throw new Error(
         'The execCommand returned false, meaning the command is unsupported or disabled',
       );

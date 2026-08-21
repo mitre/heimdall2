@@ -26,9 +26,8 @@ function calculateColor(colorName: string): string {
     const value = (1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2];
     // Parse it as hex, and replace the leading 1 with a #
     return `#${value.toString(16).slice(1)}`;
-  } else {
-    throw new Error(`Error generating color ${colorName}`);
   }
+  throw new Error(`Error generating color ${colorName}`);
 }
 
 @Module({

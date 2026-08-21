@@ -427,21 +427,23 @@ export default class UserModal extends Vue {
   }
 
   getAPIKeys() {
-    if (this.apiKeysEnabled) {
-      this.apiKeyTableLoading = true;
-      axios
-        .create()
-        .get<IApiKey[]>('/apikeys', { params: { userId: this.user.id } })
-        .then(({ data }) => {
-          this.apiKeys = data;
-        })
-        .catch((error) => {
-          if (error.response) {
-            SnackbarModule.failure('Unable to get API Keys');
-          }
-        });
-      this.apiKeyTableLoading = false;
+    if (!this.apiKeysEnabled) {
+      return;
     }
+
+    this.apiKeyTableLoading = true;
+    axios
+      .create()
+      .get<IApiKey[]>('/apikeys', { params: { userId: this.user.id } })
+      .then(({ data }) => {
+        this.apiKeys = data;
+      })
+      .catch((error) => {
+        if (error.response) {
+          SnackbarModule.failure('Unable to get API Keys');
+        }
+      });
+    this.apiKeyTableLoading = false;
   }
 
   mounted() {

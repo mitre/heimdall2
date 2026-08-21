@@ -408,7 +408,7 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   }
 
   createShareLink(item: IEvaluation) {
-    return `${globalThis.location.origin}/results/${item.id}`;
+    return `${location.origin}/results/${item.id}`;
   }
 
   deleteItem(item: IEvaluation) {
@@ -580,13 +580,11 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
     //  Map sorted fields to database names.
     if (field == 'filename' || field == 'createdAt') {
       return [`${field}`, `${order}`];
-    } else if (field == 'groups') {
-      return ['groups', 'name', order];
-    } else if (field == 'evaluationTags') {
-      return ['evaluationTags', 'value', order];
-    } else {
-      return [field, order];
     }
+    if (field == 'groups') {
+      return ['groups', 'name', order];
+    }
+    return field == 'evaluationTags' ? ['evaluationTags', 'value', order] : [field, order];
   }
 
   isEmpty(value: string): boolean {

@@ -273,7 +273,7 @@ export default class ControlTable extends Vue {
     // Controls ascending/descending
     let factor = 1;
     // Whether or not we need to sort
-    let sort = true;
+    let isSort = true;
     // Our comparator function
     let cmp: (a: ListElt, b: ListElt) => number;
 
@@ -316,7 +316,7 @@ export default class ControlTable extends Vue {
         factor = -1;
       }
     } else {
-      sort = false;
+      isSort = false;
     }
 
     // Displays only unviewed controls.
@@ -324,7 +324,7 @@ export default class ControlTable extends Vue {
       items = items.filter(val => !this.viewedControlIds.includes(val.key));
     }
 
-    if (sort === true) {
+    if (isSort === true) {
       items = items.sort((a, b) => cmp(a, b) * factor);
     }
 
@@ -439,13 +439,13 @@ export default class ControlTable extends Vue {
   toggle(key: string) {
     if (this.singleExpand) {
       // Check if key already there
-      const had = this.expanded.includes(key);
+      const isHad = this.expanded.includes(key);
 
       // Clear
       this.expanded = [];
 
       // If key is new, add it
-      if (!had) {
+      if (!isHad) {
         this.expanded.push(key);
         this.jump_to_key(key);
       }

@@ -61,14 +61,11 @@ export default class Sidebar extends mixins(RouteMixin) {
   get active_path() {
     if (this.current_route === 'profiles') {
       return 1;
-    } else if (
-      this.current_route === 'results'
-      || this.current_route === 'compare'
-    ) {
-      return 0;
-    } else {
-      return -1;
     }
+    return this.current_route === 'results'
+      || this.current_route === 'compare'
+      ? 0
+      : -1;
   }
 
   set active_path(id: number) {

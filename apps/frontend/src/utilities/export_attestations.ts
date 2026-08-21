@@ -11,19 +11,15 @@ export function toAttestationXlsx(
   attestations: AttestationData[],
   comments: CommentEntry[],
 ): BlobPart {
-  const rows: Record<string, string>[] = [];
-
-  for (const a of attestations) {
-    rows.push({
-      control_id: a.control_id,
-      explanation: a.explanation,
-      frequency: a.frequency,
-      status: a.status,
-      type: 'attestation',
-      updated: a.updated,
-      updated_by: a.updated_by,
-    });
-  }
+  const rows: Record<string, string>[] = Array.from(attestations, a => ({
+    control_id: a.control_id,
+    explanation: a.explanation,
+    frequency: a.frequency,
+    status: a.status,
+    type: 'attestation',
+    updated: a.updated,
+    updated_by: a.updated_by,
+  }));
 
   for (const c of comments) {
     rows.push({

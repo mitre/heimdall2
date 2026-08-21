@@ -97,7 +97,7 @@ router.beforeEach((to, from, next) => {
       InspecDataModule.hasUnsavedFiles
       && from.path !== to.path
     ) {
-      const discard = await confirm({
+      const isDiscard = await confirm({
         cancelText: 'Stay',
         confirmText: 'Discard',
         message:
@@ -105,7 +105,7 @@ router.beforeEach((to, from, next) => {
           + 'Leaving this page will discard them.',
         title: 'Unsaved Changes',
       });
-      if (!discard) {
+      if (!isDiscard) {
         next(false);
         return;
       }
@@ -122,7 +122,7 @@ router.beforeEach((to, from, next) => {
       && to.params.id !== loadedDatabaseIds
     ) {
       next({
-        path: `/${to.path.split('/')[1]}/${loadedDatabaseIds}`,
+        path: `/${to.path.split('/', 2)[1]}/${loadedDatabaseIds}`,
         replace: true,
       });
       return;

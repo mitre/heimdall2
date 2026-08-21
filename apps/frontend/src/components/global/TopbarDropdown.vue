@@ -154,11 +154,8 @@ export default class TopbarDropdown extends mixins(ServerMixin) {
       return (
         this.userInfo.firstName.charAt(0) + this.userInfo.lastName.charAt(0)
       );
-    } else if (this.userInfo.firstName) {
-      return this.userInfo.firstName.slice(0, 2);
-    } else {
-      return this.userInfo.email.slice(0, 2);
     }
+    return this.userInfo.firstName ? this.userInfo.firstName.slice(0, 2) : this.userInfo.email.slice(0, 2);
   }
 }
 </script>

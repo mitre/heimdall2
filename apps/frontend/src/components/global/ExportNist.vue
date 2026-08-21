@@ -100,7 +100,8 @@ export default class ExportNIST extends Vue {
     // For now just do raw text. Once Mo's nist work is done we can make sure these are well formed
     if (control.rawText) {
       return control.rawText.replaceAll(/\s/gv, '');
-    } else if (control.subSpecifiers.length < 2) {
+    }
+    if (control.subSpecifiers.length < 2) {
       // Too short: abort
       return null;
     } else {
@@ -146,8 +147,8 @@ export default class ExportNIST extends Vue {
       const tags = c.root.hdf.parsedNistTags;
       for (const t of tags) {
         if (
-          !nistControls.some(
-            otherTag => this.format_tag(otherTag) === this.format_tag(t),
+          nistControls.every(
+            otherTag => this.format_tag(otherTag) !== this.format_tag(t),
           )
         ) {
           nistControls.push(t);

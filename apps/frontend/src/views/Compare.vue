@@ -618,7 +618,7 @@ export default class Compare extends Vue {
     a: SourcedContextualizedEvaluation,
     b: SourcedContextualizedEvaluation,
   ) {
-    const field = this.sortControlSetsBy.split('Passthrough Field: ')[1];
+    const field = this.sortControlSetsBy.split('Passthrough Field: ', 2)[1];
     const aPassthroughField = _.get(a.data, `passthrough.${field}`);
     const bPassthroughField = _.get(b.data, `passthrough.${field}`);
     if (
@@ -632,9 +632,11 @@ export default class Compare extends Vue {
         return (aPassthroughField as string).localeCompare(
           bPassthroughField,
         );
-      } else if (typeof aPassthroughField === 'number') {
+      }
+      if (typeof aPassthroughField === 'number') {
         return aPassthroughField - Number(bPassthroughField);
-      } else if (typeof aPassthroughField === 'boolean') {
+      }
+      if (typeof aPassthroughField === 'boolean') {
         return Number(aPassthroughField) - Number(bPassthroughField);
       }
     }

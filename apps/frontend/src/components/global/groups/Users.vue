@@ -82,9 +82,7 @@ export default class Users extends Vue {
   readonly create!: boolean;
 
   @VModel({
-    default(): ISlimUser[] {
-      return [];
-    },
+    default: (): ISlimUser[] => [],
     required: false,
     type: Array,
   })
@@ -120,11 +118,11 @@ export default class Users extends Vue {
 
   // Filter out users that are already in the group from the user search
   get availableUsers(): IVuetifyItems[] {
-    const currentUserIds: string[] = this.currentUsers.map(user => user.id);
+    const currentUserIds = new Set<string>(this.currentUsers.map(user => user.id));
     const users: IVuetifyItems[] = [];
     for (const user of ServerModule.allUsers) {
       if (
-        !currentUserIds.includes(user.id)
+        !currentUserIds.has(user.id)
         && (user.id !== ServerModule.userInfo.id || this.admin || !this.create)
       ) {
         users.push({
@@ -169,20 +167,20 @@ export default class Users extends Vue {
 
   @Emit()
   deleteUserConfirm(): boolean {
-    let saveable = true;
+    let isSaveable = true;
     const userToDelete = this.currentUsers.indexOf(this.getEditedUser());
     if (
       this.currentUsers[userToDelete].groupRole === 'owner'
       && this.numberOfOwners() < 2
     ) {
-      saveable = false;
+      isSaveable = false;
     }
     if (this.editedUserID !== '0') {
       this.currentUsers.splice(userToDelete, 1);
     }
     this.onUpdateGroupUserRole('');
     this.closeActionDialog();
-    return saveable;
+    return isSaveable;
   }
 
   deleteUserDialog(user: ISlimUser): void {
@@ -206,7 +204,7 @@ export default class Users extends Vue {
 
   @Emit()
   onUpdateGroupUserRole(newRole: string) {
-    let saveable = true;
+    let isSaveable = true;
     // If a role is being changed to member, check that there is at least 1 owner.
     const editedUser = this.getEditedUser();
     const userToUpdate = this.currentUsers.indexOf(editedUser);
@@ -217,9 +215,9 @@ export default class Users extends Vue {
     this.currentUsers[userToUpdate] = updatedGroupUser;
 
     if (this.numberOfOwners() < 1) {
-      saveable = false;
+      isSaveable = false;
     }
-    return saveable;
+    return isSaveable;
   }
 }
 </script>

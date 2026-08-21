@@ -26,8 +26,8 @@ describe('confirm_service', () => {
 
     resolve(true);
 
-    const result = await promise;
-    expect(result).toBe(true);
+    const isResult = await promise;
+    expect(isResult).toBe(true);
     expect(confirmDialogState.visible).toBe(false);
   });
 
@@ -39,8 +39,8 @@ describe('confirm_service', () => {
 
     resolve(false);
 
-    const result = await promise;
-    expect(result).toBe(false);
+    const isResult = await promise;
+    expect(isResult).toBe(false);
     expect(confirmDialogState.visible).toBe(false);
   });
 
@@ -78,10 +78,10 @@ describe('confirm_service', () => {
 
     resolve(true);
 
-    const secondResult = await second;
-    expect(secondResult).toBe(true);
+    const isSecondResult = await second;
+    expect(isSecondResult).toBe(true);
 
-    const firstResult = await first;
-    expect(firstResult).toBe(false);
+    const isFirstResult = await first;
+    expect(isFirstResult).toBe(false);
   });
 });

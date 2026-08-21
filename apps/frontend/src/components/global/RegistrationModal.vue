@@ -154,7 +154,7 @@
 
 <script lang="ts">
 import {
-  validatePasswordBoolean,
+  isValidPassword,
   validators,
 } from '@heimdall/password-complexity';
 import Vue from 'vue';
@@ -218,7 +218,7 @@ export default class RegistrationModal extends Vue {
   }
 
   get registrationDisabled(): boolean {
-    return this.$v.$invalid || !validatePasswordBoolean(this.password);
+    return this.$v.$invalid || !isValidPassword(this.password);
   }
 
   login() {

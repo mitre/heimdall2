@@ -239,7 +239,7 @@ export class AnnotationStore extends VuexModule {
     const clone: ExecJSON.Execution = _.cloneDeep(file.evaluation.data);
     const attestations = state.attestations.map(a => ({
       ...a,
-      status: `${a.status}` as `${typeof a.status}`,
+      status: `${a.status}`,
     }));
     return addAttestationToHDF(clone, attestations);
   }

@@ -117,7 +117,7 @@ export default class AuthStep extends Vue {
       index: this.index,
       password: this.password,
       port: Number.parseInt(parsedURL.port) || 8089,
-      scheme: parsedURL.protocol.split(':')[0] || 'https',
+      scheme: parsedURL.protocol.split(':', 1)[0] || 'https',
       username: this.username,
     };
 

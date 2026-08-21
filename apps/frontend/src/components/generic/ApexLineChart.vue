@@ -120,11 +120,8 @@ export default class ApexLineChart extends Vue {
   get y_axis_tick(): number {
     if (this.upperRange < 15) {
       return this.upperRange;
-    } else if (this.upperRange < 50) {
-      return Math.floor(this.upperRange / 5);
-    } else {
-      return Math.floor(this.upperRange / 10);
     }
+    return this.upperRange < 50 ? Math.floor(this.upperRange / 5) : Math.floor(this.upperRange / 10);
   }
 }
 </script>

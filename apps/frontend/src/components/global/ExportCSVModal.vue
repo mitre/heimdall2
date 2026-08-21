@@ -296,10 +296,9 @@ export default class ExportCSVModal extends Vue {
       const root = ctrl.root;
       if (hitIds.has(root.hdf.wraps.id)) {
         continue;
-      } else {
-        hitIds.add(root.hdf.wraps.id);
-        rows.push(this.convertRow(file, root));
       }
+      hitIds.add(root.hdf.wraps.id);
+      rows.push(this.convertRow(file, root));
     }
     return rows;
   }
@@ -385,9 +384,8 @@ export default class ExportCSVModal extends Vue {
           }\r\n\r\n`;
       });
       return result;
-    } else {
-      return '';
     }
+    return '';
   }
 
   showModal() {

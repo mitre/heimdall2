@@ -249,7 +249,7 @@ export function getControlCount(
 export function getControlRunTime(control: ContextualizedControl): number {
   return (
     control.hdf.segments?.reduce(
-      (total: number, segment: {run_time?: number}) => (segment.run_time || 0) + total,
+      (total: number, segment: { run_time?: number }) => (segment.run_time || 0) + total,
       0,
     ) || 0
   );

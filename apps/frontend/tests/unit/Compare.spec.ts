@@ -147,35 +147,34 @@ describe.sequential('Compare', async () => {
         for (const ctrl of Object.values(pairing)) {
           if (ctrl === null) {
             continue;
-          } else {
-            switch (ctrl.root.hdf.status) {
-              case 'Failed': {
-                failed++;
+          }
+          switch (ctrl.root.hdf.status) {
+            case 'Failed': {
+              failed++;
 
-                break;
-              }
-              case 'Not Applicable': {
-                na++;
-
-                break;
-              }
-              case 'Not Reviewed': {
-                nr++;
-
-                break;
-              }
-              case 'Passed': {
-                passed++;
-
-                break;
-              }
-              case 'Profile Error': {
-                pe++;
-
-                break;
-              }
- // No default
+              break;
             }
+            case 'Not Applicable': {
+              na++;
+
+              break;
+            }
+            case 'Not Reviewed': {
+              nr++;
+
+              break;
+            }
+            case 'Passed': {
+              passed++;
+
+              break;
+            }
+            case 'Profile Error': {
+              pe++;
+
+              break;
+            }
+          // No default
           }
         }
       }

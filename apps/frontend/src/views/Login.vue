@@ -106,7 +106,7 @@ export default class Login extends Vue {
   }
 
   get logoffFailure() {
-    const queryString = globalThis.location.search;
+    const queryString = location.search;
     const urlParams = new URLSearchParams(queryString);
     return (
       urlParams.get('logoff')?.toLowerCase() === 'true'
@@ -115,44 +115,45 @@ export default class Login extends Vue {
   }
 
   get logoffSnackbar() {
-    const queryString = globalThis.location.search;
+    const queryString = location.search;
     const urlParams = new URLSearchParams(queryString);
     if (
       !this.logoffFailure
       && urlParams.get('logoff')?.toLowerCase() === 'true'
     ) {
       return true;
-    } else {
-      if (urlParams.get('error')) {
-        // If the token has expired or the user has changed their JWT secret
-        this.logoffMessage = urlParams.get('error') === 'Unauthorized'
-          ? 'Your session was invalid, please sign in again.'
-          : `An error occurred while signing you out: ${urlParams.get(
-            'error',
-          )}`;
-        return true;
-      } else if (
-        urlParams.get('logoff')?.toLowerCase() === 'true'
-        && ServerModule.token !== ''
-      ) {
-        this.logoffMessage
-          = 'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
-        return false;
-      } else {
-        return false;
-      }
     }
+    if (urlParams.get('error')) {
+      // If the token has expired or the user has changed their JWT secret
+      this.logoffMessage = urlParams.get('error') === 'Unauthorized'
+        ? 'Your session was invalid, please sign in again.'
+        : `An error occurred while signing you out: ${urlParams.get(
+          'error',
+        )}`;
+      return true;
+    }
+    if (
+      urlParams.get('logoff')?.toLowerCase() === 'true'
+      && ServerModule.token !== ''
+    ) {
+      this.logoffMessage
+        = 'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
+      return false;
+    }
+    return false;
   }
 
   checkForAuthenticationError() {
-    if (this.$cookies.get('authenticationError')) {
-      SnackbarModule.failure(
-        `Sorry, a problem occurred while signing you in. The reason given was: ${this.$cookies.get(
-          'authenticationError',
-        )}`,
-      );
-      this.$cookies.remove('authenticationError');
+    if (!this.$cookies.get('authenticationError')) {
+      return;
     }
+
+    SnackbarModule.failure(
+      `Sorry, a problem occurred while signing you in. The reason given was: ${this.$cookies.get(
+        'authenticationError',
+      )}`,
+    );
+    this.$cookies.remove('authenticationError');
   }
 
   checkLoggedIn() {

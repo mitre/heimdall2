@@ -193,15 +193,15 @@ export class Evaluation extends VuexModule {
   // Save an evaluation or update it if is already saved.
   @Mutation
   SAVE_EVALUATION(evaluationToSave: IEvaluation) {
-    let found = false;
+    let isFound = false;
     for (const [index, evaluation] of this.allEvaluations.entries()) {
       if (evaluationToSave.id === evaluation.id) {
         this.allEvaluations.splice(index, 1, evaluationToSave);
-        found = true;
+        isFound = true;
         break;
       }
     }
-    if (!found) {
+    if (!isFound) {
       this.allEvaluations.push(evaluationToSave);
     }
   }
@@ -210,15 +210,15 @@ export class Evaluation extends VuexModule {
   // to the paged variable. Update it if is already saved.
   @Mutation
   SAVE_PAGED_EVALUATION(evaluationToSave: IEvaluation) {
-    let found = false;
+    let isFound = false;
     for (const [index, evaluation] of this.pagedEvaluations.entries()) {
       if (evaluationToSave.id === evaluation.id) {
         this.pagedEvaluations.splice(index, 1, evaluationToSave);
-        found = true;
+        isFound = true;
         break;
       }
     }
-    if (!found) {
+    if (!isFound) {
       this.pagedEvaluations.push(evaluationToSave);
     }
   }

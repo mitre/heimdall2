@@ -24,13 +24,13 @@ export class LocalStorageVal<T> {
 
   /** Clears the local storage value */
   clear(): void {
-    globalThis.localStorage.removeItem(this.storageKey);
+    localStorage.removeItem(this.storageKey);
   }
 
   /** Retrieves the currently held item, as resolved by JSON.parse */
   get(): null | T {
     // Fetch the string, failing early if not set
-    const s = globalThis.localStorage.getItem(this.storageKey);
+    const s = localStorage.getItem(this.storageKey);
     if (!s) {
       return null;
     }
@@ -53,7 +53,7 @@ export class LocalStorageVal<T> {
   /** Sets the local storage value to the given value, stringified */
   set(val: T): void {
     const nv = JSON.stringify(val);
-    globalThis.localStorage.setItem(this.storageKey, nv);
+    localStorage.setItem(this.storageKey, nv);
   }
 }
 
@@ -86,13 +86,13 @@ export function compareArrays<T>(
   if (a.length > b.length) {
     // a longer => a after b => return positive
     return 1;
-  } else if (a.length === b.length) {
+  }
+  if (a.length === b.length) {
     // Completely equal
     return 0;
-  } else {
-    // b longer => a before b => Return negative
-    return -1;
   }
+  // b longer => a before b => Return negative
+  return -1;
 }
 
 /** Get description from Array of descriptions or Key/String pair */

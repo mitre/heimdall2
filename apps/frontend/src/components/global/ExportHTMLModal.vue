@@ -78,6 +78,7 @@
 <script lang="ts">
 import { FromHDFToHTMLMapper } from '@mitre/hdf-converters';
 import { saveAs } from 'file-saver';
+import type { ContextualizedControl, ContextualizedProfile } from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
@@ -85,7 +86,6 @@ import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import { cleanUpFilename } from '@/utilities/export_util';
 import type { Filter } from '../../store/data_filters';
 import { InspecDataModule } from '../../store/data_store';
-import type { ContextualizedControl, ContextualizedProfile } from 'inspecjs';
 import { SourcedContextualizedEvaluation } from '../../store/report_intake';
 import { SnackbarModule } from '../../store/snackbar';
 

@@ -210,7 +210,8 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     let cci_tags: string | string[] = this.control.data.tags.cci || '';
     if (!cci_tags) {
       return [];
-    } else if (typeof cci_tags == 'string') {
+    }
+    if (typeof cci_tags == 'string') {
       cci_tags = cci_tags.split(' ');
     }
     return cci_tags.map((cci) => {
@@ -232,7 +233,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   get nistTags(): Tag[] {
     let nistTags = this.control.hdf.rawNistTags;
-    nistTags = nistTags.filter((tag: string) => tag.search(/rev.*\d/iv) === -1);
+    nistTags = nistTags.filter((tag: string) => !/rev.*\d/iv.test(tag));
     return nistTags.map((tag: string) => {
       const nisted = parse_nist(tag);
       let url = '';

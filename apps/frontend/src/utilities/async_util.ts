@@ -6,9 +6,8 @@
 export function defined<T>(x: null | T | undefined): T {
   if (x === null || x === undefined) {
     throw new Error('Value must not be null/undefined');
-  } else {
-    return x;
   }
+  return x;
 }
 
 /** Sleeps for a given # of milliseconds */
