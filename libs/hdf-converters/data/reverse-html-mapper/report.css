@@ -142,7 +142,6 @@ html { scrollbar-gutter: stable; overflow-y: scroll; }
 /* === Layout === */
 .report-header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--pico-muted-border-color); padding-top: 1.5rem; padding-bottom: .5rem; margin-bottom: 0; }
 .report-header > hgroup { flex: 1; }
-.report-header > .btn-icon { flex: none; margin-top: .5rem; }
 /* .report-nav removed — using Blades native nav + nav[aria-label] overrides */
 .report-filters { background: var(--report-stripe-bg); border-bottom: 1px solid var(--pico-muted-border-color); padding: .5rem .75rem; }
 [data-jump-to="top"] { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 5; padding: .4rem .7rem; border-radius: .5rem; background: var(--report-stripe-bg); border: 1px solid var(--report-border); font-size: .8rem; text-decoration: none; opacity: .6; transition: opacity .15s; }
@@ -234,11 +233,21 @@ pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
 [data-theme="dark"] .shiki span { color: var(--shiki-dark) !important; }
 
 /* === Nav overrides (Blades nav provides flex layout natively) === */
-nav[aria-label="Report controls"] { position: sticky; top: 0; z-index: 10; background: var(--report-cap-bg); border-bottom: 1px solid var(--pico-muted-border-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: .35rem .75rem; }
+nav[aria-label="Report controls"] { position: sticky; top: 0; z-index: 10; background: var(--report-cap-bg); border-bottom: 1px solid var(--pico-muted-border-color); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: .35rem .75rem; flex-wrap: wrap; }
 nav[aria-label="Report controls"] form[role="search"] { margin: 0; }
 nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
-.btn-icon { margin: 0; padding: .3rem .5rem; font-size: .9rem; width: auto; }
+.btn-icon { margin: 0; padding: .25rem .4rem; font-size: .85rem; width: auto; line-height: 1; }
+.btn-icon svg { display: block; }
+#theme-toggle .icon-sun { display: none; }
+#theme-toggle .icon-moon { display: block; }
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) #theme-toggle .icon-sun { display: block; }
+  :root:not([data-theme]) #theme-toggle .icon-moon { display: none; }
+}
+[data-theme="dark"] #theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] #theme-toggle .icon-moon { display: none; }
 .mobile-only { display: none; }
+.search-hint { width: 100%; opacity: .5; font-size: .65rem; text-align: right; margin: 0; padding: .1rem 0 0; }
 
 /* === Filter chips (M3 filter chip pattern + SonarQube counts) === */
 .filtered-out { display: none; }
@@ -281,6 +290,10 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
   /* Nav: Blades handles layout, just ensure 44px touch targets + static positioning */
   .btn-icon { min-width: 2.75rem; min-height: 2.75rem; }
   nav[aria-label="Report controls"] { position: static; }
+  nav[aria-label="Report controls"] > ul:first-child { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  nav[aria-label="Report controls"] > ul:first-child::-webkit-scrollbar { display: none; }
+  nav[aria-label="Report controls"] > ul:last-of-type { margin-left: auto; }
+  .search-hint { text-align: left; }
 
   /* Chips: 44px touch targets on mobile */
   .chip { min-height: 2.75rem; padding: .5rem .8rem; }
@@ -297,18 +310,41 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
   #profile-info td code { overflow-wrap: anywhere; text-align: right; }
 }
 
+/* === View-level toggle — Exec/Mgr/Admin CSS visibility === */
+.header-actions { display: flex; gap: .35rem; align-items: stretch; flex: none; margin-top: .5rem; }
+.header-actions > .btn-icon { padding: .25rem .4rem; font-size: .7rem; }
+.header-actions > .btn-icon svg { width: 14px; height: 14px; }
+.view-toggle { display: flex; gap: 0; align-items: stretch; }
+.view-toggle button { border-radius: 0; font-size: .7rem; padding: .25rem .5rem; margin: 0; line-height: 1; }
+.view-toggle button:first-child { border-radius: .25rem 0 0 .25rem; }
+.view-toggle button:last-child { border-radius: 0 .25rem .25rem 0; }
+.view-toggle button[aria-current="true"] { background: var(--pico-primary-background); border-color: var(--pico-primary); color: var(--pico-primary-inverse); }
+[data-report-level="executive"] [data-report-section="controls"] { display: none !important; }
+[data-report-level="executive"] #filter-bar { display: none !important; }
+[data-report-level="executive"] nav[aria-label="Report controls"] form[role="search"] { display: none !important; }
+[data-report-level="executive"] #nav-filter-toggle { display: none !important; }
+[data-report-level="manager"] [data-report-section="code"] { display: none !important; }
+
 /* === Corrected @media print — ADR §9.2 === */
 @media print {
-  /* Force light — beats Blades data-theme dark specificity */
-  :root, :root[data-theme="dark"], :root[data-theme="light"] { color-scheme: light !important; }
-  html, body { background: var(--pico-contrast-inverse, #fff) !important; color: var(--pico-contrast, #000) !important; }
+  /* Force light — JS beforeprint removes data-theme so Blades variables
+     resolve to their light-mode :root values. These overrides handle the
+     CSS-only fallback (JS disabled + prefers-color-scheme: dark). */
+  :root, :root[data-theme="dark"], :root[data-theme="light"] {
+    color-scheme: light !important;
+    --report-emphasis-rgb: 0, 0, 0;
+    --report-print-bg: #fff;
+    --report-print-fg: #000;
+  }
+  html, body { background: var(--report-print-bg) !important; color: var(--report-print-fg) !important; }
 
   /* Print backgrounds (inherited from :root) */
   :root { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
   /* Reveal closed <details> — CSS fallback; JS beforeprint handler is primary (n3v.12) */
   details::details-content { content-visibility: visible !important; }
-  summary { cursor: default; }
+  summary { cursor: default; list-style: none; }
+  summary::marker, summary::-webkit-details-marker { display: none; }
 
   /* Un-defer lazy controls */
   article.control { content-visibility: visible !important; contain-intrinsic-size: auto !important; }
@@ -327,10 +363,28 @@ nav[aria-label="Report controls"] form[role="search"] input { margin: 0; }
 
   /* Hide interactive chrome */
   nav, .no-print, #filter-bar, button, [role="button"] { display: none !important; }
+  .profile-toggle { display: none !important; }
+  td:has(.profile-toggle) { display: none !important; }
+  th:first-child:empty { display: none !important; }
 
   /* Expand link URLs */
   a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 90%; color: var(--print-muted); word-break: break-all; }
   a[href^="#"]::after, a[href^="mailto:"]::after { content: ""; }
+
+  /* Shiki: force light theme in print (override dark mode vars) */
+  pre.shiki { background-color: var(--shiki-bg, #fff) !important; }
+  .shiki span { color: var(--shiki-default, inherit) !important; }
+
+  /* Status bar: preserve colors on color printers + B&W fallback borders */
+  .bar-seg { -webkit-print-color-adjust: exact; print-color-adjust: exact; border: 1px solid rgba(0,0,0,.3); }
+
+  /* Profile Info: force table layout in print (override mobile stack-to-card) */
+  #profile-info table { display: table; }
+  #profile-info thead { display: table-header-group; position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+  #profile-info tbody { display: table-row-group; }
+  #profile-info tr { display: table-row; border: none; border-radius: 0; margin-bottom: 0; padding: 0; }
+  #profile-info td { display: table-cell; }
+  #profile-info td::before { content: none; }
 
   /* Cards */
   article { box-shadow: none !important; border: 1px solid var(--print-border); }

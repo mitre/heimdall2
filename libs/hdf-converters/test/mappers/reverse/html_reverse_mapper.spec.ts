@@ -1,7 +1,36 @@
 import fs from 'fs';
-import {describe, expect, it} from 'vitest';
+import {beforeAll, describe, expect, it} from 'vitest';
 import {FileExportTypes, FromHDFToHTMLMapper} from '../../../index';
 import {omitHTMLStyleTag} from '../../utils';
+
+const rhel7Data = fs.readFileSync(
+  'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
+  {encoding: 'utf-8'}
+);
+
+let sharedAdminHtml: string;
+let sharedManagerHtml: string;
+let sharedExecutiveHtml: string;
+
+beforeAll(async () => {
+  const adminMapper = new FromHDFToHTMLMapper(
+    [{data: rhel7Data, fileName: 'rhel7-results.json', fileID: '1'}],
+    FileExportTypes.Administrator
+  );
+  sharedAdminHtml = await adminMapper.toHTML();
+
+  const managerMapper = new FromHDFToHTMLMapper(
+    [{data: rhel7Data, fileName: 'rhel7-results.json', fileID: '1'}],
+    FileExportTypes.Manager
+  );
+  sharedManagerHtml = await managerMapper.toHTML();
+
+  const execMapper = new FromHDFToHTMLMapper(
+    [{data: rhel7Data, fileName: 'rhel7-results.json', fileID: '1'}],
+    FileExportTypes.Executive
+  );
+  sharedExecutiveHtml = await execMapper.toHTML();
+}, 60000);
 
 describe('Liquid partial templates', () => {
   it('html.liquid layout renders with child block overrides', async () => {
@@ -258,11 +287,7 @@ describe('Template structure (Blades CSS)', () => {
   );
 
   it('uses <details>/<summary> for progressive disclosure (not TW Elements accordion)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<details');
     expect(output).toContain('<summary');
     expect(output).not.toContain('data-te-collapse');
@@ -270,11 +295,7 @@ describe('Template structure (Blades CSS)', () => {
   });
 
   it('uses semantic HTML5 landmarks', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<main');
     expect(output).toContain('<nav');
     expect(output).toContain('<article');
@@ -282,51 +303,31 @@ describe('Template structure (Blades CSS)', () => {
   });
 
   it('uses <meter> for compliance (not <progress>)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<meter');
     expect(output).not.toContain('<progress');
   });
 
   it('uses {{{frameworkStyles}}} not {{{tailwindStyles}}}', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).not.toContain('{{{tailwindStyles}}}');
     expect(output).not.toContain('{{{tailwindElements}}}');
     expect(output).toContain('--pico-');
   });
 
   it('has <meta name="color-scheme"> for dark mode', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<meta name="color-scheme" content="light dark"');
   });
 
   it('has a skip link for accessibility', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('skip-link');
     expect(output).toContain('href="#main"');
   });
 
   it('has no Tailwind utility classes', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).not.toContain('px-3 py-2');
     expect(output).not.toContain('bg-gray-100');
     expect(output).not.toContain('text-lg font-bold');
@@ -334,32 +335,20 @@ describe('Template structure (Blades CSS)', () => {
   });
 
   it('has no <script> block with TW Elements', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).not.toContain('TW Elements');
     expect(output).not.toContain('tailwindElements');
   });
 
   it('uses <dl> for metadata', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<dl');
     expect(output).toContain('<dt');
     expect(output).toContain('<dd');
   });
 
   it('wraps code in <figure>/<pre>/<code>', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<figure');
     expect(output).toContain('<pre');
     expect(output).toContain('<code');
@@ -373,22 +362,15 @@ describe('Shiki syntax highlighting (n3v.13)', () => {
   );
 
   it('Administrator export has Shiki-highlighted code with --shiki-dark CSS vars', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('--shiki-dark');
     expect(output).toContain('class="shiki');
   });
 
-  it('Executive export has no Shiki highlighting (showCode=false)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Executive
-    );
-    const output = await mapper.toHTML();
-    expect(output).not.toContain('class="shiki');
+  it('Executive export has Shiki code (full content, CSS-hidden via data-report-level)', async () => {
+    const output = sharedExecutiveHtml;
+    expect(output).toContain('class="shiki');
+    expect(output).toContain('data-report-level="executive"');
   });
 
   it('report.css has dark mode override for Shiki spans', async () => {
@@ -412,21 +394,14 @@ describe('Shiki syntax highlighting (n3v.13)', () => {
     expect(reportCss).toMatch(/article\.control\s+dt\s*\{[^}]*text-transform:\s*uppercase/);
   });
 
-  it('Manager export has no Shiki highlighting (showCode=false)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Manager
-    );
-    const output = await mapper.toHTML();
-    expect(output).not.toContain('class="shiki');
+  it('Manager export has Shiki code (full content, CSS-hidden via data-report-level)', async () => {
+    const output = sharedManagerHtml;
+    expect(output).toContain('class="shiki');
+    expect(output).toContain('data-report-level="manager"');
   });
 
   it('highlighted code is output as raw HTML (not escaped)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<span style="');
     expect(output).not.toContain('&lt;span style=');
   });
@@ -447,11 +422,7 @@ describe('Shiki syntax highlighting (n3v.13)', () => {
   });
 
   it('control articles have data-families attribute with NIST families (not CCI)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('data-families="');
     expect(output).not.toMatch(/data-families="[^"]*CCI/);
     const acControls = (output.match(/data-families="[^"]*AC[^"]*"/g) || []).length;
@@ -478,11 +449,7 @@ describe('Shiki syntax highlighting (n3v.13)', () => {
   });
 
   it('cross-facet counting matrix — exact counts for rhel7 data', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
 
     const controlRegex = /data-status="([^"]*)" data-severity="([^"]*)" data-families="([^"]*)"/g;
     const controls: {status: string; severity: string; families: string[]}[] = [];
@@ -617,11 +584,7 @@ describe('Shiki syntax highlighting (n3v.13)', () => {
   });
 
   it('data-families counts match static nistFamilies counts', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const acFromAttr = (output.match(/data-families="[^"]*AC[^"]*"/g) || []).length;
     const acFromStatic = output.match(/data-family-count="(\d+)"[^>]*>\s*AC/);
     expect(acFromStatic).not.toBeNull();
@@ -643,11 +606,7 @@ describe('Shiki syntax highlighting (n3v.13)', () => {
   });
 
   it('highlighted code is inside <pre><code> structure', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toMatch(/<pre[^>]*class="shiki[^"]*"[^>]*><code>/);
   });
 });
@@ -676,11 +635,7 @@ describe('Mobile responsive layout (n3v.28)', () => {
   });
 
   it('status and severity chips are in separate role="group" rows (Pico-idiomatic)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const statusGroup = output.match(/<div[^>]*role="group"[^>]*aria-label="[^"]*status[^"]*"/i);
     const severityGroup = output.match(/<div[^>]*role="group"[^>]*aria-label="[^"]*severity[^"]*"/i);
     expect(statusGroup).not.toBeNull();
@@ -723,11 +678,7 @@ describe('Mobile responsive layout (n3v.28)', () => {
   });
 
   it('NIST dropdown is in the filter-actions row (not inside a chip group)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const actionsMatch = output.match(/<div class="filter-actions">([\s\S]*?)<\/div>/);
     expect(actionsMatch).not.toBeNull();
     expect(actionsMatch![1]).toContain('nist-family-filter');
@@ -742,11 +693,7 @@ describe('Blades component refactor (n3v.31)', () => {
   );
 
   it('nav uses Blades pattern: two <ul> groups, no custom wrappers', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const navMatch = output.match(/<nav[^>]*>([\s\S]*?)<\/nav>/);
     expect(navMatch).not.toBeNull();
     const navContent = navMatch![1];
@@ -758,11 +705,7 @@ describe('Blades component refactor (n3v.31)', () => {
   });
 
   it('NIST dropdown uses Blades pattern: details.dropdown > summary + ul > li > label', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toMatch(/details[^>]*id="nist-family-filter"[^>]*class="dropdown"/);
     expect(output).toMatch(/<ul[^>]*id="nist-family-list"/);
     const nistMatch = output.match(/<ul[^>]*id="nist-family-list"[^>]*>([\s\S]*?)<\/ul>/);
@@ -796,11 +739,7 @@ describe('Blades component refactor (n3v.31)', () => {
   });
 
   it('filter chip groups use bare role="group" without wrapper class', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const statusGroup = output.match(/<div[^>]*role="group"[^>]*aria-label="[^"]*status[^"]*"[^>]*>/i);
     expect(statusGroup).not.toBeNull();
     expect(statusGroup![0]).not.toContain('class="chip-row"');
@@ -870,11 +809,7 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
   });
 
   it('filter-actions row has NIST + expand + collapse + count + clear on one row', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const actionsMatch = output.match(/<div class="filter-actions">([\s\S]*?)<\/div>\s*<div/);
     expect(actionsMatch).not.toBeNull();
     const content = actionsMatch![1];
@@ -893,11 +828,7 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
   });
 
   it('expand/collapse buttons are in the filter bar (not nav)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const navMatch = output.match(/<nav[^>]*>([\s\S]*?)<\/nav>/);
     expect(navMatch).not.toBeNull();
     expect(navMatch![1]).not.toContain('btn-expand-all');
@@ -908,21 +839,13 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
   });
 
   it('expand/collapse buttons use arrow+text labels (not cryptic icons)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toMatch(/id="btn-expand-all"[^>]*>.*Expand/);
     expect(output).toMatch(/id="btn-collapse-all"[^>]*>.*Collapse/);
   });
 
   it('search input uses Pico role="search" group pattern', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toMatch(/role="search"[^>]*>[\s\S]*?id="control-search"/);
   });
 
@@ -945,11 +868,7 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
   });
 
   it('theme toggle is inside the report header (same row as title)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const headerMatch = output.match(/<header class="report-header[^"]*">([\s\S]*?)<\/header>/);
     expect(headerMatch).not.toBeNull();
     expect(headerMatch![1]).toContain('id="theme-toggle"');
@@ -978,11 +897,7 @@ describe('CSS audit fixes — Blades framework conflicts (n3v.27)', () => {
   });
 
   it('H2: NIST dropdown uses Blades "dropdown" class (not custom chip-dropdown)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8'), fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('class="dropdown"');
     expect(output).not.toContain('chip-dropdown');
   });
@@ -1029,11 +944,7 @@ describe('Cloudscape toolbar + ISSO filtering (n3v.12)', () => {
   );
 
   it('has filter chips with counts for all 5 statuses', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('data-filter-status="Passed"');
     expect(output).toContain('data-filter-status="Failed"');
     expect(output).toContain('data-filter-status="Not Applicable"');
@@ -1042,11 +953,7 @@ describe('Cloudscape toolbar + ISSO filtering (n3v.12)', () => {
   });
 
   it('has filter chips with counts for all 5 severities', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('data-filter-severity="none"');
     expect(output).toContain('data-filter-severity="critical"');
   });
@@ -1059,62 +966,38 @@ describe('Cloudscape toolbar + ISSO filtering (n3v.12)', () => {
   });
 
   it('has a search input', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('type="search"');
     expect(output).toContain('id="control-search"');
   });
 
   it('has a theme toggle and expand/collapse icon buttons', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('id="theme-toggle"');
     expect(output).toContain('id="btn-expand-all"');
     expect(output).toContain('id="btn-collapse-all"');
   });
 
   it('has a live count element and clear-all link', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('id="filter-count"');
     expect(output).toContain('id="btn-clear-filters"');
   });
 
   it('has an active-tokens container for dismissable filter tokens', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('id="active-tokens"');
   });
 
   it('has a NIST family multi-select checkbox dropdown', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('id="nist-family-filter"');
     expect(output).toContain('id="nist-family-list"');
     expect(output).toContain('class="dropdown');
   });
 
   it('hero summary bar segments have data-filter-status for cross-filtering', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toMatch(/class="bar-seg bar-passed"[^>]*data-filter-status/);
     expect(output).toMatch(/class="bar-seg bar-failed"[^>]*data-filter-status/);
   });
@@ -1145,23 +1028,15 @@ describe('Cloudscape toolbar + ISSO filtering (n3v.12)', () => {
   });
 
   it('has a mobile filter toggle button', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('id="nav-filter-toggle"');
   });
 
-  it('Executive export has no filter controls (showResultSets=false)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Executive
-    );
-    const output = await mapper.toHTML();
-    expect(output).not.toContain('id="control-search"');
-    expect(output).not.toContain('id="filter-bar"');
-    expect(output).not.toContain('class="chip"');
+  it('Executive export has full content with executive default view', async () => {
+    const output = sharedExecutiveHtml;
+    expect(output).toContain('id="control-search"');
+    expect(output).toContain('id="filter-bar"');
+    expect(output).toContain('data-report-level="executive"');
   });
 });
 
@@ -1172,21 +1047,13 @@ describe('Custom CSS layer (P4)', () => {
   );
 
   it('has @media print rules that force light theme', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('@media print');
     expect(output).toContain('color-scheme: light');
   });
 
   it('has status color tokens with Pico-idiomatic dark mode scoping', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('--st-pass-fg');
     expect(output).toContain('--st-fail-fg');
     expect(output).toContain('--st-na-fg');
@@ -1196,11 +1063,7 @@ describe('Custom CSS layer (P4)', () => {
   });
 
   it('has severity color tokens', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('--sv-none-fg');
     expect(output).toContain('--sv-low-fg');
     expect(output).toContain('--sv-medium-fg');
@@ -1209,21 +1072,13 @@ describe('Custom CSS layer (P4)', () => {
   });
 
   it('has data-status and data-severity attributes on control articles', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('data-status=');
     expect(output).toContain('data-severity=');
   });
 
   it('has print-color-adjust for status backgrounds', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('print-color-adjust');
   });
 });
@@ -1371,40 +1226,24 @@ describe('Blades idiom polish (n3v.22)', () => {
   );
 
   it('has data-tooltip on theme toggle button', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toMatch(/id="theme-toggle"[^>]*data-tooltip=/);
   });
 
   it('has data-tooltip on Expand All, Collapse All, Clear Filters buttons', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toMatch(/id="btn-expand-all"[^>]*data-tooltip=/);
     expect(output).toMatch(/id="btn-collapse-all"[^>]*data-tooltip=/);
     expect(output).toMatch(/id="btn-clear-filters"[^>]*data-tooltip=/);
   });
 
   it('has data-tooltip with data-placement on nav action buttons', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('data-placement="bottom"');
   });
 
   it('has a back-to-top link with data-jump-to after main', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('data-jump-to="top"');
     expect(output).toMatch(/class="[^"]*no-print[^"]*"[^>]*data-jump-to="top"/);
     expect(output).toContain('aria-label="Back to top"');
@@ -1436,11 +1275,7 @@ describe('Blades idiom polish (n3v.22)', () => {
   });
 
   it('does NOT use ins/del on status badges', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const badges = output.match(/<span class="badge[^"]*">[^<]*<\/span>/g) || [];
     for (const badge of badges) {
       expect(badge).not.toContain('<ins>');
@@ -1465,11 +1300,7 @@ describe('LiquidJS engine wiring (n3v.20)', () => {
   );
 
   it('toHTML() renders via LiquidJS (no unresolved Mustache syntax)', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<!doctype html>');
     expect(output).not.toContain('{{{');
     expect(output).not.toContain('{{#');
@@ -1477,11 +1308,7 @@ describe('LiquidJS engine wiring (n3v.20)', () => {
   });
 
   it('toHTML() output uses Liquid-rendered Blades shell with color-scheme meta', async () => {
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).toContain('<meta name="color-scheme" content="light dark"');
     expect(output).toContain('<meta name="generator" content="Heimdall"');
   });
@@ -1502,11 +1329,7 @@ describe('Mapper interface', () => {
       'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
       {encoding: 'utf-8'}
     );
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).not.toContain('TW Elements');
     expect(output).not.toContain('sourceMappingURL=tw-elements');
   });
@@ -1543,15 +1366,15 @@ describe('CLI build:html-report (n3v.32)', () => {
     expect(html).toContain('class="shiki');
   });
 
-  it('generates an Executive HTML report (no controls)', async () => {
+  it('generates an Executive HTML report (full content, executive default view)', async () => {
     const {execSync} = await import('child_process');
     const outPath = '/tmp/cli-test-exec.html';
     try { fs.unlinkSync(outPath); } catch {}
     execSync(`npx tsx scripts/build-html-report.ts --type executive --files sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json --output ${outPath}`, {cwd: process.cwd(), timeout: 120000});
     const html = fs.readFileSync(outPath, 'utf-8');
-    expect(html).toContain('Heimdall Executive Report');
-    expect(html).not.toContain('id="filter-bar"');
-    expect(html).not.toContain('id="control-search"');
+    expect(html).toContain('Heimdall Administrator Report');
+    expect(html).toContain('data-report-level="executive"');
+    expect(html).toContain('id="filter-bar"');
   });
 
   it('generates a multi-profile report from multiple files', async () => {
@@ -1584,23 +1407,13 @@ describe('Profile visibility toggle (n3v.33)', () => {
   });
 
   it('single-profile: no eye toggle button', async () => {
-    const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: rhel7, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     expect(output).not.toContain('data-file-id=');
     expect(output).not.toContain('👁');
   });
 
   it('Profile Info and Executive Summary are collapsible via details/summary', async () => {
-    const rhel7 = fs.readFileSync('sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json', 'utf-8');
-    const mapper = new FromHDFToHTMLMapper(
-      [{data: rhel7, fileName: 'rhel7-results.json', fileID: '1'}],
-      FileExportTypes.Administrator
-    );
-    const output = await mapper.toHTML();
+    const output = sharedAdminHtml;
     const profileSection = output.match(/<section id="profile-info"[^>]*>([\s\S]*?)<\/section>/);
     expect(profileSection).not.toBeNull();
     expect(profileSection![1]).toContain('<details');
@@ -1670,6 +1483,694 @@ describe('Multi-profile report', () => {
     expect(output).toContain('data-families=');
     expect(output).toContain('data-status=');
     expect(output).toContain('class="shiki');
+  });
+});
+
+describe('Print/PDF refinement (n3v.34)', () => {
+  const inputData = fs.readFileSync(
+    'sample_jsons/html_reverse_mapper/sample_input_report/rhel7-results.json',
+    {encoding: 'utf-8'}
+  );
+
+  it('beforeprint opens ALL details (Profile Info, Summary, profile sections, controls) and afterprint restores them', async () => {
+    const html = sharedAdminHtml;
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(html, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const profileDetails = doc.querySelector('#profile-info details');
+    const summaryDetails = doc.querySelector('#summary details');
+    const controlDetails = doc.querySelector('article.control details');
+    expect(profileDetails).not.toBeNull();
+    expect(summaryDetails).not.toBeNull();
+    expect(controlDetails).not.toBeNull();
+
+    profileDetails.open = false;
+    summaryDetails.open = false;
+    controlDetails.open = false;
+
+    dom.window.dispatchEvent(new dom.window.Event('beforeprint'));
+
+    expect(profileDetails.open).toBe(true);
+    expect(summaryDetails.open).toBe(true);
+    expect(controlDetails.open).toBe(true);
+
+    dom.window.dispatchEvent(new dom.window.Event('afterprint'));
+
+    expect(profileDetails.open).toBe(false);
+    expect(summaryDetails.open).toBe(false);
+    expect(controlDetails.open).toBe(false);
+
+    dom.window.close();
+  });
+
+  it('beforeprint removes data-theme (force light) and afterprint restores it', async () => {
+    const html = sharedAdminHtml;
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(html, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+    const root = doc.documentElement;
+
+    root.setAttribute('data-theme', 'dark');
+    expect(root.getAttribute('data-theme')).toBe('dark');
+
+    dom.window.dispatchEvent(new dom.window.Event('beforeprint'));
+    expect(root.getAttribute('data-theme')).toBeNull();
+
+    dom.window.dispatchEvent(new dom.window.Event('afterprint'));
+    expect(root.getAttribute('data-theme')).toBe('dark');
+
+    dom.window.close();
+  });
+
+  it('filtered controls stay .filtered-out through beforeprint/afterprint (WYSIWYG)', async () => {
+    const html = sharedAdminHtml;
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(html, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const statusChip = doc.querySelector('.chip[data-filter-status="Passed"]');
+    expect(statusChip).not.toBeNull();
+    statusChip.click();
+
+    const failedControls = doc.querySelectorAll('article.control[data-status="Failed"]');
+    expect(failedControls.length).toBeGreaterThan(0);
+    for (const c of failedControls) {
+      expect(c.classList.contains('filtered-out')).toBe(true);
+    }
+
+    dom.window.dispatchEvent(new dom.window.Event('beforeprint'));
+
+    for (const c of failedControls) {
+      expect(c.classList.contains('filtered-out')).toBe(true);
+    }
+
+    dom.window.dispatchEvent(new dom.window.Event('afterprint'));
+
+    for (const c of failedControls) {
+      expect(c.classList.contains('filtered-out')).toBe(true);
+    }
+
+    dom.window.close();
+  });
+
+  it('Expand All opens section-level details AND control details', async () => {
+    const html = sharedAdminHtml;
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(html, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const profileInfo = doc.querySelector('#profile-info details');
+    const summary = doc.querySelector('#summary details');
+    const controlDetail = doc.querySelector('article.control details');
+    profileInfo.open = false;
+    summary.open = false;
+    controlDetail.open = false;
+
+    doc.getElementById('btn-expand-all').click();
+
+    expect(profileInfo.open).toBe(true);
+    expect(summary.open).toBe(true);
+    expect(controlDetail.open).toBe(true);
+
+    dom.window.close();
+  });
+
+  it('Collapse All closes section-level details AND control details', async () => {
+    const html = sharedAdminHtml;
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(html, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const profileInfo = doc.querySelector('#profile-info details');
+    const summary = doc.querySelector('#summary details');
+    const controlDetail = doc.querySelector('article.control details');
+    expect(profileInfo.open).toBe(true);
+    expect(summary.open).toBe(true);
+
+    doc.getElementById('btn-collapse-all').click();
+
+    expect(profileInfo.open).toBe(false);
+    expect(summary.open).toBe(false);
+    expect(controlDetail.open).toBe(false);
+
+    dom.window.close();
+  });
+
+  it('mobile nav links scroll horizontally (no overflow)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('overflow-x: auto');
+    expect(reportCss).toContain('flex-wrap: nowrap');
+    expect(reportCss).toContain('scrollbar-width: none');
+    expect(reportCss).toMatch(/ul:first-child\s*\{[^}]*overflow-x:\s*auto/);
+  });
+
+  it('has a Print/PDF button in the header (next to theme toggle)', async () => {
+    const output = sharedAdminHtml;
+    expect(output).toContain('id="btn-print"');
+    const header = output.match(/<header[^>]*class="[^"]*report-header[^"]*"[^>]*>([\s\S]*?)<\/header>/);
+    expect(header).not.toBeNull();
+    expect(header![1]).toContain('btn-print');
+  });
+
+  it('Print/PDF button calls window.print()', async () => {
+    const html = sharedAdminHtml;
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(html, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    let printCalled = false;
+    dom.window.print = () => { printCalled = true; };
+
+    const btn = doc.getElementById('btn-print');
+    expect(btn).not.toBeNull();
+    btn.click();
+    expect(printCalled).toBe(true);
+
+    dom.window.close();
+  });
+
+  it('Print/PDF button is hidden in print output (inside no-print header)', async () => {
+    const output = sharedAdminHtml;
+    const header = output.match(/<header[^>]*class="[^"]*report-header[^"]*no-print[^"]*"[^>]*>([\s\S]*?)<\/header>/);
+    expect(header).not.toBeNull();
+    expect(header![1]).toContain('btn-print');
+  });
+
+  it('Executive export also has Print/PDF button (in header, always available)', async () => {
+    const output = sharedExecutiveHtml;
+    expect(output).toContain('id="btn-print"');
+  });
+
+  it('@media print hides summary disclosure markers (chevrons)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).toMatch(/summary\s*\{[^}]*list-style:\s*none/);
+  });
+
+  it('@media print forces Shiki light theme (not dark bg)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).toContain('pre.shiki');
+    expect(printBlock![1]).toContain('--shiki-bg');
+  });
+
+  it('@media print forces Profile Info as table (not stacked cards)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).toContain('#profile-info');
+    expect(printBlock![1]).toMatch(/display:\s*table/);
+  });
+
+  it('@media print has print-color-adjust on status bar segments', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).toContain('.bar-seg');
+    expect(printBlock![1]).toContain('print-color-adjust');
+  });
+
+  it('@media print adds borders to status bar segments for B&W fallback', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).toMatch(/\.bar-seg\s*\{[^}]*border/);
+  });
+
+  it('@media print hides profile-toggle column (empty cell cleanup)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).toContain('.profile-toggle');
+  });
+
+  it('@media print keeps .filtered-out hidden (WYSIWYG)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('.filtered-out');
+    expect(reportCss).toMatch(/\.filtered-out\s*\{\s*display:\s*none/);
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).not.toMatch(/\.filtered-out\s*\{[^}]*display:\s*(?!none)/);
+  });
+
+  it('existing .no-print class hides header, nav, filter bar, and back-to-top in print', async () => {
+    const output = sharedAdminHtml;
+    expect(output).toMatch(/<header[^>]*class="[^"]*no-print[^"]*"/);
+    expect(output).toMatch(/<nav[^>]*class="[^"]*no-print[^"]*"/);
+    expect(output).toMatch(/<div[^>]*class="[^"]*no-print[^"]*"[^>]*id="filter-bar"/);
+    expect(output).toMatch(/class="[^"]*no-print[^"]*"[^>]*data-jump-to="top"/);
+  });
+
+  it('@media print hides all button elements (interactive chrome)', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).toMatch(/\bbutton\b[^{]*\{[^}]*display:\s*none/);
+  });
+
+  it('badges have icon+text for B&W readability (not just color)', async () => {
+    const output = sharedAdminHtml;
+    expect(output).toContain('&#10003; Pass');
+    expect(output).toContain('&#10007; Fail');
+    expect(output).toContain('&#8854; N/A');
+    expect(output).toContain('&#9888; NR');
+    expect(output).toContain('&#9651; Err');
+  });
+
+  it('all three export types produce valid HTML with print CSS', async () => {
+    for (const exportType of [FileExportTypes.Administrator, FileExportTypes.Manager, FileExportTypes.Executive]) {
+      const mapper = new FromHDFToHTMLMapper(
+        [{data: inputData, fileName: 'rhel7-results.json', fileID: '1'}],
+        exportType
+      );
+      const output = await mapper.toHTML();
+      expect(output).toContain('<!doctype html>');
+      expect(output).toContain('@media print');
+      expect(output).toContain('color-scheme: light');
+    }
+  });
+
+  it('Manager export has full content with manager default view', async () => {
+    const output = sharedManagerHtml;
+    expect(output).toContain('data-status=');
+    expect(output).toContain('class="shiki');
+    expect(output).toContain('data-report-level="manager"');
+  });
+
+  it('Executive export has full content with executive default view', async () => {
+    const output = sharedExecutiveHtml;
+    expect(output).toContain('Executive Summary');
+    expect(output).toContain('data-status=');
+    expect(output).toContain('data-report-level="executive"');
+  });
+
+  it('@media print Shiki code wraps long lines', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const printBlock = reportCss.match(/@media print\s*\{([\s\S]*?)\n\}/);
+    expect(printBlock).not.toBeNull();
+    expect(printBlock![1]).toMatch(/pre\s*\{[^}]*white-space:\s*pre-wrap/);
+  });
+
+  it('@page has letter size and page numbers', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toContain('@page');
+    expect(reportCss).toContain('size: letter');
+    expect(reportCss).toContain('counter(page)');
+  });
+});
+
+describe('Dynamic view-level toggle (n3v.36)', () => {
+  it('all export types generate full content (controls + code always present)', async () => {
+    expect(sharedAdminHtml).toContain('data-status=');
+    expect(sharedAdminHtml).toContain('class="shiki');
+    expect(sharedManagerHtml).toContain('data-status=');
+    expect(sharedManagerHtml).toContain('class="shiki');
+    expect(sharedExecutiveHtml).toContain('data-status=');
+    expect(sharedExecutiveHtml).toContain('class="shiki');
+  });
+
+  it('html root has data-report-level attribute matching export type', async () => {
+    expect(sharedAdminHtml).toContain('data-report-level="administrator"');
+    expect(sharedManagerHtml).toContain('data-report-level="manager"');
+    expect(sharedExecutiveHtml).toContain('data-report-level="executive"');
+  });
+
+  it('has segmented control with 3 view-level buttons in role="group"', async () => {
+    expect(sharedAdminHtml).toContain('data-view-level="executive"');
+    expect(sharedAdminHtml).toContain('data-view-level="manager"');
+    expect(sharedAdminHtml).toContain('data-view-level="administrator"');
+    const groupMatch = sharedAdminHtml.match(/role="group"[^>]*aria-label="Report detail level"/);
+    expect(groupMatch).not.toBeNull();
+  });
+
+  it('active view-level button has aria-current="true"', async () => {
+    expect(sharedAdminHtml).toMatch(/data-view-level="administrator"[^>]*aria-current="true"/);
+    expect(sharedManagerHtml).toMatch(/data-view-level="manager"[^>]*aria-current="true"/);
+    expect(sharedExecutiveHtml).toMatch(/data-view-level="executive"[^>]*aria-current="true"/);
+  });
+
+  it('controls sections have data-report-section="controls" attribute', async () => {
+    expect(sharedAdminHtml).toContain('data-report-section="controls"');
+  });
+
+  it('code blocks have data-report-section="code" attribute', async () => {
+    expect(sharedAdminHtml).toMatch(/figure[^>]*data-report-section="code"/);
+  });
+
+  it('CSS hides controls and filter bar in executive view', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\[data-report-level="executive"\][^{]*\[data-report-section="controls"\][^{]*\{[^}]*display:\s*none/);
+  });
+
+  it('CSS hides code in manager view', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\[data-report-level="manager"\][^{]*\[data-report-section="code"\][^{]*\{[^}]*display:\s*none/);
+  });
+
+  it('jsdom: clicking Executive toggle sets data-report-level, clicking Admin restores', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+    const root = doc.documentElement;
+
+    expect(root.getAttribute('data-report-level')).toBe('administrator');
+
+    const execBtn = doc.querySelector('[data-view-level="executive"]');
+    expect(execBtn).not.toBeNull();
+    execBtn.click();
+
+    expect(root.getAttribute('data-report-level')).toBe('executive');
+    expect(execBtn.getAttribute('aria-current')).toBe('true');
+    const adminBtn = doc.querySelector('[data-view-level="administrator"]');
+    expect(adminBtn.getAttribute('aria-current')).toBeNull();
+
+    adminBtn.click();
+    expect(root.getAttribute('data-report-level')).toBe('administrator');
+    expect(adminBtn.getAttribute('aria-current')).toBe('true');
+    expect(execBtn.getAttribute('aria-current')).toBeNull();
+
+    dom.window.close();
+  });
+
+  it('jsdom: view toggle does not reset filter state', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const statusChip = doc.querySelector('.chip[data-filter-status="Passed"]');
+    statusChip.click();
+    expect(statusChip.getAttribute('aria-current')).toBe('true');
+
+    doc.querySelector('[data-view-level="manager"]').click();
+    expect(statusChip.getAttribute('aria-current')).toBe('true');
+
+    dom.window.close();
+  });
+
+  it('Executive view still shows Profile Info and Summary (not inside data-report-section)', async () => {
+    const profileInfo = sharedAdminHtml.match(/<section id="profile-info"[^>]*>/);
+    expect(profileInfo).not.toBeNull();
+    expect(profileInfo![0]).not.toContain('data-report-section');
+    const summary = sharedAdminHtml.match(/<section id="summary"[^>]*>/);
+    expect(summary).not.toBeNull();
+    expect(summary![0]).not.toContain('data-report-section');
+  });
+
+  it('jsdom: toggle to Executive then print — controls stay hidden, view level preserved', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+    const root = doc.documentElement;
+
+    doc.querySelector('[data-view-level="executive"]').click();
+    expect(root.getAttribute('data-report-level')).toBe('executive');
+
+    dom.window.dispatchEvent(new dom.window.Event('beforeprint'));
+
+    expect(root.getAttribute('data-report-level')).toBe('executive');
+
+    const controlSection = doc.querySelector('[data-report-section="controls"]');
+    expect(controlSection).not.toBeNull();
+
+    dom.window.dispatchEvent(new dom.window.Event('afterprint'));
+
+    expect(root.getAttribute('data-report-level')).toBe('executive');
+
+    dom.window.close();
+  });
+
+});
+
+describe('AND-of-terms search (n3v.29)', () => {
+  it('control cards have data-search attribute with searchable text', async () => {
+    expect(sharedAdminHtml).toMatch(/article[^>]*data-search="/);
+    const match = sharedAdminHtml.match(/data-search="([^"]+)"/);
+    expect(match).not.toBeNull();
+    const searchText = match![1].toLowerCase();
+    expect(searchText).toBe(match![1]);
+  });
+
+  it('data-search contains control id, title, and NIST tags', async () => {
+    const match = sharedAdminHtml.match(/id="V-71849"[^>]*data-search="([^"]+)"/);
+    expect(match).not.toBeNull();
+    const searchText = match![1];
+    expect(searchText).toContain('v-71849');
+    expect(searchText).toMatch(/au-|ac-|cm-|ia-/i);
+  });
+
+  it('jsdom: search "sshd_config" matches controls containing that path', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = 'sshd_config';
+    searchInput.dispatchEvent(new dom.window.Event('input'));
+
+    await new Promise(r => setTimeout(r, 300));
+
+    const visible = doc.querySelectorAll('article.control:not(.filtered-out)');
+    const hidden = doc.querySelectorAll('article.control.filtered-out');
+    expect(visible.length).toBeGreaterThan(0);
+    expect(hidden.length).toBeGreaterThan(0);
+
+    for (const v of visible) {
+      expect(v.getAttribute('data-search')).toContain('sshd_config');
+    }
+
+    dom.window.close();
+  });
+
+  it('jsdom: AND semantics — multi-term search requires ALL terms to match', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = 'V-71849 AU-9';
+    searchInput.dispatchEvent(new dom.window.Event('input'));
+
+    await new Promise(r => setTimeout(r, 300));
+
+    const visible = doc.querySelectorAll('article.control:not(.filtered-out)');
+    for (const v of visible) {
+      const s = v.getAttribute('data-search');
+      expect(s).toContain('v-71849');
+      expect(s).toMatch(/au-9/);
+    }
+
+    dom.window.close();
+  });
+
+  it('jsdom: quoted phrase treated as single literal term', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = '"file permissions"';
+    searchInput.dispatchEvent(new dom.window.Event('input'));
+
+    await new Promise(r => setTimeout(r, 300));
+
+    const visible = doc.querySelectorAll('article.control:not(.filtered-out)');
+    expect(visible.length).toBeGreaterThan(0);
+    for (const v of visible) {
+      expect(v.getAttribute('data-search')).toContain('file permissions');
+    }
+
+    dom.window.close();
+  });
+
+  it('jsdom: clearing search chips via Clear All shows all controls', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = 'V-71849';
+    searchInput.dispatchEvent(new dom.window.KeyboardEvent('keydown', {key: 'Enter'}));
+
+    const hiddenBefore = doc.querySelectorAll('article.control.filtered-out').length;
+    expect(hiddenBefore).toBeGreaterThan(0);
+
+    doc.getElementById('btn-clear-filters').click();
+
+    const hiddenAfter = doc.querySelectorAll('article.control.filtered-out').length;
+    expect(hiddenAfter).toBe(0);
+
+    dom.window.close();
+  });
+
+  it('jsdom: search reads data-search not textContent', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const scriptsSrc = templates['partials/scripts'];
+    expect(scriptsSrc).toContain('dataset.search');
+    expect(scriptsSrc).not.toMatch(/textContent.*indexOf/);
+  });
+
+  it('parseQuery function exists and handles quoted phrases', async () => {
+    const {templates} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const scriptsSrc = templates['partials/scripts'];
+    expect(scriptsSrc).toContain('parseQuery');
+  });
+
+  it('header-actions uses align-items:stretch for uniform button height', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.header-actions\s*\{[^}]*align-items:\s*stretch/);
+  });
+
+  it('header icon buttons share font-size with view-toggle buttons', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    const viewToggleFont = reportCss.match(/\.view-toggle button\s*\{[^}]*font-size:\s*([^;]+)/);
+    const headerBtnFont = reportCss.match(/\.header-actions > \.btn-icon\s*\{[^}]*font-size:\s*([^;]+)/);
+    expect(viewToggleFont).not.toBeNull();
+    expect(headerBtnFont).not.toBeNull();
+    expect(viewToggleFont![1].trim()).toBe(headerBtnFont![1].trim());
+  });
+
+  it('header icon SVGs are sized to match text buttons', async () => {
+    const {reportCss} = await import(
+      '../../../src/converters-from-hdf/html/embedded-assets.js'
+    );
+    expect(reportCss).toMatch(/\.header-actions > \.btn-icon svg\s*\{[^}]*width:\s*14px/);
+    expect(reportCss).toMatch(/\.header-actions > \.btn-icon svg\s*\{[^}]*height:\s*14px/);
+  });
+});
+
+describe('Search chips in token strip (n3v.39)', () => {
+  it('jsdom: typing search creates dismissable chips and clears input', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = 'sshd_config IA-2';
+    searchInput.dispatchEvent(new dom.window.KeyboardEvent('keydown', {key: 'Enter'}));
+
+    const tokens = doc.querySelectorAll('#active-tokens [data-remove-search]');
+    expect(tokens.length).toBe(2);
+    expect(tokens[0].getAttribute('data-remove-search')).toBe('sshd_config');
+    expect(tokens[1].getAttribute('data-remove-search')).toBe('ia-2');
+    expect(searchInput.value).toBe('');
+
+    dom.window.close();
+  });
+
+  it('jsdom: chips persist after input clears — adding more terms appends', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = 'sshd_config';
+    searchInput.dispatchEvent(new dom.window.KeyboardEvent('keydown', {key: 'Enter'}));
+    expect(doc.querySelectorAll('#active-tokens [data-remove-search]').length).toBe(1);
+
+    searchInput.value = 'IA-2';
+    searchInput.dispatchEvent(new dom.window.KeyboardEvent('keydown', {key: 'Enter'}));
+    expect(doc.querySelectorAll('#active-tokens [data-remove-search]').length).toBe(2);
+
+    dom.window.close();
+  });
+
+  it('jsdom: clicking x on a search chip removes that term and re-filters', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = 'sshd_config IA-2';
+    searchInput.dispatchEvent(new dom.window.KeyboardEvent('keydown', {key: 'Enter'}));
+
+    const beforeCount = doc.querySelectorAll('article.control:not(.filtered-out)').length;
+
+    const chip = doc.querySelector('[data-remove-search="ia-2"]');
+    expect(chip).not.toBeNull();
+    chip.click();
+    await new Promise(r => setTimeout(r, 50));
+
+    const afterCount = doc.querySelectorAll('article.control:not(.filtered-out)').length;
+    expect(afterCount).toBeGreaterThan(beforeCount);
+
+    const remaining = doc.querySelectorAll('#active-tokens [data-remove-search]');
+    expect(remaining.length).toBe(1);
+    expect(remaining[0].getAttribute('data-remove-search')).toBe('sshd_config');
+
+    dom.window.close();
+  });
+
+  it('jsdom: quoted phrase appears as single chip', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = '"file permissions" sshd';
+    searchInput.dispatchEvent(new dom.window.KeyboardEvent('keydown', {key: 'Enter'}));
+
+    const tokens = doc.querySelectorAll('#active-tokens [data-remove-search]');
+    expect(tokens.length).toBe(2);
+    expect(tokens[0].getAttribute('data-remove-search')).toBe('file permissions');
+    expect(tokens[1].getAttribute('data-remove-search')).toBe('sshd');
+
+    dom.window.close();
+  });
+
+  it('jsdom: search chips appear alongside status chips', async () => {
+    const {JSDOM} = await import('jsdom');
+    const dom = new JSDOM(sharedAdminHtml, {runScripts: 'dangerously'});
+    const doc = dom.window.document;
+
+    doc.querySelector('.chip[data-filter-status="Failed"]').click();
+
+    const searchInput = doc.getElementById('control-search');
+    searchInput.value = 'sshd_config';
+    searchInput.dispatchEvent(new dom.window.KeyboardEvent('keydown', {key: 'Enter'}));
+
+    const statusTokens = doc.querySelectorAll('#active-tokens [data-remove-status]');
+    const searchTokens = doc.querySelectorAll('#active-tokens [data-remove-search]');
+    expect(statusTokens.length).toBe(1);
+    expect(searchTokens.length).toBe(1);
+
+    dom.window.close();
   });
 });
 

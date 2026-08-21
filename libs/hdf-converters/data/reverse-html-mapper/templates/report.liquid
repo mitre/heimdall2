@@ -1,7 +1,7 @@
 {% comment %}Root report template. Uses LiquidJS layout/block inheritance.
-Variables: All IOutputData fields + css, reportCss (passed from mapper).
+Variables: All IOutputData fields + css, reportCss, defaultView (passed from mapper).
 Layout: html.liquid provides the document shell with named blocks.{% endcomment -%}
-{% layout 'html', title: title %}
+{% layout 'html', title: title, defaultView: defaultView %}
 
 {% block styles %}
     <style>{{ css | raw }}</style>
@@ -14,31 +14,34 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
 
     <header class="report-header no-print">
       <hgroup>
-        <h1>Heimdall {{ exportType }} Report</h1>
+        <h1>Heimdall Administrator Report</h1>
         <p>Self-contained security compliance report</p>
       </hgroup>
-      <button type="button" id="theme-toggle" class="contrast btn-icon" aria-label="Toggle light/dark theme" data-tooltip="Toggle light/dark theme" data-placement="bottom">&#9788;/&#9790;</button>
+      <div class="header-actions">
+        <div role="group" aria-label="Report detail level" class="view-toggle">
+          <button type="button" class="outline" data-view-level="executive"{% if defaultView == 'executive' %} aria-current="true"{% endif %} data-tooltip="Summary only">Exec</button>
+          <button type="button" class="outline" data-view-level="manager"{% if defaultView == 'manager' %} aria-current="true"{% endif %} data-tooltip="Controls + test results">Mgr</button>
+          <button type="button" class="outline" data-view-level="administrator"{% if defaultView == 'administrator' %} aria-current="true"{% endif %} data-tooltip="Full report with code">Admin</button>
+        </div>
+        <button type="button" class="outline btn-icon" id="btn-print" aria-label="Print or save as PDF" data-tooltip="Print / PDF" data-placement="bottom"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></button>
+        <button type="button" class="contrast btn-icon" id="theme-toggle" aria-label="Toggle light/dark theme" data-tooltip="Toggle theme" data-placement="bottom"><svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+      </div>
     </header>
 
     <nav class="no-print" aria-label="Report controls">
       <ul>
         <li><a href="#summary"><strong>Summary</strong></a></li>
         <li><a href="#profile-info">Profile Info</a></li>
-        {%- if showResultSets %}
         {%- for resultSet in resultSets %}
         <li><a href="#file-{{ resultSet.fileID }}">{{ resultSet.filename }}</a></li>
         {%- endfor %}
-        {%- endif %}
       </ul>
       <ul>
-        {%- if showResultSets %}
         <li><form role="search"><input type="search" id="control-search" placeholder="Search controls..." aria-label="Search controls by ID or title"></form></li>
         <li><button class="btn-icon mobile-only" id="nav-filter-toggle" aria-label="Toggle filters" aria-expanded="false">&#9776;</button></li>
-        {%- endif %}
       </ul>
+      <small class="search-hint">Search: type terms + Enter &middot; <code>"quotes"</code> for phrases &middot; multiple terms use AND logic</small>
     </nav>
-
-    {%- if showResultSets %}
     <div class="no-print report-filters" id="filter-bar" aria-label="Control filters" hidden>
       <div role="group" aria-label="Filter by status">
         <button type="button" class="chip" data-filter-status="Passed">&#10003; Pass <span class="chip-count">{{ statistics.passed }}</span></button>
@@ -70,15 +73,13 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
         <button type="button" id="btn-clear-filters" class="link-btn" hidden data-tooltip="Clear all active filters">Clear all</button>
       </div>
     </div><!-- end filter-bar -->
-    {%- endif %}
 
     <main id="main">
       {% render 'partials/profile-info', files: files %}
       {% render 'partials/summary', statistics: statistics, severity: severity, compliance: compliance, icons: icons %}
 
-      {%- if showResultSets %}
       {%- for resultSet in resultSets %}
-      <section id="file-{{ resultSet.fileID }}" aria-labelledby="file-{{ resultSet.fileID }}-h">
+      <section id="file-{{ resultSet.fileID }}" aria-labelledby="file-{{ resultSet.fileID }}-h" data-report-section="controls">
         <details open>
           <summary><h2 id="file-{{ resultSet.fileID }}-h" style="display:inline;">{{ resultSet.filename }}</h2></summary>
           {%- for result in resultSet.results %}
@@ -87,13 +88,12 @@ Layout: html.liquid provides the document shell with named blocks.{% endcomment 
         </details>
       </section>
       {%- endfor %}
-      {%- endif %}
     </main>
 
     <a href="#" class="no-print" data-jump-to="top" aria-label="Back to top">&uarr; Top</a>
 
     <footer class="report-footer">
-      <p><small>Generated by Heimdall &middot; {{ exportType }} Report &middot; Self-contained export</small></p>
+      <p><small>Generated by Heimdall &middot; Administrator Report &middot; Self-contained export</small></p>
     </footer>
   </div>
 {% endblock %}

@@ -5,7 +5,7 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
   var h = document.documentElement;
   var controls = [].slice.call(document.querySelectorAll('article.control'));
   var total = controls.length;
-  var activeStatus = {}, activeSeverity = {}, activeFamilies = {}, searchTerm = '';
+  var activeStatus = {}, activeSeverity = {}, activeFamilies = {};
   var countEl = document.getElementById('filter-count');
   var tokensEl = document.getElementById('active-tokens');
   var clearBtn = document.getElementById('btn-clear-filters');
@@ -14,13 +14,25 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
   var familyTrigger = document.getElementById('nist-family-trigger');
   var familyList = document.getElementById('nist-family-list');
   var debounceTimer;
+  var searchTerms = [];
+
+  function parseQuery(q) {
+    var terms = [];
+    var re = /"([^"]+)"/g, m;
+    while ((m = re.exec(q)) !== null) terms.push(m[1].toLowerCase());
+    var rest = q.replace(/"[^"]*"/g, '').trim().toLowerCase();
+    if (rest) {
+      rest.split(/\s+/).forEach(function(t) { if (t) terms.push(t); });
+    }
+    return terms;
+  }
 
   function applyFilters() {
     var visible = 0;
     var hasStatus = Object.keys(activeStatus).length > 0;
     var hasSeverity = Object.keys(activeSeverity).length > 0;
     var hasFamily = Object.keys(activeFamilies).length > 0;
-    var q = searchTerm.toLowerCase();
+    var allSearch = searchTerms.concat(searchInput ? parseQuery(searchInput.value) : []);
     for (var i = 0; i < controls.length; i++) {
       var c = controls[i];
       var st = c.getAttribute('data-status');
@@ -34,14 +46,14 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
         for (var j = 0; j < fams.length; j++) { if (activeFamilies[fams[j]]) { match = true; break; } }
         if (!match) show = false;
       }
-      if (show && q) {
-        var text = (c.getAttribute('id') + ' ' + c.textContent).toLowerCase();
-        if (text.indexOf(q) === -1) show = false;
+      if (show && allSearch.length) {
+        var s = c.dataset.search || '';
+        for (var ti = 0; ti < allSearch.length; ti++) { if (s.indexOf(allSearch[ti]) === -1) { show = false; break; } }
       }
       c.classList.toggle('filtered-out', !show);
       if (show) visible++;
     }
-    var hasAny = hasStatus || hasSeverity || hasFamily || q;
+    var hasAny = hasStatus || hasSeverity || hasFamily || allSearch.length;
     if (countEl) countEl.textContent = hasAny ? visible + ' of ' + total + ' controls' : total + ' controls';
     var countForStatus = {}, countForSeverity = {}, countForFamily = {};
     for (var k = 0; k < controls.length; k++) {
@@ -51,7 +63,7 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
       var cfams = (ck.getAttribute('data-families') || '').split(',');
       var passSev = !hasSeverity || activeSeverity[csv];
       var passFam = !hasFamily || cfams.some(function(f) { return activeFamilies[f]; });
-      var passQ = !q || (ck.getAttribute('id') + ' ' + ck.textContent).toLowerCase().indexOf(q) !== -1;
+      var passQ = !allSearch.length || allSearch.every(function(t) { return (ck.dataset.search || '').indexOf(t) !== -1; });
       if (passSev && passFam && passQ) countForStatus[cst] = (countForStatus[cst] || 0) + 1;
       var passSt = !hasStatus || activeStatus[cst];
       if (passSt && passFam && passQ) countForSeverity[csv] = (countForSeverity[csv] || 0) + 1;
@@ -76,9 +88,10 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
     Object.keys(activeStatus).forEach(function(s) { parts.push('<button class="active-token" data-remove-status="' + s + '">&times; ' + s + '</button>'); });
     Object.keys(activeSeverity).forEach(function(s) { parts.push('<button class="active-token" data-remove-severity="' + s + '">&times; ' + s + '</button>'); });
     Object.keys(activeFamilies).forEach(function(f) { parts.push('<button class="active-token" data-remove-family="' + f + '">&times; ' + f + '</button>'); });
+    searchTerms.forEach(function(t) { parts.push('<button class="active-token" data-remove-search="' + t + '">&times; ' + t + '</button>'); });
     tokensEl.innerHTML = parts.join('');
     tokensEl.hidden = parts.length === 0;
-    if (clearBtn) clearBtn.hidden = parts.length === 0 && !searchTerm;
+    if (clearBtn) clearBtn.hidden = parts.length === 0;
   }
 
   function toggleChip(btn, map, key) {
@@ -103,9 +116,39 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
     if (rv) { var k2 = rv.getAttribute('data-remove-severity'); delete activeSeverity[k2]; var c2 = document.querySelector('.chip[data-filter-severity="' + k2 + '"]'); if (c2) c2.removeAttribute('aria-current'); applyFilters(); return; }
     var rf = e.target.closest ? e.target.closest('[data-remove-family]') : null;
     if (rf) { var fk = rf.getAttribute('data-remove-family'); delete activeFamilies[fk]; var cb = document.querySelector('#nist-family-list input[value="' + fk + '"]'); if (cb) cb.checked = false; applyFilters(); return; }
+    var rq = e.target.closest ? e.target.closest('[data-remove-search]') : null;
+    if (rq) { var term = rq.getAttribute('data-remove-search'); searchTerms = searchTerms.filter(function(t) { return t !== term; }); if (searchInput) searchInput.value = searchTerms.map(function(t) { return t.indexOf(' ') !== -1 ? '"' + t + '"' : t; }).join(' '); applyFilters(); return; }
   });
 
-  if (searchInput) searchInput.addEventListener('input', function() { clearTimeout(debounceTimer); debounceTimer = setTimeout(function() { searchTerm = searchInput.value; applyFilters(); }, 200); });
+  var committing = false;
+
+  function commitSearch() {
+    committing = true;
+    var newTerms = parseQuery(searchInput.value);
+    if (newTerms.length) {
+      newTerms.forEach(function(t) { if (searchTerms.indexOf(t) === -1) searchTerms.push(t); });
+      searchInput.value = '';
+    }
+    committing = false;
+    applyFilters();
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      if (committing) return;
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function() { applyFilters(); }, 200);
+    });
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); clearTimeout(debounceTimer); commitSearch(); }
+    });
+    searchInput.addEventListener('blur', function() {
+      clearTimeout(debounceTimer);
+      if (searchInput.value.trim()) commitSearch();
+    });
+    var searchForm = searchInput.closest('form');
+    if (searchForm) searchForm.addEventListener('submit', function(e) { e.preventDefault(); });
+  }
 
   if (familyList) {
     var cbs = familyList.querySelectorAll('input[type="checkbox"]');
@@ -129,7 +172,7 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
   });
 
   if (clearBtn) clearBtn.addEventListener('click', function() {
-    activeStatus = {}; activeSeverity = {}; activeFamilies = {}; searchTerm = '';
+    activeStatus = {}; activeSeverity = {}; activeFamilies = {}; searchTerms = [];
     if (searchInput) searchInput.value = '';
     document.querySelectorAll('.chip[aria-current]').forEach(function(c) { c.removeAttribute('aria-current'); });
     document.querySelectorAll('#nist-family-list input').forEach(function(cb) { cb.checked = false; });
@@ -140,8 +183,20 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
 
   var expandBtn = document.getElementById('btn-expand-all');
   var collapseBtn = document.getElementById('btn-collapse-all');
-  if (expandBtn) expandBtn.addEventListener('click', function() { controls.forEach(function(c) { if (!c.classList.contains('filtered-out')) { var d = c.querySelector('details'); if (d) d.open = true; } }); });
-  if (collapseBtn) collapseBtn.addEventListener('click', function() { controls.forEach(function(c) { var d = c.querySelector('details'); if (d) d.open = false; }); });
+  if (expandBtn) expandBtn.addEventListener('click', function() { [].slice.call(document.querySelectorAll('#main details')).forEach(function(d) { var parent = d.closest('.filtered-out'); if (!parent) d.open = true; }); });
+  if (collapseBtn) collapseBtn.addEventListener('click', function() { [].slice.call(document.querySelectorAll('#main details')).forEach(function(d) { d.open = false; }); });
+
+  var viewBtns = [].slice.call(document.querySelectorAll('[data-view-level]'));
+  viewBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      viewBtns.forEach(function(b) { b.removeAttribute('aria-current'); });
+      btn.setAttribute('aria-current', 'true');
+      h.setAttribute('data-report-level', btn.getAttribute('data-view-level'));
+    });
+  });
+
+  var printBtn = document.getElementById('btn-print');
+  if (printBtn) printBtn.addEventListener('click', function() { window.print(); });
 
   var themeBtn = document.getElementById('theme-toggle');
   if (themeBtn) themeBtn.addEventListener('click', function() { h.setAttribute('data-theme', h.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); });
@@ -154,9 +209,9 @@ Degrades gracefully — all controls visible if JS is blocked.{% endcomment -%}
     window.addEventListener('resize', function() { if (window.innerWidth > 768) { filterBar.hidden = false; filterToggle.setAttribute('aria-expanded', 'true'); } });
   }
 
-  var savedOpen = [];
-  function beforePrint() { savedOpen = []; controls.forEach(function(c) { var d = c.querySelector('details'); if (d) { savedOpen.push({el: d, was: d.open}); d.open = true; } }); }
-  function afterprint() { savedOpen.forEach(function(s) { s.el.open = s.was; }); savedOpen = []; }
+  var savedOpen = [], savedTheme = null;
+  function beforePrint() { savedOpen = []; savedTheme = h.getAttribute('data-theme'); h.removeAttribute('data-theme'); [].slice.call(document.querySelectorAll('details')).forEach(function(d) { savedOpen.push({el: d, was: d.open}); d.open = true; }); }
+  function afterprint() { savedOpen.forEach(function(s) { s.el.open = s.was; }); savedOpen = []; if (savedTheme) h.setAttribute('data-theme', savedTheme); savedTheme = null; }
   window.addEventListener('beforeprint', beforePrint);
   window.addEventListener('afterprint', afterprint);
   if (window.matchMedia) { var mql = window.matchMedia('print'); if (mql.addEventListener) mql.addEventListener('change', function(e) { if (e.matches) beforePrint(); else afterprint(); }); }

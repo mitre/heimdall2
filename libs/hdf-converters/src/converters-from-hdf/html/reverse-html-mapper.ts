@@ -135,20 +135,8 @@ export class FromHDFToHTMLMapper {
   };
 
   constructor(files: InputData[], exportType: FileExportTypes) {
-    // Set html element visibility based on export type
-    switch (exportType) {
-      case FileExportTypes.Executive:
-        this.outputData.showResultSets = false;
-        this.outputData.showCode = false;
-        break;
-      case FileExportTypes.Manager:
-        this.outputData.showResultSets = true;
-        this.outputData.showCode = false;
-        break;
-      case FileExportTypes.Administrator:
-        this.outputData.showResultSets = true;
-        this.outputData.showCode = true;
-    }
+    this.outputData.showResultSets = true;
+    this.outputData.showCode = true;
 
     // Set default attribute values in preparation for value assignment
     this.outputData.files = [];
@@ -360,7 +348,7 @@ export class FromHDFToHTMLMapper {
     resultLevels: ContextualizedControl[]
   ): ContextualizedControl & {details: IDetail[]} & {resultID: string} & {
     resultStatus: IResultStatus;
-  } & {resultSeverity: IResultSeverity} & {controlTags: string[]; nistFamilies: string} {
+  } & {resultSeverity: IResultSeverity} & {controlTags: string[]; nistFamilies: string; searchText: string} {
     // Check status of individual result to assign corresponding icon
     let statusColor;
     switch (result.root.hdf.status) {
@@ -481,6 +469,14 @@ export class FromHDFToHTMLMapper {
         icon: severityColor
       },
       controlTags: filteredControls,
+      searchText: [
+        result.data.id,
+        result.data.title,
+        result.data.desc,
+        result.hdf.descriptions.check || result.data.tags.check,
+        result.hdf.descriptions.fix || result.data.tags.fix,
+        ...filteredControls
+      ].filter(Boolean).join(' ').toLowerCase().replace(/<[^>]*>/g, ''),
       nistFamilies: [...new Set(
         filteredControls
           .filter((t) => !t.startsWith('CCI-'))
@@ -558,7 +554,8 @@ export class FromHDFToHTMLMapper {
 
     return engine.parseAndRender(templates['report'], {
       ...this.outputData,
-      title: 'Heimdall ' + this.outputData.exportType + ' Report',
+      title: 'Heimdall Administrator Report',
+      defaultView: this.outputData.exportType.toLowerCase(),
       css,
       reportCss
     });

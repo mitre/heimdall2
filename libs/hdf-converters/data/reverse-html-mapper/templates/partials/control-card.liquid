@@ -3,7 +3,7 @@ Variables: result (control object), showCode (boolean).
 Raw HTML justification: result.resultStatus.icon and result.resultSeverity.icon are SVG strings built by the mapper.
 result.hdf.wraps.title may contain sanitized HTML. result.data.desc is sanitized by sanitize-html in the mapper.
 segment.code_desc may contain sanitized HTML. detail.value is sanitized by sanitize-html in the mapper.{% endcomment -%}
-<article class="control" id="{{ result.resultID }}" data-status="{{ result.resultStatus.status }}" data-severity="{{ result.resultSeverity.severity }}" data-families="{{ result.nistFamilies }}">
+<article class="control" id="{{ result.resultID }}" data-status="{{ result.resultStatus.status }}" data-severity="{{ result.resultSeverity.severity }}" data-families="{{ result.nistFamilies }}" data-search="{{ result.searchText }}">
   <details>
     <summary>
       {%- assign status_class = result.resultStatus.status | downcase | replace: ' ', '-' -%}
@@ -42,11 +42,9 @@ segment.code_desc may contain sanitized HTML. detail.value is sanitized by sanit
       {%- endfor %}
     </dl>
 
-    {%- if showCode %}
-    <figure>
+    <figure data-report-section="code">
       <figcaption>Source Code</figcaption>
       {{ result.full_code | raw }}
     </figure>
-    {%- endif %}
   </details>
 </article>
