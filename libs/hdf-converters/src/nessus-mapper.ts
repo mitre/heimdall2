@@ -1,13 +1,15 @@
+import type {ProcessEntitiesOptions, X2jOptions} from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
-  ILookupPath,
-  impactMapping,
-  MappedTransform,
   buildParseHtmlFunc,
-  parseXml
+  DEFAULT_XML_PROCESS_ENTITIES_OPTIONS,
+  type ILookupPath,
+  impactMapping,
+  type MappedTransform,
+  parseXml,
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping';
@@ -32,6 +34,7 @@ const COMPLIANCE_ACTUAL_VALUE = 'compliance-actual-value';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
+const DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS = 1_000_000_000;
 const DEFAULT_NIST_TAG: string[] = ["SI-2"];
 
 let parseHtml: (input: unknown) => string;
@@ -213,8 +216,22 @@ export class NessusResults {
   data: Record<string, unknown>;
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   withRaw: boolean;
-  constructor(nessusXml: string, withRaw = false) {
-    this.data = parseXml(nessusXml);
+  constructor(
+    nessusXml: string,
+    withRaw = false,
+    options: X2jOptions = {},
+  ) { 
+    // Only allowing overrides for MAX_TOTAL_EXPANSIONS for right now but structured in a way to let people override anything in the future
+    const {maxTotalExpansions = DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS} =
+      _.isPlainObject(options.processEntities)
+        ? (options.processEntities as ProcessEntitiesOptions)
+        : {};
+    this.data = parseXml(nessusXml, {
+      processEntities: {
+        ...DEFAULT_XML_PROCESS_ENTITIES_OPTIONS,
+        maxTotalExpansions,
+      },
+    });
     this.withRaw = withRaw;
   }
 
