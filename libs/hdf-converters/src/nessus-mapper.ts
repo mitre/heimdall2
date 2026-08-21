@@ -37,12 +37,6 @@ const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS = 1_000_000_000;
 const DEFAULT_NIST_TAG: string[] = ["SI-2"];
 
-function isProcessEntitiesOptions(
-  value: X2jOptions['processEntities'],
-): value is ProcessEntitiesOptions {
-  return _.isPlainObject(value);
-}
-
 let parseHtml: (input: unknown) => string;
 
 let policyName: string;
@@ -229,8 +223,8 @@ export class NessusResults {
   ) { 
     // Only allowing overrides for MAX_TOTAL_EXPANSIONS for right now but structured in a way to let people override anything in the future
     const {maxTotalExpansions = DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS} =
-      isProcessEntitiesOptions(options.processEntities)
-        ? options.processEntities
+      _.isPlainObject(options.processEntities)
+        ? (options.processEntities as ProcessEntitiesOptions)
         : {};
     this.data = parseXml(nessusXml, {
       processEntities: {
