@@ -1,0 +1,37 @@
+# docker-compose.override.yml
+#
+# Docker Compose automatically merges this file with docker-compose.yml
+# when you run `docker compose up`. No -f flag needed.
+# See: https://docs.docker.com/compose/how-tos/multiple-compose-files/merge/
+#
+# This override publishes PostgreSQL on the host (5438 by default, override
+# with POSTGRES_PORT) so backend tests running on the host can connect.
+# The base docker-compose.yml only
+# uses `expose` (Docker-internal), which is correct for production
+# but prevents local TDD.
+#
+# Usage:
+#   docker compose up -d database   # start PostgreSQL on localhost:5438
+#   NODE_ENV=test yarn backend test  # run backend tests from the host
+
+services:
+  database:
+    ports:
+      - "${POSTGRES_PORT:-5438}:5432"
+    environment:
+      - POSTGRES_DB=heimdall-server-development
+      # No secret is hardcoded here — this file is committed. Supply the
+      # password from your local .env (compose reads it automatically) or
+      # from your shell environment, e.g.:
+      #   echo "POSTGRES_PASSWORD=$(openssl rand -base64 24)" >> .env
+      # If it is unset, compose fails fast with the message below rather
+      # than silently starting a database with a guessable password.
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in your .env or shell}
+
+  # Test LDAP server (Planet Express from Futurama)
+  # Users: hermes (hermes), professor (professor), etc.
+  # Matches .env-ci LDAP config
+  ldap:
+    image: rroemhild/test-openldap
+    ports:
+      - "10389:10389"
