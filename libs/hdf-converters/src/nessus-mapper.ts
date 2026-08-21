@@ -1,3 +1,4 @@
+import type {X2jOptions} from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -218,8 +219,12 @@ export class NessusResults {
   constructor(
     nessusXml: string,
     withRaw = false,
-    maxTotalExpansions = DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS,
+    options: X2jOptions = {},
   ) {
+    const {maxTotalExpansions = DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS} =
+      typeof options.processEntities === 'object'
+        ? options.processEntities
+        : {};
     this.data = parseXml(nessusXml, {
       processEntities: {
         ...DEFAULT_XML_PROCESS_ENTITIES_OPTIONS,
