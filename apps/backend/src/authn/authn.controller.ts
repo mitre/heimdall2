@@ -98,11 +98,10 @@ export class AuthnController {
     this.logger.debug(JSON.stringify(req.session, null, 2));
     if (this.configService.isLocalLoginAllowed()) {
       return this.authnService.login(req.user as User);
-    } else {
-      throw new ForbiddenException(
-        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.',
-      );
     }
+    throw new ForbiddenException(
+      'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.',
+    );
   }
 
   @Get('github')

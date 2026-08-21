@@ -29,7 +29,7 @@ export class DatabaseService {
 
     const added = updated.filter(
       updatedItem =>
-        !source.some(sourceItem => sourceItem.id === updatedItem.id),
+        source.every(sourceItem => sourceItem.id !== updatedItem.id),
     );
     const changed = updated.filter(
       updatedItem =>
@@ -37,7 +37,7 @@ export class DatabaseService {
     );
     const deleted = source.filter(
       sourceItem =>
-        !updated.some(updatedItem => updatedItem.id === sourceItem.id),
+        updated.every(updatedItem => updatedItem.id !== sourceItem.id),
     );
 
     return {

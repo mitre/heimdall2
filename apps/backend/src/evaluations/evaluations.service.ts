@@ -153,9 +153,8 @@ export class EvaluationsService {
     );
     if (evaluation === null) {
       throw new NotFoundException('Evaluation with given id not found');
-    } else {
-      return evaluation;
     }
+    return evaluation;
   }
 
   async getAllEvaluations(
@@ -332,10 +331,9 @@ export class EvaluationsService {
     if (operation === 'AND') {
       // Expected outcome: an OR baseCriteria AND an AND searchFields
       return { [Op.and]: searchFields, [Op.or]: baseCriteria };
-    } else {
-      // Expected outcome: an OR baseCriteria AND an OR searchFields
-      return { [Op.and]: [{ [Op.or]: baseCriteria }, { [Op.and]: { [Op.or]: searchFields } }] };
     }
+    // Expected outcome: an OR baseCriteria AND an OR searchFields
+    return { [Op.and]: [{ [Op.or]: baseCriteria }, { [Op.and]: { [Op.or]: searchFields } }] };
   }
 
   async groups(id: string): Promise<Group[]> {

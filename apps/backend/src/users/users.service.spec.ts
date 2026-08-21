@@ -228,9 +228,8 @@ describe('UsersService', () => {
 
       if (findUser === null || admin === null) {
         throw new TypeError(errorString);
-      } else {
-        user = findUser;
       }
+      user = findUser;
 
       userCreatedAt = user.updatedAt;
       abacPolicy = authzService.abac.createForUser(user);
@@ -490,10 +489,9 @@ describe('UsersService', () => {
 
       if (userResponse === null || adminResponse === null) {
         throw new TypeError(errorString);
-      } else {
-        user = userResponse;
-        adminUser = adminResponse;
       }
+      user = userResponse;
+      adminUser = adminResponse;
 
       abacPolicy = authzService.abac.createForUser(user);
       adminAbacPolicy = authzService.abac.createForUser(adminResponse);

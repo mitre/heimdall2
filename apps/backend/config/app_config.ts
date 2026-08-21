@@ -1,11 +1,11 @@
-import {Logger} from '@nestjs/common';
-import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import { Logger } from '@nestjs/common';
+import * as dotenv from 'dotenv';
 
 export default class AppConfig {
   private static instance: AppConfig;
   private readonly logger = new Logger(AppConfig.name);
-  private envConfig: {[key: string]: string | undefined};
+  private envConfig: Record<string, string | undefined>;
 
   private constructor() {
     try {
@@ -22,10 +22,10 @@ export default class AppConfig {
   }
 
   static getInstance(): AppConfig {
-    if (!AppConfig.instance) {
-      AppConfig.instance = new AppConfig();
+    if (!this.instance) {
+      this.instance = new AppConfig();
     }
-    return AppConfig.instance;
+    return this.instance;
   }
 
   set(key: string, value: string | undefined): void {
@@ -38,58 +38,45 @@ export default class AppConfig {
 
   getExternalUrl(): string {
     const external_url = this.get('EXTERNAL_URL');
-    if (external_url === undefined) {
-      return '';
-    } else {
-      return external_url;
-    }
+    return external_url === undefined ? '' : external_url;
   }
 
   getSplunkHostUrl(): string {
     const splunk_host_url = this.get('SPLUNK_HOST_URL');
-    if (splunk_host_url !== undefined) {
-      return splunk_host_url;
-    } else {
-      return '';
-    }
+    return splunk_host_url === undefined ? '' : splunk_host_url;
   }
 
   getTenableHostUrl(): string {
     const tenable_host_url = this.get('TENABLE_HOST_URL');
-    if (tenable_host_url !== undefined) {
-      return tenable_host_url;
-    } else {
-      return '';
-    }
+    return tenable_host_url === undefined ? '' : tenable_host_url;
   }
 
   getDatabaseName(): string {
     const databaseName = this.get('DATABASE_NAME');
-    const nodeEnvironment = this.get('NODE_ENV');
-
     if (databaseName !== undefined) {
       return databaseName;
-    } else if (nodeEnvironment !== undefined) {
-      return `heimdall-server-${nodeEnvironment.toLowerCase()}`;
-    } else {
+    }
+    const nodeEnvironment = this.get('NODE_ENV');
+    if (nodeEnvironment === undefined) {
       throw new TypeError(
-        'NODE_ENV and DATABASE_NAME are undefined. Unable to set database or use the default based on environment.'
+        'NODE_ENV and DATABASE_NAME are undefined. Unable to set database or use the default based on environment.',
       );
     }
+    return `heimdall-server-${nodeEnvironment.toLowerCase()}`;
   }
 
   getSSLConfig() {
     if (
-      !this.get('DATABASE_SSL') ||
-      this.get('DATABASE_SSL')?.toLowerCase() === 'false'
+      !this.get('DATABASE_SSL')
+      || this.get('DATABASE_SSL')?.toLowerCase() === 'false'
     ) {
       return false;
     }
 
-    let sslKey, sslCert, sslCA;
+    let sslCA, sslCert, sslKey;
 
     if (typeof this.get('DATABASE_SSL_KEY') === 'string') {
-      if (this.get('DATABASE_SSL_KEY')?.indexOf('-BEGIN') !== -1) {
+      if (this.get('DATABASE_SSL_KEY')?.includes('-BEGIN') === true) {
         sslKey = this.get('DATABASE_SSL_KEY');
       } else {
         // Verify file exists
@@ -102,7 +89,7 @@ export default class AppConfig {
     }
 
     if (typeof this.get('DATABASE_SSL_CERT') === 'string') {
-      if (this.get('DATABASE_SSL_CERT')?.indexOf('-BEGIN') !== -1) {
+      if (this.get('DATABASE_SSL_CERT')?.includes('-BEGIN') === true) {
         sslCert = this.get('DATABASE_SSL_CERT');
       } else {
         // Verify file exists
@@ -115,7 +102,7 @@ export default class AppConfig {
     }
 
     if (typeof this.get('DATABASE_SSL_CA') === 'string') {
-      if (this.get('DATABASE_SSL_CA')?.indexOf('-BEGIN') !== -1) {
+      if (this.get('DATABASE_SSL_CA')?.includes('-BEGIN') === true) {
         sslCA = this.get('DATABASE_SSL_CA');
       } else {
         // Verify file exists
@@ -128,12 +115,12 @@ export default class AppConfig {
     }
 
     return {
-      rejectUnauthorized:
-        this.get('DATABASE_SSL_INSECURE') &&
-        this.get('DATABASE_SSL_INSECURE')?.toLowerCase() !== 'true',
-      key: sslKey,
+      ca: sslCA,
       cert: sslCert,
-      ca: sslCA
+      key: sslKey,
+      rejectUnauthorized:
+        this.get('DATABASE_SSL_INSECURE')
+        && this.get('DATABASE_SSL_INSECURE')?.toLowerCase() !== 'true',
     };
   }
 
@@ -143,18 +130,16 @@ export default class AppConfig {
 
   getDbConfig() {
     return {
-      username: this.get('DATABASE_USERNAME') || 'postgres',
-      user: this.get('DATABASE_USERNAME') || 'postgres',
-      role: this.get('DATABASE_USERNAME') || 'postgres',
-      password: this.get('DATABASE_PASSWORD') || '',
       database: this.getDatabaseName(),
-      host: this.get('DATABASE_HOST') || '127.0.0.1',
-      port: Number(this.get('DATABASE_PORT')) || 5432,
       dialect: 'postgres' as const,
-      dialectOptions: {
-        ssl: this.getSSLConfig()
-      },
-      ssl: Boolean(this.get('DATABASE_SSL')) || false
+      dialectOptions: { ssl: this.getSSLConfig() },
+      host: this.get('DATABASE_HOST') || '127.0.0.1',
+      password: this.get('DATABASE_PASSWORD') || '',
+      port: Number(this.get('DATABASE_PORT')) || 5432,
+      role: this.get('DATABASE_USERNAME') || 'postgres',
+      ssl: Boolean(this.get('DATABASE_SSL')) || false,
+      user: this.get('DATABASE_USERNAME') || 'postgres',
+      username: this.get('DATABASE_USERNAME') || 'postgres',
     };
   }
 
@@ -162,36 +147,18 @@ export default class AppConfig {
     const url = this.get('DATABASE_URL');
     if (url === undefined) {
       return false;
-    } else {
-      const pattern =
-        /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/;
-      const matches = url.match(pattern);
+    }
 
-      if (matches === null) {
-        return false;
-      }
-
-      this.set(
-        'DATABASE_USERNAME',
-        matches[2] !== undefined ? matches[2].split(':')[0] : undefined
-      );
-      this.set(
-        'DATABASE_PASSWORD',
-        matches[2] !== undefined ? matches[2].split(':')[1] : undefined
-      );
-      this.set(
-        'DATABASE_HOST',
-        matches[3] !== undefined ? matches[3].split(/:(?=\d+$)/)[0] : undefined
-      );
-      this.set(
-        'DATABASE_NAME',
-        matches[4] !== undefined ? matches[4].split('/')[0] : undefined
-      );
-      this.set(
-        'DATABASE_PORT',
-        matches[3] !== undefined ? matches[3].split(/:(?=\d+$)/)[1] : undefined
-      );
+    try {
+      const parsed = new URL(url);
+      this.set('DATABASE_USERNAME', parsed.username || undefined);
+      this.set('DATABASE_PASSWORD', parsed.password || undefined);
+      this.set('DATABASE_HOST', parsed.hostname || undefined);
+      this.set('DATABASE_NAME', parsed.pathname.slice(1).split('/', 1)[0] || undefined);
+      this.set('DATABASE_PORT', parsed.port || undefined);
       return true;
+    } catch {
+      return false;
     }
   }
 }

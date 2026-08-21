@@ -89,10 +89,9 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         lastName,
         'github',
       );
-    } else {
-      throw new UnauthorizedException(
-        'Please verify your email with Github before logging into Heimdall.',
-      );
     }
+    throw new UnauthorizedException(
+      'Please verify your email with Github before logging into Heimdall.',
+    );
   }
 }

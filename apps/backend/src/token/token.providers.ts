@@ -19,9 +19,8 @@ export function limitJWTTime(time: string, logLimit: boolean) {
       logger.warn('JWT Expire time has been limited to two days maximum.');
     }
     return maxDays;
-  } else {
-    return timeMs;
   }
+  return timeMs;
 }
 
 export const tokenProviders = [

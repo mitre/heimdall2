@@ -28,7 +28,7 @@ export class AuthnService {
       winston.format.timestamp({ format: this.loggingTimeFormat }),
       winston.format.printf(
         info =>
-          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`,
+          `${this.line}[${String([info.timestamp])}] (Authn Service): ${String(info.message)}`,
       ),
     ),
     transports: [new winston.transports.Console()],
@@ -59,7 +59,7 @@ export class AuthnService {
       !loginUser.jwtSecret
       || this.configService.get('ONE_SESSION_PER_USER')?.toLowerCase() === 'true'
     ) {
-      this.usersService.updateUserSecret(loginUser);
+      void this.usersService.updateUserSecret(loginUser);
     }
     if (payload.forcePasswordChange || user.role === 'admin') {
       // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.
@@ -125,7 +125,7 @@ export class AuthnService {
           keyId: string;
           token: string;
         };
-        const JWTSignature = apikey.split('.')[2];
+        const JWTSignature = apikey.split('.', 3)[2];
         if (_.has(jwtPayload, 'keyId')) {
           const matchingKey = await this.apiKeyService.findById(
             jwtPayload.keyId,
@@ -133,17 +133,12 @@ export class AuthnService {
           if (await compare(JWTSignature, matchingKey.apiKey)) {
             if (matchingKey.type === 'user') {
               return matchingKey.user;
-            } else if (matchingKey.type === 'group') {
-              return matchingKey.group;
-            } else {
-              return null;
             }
-          } else {
-            return null;
+            return matchingKey.type === 'group' ? matchingKey.group : null;
           }
-        } else {
           return null;
         }
+        return null;
       } catch {
         return null;
       }
@@ -186,9 +181,9 @@ export class AuthnService {
       if (user.firstName !== firstName || user.lastName !== lastName) {
         user.firstName = firstName;
         user.lastName = lastName;
-        user.save();
+        void user.save();
       }
-      this.usersService.updateLoginMetadata(user);
+      void this.usersService.updateLoginMetadata(user);
     }
 
     return user;
@@ -202,10 +197,9 @@ export class AuthnService {
       throw new UnauthorizedException('Incorrect Username or Password');
     }
     if (user && (await compare(password, user.encryptedPassword))) {
-      this.usersService.updateLoginMetadata(user);
+      void this.usersService.updateLoginMetadata(user);
       return user;
-    } else {
-      return null;
     }
+    return null;
   }
 }

@@ -70,18 +70,16 @@ export class UsersService {
     const user = await this.userModel.findByPk<User>(identifier);
     if (user === null) {
       throw new NotFoundException('User with given id not found');
-    } else {
-      return user;
     }
+    return user;
   }
 
   async findOneBang(options: FindOptions | undefined): Promise<User> {
     const user = await this.userModel.findOne<User>(options);
     if (user === null) {
       throw new NotFoundException('User with given id not found');
-    } else {
-      return user;
     }
+    return user;
   }
 
   async remove(
@@ -136,7 +134,8 @@ export class UsersService {
       && !abac.can('skip-force-password-change', userToUpdate)
     ) {
       throw new BadRequestException('You must change your password');
-    } else if (updateUserDto.password) {
+    }
+    if (updateUserDto.password) {
       userToUpdate.encryptedPassword = await hash(updateUserDto.password, 14);
       userToUpdate.passwordChangedAt = new Date();
       userToUpdate.forcePasswordChange = false;

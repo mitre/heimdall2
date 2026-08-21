@@ -16,8 +16,7 @@ export class PasswordsMatchPipe implements PipeTransform {
     }
     if (value.password === value.passwordConfirmation) {
       return value;
-    } else {
-      throw new BadRequestException('Passwords do not match');
     }
+    throw new BadRequestException('Passwords do not match');
   }
 }

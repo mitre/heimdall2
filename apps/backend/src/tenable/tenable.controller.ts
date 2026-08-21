@@ -74,7 +74,8 @@ export class TenableController {
             },
             HttpStatus.NOT_FOUND,
           );
-        } else if (error.response?.status === HttpStatus.UNAUTHORIZED) {
+        }
+        if (error.response?.status === HttpStatus.UNAUTHORIZED) {
           throw new HttpException(
             {
               code: 'INVALID_CREDENTIALS', // custom application error code (optional)
@@ -83,64 +84,63 @@ export class TenableController {
             },
             HttpStatus.UNAUTHORIZED,
           );
-        } else {
-          switch (error.code) {
-            case 'ECONNREFUSED': {
-              throw new HttpException(
-                {
-                  code: 'SERVER_UNREACHABLE', // custom app code
-                  message: 'Tenable server is unreachable',
-                  status: HttpStatus.BAD_GATEWAY,
-                },
-                HttpStatus.BAD_GATEWAY,
-              );
-            }
-            case 'ENOTFOUND': {
-              throw new HttpException(
-                {
-                  code: 'INVALID_HOST_URL', // custom app code
-                  message:
-                'Unable to resolve Tenable host URL to an IP address (possible DNS resolution on the hosting platform).',
-                  status: HttpStatus.BAD_REQUEST,
-                },
-                HttpStatus.BAD_REQUEST,
-              );
-            }
-            case 'ETIMEDOUT': {
-              throw new HttpException(
-                {
-                  code: 'CONNECTION_TIMEOUT', // custom application error code (optional)
-                  message: 'Tenable server took too long to respond',
-                  status: HttpStatus.REQUEST_TIMEOUT,
-                },
-                HttpStatus.REQUEST_TIMEOUT,
-              );
-            }
-            case 'UNABLE_TO_VERIFY_LEAF_SIGNATURE': {
-              throw new HttpException(
-                {
-                  code: 'UNABLE_TO_VERIFY_LEAF_SIGNATURE',
-                  message:
-                'SSL certificate verification failed while connecting to Tenable '
-                + `(${host_url}). This may be due to an untrusted or incomplete TLS `
-                + 'certificate chain.',
-                  status: HttpStatus.BAD_GATEWAY,
-                },
-                HttpStatus.BAD_GATEWAY,
-              );
-            }
-            default: {
-              throw new HttpException(
-                {
-                  code: 'TENABLE_PROXY_ERROR', // Optional custom app code
-                  message:
-                error.response?.data?.message
-                || `Unexpected error connecting to Tenable ${host_url}`,
-                  status: error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
-                },
-                error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
-              );
-            }
+        }
+        switch (error.code) {
+          case 'ECONNREFUSED': {
+            throw new HttpException(
+              {
+                code: 'SERVER_UNREACHABLE', // custom app code
+                message: 'Tenable server is unreachable',
+                status: HttpStatus.BAD_GATEWAY,
+              },
+              HttpStatus.BAD_GATEWAY,
+            );
+          }
+          case 'ENOTFOUND': {
+            throw new HttpException(
+              {
+                code: 'INVALID_HOST_URL', // custom app code
+                message:
+              'Unable to resolve Tenable host URL to an IP address (possible DNS resolution on the hosting platform).',
+                status: HttpStatus.BAD_REQUEST,
+              },
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+          case 'ETIMEDOUT': {
+            throw new HttpException(
+              {
+                code: 'CONNECTION_TIMEOUT', // custom application error code (optional)
+                message: 'Tenable server took too long to respond',
+                status: HttpStatus.REQUEST_TIMEOUT,
+              },
+              HttpStatus.REQUEST_TIMEOUT,
+            );
+          }
+          case 'UNABLE_TO_VERIFY_LEAF_SIGNATURE': {
+            throw new HttpException(
+              {
+                code: 'UNABLE_TO_VERIFY_LEAF_SIGNATURE',
+                message:
+              'SSL certificate verification failed while connecting to Tenable '
+              + `(${host_url}). This may be due to an untrusted or incomplete TLS `
+              + 'certificate chain.',
+                status: HttpStatus.BAD_GATEWAY,
+              },
+              HttpStatus.BAD_GATEWAY,
+            );
+          }
+          default: {
+            throw new HttpException(
+              {
+                code: 'TENABLE_PROXY_ERROR', // Optional custom app code
+                message:
+              error.response?.data?.message
+              || `Unexpected error connecting to Tenable ${host_url}`,
+                status: error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+              },
+              error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            );
           }
         }
       } else if (error instanceof Error) {

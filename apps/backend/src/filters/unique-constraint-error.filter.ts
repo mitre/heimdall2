@@ -10,10 +10,7 @@ import { UniqueConstraintError, ValidationErrorItem } from 'sequelize';
 @Catch(UniqueConstraintError)
 export class UniqueConstraintErrorFilter implements ExceptionFilter {
   buildMessage(errors: ValidationErrorItem[]): string[] {
-    const builtErrors: string[] = [];
-    for (const error of errors) {
-      builtErrors.push(error.message);
-    }
+    const builtErrors: string[] = Array.from(errors, error => error.message);
     return builtErrors;
   }
 

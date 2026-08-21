@@ -70,9 +70,8 @@ export class EvaluationTagsService {
     );
     if (evaluationTag === null) {
       throw new NotFoundException('EvaluationTag with given id not found');
-    } else {
-      return evaluationTag;
     }
+    return evaluationTag;
   }
 
   async remove(id: string): Promise<EvaluationTag> {

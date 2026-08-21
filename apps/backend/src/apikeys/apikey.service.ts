@@ -39,7 +39,7 @@ export class ApiKeyService {
       APIKeySecret,
     );
     // Since BCrypt has a 72 byte limit only hash the JWT signature
-    const JWTSignature = newJWT.split('.')[2];
+    const JWTSignature = newJWT.split('.', 3)[2];
     newApiKey.apiKey = await hash(JWTSignature, 14);
     newApiKey.save();
     return { apiKey: newJWT, id: newApiKey.id, name: newApiKey.name };
@@ -59,9 +59,8 @@ export class ApiKeyService {
     const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, { include: [User, Group] });
     if (apiKey === null) {
       throw new NotFoundException('API key with given id not found');
-    } else {
-      return apiKey;
     }
+    return apiKey;
   }
 
   async remove(id: string): Promise<APIKeyDto> {

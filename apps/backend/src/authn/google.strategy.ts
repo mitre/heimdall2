@@ -51,10 +51,9 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
         user.lastName,
         'google',
       );
-    } else {
-      throw new UnauthorizedException(
-        'Please verify your email with Google before logging into Heimdall.',
-      );
     }
+    throw new UnauthorizedException(
+      'Please verify your email with Google before logging into Heimdall.',
+    );
   }
 }

@@ -26,9 +26,8 @@ function getSynchronize(configService: ConfigService): boolean {
   const nodeEnvironment = configService.get('NODE_ENV');
   if (nodeEnvironment === undefined) {
     throw new TypeError('NODE_ENV is not set and must be provided.');
-  } else {
-    return nodeEnvironment === 'test' ? false : true;
   }
+  return nodeEnvironment === 'test' ? false : true;
 }
 
 function logQuery(

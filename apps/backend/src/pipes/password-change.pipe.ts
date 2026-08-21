@@ -31,18 +31,18 @@ export class PasswordChangePipe implements PipeTransform {
       || !value.currentPassword
     ) {
       return value;
-    } else if (
+    }
+    if (
       typeof value.password == 'string'
       && typeof value.currentPassword == 'string'
       && levenshtein(value.password, value.currentPassword) > 8
       && this.classesChanged(value.password, value.currentPassword)
     ) {
       return value;
-    } else {
-      throw new BadRequestException(
-        'A minimum of four character classes must be changed when updating a password.'
-        + ' A minimum of eight of the total number of characters must be changed when updating a password.',
-      );
     }
+    throw new BadRequestException(
+      'A minimum of four character classes must be changed when updating a password.'
+      + ' A minimum of eight of the total number of characters must be changed when updating a password.',
+    );
   }
 }

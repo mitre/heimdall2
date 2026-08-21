@@ -121,7 +121,8 @@ describe('GroupsController', () => {
     it('findForUser should return groups the user is a member of', async () => {
       expect.assertions(1);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
-      const publicGroups = (await groupsService.findAll()).filter(
+      const allGroups = await groupsService.findAll();
+      const publicGroups = allGroups.filter(
         group => group.public && group.id !== privateGroup.id,
       );
       const groups = await groupsController.findForUser({ user: basicUser });
@@ -323,13 +324,15 @@ describe('GroupsController', () => {
       });
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
-      expect((await privateGroup.$get('evaluations')).length).toEqual(1);
+      const evaluationsBeforeRemoval = await privateGroup.$get('evaluations');
+      expect(evaluationsBeforeRemoval.length).toEqual(1);
       await groupsController.removeEvaluationFromGroup(
         privateGroup.id,
         { user: basicUser },
         { id: evaluation.id },
       );
-      expect((await privateGroup.$get('evaluations')).length).toEqual(0);
+      const evaluationsAfterRemoval = await privateGroup.$get('evaluations');
+      expect(evaluationsAfterRemoval.length).toEqual(0);
     });
 
     it('should prevent non-members from removing an evaluation', async () => {

@@ -35,9 +35,9 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
   }
 
   static getSSLConfig(configService: ConfigService) {
-    const sslEnabled
+    const isSslEnabled
       = (configService.get('LDAP_SSL') ?? '').toLowerCase() === 'true';
-    if (!sslEnabled) {
+    if (!isSslEnabled) {
       return false;
     }
 
@@ -58,12 +58,12 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       }
     }
 
-    const sslInsecure
+    const isSslInsecure
       = (configService.get('LDAP_SSL_INSECURE') ?? '').toLowerCase() === 'true';
 
     return {
       ca: sslCA,
-      rejectUnauthorized: !sslInsecure,
+      rejectUnauthorized: !isSslInsecure,
     };
   }
 
@@ -76,7 +76,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       this.configService.get('LDAP_MAILFIELD') || 'mail',
     );
     const validatedUser = this.authnService.validateOrCreateUser(
-      Array.isArray(email) ? email[0] : email,
+      Array.isArray(email) ? email.at(0) : email,
       firstName,
       lastName,
       'ldap',

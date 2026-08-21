@@ -125,18 +125,16 @@ export class GroupsService {
     const group = await this.groupModel.findByPk(id, { include: 'users' });
     if (group === null) {
       throw new NotFoundException('Group with given id not found');
-    } else {
-      return group;
     }
+    return group;
   }
 
   async findOneBang(options?: FindOptions): Promise<Group> {
     const group = await this.groupModel.findOne<Group>(options);
     if (group === null) {
       throw new NotFoundException('Group with given name not found');
-    } else {
-      return group;
     }
+    return group;
   }
 
   async remove(groupToDelete: Group): Promise<Group> {
@@ -197,7 +195,7 @@ export class GroupsService {
       existingGroups
         .filter(
           existingGroup =>
-            !currentGroups.some(group => group.name === existingGroup.name),
+            currentGroups.every(group => group.name !== existingGroup.name),
         )
         .map(existingGroup =>
           this.addUserToGroup(existingGroup, user, 'member'),
