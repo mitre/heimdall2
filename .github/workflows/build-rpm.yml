@@ -1,0 +1,78 @@
+name: Build RPMs
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      el_versions:
+        description: 'EL versions to build (JSON array)'
+        default: '["8", "9"]'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-rpm:
+    strategy:
+      fail-fast: false
+      matrix:
+        el_version: ${{ fromJSON(inputs.el_versions || '["8", "9"]') }}
+        arch:
+          - name: x86_64
+            runner: ubuntu-24.04
+          - name: aarch64
+            runner: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.arch.runner }}
+    name: EL${{ matrix.el_version }} / ${{ matrix.arch.name }}
+    container:
+      image: oraclelinux:${{ matrix.el_version }}
+
+    steps:
+      - name: Install git
+        run: dnf install -y git
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build RPM
+        run: ./packaging/rpm/setup-rpm-build-env.sh --build --no-gpg-check
+        env:
+          HOME: /root
+
+      - name: Collect RPM artifacts
+        run: |
+          mkdir -p /tmp/rpms
+          cp /root/rpmbuild/RPMS/*/*.rpm /tmp/rpms/ 2>/dev/null || true
+          cp /root/rpmbuild/SRPMS/*.rpm /tmp/rpms/ 2>/dev/null || true
+          ls -la /tmp/rpms/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpm-el${{ matrix.el_version }}-${{ matrix.arch.name }}
+          path: /tmp/rpms/*.rpm
+          retention-days: 30
+
+      - name: Upload RPMs to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ matrix.arch.name }}" = "x86_64" ]; then
+            gh_arch="amd64"
+          else
+            gh_arch="arm64"
+          fi
+          dnf install -y --nogpgcheck \
+            "https://github.com/cli/cli/releases/download/v2.67.0/gh_2.67.0_linux_${gh_arch}.rpm" \
+            2>/dev/null || true
+          for rpm in /tmp/rpms/*.rpm; do
+            [ -f "${rpm}" ] || continue
+            gh release upload "${{ github.event.release.tag_name }}" \
+              "${rpm}" \
+              --clobber \
+              --repo "${{ github.repository }}"
+          done
