@@ -1,4 +1,4 @@
-import type {X2jOptions} from 'fast-xml-parser';
+import type {ProcessEntitiesOptions, X2jOptions} from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -36,6 +36,12 @@ const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG: string[] = [];
 const DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS = 1_000_000_000;
+
+function isProcessEntitiesOptions(
+  value: X2jOptions['processEntities'],
+): value is ProcessEntitiesOptions {
+  return _.isPlainObject(value);
+}
 
 let parseHtml: (input: unknown) => string;
 
@@ -223,7 +229,7 @@ export class NessusResults {
   ) { 
     // Only allowing overrides for MAX_TOTAL_EXPANSIONS for right now but structured in a way to let people override anything in the future
     const {maxTotalExpansions = DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS} =
-      _.isPlainObject(options.processEntities) 
+      isProcessEntitiesOptions(options.processEntities)
         ? options.processEntities
         : {};
     this.data = parseXml(nessusXml, {
