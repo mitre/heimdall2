@@ -1,33 +1,42 @@
-/* eslint-disable n/no-extraneous-import */
-
 import e18e from '@e18e/eslint-plugin';
 import comments from '@eslint-community/eslint-plugin-eslint-comments/configs';
 import js from '@eslint/js';
 import json from '@eslint/json';
-import markdown from '@eslint/markdown';
 import stylistic from '@stylistic/eslint-plugin';
 import vitest from '@vitest/eslint-plugin';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
+import cypress from 'eslint-plugin-cypress';
 import { importX } from 'eslint-plugin-import-x';
-import markdownLinks from 'eslint-plugin-markdown-links';
-import markdownPreferences from 'eslint-plugin-markdown-preferences';
 import n from 'eslint-plugin-n';
 import perfectionist from 'eslint-plugin-perfectionist';
 import promise from 'eslint-plugin-promise';
 import regexp from 'eslint-plugin-regexp';
 import security from 'eslint-plugin-security';
 import unicorn from 'eslint-plugin-unicorn';
+import vue from 'eslint-plugin-vue';
 import yml from 'eslint-plugin-yml';
 import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
-import cypress from 'eslint-plugin-cypress';
-import vue from 'eslint-plugin-vue';
-
-/* eslint-enable n/no-extraneous-import */
 
 export default defineConfig([
   {
-    ignores: ['**/dist', '**/lib', '**/node_modules', 'libs/inspecjs/src/generated_parsers/**'],
+    ignores: [
+      '**/dist',
+      '**/lib',
+      '**/node_modules',
+      'libs/inspecjs/src/generated_parsers/**',
+      'libs/hdf-converters/types/**/*.js',
+      'libs/hdf-converters/types/**/*.d.ts',
+      'libs/hdf-converters/data/reverse-html-mapper/tw-elements.min.js',
+      'libs/hdf-converters/schemas/checklist/**/jsonix-compiler-output/**',
+      'libs/hdf-converters/sample_jsons/**/*.js',
+      'apps/backend/migrations/**',
+      'apps/backend/seeders/**',
+      'apps/frontend/src/server.js',
+      'test/support/server/**',
+      '.vscode/**',
+      'postcss.config.js',
+    ],
     name: 'global ignores',
   },
   {
@@ -50,7 +59,7 @@ export default defineConfig([
       },
       tseslint.configs.stylisticTypeChecked,
       comments.recommended,
-      yml.configs.standard.map((cfg) => ({...cfg, name: 'yml/standard'})),
+      yml.configs.standard.map(cfg => ({ ...cfg, name: 'yml/standard' })),
       security.configs.recommended,
       importX.flatConfigs.recommended,
       importX.flatConfigs.typescript,
@@ -63,34 +72,21 @@ export default defineConfig([
     files: ['**/*.{js,mjs,cjs,ts,mts,cts,vue}'],
     languageOptions: {
       ecmaVersion: 'latest',
-      parserOptions: { 
+      parserOptions: {
         extraFileExtensions: ['.vue'],
         parser: tseslint.parser,
-        projectService: { 
+        projectService: {
           allowDefaultProject: [
             'apps/frontend/vue.config.js',
             'eslint.config.mjs',
             'libs/password-complexity/index.js',
             'vitest.config.ts',
-          ]
-        }
+          ],
+        },
       },
       sourceType: 'module',
     },
     name: 'js/ts',
-    settings: {
-      'import-x/resolver-next': [
-        createTypeScriptImportResolver({
-          alwaysTryTypes: true,
-          project: [
-            'tsconfig.json',
-            'apps/*/tsconfig.json',
-            'libs/*/tsconfig.json',
-          ],
-          noWarnOnMultipleProjects: true,
-        }),
-      ],
-    },
     rules: {
       '@stylistic/eol-last': 'error',
       '@stylistic/object-curly-newline': ['error', { multiline: true }],
@@ -99,17 +95,25 @@ export default defineConfig([
       '@typescript-eslint/consistent-type-exports': 'error',
       '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
-      '@typescript-eslint/restrict-template-expressions': ['error', { allowBoolean: true, allowNullish: true, allowNumber: true }],
       '@typescript-eslint/no-redundant-type-constituents': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowBoolean: true, allowNullish: true, allowNumber: true }],
       curly: 'error',
-      'n/no-missing-import': ['error', { tryExtensions: ['.ts', '.tsx', '.d.ts', '.js', '.jsx', '.mjs', '.cjs', '.json'] }],
+      'e18e/prefer-spread-syntax': 'off',
+      'import-x/namespace': 'off',
+      'import-x/no-named-as-default-member': 'off',
+      'n/no-missing-import': 'off',
+      'n/no-unpublished-import': 'off',
+      'n/no-unsupported-features/es-builtins': 'off',
+      'n/no-unsupported-features/es-syntax': 'off',
+      'n/no-unsupported-features/node-builtins': 'off',
+      'perfectionist/sort-classes': 'off',
       'perfectionist/sort-imports': [
         'error',
         {
@@ -128,22 +132,30 @@ export default defineConfig([
           useExperimentalDependencyDetection: true,
         },
       ],
-      'prefer-object-has-own': 'error',
-      'unicorn/filename-case': ['error', { cases: { camelCase: true, kebabCase: true, pascalCase: true, snakeCase: true } }],
-      'e18e/prefer-spread-syntax': 'off',
-      'import-x/namespace': 'off',
-      'unicorn/prefer-spread': 'off',
-      'n/no-missing-import': 'off',
-      'n/no-unsupported-features/es-builtins': 'off',
-      'n/no-unsupported-features/es-syntax': 'off',
-      'n/no-unsupported-features/node-builtins': 'off',
-      'n/no-unpublished-import': 'off',
-      'perfectionist/sort-classes': 'off',
       'perfectionist/sort-modules': 'off',
+      'prefer-object-has-own': 'error',
+      'security/detect-object-injection': 'off',
+      'unicorn/filename-case': ['error', { cases: { camelCase: true, kebabCase: true, pascalCase: true, snakeCase: true } }],
       'unicorn/no-null': 'off',
       'unicorn/no-process-exit': 'off',
+      'unicorn/no-useless-else': 'off',
       'unicorn/prefer-node-protocol': 'off',
+      'unicorn/prefer-spread': 'off',
       'unicorn/prevent-abbreviations': 'off',
+      'vitest/expect-expect': 'off',
+    },
+    settings: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+          noWarnOnMultipleProjects: true,
+          project: [
+            'tsconfig.json',
+            'apps/*/tsconfig.json',
+            'libs/*/tsconfig.json',
+          ],
+        }),
+      ],
     },
   },
   {
@@ -157,6 +169,55 @@ export default defineConfig([
         }),
       ],
     },
+  },
+  {
+    files: ['libs/inspecjs/**/*.ts'],
+    name: 'inspecjs/schema-terms',
+    rules: {
+      'security/detect-non-literal-fs-filename': 'off',
+      'unicorn/consistent-boolean-name': 'off',
+      'unicorn/consistent-class-member-order': 'off',
+      'unicorn/no-break-in-nested-loop': 'off',
+    },
+  },
+  {
+    files: ['libs/password-complexity/**/*.js'],
+    name: 'password-complexity/cjs',
+    rules: { 'unicorn/prefer-module': 'off' },
+  },
+  {
+    files: ['test/**/*.ts', 'cypress.config.ts'],
+    name: 'integration-tests/overrides',
+    rules: {
+      '@typescript-eslint/no-unused-expressions': 'off',
+      'n/no-extraneous-import': 'off',
+      'promise/always-return': 'off',
+      'promise/catch-or-return': 'off',
+      'unicorn/prefer-dom-node-text-content': 'off',
+      'vitest/no-standalone-expect': 'off',
+      'vitest/valid-expect': 'off',
+    },
+  },
+  {
+    files: ['apps/backend/**/*.ts'],
+    name: 'backend/nestjs-conventions',
+    rules: {
+      '@typescript-eslint/require-await': 'off',
+      'n/no-extraneous-import': 'off',
+      'security/detect-non-literal-fs-filename': 'off',
+      'unicorn/consistent-class-member-order': 'off',
+      'unicorn/no-non-function-verb-prefix': 'off',
+    },
+  },
+  {
+    files: ['tools/**/*.ts'],
+    name: 'tools/overrides',
+    rules: { 'n/no-extraneous-import': 'off' },
+  },
+  {
+    files: ['**/vitest.config.ts', '**/vitest.config.mts'],
+    name: 'vitest-config/peer-deps',
+    rules: { 'n/no-extraneous-import': ['error', { allowModules: ['vite'] }] },
   },
   {
     files: ['**/scripts/**/*.{ts,mts}'],
@@ -180,18 +241,23 @@ export default defineConfig([
     language: 'json/json',
     name: 'package.json',
     plugins: { json },
+    rules: { 'e18e/ban-dependencies': ['error', { allowed: ['axios', 'dotenv', 'eslint-plugin-import', 'jsonwebtoken', 'lodash', 'moment', 'rimraf', 'uuid'] }] },
   },
-  {
-    extends: [
-      markdown.configs.recommended,
-      markdownLinks.configs.recommended,
-      markdownPreferences.configs.standard,
-    ],
-    files: ['**/*.md'],
-    language: 'markdown/gfm',
-    name: 'markdown',
-    plugins: { markdown },
-  },
+  // @eslint/markdown v8 crashes with "Custom getLoc() method must be implemented in the subclass"
+  // due to incompatibility with @eslint/plugin-kit 0.7.x. Both packages are on latest versions
+  // (8.0.2 / 0.7.2) — no fix available upstream. Disabled until the bug is resolved.
+  // Track: https://github.com/eslint/markdown/issues
+  // {
+  //   extends: [
+  //     markdown.configs.recommended,
+  //     markdownLinks.configs.recommended,
+  //     markdownPreferences.configs.standard,
+  //   ],
+  //   files: ['**/*.md'],
+  //   language: 'markdown/gfm',
+  //   name: 'markdown',
+  //   plugins: { markdown },
+  // },
 ]);
 //     Should we retain this naming convention for any (i.e. common, hdf-converters projects) / all interfaces (soon to be mostly all types)
 //     "@typescript-eslint/naming-convention": [
