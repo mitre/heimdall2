@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
 import type { ExecJSON } from 'inspecjs';
+import { describe, expect, it, vi } from 'vitest';
 import { BaseConverter, BaseResults } from '../../src/base-converter';
 
 class MockMapper extends BaseConverter {
@@ -7,7 +7,7 @@ class MockMapper extends BaseConverter {
     platform: { name: 'test', release: '1.0', target_id: '' },
     profiles: [{
       attributes: [],
-      controls: [{ id: 'test-1', title: 'Test Control', code: '', desc: '', impact: 0.5, refs: [], results: [], source_location: {}, tags: {} }],
+      controls: [{ code: '', desc: '', id: 'test-1', impact: 0.5, refs: [], results: [], source_location: {}, tags: {}, title: 'Test Control' }],
       depends: [],
       groups: [],
       name: 'mock-profile',
@@ -41,6 +41,7 @@ class AsyncInitMockResults extends BaseResults {
   initCalled = false;
 
   protected async init(): Promise<void> {
+    await Promise.resolve();
     this.initCalled = true;
   }
 
@@ -67,9 +68,9 @@ describe('BaseResults', () => {
   describe('lifecycle', () => {
     it('parse() runs in toHdf(), not in constructor', async () => {
       const results = new SimpleMockResults('{"key": "value"}');
-      expect(results['parsed']).toBeUndefined();
+      expect(results.parsed).toBeUndefined();
       await results.toHdf();
-      expect(results['parsed']).toEqual({ key: 'value' });
+      expect(results.parsed).toEqual({ key: 'value' });
     });
 
     it('init() runs after parse() and before createMapper()', async () => {
@@ -109,13 +110,13 @@ describe('BaseResults', () => {
     });
 
     it('custom logService is used when provided', () => {
-      const customLogger = { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn() } as any;
+      const customLogger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() } as any;
       const results = new SimpleMockResults('{}', customLogger);
       expect(results.logger).toBe(customLogger);
     });
 
     it('toHdf() logs info on start and complete', async () => {
-      const mockLogger = { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn(), verbose: vi.fn() } as any;
+      const mockLogger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), verbose: vi.fn(), warn: vi.fn() } as any;
       const results = new SimpleMockResults('{"key":"value"}', mockLogger);
       await results.toHdf();
       expect(mockLogger.info).toHaveBeenCalledTimes(2);
@@ -134,13 +135,13 @@ describe('BaseConverter logger', () => {
   });
 
   it('custom logService is used when provided', () => {
-    const customLogger = { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn() } as any;
+    const customLogger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() } as any;
     const mapper = new MockMapper({}, false, customLogger);
     expect(mapper.logger).toBe(customLogger);
   });
 
   it('toHdf() logs info on start and complete with control count', () => {
-    const mockLogger = { info: vi.fn(), debug: vi.fn(), warn: vi.fn(), error: vi.fn(), verbose: vi.fn() } as any;
+    const mockLogger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), verbose: vi.fn(), warn: vi.fn() } as any;
     const mapper = new MockMapper({}, false, mockLogger);
     mapper.toHdf();
     expect(mockLogger.info).toHaveBeenCalledTimes(2);

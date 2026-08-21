@@ -1,4 +1,4 @@
-/* Types are generated with Tygo, from original Golang source code to TypeScript, and tweaked to reflect actual outputted JSON. 
+/* Types are generated with Tygo, from original Golang source code to TypeScript, and tweaked to reflect actual outputted JSON.
 
 // Dockerfile
 ```
@@ -38,8 +38,8 @@ services:
     command: tygo generate
 ```
 
-// `docker compose` command to regenerate Tygo types: `docker compose up --build go2ts`. Output file will be `./tygo-output/neuvector-generated-types.ts`. 
-Some of the generated types are copied into and defined in this file. The currently-used generated types begin with `REST`, and some of the generated types are tweaked such that when they have a field beginning with `REST`, the field is intersected instead. For example: 
+// `docker compose` command to regenerate Tygo types: `docker compose up --build go2ts`. Output file will be `./tygo-output/neuvector-generated-types.ts`.
+Some of the generated types are copied into and defined in this file. The currently-used generated types begin with `REST`, and some of the generated types are tweaked such that when they have a field beginning with `REST`, the field is intersected instead. For example:
 ```
 type RESTScanRepoReport = {
   verdict?: string;
@@ -80,41 +80,41 @@ export interface RESTScanRepoReport {
 */
 
 export type RESTVulnerability = {
-  // This can be a CVE, GHSA, or RHSA.
-  name: string;
-  // `score` is possibly CVSS v2 based on https://github.com/neuvector/scanner/blob/765fb1db2cf678ea6c6d386f3eb0f720311d745a/cvetools/cvesearch.go#L1416.
-  score: number /* Tygo: float32 */;
-  // Could be CVSS v3, since info for v2 and v4 doesn't always exist for CVEs.
-  severity: string;
-  // Could be the CVSS v2 vector.
-  vectors: string;
-  description: string;
-  file_name: string;
-  package_name: string;
-  package_version: string;
-  fixed_version: string;
-  link: string;
-  // In the NeuVector Scanning & Compliance documentation, Score (V3) is selectable by a dropdown. This could be the CVSS v3 score.
-  score_v3: number /* Tygo: float32 */;
-  // Could be the CVSS v3 vector.
-  vectors_v3: string;
-  // Both timestamp fields are Unix epoch timestamps, in seconds.
-  published_timestamp: number /* Tygo: int64 */;
-  last_modified_timestamp: number /* Tygo: int64 */;
   cpes?: string[];
   cves?: string[];
+  description: string;
   feed_rating: string;
+  file_name: string;
+  fixed_version: string;
   in_base_image?: boolean;
+  last_modified_timestamp: number;
+  link: string;
+  // This can be a CVE, GHSA, or RHSA.
+  name: string;
+  package_name: string;
+  package_version: string;
+  // Both timestamp fields are Unix epoch timestamps, in seconds.
+  published_timestamp: number;
+  // `score` is possibly CVSS v2 based on https://github.com/neuvector/scanner/blob/765fb1db2cf678ea6c6d386f3eb0f720311d745a/cvetools/cvesearch.go#L1416.
+  score: number;
+  // In the NeuVector Scanning & Compliance documentation, Score (V3) is selectable by a dropdown. This could be the CVSS v3 score.
+  score_v3: number;
+  // Could be CVSS v3, since info for v2 and v4 doesn't always exist for CVEs.
+  severity: string;
   tags?: string[];
+  // Could be the CVSS v2 vector.
+  vectors: string;
+  // Could be the CVSS v3 vector.
+  vectors_v3: string;
 };
 
 export type RESTScanModule = {
-  name: string;
-  file: string;
-  version: string;
-  source: string;
-  cves?: RESTModuleCve[];
   cpes?: string[];
+  cves?: RESTModuleCve[];
+  file: string;
+  name: string;
+  source: string;
+  version: string;
 };
 
 export type RESTModuleCve = {
@@ -122,84 +122,84 @@ export type RESTModuleCve = {
   status: string;
 };
 
-type RESTBenchItem = {
-  level: string;
+type RESTBenchItem = RESTBenchCheck & {
   evidence?: string;
+  group?: string;
+  level: string;
   location?: string;
   message: string[];
-  group?: string;
-} & RESTBenchCheck;
+};
 
 type RESTBenchCheck = {
-  test_number: string;
-  category: string;
-  type: string;
-  profile: string;
-  scored: boolean;
   automated: boolean;
+  category: string;
   description: string;
+  profile: string;
   remediation: string;
+  scored: boolean;
   tags?: string[]; // Tygo: Tags provide list of compliance that related to the cis test item.
-  tags_v2?: Record<string, unknown /* Tygo: share.TagDetails */>; // Tygo: TagsV2 provide compliance details for each compliance tag
+  tags_v2?: Record<string, unknown>; // Tygo: TagsV2 provide compliance details for each compliance tag
+  test_number: string;
+  type: string;
 };
 
 type RESTScanSecret = {
-  type: string;
   evidence: string;
   path: string;
   suggestion: string;
+  type: string;
 };
 
 type RESTScanSetIdPerm = {
-  type: string;
   evidence: string;
   path: string;
+  type: string;
 };
 
 type RESTScanSignatureInfo = {
-  verifiers?: string[];
   verification_timestamp: string;
+  verifiers?: string[];
 };
 
 type RESTScanReport = {
-  vulnerabilities: RESTVulnerability[];
-  modules?: RESTScanModule[];
   // `checks` lines up with CIS benchmarks
   checks?: RESTBenchItem[];
-  secrets?: RESTScanSecret[];
-  setid_perms?: RESTScanSetIdPerm[];
+  // Dockerfile CMDs
+  cmds?: string[];
   // Environment variables used within the Docker image
   envs?: string[];
   labels?: Record<string, string>;
-  // Dockerfile CMDs
-  cmds?: string[];
+  modules?: RESTScanModule[];
+  secrets?: RESTScanSecret[];
+  setid_perms?: RESTScanSetIdPerm[];
   signature_data?: RESTScanSignatureInfo;
+  vulnerabilities: RESTVulnerability[];
 };
 
-export type RESTScanRepoReport = {
-  verdict?: string;
-  image_id: string;
-  registry: string;
-  repository: string;
-  tag: string;
-  digest: string;
-  size: number /* Tygo: int64 */;
+export type RESTScanRepoReport = RESTScanReport & {
   author: string;
   base_os: string;
   created_at: string;
-  cvedb_version: string;
   cvedb_create_time: string;
+  cvedb_version: string;
+  digest: string;
+  image_id: string;
   layers: RESTScanLayer[];
-} & RESTScanReport;
+  registry: string;
+  repository: string;
+  size: number;
+  tag: string;
+  verdict?: string;
+};
 
 type RESTScanLayer = {
-  digest: string;
   cmds: string;
+  digest: string;
+  size: number;
   vulnerabilities: RESTVulnerability[];
-  size: number /* Tygo: int64 */;
 };
 
 export type NeuVectorScanJson = {
-  report: RESTScanRepoReport;
   error_message: string;
+  report: RESTScanRepoReport;
 };

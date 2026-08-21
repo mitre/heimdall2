@@ -64,7 +64,7 @@ describe('CAAT Results Reverse Mapper', () => {
     expect(
       converted.SheetNames.map(name =>
         XLSX.utils
-          .sheet_to_json<CAATRow>(converted.Sheets[name] /* eslint-disable-line security/detect-object-injection -- name from SheetNames */)
+          .sheet_to_json<CAATRow>(converted.Sheets[name])
           .map(sheet =>
             Object.fromEntries(
               Object.entries(sheet).map(([k, v]) => [
@@ -77,7 +77,7 @@ describe('CAAT Results Reverse Mapper', () => {
     ).toEqual(
       expected.SheetNames.map(name =>
         XLSX.utils
-          .sheet_to_json<CAATRow>(expected.Sheets[name] /* eslint-disable-line security/detect-object-injection -- name from SheetNames */)
+          .sheet_to_json<CAATRow>(expected.Sheets[name])
           .map(sheet =>
             Object.fromEntries(
               Object.entries(sheet).map(([k, v]) => [

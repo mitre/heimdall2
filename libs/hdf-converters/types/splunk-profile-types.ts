@@ -1,23 +1,23 @@
-import {ILookupPathFH} from '../src/converters-from-hdf/reverse-base-converter';
+import { type ILookupPathFH } from '../src/converters-from-hdf/reverse-base-converter';
 
 export type SplunkProfile = {
-  meta: Meta;
-  summary: string;
-  sha256: string;
-  controls: unknown[];
-  supports: any[] | ILookupPathFH;
-  name: string;
-  copyright: string;
-  maintainer: string;
-  copyright_email: string;
-  version: string;
-  license: string;
-  title: string;
-  parent_profile: string | undefined;
-  depends: Depend[] | ILookupPathFH;
   attributes: Attribute[] | ILookupPathFH;
+  controls: unknown[];
+  copyright: string;
+  copyright_email: string;
+  depends: Depend[] | ILookupPathFH;
   groups: Group[] | ILookupPathFH;
+  license: string;
+  maintainer: string;
+  meta: Meta;
+  name: string;
+  parent_profile: string | undefined;
+  sha256: string;
   status: string;
+  summary: string;
+  supports: any[] | ILookupPathFH;
+  title: string;
+  version: string;
 };
 
 export type Attribute = {
@@ -32,15 +32,15 @@ export type Options = {
 };
 
 export type Depend = {
-  name: string;
-  url: string;
-  git: string;
   branch: string;
+  compliance: string;
+  git: string;
+  name: string;
   path: string;
   skip_message: string;
   status: string;
   supermarket: string;
-  compliance: string;
+  url: string;
 };
 
 export type Group = {
@@ -49,11 +49,11 @@ export type Group = {
 };
 
 export type Meta = {
-  guid: string;
-  filetype: string;
   filename: string;
-  subtype: string;
-  profile_sha256: string;
+  filetype: string;
+  guid: string;
   hdf_splunk_schema: string;
   is_baseline: boolean;
+  profile_sha256: string;
+  subtype: string;
 };

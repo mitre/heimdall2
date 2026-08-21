@@ -1,9 +1,11 @@
+import fs from 'fs';
 import { ExecJSON } from 'inspecjs';
-import { describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it } from 'vitest';
 import { buildSkipResult } from '../../src/aws-config-mapper';
 import { accumulateControlStatus, type Counts } from '../../src/converters-from-hdf/asff/transformers';
 import { countResultSeverity, countResultStatus } from '../../src/converters-from-hdf/html/reverse-html-mapper';
 import { findControlAcrossProfiles } from '../../src/utils/description-editing';
+import { loadFixture } from '../utils';
 
 function makeControl(id: string, title = ''): ExecJSON.Control {
   return {
@@ -222,6 +224,37 @@ describe('accumulateControlStatus', () => {
     const counts = zeroCounts();
     accumulateControlStatus(counts, makeAsffControl('Unknown'));
     expect(counts).toEqual(zeroCounts());
+  });
+});
+
+describe('loadFixture', () => {
+  afterAll(() => {
+    if (fs.existsSync('test/fixtures/utf8-test.json')) {
+      fs.unlinkSync('test/fixtures/utf8-test.json');
+    }
+  });
+
+  it('returns parsed JSON object for a valid fixture path', () => {
+    const result = loadFixture('sample_jsons/anchore_grype_mapper/anchore-grype-hdf.json');
+
+    expect(result).toBeDefined();
+    expect(typeof result).toBe('object');
+    expect(result).not.toBeNull();
+    expect((result as any).profiles).toBeDefined();
+  });
+
+  it('throws on nonexistent file path', () => {
+    expect(() => loadFixture('sample_jsons/does-not-exist.json')).toThrow();
+  });
+
+  it('handles UTF-8 encoded files with multibyte characters', () => {
+    const utf8Content = { desc: 'Ünïcödé — 日本語テスト — émojis: 🔒🛡️' };
+    fs.mkdirSync('test/fixtures', { recursive: true });
+    fs.writeFileSync('test/fixtures/utf8-test.json', JSON.stringify(utf8Content), 'utf8');
+
+    const result = loadFixture('test/fixtures/utf8-test.json') as typeof utf8Content;
+
+    expect(result.desc).toBe('Ünïcödé — 日本語テスト — émojis: 🔒🛡️');
   });
 });
 

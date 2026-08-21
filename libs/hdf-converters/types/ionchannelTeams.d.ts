@@ -4,23 +4,23 @@ export type IonChannelTeams = {
 };
 
 export type Team = {
-  id: string;
   created_at: Date;
-  updated_at: Date;
-  deleted_at: Date;
-  name: string;
-  delivering: boolean;
-  sys_admin: boolean;
-  poc_name: string;
-  poc_email: string;
   default_deploy_key: string;
+  deleted_at: Date;
+  delivering: boolean;
+  id: string;
+  name: string;
   organization_id: string;
-  user_id: string;
+  poc_email: string;
+  poc_name: string;
   role: string;
   status: string;
+  sys_admin: boolean;
+  updated_at: Date;
+  user_id: string;
 };
 
 export type Meta = {
-  total_count: number;
   offset: number;
+  total_count: number;
 };

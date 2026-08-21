@@ -452,6 +452,111 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
   });
 });
 
+const baseDate = () => utc(1_662_758_942_000);
+
+describe('CUSTOM_FREQUENCY_RE (via advanceDate)', () => {
+  describe('matches valid custom frequencies', () => {
+    it.each([
+      ['1d', '2022-09-10T21:29:02.000+00:00'],
+      ['2w', '2022-09-23T21:29:02.000+00:00'],
+      ['3m', '2022-12-09T21:29:02.000+00:00'],
+      ['1y', '2023-09-09T21:29:02.000+00:00'],
+      ['10d', '2022-09-19T21:29:02.000+00:00'],
+      ['52w', '2023-09-08T21:29:02.000+00:00'],
+    ])('%s advances the date correctly', (frequency, expected) => {
+      expect(advanceDate(baseDate(), frequency).toISOString(true)).toBe(
+        expected,
+      );
+    });
+  });
+
+  describe('rejects invalid patterns', () => {
+    it('throws on bare letters without digits (d, w, m, y)', () => {
+      expect(() => advanceDate(baseDate(), 'd')).toThrow('Unknown date format');
+      expect(() => advanceDate(baseDate(), 'w')).toThrow('Unknown date format');
+      expect(() => advanceDate(baseDate(), 'm')).toThrow('Unknown date format');
+      expect(() => advanceDate(baseDate(), 'y')).toThrow('Unknown date format');
+    });
+
+    it('throws on alphabetic-only input', () => {
+      expect(() => advanceDate(baseDate(), 'abc')).toThrow(
+        'Unknown date format',
+      );
+    });
+
+    it('handles decimal values correctly (escaped dot regression)', () => {
+      const result = advanceDate(baseDate(), '1.5d');
+      expect(result.toISOString(true)).toBe('2022-09-11T21:29:02.000+00:00');
+    });
+
+    it('throws on empty string', () => {
+      expect(() => advanceDate(baseDate(), '')).toThrow('Unknown date format');
+    });
+
+    it('throws on digits-only input', () => {
+      expect(() => advanceDate(baseDate(), '5')).toThrow('Unknown date format');
+    });
+  });
+
+  describe('regex accepts any [a-z] unit (inner switch silently ignores unknown units)', () => {
+    it('1x matches regex but date is unchanged (unit x not handled)', () => {
+      const original = baseDate().toISOString(true);
+      const result = advanceDate(baseDate(), '1x');
+      expect(result.toISOString(true)).toBe(original);
+    });
+
+    it('2z matches regex but date is unchanged (unit z not handled)', () => {
+      const original = baseDate().toISOString(true);
+      const result = advanceDate(baseDate(), '2z');
+      expect(result.toISOString(true)).toBe(original);
+    });
+
+    it('1.d matches regex with value=1. and unit=d (adds 1 day)', () => {
+      const result = advanceDate(baseDate(), '1.d');
+      expect(result.toISOString(true)).toBe('2022-09-10T21:29:02.000+00:00');
+    });
+  });
+});
+
+describe('createAttestationMessage isExpired logic', () => {
+  const attestation: Attestation = {
+    control_id: 'SV-230223',
+    explanation: 'Test explanation',
+    frequency: '1d',
+    status: 'passed',
+    updated: '2024-01-01',
+    updated_by: 'Tester',
+  };
+
+  it('prefixes with "Expired Attestation:" when isExpired is true', () => {
+    const message = createAttestationMessage(attestation, true);
+
+    expect(message).toContain('Expired Attestation:\n');
+    expect(message).toContain('Expired Status: passed');
+    expect(message).toContain('Expired Explanation: Test explanation');
+  });
+
+  it('prefixes with "Attestation:" when isExpired is false', () => {
+    const message = createAttestationMessage(attestation, false);
+
+    expect(message).toContain('Attestation:\n');
+    expect(message).toContain('Status: passed');
+    expect(message).toContain('Explanation: Test explanation');
+    expect(message).not.toContain('Expired');
+  });
+
+  it('includes updated, updated_by, and frequency in both paths', () => {
+    const expired = createAttestationMessage(attestation, true);
+    const valid = createAttestationMessage(attestation, false);
+
+    for (const msg of [expired, valid]) {
+      expect(msg).toContain('Updated: 2024-01-01');
+      expect(msg).toContain('Updated By: Tester');
+      expect(msg).toContain('Frequency: 1d');
+    }
+  });
+});
+
 describe('parseXLSXAttestations', () => {
   const xlsxInputFile: Buffer = fs.readFileSync(
     'sample_jsons/attestations/attestations_xlsxInputFormat.xlsx',

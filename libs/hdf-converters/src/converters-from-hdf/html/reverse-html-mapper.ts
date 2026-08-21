@@ -19,7 +19,9 @@ import {
 import _ from 'lodash';
 import Mustache from 'mustache';
 import sanitize from 'sanitize-html';
+import type { Logger } from 'winston';
 import { formatCompliance, translateCompliance } from '../../utils/compliance';
+import { createWinstonLogger } from '../../utils/global';
 import { css, html, js } from './embedded-assets';
 import type {
   IDetail,
@@ -85,7 +87,8 @@ export class FromHDFToHTMLMapper {
     triangleAlert: this.iconDataToSVG(mdiAlert, 'rgb(121, 134, 203)'),
   };
 
-  // Default attributes
+  logger: Logger = createWinstonLogger('HDF2HTML');
+
   outputData: IOutputData = {
     // Used for profile compliance reporting
     compliance: {
@@ -487,7 +490,7 @@ export class FromHDFToHTMLMapper {
 
   // Prompt HTML generation from data pulled from file during constructor initialization
   toHTML(): string {
-    // Pull export template + styles and create outputData object containing data to fill template with
+    this.logger.debug(`Generating HTML export with ${this.outputData.files.length} file(s)`);
     const template = html;
     this.outputData.tailwindStyles = css;
     // Remove source map reference in TW Elements library

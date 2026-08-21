@@ -365,7 +365,9 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     if (this.mappings() === undefined) {
       throw new Error('Mappings must be provided');
     }
-    let resList: IFindingASFF[] = this.controlsToSegments().map(
+    const segments = this.controlsToSegments();
+    this.logger.debug(`Converting ${segments.length} control segments to ASFF findings`);
+    let resList: IFindingASFF[] = segments.map(
       (segment, index) => {
         this.index = index;
         return this.convertInternal(segment, this.mappings()).Findings[0];

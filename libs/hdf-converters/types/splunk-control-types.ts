@@ -1,43 +1,43 @@
-import {HDFControlSegment} from 'inspecjs';
-import {ILookupPathFH} from '../src/converters-from-hdf/reverse-base-converter';
+import { type HDFControlSegment } from 'inspecjs';
+import { type ILookupPathFH } from '../src/converters-from-hdf/reverse-base-converter';
 
 export type SplunkControl = {
-  meta: Meta;
   code: string;
   desc: string;
-  title?: string | null;
-  descriptions: Record<string, string>[] | ILookupPathFH;
+  descriptions: ILookupPathFH | Record<string, string>[];
   id: string;
   impact: number;
+  meta: Meta;
   refs: any[] | ILookupPathFH;
   results?: HDFControlSegment[] | ILookupPathFH;
   source_location?: any;
   tags: Tags;
+  title?: null | string;
 };
 
 export type Meta = {
-  guid: string;
   filename: string;
   filetype: string;
-  subtype: string;
-  profile_sha256: string;
+  guid: string;
   hdf_splunk_schema: string;
-  status: string;
-  is_waived: boolean;
   is_baseline: boolean;
+  is_waived: boolean;
   overlay_depth: number;
+  profile_sha256: string;
+  status: string;
+  subtype: string;
 };
 
 export type Result = {
+  backtrace: null;
   code_desc: string;
+  exception: string;
+  message: string;
+  resource: string;
   run_time: number;
+  skip_message: string;
   start_time: Date;
   status: string;
-  resource: string;
-  message: string;
-  skip_message: string;
-  exception: string;
-  backtrace: null;
 };
 
 export type Tags = {

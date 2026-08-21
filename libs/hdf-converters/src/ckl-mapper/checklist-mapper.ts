@@ -1,5 +1,6 @@
 import { ExecJSON, severities } from 'inspecjs';
 import _ from 'lodash';
+import type { Logger } from 'winston';
 import xmlFormat from 'xml-formatter';
 import type {
   ILookupPath,
@@ -10,7 +11,7 @@ import {
   generateHash,
 } from '../base-converter';
 import { CciNistTwoWayMapper } from '../mappings/CciNistMapping';
-import { DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS, HeimdallToolsVersion } from '../utils/global';
+import { createWinstonLogger, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS, HeimdallToolsVersion } from '../utils/global';
 import { parseJson } from '../utils/parseJson';
 import {
   ChecklistJsonixConverter,
@@ -322,6 +323,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   checklistObject: ChecklistObject;
   data: ExecJSON.Execution | string;
   jsonixData: Checklist;
+  logger: Logger;
   shouldIncludeRaw: boolean;
 
   /**
@@ -335,17 +337,20 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   constructor(data: ExecJSON.Execution | string, shouldIncludeRaw = false) {
     super(jsonixMapping);
     this.data = data;
+    this.logger = createWinstonLogger('ChecklistResults');
 
     if (typeof data === 'string') {
+      this.logger.debug('Input type: XML CKL string');
       this.jsonixData = super.toJsonix(data);
       this.checklistObject = super.toIntermediateObject(this.jsonixData);
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
     } else if (hasChecklist(data)) {
+      this.logger.debug('Input type: HDF with checklist passthrough');
       this.checklistObject = getChecklistObjectFromHdf(data);
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     } else {
-      // CREATE Intermediate Object from HDF
+      this.logger.debug('Input type: bare HDF (no checklist passthrough)');
       this.checklistObject = super.hdfToIntermediateObject(data);
       throwIfInvalidAssetMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
@@ -385,6 +390,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
    */
   toHdf(): ExecJSON.Execution {
     const numberOfStigs = this.checklistObject.stigs.length;
+    this.logger.debug(`Checklist contains ${numberOfStigs} STIG(s)`);
     if (numberOfStigs === 1) {
       const defaultChecklist = new ChecklistMapper(this.checklistObject);
       return defaultChecklist.toHdf();

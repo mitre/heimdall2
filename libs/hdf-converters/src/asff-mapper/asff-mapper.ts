@@ -706,6 +706,7 @@ export class ASFFResults extends BaseResults<Record<string, Record<string, unkno
   async toHdf(): Promise<Record<string, ExecJSON.Execution>> {
     await this.init();
     const findings = _.get(fixFileInput(this.rawInput), 'Findings');
+    this.logger.debug(`Processing ${findings.length} ASFF findings`);
     this.data = _.groupBy(findings, (finding) => {
       const productInfo = ((_.get(finding, 'ProductArn') as string)
         .split(':')

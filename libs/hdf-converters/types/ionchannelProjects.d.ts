@@ -4,69 +4,69 @@ export type Projects = {
 };
 
 export type Project = {
-  id: string;
-  team_id: string;
-  name: string;
   active: boolean;
-  draft: boolean;
-  chat_channel: string;
-  created_at: Date;
-  updated_at: Date;
-  deploy_key: string;
-  should_monitor: boolean;
-  monitor_frequency: string;
-  poc_name: string;
-  poc_email: string;
-  username: string;
-  password: string;
-  key_fingerprint: string;
-  private: boolean;
   aliases: null;
-  tags: null;
-  ruleset_history: null;
-  sbom_id: string;
-  sbom_entry_id: string;
-  cpe: string;
-  purl: string;
-  ruleset_name: string;
   analysis_summary: AnalysisSummary;
+  chat_channel: string;
+  cpe: string;
+  created_at: Date;
+  deploy_key: string;
+  draft: boolean;
+  id: string;
+  key_fingerprint: string;
+  monitor_frequency: string;
+  name: string;
+  password: string;
+  poc_email: string;
+  poc_name: string;
+  private: boolean;
+  purl: string;
+  ruleset_history: null;
+  ruleset_name: string;
+  sbom_entry_id: string;
+  sbom_id: string;
+  should_monitor: boolean;
   status: Status;
+  tags: null;
+  team_id: string;
+  updated_at: Date;
+  username: string;
 };
 
 export type AnalysisSummary = {
-  id: string;
   analysis_id: string;
-  team_id: string;
-  project_id: string;
-  name: string;
-  text: null;
-  type: string;
-  source: string;
   branch: string;
+  created_at: Date;
   description: string;
-  risk: string;
-  summary: string;
+  duration: number;
+  id: string;
+  name: string;
   passed: boolean;
+  project_id: string;
+  risk: string;
   ruleset_id: string;
   ruleset_name: string;
+  source: string;
   status: string;
-  created_at: Date;
-  updated_at: Date;
-  duration: number;
+  summary: string;
+  team_id: string;
+  text: null;
+  trigger: string;
+  trigger_author: string;
   trigger_hash: string;
   trigger_text: string;
-  trigger_author: string;
-  trigger: string;
+  type: string;
+  updated_at: Date;
 };
 
 export enum Status {
   Errored = 'errored',
   Failing = 'failing',
-  Passing = 'passing'
+  Passing = 'passing',
 }
 
 export type Meta = {
-  total_count: number;
   limit: number;
   offset: number;
+  total_count: number;
 };

@@ -58,6 +58,8 @@ export class XCCDFResultsMapper extends BaseConverter {
     );
     this.parseHtml = parseHtml;
     this.shouldIncludeRaw = shouldIncludeRaw;
+    const benchmarkId = _.get(this.data, 'Benchmark.id') as string | undefined;
+    this.logger.debug(`Parsing XCCDF benchmark: ${benchmarkId ?? 'unknown'}`);
     this.mappings = {
       passthrough: {
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {

@@ -316,7 +316,7 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
     // If our node has already been created, replace the temporary control with the "real" one
     const key = _key_for(asControl);
     let asNode: NistHierarchyNode;
-    if (map[key]) {
+    if (Object.hasOwn(map, key)) {
       asNode = map[key];
       asNode.control = asControl;
     } else {

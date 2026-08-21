@@ -1,4 +1,5 @@
 export type CycloneDXSoftwareBillOfMaterialSpecification = {
+  [property: string]: any;
   /**
    * Specifies the format of the BOM. This helps to identify the file as CycloneDX since BOMs
    * do not have a filename convention nor does JSON schema support namespaces.
@@ -43,7 +44,6 @@ export type CycloneDXSoftwareBillOfMaterialSpecification = {
    * BOM and if no changes are made to the BOMs, then each BOM will have a version of '1'.
    */
   version: number;
-  [property: string]: any;
 };
 
 /**
@@ -68,6 +68,7 @@ export type BOMFormat = 'CycloneDX';
  * be known.
  */
 export type PedigreeObject = {
+  [property: string]: any;
   /**
    * Describes zero or more components in which a component is derived from. This is commonly
    * used to describe forks from existing projects where the forked version contains a
@@ -106,13 +107,13 @@ export type PedigreeObject = {
    * ancestor.
    */
   variants?: ComponentObject[];
-  [property: string]: any;
 };
 
 /**
  * The component that the BOM describes.
  */
 export type ComponentObject = {
+  [property: string]: any;
   /**
    * The person(s) or organization(s) that authored the component
    */
@@ -217,13 +218,13 @@ export type ComponentObject = {
    * not enforced.
    */
   version: string;
-  [property: string]: any;
 };
 
 /**
  * Specifies an individual commit
  */
 export type CommitObject = {
+  [property: string]: any;
   /**
    * The author who created the changes in the commit
    */
@@ -246,7 +247,6 @@ export type CommitObject = {
    * system.
    */
   url?: string;
-  [property: string]: any;
 };
 
 /**
@@ -257,6 +257,7 @@ export type CommitObject = {
  * The person who committed or pushed the commit
  */
 export type AuthorObject = {
+  [property: string]: any;
   /**
    * The email address of the individual who performed the action
    */
@@ -269,13 +270,13 @@ export type AuthorObject = {
    * The timestamp in which the action occurred
    */
   timestamp?: Date;
-  [property: string]: any;
 };
 
 /**
  * Specifies an individual patch
  */
 export type PatchObject = {
+  [property: string]: any;
   /**
    * The patch file (or diff) that show changes. Refer to https://en.wikipedia.org/wiki/Diff
    */
@@ -289,13 +290,13 @@ export type PatchObject = {
    * or new behavior or functionality
    */
   type: PatchType;
-  [property: string]: any;
 };
 
 /**
  * The patch file (or diff) that show changes. Refer to https://en.wikipedia.org/wiki/Diff
  */
 export type DiffObject = {
+  [property: string]: any;
   /**
    * Specifies the optional text of the diff
    */
@@ -304,7 +305,6 @@ export type DiffObject = {
    * Specifies the URL to the diff
    */
   url?: string;
-  [property: string]: any;
 };
 
 /**
@@ -317,6 +317,7 @@ export type DiffObject = {
  * Specifies the metadata and content of the SWID tag.
  */
 export type TextObject = {
+  [property: string]: any;
   /**
    * The attachment data
    */
@@ -329,7 +330,6 @@ export type TextObject = {
    * Specifies the optional encoding the text is represented in.
    */
   encoding?: Encoding;
-  [property: string]: any;
 };
 
 /**
@@ -341,6 +341,7 @@ export type Encoding = 'base64';
  * The patch file (or diff) that show changes. Refer to https://en.wikipedia.org/wiki/Diff
  */
 export type ResolveObject = {
+  [property: string]: any;
   /**
    * A description of the issue
    */
@@ -365,13 +366,13 @@ export type ResolveObject = {
    * Specifies the type of issue
    */
   type: ResolveType;
-  [property: string]: any;
 };
 
 /**
  * The source of the issue where it is documented
  */
 export type SourceObject = {
+  [property: string]: any;
   /**
    * The name of the source. For example 'National Vulnerability Database', 'NVD', and 'Apache'
    */
@@ -380,7 +381,6 @@ export type SourceObject = {
    * The url of the issue documentation as provided by the source
    */
   url?: string;
-  [property: string]: any;
 };
 
 /**
@@ -409,30 +409,31 @@ export type ResolveType = 'defect' | 'enhancement' | 'security';
  * Specifies the purpose for the patch including the resolution of defects, security issues,
  * or new behavior or functionality.
  */
-export type PatchType = 'unofficial' | 'monkey' | 'backport' | 'cherry-pick';
+export type PatchType = 'backport' | 'cherry-pick' | 'monkey' | 'unofficial';
 
 /**
  * Provides the ability to document evidence collected through various forms of extraction
  * or analysis.
  */
 export type EvidenceObject = {
+  [property: string]: any;
   copyright?: CopyrightObject[];
   licenses?: LicenseS[];
-  [property: string]: any;
 };
 
 export type CopyrightObject = {
-  text: string;
   [property: string]: any;
+  text: string;
 };
 
 export type LicenseS = {
+  [property: string]: any;
   expression?: string;
   license?: LicenseObjectObject;
-  [property: string]: any;
 };
 
 export type LicenseObjectObject = {
+  [property: string]: any;
   /**
    * A valid SPDX license ID
    */
@@ -451,7 +452,6 @@ export type LicenseObjectObject = {
    * specified for completeness
    */
   url?: string;
-  [property: string]: any;
 };
 
 /**
@@ -461,741 +461,742 @@ export type LicenseObjectObject = {
  * of valid SPDX license identifiers defined in the spdx.schema.json (or spdx.xml) subschema
  * which is synchronized with the official SPDX license list.
  */
-export type SpdxSchema =
-  | '0BSD'
-  | '3D-Slicer-1.0'
-  | 'AAL'
-  | 'Abstyles'
-  | 'AdaCore-doc'
-  | 'Adobe-2006'
-  | 'Adobe-Display-PostScript'
-  | 'Adobe-Glyph'
-  | 'Adobe-Utopia'
-  | 'ADSL'
-  | 'AFL-1.1'
-  | 'AFL-1.2'
-  | 'AFL-2.0'
-  | 'AFL-2.1'
-  | 'AFL-3.0'
-  | 'Afmparse'
-  | 'AGPL-1.0'
-  | 'AGPL-1.0-only'
-  | 'AGPL-1.0-or-later'
-  | 'AGPL-3.0'
-  | 'AGPL-3.0-only'
-  | 'AGPL-3.0-or-later'
-  | 'Aladdin'
-  | 'AMD-newlib'
-  | 'AMDPLPA'
-  | 'AML'
-  | 'AML-glslang'
-  | 'AMPAS'
-  | 'ANTLR-PD'
-  | 'ANTLR-PD-fallback'
-  | 'any-OSI'
-  | 'Apache-1.0'
-  | 'Apache-1.1'
-  | 'Apache-2.0'
-  | 'APAFML'
-  | 'APL-1.0'
-  | 'App-s2p'
-  | 'APSL-1.0'
-  | 'APSL-1.1'
-  | 'APSL-1.2'
-  | 'APSL-2.0'
-  | 'Arphic-1999'
-  | 'Artistic-1.0'
-  | 'Artistic-1.0-cl8'
-  | 'Artistic-1.0-Perl'
-  | 'Artistic-2.0'
-  | 'ASWF-Digital-Assets-1.0'
-  | 'ASWF-Digital-Assets-1.1'
-  | 'Baekmuk'
-  | 'Bahyph'
-  | 'Barr'
-  | 'bcrypt-Solar-Designer'
-  | 'Beerware'
-  | 'Bitstream-Charter'
-  | 'Bitstream-Vera'
-  | 'BitTorrent-1.0'
-  | 'BitTorrent-1.1'
-  | 'blessing'
-  | 'BlueOak-1.0.0'
-  | 'Boehm-GC'
-  | 'Borceux'
-  | 'Brian-Gladman-2-Clause'
-  | 'Brian-Gladman-3-Clause'
-  | 'BSD-1-Clause'
-  | 'BSD-2-Clause'
-  | 'BSD-2-Clause-Darwin'
-  | 'BSD-2-Clause-first-lines'
-  | 'BSD-2-Clause-FreeBSD'
-  | 'BSD-2-Clause-NetBSD'
-  | 'BSD-2-Clause-Patent'
-  | 'BSD-2-Clause-Views'
-  | 'BSD-3-Clause'
-  | 'BSD-3-Clause-acpica'
-  | 'BSD-3-Clause-Attribution'
-  | 'BSD-3-Clause-Clear'
-  | 'BSD-3-Clause-flex'
-  | 'BSD-3-Clause-HP'
-  | 'BSD-3-Clause-LBNL'
-  | 'BSD-3-Clause-Modification'
-  | 'BSD-3-Clause-No-Military-License'
-  | 'BSD-3-Clause-No-Nuclear-License'
-  | 'BSD-3-Clause-No-Nuclear-License-2014'
-  | 'BSD-3-Clause-No-Nuclear-Warranty'
-  | 'BSD-3-Clause-Open-MPI'
-  | 'BSD-3-Clause-Sun'
-  | 'BSD-4-Clause'
-  | 'BSD-4-Clause-Shortened'
-  | 'BSD-4-Clause-UC'
-  | 'BSD-4.3RENO'
-  | 'BSD-4.3TAHOE'
-  | 'BSD-Advertising-Acknowledgement'
-  | 'BSD-Attribution-HPND-disclaimer'
-  | 'BSD-Inferno-Nettverk'
-  | 'BSD-Protection'
-  | 'BSD-Source-beginning-file'
-  | 'BSD-Source-Code'
-  | 'BSD-Systemics'
-  | 'BSD-Systemics-W3Works'
-  | 'BSL-1.0'
-  | 'BUSL-1.1'
-  | 'bzip2-1.0.5'
-  | 'bzip2-1.0.6'
-  | 'C-UDA-1.0'
-  | 'CAL-1.0'
-  | 'CAL-1.0-Combined-Work-Exception'
-  | 'Caldera'
-  | 'Caldera-no-preamble'
-  | 'Catharon'
-  | 'CATOSL-1.1'
-  | 'CC-BY-1.0'
-  | 'CC-BY-2.0'
-  | 'CC-BY-2.5'
-  | 'CC-BY-2.5-AU'
-  | 'CC-BY-3.0'
-  | 'CC-BY-3.0-AT'
-  | 'CC-BY-3.0-AU'
-  | 'CC-BY-3.0-DE'
-  | 'CC-BY-3.0-IGO'
-  | 'CC-BY-3.0-NL'
-  | 'CC-BY-3.0-US'
-  | 'CC-BY-4.0'
-  | 'CC-BY-NC-1.0'
-  | 'CC-BY-NC-2.0'
-  | 'CC-BY-NC-2.5'
-  | 'CC-BY-NC-3.0'
-  | 'CC-BY-NC-3.0-DE'
-  | 'CC-BY-NC-4.0'
-  | 'CC-BY-NC-ND-1.0'
-  | 'CC-BY-NC-ND-2.0'
-  | 'CC-BY-NC-ND-2.5'
-  | 'CC-BY-NC-ND-3.0'
-  | 'CC-BY-NC-ND-3.0-DE'
-  | 'CC-BY-NC-ND-3.0-IGO'
-  | 'CC-BY-NC-ND-4.0'
-  | 'CC-BY-NC-SA-1.0'
-  | 'CC-BY-NC-SA-2.0'
-  | 'CC-BY-NC-SA-2.0-DE'
-  | 'CC-BY-NC-SA-2.0-FR'
-  | 'CC-BY-NC-SA-2.0-UK'
-  | 'CC-BY-NC-SA-2.5'
-  | 'CC-BY-NC-SA-3.0'
-  | 'CC-BY-NC-SA-3.0-DE'
-  | 'CC-BY-NC-SA-3.0-IGO'
-  | 'CC-BY-NC-SA-4.0'
-  | 'CC-BY-ND-1.0'
-  | 'CC-BY-ND-2.0'
-  | 'CC-BY-ND-2.5'
-  | 'CC-BY-ND-3.0'
-  | 'CC-BY-ND-3.0-DE'
-  | 'CC-BY-ND-4.0'
-  | 'CC-BY-SA-1.0'
-  | 'CC-BY-SA-2.0'
-  | 'CC-BY-SA-2.0-UK'
-  | 'CC-BY-SA-2.1-JP'
-  | 'CC-BY-SA-2.5'
-  | 'CC-BY-SA-3.0'
-  | 'CC-BY-SA-3.0-AT'
-  | 'CC-BY-SA-3.0-DE'
-  | 'CC-BY-SA-3.0-IGO'
-  | 'CC-BY-SA-4.0'
-  | 'CC-PDDC'
-  | 'CC0-1.0'
-  | 'CDDL-1.0'
-  | 'CDDL-1.1'
-  | 'CDL-1.0'
-  | 'CDLA-Permissive-1.0'
-  | 'CDLA-Permissive-2.0'
-  | 'CDLA-Sharing-1.0'
-  | 'CECILL-1.0'
-  | 'CECILL-1.1'
-  | 'CECILL-2.0'
-  | 'CECILL-2.1'
-  | 'CECILL-B'
-  | 'CECILL-C'
-  | 'CERN-OHL-1.1'
-  | 'CERN-OHL-1.2'
-  | 'CERN-OHL-P-2.0'
-  | 'CERN-OHL-S-2.0'
-  | 'CERN-OHL-W-2.0'
-  | 'CFITSIO'
-  | 'check-cvs'
-  | 'checkmk'
-  | 'ClArtistic'
-  | 'Clips'
-  | 'CMU-Mach'
-  | 'CMU-Mach-nodoc'
-  | 'CNRI-Jython'
-  | 'CNRI-Python'
-  | 'CNRI-Python-GPL-Compatible'
-  | 'COIL-1.0'
-  | 'Community-Spec-1.0'
-  | 'Condor-1.1'
-  | 'copyleft-next-0.3.0'
-  | 'copyleft-next-0.3.1'
-  | 'Cornell-Lossless-JPEG'
-  | 'CPAL-1.0'
-  | 'CPL-1.0'
-  | 'CPOL-1.02'
-  | 'Cronyx'
-  | 'Crossword'
-  | 'CrystalStacker'
-  | 'CUA-OPL-1.0'
-  | 'Cube'
-  | 'curl'
-  | 'cve-tou'
-  | 'D-FSL-1.0'
-  | 'DEC-3-Clause'
-  | 'diffmark'
-  | 'DL-DE-BY-2.0'
-  | 'DL-DE-ZERO-2.0'
-  | 'DOC'
-  | 'Dotseqn'
-  | 'DRL-1.0'
-  | 'DRL-1.1'
-  | 'DSDP'
-  | 'dtoa'
-  | 'dvipdfm'
-  | 'ECL-1.0'
-  | 'ECL-2.0'
-  | 'eCos-2.0'
-  | 'EFL-1.0'
-  | 'EFL-2.0'
-  | 'eGenix'
-  | 'Elastic-2.0'
-  | 'Entessa'
-  | 'EPICS'
-  | 'EPL-1.0'
-  | 'EPL-2.0'
-  | 'ErlPL-1.1'
-  | 'etalab-2.0'
-  | 'EUDatagrid'
-  | 'EUPL-1.0'
-  | 'EUPL-1.1'
-  | 'EUPL-1.2'
-  | 'Eurosym'
-  | 'Fair'
-  | 'FBM'
-  | 'FDK-AAC'
-  | 'Ferguson-Twofish'
-  | 'Frameworx-1.0'
-  | 'FreeBSD-DOC'
-  | 'FreeImage'
-  | 'FSFAP'
-  | 'FSFAP-no-warranty-disclaimer'
-  | 'FSFUL'
-  | 'FSFULLR'
-  | 'FSFULLRWD'
-  | 'FTL'
-  | 'Furuseth'
-  | 'fwlw'
-  | 'GCR-docs'
-  | 'GD'
-  | 'GFDL-1.1'
-  | 'GFDL-1.1-invariants-only'
-  | 'GFDL-1.1-invariants-or-later'
-  | 'GFDL-1.1-no-invariants-only'
-  | 'GFDL-1.1-no-invariants-or-later'
-  | 'GFDL-1.1-only'
-  | 'GFDL-1.1-or-later'
-  | 'GFDL-1.2'
-  | 'GFDL-1.2-invariants-only'
-  | 'GFDL-1.2-invariants-or-later'
-  | 'GFDL-1.2-no-invariants-only'
-  | 'GFDL-1.2-no-invariants-or-later'
-  | 'GFDL-1.2-only'
-  | 'GFDL-1.2-or-later'
-  | 'GFDL-1.3'
-  | 'GFDL-1.3-invariants-only'
-  | 'GFDL-1.3-invariants-or-later'
-  | 'GFDL-1.3-no-invariants-only'
-  | 'GFDL-1.3-no-invariants-or-later'
-  | 'GFDL-1.3-only'
-  | 'GFDL-1.3-or-later'
-  | 'Giftware'
-  | 'GL2PS'
-  | 'Glide'
-  | 'Glulxe'
-  | 'GLWTPL'
-  | 'gnuplot'
-  | 'GPL-1.0'
-  | 'GPL-1.0+'
-  | 'GPL-1.0-only'
-  | 'GPL-1.0-or-later'
-  | 'GPL-2.0'
-  | 'GPL-2.0+'
-  | 'GPL-2.0-only'
-  | 'GPL-2.0-or-later'
-  | 'GPL-2.0-with-autoconf-exception'
-  | 'GPL-2.0-with-bison-exception'
-  | 'GPL-2.0-with-classpath-exception'
-  | 'GPL-2.0-with-font-exception'
-  | 'GPL-2.0-with-GCC-exception'
-  | 'GPL-3.0'
-  | 'GPL-3.0+'
-  | 'GPL-3.0-only'
-  | 'GPL-3.0-or-later'
-  | 'GPL-3.0-with-autoconf-exception'
-  | 'GPL-3.0-with-GCC-exception'
-  | 'Graphics-Gems'
-  | 'gSOAP-1.3b'
-  | 'gtkbook'
-  | 'Gutmann'
-  | 'HaskellReport'
-  | 'hdparm'
-  | 'Hippocratic-2.1'
-  | 'HP-1986'
-  | 'HP-1989'
-  | 'HPND'
-  | 'HPND-DEC'
-  | 'HPND-doc'
-  | 'HPND-doc-sell'
-  | 'HPND-export-US'
-  | 'HPND-export-US-acknowledgement'
-  | 'HPND-export-US-modify'
-  | 'HPND-export2-US'
-  | 'HPND-Fenneberg-Livingston'
-  | 'HPND-INRIA-IMAG'
-  | 'HPND-Intel'
-  | 'HPND-Kevlin-Henney'
-  | 'HPND-Markus-Kuhn'
-  | 'HPND-merchantability-variant'
-  | 'HPND-MIT-disclaimer'
-  | 'HPND-Pbmplus'
-  | 'HPND-sell-MIT-disclaimer-xserver'
-  | 'HPND-sell-regexpr'
-  | 'HPND-sell-variant'
-  | 'HPND-sell-variant-MIT-disclaimer'
-  | 'HPND-sell-variant-MIT-disclaimer-rev'
-  | 'HPND-UC'
-  | 'HPND-UC-export-US'
-  | 'HTMLTIDY'
-  | 'IBM-pibs'
-  | 'ICU'
-  | 'IEC-Code-Components-EULA'
-  | 'IJG'
-  | 'IJG-short'
-  | 'ImageMagick'
-  | 'iMatix'
-  | 'Imlib2'
-  | 'Info-ZIP'
-  | 'Inner-Net-2.0'
-  | 'Intel'
-  | 'Intel-ACPI'
-  | 'Interbase-1.0'
-  | 'IPA'
-  | 'IPL-1.0'
-  | 'ISC'
-  | 'ISC-Veillard'
-  | 'Jam'
-  | 'JasPer-2.0'
-  | 'JPL-image'
-  | 'JPNIC'
-  | 'JSON'
-  | 'Kastrup'
-  | 'Kazlib'
-  | 'Knuth-CTAN'
-  | 'LAL-1.2'
-  | 'LAL-1.3'
-  | 'Latex2e'
-  | 'Latex2e-translated-notice'
-  | 'Leptonica'
-  | 'LGPL-2.0'
-  | 'LGPL-2.0+'
-  | 'LGPL-2.0-only'
-  | 'LGPL-2.0-or-later'
-  | 'LGPL-2.1'
-  | 'LGPL-2.1+'
-  | 'LGPL-2.1-only'
-  | 'LGPL-2.1-or-later'
-  | 'LGPL-3.0'
-  | 'LGPL-3.0+'
-  | 'LGPL-3.0-only'
-  | 'LGPL-3.0-or-later'
-  | 'LGPLLR'
-  | 'Libpng'
-  | 'libpng-2.0'
-  | 'libselinux-1.0'
-  | 'libtiff'
-  | 'libutil-David-Nugent'
-  | 'LiLiQ-P-1.1'
-  | 'LiLiQ-R-1.1'
-  | 'LiLiQ-Rplus-1.1'
-  | 'Linux-man-pages-1-para'
-  | 'Linux-man-pages-copyleft'
-  | 'Linux-man-pages-copyleft-2-para'
-  | 'Linux-man-pages-copyleft-var'
-  | 'Linux-OpenIB'
-  | 'LOOP'
-  | 'LPD-document'
-  | 'LPL-1.0'
-  | 'LPL-1.02'
-  | 'LPPL-1.0'
-  | 'LPPL-1.1'
-  | 'LPPL-1.2'
-  | 'LPPL-1.3a'
-  | 'LPPL-1.3c'
-  | 'lsof'
-  | 'Lucida-Bitmap-Fonts'
-  | 'LZMA-SDK-9.11-to-9.20'
-  | 'LZMA-SDK-9.22'
-  | 'Mackerras-3-Clause'
-  | 'Mackerras-3-Clause-acknowledgment'
-  | 'magaz'
-  | 'mailprio'
-  | 'MakeIndex'
-  | 'Martin-Birgmeier'
-  | 'McPhee-slideshow'
-  | 'metamail'
-  | 'Minpack'
-  | 'MirOS'
-  | 'MIT'
-  | 'MIT-0'
-  | 'MIT-advertising'
-  | 'MIT-CMU'
-  | 'MIT-enna'
-  | 'MIT-feh'
-  | 'MIT-Festival'
-  | 'MIT-Khronos-old'
-  | 'MIT-Modern-Variant'
-  | 'MIT-open-group'
-  | 'MIT-testregex'
-  | 'MIT-Wu'
-  | 'MITNFA'
-  | 'MMIXware'
-  | 'Motosoto'
-  | 'MPEG-SSG'
-  | 'mpi-permissive'
-  | 'mpich2'
-  | 'MPL-1.0'
-  | 'MPL-1.1'
-  | 'MPL-2.0'
-  | 'MPL-2.0-no-copyleft-exception'
-  | 'mplus'
-  | 'MS-LPL'
-  | 'MS-PL'
-  | 'MS-RL'
-  | 'MTLL'
-  | 'MulanPSL-1.0'
-  | 'MulanPSL-2.0'
-  | 'Multics'
-  | 'Mup'
-  | 'NAIST-2003'
-  | 'NASA-1.3'
-  | 'Naumen'
-  | 'NBPL-1.0'
-  | 'NCBI-PD'
-  | 'NCGL-UK-2.0'
-  | 'NCL'
-  | 'NCSA'
-  | 'Net-SNMP'
-  | 'NetCDF'
-  | 'Newsletr'
-  | 'NGPL'
-  | 'NICTA-1.0'
-  | 'NIST-PD'
-  | 'NIST-PD-fallback'
-  | 'NIST-Software'
-  | 'NLOD-1.0'
-  | 'NLOD-2.0'
-  | 'NLPL'
-  | 'Nokia'
-  | 'NOSL'
-  | 'Noweb'
-  | 'NPL-1.0'
-  | 'NPL-1.1'
-  | 'NPOSL-3.0'
-  | 'NRL'
-  | 'NTP'
-  | 'NTP-0'
-  | 'Nunit'
-  | 'O-UDA-1.0'
-  | 'OAR'
-  | 'OCCT-PL'
-  | 'OCLC-2.0'
-  | 'ODbL-1.0'
-  | 'ODC-By-1.0'
-  | 'OFFIS'
-  | 'OFL-1.0'
-  | 'OFL-1.0-no-RFN'
-  | 'OFL-1.0-RFN'
-  | 'OFL-1.1'
-  | 'OFL-1.1-no-RFN'
-  | 'OFL-1.1-RFN'
-  | 'OGC-1.0'
-  | 'OGDL-Taiwan-1.0'
-  | 'OGL-Canada-2.0'
-  | 'OGL-UK-1.0'
-  | 'OGL-UK-2.0'
-  | 'OGL-UK-3.0'
-  | 'OGTSL'
-  | 'OLDAP-1.1'
-  | 'OLDAP-1.2'
-  | 'OLDAP-1.3'
-  | 'OLDAP-1.4'
-  | 'OLDAP-2.0'
-  | 'OLDAP-2.0.1'
-  | 'OLDAP-2.1'
-  | 'OLDAP-2.2'
-  | 'OLDAP-2.2.1'
-  | 'OLDAP-2.2.2'
-  | 'OLDAP-2.3'
-  | 'OLDAP-2.4'
-  | 'OLDAP-2.5'
-  | 'OLDAP-2.6'
-  | 'OLDAP-2.7'
-  | 'OLDAP-2.8'
-  | 'OLFL-1.3'
-  | 'OML'
-  | 'OpenPBS-2.3'
-  | 'OpenSSL'
-  | 'OpenSSL-standalone'
-  | 'OpenVision'
-  | 'OPL-1.0'
-  | 'OPL-UK-3.0'
-  | 'OPUBL-1.0'
-  | 'OSET-PL-2.1'
-  | 'OSL-1.0'
-  | 'OSL-1.1'
-  | 'OSL-2.0'
-  | 'OSL-2.1'
-  | 'OSL-3.0'
-  | 'PADL'
-  | 'Parity-6.0.0'
-  | 'Parity-7.0.0'
-  | 'PDDL-1.0'
-  | 'PHP-3.0'
-  | 'PHP-3.01'
-  | 'Pixar'
-  | 'pkgconf'
-  | 'Plexus'
-  | 'pnmstitch'
-  | 'PolyForm-Noncommercial-1.0.0'
-  | 'PolyForm-Small-Business-1.0.0'
-  | 'PostgreSQL'
-  | 'PPL'
-  | 'PSF-2.0'
-  | 'psfrag'
-  | 'psutils'
-  | 'Python-2.0'
-  | 'Python-2.0.1'
-  | 'python-ldap'
-  | 'Qhull'
-  | 'QPL-1.0'
-  | 'QPL-1.0-INRIA-2004'
-  | 'radvd'
-  | 'Rdisc'
-  | 'RHeCos-1.1'
-  | 'RPL-1.1'
-  | 'RPL-1.5'
-  | 'RPSL-1.0'
-  | 'RSA-MD'
-  | 'RSCPL'
-  | 'Ruby'
-  | 'SAX-PD'
-  | 'SAX-PD-2.0'
-  | 'Saxpath'
-  | 'SCEA'
-  | 'SchemeReport'
-  | 'Sendmail'
-  | 'Sendmail-8.23'
-  | 'SGI-B-1.0'
-  | 'SGI-B-1.1'
-  | 'SGI-B-2.0'
-  | 'SGI-OpenGL'
-  | 'SGP4'
-  | 'SHL-0.5'
-  | 'SHL-0.51'
-  | 'SimPL-2.0'
-  | 'SISSL'
-  | 'SISSL-1.2'
-  | 'SL'
-  | 'Sleepycat'
-  | 'SMLNJ'
-  | 'SMPPL'
-  | 'SNIA'
-  | 'snprintf'
-  | 'softSurfer'
-  | 'Soundex'
-  | 'Spencer-86'
-  | 'Spencer-94'
-  | 'Spencer-99'
-  | 'SPL-1.0'
-  | 'ssh-keyscan'
-  | 'SSH-OpenSSH'
-  | 'SSH-short'
-  | 'SSLeay-standalone'
-  | 'SSPL-1.0'
-  | 'StandardML-NJ'
-  | 'SugarCRM-1.1.3'
-  | 'Sun-PPP'
-  | 'Sun-PPP-2000'
-  | 'SunPro'
-  | 'SWL'
-  | 'swrule'
-  | 'Symlinks'
-  | 'TAPR-OHL-1.0'
-  | 'TCL'
-  | 'TCP-wrappers'
-  | 'TermReadKey'
-  | 'TGPPL-1.0'
-  | 'threeparttable'
-  | 'TMate'
-  | 'TORQUE-1.1'
-  | 'TOSL'
-  | 'TPDL'
-  | 'TPL-1.0'
-  | 'TTWL'
-  | 'TTYP0'
-  | 'TU-Berlin-1.0'
-  | 'TU-Berlin-2.0'
-  | 'UCAR'
-  | 'UCL-1.0'
-  | 'ulem'
-  | 'UMich-Merit'
-  | 'Unicode-3.0'
-  | 'Unicode-DFS-2015'
-  | 'Unicode-DFS-2016'
-  | 'Unicode-TOU'
-  | 'UnixCrypt'
-  | 'Unlicense'
-  | 'UPL-1.0'
-  | 'URT-RLE'
-  | 'Vim'
-  | 'VOSTROM'
-  | 'VSL-1.0'
-  | 'W3C'
-  | 'W3C-19980720'
-  | 'W3C-20150513'
-  | 'w3m'
-  | 'Watcom-1.0'
-  | 'Widget-Workshop'
-  | 'Wsuipa'
-  | 'WTFPL'
-  | 'wxWindows'
-  | 'X11'
-  | 'X11-distribute-modifications-variant'
-  | 'Xdebug-1.03'
-  | 'Xerox'
-  | 'Xfig'
-  | 'XFree86-1.1'
-  | 'xinetd'
-  | 'xkeyboard-config-Zinoviev'
-  | 'xlock'
-  | 'Xnet'
-  | 'xpp'
-  | 'XSkat'
-  | 'xzoom'
-  | 'YPL-1.0'
-  | 'YPL-1.1'
-  | 'Zed'
-  | 'Zeeff'
-  | 'Zend-2.0'
-  | 'Zimbra-1.3'
-  | 'Zimbra-1.4'
-  | 'Zlib'
-  | 'zlib-acknowledgement'
-  | 'ZPL-1.1'
-  | 'ZPL-2.0'
-  | 'ZPL-2.1'
-  | '389-exception'
-  | 'Asterisk-exception'
-  | 'Asterisk-linking-protocols-exception'
-  | 'Autoconf-exception-2.0'
-  | 'Autoconf-exception-3.0'
-  | 'Autoconf-exception-generic'
-  | 'Autoconf-exception-generic-3.0'
-  | 'Autoconf-exception-macro'
-  | 'Bison-exception-1.24'
-  | 'Bison-exception-2.2'
-  | 'Bootloader-exception'
-  | 'Classpath-exception-2.0'
-  | 'CLISP-exception-2.0'
-  | 'cryptsetup-OpenSSL-exception'
-  | 'DigiRule-FOSS-exception'
-  | 'eCos-exception-2.0'
-  | 'Fawkes-Runtime-exception'
-  | 'FLTK-exception'
-  | 'fmt-exception'
-  | 'Font-exception-2.0'
-  | 'freertos-exception-2.0'
-  | 'GCC-exception-2.0'
-  | 'GCC-exception-2.0-note'
-  | 'GCC-exception-3.1'
-  | 'Gmsh-exception'
-  | 'GNAT-exception'
-  | 'GNOME-examples-exception'
-  | 'GNU-compiler-exception'
-  | 'gnu-javamail-exception'
-  | 'GPL-3.0-interface-exception'
-  | 'GPL-3.0-linking-exception'
-  | 'GPL-3.0-linking-source-exception'
-  | 'GPL-CC-1.0'
-  | 'GStreamer-exception-2005'
-  | 'GStreamer-exception-2008'
-  | 'i2p-gpl-java-exception'
-  | 'KiCad-libraries-exception'
-  | 'LGPL-3.0-linking-exception'
-  | 'libpri-OpenH323-exception'
-  | 'Libtool-exception'
-  | 'Linux-syscall-note'
-  | 'LLGPL'
-  | 'LLVM-exception'
-  | 'LZMA-exception'
-  | 'mif-exception'
-  | 'Nokia-Qt-exception-1.1'
-  | 'OCaml-LGPL-linking-exception'
-  | 'OCCT-exception-1.0'
-  | 'OpenJDK-assembly-exception-1.0'
-  | 'openvpn-openssl-exception'
-  | 'PCRE2-exception'
-  | 'PS-or-PDF-font-exception-20170817'
-  | 'QPL-1.0-INRIA-2004-exception'
-  | 'Qt-GPL-exception-1.0'
-  | 'Qt-LGPL-exception-1.1'
-  | 'Qwt-exception-1.0'
-  | 'RRDtool-FLOSS-exception-2.0'
-  | 'SANE-exception'
-  | 'SHL-2.0'
-  | 'SHL-2.1'
-  | 'stunnel-exception'
-  | 'SWI-exception'
-  | 'Swift-exception'
-  | 'Texinfo-exception'
-  | 'u-boot-exception-2.0'
-  | 'UBDL-exception'
-  | 'Universal-FOSS-exception-1.0'
-  | 'vsftpd-openssl-exception'
-  | 'WxWindows-exception-3.1'
-  | 'x11vnc-openssl-exception';
+export type SpdxSchema
+  = | '0BSD'
+    | '3D-Slicer-1.0'
+    | '389-exception'
+    | 'AAL'
+    | 'Abstyles'
+    | 'AdaCore-doc'
+    | 'Adobe-2006'
+    | 'Adobe-Display-PostScript'
+    | 'Adobe-Glyph'
+    | 'Adobe-Utopia'
+    | 'ADSL'
+    | 'AFL-1.1'
+    | 'AFL-1.2'
+    | 'AFL-2.0'
+    | 'AFL-2.1'
+    | 'AFL-3.0'
+    | 'Afmparse'
+    | 'AGPL-1.0'
+    | 'AGPL-1.0-only'
+    | 'AGPL-1.0-or-later'
+    | 'AGPL-3.0'
+    | 'AGPL-3.0-only'
+    | 'AGPL-3.0-or-later'
+    | 'Aladdin'
+    | 'AMD-newlib'
+    | 'AMDPLPA'
+    | 'AML'
+    | 'AML-glslang'
+    | 'AMPAS'
+    | 'ANTLR-PD'
+    | 'ANTLR-PD-fallback'
+    | 'any-OSI'
+    | 'Apache-1.0'
+    | 'Apache-1.1'
+    | 'Apache-2.0'
+    | 'APAFML'
+    | 'APL-1.0'
+    | 'App-s2p'
+    | 'APSL-1.0'
+    | 'APSL-1.1'
+    | 'APSL-1.2'
+    | 'APSL-2.0'
+    | 'Arphic-1999'
+    | 'Artistic-1.0'
+    | 'Artistic-1.0-cl8'
+    | 'Artistic-1.0-Perl'
+    | 'Artistic-2.0'
+    | 'Asterisk-exception'
+    | 'Asterisk-linking-protocols-exception'
+    | 'ASWF-Digital-Assets-1.0'
+    | 'ASWF-Digital-Assets-1.1'
+    | 'Autoconf-exception-2.0'
+    | 'Autoconf-exception-3.0'
+    | 'Autoconf-exception-generic'
+    | 'Autoconf-exception-generic-3.0'
+    | 'Autoconf-exception-macro'
+    | 'Baekmuk'
+    | 'Bahyph'
+    | 'Barr'
+    | 'bcrypt-Solar-Designer'
+    | 'Beerware'
+    | 'Bison-exception-1.24'
+    | 'Bison-exception-2.2'
+    | 'Bitstream-Charter'
+    | 'Bitstream-Vera'
+    | 'BitTorrent-1.0'
+    | 'BitTorrent-1.1'
+    | 'blessing'
+    | 'BlueOak-1.0.0'
+    | 'Boehm-GC'
+    | 'Bootloader-exception'
+    | 'Borceux'
+    | 'Brian-Gladman-2-Clause'
+    | 'Brian-Gladman-3-Clause'
+    | 'BSD-1-Clause'
+    | 'BSD-2-Clause'
+    | 'BSD-2-Clause-Darwin'
+    | 'BSD-2-Clause-first-lines'
+    | 'BSD-2-Clause-FreeBSD'
+    | 'BSD-2-Clause-NetBSD'
+    | 'BSD-2-Clause-Patent'
+    | 'BSD-2-Clause-Views'
+    | 'BSD-3-Clause'
+    | 'BSD-3-Clause-acpica'
+    | 'BSD-3-Clause-Attribution'
+    | 'BSD-3-Clause-Clear'
+    | 'BSD-3-Clause-flex'
+    | 'BSD-3-Clause-HP'
+    | 'BSD-3-Clause-LBNL'
+    | 'BSD-3-Clause-Modification'
+    | 'BSD-3-Clause-No-Military-License'
+    | 'BSD-3-Clause-No-Nuclear-License'
+    | 'BSD-3-Clause-No-Nuclear-License-2014'
+    | 'BSD-3-Clause-No-Nuclear-Warranty'
+    | 'BSD-3-Clause-Open-MPI'
+    | 'BSD-3-Clause-Sun'
+    | 'BSD-4-Clause'
+    | 'BSD-4-Clause-Shortened'
+    | 'BSD-4-Clause-UC'
+    | 'BSD-4.3RENO'
+    | 'BSD-4.3TAHOE'
+    | 'BSD-Advertising-Acknowledgement'
+    | 'BSD-Attribution-HPND-disclaimer'
+    | 'BSD-Inferno-Nettverk'
+    | 'BSD-Protection'
+    | 'BSD-Source-beginning-file'
+    | 'BSD-Source-Code'
+    | 'BSD-Systemics'
+    | 'BSD-Systemics-W3Works'
+    | 'BSL-1.0'
+    | 'BUSL-1.1'
+    | 'bzip2-1.0.5'
+    | 'bzip2-1.0.6'
+    | 'C-UDA-1.0'
+    | 'CAL-1.0'
+    | 'CAL-1.0-Combined-Work-Exception'
+    | 'Caldera'
+    | 'Caldera-no-preamble'
+    | 'Catharon'
+    | 'CATOSL-1.1'
+    | 'CC0-1.0'
+    | 'CC-BY-1.0'
+    | 'CC-BY-2.0'
+    | 'CC-BY-2.5'
+    | 'CC-BY-2.5-AU'
+    | 'CC-BY-3.0'
+    | 'CC-BY-3.0-AT'
+    | 'CC-BY-3.0-AU'
+    | 'CC-BY-3.0-DE'
+    | 'CC-BY-3.0-IGO'
+    | 'CC-BY-3.0-NL'
+    | 'CC-BY-3.0-US'
+    | 'CC-BY-4.0'
+    | 'CC-BY-NC-1.0'
+    | 'CC-BY-NC-2.0'
+    | 'CC-BY-NC-2.5'
+    | 'CC-BY-NC-3.0'
+    | 'CC-BY-NC-3.0-DE'
+    | 'CC-BY-NC-4.0'
+    | 'CC-BY-NC-ND-1.0'
+    | 'CC-BY-NC-ND-2.0'
+    | 'CC-BY-NC-ND-2.5'
+    | 'CC-BY-NC-ND-3.0'
+    | 'CC-BY-NC-ND-3.0-DE'
+    | 'CC-BY-NC-ND-3.0-IGO'
+    | 'CC-BY-NC-ND-4.0'
+    | 'CC-BY-NC-SA-1.0'
+    | 'CC-BY-NC-SA-2.0'
+    | 'CC-BY-NC-SA-2.0-DE'
+    | 'CC-BY-NC-SA-2.0-FR'
+    | 'CC-BY-NC-SA-2.0-UK'
+    | 'CC-BY-NC-SA-2.5'
+    | 'CC-BY-NC-SA-3.0'
+    | 'CC-BY-NC-SA-3.0-DE'
+    | 'CC-BY-NC-SA-3.0-IGO'
+    | 'CC-BY-NC-SA-4.0'
+    | 'CC-BY-ND-1.0'
+    | 'CC-BY-ND-2.0'
+    | 'CC-BY-ND-2.5'
+    | 'CC-BY-ND-3.0'
+    | 'CC-BY-ND-3.0-DE'
+    | 'CC-BY-ND-4.0'
+    | 'CC-BY-SA-1.0'
+    | 'CC-BY-SA-2.0'
+    | 'CC-BY-SA-2.0-UK'
+    | 'CC-BY-SA-2.1-JP'
+    | 'CC-BY-SA-2.5'
+    | 'CC-BY-SA-3.0'
+    | 'CC-BY-SA-3.0-AT'
+    | 'CC-BY-SA-3.0-DE'
+    | 'CC-BY-SA-3.0-IGO'
+    | 'CC-BY-SA-4.0'
+    | 'CC-PDDC'
+    | 'CDDL-1.0'
+    | 'CDDL-1.1'
+    | 'CDL-1.0'
+    | 'CDLA-Permissive-1.0'
+    | 'CDLA-Permissive-2.0'
+    | 'CDLA-Sharing-1.0'
+    | 'CECILL-1.0'
+    | 'CECILL-1.1'
+    | 'CECILL-2.0'
+    | 'CECILL-2.1'
+    | 'CECILL-B'
+    | 'CECILL-C'
+    | 'CERN-OHL-1.1'
+    | 'CERN-OHL-1.2'
+    | 'CERN-OHL-P-2.0'
+    | 'CERN-OHL-S-2.0'
+    | 'CERN-OHL-W-2.0'
+    | 'CFITSIO'
+    | 'check-cvs'
+    | 'checkmk'
+    | 'ClArtistic'
+    | 'Classpath-exception-2.0'
+    | 'Clips'
+    | 'CLISP-exception-2.0'
+    | 'CMU-Mach'
+    | 'CMU-Mach-nodoc'
+    | 'CNRI-Jython'
+    | 'CNRI-Python'
+    | 'CNRI-Python-GPL-Compatible'
+    | 'COIL-1.0'
+    | 'Community-Spec-1.0'
+    | 'Condor-1.1'
+    | 'copyleft-next-0.3.0'
+    | 'copyleft-next-0.3.1'
+    | 'Cornell-Lossless-JPEG'
+    | 'CPAL-1.0'
+    | 'CPL-1.0'
+    | 'CPOL-1.02'
+    | 'Cronyx'
+    | 'Crossword'
+    | 'cryptsetup-OpenSSL-exception'
+    | 'CrystalStacker'
+    | 'CUA-OPL-1.0'
+    | 'Cube'
+    | 'curl'
+    | 'cve-tou'
+    | 'D-FSL-1.0'
+    | 'DEC-3-Clause'
+    | 'diffmark'
+    | 'DigiRule-FOSS-exception'
+    | 'DL-DE-BY-2.0'
+    | 'DL-DE-ZERO-2.0'
+    | 'DOC'
+    | 'Dotseqn'
+    | 'DRL-1.0'
+    | 'DRL-1.1'
+    | 'DSDP'
+    | 'dtoa'
+    | 'dvipdfm'
+    | 'ECL-1.0'
+    | 'ECL-2.0'
+    | 'eCos-2.0'
+    | 'eCos-exception-2.0'
+    | 'EFL-1.0'
+    | 'EFL-2.0'
+    | 'eGenix'
+    | 'Elastic-2.0'
+    | 'Entessa'
+    | 'EPICS'
+    | 'EPL-1.0'
+    | 'EPL-2.0'
+    | 'ErlPL-1.1'
+    | 'etalab-2.0'
+    | 'EUDatagrid'
+    | 'EUPL-1.0'
+    | 'EUPL-1.1'
+    | 'EUPL-1.2'
+    | 'Eurosym'
+    | 'Fair'
+    | 'Fawkes-Runtime-exception'
+    | 'FBM'
+    | 'FDK-AAC'
+    | 'Ferguson-Twofish'
+    | 'FLTK-exception'
+    | 'fmt-exception'
+    | 'Font-exception-2.0'
+    | 'Frameworx-1.0'
+    | 'FreeBSD-DOC'
+    | 'FreeImage'
+    | 'freertos-exception-2.0'
+    | 'FSFAP'
+    | 'FSFAP-no-warranty-disclaimer'
+    | 'FSFUL'
+    | 'FSFULLR'
+    | 'FSFULLRWD'
+    | 'FTL'
+    | 'Furuseth'
+    | 'fwlw'
+    | 'GCC-exception-2.0'
+    | 'GCC-exception-2.0-note'
+    | 'GCC-exception-3.1'
+    | 'GCR-docs'
+    | 'GD'
+    | 'GFDL-1.1'
+    | 'GFDL-1.1-invariants-only'
+    | 'GFDL-1.1-invariants-or-later'
+    | 'GFDL-1.1-no-invariants-only'
+    | 'GFDL-1.1-no-invariants-or-later'
+    | 'GFDL-1.1-only'
+    | 'GFDL-1.1-or-later'
+    | 'GFDL-1.2'
+    | 'GFDL-1.2-invariants-only'
+    | 'GFDL-1.2-invariants-or-later'
+    | 'GFDL-1.2-no-invariants-only'
+    | 'GFDL-1.2-no-invariants-or-later'
+    | 'GFDL-1.2-only'
+    | 'GFDL-1.2-or-later'
+    | 'GFDL-1.3'
+    | 'GFDL-1.3-invariants-only'
+    | 'GFDL-1.3-invariants-or-later'
+    | 'GFDL-1.3-no-invariants-only'
+    | 'GFDL-1.3-no-invariants-or-later'
+    | 'GFDL-1.3-only'
+    | 'GFDL-1.3-or-later'
+    | 'Giftware'
+    | 'GL2PS'
+    | 'Glide'
+    | 'Glulxe'
+    | 'GLWTPL'
+    | 'Gmsh-exception'
+    | 'GNAT-exception'
+    | 'GNOME-examples-exception'
+    | 'GNU-compiler-exception'
+    | 'gnu-javamail-exception'
+    | 'gnuplot'
+    | 'GPL-1.0'
+    | 'GPL-1.0+'
+    | 'GPL-1.0-only'
+    | 'GPL-1.0-or-later'
+    | 'GPL-2.0'
+    | 'GPL-2.0+'
+    | 'GPL-2.0-only'
+    | 'GPL-2.0-or-later'
+    | 'GPL-2.0-with-autoconf-exception'
+    | 'GPL-2.0-with-bison-exception'
+    | 'GPL-2.0-with-classpath-exception'
+    | 'GPL-2.0-with-font-exception'
+    | 'GPL-2.0-with-GCC-exception'
+    | 'GPL-3.0'
+    | 'GPL-3.0+'
+    | 'GPL-3.0-interface-exception'
+    | 'GPL-3.0-linking-exception'
+    | 'GPL-3.0-linking-source-exception'
+    | 'GPL-3.0-only'
+    | 'GPL-3.0-or-later'
+    | 'GPL-3.0-with-autoconf-exception'
+    | 'GPL-3.0-with-GCC-exception'
+    | 'GPL-CC-1.0'
+    | 'Graphics-Gems'
+    | 'gSOAP-1.3b'
+    | 'GStreamer-exception-2005'
+    | 'GStreamer-exception-2008'
+    | 'gtkbook'
+    | 'Gutmann'
+    | 'HaskellReport'
+    | 'hdparm'
+    | 'Hippocratic-2.1'
+    | 'HP-1986'
+    | 'HP-1989'
+    | 'HPND'
+    | 'HPND-DEC'
+    | 'HPND-doc'
+    | 'HPND-doc-sell'
+    | 'HPND-export2-US'
+    | 'HPND-export-US'
+    | 'HPND-export-US-acknowledgement'
+    | 'HPND-export-US-modify'
+    | 'HPND-Fenneberg-Livingston'
+    | 'HPND-INRIA-IMAG'
+    | 'HPND-Intel'
+    | 'HPND-Kevlin-Henney'
+    | 'HPND-Markus-Kuhn'
+    | 'HPND-merchantability-variant'
+    | 'HPND-MIT-disclaimer'
+    | 'HPND-Pbmplus'
+    | 'HPND-sell-MIT-disclaimer-xserver'
+    | 'HPND-sell-regexpr'
+    | 'HPND-sell-variant'
+    | 'HPND-sell-variant-MIT-disclaimer'
+    | 'HPND-sell-variant-MIT-disclaimer-rev'
+    | 'HPND-UC'
+    | 'HPND-UC-export-US'
+    | 'HTMLTIDY'
+    | 'i2p-gpl-java-exception'
+    | 'IBM-pibs'
+    | 'ICU'
+    | 'IEC-Code-Components-EULA'
+    | 'IJG'
+    | 'IJG-short'
+    | 'ImageMagick'
+    | 'iMatix'
+    | 'Imlib2'
+    | 'Info-ZIP'
+    | 'Inner-Net-2.0'
+    | 'Intel'
+    | 'Intel-ACPI'
+    | 'Interbase-1.0'
+    | 'IPA'
+    | 'IPL-1.0'
+    | 'ISC'
+    | 'ISC-Veillard'
+    | 'Jam'
+    | 'JasPer-2.0'
+    | 'JPL-image'
+    | 'JPNIC'
+    | 'JSON'
+    | 'Kastrup'
+    | 'Kazlib'
+    | 'KiCad-libraries-exception'
+    | 'Knuth-CTAN'
+    | 'LAL-1.2'
+    | 'LAL-1.3'
+    | 'Latex2e'
+    | 'Latex2e-translated-notice'
+    | 'Leptonica'
+    | 'LGPL-2.0'
+    | 'LGPL-2.0+'
+    | 'LGPL-2.0-only'
+    | 'LGPL-2.0-or-later'
+    | 'LGPL-2.1'
+    | 'LGPL-2.1+'
+    | 'LGPL-2.1-only'
+    | 'LGPL-2.1-or-later'
+    | 'LGPL-3.0'
+    | 'LGPL-3.0+'
+    | 'LGPL-3.0-linking-exception'
+    | 'LGPL-3.0-only'
+    | 'LGPL-3.0-or-later'
+    | 'LGPLLR'
+    | 'Libpng'
+    | 'libpng-2.0'
+    | 'libpri-OpenH323-exception'
+    | 'libselinux-1.0'
+    | 'libtiff'
+    | 'Libtool-exception'
+    | 'libutil-David-Nugent'
+    | 'LiLiQ-P-1.1'
+    | 'LiLiQ-R-1.1'
+    | 'LiLiQ-Rplus-1.1'
+    | 'Linux-man-pages-1-para'
+    | 'Linux-man-pages-copyleft'
+    | 'Linux-man-pages-copyleft-2-para'
+    | 'Linux-man-pages-copyleft-var'
+    | 'Linux-OpenIB'
+    | 'Linux-syscall-note'
+    | 'LLGPL'
+    | 'LLVM-exception'
+    | 'LOOP'
+    | 'LPD-document'
+    | 'LPL-1.0'
+    | 'LPL-1.02'
+    | 'LPPL-1.0'
+    | 'LPPL-1.1'
+    | 'LPPL-1.2'
+    | 'LPPL-1.3a'
+    | 'LPPL-1.3c'
+    | 'lsof'
+    | 'Lucida-Bitmap-Fonts'
+    | 'LZMA-exception'
+    | 'LZMA-SDK-9.11-to-9.20'
+    | 'LZMA-SDK-9.22'
+    | 'Mackerras-3-Clause'
+    | 'Mackerras-3-Clause-acknowledgment'
+    | 'magaz'
+    | 'mailprio'
+    | 'MakeIndex'
+    | 'Martin-Birgmeier'
+    | 'McPhee-slideshow'
+    | 'metamail'
+    | 'mif-exception'
+    | 'Minpack'
+    | 'MirOS'
+    | 'MIT'
+    | 'MIT-0'
+    | 'MIT-advertising'
+    | 'MIT-CMU'
+    | 'MIT-enna'
+    | 'MIT-feh'
+    | 'MIT-Festival'
+    | 'MIT-Khronos-old'
+    | 'MIT-Modern-Variant'
+    | 'MIT-open-group'
+    | 'MIT-testregex'
+    | 'MIT-Wu'
+    | 'MITNFA'
+    | 'MMIXware'
+    | 'Motosoto'
+    | 'MPEG-SSG'
+    | 'mpi-permissive'
+    | 'mpich2'
+    | 'MPL-1.0'
+    | 'MPL-1.1'
+    | 'MPL-2.0'
+    | 'MPL-2.0-no-copyleft-exception'
+    | 'mplus'
+    | 'MS-LPL'
+    | 'MS-PL'
+    | 'MS-RL'
+    | 'MTLL'
+    | 'MulanPSL-1.0'
+    | 'MulanPSL-2.0'
+    | 'Multics'
+    | 'Mup'
+    | 'NAIST-2003'
+    | 'NASA-1.3'
+    | 'Naumen'
+    | 'NBPL-1.0'
+    | 'NCBI-PD'
+    | 'NCGL-UK-2.0'
+    | 'NCL'
+    | 'NCSA'
+    | 'Net-SNMP'
+    | 'NetCDF'
+    | 'Newsletr'
+    | 'NGPL'
+    | 'NICTA-1.0'
+    | 'NIST-PD'
+    | 'NIST-PD-fallback'
+    | 'NIST-Software'
+    | 'NLOD-1.0'
+    | 'NLOD-2.0'
+    | 'NLPL'
+    | 'Nokia'
+    | 'Nokia-Qt-exception-1.1'
+    | 'NOSL'
+    | 'Noweb'
+    | 'NPL-1.0'
+    | 'NPL-1.1'
+    | 'NPOSL-3.0'
+    | 'NRL'
+    | 'NTP'
+    | 'NTP-0'
+    | 'Nunit'
+    | 'O-UDA-1.0'
+    | 'OAR'
+    | 'OCaml-LGPL-linking-exception'
+    | 'OCCT-exception-1.0'
+    | 'OCCT-PL'
+    | 'OCLC-2.0'
+    | 'ODbL-1.0'
+    | 'ODC-By-1.0'
+    | 'OFFIS'
+    | 'OFL-1.0'
+    | 'OFL-1.0-no-RFN'
+    | 'OFL-1.0-RFN'
+    | 'OFL-1.1'
+    | 'OFL-1.1-no-RFN'
+    | 'OFL-1.1-RFN'
+    | 'OGC-1.0'
+    | 'OGDL-Taiwan-1.0'
+    | 'OGL-Canada-2.0'
+    | 'OGL-UK-1.0'
+    | 'OGL-UK-2.0'
+    | 'OGL-UK-3.0'
+    | 'OGTSL'
+    | 'OLDAP-1.1'
+    | 'OLDAP-1.2'
+    | 'OLDAP-1.3'
+    | 'OLDAP-1.4'
+    | 'OLDAP-2.0'
+    | 'OLDAP-2.0.1'
+    | 'OLDAP-2.1'
+    | 'OLDAP-2.2'
+    | 'OLDAP-2.2.1'
+    | 'OLDAP-2.2.2'
+    | 'OLDAP-2.3'
+    | 'OLDAP-2.4'
+    | 'OLDAP-2.5'
+    | 'OLDAP-2.6'
+    | 'OLDAP-2.7'
+    | 'OLDAP-2.8'
+    | 'OLFL-1.3'
+    | 'OML'
+    | 'OpenJDK-assembly-exception-1.0'
+    | 'OpenPBS-2.3'
+    | 'OpenSSL'
+    | 'OpenSSL-standalone'
+    | 'OpenVision'
+    | 'openvpn-openssl-exception'
+    | 'OPL-1.0'
+    | 'OPL-UK-3.0'
+    | 'OPUBL-1.0'
+    | 'OSET-PL-2.1'
+    | 'OSL-1.0'
+    | 'OSL-1.1'
+    | 'OSL-2.0'
+    | 'OSL-2.1'
+    | 'OSL-3.0'
+    | 'PADL'
+    | 'Parity-6.0.0'
+    | 'Parity-7.0.0'
+    | 'PCRE2-exception'
+    | 'PDDL-1.0'
+    | 'PHP-3.0'
+    | 'PHP-3.01'
+    | 'Pixar'
+    | 'pkgconf'
+    | 'Plexus'
+    | 'pnmstitch'
+    | 'PolyForm-Noncommercial-1.0.0'
+    | 'PolyForm-Small-Business-1.0.0'
+    | 'PostgreSQL'
+    | 'PPL'
+    | 'PS-or-PDF-font-exception-20170817'
+    | 'PSF-2.0'
+    | 'psfrag'
+    | 'psutils'
+    | 'Python-2.0'
+    | 'Python-2.0.1'
+    | 'python-ldap'
+    | 'Qhull'
+    | 'QPL-1.0'
+    | 'QPL-1.0-INRIA-2004'
+    | 'QPL-1.0-INRIA-2004-exception'
+    | 'Qt-GPL-exception-1.0'
+    | 'Qt-LGPL-exception-1.1'
+    | 'Qwt-exception-1.0'
+    | 'radvd'
+    | 'Rdisc'
+    | 'RHeCos-1.1'
+    | 'RPL-1.1'
+    | 'RPL-1.5'
+    | 'RPSL-1.0'
+    | 'RRDtool-FLOSS-exception-2.0'
+    | 'RSA-MD'
+    | 'RSCPL'
+    | 'Ruby'
+    | 'SANE-exception'
+    | 'SAX-PD'
+    | 'SAX-PD-2.0'
+    | 'Saxpath'
+    | 'SCEA'
+    | 'SchemeReport'
+    | 'Sendmail'
+    | 'Sendmail-8.23'
+    | 'SGI-B-1.0'
+    | 'SGI-B-1.1'
+    | 'SGI-B-2.0'
+    | 'SGI-OpenGL'
+    | 'SGP4'
+    | 'SHL-0.5'
+    | 'SHL-0.51'
+    | 'SHL-2.0'
+    | 'SHL-2.1'
+    | 'SimPL-2.0'
+    | 'SISSL'
+    | 'SISSL-1.2'
+    | 'SL'
+    | 'Sleepycat'
+    | 'SMLNJ'
+    | 'SMPPL'
+    | 'SNIA'
+    | 'snprintf'
+    | 'softSurfer'
+    | 'Soundex'
+    | 'Spencer-86'
+    | 'Spencer-94'
+    | 'Spencer-99'
+    | 'SPL-1.0'
+    | 'ssh-keyscan'
+    | 'SSH-OpenSSH'
+    | 'SSH-short'
+    | 'SSLeay-standalone'
+    | 'SSPL-1.0'
+    | 'StandardML-NJ'
+    | 'stunnel-exception'
+    | 'SugarCRM-1.1.3'
+    | 'Sun-PPP'
+    | 'Sun-PPP-2000'
+    | 'SunPro'
+    | 'SWI-exception'
+    | 'Swift-exception'
+    | 'SWL'
+    | 'swrule'
+    | 'Symlinks'
+    | 'TAPR-OHL-1.0'
+    | 'TCL'
+    | 'TCP-wrappers'
+    | 'TermReadKey'
+    | 'Texinfo-exception'
+    | 'TGPPL-1.0'
+    | 'threeparttable'
+    | 'TMate'
+    | 'TORQUE-1.1'
+    | 'TOSL'
+    | 'TPDL'
+    | 'TPL-1.0'
+    | 'TTWL'
+    | 'TTYP0'
+    | 'TU-Berlin-1.0'
+    | 'TU-Berlin-2.0'
+    | 'u-boot-exception-2.0'
+    | 'UBDL-exception'
+    | 'UCAR'
+    | 'UCL-1.0'
+    | 'ulem'
+    | 'UMich-Merit'
+    | 'Unicode-3.0'
+    | 'Unicode-DFS-2015'
+    | 'Unicode-DFS-2016'
+    | 'Unicode-TOU'
+    | 'Universal-FOSS-exception-1.0'
+    | 'UnixCrypt'
+    | 'Unlicense'
+    | 'UPL-1.0'
+    | 'URT-RLE'
+    | 'Vim'
+    | 'VOSTROM'
+    | 'vsftpd-openssl-exception'
+    | 'VSL-1.0'
+    | 'W3C'
+    | 'W3C-19980720'
+    | 'W3C-20150513'
+    | 'w3m'
+    | 'Watcom-1.0'
+    | 'Widget-Workshop'
+    | 'Wsuipa'
+    | 'WTFPL'
+    | 'wxWindows'
+    | 'WxWindows-exception-3.1'
+    | 'X11'
+    | 'X11-distribute-modifications-variant'
+    | 'x11vnc-openssl-exception'
+    | 'Xdebug-1.03'
+    | 'Xerox'
+    | 'Xfig'
+    | 'XFree86-1.1'
+    | 'xinetd'
+    | 'xkeyboard-config-Zinoviev'
+    | 'xlock'
+    | 'Xnet'
+    | 'xpp'
+    | 'XSkat'
+    | 'xzoom'
+    | 'YPL-1.0'
+    | 'YPL-1.1'
+    | 'Zed'
+    | 'Zeeff'
+    | 'Zend-2.0'
+    | 'Zimbra-1.3'
+    | 'Zimbra-1.4'
+    | 'Zlib'
+    | 'zlib-acknowledgement'
+    | 'ZPL-1.1'
+    | 'ZPL-2.0'
+    | 'ZPL-2.1';
 
 /**
  * Specifies an individual external reference
  */
 export type ExternalReferenceObject = {
+  [property: string]: any;
   /**
    * An optional comment describing the external reference
    */
@@ -1214,55 +1215,55 @@ export type ExternalReferenceObject = {
    * The URL to the external reference
    */
   url: string;
-  [property: string]: any;
 };
 
 export type HashObject = {
+  [property: string]: any;
   alg: HashAlgorithm;
   content: string;
-  [property: string]: any;
 };
 
 /**
  * The algorithm that generated the hash value.
  */
-export type HashAlgorithm =
-  | 'MD5'
-  | 'SHA-1'
-  | 'SHA-256'
-  | 'SHA-384'
-  | 'SHA-512'
-  | 'SHA3-256'
-  | 'SHA3-384'
-  | 'SHA3-512'
-  | 'BLAKE2b-256'
-  | 'BLAKE2b-384'
-  | 'BLAKE2b-512'
-  | 'BLAKE3';
+export type HashAlgorithm
+  = | 'BLAKE2b-256'
+    | 'BLAKE2b-384'
+    | 'BLAKE2b-512'
+    | 'BLAKE3'
+    | 'MD5'
+    | 'SHA3-256'
+    | 'SHA3-384'
+    | 'SHA3-512'
+    | 'SHA-1'
+    | 'SHA-256'
+    | 'SHA-384'
+    | 'SHA-512';
 
 /**
  * Specifies the type of external reference. There are built-in types to describe common
  * references. If a type does not exist for the reference being referred to, use the "other"
  * type.
  */
-export type PurpleType =
-  | 'vcs'
-  | 'issue-tracker'
-  | 'website'
-  | 'advisories'
-  | 'bom'
-  | 'mailing-list'
-  | 'social'
-  | 'chat'
-  | 'documentation'
-  | 'support'
-  | 'distribution'
-  | 'license'
-  | 'build-meta'
-  | 'build-system'
-  | 'other';
+export type PurpleType
+  = | 'advisories'
+    | 'bom'
+    | 'build-meta'
+    | 'build-system'
+    | 'chat'
+    | 'distribution'
+    | 'documentation'
+    | 'issue-tracker'
+    | 'license'
+    | 'mailing-list'
+    | 'other'
+    | 'social'
+    | 'support'
+    | 'vcs'
+    | 'website';
 
 export type LightweightNameValuePair = {
+  [property: string]: any;
   /**
    * The name of the property. Duplicate names are allowed, each potentially having a
    * different value.
@@ -1272,7 +1273,6 @@ export type LightweightNameValuePair = {
    * The value of the property.
    */
   value?: string;
-  [property: string]: any;
 };
 
 /**
@@ -1282,7 +1282,7 @@ export type LightweightNameValuePair = {
  * Specifies the scope of the component. If scope is not specified, 'required' scope SHOULD
  * be assumed by the consumer of the BOM.
  */
-export type ComponentScope = 'required' | 'optional' | 'excluded';
+export type ComponentScope = 'excluded' | 'optional' | 'required';
 
 /**
  * The organization that supplied the component. The supplier may often be the manufacturer,
@@ -1298,6 +1298,7 @@ export type ComponentScope = 'required' | 'optional' | 'excluded';
  * The organization that provides the service.
  */
 export type ManufactureObject = {
+  [property: string]: any;
   /**
    * A contact at the organization. Multiple contacts are allowed.
    */
@@ -1310,10 +1311,10 @@ export type ManufactureObject = {
    * The URL of the organization. Multiple URLs are allowed.
    */
   url?: string[];
-  [property: string]: any;
 };
 
 export type ContactObject = {
+  [property: string]: any;
   /**
    * The email address of the contact.
    */
@@ -1326,13 +1327,13 @@ export type ContactObject = {
    * The phone number of the contact.
    */
   phone?: string;
-  [property: string]: any;
 };
 
 /**
  * Specifies metadata and content for ISO-IEC 19770-2 Software Identification (SWID) Tags.
  */
 export type SwidObject = {
+  [property: string]: any;
   /**
    * Maps to the name of a SoftwareIdentity.
    */
@@ -1361,7 +1362,6 @@ export type SwidObject = {
    * Maps to the version of a SoftwareIdentity.
    */
   version?: string;
-  [property: string]: any;
 };
 
 /**
@@ -1369,17 +1369,18 @@ export type SwidObject = {
  * more specific appropriate classification is available or cannot be determined for the
  * component.
  */
-export type PurpleComponentType =
-  | 'application'
-  | 'framework'
-  | 'library'
-  | 'container'
-  | 'operating-system'
-  | 'device'
-  | 'firmware'
-  | 'file';
+export type PurpleComponentType
+  = | 'application'
+    | 'container'
+    | 'device'
+    | 'file'
+    | 'firmware'
+    | 'framework'
+    | 'library'
+    | 'operating-system';
 
 export type CompositionObject = {
+  [property: string]: any;
   /**
    * Specifies an aggregate type that describe how complete a relationship is.
    */
@@ -1398,19 +1399,18 @@ export type CompositionObject = {
    * explicit for the specified dependency only.
    */
   dependencies?: string[];
-  [property: string]: any;
 };
 
 /**
  * Specifies an aggregate type that describe how complete a relationship is.
  */
-export type PurpleAggregateType =
-  | 'complete'
-  | 'incomplete'
-  | 'incomplete_first_party_only'
-  | 'incomplete_third_party_only'
-  | 'unknown'
-  | 'not_specified';
+export type PurpleAggregateType
+  = | 'complete'
+    | 'incomplete'
+    | 'incomplete_first_party_only'
+    | 'incomplete_third_party_only'
+    | 'not_specified'
+    | 'unknown';
 
 /**
  * Defines the direct dependencies of a component. Components that do not have their own
@@ -1420,6 +1420,7 @@ export type PurpleAggregateType =
  * dependency-free.
  */
 export type DependencyObject = {
+  [property: string]: any;
   /**
    * The bom-ref identifiers of the components that are dependencies of this dependency object.
    */
@@ -1428,13 +1429,13 @@ export type DependencyObject = {
    * References a component by the components bom-ref attribute
    */
   ref: string;
-  [property: string]: any;
 };
 
 /**
  * Provides additional information about a BOM.
  */
 export type MetadataObject = {
+  [property: string]: any;
   /**
    * The person(s) who created the BOM. Authors are common in BOMs created through manual
    * processes. BOMs created through automated means may not have authors.
@@ -1469,13 +1470,13 @@ export type MetadataObject = {
    * The tool(s) used in the creation of the BOM.
    */
   tools?: ToolElement[];
-  [property: string]: any;
 };
 
 /**
  * The tool used to create the BOM.
  */
 export type ToolElement = {
+  [property: string]: any;
   /**
    * The hashes of the tool (if applicable).
    */
@@ -1492,10 +1493,10 @@ export type ToolElement = {
    * The date and time (timestamp) when the document was created.
    */
   version?: string;
-  [property: string]: any;
 };
 
 export type ServiceObject = {
+  [property: string]: any;
   /**
    * A boolean value indicating if the service requires authentication. A value of true
    * indicates the service requires authentication prior to use. A value of false indicates
@@ -1553,13 +1554,12 @@ export type ServiceObject = {
    * of false indicates that by using the service, a trust boundary is not crossed.
    */
   'x-trust-boundary'?: boolean;
-  [property: string]: any;
 };
 
 export type DatumObject = {
+  [property: string]: any;
   classification: string;
   flow: DataFlowDirection;
-  [property: string]: any;
 };
 
 /**
@@ -1575,11 +1575,11 @@ export type DatumObject = {
  *
  * Specifies the flow direction of the data. Direction is relative to the service.
  */
-export type DataFlowDirection =
-  | 'inbound'
-  | 'outbound'
-  | 'bi-directional'
-  | 'unknown';
+export type DataFlowDirection
+  = | 'bi-directional'
+    | 'inbound'
+    | 'outbound'
+    | 'unknown';
 
 export type CycloneDXSoftwareBillOfMaterialsStandard = {
   $schema?: Schema;
@@ -1670,7 +1670,7 @@ export type CycloneDXSoftwareBillOfMaterialsStandard = {
   vulnerabilities?: CycloneDXSoftwareBillOfMaterialsStandardVulnerability[];
 };
 
-export type Schema = 'http://cyclonedx.org/schema/bom-1.5.schema.json';
+export type Schema = 'https://cyclonedx.org/schema/bom-1.5.schema.json';
 
 /**
  * A comment, note, explanation, or similar textual content which provides additional
@@ -2212,6 +2212,7 @@ export type PurpleDataContents = {
  * is OPTIONAL.
  */
 export type LightweightNameValuePairObject = {
+  [property: string]: any;
   /**
    * The name of the property. Duplicate names are allowed, each potentially having a
    * different value.
@@ -2221,7 +2222,6 @@ export type LightweightNameValuePairObject = {
    * The value of the property.
    */
   value?: string;
-  [property: string]: any;
 };
 
 export type PurpleDataGovernance = {
@@ -2349,12 +2349,12 @@ export type Graphic = {
  *
  * The general theme or subject matter of the data being specified.
  */
-export type TypeOfData =
-  | 'source-code'
-  | 'configuration'
-  | 'dataset'
-  | 'definition'
-  | 'other';
+export type TypeOfData
+  = | 'configuration'
+    | 'dataset'
+    | 'definition'
+    | 'other'
+    | 'source-code';
 
 /**
  * Provides the ability to document evidence collected through various forms of extraction
@@ -2380,9 +2380,7 @@ export type PurpleEvidence = {
 /**
  * Evidence of the components use through the callstack.
  */
-export type Callstack = {
-  frames?: FrameElement[];
-};
+export type Callstack = { frames?: FrameElement[] };
 
 export type FrameElement = {
   /**
@@ -2416,9 +2414,7 @@ export type FrameElement = {
   parameters?: string[];
 };
 
-export type PurpleCopyright = {
-  text: string;
-};
+export type PurpleCopyright = { text: string };
 
 /**
  * Evidence that substantiates the identity of a component.
@@ -2447,14 +2443,14 @@ export type Identity = {
 /**
  * The identity field of the component which the evidence describes.
  */
-export type IdentityField =
-  | 'group'
-  | 'name'
-  | 'version'
-  | 'purl'
-  | 'cpe'
-  | 'swid'
-  | 'hash';
+export type IdentityField
+  = | 'cpe'
+    | 'group'
+    | 'hash'
+    | 'name'
+    | 'purl'
+    | 'swid'
+    | 'version';
 
 export type IdentityMethod = {
   /**
@@ -2476,17 +2472,17 @@ export type IdentityMethod = {
 /**
  * The technique used in this method of analysis.
  */
-export type Technique =
-  | 'source-code-analysis'
-  | 'binary-analysis'
-  | 'manifest-analysis'
-  | 'ast-fingerprint'
-  | 'hash-comparison'
-  | 'instrumentation'
-  | 'dynamic-analysis'
-  | 'filename'
-  | 'attestation'
-  | 'other';
+export type Technique
+  = | 'ast-fingerprint'
+    | 'attestation'
+    | 'binary-analysis'
+    | 'dynamic-analysis'
+    | 'filename'
+    | 'hash-comparison'
+    | 'instrumentation'
+    | 'manifest-analysis'
+    | 'other'
+    | 'source-code-analysis';
 
 /**
  * A list of SPDX licenses and/or named licenses.
@@ -2494,13 +2490,13 @@ export type Technique =
  * A tuple of exactly one SPDX License Expression.
  */
 export type MultipleLicense = {
-  license?: LicenseObjectClass;
   /**
    * An optional identifier which can be used to reference the license elsewhere in the BOM.
    * Every bom-ref MUST be unique within the BOM.
    */
   'bom-ref'?: string;
   expression?: string;
+  license?: LicenseObjectClass;
 };
 
 export type LicenseObjectClass = {
@@ -2618,23 +2614,23 @@ export type LicenseObjectLicensing = {
   purchaser?: PurplePurchaser;
 };
 
-export type LicenseType =
-  | 'academic'
-  | 'appliance'
-  | 'client-access'
-  | 'concurrent-user'
-  | 'core-points'
-  | 'custom-metric'
-  | 'device'
-  | 'evaluation'
-  | 'named-user'
-  | 'node-locked'
-  | 'oem'
-  | 'perpetual'
-  | 'processor-points'
-  | 'subscription'
-  | 'user'
-  | 'other';
+export type LicenseType
+  = | 'academic'
+    | 'appliance'
+    | 'client-access'
+    | 'concurrent-user'
+    | 'core-points'
+    | 'custom-metric'
+    | 'device'
+    | 'evaluation'
+    | 'named-user'
+    | 'node-locked'
+    | 'oem'
+    | 'other'
+    | 'perpetual'
+    | 'processor-points'
+    | 'subscription'
+    | 'user';
 
 /**
  * The individual or organization for which a license was granted to
@@ -2889,46 +2885,46 @@ export type HashClass = {
  * * __other__ = Use this if no other types accurately describe the purpose of the external
  * reference
  */
-export type FluffyType =
-  | 'vcs'
-  | 'issue-tracker'
-  | 'website'
-  | 'advisories'
-  | 'bom'
-  | 'mailing-list'
-  | 'social'
-  | 'chat'
-  | 'documentation'
-  | 'support'
-  | 'distribution'
-  | 'distribution-intake'
-  | 'license'
-  | 'build-meta'
-  | 'build-system'
-  | 'release-notes'
-  | 'security-contact'
-  | 'model-card'
-  | 'log'
-  | 'configuration'
-  | 'evidence'
-  | 'formulation'
-  | 'attestation'
-  | 'threat-model'
-  | 'adversary-model'
-  | 'risk-assessment'
-  | 'vulnerability-assertion'
-  | 'exploitability-statement'
-  | 'pentest-report'
-  | 'static-analysis-report'
-  | 'dynamic-analysis-report'
-  | 'runtime-analysis-report'
-  | 'component-analysis-report'
-  | 'maturity-report'
-  | 'certification-report'
-  | 'codified-infrastructure'
-  | 'quality-metrics'
-  | 'poam'
-  | 'other';
+export type FluffyType
+  = | 'adversary-model'
+    | 'advisories'
+    | 'attestation'
+    | 'bom'
+    | 'build-meta'
+    | 'build-system'
+    | 'certification-report'
+    | 'chat'
+    | 'codified-infrastructure'
+    | 'component-analysis-report'
+    | 'configuration'
+    | 'distribution'
+    | 'distribution-intake'
+    | 'documentation'
+    | 'dynamic-analysis-report'
+    | 'evidence'
+    | 'exploitability-statement'
+    | 'formulation'
+    | 'issue-tracker'
+    | 'license'
+    | 'log'
+    | 'mailing-list'
+    | 'maturity-report'
+    | 'model-card'
+    | 'other'
+    | 'pentest-report'
+    | 'poam'
+    | 'quality-metrics'
+    | 'release-notes'
+    | 'risk-assessment'
+    | 'runtime-analysis-report'
+    | 'security-contact'
+    | 'social'
+    | 'static-analysis-report'
+    | 'support'
+    | 'threat-model'
+    | 'vcs'
+    | 'vulnerability-assertion'
+    | 'website';
 
 /**
  * A model card describes the intended uses of a machine learning model and potential
@@ -3086,12 +3082,12 @@ export type PurpleApproach = {
 /**
  * Learning types describing the learning problem or hybrid learning problem.
  */
-export type LearningType =
-  | 'supervised'
-  | 'unsupervised'
-  | 'reinforcement-learning'
-  | 'semi-supervised'
-  | 'self-supervised';
+export type LearningType
+  = | 'reinforcement-learning'
+    | 'self-supervised'
+    | 'semi-supervised'
+    | 'supervised'
+    | 'unsupervised';
 
 export type PurpleDataset = {
   /**
@@ -3116,6 +3112,10 @@ export type PurpleDataset = {
    */
   name?: string;
   /**
+   * References a data component by the components bom-ref attribute
+   */
+  ref?: string;
+  /**
    * A description of any sensitive data in a dataset.
    */
   sensitiveData?: string[];
@@ -3130,10 +3130,6 @@ export type PurpleDataset = {
    * * __other__ = Any other type of data that does not fit into existing definitions.
    */
   type?: TypeOfData;
-  /**
-   * References a data component by the components bom-ref attribute
-   */
-  ref?: string;
 };
 
 export type PurpleInputAndOutputParameters = {
@@ -3270,14 +3266,6 @@ export type PurpleNote = {
  * Unique top level property for simple signatures. (signaturecore)
  */
 export type Signature = {
-  /**
-   * Unique top level property for Multiple Signatures. (multisignature)
-   */
-  signers?: ChainElement[];
-  /**
-   * Unique top level property for Signature Chains. (signaturechain)
-   */
-  chain?: ChainElement[];
   algorithm?: string;
   /**
    * Optional. Sorted array of X.509 [RFC5280] certificates, where the first element must
@@ -3285,6 +3273,10 @@ export type Signature = {
    * required to be complete.
    */
   certificatePath?: string[];
+  /**
+   * Unique top level property for Signature Chains. (signaturechain)
+   */
+  chain?: ChainElement[];
   /**
    * Optional. Array holding the names of one or more application level properties that must
    * be excluded from the signature process. Note that the "excludes" property itself, must
@@ -3301,6 +3293,10 @@ export type Signature = {
    * Optional. Public key object.
    */
   publicKey?: PublicKey;
+  /**
+   * Unique top level property for Multiple Signatures. (multisignature)
+   */
+  signers?: ChainElement[];
   /**
    * The signature data. Note that the binary representation must follow the JWA [RFC7518]
    * specifications.
@@ -3346,8 +3342,8 @@ export type ChainElement = {
  * Optional. Public key object.
  */
 export type PublicKey = {
-  kty: KeyType;
   [property: string]: any;
+  kty: KeyType;
 };
 
 /**
@@ -3438,19 +3434,19 @@ export type PurpleSWIDTag = {
  * or decisions without being explicitly programmed to do so.
  * * __data__ = A collection of discrete values that convey information.
  */
-export type FluffyComponentType =
-  | 'application'
-  | 'framework'
-  | 'library'
-  | 'container'
-  | 'platform'
-  | 'operating-system'
-  | 'device'
-  | 'device-driver'
-  | 'firmware'
-  | 'file'
-  | 'machine-learning-model'
-  | 'data';
+export type FluffyComponentType
+  = | 'application'
+    | 'container'
+    | 'data'
+    | 'device'
+    | 'device-driver'
+    | 'file'
+    | 'firmware'
+    | 'framework'
+    | 'library'
+    | 'machine-learning-model'
+    | 'operating-system'
+    | 'platform';
 
 /**
  * The service that created the annotation
@@ -3680,17 +3676,17 @@ export type CycloneDXSoftwareBillOfMaterialsStandardComposition = {
  *
  * Specifies an aggregate type that describe how complete a relationship is.
  */
-export type FluffyAggregateType =
-  | 'complete'
-  | 'incomplete'
-  | 'incomplete_first_party_only'
-  | 'incomplete_first_party_proprietary_only'
-  | 'incomplete_first_party_opensource_only'
-  | 'incomplete_third_party_only'
-  | 'incomplete_third_party_proprietary_only'
-  | 'incomplete_third_party_opensource_only'
-  | 'unknown'
-  | 'not_specified';
+export type FluffyAggregateType
+  = | 'complete'
+    | 'incomplete'
+    | 'incomplete_first_party_only'
+    | 'incomplete_first_party_opensource_only'
+    | 'incomplete_first_party_proprietary_only'
+    | 'incomplete_third_party_only'
+    | 'incomplete_third_party_opensource_only'
+    | 'incomplete_third_party_proprietary_only'
+    | 'not_specified'
+    | 'unknown';
 
 /**
  * Defines the direct dependencies of a component or service. Components or services that do
@@ -3824,7 +3820,7 @@ export type PurpleInputType = {
   /**
    * Inputs that have the form of parameters with names and values.
    */
-  environmentVars?: Array<LightweightNameValuePairObject | string>;
+  environmentVars?: (LightweightNameValuePairObject | string)[];
   /**
    * Inputs that have the form of parameters with names and values.
    */
@@ -3909,7 +3905,7 @@ export type PurpleOutputType = {
   /**
    * Outputs that have the form of environment variables.
    */
-  environmentVars?: Array<LightweightNameValuePairObject | string>;
+  environmentVars?: (LightweightNameValuePairObject | string)[];
   properties?: LightweightNameValuePairObject[];
   /**
    * A reference to an independent resource generated as output by the task.
@@ -3934,13 +3930,13 @@ export type PurpleOutputType = {
 /**
  * Describes the type of data output.
  */
-export type OutputTypeType =
-  | 'artifact'
-  | 'attestation'
-  | 'log'
-  | 'evidence'
-  | 'metrics'
-  | 'other';
+export type OutputTypeType
+  = | 'artifact'
+    | 'attestation'
+    | 'evidence'
+    | 'log'
+    | 'metrics'
+    | 'other';
 
 /**
  * Executes specific commands or tools in order to accomplish its owning task as part of a
@@ -3970,19 +3966,19 @@ export type PurpleCommand = {
   properties?: LightweightNameValuePairObject[];
 };
 
-export type TaskType =
-  | 'copy'
-  | 'clone'
-  | 'lint'
-  | 'scan'
-  | 'merge'
-  | 'build'
-  | 'test'
-  | 'deliver'
-  | 'deploy'
-  | 'release'
-  | 'clean'
-  | 'other';
+export type TaskType
+  = | 'build'
+    | 'clean'
+    | 'clone'
+    | 'copy'
+    | 'deliver'
+    | 'deploy'
+    | 'lint'
+    | 'merge'
+    | 'other'
+    | 'release'
+    | 'scan'
+    | 'test';
 
 /**
  * Describes the inputs, sequence of steps and resources used to accomplish a task and its
@@ -4154,7 +4150,7 @@ export type PurpleEvent = {
 /**
  * The source type of event which caused the trigger to fire.
  */
-export type TriggerType = 'manual' | 'api' | 'webhook' | 'scheduled';
+export type TriggerType = 'api' | 'manual' | 'scheduled' | 'webhook';
 
 /**
  * A named filesystem or data resource shareable by workflow tasks.
@@ -4216,12 +4212,12 @@ export type PurpleWorkspace = {
  * Describes the read-write access control for the workspace relative to the owning resource
  * instance.
  */
-export type AccessMode =
-  | 'read-only'
-  | 'read-write'
-  | 'read-write-once'
-  | 'write-once'
-  | 'write-only';
+export type AccessMode
+  = | 'read-only'
+    | 'read-write'
+    | 'read-write-once'
+    | 'write-once'
+    | 'write-only';
 
 /**
  * Information about the actual volume instance allocated to the workspace.
@@ -4264,7 +4260,7 @@ export type PurpleVolume = {
 /**
  * The mode for the volume instance.
  */
-export type VolumeMode = 'filesystem' | 'block';
+export type VolumeMode = 'block' | 'filesystem';
 
 /**
  * Provides additional information about a BOM.
@@ -4304,13 +4300,21 @@ export type MetadataClass = {
    * The date and time (timestamp) when the BOM was created.
    */
   timestamp?: Date;
-  tools?: CreationToolsLegacyElement[] | CreationTools;
+  tools?: CreationTools | CreationToolsLegacyElement[];
 };
 
 /**
  * The product lifecycle(s) that this BOM represents.
  */
 export type PurpleLifecycle = {
+  /**
+   * The description of the lifecycle phase
+   */
+  description?: string;
+  /**
+   * The name of the lifecycle phase
+   */
+  name?: string;
   /**
    * A pre-defined phase in the product lifecycle.
    *
@@ -4342,14 +4346,6 @@ export type PurpleLifecycle = {
    * operations.
    */
   phase?: Phase;
-  /**
-   * The description of the lifecycle phase
-   */
-  description?: string;
-  /**
-   * The name of the lifecycle phase
-   */
-  name?: string;
 };
 
 /**
@@ -4384,14 +4380,14 @@ export type PurpleLifecycle = {
  *
  * A pre-defined phase in the product lifecycle.
  */
-export type Phase =
-  | 'design'
-  | 'pre-build'
-  | 'build'
-  | 'post-build'
-  | 'operations'
-  | 'discovery'
-  | 'decommission';
+export type Phase
+  = | 'build'
+    | 'decommission'
+    | 'design'
+    | 'discovery'
+    | 'operations'
+    | 'post-build'
+    | 'pre-build';
 
 /**
  * [Deprecated] The tool(s) used in the creation of the BOM.
@@ -4645,23 +4641,23 @@ export type PurpleImpactAnalysis = {
  *
  * The rationale of why the impact analysis state was asserted.
  */
-export type ImpactAnalysisJustification =
-  | 'code_not_present'
-  | 'code_not_reachable'
-  | 'requires_configuration'
-  | 'requires_dependency'
-  | 'requires_environment'
-  | 'protected_by_compiler'
-  | 'protected_at_runtime'
-  | 'protected_at_perimeter'
-  | 'protected_by_mitigating_control';
+export type ImpactAnalysisJustification
+  = | 'code_not_present'
+    | 'code_not_reachable'
+    | 'protected_at_perimeter'
+    | 'protected_at_runtime'
+    | 'protected_by_compiler'
+    | 'protected_by_mitigating_control'
+    | 'requires_configuration'
+    | 'requires_dependency'
+    | 'requires_environment';
 
-export type Response =
-  | 'can_not_fix'
-  | 'will_not_fix'
-  | 'update'
-  | 'rollback'
-  | 'workaround_available';
+export type Response
+  = | 'can_not_fix'
+    | 'rollback'
+    | 'update'
+    | 'will_not_fix'
+    | 'workaround_available';
 
 /**
  * Declares the current state of an occurrence of a vulnerability, after automated or manual
@@ -4681,13 +4677,13 @@ export type Response =
  * Declares the current state of an occurrence of a vulnerability, after automated or manual
  * analysis.
  */
-export type ImpactAnalysisState =
-  | 'resolved'
-  | 'resolved_with_pedigree'
-  | 'exploitable'
-  | 'in_triage'
-  | 'false_positive'
-  | 'not_affected';
+export type ImpactAnalysisState
+  = | 'exploitable'
+    | 'false_positive'
+    | 'in_triage'
+    | 'not_affected'
+    | 'resolved'
+    | 'resolved_with_pedigree';
 
 /**
  * Individuals or organizations credited with the discovery of the vulnerability.
@@ -4708,6 +4704,7 @@ export type PurpleCredits = {
  * Evidence used to reproduce the vulnerability.
  */
 export type PurpleProofOfConcept = {
+  [property: string]: any;
   /**
    * A description of the environment in which reproduction was possible.
    */
@@ -4721,7 +4718,6 @@ export type PurpleProofOfConcept = {
    * possible. This may include screenshots, payloads, and PoC exploit code.
    */
   supportingMaterial?: LicenseObjectTextClass[];
-  [property: string]: any;
 };
 
 /**
@@ -4766,14 +4762,14 @@ export type PurpleRating = {
  *
  * Specifies the severity or risk scoring methodology or standard used.
  */
-export type MethodEnum =
-  | 'CVSSv2'
-  | 'CVSSv3'
-  | 'CVSSv31'
-  | 'CVSSv4'
-  | 'OWASP'
-  | 'SSVC'
-  | 'other';
+export type MethodEnum
+  = | 'CVSSv2'
+    | 'CVSSv3'
+    | 'CVSSv4'
+    | 'CVSSv31'
+    | 'other'
+    | 'OWASP'
+    | 'SSVC';
 
 /**
  * Textual representation of the severity that corresponds to the numerical score of the
@@ -4783,14 +4779,14 @@ export type MethodEnum =
  * method. If the analysis method uses values other than what is provided, the user is
  * expected to translate appropriately.
  */
-export type Severity =
-  | 'critical'
-  | 'high'
-  | 'medium'
-  | 'low'
-  | 'info'
-  | 'none'
-  | 'unknown';
+export type Severity
+  = | 'critical'
+    | 'high'
+    | 'info'
+    | 'low'
+    | 'medium'
+    | 'none'
+    | 'unknown';
 
 /**
  * The source that calculated the severity or risk rating of the vulnerability.
@@ -5554,108 +5550,108 @@ export type AlgorithmProperties = {
   primitive?: Primitive;
 };
 
-export type CertificationLevel =
-  | 'none'
-  | 'fips140-1-l1'
-  | 'fips140-1-l2'
-  | 'fips140-1-l3'
-  | 'fips140-1-l4'
-  | 'fips140-2-l1'
-  | 'fips140-2-l2'
-  | 'fips140-2-l3'
-  | 'fips140-2-l4'
-  | 'fips140-3-l1'
-  | 'fips140-3-l2'
-  | 'fips140-3-l3'
-  | 'fips140-3-l4'
-  | 'cc-eal1'
-  | 'cc-eal1+'
-  | 'cc-eal2'
-  | 'cc-eal2+'
-  | 'cc-eal3'
-  | 'cc-eal3+'
-  | 'cc-eal4'
-  | 'cc-eal4+'
-  | 'cc-eal5'
-  | 'cc-eal5+'
-  | 'cc-eal6'
-  | 'cc-eal6+'
-  | 'cc-eal7'
-  | 'cc-eal7+'
-  | 'other'
-  | 'unknown';
+export type CertificationLevel
+  = | 'cc-eal1'
+    | 'cc-eal1+'
+    | 'cc-eal2'
+    | 'cc-eal2+'
+    | 'cc-eal3'
+    | 'cc-eal3+'
+    | 'cc-eal4'
+    | 'cc-eal4+'
+    | 'cc-eal5'
+    | 'cc-eal5+'
+    | 'cc-eal6'
+    | 'cc-eal6+'
+    | 'cc-eal7'
+    | 'cc-eal7+'
+    | 'fips140-1-l1'
+    | 'fips140-1-l2'
+    | 'fips140-1-l3'
+    | 'fips140-1-l4'
+    | 'fips140-2-l1'
+    | 'fips140-2-l2'
+    | 'fips140-2-l3'
+    | 'fips140-2-l4'
+    | 'fips140-3-l1'
+    | 'fips140-3-l2'
+    | 'fips140-3-l3'
+    | 'fips140-3-l4'
+    | 'none'
+    | 'other'
+    | 'unknown';
 
-export type CryptographicFunction =
-  | 'generate'
-  | 'keygen'
-  | 'encrypt'
-  | 'decrypt'
-  | 'digest'
-  | 'tag'
-  | 'keyderive'
-  | 'sign'
-  | 'verify'
-  | 'encapsulate'
-  | 'decapsulate'
-  | 'other'
-  | 'unknown';
+export type CryptographicFunction
+  = | 'decapsulate'
+    | 'decrypt'
+    | 'digest'
+    | 'encapsulate'
+    | 'encrypt'
+    | 'generate'
+    | 'keyderive'
+    | 'keygen'
+    | 'other'
+    | 'sign'
+    | 'tag'
+    | 'unknown'
+    | 'verify';
 
 /**
  * The target and execution environment in which the algorithm is implemented in.
  */
-export type ExecutionEnvironment =
-  | 'software-plain-ram'
-  | 'software-encrypted-ram'
-  | 'software-tee'
-  | 'hardware'
-  | 'other'
-  | 'unknown';
+export type ExecutionEnvironment
+  = | 'hardware'
+    | 'other'
+    | 'software-encrypted-ram'
+    | 'software-plain-ram'
+    | 'software-tee'
+    | 'unknown';
 
 /**
  * The target platform for which the algorithm is implemented. The implementation can be
  * 'generic', running on any platform or for a specific platform.
  */
-export type ImplementationPlatform =
-  | 'generic'
-  | 'x86_32'
-  | 'x86_64'
-  | 'armv7-a'
-  | 'armv7-m'
-  | 'armv8-a'
-  | 'armv8-m'
-  | 'armv9-a'
-  | 'armv9-m'
-  | 's390x'
-  | 'ppc64'
-  | 'ppc64le'
-  | 'other'
-  | 'unknown';
+export type ImplementationPlatform
+  = | 'armv7-a'
+    | 'armv7-m'
+    | 'armv8-a'
+    | 'armv8-m'
+    | 'armv9-a'
+    | 'armv9-m'
+    | 'generic'
+    | 'other'
+    | 'ppc64'
+    | 'ppc64le'
+    | 's390x'
+    | 'unknown'
+    | 'x86_32'
+    | 'x86_64';
 
 /**
  * The mode of operation in which the cryptographic algorithm (block cipher) is used.
  */
-export type AlgorithmPropertiesMode =
-  | 'cbc'
-  | 'ecb'
-  | 'ccm'
-  | 'gcm'
-  | 'cfb'
-  | 'ofb'
-  | 'ctr'
-  | 'other'
-  | 'unknown';
+export type AlgorithmPropertiesMode
+  = | 'cbc'
+    | 'ccm'
+    | 'cfb'
+    | 'ctr'
+    | 'ecb'
+    | 'gcm'
+    | 'ofb'
+    | 'other'
+    | 'unknown';
 
 /**
  * The padding scheme that is used for the cryptographic algorithm.
  */
-export type Padding =
-  | 'pkcs5'
-  | 'pkcs7'
-  | 'pkcs1v15'
-  | 'oaep'
-  | 'raw'
-  | 'other'
-  | 'unknown';
+export type Padding
+  = | 'oaep'
+    | 'other'
+    | 'pkcs1v15'
+    | 'pkcs5'
+    | 'pkcs7'
+    | 'raw'
+    | 'unknown';
 
 /**
  * Cryptographic building blocks used in higher-level cryptographic systems and protocols.
@@ -5668,22 +5664,22 @@ export type Padding =
  * ML-KEM), authenticated encryption (ae, e.g. AES-GCM) and the combination of multiple
  * algorithms (combiner, e.g. SP800-56Cr2).
  */
-export type Primitive =
-  | 'drbg'
-  | 'mac'
-  | 'block-cipher'
-  | 'stream-cipher'
-  | 'signature'
-  | 'hash'
-  | 'pke'
-  | 'xof'
-  | 'kdf'
-  | 'key-agree'
-  | 'kem'
-  | 'ae'
-  | 'combiner'
-  | 'other'
-  | 'unknown';
+export type Primitive
+  = | 'ae'
+    | 'block-cipher'
+    | 'combiner'
+    | 'drbg'
+    | 'hash'
+    | 'kdf'
+    | 'kem'
+    | 'key-agree'
+    | 'mac'
+    | 'other'
+    | 'pke'
+    | 'signature'
+    | 'stream-cipher'
+    | 'unknown'
+    | 'xof';
 
 /**
  * Cryptographic assets occur in several forms. Algorithms and protocols are most commonly
@@ -5691,11 +5687,11 @@ export type Primitive =
  * 'hardcoded' in software components. Certificates and related cryptographic material like
  * keys, tokens, secrets or passwords are other cryptographic assets to be modelled.
  */
-export type AssetType =
-  | 'algorithm'
-  | 'certificate'
-  | 'protocol'
-  | 'related-crypto-material';
+export type AssetType
+  = | 'algorithm'
+    | 'certificate'
+    | 'protocol'
+    | 'related-crypto-material';
 
 /**
  * Properties for cryptographic assets of asset type 'certificate'
@@ -5816,15 +5812,15 @@ export type IKEv2TransformTypes = {
 /**
  * The concrete protocol type.
  */
-export type ProtocolPropertiesType =
-  | 'tls'
-  | 'ssh'
-  | 'ipsec'
-  | 'ike'
-  | 'sstp'
-  | 'wpa'
-  | 'other'
-  | 'unknown';
+export type ProtocolPropertiesType
+  = | 'ike'
+    | 'ipsec'
+    | 'other'
+    | 'ssh'
+    | 'sstp'
+    | 'tls'
+    | 'unknown'
+    | 'wpa';
 
 /**
  * Properties for cryptographic assets of asset type: `related-crypto-material`
@@ -5899,37 +5895,37 @@ export type SecuredBy = {
 /**
  * The key state as defined by NIST SP 800-57.
  */
-export type State =
-  | 'pre-activation'
-  | 'active'
-  | 'suspended'
-  | 'deactivated'
-  | 'compromised'
-  | 'destroyed';
+export type State
+  = | 'active'
+    | 'compromised'
+    | 'deactivated'
+    | 'destroyed'
+    | 'pre-activation'
+    | 'suspended';
 
 /**
  * The type for the related cryptographic material
  */
-export type RelatedCryptoMaterialType =
-  | 'private-key'
-  | 'public-key'
-  | 'secret-key'
-  | 'key'
-  | 'ciphertext'
-  | 'signature'
-  | 'digest'
-  | 'initialization-vector'
-  | 'nonce'
-  | 'seed'
-  | 'salt'
-  | 'shared-secret'
-  | 'tag'
-  | 'additional-data'
-  | 'password'
-  | 'credential'
-  | 'token'
-  | 'other'
-  | 'unknown';
+export type RelatedCryptoMaterialType
+  = | 'additional-data'
+    | 'ciphertext'
+    | 'credential'
+    | 'digest'
+    | 'initialization-vector'
+    | 'key'
+    | 'nonce'
+    | 'other'
+    | 'password'
+    | 'private-key'
+    | 'public-key'
+    | 'salt'
+    | 'secret-key'
+    | 'seed'
+    | 'shared-secret'
+    | 'signature'
+    | 'tag'
+    | 'token'
+    | 'unknown';
 
 export type FluffyComponentData = {
   /**
@@ -6180,7 +6176,7 @@ export type FluffyEvidence = {
    * introduced in CycloneDX v1.5. Arrays were introduced in v1.6. It is recommended that all
    * implementations use arrays, even if only one identity object is specified.
    */
-  identity?: IdentityEvidenceElement[] | IdentityEvidenceElement;
+  identity?: IdentityEvidenceElement | IdentityEvidenceElement[];
   licenses?: LicenseChoiceElement[];
   /**
    * Evidence of individual instances of a component spread across multiple locations.
@@ -6278,16 +6274,16 @@ export type IdentityEvidenceElement = {
 /**
  * The identity field of the component which the evidence describes.
  */
-export type IdentityEvidenceField =
-  | 'group'
-  | 'name'
-  | 'version'
-  | 'purl'
-  | 'cpe'
-  | 'omniborId'
-  | 'swhid'
-  | 'swid'
-  | 'hash';
+export type IdentityEvidenceField
+  = | 'cpe'
+    | 'group'
+    | 'hash'
+    | 'name'
+    | 'omniborId'
+    | 'purl'
+    | 'swhid'
+    | 'swid'
+    | 'version';
 
 export type IdentityEvidenceMethod = {
   /**
@@ -6312,7 +6308,6 @@ export type IdentityEvidenceMethod = {
  * A tuple of exactly one SPDX License Expression.
  */
 export type LicenseChoiceElement = {
-  license?: License;
   acknowledgement?: LicenseAcknowledgement;
   /**
    * An optional identifier which can be used to reference the license elsewhere in the BOM.
@@ -6326,6 +6321,7 @@ export type LicenseChoiceElement = {
    * Refer to https://spdx.org/specifications for syntax requirements
    */
   expression?: string;
+  license?: License;
 };
 
 /**
@@ -6340,7 +6336,7 @@ export type LicenseChoiceElement = {
  * and risk management. Observed licenses are defined in `@.evidence.licenses`. Observed
  * licenses form the evidence necessary to substantiate a concluded license.
  */
-export type LicenseAcknowledgement = 'declared' | 'concluded';
+export type LicenseAcknowledgement = 'concluded' | 'declared';
 
 /**
  * Specifies the details and attributes related to a software license. It can either include
@@ -6551,50 +6547,50 @@ export type Hash = {
 /**
  * Specifies the type of external reference.
  */
-export type TentacledType =
-  | 'vcs'
-  | 'issue-tracker'
-  | 'website'
-  | 'advisories'
-  | 'bom'
-  | 'mailing-list'
-  | 'social'
-  | 'chat'
-  | 'documentation'
-  | 'support'
-  | 'source-distribution'
-  | 'distribution'
-  | 'distribution-intake'
-  | 'license'
-  | 'build-meta'
-  | 'build-system'
-  | 'release-notes'
-  | 'security-contact'
-  | 'model-card'
-  | 'log'
-  | 'configuration'
-  | 'evidence'
-  | 'formulation'
-  | 'attestation'
-  | 'threat-model'
-  | 'adversary-model'
-  | 'risk-assessment'
-  | 'vulnerability-assertion'
-  | 'exploitability-statement'
-  | 'pentest-report'
-  | 'static-analysis-report'
-  | 'dynamic-analysis-report'
-  | 'runtime-analysis-report'
-  | 'component-analysis-report'
-  | 'maturity-report'
-  | 'certification-report'
-  | 'codified-infrastructure'
-  | 'quality-metrics'
-  | 'poam'
-  | 'electronic-signature'
-  | 'digital-signature'
-  | 'rfc-9116'
-  | 'other';
+export type TentacledType
+  = | 'adversary-model'
+    | 'advisories'
+    | 'attestation'
+    | 'bom'
+    | 'build-meta'
+    | 'build-system'
+    | 'certification-report'
+    | 'chat'
+    | 'codified-infrastructure'
+    | 'component-analysis-report'
+    | 'configuration'
+    | 'digital-signature'
+    | 'distribution'
+    | 'distribution-intake'
+    | 'documentation'
+    | 'dynamic-analysis-report'
+    | 'electronic-signature'
+    | 'evidence'
+    | 'exploitability-statement'
+    | 'formulation'
+    | 'issue-tracker'
+    | 'license'
+    | 'log'
+    | 'mailing-list'
+    | 'maturity-report'
+    | 'model-card'
+    | 'other'
+    | 'pentest-report'
+    | 'poam'
+    | 'quality-metrics'
+    | 'release-notes'
+    | 'rfc-9116'
+    | 'risk-assessment'
+    | 'runtime-analysis-report'
+    | 'security-contact'
+    | 'social'
+    | 'source-distribution'
+    | 'static-analysis-report'
+    | 'support'
+    | 'threat-model'
+    | 'vcs'
+    | 'vulnerability-assertion'
+    | 'website';
 
 /**
  * A model card describes the intended uses of a machine learning model and potential
@@ -6742,16 +6738,16 @@ export type EnergyConsumption = {
  * The type of activity that is part of a machine learning model development or operational
  * lifecycle.
  */
-export type Activity =
-  | 'design'
-  | 'data-collection'
-  | 'data-preparation'
-  | 'training'
-  | 'fine-tuning'
-  | 'validation'
-  | 'deployment'
-  | 'inference'
-  | 'other';
+export type Activity
+  = | 'data-collection'
+    | 'data-preparation'
+    | 'deployment'
+    | 'design'
+    | 'fine-tuning'
+    | 'inference'
+    | 'other'
+    | 'training'
+    | 'validation';
 
 /**
  * The total energy cost associated with the model lifecycle activity.
@@ -6837,18 +6833,18 @@ export type EnergyProvider = {
 /**
  * The energy source for the energy provider.
  */
-export type EnergySource =
-  | 'coal'
-  | 'oil'
-  | 'natural-gas'
-  | 'nuclear'
-  | 'wind'
-  | 'solar'
-  | 'geothermal'
-  | 'hydropower'
-  | 'biofuel'
-  | 'unknown'
-  | 'other';
+export type EnergySource
+  = | 'biofuel'
+    | 'coal'
+    | 'geothermal'
+    | 'hydropower'
+    | 'natural-gas'
+    | 'nuclear'
+    | 'oil'
+    | 'other'
+    | 'solar'
+    | 'unknown'
+    | 'wind';
 
 /**
  * The organization that provides energy.
@@ -7018,6 +7014,10 @@ export type FluffyDataset = {
    */
   name?: string;
   /**
+   * References a data component by the components bom-ref attribute
+   */
+  ref?: string;
+  /**
    * A description of any sensitive data in a dataset.
    */
   sensitiveData?: string[];
@@ -7025,10 +7025,6 @@ export type FluffyDataset = {
    * The general theme or subject matter of the data being specified.
    */
   type?: TypeOfData;
-  /**
-   * References a data component by the components bom-ref attribute
-   */
-  ref?: string;
 };
 
 export type FluffyInputAndOutputParameters = {
@@ -7198,20 +7194,20 @@ export type FluffySWIDTag = {
  * more specific appropriate classification is available or cannot be determined for the
  * component.
  */
-export type TentacledComponentType =
-  | 'application'
-  | 'framework'
-  | 'library'
-  | 'container'
-  | 'platform'
-  | 'operating-system'
-  | 'device'
-  | 'device-driver'
-  | 'firmware'
-  | 'file'
-  | 'machine-learning-model'
-  | 'data'
-  | 'cryptographic-asset';
+export type TentacledComponentType
+  = | 'application'
+    | 'container'
+    | 'cryptographic-asset'
+    | 'data'
+    | 'device'
+    | 'device-driver'
+    | 'file'
+    | 'firmware'
+    | 'framework'
+    | 'library'
+    | 'machine-learning-model'
+    | 'operating-system'
+    | 'platform';
 
 /**
  * The service that created the annotation
@@ -8001,7 +7997,7 @@ export type FluffyInputType = {
   /**
    * Inputs that have the form of parameters with names and values.
    */
-  environmentVars?: Array<LightweightNameValuePairClass | string>;
+  environmentVars?: (LightweightNameValuePairClass | string)[];
   /**
    * Inputs that have the form of parameters with names and values.
    */
@@ -8095,7 +8091,7 @@ export type FluffyOutputType = {
   /**
    * Outputs that have the form of environment variables.
    */
-  environmentVars?: Array<LightweightNameValuePairClass | string>;
+  environmentVars?: (LightweightNameValuePairClass | string)[];
   /**
    * Provides the ability to document properties in a name-value store. This provides
    * flexibility to include data not officially supported in the standard without having to
@@ -8556,17 +8552,13 @@ export type BOMMetadata = {
   /**
    * The tool(s) used in the creation, enrichment, and validation of the BOM.
    */
-  tools?: ToolsToolsLegacy[] | PurpleTools;
+  tools?: PurpleTools | ToolsToolsLegacy[];
 };
 
 /**
  * The product lifecycle(s) that this BOM represents.
  */
 export type FluffyLifecycle = {
-  /**
-   * A pre-defined phase in the product lifecycle.
-   */
-  phase?: Phase;
   /**
    * The description of the lifecycle phase
    */
@@ -8575,6 +8567,10 @@ export type FluffyLifecycle = {
    * The name of the lifecycle phase
    */
   name?: string;
+  /**
+   * A pre-defined phase in the product lifecycle.
+   */
+  phase?: Phase;
 };
 
 /**
@@ -8719,7 +8715,7 @@ export type CycloneDXBillOfMaterialsStandardVulnerability = {
   /**
    * The tool(s) used to identify, confirm, or score the vulnerability.
    */
-  tools?: ToolsToolsLegacy[] | FluffyTools;
+  tools?: FluffyTools | ToolsToolsLegacy[];
   /**
    * The date and time (timestamp) when the vulnerability record was last updated.
    */
@@ -8820,6 +8816,7 @@ export type FluffyCredits = {
  * Evidence used to reproduce the vulnerability.
  */
 export type FluffyProofOfConcept = {
+  [property: string]: any;
   /**
    * A description of the environment in which reproduction was possible.
    */
@@ -8833,7 +8830,6 @@ export type FluffyProofOfConcept = {
    * possible. This may include screenshots, payloads, and PoC exploit code.
    */
   supportingMaterial?: LicenseText[];
-  [property: string]: any;
 };
 
 /**

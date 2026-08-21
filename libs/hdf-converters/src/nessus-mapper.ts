@@ -185,6 +185,7 @@ export class NessusResults extends BaseResults<Record<string, unknown>, ExecJSON
       this.parsed,
       'NessusClientData_v2.Policy.policyName',
     ) as string;
+    this.logger.debug(`Policy name: ${this.policyName}`);
     const preference = _.get(
       this.parsed,
       'NessusClientData_v2.Policy.Preferences.ServerPreferences.preference',
@@ -198,11 +199,15 @@ export class NessusResults extends BaseResults<Record<string, unknown>, ExecJSON
           'value',
         ) || '';
     }
+    if (!this.version) {
+      this.logger.warn('sc_version not found in preferences, defaulting to empty version');
+    }
     const reportHost = _.get(
       this.parsed,
       'NessusClientData_v2.Report.ReportHost',
     );
     if (Array.isArray(reportHost)) {
+      this.logger.debug(`Processing ${reportHost.length} report hosts`);
       for (const element of reportHost) {
         const entry = new NessusMapper(element, this.shouldIncludeRaw, this.parseHtml, this.policyName, this.version);
         if (this.customMapping !== undefined) {

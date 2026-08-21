@@ -46,52 +46,6 @@ abstract class HDFControl10 implements HDFControl {
   // We use this as a reference
   wraps: ProfileControl_1_0 | ResultControl_1_0;
 
-  // We leave this as a getter because its computation is trivial, and saving it would result in vast data duplication
-  get finding_details(): string {
-    switch (this.status) {
-      case 'Failed': {
-        return `One or more of the automated tests failed or was inconclusive for the control:\n\n${this.message}\n`;
-      }
-      case 'Not Applicable': {
-        return `Justification:\n\n${this.message}\n`;
-      }
-      case 'Not Reviewed': {
-        return `Automated test skipped due to known accepted condition in the control:\n\n${this.message}\n`;
-      }
-      case 'Passed': {
-        return `All Automated tests passed for the control:\n\n${this.message}\n`;
-      }
-      case profileError: {
-        if (!this.status_list || this.status_list.length === 0) {
-          return 'No describe blocks were run in this control';
-        } else if (this.message === undefined) {
-          return 'No details available for this control.';
-        } else {
-          return `Exception:\n\n${this.message}\n`;
-        }
-      }
-      case 'From Profile': {
-        return 'No tests are run in a profile json.';
-      }
-      default: {
-        throw new Error('Error: invalid status generated');
-      }
-    }
-  }
-
-  // Abstracts - implemented more specifically below
-  abstract get message(): string;
-  abstract get segments(): HDFControlSegment[] | undefined;
-  abstract get status(): ControlStatus;
-
-  // Also leave this as a getter because it's trivial and there's no sense duplicating this data
-  get status_list(): SegmentStatus[] | undefined {
-    if (this.segments !== undefined) {
-      return this.segments.map(s => s.status);
-    }
-  }
-
-  // We ask that the child compute waived for us, to ease discrimination thereof
   constructor(
     forControl: ProfileControl_1_0 | ResultControl_1_0,
     isProfile: boolean,
@@ -116,6 +70,45 @@ abstract class HDFControl10 implements HDFControl {
     this.severity = HDFControl10.compute_severity(this.wraps);
   }
 
+  get finding_details(): string {
+    switch (this.status) {
+      case 'Failed': {
+        return `One or more of the automated tests failed or was inconclusive for the control:\n\n${this.message}\n`;
+      }
+      case 'From Profile': {
+        return 'No tests are run in a profile json.';
+      }
+      case 'Not Applicable': {
+        return `Justification:\n\n${this.message}\n`;
+      }
+      case 'Not Reviewed': {
+        return `Automated test skipped due to known accepted condition in the control:\n\n${this.message}\n`;
+      }
+      case 'Passed': {
+        return `All Automated tests passed for the control:\n\n${this.message}\n`;
+      }
+      case profileError: {
+        if (!this.status_list || this.status_list.length === 0) {
+          return 'No describe blocks were run in this control';
+        }
+        return this.message === undefined ? 'No details available for this control.' : `Exception:\n\n${this.message}\n`;
+      }
+      default: {
+        throw new Error('Error: invalid status generated');
+      }
+    }
+  }
+
+  abstract get message(): string;
+  abstract get segments(): HDFControlSegment[] | undefined;
+  abstract get status(): ControlStatus;
+
+  get status_list(): SegmentStatus[] | undefined {
+    if (this.segments !== undefined) {
+      return this.segments.map(s => s.status);
+    }
+  }
+
   // Everything below here are helpers for computing our properties
 
   /** Generates the nist tags, as needed. */
@@ -127,11 +120,12 @@ abstract class HDFControl10 implements HDFControl {
     let parsedNistRevision: NistRevision | null = null;
     const seenSpecs = new Set<string>(); // Used to track duplication
 
-    // Process item by item
-    for (const x of (Array.isArray(raw) ? raw : [raw]).map(tag => parse_nist(tag))) {
+    const tags = (Array.isArray(raw) ? raw : [raw]).map(tag => parse_nist(tag));
+    for (const x of tags) {
       if (!x) {
         continue;
-      } else if (is_control(x)) {
+      }
+      if (is_control(x)) {
         const specChain = x.subSpecifiers.join('-');
         if (!seenSpecs.has(specChain)) {
           seenSpecs.add(specChain);
@@ -234,7 +228,7 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   private static compute_message(control: ResultControl_1_0): string {
     return control.impact === 0
       ? (control.desc || 'No message found.')
-      : control.results.map(r => ExecControl.to_message_line(r)).join('');
+      : control.results.map(r => this.to_message_line(r)).join('');
   }
 
   private static compute_segments(
@@ -294,20 +288,24 @@ export class ExecControl extends HDFControl10 implements HDFControl {
 
     if (!this.status_list || this.status_list.includes('error')) {
       return profileError;
-    } else if (this.waived || this.wraps.impact === 0) {
+    }
+    if (this.waived || this.wraps.impact === 0) {
       // We interject this between profile error conditions because an empty-result waived control is still NA
       return 'Not Applicable';
-    } else if (this.status_list.length === 0) {
-      return profileError;
-    } else if (this.status_list.includes('failed')) {
-      return 'Failed';
-    } else if (this.status_list.includes('passed')) {
-      return 'Passed';
-    } else if (this.status_list.includes('skipped')) {
-      return 'Not Reviewed';
-    } else {
-      return profileError; // Shouldn't get here, but might as well have fallback
     }
+    if (this.status_list.length === 0) {
+      return profileError;
+    }
+    if (this.status_list.includes('failed')) {
+      return 'Failed';
+    }
+    if (this.status_list.includes('passed')) {
+      return 'Passed';
+    }
+    if (this.status_list.includes('skipped')) {
+      return 'Not Reviewed';
+    }
+    return profileError; // Shouldn't get here, but might as well have fallback
   }
 }
 
@@ -330,9 +328,9 @@ export class ProfileControl extends HDFControl10 implements HDFControl {
     super(control, true, false, false);
     // Build descriptions
     if (control.descriptions) {
-      for (const key of Object.keys(control.descriptions)) {
-        if (typeof control.descriptions[key] === 'string') {
-          this.descriptions[key] = control.descriptions[key];
+      for (const [key, value] of Object.entries(control.descriptions)) {
+        if (typeof value === 'string') {
+          this.descriptions[key] = value;
         }
       }
     }

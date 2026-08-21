@@ -1,23 +1,23 @@
-import {ExecJSON} from 'inspecjs';
+import { type ExecJSON } from 'inspecjs';
 
 export type SplunkReport = {
   meta: Meta;
-  statistics?: ExecJSON.Statistics;
   passthrough: any;
-  profiles: unknown[];
   platform: Platform;
+  profiles: unknown[];
+  statistics?: ExecJSON.Statistics;
   version: string;
 };
 
 export type Meta = {
-  guid: string;
   filename: string;
   filetype: string;
-  subtype: string;
+  guid: string;
   hdf_splunk_schema: string;
+  subtype: string;
 };
 
 export type Platform = {
-  release: string;
   name: string;
+  release: string;
 };

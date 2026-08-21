@@ -209,15 +209,14 @@ export type TitleCasedSeverity = (typeof titleCasedSeverities)[number];
 export function convertImpactToSeverity(impact: number): Severity {
   if (impact < 0.1) {
     return 'none';
-  } else if (impact < 0.4) {
-    return 'low';
-  } else if (impact < 0.7) {
-    return 'medium';
-  } else if (impact < 0.9) {
-    return 'high';
-  } else {
-    return 'critical';
   }
+  if (impact < 0.4) {
+    return 'low';
+  }
+  if (impact < 0.7) {
+    return 'medium';
+  }
+  return impact < 0.9 ? 'high' : 'critical';
 }
 
 /**
@@ -231,11 +230,11 @@ export function hdfWrapControl(ctrl: parse.AnyControl): HDFControl {
   if ((ctrl as ResultControl_1_0).results !== undefined) {
     const rctrl = ctrl as ResultControl_1_0;
     return new HDFExecControl_1_0(rctrl);
-  } else if ((ctrl as ResultControl_1_0).results === undefined) {
+  }
+  if ((ctrl as ResultControl_1_0).results === undefined) {
     const rctrl = ctrl as ProfileControl_1_0;
     return new HDFProfileControl_1_0(rctrl);
-  } else {
-    // In theory future schemas will be easier to decipher because of a version tag
-    throw new Error('Control did not match any expected schema');
   }
+  // In theory future schemas will be easier to decipher because of a version tag
+  throw new Error('Control did not match any expected schema');
 }

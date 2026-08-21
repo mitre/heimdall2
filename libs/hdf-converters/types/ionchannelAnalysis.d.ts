@@ -1,115 +1,111 @@
-export type ContextualizedDependency = Dependency & {
-  parentDependencies: string[];
-};
+export type ContextualizedDependency = Dependency & { parentDependencies: string[] };
 
-export type IonChannelAnalysisResponse = {
-  analysis: IonChannelAnalysis;
-};
+export type IonChannelAnalysisResponse = { analysis: IonChannelAnalysis };
 
 export type IonChannelAnalysis = {
-  id: string;
   analysis_id: string;
-  team_id: string;
-  project_id: string;
-  name: string;
-  text: string;
-  type: string;
-  source: string;
   branch: string;
+  created_at: Date;
   description: string;
-  risk: string;
-  summary: string;
+  duration: number;
+  id: string;
+  name: string;
   passed: boolean;
+  project_id: string;
+  public: boolean;
+  risk: string;
   ruleset_id: string;
   ruleset_name: string;
+  scan_summaries: ScanSummary[];
+  source: string;
   status: string;
-  created_at: Date;
-  updated_at: Date;
-  duration: number;
+  summary: string;
+  team_id: string;
+  text: string;
+  trigger: string;
+  trigger_author: string;
   trigger_hash: string;
   trigger_text: string;
-  trigger_author: string;
-  trigger: string;
-  scan_summaries: ScanSummary[];
-  public: boolean;
+  type: string;
+  updated_at: Date;
 };
 
 export type ScanSummary = {
-  id: string;
-  team_id: string;
-  project_id: string;
   analysis_id: string;
-  summary: string;
-  results: Results;
   created_at: Date;
-  updated_at: Date;
-  duration: number;
-  name: string;
   description: string;
+  duration: number;
+  id: string;
+  name: string;
+  project_id: string;
+  results: Results;
+  summary: string;
+  team_id: string;
+  updated_at: Date;
 };
 
 export type Results = {
-  type: string;
   data: Data;
+  type: string;
 };
 
 export type Data = {
-  vulnerabilities?: DataVulnerability[];
-  meta?: Meta;
-  dependencies?: Dependency[];
-  CSS?: number;
-  HTML?: number;
-  JavaScript?: number;
-  Vue?: number;
-  committers?: number;
-  name?: string;
-  url?: string;
+  checksum?: string;
+  clam_av_details?: ClamAVDetails;
   committed_at?: Date;
-  old_names?: string[];
-  stars?: number;
-  name_changed?: boolean;
+  committers?: number;
   compilers?: null;
+  content?: string;
+  CSS?: number;
+  data_read?: string;
+  data_scanned?: string;
+  dependencies?: Dependency[];
+  difference?: boolean;
   docker_file?: DockerFile;
-  known_viruses?: number;
   engine_version?: string;
+  file_notes?: Record<string, unknown>;
+  HTML?: number;
+  infected_files?: number;
+  JavaScript?: number;
+  known_viruses?: number;
+  license?: License;
+  message?: string;
+  meta?: Meta;
+  name?: string;
+  name_changed?: boolean;
+  old_names?: string[];
   scanned_directories?: number;
   scanned_files?: number;
-  infected_files?: number;
-  data_scanned?: string;
-  data_read?: string;
+  stars?: number;
   time?: string;
-  file_notes?: Record<string, unknown>;
-  clam_av_details?: ClamAVDetails;
-  license?: License;
-  checksum?: string;
-  difference?: boolean;
-  message?: string;
+  url?: string;
   valid?: boolean;
-  content?: string;
+  Vue?: number;
+  vulnerabilities?: DataVulnerability[];
 };
 
 export type ClamAVDetails = {
-  clamav_version: string;
   clamav_db_version: string;
+  clamav_version: string;
 };
 
 export type Dependency = {
-  latest_version: string;
-  org: string;
-  name: string;
-  type: string;
-  package: string;
-  version: string;
-  scope: Scope;
-  requirement: string;
-  file: File;
-  outdated_version: OutdatedVersion;
   dependencies: Dependency[];
+  file: File;
+  latest_version: string;
+  name: string;
+  org: string;
+  outdated_version: OutdatedVersion;
+  package: string;
+  requirement: string;
+  scope: Scope;
+  type: string;
+  version: string;
 };
 
 export enum File {
   Empty = '',
-  PackageJSON = 'package.json'
+  PackageJSON = 'package.json',
 }
 
 export type OutdatedVersion = {
@@ -118,13 +114,11 @@ export type OutdatedVersion = {
   patch_behind: number;
 };
 
-export enum Scope {
-  Runtime = 'runtime'
-}
+export enum Scope { Runtime = 'runtime' }
 
 export type DockerFile = {
-  images: null;
   dependencies: null;
+  images: null;
 };
 
 export type License = {
@@ -133,67 +127,67 @@ export type License = {
 };
 
 export type TypeElement = {
-  name: string;
   confidence: number;
+  name: string;
 };
 
 export type Meta = {
-  vulnerability_count?: number;
-  resolved_to?: string;
   first_degree_count?: number;
   no_version_count?: number;
+  resolved_to?: string;
   total_unique_count?: number;
   update_available_count?: number;
+  vulnerability_count?: number;
   vulnerable_count?: number;
 };
 
 export type DataVulnerability = {
-  id: number;
-  external_id: string;
-  source_id: number;
-  title: string;
-  name: string;
-  org: string;
-  version: string;
-  up: string;
-  edition: string;
   aliases: null;
   created_at: Date;
-  updated_at: Date;
-  references: null;
-  part: string;
+  edition: string;
+  external_id: string;
+  id: number;
   language: string;
-  vulnerabilities: VulnerabilityVulnerability[];
+  name: string;
+  org: string;
+  part: string;
   query: Dependency;
+  references: null;
+  source_id: number;
+  title: string;
+  up: string;
+  updated_at: Date;
+  version: string;
+  vulnerabilities: VulnerabilityVulnerability[];
 };
 
 export type VulnerabilityVulnerability = {
-  id: number;
-  external_id: string;
-  source: Source[];
-  title: string;
-  summary: string;
-  score: string;
-  score_version?: string;
-  score_system: string;
-  score_details: ScoreDetails;
-  vector: string;
   access_complexity: string;
-  vulnerability_authentication: string;
-  confidentiality_impact: string;
-  integrity_impact: string;
-  availability_impact: string;
-  vulnerabilty_source: string;
   assessment_check: null;
-  scanner: null;
+  availability_impact: string;
+  confidentiality_impact: string;
+  created_at: Date;
+  dependencies: null;
+  external_id: string;
+  id: number;
+  integrity_impact: string;
+  modified_at: Date;
+  mttr_seconds: null;
+  published_at: Date;
   recommendation: string;
   references: null;
-  modified_at: Date;
-  published_at: Date;
-  created_at: Date;
+  scanner: null;
+  score: string;
+  score_details: ScoreDetails;
+  score_system: string;
+  score_version?: string;
+  source: Source[];
+  summary: string;
+  title: string;
   updated_at: Date;
-  mttr_seconds: null;
-  dependencies: null;
+  vector: string;
+  vulnerability_authentication: string;
+  vulnerabilty_source: string;
 };
 
 export type ScoreDetails = {
@@ -202,37 +196,37 @@ export type ScoreDetails = {
 };
 
 export type Cvssv2 = {
-  vectorString: string;
-  accessVector: string;
   accessComplexity: string;
+  accessVector: string;
   authentication: string;
-  confidentialityImpact: string;
-  integrityImpact: string;
   availabilityImpact: string;
   baseScore: number;
+  confidentialityImpact: string;
+  integrityImpact: string;
+  vectorString: string;
 };
 
 export type Cvssv3 = {
-  vectorString: string;
-  attackVector: string;
   attackComplexity: string;
-  privilegesRequired: string;
-  userInteraction: string;
-  scope: string;
-  confidentialityImpact: string;
-  integrityImpact: string;
+  attackVector: string;
   availabilityImpact: string;
   baseScore: number;
   baseSeverity: string;
+  confidentialityImpact: string;
+  integrityImpact: string;
+  privilegesRequired: string;
+  scope: string;
+  userInteraction: string;
+  vectorString: string;
 };
 
 export type Source = {
-  id: number;
-  name: string;
-  description: string;
-  created_at: Date;
-  updated_at: Date;
   attribution: string;
-  license: string;
   copyright_url: string;
+  created_at: Date;
+  description: string;
+  id: number;
+  license: string;
+  name: string;
+  updated_at: Date;
 };

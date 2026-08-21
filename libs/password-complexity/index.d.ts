@@ -1,2 +1,2 @@
-export declare const validators: { check: Function; name: string }[];
-export declare function validatePasswordBoolean(password: string): boolean;
+export declare const validators: { check: (password: string) => boolean; name: string }[];
+export declare function isValidPassword(password: string): boolean;

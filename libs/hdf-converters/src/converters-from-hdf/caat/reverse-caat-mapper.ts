@@ -11,7 +11,8 @@ import {
   isContextualizedEvaluation,
 } from 'inspecjs';
 import * as _ from 'lodash';
-import { ensureContextualizedEvaluation } from '../../utils/global';
+import type { Logger } from 'winston';
+import { createWinstonLogger, ensureContextualizedEvaluation } from '../../utils/global';
 
 export type InputData = {
   controls?: ContextualizedControl[];
@@ -88,8 +89,8 @@ export class FromHDFToCAATMapper {
   }
 
   data: Data[];
+  logger: Logger = createWinstonLogger('HDF2CAAT');
 
-  // ensure input is turned into an array of contextualized evaluations with some additional metadata
   constructor(data: InputData | InputData[]) {
     if (!Array.isArray(data)) {
       data = [data];
@@ -207,7 +208,7 @@ export class FromHDFToCAATMapper {
     shouldReturnWorkBook = false,
     options: XLSX.WritingOptions = FromHDFToCAATMapper.DefaultWritingOptions,
   ) {
-    // Sheet names must be unique across the workbook
+    this.logger.debug(`Generating CAAT export for ${this.data.length} evaluation(s)`);
     const takenSheetNames: string[] = [];
 
     // Define our workbook
@@ -261,7 +262,7 @@ export class FromHDFToCAATMapper {
         rows,
         FromHDFToCAATMapper.SheetOptions,
       );
-      workBook.Sheets[sheetName] = workSheet; // eslint-disable-line security/detect-object-injection -- XLSX API pattern, sheetName is sanitized
+      workBook.Sheets[sheetName] = workSheet;
     }
 
     if (shouldReturnWorkBook) {

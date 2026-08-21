@@ -6,15 +6,15 @@ OHDF Converters supplies several methods to convert various types of security to
 
 ## Supported Formats
 
-1.  [**anchore-grype-mapper**] - Anchore Grype container security scanning results file
-2.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
-3.  [**aws-config-mapper**] - AWS Config
-4.  [**burpsuite-mapper**] - BurpSuite Pro XML file
-5.  [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
-6.  [**checklist-mapper**] - Checlist Mapper format
-7.  [**checkov-mapper**] - Convert checkov json output files
-8.  [**conveyor-mapper**] - Conveyor JSON file
-9.  [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
+1. [**anchore-grype-mapper**] - Anchore Grype container security scanning results file
+2. [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
+3. [**aws-config-mapper**] - AWS Config
+4. [**burpsuite-mapper**] - BurpSuite Pro XML file
+5. [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
+6. [**checklist-mapper**] - Checlist Mapper format
+7. [**checkov-mapper**] - Convert checkov json output files
+8. [**conveyor-mapper**] - Conveyor JSON file
+9. [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
 10. [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
 11. [**dependency-track-mapper**] - OWASP Dependency-Track Finding Packaging Format (FPF)
 12. [**fortify-mapper**] - Fortify results FVDL file

@@ -1,13 +1,13 @@
 export type SplunkConfig = {
-  scheme: string;
+  app?: string;
+  autologin?: boolean;
   host: string;
-  port?: number;
-  username?: string;
-  password?: string;
   index: string;
   owner?: string;
-  app?: string;
+  password?: string;
+  port?: number;
+  scheme: string;
   sessionKey?: string;
-  autologin?: boolean;
+  username?: string;
   version?: string;
 };

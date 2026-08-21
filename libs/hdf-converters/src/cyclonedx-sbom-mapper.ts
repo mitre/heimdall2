@@ -472,11 +472,14 @@ export class CycloneDXSBOMResults extends BaseResults<DataStorage> {
     };
 
     if (data.raw.components) {
+      this.logger.debug(`Detected SBOM format: ${data.raw.components.length} components`);
       this.flattenComponents(data);
       if (data.raw.vulnerabilities) {
+        this.logger.debug(`Found ${data.raw.vulnerabilities.length} vulnerabilities`);
         this.generateIntermediary(data);
       }
     } else if (data.raw.vulnerabilities) {
+      this.logger.debug(`Detected VEX format: ${data.raw.vulnerabilities.length} vulnerabilities (no components)`);
       this.formatVEX(data);
     } else {
       throw new Error(

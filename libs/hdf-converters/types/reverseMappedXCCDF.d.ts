@@ -1,67 +1,65 @@
-export type MappedXCCDFtoHDF = {
-  Benchmark: Benchmark;
-};
+export type MappedXCCDFtoHDF = { Benchmark: Benchmark };
 
 export type Benchmark = {
-  id: string;
   date: string;
-  title: string;
-  Profile: Profile[];
-  Rule: Rule[];
+  id: string;
   metadata: MetaData;
   passthrough: string;
-  version: string;
+  Profile: Profile[];
+  Rule: Rule[];
   TestResult: {
+    // Any as defined by InSpec Inputs, matching InSpecJS
+    attributes: Record<string, any>[];
     endTime: string;
     hasAttributes: boolean;
-    // Any as defined by InSpec Inputs, matching InSpecJS
-    attributes: {[key: string]: any}[];
     results: TestResult[];
   };
+  title: string;
+  version: string;
 };
 
 export type Profile = {
-  id: string;
-  title: string;
   description: string;
+  id: string;
   select: string[];
+  title: string;
 };
 
 export type Rule = {
+  ccis: string[];
+  checkContent?: string;
+  code?: string;
+  description?: string;
+  fix?: string;
   groupId?: string;
   id: string;
-  title?: string;
-  description?: string;
-  code?: string;
-  warning?: string;
   rationale?: string;
-  checkContent?: string;
-  fix?: string;
-  ccis: string[];
+  title?: string;
+  warning?: string;
 };
 
 export type MetaData = {
-  maintainer?: string;
   copyright?: string;
+  maintainer?: string;
 };
 
-export type XCCDFSeverity = 'info' | 'low' | 'medium' | 'high';
+export type XCCDFSeverity = 'high' | 'info' | 'low' | 'medium';
 
-export type TestResultStatus =
-  | 'pass'
-  | 'fail'
-  | 'error'
-  | 'unknown'
-  | 'notapplicable'
-  | 'notchecked'
-  | 'notselected'
-  | 'informational'
-  | 'fixed';
+export type TestResultStatus
+  = | 'error'
+    | 'fail'
+    | 'fixed'
+    | 'informational'
+    | 'notapplicable'
+    | 'notchecked'
+    | 'notselected'
+    | 'pass'
+    | 'unknown';
 
 export type TestResult = {
-  idref: string;
-  result: TestResultStatus;
-  messageType: string;
-  message: string;
   code: string;
+  idref: string;
+  message: string;
+  messageType: string;
+  result: TestResultStatus;
 };

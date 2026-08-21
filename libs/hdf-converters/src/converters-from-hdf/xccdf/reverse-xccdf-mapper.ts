@@ -3,12 +3,13 @@ import { ControlResultStatus } from 'inspecjs/src/generated_parsers/v_1_0/exec-j
 import * as _ from 'lodash';
 import moment from 'moment';
 import Mustache from 'mustache';
+import type { Logger } from 'winston';
 import type {
   MappedXCCDFtoHDF,
   TestResultStatus,
   XCCDFSeverity,
 } from '../../../types/reverseMappedXCCDF';
-import { getDescription, HeimdallToolsVersion } from '../../utils/global';
+import { createWinstonLogger, getDescription, HeimdallToolsVersion } from '../../utils/global';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 const TESTING_DATE_OVERRIDE = '1970-01-01';
@@ -90,6 +91,7 @@ function getMessages(segments: ExecJSON.ControlResult[]) {
 export class FromHDFToXCCDFMapper {
   data: ExecJSON.Execution;
   hasDateOverride: boolean;
+  logger: Logger = createWinstonLogger('HDF2XCCDF');
   xccdfTemplate: string;
 
   constructor(data: string, xccdfTemplate: string, hasDateOverride = false) {
@@ -215,6 +217,7 @@ export class FromHDFToXCCDFMapper {
   }
 
   toXCCDF() {
+    this.logger.debug(`Generating XCCDF export for ${this.data.profiles.length} profile(s)`);
     const passthrough = _.get(this.data, 'passthrough');
     let passthroughString = '';
     if (typeof passthrough === 'object') {

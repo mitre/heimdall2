@@ -240,11 +240,9 @@ export function contextualizeEvaluation(
       // If the object we end up with is "us", then just ignore
       if (Object.is(cc, sameIdPopulated)) {
         continue;
-      } else {
-        // Otherwise, bind
-        sameIdPopulated.extendedBy.push(cc);
-        cc.extendsFrom.push(sameIdPopulated);
       }
+      sameIdPopulated.extendedBy.push(cc);
+      cc.extendsFrom.push(sameIdPopulated);
     }
   }
   return evalContext;

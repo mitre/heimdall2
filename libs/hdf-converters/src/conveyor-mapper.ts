@@ -87,10 +87,11 @@ export class ConveyorResults extends BaseResults<Record<string, unknown>, Record
   async toHdf(): Promise<Record<string, ExecJSON.Execution>> {
     this.parsed = this.parse(this.rawInput);
     await this.init();
+    const results = _.get(this.parsed, 'api_response.results') as Record<string, unknown>;
+    const scannerNames = Object.keys(results);
+    this.logger.debug(`Processing ${scannerNames.length} scanner groups: ${scannerNames.join(', ')}`);
     const scannerRecordInput = (
-      Object.entries(
-        _.get(this.parsed, 'api_response.results') as Record<string, unknown>,
-      ) as [string, Record<string, unknown>][]
+      Object.entries(results) as [string, Record<string, unknown>][]
     ).map(([scannerName, scannerData]) => [
       scannerName,
       new ConveyorMapper(scannerData, this.parsed, scannerName as scannerType).toHdf(),
