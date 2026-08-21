@@ -220,9 +220,10 @@ export class NessusResults {
     nessusXml: string,
     withRaw = false,
     options: X2jOptions = {},
-  ) {
+  ) { 
+    // Only allowing overrides for MAX_TOTAL_EXPANSIONS for right now but structured in a way to let people override anything in the future
     const {maxTotalExpansions = DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS} =
-      typeof options.processEntities === 'object'
+      _.isPlainObject(options.processEntities) 
         ? options.processEntities
         : {};
     this.data = parseXml(nessusXml, {
