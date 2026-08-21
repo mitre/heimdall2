@@ -2,6 +2,7 @@
   <v-stepper-content step="1">
     <v-form v-model="valid">
       <v-text-field
+        data-cy="s3AccessToken"
         :value="accessToken"
         label="User Account Access Token"
         lazy-validation="lazy"
@@ -9,6 +10,7 @@
         @input="change_access_token"
       />
       <v-text-field
+        data-cy="s3SecretToken"
         :value="secretToken"
         label="User Account Secret Token"
         type="password"
@@ -22,6 +24,7 @@
         @input="change_region"
       />
       <v-text-field
+        data-cy="s3Endpoint"
         :value="endpoint"
         label="S3 Endpoint (Default: AWS)"
         hint="Leave blank for AWS, or enter a custom S3-compatible URL (e.g. https://minio.example.com)"
@@ -30,6 +33,7 @@
         @input="change_endpoint"
       />
       <v-checkbox
+        data-cy="s3SkipSts"
         :input-value="skipSts"
         class="mb-4"
         label="Use credentials directly (skip STS)"
@@ -40,6 +44,7 @@
     </v-form>
     <v-row class="mx-1 mb-2">
       <v-btn
+        data-cy="s3BasicLogin"
         color="primary"
         :disabled="!valid"
         class="my-2 mr-3"
