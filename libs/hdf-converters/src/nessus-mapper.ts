@@ -34,8 +34,8 @@ const COMPLIANCE_ACTUAL_VALUE = 'compliance-actual-value';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
-const DEFAULT_NIST_TAG: string[] = [];
 const DEFAULT_NESSUS_MAX_TOTAL_EXPANSIONS = 1_000_000_000;
+const DEFAULT_NIST_TAG: string[] = ["SI-2"];
 
 let parseHtml: (input: unknown) => string;
 
