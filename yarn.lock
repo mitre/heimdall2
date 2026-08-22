@@ -216,10 +216,10 @@
     "@smithy/types" "^4.16.1"
     tslib "^2.6.2"
 
-"@aws-sdk/client-config-service@3.1112.0":
-  version "3.1112.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1112.0.tgz#da9b7c7a2b132a2b71e0458c96198c4e1941ca41"
-  integrity sha512-Pc4zYMz4D+vNhYmujEBb3ODHqSRfbovfzsX3EdP+IqiT2b17ThWxtEc+QGnGYxubXPtpGsGk4koGIt/HuW+FKA==
+"@aws-sdk/client-config-service@3.1113.0":
+  version "3.1113.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.1113.0.tgz#ba8a7dca1bbf9a52596915e6cb81438b12ff12b4"
+  integrity sha512-cI9/rJkSiCnht0JAALgCcr/jETr8VXzfzIaI1pGe1iEO91GnRyr0tgYP4+JBknhpbagfwwsZnk6BsGLtHqv3gQ==
   dependencies:
     "@aws-sdk/core" "^3.977.8"
     "@aws-sdk/credential-provider-node" "^3.972.80"
