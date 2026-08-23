@@ -1,0 +1,65 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.13.0"
+  },
+  "version": "2.13.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "KICS",
+      "title": "KICS Infrastructure-as-Code Scan",
+      "version": "v2.1.20",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "kics-scan-coverage",
+          "title": "KICS scan coverage",
+          "impact": 0,
+          "desc": "KICS executed 1100 queries against 1 file(s); 0 produced findings. KICS reports violations only and does not enumerate the queries that ran without finding anything, so no passing controls can be derived from its output and the compliance ratio should not be read as a pass rate.",
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "tags": {
+            "queries_executed": 1100,
+            "queries_with_findings": 0,
+            "files_scanned": 1,
+            "files_parsed": 1
+          },
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "KICS executed 1100 queries against 1 file(s); 0 produced findings. KICS reports violations only and does not enumerate the queries that ran without finding anything, so no passing controls can be derived from its output and the compliance ratio should not be read as a pass rate.",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "68019f2a0c1342b23ead8360c43b5e2669df996b30638c2825321417525001d3"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "KICS",
+        "data": {
+          "kics_version": "v2.1.20",
+          "severity_counters": {
+            "CRITICAL": 0,
+            "HIGH": 0,
+            "INFO": 0,
+            "LOW": 0,
+            "MEDIUM": 0,
+            "TRACE": 0
+          },
+          "total_counter": 0,
+          "files_scanned": 1,
+          "queries_total": 1100
+        }
+      }
+    ]
+  }
+}
