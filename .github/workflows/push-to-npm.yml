@@ -35,15 +35,15 @@ jobs:
 
       - name: Publish Heimdall Lite to NPM
         if: always()
-        run: npx -y npm@latest publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        run: npx -y npm@latest publish --access public --tag latest apps/frontend/mitre-heimdall-lite*.tgz
 
       - name: Publish InSpecJS to NPM
         if: always()
-        run: npx -y npm@latest publish --access public libs/inspecjs/inspecjs*.tgz
+        run: npx -y npm@latest publish --access public --tag latest libs/inspecjs/inspecjs*.tgz
 
       - name: Publish OHDF Converters to NPM
         if: always()
-        run: npx -y npm@latest publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
+        run: npx -y npm@latest publish --access public --tag latest libs/hdf-converters/mitre-hdf-converters*.tgz
 
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v6
@@ -56,6 +56,6 @@ jobs:
 
       - name: Publish Heimdall Lite to GitHub Packages
         if: always()
-        run: npx -y npm@latest publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        run: npx -y npm@latest publish --access public --tag latest apps/frontend/mitre-heimdall-lite*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
