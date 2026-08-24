@@ -1,6 +1,6 @@
 {
   "name": "@heimdall/common",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "description": "Common utilities and interfaces between the front and backends of Heimdall",
   "private": true,
   "repository": {

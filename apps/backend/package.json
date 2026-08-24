@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.13.0",
+  "version": "2.14.0",
   "license": "Apache-2.0",
   "description": "Heimdall's backend which allows for data persistence, authentication, RBAC, and API access",
   "repository": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "@casl/ability": "^7.0.0",
     "@govtechsg/passport-openidconnect": "^1.0.3",
-    "@heimdall/common": "^2.13.0",
+    "@heimdall/common": "^2.14.0",
     "@heimdall/password-complexity": "^2.13.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/common": "^11.0.16",
