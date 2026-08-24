@@ -2308,10 +2308,10 @@
   resolved "https://registry.npmjs.org/@microsoft/microsoft-graph-types/-/microsoft-graph-types-2.43.1.tgz#4fa178a9d1b1372a5cb648013ac9eed4b1184725"
   integrity sha512-7r3FiJYW2qTWnl+Li8GV5MzJqPiJp27hvY98kH5V/ZMzGuIOkcJqOfIpusoIQrskLDfYk5kFT8AjpeW713qcIg==
 
-"@mitre/jsonix@^3.0.7":
-  version "3.0.10"
-  resolved "https://registry.npmjs.org/@mitre/jsonix/-/jsonix-3.0.10.tgz#c8ee8533488f26f8b3a9486afd585c096c5f32e4"
-  integrity sha512-4Pzp2i07ZVeZ1IoJkQMXjfuJIRygtxEHdxt1KFxq4Tmquolhi0Uav0cM+RtzSteysDuREdT/4GB/C/eBJKcQHQ==
+"@mitre/jsonix@^3.0.11":
+  version "3.0.11"
+  resolved "https://registry.npmjs.org/@mitre/jsonix/-/jsonix-3.0.11.tgz#2a478a8fdb3ba81ac385e75f910b99d3ec1da791"
+  integrity sha512-lEQcBbiQW+VkXLlWhQJf6HjNhI3p2beUmoYJLQkgqWShVpxhB0Xv0pjOVTX5zL7RfeYp5o/iV5A3rXPzFts6eQ==
   dependencies:
     "@xmldom/xmldom" "^0.9.7"
     amdefine "^1.0.1"
