@@ -205,15 +205,15 @@
     is-potential-custom-element-name "^1.0.1"
     lru-cache "^11.5.2"
 
-"@aws-sdk/checksums@^3.1000.28":
-  version "3.1000.28"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/checksums/-/checksums-3.1000.28.tgz#2a057727dc4b575dd84fe756d437caf4331bc974"
-  integrity sha512-VCpnmyHQ1IH49ni3LXnQj7DPr7rmcJmzYeiCkYdCcfgNtkvOj38cdcL9lapBWoItZWFACJPFJlymqC7/gem3Gw==
+"@aws-sdk/checksums@^3.1000.29":
+  version "3.1000.29"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/checksums/-/checksums-3.1000.29.tgz#f12a6926eb3789057f5f16582fc226fe533c87fa"
+  integrity sha512-Dtu0gr4dnATZAPwEYbpCsG+MpLM7OAliy2gTepEFQwl1vZ6DL3QMH2FveMa3HLvPsOdhJsPRB3KtxVhph9T75A==
   dependencies:
-    "@aws-sdk/core" "^3.977.8"
-    "@aws-sdk/types" "^3.974.4"
-    "@smithy/core" "^3.31.1"
-    "@smithy/types" "^4.16.1"
+    "@aws-sdk/core" "^3.977.9"
+    "@aws-sdk/types" "^3.974.5"
+    "@smithy/core" "^3.33.3"
+    "@smithy/types" "^4.17.2"
     tslib "^2.6.2"
 
 "@aws-sdk/client-config-service@3.1113.0":
@@ -231,20 +231,20 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.1113.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1113.0.tgz#25775622ba1615968d7dbf24d712d47bc9dda77d"
-  integrity sha512-NRqdtohoMRyWkEeeznfG1KPN08dclCbl+HFuLPB2v8qPcgoNmTFlLKl9ELiR6hsGXQ4Ur3qvRnoJVEk8ND74pg==
+  version "3.1116.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1116.0.tgz#1e2eec221df81a255a4942bbcbe37e90f5dc3099"
+  integrity sha512-UKRl9qSVW0rZpvSOauQNpYAy8+ONBAVYnpfKVtCyOF+FZVT1tl6MunYuHvuarCrroD2/YJs+tHTALYNgAlec3Q==
   dependencies:
-    "@aws-sdk/checksums" "^3.1000.28"
-    "@aws-sdk/core" "^3.977.8"
-    "@aws-sdk/credential-provider-node" "^3.972.80"
-    "@aws-sdk/middleware-sdk-s3" "^3.972.74"
-    "@aws-sdk/signature-v4-multi-region" "^3.996.45"
-    "@aws-sdk/types" "^3.974.4"
-    "@smithy/core" "^3.31.1"
-    "@smithy/fetch-http-handler" "^5.6.13"
-    "@smithy/node-http-handler" "^4.9.13"
-    "@smithy/types" "^4.16.1"
+    "@aws-sdk/checksums" "^3.1000.29"
+    "@aws-sdk/core" "^3.977.9"
+    "@aws-sdk/credential-provider-node" "^3.972.81"
+    "@aws-sdk/middleware-sdk-s3" "^3.972.75"
+    "@aws-sdk/signature-v4-multi-region" "^3.996.46"
+    "@aws-sdk/types" "^3.974.5"
+    "@smithy/core" "^3.33.3"
+    "@smithy/fetch-http-handler" "^5.7.2"
+    "@smithy/node-http-handler" "^4.11.3"
+    "@smithy/types" "^4.17.2"
     tslib "^2.6.2"
 
 "@aws-sdk/client-sts@^3.427.0":
@@ -384,16 +384,16 @@
     "@smithy/types" "^4.17.2"
     tslib "^2.6.2"
 
-"@aws-sdk/middleware-sdk-s3@^3.972.74":
-  version "3.972.74"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-sdk-s3/-/middleware-sdk-s3-3.972.74.tgz#203bb14775dcdc8f2b0c4984125da09708d8496d"
-  integrity sha512-2lzoV2z2QO5KJZYGOCnIZ1WVQgzMECvwuzr1xb034a++8QW4U4eGrmC2u4yg1xvNv4TLL/Uv5DLyuAiw0b9z7Q==
+"@aws-sdk/middleware-sdk-s3@^3.972.75":
+  version "3.972.75"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-sdk-s3/-/middleware-sdk-s3-3.972.75.tgz#d20222cbdd61197b245e0aaa3f79b7215dff31dc"
+  integrity sha512-wMIsNumRVKaNMKhvU/s9VrdEwE8S6gSzXp4RygFG5BEMnGkkXf8cjh8zf7cKJBpUDpqTWqwbz5isEgp9rH6Lng==
   dependencies:
-    "@aws-sdk/core" "^3.977.8"
-    "@aws-sdk/signature-v4-multi-region" "^3.996.45"
-    "@aws-sdk/types" "^3.974.4"
-    "@smithy/core" "^3.31.1"
-    "@smithy/types" "^4.16.1"
+    "@aws-sdk/core" "^3.977.9"
+    "@aws-sdk/signature-v4-multi-region" "^3.996.46"
+    "@aws-sdk/types" "^3.974.5"
+    "@smithy/core" "^3.33.3"
+    "@smithy/types" "^4.17.2"
     tslib "^2.6.2"
 
 "@aws-sdk/nested-clients@^3.997.44":
@@ -410,7 +410,7 @@
     "@smithy/types" "^4.17.2"
     tslib "^2.6.2"
 
-"@aws-sdk/signature-v4-multi-region@^3.996.45", "@aws-sdk/signature-v4-multi-region@^3.996.46":
+"@aws-sdk/signature-v4-multi-region@^3.996.46":
   version "3.996.46"
   resolved "https://registry.yarnpkg.com/@aws-sdk/signature-v4-multi-region/-/signature-v4-multi-region-3.996.46.tgz#ee57afe5282da4b57968061ef8706d32890267ab"
   integrity sha512-L+2xZTye/2T96f3lwCws0Zw6GG2JHZW9e8FpVgGBeeExSKyeoZ6CWRpBml/7DNiK/O26jrgPM9F+Ay8VkgzUWQ==
