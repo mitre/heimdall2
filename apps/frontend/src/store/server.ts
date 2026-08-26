@@ -36,7 +36,7 @@ export interface IServerState {
   ldap: boolean;
   localLoginEnabled: boolean;
   userInfo: IUser;
-  tenableHostUrl: string;
+  tenableHostUrl: string[];
   forceTenableFrontend: boolean;
   splunkHostUrl: string;
 }
@@ -68,7 +68,7 @@ class Server extends VuexModule implements IServerState {
   externalUrl: string = '';
   allUsers: ISlimUser[] = [];
   oidcName = '';
-  tenableHostUrl: string = '';
+  tenableHostUrl: string[] = [];
   forceTenableFrontend = false; // If true, the frontend will use Tenable.SC Lite features
   splunkHostUrl: string = '';
   /** Our currently granted JWT token */

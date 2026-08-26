@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.42",
+    "release": "2.13.0",
     "target_id": "10.0.0.2"
   },
-  "version": "2.6.42",
+  "version": "2.13.0",
   "statistics": {},
   "profiles": [
     {
@@ -19,7 +19,9 @@
       "controls": [
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "104410",
             "risk_factor": "None",
             "plugin_type": "summary",
@@ -52,7 +54,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "21745",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -239,7 +243,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "47619",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -271,7 +277,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "49069",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -384,7 +392,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "19689",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -449,7 +459,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "149334",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -481,7 +493,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "153588",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -747,7 +761,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "11219",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -797,7 +813,7 @@
           ]
         }
       ],
-      "sha256": "d023bf79a638512fc02de65b31a8c02a985bfd8260a6210b0c96071bff8b0386"
+      "sha256": "67fed194241d05cc322b62370955277c3b9da629a0f376b23fbfd24cc39a9214"
     }
   ],
   "passthrough": {
