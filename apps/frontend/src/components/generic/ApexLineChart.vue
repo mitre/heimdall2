@@ -32,7 +32,8 @@ export interface SeriesItem {
   }
 })
 export default class ApexLineChart extends Vue {
-  @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
+  @Prop({required: true, type: Array})
+  readonly categories!: Category<string>['label'][];
   @Prop({required: true, type: Array}) readonly series!: number[];
   @Prop({type: Number}) readonly upperRange!: number; //upper bound of y axis
   @Prop({type: Boolean}) readonly sevChart!: boolean; //identifies chart as severity chart
