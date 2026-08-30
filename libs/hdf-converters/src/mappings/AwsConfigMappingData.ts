@@ -12,6 +12,9 @@
 // control. Rev 4 statement letters (AC-2(j)) do not survive to Rev 5, which
 // renumbered control statements.
 //
+// Some (rule, control) pairs a source published have been removed after
+// maintainer review of what the rule actually checks.
+//
 // Row order is load-bearing: rules are alphabetical, and within a rule Rev 5
 // comes first and Rev 4 last. AwsConfigMapping keys its lookup by rule name and
 // source identifier with last-write-wins, so Rev 4 is what searchNIST resolves
@@ -218,15 +221,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'APIGATEWAY_STAGE_ACCESS_LOGS_ENABLED',
     AwsConfigRuleName: 'apigateway-stage-access-logs-enabled',
-    'NIST-ID':
-      'AC-4(26)|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4(26)|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'APIGATEWAY_STAGE_ACCESS_LOGS_ENABLED',
     AwsConfigRuleName: 'apigateway-stage-access-logs-enabled',
-    'NIST-ID':
-      'AC-4|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7',
     Rev: 4
   },
   {
@@ -261,16 +262,14 @@ export const data = [
     AwsConfigRuleSourceIdentifier:
       'APPMESH_VIRTUAL_GATEWAY_LOGGING_FILE_PATH_EXISTS',
     AwsConfigRuleName: 'appmesh-virtual-gateway-logging-file-path-exists',
-    'NIST-ID':
-      'AC-4(26)|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4(26)|AU-6(3)|AU-6(4)|AU-12|CA-7|SI-7(8)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier:
       'APPMESH_VIRTUAL_GATEWAY_LOGGING_FILE_PATH_EXISTS',
     AwsConfigRuleName: 'appmesh-virtual-gateway-logging-file-path-exists',
-    'NIST-ID':
-      'AC-4|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4|AU-6(3)|AU-6(4)|AU-12|CA-7|SI-7(8)',
     Rev: 4
   },
   {
@@ -291,16 +290,14 @@ export const data = [
     AwsConfigRuleSourceIdentifier:
       'APPMESH_VIRTUAL_NODE_LOGGING_FILE_PATH_EXISTS',
     AwsConfigRuleName: 'appmesh-virtual-node-logging-file-path-exists',
-    'NIST-ID':
-      'AC-4(26)|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4(26)|AU-6(3)|AU-6(4)|AU-12|CA-7|SI-7(8)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier:
       'APPMESH_VIRTUAL_NODE_LOGGING_FILE_PATH_EXISTS',
     AwsConfigRuleName: 'appmesh-virtual-node-logging-file-path-exists',
-    'NIST-ID':
-      'AC-4|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4|AU-6(3)|AU-6(4)|AU-12|CA-7|SI-7(8)',
     Rev: 4
   },
   {
@@ -320,15 +317,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'APPRUNNER_SERVICE_NO_PUBLIC_ACCESS',
     AwsConfigRuleName: 'apprunner-service-no-public-access',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'APPRUNNER_SERVICE_NO_PUBLIC_ACCESS',
     AwsConfigRuleName: 'apprunner-service-no-public-access',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 4
   },
   {
@@ -382,15 +377,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'APPSYNC_LOGGING_ENABLED',
     AwsConfigRuleName: 'appsync-logging-enabled',
-    'NIST-ID':
-      'AC-4(26)|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4(26)|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SI-7(8)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'APPSYNC_LOGGING_ENABLED',
     AwsConfigRuleName: 'appsync-logging-enabled',
-    'NIST-ID':
-      'AC-4|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SI-7(8)',
     Rev: 4
   },
   {
@@ -408,15 +401,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'ATHENA_WORKGROUP_LOGGING_ENABLED',
     AwsConfigRuleName: 'athena-workgroup-logging-enabled',
-    'NIST-ID':
-      'AC-4(26)|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4(26)|AU-2|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'ATHENA_WORKGROUP_LOGGING_ENABLED',
     AwsConfigRuleName: 'athena-workgroup-logging-enabled',
-    'NIST-ID':
-      'AC-4|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7(9)|SI-7(8)',
+    'NIST-ID': 'AC-4|AU-2|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7',
     Rev: 4
   },
   {
@@ -905,7 +896,7 @@ export const data = [
       'CLOUDTRAIL_S3_BUCKET_PUBLIC_ACCESS_PROHIBITED',
     AwsConfigRuleName: 'cloudtrail-s3-bucket-public-access-prohibited',
     'NIST-ID':
-      'AC-3|AC-4(26)|AC-21|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)|SI-7(8)',
+      'AC-3|AC-21|AU-10|SC-7|SC-7(3)|SC-7(4)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 5
   },
   {
@@ -913,7 +904,7 @@ export const data = [
       'CLOUDTRAIL_S3_BUCKET_PUBLIC_ACCESS_PROHIBITED',
     AwsConfigRuleName: 'cloudtrail-s3-bucket-public-access-prohibited',
     'NIST-ID':
-      'AC-3|AC-4|AC-21|AU-2|AU-3|AU-6(3)|AU-6(4)|AU-10|AU-12|CA-7|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)|SI-7(8)',
+      'AC-3|AC-4|AC-21|AU-10|SC-7|SC-7(3)|SC-7(4)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 4
   },
   {
@@ -1496,15 +1487,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'EBS_SNAPSHOT_BLOCK_PUBLIC_ACCESS',
     AwsConfigRuleName: 'ebs-snapshot-block-public-access',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'EBS_SNAPSHOT_BLOCK_PUBLIC_ACCESS',
     AwsConfigRuleName: 'ebs-snapshot-block-public-access',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 4
   },
   {
@@ -2855,14 +2844,14 @@ export const data = [
     AwsConfigRuleSourceIdentifier: 'KMS_KEY_POLICY_NO_PUBLIC_ACCESS',
     AwsConfigRuleName: 'kms-key-policy-no-public-access',
     'NIST-ID':
-      'AC-3|AC-21|CA-9(1)|CM-3(6)|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)|SC-13|SC-28|SC-28(1)',
+      'AC-3|AC-21|CM-3(6)|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(16)|SC-7(21)|SC-13|SC-28|SC-28(1)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'KMS_KEY_POLICY_NO_PUBLIC_ACCESS',
     AwsConfigRuleName: 'kms-key-policy-no-public-access',
     'NIST-ID':
-      'AC-3|AC-21|CA-9(1)|CM-3(6)|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)|SC-13|SC-28|SC-28(1)',
+      'AC-3|AC-21|CM-3(6)|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(16)|SC-7(21)|SC-13|SC-28|SC-28(1)',
     Rev: 4
   },
   {
@@ -2943,16 +2932,14 @@ export const data = [
     AwsConfigRuleSourceIdentifier:
       'LIGHTSAIL_BUCKET_ALLOW_PUBLIC_OVERRIDES_DISABLED',
     AwsConfigRuleName: 'lightsail-bucket-allow-public-overrides-disabled',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(21)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier:
       'LIGHTSAIL_BUCKET_ALLOW_PUBLIC_OVERRIDES_DISABLED',
     AwsConfigRuleName: 'lightsail-bucket-allow-public-overrides-disabled',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(21)',
     Rev: 4
   },
   {
@@ -3060,15 +3047,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'MQ_NO_PUBLIC_ACCESS',
     AwsConfigRuleName: 'mq-no-public-access',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'MQ_NO_PUBLIC_ACCESS',
     AwsConfigRuleName: 'mq-no-public-access',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 4
   },
   {
@@ -3086,15 +3071,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'MSK_CLUSTER_PUBLIC_ACCESS_DISABLED',
     AwsConfigRuleName: 'msk-cluster-public-access-disabled',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'MSK_CLUSTER_PUBLIC_ACCESS_DISABLED',
     AwsConfigRuleName: 'msk-cluster-public-access-disabled',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 4
   },
   {
@@ -4048,16 +4031,14 @@ export const data = [
     AwsConfigRuleSourceIdentifier:
       'REDSHIFT_SERVERLESS_WORKGROUP_NO_PUBLIC_ACCESS',
     AwsConfigRuleName: 'redshift-serverless-workgroup-no-public-access',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier:
       'REDSHIFT_SERVERLESS_WORKGROUP_NO_PUBLIC_ACCESS',
     AwsConfigRuleName: 'redshift-serverless-workgroup-no-public-access',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 4
   },
   {
@@ -4154,8 +4135,7 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'S3_ACCOUNT_LEVEL_PUBLIC_ACCESS_BLOCKS',
     AwsConfigRuleName: 's3-account-level-public-access-blocks',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 5
   },
   {
@@ -4772,15 +4752,13 @@ export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'SSM_AUTOMATION_BLOCK_PUBLIC_SHARING',
     AwsConfigRuleName: 'ssm-automation-block-public-sharing',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 5
   },
   {
     AwsConfigRuleSourceIdentifier: 'SSM_AUTOMATION_BLOCK_PUBLIC_SHARING',
     AwsConfigRuleName: 'ssm-automation-block-public-sharing',
-    'NIST-ID':
-      'AC-3|AC-21|SC-7|SC-7(3)|SC-7(4)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
+    'NIST-ID': 'AC-3|AC-21|SC-7|SC-7(3)|SC-7(9)|SC-7(11)|SC-7(16)|SC-7(21)',
     Rev: 4
   },
   {
