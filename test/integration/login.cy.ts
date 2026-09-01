@@ -47,6 +47,7 @@ context('Login', () => {
       toastVerifier.toastTextContains('You have successfully signed in.');
     });
     it('authenticates an oidc user', () => {
+      loginPageVerifier.oidcLoginButtonPresent();
       loginPage.loginOauth('oidc');
       // Open the user modal
       dropdown.openUserModal();
@@ -54,6 +55,7 @@ context('Login', () => {
       userModalVerifier.verifyFieldsExist();
     });
     it('authenticates a saml user', () => {
+      loginPageVerifier.samlLoginButtonPresent();
       loginPage.loginSaml('saml');
       dropdown.openUserModal();
       userModalVerifier.verifyFieldsExist();

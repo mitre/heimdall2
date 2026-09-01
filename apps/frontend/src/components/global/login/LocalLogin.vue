@@ -160,7 +160,7 @@
                 max-height="32"
                 :src="require('@/assets/saml.svg')"
               />
-              <div class="pl-2">Login with SAML</div>
+              <div class="pl-2">Login with {{ samlName }}</div>
             </v-btn>
           </div>
         </div>
@@ -210,6 +210,10 @@ export default class LocalLogin extends Vue {
 
   get registrationEnabled() {
     return ServerModule.registrationEnabled;
+  }
+
+  get samlName() {
+    return ServerModule.samlName;
   }
 
   get showAlternateAuth() {

@@ -12,9 +12,7 @@ export default class LoginPage {
   }
 
   loginSaml(username: string): void {
-    const origin = String(
-      Cypress.env('MOCKSAML_ORIGIN') || 'http://localhost:4000',
-    );
+    const origin = 'http://localhost:4000';
 
     cy.get('#saml').click({ force: true });
     cy.origin(origin, { args: { username } }, ({ username }) => {

@@ -31,7 +31,7 @@
                   >Heimdall Login (Local Authorization)</v-tab
                 >
                 <v-tab
-                  v-if="ldapenabled"
+                  v-if="ldapEnabled"
                   id="select-tab-ldap-login"
                   href="#login-ldap"
                   >Organization Login (LDAP Authorization)</v-tab
@@ -102,15 +102,10 @@ export default class Login extends Vue {
   }
 
   get anyAuthProvidersAvailable() {
-    return (
-      ServerModule.enabledAuthStrategies.includes('local') ||
-      ServerModule.enabledAuthStrategies.some(
-        (strategy) => strategy !== 'local' && strategy !== 'ldap'
-      )
-    );
+    return ServerModule.enabledAuthStrategies.some(strategy => strategy !== 'ldap');
   }
 
-  get ldapenabled() {
+  get ldapEnabled() {
     return ServerModule.enabledAuthStrategies.includes('ldap');
   }
 

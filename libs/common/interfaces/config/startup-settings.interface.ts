@@ -11,6 +11,7 @@ export type IStartupSettings = {
   readonly forceTenableFrontend: boolean;
   readonly oidcName: string;
   readonly registrationEnabled: boolean;
+  readonly samlName: string;
   readonly splunkHostUrl: string;
   readonly tenableHostUrl: string;
 };

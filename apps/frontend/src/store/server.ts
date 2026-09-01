@@ -34,6 +34,7 @@ export interface IServerState {
   externalUrl: string;
   registrationEnabled: boolean;
   oidcName: string;
+  samlName: string;
   userInfo: IUser;
   tenableHostUrl: string;
   forceTenableFrontend: boolean;
@@ -65,6 +66,7 @@ class Server extends VuexModule implements IServerState {
   externalUrl: string = '';
   allUsers: ISlimUser[] = [];
   oidcName = '';
+  samlName = '';
   tenableHostUrl: string = '';
   forceTenableFrontend = false; // If true, the frontend will use Tenable.SC Lite features
   splunkHostUrl: string = '';
@@ -110,6 +112,7 @@ class Server extends VuexModule implements IServerState {
     this.externalUrl = settings.externalUrl;
     this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;
+    this.samlName = settings.samlName;
     this.tenableHostUrl = settings.tenableHostUrl;
     this.forceTenableFrontend = settings.forceTenableFrontend;
     this.splunkHostUrl = settings.splunkHostUrl;

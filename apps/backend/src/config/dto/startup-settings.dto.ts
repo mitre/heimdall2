@@ -11,6 +11,7 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly forceTenableFrontend: boolean;
   readonly oidcName: string;
   readonly registrationEnabled: boolean;
+  readonly samlName: string;
   readonly splunkHostUrl: string;
   readonly tenableHostUrl: string;
 
@@ -24,6 +25,7 @@ export class StartupSettingsDto implements IStartupSettings {
     this.externalUrl = settings.externalUrl;
     this.oidcName = settings.oidcName;
     this.registrationEnabled = settings.registrationEnabled;
+    this.samlName = settings.samlName;
     this.tenableHostUrl = settings.tenableHostUrl;
     this.forceTenableFrontend = settings.forceTenableFrontend;
     this.splunkHostUrl = settings.splunkHostUrl;

@@ -69,9 +69,7 @@ async function bootstrap() {
   // Sessions was previously set to only be used for oauth callbacks
   // but now is used for Tenable authentication as well.
   if (
-    configService
-      .enabledAuthStrategies()
-      .some((strategy) => strategy !== 'local') ||
+    configService.enabledOauthStrategies().length ||
     configService.getTenableHostUrl().length
   ) {
     app.use(

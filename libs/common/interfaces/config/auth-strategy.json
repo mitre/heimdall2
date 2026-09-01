@@ -1,0 +1,13 @@
+{
+  "strategies": {
+    "GITHUB": "github",
+    "GITLAB": "gitlab",
+    "GOOGLE": "google",
+    "LDAP": "ldap",
+    "LOCAL": "local",
+    "OIDC": "oidc",
+    "OKTA": "okta",
+    "SAML": "saml"
+  },
+  "oauthStrategies": ["github", "gitlab", "google", "oidc", "okta"]
+}

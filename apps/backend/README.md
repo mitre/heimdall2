@@ -1,6 +1,6 @@
 # Heimdall Backend
 
-Logos used by this project are sourced from SVG Repo and are covered by the Logo License or MIT License: https://www.svgrepo.com/page/licensing/
+Login-provider logos except SAML are sourced from SVG Repo and covered by its Logo License or MIT License: https://www.svgrepo.com/page/licensing/. The SAML logo is sourced from [Worldvectorlogo](https://worldvectorlogo.com/logo/saml-1).
 
 Create the database by setting the appropriate environment variables found in `.env-example` in `.env`
 

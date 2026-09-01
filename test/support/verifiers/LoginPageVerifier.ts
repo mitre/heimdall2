@@ -10,4 +10,16 @@ export default class LoginPageVerifier {
     cy.get('label[for=username_field]').should('contain', 'Username');
     cy.get('label[for=password_field]').should('contain', 'Password');
   }
+
+  oidcLoginButtonPresent(): void {
+    cy.get('#oauth-oidc')
+      .should('be.visible')
+      .and('contain.text', 'Login with Mock Server');
+  }
+
+  samlLoginButtonPresent(): void {
+    cy.get('#saml')
+      .should('be.visible')
+      .and('contain.text', 'Login with MockSAML');
+  }
 }

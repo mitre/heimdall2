@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Profile, SamlScopingConfig } from '@node-saml/passport-saml';
 import { Strategy } from '@node-saml/passport-saml';
@@ -6,7 +6,23 @@ import winston from 'winston';
 import { ConfigService } from '../config/config.service';
 import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
-import { getRequiredClaim } from './resolve_claim';
+
+export function getRequiredClaim(
+  claims: Record<string, unknown>,
+  defaultClaimName: string,
+  configuredClaimName?: string,
+): string {
+  const resolvedClaimName = configuredClaimName || defaultClaimName;
+  const claimValue = Object.getOwnPropertyDescriptor(
+    claims,
+    resolvedClaimName,
+  )?.value;
+  if (typeof claimValue === 'string' && claimValue.length > 0) {
+    return claimValue;
+  }
+
+  throw new UnauthorizedException(`Missing required claim "${resolvedClaimName}".`);
+}
 
 function getSamlScoping(
   configService: ConfigService,
@@ -52,11 +68,24 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
     private readonly configService: ConfigService,
   ) {
     const samlAudience = configService.get('SAML_AUDIENCE');
+    const additionalAuthorizeParams = configService.get(
+      'SAML_ADDITIONAL_AUTHORIZE_PARAMS',
+    );
+    const additionalLogoutParams = configService.get(
+      'SAML_ADDITIONAL_LOGOUT_PARAMS',
+    );
+    const additionalParams = configService.get('SAML_ADDITIONAL_PARAMS');
     super({
       acceptedClockSkewMs: Number(configService.get('SAML_ACCEPTED_CLOCK_SKEW_MS') ?? 0),
-      additionalAuthorizeParams: configService.get('SAML_ADDITIONAL_AUTHORIZE_PARAMS') ? JSON.parse(configService.get('SAML_ADDITIONAL_AUTHORIZE_PARAMS')!) : undefined,
-      additionalLogoutParams: configService.get('SAML_ADDITIONAL_LOGOUT_PARAMS') ? JSON.parse(configService.get('SAML_ADDITIONAL_LOGOUT_PARAMS')!) : undefined,
-      additionalParams: configService.get('SAML_ADDITIONAL_PARAMS') ? JSON.parse(configService.get('SAML_ADDITIONAL_PARAMS')!) : undefined,
+      additionalAuthorizeParams: additionalAuthorizeParams
+        ? JSON.parse(additionalAuthorizeParams)
+        : undefined,
+      additionalLogoutParams: additionalLogoutParams
+        ? JSON.parse(additionalLogoutParams)
+        : undefined,
+      additionalParams: additionalParams
+        ? JSON.parse(additionalParams)
+        : undefined,
       allowCreate: (configService.get('SAML_ALLOW_CREATE') ?? 'true').toLowerCase() === 'true',
       attributeConsumingServiceIndex: configService.get('SAML_ATTRIBUTE_CONSUMING_SERVICE_INDEX'),
       audience:
@@ -121,12 +150,12 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
       getRequiredClaim(
         profile,
         'firstName',
-        this.configService.get('SAML_FIRST_NAME_ATTRIBUTE'),
+        this.configService.get('SAML_GIVEN_NAME_ATTRIBUTE'),
       ),
       getRequiredClaim(
         profile,
         'lastName',
-        this.configService.get('SAML_LAST_NAME_ATTRIBUTE'),
+        this.configService.get('SAML_FAMILY_NAME_ATTRIBUTE'),
       ),
       'saml',
     );

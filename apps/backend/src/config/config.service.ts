@@ -1,16 +1,11 @@
-import { AUTH_STRATEGY } from '@heimdall/common/interfaces';
+import {
+  AUTH_STRATEGY,
+  OAUTH_AUTH_STRATEGIES,
+} from '@heimdall/common/interfaces';
 import type { AuthStrategy } from '@heimdall/common/interfaces';
 import type { SequelizeOptions } from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
 import { StartupSettingsDto } from './dto/startup-settings.dto';
-
-const OAUTH_AUTH_STRATEGIES = [
-  AUTH_STRATEGY.GITHUB,
-  AUTH_STRATEGY.GITLAB,
-  AUTH_STRATEGY.GOOGLE,
-  AUTH_STRATEGY.OKTA,
-  AUTH_STRATEGY.OIDC,
-] as const;
 
 export class ConfigService {
   private readonly appConfig: AppConfig;
@@ -52,20 +47,22 @@ export class ConfigService {
     if (this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true') {
       enabledAuthStrategies.push(AUTH_STRATEGY.LDAP);
     }
-    enabledAuthStrategies.push(
-      ...OAUTH_AUTH_STRATEGIES.filter(authStrategy =>
-        this.get(`${authStrategy.toUpperCase()}_CLIENTID`),
-      ),
-    );
+    enabledAuthStrategies.push(...this.enabledOauthStrategies());
     if (
-      ['SAML_ENTRY_POINT', 'SAML_ISSUER', 'SAML_IDP_CERT'].every(setting =>
-        this.get(setting),
+      ['SAML_NAME', 'SAML_ENTRY_POINT', 'SAML_ISSUER', 'SAML_IDP_CERT'].every(
+        setting => this.get(setting),
       )
     ) {
       enabledAuthStrategies.push(AUTH_STRATEGY.SAML);
     }
 
     return enabledAuthStrategies;
+  }
+
+  enabledOauthStrategies(): AuthStrategy[] {
+    return OAUTH_AUTH_STRATEGIES.filter(authStrategy =>
+      this.get(`${authStrategy.toUpperCase()}_CLIENTID`),
+    );
   }
 
   frontendStartupSettings(): StartupSettingsDto {
@@ -81,6 +78,7 @@ export class ConfigService {
       externalUrl: this.getExternalUrl(),
       oidcName: this.get('OIDC_NAME') || '',
       registrationEnabled: this.isRegistrationAllowed(),
+      samlName: this.get('SAML_NAME') || '',
       tenableHostUrl: this.getTenableHostUrl(),
       forceTenableFrontend:
         this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',

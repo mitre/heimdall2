@@ -20,7 +20,7 @@ import {LDAPStrategy} from './ldap.strategy';
 import {LocalStrategy} from './local.strategy';
 import {OidcStrategy} from './oidc.strategy';
 import {OktaStrategy} from './okta.strategy';
-import { SAMLStrategy } from './saml.strategy';
+import {SAMLStrategy} from './saml.strategy';
 
 async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
   const {HttpsProxyAgent} = await import('https-proxy-agent');
@@ -38,14 +38,14 @@ async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
   ],
   providers: [
     AuthnService,
+    ApiKeyService,
     APIKeyStrategy,
-    LocalStrategy,
-    JwtStrategy,
     GithubStrategy,
     GitlabStrategy,
     GoogleStrategy,
+    JwtStrategy,
     LDAPStrategy,
-    ApiKeyService,
+    LocalStrategy,
     SAMLStrategy,
     {
       provide: OidcStrategy,

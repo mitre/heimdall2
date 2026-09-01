@@ -1,26 +1,13 @@
-export const AUTH_STRATEGY = {
-  GITHUB: 'github',
-  GITLAB: 'gitlab',
-  GOOGLE: 'google',
-  LDAP: 'ldap',
-  LOCAL: 'local',
-  OIDC: 'oidc',
-  OKTA: 'okta',
-  SAML: 'saml',
-} as const;
+import authStrategyDefinitions from './auth-strategy.json';
 
-export const AUTH_STRATEGIES = [
-  AUTH_STRATEGY.LOCAL,
-  AUTH_STRATEGY.LDAP,
-  AUTH_STRATEGY.GITHUB,
-  AUTH_STRATEGY.GITLAB,
-  AUTH_STRATEGY.GOOGLE,
-  AUTH_STRATEGY.OKTA,
-  AUTH_STRATEGY.OIDC,
-  AUTH_STRATEGY.SAML,
-] as const;
-
-export type AuthStrategy = (typeof AUTH_STRATEGIES)[number];
+type AuthStrategyKey = keyof typeof authStrategyDefinitions.strategies;
+export type AuthStrategy = Lowercase<AuthStrategyKey>;
+export const AUTH_STRATEGY = authStrategyDefinitions.strategies as {
+  readonly [Key in AuthStrategyKey]: Lowercase<Key>;
+};
+export const AUTH_STRATEGIES = Object.values(AUTH_STRATEGY) as readonly AuthStrategy[];
+export const OAUTH_AUTH_STRATEGIES =
+  authStrategyDefinitions.oauthStrategies as readonly AuthStrategy[];
 
 export type ExternalAuthStrategy = Exclude<
   AuthStrategy,

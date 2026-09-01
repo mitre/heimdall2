@@ -6,6 +6,7 @@ export * from './apikey/update-apikey.interface';
 export {
   AUTH_STRATEGIES,
   AUTH_STRATEGY,
+  OAUTH_AUTH_STRATEGIES,
 } from './config/auth-strategy.interface';
 export type {
   AuthStrategy,

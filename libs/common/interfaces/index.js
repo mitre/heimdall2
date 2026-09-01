@@ -1,24 +1,8 @@
-const AUTH_STRATEGY = {
-  GITHUB: 'github',
-  GITLAB: 'gitlab',
-  GOOGLE: 'google',
-  LDAP: 'ldap',
-  LOCAL: 'local',
-  OIDC: 'oidc',
-  OKTA: 'okta',
-  SAML: 'saml',
-};
-
-const AUTH_STRATEGIES = [
-  AUTH_STRATEGY.LOCAL,
-  AUTH_STRATEGY.LDAP,
-  AUTH_STRATEGY.GITHUB,
-  AUTH_STRATEGY.GITLAB,
-  AUTH_STRATEGY.GOOGLE,
-  AUTH_STRATEGY.OKTA,
-  AUTH_STRATEGY.OIDC,
-  AUTH_STRATEGY.SAML,
-];
+const authStrategyDefinitions = require('./config/auth-strategy.json');
+const AUTH_STRATEGY = authStrategyDefinitions.strategies;
+const AUTH_STRATEGIES = Object.values(AUTH_STRATEGY);
+const OAUTH_AUTH_STRATEGIES = authStrategyDefinitions.oauthStrategies;
 
 exports.AUTH_STRATEGIES = AUTH_STRATEGIES;
 exports.AUTH_STRATEGY = AUTH_STRATEGY;
+exports.OAUTH_AUTH_STRATEGIES = OAUTH_AUTH_STRATEGIES;
