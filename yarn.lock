@@ -2392,10 +2392,10 @@
     path-to-regexp "8.4.2"
     tslib "2.8.1"
 
-"@nestjs/jwt@^11.0.0":
-  version "11.0.2"
-  resolved "https://registry.npmjs.org/@nestjs/jwt/-/jwt-11.0.2.tgz#bd574b2932de75e0d99017204eb08203cf373adf"
-  integrity sha512-rK8aE/3/Ma45gAWfCksAXUNbOoSOUudU0Kn3rT39htPF7wsYXtKfjALKeKKJbFrIWbLjsbqfXX5bIJNvgBugGA==
+"@nestjs/jwt@^12.0.1":
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/jwt/-/jwt-12.0.1.tgz#964d71aa3ef765801bcfd0bc06a7742c9f19f2bd"
+  integrity sha512-AOvjo0JIuVMNr+6JgbEz4fP+4afclGR5ffZnHtjOFs4+HhzerUYKcIVUL06u5uQYQi/ra8WHO+NZR7OFdQeGvA==
   dependencies:
     "@types/jsonwebtoken" "9.0.10"
     jsonwebtoken "9.0.3"
