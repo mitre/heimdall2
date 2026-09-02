@@ -1,0 +1,74 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.14.0"
+  },
+  "version": "2.14.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Hadolint Scan",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "DL3002",
+          "title": "Last USER should not be root",
+          "tags": {},
+          "refs": [],
+          "source_location": {},
+          "desc": "Last USER should not be root",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 11\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "DL3041",
+          "title": "Specify version with `dnf install -y <package>-<version>`.",
+          "tags": {},
+          "refs": [],
+          "source_location": {},
+          "desc": "Specify version with `dnf install -y <package>-<version>`.",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 15\nColumn: 1",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 42\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "DL3059",
+          "title": "Multiple consecutive `RUN` instructions. Consider consolidation.",
+          "tags": {},
+          "refs": [],
+          "source_location": {},
+          "desc": "Multiple consecutive `RUN` instructions. Consider consolidation.",
+          "impact": 0.3,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 26\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "18df273295d42c076060cceb8494fe61cabf997c232610e7f8bb469b28e554fc"
+    }
+  ],
+  "passthrough": {}
+}

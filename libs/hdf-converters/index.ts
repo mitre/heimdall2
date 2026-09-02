@@ -27,6 +27,7 @@ export * from './src/dbprotect-mapper';
 export * from './src/dependency-track-mapper';
 export * from './src/fortify-mapper';
 export * from './src/gosec-mapper';
+export * from './src/hadolint-mapper';
 export * from './src/ionchannel-mapper';
 export * from './src/jfrog-xray-mapper';
 export * from './src/msft-secure-score-mapper';

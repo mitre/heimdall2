@@ -1,0 +1,146 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.14.0"
+  },
+  "version": "2.14.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Hadolint Scan",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "DL3002",
+          "title": "Last USER should not be root",
+          "tags": {},
+          "refs": [],
+          "source_location": {},
+          "desc": "Last USER should not be root",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 11\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "DL3041",
+          "title": "Specify version with `dnf install -y <package>-<version>`.",
+          "tags": {},
+          "refs": [],
+          "source_location": {},
+          "desc": "Specify version with `dnf install -y <package>-<version>`.",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 15\nColumn: 1",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 44\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "SC2154",
+          "title": "value is referenced but not assigned.",
+          "tags": {},
+          "refs": [],
+          "source_location": {},
+          "desc": "value is referenced but not assigned.",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 25\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "DL3059",
+          "title": "Multiple consecutive `RUN` instructions. Consider consolidation.",
+          "tags": {},
+          "refs": [],
+          "source_location": {},
+          "desc": "Multiple consecutive `RUN` instructions. Consider consolidation.",
+          "impact": 0.3,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 27\nColumn: 1",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 28\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "5d785d2a3c6231e2075631f1773e3a90075a1f6376e995d4752b0cb7638439dd"
+    }
+  ],
+  "passthrough": {
+    "raw": [
+      {
+        "code": "DL3002",
+        "column": 1,
+        "file": "Dockerfile",
+        "level": "warning",
+        "line": 11,
+        "message": "Last USER should not be root"
+      },
+      {
+        "code": "DL3041",
+        "column": 1,
+        "file": "Dockerfile",
+        "level": "warning",
+        "line": 15,
+        "message": "Specify version with `dnf install -y <package>-<version>`."
+      },
+      {
+        "code": "SC2154",
+        "column": 1,
+        "file": "Dockerfile",
+        "level": "warning",
+        "line": 25,
+        "message": "value is referenced but not assigned."
+      },
+      {
+        "code": "DL3059",
+        "column": 1,
+        "file": "Dockerfile",
+        "level": "info",
+        "line": 27,
+        "message": "Multiple consecutive `RUN` instructions. Consider consolidation."
+      },
+      {
+        "code": "DL3059",
+        "column": 1,
+        "file": "Dockerfile",
+        "level": "info",
+        "line": 28,
+        "message": "Multiple consecutive `RUN` instructions. Consider consolidation."
+      },
+      {
+        "code": "DL3041",
+        "column": 1,
+        "file": "Dockerfile",
+        "level": "warning",
+        "line": 44,
+        "message": "Specify version with `dnf install -y <package>-<version>`."
+      }
+    ]
+  }
+}
