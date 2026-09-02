@@ -96,14 +96,26 @@ export function parseCsv(csv: string): unknown[] {
 }
 
 export function impactMapping(
-  mapping: Map<string, number>
+  mapping: Map<string, number>,
+  defaultValue = 0.5
 ): (severity: unknown) => number {
+  const warned = new Set<string>();
   return (severity: unknown): number => {
     if (typeof severity === 'string' || typeof severity === 'number') {
-      return mapping.get(severity.toString().toLowerCase()) || 0;
-    } else {
-      return 0;
+      const impact = mapping.get(severity.toString().toLowerCase());
+      if (impact !== undefined) {
+        return impact;
+      }
     }
+    // If the base data had no severity we can map, fall through to the default value, and print a warning to stderr
+    const key = String(severity);
+    if (!warned.has(key)) {
+      warned.add(key);
+      console.warn(
+        `Severity "${key}" is not in this converter's impact mapping; defaulting to impact ${defaultValue}`
+      );
+    }
+    return defaultValue;
   };
 }
 
