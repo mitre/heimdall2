@@ -61,7 +61,7 @@ export class NiktoMapper extends BaseConverter {
                 path: 'id',
                 transformer: (id: string) => getCCIsForNISTTags(nistTag(id))
               },
-              ösvdb: {path: 'OSVDB'}
+              osvdb: {path: 'OSVDB'}
             },
             refs: [],
             source_location: {},
