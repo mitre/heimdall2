@@ -15,10 +15,9 @@
 // Some (rule, control) pairs a source published have been removed after
 // maintainer review of what the rule actually checks.
 //
-// Row order is load-bearing: rules are alphabetical, and within a rule Rev 5
-// comes first and Rev 4 last. AwsConfigMapping keys its lookup by rule name and
-// source identifier with last-write-wins, so Rev 4 is what searchNIST resolves
-// to. Reordering the revisions silently switches every lookup to Rev 5.
+// Rows are alphabetical by rule, Rev 5 then Rev 4 within each rule. The order
+// is presentational: AwsConfigMapping keys its lookups by revision, so the two
+// rows for a rule no longer overwrite each other and either can be selected.
 export const data = [
   {
     AwsConfigRuleSourceIdentifier: 'ACCESS_KEYS_ROTATED',

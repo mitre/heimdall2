@@ -17,17 +17,15 @@ function control(tag: string): NistControl {
 /**
  * Mirrors how Heimdall filters/rolls up: a rule is reachable under `filterTag`
  * when the filter control contains (equals or is a parent of) one of the rule's
- * mapped tags, see NistControl.compare_lineage in inspecjs/src/nist.ts.
+ * mapped tags -- see NistControl.compare_lineage in inspecjs/src/nist.ts.
  */
 function reachableUnder(filterTag: string, ruleTags: string[]): boolean {
   const filter = control(filterTag);
   return ruleTags.some((t) => filter.contains(control(t)));
 }
 
-// Issue #8458: AWS shorthand collapsed NIST sub-parts into a single tag, so
-// every sibling after the first was unreachable through filtering and rollups.
-describe('AwsConfigMapping', () => {
-  it('Should split collapsed sibling enhancements into their own tags', () => {
+describe('AwsConfigMapping NIST sub-part expansion (issue #8458)', () => {
+  it('splits collapsed sibling enhancements into their own tags', () => {
     // root-account-mfa-enabled carried the collapsed tag IA-2(1)(11).
     const tags = mapping.searchNIST(['ROOT_ACCOUNT_MFA_ENABLED']);
     expect(tags).toContain('IA-2(1)');
@@ -35,7 +33,7 @@ describe('AwsConfigMapping', () => {
     expect(tags).not.toContain('IA-2(1)(11)');
   });
 
-  it('Should make every sibling enhancement reachable, not just the first', () => {
+  it('makes every sibling enhancement reachable, not just the first', () => {
     // The core bug: IA-2(11) was unreachable because [IA,2,11] is not a
     // prefix of the flattened [IA,2,1,11]. Both must now be reachable.
     const tags = mapping.searchNIST(['ROOT_ACCOUNT_MFA_ENABLED']);
@@ -43,7 +41,7 @@ describe('AwsConfigMapping', () => {
     expect(reachableUnder('IA-2(11)', tags)).toBe(true);
   });
 
-  it('Should split three collapsed enhancements (IA-2(1)(2)(11)) into siblings', () => {
+  it('splits three collapsed enhancements (IA-2(1)(2)(11)) into siblings', () => {
     const tags = mapping.searchNIST(['MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS']);
     expect(tags).toEqual(
       expect.arrayContaining(['IA-2(1)', 'IA-2(2)', 'IA-2(11)'])
@@ -53,7 +51,7 @@ describe('AwsConfigMapping', () => {
     }
   });
 
-  it('Should split collapsed statement parts into siblings (SI-4, AU-6, CA-7)', () => {
+  it('splits collapsed statement parts into siblings (SI-4, AU-6, CA-7)', () => {
     const tags = mapping.searchNIST(['SECURITYHUB_ENABLED']);
     expect(tags).toEqual(
       expect.arrayContaining([
@@ -70,7 +68,7 @@ describe('AwsConfigMapping', () => {
     expect(reachableUnder('AU-6(3)', tags)).toBe(true);
   });
 
-  it('Should keep the enhancement prefix on mixed enhancement+parts (IA-5(1)(a)(d)(e))', () => {
+  it('keeps the enhancement prefix on mixed enhancement+parts (IA-5(1)(a)(d)(e))', () => {
     const tags = mapping.searchNIST(['IAM_PASSWORD_POLICY']);
     expect(tags).toEqual(
       expect.arrayContaining(['IA-5(1)(a)', 'IA-5(1)(d)', 'IA-5(1)(e)'])
@@ -82,9 +80,9 @@ describe('AwsConfigMapping', () => {
     expect(tags).not.toContain('IA-5(e)');
   });
 
-  it('Should leave legitimately-nested single controls intact (AC-2(12)(a), CM-8(3)(a))', () => {
-    // These are enhancement + its own statement part: a single valid control,
-    // already reachable via prefix match, so they must NOT be split.
+  it('leaves legitimately-nested single controls intact (AC-2(12)(a), CM-8(3)(a))', () => {
+    // These are enhancement + its own statement part -- a single valid control,
+    // already reachable via prefix match -- so they must NOT be split.
     const secHub = mapping.searchNIST(['SECURITYHUB_ENABLED']);
     expect(secHub).toContain('AC-2(12)(a)');
     expect(secHub).not.toContain('AC-2(a)');
@@ -95,7 +93,7 @@ describe('AwsConfigMapping', () => {
     expect(allTags.has('CM-8(3)(a)')).toBe(true);
   });
 
-  it('Should no longer store any collapsed sibling token in the mapping data', () => {
+  it('no longer stores any collapsed sibling token in the mapping data', () => {
     const collapsed = [
       'AU-2(a)(d)',
       'AU-12(a)(c)',
