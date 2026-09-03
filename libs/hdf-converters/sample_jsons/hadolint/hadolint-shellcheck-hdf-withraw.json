@@ -16,10 +16,17 @@
         {
           "id": "DL3002",
           "title": "Last USER should not be root",
-          "tags": {},
+          "tags": {
+            "nist": [
+              "AC-6"
+            ],
+            "cci": [
+              "CCI-000225"
+            ]
+          },
           "refs": [],
           "source_location": {},
-          "desc": "Last USER should not be root",
+          "desc": "",
           "impact": 0.5,
           "results": [
             {
@@ -32,10 +39,15 @@
         {
           "id": "DL3041",
           "title": "Specify version with `dnf install -y <package>-<version>`.",
-          "tags": {},
+          "tags": {
+            "nist": [
+              "CM-2"
+            ],
+            "cci": []
+          },
           "refs": [],
           "source_location": {},
-          "desc": "Specify version with `dnf install -y <package>-<version>`.",
+          "desc": "",
           "impact": 0.5,
           "results": [
             {
@@ -53,10 +65,17 @@
         {
           "id": "SC2154",
           "title": "value is referenced but not assigned.",
-          "tags": {},
+          "tags": {
+            "nist": [
+              "SA-11"
+            ],
+            "cci": [
+              "CCI-003173"
+            ]
+          },
           "refs": [],
           "source_location": {},
-          "desc": "value is referenced but not assigned.",
+          "desc": "",
           "impact": 0.5,
           "results": [
             {
@@ -69,10 +88,15 @@
         {
           "id": "DL3059",
           "title": "Multiple consecutive `RUN` instructions. Consider consolidation.",
-          "tags": {},
+          "tags": {
+            "nist": [
+              "CM-7"
+            ],
+            "cci": []
+          },
           "refs": [],
           "source_location": {},
-          "desc": "Multiple consecutive `RUN` instructions. Consider consolidation.",
+          "desc": "",
           "impact": 0.3,
           "results": [
             {
@@ -88,7 +112,7 @@
           ]
         }
       ],
-      "sha256": "5d785d2a3c6231e2075631f1773e3a90075a1f6376e995d4752b0cb7638439dd"
+      "sha256": "5323da015b22605384de72efec85f66da9fbda491b8b10dd981645662e430486"
     }
   ],
   "passthrough": {
