@@ -3,6 +3,7 @@ export * as AwsConfigMappingData from './src/mappings/AwsConfigMappingData';
 export * as CciNistMappingData from './src/mappings/CciNistMappingData';
 export * as CheckovToCciAndNistMappingData from './src/mappings/CheckovToCciAndNistMappingData';
 export * as CweNistMappingData from './src/mappings/CweNistMappingData';
+export * as HadolintNistMappingData from './src/mappings/HadolintNistMappingData';
 export * as NessusPluginNistMappingData from './src/mappings/NessusPluginNistMappingData';
 export * as NiktoNistMappingData from './src/mappings/NiktoNistMappingData';
 export * as NistCciMappingData from './src/mappings/NistCciMappingData';

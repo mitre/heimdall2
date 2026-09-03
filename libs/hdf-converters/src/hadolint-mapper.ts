@@ -8,6 +8,10 @@ import {
   impactMapping,
   MappedTransform
 } from './base-converter';
+import {HadolintNistMapping} from './mappings/HadolintNistMapping';
+import {getCCIsForNISTTags} from './utils/global';
+
+const HADOLINT_NIST_MAPPING = new HadolintNistMapping();
 
 export const HadolintLevel = {
   Error: 'error',
@@ -71,6 +75,10 @@ async function fetchRuleDescription(code: string): Promise<string> {
   }
 }
 
+function nistTag(rule: string): string[] {
+  return HADOLINT_NIST_MAPPING.nistTag(rule);
+}
+
 export class HadolintMapper {
   withRaw: boolean;
   findings: HadolintFinding[];
@@ -99,7 +107,13 @@ export class HadolintMapper {
             key: 'id',
             id: {path: 'code'},
             title: {path: 'message'},
-            tags: {},
+            tags: {
+              nist: {path: 'code', transformer: nistTag},
+              cci: {
+                path: 'code',
+                transformer: (rule: string) => getCCIsForNISTTags(nistTag(rule))
+              }
+            },
             refs: [],
             source_location: {},
             desc: {path: 'description'},
