@@ -76,7 +76,17 @@ async function fetchRuleDescription(code: string): Promise<string> {
 }
 
 function nistTag(rule: string): string[] {
-  return HADOLINT_NIST_MAPPING.nistTag(rule);
+  const nistTags = HADOLINT_NIST_MAPPING.nistTag(rule);
+  if (HADOLINT_NIST_MAPPING.controlForRule(rule) === undefined) {
+    console.error(
+      `No NIST control mapping exists for Hadolint rule ${rule}; defaulting to SA-11. Please file an issue at https://github.com/mitre/saf-cli/issues requesting that the Hadolint rule-to-control mapping be extended.`
+    );
+  }
+  return nistTags;
+}
+
+function cciTag(rule: string): string[] {
+  return getCCIsForNISTTags(HADOLINT_NIST_MAPPING.nistTag(rule));
 }
 
 export class HadolintMapper {
@@ -111,7 +121,7 @@ export class HadolintMapper {
               nist: {path: 'code', transformer: nistTag},
               cci: {
                 path: 'code',
-                transformer: (rule: string) => getCCIsForNISTTags(nistTag(rule))
+                transformer: cciTag
               }
             },
             refs: [],
