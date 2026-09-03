@@ -1,4 +1,6 @@
+import axios from 'axios';
 import {ExecJSON} from 'inspecjs';
+import MarkdownIt from 'markdown-it';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -37,8 +39,42 @@ export type HadolintFinding = {
   message: string;
 };
 
-export class HadolintMapper extends BaseConverter<{findings: HadolintFinding[]}> {
+type HadolintFindingWithDescription = HadolintFinding & {
+  description: string;
+};
+
+const HADOLINT_WIKI_URL =
+  'https://raw.githubusercontent.com/wiki/hadolint/hadolint';
+const SHELLCHECK_WIKI_URL =
+  'https://raw.githubusercontent.com/wiki/koalaman/shellcheck';
+const markdownIt = new MarkdownIt();
+
+function wikiUrl(code: string): string {
+  const wikiBaseUrl = code.startsWith('SC')
+    ? SHELLCHECK_WIKI_URL
+    : HADOLINT_WIKI_URL;
+  return `${wikiBaseUrl}/${code}.md`;
+}
+
+function extractRuleDescription(markdown: string): string {
+  const lines = markdown.trim().split(/\r?\n/);
+  const pageWithoutTitle = lines.slice(1).join('\n');
+  return pageWithoutTitle ? markdownIt.render(pageWithoutTitle) : '';
+}
+
+async function fetchRuleDescription(code: string): Promise<string> {
+  try {
+    const {data} = await axios.get<string>(wikiUrl(code));
+    return extractRuleDescription(data);
+  } catch {
+    return '';
+  }
+}
+
+export class HadolintMapper {
   withRaw: boolean;
+  findings: HadolintFinding[];
+  includeRuleDescriptions: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -66,7 +102,7 @@ export class HadolintMapper extends BaseConverter<{findings: HadolintFinding[]}>
             tags: {},
             refs: [],
             source_location: {},
-            desc: {path: 'message'},
+            desc: {path: 'description'},
             impact: {
               path: 'level',
               transformer: impactMapping(IMPACT_MAPPING)
@@ -84,16 +120,49 @@ export class HadolintMapper extends BaseConverter<{findings: HadolintFinding[]}>
       }
     ],
     passthrough: {
-      transformer: (data: {findings: HadolintFinding[]}): Record<string, unknown> => {
+      transformer: (): Record<string, unknown> => {
         return {
-          ...(this.withRaw && {raw: data.findings})
+          ...(this.withRaw && {raw: this.findings})
         };
       }
     }
   };
 
-  constructor(hadolintJson: string, withRaw = false) {
-    super({findings: JSON.parse(hadolintJson) as HadolintFinding[]}, true);
+  constructor(
+    hadolintJson: string,
+    withRaw = false,
+    includeRuleDescriptions = false
+  ) {
     this.withRaw = withRaw;
+    this.findings = JSON.parse(hadolintJson) as HadolintFinding[];
+    this.includeRuleDescriptions = includeRuleDescriptions;
+  }
+
+  async getRuleDescriptions(): Promise<Map<string, string>> {
+    const descriptions = await Promise.all(
+      [...new Set(this.findings.map((finding) => finding.code))].map(
+        async (code) => [code, await fetchRuleDescription(code)] as const
+      )
+    );
+    return new Map(descriptions);
+  }
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    const descriptions = this.includeRuleDescriptions
+      ? await this.getRuleDescriptions()
+      : new Map<string, string>();
+    const converter = new BaseConverter<{findings: HadolintFindingWithDescription[]}>(
+      {
+        findings: this.findings.map(
+          (finding): HadolintFindingWithDescription => ({
+            ...finding,
+            description: descriptions.get(finding.code) ?? ''
+          })
+        )
+      },
+      true
+    );
+    converter.setMappings(this.mappings);
+    return converter.toHdf();
   }
 }

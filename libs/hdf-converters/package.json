@@ -52,6 +52,7 @@
     "htmlparser2": "^12.0.0",
     "inspecjs": "^2.14.0",
     "lodash": "^4.17.21",
+    "markdown-it": "^15.0.1",
     "moment": "^2.29.1",
     "mustache": "^4.2.0",
     "papaparse": "^5.3.1",
