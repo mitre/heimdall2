@@ -29,6 +29,7 @@ import {
   NiktoMapper,
   PrismaMapper,
   SarifMapper,
+  SemgrepMapper,
   ScoutsuiteMapper,
   SnykResults,
   TrufflehogResults,
@@ -246,6 +247,8 @@ export class InspecIntake extends VuexModule {
         return new NiktoMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.SARIF:
         return new SarifMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.SEMGREP:
+        return new SemgrepMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.SNYK:
         return new SnykResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TWISTLOCK:
