@@ -1,0 +1,50 @@
+[
+  {
+    "code": "DL3002",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "warning",
+    "line": 11,
+    "message": "Last USER should not be root"
+  },
+  {
+    "code": "DL3041",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "warning",
+    "line": 15,
+    "message": "Specify version with `dnf install -y <package>-<version>`."
+  },
+  {
+    "code": "SC2154",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "warning",
+    "line": 25,
+    "message": "value is referenced but not assigned."
+  },
+  {
+    "code": "DL3059",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "info",
+    "line": 27,
+    "message": "Multiple consecutive `RUN` instructions. Consider consolidation."
+  },
+  {
+    "code": "DL3059",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "info",
+    "line": 28,
+    "message": "Multiple consecutive `RUN` instructions. Consider consolidation."
+  },
+  {
+    "code": "DL3041",
+    "column": 1,
+    "file": "Dockerfile",
+    "level": "warning",
+    "line": 44,
+    "message": "Specify version with `dnf install -y <package>-<version>`."
+  }
+]

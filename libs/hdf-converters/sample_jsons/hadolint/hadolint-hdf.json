@@ -1,0 +1,91 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.14.0"
+  },
+  "version": "2.14.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Hadolint Scan",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "DL3002",
+          "title": "Last USER should not be root",
+          "tags": {
+            "nist": [
+              "AC-6"
+            ],
+            "cci": [
+              "CCI-000225"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "desc": "",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 11\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "DL3041",
+          "title": "Specify version with `dnf install -y <package>-<version>`.",
+          "tags": {
+            "nist": [
+              "CM-2"
+            ],
+            "cci": []
+          },
+          "refs": [],
+          "source_location": {},
+          "desc": "",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 15\nColumn: 1",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 42\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "DL3059",
+          "title": "Multiple consecutive `RUN` instructions. Consider consolidation.",
+          "tags": {
+            "nist": [
+              "CM-7"
+            ],
+            "cci": []
+          },
+          "refs": [],
+          "source_location": {},
+          "desc": "",
+          "impact": 0.3,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 26\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "e40db6d85425a5f5587051ac6c90196f20e7f0252134f891bf941d9275070a73"
+    }
+  ],
+  "passthrough": {}
+}
