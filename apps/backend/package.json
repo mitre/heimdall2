@@ -32,7 +32,7 @@
     "@heimdall/password-complexity": "^2.13.0",
     "@nestjs/cli": "^12.0.0",
     "@nestjs/common": "^11.0.16",
-    "@nestjs/core": "^11.1.6",
+    "@nestjs/core": "^12.0.1",
     "@nestjs/jwt": "^12.0.1",
     "@nestjs/passport": "^12.0.0",
     "@nestjs/platform-express": "^11.1.6",
