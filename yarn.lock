@@ -2432,10 +2432,10 @@
   resolved "https://registry.yarnpkg.com/@nestjs/sequelize/-/sequelize-12.0.0.tgz#571819b5a493c337cfe2c2630a4e864ce0832ab9"
   integrity sha512-YLxJooMWNihBVNZTKFKnPQvNxPsCWZNxSjzT+FvQ8cKbWJeF5Vx6GxYaPN1i3Vo0m1S7AQfB83z44kCmT+A+5A==
 
-"@nestjs/serve-static@^5.0.3":
-  version "5.0.5"
-  resolved "https://registry.npmjs.org/@nestjs/serve-static/-/serve-static-5.0.5.tgz#4bef0d71ed320a9d408fe8ed044ce388f941d45d"
-  integrity sha512-AhYx3N9aMwR2cb0w5Nlb5nHNYiAcF74ea/D/xna+PxlXwjmwGN/PpC/5fuMtOwmPBMgOTxNPOnB8C9LDZBSgyw==
+"@nestjs/serve-static@^12.0.0":
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/serve-static/-/serve-static-12.0.0.tgz#fa2056e76358d5cc47a39a1c0938cf0de341857d"
+  integrity sha512-3YsDpylQN90o5r7rIN2M5LQ3uK8WUJ8oSo0wH0SRrBb7X/FKD31vNY4J7cOlbRDZiX1kxDWyI8wSlygqj/57Yg==
   dependencies:
     path-to-regexp "8.4.2"
 
