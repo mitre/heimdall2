@@ -84,7 +84,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@nestjs/testing": "^11.0.1",
+    "@nestjs/testing": "^12.0.1",
     "@swc/core": "^1.13.0",
     "@types/mock-fs": "^4.10.0",
     "mock-fs": "^5.0.0",
