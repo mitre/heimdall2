@@ -2381,10 +2381,10 @@
     load-esm "1.0.3"
     tslib "2.8.1"
 
-"@nestjs/core@^11.1.6":
-  version "11.2.3"
-  resolved "https://registry.npmjs.org/@nestjs/core/-/core-11.2.3.tgz#997994ee6757aab00adcd2a3d5a644c78a788858"
-  integrity sha512-vkA9/Ja0Z3hvqXErSa+HaxrfF+cNXthNFi8VPNEKVli4rMd009yExAl0gLmko/Kf8peDXr72u1RN+j9Da2ukHg==
+"@nestjs/core@^12.0.1":
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-12.0.1.tgz#b74691cf5a634ad0b56c0755b7c3c62522862c6e"
+  integrity sha512-rU6tAi8vDdyzHgN0iW0J4UJvziroOqzHqzlqL7phOSPizaXVEePfv+OUOsdJEOh0Qd14mslc3udOheLrAEcZow==
   dependencies:
     uid "2.0.2"
     fast-safe-stringify "2.1.1"
