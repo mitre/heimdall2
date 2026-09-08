@@ -75,6 +75,8 @@ export type InspecFile = {
 
   createdAt?: Date;
   updatedAt?: Date;
+  /** The uploaded file's local last-modified time, if known (client-reported, not verified). */
+  lastModified?: Date;
 };
 
 /** Modify our contextual types to sort of have back-linking to sourced from files */
@@ -109,6 +111,7 @@ export type TextLoadOptions = {
   database_id?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  lastModified?: Date;
   tags?: Tag[];
 
   /** The text to use for it. */
@@ -121,6 +124,7 @@ export type ExecJSONLoadOptions = {
   database_id?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  lastModified?: Date;
   tags?: Tag[];
   data: ExecJSON.Execution;
 };
@@ -140,6 +144,10 @@ export class InspecIntake extends VuexModule {
     let read: string;
     const filename =
       options.file?.name || options.filename || 'Missing Filename';
+    // Browser-reported, not server-verified; only available for local file picks.
+    const lastModified = options.file
+      ? new Date(options.file.lastModified)
+      : undefined;
     if (options.file) {
       read = await readFileAsync(options.file);
     } else if (options.data) {
@@ -150,7 +158,8 @@ export class InspecIntake extends VuexModule {
     if (await this.isHDF(read)) {
       return this.loadText({
         text: read,
-        filename: filename
+        filename: filename,
+        lastModified
       });
     } else {
       const converted = await this.convertToHdf({
@@ -168,14 +177,16 @@ export class InspecIntake extends VuexModule {
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: `${filename.replaceAll(/\.json/giv, '').replaceAll(/\.nessus/giv, '')}-${_.get(evaluation, 'platform.target_id', _.get(evaluation, 'profiles[0].name'))}.${originalFileType}`
+              filename: `${filename.replaceAll(/\.json/giv, '').replaceAll(/\.nessus/giv, '')}-${_.get(evaluation, 'platform.target_id', _.get(evaluation, 'profiles[0].name'))}.${originalFileType}`,
+              lastModified
             });
           })
         );
       } else if (converted) {
         return this.loadExecJson({
           data: converted,
-          filename: filename
+          filename: filename,
+          lastModified
         });
       } else {
         return [];
@@ -338,6 +349,7 @@ export class InspecIntake extends VuexModule {
         database_id: options.database_id,
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
+        lastModified: options.lastModified,
         tags: options.tags
         // evaluation
       } as EvaluationFile;
@@ -393,6 +405,7 @@ export class InspecIntake extends VuexModule {
       database_id: options.database_id,
       createdAt: options.createdAt,
       updatedAt: options.updatedAt,
+      lastModified: options.lastModified,
       tags: options.tags
     } as EvaluationFile;
 

@@ -226,6 +226,7 @@ import {
   compareCompliance,
   compareControlCount,
   compareExecutionTimes,
+  compareLastModified,
   compare_times,
   ComparisonContext,
   ControlSeries,
@@ -288,7 +289,8 @@ export default class Compare extends Vue {
     'Run Time',
     'Total Number of Controls',
     'Passed Control Count',
-    'Compliance (Passed Control %)'
+    'Compliance (Passed Control %)',
+    'File Last Modified'
   ];
 
   sortControlSetsBy = '';
@@ -452,6 +454,9 @@ export default class Compare extends Vue {
         break;
       case 'Compliance (Passed Control %)':
         fileList.sort(compareCompliance);
+        break;
+      case 'File Last Modified':
+        fileList.sort(compareLastModified);
         break;
       default:
         if (this.sortControlSetsBy.startsWith('Passthrough Field')) {
