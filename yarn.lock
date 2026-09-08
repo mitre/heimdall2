@@ -8760,9 +8760,9 @@ eslint-plugin-promise@^7.2.1:
     "@eslint-community/eslint-utils" "^4.4.0"
 
 eslint-plugin-regexp@^3.1.0:
-  version "3.2.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-regexp/-/eslint-plugin-regexp-3.2.0.tgz#c1e7f8479623c347e79bbbede2456a653d3230b4"
-  integrity sha512-4yq47CnLxyfHFKJEo5kvNaiJ0aDtBxSJWk4M2LiamplUXdWxdlzDYqImb/ZVCp+2BqkQjBAmw4Xc07Q8SXVDZg==
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-regexp/-/eslint-plugin-regexp-3.3.0.tgz#d01dd5cd9f9601c66a4e5cc5cdcdf0f31afb185f"
+  integrity sha512-TT0JTQbW7CRKohntpGAsMdQ1K3MsmJK4gdAhKJtIwlJ0JvuYxauymFgJdvqxIY4lqNj0EuRZWVrymQtEdJYEFg==
   dependencies:
     "@eslint-community/eslint-utils" "^4.2.0"
     "@eslint-community/regexpp" "^4.11.0"
