@@ -9,6 +9,7 @@ export enum INPUT_TYPES {
   DEPENDENCY_TRACK = 'dependencyTrack',
   FORTIFY = 'fortify',
   GOSEC = 'gosec',
+  HADOLINT = 'hadolint',
   GRYPE = 'grype',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
@@ -42,6 +43,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.DEPENDENCY_TRACK]: ['version', 'meta', 'project', 'findings'],
   [INPUT_TYPES.FORTIFY]: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
   [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
+  [INPUT_TYPES.HADOLINT]: ['code', 'column', 'file', 'level', 'line', 'message'],
   [INPUT_TYPES.GRYPE]: [
     'matches.vulnerability',
     'matches.relatedVulnerabilities',

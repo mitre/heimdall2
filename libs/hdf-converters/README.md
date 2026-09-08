@@ -19,39 +19,22 @@ OHDF Converters supplies several methods to convert various types of security to
 11. [**dependency-track-mapper**] - OWASP Dependency-Track Finding Packaging Format (FPF)
 12. [**fortify-mapper**] - Fortify results FVDL file
 13. [**gosec-mapper**] - gosec results JSON file
-14. [**ionchannel-mapper**] - SBOM data from Ion Channel
-15. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
-16. [**msft-secure-mapper**] - Microsoft Secure Score results file
-17. [**nessus-mapper**] - Nessus XML results file
-18. [**netsparker-mapper**] - Netsparker XML results file
-19. [**neuvector-mapper**] - NeuVector JSON results file
-20. [**nikto-mapper**] - Nikto results JSON file
-21. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
-22. [**sarif-mapper**] - SARIF JSON file
-23. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
-24. [**snyk-mapper**] - Snyk results JSON file
-25. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
-26. [**splunk-mapper**] - Splunk instance
-27. [**trufflehog-mapper**] - Trufflehog results json file
-28. [**twistlock-mapper**] - Twistlock CLI output file
-29. [**veracode-mapper**] - Veracode Scan Results XML file
-30. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-31. [**zap-mapper**] - OWASP ZAP results JSON
-
-### NOTICE
-
-© 2022 The MITRE Corporation.
-
-Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
-
-### NOTICE
-
-MITRE hereby grants express written permission to use, reproduce, distribute, modify, and otherwise leverage this software to the extent permitted by the licensed terms provided in the LICENSE.md file included with this project.
-
-### NOTICE
-
-This software was produced for the U. S. Government under Contract Number HHSM-500-2012-00008I, and is subject to Federal Acquisition Regulation Clause 52.227-14, Rights in Data-General.
-
-No other use other than that granted to the U. S. Government, or to those acting on behalf of the U. S. Government under that Clause is authorized without the express written permission of The MITRE Corporation.
-
-For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA 22102-7539, (703) 983-6000.
+14. [**hadolint-mapper**] - Hadolint results JSON file
+15. [**ionchannel-mapper**] - SBOM data from Ion Channel
+16. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+17. [**msft-secure-mapper**] - Microsoft Secure Score results file
+18. [**nessus-mapper**] - Nessus XML results file
+19. [**netsparker-mapper**] - Netsparker XML results file
+20. [**neuvector-mapper**] - NeuVector JSON results file
+21. [**nikto-mapper**] - Nikto results JSON file
+22. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
+23. [**sarif-mapper**] - SARIF JSON file
+24. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
+25. [**snyk-mapper**] - Snyk results JSON file
+26. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+27. [**splunk-mapper**] - Splunk instance
+28. [**trufflehog-mapper**] - Trufflehog results json file
+29. [**twistlock-mapper**] - Twistlock CLI output file
+30. [**veracode-mapper**] - Veracode Scan Results XML file
+31. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+32. [**zap-mapper**] - OWASP ZAP results JSON

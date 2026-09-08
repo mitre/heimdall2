@@ -14,6 +14,8 @@ export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
 export const DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS =
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS.flatMap((tag) => NistCciMappingData[tag]);
 
+export const DEFAULT_TESTING_NIST_TAGS = ['SA-11'];
+
 // REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
 // SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
 export const DEFAULT_UPDATE_REMEDIATION_NIST_TAGS = ['SI-2', 'RA-5'];

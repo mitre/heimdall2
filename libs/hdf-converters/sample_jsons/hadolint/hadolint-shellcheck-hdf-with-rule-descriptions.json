@@ -1,0 +1,119 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.14.0"
+  },
+  "version": "2.14.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Hadolint Scan",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "DL3002",
+          "title": "Last USER should not be root",
+          "tags": {
+            "nist": [
+              "AC-6"
+            ],
+            "cci": [
+              "CCI-000225"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "desc": "<h3>Problematic code:</h3>\n<pre><code class=\"language-dockerfile\">FROM busybox\nUSER root\nRUN ...\n</code></pre>\n<h3>Correct code:</h3>\n<pre><code class=\"language-dockerfile\">FROM busybox\nUSER root\nRUN ...\nUSER guest\n</code></pre>\n<h3>Rationale:</h3>\n<p>Switching to the root <code>USER</code> opens up certain security risks if an attacker gets access to the container. In order to mitigate this, switch back to a non privileged user after running the commands you need as root.</p>\n",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 11\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "DL3041",
+          "title": "Specify version with `dnf install -y <package>-<version>`.",
+          "tags": {
+            "nist": [
+              "CM-2"
+            ],
+            "cci": []
+          },
+          "refs": [],
+          "source_location": {},
+          "desc": "<h3>Problematic code:</h3>\n<pre><code class=\"language-Dockerfile\">RUN dnf install -y httpd &amp;&amp; dnf clean all\n</code></pre>\n<h3>Correct code:</h3>\n<pre><code class=\"language-Dockerfile\">RUN dnf install -y httpd-2.24.2 &amp;&amp; dnf clean all\n</code></pre>\n<h3>Rationale:</h3>\n<blockquote>\n<p>Version pinning forces the build to retrieve a particular version regardless of what’s in the cache. This technique can also reduce failures due to unanticipated changes in required packages.</p>\n</blockquote>\n<p>https://docs.docker.com/develop/develop-images/dockerfile_best-practices/</p>\n<h3>Notes:</h3>\n<p>If you need downgrade an already installed package to an older version, use <code>dnf downgrade -y &lt;package_name&gt;-&lt;version_info&gt;</code></p>\n",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 15\nColumn: 1",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 44\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "SC2154",
+          "title": "value is referenced but not assigned.",
+          "tags": {
+            "nist": [
+              "SA-11"
+            ],
+            "cci": [
+              "CCI-003173"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "desc": "<h3>Optional - <code>check-unassigned-uppercase</code></h3>\n<p>This is an [[optional]] rule, which means that it has a special &quot;long name&quot; and is not enabled by default. See the [[optional]] page for more details. In short, you have to enable it with the long name instead of the &quot;SC&quot; code like you would with a normal rule:</p>\n<h4><code>.shellcheckrc</code></h4>\n<pre><code>enable=check-unassigned-uppercase # SC2154\n</code></pre>\n<h3>Problematic code:</h3>\n<pre><code class=\"language-sh\">var=name\nn=42\necho &quot;$var_$n.jpg&quot;   # overextended\n</code></pre>\n<p>or</p>\n<pre><code class=\"language-sh\">target=&quot;world&quot;\necho &quot;hello $tagret&quot;  # misspelled\n</code></pre>\n<p>or</p>\n<pre><code class=\"language-sh\">echo &quot;Result: ${mycmd -a myfile}&quot;  # trying to execute commands\n</code></pre>\n<h3>Correct code:</h3>\n<pre><code class=\"language-sh\">var=name\nn=42\necho &quot;${var}_${n}.jpg&quot;\n</code></pre>\n<p>or</p>\n<pre><code class=\"language-sh\">target=&quot;world&quot;\necho &quot;hello $target&quot;\n</code></pre>\n<p>or</p>\n<pre><code class=\"language-sh\">echo &quot;Result: $(mycmd -a myfile)&quot;\n</code></pre>\n<h3>Rationale:</h3>\n<p>ShellCheck has noticed that you reference a variable that is not assigned. Double check that the variable is indeed assigned, and that the name is not misspelled.</p>\n<p>Note: This message only triggers for variables with lowercase characters in their name (<code>foo</code> and <code>kFOO</code> but not <code>FOO</code>) due to the standard convention of using lowercase variable names for unexported, local variables.</p>\n<h3>Exceptions:</h3>\n<p>ShellCheck intentionally does not attempt to figure out runtime or dynamic assignments like with <code>source &quot;$(date +%F).sh&quot;</code> or <code>eval var=value</code>. See [[SC2034]] for an extended discussion of why this is the case.</p>\n<p>If you know for a fact that the variable is set, you can use <code>${var:?}</code> to fail if the variable is unset (or empty), initialize it to a default value if uninitialized with <code>: &quot;${var:=}&quot;</code>, or explicitly initialize/declare it with <code>var=&quot;&quot;</code> or <code>declare var</code>. You can also disable the message with a [[directive]].</p>\n<hr>\n<h2>Read more:</h2>\n<p>POSIX - Parameter expansion:</p>\n<ul>\n<li>https://stackoverflow.com/a/16753536/2309247</li>\n<li>http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02</li>\n</ul>\n",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 25\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "DL3059",
+          "title": "Multiple consecutive `RUN` instructions. Consider consolidation.",
+          "tags": {
+            "nist": [
+              "CM-7"
+            ],
+            "cci": []
+          },
+          "refs": [],
+          "source_location": {},
+          "desc": "<h3>Problematic code:</h3>\n<pre><code class=\"language-Dockerfile\">RUN command_creating_big_files     # big files stored in image layer!\nRUN command_deleting_these_files\n</code></pre>\n<p>or</p>\n<pre><code class=\"language-Dockerfile\">RUN command_updating_package_info  # cached in image layer and not fresh!\nRUN command_using_package_info\n</code></pre>\n<h3>Correct code:</h3>\n<pre><code class=\"language-Dockerfile\">RUN command_creating_big_files \\\n &amp;&amp; command_deleting_these_files\n</code></pre>\n<p>or, respectively</p>\n<pre><code class=\"language-Dockerfile\">RUN command_updating_package_info \\\n &amp;&amp; command_using_package_info\n</code></pre>\n<h3>Rationale:</h3>\n<p>Each <code>RUN</code> instruction will create a new layer in the resulting image. Therefore consolidating consecutive <code>RUN</code> instructions will reduce the layer count. This will reduce the size of the image if it allows temporary files to be deleted in the same RUN instruction as the one that created them (see https://docs.docker.com/develop/dev-best-practices/).\nIn addition to that, each <code>RUN</code> runs in its own shell, which can be the source of confusion when part of a <code>RUN</code> instruction changes something about the environment, because these changes may vanish in the next <code>RUN</code> instruction.</p>\n<h3>Drawbacks</h3>\n<p>Please review Docker's layer caching. In general you want layers first which don't change often, so they can be cached. Putting easy cacheable and non-cacheable commands in the same layer (by using one <code>RUN</code> command) might have negative performance issues. You might want to ignore this <code>info</code> level rule.</p>\n",
+          "impact": 0.3,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 27\nColumn: 1",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "File: Dockerfile\nLine: 28\nColumn: 1",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "ed73b8e5ed7c8e3de4e333747477172498ced9acee332800ef25dd8f88206d9b"
+    }
+  ],
+  "passthrough": {}
+}
