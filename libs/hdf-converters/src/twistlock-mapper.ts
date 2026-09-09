@@ -12,18 +12,11 @@ import {
   getCCIsForNISTTags
 } from './utils/global';
 
-// For OS-vendor-maintained packages Prisma Cloud passes through the vendor's
-// severity string verbatim instead of NVD's, so distro vocabulary reaches the
-// report alongside Prisma's own tiers (mitre/heimdall2#8611; see the vendor
-// table in Prisma's CVSS-scoring doc). The no-rating values — 'unassigned',
-// 'not yet assigned', and Ubuntu's 'untriaged' — take the conservative
-// medium, matching dependency-track's 'unassigned' and grype's 'unknown'.
-// 'negligible' (Ubuntu: "technically a security problem" but theoretical/no
-// real damage) and 'unimportant' (Debian: the problem does not affect the
-// shipped binary package — Prisma ranks it even below negligible) are the
-// minimal ratings: 0.1 rather than 0.0 because the 0.0 tier is reserved for
-// informational non-findings across this codebase, and impact 0 exports as
-// Not_Applicable in checklists, hiding a finding the scanner reported.
+// Prisma Cloud passes OS-vendor severity terminology through verbatim, so
+// distro vocabulary appears alongside its own tiers. Vendor mapping table:
+// https://docs.prismacloud.io/admin-guide/vulnerability-management/cvss-scoring
+// Pinned copy of that page's source:
+// https://github.com/hlxsites/prisma-cloud-docs/blob/7f015228ce566c4bd928f23ed65a916a44c9dfb9/docs/en/compute-edition/32/admin-guide/vulnerability-management/cvss-scoring.adoc
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
   ['important', 0.9],
