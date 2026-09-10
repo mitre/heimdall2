@@ -37,7 +37,9 @@ function filterSite<T>(input: Array<T>, name?: string) {
 function impactMapping(input: unknown): number {
   if (typeof input === 'string') {
     const impact = parseInt(input);
-    if (0 <= impact && impact <= 1) {
+    if (impact == 0) {
+      return 0;
+    } else if (impact == 1) {
       return 0.3;
     } else if (impact === 2) {
       return 0.5;
