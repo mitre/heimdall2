@@ -141,13 +141,12 @@ export class UsersService {
         'Cannot destroy only administrator account, please promote another user to administrator first'
       );
     }
-    // Clean up groups owned by user
+    // Ensure the user's groups retain an owner.
+    const groups = await userToDelete.$get('groups');
     await Promise.all(
-      (await this.groupsService.findAll()).map(async (group) => {
-        if (group.users.some((user) => user.id === userToDelete.id)) {
-          await this.groupsService.ensureGroupHasOwner(group, userToDelete);
-        }
-      })
+      groups.map(group =>
+        this.groupsService.ensureGroupHasOwner(group, userToDelete),
+      ),
     );
     await userToDelete.destroy();
     return userToDelete;
