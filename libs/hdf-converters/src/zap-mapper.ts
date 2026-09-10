@@ -76,6 +76,15 @@ function formatCodeDesc(input: unknown): string {
   }
   return text.join('\n') + '\n';
 }
+function formatReferences(input: Record<string, unknown>): ExecJSON.Reference[] {
+  const reference: unknown = _.get(input, 'reference');
+
+  if (!_.isString(reference)) {
+    return [];
+  }
+
+  return ((reference as string).match(/https?:\/\/[^<\s]+/g) ?? []).map((url) => ({url}));
+}
 function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   const controlId = input.map((element) => {
     return _.get(element, 'id');
@@ -158,7 +167,7 @@ export class ZapMapper extends BaseConverter {
               confidence: {path: 'confidence'},
               riskdesc: {path: 'riskdesc'}
             },
-            refs: [],
+            refs: {transformer: formatReferences} as unknown as ExecJSON.Reference[],
             source_location: {},
             title: {path: 'name'},
             id: {path: 'pluginid'},
