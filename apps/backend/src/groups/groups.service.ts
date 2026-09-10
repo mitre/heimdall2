@@ -39,6 +39,16 @@ export class GroupsService {
     return this.groupModel.findAll<Group>({include: 'users'});
   }
 
+  async findPublic(excludedGroupIds: string[] = []): Promise<Group[]> {
+    return this.groupModel.findAll<Group>({
+      include: 'users',
+      where: {
+        id: { [Op.notIn]: excludedGroupIds },
+        public: true,
+      },
+    });
+  }
+
   async count(): Promise<number> {
     return this.groupModel.count();
   }
