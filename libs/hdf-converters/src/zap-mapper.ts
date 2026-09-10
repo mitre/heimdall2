@@ -83,7 +83,7 @@ function formatReferences(input: Record<string, unknown>): ExecJSON.Reference[] 
     return [];
   }
 
-  return ((reference as string).match(/https?:\/\/[^<\s]+/g) ?? []).map((url) => ({url}));
+  return ((reference as string).match(/https?:\/\/[^<>"'\s]+/gi) ?? []).map((url) => ({url}));
 }
 function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   const controlId = input.map((element) => {
