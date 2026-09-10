@@ -123,12 +123,14 @@ export class GroupsService {
         }));
       if (admin !== null) {
         // If admin is in the group, promote it. If not, add as owner
-        const adminId = admin.id;
-        const adminInGroup = (await group.$get('users')).find(
-          (userOnGroup) => userOnGroup.id === adminId
-        );
+        const adminInGroup = await GroupUser.findOne({
+          where: {
+            groupId: group.id,
+            userId: admin.id,
+          },
+        });
         adminInGroup
-          ? await adminInGroup.GroupUser.update({role: 'owner'})
+          ? await adminInGroup.update({ role: 'owner' })
           : await this.addUserToGroup(group, admin, 'owner');
       } else {
         // No admin found in system
