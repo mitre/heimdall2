@@ -18488,9 +18488,9 @@ unpipe@~1.0.0:
   integrity sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==
 
 unplugin-swc@^1.5.5:
-  version "1.5.11"
-  resolved "https://registry.npmjs.org/unplugin-swc/-/unplugin-swc-1.5.11.tgz#f49ecbea6633e783a5bade20d07655a6013ff921"
-  integrity sha512-R7U4GbfrESPnYLn3nXREZrwhKQk3BAmTBoKJ5lmo7btTc/yJpNsDzavBWo+XpQTjDSIogiZEAxC5ig/vfMWxWg==
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/unplugin-swc/-/unplugin-swc-1.6.0.tgz#73eaaa2d2655fc781332f5c89f29ef322f8d9d6f"
+  integrity sha512-aOdzxAwJvz1GeQ8vwSNA2N8AreHYBrpwxqnwzxmB7LCdeZiXOBDj0rgjZod+lMxFsJGm8k6lF/1iKF/9wacLbw==
   dependencies:
     "@rollup/pluginutils" "^5.4.0"
     load-tsconfig "^0.2.5"
