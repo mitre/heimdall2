@@ -15,6 +15,7 @@ export class EvaluationDto implements IEvaluation {
   readonly public: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly lastModified?: Date;
   readonly editable: boolean;
   readonly shareURL?: string;
 
@@ -26,6 +27,7 @@ export class EvaluationDto implements IEvaluation {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
     this.data = evaluation.data;
+    this.lastModified = evaluation.lastModified;
     if (
       evaluation.evaluationTags === null ||
       evaluation.evaluationTags === undefined

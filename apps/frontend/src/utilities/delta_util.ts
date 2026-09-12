@@ -313,3 +313,21 @@ export function compareCompliance(
     calculateCompliance({fromFile: [b.from_file.uniqueId]})
   );
 }
+
+// Client-reported (browser File.lastModified); not server-verified. Missing
+// values sort last regardless of sort direction.
+export function compareLastModified(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  const aTime = a.from_file.lastModified?.valueOf();
+  const bTime = b.from_file.lastModified?.valueOf();
+  if (aTime === undefined && bTime === undefined) {
+    return 0;
+  } else if (aTime === undefined) {
+    return 1;
+  } else if (bTime === undefined) {
+    return -1;
+  }
+  return aTime - bTime;
+}

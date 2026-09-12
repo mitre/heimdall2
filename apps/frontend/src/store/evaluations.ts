@@ -109,6 +109,7 @@ export class Evaluation extends VuexModule {
                 database_id: evaluation.id,
                 createdAt: evaluation.createdAt,
                 updatedAt: evaluation.updatedAt,
+                lastModified: evaluation.lastModified,
                 tags: [] // Tags are not yet implemented, so for now the value is passed in empty
               })
                 .then((fileId) => loadedIds.push(fileId))

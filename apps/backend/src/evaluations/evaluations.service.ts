@@ -337,6 +337,7 @@ export class EvaluationsService {
     data: unknown;
     userId?: string;
     groupId?: string;
+    lastModified?: Date;
   }): Promise<Evaluation> {
     return Evaluation.create<Evaluation>(
       {
