@@ -7,7 +7,7 @@ import {
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
 import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
-import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
+import {GROUP_1} from '../../test/constants/groups-test.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_SECOND_ADMIN_DTO,
@@ -54,6 +54,7 @@ describe('UsersService', () => {
   let authzService: AuthzService;
   let usersService: UsersService;
   let databaseService: DatabaseService;
+  let groupsService: GroupsService;
   const errorString =
     'User that was just created was not returned from the database. Create method may have failed silently.';
 
@@ -76,13 +77,14 @@ describe('UsersService', () => {
         ConfigService,
         DatabaseService,
         UsersService,
-        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
+        GroupsService
       ]
     }).compile();
 
     authzService = module.get<AuthzService>(AuthzService);
     usersService = module.get<UsersService>(UsersService);
     databaseService = module.get<DatabaseService>(DatabaseService);
+    groupsService = module.get<GroupsService>(GroupsService);
   });
 
   afterAll(async () => {
@@ -534,6 +536,109 @@ describe('UsersService', () => {
       await expect(usersService.findByEmail(user.email)).rejects.toThrow(
         NotFoundException
       );
+    });
+
+    it('reassigns groups needing an owner and leaves unrelated groups unchanged', async () => {
+      const affectedGroups = [];
+      for (const [name, role] of [
+        ['owned-first', 'owner'],
+        ['owned-second', 'owner'],
+        ['ownerless', 'member'],
+      ]) {
+        const group = await groupsService.create({ ...GROUP_1, name });
+        await groupsService.addUserToGroup(group, user, role);
+        affectedGroups.push(group);
+      }
+      await groupsService.addUserToGroup(
+        affectedGroups[0],
+        adminUser,
+        'member',
+      );
+
+      const otherUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
+      const unrelatedGroups = [];
+      for (const role of ['owner', 'member']) {
+        const group = await groupsService.create({
+          ...GROUP_1,
+          name: `unrelated-${role}`,
+        });
+        await groupsService.addUserToGroup(group, otherUser, role);
+        unrelatedGroups.push(group);
+      }
+      const membershipsBefore = await GroupUser.findAll({
+        order: [['id', 'ASC']],
+        raw: true,
+        where: { userId: otherUser.id },
+      });
+
+      await usersService.remove(user, {}, adminAbacPolicy);
+
+      await expect(usersService.findById(user.id)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(await GroupUser.count({ where: { userId: user.id } })).toBe(0);
+      for (const group of affectedGroups) {
+        const members = await group.$get('users');
+        expect(members).toHaveLength(1);
+        expect(members[0]).toMatchObject({
+          GroupUser: { role: 'owner' },
+          id: adminUser.id,
+        });
+      }
+      expect(
+        await GroupUser.findAll({
+          order: [['id', 'ASC']],
+          raw: true,
+          where: { userId: otherUser.id },
+        }),
+      ).toEqual(membershipsBefore);
+      for (const group of unrelatedGroups) {
+        expect(await group.$get('users')).toHaveLength(1);
+      }
+      expect(await groupsService.count()).toBe(5);
+    });
+
+    it.each(['member', 'owner'])(
+      'preserves the remaining owner when deleting a group %s',
+      async (role) => {
+        const otherOwner = await usersService.create(
+          CREATE_USER_DTO_TEST_OBJ_2,
+        );
+        const group = await groupsService.create(GROUP_1);
+        await groupsService.addUserToGroup(group, user, role);
+        await groupsService.addUserToGroup(group, otherOwner, 'owner');
+
+        await usersService.remove(user, {}, adminAbacPolicy);
+
+        const members = await group.$get('users');
+        expect(members).toHaveLength(1);
+        expect(members[0]).toMatchObject({
+          GroupUser: { role: 'owner' },
+          id: otherOwner.id,
+        });
+        await expect(usersService.findById(user.id)).rejects.toThrow(
+          NotFoundException,
+        );
+        expect(await GroupUser.count({ where: { userId: user.id } })).toBe(0);
+      },
+    );
+
+    it('preserves the user and ownership when no replacement administrator exists', async () => {
+      await adminUser.destroy();
+      const group = await groupsService.create(GROUP_1);
+      await groupsService.addUserToGroup(group, user, 'owner');
+
+      await expect(
+        usersService.remove(user, DELETE_USER_DTO_TEST_OBJ, abacPolicy),
+      ).rejects.toThrow('No admin to be promoted');
+
+      expect(await usersService.findById(user.id)).toMatchObject({ id: user.id });
+      const members = await group.$get('users');
+      expect(members).toHaveLength(1);
+      expect(members[0]).toMatchObject({
+        GroupUser: { role: 'owner' },
+        id: user.id,
+      });
     });
 
     it('should delete a user without matching password when admin', async () => {

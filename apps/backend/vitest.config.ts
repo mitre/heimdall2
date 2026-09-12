@@ -5,7 +5,8 @@ export default defineConfig({
   test: {
     hookTimeout: 20000,
     testTimeout: 20000,
-    fileParallelism: false
+    fileParallelism: false,
+    unstubEnvs: true
   },
   plugins: [
     swc.vite({
