@@ -16,8 +16,6 @@ jobs:
     services:
       splunk:
         image: splunk/splunk
-        volumes:
-          - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
         ports:
           - 8089:8089
           - 8088:8088
@@ -49,8 +47,13 @@ jobs:
         env:
           CYPRESS_INSTALL_BINARY: 0
 
+      - name: Configure Splunk CORS and wait for readiness
+        run: bash test/services/configure_splunk.sh '${{ job.services.splunk.id }}' http
+
       - name: Start Mock Sonarqube Server
-        run: yarn run cypress-test mock-json &
+        run: |
+          yarn run cypress-test mock-json &
+          curl --fail --silent --show-error --retry 30 --retry-all-errors --retry-delay 1 --max-time 5 http://127.0.0.1:3001/health
 
       - name: Run unit tests
         run: yarn hdf-converters test:ci

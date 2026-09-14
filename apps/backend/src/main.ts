@@ -2,7 +2,6 @@ import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {NestExpressApplication} from '@nestjs/platform-express';
 import {json} from 'express';
-import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import multer from 'multer';
 import winston from 'winston';
@@ -10,6 +9,7 @@ import passport = require('passport');
 import postgresSessionStore = require('connect-pg-simple');
 import session = require('express-session');
 import {AppModule} from './app.module';
+import {createLoginRateLimiter} from './authn/login_rate_limit';
 import {ConfigService} from './config/config.service';
 import {generateDefault} from './token/token.providers';
 
@@ -100,15 +100,7 @@ async function bootstrap() {
   }
   app.use(
     '/authn/login',
-    rateLimit({
-      windowMs: 60 * 1000,
-      max: 20,
-      message: {
-        status: 429,
-        message: 'Too Many Requests',
-        error: 'Ratelimited'
-      }
-    })
+    createLoginRateLimiter()
   );
   // Allow for file uploads up to 50 mb
   multer({

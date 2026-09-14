@@ -530,10 +530,12 @@ To test your code to make sure everything still works:
 
 The application includes an End-to-End (E2E) frontend and Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
 
-    CYPRESS_TESTING=true yarn start:dev
+    NODE_ENV=development CYPRESS_TESTING=true yarn start:dev
     CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open
 
 The first command will start an instance of Heimdall Server and exposes additional routes required to allow the tests to run. The second will open the Cypress UI which will run the tests any time code changes are made.
+
+See the [E2E test workspace guide](test/README.md) for the full service setup, production-build commands, test organization, and focused runs.
 
 > [!NOTE] 
 > When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes.
