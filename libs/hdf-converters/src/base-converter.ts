@@ -101,7 +101,7 @@ export function impactMapping(
 ): (severity: unknown) => number {
   const warned = new Set<string>();
   return (severity: unknown): number => {
-    if (typeof severity === 'string' || typeof severity === 'number') {
+    if (_.isString(severity) || _.isNumber(severity)) {
       const impact = mapping.get(severity.toString().toLowerCase());
       if (impact !== undefined) {
         return impact;
@@ -130,7 +130,7 @@ function collapseDuplicates<T extends object>(
   let counter = 0;
   array.forEach((item: T) => {
     const propertyValue = _.get(item, key);
-    if (typeof propertyValue === 'string') {
+    if (_.isString(propertyValue)) {
       const index = seen.get(propertyValue) || 0;
       if (!seen.has(propertyValue)) {
         newArray.push(item);
