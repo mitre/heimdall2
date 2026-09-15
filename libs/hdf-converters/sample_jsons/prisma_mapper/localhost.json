@@ -331,6 +331,7 @@
           "source_location": "localhost",
           "id": "411-CVE-2020-24553",
           "title": "localhost-redhat-RHEL7-image",
+          "impact": 0.5,
           "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2020-24553\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"medium\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.14.4\",\n  \"Package License\": \"\",\n  \"CVSS\": \"6.10\",\n  \"Fix Status\": \"fixed in 1.15.1, 1.14.8\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2020-24553.\",\n  \"Cause\": \"\",\n  \"Published\": \"2020-08-01 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2020-24553\"\n}",
           "results": [
             {

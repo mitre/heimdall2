@@ -96,14 +96,31 @@ export function parseCsv(csv: string): unknown[] {
 }
 
 export function impactMapping(
-  mapping: Map<string, number>
+  mapping: Map<string, number>,
+  defaultValue = 0.5
 ): (severity: unknown) => number {
+  // Normalize the table's keys as well as the value being looked up, so a
+  // converter's map can be written in whatever case its source format uses.
+  const normalizedMapping = new Map(
+    [...mapping].map(([severity, impact]) => [severity.toLowerCase(), impact])
+  );
+  const warned = new Set<string>();
   return (severity: unknown): number => {
-    if (typeof severity === 'string' || typeof severity === 'number') {
-      return mapping.get(severity.toString().toLowerCase()) || 0;
-    } else {
-      return 0;
+    if (_.isString(severity) || _.isNumber(severity)) {
+      const impact = normalizedMapping.get(severity.toString().toLowerCase());
+      if (impact !== undefined) {
+        return impact;
+      }
     }
+    // If the base data had no severity we can map, fall through to the default value, and print a warning to stderr
+    const key = String(severity);
+    if (!warned.has(key)) {
+      warned.add(key);
+      console.warn(
+        `Severity "${key}" is not in this converter's impact mapping; defaulting to impact ${defaultValue}`
+      );
+    }
+    return defaultValue;
   };
 }
 
@@ -118,7 +135,7 @@ function collapseDuplicates<T extends object>(
   let counter = 0;
   array.forEach((item: T) => {
     const propertyValue = _.get(item, key);
-    if (typeof propertyValue === 'string') {
+    if (_.isString(propertyValue)) {
       const index = seen.get(propertyValue) || 0;
       if (!seen.has(propertyValue)) {
         newArray.push(item);
