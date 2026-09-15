@@ -24,6 +24,22 @@ describe.sequential('impactMapping', () => {
     expect(warn).not.toHaveBeenCalled();
   });
 
+  it('matches regardless of the case the mapping table is written in', () => {
+    const warn = vi.spyOn(console, 'warn').mockReturnValue();
+    // Converters key their tables in whatever case the source format emits
+    // (e.g. ASFF's 'CRITICAL'); the table is normalized alongside the lookup.
+    const upperCased = impactMapping(
+      new Map([
+        ['CRITICAL', 0.9],
+        ['Informational', 0.0]
+      ])
+    );
+    expect(upperCased('CRITICAL')).toBe(0.9);
+    expect(upperCased('critical')).toBe(0.9);
+    expect(upperCased('INFORMATIONAL')).toBe(0.0);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it('returns a legitimate mapped 0.0 with no warning', () => {
     const warn = vi.spyOn(console, 'warn').mockReturnValue();
     expect(impactMapping(MAPPING)('none')).toBe(0.0);

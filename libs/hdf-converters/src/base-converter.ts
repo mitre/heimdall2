@@ -99,10 +99,15 @@ export function impactMapping(
   mapping: Map<string, number>,
   defaultValue = 0.5
 ): (severity: unknown) => number {
+  // Normalize the table's keys as well as the value being looked up, so a
+  // converter's map can be written in whatever case its source format uses.
+  const normalizedMapping = new Map(
+    [...mapping].map(([severity, impact]) => [severity.toLowerCase(), impact])
+  );
   const warned = new Set<string>();
   return (severity: unknown): number => {
     if (_.isString(severity) || _.isNumber(severity)) {
-      const impact = mapping.get(severity.toString().toLowerCase());
+      const impact = normalizedMapping.get(severity.toString().toLowerCase());
       if (impact !== undefined) {
         return impact;
       }
