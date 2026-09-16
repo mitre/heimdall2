@@ -5321,9 +5321,9 @@ apex-commons@^0.7.0:
   integrity sha512-cGspw4G0FV/hULrJy75Du301lFGSkMWph4c5B+/YX4CBImG8WFWRUZ5dTFKYcoK5Q8/Ax2jHAKWVVRzNZOWH7g==
 
 apexcharts@^7.0.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-7.2.0.tgz#81eb9e8f6f53e90b7069a71ae01271319ebdea71"
-  integrity sha512-5tKy/nbgmo/COju4XqMUr5XldZGGfJlUpdbxHvzUo9/Utkt4XyZV466up++xxkLJNqa12u97BvGudfbTpoSJCQ==
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-7.3.0.tgz#9bfe9de444ddf9a800f176ef979cc2731eadd4e5"
+  integrity sha512-WCpubnhgwuNdhH0VZ/Wizj13NlKqDBAxUTYmhnd01pBnDsdiPKNuXFATvDS2t1sojOVuzDFpCvBOWGEvbSUi6g==
   dependencies:
     apex-commons "^0.7.0"
 
