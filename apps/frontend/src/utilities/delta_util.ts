@@ -315,10 +315,11 @@ export function compareCompliance(
 }
 
 // Client-reported (browser File.lastModified); not server-verified. Missing
-// values sort last regardless of sort direction.
+// values always sort last, regardless of `reverse`.
 export function compareLastModified(
   a: SourcedContextualizedEvaluation,
-  b: SourcedContextualizedEvaluation
+  b: SourcedContextualizedEvaluation,
+  reverse = false
 ) {
   const aTime = parseLastModifiedTime(a.from_file.lastModified);
   const bTime = parseLastModifiedTime(b.from_file.lastModified);
@@ -329,7 +330,7 @@ export function compareLastModified(
   } else if (bTime === undefined) {
     return -1;
   }
-  return aTime - bTime;
+  return reverse ? bTime - aTime : aTime - bTime;
 }
 
 // Values may arrive as strings/null (e.g. from a JSON API response) despite
