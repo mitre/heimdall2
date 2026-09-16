@@ -121,6 +121,20 @@ export default defineConfig([
     },
   },
   {
+    files: ['test/**/*.{ts,mjs}', 'cypress.config.ts'],
+    name: 'cypress tests',
+    rules: {
+      // The global Vitest configuration does not understand Cypress assertions
+      // or its command queue. Cypress's recommended rules remain enabled.
+      ...Object.fromEntries(Object.keys(vitest.configs.recommended.rules).map((rule) => [rule, 'off'])),
+    },
+  },
+  {
+    files: ['cypress.config.ts'],
+    name: 'cypress workspace dependencies',
+    rules: { 'n/no-extraneous-import': 'off' },
+  },
+  {
     extends: [json.configs.recommended],
     files: ['**/*.json'],
     ignores: ['package-lock.json', 'parse_testbed/**', 'schemas/**'],

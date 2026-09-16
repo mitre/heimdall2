@@ -23,7 +23,11 @@
         <v-list-item v-if="files.length === 0"
           >No items found! Try different terms?</v-list-item
         >
-        <v-list-item v-for="(val, index) in files" :key="val.Key">
+        <v-list-item
+          v-for="(val, index) in files"
+          :key="val.Key"
+          data-cy="s3File"
+        >
           <v-list-item-content>
             <!-- Title: The item key -->
             <v-list-item-title>{{ val.Key }}</v-list-item-title>

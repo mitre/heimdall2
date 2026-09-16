@@ -57,6 +57,7 @@
     "connect-pg-simple": "^10.0.0",
     "dotenv": "^17.0.0",
     "eslint-plugin-import": "^2.20.1",
+    "express": "^5.2.1",
     "express-rate-limit": "^8.0.0",
     "express-session": "^1.17.1",
     "helmet": "^8.0.0",
@@ -90,5 +91,8 @@
     "mock-fs": "^5.0.0",
     "unplugin-swc": "^1.5.5",
     "vitest": "^4.0.18"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

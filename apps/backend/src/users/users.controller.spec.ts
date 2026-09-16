@@ -91,6 +91,23 @@ describe('UsersController Unit Tests', () => {
     adminUser = await usersService.findByPkBang(adminDto.id);
   });
 
+  describe('E2E database reset', () => {
+    it('removes users and groups before returning and can be repeated', async () => {
+      await Group.create({name: 'E2E reset group'});
+      await usersController.clear();
+      expect(await User.count()).toBe(0);
+      expect(await Group.count()).toBe(0);
+      // These inserts would race with a reset that returns before it completes.
+      const recreated = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      await Group.create({name: 'E2E reset group'});
+      expect(await usersService.findByPkBang(recreated.id)).toBeDefined();
+      expect(await Group.count()).toBe(1);
+      await usersController.clear();
+      expect(await User.count()).toBe(0);
+      expect(await Group.count()).toBe(0);
+    });
+  });
+
   describe('FindbyId function', () => {
     // Tests the findById function with valid ID (basic positive test)
     it('should test findById with valid ID', async () => {

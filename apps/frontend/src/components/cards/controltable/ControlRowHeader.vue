@@ -3,6 +3,7 @@
   <ResponsiveRowSwitch :dense="true">
     <template #status>
       <v-card
+        data-cy="toggleControlDetails"
         :color="status_color"
         class="pl-2 font-weight-bold"
         hover
