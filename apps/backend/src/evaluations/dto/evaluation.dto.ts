@@ -27,7 +27,7 @@ export class EvaluationDto implements IEvaluation {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
     this.data = evaluation.data;
-    this.lastModified = evaluation.lastModified;
+    this.lastModified = evaluation.lastModified ?? undefined;
     if (
       evaluation.evaluationTags === null ||
       evaluation.evaluationTags === undefined
