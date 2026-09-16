@@ -320,8 +320,8 @@ export function compareLastModified(
   a: SourcedContextualizedEvaluation,
   b: SourcedContextualizedEvaluation
 ) {
-  const aTime = a.from_file.lastModified?.valueOf();
-  const bTime = b.from_file.lastModified?.valueOf();
+  const aTime = parseLastModifiedTime(a.from_file.lastModified);
+  const bTime = parseLastModifiedTime(b.from_file.lastModified);
   if (aTime === undefined && bTime === undefined) {
     return 0;
   } else if (aTime === undefined) {
@@ -330,4 +330,14 @@ export function compareLastModified(
     return -1;
   }
   return aTime - bTime;
+}
+
+// Values may arrive as strings/null (e.g. from a JSON API response) despite
+// being typed as Date, so parse defensively rather than trusting the type.
+function parseLastModifiedTime(value: unknown): number | undefined {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+  const time = new Date(value as string | number | Date).getTime();
+  return Number.isNaN(time) ? undefined : time;
 }
