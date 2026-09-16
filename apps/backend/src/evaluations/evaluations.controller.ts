@@ -163,7 +163,8 @@ export class EvaluationsController {
             evaluationTags: createEvaluationDto.evaluationTags || [],
             public: createEvaluationDto.public,
             data: serializedDta,
-            groupId: request.user.id
+            groupId: request.user.id,
+            lastModified: createEvaluationDto.lastModified
           })
           .then(async (evaluation) => {
             const group = await this.groupsService.findByPkBang(
@@ -198,7 +199,8 @@ export class EvaluationsController {
             evaluationTags: createEvaluationDto.evaluationTags || [],
             public: createEvaluationDto.public,
             data: serializedDta,
-            userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+            userId: request.user.id, // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+            lastModified: createEvaluationDto.lastModified
           })
           .then((createdEvaluation) => {
             groups.forEach((group) =>

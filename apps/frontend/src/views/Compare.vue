@@ -226,6 +226,7 @@ import {
   compareCompliance,
   compareControlCount,
   compareExecutionTimes,
+  compareLastModified,
   compare_times,
   ComparisonContext,
   ControlSeries,
@@ -288,7 +289,8 @@ export default class Compare extends Vue {
     'Run Time',
     'Total Number of Controls',
     'Passed Control Count',
-    'Compliance (Passed Control %)'
+    'Compliance (Passed Control %)',
+    'File Last Modified'
   ];
 
   sortControlSetsBy = '';
@@ -453,13 +455,18 @@ export default class Compare extends Vue {
       case 'Compliance (Passed Control %)':
         fileList.sort(compareCompliance);
         break;
+      case 'File Last Modified':
+        fileList.sort((a, b) => compareLastModified(a, b, this.reverseSort));
+        break;
       default:
         if (this.sortControlSetsBy.startsWith('Passthrough Field')) {
           fileList.sort(this.comparePassthrough);
         }
         break;
     }
-    if (this.reverseSort) {
+    // Reverse direction is handled inside the comparator for 'File Last Modified'
+    // so missing values always stay last.
+    if (this.reverseSort && this.sortControlSetsBy !== 'File Last Modified') {
       fileList.reverse();
     }
     return fileList.map((evaluation) => evaluation.from_file);
