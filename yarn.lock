@@ -4411,7 +4411,7 @@
     tinyglobby "^0.2.15"
     ts-api-utils "^2.5.0"
 
-"@typescript-eslint/utils@8.70.0", "@typescript-eslint/utils@^8.58.0", "@typescript-eslint/utils@^8.68.0":
+"@typescript-eslint/utils@8.70.0", "@typescript-eslint/utils@^8.58.0", "@typescript-eslint/utils@^8.70.0":
   version "8.70.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/utils/-/utils-8.70.0.tgz#78a78b4c52dd8523e5321993cb46ebe6d7934510"
   integrity sha512-oZmtKJz/4fufZ2p3+Cn3ijEojcdfR+1zYDH2xKYrEly0dR/Q/1xUPRCOlKGxod78nWlU2UnDe09GZ3TaknBFGA==
@@ -8810,11 +8810,11 @@ eslint-plugin-n@^18.0.1:
     semver "^7.6.3"
 
 eslint-plugin-perfectionist@^5.8.0:
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-perfectionist/-/eslint-plugin-perfectionist-5.11.0.tgz#91a571b3af2f00da487f3a1192b7cbe9e899739c"
-  integrity sha512-kZV1otBcu4xT5R1p+0x1N1wRv4pS+OIbxrA47n5a1fTnN3MWbexOx5eQgbQhGyCNbpvF/rqrbnpkGjumHF+Y0Q==
+  version "5.11.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-perfectionist/-/eslint-plugin-perfectionist-5.11.1.tgz#953768d5e3ca9de4e3d5124fe8767d43f2d8da71"
+  integrity sha512-xloHScnOpin9Jy3CegfzoBeY33ASk0spLyM2sJs0LyNHQjv9m0osUD2PYNT7NrJieZbUR2Ebn4A5Q0+0dOcv+A==
   dependencies:
-    "@typescript-eslint/utils" "^8.68.0"
+    "@typescript-eslint/utils" "^8.70.0"
     natural-orderby "^5.0.0"
 
 eslint-plugin-promise@^7.2.1:
