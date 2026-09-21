@@ -119,10 +119,15 @@ getent passwd heimdall >/dev/null || \
 %systemd_post %{name}.service
 SETUP_FAILED=0
 
-if ! %{_libexecdir}/%{name}/configure.sh; then
+if ! %{_libexecdir}/%{name}/configure.sh --non-interactive; then
   echo "heimdall-server: configuration step failed." >&2
   echo "Run /usr/bin/heimdall-server-setup --non-interactive after fixing the issue." >&2
   SETUP_FAILED=1
+fi
+
+if [ ! -d /run/systemd/system ] || ! systemctl show-environment >/dev/null 2>&1; then
+  echo 'heimdall-server: service initialization deferred; run /usr/bin/heimdall-server-setup --non-interactive on the target host.' >&2
+  exit 0
 fi
 
 if [ "${SETUP_FAILED}" -eq 0 ]; then

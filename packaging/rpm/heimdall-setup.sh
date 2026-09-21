@@ -46,6 +46,11 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
+if [[ ! -d /run/systemd/system ]] || ! systemctl show-environment >/dev/null 2>&1; then
+  echo 'Heimdall setup requires a running systemd service manager.' >&2
+  exit 1
+fi
+
 case "${SETUP_MODE}" in
   interactive)
     "${CONFIGURE_BIN}" --interactive
@@ -61,8 +66,8 @@ esac
 "${POSTGRES_SETUP_BIN}"
 "${DB_SETUP_BIN}"
 
-if command -v systemctl >/dev/null 2>&1; then
-  systemctl enable --now "${SERVICE_NAME}"
-fi
+systemctl enable "${SERVICE_NAME}"
+systemctl restart "${SERVICE_NAME}"
+systemctl is-active --quiet "${SERVICE_NAME}"
 
 echo "Heimdall server setup completed."

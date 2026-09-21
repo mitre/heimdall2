@@ -63,7 +63,7 @@ have_tty() {
 }
 
 TTY_AVAILABLE=0
-if have_tty; then
+if [[ "${MODE}" != "non-interactive" ]] && have_tty; then
   TTY_AVAILABLE=1
 fi
 
@@ -134,10 +134,10 @@ if [[ "${SHOULD_PROMPT}" -eq 1 ]]; then
   echo "Press Enter to accept each default value." >/dev/tty
   echo >/dev/tty
 
-  prompt_with_default DATABASE_USERNAME "Enter DATABASE_USERNAME (leave blank to use default 'postgres'): " "postgres"
-  prompt_with_default DATABASE_PASSWORD "Enter DATABASE_PASSWORD (leave blank to auto-generate a secure password): " ""
-  prompt_with_default JWT_EXPIRE_TIME "Enter JWT_EXPIRE_TIME ex. 1d or 25m (leave blank to use default 1d): " "1d"
-  prompt_with_default NGINX_HOST "Enter your FQDN/Hostname/IP Address (leave blank to use default localhost): " "localhost"
+  prompt_with_default DATABASE_USERNAME "Enter DATABASE_USERNAME (leave blank to keep '${DATABASE_USERNAME}'): " "$DATABASE_USERNAME"
+  prompt_with_default DATABASE_PASSWORD 'Enter DATABASE_PASSWORD (leave blank to keep the current value or generate one if empty): ' "$DATABASE_PASSWORD"
+  prompt_with_default JWT_EXPIRE_TIME "Enter JWT_EXPIRE_TIME (leave blank to keep '${JWT_EXPIRE_TIME}'): " "$JWT_EXPIRE_TIME"
+  prompt_with_default NGINX_HOST "Enter FQDN/Hostname/IP (leave blank to keep '${NGINX_HOST}'): " "$NGINX_HOST"
 fi
 
 PASSWORD_AUTO_GENERATED=0
@@ -150,7 +150,12 @@ if [[ -z "${DATABASE_PASSWORD//[[:space:]]/}" ]]; then
   PASSWORD_AUTO_GENERATED=1
 fi
 
-printf "# Generated during heimdall-server RPM installation\n" >>"${TMP_FILE}"
+if [[ -f "$ENV_FILE" ]]; then
+  awk '!/^[[:space:]]*(export[[:space:]]+)?(NODE_ENV|PORT|DATABASE_HOST|DATABASE_PORT|DATABASE_USERNAME|DATABASE_PASSWORD|DATABASE_NAME|JWT_SECRET|JWT_EXPIRE_TIME|API_KEY_SECRET|NGINX_HOST|ADMIN_EMAIL|ADMIN_PASSWORD)=/' \
+    "$ENV_FILE" >> "$TMP_FILE"
+else
+  printf '# Generated during heimdall-server RPM installation\n' >> "$TMP_FILE"
+fi
 write_key NODE_ENV "${NODE_ENV}"
 write_key PORT "${PORT}"
 write_key DATABASE_HOST "${DATABASE_HOST}"
