@@ -5,7 +5,7 @@ import {NessusResults} from '../../../src/nessus-mapper';
 import {omitVersions} from '../../utils';
 
 describe('nessus_mapper', () => {
-  it('Successfully converts Nessus data', () => {
+  it('Successfully converts Nessus data', async () => {
     const mapper = new NessusResults(
       fs.readFileSync(
         'sample_jsons/nessus_mapper/sample_input_report/sample.nessus',
@@ -13,7 +13,7 @@ describe('nessus_mapper', () => {
       )
     );
 
-    const converted = mapper.toHdf();
+    const converted = await mapper.toHdf();
 
     /*
     fs.writeFileSync(
@@ -61,7 +61,7 @@ describe('nessus_mapper', () => {
 });
 
 describe('nessus_mapper_withraw', () => {
-  it('Successfully converts withRaw flagged Nessus data', () => {
+  it('Successfully converts withRaw flagged Nessus data', async () => {
     const mapper = new NessusResults(
       fs.readFileSync(
         'sample_jsons/nessus_mapper/sample_input_report/sample.nessus',
@@ -70,7 +70,7 @@ describe('nessus_mapper_withraw', () => {
       true
     );
 
-    const converted = mapper.toHdf();
+    const converted = await mapper.toHdf();
 
     /*
     fs.writeFileSync(
@@ -123,5 +123,18 @@ describe('nessus_mapper_withraw', () => {
         )
       );
     }
+  });
+});
+
+describe('nessus_mapper_entity_expansion_limit', () => {
+  it('accepts a custom entity expansion limit', () => {
+    expect(
+      () =>
+        new NessusResults('<root>&quot;&quot;</root>', false, {
+          processEntities: {maxTotalExpansions: 1},
+        }),
+    ).toThrow(
+      '[EntityReplacer] Entity expansion count limit exceeded: 2 > 1',
+    );
   });
 });

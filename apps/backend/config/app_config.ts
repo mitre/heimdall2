@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import {parseHostUrl} from '../src/utils/url_validation';
 
 export default class AppConfig {
   private envConfig: {[key: string]: string | undefined};
@@ -34,6 +35,15 @@ export default class AppConfig {
     return process.env[key] || this.envConfig[key];
   }
 
+  getExternalUrl(): string {
+    const external_url = this.get('EXTERNAL_URL');
+    if (external_url === undefined) {
+      return '';
+    } else {
+      return external_url;
+    }
+  }
+
   getSplunkHostUrl(): string {
     const splunk_host_url = this.get('SPLUNK_HOST_URL');
     if (splunk_host_url !== undefined) {
@@ -43,13 +53,26 @@ export default class AppConfig {
     }
   }
 
-  getTenableHostUrl(): string {
+  // Newline-separated allowlist of Tenable.SC hosts for the login/proxy endpoints
+  // Entries must include a protocol and may include a port; malformed entries throw at startup.
+  getTenableHostUrl(): string[] {
     const tenable_host_url = this.get('TENABLE_HOST_URL');
-    if (tenable_host_url !== undefined) {
-      return tenable_host_url;
-    } else {
-      return '';
+    if (tenable_host_url === undefined) {
+      return [];
     }
+    return tenable_host_url
+      .split('\n')
+      .map((url) => url.trim())
+      .filter((url) => url.length > 0)
+      .map((url) => {
+        const parsed = parseHostUrl(url);
+        if (!parsed) {
+          throw new Error(
+            `Invalid TENABLE_HOST_URL entry "${url}": must be a complete http(s) URL containing only protocol, hostname, and optional port`
+          );
+        }
+        return parsed.origin;
+      });
   }
 
   getDatabaseName(): string {

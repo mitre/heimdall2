@@ -3,6 +3,9 @@
 apps/backend/dist
 node_modules
 
+# Typescript cache
+*.tsbuildinfo
+
 # Logs
 logs
 *.log

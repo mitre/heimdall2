@@ -6,7 +6,7 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml,
+  buildParseHtmlFunc,
   parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
@@ -27,6 +27,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING = new OwaspNistMapping();
+
+let parseHtml: (input: unknown) => string;
 
 function nistTag(classification: Record<string, unknown>): string[] {
   let cweTag = _.get(classification, 'cwe');
@@ -138,6 +140,17 @@ function formatMessage(response: unknown): string {
   text.push(`status-code  : ${_.get(response, 'status-code')}`);
   return text.join('\n');
 }
+
+export class NetsparkerResults {
+  constructor(readonly netsparkerXml: string, readonly withRaw = false) {}
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    parseHtml = await buildParseHtmlFunc();
+
+    return (new NetsparkerMapper(this.netsparkerXml, this.withRaw)).toHdf();
+  }
+}
+
 export class NetsparkerMapper extends BaseConverter {
   withRaw: boolean;
 

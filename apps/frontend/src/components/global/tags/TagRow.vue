@@ -6,7 +6,7 @@
       @open="syncEvaluationTags"
       @cancel="syncEvaluationTags"
     >
-      <template v-for="tag in evaluation.evaluationTags">
+      <template v-for="tag in sortedEvaluationTags">
         <v-chip
           v-if="evaluation.editable"
           :key="tag.id + '_'"
@@ -66,6 +66,7 @@
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import {EvaluationModule} from '@/store/evaluations';
 import {SnackbarModule} from '@/store/snackbar';
+import {caseInsensitiveCompare} from '@/utilities/helper_util';
 import {IEvaluation, IEvaluationTag} from '@heimdall/common/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -140,8 +141,14 @@ export default class TagRow extends Vue {
     this.tags = this.evaluationTagsToStrings();
   }
 
+  get sortedEvaluationTags(): IEvaluationTag[] {
+    return this.evaluation.evaluationTags.toSorted((a, b) =>
+      caseInsensitiveCompare(a.value, b.value)
+    );
+  }
+
   evaluationTagsToStrings(): string[] {
-    return this.evaluation.evaluationTags.map((tag) => tag.value) || [];
+    return this.sortedEvaluationTags.map((tag) => tag.value) || [];
   }
 
   async deleteTag(tag: IEvaluationTag) {

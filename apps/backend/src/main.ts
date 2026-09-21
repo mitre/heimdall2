@@ -58,7 +58,7 @@ async function bootstrap() {
           "'self'",
           'https://api.github.com',
           'https://sts.amazonaws.com',
-          configService.getTenableHostUrl(),
+          ...configService.getTenableHostUrl(),
           configService.getSplunkHostUrl()
         ].filter((source) => source)
       }

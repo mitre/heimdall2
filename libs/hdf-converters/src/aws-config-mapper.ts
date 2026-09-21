@@ -13,7 +13,11 @@ import https from 'https';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {AwsConfigMapping} from './mappings/AwsConfigMapping';
+import {
+  AwsConfigMapping,
+  AwsConfigRev,
+  DEFAULT_AWS_CONFIG_REV
+} from './mappings/AwsConfigMapping';
 
 const NOT_APPLICABLE_MSG =
   'No AWS resources found to evaluate compliance for this rule';
@@ -21,17 +25,24 @@ const INSUFFICIENT_DATA_MSG =
   'Not enough data has been collected to determine compliance yet.';
 const NAME = 'AWS Config';
 
-const AWS_CONFIG_MAPPING = new AwsConfigMapping();
+// One instance per revision, built once -- the mapping is static data.
+const AWS_CONFIG_MAPPINGS: Record<AwsConfigRev, AwsConfigMapping> = {
+  4: new AwsConfigMapping(4),
+  5: new AwsConfigMapping(5)
+};
 
 export class AwsConfigMapper {
   configService: ConfigService;
   issues: Promise<ConfigRule[]>;
   results: ExecJSON.ControlResult[][];
+  private readonly awsConfigMapping: AwsConfigMapping;
   constructor(
     options: ConfigServiceClientConfig,
     verifySSLCertificates = true,
-    certificate?: string
+    certificate?: string,
+    nistRev: AwsConfigRev = DEFAULT_AWS_CONFIG_REV
   ) {
+    this.awsConfigMapping = AWS_CONFIG_MAPPINGS[nistRev];
     const clientOptions: ConfigServiceClientConfig = {
       ...options,
       requestHandler: new NodeHttpHandler({
@@ -327,7 +338,7 @@ export class AwsConfigMapper {
     result = _.set(result, 'nist', []);
     let defaultMatch: string[] | null = [];
     if (sourceIdentifier !== undefined) {
-      defaultMatch = AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier]);
+      defaultMatch = this.awsConfigMapping.searchNIST([sourceIdentifier]);
     }
     if (Array.isArray(defaultMatch) && defaultMatch.length !== 0) {
       result = _.set(

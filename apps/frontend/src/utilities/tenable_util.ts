@@ -2,7 +2,6 @@
 import JSZip from 'jszip';
 import axios, {AxiosInstance} from 'axios';
 import {ServerModule} from '@/store/server';
-import {createWinstonLogger} from '../../../../libs/hdf-converters/src/utils/global';
 
 /** represents the information of the current used */
 export interface AuthInfo {
@@ -24,11 +23,9 @@ export type ScanResults = {
   status: string;
 };
 
-const UTIL_NAME = 'Tenable.SC';
 const LOGIN_TIMEOUT = 60000; // 60 seconds
 const LOGIN_TIMEOUT_MSG =
   'Login timed out. Ensure the provided credentials and domain/URL are valid and try again.';
-const logger = createWinstonLogger(UTIL_NAME, 'debug');
 
 export class TenableUtil {
   hostConfig: AuthInfo;
@@ -65,13 +62,15 @@ export class TenableUtil {
         headers
       });
 
-    logger.info(
+    // eslint-disable-next-line no-console
+    console.info(
       `Tenable Client initialized in ${this.isServer ? 'Server' : 'Lite'} mode`
     );
   }
 
   async loginToTenable(): Promise<boolean> {
-    logger.info(`Connecting to Tenable Client`);
+    // eslint-disable-next-line no-console
+    console.info(`Connecting to Tenable Client`);
     return new Promise((resolve, reject) => {
       setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
 
@@ -79,7 +78,8 @@ export class TenableUtil {
         const url = this.isServer ? '/api/tenable/login' : '/rest/currentUser';
         if (this.isServer) {
           // If running on the server, use the backend proxy endpoint
-          logger.info(`Using Server-Mode: ${url}`);
+          // eslint-disable-next-line no-console
+          console.info(`Using Server-Mode: ${url}`);
           this.axios_instance
             .post(url, {
               host_url: this.hostConfig.host_url,
@@ -94,32 +94,37 @@ export class TenableUtil {
               }
             })
             .catch((error) => {
-              logger.error(
+              // eslint-disable-next-line no-console
+              console.error(
                 `Processing (Server-Mode) connection error -> ${error}`
               );
               reject(this.getRejectConnectionMessage(error));
             });
         } else {
           // If running in Lite mode, connect directly to Tenable
-          logger.info(`Using Lite-Mode`);
+          // eslint-disable-next-line no-console
+          console.info(`Using Lite-Mode`);
           this.axios_instance
             .get(url)
             .then((response) => {
               if (response.status === 200) {
-                logger.info('Processing (Lite-Mode) connected successfully');
+                // eslint-disable-next-line no-console
+                console.info('Processing (Lite-Mode) connected successfully');
                 resolve(true);
               } else {
                 const msg =
                   response.data?.message ||
                   'Unexpected response structure from Tenable';
-                logger.error(
+                // eslint-disable-next-line no-console
+                console.error(
                   `Processing (Lite-Mode) connection failed: ${msg}`
                 );
                 reject(msg);
               }
             })
             .catch((error) => {
-              logger.error(`Processing (Lite-Mode) connecting error: ${error}`);
+              // eslint-disable-next-line no-console
+              console.error(`Processing (Lite-Mode) connecting error: ${error}`);
               reject(this.getRejectConnectionMessage(error));
             });
         }
@@ -154,6 +159,8 @@ export class TenableUtil {
           if (this.isServer) {
             if (error.response?.data?.code === 'INVALID_HOST_URL') { // Custom set in the backend
               rejectMsg = (error.response?.data?.message ?? 'Tenable host URL to IP address resolution failed');
+            } else if (error.response?.data?.code === 'HOST_NOT_ALLOWED') { // Custom set in the backend
+              rejectMsg = (error.response?.data?.message ?? 'Tenable host URL is not in the configured allowlist');
             } else if (error.response?.data?.message) {
               rejectMsg = this.getCSPErrorMsg(this.hostConfig.host_url, TENABLE_HOST_URL)
             } else {
@@ -168,7 +175,7 @@ export class TenableUtil {
             'Unauthorized (missing or not accepted credentials): ' +
             (error.response?.data?.message ?? error.message);
         } else if (error.status == 404) {
-          if (this.isServer && !TENABLE_HOST_URL) {
+          if (this.isServer && !TENABLE_HOST_URL.length) {
             rejectMsg = TENABLE_CSP_NOT_SET;
           } else {
             rejectMsg = `Network Error -> ${DEFAULT_REJECT_MSG}`;    
@@ -203,10 +210,10 @@ export class TenableUtil {
       if (error.code == 'ERR_NETWORK') {
         // Check if the tenable url was provided - Content Security Policy (CSP)
         const corsReject = `Possible access blocked by CORS or connection refused by the host: ${error.config.baseURL}. See Help for additional instructions. Received Error: ${error.message}`;
-        if (TENABLE_HOST_URL) {
-          // If the URL is listed in the allows domains
+        if (TENABLE_HOST_URL.length) {
+          // If the URL is listed in the allowed domains
           // (.env variable TENABLE_HOST_URL) check if they match
-          if (!error.config.baseURL.includes(TENABLE_HOST_URL)) {
+          if (!TENABLE_HOST_URL.some((url) => error.config.baseURL.includes(url))) {
             if (error.config.baseURL) {
               rejectMsg = this.getCSPErrorMsg(error.config.baseURL, TENABLE_HOST_URL)
             } else {
@@ -248,7 +255,8 @@ export class TenableUtil {
    *   name,description,scannedIPs,startTime,finishTime,status
    */
   async getScans(startTime: number, endTime: number): Promise<[]> {
-    logger.info(`Getting scans from Tenable Client`);
+    // eslint-disable-next-line no-console
+    console.info(`Getting scans from Tenable Client`);
     return new Promise((resolve, reject) => {
       setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
 
@@ -281,7 +289,8 @@ export class TenableUtil {
    *   For type "diagnostic", the file is a diagnostic database file.
    */
   async getVulnerabilities(scanId: string): Promise<string> {
-    logger.info(`Getting vulnerabilities from Tenable Client`);
+    // eslint-disable-next-line no-console
+    console.info(`Getting vulnerabilities from Tenable Client`);
     return new Promise((resolve, reject) => {
       setTimeout( () => reject(new Error(LOGIN_TIMEOUT_MSG)), LOGIN_TIMEOUT);
 
@@ -368,11 +377,11 @@ export class TenableUtil {
    * Generates an error message indicating a Content Security Policy (CSP) violation.
    *
    * @param baseURL - The hostname that triggered the CSP violation.
-   * @param tenableUrl - The hostname allowed by the CSP.
+   * @param tenableUrls - The hostnames allowed by the CSP.
    * @returns A string describing the CSP violation, including the offending and allowed hostnames.
    */
-  getCSPErrorMsg(baseURL: string, tenableUrl: string): string {
-    return `Hostname: ${baseURL?.trim() || 'Unknown host'} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl?.trim() || 'Host not set'}`;
+  getCSPErrorMsg(baseURL: string, tenableUrls: string[]): string {
+    return `Hostname: ${baseURL?.trim() || 'Unknown host'} violates the Content Security Policy (CSP). The host(s) allowed by the CSP: ${tenableUrls.length ? tenableUrls.join(', ') : 'Host not set'}`;
   }
 
 }

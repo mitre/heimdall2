@@ -262,7 +262,7 @@ describe('convertAttestationToSegment', () => {
   });
 });
 
-describe('addAttestationToHDF', () => {
+describe.sequential('addAttestationToHDF', () => {
   let inputData: ExecJSON.Execution;
   const consoleOriginal = console.error;
   // Reset inputData and error console for each test

@@ -1,8 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
-import {Request} from 'express';
 import * as fs from 'fs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Strategy from 'passport-ldapauth';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
@@ -10,10 +9,9 @@ import {AuthnService} from './authn.service';
 @Injectable()
 export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
   static getSSLConfig(configService: ConfigService) {
-    if (
-      !configService.get('LDAP_SSL') ||
-      configService.get('LDAP_SSL')?.toLowerCase() === 'false'
-    ) {
+    const sslEnabled =
+      (configService.get('LDAP_SSL') ?? '').toLowerCase() === 'true';
+    if (!sslEnabled) {
       return false;
     }
 
@@ -34,10 +32,11 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       }
     }
 
+    const sslInsecure =
+      (configService.get('LDAP_SSL_INSECURE') ?? '').toLowerCase() === 'true';
+
     return {
-      rejectUnauthorized:
-        configService.get('LDAP_SSL_INSECURE') &&
-        configService.get('LDAP_SSL_INSECURE')?.toLowerCase() !== 'true',
+      rejectUnauthorized: !sslInsecure,
       ca: sslCA
     };
   }
@@ -47,45 +46,42 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
     private readonly configService: ConfigService
   ) {
     const sslConfig = LDAPStrategy.getSSLConfig(configService);
-    super(
-      {
-        passReqToCallback: true,
-        server: {
-          url: `${sslConfig ? 'ldaps' : 'ldap'}://${configService.get(
-            'LDAP_HOST'
-          )}:${configService.get('LDAP_PORT') || '389'}`,
-          bindDN: configService.get('LDAP_BINDDN'),
-          bindCredentials: configService.get('LDAP_PASSWORD'),
-          searchBase: configService.get('LDAP_SEARCHBASE') || 'disabled',
-          searchFilter:
-            configService.get('LDAP_SEARCHFILTER') ||
-            '(sAMAccountName={{username}})',
-          passReqToCallback: true,
-          ...(sslConfig && {
-            tlsOptions: {
-              rejectUnauthorized: sslConfig.rejectUnauthorized,
-              ca: sslConfig.ca
-            }
-          })
-        }
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async (req: Request, user: unknown, done: any) => {
-        const {firstName, lastName} = this.authnService.splitName(
-          _.get(user, configService.get('LDAP_NAMEFIELD') || 'name')
-        );
-        const email: string = _.get(
-          user,
-          configService.get('LDAP_MAILFIELD') || 'mail'
-        );
-        req.user = this.authnService.validateOrCreateUser(
-          Array.isArray(email) ? email[0] : email,
-          firstName,
-          lastName,
-          'ldap'
-        );
-        return done(null, req.user);
+    super({
+      server: {
+        url: `${sslConfig ? 'ldaps' : 'ldap'}://${configService.get(
+          'LDAP_HOST'
+        )}:${configService.get('LDAP_PORT') || '389'}`,
+        bindDN: configService.get('LDAP_BINDDN'),
+        bindCredentials: configService.get('LDAP_PASSWORD'),
+        searchBase: configService.get('LDAP_SEARCHBASE') || 'disabled',
+        searchFilter:
+          configService.get('LDAP_SEARCHFILTER') ||
+          '(sAMAccountName={{username}})',
+        ...(sslConfig && {
+          tlsOptions: {
+            rejectUnauthorized: sslConfig.rejectUnauthorized,
+            ca: sslConfig.ca
+          }
+        })
       }
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async validate(user: unknown, done: any) {
+    const {firstName, lastName} = this.authnService.splitName(
+      _.get(user, this.configService.get('LDAP_NAMEFIELD') || 'name')
     );
+    const email: string = _.get(
+      user,
+      this.configService.get('LDAP_MAILFIELD') || 'mail'
+    );
+    const validatedUser = this.authnService.validateOrCreateUser(
+      Array.isArray(email) ? email[0] : email,
+      firstName,
+      lastName,
+      'ldap'
+    );
+    return done(null, validatedUser);
   }
 }

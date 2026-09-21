@@ -9,21 +9,23 @@ import {readFileAsync} from '@/utilities/async_util';
 import {
   AnchoreGrypeMapper,
   ASFFResults as ASFFResultsMapper,
-  BurpSuiteMapper,
+  BurpSuiteResults,
   ChecklistResults,
+  CheckovMapper,
   ConveyorResults as ConveyorResultsMapper,
   CycloneDXSBOMResults,
   DBProtectMapper,
   DependencyTrackMapper,
   fingerprint,
-  FortifyMapper,
+  FortifyResults,
   GosecMapper,
+  HadolintMapper,
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
   MsftSecureScoreResults,
   NessusResults,
-  NetsparkerMapper,
+  NetsparkerResults,
   NeuVectorMapper,
   NiktoMapper,
   PrismaMapper,
@@ -33,8 +35,8 @@ import {
   TrufflehogResults,
   TwistlockResults,
   VeracodeMapper,
-  XCCDFResultsMapper,
-  ZapMapper
+  XCCDFResultsResults,
+  ZapResults
 } from '@mitre/hdf-converters';
 import axios from 'axios';
 import {
@@ -240,7 +242,7 @@ export class InspecIntake extends VuexModule {
           new ConveyorResultsMapper(convertOptions.data).toHdf()
         );
       case INPUT_TYPES.ZAP:
-        return new ZapMapper(convertOptions.data).toHdf();
+        return new ZapResults(convertOptions.data).toHdf();
       case INPUT_TYPES.NIKTO:
         return new NiktoMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.SARIF:
@@ -252,9 +254,9 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.NESSUS:
         return new NessusResults(convertOptions.data).toHdf();
       case INPUT_TYPES.XCCDF:
-        return new XCCDFResultsMapper(convertOptions.data).toHdf();
+        return new XCCDFResultsResults(convertOptions.data).toHdf();
       case INPUT_TYPES.BURP:
-        return new BurpSuiteMapper(convertOptions.data).toHdf();
+        return new BurpSuiteResults(convertOptions.data).toHdf();
       case INPUT_TYPES.IONCHANNEL:
         return new IonChannelMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.SCOUTSUITE:
@@ -262,17 +264,19 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.DB_PROTECT:
         return new DBProtectMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.NETSPARKER:
-        return new NetsparkerMapper(convertOptions.data).toHdf();
+        return new NetsparkerResults(convertOptions.data).toHdf();
       case INPUT_TYPES.PRISMA:
         return new PrismaMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.VERACODE:
         return new VeracodeMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.FORTIFY:
-        return new FortifyMapper(convertOptions.data).toHdf();
+        return new FortifyResults(convertOptions.data).toHdf();
       case INPUT_TYPES.CHECKLIST:
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GosecMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.HADOLINT:
+        return new HadolintMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.CYCLONEDX_SBOM:
         return new CycloneDXSBOMResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
@@ -283,6 +287,8 @@ export class InspecIntake extends VuexModule {
         return new NeuVectorMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.DEPENDENCY_TRACK:
         return new DependencyTrackMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.CHECKOV:
+        return new CheckovMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`

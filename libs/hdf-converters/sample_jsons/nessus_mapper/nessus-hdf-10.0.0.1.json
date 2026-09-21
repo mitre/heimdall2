@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.42",
+    "release": "2.13.0",
     "target_id": "10.0.0.1"
   },
-  "version": "2.6.42",
+  "version": "2.13.0",
   "statistics": {},
   "profiles": [
     {
@@ -19,7 +19,9 @@
       "controls": [
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "104410",
             "risk_factor": "None",
             "plugin_type": "summary",
@@ -52,7 +54,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "21745",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -214,7 +218,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "33850",
             "risk_factor": "Critical",
             "plugin_type": "combined",
@@ -383,7 +389,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "156899",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -460,7 +468,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "136318",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -648,7 +658,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "10386",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -676,7 +688,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "50845",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -817,7 +831,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "35716",
             "risk_factor": "None",
             "plugin_type": "combined",
@@ -971,7 +987,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "153588",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -999,7 +1017,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "153953",
             "risk_factor": "Low",
             "plugin_type": "remote",
@@ -1067,7 +1087,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "149334",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1310,7 +1332,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "72779",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1368,7 +1392,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "11002",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1411,7 +1437,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "10663",
             "risk_factor": "Low",
             "plugin_type": "remote",
@@ -1444,7 +1472,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "11219",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1494,7 +1524,7 @@
           ]
         }
       ],
-      "sha256": "9ef3545247cb1eb02de6c5237c5a9f82be29debe80a9f10ad0d827ad17cfd5f9"
+      "sha256": "9024203a0caa1ebf97cbf0ac58b887e64a110d91a8dc99f570b8e8e22e804254"
     }
   ],
   "passthrough": {

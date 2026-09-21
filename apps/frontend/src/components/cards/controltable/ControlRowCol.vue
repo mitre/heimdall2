@@ -95,6 +95,8 @@ button.unclickable-button {
 
 .pre-formatted {
   white-space: pre-wrap;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .inline-text {

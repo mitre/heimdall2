@@ -3,6 +3,13 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 
+/** Compares two strings alphabetically for user-facing sorted lists,
+ * ignoring case and diacritics (e.g. 'Banana' sorts between 'apple' and
+ * 'zeta', not before both). */
+export function caseInsensitiveCompare(a: string, b: string): number {
+  return a.localeCompare(b, undefined, {sensitivity: 'base'});
+}
+
 /** Compares arrays a and b, returning a number indicating their lexicographic ordering
  * with the same output semantics.
  * That is,

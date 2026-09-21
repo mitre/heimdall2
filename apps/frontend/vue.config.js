@@ -59,6 +59,9 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
+      new webpack.NormalModuleReplacementPlugin(/^node:/v, (resource) => {
+        resource.request = resource.request.replace(/^node:/v, '');
+      }),
       new webpack.DefinePlugin({
         'process.env.PACKAGE_VERSION': `"${version}"`,
         'process.env.DESCRIPTION': `"${description}"`,
@@ -69,17 +72,7 @@ module.exports = {
         'process.env.ISSUES': `"${issues}"`
       }),
       new NodePolyfillPlugin({
-        includeAliases: [
-          'crypto',
-          'path',
-          'http',
-          'https',
-          'os',
-          'zlib',
-          'process',
-          'Buffer',
-          'stream'
-        ]
+        additionalAliases: ['process']
       })
     ]
   },

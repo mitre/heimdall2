@@ -1,16 +1,24 @@
 import JSZip from 'jszip';
 import {saveAs} from 'file-saver';
 
-type File = {
+type ExportFile = {
   filename: string;
   data: ArrayBuffer | Uint8Array | Blob | string;
 };
 export async function saveSingleOrMultipleFiles(
-  files: File[],
+  files: ExportFile[],
   filetype: string
 ) {
   if (files.length === 1) {
-    const blob = new Blob([files[0].data]);
+    const d = files[0].data;
+    const part: BlobPart =
+      d instanceof Uint8Array
+        ? (d.buffer.slice(
+            d.byteOffset,
+            d.byteOffset + d.byteLength
+          ) as ArrayBuffer)
+        : (d as BlobPart);
+    const blob = new Blob([part]);
     saveAs(blob, cleanUpFilename(`${files[0]?.filename}`));
   } else {
     const zip = new JSZip();

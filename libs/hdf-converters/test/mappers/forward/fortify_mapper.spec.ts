@@ -1,11 +1,11 @@
 import fs from 'fs';
 import {describe, expect, it} from 'vitest';
-import {FortifyMapper} from '../../../src/fortify-mapper';
+import {FortifyResults} from '../../../src/fortify-mapper';
 import {omitVersions} from '../../utils';
 
 describe('fortify_mapper', () => {
-  it('Successfully converts Fortify reports', () => {
-    const mapper = new FortifyMapper(
+  it('Successfully converts Fortify reports', async () => {
+    const mapper = new FortifyResults(
       fs.readFileSync(
         'sample_jsons/fortify_mapper/sample_input_report/fortify_webgoat_results.fvdl',
         {encoding: 'utf-8'}
@@ -14,10 +14,10 @@ describe('fortify_mapper', () => {
 
     // fs.writeFileSync(
     //   'sample_jsons/fortify_mapper/fortify-hdf.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
+    //   JSON.stringify(await mapper.toHdf(), null, 2)
     // );
 
-    expect(JSON.stringify(omitVersions(mapper.toHdf()))).toEqual(
+    expect(JSON.stringify(omitVersions(await mapper.toHdf()))).toEqual(
       JSON.stringify(
         omitVersions(
           JSON.parse(
@@ -32,8 +32,8 @@ describe('fortify_mapper', () => {
 });
 
 describe('fortify_mapper_withraw', () => {
-  it('Successfully converts withRaw flagged Fortify reports', () => {
-    const mapper = new FortifyMapper(
+  it('Successfully converts withRaw flagged Fortify reports', async () => {
+    const mapper = new FortifyResults(
       fs.readFileSync(
         'sample_jsons/fortify_mapper/sample_input_report/fortify_webgoat_results.fvdl',
         {encoding: 'utf-8'}
@@ -43,10 +43,10 @@ describe('fortify_mapper_withraw', () => {
 
     // fs.writeFileSync(
     //   'sample_jsons/fortify_mapper/fortify-hdf-withraw.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
+    //   JSON.stringify(await mapper.toHdf(), null, 2)
     // );
 
-    expect(JSON.stringify(omitVersions(mapper.toHdf()))).toEqual(
+    expect(JSON.stringify(omitVersions(await mapper.toHdf()))).toEqual(
       JSON.stringify(
         omitVersions(
           JSON.parse(

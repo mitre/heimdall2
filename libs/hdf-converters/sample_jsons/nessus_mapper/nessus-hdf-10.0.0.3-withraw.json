@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.42",
+    "release": "2.13.0",
     "target_id": "10.0.0.3"
   },
-  "version": "2.6.42",
+  "version": "2.13.0",
   "statistics": {},
   "profiles": [
     {
@@ -119,7 +119,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "141118",
             "risk_factor": "None",
             "plugin_type": "summary",
@@ -147,7 +149,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "152743",
             "risk_factor": "None",
             "plugin_type": "summary",
@@ -235,7 +239,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "156000",
             "risk_factor": "None",
             "plugin_type": "local",
@@ -267,7 +273,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "156888",
             "risk_factor": "Medium",
             "plugin_type": "local",
@@ -304,7 +312,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "154345",
             "risk_factor": "High",
             "plugin_type": "local",
@@ -341,7 +351,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "71463",
             "risk_factor": "None",
             "plugin_type": "local",
@@ -378,7 +390,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "64815",
             "risk_factor": "None",
             "plugin_type": "local",
@@ -410,7 +424,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "147817",
             "risk_factor": "None",
             "plugin_type": "local",
@@ -502,7 +518,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "46180",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -613,7 +631,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "151883",
             "risk_factor": "None",
             "plugin_type": "local",
@@ -645,7 +665,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "93561",
             "risk_factor": "None",
             "plugin_type": "local",
@@ -707,7 +729,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "35716",
             "risk_factor": "None",
             "plugin_type": "combined",
@@ -939,7 +963,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "83303",
             "risk_factor": "None",
             "plugin_type": "local",
@@ -1007,7 +1033,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "72481",
             "risk_factor": "None",
             "plugin_type": "local",
@@ -1134,7 +1162,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "138330",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1171,7 +1201,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "136318",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1334,7 +1366,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "10147",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1371,7 +1405,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "42822",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1433,7 +1469,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "66717",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1532,7 +1570,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "42255",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1721,7 +1761,9 @@
         },
         {
           "tags": {
-            "nist": [],
+            "nist": [
+              "SI-2"
+            ],
             "rid": "11219",
             "risk_factor": "None",
             "plugin_type": "remote",
@@ -1765,7 +1807,7 @@
           ]
         }
       ],
-      "sha256": "f6aad67dc68f151e19896519beda4d39a6f01b7bb956b3aa89a5bf5c33a7d716"
+      "sha256": "329f0ef9ba4f3e84e7eaa98c19c6c3d9dca2b9ccefcb4dc5c58ba7a234f8f55d"
     }
   ],
   "passthrough": {

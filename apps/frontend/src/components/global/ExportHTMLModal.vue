@@ -57,7 +57,6 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {s2ab} from '@/utilities/export_util';
 import {saveAs} from 'file-saver';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -156,12 +155,10 @@ export default class ExportHTMLModal extends Vue {
       }
     }
     // Generate and export HTML file
-    const body = await new FromHDFToHTMLMapper(files, this.exportType).toHTML(
-      '/static/export/'
-    );
+    const body = await new FromHDFToHTMLMapper(files, this.exportType).toHTML();
 
     saveAs(
-      new Blob([s2ab(body)], {type: 'application/octet-stream'}),
+      new Blob([body], {type: 'text/html;charset=utf-8'}),
       `${this.exportType}_Report_${new Date().toString()}.html`.replace(
         /[ :]/gv,
         '_'

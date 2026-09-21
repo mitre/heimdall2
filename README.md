@@ -316,6 +316,10 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
 1. Install system dependencies with your system's package manager. NodeJS is required and can be installed via your system's package manager, or an alternative method if desired. Documented below is the installation via your system's package manager.
 
+   Oracle Linux:
+
+   - For Oracle Linux production installs, follow the [Oracle Linux Production Install guide](https://github.com/mitre/heimdall2/wiki/Oracle-Linux-Production-Install)
+
    Ubuntu:
 
    - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) provided by NodeSource for details on supported Node.js versions and additional installation information
@@ -456,21 +460,21 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 > [!NOTE]
 > The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations.
 
-6. Create and seed the database:
+6. Build the project:
 
    - ```bash
-     # Windows
-     yarn backend sequelize-cli-windows db:create
-     yarn backend sequelize-cli-windows db:migrate
-     yarn backend sequelize-cli-windows db:seed:all
-
-     # All other OSs
-     yarn backend sequelize-cli db:create
-     yarn backend sequelize-cli db:migrate
-     yarn backend sequelize-cli db:seed:all
+     yarn build
      ```
 
-7. Start Heimdall:
+7. Create and seed the database:
+
+   - ```bash
+     yarn backend sequelize db:create
+     yarn backend sequelize db:migrate
+     yarn backend sequelize db:seed:all
+     ```
+
+8. Start Heimdall:
 
    - ```bash
      yarn start:dev

@@ -30,12 +30,13 @@ export interface IServerState {
   classificationBannerText: string;
   classificationBannerTextColor: string;
   enabledOAuth: string[];
+  externalUrl: string;
   registrationEnabled: boolean;
   oidcName: string;
   ldap: boolean;
   localLoginEnabled: boolean;
   userInfo: IUser;
-  tenableHostUrl: string;
+  tenableHostUrl: string[];
   forceTenableFrontend: boolean;
   splunkHostUrl: string;
 }
@@ -64,9 +65,10 @@ class Server extends VuexModule implements IServerState {
   localLoginEnabled = true;
   loading = true;
   enabledOAuth: string[] = [];
+  externalUrl: string = '';
   allUsers: ISlimUser[] = [];
   oidcName = '';
-  tenableHostUrl: string = '';
+  tenableHostUrl: string[] = [];
   forceTenableFrontend = false; // If true, the frontend will use Tenable.SC Lite features
   splunkHostUrl: string = '';
   /** Our currently granted JWT token */
@@ -108,6 +110,7 @@ class Server extends VuexModule implements IServerState {
     this.classificationBannerColor = settings.classificationBannerColor;
     this.classificationBannerTextColor = settings.classificationBannerTextColor;
     this.enabledOAuth = settings.enabledOAuth;
+    this.externalUrl = settings.externalUrl;
     this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;
     this.ldap = settings.ldap;

@@ -5,11 +5,12 @@ export interface IStartupSettings {
   readonly classificationBannerText: string;
   readonly classificationBannerTextColor: string;
   readonly enabledOAuth: string[];
+  readonly externalUrl: string;
   readonly oidcName: string;
   readonly ldap: boolean;
   readonly registrationEnabled: boolean;
   readonly localLoginEnabled: boolean;
-  readonly tenableHostUrl: string;
+  readonly tenableHostUrl: string[];
   readonly forceTenableFrontend: boolean;
   readonly splunkHostUrl: string;
 }

@@ -67,7 +67,7 @@ jobs:
           driver: cloud
           endpoint: "mitre/mitre-builder"
       - name: Checkout the Heimdall Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       # Note: We build single-platform images only (server-amd64 or server-arm64) because
@@ -77,7 +77,7 @@ jobs:
       # are more practical as they can be loaded with 'docker load -i heimdall.tar'.
       - name: Build and save
         id: docker_build
-        uses: docker/bake-action@v5
+        uses: docker/bake-action@v7
         env:
           TAG_SUFFIXES: ${{ env.DOCKER_TAG }}
         with:

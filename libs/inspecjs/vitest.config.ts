@@ -4,6 +4,8 @@ export default defineConfig({
   test: {
     hookTimeout: 10000,
     testTimeout: 10000,
-    root: '.'
+    sequence: {
+      concurrent: true
+    }
   }
 });

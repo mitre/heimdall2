@@ -1,22 +1,26 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
+    "lib": ["esnext"],
+    "target": "esnext",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "target": "ES2021",
-    "esModuleInterop": true,
+
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+
     "noImplicitAny": true,
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "inlineSources": true,
+
+    "incremental": true,
+
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false
+    "esModuleInterop": true,
+
+    "skipLibCheck": true
   },
-  "include": [
-    "types/**/*.d.ts"
-  ],
-  "exclude": [
-    "**/node_modules"
-  ]
+  "exclude": ["**/node_modules"]
 }

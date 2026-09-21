@@ -1,7 +1,9 @@
 export {ASFFResults} from './src/asff-mapper/asff-mapper';
 export * as AwsConfigMappingData from './src/mappings/AwsConfigMappingData';
 export * as CciNistMappingData from './src/mappings/CciNistMappingData';
+export * as CheckovToCciAndNistMappingData from './src/mappings/CheckovToCciAndNistMappingData';
 export * as CweNistMappingData from './src/mappings/CweNistMappingData';
+export * as HadolintNistMappingData from './src/mappings/HadolintNistMappingData';
 export * as NessusPluginNistMappingData from './src/mappings/NessusPluginNistMappingData';
 export * as NiktoNistMappingData from './src/mappings/NiktoNistMappingData';
 export * as NistCciMappingData from './src/mappings/NistCciMappingData';
@@ -10,6 +12,7 @@ export * as ScoutsuiteNistMappingData from './src/mappings/ScoutsuiteNistMapping
 export * from './src/anchore-grype-mapper';
 export * from './src/aws-config-mapper';
 export * from './src/burpsuite-mapper';
+export * from './src/checkov-mapper';
 export * from './src/ckl-mapper/checklist-jsonix-converter';
 export * from './src/ckl-mapper/checklist-mapper';
 export * from './src/ckl-mapper/checklist-metadata-utils';
@@ -25,6 +28,7 @@ export * from './src/dbprotect-mapper';
 export * from './src/dependency-track-mapper';
 export * from './src/fortify-mapper';
 export * from './src/gosec-mapper';
+export * from './src/hadolint-mapper';
 export * from './src/ionchannel-mapper';
 export * from './src/jfrog-xray-mapper';
 export * from './src/msft-secure-score-mapper';

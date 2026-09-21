@@ -16,5 +16,4 @@ jobs:
       - uses: release-drafter/release-drafter@v6
         with:
           disable-autolabeler: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}

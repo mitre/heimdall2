@@ -11,7 +11,7 @@ export function generateHostname(config: SplunkConfig): string {
 
 // Parse through valid Splunk HTTP errors and report failed request cause
 // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing#HTTP_Status_Codes
-export function handleSplunkErrorResponse(error: AxiosResponse): string {
+export function handleSplunkErrorResponse(error: AxiosResponse | unknown): string {
   switch (_.get(error, ['response', 'status'])) {
     case 400:
       return 'Malformed request received';
@@ -39,57 +39,57 @@ export async function checkSplunkCredentials(
   config: SplunkConfig
 ): Promise<string> {
   const hostname = generateHostname(config);
-  const username = (config.username ??= '');
-  const password = (config.password ??= '');
-  let authRequest: AxiosResponse;
+  const username = config.username ?? '';
+  const password = config.password ?? '';
 
   // Time to wait (in ms) for login query response until returning bad query status
   // Arbitrary, change as necessary
   const loginTimeout = 5000;
 
-  // Fail query if request takes too long to respond
-  const loginTimer = setTimeout(() => {
-    throw new Error(
-      'Login timed out - Please check your CORS configuration or validate that you have inputted the correct domain'
-    );
-  }, loginTimeout);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), loginTimeout);
 
-  // Try authenticating to Splunk with given credentials
   try {
-    authRequest = await axios.post(
+    // Try authenticating to Splunk with given credentials
+    const authRequest: AxiosResponse = await axios.post(
       `${hostname}/services/auth/login`,
-      new URLSearchParams({
-        username: username,
-        password: password
-      }),
-      {params: {output_mode: 'json'}}
+      new URLSearchParams({username, password}),
+      {
+        params: {output_mode: 'json'},
+        signal: controller.signal
+      }
     );
-  } catch (error) {
-    // Kill timer since request has failed
-    clearTimeout(loginTimer);
 
+    if (_.has(authRequest, ['data', 'sessionKey'])) {
+      return authRequest.data.sessionKey;
+    }
+
+    throw new Error('Failed to login - Malformed authentication response received');
+  } catch (error: any) {
+    // Error handling for timeout
+    if (
+      error?.name === 'CanceledError' ||
+      error?.code === 'ERR_CANCELED' ||
+      controller.signal.aborted
+    ) {
+      // Fail query if request takes too long to respond
+      throw new Error(
+        'Login timed out - Please check your CORS configuration or validate that you have inputted the correct domain'
+      );
+    }
+
+    // Error handling for normal HTTP and axios errors
     console.log(`Splunk axios error: ${error}`);
-
     // Parse error response and report why request failed
     const errorCode = handleSplunkErrorResponse(error);
     if (errorCode === 'Unexpected error') {
       throw new Error(
         `Failed to login - Please check your CORS configuration and validate that your input has the correct domain: ${error}`
       );
-    } else {
-      throw new Error(`Failed to login - ${errorCode}`);
     }
-  }
-
-  // Kill timer since request has passed
-  clearTimeout(loginTimer);
-
-  // If successful, return session key found in response body
-  if (_.has(authRequest, ['data', 'sessionKey'])) {
-    return authRequest.data.sessionKey;
-  } else {
-    throw new Error(
-      'Failed to login - Malformed authentication response received'
-    );
+    throw new Error(`Failed to login - ${errorCode}`);
+  } finally {
+    // Kill timer since request has failed
+    clearTimeout(timeoutId);
   }
 }

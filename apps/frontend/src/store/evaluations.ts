@@ -1,5 +1,6 @@
 import {SpinnerModule} from '@/store/spinner';
 import Store from '@/store/store';
+import {caseInsensitiveCompare} from '@/utilities/helper_util';
 import {
   ICreateEvaluationTag,
   IEvalPaginationParams,
@@ -63,9 +64,10 @@ export class Evaluation extends VuexModule {
   }
 
   get allEvaluationTags(): string[] {
-    return this.allEvaluations.flatMap((evaluation) => {
+    const tagValues = this.allEvaluations.flatMap((evaluation) => {
       return evaluation.evaluationTags.map((tag) => tag.value);
     });
+    return [...new Set(tagValues)].toSorted(caseInsensitiveCompare);
   }
 
   @Action

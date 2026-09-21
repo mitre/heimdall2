@@ -1,27 +1,18 @@
 {
   "extends": "../../tsconfig.json",
+
   "compilerOptions": {
-    "resolveJsonModule": true,
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "useDefineForClassFields": false,
+
+    "module": "esnext",
     "moduleResolution": "node",
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
-    "types": ["vuetify", "node"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
-    "lib": ["ES2021", "dom", "dom.iterable", "scripthost"]
+
+    "ignoreDeprecations": "6.0"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": ["node_modules"]
+
+  "include": ["**/*.ts", "**/*.vue"]
 }

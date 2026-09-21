@@ -1,25 +1,10 @@
 {
   "extends": "../../tsconfig.json",
+
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "strict": true,
-    "lib": [
-      "es2020",
-      "DOM"
-    ],
-    "paths": {}
+    "outDir": "./dist"
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ]
+
+  "include": ["**/*.ts"],
+  "exclude": ["dist", "node_modules"]
 }

@@ -16,7 +16,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {AnyFilesInterceptor} from '@nestjs/platform-express';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
@@ -209,9 +209,7 @@ export class EvaluationsController {
         const createdDto: EvaluationDto = new EvaluationDto(
           evaluation,
           true,
-          `${this.configService.get('EXTERNAL_URL') || ''}/results/${
-            evaluation.id
-          }`
+          `${this.configService.getExternalUrl()}/results/${evaluation.id}`
         );
         return _.omit(createdDto, 'data');
       }

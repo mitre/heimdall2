@@ -5,7 +5,7 @@ import {
   NestInterceptor
 } from '@nestjs/common';
 import {Request} from 'express';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {Observable} from 'rxjs';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';
@@ -83,7 +83,7 @@ export class LoggingInterceptor implements NestInterceptor {
     if (!_.isObject(obj)) {
       return undefined;
     }
-    return this.redactObject(_.cloneDeep(obj));
+    return this.redactObject(structuredClone(obj));
   }
 
   redactObject(obj: Record<string, unknown>): Record<string, unknown> {

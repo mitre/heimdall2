@@ -6,7 +6,7 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml,
+  buildParseHtmlFunc,
   parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
@@ -24,6 +24,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 const NAME = 'BurpSuite Pro Scan';
 const CWE_NIST_MAPPING = new CweNistMapping();
+
+let parseHtml: (input: unknown) => string;
 
 // Transformation Functions
 function formatCodeDesc(issue: unknown): string {
@@ -69,6 +71,16 @@ function nistTag(input: string): string[] {
     cwe,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
   );
+}
+
+export class BurpSuiteResults {
+  constructor(readonly burpsXml: string, readonly withRaw = false) {}
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    parseHtml = await buildParseHtmlFunc();
+
+    return (new BurpSuiteMapper(this.burpsXml, this.withRaw)).toHdf();
+  }
 }
 
 export class BurpSuiteMapper extends BaseConverter {

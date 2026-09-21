@@ -274,7 +274,7 @@ export class FromHDFControlToSplunkControlMapper extends FromAnyBaseConverter {
 }
 
 export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
-  mappings?: MappedTransform<SplunkData, ILookupPathFH>;
+  declare mappings?: MappedTransform<SplunkData, ILookupPathFH>;
   contextualizedEvaluation?: ContextualizedEvaluation;
   axiosInstance: AxiosInstance;
 

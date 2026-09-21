@@ -54,6 +54,7 @@ export class ConfigService {
       classificationBannerTextColor:
         this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
       enabledOAuth: this.enabledOauthStrategies(),
+      externalUrl: this.getExternalUrl(),
       oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
       registrationEnabled: this.isRegistrationAllowed(),
@@ -65,11 +66,15 @@ export class ConfigService {
     });
   }
 
+  getExternalUrl(): string {
+    return this.appConfig.getExternalUrl();
+  }
+
   getSplunkHostUrl(): string {
     return this.appConfig.getSplunkHostUrl();
   }
 
-  getTenableHostUrl(): string {
+  getTenableHostUrl(): string[] {
     return this.appConfig.getTenableHostUrl();
   }
 

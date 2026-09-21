@@ -4,10 +4,12 @@ export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
   CHECKLIST = 'checklist',
+  CHECKOV = 'checkov',
   CONVEYOR = 'conveyor',
   DEPENDENCY_TRACK = 'dependencyTrack',
   FORTIFY = 'fortify',
   GOSEC = 'gosec',
+  HADOLINT = 'hadolint',
   GRYPE = 'grype',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
@@ -33,11 +35,15 @@ export enum INPUT_TYPES {
 // Fields to look for inside of JSON structures to determine type before passing to hdf-converters
 const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ASFF]: ['Findings', 'AwsAccountId', 'ProductArn'],
+  [INPUT_TYPES.CHECKOV]: ["check_type", "results", "results.passed_checks",
+    "results.failed_checks", "results.skipped_checks", "results.parsing_errors",
+     "summary", "url"],
   [INPUT_TYPES.CONVEYOR]: ['api_error_message', 'api_response'],
   [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion'],
   [INPUT_TYPES.DEPENDENCY_TRACK]: ['version', 'meta', 'project', 'findings'],
   [INPUT_TYPES.FORTIFY]: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
   [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
+  [INPUT_TYPES.HADOLINT]: ['code', 'column', 'file', 'level', 'line', 'message'],
   [INPUT_TYPES.GRYPE]: [
     'matches.vulnerability',
     'matches.relatedVulnerabilities',

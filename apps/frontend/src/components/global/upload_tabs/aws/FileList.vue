@@ -3,11 +3,13 @@
     <div class="d-flex flex-column">
       <div class="d-flex justify-space-between">
         <v-text-field
+          data-cy="s3BucketName"
           v-model="formBucketName"
           label="Bucket name"
           @keyup.enter="load"
         />
         <v-btn
+          data-cy="s3LoadBucket"
           title="Query the S3 bucket"
           :disabled="formBucketName.length < 1"
           class="fill-height pa-0"
@@ -17,7 +19,7 @@
         </v-btn>
       </div>
 
-      <v-list :two-line="true">
+      <v-list data-cy="s3FileList" :two-line="true">
         <v-list-item v-if="files.length === 0"
           >No items found! Try different terms?</v-list-item
         >
@@ -32,7 +34,12 @@
           </v-list-item-content>
           <!-- Action: Click to add -->
           <v-list-item-action>
-            <v-btn title="Load into Heimdall" icon @click="loadFile(index)">
+            <v-btn
+              data-cy="s3LoadFile"
+              title="Load into Heimdall"
+              icon
+              @click="loadFile(index)"
+            >
               <v-icon>mdi-plus-circle</v-icon>
             </v-btn>
           </v-list-item-action>
