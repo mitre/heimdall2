@@ -14,6 +14,8 @@ for Heimdall Server.
 - `heimdall-postgres-setup.sh`: PostgreSQL init/start/user bootstrap helper.
 - `heimdall-setup.sh`: One-command post-install interactive setup helper.
 - `setup-rpm-build-env.sh`: One-command RPM build environment setup/staging helper.
+- `Dockerfile.ol8`: Reproducible Oracle Linux 8 builder, test host, and artifact export targets.
+- `tests/payload.sh`: Binary RPM payload regression checks for an OL8 container.
 
 ## Build Notes
 
@@ -53,6 +55,45 @@ To also run `rpmbuild` in the same command:
 ```bash
 ./packaging/rpm/setup-rpm-build-env.sh --build
 ```
+
+To build the current workspace, including uncommitted packaging edits, use the
+OL8 Docker build from the repository root. Git release staging deliberately
+uses tracked, committed files instead.
+
+```bash
+docker build --platform linux/arm64 --progress plain \
+  --secret id=corp_ca,src=/etc/ssl/certs/mitre-ca-certificates.crt \
+  -f packaging/rpm/Dockerfile.ol8 --target builder \
+  -t heimdall-rpm-builder:ol8-arm64 .
+docker build --platform linux/arm64 \
+  --secret id=corp_ca,src=/etc/ssl/certs/mitre-ca-certificates.crt \
+  -f packaging/rpm/Dockerfile.ol8 --target artifacts \
+  --output type=local,dest=packaging/rpm/dist/arm64 .
+docker run --rm --entrypoint bash heimdall-rpm-builder:ol8-arm64 -lc \
+  'bash packaging/rpm/tests/staging.sh && bash packaging/rpm/tests/payload.sh /rpmbuild/RPMS/aarch64/heimdall-server-2.14.0-1.el8.aarch64.rpm'
+
+docker build --platform linux/amd64 --progress plain \
+  --secret id=corp_ca,src=/etc/ssl/certs/mitre-ca-certificates.crt \
+  --build-arg QEMU_GUEST_BASE=0x800000000000 \
+  -f packaging/rpm/Dockerfile.ol8 --target builder \
+  -t heimdall-rpm-builder:ol8-amd64 .
+docker build --platform linux/amd64 \
+  --secret id=corp_ca,src=/etc/ssl/certs/mitre-ca-certificates.crt \
+  --build-arg QEMU_GUEST_BASE=0x800000000000 \
+  -f packaging/rpm/Dockerfile.ol8 --target artifacts \
+  --output type=local,dest=packaging/rpm/dist/amd64 .
+docker run --rm --platform linux/amd64 --entrypoint bash \
+  heimdall-rpm-builder:ol8-amd64 -lc \
+  'bash packaging/rpm/tests/staging.sh && bash packaging/rpm/tests/payload.sh /rpmbuild/RPMS/x86_64/heimdall-server-2.14.0-1.el8.x86_64.rpm'
+```
+
+The `corp_ca` BuildKit secret is optional. It adds a local trusted CA without
+copying it into the build context or final layers; omit `--secret` on networks
+that use public trust. Exported binary and source packages are under `RPMS/`
+and `SRPMS/` in the selected destination.
+
+`QEMU_GUEST_BASE` is an optional build-only argument for emulating x86_64 on
+ARM hosts. Omit it for native ARM64 and native x86_64 builds.
 
 If you see `Arch dependent binaries in noarch package`, restage from the
 current workspace spec and rebuild:

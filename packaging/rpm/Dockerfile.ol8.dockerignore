@@ -1,0 +1,15 @@
+.git
+.beads
+.superpowers
+**/node_modules
+**/dist
+**/coverage
+**/.cache
+**/*.tsbuildinfo
+**/.env
+**/.env-*
+**/*.log
+**/*.rpm
+certs
+nginx/certs
+.DS_Store

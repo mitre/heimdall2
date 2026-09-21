@@ -52,10 +52,14 @@ access for Heimdall evaluations.
 %build
 export NODE_ENV=production
 export YARN_CACHE_FOLDER="$(mktemp -d)"
+trap 'rm -rf "${YARN_CACHE_FOLDER}"' EXIT
 yarn install --frozen-lockfile --production --network-timeout 600000
 yarn frontend build
 yarn backend build
-rm -rf "${YARN_CACHE_FOLDER}"
+test -s apps/backend/dist/src/main.js
+test -s apps/backend/dist/db/database.js
+test -s dist/frontend/index.html
+test -x apps/backend/node_modules/.bin/sequelize
 
 %install
 rm -rf %{buildroot}

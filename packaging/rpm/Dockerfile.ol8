@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1
+FROM oraclelinux:8 AS trusted-base
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN --mount=type=secret,id=corp_ca \
+    if [[ -s /run/secrets/corp_ca ]]; then \
+      install -m 0644 /run/secrets/corp_ca /etc/pki/ca-trust/source/anchors/rpm-test-ca.crt; \
+      update-ca-trust; \
+    fi
+ENV NODE_EXTRA_CA_CERTS=/etc/pki/tls/certs/ca-bundle.crt
+
+FROM trusted-base AS test-host
+RUN curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \
+    dnf install -y "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-$(rpm -E '%{_arch}')/pgdg-redhat-repo-latest.noarch.rpm" && \
+    dnf -qy module disable postgresql && \
+    dnf install -y procps-ng && dnf clean all
+CMD ["/sbin/init"]
+
+FROM trusted-base AS builder
+ARG HEIMDALL_RELEASE=1
+WORKDIR /workspace
+COPY . .
+RUN bash packaging/rpm/setup-rpm-build-env.sh --skip-update --topdir /rpmbuild
+# Optional workaround for x86_64 V8 address-space collisions under QEMU.
+ARG QEMU_GUEST_BASE
+RUN rpmbuild --define '_topdir /rpmbuild' \
+      --define "heimdall_release ${HEIMDALL_RELEASE}" \
+      -ba /rpmbuild/SPECS/heimdall-server.spec
+
+FROM scratch AS artifacts
+COPY --from=builder /rpmbuild/RPMS /RPMS
+COPY --from=builder /rpmbuild/SRPMS /SRPMS
