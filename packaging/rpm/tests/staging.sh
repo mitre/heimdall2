@@ -29,6 +29,14 @@ fi
 grep -q 'version mismatch' "$scratch/mismatch.log"
 
 printf '{"version":"2.14.0"}\n' > "$fixture/apps/backend/package.json"
+ln -s "$fixture" "$scratch/source-link"
+if bash "$scratch/source-link/packaging/rpm/setup-rpm-build-env.sh" \
+  --skip-deps --topdir "$fixture/dist/output" > "$scratch/symlink-topdir.log" 2>&1; then
+  echo 'In-tree topdir through a symlinked source was accepted.' >&2
+  exit 1
+fi
+grep -q 'outside the source tree' "$scratch/symlink-topdir.log"
+
 git -C "$fixture" init -q
 git -C "$fixture" add .
 git -C "$fixture" -c user.name=RPM-Test -c user.email=rpm-test@example.invalid \
@@ -41,6 +49,16 @@ if stage > "$scratch/dirty.log" 2>&1; then
 fi
 grep -q 'uncommitted' "$scratch/dirty.log"
 git -C "$fixture" checkout -- packaging/rpm/heimdall-server.sh
+printf 'untracked build input\n' > "$fixture/apps/backend/untracked.txt"
+if stage > "$scratch/untracked.log" 2>&1; then
+  echo 'Untracked build input was accepted.' >&2
+  exit 1
+fi
+grep -q 'uncommitted' "$scratch/untracked.log"
+rm "$fixture/apps/backend/untracked.txt"
+mkdir -p "$fixture/docs"
+printf 'unrelated documentation\n' > "$fixture/docs/note.txt"
+stage
 git -C "$fixture" worktree add --detach "$scratch/linked" HEAD
 bash "$scratch/linked/packaging/rpm/setup-rpm-build-env.sh" \
   --skip-deps --topdir "$scratch/linked-output"

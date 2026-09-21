@@ -219,8 +219,12 @@ stage_rpm_inputs() {
     fi
   done
 
-  case "$(realpath -m "$TOPDIR")/" in
-    "${REPO_ROOT}/"*)
+  local canonical_repo_root=""
+  local canonical_topdir=""
+  canonical_repo_root="$(realpath -m "$REPO_ROOT")"
+  canonical_topdir="$(realpath -m "$TOPDIR")"
+  case "${canonical_topdir}/" in
+    "${canonical_repo_root}/"*)
       echo 'RPM topdir must be outside the source tree.' >&2
       exit 1
       ;;
