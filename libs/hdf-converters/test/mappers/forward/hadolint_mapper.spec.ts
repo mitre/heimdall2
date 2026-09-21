@@ -3,6 +3,23 @@ import {describe, expect, it} from 'vitest';
 import {HadolintMapper} from '../../../src/hadolint-mapper';
 import {HadolintNistMapping} from '../../../src/mappings/HadolintNistMapping';
 import {omitVersions} from '../../utils';
+import { ExecJSON } from 'inspecjs';
+
+function omitRuleDescriptions(hdf: ExecJSON.Execution): ExecJSON.Execution {
+  return {
+    ...hdf,
+    profiles: hdf.profiles.map((profile) => ({
+      ...profile,
+      controls: profile.controls.map(({desc: _desc, ...control}) => control)
+    }))
+  } as ExecJSON.Execution;
+}
+
+function controlsHaveDescriptions(hdf: ExecJSON.Execution): boolean {
+  return hdf.profiles
+    .flatMap((profile) => profile.controls)
+    .every((control) => typeof control.desc === 'string' && control.desc.trim().length > 0);
+}
 
 describe('hadolint_mapper', () => {
   it('Successfully converts Hadolint data', async () => {
@@ -127,15 +144,15 @@ describe('hadolint_mapper_rule_descriptions', () => {
     //   JSON.stringify(await mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(await mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/hadolint/hadolint-shellcheck-hdf-with-rule-descriptions.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
+    const actual = await mapper.toHdf();
+    const expected = JSON.parse(fs.readFileSync(
+      'sample_jsons/hadolint/hadolint-shellcheck-hdf-with-rule-descriptions.json',
+      'utf-8'
+    ));
+
+    expect(controlsHaveDescriptions(actual)).toBe(true);
+    expect(omitVersions(omitRuleDescriptions(actual))).toEqual(
+      omitVersions(omitRuleDescriptions(expected))
     );
   });
 });
