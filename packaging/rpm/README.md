@@ -51,7 +51,12 @@ Binary RPMs are exported under `RPMS/<architecture>/` and source RPMs under `SRP
 
 The final repeated builds on the tested Docker Desktop host needed serialization and explicit resource bounds. Both successful rebuilds used 4 GiB RAM plus 1 GiB existing swap and a 2 GiB Node heap. The external Vue CLI build configuration selected one worker while retaining production minification and type checking; x86_64 emulation also used `QEMU_TB_SIZE=32`. These are resource controls for this constrained host, not RPM payload settings. Preserve at least 10 GiB of writable-layer disk space per full build and verify the actual cgroup limits before starting.
 
-The following reproduces the successful bounded x86_64 release-2 assembly from a completed builder image. Use the ARM64 platform and omit both QEMU variables for native ARM64:
+The accepted bounded x86_64 build produced release 1 from immutable release-2
+builder image
+`sha256:1872fd7dd67682f8ad304699febc2c6f341202a7c845b7c792489adccf679ba0`.
+The following adapts that tested procedure to produce release 2 from the same
+frozen builder input. Use the ARM64 platform and omit both QEMU variables for
+native ARM64:
 
 ```bash
 work_config=$(mktemp -d)
@@ -65,16 +70,17 @@ docker create --name heimdall-rpm-build-amd64-release2 \
   -e NODE_OPTIONS=--max-old-space-size=2048 \
   -e VUE_CLI_SERVICE_CONFIG_PATH=/tmp/heimdall-vue-build/config.cjs \
   -e QEMU_GUEST_BASE=0x800000000000 -e QEMU_TB_SIZE=32 \
-  heimdall-rpm-builder:ol8-amd64 bash -lc \
+  sha256:1872fd7dd67682f8ad304699febc2c6f341202a7c845b7c792489adccf679ba0 bash -lc \
   'test "$(cat /sys/fs/cgroup/memory.max)" = 4294967296 &&
    test "$(cat /sys/fs/cgroup/memory.swap.max)" = 1073741824 &&
    rpmbuild --define "_topdir /rpmbuild" --define "heimdall_release 2" \
      -ba /rpmbuild/SPECS/heimdall-server.spec'
 docker cp "$work_config/." heimdall-rpm-build-amd64-release2:/tmp/heimdall-vue-build
 docker start -a heimdall-rpm-build-amd64-release2
-mkdir -p packaging/rpm/dist/amd64-release2
-docker cp heimdall-rpm-build-amd64-release2:/rpmbuild/RPMS/x86_64/heimdall-server-2.14.0-2.el8.x86_64.rpm packaging/rpm/dist/amd64-release2/
-docker cp heimdall-rpm-build-amd64-release2:/rpmbuild/SRPMS/heimdall-server-2.14.0-2.el8.src.rpm packaging/rpm/dist/amd64-release2/
+mkdir -p packaging/rpm/dist/amd64-release2/RPMS/x86_64 \
+  packaging/rpm/dist/amd64-release2/SRPMS
+docker cp heimdall-rpm-build-amd64-release2:/rpmbuild/RPMS/x86_64/heimdall-server-2.14.0-2.el8.x86_64.rpm packaging/rpm/dist/amd64-release2/RPMS/x86_64/
+docker cp heimdall-rpm-build-amd64-release2:/rpmbuild/SRPMS/heimdall-server-2.14.0-2.el8.src.rpm packaging/rpm/dist/amd64-release2/SRPMS/
 ```
 
 
