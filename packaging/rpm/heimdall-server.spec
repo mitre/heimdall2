@@ -1,6 +1,7 @@
 Name:           heimdall-server
-Version:        2.12.6
-Release:        2%{?dist}
+Version:        2.14.0
+%{!?heimdall_release:%global heimdall_release 1}
+Release:        %{heimdall_release}%{?dist}
 Summary:        Heimdall server for security result persistence and review
 
 License:        Apache-2.0
@@ -27,14 +28,14 @@ ExclusiveArch:  aarch64 x86_64
 
 BuildRequires:  gcc-c++
 BuildRequires:  make
-BuildRequires:  nodejs >= 22
+BuildRequires:  nodejs(engine) >= 22.18.0
 BuildRequires:  python3
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  yarn
 
 %{?systemd_requires}
 
-Requires:       nodejs >= 22
+Requires:       nodejs(engine) >= 22.18.0
 Requires:       openssl
 Requires(pre):  shadow-utils
 Requires(post): postgresql18
@@ -165,6 +166,10 @@ fi
 %{_datadir}/%{name}/libs
 
 %changelog
+* Mon Sep 21 2026 Heimdall Maintainers <opensource@mitre.org> - 2.14.0-1
+- Keep RPM metadata aligned with application manifests and source archives.
+- Reject inconsistent or uncommitted build inputs during release staging.
+
 * Thu Feb 26 2026 Heimdall Maintainers <opensource@mitre.org> - 2.12.6-2
 - Run post-install setup in auto mode (interactive when TTY is available).
 - Avoid RPM post scriptlet hard-fail for recoverable setup/startup issues.

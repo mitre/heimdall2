@@ -190,6 +190,8 @@ install_build_deps() {
 stage_rpm_inputs() {
   require_cmd awk
   require_cmd cp
+  require_cmd python3
+  require_cmd realpath
   require_cmd tar
 
   if [[ ! -f "${SPEC_FILE}" ]]; then
@@ -203,6 +205,36 @@ stage_rpm_inputs() {
   if [[ -z "${version}" ]]; then
     echo "Unable to parse Version from ${SPEC_FILE}" >&2
     exit 1
+  fi
+
+  local manifest=""
+  local app_version=""
+  for manifest in apps/backend/package.json apps/frontend/package.json; do
+    app_version=$(python3 -c \
+      'import json,sys; print(json.load(open(sys.argv[1]))["version"])' \
+      "${REPO_ROOT}/${manifest}")
+    if [[ "$app_version" != "$version" ]]; then
+      echo "RPM/application version mismatch: ${version} != ${app_version} (${manifest})" >&2
+      exit 1
+    fi
+  done
+
+  case "$(realpath -m "$TOPDIR")/" in
+    "${REPO_ROOT}/"*)
+      echo 'RPM topdir must be outside the source tree.' >&2
+      exit 1
+      ;;
+  esac
+
+  local source_archive="${TOPDIR}/SOURCES/heimdall2-${version}.tar.gz"
+  if command -v git >/dev/null 2>&1 &&
+     git -C "$REPO_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    local source_paths=(package.json yarn.lock lerna.json tsconfig.json postcss.config.js apps libs packaging/rpm)
+    if ! git -C "$REPO_ROOT" diff --quiet HEAD -- "${source_paths[@]}" ||
+       [[ -n "$(git -C "$REPO_ROOT" ls-files --others --exclude-standard -- "${source_paths[@]}")" ]]; then
+      echo 'Source has uncommitted build inputs; commit them or use the OL8 Docker build for current edits.' >&2
+      exit 1
+    fi
   fi
 
   mkdir -p "${TOPDIR}"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
@@ -222,25 +254,15 @@ stage_rpm_inputs() {
     cp -f "${SCRIPT_DIR}/${source_file}" "${TOPDIR}/SOURCES/"
   done
 
-  local source_archive="${TOPDIR}/SOURCES/heimdall2-${version}.tar.gz"
-  if command -v git >/dev/null 2>&1 && [[ -d "${REPO_ROOT}/.git" ]]; then
-    git -C "${REPO_ROOT}" archive \
-      --format=tar.gz \
-      --prefix="heimdall2-${version}/" \
-      HEAD \
-      > "${source_archive}"
+  if command -v git >/dev/null 2>&1 &&
+     git -C "$REPO_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    git -C "$REPO_ROOT" archive --format=tar.gz \
+      --prefix="heimdall2-${version}/" HEAD > "$source_archive"
   else
-    tar -C "${REPO_ROOT}" \
-      --exclude=".git" \
-      --exclude="node_modules" \
-      --exclude="apps/backend/node_modules" \
-      --exclude="apps/frontend/node_modules" \
-      --exclude="dist" \
-      --exclude="apps/backend/dist" \
-      --exclude="apps/frontend/dist" \
-      --transform "s|^|heimdall2-${version}/|" \
-      -czf "${source_archive}" \
-      .
+    tar -C "$REPO_ROOT" --exclude='.git' --exclude='.beads' \
+      --exclude='node_modules' --exclude='dist' --exclude='.env' \
+      --exclude='.env-prod' --exclude='.env-dev' --exclude='*.rpm' \
+      --transform "s|^|heimdall2-${version}/|" -czf "$source_archive" .
   fi
 
   echo "Staged rpmbuild inputs in ${TOPDIR}"
