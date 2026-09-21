@@ -9,7 +9,8 @@ RUN --mount=type=secret,id=corp_ca \
 ENV NODE_EXTRA_CA_CERTS=/etc/pki/tls/certs/ca-bundle.crt
 
 FROM trusted-base AS test-host
-RUN curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \
+RUN mkdir -p /usr/share/man/man1 && \
+    curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \
     dnf install -y "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-$(rpm -E '%{_arch}')/pgdg-redhat-repo-latest.noarch.rpm" && \
     dnf -qy module disable postgresql && \
     dnf install -y procps-ng && dnf clean all
