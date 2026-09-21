@@ -4,7 +4,6 @@ set -euo pipefail
 APP_ROOT="/usr/share/heimdall-server"
 APP_DIR="${APP_ROOT}/apps/backend"
 ENV_FILE="/etc/heimdall-server/backend.env"
-TSX_BIN="${APP_DIR}/node_modules/.bin/tsx"
 SEQUELIZE_BIN="${APP_DIR}/node_modules/.bin/sequelize"
 
 usage() {
@@ -48,13 +47,17 @@ if [[ ! -d "${APP_DIR}" ]]; then
   exit 1
 fi
 
-if [[ ! -x "${TSX_BIN}" || ! -x "${SEQUELIZE_BIN}" ]]; then
+if [[ ! -x /usr/bin/node || ! -x "$SEQUELIZE_BIN" ]]; then
   echo "Missing required executables in ${APP_DIR}/node_modules/.bin" >&2
+  exit 1
+fi
+if [[ ! -s "${APP_DIR}/dist/db/database.js" ]]; then
+  echo "Missing compiled database configuration: ${APP_DIR}/dist/db/database.js" >&2
   exit 1
 fi
 
 run_sequelize() {
-  "${TSX_BIN}" "${SEQUELIZE_BIN}" "$@"
+  /usr/bin/node "$SEQUELIZE_BIN" "$@"
 }
 
 run_db_create() {

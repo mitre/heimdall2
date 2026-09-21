@@ -37,6 +37,9 @@ BuildRequires:  yarn
 
 Requires:       nodejs(engine) >= 22.18.0
 Requires:       openssl
+Requires:       postgresql18
+Requires:       postgresql18-server
+Requires:       util-linux
 Requires(pre):  shadow-utils
 Requires(post): postgresql18
 Requires(post): postgresql18-server
