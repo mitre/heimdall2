@@ -65,7 +65,7 @@
                                 <br />
                                 {{ file.filename }}
                                 <br />
-                                <span>{{ fileTimes[i] }}</span>
+                                <span>ST: {{ fileTimes[i] }}</span>
                                 <TagRow
                                   v-if="file.database_id"
                                   style="max-width: 400px"
@@ -163,7 +163,7 @@
               v-for="i in num_shown_files"
               :key="i - 1 + startIndex"
               :name="files[i - 1 + startIndex].filename"
-              :start-time="fileTimes[i - 1]"
+              :start-time="fileTimes[i - 1] ? `ST: ${fileTimes[i - 1]}` : undefined"
               :index="i + startIndex"
               :show-index="files.length > num_shown_files"
             />
@@ -285,7 +285,7 @@ export default class Compare extends Vue {
   ];
 
   compareItems = [
-    'Scan Start Time',
+    'Scan Start Time (ST)',
     'Run Time',
     'Total Number of Controls',
     'Passed Control Count',
@@ -443,7 +443,7 @@ export default class Compare extends Vue {
 
     switch (this.sortControlSetsBy) {
       case '':
-      case 'Scan Start Time':
+      case 'Scan Start Time (ST)':
         fileList.sort(compare_times);
         break;
       case 'Run Time':
