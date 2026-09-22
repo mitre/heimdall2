@@ -68,6 +68,10 @@
                                 <span>ST: {{ fileTimes[i] }}</span>
                                 <br />
                                 <span>RT: {{ fileRunTimes[i] }}</span>
+                                <template v-if="fileLastModifiedTimes[i]">
+                                  <br />
+                                  <span>LM: {{ fileLastModifiedTimes[i] }}</span>
+                                </template>
                                 <TagRow
                                   v-if="file.database_id"
                                   style="max-width: 400px"
@@ -167,6 +171,7 @@
               :name="files[i - 1 + startIndex].filename"
               :start-time="fileTimes[i - 1]"
               :run-time="fileRunTimes[i - 1]"
+              :last-modified="fileLastModifiedTimes[i - 1]"
               :index="i + startIndex"
               :show-index="files.length > num_shown_files"
             />
@@ -294,7 +299,7 @@ export default class Compare extends Vue {
     'Total Number of Controls',
     'Passed Control Count',
     'Compliance (Passed Control %)',
-    'File Last Modified'
+    'File Last Modified (LM)'
   ];
 
   sortControlSetsBy = '';
@@ -459,7 +464,7 @@ export default class Compare extends Vue {
       case 'Compliance (Passed Control %)':
         fileList.sort(compareCompliance);
         break;
-      case 'File Last Modified':
+      case 'File Last Modified (LM)':
         fileList.sort((a, b) => compareLastModified(a, b, this.reverseSort));
         break;
       default:
@@ -470,7 +475,7 @@ export default class Compare extends Vue {
     }
     // Reverse direction is handled inside the comparator for 'File Last Modified'
     // so missing values always stay last.
-    if (this.reverseSort && this.sortControlSetsBy !== 'File Last Modified') {
+    if (this.reverseSort && this.sortControlSetsBy !== 'File Last Modified (LM)') {
       fileList.reverse();
     }
     return fileList.map((evaluation) => evaluation.from_file);
@@ -552,6 +557,12 @@ export default class Compare extends Vue {
   get fileRunTimes(): string[] {
     return this.files.map(
       (file) => `${getResultsSetExecutionTime(file.evaluation)}s`
+    );
+  }
+
+  get fileLastModifiedTimes(): (string | undefined)[] {
+    return this.files.map((file) =>
+      file.lastModified ? new Date(file.lastModified).toLocaleString() : undefined
     );
   }
 
