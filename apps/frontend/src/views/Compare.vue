@@ -66,6 +66,8 @@
                                 {{ file.filename }}
                                 <br />
                                 <span>ST: {{ fileTimes[i] }}</span>
+                                <br />
+                                <span>RT: {{ fileRunTimes[i] }}</span>
                                 <TagRow
                                   v-if="file.database_id"
                                   style="max-width: 400px"
@@ -163,7 +165,8 @@
               v-for="i in num_shown_files"
               :key="i - 1 + startIndex"
               :name="files[i - 1 + startIndex].filename"
-              :start-time="fileTimes[i - 1] ? `ST: ${fileTimes[i - 1]}` : undefined"
+              :start-time="fileTimes[i - 1]"
+              :run-time="fileRunTimes[i - 1]"
               :index="i + startIndex"
               :show-index="files.length > num_shown_files"
             />
@@ -230,7 +233,8 @@ import {
   compare_times,
   ComparisonContext,
   ControlSeries,
-  get_eval_start_time
+  get_eval_start_time,
+  getResultsSetExecutionTime
 } from '@/utilities/delta_util';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/common/interfaces';
@@ -542,6 +546,12 @@ export default class Compare extends Vue {
   get fileTimes(): (string | undefined)[] {
     return this.files.map(
       (file) => get_eval_start_time(file.evaluation) || undefined
+    );
+  }
+
+  get fileRunTimes(): string[] {
+    return this.files.map(
+      (file) => `${getResultsSetExecutionTime(file.evaluation)}s`
     );
   }
 
