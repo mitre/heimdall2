@@ -110,3 +110,19 @@ export function replaceXCCDFVersion(input: string): string {
 export function omitHTMLStyleTag(input: string): string {
   return input.replace(/(<style>)[\s\S]*?(<\/style>)/, "$1$2");
 }
+
+export function omitRuleDescs(hdf: ExecJSON.Execution): ExecJSON.Execution {
+  return {
+    ...hdf,
+    profiles: hdf.profiles.map((profile) => ({
+      ...profile,
+      controls: profile.controls.map((control) => _.omit(control, 'desc'))
+    }))
+  };
+}
+
+export function controlsHaveDescs(hdf: ExecJSON.Execution): boolean {
+  return hdf.profiles
+    .flatMap((profile) => profile.controls)
+    .every((control) => _.isString(control.desc) && _.trim(control.desc).length > 0);
+}
