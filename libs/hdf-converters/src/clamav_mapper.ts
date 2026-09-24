@@ -1,5 +1,5 @@
 import { ExecJSON } from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import type {
   ILookupPath,
@@ -62,10 +62,7 @@ export class ClamAvMapper extends BaseConverter<ClamAvReport> {
             },
             desc: { transformer: descriptionForFinding },
             id: { path: 'file' },
-            impact: {
-              transformer: (finding: ClamAvFinding): number =>
-                isLimitFinding(finding) ? 0 : (finding.outcome === 'OK' ? 0.1 : 0.7),
-            },
+            impact: { transformer: impactForFinding },
             key: 'id',
             path: 'findings',
             refs: [],
@@ -123,47 +120,14 @@ export function parseClamAvReport(report: string): ClamAvReport {
     }
 
     if (isInSummary) {
-      const separatorIndex = line.indexOf(':');
-      if (separatorIndex !== -1) {
-        const key = line.slice(0, separatorIndex).trim();
-        const value = line.slice(separatorIndex + 1).trim();
-        if (key) {
-          // key is a ClamAV summary label.
-          _.set(summary, key, value);
-        }
-      }
+      parseSummaryLine(line, summary);
       continue;
     }
 
-    // Prevent parsing of lines not in the format of "file: outcome" or "file: outcome signature" ()
-    // Ex: LibClamAV Error: No supported database files found
-    let isParsedFinding = false;
-    const separatorIndex = line.lastIndexOf(': ');
-    if (separatorIndex > 0) {
-      const file = line.slice(0, Math.max(0, separatorIndex));
-      const outcome = line.slice(separatorIndex + 2);
-      if (outcome === 'OK') {
-        findings.push({ file, outcome });
-        isParsedFinding = true;
-      } else if (outcome.endsWith(' FOUND')) {
-        const signature = outcome.slice(0, -' FOUND'.length);
-        if (signature) {
-          findings.push({ file, outcome: 'FOUND', signature });
-          isParsedFinding = true;
-        }
-      } else if (outcome.startsWith(CLAMAV_LIMIT_SIGNATURE_PREFIX)) {
-        findings.push({ file, outcome: 'FOUND', signature: outcome });
-        isParsedFinding = true;
-      } else if (
-        outcome.endsWith(' ERROR')
-        && !isCompanionLimitError(findings, file, outcome)
-      ) {
-        findings.push({ file, outcome: 'ERROR', signature: outcome });
-        isParsedFinding = true;
-      }
-    }
-
-    if (!isParsedFinding && isGlobalScanError(line)) {
+    const finding = parseFindingLine(line, findings);
+    if (finding) {
+      findings.push(finding);
+    } else if (isGlobalScanError(line)) {
       findings.push({
         file: CLAMAV_SCANNER_ERROR_FILE,
         outcome: 'ERROR',
@@ -188,6 +152,14 @@ function descriptionForFinding(finding: ClamAvFinding): string {
   return `ClamAV detected the ${finding.signature} signature.`;
 }
 
+function impactForFinding(finding: ClamAvFinding): number {
+  if (isLimitFinding(finding)) {
+    return 0;
+  }
+  const impact = finding.outcome === 'OK' ? 0.1 : 0.7;
+  return impact;
+}
+
 // Disregard "Virus(es) detected ERROR" diagnostics for files that also have a companion limit alert.
 function isCompanionLimitError(
   findings: ClamAvFinding[],
@@ -195,7 +167,7 @@ function isCompanionLimitError(
   outcome: string,
 ): boolean {
   return outcome === 'Virus(es) detected ERROR'
-    && _.some(findings, finding => finding.file === file && isLimitFinding(finding));
+    && findings.some(finding => finding.file === file && isLimitFinding(finding));
 }
 
 // Check for clamscan database or engine failures that are not associated with a specific input file.
@@ -215,6 +187,47 @@ function messageForFinding(finding: ClamAvFinding): string {
     return `ClamAV scan error: ${finding.signature}`;
   }
   return finding.signature ?? '';
+}
+
+// Ignore lines outside the "file: outcome" or "file: outcome signature" formats.
+function parseFindingLine(
+  line: string,
+  findings: ClamAvFinding[],
+): ClamAvFinding | undefined {
+  const separatorIndex = line.lastIndexOf(': ');
+  if (separatorIndex <= 0) {
+    return undefined;
+  }
+
+  const file = line.slice(0, separatorIndex);
+  const outcome = line.slice(separatorIndex + 2);
+  if (outcome === 'OK') {
+    return { file, outcome };
+  }
+  if (outcome.endsWith(' FOUND')) {
+    const signature = outcome.slice(0, -' FOUND'.length);
+    return signature ? { file, outcome: 'FOUND', signature } : undefined;
+  }
+  if (outcome.startsWith(CLAMAV_LIMIT_SIGNATURE_PREFIX)) {
+    return { file, outcome: 'FOUND', signature: outcome };
+  }
+  if (outcome.endsWith(' ERROR') && !isCompanionLimitError(findings, file, outcome)) {
+    return { file, outcome: 'ERROR', signature: outcome };
+  }
+  return undefined;
+}
+
+function parseSummaryLine(line: string, summary: Record<string, string>): void {
+  const separatorIndex = line.indexOf(':');
+  if (separatorIndex === -1) {
+    return;
+  }
+
+  const key = line.slice(0, separatorIndex).trim();
+  if (key) {
+    // key is a ClamAV summary label.
+    _.set(summary, key, line.slice(separatorIndex + 1).trim());
+  }
 }
 
 function statusForFinding(finding: ClamAvFinding): ExecJSON.ControlResultStatus {
