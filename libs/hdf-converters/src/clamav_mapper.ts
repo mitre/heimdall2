@@ -30,20 +30,29 @@ export class ClamAvMapper extends BaseConverter<ClamAvReport> {
     ExecJSON.Execution & { passthrough: unknown },
     ILookupPath
   > = {
-    passthrough: {
-      transformer: (data: ClamAvReport): Record<string, unknown> => ({
-        clamav_summary: data.summary,
-        ...(this.hasRaw && { raw: this.report }),
-      }),
-    },
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: null,
     },
+    version: HeimdallToolsVersion,
+    statistics: {},
     profiles: [
       {
+        name: 'ClamAV Scan',
+        title: 'ClamAV Scan Results',
+        version: { path: 'summary.Engine version' },
+        maintainer: null,
+        summary: null,
+        license: null,
+        copyright: null,
+        copyright_email: null,
+        supports: [],
         attributes: [],
+        depends: [],
+        groups: [],
+        sha256: '',
+        status: 'loaded',
         controls: [
           {
             arrayTransformer: updateControls,
@@ -80,23 +89,14 @@ export class ClamAvMapper extends BaseConverter<ClamAvReport> {
             title: { transformer: titleForFinding },
           },
         ],
-        copyright: null,
-        copyright_email: null,
-        depends: [],
-        groups: [],
-        license: null,
-        maintainer: null,
-        name: 'ClamAV Scan',
-        sha256: '',
-        status: 'loaded',
-        summary: null,
-        supports: [],
-        title: 'ClamAV Scan Results',
-        version: { path: 'summary.Engine version' },
       },
     ],
-    statistics: {},
-    version: HeimdallToolsVersion,
+    passthrough: {
+      transformer: (data: ClamAvReport): Record<string, unknown> => ({
+        clamav_summary: data.summary,
+        ...(this.hasRaw && { raw: this.report }),
+      }),
+    },
   };
 
   report: string;
