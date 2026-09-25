@@ -2,12 +2,17 @@
   "extends": "../tsconfig.json",
 
   "compilerOptions": {
-    "types": ["cypress", "cypress-wait-until"],
+    "types": ["cypress", "node"],
+    "lib": ["esnext", "dom"],
+    "allowJs": true,
+    "noEmit": true,
 
     "ignoreDeprecations": "6.0"
   },
 
   "include": [
-    "**/*.ts"
+    "../cypress.config.ts",
+    "**/*.ts",
+    "services/*.mjs"
   ]
 }

@@ -22,6 +22,11 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
       ldap:
         image: rroemhild/test-openldap
         ports:
@@ -32,8 +37,6 @@ jobs:
           SPLUNK_START_ARGS: --accept-license
           SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
           SPLUNK_PASSWORD: Valid_password!
-        volumes:
-          - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
         ports:
           - 8089:8089
       versitygw:
@@ -65,6 +68,11 @@ jobs:
       - name: Install project dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Check E2E types and lint
+        run: |
+          yarn cypress-test typecheck
+          yarn cypress-test lint:ci
+
       - name: Copy .env-ci to .env
         run: cp apps/backend/test/.env-ci apps/backend/.env
 
@@ -79,12 +87,22 @@ jobs:
           yarn backend sequelize db:migrate
           yarn backend sequelize db:seed:all
 
+      - name: Configure Splunk CORS and wait for readiness
+        run: bash test/services/configure_splunk.sh '${{ job.services.splunk.id }}' https
+
+      - name: Wait for LDAP
+        run: timeout 120 bash -c 'until echo > /dev/tcp/127.0.0.1/10389; do sleep 1; done'
+
       - name: Upload sample data for custom S3 endpoints
         env:
           AWS_ACCESS_KEY_ID: myaccesskey
           AWS_SECRET_ACCESS_KEY: mysecretkey
           AWS_DEFAULT_REGION: us-east-1
         run: |
+          for attempt in {1..30}; do
+            if aws --endpoint-url http://127.0.0.1:7070 s3 ls; then break; fi
+            sleep 2
+          done
           aws --endpoint-url http://127.0.0.1:7070 s3 mb s3://mybucket
           aws --endpoint-url http://127.0.0.1:7070 s3 cp libs/hdf-converters/sample_jsons/nessus_mapper/nessus-hdf-10.0.0.1.json s3://mybucket/nessus-hdf.json
           aws --endpoint-url http://127.0.0.1:7070 s3 ls s3://mybucket
@@ -93,7 +111,7 @@ jobs:
         uses: cypress-io/github-action@v7
         with:
           start: yarn start, yarn run cypress-test mock-json, yarn run cypress-test mock-openid
-          wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
+          wait-on: 'http://127.0.0.1:3000/server, http://127.0.0.1:3001/health, http://localhost:8082/.well-known/openid-configuration'
 
       - name: Upload test screenshots and videos
         if: failure()

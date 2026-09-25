@@ -17,6 +17,7 @@ import {
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
+import {DatabaseService} from '../database/database.service';
 import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
 import {ImplicitAllowJwtAuthGuard} from '../guards/implicit-allow-jwt-auth.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
@@ -39,7 +40,8 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
+    private readonly databaseService: DatabaseService
   ) {}
 
   @Get('/user-find-all')
@@ -151,6 +153,6 @@ export class UsersController {
   @UseGuards(TestGuard)
   @Post('/clear')
   async clear(): Promise<void> {
-    User.truncate({cascade: true});
+    await this.databaseService.cleanAll();
   }
 }

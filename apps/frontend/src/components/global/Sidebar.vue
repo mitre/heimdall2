@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+    data-cy="sidebar"
     :value="value"
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
