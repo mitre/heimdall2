@@ -1491,13 +1491,13 @@
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
 "@e18e/eslint-plugin@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.npmjs.org/@e18e/eslint-plugin/-/eslint-plugin-0.8.0.tgz#002dabfe0bf12b27717befa3346fe799283f6c28"
-  integrity sha512-js/TeM+XJyoJ2Zk4if5uTEchv3MEbqugc9gLgq8YdB6Dy+LvwGACpQiAwcul0r4LUl0TvhuzAKUeIUPtGp2cew==
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@e18e/eslint-plugin/-/eslint-plugin-0.8.1.tgz#6748e7807e5001e37a5aba86631f886f97a56254"
+  integrity sha512-OV3T7l0r52/IglskdAuoO+BJyzsCs7AcIHpwpBMlIMO0+3RHskM2h5MuHdLuesIhSRhwCURGMKtp/XwnfXrfxg==
   dependencies:
     empathic "^2.0.1"
-    module-replacements "^3.1.0"
-    semver "^7.8.5"
+    module-replacements "^3.3.0"
+    verkit "^0.4.0"
 
 "@e965/xlsx@^0.20.0":
   version "0.20.3"
@@ -13593,10 +13593,10 @@ module-alias@^2.2.2:
   resolved "https://registry.npmjs.org/module-alias/-/module-alias-2.3.4.tgz#7c2b0442ba1114744e97288963db637859db4094"
   integrity sha512-bOclZt8hkpuGgSSoG07PKmvzTizROilUTvLNyrMqvlC9snhs7y7GzjNWAVbISIOlhCP1T14rH1PDAV9iNyBq/w==
 
-module-replacements@^3.1.0:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/module-replacements/-/module-replacements-3.3.0.tgz#1e6acb54fad9ec9512ffdf56b1aeeb3c2cb9657b"
-  integrity sha512-AVZL23uePazQOZlb/QMGwxsUa1oWA62Cfe6ApPzgasUoF4cdCWAiRPVq4KkaQzXbIDAlpLhLG61Jx8Lju4wjTg==
+module-replacements@^3.3.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/module-replacements/-/module-replacements-3.4.0.tgz#5fbbc3af9b9c9a216af70802007f21ddef4c4ad4"
+  integrity sha512-NKBNFM/uAUvSs+LOYfSly4EwrC9bgMoFuEnqNNjcDb910W+5IgS2KMB2ERLm5YZZm7R187jx1dMA9pOPvqbSbw==
 
 moment-timezone@^0.5.43:
   version "0.5.48"
@@ -18733,6 +18733,11 @@ vasync@^2.2.0:
   integrity sha512-Hq72JaTpcTFdWiNA4Y22Amej2GH3BFmBaKPPlDZ4/oC8HNn2ISHLkFrJU4Ds8R3jcUi7oo5Y9jcMHKjES+N9wQ==
   dependencies:
     verror "1.10.0"
+
+verkit@^0.4.0:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/verkit/-/verkit-0.4.1.tgz#f8c00a63516c5ed3fe7dbbc82355c50579c42c61"
+  integrity sha512-mMVzj0TXExtVdlDEq+Mzp0eyOuyznNpFobNM3uAqe3HVm/Ps2c+u17BligMkZjZCA6EiXpoon8iRTer3iu40SQ==
 
 verror@1.10.0:
   version "1.10.0"
