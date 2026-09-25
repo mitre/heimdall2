@@ -55,7 +55,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "connect-pg-simple": "^10.0.0",
-    "dotenv": "^17.0.0",
+    "dotenv": "^18.0.2",
     "eslint-plugin-import": "^2.20.1",
     "express-rate-limit": "^8.0.0",
     "express-session": "^1.17.1",
