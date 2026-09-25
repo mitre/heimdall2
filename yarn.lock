@@ -228,9 +228,9 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.1131.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1131.0.tgz#b3b3a87a35faecc83a10899996db18b369bca660"
-  integrity sha512-jMw3q5sYNvWJRngkNwdS3H2WPBcdqhdrOez+7fBUB26fpH/2+TaJcDdlzdjgLTMhFTq2eOyXBSy1T/4A6CL/Lw==
+  version "3.1137.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1137.0.tgz#cfc66cab5182b63dcfec1a1d2aa5ecabb9741a13"
+  integrity sha512-ppiYnDyy2qCDT3PIV83XJwAi0BhVUZ/jOHxUgC5tlMCaFeKRL8PVVub8A0pUMkF1yvZtzNOp3ClbmTCcIa9w3g==
   dependencies:
     "@aws-sdk/checksums" "^3.1001.0"
     "@aws-sdk/core" "^3.978.0"
