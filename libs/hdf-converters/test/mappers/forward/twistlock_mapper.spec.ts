@@ -117,3 +117,30 @@ describe('twistlock_mapper_withraw', () => {
     );
   });
 });
+
+describe('twistlock_mapper_vendor_severities', () => {
+  it('Successfully converts a Twistlock docker image scan containing distro-vendor severities', () => {
+    const mapper = new TwistlockResults(
+      fs.readFileSync(
+        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-vendor-severities-sample.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/twistlock_mapper/twistlock-vendor-severities-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/twistlock_mapper/twistlock-vendor-severities-hdf.json',
+            {encoding: 'utf-8'}
+          )
+        )
+      )
+    );
+  });
+});
