@@ -178,14 +178,42 @@ describe('UsersController Unit Tests', () => {
   });
 
   describe('Create function with registration disabled', () => {
-    it('should test the create function with valid dto', async () => {
+    it.each(['true', 'local', 'local,sso', 'sso,local'])(
+      'rejects local registration for %s',
+      async (registrationDisabled) => {
+        expect.assertions(1);
+
+        configService.set('REGISTRATION_DISABLED', registrationDisabled);
+
+        await expect(
+          usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
+        ).rejects.toBeInstanceOf(ForbiddenError);
+      }
+    );
+
+    it.each(['false', 'sso'])(
+      'allows local registration for %s',
+      async (registrationDisabled) => {
+        expect.assertions(1);
+
+        configService.set('REGISTRATION_DISABLED', registrationDisabled);
+
+        const createdUser = await usersController.create(
+          CREATE_USER_DTO_TEST_OBJ_2,
+          {}
+        );
+        expect(createdUser.email).toBe(CREATE_USER_DTO_TEST_OBJ_2.email);
+      }
+    );
+
+    it('allows an administrator to bypass disabled registration', async () => {
       expect.assertions(1);
 
       configService.set('REGISTRATION_DISABLED', 'true');
 
       await expect(
-        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
-      ).rejects.toBeInstanceOf(ForbiddenError);
+        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {user: adminUser})
+      ).resolves.toBeInstanceOf(UserDto);
     });
   });
 

@@ -1,6 +1,8 @@
 import {
   ForbiddenException,
+  HttpStatus,
   Injectable,
+  NotFoundException,
   UnauthorizedException
 } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
@@ -103,9 +105,31 @@ export class AuthnService {
     creationMethod: string
   ): Promise<User> {
     let user: User;
+
+    if (!email) {
+      throw new UnauthorizedException({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'External identity did not provide an email address.',
+        error: 'external_identity_missing_email'
+      });
+    }
+
     try {
       user = await this.usersService.findByEmail(email);
-    } catch {
+    } catch (err) {
+      if (!(err instanceof NotFoundException)) {
+        throw err;
+      }
+
+      if (!this.configService.isRegistrationAllowed('sso')) {
+        throw new UnauthorizedException({
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message:
+            'No Heimdall account exists for this SSO user. Please ask your system administrator to create the account.',
+          error: 'account_not_provisioned'
+        });
+      }
+
       const randomPass = crypto.randomBytes(128).toString('hex');
       const createUser: CreateUserDto = {
         email: email,

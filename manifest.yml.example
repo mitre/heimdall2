@@ -24,6 +24,7 @@ applications:
     NODE_ENV: production
     ADMIN_PASSWORD: ChangeMe@123
     # See /apps/backend/.env-example or https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration for the full list and use of the following
+    #REGISTRATION_DISABLED: 'false' # 'false', 'true', or an exact lowercase comma-separated list such as 'local', 'sso', or 'local,sso'
     #GITHUB_CLIENTID:
     #GITHUB_CLIENTSECRET:
     #GITLAB_CLIENTID:
