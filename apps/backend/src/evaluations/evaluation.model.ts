@@ -63,6 +63,11 @@ export class Evaluation extends Model {
   @Column
   declare updatedAt: Date;
 
+  // Client-reported (browser File.lastModified); not server-verified.
+  @AllowNull(true)
+  @Column
+  declare lastModified: Date | null;
+
   @HasMany(() => EvaluationTag)
   declare evaluationTags: EvaluationTag[];
 

@@ -109,6 +109,10 @@ export class Evaluation extends VuexModule {
                 database_id: evaluation.id,
                 createdAt: evaluation.createdAt,
                 updatedAt: evaluation.updatedAt,
+                // API response is JSON, so this arrives as a string/null, not a Date.
+                lastModified: evaluation.lastModified
+                  ? new Date(evaluation.lastModified)
+                  : undefined,
                 tags: [] // Tags are not yet implemented, so for now the value is passed in empty
               })
                 .then((fileId) => loadedIds.push(fileId))

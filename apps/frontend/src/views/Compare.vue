@@ -64,8 +64,23 @@
                                 <em>{{ i + 1 }}</em>
                                 <br />
                                 {{ file.filename }}
-                                <br />
-                                <span>{{ fileTimes[i] }}</span>
+                                <template v-if="isSortedBy('Scan Start Time (ST)')">
+                                  <br />
+                                  <span>ST: {{ fileTimes[i] }}</span>
+                                </template>
+                                <template v-if="isSortedBy('Run Time')">
+                                  <br />
+                                  <span>RT: {{ fileRunTimes[i] }}</span>
+                                </template>
+                                <template
+                                  v-if="
+                                    isSortedBy('File Last Modified (LM)') &&
+                                    fileLastModifiedTimes[i]
+                                  "
+                                >
+                                  <br />
+                                  <span>LM: {{ fileLastModifiedTimes[i] }}</span>
+                                </template>
                                 <TagRow
                                   v-if="file.database_id"
                                   style="max-width: 400px"
@@ -163,7 +178,6 @@
               v-for="i in num_shown_files"
               :key="i - 1 + startIndex"
               :name="files[i - 1 + startIndex].filename"
-              :start-time="fileTimes[i - 1]"
               :index="i + startIndex"
               :show-index="files.length > num_shown_files"
             />
@@ -226,10 +240,12 @@ import {
   compareCompliance,
   compareControlCount,
   compareExecutionTimes,
+  compareLastModified,
   compare_times,
   ComparisonContext,
   ControlSeries,
-  get_eval_start_time
+  get_eval_start_time,
+  getResultsSetExecutionTime
 } from '@/utilities/delta_util';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/common/interfaces';
@@ -284,14 +300,15 @@ export default class Compare extends Vue {
   ];
 
   compareItems = [
-    'Scan Start Time',
+    'Scan Start Time (ST)',
     'Run Time',
     'Total Number of Controls',
     'Passed Control Count',
-    'Compliance (Passed Control %)'
+    'Compliance (Passed Control %)',
+    'File Last Modified (LM)'
   ];
 
-  sortControlSetsBy = '';
+  sortControlSetsBy = 'Scan Start Time (ST)';
   changedOnly = true;
   expandedView = true;
   tab = 0;
@@ -441,7 +458,7 @@ export default class Compare extends Vue {
 
     switch (this.sortControlSetsBy) {
       case '':
-      case 'Scan Start Time':
+      case 'Scan Start Time (ST)':
         fileList.sort(compare_times);
         break;
       case 'Run Time':
@@ -453,13 +470,18 @@ export default class Compare extends Vue {
       case 'Compliance (Passed Control %)':
         fileList.sort(compareCompliance);
         break;
+      case 'File Last Modified (LM)':
+        fileList.sort((a, b) => compareLastModified(a, b, this.reverseSort));
+        break;
       default:
         if (this.sortControlSetsBy.startsWith('Passthrough Field')) {
           fileList.sort(this.comparePassthrough);
         }
         break;
     }
-    if (this.reverseSort) {
+    // Reverse direction is handled inside the comparator for 'File Last Modified'
+    // so missing values always stay last.
+    if (this.reverseSort && this.sortControlSetsBy !== 'File Last Modified (LM)') {
       fileList.reverse();
     }
     return fileList.map((evaluation) => evaluation.from_file);
@@ -536,6 +558,26 @@ export default class Compare extends Vue {
     return this.files.map(
       (file) => get_eval_start_time(file.evaluation) || undefined
     );
+  }
+
+  get fileRunTimes(): string[] {
+    return this.files.map(
+      (file) => `${getResultsSetExecutionTime(file.evaluation)}s`
+    );
+  }
+
+  get fileLastModifiedTimes(): (string | undefined)[] {
+    return this.files.map((file) =>
+      file.lastModified ? new Date(file.lastModified).toLocaleString() : undefined
+    );
+  }
+
+  // Default sort ('') behaves as 'Scan Start Time (ST)', so ST also shows then.
+  isSortedBy(option: string): boolean {
+    if (option === 'Scan Start Time (ST)') {
+      return this.sortControlSetsBy === '' || this.sortControlSetsBy === option;
+    }
+    return this.sortControlSetsBy === option;
   }
 
   get total_failed(): number {
