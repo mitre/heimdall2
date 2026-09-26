@@ -2505,9 +2505,9 @@
     "@tybys/wasm-util" "^0.10.3"
 
 "@nestjs/cli@^12.0.0":
-  version "12.0.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-12.0.3.tgz#79e6651a7e207a717c5104fc530fdcf789a27e6e"
-  integrity sha512-HofsPoiWsx6gZ7/IivaZJrgsq/3CTCb4FkCQzFu/Q3J2V+4xC7GYnit/HNB66EfuY8j3gWJCzasMKmF5VugmOA==
+  version "12.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-12.0.5.tgz#778a6d90362ca197e34c5ce1e297965c0dbeb44f"
+  integrity sha512-28PJP/dYqGdAZoLbGgJORY9CxqkYBN449WKOUiYAXKwtSEAq7jJChtHCJYo1jLMwM0mwKqCjpBYIAWoHzyhSxw==
   dependencies:
     "@angular-devkit/core" "22.1.8"
     "@angular-devkit/schematics" "22.1.8"
@@ -2518,6 +2518,7 @@
     chokidar "5.0.0"
     cli-table3 "0.6.5"
     commander "15.0.0"
+    jsonc-parser "3.3.1"
     minimatch "10.2.6"
     node-emoji "2.2.0"
     ora "9.4.1"
