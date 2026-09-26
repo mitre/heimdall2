@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
+  CLAMAV = 'clamav',
   CHECKLIST = 'checklist',
   CHECKOV = 'checkov',
   CONVEYOR = 'conveyor',
@@ -96,6 +97,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ZAP]: ['@generated', '@version', 'site'],
 
   [INPUT_TYPES.BURP]: [],
+  [INPUT_TYPES.CLAMAV]: [],
   [INPUT_TYPES.CHECKLIST]: [],
   [INPUT_TYPES.DB_PROTECT]: [],
   [INPUT_TYPES.NESSUS]: [],
@@ -135,6 +137,11 @@ export function fingerprint(guessOptions: {
     // If we don't have valid json, look for known strings inside the file text
     if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
       return INPUT_TYPES.NESSUS;
+    } else if (
+      guessOptions.data.includes('----------- SCAN SUMMARY -----------') &&
+      guessOptions.data.includes('Engine version:')
+    ) {
+      return INPUT_TYPES.CLAMAV;
     } else if (
       guessOptions.data.match(/xmlns.*http.*\/xccdf/) || // Keys matching (hopefully) all xccdf formats
       guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1

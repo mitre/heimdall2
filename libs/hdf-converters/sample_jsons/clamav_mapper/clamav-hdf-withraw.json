@@ -1,0 +1,959 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.14.0",
+    "target_id": null
+  },
+  "version": "2.14.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "ClamAV Scan",
+      "title": "ClamAV Scan Results",
+      "version": "1.5.4",
+      "maintainer": null,
+      "summary": null,
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "sha256": "a21952e49fa79fdfa9d294e95d69f563c88040aeaf41603f075891c7c0c6beb8",
+      "status": "loaded",
+      "controls": [
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/CODE_OF_CONDUCT.md\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/CODE_OF_CONDUCT.md",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/CODE_OF_CONDUCT.md",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/CODE_OF_CONDUCT.md"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/LICENSE.md\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/LICENSE.md",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/LICENSE.md",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/LICENSE.md"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/manifest.yml.example\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/manifest.yml.example",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/manifest.yml.example",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/manifest.yml.example"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/setup-dev-env.ps1\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/setup-dev-env.ps1",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/setup-dev-env.ps1",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/setup-dev-env.ps1"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/setup-dev-env.sh\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/setup-dev-env.sh",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/setup-dev-env.sh",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/setup-dev-env.sh"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/.DS_Store\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/.DS_Store",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/.DS_Store",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/.DS_Store"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/.slugignore\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/.slugignore",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/.slugignore",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/.slugignore"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/app.json\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/app.json",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/app.json",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/app.json"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/CHANGELOG\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/CHANGELOG",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/CHANGELOG",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/CHANGELOG"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/Dockerfile\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/Dockerfile",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/Dockerfile",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/Dockerfile"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/heimdall2.code-workspace\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/heimdall2.code-workspace",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/heimdall2.code-workspace",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/heimdall2.code-workspace"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/Dockerfile.lite\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/Dockerfile.lite",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/Dockerfile.lite",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/Dockerfile.lite"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/setup-docker-env.ps1\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/setup-docker-env.ps1",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/setup-docker-env.ps1",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/setup-docker-env.ps1"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/canary1.txt\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/canary1.txt",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/canary1.txt",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/canary1.txt"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/docker-bake.hcl\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/docker-bake.hcl",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/docker-bake.hcl",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/docker-bake.hcl"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/README.md\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/README.md",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/README.md",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/README.md"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/Docker.dmg\",\n  \"outcome\": \"FOUND\",\n  \"signature\": \"Heuristics.Limits.Exceeded.MaxFileSize\"\n}",
+          "desc": "The file exceeded configured ClamAV scan limits and was not fully scanned.",
+          "id": "/workspace/heimdall2/Docker.dmg",
+          "impact": 0,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/Docker.dmg",
+              "message": "Heuristics.Limits.Exceeded.MaxFileSize",
+              "start_time": "",
+              "status": "skipped",
+              "skip_message": "Not Applicable: the file exceeded configured ClamAV scan limits; no malware detection was made."
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "FOUND",
+            "clamav_signature": "Heuristics.Limits.Exceeded.MaxFileSize",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV detected Heuristics.Limits.Exceeded.MaxFileSize"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/Docker Desktop Installer.exe\",\n  \"outcome\": \"FOUND\",\n  \"signature\": \"Heuristics.Limits.Exceeded.MaxFileSize\"\n}",
+          "desc": "The file exceeded configured ClamAV scan limits and was not fully scanned.",
+          "id": "/workspace/heimdall2/Docker Desktop Installer.exe",
+          "impact": 0,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/Docker Desktop Installer.exe",
+              "message": "Heuristics.Limits.Exceeded.MaxFileSize",
+              "start_time": "",
+              "status": "skipped",
+              "skip_message": "Not Applicable: the file exceeded configured ClamAV scan limits; no malware detection was made."
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "FOUND",
+            "clamav_signature": "Heuristics.Limits.Exceeded.MaxFileSize",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV detected Heuristics.Limits.Exceeded.MaxFileSize"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/yarn.lock\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/yarn.lock",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/yarn.lock",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/yarn.lock"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/.dockerignore\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/.dockerignore",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/.dockerignore",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/.dockerignore"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/.gitignore\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/.gitignore",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/.gitignore",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/.gitignore"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/package.json\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/package.json",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/package.json",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/package.json"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/VERSION\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/VERSION",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/VERSION",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/VERSION"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/bad.txt\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/bad.txt",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/bad.txt",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/bad.txt"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/.env\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/.env",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/.env",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/.env"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/.nvmrc\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/.nvmrc",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/.nvmrc",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/.nvmrc"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/cmd.sh\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/cmd.sh",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/cmd.sh",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/cmd.sh"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/scan.txt\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/scan.txt",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/scan.txt",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/scan.txt"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/tsconfig.json\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/tsconfig.json",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/tsconfig.json",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/tsconfig.json"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/docker-compose.yml\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/docker-compose.yml",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/docker-compose.yml",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/docker-compose.yml"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/test-doc-see-as-virus-by-clamav.txt\",\n  \"outcome\": \"FOUND\",\n  \"signature\": \"Eicar-Signature\"\n}",
+          "desc": "ClamAV detected the Eicar-Signature signature.",
+          "id": "/workspace/heimdall2/test-doc-see-as-virus-by-clamav.txt",
+          "impact": 0.7,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/test-doc-see-as-virus-by-clamav.txt",
+              "message": "Eicar-Signature",
+              "start_time": "",
+              "status": "failed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "FOUND",
+            "clamav_signature": "Eicar-Signature",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV detected Eicar-Signature"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/Procfile\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/Procfile",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/Procfile",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/Procfile"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/local-test.hdb\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/local-test.hdb",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/local-test.hdb",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/local-test.hdb"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/setup-docker-env.sh\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/setup-docker-env.sh",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/setup-docker-env.sh",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/setup-docker-env.sh"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/lerna.json\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/lerna.json",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/lerna.json",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/lerna.json"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/postcss.config.js\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/postcss.config.js",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/postcss.config.js",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/postcss.config.js"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/eslint.config.mjs\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/eslint.config.mjs",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/eslint.config.mjs",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/eslint.config.mjs"
+        },
+        {
+          "code": "{\n  \"file\": \"/workspace/heimdall2/cypress.config.ts\",\n  \"outcome\": \"OK\"\n}",
+          "desc": "ClamAV reported this file as clean.",
+          "id": "/workspace/heimdall2/cypress.config.ts",
+          "impact": 0.1,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "File: /workspace/heimdall2/cypress.config.ts",
+              "message": "No malware detected.",
+              "start_time": "",
+              "status": "passed"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "clamav_result": "OK",
+            "clamav_signature": "",
+            "nist": [
+              "SI-3"
+            ]
+          },
+          "title": "ClamAV scanned /workspace/heimdall2/cypress.config.ts"
+        }
+      ]
+    }
+  ],
+  "passthrough": {
+    "clamav_summary": {
+      "Known viruses": "3628071",
+      "Engine version": "1.5.4",
+      "Scanned directories": "1",
+      "Scanned files": "36",
+      "Infected files": "1",
+      "Total errors": "2",
+      "Data scanned": "2.62 MiB",
+      "Data read": "1.13 GiB (ratio 0.00:1)",
+      "Time": "4.037 sec (0 m 4 s)",
+      "Start Date": "2026:09:23 13:02:03",
+      "End Date": "2026:09:23 13:02:07"
+    },
+    "raw": "Loading:     2s, ETA:   0s [========================>]    3.63M/3.63M sigs       \nCompiling:   1s, ETA:   0s [========================>]       41/41 tasks \n\n/workspace/heimdall2/CODE_OF_CONDUCT.md: OK\n/workspace/heimdall2/LICENSE.md: OK\n/workspace/heimdall2/manifest.yml.example: OK\n/workspace/heimdall2/setup-dev-env.ps1: OK\n/workspace/heimdall2/setup-dev-env.sh: OK\n/workspace/heimdall2/.DS_Store: OK\n/workspace/heimdall2/.slugignore: OK\n/workspace/heimdall2/app.json: OK\n/workspace/heimdall2/CHANGELOG: OK\n/workspace/heimdall2/Dockerfile: OK\n/workspace/heimdall2/heimdall2.code-workspace: OK\n/workspace/heimdall2/Dockerfile.lite: OK\n/workspace/heimdall2/setup-docker-env.ps1: OK\n/workspace/heimdall2/canary1.txt: OK\n/workspace/heimdall2/docker-bake.hcl: OK\n/workspace/heimdall2/README.md: OK\n/workspace/heimdall2/Docker.dmg: Heuristics.Limits.Exceeded.MaxFileSize FOUND\n/workspace/heimdall2/Docker.dmg: Virus(es) detected ERROR\n/workspace/heimdall2/Docker Desktop Installer.exe: Heuristics.Limits.Exceeded.MaxFileSize FOUND\n/workspace/heimdall2/Docker Desktop Installer.exe: Virus(es) detected ERROR\n/workspace/heimdall2/yarn.lock: OK\n/workspace/heimdall2/.dockerignore: OK\n/workspace/heimdall2/.gitignore: OK\n/workspace/heimdall2/package.json: OK\n/workspace/heimdall2/VERSION: OK\n/workspace/heimdall2/bad.txt: OK\n/workspace/heimdall2/.env: OK\n/workspace/heimdall2/.nvmrc: OK\n/workspace/heimdall2/cmd.sh: OK\n/workspace/heimdall2/scan.txt: OK\n/workspace/heimdall2/tsconfig.json: OK\n/workspace/heimdall2/docker-compose.yml: OK\n/workspace/heimdall2/test-doc-see-as-virus-by-clamav.txt: Eicar-Signature FOUND\n/workspace/heimdall2/Procfile: OK\n/workspace/heimdall2/local-test.hdb: OK\n/workspace/heimdall2/setup-docker-env.sh: OK\n/workspace/heimdall2/lerna.json: OK\n/workspace/heimdall2/postcss.config.js: OK\n/workspace/heimdall2/eslint.config.mjs: OK\n/workspace/heimdall2/cypress.config.ts: OK\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628071\nEngine version: 1.5.4\nScanned directories: 1\nScanned files: 36\nInfected files: 1\nTotal errors: 2\nData scanned: 2.62 MiB\nData read: 1.13 GiB (ratio 0.00:1)\nTime: 4.037 sec (0 m 4 s)\nStart Date: 2026:09:23 13:02:03\nEnd Date:   2026:09:23 13:02:07\n\n"
+  }
+}
