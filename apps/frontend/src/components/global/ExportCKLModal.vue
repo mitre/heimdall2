@@ -738,8 +738,12 @@ export default class ExportCKLModal extends Vue {
         });
       }
     }
-    saveSingleOrMultipleFiles(fileData, 'ckl');
-    this.closeModal();
+    saveSingleOrMultipleFiles(fileData, 'ckl').then(() => {
+      InspecDataModule.markFilesSaved(
+        this.selected.map((file) => file.uniqueId)
+      );
+      this.closeModal();
+    });
   }
 
   validateInputMetadata(metadata: ChecklistMetadata): Result<true, string> {
