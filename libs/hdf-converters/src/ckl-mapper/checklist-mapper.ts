@@ -1,4 +1,4 @@
-import {ExecJSON, severities} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import xmlFormat from 'xml-formatter';
 import {version as HeimdallToolsVersion} from '../../package.json';
@@ -6,6 +6,7 @@ import {
   BaseConverter,
   generateHash,
   ILookupPath,
+  impactMapping,
   MappedTransform
 } from '../base-converter';
 import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
@@ -15,6 +16,7 @@ import {
   ChecklistObject,
   ChecklistVuln,
   EmptyChecklistObject,
+  IMPACT_MAPPING,
   updateChecklistWithMetadata
 } from './checklist-jsonix-converter';
 import {Checklist} from './checklistJsonix';
@@ -22,11 +24,7 @@ import {jsonixMapping} from './jsonixMapping';
 import {throwIfInvalidAssetMetadata} from './checklist-metadata-utils';
 import {parseJson} from '../utils/parseJson';
 
-enum ImpactMapping {
-  high = 0.7,
-  medium = 0.5,
-  low = 0.3
-}
+const severityToImpact = impactMapping(IMPACT_MAPPING);
 
 const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
 
@@ -110,12 +108,6 @@ function computeSeverity(vuln: ChecklistVuln): string {
   let computed = severity;
   if (severityOverride) computed = severityOverride;
 
-  if (!severities.find((severity) => severity === computed))
-    throw new Error(
-      `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
-        vuln.vulnNum
-      }`
-    );
   return computed;
 }
 
@@ -128,7 +120,7 @@ function computeSeverity(vuln: ChecklistVuln): string {
 function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
   const severity = computeSeverity(vuln);
-  let impact: number = ImpactMapping[severity as keyof typeof ImpactMapping];
+  let impact: number = severityToImpact(severity);
   const hdfExistingData = parseJson(vuln.thirdPartyTools);
   if (hdfExistingData.ok) {
     const maybeImpact = _.get(
@@ -138,12 +130,6 @@ function transformImpact(vuln: ChecklistVuln): number {
     );
     if (typeof maybeImpact === 'number') impact = maybeImpact;
   }
-  if (!impact)
-    throw new Error(
-      `Severity "${severity}" does not match low, medium, or high, please check severity for ${
-        vuln.vulnNum
-      }`
-    );
   return impact;
 }
 
