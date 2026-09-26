@@ -16,12 +16,22 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 const MESSAGE_TEXT = 'message.text';
 const CWE_NIST_MAPPING = new CweNistMapping();
 
-function extractCwe(text: string): string[] {
-  let output = text.split('(').slice(-1)[0].slice(0, -2).split(', ');
-  if (output.length === 1) {
-    output = text.split('(').slice(-1)[0].slice(0, -2).split('!/');
+// CWE identifiers wherever they appear, in any of the forms producers emit:
+// a rule tag ('CWE-79: Improper Neutralization ...'), a bare token, or a
+// parenthesised list at the end of a message ('... (CWE-120, CWE-20).').
+const CWE_PATTERN = /CWE-(\d+)/gi;
+
+function extractCweIdentifiers(...sources: unknown[]): string[] {
+  const identifiers = new Set<string>();
+  for (const source of sources) {
+    if (!_.isString(source)) {
+      continue;
+    }
+    for (const match of source.matchAll(CWE_PATTERN)) {
+      identifiers.add(`CWE-${match[1]}`);
+    }
   }
-  return output;
+  return [...identifiers];
 }
 function impactMapping(severity: unknown): number {
   if (typeof severity === 'string' || typeof severity === 'number') {
@@ -37,17 +47,67 @@ function formatCodeDesc(input: unknown): string {
   output.push(`COLUMN : ${_.get(input, 'region.startColumn')}`);
   return output.join(' ');
 }
-function nistTag(text: string): string[] {
-  let identifiers = extractCwe(text);
-  identifiers = identifiers.map((element) => element.split('-')[1]);
+function nistTag(cweIdentifiers: string[]): string[] {
   return CWE_NIST_MAPPING.nistFilter(
-    identifiers,
+    cweIdentifiers.map((identifier) => identifier.split('-')[1]),
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
   );
 }
 
+// SARIF carries rule metadata on the rule object, not on the result: a result
+// only references its rule by id. Producers publish CWEs there in two places --
+// `properties.tags` (Semgrep, CodeQL) and `relationships[].target.id` against a
+// CWE taxonomy (the standards-blessed form) -- and a result's message may carry
+// none at all. Indexing every rule once lets a result resolve its own.
+function indexRuleCweIdentifiers(document: unknown): Map<string, string[]> {
+  const index = new Map<string, string[]>();
+  const runs: unknown = _.get(document, 'runs');
+  if (!Array.isArray(runs)) {
+    return index;
+  }
+  for (const run of runs) {
+    const extensions = _.get(run, 'tool.extensions') as unknown;
+    const components: unknown[] = [
+      _.get(run, 'tool.driver'),
+      ...(Array.isArray(extensions) ? extensions : [])
+    ];
+    for (const component of components) {
+      const rules: unknown = _.get(component, 'rules');
+      if (!Array.isArray(rules)) {
+        continue;
+      }
+      for (const rule of rules) {
+        const id: unknown = _.get(rule, 'id');
+        if (!_.isString(id)) {
+          continue;
+        }
+        const properties: unknown = _.get(rule, 'properties');
+        const ruleTags = _.get(properties, 'tags') as unknown;
+        const ruleCwe = _.get(properties, 'cwe') as unknown;
+        const relationships = _.get(rule, 'relationships') as unknown;
+        const identifiers = extractCweIdentifiers(
+          ...(Array.isArray(ruleTags) ? ruleTags : []),
+          ...(Array.isArray(ruleCwe) ? ruleCwe : [ruleCwe]),
+          ...(Array.isArray(relationships)
+            ? relationships.map((relationship) =>
+                _.get(relationship, 'target.id')
+              )
+            : [])
+        );
+        if (identifiers.length > 0) {
+          index.set(id, [
+            ...new Set([...(index.get(id) ?? []), ...identifiers])
+          ]);
+        }
+      }
+    }
+  }
+  return index;
+}
+
 export class SarifMapper extends BaseConverter {
   withRaw: boolean;
+  ruleCweIdentifiers: Map<string, string[]> = new Map();
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -75,14 +135,14 @@ export class SarifMapper extends BaseConverter {
             path: 'results',
             key: 'id',
             tags: {
-              cci: {
-                path: 'vulnerabilityClassifications',
-                transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
-              },
-              nist: {path: MESSAGE_TEXT, transformer: nistTag},
-              cwe: {
-                path: MESSAGE_TEXT,
-                transformer: extractCwe
+              // All three derive from one CWE resolution. Previously each was
+              // computed independently and `cci` read a path SARIF does not
+              // define, so it always fell through to the default tags' CCIs --
+              // which disagreed with the `nist` tag on the same control.
+              transformer: (result: unknown): Record<string, unknown> => {
+                const cwe = this.resolveCweIdentifiers(result);
+                const nist = nistTag(cwe);
+                return {cci: getCCIsForNISTTags(nist), nist, cwe};
               }
             },
             refs: [],
@@ -168,8 +228,23 @@ export class SarifMapper extends BaseConverter {
       }
     }
   };
+  // Prefers the rule's own metadata and falls back to scraping the result
+  // message. The fallback is what flawfinder-style producers rely on -- their
+  // rules carry no properties and the CWEs appear only in the message text.
+  resolveCweIdentifiers(result: unknown): string[] {
+    const ruleId = _.get(result, 'ruleId');
+    if (_.isString(ruleId)) {
+      const fromRule = this.ruleCweIdentifiers.get(ruleId);
+      if (fromRule !== undefined && fromRule.length > 0) {
+        return fromRule;
+      }
+    }
+    return extractCweIdentifiers(_.get(result, MESSAGE_TEXT));
+  }
+
   constructor(sarifJson: string, withRaw = false) {
     super(JSON.parse(sarifJson));
     this.withRaw = withRaw;
+    this.ruleCweIdentifiers = indexRuleCweIdentifiers(this.data);
   }
 }
