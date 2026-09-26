@@ -34,7 +34,7 @@ export interface IFindingASFF {
   Resources: IResourcesASFF[];
   Compliance: IComplianceASFF;
   WorkflowState?: string;
-  Workflow?: {Status: string};
+  Workflow?: IWorkflowASFF;
   RecordState?: string;
   FindingProviderFields: IFindingProviderFieldsASFF;
 }
@@ -82,6 +82,11 @@ export interface IComplianceASFF {
   } | null)[];
   RelatedRequirements?: string[] | Record<string, unknown>;
 }
+
+export interface IWorkflowASFF {
+  Status?: string;
+}
+
 export interface IFindingProviderFieldsASFF {
   Severity: {Label: string; Original?: string};
   Types: string[] | Record<string, unknown>;
