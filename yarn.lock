@@ -2525,9 +2525,9 @@
     typescript "~6.0.2"
 
 "@nestjs/common@^11.0.16":
-  version "11.2.3"
-  resolved "https://registry.npmjs.org/@nestjs/common/-/common-11.2.3.tgz#1aa7d68430aba4b3621d313d61627a4040a1bfd8"
-  integrity sha512-obdauJXHfthhepbV+LpGe88OeBlR/Kw9lwjLo0Utzc//agoLXYb9DUGhPQWtm81IpBWMv+19eiwcve9MsBZwXA==
+  version "11.2.6"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.2.6.tgz#bd6b935ce861e6f39b4d43b3591de6ca4ef38989"
+  integrity sha512-uXs98qEOesTf6rGs0OcvFpRdF4M6JvzyBmoIXcTYvojdte4HiwDYv+whaALoboyfu/fuq2umF74FLQu3V7ZPHw==
   dependencies:
     uid "2.0.2"
     file-type "21.3.4"
