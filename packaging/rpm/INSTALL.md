@@ -1,6 +1,11 @@
 # Heimdall Server — RPM Installation Guide
 
-## Supported Platforms
+This guide covers the **2.13.1 integration candidate** on
+`feat/rpm-integrated-install`, not a stable release. Do not install it over
+2.14.0. See [README.md acceptance status](README.md#acceptance-status) for
+completed checks and the remaining candidate/CI acceptance work.
+
+## Build and Install Matrix
 
 | OS | Architectures |
 |---|---|
@@ -11,9 +16,23 @@
 
 - Root or sudo access
 - PostgreSQL 13+ (local or remote)
-- Node.js 22 (bundled in the RPM — no separate install needed)
+- Node.js 22, version >=22.18.0, from a configured repository (not bundled)
+- A booted systemd host for normal setup and service operations
 - 2 GB RAM minimum (4 GB recommended)
 - 1 GB free disk space
+
+### Node.js Repository
+
+Configure NodeSource on the runtime host before installing the RPM. The builder's
+repository configuration is not inherited by another host or clean container.
+
+```bash
+curl -fsSL https://rpm.nodesource.com/setup_22.x | sudo bash -
+```
+
+DNF then installs the Node.js RPM required by Heimdall. Keep TLS and repository
+signature verification enabled. For mirrored or inspected networks, configure
+trusted mirrors, RPM keys and your organization's CA instead of bypassing checks.
 
 ### PostgreSQL Setup (if not already installed)
 
@@ -35,104 +54,114 @@ sudo dnf install -y postgresql18-server postgresql18
 
 For aarch64, replace `x86_64` with `aarch64` in the repo URL.
 
-Any PostgreSQL version 13–18 from PGDG is supported. The setup scripts
-auto-detect the installed version.
+The setup scripts detect PGDG versions 13–18. The required local acceptance
+fixture uses PostgreSQL 18; this is not evidence for every version combination.
+For a remote deployment, install the selected compatible client package (for
+example `postgresql18`) without `postgresql18-server`. The CLI uses `psql` and
+`pg_dump` for connection checks, backup and recovery.
 
 ## Install
 
-Download the RPM for your OS and architecture from the
-[GitHub Releases](https://github.com/mitre/heimdall2/releases) page.
+Integration candidates are built locally or downloaded from the integration CI
+artifacts. They are not published as stable GitHub releases. Select the exact
+version, distribution and architecture; do not use a wildcard that can select
+multiple candidate versions.
+
+In a disposable acceptance host, verify the test public key came from the same
+trusted CI run or local signing invocation as the RPM, then install:
 
 ```bash
-sudo dnf install -y ./heimdall-server-*.rpm
+sudo rpm --import ./RPM-TEST-GPG-KEY
+sudo dnf install --setopt=localpkg_gpgcheck=1 ./heimdall-server-2.13.1-0.1.integration.el8.x86_64.rpm
 ```
+
+The key is ephemeral acceptance-test material, not a production release key.
+Do not disable signature checks for unsigned local builds; see
+[acceptance signing](README.md#acceptance-signing).
+
+The transaction creates the service account and installs files. It does not
+initialize a database, generate credentials, run migrations or start Heimdall.
+For remote deployments, use `--setopt=install_weak_deps=False` to avoid optional
+server recommendations and install the required client tools separately.
 
 ### Building from Source RPM
 
-Each release also publishes a source RPM (`.src.rpm`) so you can rebuild
-on your own infrastructure, apply local patches, or build for an
-architecture not covered by the release binaries:
+A candidate SRPM includes the application archive, packaging inputs, the pinned
+CLI binary and its generated man pages. Rebuild on the same architecture as the
+candidate CLI binary. Install the full build prerequisites first:
 
 ```bash
-# Install build dependencies and rebuild
-sudo dnf install -y rpm-build
-rpmbuild --rebuild ./heimdall-server-*.src.rpm
-
-# The binary RPM is produced in ~/rpmbuild/RPMS/$(uname -m)/
-sudo dnf install -y ~/rpmbuild/RPMS/$(uname -m)/heimdall-server-*.rpm
+sudo bash packaging/rpm/scripts/setup-build-deps.sh --skip-update
+export PATH="/opt/heimdall-build/go-1.25.8/bin:$PATH"
+mkdir -p "$HOME/rpmbuild-heimdall-rebuild"
+rpmbuild --rebuild --define "_topdir $HOME/rpmbuild-heimdall-rebuild" \
+  ./heimdall-server-2.13.1-0.1.integration.el8.src.rpm
 ```
 
-You will need Node.js 22 (NodeSource), Yarn, and a C++ compiler
-installed. See [`setup-rpm-build-env.sh`](setup-rpm-build-env.sh)
-for the full dependency list, or run it with `--skip-deps` if you already
-have everything.
+This uses Node 22 >=22.18.0, Yarn Classic 1.22.22 and the declared RPM build
+dependencies. The output is under `~/rpmbuild-heimdall-rebuild/RPMS/<arch>/`.
+Use an empty external build directory to verify the SRPM has everything it needs;
+old generated man pages must not supply missing inputs. Independently sign the
+rebuilt RPM before acceptance installation. See [README.md](README.md) for
+committed Git versus filtered Docker sources and the CLI pin contract.
 
 ## Setup
 
-After install, run the setup command:
+After installing a local PostgreSQL server or configuring a remote database, run:
 
 ```bash
-sudo heimdall-server-setup
+sudo heimdall-cli setup --non-interactive --skip-tls
 ```
 
-This runs six steps:
+Normal CLI setup configures the environment, bootstraps a local database when
+needed, tests the connection, runs packaged migrations/seeds, configures TLS when
+requested, applies available host security integrations, and enables/restarts
+Heimdall. Service failures propagate to the command's exit status. Setup requires
+a live systemd manager before making changes for service operations.
 
-1. **Configuration** — generates `/etc/heimdall-server/backend.env` with
-   database credentials, JWT secrets, API key secrets, and EXTERNAL_URL.
-   Missing values are auto-generated securely.
-2. **PostgreSQL bootstrap** — initializes the database cluster, starts
-   PostgreSQL, creates the database role with SCRAM-SHA-256 authentication.
-   Skipped automatically if `DATABASE_HOST` is not localhost.
-3. **Database migrations** — creates the database, runs all schema
-   migrations, and seeds the initial admin user.
-4. **TLS reverse proxy** — configures Caddy as an HTTPS reverse proxy on
-   port 443, proxying to the backend on localhost:3000. For hostname-based
-   deployments, Caddy can auto-provision Let's Encrypt certificates. For
-   IP-based or air-gapped deployments, a self-signed certificate is
-   generated automatically. Skipped if Caddy is not installed.
-5. **Security policies** — registers the Heimdall port with SELinux, sets
-   `httpd_can_network_connect` for the reverse proxy, adds bundled binaries
-   to fapolicyd trust, and opens HTTPS (443) in firewalld. Each subsystem
-   is skipped if its tools are not installed.
-6. **Service start** — enables and starts `heimdall-server.service`.
-   Detects cloud environments (EC2, Azure, GCP) and prints helpful
-   firewall hints.
+`--skip-tls` leaves TLS to your existing proxy or acceptance environment; use the
+TLS options below for a deployed HTTPS endpoint. The shell entry point
+`heimdall-server-setup` remains available, but new operator workflows use the CLI.
 
 ### Setup Options
 
 ```bash
-# Interactive (default when run from a terminal)
-sudo heimdall-server-setup --interactive
+# Prompt for values; blank passwords retain existing configured credentials.
+sudo heimdall-cli setup --interactive
 
-# Non-interactive (for automation — accepts all defaults)
-sudo heimdall-server-setup --non-interactive
+# Configuration only, without migrations or service changes.
+sudo heimdall-cli setup --non-interactive --reconfigure
 
-# Reconfigure only (re-run step 1, then restart service)
-sudo heimdall-server-setup --reconfigure
+# Skip all DB work only when provisioning/migrations are managed separately.
+sudo heimdall-cli setup --non-interactive --skip-db --skip-tls
 
-# Skip database steps (for remote database setups)
-sudo heimdall-server-setup --skip-db
-
-# Skip TLS proxy setup (if you manage your own reverse proxy)
-sudo heimdall-server-setup --skip-tls
+# Use an existing TLS proxy.
+sudo heimdall-cli setup --non-interactive \
+  --external-url https://heimdall.example.com --skip-tls
 ```
+
+Both configurators retain extra login/OIDC assignments and existing secrets on
+rerun. The CLI also preserves comments and unchanged assignment text. Use
+single-line configuration values, keep `backend.env` root-owned and mode `0640`,
+and back it up before intentional credential changes. `--reconfigure` works
+without changing services; run a normal setup or explicit restart afterward when
+you want the new configuration active.
 
 ### Remote Database
 
-To use an existing PostgreSQL server instead of a local one:
+Install compatible PostgreSQL client tools, provision the database role and
+network access, and configure the remote credentials in
+`/etc/heimdall-server/backend.env`. Then run:
 
-1. Run `sudo heimdall-server-setup --interactive`
-2. Set `DATABASE_HOST` to your server's hostname or IP
-3. Set `DATABASE_PORT`, `DATABASE_USERNAME`, `DATABASE_PASSWORD` as needed
-4. The PostgreSQL bootstrap step is automatically skipped — but the setup
-   still checks the role's password verifier for FIPS compatibility (see
-   "FIPS Hosts and md5 Password Verifiers" below)
-
-Or edit `/etc/heimdall-server/backend.env` directly and run:
 ```bash
-sudo heimdall-server-setup --skip-db
-sudo heimdall-server-db-setup
+sudo heimdall-cli setup --non-interactive --skip-tls
 ```
+
+The resolved `DATABASE_HOST` determines topology. A remote hostname skips local
+PostgreSQL bootstrap but still performs connection checks and migrations. Do not
+use `--skip-db` merely because the database is remote: that option skips these
+checks and migrations too. TLS and least-privilege settings for the remote server
+are described below.
 
 ## PostgreSQL Security
 
@@ -214,7 +243,7 @@ curl -fsS http://localhost:3000/health
 ```
 
 ```json
-{"status":"ok","version":"2.13.0"}
+{"status":"ok","version":"2.13.1"}
 ```
 
 ```bash
@@ -376,7 +405,7 @@ sudo dnf install -y caddy
 
 Then re-run setup to configure TLS:
 ```bash
-sudo heimdall-server-setup --skip-db
+sudo heimdall-cli setup --skip-db
 ```
 
 ### TLS Certificate Strategies
@@ -412,7 +441,7 @@ Add to each client's `/etc/hosts`:
 #### Option 3: Use IP directly
 Re-run setup with the server IP:
 ```bash
-sudo heimdall-server-setup --external-url https://192.168.1.100 --skip-db
+sudo heimdall-cli setup --external-url https://192.168.1.100 --skip-db
 ```
 This generates a self-signed certificate with the IP as SAN.
 
@@ -447,7 +476,7 @@ When TLS is terminated at the load balancer, the app receives plain HTTP.
 Skip Caddy and let the LB handle certificates:
 
 ```bash
-sudo heimdall-server-setup \
+sudo heimdall-cli setup \
   --external-url https://heimdall.agency.mil \
   --skip-tls
 ```
@@ -464,7 +493,7 @@ email links, and the app's security headers.
 If your organization issues certificates from an internal CA:
 
 ```bash
-sudo heimdall-server-setup \
+sudo heimdall-cli setup \
   --external-url https://heimdall.agency.mil \
   --tls-cert /etc/pki/tls/certs/heimdall.pem \
   --tls-key /etc/pki/tls/private/heimdall.key
@@ -478,7 +507,7 @@ When certs are renewed, reload Caddy: `sudo systemctl reload caddy`.
 If your organization has a standard reverse proxy stack:
 
 ```bash
-sudo heimdall-server-setup \
+sudo heimdall-cli setup \
   --external-url https://heimdall.agency.mil \
   --skip-tls
 ```
@@ -677,7 +706,7 @@ the new port with SELinux:
 sudo semanage port -a -t heimdall_server_port_t -p tcp 8443
 ```
 
-The setup script (`heimdall-server-setup`) does this automatically.
+The setup command does this automatically.
 
 ### Troubleshooting SELinux
 
@@ -705,13 +734,14 @@ sudo setsebool -P heimdall_server_connect_postgresql on
 
 ## fapolicyd
 
-The RPM automatically registers bundled binaries (Node.js and native addons)
-with fapolicyd's trust database at `/etc/fapolicyd/trust.d/heimdall-server`
-on install. Entries are removed on uninstall. No manual configuration needed.
+The RPM registers its CLI and bundled native addons with fapolicyd's trust
+database at `/etc/fapolicyd/trust.d/heimdall-server` when fapolicyd is installed.
+Node.js is a separate RPM dependency. Full removal drops the package's trust
+entries before its CLI and payload are deleted.
 
 If you reinstall or upgrade and fapolicyd blocks execution:
 ```bash
-sudo /usr/libexec/heimdall-server/fapolicyd-trust.sh add
+sudo heimdall-cli fapolicyd add
 ```
 
 ## Firewall
@@ -745,16 +775,16 @@ heimdall-cli config get PORT
 sudo heimdall-cli config set PORT 8443
 
 # Reset admin password
-sudo heimdall-cli reset_password admin@heimdall.local
+sudo heimdall-cli reset-password admin@heimdall.local
 
 # Change listen port (updates config, SELinux, firewalld, restarts service)
-sudo heimdall-cli set_port 8443
+sudo heimdall-cli set-port 8443
 
 # Add organizational CA certificate
-sudo heimdall-cli add_cert /path/to/ca.pem
+sudo heimdall-cli add-cert /path/to/ca.pem
 
 # Backup database + config to a timestamped archive
-sudo heimdall-cli backup /root
+sudo heimdall-cli backup -o /root
 
 # Restore from archive
 sudo heimdall-cli restore /root/heimdall-backup-20260226-143000.tar.gz
@@ -777,9 +807,12 @@ Tab completion is available in bash (installed to `/etc/bash_completion.d/`).
 ## Backup and Restore
 
 Using `heimdall-cli` (backs up both database and config to a single archive):
+Verify the archive exists and keep a copy outside the package's data directory.
+Restore replaces database/configuration state; use a disposable recovery target
+first and check restored data before returning the service to use.
 
 ```bash
-sudo heimdall-cli backup /root
+sudo heimdall-cli backup -o /root
 sudo heimdall-cli restore /root/heimdall-backup-20260226-143000.tar.gz
 ```
 
@@ -794,7 +827,9 @@ sudo -u postgres pg_dump heimdall-server-production > heimdall-backup-$(date +%Y
 ### Database Restore
 
 ```bash
-sudo -u postgres psql -d heimdall-server-production < heimdall-backup-YYYYMMDD.sql
+# Use a newly created empty recovery database, not an already populated schema.
+sudo -u postgres createdb heimdall-recovery
+sudo -u postgres psql -v ON_ERROR_STOP=1 -d heimdall-recovery < heimdall-backup-YYYYMMDD.sql
 ```
 
 ### Configuration Backup
@@ -849,40 +884,58 @@ curl -X PUT http://localhost:3000/users/<user-id> \
 
 ## Upgrading
 
-Back up before upgrading:
+Only the development transition from `2.13.1-0.1.integration` to
+`2.13.1-0.2.integration` is covered by this candidate's fixtures. It is not an
+upgrade from 2.14.0.
+
+Before replacing the package, edit `/etc/sysconfig/heimdall-server` and set:
+
 ```bash
-sudo heimdall-cli backup /root
+RESTART_ON_UPGRADE=false
 ```
 
-Then upgrade:
+The shipped default is true. Keep it false until explicit migrations finish so
+the package transaction does not restart the application early. Verify an explicit
+backup, upgrade, then run setup to migrate and restart:
+
 ```bash
-sudo dnf upgrade -y ./heimdall-server-<new-version>.rpm
-sudo heimdall-server-db-setup    # Run new migrations
-sudo systemctl restart heimdall-server
+sudo heimdall-cli backup
+sudo dnf upgrade --setopt=localpkg_gpgcheck=1 ./heimdall-server-2.13.1-0.2.integration.el8.x86_64.rpm
+sudo heimdall-cli setup --non-interactive --skip-tls
+sudo heimdall-cli status
+curl -fsS http://localhost:3000/health/ready
 ```
 
-The config file (`backend.env`) is preserved across upgrades
-(`%config(noreplace)`).
+For a TLS deployment, retain its configured TLS options instead of copying the
+acceptance-only `--skip-tls` choice. The RPM also attempts an automatic backup,
+but a failure is nonfatal to the transaction; it does not replace the verified
+manual backup.
 
-## Uninstall
+`backend.env` and sysconfig are `%config(noreplace)`, so modified settings survive
+upgrades. Review any `.rpmnew` templates without replacing existing secrets.
+Normal setup reruns preserve additional settings and credentials.
+
+## Uninstall and Recovery
+
+Back up the database and configuration before removal:
 
 ```bash
+sudo heimdall-cli backup -o /root
 sudo systemctl stop heimdall-server
 sudo dnf remove heimdall-server
 ```
 
-This removes the application files but preserves:
-- `/etc/heimdall-server/backend.env` (marked as config)
-- The PostgreSQL database and data
+The package removes its application files and host integration. It does not drop
+the PostgreSQL database or delete backup archives. RPM may move modified config
+files to `.rpmsave`; unchanged packaged templates can be removed. Do not rely on
+`backend.env` remaining at its original pathname.
 
-To fully clean up:
-```bash
-sudo rm -rf /etc/heimdall-server
-sudo userdel heimdall
-sudo groupdel heimdall
-# Optionally drop the database:
-sudo -u postgres psql -c "DROP DATABASE \"heimdall-server-production\";"
-```
+For recovery, reinstall the same signed candidate with its prerequisites, recover
+configuration from the verified backup or reviewed `.rpmsave`, and restore the
+backup through `heimdall-cli restore`. Check database contents and health before
+resuming use. Retain database files, backups and the service account until recovery
+has been verified. The acceptance recovery fixture uses a disposable database and
+requires SQL errors to propagate; it is not evidence for migration from 2.14.0.
 
 ## Troubleshooting
 
@@ -893,7 +946,7 @@ sudo journalctl -u heimdall-server -n 50 --no-pager
 ```
 
 Common causes:
-- `DATABASE_PASSWORD` not set → run `sudo heimdall-server-setup`
+- `DATABASE_PASSWORD` not set → run `sudo heimdall-cli setup`
 - PostgreSQL not running → `sudo systemctl start postgresql-18`
 - Port already in use → change `PORT` in `backend.env`
 
@@ -907,21 +960,14 @@ sudo systemctl status postgresql-18
 PGPASSWORD=<password> psql -h localhost -U postgres -d heimdall-server-production -c "SELECT 1;"
 ```
 
-### Re-run setup from scratch
+### Re-run setup while preserving configuration
 
 ```bash
-sudo heimdall-server-setup --non-interactive
+sudo heimdall-cli setup --non-interactive
 ```
 
 ### Reset admin password
 
 ```bash
-# Using heimdall-cli (recommended)
-sudo heimdall-cli reset_password admin@heimdall.local
-
-# Or manually
-sudo -u postgres psql -d heimdall-server-production -c "
-  UPDATE \"Users\" SET \"encryptedPassword\" = '' WHERE email = 'admin@heimdall.local';
-"
-sudo heimdall-server-db-setup  # Re-seeds admin with new random password
+sudo heimdall-cli reset-password admin@heimdall.local
 ```

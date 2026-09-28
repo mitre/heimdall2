@@ -27,6 +27,7 @@ Source18:       heimdall-rsyslog.conf
 Source19:       heimdall-logrotate.conf
 Source20:       40-heimdall.rules
 Source21:       SECURITY.md
+Source22:       heimdall-cli-man.tar.gz
 
 # JS application with native addons: disable debug/debuginfo subpackages.
 %global debug_package %{nil}
@@ -77,6 +78,8 @@ After installation, run:
 
 %prep
 %autosetup -n heimdall2-%{version}
+mkdir -p rpm-man
+tar -xzf "%{SOURCE22}" -C rpm-man
 
 %build
 export NODE_ENV=production
@@ -196,11 +199,9 @@ install -d %{buildroot}%{_datadir}/%{name}/security
 install -m 0644 %{SOURCE20} %{buildroot}%{_datadir}/%{name}/security/40-heimdall.rules
 install -m 0644 %{SOURCE21} %{buildroot}%{_datadir}/%{name}/security/SECURITY.md
 
-# Man pages (auto-generated from CLI command tree, pre-staged by build system)
+# Man pages generated from the pinned CLI and carried in the source package.
 install -d %{buildroot}%{_mandir}/man1
-if ls %{_builddir}/man/man1/*.1 1>/dev/null 2>&1; then
-  install -p -m 0644 %{_builddir}/man/man1/*.1 %{buildroot}%{_mandir}/man1/
-fi
+install -p -m 0644 rpm-man/man1/*.1 %{buildroot}%{_mandir}/man1/
 
 # Runtime directories (owned by service user)
 install -d -m 0750 %{buildroot}/var/lib/%{name}

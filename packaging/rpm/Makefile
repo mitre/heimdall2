@@ -41,7 +41,7 @@ UPSTREAM_REPO ?= mitre/heimdall2
 CACHE      ?= 0
 YARN_CACHE ?= $(HOME)/.cache/yarn-heimdall
 ifeq ($(CACHE),1)
-  RPMBUILD_PREFIX := YARN_CACHE_FOLDER=$(YARN_CACHE)
+  RPMBUILD_PREFIX := YARN_CACHE_FOLDER="$(YARN_CACHE)"
 else
   RPMBUILD_PREFIX :=
 endif
@@ -63,28 +63,35 @@ else
 	  > "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz"
 endif
 
-# heimdall-cli source, cloned at a pinned ref.
-#
-# The CLI lives at github.com/mitre/heimdall-cli — it is a separate repository,
-# not a sibling directory, so it is fetched rather than referenced by path.
-#
-# HEIMDALL_CLI_REF is the contract carrier: it records exactly which CLI a given
-# RPM shipped. Release builds MUST override it with a tag. `main` is a
-# development default only.
-HEIMDALL_CLI_REPO ?= https://github.com/mitre/heimdall-cli.git
-HEIMDALL_CLI_REF  ?= main
-CLI_DIR           := $(TOPDIR)/heimdall-cli-src
+# The committed pin files identify the tested CLI. Read them in the shell so
+# malformed file contents cannot become shell syntax through Make expansion.
+override CLI_DIR := $(TOPDIR)/heimdall-cli-src
 
 cli-src: check-source
-	@mkdir -p "$(TOPDIR)"
-	@if [ -d "$(CLI_DIR)/.git" ]; then \
-	  git -C $(CLI_DIR) fetch --quiet --tags origin; \
+	@test "$(origin HEIMDALL_CLI_REPO)" = undefined && test "$(origin HEIMDALL_CLI_REF)" = undefined || { \
+	  echo 'ERROR: CLI pin overrides are unsupported; update heimdall-cli.repo and heimdall-cli.ref' >&2; exit 1; }
+	@set -eu; \
+	cli_repo=$$(cat heimdall-cli.repo); cli_ref=$$(cat heimdall-cli.ref); \
+	test "$${#cli_ref}" -eq 40 && printf '%s\n' "$$cli_ref" | LC_ALL=C grep -Eq '^[0-9a-f]{40}$$' || { \
+	  echo 'ERROR: heimdall-cli.ref must contain exactly 40 lowercase hex characters' >&2; exit 1; }; \
+	test -n "$$cli_repo" && test "$$(printf '%s\n' "$$cli_repo" | wc -l)" -eq 1 || { \
+	  echo 'ERROR: heimdall-cli.repo must contain one repository URL' >&2; exit 1; }; \
+	mkdir -p "$(TOPDIR)"; \
+	if [ -e "$(CLI_DIR)" ]; then \
+	  test -d "$(CLI_DIR)/.git" && test ! -L "$(CLI_DIR)" || { \
+	    echo 'ERROR: CLI source path is not an owned Git checkout' >&2; exit 1; }; \
+	  test "$$(git -C "$(CLI_DIR)" remote get-url origin)" = "$$cli_repo" || { \
+	    echo 'ERROR: CLI repository mismatch' >&2; exit 1; }; \
+	  test -z "$$(git -C "$(CLI_DIR)" status --porcelain --untracked-files=all --ignored)" || { \
+	    echo 'ERROR: Uncommitted CLI inputs; use a clean checkout' >&2; exit 1; }; \
 	else \
-	  git clone --quiet $(HEIMDALL_CLI_REPO) $(CLI_DIR); \
-	fi
-	@git -C $(CLI_DIR) checkout --quiet --detach $(HEIMDALL_CLI_REF) || { \
-	  echo "ERROR: ref '$(HEIMDALL_CLI_REF)' not found in $(HEIMDALL_CLI_REPO)"; exit 1; }
-	@echo "heimdall-cli source at $(HEIMDALL_CLI_REF) ($$(git -C $(CLI_DIR) rev-parse --short HEAD))"
+	  git clone --quiet --no-checkout -- "$$cli_repo" "$(CLI_DIR)"; \
+	fi; \
+	git -C "$(CLI_DIR)" fetch --quiet origin "$$cli_ref"; \
+	git -C "$(CLI_DIR)" checkout --quiet --detach "$$cli_ref"; \
+	test "$$(git -C "$(CLI_DIR)" rev-parse HEAD)" = "$$cli_ref"; \
+	test -z "$$(git -C "$(CLI_DIR)" status --porcelain --untracked-files=all --ignored)"; \
+	echo "heimdall-cli source at $$cli_ref"
 
 # Build Go CLI binary for the target platform (static, no CGO).
 # Produces a flat binary at rpmbuild/SOURCES/heimdall-cli (spec Source15).
@@ -94,37 +101,37 @@ cli-src: check-source
 # CLI_COMMIT is resolved from the CLI checkout, not from heimdall2. The previous
 # `git rev-parse HEAD` ran in the packaging repo and stamped the wrong commit
 # into the binary's version output.
-CLI_DATE := $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
 heimdall-cli: cli-src
-	@mkdir -p $(TOPDIR)/SOURCES
-	cd $(CLI_DIR) && GOOS=linux GOARCH=$(GOARCH) CGO_ENABLED=0 \
+	@mkdir -p "$(TOPDIR)/SOURCES"
+	output=$$(cd "$(TOPDIR)/SOURCES" && pwd) && \
+	cd "$(CLI_DIR)" && GOOS=linux GOARCH="$(GOARCH)" CGO_ENABLED=0 \
 	  go build -trimpath \
 	  -ldflags="-s -w \
 	    -X 'github.com/mitre/heimdall-cli/internal/version.Version=$(VERSION)' \
-	    -X 'github.com/mitre/heimdall-cli/internal/version.Commit=$$(git rev-parse --short HEAD)' \
-	    -X 'github.com/mitre/heimdall-cli/internal/version.Date=$(CLI_DATE)'" \
-	  -o $(abspath $(TOPDIR)/SOURCES/heimdall-cli) \
+	    -X 'github.com/mitre/heimdall-cli/internal/version.Commit=$$(git rev-parse HEAD)' \
+	    -X 'github.com/mitre/heimdall-cli/internal/version.Date=$$(git show -s --format=%cI HEAD)'" \
+	  -o "$$output/heimdall-cli" \
 	  ./cmd/heimdall-cli
-	@echo "Built: $(TOPDIR)/SOURCES/heimdall-cli (linux/$(GOARCH), ref $(HEIMDALL_CLI_REF))"
+	@echo "Built: $(TOPDIR)/SOURCES/heimdall-cli (linux/$(GOARCH))"
 
 # Generate man pages from the CLI command tree.
 # Generated from the same pinned checkout as the binary, so the pages can never
 # drift from the commands they document.
 man: cli-src
-	@test -d $(CLI_DIR)/cmd/gen-manpages || { \
-	  echo "ERROR: $(HEIMDALL_CLI_REF) of heimdall-cli has no cmd/gen-manpages."; \
-	  echo "  The spec's %files claims %{_mandir}/man1/heimdall-cli*.1*, so the"; \
-	  echo "  build will fail without generated pages. The generator was not"; \
-	  echo "  carried over when heimdall-cli was extracted to its own repository."; \
-	  echo "  Tracked as a blocking cross-repo item in ADR-006 §14."; \
-	  exit 1; }
-	cd $(CLI_DIR) && go run ./cmd/gen-manpages $(abspath man/man1)
+	rm -rf "$(TOPDIR)/cli-man"
+	rm -f "$(TOPDIR)/SOURCES/heimdall-cli-man.tar.gz"
+	mkdir -p "$(TOPDIR)/cli-man/man1" "$(TOPDIR)/SOURCES"
+	output=$$(cd "$(TOPDIR)/cli-man/man1" && pwd) && \
+	cd "$(CLI_DIR)" && go run ./cmd/gen-manpages "$$output"
+	test -s "$(TOPDIR)/cli-man/man1/heimdall-cli.1"
+	test -s "$(TOPDIR)/cli-man/man1/heimdall-cli-setup.1"
+	tar -C "$(TOPDIR)/cli-man" -czf "$(TOPDIR)/SOURCES/heimdall-cli-man.tar.gz" man1
 
 # Install build dependencies (delegates to setup script).
 deps:
 	scripts/setup-build-deps.sh
 
-# Stage all source files into rpmbuild tree (Sources 0-21).
+# Stage all source files into rpmbuild tree (Sources 0-22).
 # Single source of truth for which files go into the RPM.
 stage: check-source sources heimdall-cli man
 	@mkdir -p "$(TOPDIR)/SPECS" "$(TOPDIR)/BUILD" "$(TOPDIR)/RPMS" "$(TOPDIR)/SRPMS"
@@ -145,18 +152,15 @@ stage: check-source sources heimdall-cli man
 	   "$(TOPDIR)/SOURCES/"
 	@# Sources 20-21: security samples
 	cp security/40-heimdall.rules security/SECURITY.md "$(TOPDIR)/SOURCES/"
-	@# Man pages (generated by the man target above)
-	mkdir -p "$(TOPDIR)/BUILD/man/man1"
-	cp man/man1/*.1 "$(TOPDIR)/BUILD/man/man1/" 2>/dev/null || true
 
 srpm: stage
 	rpmbuild -bs --define "_topdir $(TOPDIR)" --define "heimdall_release $(HEIMDALL_RELEASE)" "$(TOPDIR)/SPECS/$(SPEC)"
-	@echo "SRPM: $$(ls $(TOPDIR)/SRPMS/*.src.rpm)"
+	@echo "SRPM: $$(ls "$(TOPDIR)"/SRPMS/*.src.rpm)"
 
 rpm: stage
-	@$(if $(filter 1,$(CACHE)),mkdir -p $(YARN_CACHE),true)
+	@$(if $(filter 1,$(CACHE)),mkdir -p "$(YARN_CACHE)",true)
 	$(RPMBUILD_PREFIX) rpmbuild -ba --define "_topdir $(TOPDIR)" --define "heimdall_release $(HEIMDALL_RELEASE)" "$(TOPDIR)/SPECS/$(SPEC)"
-	@echo "RPMs: $$(ls $(TOPDIR)/RPMS/*/*.rpm)"
+	@echo "RPMs: $$(ls "$(TOPDIR)"/RPMS/*/*.rpm)"
 
 # Iterate fast on spec edits — skips %prep + %build (no tarball
 # extraction, no `yarn install`, no node build) and re-runs only
@@ -165,8 +169,8 @@ rpm: stage
 # %files, %post/%postun scriptlets, or any spec metadata.
 # Requires a prior successful `make rpm`.
 rpm-install:
-	rpmbuild --short-circuit -bi --define "_topdir $(TOPDIR)" $(TOPDIR)/SPECS/$(SPEC)
-	@echo "RPMs: $$(ls $(TOPDIR)/RPMS/*/*.rpm)"
+	rpmbuild --short-circuit -bi --define "_topdir $(TOPDIR)" "$(TOPDIR)/SPECS/$(SPEC)"
+	@echo "RPMs: $$(ls "$(TOPDIR)"/RPMS/*/*.rpm)"
 
 # Fastest possible iteration — skips %prep + %build + %install,
 # re-runs only %check + %files selection + binary packaging against
@@ -181,8 +185,8 @@ rpm-package:
 		echo "BUILDROOT empty (cleaned by previous build) — running rpm-install first"; \
 		$(MAKE) rpm-install; \
 	else \
-		rpmbuild --short-circuit -bb --define "_topdir $(TOPDIR)" $(TOPDIR)/SPECS/$(SPEC); \
-		echo "RPMs: $$(ls $(TOPDIR)/RPMS/*/*.rpm)"; \
+		rpmbuild --short-circuit -bb --define "_topdir $(TOPDIR)" "$(TOPDIR)/SPECS/$(SPEC)"; \
+		echo "RPMs: $$(ls "$(TOPDIR)"/RPMS/*/*.rpm)"; \
 	fi
 
 lint:
@@ -190,17 +194,17 @@ lint:
 
 # Lint built RPMs (run after 'make rpm')
 lint-rpm:
-	@if ls $(TOPDIR)/RPMS/*/*.rpm >/dev/null 2>&1; then \
-		rpmlint -f .rpmlintrc $(TOPDIR)/RPMS/*/*.rpm; \
+	@if ls "$(TOPDIR)"/RPMS/*/*.rpm >/dev/null 2>&1; then \
+		rpmlint -f .rpmlintrc "$(TOPDIR)"/RPMS/*/*.rpm; \
 	else \
 		echo "No RPMs found — run 'make rpm' first"; exit 1; \
 	fi
-	@if ls $(TOPDIR)/SRPMS/*.src.rpm >/dev/null 2>&1; then \
-		rpmlint -f .rpmlintrc $(TOPDIR)/SRPMS/*.src.rpm; \
+	@if ls "$(TOPDIR)"/SRPMS/*.src.rpm >/dev/null 2>&1; then \
+		rpmlint -f .rpmlintrc "$(TOPDIR)"/SRPMS/*.src.rpm; \
 	fi
 
 clean:
-	rm -rf $(TOPDIR)
+	rm -rf "$(TOPDIR)"
 
 # Compare the spec's Version against the latest GitHub release on UPSTREAM_REPO.
 # Read-only: never touches the spec. Useful before `make bump-version`.
