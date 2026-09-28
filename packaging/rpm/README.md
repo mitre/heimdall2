@@ -164,7 +164,7 @@ sudo heimdall-cli setup \
 # Re-run configuration only (preserve database)
 sudo heimdall-cli setup --reconfigure
 
-# Skip database and TLS (config + service start only)
+# Skip database and TLS (config + service restart only)
 sudo heimdall-cli setup --skip-db --skip-tls
 ```
 
@@ -178,7 +178,7 @@ The `heimdall-cli setup` command runs 7 steps:
 4. **Database migrations** — create schema, run Sequelize migrations and seeds
 5. **TLS reverse proxy** — configures Caddy on port 443 (skipped with `--skip-tls`)
 6. **Security policies** — SELinux port registration, fapolicyd trust, firewalld rules
-7. **Start service** — `systemctl enable --now heimdall-server`
+7. **Enable and restart service** — enables `heimdall-server`, restarts it even if already running, and verifies it is active
 
 ## Managing the Service
 

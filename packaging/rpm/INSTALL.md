@@ -392,7 +392,17 @@ proxy on port 443, proxying to the Node.js backend on localhost:3000.
 
 ### Installing Caddy
 
-Caddy is in EPEL:
+Caddy is provided through EPEL. On **Oracle Linux 8**, the following repository
+setup was used by the passing RPM acceptance fixtures:
+
+```bash
+sudo dnf install -y oracle-epel-release-el8 dnf-plugins-core
+sudo dnf config-manager --set-enabled ol8_codeready_builder ol8_developer_EPEL
+sudo dnf install -y caddy
+```
+
+For other EL8/EL9 hosts, configure their EPEL repository:
+
 ```bash
 # EL8
 sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
@@ -806,17 +816,45 @@ Tab completion is available in bash (installed to `/etc/bash_completion.d/`).
 
 ## Backup and Restore
 
-Using `heimdall-cli` (backs up both database and config to a single archive):
-Verify the archive exists and keep a copy outside the package's data directory.
-Restore replaces database/configuration state; use a disposable recovery target
-first and check restored data before returning the service to use.
+The CLI backs up configuration and, when `DATABASE_PASSWORD` is configured,
+the database to a timestamped archive:
 
 ```bash
 sudo heimdall-cli backup -o /root
-sudo heimdall-cli restore /root/heimdall-backup-20260226-143000.tar.gz
 ```
 
-Or manually:
+Use the exact archive path printed by the command. Verify that it contains
+`backend.env` and `database.sql`, and keep a secure copy outside the package's
+data directory. Without a database password, the archive contains configuration
+only; a successful command then does not establish a database backup.
+
+Before restoring, review the archived `backend.env` securely and prepare an
+**empty target database** with the required role. Restore first replaces the live
+configuration, then connects using the host, database name and credentials from
+that archived file. Moving an archive to another host does not redirect a remote
+database connection. For recovery to a different database, use the manual restore
+procedure below and configure its connection settings explicitly.
+
+The CLI replays SQL; it does not drop, recreate or empty the database. Do not run
+setup/migrations against the empty recovery database before restoring. Stop the
+application during recovery and restart only after restore succeeds. Replace the
+example archive timestamp below with the actual backup filename:
+
+```bash
+sudo systemctl stop heimdall-server &&
+  sudo heimdall-cli restore /root/heimdall-backup-YYYYMMDD-HHMMSS.tar.gz &&
+  sudo systemctl start heimdall-server &&
+  curl -fsS --retry 30 --retry-connrefused --retry-delay 1 \
+    --retry-max-time 60 --max-time 5 http://localhost:3000/health/ready
+```
+
+SQL errors stop the command and return a failure. A failed restore can leave
+configuration changed and SQL partially applied; keep the service stopped and
+resolve the failure before retrying against an empty recovery database. Verify
+restored users/data and login before resuming use. Use your configured port or
+trusted HTTPS endpoint for the health check when it differs from the example.
+
+Alternatively, back up and restore the database and configuration separately:
 
 ### Database Backup
 
