@@ -369,18 +369,23 @@ The setup scripts auto-detect PGDG installations of PostgreSQL 13 through 18, as
 
 ## Acceptance status
 
-As of September 28, 2026, the current evidence is limited to:
+Acceptance passed on September 28, 2026, for source
+`c540d7ac89f0b2fed16622d6af33a5d5177afffe`, version `2.13.1`, releases
+`0.1.integration` and `0.2.integration`. See the
+[acceptance report](../../docs/superpowers/reports/2026-09-28-rpm-integration-acceptance.md)
+for artifact hashes, environments, preserved-state assertions and evidence.
 
 | Check | Result |
 |---|---|
 | Source/version fixtures | 12 passed locally and on OL8 Python 3.6.8 |
-| Focused shell configuration, setup and bootstrap/payload fixtures | Passed; these do not establish installed lifecycle acceptance |
+| Configuration, CLI acquisition, bootstrap, signing and host-wrapper fixtures | Passed, including Bash 3.2 and signature rejection/cleanup cases |
 | Application baseline | Backend 437/437, frontend 66/66; both production builds passed with Node 22.18.0 and Yarn 1.22.22 |
-| CLI pin, unit/man tests | `eb386bfedd56beb40462dbfb405afa3efd08f5e7`; full unit suite, build and deterministic man-page generation passed with Go 1.25.8; fresh fetch verified |
-| Integrated binary payload and fresh SRPM rebuilds | Pending |
-| OL8 x86_64 and aarch64 install/setup/login/rerun/upgrade/reboot/removal | Pending |
-| Remote PostgreSQL, trusted Caddy HTTPS and database recovery fixtures | Pending |
-| Updated CI EL8/EL9 builds/install matrix and native OL8 lifecycle jobs | Pending actual workflow runs |
+| CLI pin, unit/man tests | `eb386bfedd56beb40462dbfb405afa3efd08f5e7`; full unit suite, build and deterministic man-page generation passed with Go 1.25.8; fresh fetch and OL8 staging verified |
+| Integrated binary payload | Both candidate releases passed on OL8 aarch64 and x86_64 |
+| Fresh SRPM rebuild | Passed on OL8 aarch64 with the original BUILD tree removed; payload, Source22 man pages and scriptlets verified |
+| OL8 install/setup/login/rerun/upgrade/reboot/removal | Passed on native aarch64 and x86_64 CI; also passed locally on ARM64 |
+| Remote PostgreSQL, trusted Caddy HTTPS and database recovery | Passed on both OL8 architectures; also passed locally on ARM64 |
+| CI EL8/EL9 build/install matrix | All eight jobs passed in [run 36477971745](https://github.com/mitre/heimdall2/actions/runs/36477971745); both native OL8 lifecycle jobs passed; publication skipped |
 
 The OL8 lifecycle gate builds its own candidates; it does not certify the Rocky
 matrix artifacts for OL8 runtime operation. Emulated local results must be

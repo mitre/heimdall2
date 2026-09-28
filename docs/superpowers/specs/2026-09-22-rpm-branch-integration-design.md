@@ -139,3 +139,22 @@ The implementation plans are
 - [CLI setup](https://github.com/mitre/heimdall-cli/blob/c7da1593c4ffa81d4457fa0757418842ae50bac0/internal/cmd/setup.go)
 - [CLI environment handling](https://github.com/mitre/heimdall-cli/blob/c7da1593c4ffa81d4457fa0757418842ae50bac0/internal/cmd/env.go)
 - [Latest recorded target RPM run](https://github.com/mitre/heimdall2/actions/runs/31267346150)
+
+## Execution record — September 28, 2026
+
+Requirements R1–R9 are implemented and accepted on
+`feat/rpm-integrated-install`. The tested source is
+`c540d7ac89f0b2fed16622d6af33a5d5177afffe`; the CLI pin is
+`eb386bfedd56beb40462dbfb405afa3efd08f5e7` from the authorized public fork.
+The user directed use of the existing checkout and an ordinary CLI clone,
+superseding the original worktree instructions. Both original branches remain
+preserved; the donor comparison commit is unchanged.
+
+Both native OL8 architectures passed complete lifecycle, remote PostgreSQL,
+trusted HTTPS and recovery acceptance. All eight Rocky EL8/EL9 build/install
+jobs passed; publication was skipped. Local ARM64 builds, a fresh SRPM rebuild
+and runtime fixtures also passed. The
+[acceptance report](../reports/2026-09-28-rpm-integration-acceptance.md) records
+the exact evidence, resource adjustment and scope limits. This completes the
+2.13.1 packaging milestone; newer application reconciliation and migration from
+a real 2.14.0 database remain separate work.

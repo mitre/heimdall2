@@ -79,7 +79,7 @@ and `packaging/rpm/tests/inputs.py`.
 version. `head` archives committed HEAD, `release` additionally requires the
 matching tag at HEAD, and `workspace` is the filtered Docker context.
 
-- [ ] **Step 1: Create a regression that runs checks in a temporary fixture.**
+- [x] **Step 1: Create a regression that runs checks in a temporary fixture.**
 
 ```python
 import json
@@ -125,9 +125,9 @@ if __name__ == '__main__':
     unittest.main()
 ```
 
-- [ ] **Step 2: Run `python3 packaging/rpm/tests/inputs.py`; confirm the missing checker fails.**
+- [x] **Step 2: Run `python3 packaging/rpm/tests/inputs.py`; confirm the missing checker fails.**
 
-- [ ] **Step 3: Implement the checker.**
+- [x] **Step 3: Implement the checker.**
 
 ```python
 #!/usr/bin/env python3
@@ -167,7 +167,7 @@ print(version)
 OL8's Python may be 3.6: do not introduce syntax or APIs newer than that into
 this helper.
 
-- [ ] **Step 4: Align backend metadata and wire the target Makefile to the checker.**
+- [x] **Step 4: Align backend metadata and wire the target Makefile to the checker.**
 
 Set only backend `version` to `2.13.1`. Keep target VERSION/spec/frontend/library
 dependencies as-is. Replace `check-version`'s recipe and add source-mode handling:
@@ -217,7 +217,7 @@ Replace the existing Node requirements; retain all other target requirements.
 Pass `--define "heimdall_release $(HEIMDALL_RELEASE)"` from the Makefile's
 `rpm` and `srpm` targets, with `HEIMDALL_RELEASE ?= 0.1.integration`.
 
-- [ ] **Step 5: Extend fixture tests to committed, dirty, and linked-worktree cases.**
+- [x] **Step 5: Extend fixture tests to committed, dirty, and linked-worktree cases.**
 
 Use the same `InputsTest` fixture and this exact Git initialization:
 
@@ -252,7 +252,7 @@ def test_linked_worktree(self):
     self.assertEqual(self.check('head').returncode, 0)
 ```
 
-- [ ] **Step 6: Run tests, check versions, and commit.**
+- [x] **Step 6: Run tests, check versions, and commit.**
 
 ```bash
 python3 packaging/rpm/tests/inputs.py
@@ -272,7 +272,7 @@ git commit -m "build(rpm): align integration metadata and validate source inputs
 `CLI_WORKTREE` path. Produces Source15 (CLI binary), Source22 (man-page archive),
 and a CLI whose version output identifies the pinned commit.
 
-- [ ] **Step 1: Capture and test the dependency contract.**
+- [x] **Step 1: Capture and test the dependency contract.**
 
 ```bash
 test -n "$CLI_WORKTREE"
@@ -298,7 +298,7 @@ grep -qx 'man1/heimdall-cli.1' "$topdir/man-members.txt"
 grep -qx 'man1/heimdall-cli-setup.1' "$topdir/man-members.txt"
 ```
 
-- [ ] **Step 2: Record the missing generator in a separate checkout of the old CLI.**
+- [x] **Step 2: Record the missing generator in a separate checkout of the old CLI.**
 
 ```bash
 old_cli="$(mktemp -d)/heimdall-cli"
@@ -311,7 +311,7 @@ Expected: the generator directory is missing. Do not switch the completed
 `CLI_WORKTREE` away from its tested commit. Subsequent staging uses that tested
 commit through the new pin files.
 
-- [ ] **Step 3: Update Makefile CLI acquisition and man staging.**
+- [x] **Step 3: Update Makefile CLI acquisition and man staging.**
 
 ```make
 HEIMDALL_CLI_REPO := $(shell cat heimdall-cli.repo)
@@ -360,7 +360,7 @@ install -d %{buildroot}%{_mandir}/man1
 install -p -m 0644 rpm-man/man1/*.1 %{buildroot}%{_mandir}/man1/
 ```
 
-- [ ] **Step 4: Replace the stale build helper with a delegating wrapper.**
+- [x] **Step 4: Replace the stale build helper with a delegating wrapper.**
 
 The wrapper accepts `--build`, `--skip-deps`, `--topdir PATH`, and `--dev`.
 Unrecognized legacy flags fail with usage instead of silently selecting different
@@ -389,7 +389,7 @@ if [[ $deps -eq 1 ]]; then make deps; fi
 exec make "$target" "TOPDIR=$topdir" "DEV=$dev"
 ```
 
-- [ ] **Step 5: In a prepared Linux builder, stage and inspect the CLI/man payload.**
+- [x] **Step 5: In a prepared Linux builder, stage and inspect the CLI/man payload.**
 
 ```bash
 make -C packaging/rpm stage SOURCE_MODE=workspace TOPDIR=/rpmbuild
@@ -401,7 +401,7 @@ This check runs inside a disposable builder against its copied workspace. After
 committing, also test `DEV=1` in a Git checkout. The full SRPM rebuild check is in
 Task 4.
 
-- [ ] **Step 6: Commit only the CLI integration files.**
+- [x] **Step 6: Commit only the CLI integration files.**
 
 ```bash
 git add packaging/rpm/heimdall-cli.ref packaging/rpm/heimdall-cli.repo packaging/rpm/Makefile packaging/rpm/heimdall-server.spec packaging/rpm/setup-rpm-build-env.sh packaging/rpm/tests/cli-inputs.sh
@@ -418,7 +418,7 @@ git commit -m "build(rpm): pin the CLI and include man pages in source packages"
 shell setup flags. The normal administrator interface remains `heimdall-cli setup`.
 Do not restore donor `%post` automation or hard PostgreSQL-18 Requires.
 
-- [ ] **Step 1: Import the two focused donor tests.**
+- [x] **Step 1: Import the two focused donor tests.**
 
 ```bash
 mkdir -p packaging/rpm/tests
@@ -434,7 +434,7 @@ fail before modifying the configurator. Run database.sh against a disposable
 installed target RPM when available; otherwise use the first candidate in Task
 4 and record that the baseline installed reproduction was unavailable.
 
-- [ ] **Step 2: Apply the preservation change while retaining EXTERNAL_URL support.**
+- [x] **Step 2: Apply the preservation change while retaining EXTERNAL_URL support.**
 
 Replace the generated-header overwrite with:
 
@@ -452,7 +452,7 @@ Keep all existing `write_key` calls. Change the password prompt default to
 prompts. Verify blank input retains a configured password in an OL8 pseudo-TTY
 session; do not merely grep for the new default.
 
-- [ ] **Step 3: Apply the donor migration launcher fix.**
+- [x] **Step 3: Apply the donor migration launcher fix.**
 
 Delete `TSX_BIN`, preserve the existing missing-executable message, and use:
 
@@ -480,7 +480,7 @@ test -s dist/frontend/index.html
 test -x apps/backend/node_modules/.bin/sequelize
 ```
 
-- [ ] **Step 4: Adapt the shell service guard/restart fix and preserve unit hardening.**
+- [x] **Step 4: Adapt the shell service guard/restart fix and preserve unit hardening.**
 
 After shell setup has parsed flags/root checks, before changing configuration,
 require systemd unless `RECONFIGURE_ONLY=1`:
@@ -512,7 +512,7 @@ Keep CLI validation, `UV_THREADPOOL_SIZE`, all security directives, and logger
 settings. Add ordinary runtime `Requires: tar` because the bundled CLI's backup
 and restore invoke it; retain existing optional PostgreSQL/Caddy recommendations.
 
-- [ ] **Step 5: Run configure/database tests, shell syntax checks, and commit.**
+- [x] **Step 5: Run configure/database tests, shell syntax checks, and commit.**
 
 ```bash
 for script in packaging/rpm/*.sh packaging/rpm/tests/*.sh; do bash -n "$script"; done
@@ -534,7 +534,7 @@ modify `packaging/rpm/scripts/setup-build-deps.sh` and `.gitignore`.
 `HEIMDALL_RELEASE` selects `0.1.integration` or `0.2.integration`.
 Outputs are `RPMS/<arch>/*.rpm` and `SRPMS/*.src.rpm` under the chosen destination.
 
-- [ ] **Step 1: Import the donor payload test and adapt its assertions.**
+- [x] **Step 1: Import the donor payload test and adapt its assertions.**
 
 ```bash
 git show e5ded4aa67d95745a4da7c64b55e13e480e412d1:packaging/rpm/tests/payload.sh > packaging/rpm/tests/payload.sh
@@ -554,7 +554,7 @@ test -s "$scratch/usr/share/selinux/packages/heimdall-server.pp"
 Append `**/rpmbuild`, `**/man/man1`, and `**/cli-man` to the Docker exclusion
 file, and `dist/` to `packaging/rpm/.gitignore`.
 
-- [ ] **Step 2: Repair compatible dependency bootstrap.**
+- [x] **Step 2: Repair compatible dependency bootstrap.**
 
 Remove the unconditional `curl` RPM from the target build-package list. Add
 `command -v curl >/dev/null` before repository downloads; OL8/EL9 curl-minimal
@@ -584,7 +584,7 @@ If the available Yarn RPM is not 1.22.22, install that exact Yarn Classic RPM
 from the configured Yarn repository and repeat the check; never substitute
 Corepack or a floating major version silently.
 
-- [ ] **Step 3: Add the adapted OL8 Docker definition.**
+- [x] **Step 3: Add the adapted OL8 Docker definition.**
 
 ```dockerfile
 # syntax=docker/dockerfile:1
@@ -630,7 +630,7 @@ Run configure.sh using `docker run` on the builder image, not during Docker
 build: its guard checks `/.dockerenv`, which is not a portable BuildKit RUN
 assumption. Do not set the opt-in variable in the application package/service.
 
-- [ ] **Step 4: Build candidates on each architecture, one at a time.**
+- [x] **Step 4: Build candidates on each architecture, one at a time.**
 
 ```bash
 docker build --platform linux/arm64 -f packaging/rpm/Dockerfile.ol8 \
@@ -662,7 +662,7 @@ reuse the donor README's measured 4-GiB/one-worker build procedure with paths
 changed to `heimdall2-2.13.1`; do not change frontend behavior or disable checks
 to hide build-resource failures. Report unrelated logger failures separately.
 
-- [ ] **Step 5: Rebuild an SRPM in a fresh build directory.**
+- [x] **Step 5: Rebuild an SRPM in a fresh build directory.**
 
 Use a builder with the same dependencies but an empty `/tmp/srpm-rebuild`:
 
@@ -678,7 +678,7 @@ Expected: man pages install from Source22 despite the empty BUILD tree. Also
 check `rpm -qp --scripts` to ensure installation never calls configuration or
 database setup. A passing build alone does not establish a working installation.
 
-- [ ] **Step 6: Commit Docker, payload, and bootstrap changes.**
+- [x] **Step 6: Commit Docker, payload, and bootstrap changes.**
 
 ```bash
 git add packaging/rpm/Dockerfile.ol8 packaging/rpm/Dockerfile.ol8.dockerignore packaging/rpm/tests/payload.sh packaging/rpm/scripts/setup-build-deps.sh packaging/rpm/.gitignore
@@ -695,7 +695,7 @@ run only inside an opted-in disposable systemd container. The host runner takes
 `PLATFORM RELEASE1_RPM RELEASE2_RPM`; it creates dedicated named containers,
 copies exact artifacts/tests, and saves results under ignored `dist/integration`.
 
-- [ ] **Step 1: Import lifecycle.sh and retain its real service/login/state assertions.**
+- [x] **Step 1: Import lifecycle.sh and retain its real service/login/state assertions.**
 
 ```bash
 git show e5ded4aa67d95745a4da7c64b55e13e480e412d1:packaging/rpm/tests/lifecycle.sh > packaging/rpm/tests/lifecycle.sh
@@ -732,7 +732,7 @@ curl --fail --silent --show-error --max-time 10 http://127.0.0.1:3000/health/rea
 Use `SequelizeMeta` row counts and the existing sentinel from database.sh;
 the helper does not change target migrations or seeds.
 
-- [ ] **Step 2: Adapt upgrade testing to explicit migrations and administrator-controlled restart.**
+- [x] **Step 2: Adapt upgrade testing to explicit migrations and administrator-controlled restart.**
 
 Before upgrading, write `RESTART_ON_UPGRADE=false` into the existing sysconfig
 assignment and record MainPID. Run:
@@ -756,7 +756,7 @@ removed. Move that existing cleanup invocation into the `$1 == 0` path of
 `%preun` and remove the obsolete `%postun` copy; retain messages and SELinux
 cleanup. Verify removal leaves database/sentinel and `backend.env.rpmsave`.
 
-- [ ] **Step 3: Add the host runner using the verified disposable-systemd launch.**
+- [x] **Step 3: Add the host runner using the verified disposable-systemd launch.**
 
 Core of `run-lifecycle.sh` (run from repository root):
 
@@ -814,7 +814,7 @@ mount the host checkout or publish application ports. The runner saves output
 and container inspection before cleanup; record RPM and image versions with the
 artifact evidence.
 
-- [ ] **Step 4: Add real TLS and backup/restore checks in features.sh.**
+- [x] **Step 4: Add real TLS and backup/restore checks in features.sh.**
 
 Use the same container/root/HEIMDALL_RPM_TEST guard as lifecycle.sh. Run these
 after reboot verification and before removal:
@@ -852,7 +852,7 @@ selection in setup-build-deps.sh if installing oracle-epel-release-el8 alone doe
 not enable the Caddy repository. Record the actual repository used. Inspect restore's SQL exit/result and sentinel contents, not
 only the CLI exit code. Keep the test inside its disposable host.
 
-- [ ] **Step 5: Add a separate external-database acceptance fixture.**
+- [x] **Step 5: Add a separate external-database acceptance fixture.**
 
 Create a dedicated Docker network and PostgreSQL 18 container with synthetic
 credentials; the systemd application host must have no PostgreSQL server package.
@@ -941,7 +941,7 @@ The test-host image is produced by the local lifecycle runner first. No host
 ports or volumes are needed. Container inspection records the actual database
 image ID, not only its test-image tag.
 
-- [ ] **Step 6: Run both architectures and retain new acceptance evidence.**
+- [x] **Step 6: Run both architectures and retain new acceptance evidence.**
 
 ```bash
 bash packaging/rpm/tests/run-lifecycle.sh linux/arm64 \
@@ -957,7 +957,7 @@ application/CLI commits, OS/package versions, architecture/emulation, image
 digests, each command's exit status, and preserved-state assertions. A failure
 is a blocker with its diagnostic output; do not relax checks or label it passed.
 
-- [ ] **Step 7: Commit tests and scriptlet cleanup after the targeted checks pass.**
+- [x] **Step 7: Commit tests and scriptlet cleanup after the targeted checks pass.**
 
 ```bash
 git add packaging/rpm/tests/lifecycle.sh packaging/rpm/tests/features.sh packaging/rpm/tests/run-lifecycle.sh packaging/rpm/tests/remote-database.sh packaging/rpm/heimdall-server.spec
@@ -973,7 +973,7 @@ and `packaging/rpm/INSTALL.md`.
 publishing job. Accepted artifacts use the committed CLI pin. New OL8 lifecycle
 jobs must succeed before the publishing job can run.
 
-- [ ] **Step 1: Broaden build triggers to all package inputs.**
+- [x] **Step 1: Broaden build triggers to all package inputs.**
 
 Add these paths to both existing pull-request/push path lists:
 
@@ -993,7 +993,7 @@ known path for later steps after make deps, including `/opt/heimdall-build/go-1.
 if the helper installed it. Run `python3 packaging/rpm/tests/inputs.py` before
 building. Keep candidate release values explicit in integration runs.
 
-- [ ] **Step 2: Make install checks test the actual payload and prerequisites.**
+- [x] **Step 2: Make install checks test the actual payload and prerequisites.**
 
 Configure NodeSource 22 in the clean smoke-test container before installing the
 RPM; the builder's repository configuration is not inherited. Run payload.sh
@@ -1002,7 +1002,7 @@ blanket `|| true` from `systemd-analyze verify`; EL8-only unsupported directives
 must be reported accurately and evaluated without weakening supported hardening.
 Do not use `rpm -V || true` as proof of content correctness.
 
-- [ ] **Step 3: Add a host-runner OL8 lifecycle matrix.**
+- [x] **Step 3: Add a host-runner OL8 lifecycle matrix.**
 
 Use native GitHub runners with Docker, not the unprivileged Rocky job container:
 
@@ -1054,7 +1054,7 @@ done < <(find rpms -name '*.rpm' -print0)
 This check makes the candidate status enforceable; a release event cannot
 accidentally upload packages carrying the development release number.
 
-- [ ] **Step 4: Replace stale quick-start and upgrade instructions.**
+- [x] **Step 4: Replace stale quick-start and upgrade instructions.**
 
 Document these concrete contracts:
 
@@ -1079,7 +1079,7 @@ Remove documentation recommending `--no-gpg-check` for air-gapped builds or
 referring to a nonexistent sibling CLI directory. Keep logger instructions
 unchanged. State clearly that this candidate is not an upgrade from 2.14.0.
 
-- [ ] **Step 5: Review, validate, and commit the integrated result.**
+- [x] **Step 5: Review, validate, and commit the integrated result.**
 
 ```bash
 git diff --check
@@ -1150,3 +1150,31 @@ Repository tracking note: `bd ready --json` currently fails because database
 writing the requested plans. Recover the existing tracker before using it to
 claim execution tasks; do not initialize a replacement database as part of RPM
 integration.
+
+## Execution record — September 28, 2026
+
+All six tasks and their acceptance gates are complete. The tested source is
+`c540d7ac89f0b2fed16622d6af33a5d5177afffe` on
+`feat/rpm-integrated-install`, using CLI commit
+`eb386bfedd56beb40462dbfb405afa3efd08f5e7` from the authorized fork.
+[CI run 36477971745](https://github.com/mitre/heimdall2/actions/runs/36477971745)
+passed all four Rocky builds, four signed-install checks and both native OL8
+lifecycle jobs. Publication was skipped. Local ARM64 candidate builds, fresh
+SRPM rebuild, full lifecycle, remote PostgreSQL, trusted Caddy HTTPS and
+backup/restore also passed. Exact artifacts, environments and evidence are in
+the [acceptance report](../reports/2026-09-28-rpm-integration-acceptance.md).
+
+Execution followed the user's existing-checkout/no-worktree instruction and
+explicit checkpoint commit/push requests. Native CI supplied both architecture
+results without a duplicate local emulated x86_64 run. The fresh SRPM retry used
+5 GiB RAM plus 1 GiB swap after a recorded 4-GiB OOM, retaining minification and
+type checking. The original missing-generator evidence covered the old-CLI
+probe; real staging used the tested, published fork pin. These adaptations
+retain the plan's required behavior and acceptance checks.
+
+The earlier drafting and tracker notes describe their original dates. No
+replacement issue tracker was initialized. Application/FIPS/logger source and
+the lockfile remain unchanged; only backend version metadata was corrected.
+This closing documentation records the tested source above rather than claiming
+a rebuild of the documentation commit. No stable release or 2.14.0 deployment
+was performed.

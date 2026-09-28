@@ -53,7 +53,7 @@ Use the existing `internal/cmd.NewRootCmd()`; do not duplicate its command list.
 `go run ./cmd/gen-manpages OUTPUT_DIRECTORY`, which exits nonzero on error and
 creates `heimdall-cli.1`, `heimdall-cli-setup.1`, and pages for the other commands.
 
-- [ ] **Step 1: Add the behavior test.**
+- [x] **Step 1: Add the behavior test.**
 
 ```go
 package main
@@ -79,9 +79,9 @@ func TestGenerateCommandPages(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Run `go test ./cmd/gen-manpages`; observe missing `generate`.**
+- [x] **Step 2: Run `go test ./cmd/gen-manpages`; observe missing `generate`.**
 
-- [ ] **Step 3: Add the generator.**
+- [x] **Step 3: Add the generator.**
 
 ```go
 package main
@@ -118,7 +118,7 @@ func main() {
 }
 ```
 
-- [ ] **Step 4: Run the generator twice into temporary directories and compare.**
+- [x] **Step 4: Run the generator twice into temporary directories and compare.**
 
 ```bash
 go test ./cmd/gen-manpages
@@ -130,7 +130,7 @@ diff -r "$man_test/first" "$man_test/second"
 
 Expected: tests and diff exit zero. No server/service command is executed.
 
-- [ ] **Step 5: Format and commit.**
+- [x] **Step 5: Format and commit.**
 
 ```bash
 gofmt -w cmd/gen-manpages
@@ -149,7 +149,7 @@ error` becomes a preserving update of supplied keys. `WriteEnvKey` delegates to
 that operation. `ParseEnv(string) map[string]string` uses the same literal codec
 as the writer. Do not execute the file as a shell script from Go.
 
-- [ ] **Step 1: Add a setup regression using the existing fake.**
+- [x] **Step 1: Add a setup regression using the existing fake.**
 
 ```go
 func TestStepConfigurePreservesAdditionalSettings(t *testing.T) {
@@ -200,9 +200,9 @@ func TestWriteEnvPreservesTextAndLiteralSecrets(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Run `go test ./internal/cmd -run 'TestStepConfigurePreservesAdditionalSettings|TestWriteEnvPreservesTextAndLiteralSecrets' -count=1`; observe lost keys/text or incorrect literal decoding.**
+- [x] **Step 2: Run `go test ./internal/cmd -run 'TestStepConfigurePreservesAdditionalSettings|TestWriteEnvPreservesTextAndLiteralSecrets' -count=1`; observe lost keys/text or incorrect literal decoding.**
 
-- [ ] **Step 3: Merge existing keys before the existing `WriteEnvFile` call in `SetupRunner.writeConfig`.**
+- [x] **Step 3: Merge existing keys before the existing `WriteEnvFile` call in `SetupRunner.writeConfig`.**
 
 ```go
 for key, value := range existing {
@@ -220,7 +220,7 @@ if err != nil && !errors.Is(err, os.ErrNotExist) { return err }
 Add `errors` and `os` imports if absent. A missing file is a fresh install;
 permission or read errors must not silently become an empty configuration.
 
-- [ ] **Step 4: Add a small literal codec and use it from ParseEnv.**
+- [x] **Step 4: Add a small literal codec and use it from ParseEnv.**
 
 `decodeEnvValue` removes one pair of outer single/double quotes. Within double
 quotes it unescapes only backslash, double quote, dollar sign, and backtick, which
@@ -261,7 +261,7 @@ require.NoError(t, err)
 require.Equal(t, value, decodeEnvValue(encoded))
 ```
 
-- [ ] **Step 5: Replace the destructive WriteEnvFile body with a preserving update.**
+- [x] **Step 5: Replace the destructive WriteEnvFile body with a preserving update.**
 
 Use existing imports plus `errors` and `fmt` as needed. Keep unrelated lines and
 the exact text of unchanged assignments. Serialize changed/new values with the
@@ -304,13 +304,13 @@ return m.WriteEnvFile(map[string]string{key: value})
 Adjust existing tests that intentionally asserted destructive replacement to
 assert preserving updates. Do not weaken content/permission assertions.
 
-- [ ] **Step 6: Run the targeted regressions and `go test ./internal/cmd -count=1`.**
+- [x] **Step 6: Run the targeted regressions and `go test ./internal/cmd -count=1`.**
 
 Expected: extra keys, comments, literal secrets, explicit changes, and second-run
 stability pass. Add a real-file read-error case using a directory as the env path;
 assert `stepConfigure` returns an error and the directory is unchanged.
 
-- [ ] **Step 7: Format and commit the configuration change.**
+- [x] **Step 7: Format and commit the configuration change.**
 
 ```bash
 gofmt -w internal/cmd/env.go internal/cmd/env_values.go internal/cmd/env_test.go internal/cmd/env_values_test.go internal/cmd/setup.go internal/cmd/setup_test.go
@@ -327,7 +327,7 @@ git commit -m "fix: preserve configuration through CLI setup reruns"
 `ExecRunner.Run`. Setup exits nonzero if the system bus or required service is
 unavailable. `--reconfigure` performs configuration only.
 
-- [ ] **Step 1: Add regression cases to setup_test.go.**
+- [x] **Step 1: Add regression cases to setup_test.go.**
 
 ```go
 func TestSetupRestartsAnExistingService(t *testing.T) {
@@ -362,9 +362,9 @@ func TestSetupRejectsMissingServiceManager(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Run `go test ./internal/cmd -run 'TestSetupRestartsAnExistingService|TestSetupUsesExistingRemoteHost|TestSetupRejectsMissingServiceManager' -count=1`; observe the failures.**
+- [x] **Step 2: Run `go test ./internal/cmd -run 'TestSetupRestartsAnExistingService|TestSetupUsesExistingRemoteHost|TestSetupRejectsMissingServiceManager' -count=1`; observe the failures.**
 
-- [ ] **Step 3: After the dry-run return, add the real-setup preflight before configuration.**
+- [x] **Step 3: After the dry-run return, add the real-setup preflight before configuration.**
 
 ```go
 if !r.Reconfigure {
@@ -397,7 +397,7 @@ to set `ActiveServices[service] = true` only when `Err == nil`, allocating the
 map if needed; fake `Stop` sets it false on success. Retain recorded actions.
 Update existing tests to expect enable/restart instead of enable-now.
 
-- [ ] **Step 4: Run all CLI unit tests and compile the binary.**
+- [x] **Step 4: Run all CLI unit tests and compile the binary.**
 
 ```bash
 gofmt -w internal/cmd/setup.go internal/cmd/setup_test.go internal/cmd/fakes_test.go
@@ -410,7 +410,7 @@ Use the existing injected-error cases to verify failure propagation. Real
 systemd, database, TLS, and literal environment loading are also checked by the
 RPM lifecycle plan; fake tests are not a substitute.
 
-- [ ] **Step 5: Commit, publish the integration branch, and record its exact commit.**
+- [x] **Step 5: Commit, publish the integration branch, and record its exact commit.**
 
 ```bash
 git add internal/cmd/setup.go internal/cmd/setup_test.go internal/cmd/fakes_test.go
@@ -431,3 +431,22 @@ generator is Task 1. The main RPM plan covers the package integration and real
 lifecycle checks. All new interfaces are defined above; existing runner/test
 helper names were checked at the pinned CLI commit. No FIPS or logger edits are
 part of these tasks.
+
+## Execution record — September 28, 2026
+
+Tasks 1–3 are implemented and independently reviewed. Targeted regressions,
+the full Go suite, CLI compilation and deterministic man-page generation passed
+with Go 1.25.8. The tested commit is
+`eb386bfedd56beb40462dbfb405afa3efd08f5e7`, published on
+`codex/rpm-integration-prerequisites` in the authorized
+[CLI fork](https://github.com/seanlongcc/heimdall-cli/tree/eb386bfedd56beb40462dbfb405afa3efd08f5e7).
+A fresh clone fetched this exact commit; the RPM repository and revision pins
+record that source.
+
+Execution used an ordinary clone under the user's no-worktree instruction.
+The pin also includes the required strict backup/restore error handling and
+private-hostname TLS prerequisites discovered during integration. Existing
+blank-password preservation was retained and tested. Real OL8 `DEV=1` staging
+passed, including the embedded CLI version/commit/date and Source22 man pages.
+Installed-package acceptance is recorded in the
+[RPM acceptance table](../../../packaging/rpm/README.md#acceptance-status).

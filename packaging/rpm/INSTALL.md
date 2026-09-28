@@ -3,7 +3,7 @@
 This guide covers the **2.13.1 integration candidate** on
 `feat/rpm-integrated-install`, not a stable release. Do not install it over
 2.14.0. See [README.md acceptance status](README.md#acceptance-status) for
-completed checks and the remaining candidate/CI acceptance work.
+completed checks, tested source and acceptance limits.
 
 ## Build and Install Matrix
 
