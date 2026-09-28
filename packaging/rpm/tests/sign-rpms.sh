@@ -32,10 +32,13 @@ if [[ ${1:-} == --container ]]; then
   test -s "$public"
   rpm --import "$public"
   for artifact in "$@"; do
+    # EL8's signing macro passes filenames to GPG without quoting them.
+    cp -p "$artifact" "$GNUPGHOME/package.rpm"
     rpmsign --define "_gpg_name $fingerprint" --define "_gpg_path $GNUPGHOME" \
-      --define '__gpg /usr/bin/gpg2' --define '_gpg_digest_algo sha256' --addsign "$artifact"
-    rpmkeys --checksig --verbose "$artifact" | tee "$GNUPGHOME/checksig.log"
+      --define '__gpg /usr/bin/gpg2' --define '_gpg_digest_algo sha256' --addsign "$GNUPGHOME/package.rpm"
+    rpmkeys --checksig --verbose "$GNUPGHOME/package.rpm" | tee "$GNUPGHOME/checksig.log"
     grep -Eq 'Signature.*: OK' "$GNUPGHOME/checksig.log"
+    mv "$GNUPGHOME/package.rpm" "$artifact"
     sha256sum "$artifact"
   done
   exit
@@ -56,7 +59,7 @@ docker build --platform "$platform" "${ca_args[@]}" \
 signer=''
 cleanup() {
   result=$?
-  if [[ -n $signer ]]; then docker rm -f "$signer" >/dev/null || result=1; fi
+  if [[ -n $signer ]]; then docker rm -fv "$signer" >/dev/null || result=1; fi
   exit "$result"
 }
 trap cleanup EXIT
