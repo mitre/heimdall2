@@ -109,6 +109,12 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
+if [[ "${RECONFIGURE_ONLY}" -eq 0 ]] &&
+   { [[ ! -d /run/systemd/system ]] || ! systemctl show-environment >/dev/null 2>&1; }; then
+  echo 'Heimdall setup requires a running systemd service manager.' >&2
+  exit 1
+fi
+
 # Validate --tls-cert and --tls-key (must be provided together, ignored with --skip-tls)
 if [[ "${SKIP_TLS}" -eq 0 && ( -n "${TLS_CERT}" || -n "${TLS_KEY}" ) ]]; then
   if [[ -z "${TLS_CERT}" || -z "${TLS_KEY}" ]]; then
@@ -456,7 +462,9 @@ echo "  File permissions hardened"
 echo ""
 echo "=== Step 6/6: Starting service ==="
 if command -v systemctl >/dev/null 2>&1; then
-  systemctl enable --now "${SERVICE_NAME}"
+  systemctl enable "${SERVICE_NAME}"
+  systemctl restart "${SERVICE_NAME}"
+  systemctl is-active --quiet "${SERVICE_NAME}"
   echo "Service enabled and started."
 else
   echo "systemctl not found; start the service manually."

@@ -57,6 +57,7 @@ Requires:       nodejs(engine) >= 22.18.0
 Requires:       openssl
 Requires:       policycoreutils-python-utils
 Requires:       selinux-policy-targeted
+Requires:       tar
 Requires:       util-linux
 Requires(pre):  shadow-utils
 
@@ -100,6 +101,11 @@ yarn install --frozen-lockfile --production --network-timeout 600000
 yarn frontend build
 yarn backend build
 
+test -s apps/backend/dist/src/main.js
+test -s apps/backend/dist/db/database.js
+test -s dist/frontend/index.html
+test -x apps/backend/node_modules/.bin/sequelize
+
 if [ "$yarn_cache_owned" = "1" ]; then
   rm -rf "${YARN_CACHE_FOLDER}"
 fi
@@ -128,6 +134,7 @@ cp -a apps/backend/db %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/config %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/migrations %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/seeders %{buildroot}%{_datadir}/%{name}/apps/backend/
+cp -a apps/backend/seed-support %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/dist %{buildroot}%{_datadir}/%{name}/apps/backend/
 
 # Strip executable bits from JS files that lack shebangs.
@@ -158,7 +165,7 @@ install -d %{buildroot}%{_datadir}/selinux/packages
 install -m 0644 selinux/heimdall_server.pp %{buildroot}%{_datadir}/selinux/packages/%{name}.pp
 
 # fapolicyd trust entries are managed by `heimdall-cli fapolicyd add|remove`,
-# invoked from the post and postun scriptlets (no shell helper to install).
+# invoked from the post and preun scriptlets (no shell helper to install).
 
 # firewalld service definition
 install -d %{buildroot}%{_prefix}/lib/firewalld/services
@@ -270,6 +277,11 @@ fi
 %preun
 %systemd_preun %{name}.service
 
+# Remove fapolicyd trust entries while the CLI and payload still exist.
+if [ $1 -eq 0 ]; then
+  heimdall-cli fapolicyd remove 2>/dev/null || :
+fi
+
 %postun
 # On upgrade ($1 -ge 1): check RESTART_ON_UPGRADE in sysconfig before restarting.
 # Follows the Grafana pattern — gives admins control over restart timing.
@@ -292,8 +304,6 @@ if [ $1 -eq 0 ]; then
     /usr/sbin/load_policy 2>/dev/null || true
     semanage port -d -t heimdall_server_port_t -p tcp 3000 2>/dev/null || true
   fi
-  # Remove fapolicyd trust entries (no-op if fapolicyd-cli absent).
-  heimdall-cli fapolicyd remove 2>/dev/null || :
 fi
 
 %files
