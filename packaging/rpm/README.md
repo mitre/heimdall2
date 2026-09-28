@@ -376,7 +376,7 @@ As of September 28, 2026, the current evidence is limited to:
 | Source/version fixtures | 12 passed locally and on OL8 Python 3.6.8 |
 | Focused shell configuration, setup and bootstrap/payload fixtures | Passed; these do not establish installed lifecycle acceptance |
 | Application baseline | Backend 437/437, frontend 66/66; both production builds passed with Node 22.18.0 and Yarn 1.22.22 |
-| Final CLI pin, unit/man tests | Pending final tested CLI commit |
+| CLI pin, unit/man tests | `eb386bfedd56beb40462dbfb405afa3efd08f5e7`; full unit suite, build and deterministic man-page generation passed with Go 1.25.8; fresh fetch verified |
 | Integrated binary payload and fresh SRPM rebuilds | Pending |
 | OL8 x86_64 and aarch64 install/setup/login/rerun/upgrade/reboot/removal | Pending |
 | Remote PostgreSQL, trusted Caddy HTTPS and database recovery fixtures | Pending |

@@ -42,6 +42,7 @@ if grep -Eq 'ERROR:|FAILED|restore failed' /tmp/rpm-restore.log; then exit 1; fi
 [[ $(query 'SELECT COUNT(*) FROM "SequelizeMeta"') == "$migrations" ]]
 [[ $(query "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public'") == "$tables" ]]
 sha256sum --check /tmp/rpm-recovery-env.sha256
+[[ $(stat -c '%U:%G:%a' /etc/heimdall-server/backend.env) == root:heimdall:640 ]]
 systemctl restart heimdall-server
 bash /tmp/rpm-tests/lifecycle.sh verify
 
