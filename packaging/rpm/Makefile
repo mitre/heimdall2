@@ -1,5 +1,7 @@
 SPEC     := heimdall-server.spec
-TOPDIR   := $(shell pwd)/rpmbuild
+TOPDIR   ?= $(HOME)/rpmbuild-heimdall
+SOURCE_MODE ?= $(if $(filter 1,$(DEV)),head,release)
+HEIMDALL_RELEASE ?= 0.1.integration
 
 # Version resolution is deliberately POSIX sed, not `rpmspec`.
 #
@@ -19,21 +21,15 @@ VERSION      := $(shell sed -e 's/^v//' -e 's/[[:space:]]//g' ../../VERSION 2>/d
 # Fail fast when the spec and the repository disagree about the version.
 # Every version-dependent target depends on this.
 check-version:
-	@test -n "$(VERSION)" || { \
-	  echo "ERROR: could not read ../../VERSION"; exit 1; }
-	@test -n "$(SPEC_VERSION)" || { \
-	  echo "ERROR: could not read Version: from $(SPEC)"; exit 1; }
-	@test "$(VERSION)" = "$(SPEC_VERSION)" || { \
-	  echo "ERROR: version mismatch."; \
-	  echo "  VERSION file:  $(VERSION)"; \
-	  echo "  $(SPEC):  $(SPEC_VERSION)"; \
-	  echo "  Update the spec's Version: field to match the repository version."; \
-	  exit 1; }
+	python3 scripts/check-inputs.py ../.. "$(TOPDIR)" check
+
+check-source: check-version
+	python3 scripts/check-inputs.py ../.. "$(TOPDIR)" "$(SOURCE_MODE)"
 
 # Target architecture for cross-compilation (default: host arch)
 GOARCH   ?= $(shell go env GOARCH)
 
-.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version sources cli-src heimdall-cli man stage deps check-upstream bump-version
+.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version check-source sources cli-src heimdall-cli man stage deps check-upstream bump-version
 
 # Upstream repo for `make check-upstream` (override for forks/mirrors).
 UPSTREAM_REPO ?= mitre/heimdall2
@@ -50,34 +46,21 @@ else
   RPMBUILD_PREFIX :=
 endif
 
-# Source tarball, produced from the local repository at the TAG matching the
-# spec Version. RPMs are built from tagged points in time, never from mainline.
-#
-# This replaces the previous scripts/fetch-source.sh download: the packaging now
-# lives inside heimdall2, so the source is two directories up and there is no
-# reason to reach across the network for it. That also keeps airgapped builds
-# working without a mirror.
-#
-# Set DEV=1 to archive the working tree's HEAD instead. Development only —
-# the resulting RPM does not correspond to any released version.
-SRC_REF := v$(VERSION)
-sources: check-version
-	@mkdir -p $(TOPDIR)/SOURCES
-ifeq ($(DEV),1)
-	@echo "WARNING: DEV=1 — archiving HEAD, not $(SRC_REF). Not a release build."
+# Release and development builds archive validated HEAD. Docker builds may
+# explicitly stage their filtered workspace without Git metadata.
+sources: check-source
+	@mkdir -p "$(TOPDIR)/SOURCES"
+ifeq ($(SOURCE_MODE),workspace)
+	tar -C ../.. --exclude=.git --exclude=.beads --exclude=.superpowers \
+	  --exclude=node_modules --exclude=dist --exclude=rpmbuild \
+	  --exclude=.env --exclude='.env-*' --exclude='.env.*' \
+	  --exclude='*.rpm' --exclude=certs --exclude=.cache --exclude=coverage \
+	  --transform 's|^\.|heimdall2-$(VERSION)|' \
+	  -czf "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz" .
+else
 	@git -C ../.. archive --format=tar.gz \
 	  --prefix=heimdall2-$(VERSION)/ HEAD \
-	  -o $(abspath $(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz)
-else
-	@git -C ../.. rev-parse --verify --quiet $(SRC_REF) >/dev/null || { \
-	  echo "ERROR: tag $(SRC_REF) not found in this repository."; \
-	  echo "  RPMs are built from tagged releases. Fetch tags with 'git fetch --tags',"; \
-	  echo "  or build a development RPM with 'make rpm DEV=1'."; \
-	  exit 1; }
-	@echo "Archiving $(NAME)-$(VERSION) from tag $(SRC_REF)..."
-	@git -C ../.. archive --format=tar.gz \
-	  --prefix=heimdall2-$(VERSION)/ $(SRC_REF) \
-	  -o $(abspath $(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz)
+	  > "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz"
 endif
 
 # heimdall-cli source, cloned at a pinned ref.
@@ -92,8 +75,8 @@ HEIMDALL_CLI_REPO ?= https://github.com/mitre/heimdall-cli.git
 HEIMDALL_CLI_REF  ?= main
 CLI_DIR           := $(TOPDIR)/heimdall-cli-src
 
-cli-src:
-	@mkdir -p $(TOPDIR)
+cli-src: check-source
+	@mkdir -p "$(TOPDIR)"
 	@if [ -d "$(CLI_DIR)/.git" ]; then \
 	  git -C $(CLI_DIR) fetch --quiet --tags origin; \
 	else \
@@ -143,34 +126,36 @@ deps:
 
 # Stage all source files into rpmbuild tree (Sources 0-21).
 # Single source of truth for which files go into the RPM.
-stage: sources heimdall-cli man
-	@mkdir -p $(TOPDIR)/{SPECS,BUILD,RPMS,SRPMS}
-	cp $(SPEC) $(TOPDIR)/SPECS/
+stage: check-source sources heimdall-cli man
+	@mkdir -p "$(TOPDIR)/SPECS" "$(TOPDIR)/BUILD" "$(TOPDIR)/RPMS" "$(TOPDIR)/SRPMS"
+	# Retain the selected release when the SRPM is rebuilt without Make macros.
+	sed 's/%global heimdall_release [^}]*/%global heimdall_release $(HEIMDALL_RELEASE)/' \
+	  "$(SPEC)" > "$(TOPDIR)/SPECS/$(SPEC)"
 	@# Source 9-11: SELinux policy
-	cp selinux/* $(TOPDIR)/SOURCES/
+	cp selinux/* "$(TOPDIR)/SOURCES/"
 	@# (fapolicyd helper script retired — handled by `heimdall-cli fapolicyd`)
 	@# Source 13: firewalld service definition
-	cp firewalld/* $(TOPDIR)/SOURCES/
+	cp firewalld/* "$(TOPDIR)/SOURCES/"
 	@# Sources 1-8, 14, 16-19: service, config, scripts
 	cp heimdall-backend.env heimdall-server.service heimdall-server.sh \
 	   heimdall-configure.sh heimdall-postgres-setup.sh heimdall-setup.sh \
 	   heimdall-db-setup.sh heimdall-server-tmpfiles.conf heimdall-server.repo \
 	   heimdall-Caddyfile heimdall-sysconfig \
 	   heimdall-rsyslog.conf heimdall-logrotate.conf \
-	   $(TOPDIR)/SOURCES/
+	   "$(TOPDIR)/SOURCES/"
 	@# Sources 20-21: security samples
-	cp security/40-heimdall.rules security/SECURITY.md $(TOPDIR)/SOURCES/
+	cp security/40-heimdall.rules security/SECURITY.md "$(TOPDIR)/SOURCES/"
 	@# Man pages (generated by the man target above)
-	mkdir -p $(TOPDIR)/BUILD/man/man1
-	cp man/man1/*.1 $(TOPDIR)/BUILD/man/man1/ 2>/dev/null || true
+	mkdir -p "$(TOPDIR)/BUILD/man/man1"
+	cp man/man1/*.1 "$(TOPDIR)/BUILD/man/man1/" 2>/dev/null || true
 
 srpm: stage
-	rpmbuild -bs --define "_topdir $(TOPDIR)" $(TOPDIR)/SPECS/$(SPEC)
+	rpmbuild -bs --define "_topdir $(TOPDIR)" --define "heimdall_release $(HEIMDALL_RELEASE)" "$(TOPDIR)/SPECS/$(SPEC)"
 	@echo "SRPM: $$(ls $(TOPDIR)/SRPMS/*.src.rpm)"
 
 rpm: stage
 	@$(if $(filter 1,$(CACHE)),mkdir -p $(YARN_CACHE),true)
-	$(RPMBUILD_PREFIX) rpmbuild -ba --define "_topdir $(TOPDIR)" $(TOPDIR)/SPECS/$(SPEC)
+	$(RPMBUILD_PREFIX) rpmbuild -ba --define "_topdir $(TOPDIR)" --define "heimdall_release $(HEIMDALL_RELEASE)" "$(TOPDIR)/SPECS/$(SPEC)"
 	@echo "RPMs: $$(ls $(TOPDIR)/RPMS/*/*.rpm)"
 
 # Iterate fast on spec edits — skips %prep + %build (no tarball

@@ -1,6 +1,7 @@
 Name:           heimdall-server
 Version:        2.13.1
-Release:        1%{?dist}
+%{!?heimdall_release:%global heimdall_release 0.1.integration}
+Release:        %{heimdall_release}%{?dist}
 Summary:        Heimdall server for security result persistence and review
 
 License:        Apache-2.0
@@ -44,7 +45,7 @@ ExclusiveArch:  aarch64 x86_64
 
 BuildRequires:  gcc-c++
 BuildRequires:  make
-BuildRequires:  nodejs >= 22
+BuildRequires:  nodejs(engine) >= 22.18.0
 BuildRequires:  python3
 BuildRequires:  selinux-policy-devel
 BuildRequires:  systemd-rpm-macros
@@ -52,7 +53,7 @@ BuildRequires:  /usr/bin/yarn
 
 %{?systemd_requires}
 
-Requires:       nodejs >= 22
+Requires:       nodejs(engine) >= 22.18.0
 Requires:       openssl
 Requires:       policycoreutils-python-utils
 Requires:       selinux-policy-targeted
