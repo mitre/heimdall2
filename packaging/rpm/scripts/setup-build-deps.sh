@@ -13,7 +13,6 @@
 # Options:
 #   --skip-update       Skip dnf update
 #   --with-pgdg         Also install PGDG PostgreSQL repo
-#   --no-gpg-check      Disable GPG checks (air-gapped environments)
 #   -h, --help          Show this help
 
 set -euo pipefail
@@ -21,7 +20,6 @@ set -euo pipefail
 SCRIPT_NAME="$(basename "$0")"
 RUN_DNF_UPDATE=1
 ENABLE_PGDG=0
-NO_GPG_CHECK=0
 
 usage() {
     cat <<EOF
@@ -35,7 +33,6 @@ Supported: RHEL, Oracle Linux, CentOS Stream, Rocky Linux, AlmaLinux (EL8, EL9)
 Options:
   --skip-update       Skip 'dnf update' (faster on pre-configured hosts)
   --with-pgdg         Also install PGDG PostgreSQL repository
-  --no-gpg-check      Disable GPG checks (air-gapped/mirror environments)
   -h, --help          Show this help
 
 After running, build with:
@@ -48,7 +45,6 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --skip-update)   RUN_DNF_UPDATE=0; shift ;;
         --with-pgdg)     ENABLE_PGDG=1; shift ;;
-        --no-gpg-check)  NO_GPG_CHECK=1; shift ;;
         -h|--help)       usage 0 ;;
         *)               echo "Error: unknown option '$1'" >&2; usage 1 ;;
     esac
@@ -64,8 +60,8 @@ fi
 if [[ -z "${el_major}" || "${el_major}" == "%{?rhel}" ]]; then
     el_major="$(. /etc/os-release 2>/dev/null && printf '%s' "${VERSION_ID%%.*}")"
 fi
-if [[ -z "${el_major}" ]]; then
-    echo "Error: cannot determine EL major version." >&2
+if [[ "${el_major}" != 8 && "${el_major}" != 9 ]]; then
+    echo "Error: unsupported EL major version '${el_major}'." >&2
     echo "This script supports RHEL, Oracle Linux, CentOS Stream, Rocky, and Alma (EL8/EL9)." >&2
     exit 1
 fi
@@ -84,9 +80,8 @@ fi
 
 # DNF args
 DNF_ARGS=(-y)
-if [[ "${NO_GPG_CHECK}" -eq 1 ]]; then
-    DNF_ARGS+=("--nogpgcheck" "--setopt=*.gpgcheck=0" "--setopt=*.repo_gpgcheck=0")
-fi
+command -v curl >/dev/null
+${SUDO} dnf install "${DNF_ARGS[@]}" dnf-plugins-core
 
 # ---------------------------------------------------------------------------
 # Step 1: Enable required repositories
@@ -95,7 +90,7 @@ echo ""
 echo "=== Step 1/5: Repositories ==="
 
 # --- EPEL ---
-# EPEL is needed for yarnpkg and other build deps.
+# EPEL is needed for RPM build tools on some supported distributions.
 # Package name varies: epel-release (CentOS/Rocky/Alma), oracle-epel-release-el* (OL)
 if ! rpm -q epel-release >/dev/null 2>&1 && \
    ! rpm -q oracle-epel-release-el${el_major} >/dev/null 2>&1; then
@@ -140,8 +135,10 @@ if [[ "${ENABLE_PGDG}" -eq 1 ]]; then
     echo "  Setting up PGDG PostgreSQL repo..."
     local_arch="$(uname -m)"
     pgdg_url="https://download.postgresql.org/pub/repos/yum/reporpms/EL-${el_major}-${local_arch}/pgdg-redhat-repo-latest.noarch.rpm"
-    ${SUDO} dnf install "${DNF_ARGS[@]}" "${pgdg_url}" 2>/dev/null || true
-    ${SUDO} dnf module disable postgresql "${DNF_ARGS[@]}" 2>/dev/null || true
+    ${SUDO} dnf install "${DNF_ARGS[@]}" "${pgdg_url}"
+    if [[ "${el_major}" == 8 ]]; then
+        ${SUDO} dnf module disable postgresql "${DNF_ARGS[@]}"
+    fi
 fi
 
 # ---------------------------------------------------------------------------
@@ -175,7 +172,6 @@ ${SUDO} dnf install "${DNF_ARGS[@]}" \
     selinux-policy-devel \
     systemd-rpm-macros \
     tar \
-    curl \
     util-linux
 
 # ---------------------------------------------------------------------------
@@ -184,47 +180,51 @@ ${SUDO} dnf install "${DNF_ARGS[@]}" \
 # The spec uses BuildRequires: /usr/bin/yarn. This must be satisfied by an RPM
 # package (not corepack), because rpmbuild checks the RPM database, not $PATH.
 #
-# Priority: yarnpkg from EPEL > yarn from Yarn's own repo
 echo ""
 echo "=== Step 4/5: Yarn ==="
-if command -v yarn >/dev/null 2>&1 && rpm -qf "$(command -v yarn)" >/dev/null 2>&1; then
-    echo "  Yarn: $(yarn --version) ($(rpm -qf "$(command -v yarn)"))"
-else
-    # Try yarnpkg from EPEL first
-    if ${SUDO} dnf install "${DNF_ARGS[@]}" yarnpkg 2>/dev/null; then
-        echo "  Yarn: $(yarn --version) (yarnpkg from EPEL)"
+# Remove only Corepack's shim; disabling it unconditionally removes real Yarn too.
+if command -v corepack >/dev/null 2>&1 && command -v yarn >/dev/null 2>&1 && \
+   [[ "$(readlink -f "$(command -v yarn)")" == */corepack/* ]]; then
+    ${SUDO} corepack disable yarn
+fi
+if ! command -v yarn >/dev/null 2>&1 || \
+   ! rpm -qf "$(command -v yarn)" >/dev/null 2>&1 || \
+   [[ "$(yarn --version)" != 1.22.22 ]]; then
+    ${SUDO} curl -fsSL https://dl.yarnpkg.com/rpm/yarn.repo \
+        -o /etc/yum.repos.d/yarn.repo
+    if rpm -q yarnpkg >/dev/null 2>&1; then
+        ${SUDO} dnf swap "${DNF_ARGS[@]}" yarnpkg yarn-1.22.22
+    elif rpm -q yarn-1.22.22 >/dev/null 2>&1; then
+        ${SUDO} dnf reinstall "${DNF_ARGS[@]}" yarn-1.22.22
     else
-        # Fall back to Yarn's own RPM repo
-        echo "  yarnpkg not in EPEL; adding Yarn repo..."
-        ${SUDO} curl -fsSL https://dl.yarnpkg.com/rpm/yarn.repo \
-            -o /etc/yum.repos.d/yarn.repo
-        ${SUDO} dnf install "${DNF_ARGS[@]}" yarn
-        echo "  Yarn: $(yarn --version) (yarn from dl.yarnpkg.com)"
+        ${SUDO} dnf install "${DNF_ARGS[@]}" yarn-1.22.22
     fi
 fi
+test "$(yarn --version)" = 1.22.22
+rpm -qf /usr/bin/yarn >/dev/null
 
 # ---------------------------------------------------------------------------
 # Step 5/5: Go (required for building heimdall-cli)
 # ---------------------------------------------------------------------------
 # Distro Go packages are typically too old (1.20-1.21). We install the
 # official Go tarball from go.dev which works on all EL variants.
-GO_VERSION="${GO_VERSION:-1.24.4}"
+GO_VERSION="${GO_VERSION:-1.25.8}"
 echo ""
 echo "=== Step 5/5: Go ==="
-if command -v go >/dev/null 2>&1; then
-    installed_go="$(go version | grep -oP 'go\K[0-9]+\.[0-9]+')"
-    echo "  Go: $(go version) (already installed)"
-else
+installed_go=$(go version 2>/dev/null | awk '{sub(/^go/, "", $3); print $3}' || true)
+if [[ "$installed_go" != "$GO_VERSION" ]]; then
     arch_suffix="$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
-    go_tarball="go${GO_VERSION}.linux-${arch_suffix}.tar.gz"
+    go_archive=$(mktemp)
+    trap 'rm -f "$go_archive"' EXIT
     echo "  Installing Go ${GO_VERSION}..."
-    curl -fsSL "https://go.dev/dl/${go_tarball}" | ${SUDO} tar -C /usr/local -xzf -
-    if [[ ! -f /etc/profile.d/golang.sh ]]; then
-        echo 'export PATH=$PATH:/usr/local/go/bin' | ${SUDO} tee /etc/profile.d/golang.sh >/dev/null
-    fi
-    export PATH="$PATH:/usr/local/go/bin"
-    echo "  Go: $(go version)"
+    curl --fail --location "https://go.dev/dl/go${GO_VERSION}.linux-${arch_suffix}.tar.gz" -o "$go_archive"
+    ${SUDO} install -d "/opt/heimdall-build/go-${GO_VERSION}"
+    ${SUDO} tar -C "/opt/heimdall-build/go-${GO_VERSION}" --strip-components=1 -xzf "$go_archive"
+    rm -f "$go_archive"
+    export PATH="/opt/heimdall-build/go-${GO_VERSION}/bin:$PATH"
 fi
+test "$(go env GOVERSION)" = "go${GO_VERSION}"
+node -e 'const [a,b]=process.versions.node.split(".").map(Number); if(a!==22 || b<18) process.exit(1)'
 
 # ---------------------------------------------------------------------------
 # Summary
@@ -235,6 +235,7 @@ echo " Build dependencies installed."
 echo ""
 echo " Build the RPM:"
 echo "   cd heimdall-server"
+echo "   export PATH=/opt/heimdall-build/go-${GO_VERSION}/bin:\$PATH"
 echo "   make rpm GOARCH=amd64"
 echo ""
 echo " Or step by step:"
