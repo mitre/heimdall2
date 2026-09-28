@@ -54,9 +54,9 @@ wait_bus() {
   shasum -a 256 "$initial" "$upgrade" "$RPM_TEST_GPG_KEY"
   docker info --format 'daemon_arch={{.Architecture}} daemon_os={{.OperatingSystem}}'
 } > "$logdir/inputs.txt"
-ca_args=()
-if [[ -n ${RPM_TEST_CA:-} ]]; then ca_args=(--secret "id=corp_ca,src=$RPM_TEST_CA"); fi
-step docker build --platform "$platform" "${ca_args[@]}" \
+build_args=(--platform "$platform")
+if [[ -n ${RPM_TEST_CA:-} ]]; then build_args+=(--secret "id=corp_ca,src=$RPM_TEST_CA"); fi
+step docker build "${build_args[@]}" \
   -f packaging/rpm/Dockerfile.ol8 --target test-host -t "$image" .
 docker image inspect "$image" > "$logdir/image.json"
 container=$(docker create --name "$name" --platform "$platform" --runtime=runc \

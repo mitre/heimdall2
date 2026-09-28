@@ -52,9 +52,9 @@ shift 2
 for artifact in "$@"; do test -s "$artifact"; done
 name="heimdall-rpm-signer-${platform##*/}-$$-$RANDOM"
 image="heimdall-integration-test:${platform##*/}"
-ca_args=()
-if [[ -n ${RPM_TEST_CA:-} ]]; then ca_args=(--secret "id=corp_ca,src=$RPM_TEST_CA"); fi
-docker build --platform "$platform" "${ca_args[@]}" \
+build_args=(--platform "$platform")
+if [[ -n ${RPM_TEST_CA:-} ]]; then build_args+=(--secret "id=corp_ca,src=$RPM_TEST_CA"); fi
+docker build "${build_args[@]}" \
   -f packaging/rpm/Dockerfile.ol8 --target test-host -t "$image" .
 signer=''
 cleanup() {

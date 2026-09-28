@@ -17,10 +17,14 @@ test -e "$app/libs/password-complexity/index.js"
 find "$app/apps/backend/node_modules" -xtype l > "$scratch/broken-links"
 test ! -s "$scratch/broken-links"
 test -s "$app/apps/backend/seed-support/demo-seed-helpers.js"
-NODE_ENV=production node - "$app/apps/backend" <<'NODE'
+static_root=$(sed -n 's/^Environment=HEIMDALL_STATIC_ROOT=//p' "$scratch/usr/lib/systemd/system/heimdall-server.service")
+test -n "$static_root"
+HEIMDALL_STATIC_ROOT="$scratch$static_root" NODE_ENV=production node - "$app/apps/backend" <<'NODE'
 const fs = require('fs');
 const path = require('path');
 const backend = process.argv[2];
+const {frontendRoot} = require(path.join(backend, 'dist/src/config/static-paths.js'));
+require('assert').ok(fs.statSync(path.join(frontendRoot(), 'index.html')).size > 0);
 require(path.join(backend, 'seed-support/demo-seed-helpers.js'));
 for (const file of fs.readdirSync(path.join(backend, 'seeders'))) {
   if (file.endsWith('.js')) require(path.join(backend, 'seeders', file));

@@ -12,6 +12,7 @@ WorkingDirectory=/usr/share/heimdall-server/apps/backend
 EnvironmentFile=-/etc/sysconfig/heimdall-server
 EnvironmentFile=-/etc/heimdall-server/backend.env
 Environment=NODE_ENV=production
+Environment=HEIMDALL_STATIC_ROOT=/usr/share/heimdall-server/dist
 # ADR-006 §11: libuv reads UV_THREADPOOL_SIZE at first threadpool use. The
 # PBKDF2 KDF concurrency limiter assumes 8 threadpool slots — the same value
 # the container path sets (Dockerfile ENV / cmd.sh). EnvironmentFile= values
