@@ -39,7 +39,7 @@ defaults:
     shell: bash
 
 env:
-  HEIMDALL_RELEASE: 0.1.integration
+  HEIMDALL_RELEASE: 0.4.integration
   GOTOOLCHAIN: local
 
 jobs:
@@ -83,6 +83,8 @@ jobs:
         run: |
           test "$(go env GOVERSION)" = go1.25.8
           python3 packaging/rpm/tests/inputs.py
+          python3 packaging/rpm/tests/runtime-inputs.py
+          python3 packaging/rpm/tests/cli-acquisition.py
           make -C packaging/rpm check-version TOPDIR="$TOPDIR"
 
       - name: Build candidate RPM and verify CLI inputs
@@ -95,6 +97,12 @@ jobs:
           make -C packaging/rpm rpm SOURCE_MODE="$source_mode" \
             TOPDIR="$TOPDIR" HEIMDALL_RELEASE="$HEIMDALL_RELEASE"
           bash packaging/rpm/tests/cli-inputs.sh "$TOPDIR"
+
+      - name: Rebuild the SRPM in an empty tree
+        run: |
+          mapfile -t srpms < <(find "$TOPDIR/SRPMS" -name '*.src.rpm')
+          test "${#srpms[@]}" -eq 1
+          bash packaging/rpm/tests/srpm-rebuild.sh "${srpms[0]}" /tmp/heimdall-srpm-rebuild
 
       - name: Lint the built packages (advisory)
         continue-on-error: true
@@ -109,6 +117,13 @@ jobs:
           bash packaging/rpm/tests/sign-rpms.sh --container \
             "$TOPDIR/RPM-TEST-GPG-KEY" "${rpms[@]}"
 
+      - name: Record runtime inventory and checksums
+        run: |
+          cp "$TOPDIR/SOURCES/runtime-manifest.json" "$TOPDIR/runtime-manifest.json"
+          cd "$TOPDIR"
+          find RPMS SRPMS -type f -name '*.rpm' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+          sha256sum runtime-manifest.json RPM-TEST-GPG-KEY >> SHA256SUMS
+
       - name: Record what was built
         run: |
           find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -printf '%f\n' | sort
@@ -121,6 +136,8 @@ jobs:
             ${{ env.TOPDIR }}/RPMS/**/*.rpm
             ${{ env.TOPDIR }}/SRPMS/*.rpm
             ${{ env.TOPDIR }}/RPM-TEST-GPG-KEY
+            ${{ env.TOPDIR }}/runtime-manifest.json
+            ${{ env.TOPDIR }}/SHA256SUMS
           retention-days: 7
           if-no-files-found: error
 
@@ -155,9 +172,9 @@ jobs:
           name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
           path: rpms
 
-      - name: Configure NodeSource and install the signed package
+      - name: Verify checksums and install the signed package
         run: |
-          curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
+          (cd rpms && sha256sum --check SHA256SUMS)
           mapfile -d '' -t rpms < <(find rpms -name 'heimdall-server-*.${{ matrix.arch }}.rpm' -print0)
           test "${#rpms[@]}" -eq 1
           rpm --import rpms/RPM-TEST-GPG-KEY
@@ -173,6 +190,17 @@ jobs:
         run: |
           rpm -q heimdall-server
           rpm -V heimdall-server
+          cmp rpms/runtime-manifest.json /usr/share/heimdall-server/runtime-manifest.json
+          runtime=/usr/libexec/heimdall-server/runtime
+          "$runtime/node/bin/node" --version
+          "$runtime/postgresql/bin/postgres" --version
+          "$runtime/postgresql/bin/psql" --version
+          "$runtime/caddy/caddy" version
+          rpm -qa --qf '%{NAME}\n' > /tmp/installed-packages
+          if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy)$' /tmp/installed-packages; then exit 1; fi
+          for name in node postgresql caddy; do
+            test -n "$(find /usr/share/licenses/heimdall-server -type f -ipath "*$name*" -print -quit)"
+          done
           cli_version=$(heimdall-cli --version)
           printf '%s\n' "$cli_version"
           version=$(sed 's/^v//' VERSION)
@@ -181,15 +209,15 @@ jobs:
           find /usr/share/man/man1 -name 'heimdall-cli.1*' | grep -q .
           find /usr/share/man/man1 -name 'heimdall-cli-setup.1*' | grep -q .
 
-      - name: Verify the installed systemd unit
+      - name: Verify the installed systemd units
         run: |
           mkdir -p diagnostics
-          systemd-analyze verify /usr/lib/systemd/system/heimdall-server.service 2>&1 \
+          systemd-analyze verify /usr/lib/systemd/system/heimdall-{server,postgresql,caddy}.service 2>&1 \
             | tee diagnostics/systemd-verify.log
           if [[ '${{ matrix.distro }}' == el8 ]]; then
             # systemd 239 ignores these four newer settings. Keep the directives
             # for newer systems, expose the limitation, and reject other warnings.
-            awk '!/^\/usr\/lib\/systemd\/system\/heimdall-server.service:[0-9]+: Unknown lvalue '\''(ProtectClock|ProtectHostname|ProtectKernelLogs|ProtectProc)'\'' in section '\''Service'\''$/' \
+            awk '!/^\/usr\/lib\/systemd\/system\/heimdall-(server|postgresql|caddy).service:[0-9]+: Unknown lvalue '\''(ProtectClock|ProtectHostname|ProtectKernelLogs|ProtectProc)'\'' in section '\''Service'\''$/' \
               diagnostics/systemd-verify.log > diagnostics/unexpected.log
             test ! -s diagnostics/unexpected.log
             if [[ -s diagnostics/systemd-verify.log ]]; then
@@ -224,27 +252,25 @@ jobs:
       - name: Build two OL8 candidate releases
         run: |
           docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
-            --build-arg HEIMDALL_RELEASE=0.1.integration --target artifacts \
+            --build-arg HEIMDALL_RELEASE=0.3.integration --target artifacts \
             --output type=local,dest=artifacts/first .
           docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
-            --build-arg HEIMDALL_RELEASE=0.2.integration --target artifacts \
+            --build-arg HEIMDALL_RELEASE=0.4.integration --target artifacts \
             --output type=local,dest=artifacts/second .
 
       - name: Sign disposable lifecycle candidates
         run: |
           bash packaging/rpm/tests/sign-rpms.sh '${{ matrix.platform }}' artifacts/RPM-TEST-GPG-KEY \
-            artifacts/first/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.1.integration.el8.${{ matrix.arch }}.rpm \
-            artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.2.integration.el8.${{ matrix.arch }}.rpm
+            artifacts/first/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.3.integration.el8.${{ matrix.arch }}.rpm \
+            artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.4.integration.el8.${{ matrix.arch }}.rpm
 
       - name: Verify real package lifecycle
         env:
           RPM_TEST_GPG_KEY: ${{ github.workspace }}/artifacts/RPM-TEST-GPG-KEY
         run: |
           bash packaging/rpm/tests/run-lifecycle.sh '${{ matrix.platform }}' \
-            artifacts/first/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.1.integration.el8.${{ matrix.arch }}.rpm \
-            artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.2.integration.el8.${{ matrix.arch }}.rpm
-          bash packaging/rpm/tests/remote-database.sh '${{ matrix.platform }}' \
-            artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.2.integration.el8.${{ matrix.arch }}.rpm
+            artifacts/first/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.3.integration.el8.${{ matrix.arch }}.rpm \
+            artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.4.integration.el8.${{ matrix.arch }}.rpm
 
       - uses: actions/upload-artifact@v7
         if: always()

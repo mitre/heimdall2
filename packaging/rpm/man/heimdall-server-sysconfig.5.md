@@ -55,18 +55,19 @@ file.
 
 :   Variable data directory owned by the heimdall user. Contains the
     backups/ subdirectory for pre-upgrade and on-demand database backups.
-    This is the only directory the service writes to at runtime (via the
-    systemd ReadWritePaths directive).
+    Private PostgreSQL and Caddy state are separate sibling directories and
+    are not relocated or recursively reowned by this application setting.
 
 **HEIMDALL_CONFIG_DIR**=_/etc/heimdall-server_
 
 :   Configuration directory containing backend.env and any additional
-    configuration files. Owned by root:heimdall with mode 0750.
+    configuration files. Owned by root:heimdall with mode 0751 for private Caddy traversal;
+    backend.env remains root:heimdall 0640.
 
 **HEIMDALL_LIBEXEC_DIR**=_/usr/libexec/heimdall-server_
 
-:   Helper scripts directory containing configure.sh, postgres-setup.sh,
-    fapolicyd-trust.sh, and the Caddy reverse proxy template.
+:   Helper scripts and runtime directory. Packaged executables use fixed paths
+    beneath runtime/. CLI path overrides do not relocate the RPM or units.
 
 **HEIMDALL_LOG_DIR**=_/var/log/heimdall-server_
 
@@ -85,17 +86,18 @@ file.
 :   Path to the application environment file. The entrypoint script
     sources this file before starting the Node.js process.
 
-**RESTART_ON_UPGRADE**=_true_
+**SKIP_PREUPGRADE_BACKUP**=_false_
 
-:   Controls whether the service is automatically restarted during RPM
-    upgrades. When set to **true** (the default), the RPM postun
-    scriptlet calls **systemctl try-restart heimdall-server** after
-    package upgrade. Set to **false** to manage restart timing manually,
-    which is useful in environments with maintenance windows or when
-    upgrades require manual database migration steps.
+:   An active configured installation must complete a pre-upgrade backup before
+    replacement. Set this strict boolean to **true** only after independently
+    verifying a separate backup; reset it to **false** afterward.
 
-This follows the same pattern used by Grafana and other enterprise
-services that ship sysconfig files for restart control.
+**RESTART_ON_UPGRADE**=_(legacy)_
+
+:   Retained for compatibility only. Upgrade transactions stop owned services and
+    leave /etc/heimdall-server/upgrade-pending. Full **heimdall-cli setup
+    --non-interactive** must successfully migrate before application startup.
+    This setting cannot override the migration gate.
 
 ## UPGRADE BEHAVIOR
 
@@ -109,7 +111,9 @@ package upgrades:
   **/etc/sysconfig/heimdall-server.rpmnew** for reference.
 
 This ensures that custom path overrides and restart preferences survive
-upgrades without manual intervention.
+upgrades. Review .rpmnew templates without replacing saved secrets.
+PostgreSQL major upgrades require a separate migration. A mismatched retained
+cluster major refuses package replacement before any service is stopped.
 
 ## EXAMPLES
 
@@ -119,11 +123,14 @@ Override the data directory to use a dedicated volume:
 HEIMDALL_DATA_DIR=/data/heimdall-server
 ```
 
-Disable automatic restart during upgrades:
+After verifying an independent backup, explicitly override the automatic backup
+gate for one upgrade:
 
 ```text
-RESTART_ON_UPGRADE=false
+SKIP_PREUPGRADE_BACKUP=true
 ```
+
+Reset it to false after the transaction. Full setup remains required.
 
 Point the configuration to a non-standard location:
 

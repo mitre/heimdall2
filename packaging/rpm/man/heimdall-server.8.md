@@ -27,17 +27,48 @@ hardening.
 After installing the RPM, complete the initial setup by running:
 
 ```bash
-sudo heimdall-cli setup
+sudo heimdall-cli setup --interactive
 ```
 
-This performs seven steps: generates secrets and configuration, bootstraps
-a local PostgreSQL database (if applicable), tests the database connection,
-runs schema migrations and seeds the initial admin user, configures TLS
-via Caddy (if installed), applies SELinux and firewall policies, and starts
-the service.
+The RPM includes private Node.js, PostgreSQL and Caddy runtimes. Setup asks
+independently for **--database-mode bundled|external** and
+**--proxy-mode bundled|external|none**. External databases may run on localhost;
+setup tests connectivity and migrates the application but never controls the
+external service. Supported external PostgreSQL server majors are 13 through 18.
+The two private services remain disabled until selected by setup.
 
-See **heimdall-cli**(1) for the full list of setup options and deployment
-patterns.
+Fresh defaults are bundled/bundled. Flags override saved selections; saved
+selections override defaults. Existing configured systems without mode keys use
+external/external and retain endpoints. Temporary **--skip-db** and **--skip-tls**
+do not change ownership. **--reconfigure** writes configuration only; run full
+setup afterward to apply topology changes. Changing databases does not copy data.
+
+Bundled Caddy supports **--tls-mode acme|internal|custom**. Custom mode also takes
+**--tls-cert** and **--tls-key**. External proxies forward to the configured
+application port. A port conflict returns an error without stopping its owner.
+See **heimdall-cli-setup**(1) for all options.
+
+## UPGRADES AND RECOVERY
+
+```bash
+sudo heimdall-cli backup
+sudo dnf upgrade ./heimdall-server-*.rpm
+sudo heimdall-cli setup --non-interactive
+sudo heimdall-cli status
+```
+
+Select exactly one upgrade RPM. The transaction requires a successful backup for
+an active installation, then stops only owned services. An upgrade-pending marker
+prevents application startup until full setup successfully migrates the schema.
+Skipped database work and failed migrations do not clear the marker. The legacy
+RESTART_ON_UPGRADE setting does not override this requirement.
+
+Ordinary runtime patches arrive through a new server RPM. A retained PostgreSQL
+cluster with a different major blocks replacement; major migration is separate.
+Backups contain logical SQL, configuration and owned Caddy certificate/CA state.
+Restore into an empty recovery database, then run full setup before serving.
+Removal retains data, certificates, backups and accounts, including modified
+configuration saved by RPM as .rpmsave.
 
 ## OPTIONS
 
@@ -116,8 +147,7 @@ sudo heimdall-cli status
 **/usr/bin/heimdall-cli**
 
 :   Administrative CLI tool for setup, status, configuration, backup,
-    restore, password reset, diagnostics, and service control. Static Go
-    binary with no external dependencies.
+    restore, password reset, diagnostics, and service control. Go binary; its administrative commands use the packaged runtime clients.
 
 **/usr/bin/heimdall-server**
 
@@ -127,10 +157,25 @@ sudo heimdall-cli status
 
 **/usr/libexec/heimdall-server/**
 
-:   Helper scripts used during setup and maintenance: configure.sh
-    (generates configuration), postgres-setup.sh (bootstraps local
-    PostgreSQL), fapolicyd-trust.sh (registers binaries with fapolicyd),
-    and the Caddy reverse proxy template.
+:   Setup helpers and private runtimes under runtime/node, runtime/postgresql
+    and runtime/caddy. No global node, psql or caddy aliases are installed.
+
+**/usr/share/heimdall-server/runtime-manifest.json**
+
+:   Runtime versions, archive hashes and license inventory. Notices are installed
+    under /usr/share/licenses/heimdall-server.
+
+**/var/lib/heimdall-postgresql/18/data**
+
+:   Private PostgreSQL cluster owned by heimdall-postgres. The service is
+    heimdall-postgresql.service; its default listener is 127.0.0.1:55432 and
+    its Unix socket is /run/heimdall-postgresql.
+
+**/etc/heimdall-server/caddy/Caddyfile**
+
+:   Private Caddy configuration. The service is heimdall-caddy.service, running
+    as heimdall-caddy. State lives under /var/lib/heimdall-caddy, and the admin
+    socket is /run/heimdall-caddy/admin.sock.
 
 **/var/lib/heimdall-server/**
 
@@ -144,9 +189,8 @@ sudo heimdall-cli status
 
 **/etc/pki/heimdall-server/**
 
-:   TLS certificate directory. Stores self-signed certificates generated
-    during setup for IP-based deployments. Corporate PKI certificates may
-    also be placed here.
+:   Legacy certificate directory. Managed private Caddy certificates and CA
+    state are retained in its private configuration/state directories.
 
 **/usr/share/selinux/packages/heimdall-server.pp**
 
@@ -210,8 +254,12 @@ getsebool heimdall_server_connect_postgresql
 ### fapolicyd
 
 The RPM registers all bundled native binaries with the fapolicyd trust
-database at install time via **/usr/libexec/heimdall-server/fapolicyd-trust.sh**.
+database at install time via **heimdall-cli fapolicyd**.
 Entries are automatically removed on uninstall.
+
+Policy compilation and privileged container tests do not establish enforcing
+SELinux/fapolicyd acceptance. Stock runtimes do not establish FIPS validation.
+EL8 ignores ProtectClock, ProtectHostname, ProtectKernelLogs and ProtectProc.
 
 ### Firewalld
 

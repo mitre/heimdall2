@@ -1,398 +1,232 @@
-# Heimdall Server RPM Package
+# Heimdall Server RPM
 
-RPM packaging for [Heimdall Server](https://github.com/mitre/heimdall2), with
-EL8/EL9 build and install checks for x86_64 and aarch64 and separate OL8 lifecycle
-fixtures. This branch, `feat/rpm-integrated-install`, produces **2.13.1 development
-candidates**, with releases `0.1.integration` and `0.2.integration`. These are not
-stable releases or an upgrade path from an installed 2.14.0 system.
-
-## Quick Start
-
-Run build commands from the repository root on an EL build host:
-
-```bash
-# Build the current clean, committed integration HEAD.
-./packaging/rpm/setup-rpm-build-env.sh --dev --build
+```sh
+sudo dnf install ./heimdall-server-*.rpm
+sudo heimdall-cli setup --interactive
 ```
 
-The default output directory is `~/rpmbuild-heimdall`, outside the checkout.
-Builds are unsigned until explicitly signed. CI attaches signed test candidates
-and their public key; the ephemeral key is only for disposable acceptance hosts,
-not production trust. See [acceptance signing](#acceptance-signing) for local tests.
+Select one RPM matching the host's EL major and architecture. The RPM contains
+Heimdall, its CLI, Node.js 22.23.3, PostgreSQL 18.6, and Caddy 2.11.4. DNF resolves
+ordinary OS libraries and systemd from your configured OS repositories. Setup
+configures the included runtimes; it does not download runtime packages.
 
-On a disposable OL8 runtime host, configure NodeSource 22 and the selected
-PostgreSQL repository first, as described in [INSTALL.md](INSTALL.md). Import the
-public key supplied with the signed candidate, then install and set up explicitly:
+This branch produces **2.13.1 integration candidates**. Releases
+`0.3.integration` and `0.4.integration` exercise bundled-runtime upgrades; neither
+is an upgrade from application version 2.14.0. Use disposable acceptance hosts
+until the [acceptance gates](#acceptance-status) have been completed.
 
-```bash
-sudo rpm --import ./RPM-TEST-GPG-KEY
-sudo dnf install --setopt=localpkg_gpgcheck=1 ./heimdall-server-2.13.1-0.1.integration.el8.x86_64.rpm
-sudo heimdall-cli setup --non-interactive --skip-tls
-sudo heimdall-cli status
+## Installation choices
+
+The wizard independently asks which database and HTTPS proxy to use:
+
+| Database mode | Proxy mode | Services managed by Heimdall |
+| --- | --- | --- |
+| `bundled` | `bundled` | Private PostgreSQL, application, private Caddy |
+| `bundled` | `external` | Private PostgreSQL and application |
+| `external` | `bundled` | Application and private Caddy |
+| `external` | `external` | Application |
+
+An external PostgreSQL server may run on the same host, including localhost:5432.
+Provide an existing database and a role authorized to apply application migrations.
+Supported server majors are 13–18; the bundled version-18 clients serve both modes.
+Heimdall does not initialize or manage an external server or proxy.
+
+```sh
+# Bundled database; HTTPS terminated by an existing proxy.
+sudo heimdall-cli setup --non-interactive \
+  --database-mode bundled --proxy-mode external \
+  --external-url https://heimdall.example.com
+
+# Both services are external. Use disposable/example credentials only as shown.
+sudo heimdall-cli setup --non-interactive \
+  --database-mode external --proxy-mode external \
+  --db-host db.example.com --db-port 5432 --db-user heimdall \
+  --db-password '<database-password>' --db-name heimdall-server-production \
+  --external-url https://heimdall.example.com
 ```
 
-Installation does not configure credentials, initialize PostgreSQL, migrate the
-database, or start Heimdall. `--skip-tls` is appropriate for an acceptance host or
-an existing TLS proxy; configure a trusted HTTPS endpoint for deployment.
+Configure an external proxy to forward to the configured application port
+(default `http://127.0.0.1:3000`). `--proxy-mode none` retains HTTP-only development
+operation. Bundled Caddy supports `--tls-mode acme`, `internal`, or `custom`;
+custom mode also takes `--tls-cert` and `--tls-key`. Internal CA operation does not
+need internet after the RPM and OS dependencies are installed; clients must trust
+its root certificate. ACME requires the appropriate public connectivity.
 
-## Building the RPM
+Flags override saved selections; saved selections override fresh defaults
+(`bundled`/`bundled`). Existing configured installations without mode keys default
+to `external`/`external`, preserving their endpoints. Reruns retain secrets,
+selections and custom settings. `--skip-db` and `--skip-tls` skip work for that run;
+they do not select ownership. `--reconfigure` only writes configuration. Apply
+mode changes with a subsequent full setup, not `config set`. Switching databases
+does not move data. See [INSTALL.md](INSTALL.md) for TLS, recovery and operations.
 
-The wrapper delegates source validation, CLI acquisition, staging and RPM builds
-to the Makefile. It no longer downloads a different application snapshot.
+## Local builds
 
-```bash
-# Install build prerequisites, stage committed HEAD, and build a candidate.
-./packaging/rpm/setup-rpm-build-env.sh --dev --build
+Run on native EL8 or EL9, x86_64 or aarch64, from the repository root:
 
-# Reuse an already provisioned EL build host and an explicit external directory.
-./packaging/rpm/setup-rpm-build-env.sh --dev --skip-deps \
-  --topdir "$HOME/rpmbuild-heimdall" --build
-
-# Equivalent Make invocation after dependencies are installed.
+```sh
+make -C packaging/rpm deps TOPDIR="$HOME/rpmbuild-heimdall"
 export PATH="/opt/heimdall-build/go-1.25.8/bin:$PATH"
-make -C packaging/rpm rpm DEV=1 TOPDIR="$HOME/rpmbuild-heimdall" \
-  HEIMDALL_RELEASE=0.1.integration
+make -C packaging/rpm rpm SOURCE_MODE=head TOPDIR="$HOME/rpmbuild-heimdall" \
+  HEIMDALL_RELEASE=0.3.integration
+bash packaging/rpm/tests/cli-inputs.sh "$HOME/rpmbuild-heimdall"
 ```
 
-Use the same `TOPDIR` for `rpm`, `srpm`, `lint-rpm`, checks and artifact inspection.
-Binary RPMs are in `RPMS/<arch>/`; source RPMs are in `SRPMS/`. The staged spec
-retains the selected release so an independent SRPM rebuild cannot silently
-fall back from `0.2.integration` to `0.1.integration`.
+`RPMS/<arch>/` contains the binary and `SRPMS/` the source RPM under that TOPDIR.
+Use the same TOPDIR for staging, lint and inspection. The wrapper
+`./packaging/rpm/setup-rpm-build-env.sh --dev --build` provides the same Make path.
+Local builds are unsigned until explicitly signed.
 
-### Source and toolchain contract
+For a filtered workspace build, including relevant uncommitted changes:
 
-- `VERSION`, the spec, backend and frontend manifests must agree at `2.13.1`.
-- A Git build archives committed HEAD, including packaging and CLI pin files.
-  Dirty relevant application, dependency, test or packaging inputs fail before
-  staging. Release mode additionally requires HEAD to equal the matching version
-  tag; it does not authorize publishing an integration candidate.
-- The CLI is a separate repository. `heimdall-cli.repo` records its fetchable
-  repository and `heimdall-cli.ref` its immutable full tested commit. These
-  committed files are the authority; accepted builds cannot override the pin
-  with a mutable branch or environment variable. The current integration work
-  targets [seanlongcc/heimdall-cli](https://github.com/seanlongcc/heimdall-cli).
-- The CLI binary and generated man pages use that same clean checkout. Generated
-  pages are Source22 in the SRPM and do not depend on the original BUILD tree.
-- Use Go **1.25.8**, Node **22 >=22.18.0**, and Yarn Classic **1.22.22**.
-  `make deps` provisions the build host; preserve the Go path shown above for
-  later commands. Frozen dependency installation remains required.
-- The package contains a native CLI and native Node addons. Build on the target
-  architecture; setting `GOARCH` alone does not cross-build the whole RPM.
-- Node.js is an external RPM requirement, not bundled. PostgreSQL server remains
-  optional; remote hosts need compatible client tools, not a local server.
-
-### Docker workspace builds
-
-Docker uses an explicit filtered workspace snapshot, so relevant uncommitted
-edits can be tested before committing. Local secrets, environment files, caches,
-build outputs, Git data and execution scratch are excluded. Git-based accepted
-builds still require clean committed inputs.
-
-```bash
-docker build --platform linux/arm64 -f packaging/rpm/Dockerfile.ol8 \
-  --build-arg HEIMDALL_RELEASE=0.1.integration --target artifacts \
-  --output type=local,dest=artifacts/first .
-docker build --platform linux/arm64 -f packaging/rpm/Dockerfile.ol8 \
-  --build-arg HEIMDALL_RELEASE=0.2.integration --target artifacts \
-  --output type=local,dest=artifacts/second .
+```sh
+for release in 0.3.integration 0.4.integration; do
+  docker build --platform linux/arm64 -f packaging/rpm/Dockerfile.ol8 \
+    --build-arg "HEIMDALL_RELEASE=$release" --target artifacts \
+    --output "type=local,dest=packaging/rpm/dist/bundled-arm64/$release" .
+done
 ```
 
-Use `linux/amd64` for x86_64. Native architecture runners are used in CI.
-For a corporate TLS proxy, pass your existing CA through
-`--secret id=corp_ca,src=/path/to/ca-bundle.crt`; it is not an RPM payload input.
-Keep repository TLS and signature verification enabled. Mirror environments must
-supply trusted repositories and keys instead of disabling verification.
+Use `linux/amd64` and a separate output directory for x86_64. A platform flag on
+a different host architecture uses emulation; CI uses native runners. Docker
+exports `RPMS/`, `SRPMS/` and the runtime inventory. Its build-specific ignore file
+excludes Git metadata, secrets, caches, execution scratch and prior outputs. If
+needed, pass `--secret id=corp_ca,src=/path/to/ca-bundle.crt` for a corporate CA.
+Keep TLS and signature verification enabled.
+
+### Build inputs and updates
+
+- `VERSION`, the spec and application manifests must agree. Increase the real
+  application version for application upgrades; an RPM release cannot make
+  2.13.1 newer than 2.14.0.
+- `SOURCE_MODE=head` archives clean committed inputs. Relevant dirty files fail
+  validation. `SOURCE_MODE=release` additionally requires HEAD at the version tag.
+- `heimdall-cli.repo` and `heimdall-cli.ref` select a fetchable full immutable CLI
+  commit. Binary and generated man pages come from that same clean checkout.
+- `runtime-lock.json` records runtime versions, archive URLs, SHA-256 digests and
+  notices. Runtime patch updates change the lock and ship in a new server RPM.
+- Go 1.25.8 builds the CLI; Yarn Classic 1.22.22 installs frozen application
+  dependencies. Native addons use the exact private Node executable being shipped.
+- Source23–28 contain the runtime archives, selected manifest and private units.
+  An SRPM rebuild uses these supplied runtime inputs. Yarn dependency downloads
+  still require network. Build on the SRPM's target architecture.
+
+To test an SRPM independently on a provisioned native EL build host:
+
+```sh
+bash packaging/rpm/tests/srpm-rebuild.sh \
+  "$HOME/rpmbuild-heimdall/SRPMS/heimdall-server-2.13.1-0.3.integration.el8.src.rpm" \
+  /tmp/heimdall-clean-srpm-rebuild
+```
+
+The second path must not exist. Run with privileges to install declared
+BuildRequires via `dnf builddep`. The helper verifies supplied runtime hashes,
+rebuilds in the empty tree and checks the resulting binary payload. Rebuilt
+binaries need their own signature.
+
+## CI artifacts and test signatures
+
+The existing Build RPM workflow produces four native Rocky build/install bundles:
+`rpm-el8-x86_64`, `rpm-el8-aarch64`, `rpm-el9-x86_64`, and `rpm-el9-aarch64`.
+Each contains a binary RPM, SRPM, `RPM-TEST-GPG-KEY`, `runtime-manifest.json`, and
+`SHA256SUMS`. Checksums are computed **after** test signing changes the RPM bytes.
+
+Open the repository's **Actions → Build RPM**, select a completed successful run
+for the intended commit, and download the matching artifact. With GitHub CLI:
+
+```sh
+gh run download RUN_ID --repo mitre/heimdall2 \
+  --name rpm-el8-x86_64 --dir /tmp/heimdall-candidate
+cd /tmp/heimdall-candidate
+sha256sum --check SHA256SUMS
+sudo rpm --import RPM-TEST-GPG-KEY
+sudo dnf install --setopt=localpkg_gpgcheck=1 \
+  ./RPMS/x86_64/heimdall-server-2.13.1-0.4.integration.el8.x86_64.rpm
+sudo heimdall-cli setup --interactive
+```
+
+Replace `RUN_ID` with the verified run ID. Artifact retention is seven days.
+The public key must come from that same trusted run. The signer uses disposable
+acceptance keys and deletes its private key. These are not durable distribution
+signatures. The configured RPM repository remains disabled; repository hosting
+and production signing are separate release work. The existing publication guard
+rejects integration RPMs.
 
 ### Acceptance signing
 
-The test signer generates one ephemeral key, signs the selected candidates, exports
-only its public key, and deletes private key material. It runs in a disposable
-container and does not use production signing keys:
+For locally built candidates, sign the binaries and any SRPMs you distribute:
 
-```bash
-bash packaging/rpm/tests/sign-rpms.sh linux/arm64 artifacts/RPM-TEST-GPG-KEY \
-  artifacts/first/RPMS/aarch64/heimdall-server-2.13.1-0.1.integration.el8.aarch64.rpm \
-  artifacts/second/RPMS/aarch64/heimdall-server-2.13.1-0.2.integration.el8.aarch64.rpm
-export RPM_TEST_GPG_KEY="$PWD/artifacts/RPM-TEST-GPG-KEY"
+```sh
+base=packaging/rpm/dist/bundled-arm64
+bash packaging/rpm/tests/sign-rpms.sh linux/arm64 "$base/RPM-TEST-GPG-KEY" \
+  "$base/0.3.integration/RPMS/aarch64/heimdall-server-2.13.1-0.3.integration.el8.aarch64.rpm" \
+  "$base/0.4.integration/RPMS/aarch64/heimdall-server-2.13.1-0.4.integration.el8.aarch64.rpm" \
+  "$base/0.3.integration/SRPMS/heimdall-server-2.13.1-0.3.integration.el8.src.rpm" \
+  "$base/0.4.integration/SRPMS/heimdall-server-2.13.1-0.4.integration.el8.src.rpm"
+export RPM_TEST_GPG_KEY="$PWD/$base/RPM-TEST-GPG-KEY"
 bash packaging/rpm/tests/run-lifecycle.sh linux/arm64 \
-  artifacts/first/RPMS/aarch64/heimdall-server-2.13.1-0.1.integration.el8.aarch64.rpm \
-  artifacts/second/RPMS/aarch64/heimdall-server-2.13.1-0.2.integration.el8.aarch64.rpm
-bash packaging/rpm/tests/remote-database.sh linux/arm64 \
-  artifacts/second/RPMS/aarch64/heimdall-server-2.13.1-0.2.integration.el8.aarch64.rpm
+  "$base/0.3.integration/RPMS/aarch64/heimdall-server-2.13.1-0.3.integration.el8.aarch64.rpm" \
+  "$base/0.4.integration/RPMS/aarch64/heimdall-server-2.13.1-0.4.integration.el8.aarch64.rpm"
 ```
 
-Set `RPM_TEST_CA=/path/to/ca-bundle.crt` before signing or running fixtures if a
-corporate CA is needed. Runners require `RPM_TEST_GPG_KEY` and install/upgrade
-with `localpkg_gpgcheck=1`. CI's Rocky job containers call the same signing core
-with `HEIMDALL_RPM_TEST=1` and `--container`; no nested Docker engine is required.
-Test evidence is written under `packaging/rpm/dist/integration/evidence/` and
-uploaded even on lifecycle failure. Each runner cleans up its own containers.
+Set `RPM_TEST_CA` to your corporate CA file if the fixture builder needs it.
+The runner records evidence under `packaging/rpm/dist/integration/evidence/` and
+cleans up its containers, including on failure. An optional `RPM_TEST_PREVIOUS_RPM`
+adds a separate upgrade from a preceding package; its signature must verify
+against `RPM_TEST_GPG_KEY` as well.
 
-## Installing the RPM
+## Upgrading and recovery
 
-See [INSTALL.md](INSTALL.md) for database prerequisites, remote topology, TLS,
-configuration preservation and recovery. The packaged CLI is the primary setup
-entry point; the retained shell entry point is `heimdall-server-setup`.
-
-### Setup options
-
-```bash
-# Interactive (prompts for all values)
-sudo heimdall-cli setup --interactive
-
-# Non-interactive (auto-generate secrets, accept defaults)
-sudo heimdall-cli setup --non-interactive
-
-# External database (skip local PostgreSQL bootstrap)
-sudo heimdall-cli setup \
-  --db-host db.example.com \
-  --db-port 5432 \
-  --db-user heimdall \
-  --db-password "secretpassword" \
-  --skip-tls
-
-# Behind a load balancer (skip Caddy TLS proxy)
-sudo heimdall-cli setup \
-  --external-url https://heimdall.example.com \
-  --skip-tls
-
-# Bring your own TLS certificates
-sudo heimdall-cli setup \
-  --tls-cert /path/to/cert.pem \
-  --tls-key /path/to/key.pem
-
-# Re-run configuration only (preserve database)
-sudo heimdall-cli setup --reconfigure
-
-# Skip database and TLS (config + service restart only)
-sudo heimdall-cli setup --skip-db --skip-tls
-```
-
-### Setup steps
-
-The `heimdall-cli setup` command runs 7 steps:
-
-1. **Configuration** — generates `/etc/heimdall-server/backend.env` with DB credentials and secrets
-2. **PostgreSQL bootstrap** — init, start, create role (skipped for remote DB or `--skip-db`)
-3. **Connection test** — verifies database is reachable
-4. **Database migrations** — create schema, run Sequelize migrations and seeds
-5. **TLS reverse proxy** — configures Caddy on port 443 (skipped with `--skip-tls`)
-6. **Security policies** — SELinux port registration, fapolicyd trust, firewalld rules
-7. **Enable and restart service** — enables `heimdall-server`, restarts it even if already running, and verifies it is active
-
-## Managing the Service
-
-```bash
-# Status (service, database, SELinux, config overview)
-sudo heimdall-cli status
-
-# Validate configuration (checks required env vars, DB connectivity)
-sudo heimdall-cli validate
-
-# Start / stop / restart
-sudo heimdall-cli start
-sudo heimdall-cli stop
-sudo heimdall-cli restart
-
-# View logs
-sudo heimdall-cli logs
-sudo heimdall-cli logs --lines 100
-
-# Full diagnostic dump
-sudo heimdall-cli diag
-
-# Backup database and config
-sudo heimdall-cli backup -o /var/lib/heimdall-server/backups
-
-# Restore from backup
-sudo heimdall-cli restore /path/to/backup.tar.gz
-
-# Reset a user's password
-sudo heimdall-cli reset-password admin@example.com
-
-# View/modify configuration
-sudo heimdall-cli config list
-sudo heimdall-cli config get DATABASE_HOST
-sudo heimdall-cli config set PORT 8080
-
-# Change the listen port (updates config, SELinux, firewalld)
-sudo heimdall-cli set-port 8443
-
-# Add an organizational CA certificate to the system trust store
-sudo heimdall-cli add-cert /path/to/internal-ca.pem
-```
-
-## Upgrading
-
-This candidate supports testing `0.1.integration` → `0.2.integration` at version
-2.13.1. Do not install it over 2.14.0; newer application reconciliation and real
-2.14.0 migration testing are separate work.
-
-Set `RESTART_ON_UPGRADE=false` in `/etc/sysconfig/heimdall-server` **before** the
-upgrade and leave it false until migrations and checks finish. The shipped
-default is true, so this step is necessary to control restart timing.
-
-```bash
+```sh
 sudo heimdall-cli backup
-sudo dnf upgrade --setopt=localpkg_gpgcheck=1 ./heimdall-server-2.13.1-0.2.integration.el8.x86_64.rpm
-sudo heimdall-cli setup --non-interactive --skip-tls
+sudo dnf upgrade ./heimdall-server-*.rpm
+sudo heimdall-cli setup --non-interactive
 sudo heimdall-cli status
 ```
 
-The RPM also attempts a pre-upgrade backup, but backup failure does not stop the
-RPM transaction. Verify your explicit backup before upgrading. Normal setup runs
-migrations and restarts the service; `--reconfigure` changes configuration only.
-Both configuration paths preserve existing secrets and additional settings.
-`backend.env` and sysconfig use `%config(noreplace)`; review `.rpmnew` files.
+Verify the backup first and select exactly one upgrade RPM. The transaction
+requires a successful pre-upgrade backup for an active installation, stops owned
+services, and leaves the application stopped pending migrations. Full setup uses
+saved selections and starts services only after migration succeeds.
+`SKIP_PREUPGRADE_BACKUP=true` in sysconfig is an explicit override after a separate
+verified backup. `RESTART_ON_UPGRADE` does not bypass the migration gate.
 
-## Customizing Paths
+Configuration uses `%config(noreplace)`; review `.rpmnew` files without replacing
+existing secrets. Backup includes logical SQL, configuration and private Caddy
+certificate/CA state. PostgreSQL major upgrades require a separate migration;
+package upgrades reject a mismatched retained cluster major. Removal retains
+application, database and certificate state and accounts. See
+[backup and restore](INSTALL.md#backup-and-restore) before recovering.
 
-The CLI accepts path overrides, while the packaged systemd unit and RPM-owned
-files use the FHS paths below. Relocating a running service also requires matching
-systemd overrides; changing CLI paths alone does not relocate the installation.
+## Private paths
 
-**Via `/etc/sysconfig/heimdall-server`** (persists across reboots and upgrades):
+| Purpose | Path / service |
+| --- | --- |
+| Application | `/usr/share/heimdall-server`, `heimdall-server.service` |
+| Node | `/usr/libexec/heimdall-server/runtime/node/bin/node` |
+| PostgreSQL tools | `/usr/libexec/heimdall-server/runtime/postgresql/bin/` |
+| PostgreSQL data / socket | `/var/lib/heimdall-postgresql/18/data`, `/run/heimdall-postgresql` |
+| PostgreSQL listener / owner | `127.0.0.1:55432`, `heimdall-postgres`, `heimdall-postgresql.service` |
+| Caddy | `/usr/libexec/heimdall-server/runtime/caddy/caddy`, `heimdall-caddy.service` |
+| Caddy config / state | `/etc/heimdall-server/caddy/Caddyfile`, `/var/lib/heimdall-caddy` |
+| Caddy admin | `/run/heimdall-caddy/admin.sock` |
+| Inventory / notices | `/usr/share/heimdall-server/runtime-manifest.json`, `/usr/share/licenses/heimdall-server/` |
+| App configuration | `/etc/heimdall-server/backend.env` (`root:heimdall`, `0640`) |
+| Service configuration | `/etc/sysconfig/heimdall-server` (`root:root`, `0640`) |
 
-```bash
-HEIMDALL_APP_DIR=/opt/heimdall
-HEIMDALL_DATA_DIR=/opt/heimdall/data
-HEIMDALL_CONFIG_DIR=/opt/heimdall/config
-HEIMDALL_LIBEXEC_DIR=/opt/heimdall/libexec
-HEIMDALL_LOG_DIR=/opt/heimdall/logs
-HEIMDALL_CERT_DIR=/opt/heimdall/certs
-HEIMDALL_ENV_FILE=/opt/heimdall/config/backend.env
-```
-
-**Via environment variables** (same names as above, with `HEIMDALL_` prefix).
-
-**Via CLI flags** (one-time override):
-
-```bash
-heimdall-cli status --app-dir=/opt/heimdall --data-dir=/opt/heimdall/data
-```
-
-**Priority**: CLI flag > environment variable > config file > compile-time default.
-
-### Default paths
-
-| Path | Purpose |
-|------|---------|
-| `/usr/share/heimdall-server/` | Application files (Node.js app) |
-| `/etc/heimdall-server/backend.env` | Application configuration (secrets, DB) |
-| `/etc/sysconfig/heimdall-server` | Service configuration (paths, restart behavior) |
-| `/usr/bin/heimdall-cli` | Admin CLI tool (Go static binary) |
-| `/usr/bin/heimdall-server` | Service entrypoint script |
-| `/usr/lib/systemd/system/heimdall-server.service` | systemd unit |
-| `/usr/libexec/heimdall-server/` | Helper scripts (configure, postgres-setup, fapolicyd, Caddyfile) |
-| `/usr/share/selinux/packages/heimdall-server.pp` | SELinux policy module |
-| `/usr/lib/firewalld/services/heimdall-server.xml` | firewalld service definition |
-| `/var/lib/heimdall-server/` | Variable data (backups) |
-| `/var/lib/heimdall-server/backups/` | Backup archives |
-| `/var/log/heimdall-server/` | Log files |
-| `/etc/pki/heimdall-server/` | TLS certificates |
-
-## Security
-
-### SELinux
-
-The RPM ships a custom SELinux policy module (`heimdall_server_t`) that:
-- Confines the Node.js process to a dedicated domain
-- Registers port 3000 as `heimdall_server_port_t`
-- Sets file contexts for all application directories
-
-The policy is loaded automatically on install and removed on uninstall.
-
-### fapolicyd
-
-On systems with fapolicyd enabled, the RPM registers its native CLI and bundled
-native addons in the trust database. Node.js is supplied by the external Node RPM.
-Full removal drops package trust entries before the packaged CLI is removed.
-
-### firewalld
-
-The RPM ships a firewalld service definition. The setup command opens HTTPS (443) when using Caddy, or port 3000 when using `--skip-tls`.
-
-### systemd hardening
-
-The unit requests the following systemd sandboxing:
-- `ProtectSystem=strict` with explicit `ReadWritePaths`
-- `NoNewPrivileges`, `PrivateTmp`, `PrivateDevices`
-- `ProtectHome`, `ProtectKernelTunables`, `ProtectKernelModules`
-- `ProtectClock`, `ProtectHostname`, `ProtectKernelLogs`
-- `RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6`
-- `SystemCallArchitectures=native`
-- `CapabilityBoundingSet=` (empty — no capabilities)
-
-EL8 systemd 239 ignores `ProtectClock`, `ProtectHostname`, `ProtectKernelLogs`
-and `ProtectProc`. CI reports these exact unsupported-directive warnings and
-fails on other diagnostics or a nonzero verification result. EL9 must verify
-without diagnostics. These checks do not establish enforcing-SELinux or fapolicyd
-certification.
-
-### Configuration file permissions
-
-- `/etc/heimdall-server/backend.env` — `root:heimdall 0640` (`%config(noreplace)`)
-- `/etc/sysconfig/heimdall-server` — `root:root 0640` (`%config(noreplace)`)
-
-## PostgreSQL compatibility
-
-The setup scripts auto-detect PGDG installations of PostgreSQL 13 through 18, as well as system-packaged PostgreSQL. For remote databases, the local PostgreSQL package is optional (`Recommends:`, not `Requires:`).
-
-## Source files
-
-| File | Spec Source | Purpose |
-|------|------------|---------|
-| `heimdall-server.spec` | — | RPM spec file |
-| `heimdall-server.service` | Source1 | systemd unit |
-| `heimdall-backend.env` | Source2 | Environment template |
-| `heimdall-server.sh` | Source3 | Service entrypoint |
-| `heimdall-db-setup.sh` | Source4 | Database migration script |
-| `heimdall-configure.sh` | Source5 | Config generator |
-| `heimdall-postgres-setup.sh` | Source6 | PostgreSQL bootstrap |
-| `heimdall-setup.sh` | Source7 | Retained shell setup entry point |
-| `heimdall-server-tmpfiles.conf` | Source8 | tmpfiles.d for `/run` |
-| `selinux/heimdall_server.te` | Source9 | SELinux type enforcement |
-| `selinux/heimdall_server.fc` | Source10 | SELinux file contexts |
-| `selinux/heimdall_server.if` | Source11 | SELinux interface |
-| `firewalld/heimdall-server.xml` | Source13 | firewalld service |
-| `heimdall-server.repo` | Source14 | COPR repo file |
-| `heimdall-cli` (built) | Source15 | Go admin CLI binary |
-| `heimdall-Caddyfile` | Source16 | Caddy reverse proxy template |
-| `heimdall-sysconfig` | Source17 | Service path overrides |
-| `heimdall-rsyslog.conf` | Source18 | rsyslog routing to log files |
-| `heimdall-logrotate.conf` | Source19 | Log rotation (90-day FedRAMP) |
-| `security/40-heimdall.rules` | Source20 | auditd rules (sample) |
-| `security/SECURITY.md` | Source21 | Security documentation |
-| Generated CLI man archive | Source22 | Man pages from the pinned CLI checkout |
-| `heimdall-cli.repo`, `heimdall-cli.ref` | In Source0 | CLI repository and immutable commit |
-| `setup-rpm-build-env.sh` | — | Make-based build environment wrapper |
+No global `node`, `psql` or `caddy` alias is installed. RPM-owned runtime paths
+are fixed; CLI path overrides alone do not relocate the installed units or data.
 
 ## Acceptance status
 
-Acceptance passed on September 28, 2026, for source
-`c540d7ac89f0b2fed16622d6af33a5d5177afffe`, version `2.13.1`, releases
-`0.1.integration` and `0.2.integration`. See the
-[acceptance report](../../docs/superpowers/reports/2026-09-28-rpm-integration-acceptance.md)
-for artifact hashes, environments, preserved-state assertions and evidence.
+The [September 28 report](../../docs/superpowers/reports/2026-09-28-rpm-integration-acceptance.md)
+applies to the preceding unbundled commit only. Bundled-runtime checks require
+new candidates, native EL8/EL9 build/install/SRPM evidence, both native OL8 lifecycle
+runs, four fresh deployment combinations, offline setup, coexistence and recovery.
+Do not treat the workflow definition as a completed run.
 
-| Check | Result |
-|---|---|
-| Source/version fixtures | 12 passed locally and on OL8 Python 3.6.8 |
-| Configuration, CLI acquisition, bootstrap, signing and host-wrapper fixtures | Passed, including Bash 3.2 and signature rejection/cleanup cases |
-| Application baseline | Backend 437/437, frontend 66/66; both production builds passed with Node 22.18.0 and Yarn 1.22.22 |
-| CLI pin, unit/man tests | `eb386bfedd56beb40462dbfb405afa3efd08f5e7`; full unit suite, build and deterministic man-page generation passed with Go 1.25.8; fresh fetch and OL8 staging verified |
-| Integrated binary payload | Both candidate releases passed on OL8 aarch64 and x86_64 |
-| Fresh SRPM rebuild | Passed on OL8 aarch64 with the original BUILD tree removed; payload, Source22 man pages and scriptlets verified |
-| OL8 install/setup/login/rerun/upgrade/reboot/removal | Passed on native aarch64 and x86_64 CI; also passed locally on ARM64 |
-| Remote PostgreSQL, trusted Caddy HTTPS and database recovery | Passed on both OL8 architectures; also passed locally on ARM64 |
-| CI EL8/EL9 build/install matrix | All eight jobs passed in [run 36477971745](https://github.com/mitre/heimdall2/actions/runs/36477971745); both native OL8 lifecycle jobs passed; publication skipped |
-
-The OL8 lifecycle gate builds its own candidates; it does not certify the Rocky
-matrix artifacts for OL8 runtime operation. Emulated local results must be
-identified separately from native CI results. Container tests do not prove EL9
-runtime or enforcing-SELinux behavior. No stable publication is authorized by
-these checks: the publishing job rejects any binary or source RPM whose release
-contains `integration` before attestation or release upload. Provenance
-attestations are not RPM signatures. A later stable milestone must replace test
-signing and parameterize lifecycle versions/releases from verified release
-metadata before publication can be enabled.
+SELinux/fapolicyd runtime acceptance requires an actual enforcing OL8 host.
+Privileged containers and policy compilation cannot establish it. Stock bundled
+runtimes do not establish FIPS validation. EL8 systemd ignores four newer
+hardening directives (`ProtectClock`, `ProtectHostname`, `ProtectKernelLogs`,
+`ProtectProc`); CI exposes those warnings and rejects other unit diagnostics.

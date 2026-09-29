@@ -21,8 +21,8 @@ cleanup() {
   if [[ -n $container ]]; then
     docker inspect "$container" > "$logdir/container.json" 2>/dev/null || true
     if [[ $result -ne 0 ]]; then
-      docker exec "$container" systemctl status --no-pager postgresql-18 heimdall-server caddy || true
-      docker exec "$container" journalctl --no-pager -u postgresql-18 -u heimdall-server -u caddy -n 100 || true
+      docker exec "$container" systemctl status --no-pager heimdall-postgresql heimdall-server heimdall-caddy || true
+      docker exec "$container" journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy -n 100 || true
     fi
     docker rm -f "$container" >/dev/null || result=1
   fi
@@ -71,9 +71,35 @@ docker cp "$RPM_TEST_GPG_KEY" "$container:/tmp/rpm-test-signing.asc"
 docker cp "$initial" "$container:/tmp/initial.rpm"
 docker cp "$upgrade" "$container:/tmp/upgrade.rpm"
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh install /tmp/initial.rpm
+step docker network disconnect bridge "$container"
+step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh setup
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh upgrade /tmp/upgrade.rpm
 step docker restart "$container"
 wait_bus
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh verify
 step docker exec "$container" bash /tmp/rpm-tests/features.sh
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh remove
+step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh recover /tmp/upgrade.rpm
+for db_mode in bundled external; do
+  for proxy_mode in bundled external; do
+    step bash packaging/rpm/tests/remote-database.sh "$platform" "$upgrade" "$db_mode" "$proxy_mode"
+  done
+done
+step bash packaging/rpm/tests/remote-database.sh "$platform" "$upgrade" coexist
+if [[ -n ${RPM_TEST_PREVIOUS_RPM:-} ]]; then
+  test -s "$RPM_TEST_PREVIOUS_RPM"
+  docker inspect "$container" > "$logdir/bundled-container.json"
+  step docker rm -f "$container"
+  container=''
+  container=$(docker create --name "$name-previous" --platform "$platform" --runtime=runc \
+    --privileged --cgroupns=private --tmpfs /run --tmpfs /run/lock \
+    -e container=docker -e HEIMDALL_RPM_TEST=1 \
+    -e RPM_TEST_GPG_KEY=/tmp/rpm-test-signing.asc "$image")
+  step docker start "$container"
+  wait_bus
+  docker cp packaging/rpm/tests/. "$container:/tmp/rpm-tests"
+  docker cp "$RPM_TEST_GPG_KEY" "$container:/tmp/rpm-test-signing.asc"
+  docker cp "$RPM_TEST_PREVIOUS_RPM" "$container:/tmp/previous.rpm"
+  docker cp "$upgrade" "$container:/tmp/upgrade.rpm"
+  step docker exec "$container" bash /tmp/rpm-tests/previous-package.sh /tmp/previous.rpm /tmp/upgrade.rpm
+fi

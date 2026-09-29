@@ -1,37 +1,35 @@
 #!/bin/bash
+# Fresh topology hosts share the existing lifecycle image and evidence convention.
 set -euo pipefail
-[[ -n ${RPM_TEST_GPG_KEY:-} && -s $RPM_TEST_GPG_KEY ]] || {
-  echo 'RPM_TEST_GPG_KEY must name the public key used to sign these test RPMs.' >&2
-  exit 64
-}
+[[ -n ${RPM_TEST_GPG_KEY:-} && -s $RPM_TEST_GPG_KEY ]] || exit 64
 platform=${1:?platform}
 [[ $platform == linux/arm64 || $platform == linux/amd64 ]] || exit 64
 artifact=$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${2:?rpm}")
 test -s "$artifact"
-suffix="${platform##*/}-$$-$RANDOM"
-network="heimdall-remote-$suffix"
-database="heimdall-remote-db-$suffix"
-app="heimdall-remote-app-$suffix"
+db_mode=${3:-external}
+proxy_mode=${4:-bundled}
+[[ $db_mode == bundled || $db_mode == external || $db_mode == coexist ]] || exit 64
+[[ $proxy_mode == bundled || $proxy_mode == external ]] || exit 64
+name="heimdall-topology-${platform##*/}-${db_mode}-${proxy_mode}-$$-$RANDOM"
 image="heimdall-integration-test:${platform##*/}"
-logdir="packaging/rpm/dist/integration/evidence/$app"
+logdir="packaging/rpm/dist/integration/evidence/$name"
 mkdir -p "$logdir"
 exec > >(tee "$logdir/output.log") 2>&1
-network_id=''
-database_id=''
-app_id=''
+network_id=''; database_id=''; proxy_id=''; app_id=''
 cleanup() {
   result=$?
-  if [[ -n $app_id ]]; then
-    docker inspect "$app_id" > "$logdir/app.json" 2>/dev/null || true
-    if [[ $result -ne 0 ]]; then docker exec "$app_id" journalctl --no-pager -u heimdall-server -n 100 || true; fi
-    docker rm -f "$app_id" >/dev/null || result=1
+  for owned in "$app_id" "$database_id" "$proxy_id"; do
+    [[ -n $owned ]] || continue
+    docker inspect "$owned" > "$logdir/$owned.json" 2>/dev/null || true
+    if [[ $result -ne 0 ]]; then docker logs "$owned" || true; fi
+  done
+  if [[ $result -ne 0 && -n $app_id ]]; then
+    docker exec "$app_id" journalctl --no-pager -u heimdall-server -u heimdall-postgresql -u heimdall-caddy -u postgresql -u nginx -n 150 || true
   fi
-  if [[ -n $database_id ]]; then
-    docker inspect "$database_id" > "$logdir/database.json" 2>/dev/null || true
-    if [[ $result -ne 0 ]]; then docker logs "$database_id" || true; fi
-    docker rm -fv "$database_id" >/dev/null || result=1
-  fi
-  if [[ -n $network_id ]]; then docker network rm "$network_id" >/dev/null || result=1; fi
+  for owned in "$proxy_id" "$database_id" "$app_id"; do
+    [[ -z $owned ]] || docker rm -fv "$owned" >/dev/null || result=1
+  done
+  [[ -z $network_id ]] || docker network rm "$network_id" >/dev/null || result=1
   printf 'exit_status=%s\n' "$result" | tee "$logdir/result.txt"
   exit "$result"
 }
@@ -48,76 +46,81 @@ step() {
   date -u
   printf 'platform=%s\nhost_arch=%s\napplication_commit=' "$platform" "$(uname -m)"
   git rev-parse HEAD
-  git status --short
   shasum -a 256 "$artifact" "$RPM_TEST_GPG_KEY"
   docker info --format 'daemon_arch={{.Architecture}} daemon_os={{.OperatingSystem}}'
 } > "$logdir/inputs.txt"
-# The local lifecycle runner creates this trusted test-host image first.
 docker image inspect "$image" > "$logdir/image.json"
-network_id=$(docker network create "$network")
-database_id=$(docker create --platform "$platform" --name "$database" \
-  --network "$network_id" --network-alias rpm-external-db \
-  -e POSTGRES_PASSWORD=Rpm-External-Fixture-2026 \
-  -e POSTGRES_DB=heimdall-server-production postgres:18)
-step docker start "$database_id"
-docker image inspect postgres:18 > "$logdir/database-image.json"
-app_id=$(docker create --platform "$platform" --name "$app" --network "$network_id" \
+# Fetch fixtures before creating the isolated, no-egress test network.
+if [[ $db_mode == external ]]; then step docker pull --platform "$platform" postgres:18; fi
+if [[ $proxy_mode == external && $db_mode != coexist ]]; then step docker pull --platform "$platform" nginx:stable-alpine; fi
+network_id=$(docker network create --internal "$name")
+app_id=$(docker create --platform "$platform" --name "$name" \
   --runtime=runc --privileged --cgroupns=private --tmpfs /run --tmpfs /run/lock \
-  -e container=docker -e HEIMDALL_RPM_TEST=1 "$image")
+  -e container=docker -e HEIMDALL_RPM_TEST=1 -e RPM_TEST_GPG_KEY=/tmp/rpm-test-signing.asc "$image")
 step docker start "$app_id"
 for attempt in $(seq 1 60); do
-  if docker exec "$app_id" systemctl show-environment >/dev/null 2>&1 &&
-     docker exec "$database_id" pg_isready -U postgres >/dev/null 2>&1; then break; fi
+  if docker exec "$app_id" systemctl show-environment >/dev/null 2>&1; then break; fi
   sleep 1
   [[ $attempt -lt 60 ]]
 done
 docker cp "$artifact" "$app_id:/tmp/candidate.rpm"
 docker cp "$RPM_TEST_GPG_KEY" "$app_id:/tmp/rpm-test-signing.asc"
-step docker exec -i "$app_id" bash -s <<'HOST'
-set -euo pipefail
-[[ -e /.dockerenv && ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 ]] || exit 64
-rpm --import /tmp/rpm-test-signing.asc
-rpmkeys --checksig --verbose /tmp/candidate.rpm | tee /tmp/rpm-signature.log
-grep -Eq 'Signature.*: OK' /tmp/rpm-signature.log
-sha256sum /tmp/candidate.rpm
-dnf makecache
-dnf install -y --setopt=install_weak_deps=False --setopt=localpkg_gpgcheck=1 /tmp/candidate.rpm
-if systemctl is-active --quiet heimdall-server; then exit 1; fi
-dnf install -y --setopt=install_weak_deps=False postgresql18
-test -x /usr/bin/psql
-test -x /usr/bin/pg_dump
-cat > /etc/heimdall-server/backend.env <<'ENV'
-NODE_ENV=production
-ADMIN_EMAIL=rpm-test@example.invalid
-ADMIN_PASSWORD=Rpm-Smoke-Only-2026!
-LOCAL_LOGIN_DISABLED=false
-ENV
-heimdall-cli setup --non-interactive --skip-tls \
-  --db-host rpm-external-db --db-port 5432 --db-user postgres \
-  --db-password Rpm-External-Fixture-2026 --db-name heimdall-server-production \
-  --external-url http://localhost:3000
-sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-remote-env.sha256
-before_pid=$(systemctl show -p MainPID --value heimdall-server)
-[[ $before_pid -gt 0 ]]
-heimdall-cli setup --non-interactive --skip-tls
-[[ $(systemctl show -p MainPID --value heimdall-server) != "$before_pid" ]]
-sha256sum --check /tmp/rpm-remote-env.sha256
-source /etc/heimdall-server/backend.env
-[[ $DATABASE_HOST == rpm-external-db ]]
-test ! -e /var/lib/pgsql/18/data/PG_VERSION
-if rpm -q postgresql18-server; then exit 1; fi
-systemctl is-active --quiet heimdall-server
-curl --fail --silent --show-error --retry 30 --retry-connrefused \
-  --retry-delay 1 --retry-max-time 60 --max-time 10 \
-  http://127.0.0.1:3000/health/ready -o /tmp/rpm-ready.json
-node -e 'if(require("/tmp/rpm-ready.json").status!=="ok") process.exit(1)'
-curl --fail --silent --show-error --max-time 10 -H 'Content-Type: application/json' \
-  --data '{"email":"rpm-test@example.invalid","password":"Rpm-Smoke-Only-2026!"}' \
-  http://127.0.0.1:3000/authn/login -o /tmp/login.json
-node -e 'const v=require("/tmp/login.json"); if(!v.accessToken || !v.userID) process.exit(1)'
-rm /tmp/login.json
-cat /etc/os-release
-uname -m
-rpm -q heimdall-server postgresql18 nodejs systemd
-heimdall-cli --version
-HOST
+docker cp packaging/rpm/tests/. "$app_id:/tmp/rpm-tests"
+step docker exec "$app_id" bash /tmp/rpm-tests/lifecycle.sh install /tmp/candidate.rpm
+if [[ $db_mode == coexist ]]; then
+  step docker exec "$app_id" bash /tmp/rpm-tests/coexistence.sh prepare
+fi
+step docker network disconnect bridge "$app_id"
+step docker network connect --alias rpm-app "$network_id" "$app_id"
+if [[ $db_mode == coexist ]]; then
+  step docker exec "$app_id" bash /tmp/rpm-tests/coexistence.sh verify
+  exit 0
+fi
+fixture_env=(-e HEIMDALL_RPM_TEST=1)
+if [[ $db_mode == external ]]; then
+  database_id=$(docker create --platform "$platform" --name "$name-db" \
+    --network "$network_id" --network-alias rpm-external-db \
+    -e POSTGRES_PASSWORD=Rpm-External-Fixture-2026 \
+    -e POSTGRES_DB=heimdall-server-production postgres:18)
+  step docker start "$database_id"
+  docker image inspect postgres:18 > "$logdir/database-image.json"
+  for attempt in $(seq 1 60); do
+    if docker exec "$database_id" pg_isready -U postgres >/dev/null 2>&1; then break; fi
+    sleep 1
+    [[ $attempt -lt 60 ]]
+  done
+  fixture_env+=(-e RPM_TEST_DB_HOST=rpm-external-db -e RPM_TEST_DB_PORT=5432
+    -e RPM_TEST_DB_USER=postgres -e RPM_TEST_DB_PASSWORD=Rpm-External-Fixture-2026
+    -e RPM_TEST_DB_NAME=heimdall-server-production)
+fi
+if [[ $proxy_mode == external ]]; then
+  # Generated test key stays inside disposable containers; only the CA is trusted.
+  step docker exec "$app_id" openssl req -x509 -newkey rsa:2048 -nodes \
+    -keyout /tmp/proxy.key -out /tmp/proxy.crt -days 1 \
+    -subj /CN=heimdall.example.test -addext subjectAltName=DNS:heimdall.example.test
+  proxy_id=$(docker create --platform "$platform" --name "$name-proxy" --network "$network_id" nginx:stable-alpine)
+  docker exec "$app_id" tar -C /tmp -cf - proxy.crt proxy.key | docker cp - "$proxy_id:/etc/nginx/"
+  # docker cp accepts tar streams, so stage only this public fixture configuration locally.
+  cat > "$logdir/nginx.conf" <<'NGINX'
+events {}
+http {
+  server {
+    listen 443 ssl;
+    server_name heimdall.example.test;
+    ssl_certificate /etc/nginx/proxy.crt;
+    ssl_certificate_key /etc/nginx/proxy.key;
+    location / {
+      proxy_pass http://rpm-app:3000;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-Proto https;
+    }
+  }
+}
+NGINX
+  docker cp "$logdir/nginx.conf" "$proxy_id:/etc/nginx/nginx.conf"
+  step docker start "$proxy_id"
+  docker image inspect nginx:stable-alpine > "$logdir/proxy-image.json"
+  address=$(docker inspect --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$proxy_id")
+  fixture_env+=(-e RPM_TEST_PROXY_CA=/tmp/proxy.crt -e "RPM_TEST_PROXY_ADDRESS=$address")
+fi
+step docker exec "${fixture_env[@]}" "$app_id" bash /tmp/rpm-tests/topology.sh "$db_mode" "$proxy_mode"

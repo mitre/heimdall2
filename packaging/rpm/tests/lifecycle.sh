@@ -1,56 +1,52 @@
 #!/bin/bash
 set -euo pipefail
-
-[[ -e /.dockerenv && ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 ]] || {
-  echo 'Run only in a disposable RPM test container with HEIMDALL_RPM_TEST=1.' >&2
-  exit 64
-}
-
+[[ -e /.dockerenv && ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 ]] || exit 64
+runtime=/usr/libexec/heimdall-server/runtime
+node="$runtime/node/bin/node"
+units=(heimdall-server heimdall-caddy heimdall-postgresql)
 diagnostics() {
-  systemctl status --no-pager postgresql-18 heimdall-server >&2 || true
-  journalctl --no-pager -u postgresql-18 -u heimdall-server -n 100 >&2 || true
+  systemctl status --no-pager "${units[@]}" >&2 || true
+  journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy -n 100 >&2 || true
 }
 trap diagnostics ERR
-
 query() {
-  runuser -u postgres -- /usr/pgsql-18/bin/psql \
+  runuser -u heimdall-postgres -- "$runtime/postgresql/bin/psql" \
+    -h /run/heimdall-postgresql -p 55432 -U heimdall-postgres \
     -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$1"
 }
-
 verify() {
+  for unit in "${units[@]}"; do systemctl is-active --quiet "$unit"; done
+  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-server)/exe")" = "$node"
+  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-postgresql)/exe")" = "$runtime/postgresql/bin/postgres"
+  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-caddy)/exe")" = "$runtime/caddy/caddy"
+  [[ $(systemctl show -p User --value heimdall-server) == heimdall ]]
+  mapfile -t roots < <(find /var/lib/heimdall-caddy -name root.crt -type f)
+  [[ ${#roots[@]} == 1 ]]
   curl --fail --silent --show-error --retry 30 --retry-connrefused \
     --retry-delay 1 --retry-max-time 60 --connect-timeout 2 --max-time 5 \
-    http://127.0.0.1:3000/server -o /tmp/rpm-server.json
-  /usr/bin/node -e 'JSON.parse(require("fs").readFileSync("/tmp/rpm-server.json", "utf8"))'
-  systemctl is-active --quiet postgresql-18
-  systemctl is-active --quiet heimdall-server
-  [[ $(systemctl show -p User --value heimdall-server) == heimdall ]]
-  curl --fail --silent --show-error --max-time 10 \
-    http://127.0.0.1:3000/health -o /tmp/rpm-health.json
-  curl --fail --silent --show-error --max-time 10 \
-    http://127.0.0.1:3000/health/ready -o /tmp/rpm-ready.json
-  /usr/bin/node -e 'const fs=require("fs"); if(JSON.parse(fs.readFileSync("/tmp/rpm-health.json")).version!=="2.13.1") process.exit(1); if(JSON.parse(fs.readFileSync("/tmp/rpm-ready.json")).status!=="ok") process.exit(1)'
-  curl --fail --silent --show-error --connect-timeout 2 --max-time 10 \
-    http://127.0.0.1:3000/ -o /tmp/rpm-index.html
+    --noproxy '*' --cacert "${roots[0]}" --resolve heimdall.example.test:443:127.0.0.1 \
+    https://heimdall.example.test/health/ready -o /tmp/rpm-ready.json
+  "$node" -e 'if(require("/tmp/rpm-ready.json").status!=="ok") process.exit(1)'
+  curl --fail --silent --show-error --max-time 10 http://127.0.0.1:3000/health -o /tmp/rpm-health.json
+  "$node" -e 'if(require("/tmp/rpm-health.json").version!==process.argv[1]) process.exit(1)' "$(rpm -q --qf '%{VERSION}' heimdall-server)"
+  curl --fail --silent --show-error --max-time 10 http://127.0.0.1:3000/ -o /tmp/rpm-index.html
   grep -qi '<html' /tmp/rpm-index.html
-  curl --fail --silent --show-error --connect-timeout 2 --max-time 10 \
-    -H 'Content-Type: application/json' \
+  curl --fail --silent --show-error --max-time 10 -H 'Content-Type: application/json' \
     --data '{"email":"rpm-test@example.invalid","password":"Rpm-Smoke-Only-2026!"}' \
     http://127.0.0.1:3000/authn/login -o /tmp/rpm-login.json
-  /usr/bin/node -e 'const v=JSON.parse(require("fs").readFileSync("/tmp/rpm-login.json", "utf8")); if (!v.accessToken || !v.userID) process.exit(1)'
-  rm -f /tmp/rpm-login.json
+  "$node" -e 'const v=require("/tmp/rpm-login.json"); if(!v.accessToken || !v.userID) process.exit(1)'
+  rm /tmp/rpm-login.json
 }
-
 verify_state() {
   verify
   sha256sum --check /tmp/rpm-lifecycle-env.sha256
+  sha256sum --check /tmp/rpm-lifecycle-ca.sha256
   source /etc/heimdall-server/backend.env
+  [[ $HEIMDALL_DATABASE_MODE == bundled && $HEIMDALL_PROXY_MODE == bundled ]]
   [[ $(query 'SELECT id FROM rpm_test_sentinel') == 1 ]]
-  expected=$(find /usr/share/heimdall-server/apps/backend/migrations \
-    -maxdepth 1 -name '*.js' -type f | wc -l)
+  expected=$(find /usr/share/heimdall-server/apps/backend/migrations -maxdepth 1 -name '*.js' -type f | wc -l)
   [[ $(query 'SELECT COUNT(*) FROM "SequelizeMeta"') -eq $expected ]]
 }
-
 check_signature() {
   test -s "${RPM_TEST_GPG_KEY:?public test signing key required}"
   rpm --import "$RPM_TEST_GPG_KEY"
@@ -58,123 +54,137 @@ check_signature() {
   grep -Eq 'Signature.*: OK' /tmp/rpm-signature.log
   sha256sum "$1"
 }
-
-shell_setup_checks() {
-  before_pid=$(systemctl show -p MainPID --value heimdall-server)
-  sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-shell-env.sha256
-  # Hide only this child's systemd sockets; the disposable host keeps running.
-  unshare --mount --propagation private bash -s <<'SHELL'
-set -euo pipefail
-mount -t tmpfs tmpfs /run
-if /usr/bin/heimdall-server-setup --non-interactive --skip-db --skip-tls \
-  --external-url http://changed.example.test > /tmp/rpm-shell-no-manager.log 2>&1; then
-  echo 'Shell setup unexpectedly succeeded without systemd.' >&2
-  exit 1
-fi
-cat /tmp/rpm-shell-no-manager.log
-grep -q 'requires a running systemd service manager' /tmp/rpm-shell-no-manager.log
-sha256sum --check /tmp/rpm-shell-env.sha256
-/usr/bin/heimdall-server-setup --non-interactive --reconfigure \
-  --external-url http://localhost:3000
-SHELL
-  [[ $(systemctl show -p MainPID --value heimdall-server) == "$before_pid" ]]
-  /usr/bin/heimdall-server-setup --non-interactive --skip-db --skip-tls
-  [[ $(systemctl show -p MainPID --value heimdall-server) != "$before_pid" ]]
-  verify
-  # A real failing service start must make the installed shell entry point fail.
-  install -d /run/systemd/system/heimdall-server.service.d
-  printf '[Service]\nExecStartPre=/usr/bin/false\nRestart=no\n' \
-    > /run/systemd/system/heimdall-server.service.d/rpm-test-failure.conf
-  systemctl daemon-reload
-  result=0
-  /usr/bin/heimdall-server-setup --non-interactive --skip-db --skip-tls \
-    > /tmp/rpm-shell-restart.log 2>&1 || result=$?
-  cat /tmp/rpm-shell-restart.log
-  rm /run/systemd/system/heimdall-server.service.d/rpm-test-failure.conf
-  systemctl daemon-reload
-  systemctl reset-failed heimdall-server
-  systemctl restart heimdall-server
-  [[ $result -ne 0 ]]
-  verify
+upgrade() {
+  timeout 300 dnf upgrade -y --disablerepo='*' --setopt=install_weak_deps=False \
+    --setopt=localpkg_gpgcheck=1 "$1"
 }
-
+refuse_upgrade() {
+  before=$(rpm -q --qf '%{NEVRA}' heimdall-server)
+  if upgrade "$1" > /tmp/rpm-refused-upgrade.log 2>&1; then
+    cat /tmp/rpm-refused-upgrade.log
+    echo 'Upgrade unexpectedly accepted an unsafe fixture.' >&2
+    exit 1
+  fi
+  cat /tmp/rpm-refused-upgrade.log
+  [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$before" ]]
+  for unit in "${units[@]}"; do systemctl is-active --quiet "$unit"; done
+  test ! -e /etc/heimdall-server/upgrade-pending
+}
 case ${1:-} in
   install)
-    test -f "${2:-}"
-    check_signature "$2"
+    check_signature "${2:?RPM}"
     install -d /etc/heimdall-server
     cat > /etc/heimdall-server/backend.env <<'ENV'
 NODE_ENV=production
 ADMIN_EMAIL=rpm-test@example.invalid
 ADMIN_PASSWORD=Rpm-Smoke-Only-2026!
-EXTERNAL_URL=http://localhost:3000
 LOCAL_LOGIN_DISABLED=false
 OIDC_NAME='RPM fixture login'
 ENV
     sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-before-install.sha256
-    timeout 300 dnf install -y --setopt=install_weak_deps=False \
-      --setopt=localpkg_gpgcheck=1 "$2"
-    [[ $(rpm -q --qf '%{VERSION}-%{RELEASE}' heimdall-server) == 2.13.1-0.1.integration.el8 ]]
+    timeout 300 dnf install -y --setopt=install_weak_deps=False --setopt=localpkg_gpgcheck=1 "$2"
+    [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$(rpm -qp --qf '%{NEVRA}' "$2")" ]]
     sha256sum --check /tmp/rpm-before-install.sha256
-    if systemctl is-active --quiet heimdall-server; then exit 1; fi
-    test ! -e /var/lib/pgsql/18/data/PG_VERSION
-    if rpm -q postgresql18-server; then exit 1; fi
-    dnf install -y postgresql18 postgresql18-server
-    /usr/bin/heimdall-cli setup --non-interactive --skip-tls
-    verify
-    sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-cli-rerun.sha256
+    for unit in "${units[@]}"; do if systemctl is-active --quiet "$unit"; then exit 1; fi; done
+    test ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION
+    ;;
+  setup)
+    # The host runner disconnects networking before this full setup.
+    bash /tmp/rpm-tests/topology.sh bundled bundled
     source /etc/heimdall-server/backend.env
     printf '%s\0' "$DATABASE_PASSWORD" "$JWT_SECRET" "$API_KEY_SECRET" | sha256sum > /tmp/rpm-secrets.sha256
-    before_pid=$(systemctl show -p MainPID --value heimdall-server)
-    /usr/bin/heimdall-cli setup --non-interactive --skip-tls
-    [[ $(systemctl show -p MainPID --value heimdall-server) != "$before_pid" ]]
-    sha256sum --check /tmp/rpm-cli-rerun.sha256
-    verify
     bash /tmp/rpm-tests/database.sh
-    shell_setup_checks
-    unset OIDC_NAME LOCAL_LOGIN_DISABLED DATABASE_PASSWORD JWT_SECRET API_KEY_SECRET
+    # Missing systemd must fail without touching configuration; reconfigure works.
+    sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-shell-env.sha256
+    unshare --mount --propagation private bash -s <<'SHELL'
+set -euo pipefail
+mount -t tmpfs tmpfs /run
+if heimdall-server-setup --non-interactive --skip-db --skip-tls > /tmp/rpm-shell-no-manager.log 2>&1; then exit 1; fi
+sha256sum --check /tmp/rpm-shell-env.sha256
+heimdall-server-setup --non-interactive --reconfigure
+SHELL
+    heimdall-server-setup --non-interactive
+    install -d /run/systemd/system/heimdall-server.service.d
+    printf '[Service]\nExecStartPre=/usr/bin/false\nRestart=no\n' > /run/systemd/system/heimdall-server.service.d/rpm-test-failure.conf
+    systemctl daemon-reload
+    result=0
+    heimdall-server-setup --non-interactive > /tmp/rpm-shell-failure.log 2>&1 || result=$?
+    cat /tmp/rpm-shell-failure.log
+    [[ $result -ne 0 ]]
+    rm /run/systemd/system/heimdall-server.service.d/rpm-test-failure.conf
+    systemctl daemon-reload
+    systemctl reset-failed heimdall-server
+    heimdall-cli setup --non-interactive
     source /etc/heimdall-server/backend.env
     [[ $(printf '%s\0' "$DATABASE_PASSWORD" "$JWT_SECRET" "$API_KEY_SECRET" | sha256sum) == "$(cat /tmp/rpm-secrets.sha256)" ]]
     [[ $OIDC_NAME == 'RPM fixture login' && $LOCAL_LOGIN_DISABLED == false ]]
     sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-lifecycle-env.sha256
+    find /var/lib/heimdall-caddy -name root.crt -type f -exec sha256sum {} \; > /tmp/rpm-lifecycle-ca.sha256
+    test -s /tmp/rpm-lifecycle-ca.sha256
     cat /etc/os-release
     uname -m
-    rpm -q heimdall-server postgresql18 postgresql18-server nodejs systemd
-    node --version
-    /usr/bin/heimdall-cli --version
+    rpm -q heimdall-server systemd
+    "$node" --version
+    heimdall-cli --version
     verify_state
     ;;
   upgrade)
-    test -f "${2:-}"
-    check_signature "$2"
-    sed -i 's/^RESTART_ON_UPGRADE=.*/RESTART_ON_UPGRADE=false/' /etc/sysconfig/heimdall-server
-    grep -qx 'RESTART_ON_UPGRADE=false' /etc/sysconfig/heimdall-server
-    before_pid=$(systemctl show -p MainPID --value heimdall-server)
-    [[ $before_pid -gt 0 ]]
-    timeout 300 dnf upgrade -y --setopt=install_weak_deps=False \
-      --setopt=localpkg_gpgcheck=1 "$2"
-    [[ $(rpm -q --qf '%{RELEASE}' heimdall-server) == 0.2.integration.el8 ]]
-    [[ $(systemctl show -p MainPID --value heimdall-server) == "$before_pid" ]]
+    check_signature "${2:?RPM}"
+    source /etc/heimdall-server/backend.env
+    version_file=/var/lib/heimdall-postgresql/18/data/PG_VERSION
+    cp -p "$version_file" /tmp/rpm-pg-version
+    printf '17\n' > "$version_file"
+    refuse_upgrade "$2"
+    [[ $(cat "$version_file") == 17 ]]
+    cp -p /tmp/rpm-pg-version "$version_file"
+    # Force a real pg_dump failure while all services remain alive.
+    cp -p /etc/heimdall-server/backend.env /tmp/rpm-before-backup-failure.env
+    sed -i 's/^DATABASE_PASSWORD=.*/DATABASE_PASSWORD=invalid-backup-fixture/' /etc/heimdall-server/backend.env
+    refuse_upgrade "$2"
+    cp -p /tmp/rpm-before-backup-failure.env /etc/heimdall-server/backend.env
+    upgrade "$2"
+    [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$(rpm -qp --qf '%{NEVRA}' "$2")" ]]
+    for unit in "${units[@]}"; do if systemctl is-active --quiet "$unit"; then exit 1; fi; done
+    test -e /etc/heimdall-server/upgrade-pending
     sha256sum --check /tmp/rpm-lifecycle-env.sha256
     test -n "$(find /var/lib/heimdall-server/backups -name '*.tar.gz' -print -quit)"
-    /usr/bin/heimdall-cli setup --non-interactive --skip-tls
-    [[ $(systemctl show -p MainPID --value heimdall-server) != "$before_pid" ]]
+    heimdall-cli setup --non-interactive --reconfigure
+    test -e /etc/heimdall-server/upgrade-pending
+    heimdall-cli setup --non-interactive --skip-db || true
+    test -e /etc/heimdall-server/upgrade-pending
+    if systemctl is-active --quiet heimdall-server; then exit 1; fi
+    migration=/usr/share/heimdall-server/apps/backend/migrations/99999999999999-rpm-failure.js
+    printf 'module.exports = { up: async () => { throw new Error("RPM migration failure fixture"); }, down: async () => {} };\n' > "$migration"
+    if heimdall-cli setup --non-interactive > /tmp/rpm-migration-failure.log 2>&1; then exit 1; fi
+    cat /tmp/rpm-migration-failure.log
+    test -e /etc/heimdall-server/upgrade-pending
+    if systemctl is-active --quiet heimdall-server; then exit 1; fi
+    rm "$migration"
+    heimdall-cli setup --non-interactive
+    test ! -e /etc/heimdall-server/upgrade-pending
     verify_state
     ;;
   verify) verify_state ;;
   remove)
-    sha256sum /etc/heimdall-server/backend.env | cut -d ' ' -f 1 > /tmp/rpm-before-remove.sha256
+    source /etc/heimdall-server/backend.env
+    [[ $(query 'SELECT id FROM rpm_test_sentinel') == 1 ]]
+    cp -p /etc/heimdall-server/backend.env /tmp/rpm-retained.env
+    sha256sum /var/lib/heimdall-postgresql/18/data/PG_VERSION > /tmp/rpm-retained-pg.sha256
     dnf remove -y --noautoremove heimdall-server
     if rpm -q heimdall-server; then exit 1; fi
-    if systemctl is-active --quiet heimdall-server; then exit 1; fi
-    test -s /etc/heimdall-server/backend.env.rpmsave
-    [[ $(sha256sum /etc/heimdall-server/backend.env.rpmsave | cut -d ' ' -f 1) == "$(cat /tmp/rpm-before-remove.sha256)" ]]
-    systemctl is-active --quiet postgresql-18
-    source /etc/heimdall-server/backend.env.rpmsave
-    [[ $(query 'SELECT id FROM rpm_test_sentinel') == 1 ]]
+    for unit in "${units[@]}"; do if systemctl is-active --quiet "$unit"; then exit 1; fi; done
+    retained=/etc/heimdall-server/backend.env
+    [[ -f $retained ]] || retained+=.rpmsave
+    cmp /tmp/rpm-retained.env "$retained"
+    sha256sum --check /tmp/rpm-retained-pg.sha256 /tmp/rpm-lifecycle-ca.sha256
+    for account in heimdall heimdall-postgres heimdall-caddy; do getent passwd "$account"; done
     ;;
-  *)
-    echo 'Usage: lifecycle.sh install RPM | upgrade RPM | verify | remove' >&2
-    exit 64
+  recover)
+    check_signature "${2:?RPM}"
+    dnf install -y --disablerepo='*' --setopt=localpkg_gpgcheck=1 --setopt=install_weak_deps=False "$2"
+    cp -p /tmp/rpm-retained.env /etc/heimdall-server/backend.env
+    heimdall-cli setup --non-interactive
+    verify_state
     ;;
+  *) echo 'Usage: lifecycle.sh install RPM | setup | upgrade RPM | verify | remove | recover RPM' >&2; exit 64 ;;
 esac

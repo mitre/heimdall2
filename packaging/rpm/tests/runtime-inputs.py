@@ -6,9 +6,13 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+
+# These checks run before SOURCE_MODE=head rejects dirty packaging inputs.
+sys.dont_write_bytecode = True
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'scripts/stage-runtimes.py'
 ARCHIVES = {'node': 'node-runtime.tar.xz', 'postgresql': 'postgresql-runtime.tar.bz2',

@@ -13,7 +13,8 @@ set -a
 source /etc/heimdall-server/backend.env
 set +a
 query() {
-  runuser -u postgres -- /usr/pgsql-18/bin/psql \
+  runuser -u heimdall-postgres -- /usr/libexec/heimdall-server/runtime/postgresql/bin/psql \
+    -h /run/heimdall-postgresql -p 55432 -U heimdall-postgres \
     -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$1"
 }
 expected=$(find /usr/share/heimdall-server/apps/backend/migrations \
