@@ -83,6 +83,10 @@ Requires:       tar
 Requires:       util-linux
 Requires:       iproute
 Requires(pre):  shadow-utils
+Requires(pre):  coreutils
+Requires(pre):  findutils
+Requires(pre):  gawk
+Requires(preun): diffutils
 
 Provides:       bundled(nodejs) = 22.23.3
 Provides:       bundled(postgresql) = 18.6
@@ -94,7 +98,7 @@ Heimdall Server provides data persistence, authentication, RBAC, and API
 access for Heimdall evaluations.
 
 After installation, run:
-  sudo heimdall-cli setup
+  sudo heimdall-cli setup --interactive
 
 %prep
 %autosetup -n heimdall2-%{version}
@@ -309,6 +313,114 @@ ln -sr %{buildroot}%{_sysconfdir}/%{name}/backend.env \
        %{buildroot}%{_datadir}/%{name}/apps/backend/.env
 
 %pre
+# Refuse unsafe/incompatible state before backup, service stops, or replacement.
+if [ "$1" -gt 1 ]; then
+  unit_running() {
+    state=$(systemctl is-active "$1") && query_status=0 || query_status=$?
+    case "$state:$query_status" in
+      active:0|reloading:0|activating:3|deactivating:3) return 0 ;;
+      inactive:3|failed:3) return 1 ;;
+      unknown:4)
+        # Older packages did not install these private units.
+        case "$1" in heimdall-caddy.service|heimdall-postgresql.service) return 1 ;; esac ;;
+    esac
+    echo "Cannot safely determine state of $1 (status $query_status, state '$state'); upgrade aborted." >&2
+    exit 1
+  }
+  pg_root=/var/lib/heimdall-postgresql
+  if [ -L "$pg_root" ] || { [ -e "$pg_root" ] && [ ! -d "$pg_root" ]; }; then
+    echo "Unsafe private PostgreSQL state path: $pg_root" >&2
+    exit 1
+  fi
+  for major_dir in "$pg_root"/* "$pg_root"/.[!.]* "$pg_root"/..?*; do
+    [ -e "$major_dir" ] || [ -L "$major_dir" ] || continue
+    if [ "$major_dir" != "$pg_root/18" ] || [ -L "$major_dir" ] || [ ! -d "$major_dir" ]; then
+      echo "Unsupported or ambiguous PostgreSQL cluster: $major_dir; major migration is manual." >&2
+      exit 1
+    fi
+    for entry in "$major_dir"/* "$major_dir"/.[!.]* "$major_dir"/..?*; do
+      [ -e "$entry" ] || [ -L "$entry" ] || continue
+      if [ "$entry" != "$major_dir/data" ] || [ -L "$entry" ] || [ ! -d "$entry" ]; then
+        echo "Unexpected private PostgreSQL state path: $entry" >&2
+        exit 1
+      fi
+      version_file="$entry/PG_VERSION"
+      if [ -L "$version_file" ] || { [ -e "$version_file" ] && [ ! -f "$version_file" ]; }; then
+        echo "Unsafe PostgreSQL version file: $version_file" >&2
+        exit 1
+      fi
+      if [ -f "$version_file" ]; then
+        if [ "$(cat "$version_file")" != 18 ]; then
+          echo "Private PostgreSQL cluster must be major 18; major migration is manual." >&2
+          exit 1
+        fi
+      else
+        contents=$(find "$entry" -mindepth 1 -maxdepth 1 -print -quit) || exit 1
+        if [ -n "$contents" ]; then
+          echo "Nonempty private PostgreSQL data has no PG_VERSION: $entry" >&2
+          exit 1
+        fi
+      fi
+    done
+  done
+
+  skip_backup=false
+  sysconfig=%{_sysconfdir}/sysconfig/%{name}
+  if [ -e "$sysconfig" ] || [ -L "$sysconfig" ]; then
+    if [ -L "$sysconfig" ] || [ ! -f "$sysconfig" ] || \
+       [ "$(stat -c '%%u' "$sysconfig")" != 0 ] || \
+       [ $((0$(stat -c '%%a' "$sysconfig") & 022)) -ne 0 ]; then
+      echo "Unsafe sysconfig path: $sysconfig" >&2
+      exit 1
+    fi
+    skip_backup=$(awk '
+      BEGIN { value = "false" }
+      /^[[:space:]]*SKIP_PREUPGRADE_BACKUP([[:space:]]|=|$)/ {
+        if (seen++ || $0 !~ /^[[:space:]]*SKIP_PREUPGRADE_BACKUP[[:space:]]*=[[:space:]]*(true|false)[[:space:]]*$/) {
+          invalid = 1; exit
+        }
+        sub(/^[^=]*=[[:space:]]*/, ""); sub(/[[:space:]]*$/, ""); value = $0
+      }
+      END { if (invalid) exit 1; print value }
+    ' "$sysconfig") || {
+      echo "SKIP_PREUPGRADE_BACKUP must occur once at most and be unquoted true or false." >&2
+      exit 1
+    }
+  fi
+
+  config_dir=%{_sysconfdir}/%{name}
+  marker="$config_dir/upgrade-pending"
+  if [ -L "$config_dir" ] || [ ! -d "$config_dir" ] || \
+     [ "$(stat -c '%%u' "$config_dir")" != 0 ] || \
+     [ $((0$(stat -c '%%a' "$config_dir") & 022)) -ne 0 ] || \
+     [ -L "$marker" ] || { [ -e "$marker" ] && \
+       { [ ! -f "$marker" ] || [ "$(stat -c '%%u:%%h' "$marker")" != 0:1 ]; }; }; then
+    echo "Unsafe upgrade marker or configuration directory: $marker" >&2
+    exit 1
+  fi
+
+  active=false
+  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service; do
+    if unit_running "$unit"; then active=true; fi
+  done
+  if [ "$active" = true ] && [ -s "$config_dir/backend.env" ]; then
+    echo "Creating pre-upgrade backup..."
+    if ! heimdall-cli backup -o /var/lib/%{name}/backups; then
+      if [ "$skip_backup" != true ]; then
+        echo "Backup failed; upgrade aborted. After verifying a separate backup, set SKIP_PREUPGRADE_BACKUP=true in $sysconfig to override." >&2
+        exit 1
+      fi
+      echo "WARNING: backup failed; continuing with explicit SKIP_PREUPGRADE_BACKUP=true override." >&2
+    fi
+  fi
+  (umask 077; touch "$marker") && chown root:root "$marker" && chmod 0600 "$marker" || exit 1
+  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service; do
+    if unit_running "$unit"; then
+      systemctl stop "$unit" || exit 1
+    fi
+  done
+fi
+
 getent group heimdall >/dev/null || groupadd -r heimdall
 getent passwd heimdall >/dev/null || \
   useradd -r -g heimdall -d %{_datadir}/%{name} -s /sbin/nologin \
@@ -322,35 +434,75 @@ getent passwd heimdall-caddy >/dev/null || \
   useradd -r -g heimdall-caddy -d /var/lib/heimdall-caddy -s /sbin/nologin \
   -c "Heimdall HTTPS proxy" heimdall-caddy
 
-# On upgrade ($1 -eq 2): attempt automatic backup before replacing files.
-# Non-fatal — upgrade proceeds even if backup fails (e.g., DB unreachable).
-if [ $1 -eq 2 ] && command -v heimdall-cli >/dev/null 2>&1; then
-  echo "Creating pre-upgrade backup..."
-  heimdall-cli backup \
-    -o /var/lib/%{name}/backups \
-    2>/dev/null || echo "  Pre-upgrade backup skipped (non-fatal)"
-fi
-
 %post
-%systemd_post %{name}.service
 # Setup alone enables the selected private services; presets must not start them.
+systemctl daemon-reload >/dev/null 2>&1 || :
 systemd-tmpfiles --create %{_tmpfilesdir}/%{name}.conf >/dev/null 2>&1 || :
 
 # Load SELinux policy module
-semodule -n -i %{_datadir}/selinux/packages/%{name}.pp 2>/dev/null || true
+semodule -n -i %{_datadir}/selinux/packages/%{name}.pp || \
+  echo "WARNING: Heimdall SELinux policy registration failed; resolve before setup." >&2
 if /usr/sbin/selinuxenabled 2>/dev/null; then
-  /usr/sbin/load_policy 2>/dev/null || true
-  restorecon -R %{_datadir}/%{name}/ \
-                %{_sysconfdir}/%{name}/ \
-                %{_unitdir}/%{name}.service 2>/dev/null || true
-  # Register port 3000 (ignore if already registered)
-  semanage port -a -t heimdall_server_port_t -p tcp 3000 2>/dev/null || true
+  /usr/sbin/load_policy || echo "WARNING: SELinux policy reload failed." >&2
+  for path in %{_datadir}/%{name} %{_libexecdir}/%{name}/runtime \
+              %{_sysconfdir}/%{name} /var/lib/%{name} /var/log/%{name} \
+              /var/lib/heimdall-postgresql /var/lib/heimdall-caddy \
+              /run/%{name} /run/heimdall-postgresql /run/heimdall-caddy \
+              %{_unitdir}/%{name}.service %{_unitdir}/heimdall-postgresql.service \
+              %{_unitdir}/heimdall-caddy.service; do
+    if [ -L "$path" ]; then
+      echo "WARNING: refusing to relabel symbolic link $path." >&2
+      continue
+    fi
+    [ -e "$path" ] || continue
+    restorecon -R "$path" || echo "WARNING: could not relabel $path." >&2
+  done
+
+  # Do not claim existing mappings or replace another service's assignment.
+  ledger=%{_sysconfdir}/%{name}/selinux-ports
+  config_dir=%{_sysconfdir}/%{name}
+  if [ -L "$config_dir" ] || [ ! -d "$config_dir" ] || \
+     [ "$(stat -c '%%u' "$config_dir")" != 0 ] || \
+     [ $((0$(stat -c '%%a' "$config_dir") & 022)) -ne 0 ] || \
+     [ -L "$ledger" ] || { [ -e "$ledger" ] && \
+       { [ ! -f "$ledger" ] || [ "$(stat -c '%%u:%%g:%%a:%%h' "$ledger")" != 0:0:600:1 ]; }; }; then
+    echo "WARNING: unsafe SELinux port ledger; no port mappings changed." >&2
+  elif (umask 077; touch "$ledger") && chown root:root "$ledger" && chmod 0600 "$ledger"; then
+    for registration in heimdall_server_port_t:3000 postgresql_port_t:55432; do
+      type=${registration%%:*}
+      port=${registration#*:}
+      mappings=$(LC_ALL=C semanage port -l) || {
+        echo "WARNING: cannot read SELinux ports; resolve before setup." >&2
+        break
+      }
+      if printf '%%s\n' "$mappings" | awk -v type="$type" -v port="$port" '
+        $1 == type && $2 == "tcp" {
+          for (i = 3; i <= NF; i++) {
+            gsub(/,/, "", $i); n = split($i, range, "-")
+            if ((n == 1 && range[1] == port) || (n == 2 && port >= range[1] && port <= range[2])) found = 1
+          }
+        } END { exit !found }
+      '; then
+        continue
+      fi
+      if semanage port -a -t "$type" -p tcp "$port"; then
+        if ! printf '%%s tcp %%s\n' "$type" "$port" >> "$ledger"; then
+          echo "WARNING: cannot record owned SELinux port $port; reverting registration." >&2
+          semanage port -d -p tcp "$port" || echo "WARNING: port $port requires manual cleanup." >&2
+        fi
+      else
+        echo "WARNING: TCP $port could not be labeled $type; resolve the conflict or select another port during setup." >&2
+      fi
+    done
+  else
+    echo "WARNING: could not create SELinux port ledger; no port mappings changed." >&2
+  fi
 fi
 
 # Register bundled binaries with the fapolicyd trust database.
 # heimdall-cli is a no-op when fapolicyd-cli is not installed, so the
 # command is safe to call unconditionally.
-heimdall-cli fapolicyd add 2>/dev/null || :
+heimdall-cli fapolicyd add || echo "WARNING: fapolicyd trust refresh failed; resolve before setup." >&2
 
 if [ $1 -eq 1 ]; then
   echo ""
@@ -358,7 +510,7 @@ if [ $1 -eq 1 ]; then
   echo " Heimdall Server installed successfully."
   echo ""
   echo " Complete setup by running:"
-  echo "   sudo heimdall-cli setup"
+  echo "   sudo heimdall-cli setup --interactive"
   echo "=========================================="
   echo ""
 elif [ $1 -eq 2 ]; then
@@ -366,47 +518,82 @@ elif [ $1 -eq 2 ]; then
   echo "=========================================="
   echo " Heimdall Server upgraded."
   echo ""
-  echo " A backup was attempted before upgrade."
   echo " Backups: /var/lib/%{name}/backups/"
   echo ""
-  echo " Run database migrations:"
-  echo "   sudo heimdall-cli setup --skip-tls"
+  echo " Apply migrations and start the selected services:"
+  echo "   sudo heimdall-cli setup --non-interactive"
   echo ""
-  echo " The service will restart automatically."
+  echo " Services remain stopped until setup succeeds."
   echo "=========================================="
   echo ""
 fi
 
 %preun
-%systemd_preun %{name}.service
-%systemd_preun heimdall-caddy.service heimdall-postgresql.service
-
-# Remove fapolicyd trust entries while the CLI and payload still exist.
 if [ $1 -eq 0 ]; then
-  heimdall-cli fapolicyd remove 2>/dev/null || :
+  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service; do
+    systemctl stop "$unit" || exit 1
+    systemctl disable "$unit" || exit 1
+  done
+  # Remove only our generated dependency; retain operator replacements.
+  dropin=%{_sysconfdir}/systemd/system/%{name}.service.d/database.conf
+  if [ ! -L "%{_sysconfdir}/systemd/system/%{name}.service.d" ] && \
+     [ ! -L "$dropin" ] && [ -f "$dropin" ] && \
+     printf '[Unit]\nRequires=heimdall-postgresql.service\nAfter=heimdall-postgresql.service\n' | cmp -s - "$dropin"; then
+    rm "$dropin" || exit 1
+  fi
+  # Remove trust while the CLI/payload exist; retain all data/config/accounts.
+  heimdall-cli fapolicyd remove || echo "WARNING: fapolicyd trust cleanup failed." >&2
 fi
 
 %postun
-# On upgrade ($1 -ge 1): check RESTART_ON_UPGRADE in sysconfig before restarting.
-# Follows the Grafana pattern — gives admins control over restart timing.
-if [ $1 -ge 1 ]; then
-  RESTART_ON_UPGRADE=true
-  if [ -f %{_sysconfdir}/sysconfig/%{name} ]; then
-    . %{_sysconfdir}/sysconfig/%{name}
-  fi
-  if [ "${RESTART_ON_UPGRADE}" = "true" ]; then
-    systemctl try-restart %{name}.service >/dev/null 2>&1 || true
-  fi
-else
-  systemctl daemon-reload >/dev/null 2>&1 || true
-fi
+systemctl daemon-reload >/dev/null 2>&1 || :
 
-# Remove SELinux policy on full uninstall
+# No restart or migration here, including during an upgrade.
 if [ $1 -eq 0 ]; then
-  semodule -n -r heimdall_server 2>/dev/null || true
+  ledger=%{_sysconfdir}/%{name}/selinux-ports
+  config_dir=%{_sysconfdir}/%{name}
+  if [ ! -L "$config_dir" ] && [ -d "$config_dir" ] && \
+     [ "$(stat -c '%%u' "$config_dir")" = 0 ] && \
+     [ $((0$(stat -c '%%a' "$config_dir") & 022)) -eq 0 ] && \
+     [ ! -L "$ledger" ] && [ -f "$ledger" ] && \
+     [ "$(stat -c '%%u:%%g:%%a:%%h' "$ledger")" = 0:0:600:1 ]; then
+    if mappings=$(LC_ALL=C semanage port -l -C); then
+      remaining=$(mktemp "$config_dir/.selinux-ports.XXXXXX") || exit 1
+      while read -r type protocol port extra; do
+        case "$type" in heimdall_server_port_t|postgresql_port_t|http_port_t) ;; *) continue ;; esac
+        [ "$protocol" = tcp ] && [ -z "$extra" ] || continue
+        case "$port" in ''|*[!0-9]*) continue ;; esac
+        [ "$port" -ge 1 ] && [ "$port" -le 65535 ] || continue
+        # Only exact local entries are ours; a later range belongs to its editor.
+        if printf '%%s\n' "$mappings" | awk -v type="$type" -v port="$port" '
+          $1 == type && $2 == "tcp" {
+            for (i = 3; i <= NF; i++) { gsub(/,/, "", $i); if ($i == port) found = 1 }
+          } END { exit !found }
+        '; then
+          semanage port -d -p tcp "$port" || {
+            echo "WARNING: retaining failed SELinux port cleanup for $port." >&2
+            printf '%%s tcp %%s\n' "$type" "$port" >> "$remaining" || {
+              rm -f "$remaining"
+              echo "WARNING: ownership ledger retained because cleanup results could not be saved." >&2
+              exit 1
+            }
+          }
+        fi
+      done < "$ledger"
+      if [ -s "$remaining" ]; then
+        mv -f "$remaining" "$ledger" || exit 1
+      else
+        rm -f "$remaining" "$ledger" || exit 1
+      fi
+    else
+      echo "WARNING: cannot inspect SELinux ports; ownership ledger retained." >&2
+    fi
+  elif [ -e "$ledger" ] || [ -L "$ledger" ]; then
+    echo "WARNING: unsafe SELinux port ledger retained without changes." >&2
+  fi
+  semodule -n -r heimdall_server || echo "WARNING: SELinux module retained; inspect remaining port mappings." >&2
   if /usr/sbin/selinuxenabled 2>/dev/null; then
-    /usr/sbin/load_policy 2>/dev/null || true
-    semanage port -d -t heimdall_server_port_t -p tcp 3000 2>/dev/null || true
+    /usr/sbin/load_policy || echo "WARNING: SELinux policy reload failed." >&2
   fi
 fi
 

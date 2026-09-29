@@ -2,15 +2,28 @@
 
 # Systemd unit file
 /usr/lib/systemd/system/heimdall-server\.service   --  gen_context(system_u:object_r:heimdall_server_unit_file_t,s0)
+/usr/lib/systemd/system/heimdall-postgresql\.service -- gen_context(system_u:object_r:postgresql_unit_file_t,s0)
+/usr/lib/systemd/system/heimdall-caddy\.service -- gen_context(system_u:object_r:httpd_unit_file_t,s0)
 
 # Config directory
 /etc/heimdall-server(/.*)?                     gen_context(system_u:object_r:heimdall_server_conf_t,s0)
+/etc/heimdall-server/caddy(/.*)?               gen_context(system_u:object_r:httpd_config_t,s0)
 
-# Application + bundled Node.js binary
+# Application and native addons
 /usr/share/heimdall-server(/.*)?               gen_context(system_u:object_r:heimdall_server_exec_t,s0)
+
+# Private runtime parents/share, executable clients, and shared libraries.
+/usr/libexec/heimdall-server/runtime(/.*)?     gen_context(system_u:object_r:usr_t,s0)
+/usr/libexec/heimdall-server/runtime/node/bin/node -- gen_context(system_u:object_r:heimdall_server_exec_t,s0)
+/usr/libexec/heimdall-server/runtime/postgresql/bin(/.*)? gen_context(system_u:object_r:bin_t,s0)
+/usr/libexec/heimdall-server/runtime/postgresql/bin/(postgres|initdb|pg_ctl) -- gen_context(system_u:object_r:postgresql_exec_t,s0)
+/usr/libexec/heimdall-server/runtime/postgresql/lib(/.*)? gen_context(system_u:object_r:lib_t,s0)
+/usr/libexec/heimdall-server/runtime/caddy/caddy -- gen_context(system_u:object_r:httpd_exec_t,s0)
 
 # Data directory
 /var/lib/heimdall-server(/.*)?                 gen_context(system_u:object_r:heimdall_server_var_lib_t,s0)
+/var/lib/heimdall-postgresql(/.*)?             gen_context(system_u:object_r:postgresql_db_t,s0)
+/var/lib/heimdall-caddy(/.*)?                  gen_context(system_u:object_r:httpd_var_lib_t,s0)
 
 # Log directory
 /var/log/heimdall-server(/.*)?                 gen_context(system_u:object_r:heimdall_server_log_t,s0)
@@ -18,3 +31,7 @@
 # Runtime directory
 /run/heimdall-server(/.*)?                     gen_context(system_u:object_r:heimdall_server_var_run_t,s0)
 /var/run/heimdall-server(/.*)?                 gen_context(system_u:object_r:heimdall_server_var_run_t,s0)
+/run/heimdall-postgresql(/.*)?                 gen_context(system_u:object_r:postgresql_var_run_t,s0)
+/var/run/heimdall-postgresql(/.*)?             gen_context(system_u:object_r:postgresql_var_run_t,s0)
+/run/heimdall-caddy(/.*)?                      gen_context(system_u:object_r:httpd_var_run_t,s0)
+/var/run/heimdall-caddy(/.*)?                  gen_context(system_u:object_r:httpd_var_run_t,s0)

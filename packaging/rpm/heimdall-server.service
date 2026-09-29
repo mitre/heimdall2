@@ -3,6 +3,7 @@ Description=Heimdall Server
 Documentation=https://github.com/mitre/heimdall2
 Wants=network-online.target
 After=network-online.target heimdall-postgresql.service
+ConditionPathExists=!/etc/heimdall-server/upgrade-pending
 
 [Service]
 Type=exec

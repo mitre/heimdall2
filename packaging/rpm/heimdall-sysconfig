@@ -7,13 +7,13 @@
 # new directory exists and is owned appropriately:
 #   install -d -o heimdall -g heimdall -m 0750 /new/path
 #
-# These settings control HOW the service runs (paths, user, restart behavior).
+# These settings control HOW the service runs (paths and upgrade backup policy).
 # For APPLICATION settings (database, ports, JWT), edit:
 #   /etc/heimdall-server/backend.env
 #
 # Changes here take effect after: systemctl restart heimdall-server
 #
-# All values can also be set via the heimdall-cli command:
+# Path values can also be set via the heimdall-cli command:
 #   heimdall-cli setup --app-dir=/custom/path
 #
 # Or via environment variables with the HEIMDALL_ prefix:
@@ -40,5 +40,9 @@ HEIMDALL_CERT_DIR=/etc/pki/heimdall-server
 # Environment file (application configuration)
 HEIMDALL_ENV_FILE=/etc/heimdall-server/backend.env
 
-# Restart service automatically on package upgrade (true/false)
-RESTART_ON_UPGRADE=true
+# Abort upgrades when an active configured installation cannot be backed up.
+# Set exactly true only after taking and verifying a separate backup.
+# Values must be unquoted true or false; this file is never sourced by RPM.
+# Upgrades leave services stopped until successful migration with:
+#   sudo heimdall-cli setup --non-interactive
+SKIP_PREUPGRADE_BACKUP=false

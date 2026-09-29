@@ -1,4 +1,4 @@
-policy_module(heimdall_server, 1.0.0)
+policy_module(heimdall_server, 1.1.0)
 
 ########################################
 #
@@ -7,8 +7,8 @@ policy_module(heimdall_server, 1.0.0)
 
 ## <desc>
 ## <p>
-## Allow heimdall-server to connect to PostgreSQL (TCP port 5432).
-## Enabled by default for localhost database deployments.
+## Allow heimdall-server to connect to ports labeled postgresql_port_t.
+## Enabled by default for bundled and external database deployments.
 ## </p>
 ## </desc>
 gen_tunable(heimdall_server_connect_postgresql, true)
@@ -127,14 +127,21 @@ tunable_policy(`heimdall_server_connect_postgresql',`
     corenet_tcp_connect_postgresql_port(heimdall_server_t)
 ')
 
-# PostgreSQL UNIX socket (same-host)
+# Stock PostgreSQL domain for the private server; also shared by system PostgreSQL.
 optional_policy(`
-    require {
-        type postgresql_t;
-        type postgresql_var_run_t;
-    }
-    allow heimdall_server_t postgresql_t:unix_stream_socket connectto;
-    allow heimdall_server_t postgresql_var_run_t:sock_file write;
+    gen_require(`type postgresql_t;')
+    init_nnp_daemon_domain(postgresql_t)
+    postgresql_stream_connect(heimdall_server_t)
+')
+
+# Caddy uses the stock HTTP domain. DAC separates private and system instances.
+optional_policy(`
+    gen_require(`type httpd_t;')
+    init_nnp_daemon_domain(httpd_t)
+    # Traverse the parent to caddy/ without reading backend.env.
+    allow httpd_t heimdall_server_conf_t:dir search_dir_perms;
+    allow httpd_t heimdall_server_port_t:tcp_socket name_connect;
+    apache_manage_lib(httpd_t)
 ')
 
 # cgroup access (Node.js diagnostics)

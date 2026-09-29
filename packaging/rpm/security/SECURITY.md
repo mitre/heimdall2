@@ -12,26 +12,58 @@ them to the appropriate system directories.
 
 ## SELinux Policy
 
-The RPM ships a custom SELinux policy module at
-`/usr/share/selinux/packages/heimdall-server.pp`. The policy is automatically
-loaded on install and removed on uninstall.
+The RPM ships a SELinux policy module at
+`/usr/share/selinux/packages/heimdall-server.pp`. Installation registers it and
+relabels package-owned runtime, configuration, state, and socket paths. Setup
+also relabels newly created private state. Check installation warnings: policy
+compilation alone does not establish successful loading or runtime confinement.
 
 ### Domain and port types
 
-- **heimdall_server_t** — the confined domain under which the Heimdall Server
-  systemd service runs. The policy restricts file access, network sockets, and
-  inter-process communication to only what the application requires.
+- **heimdall_server_t** — the application domain, entered through private Node at
+  `/usr/libexec/heimdall-server/runtime/node/bin/node`. Node's V8 JIT requires
+  `execmem`; the policy retains that permission.
+- **postgresql_t** — the stock PostgreSQL domain, used by the private server.
+- **httpd_t** — the stock HTTP service domain, used by private Caddy. The policy
+  permits traversal to its configuration, management of HTTP state, and reverse
+  proxy connections to `heimdall_server_port_t`.
 - **heimdall_server_port_t** — the TCP port type registered for the
   application listen port (default TCP 3000).
+- **postgresql_port_t** — the TCP port type for the selected private database
+  port (default TCP 55432); external database ports must also permit connection.
+- **http_port_t** — the HTTP/HTTPS listeners, normally TCP 80 and 443.
+
+Bundled and system PostgreSQL instances share `postgresql_t`; bundled Caddy and
+system HTTP daemons share `httpd_t`. SELinux does not isolate instances sharing
+these domains. Dedicated accounts and private filesystem modes provide that
+separation. `NoNewPrivileges=true` remains enabled; the policy includes systemd
+transition permissions for all three domains.
+
+Private PostgreSQL data and sockets use `postgresql_db_t` and
+`postgresql_var_run_t`. Its libraries use `lib_t`; only `postgres`, `initdb`, and
+`pg_ctl` are server entry points. Private Caddy configuration, certificate state,
+and sockets use `httpd_config_t`, `httpd_var_lib_t`, and `httpd_var_run_t`.
 
 ### Changing the listen port
 
-If you change the `PORT` variable in `/etc/heimdall-server/backend.env`, you
-must update the SELinux port registration:
+Use the CLI to change the application port and rerun setup after changing the
+selected database/proxy ports. Setup must reject an explicit conflicting SELinux
+service-port assignment, even when no process currently listens there. Choose
+another port or have the host administrator resolve the assignment; do not use
+`semanage port -m` to take another service's label.
+
+Inspect current assignments with:
 
 ```bash
-sudo semanage port -m -t heimdall_server_port_t -p tcp <NEW_PORT>
+sudo semanage port -l
+sudo semanage port -l -C
 ```
+
+New mappings created by Heimdall are recorded in root-owned mode-0600
+`/etc/heimdall-server/selinux-ports` as `TYPE tcp PORT`. Existing compatible
+mappings are used without claiming ownership. Uninstall removes a recorded
+mapping only when its current local assignment still matches; failed removals
+remain in the ledger. Administrator-created and stock mappings are retained.
 
 ### PostgreSQL connectivity tunable
 
@@ -41,25 +73,76 @@ The policy includes a boolean for PostgreSQL access:
 getsebool heimdall_server_connect_postgresql
 ```
 
-### heimdall-cli (unconfined)
+### Enforcement verification
 
-The `heimdall-cli` binary runs as root in the system's unconfined domain. It
-is an administrative tool intended for privileged operators and is not confined
-by a custom SELinux policy.
+The policy compiles against the inspected EL8 interfaces. Enforcing OL8 runtime
+acceptance remains unverified. Check actual `ps -eZ` process domains and
+`matchpathcon`/`ls -Z` labels on an enforcing host, then exercise setup, SQL,
+readiness/login, HTTPS, port changes, upgrades, and removal. Inspect relevant
+AVCs with `ausearch -m AVC,USER_AVC -ts recent`. Caddy ACME/DNS/HTTP3, custom
+certificates, storage, and admin socket behavior require this runtime check;
+do not enable broad HTTP network permissions without measuring a real need.
+Neither a successful module build nor a privileged container closes this gate.
+
+### heimdall-cli (administrative)
+
+The `heimdall-cli` binary is an administrative tool intended for privileged
+operators. It has no custom SELinux domain; its actual domain depends on the
+operator's SELinux login/role policy.
+
+## fapolicyd and FIPS
+
+`heimdall-cli fapolicyd add` refreshes trust for the private Node/PostgreSQL/Caddy
+executables, PostgreSQL shared libraries, and application native `.node` addons.
+Install/upgrade invokes the same native CLI command; removal deletes only owned
+trust entries. Mutable configuration, database files, and certificate storage
+are not blanket-trusted. Inspect trust-command failures and exercise services
+with fapolicyd running in enforcing mode; that gate remains unverified here.
+
+Existing host FIPS checks remain relevant. Stock bundled Node, PostgreSQL, and
+Caddy binaries do not establish FIPS validation or compliance. Do not describe
+this RPM as FIPS-validated without separate evidence for the complete deployed
+cryptographic configuration.
+
+## Upgrade and removal safety
+
+Upgrades reject incompatible/ambiguous private PostgreSQL clusters before any
+backup or service stop. An active configured installation must produce a backup;
+failure aborts replacement. Only the exact unquoted setting
+`SKIP_PREUPGRADE_BACKUP=true` in `/etc/sysconfig/heimdall-server` overrides that
+requirement, after an operator has taken and verified a separate backup.
+`RESTART_ON_UPGRADE` is retired. RPM scriptlets do not evaluate sysconfig as shell.
+
+After backup, RPM creates root-owned `/etc/heimdall-server/upgrade-pending` and
+stops only the app, private Caddy, and private PostgreSQL, in that order. Both the
+unit and launcher block application startup while the marker exists, including
+restart attempts by an older package's uninstall scriptlet. Run
+`sudo heimdall-cli setup --non-interactive` after upgrading. Successful full setup
+applies migrations before clearing the marker and starting selected services;
+failed migration, `--skip-db`, and `--reconfigure` leave it in place.
+
+Removal stops/disables only the three Heimdall units. It retains application and
+database data, secrets, certificates, configuration, and service accounts. It
+does not administer system PostgreSQL, Caddy, or other proxies. Backups contain
+logical SQL plus configuration and optional private Caddy CA/certificate state;
+they never substitute a copy of the live PostgreSQL data tree for `pg_dump`.
+RPM may retain modified packaged configuration with a `.rpmsave` suffix; restore
+that configuration before setting up a reinstalled package.
 
 ## Firewalld
 
 A service definition is shipped at
 `/usr/lib/firewalld/services/heimdall-server.xml`.
 
-- **With Caddy (default):** The setup script configures Caddy as a TLS reverse
+- **With bundled Caddy (default):** Setup configures Caddy as a TLS reverse
   proxy and opens port **443** (HTTPS) via the `heimdall-server` firewalld
   service. The application port (3000) is not exposed externally.
-- **With `--skip-tls`:** The setup script opens port **3000** directly so the
-  application is reachable without a reverse proxy.
+- **With proxy mode `none`:** Setup can expose the selected application port
+  directly for HTTP-only development.
 
-The setup script handles firewalld configuration automatically. No manual
-firewall changes are required for standard deployments.
+External proxies remain operator-managed. `--skip-tls` temporarily skips proxy
+configuration; it does not change the saved proxy ownership mode. Review the
+host's firewall policy for the chosen deployment.
 
 ## Enabling Audit Rules
 
@@ -192,7 +275,11 @@ The service unit includes comprehensive sandboxing:
 
 | Path | Mode | Owner | Purpose |
 |------|------|-------|---------|
+| `/etc/heimdall-server/` | 0751 | root:heimdall | Caddy can traverse to its private subdirectory |
 | `/etc/heimdall-server/backend.env` | 0640 | root:heimdall | Credentials (DB, JWT, OAuth) |
+| `/etc/heimdall-server/caddy/` | 0750 | root:heimdall-caddy | Private proxy configuration |
+| `/var/lib/heimdall-postgresql/` | 0700 | heimdall-postgres:heimdall-postgres | Private database state |
+| `/var/lib/heimdall-caddy/` | 0700 | heimdall-caddy:heimdall-caddy | Private certificate/CA state |
 | `/etc/sysconfig/heimdall-server` | 0640 | root:root | Service path overrides |
 | `/etc/rsyslog.d/30-heimdall-server.conf` | 0644 | root:root | Rsyslog routing rules |
 | `/etc/logrotate.d/heimdall-server` | 0644 | root:root | Log rotation policy |

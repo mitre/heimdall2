@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+if [[ -e /etc/heimdall-server/upgrade-pending || -L /etc/heimdall-server/upgrade-pending ]]; then
+  echo 'Upgrade requires successful migrations: sudo heimdall-cli setup --non-interactive' >&2
+  exit 1
+fi
+
 APP_ROOT="/usr/share/heimdall-server"
 APP_DIR="${APP_ROOT}/apps/backend"
 ENV_FILE="/etc/heimdall-server/backend.env"
