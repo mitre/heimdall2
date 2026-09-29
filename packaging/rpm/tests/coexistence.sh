@@ -75,9 +75,10 @@ NGINX
       systemctl is-active --quiet "$unit"
     done
     runtime=/usr/libexec/heimdall-server/runtime
-    private_query=(runuser -u heimdall-postgres -- "$runtime/postgresql/bin/psql"
-      -h /run/heimdall-postgresql -p 55432 -U heimdall-postgres -v ON_ERROR_STOP=1 -At
-      -d heimdall-server-production)
+    source /etc/heimdall-server/backend.env
+    private_query=(env PGPASSWORD="$DATABASE_PASSWORD" "$runtime/postgresql/bin/psql"
+      -h "$DATABASE_HOST" -p "$DATABASE_PORT" -U "$DATABASE_USERNAME" -v ON_ERROR_STOP=1 -At
+      -d "$DATABASE_NAME")
     "${private_query[@]}" -c 'CREATE TABLE rpm_coexist_sentinel(id integer); INSERT INTO rpm_coexist_sentinel VALUES (42)'
     mapfile -t roots < <(find /var/lib/heimdall-caddy -name root.crt -type f)
     [[ ${#roots[@]} == 1 ]]
