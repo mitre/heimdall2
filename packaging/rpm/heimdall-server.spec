@@ -127,6 +127,8 @@ for archive, directory, strip in [
                 if strip:
                     member.linkname = member.linkname.partition("/")[2]
                 link = os.path.join(directory, member.linkname)
+                if os.path.islink(link):
+                    raise SystemExit("Archive hard link targets a symlink: " + member.name)
             elif member.issym():
                 link = os.path.join(os.path.dirname(target), member.linkname)
             elif not (member.isfile() or member.isdir()):
