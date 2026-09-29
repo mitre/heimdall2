@@ -6,9 +6,7 @@ set -euo pipefail
   exit 64
 }
 
-/usr/libexec/heimdall-server/configure.sh --non-interactive
-/usr/libexec/heimdall-server/postgres-setup.sh
-/usr/bin/heimdall-server-db-setup
+/usr/bin/heimdall-cli setup --non-interactive
 set -a
 source /etc/heimdall-server/backend.env
 set +a

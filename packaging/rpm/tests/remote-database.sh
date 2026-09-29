@@ -84,10 +84,19 @@ if [[ $db_mode == external ]]; then
     -e POSTGRES_DB=heimdall-server-production postgres:18)
   step docker start "$database_id"
   docker image inspect postgres:18 > "$logdir/database-image.json"
+  # The image's initialization server is socket-only. Require the final TCP
+  # server, authenticated access and the requested database before setup.
   for attempt in $(seq 1 60); do
-    if docker exec "$database_id" pg_isready -U postgres >/dev/null 2>&1; then break; fi
+    if ready=$(docker exec -e PGPASSWORD=Rpm-External-Fixture-2026 -e PGCONNECT_TIMEOUT=2 \
+      "$database_id" psql -h 127.0.0.1 -p 5432 -U postgres \
+      -d heimdall-server-production -v ON_ERROR_STOP=1 -Atqc 'SELECT 1' \
+      2> "$logdir/database-readiness.log") && [[ $ready == 1 ]]; then break; fi
+    if [[ $attempt -eq 60 ]]; then
+      cat "$logdir/database-readiness.log" >&2
+      echo 'Timed out waiting for authenticated PostgreSQL TCP readiness.' >&2
+      exit 1
+    fi
     sleep 1
-    [[ $attempt -lt 60 ]]
   done
   fixture_env+=(-e RPM_TEST_DB_HOST=rpm-external-db -e RPM_TEST_DB_PORT=5432
     -e RPM_TEST_DB_USER=postgres -e RPM_TEST_DB_PASSWORD=Rpm-External-Fixture-2026
