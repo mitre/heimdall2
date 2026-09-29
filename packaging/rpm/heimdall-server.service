@@ -2,7 +2,7 @@
 Description=Heimdall Server
 Documentation=https://github.com/mitre/heimdall2
 Wants=network-online.target
-After=network-online.target postgresql.service postgresql-13.service postgresql-14.service postgresql-15.service postgresql-16.service postgresql-17.service postgresql-18.service
+After=network-online.target heimdall-postgresql.service
 
 [Service]
 Type=exec
@@ -18,7 +18,7 @@ Environment=HEIMDALL_STATIC_ROOT=/usr/share/heimdall-server/dist
 # the container path sets (Dockerfile ENV / cmd.sh). EnvironmentFile= values
 # override Environment=, so sysconfig or backend.env can still override this.
 Environment=UV_THREADPOOL_SIZE=8
-ExecStartPre=/usr/bin/test -x /usr/bin/node
+ExecStartPre=/usr/bin/test -x /usr/libexec/heimdall-server/runtime/node/bin/node
 ExecStartPre=/usr/bin/heimdall-cli validate --skip-db
 ExecStart=/usr/bin/heimdall-server
 SyslogIdentifier=heimdall-server

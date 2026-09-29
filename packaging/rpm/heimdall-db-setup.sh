@@ -47,7 +47,8 @@ if [[ ! -d "${APP_DIR}" ]]; then
   exit 1
 fi
 
-if [[ ! -x /usr/bin/node || ! -x "${SEQUELIZE_BIN}" ]]; then
+NODE_BIN=/usr/libexec/heimdall-server/runtime/node/bin/node
+if [[ ! -x "$NODE_BIN" || ! -x "${SEQUELIZE_BIN}" ]]; then
   echo "Missing required executables in ${APP_DIR}/node_modules/.bin" >&2
   exit 1
 fi
@@ -57,7 +58,7 @@ if [[ ! -s "${APP_DIR}/dist/db/database.js" ]]; then
 fi
 
 run_sequelize() {
-  /usr/bin/node "${SEQUELIZE_BIN}" "$@"
+  "$NODE_BIN" "${SEQUELIZE_BIN}" "$@"
 }
 
 run_db_create() {

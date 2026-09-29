@@ -135,7 +135,7 @@ deps:
 runtimes: check-source
 	python3 scripts/stage-runtimes.py runtime-lock.json "$(RPM_ARCH)" "$(TOPDIR)/SOURCES"
 
-# Stage all source files into rpmbuild tree (Sources 0-22).
+# Stage all source files into rpmbuild tree (Sources 0-28).
 # Single source of truth for which files go into the RPM.
 stage: check-source sources heimdall-cli man runtimes
 	@mkdir -p "$(TOPDIR)/SPECS" "$(TOPDIR)/BUILD" "$(TOPDIR)/RPMS" "$(TOPDIR)/SRPMS"
@@ -149,6 +149,7 @@ stage: check-source sources heimdall-cli man runtimes
 	cp firewalld/* "$(TOPDIR)/SOURCES/"
 	@# Sources 1-8, 14, 16-19: service, config, scripts
 	cp heimdall-backend.env heimdall-server.service heimdall-server.sh \
+	   heimdall-postgresql.service heimdall-caddy.service \
 	   heimdall-configure.sh heimdall-postgres-setup.sh heimdall-setup.sh \
 	   heimdall-db-setup.sh heimdall-server-tmpfiles.conf heimdall-server.repo \
 	   heimdall-Caddyfile heimdall-sysconfig \

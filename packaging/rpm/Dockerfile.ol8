@@ -11,9 +11,6 @@ ENV NODE_EXTRA_CA_CERTS=/etc/pki/tls/certs/ca-bundle.crt
 
 FROM trusted-base AS test-host
 RUN mkdir -p /usr/share/man/man1 && \
-    curl -fsSL https://rpm.nodesource.com/setup_22.x | bash - && \
-    dnf install -y "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-$(rpm -E '%{_arch}')/pgdg-redhat-repo-latest.noarch.rpm" && \
-    dnf -qy module disable postgresql && \
     dnf install -y systemd procps-ng && dnf clean all
 CMD ["/sbin/init"]
 
@@ -38,3 +35,4 @@ RUN make -C packaging/rpm rpm SOURCE_MODE=workspace TOPDIR=/rpmbuild \
 FROM scratch AS artifacts
 COPY --from=builder /rpmbuild/RPMS /RPMS
 COPY --from=builder /rpmbuild/SRPMS /SRPMS
+COPY --from=builder /rpmbuild/SOURCES/runtime-manifest.json /runtime-manifest.json

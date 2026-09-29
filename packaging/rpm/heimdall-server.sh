@@ -12,6 +12,9 @@ if [[ -f "${ENV_FILE}" ]]; then
   set +a
 fi
 
+NODE_BIN=/usr/libexec/heimdall-server/runtime/node/bin/node
+test -x "$NODE_BIN"
+
 if [[ -z "${DATABASE_PASSWORD:-}" ]]; then
   echo "DATABASE_PASSWORD is not set in ${ENV_FILE}." >&2
   echo "Run /usr/bin/heimdall-server-setup --non-interactive to generate and apply a secure password." >&2
@@ -29,7 +32,7 @@ if [[ -n "${LOG_FILE:-}" ]]; then
     mkdir -p "${LOG_DIR}"
     chown heimdall:heimdall "${LOG_DIR}" 2>/dev/null || true
   fi
-  exec /usr/bin/node dist/src/main.js >> "${LOG_FILE}" 2>&1
+  exec "$NODE_BIN" dist/src/main.js >> "${LOG_FILE}" 2>&1
 else
-  exec /usr/bin/node dist/src/main.js
+  exec "$NODE_BIN" dist/src/main.js
 fi

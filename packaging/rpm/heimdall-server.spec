@@ -4,7 +4,8 @@ Version:        2.13.1
 Release:        %{heimdall_release}%{?dist}
 Summary:        Heimdall server for security result persistence and review
 
-License:        Apache-2.0
+# Node's complete third-party notices are shipped in node/LICENSE.
+License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND ISC AND Unicode-3.0 AND ICU AND Zlib AND LicenseRef-Public-Domain AND PostgreSQL
 URL:            https://github.com/mitre/heimdall2
 Source0:        https://github.com/mitre/heimdall2/archive/refs/tags/v%{version}.tar.gz#/heimdall2-%{version}.tar.gz
 Source1:        heimdall-server.service
@@ -28,6 +29,12 @@ Source19:       heimdall-logrotate.conf
 Source20:       40-heimdall.rules
 Source21:       SECURITY.md
 Source22:       heimdall-cli-man.tar.gz
+Source23:       node-runtime.tar.xz
+Source24:       postgresql-runtime.tar.bz2
+Source25:       caddy-runtime.tar.gz
+Source26:       runtime-manifest.json
+Source27:       heimdall-postgresql.service
+Source28:       heimdall-caddy.service
 
 # JS application with native addons: disable debug/debuginfo subpackages.
 %global debug_package %{nil}
@@ -38,35 +45,48 @@ ExclusiveArch:  aarch64 x86_64
 # Vendored node_modules are shipped with the application and must not drive
 # automatic RPM dependency/provide generation.
 %global __requires_exclude_from ^%{_datadir}/%{name}/(apps/backend/node_modules|libs)/.*$
-%global __provides_exclude_from ^%{_datadir}/%{name}/(apps/backend/node_modules|libs)/.*$
+%global __provides_exclude_from ^(%{_datadir}/%{name}/(apps/backend/node_modules|libs)|%{_libexecdir}/%{name}/runtime/postgresql/lib)/.*$
+# These observed SONAME requirements resolve through PostgreSQL's private RUNPATH.
+# Keep all base OS ELF requirements, including OpenSSL, ICU and zlib.
+%global __requires_exclude ^lib(ecpg[.]so[.]6|ecpg_compat[.]so[.]3|pgtypes[.]so[.]3|pq[.]so[.]5)[(][)][(]64bit[)]$
 
 # Note: node_modules are vendored at build time via `yarn install --frozen-lockfile`.
 # A full Provides: bundled(npm(...)) manifest is not generated; the lockfile in
 # the source archive is the authoritative dependency record.
 
 BuildRequires:  gcc-c++
+BuildRequires:  gcc
+BuildRequires:  libicu-devel
+BuildRequires:  openssl-devel
+BuildRequires:  zlib-devel
+BuildRequires:  bison
+BuildRequires:  flex
+BuildRequires:  pkgconfig
+BuildRequires:  tar
+BuildRequires:  xz
+BuildRequires:  bzip2
 BuildRequires:  make
 BuildRequires:  nodejs(engine) >= 22.18.0
 BuildRequires:  python3
+BuildRequires:  /usr/bin/python3.9
+BuildRequires:  /usr/bin/perl
 BuildRequires:  selinux-policy-devel
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  /usr/bin/yarn
 
 %{?systemd_requires}
 
-Requires:       nodejs(engine) >= 22.18.0
 Requires:       openssl
 Requires:       policycoreutils-python-utils
 Requires:       selinux-policy-targeted
 Requires:       tar
 Requires:       util-linux
+Requires:       iproute
 Requires(pre):  shadow-utils
 
-# PostgreSQL is needed for local deployments but users may provide a remote
-# database.  Recommends pulls it in by default while allowing opt-out.
-Recommends:     postgresql-server >= 13
-Recommends:     postgresql >= 13
-Recommends:     caddy
+Provides:       bundled(nodejs) = 22.23.3
+Provides:       bundled(postgresql) = 18.6
+Provides:       bundled(caddy) = 2.11.4
 Recommends:     firewalld-filesystem
 
 %description
@@ -81,8 +101,51 @@ After installation, run:
 mkdir -p rpm-man
 tar -xzf "%{SOURCE22}" -C rpm-man
 
+# Keep archive members and link targets inside their private extraction roots.
+python3 - <<'PY'
+import os
+import tarfile
+for archive, directory, strip in [
+    ("%{SOURCE23}", "runtime-node", True),
+    ("%{SOURCE24}", "runtime-postgresql", True),
+    ("%{SOURCE25}", "runtime-caddy", False),
+]:
+    os.mkdir(directory)
+    root = os.path.realpath(directory) + os.sep
+    with tarfile.open(archive) as source:
+        for member in source:
+            if member.name.startswith("/") or ".." in member.name.split("/"):
+                raise SystemExit("Unsafe archive path: " + member.name)
+            if strip:
+                member.name = member.name.partition("/")[2]
+            if not member.name:
+                continue
+            target = os.path.realpath(os.path.join(directory, member.name))
+            if not target.startswith(root):
+                raise SystemExit("Archive path escapes destination: " + member.name)
+            if member.islnk():
+                if strip:
+                    member.linkname = member.linkname.partition("/")[2]
+                link = os.path.join(directory, member.linkname)
+            elif member.issym():
+                link = os.path.join(os.path.dirname(target), member.linkname)
+            elif not (member.isfile() or member.isdir()):
+                raise SystemExit("Unsupported archive member: " + member.name)
+            else:
+                link = target
+            if not os.path.realpath(link).startswith(root):
+                raise SystemExit("Archive link escapes destination: " + member.name)
+            source.extract(member, directory)
+PY
+
 %build
+export PATH="$PWD/runtime-node/bin:$PATH"
+test "$(node --version)" = v22.23.3
 export NODE_ENV=production
+# Build native addons against the exact Node headers shipped in this archive.
+export npm_config_nodedir="$PWD/runtime-node"
+export npm_config_build_from_source=true
+export npm_config_python=/usr/bin/python3.9
 
 # YARN_CACHE_FOLDER: if caller exported one (e.g. `make rpm CACHE=1`
 # for fast local rebuilds), honor it and leave it in place. Otherwise
@@ -118,6 +181,13 @@ mkdir -p selinux
 cp %{SOURCE9} %{SOURCE10} %{SOURCE11} selinux/
 make -f /usr/share/selinux/devel/Makefile -C selinux heimdall_server.pp
 
+pushd runtime-postgresql
+./configure --prefix=%{_libexecdir}/%{name}/runtime/postgresql \
+  --with-icu --with-ssl=openssl --with-zlib --without-readline
+# PostgreSQL generates headers only at MAKELEVEL=0; Make also launches rpmbuild.
+env -u MAKELEVEL -u MAKEFLAGS -u MFLAGS make %{?_smp_mflags}
+popd
+
 %install
 rm -rf %{buildroot}
 
@@ -129,6 +199,21 @@ install -d %{buildroot}%{_unitdir}
 install -d %{buildroot}%{_tmpfilesdir}
 install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_libexecdir}/%{name}
+
+env -u MAKELEVEL -u MAKEFLAGS -u MFLAGS make -C runtime-postgresql install DESTDIR=%{buildroot}
+# Headers, static archives and build integration files are not runtime inputs.
+rm -rf %{buildroot}%{_libexecdir}/%{name}/runtime/postgresql/include \
+       %{buildroot}%{_libexecdir}/%{name}/runtime/postgresql/lib/pgxs \
+       %{buildroot}%{_libexecdir}/%{name}/runtime/postgresql/lib/pkgconfig
+find %{buildroot}%{_libexecdir}/%{name}/runtime/postgresql -name '*.a' -delete
+install -D -m 0755 runtime-node/bin/node \
+  %{buildroot}%{_libexecdir}/%{name}/runtime/node/bin/node
+install -D -m 0755 runtime-caddy/caddy \
+  %{buildroot}%{_libexecdir}/%{name}/runtime/caddy/caddy
+install -m 0644 %{SOURCE26} %{buildroot}%{_datadir}/%{name}/runtime-manifest.json
+install -D -m 0644 runtime-node/LICENSE %{buildroot}%{_licensedir}/%{name}/node/LICENSE
+install -D -m 0644 runtime-postgresql/COPYRIGHT %{buildroot}%{_licensedir}/%{name}/postgresql/COPYRIGHT
+install -D -m 0644 runtime-caddy/LICENSE %{buildroot}%{_licensedir}/%{name}/caddy/LICENSE
 
 cp -a apps/backend/package.json %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/node_modules %{buildroot}%{_datadir}/%{name}/apps/backend/
@@ -155,6 +240,9 @@ cp -a libs/password-complexity %{buildroot}%{_datadir}/%{name}/libs/
 cp -a dist %{buildroot}%{_datadir}/%{name}/
 
 install -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
+install -m 0644 %{SOURCE27} %{buildroot}%{_unitdir}/heimdall-postgresql.service
+install -m 0644 %{SOURCE28} %{buildroot}%{_unitdir}/heimdall-caddy.service
+install -d -m 0750 %{buildroot}%{_sysconfdir}/%{name}/caddy
 install -m 0640 %{SOURCE2} %{buildroot}%{_sysconfdir}/%{name}/backend.env
 install -m 0644 %{SOURCE8} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 install -m 0755 %{SOURCE3} %{buildroot}%{_bindir}/%{name}
@@ -207,6 +295,8 @@ install -p -m 0644 rpm-man/man1/*.1 %{buildroot}%{_mandir}/man1/
 install -d -m 0750 %{buildroot}/var/lib/%{name}
 install -d -m 0700 %{buildroot}/var/lib/%{name}/backups
 install -d -m 0750 %{buildroot}/var/log/%{name}
+install -d -m 0700 %{buildroot}/var/lib/heimdall-postgresql/18
+install -d -m 0700 %{buildroot}/var/lib/heimdall-caddy
 
 # Relative symlink: avoids rpmbuild's "absolute-symlink" warning AND
 # lets rpmbuild's file-recognition step resolve the target inside
@@ -221,6 +311,14 @@ getent group heimdall >/dev/null || groupadd -r heimdall
 getent passwd heimdall >/dev/null || \
   useradd -r -g heimdall -d %{_datadir}/%{name} -s /sbin/nologin \
   -c "Heimdall service user" heimdall
+getent group heimdall-postgres >/dev/null || groupadd -r heimdall-postgres
+getent passwd heimdall-postgres >/dev/null || \
+  useradd -r -g heimdall-postgres -d /var/lib/heimdall-postgresql -s /sbin/nologin \
+  -c "Heimdall PostgreSQL" heimdall-postgres
+getent group heimdall-caddy >/dev/null || groupadd -r heimdall-caddy
+getent passwd heimdall-caddy >/dev/null || \
+  useradd -r -g heimdall-caddy -d /var/lib/heimdall-caddy -s /sbin/nologin \
+  -c "Heimdall HTTPS proxy" heimdall-caddy
 
 # On upgrade ($1 -eq 2): attempt automatic backup before replacing files.
 # Non-fatal — upgrade proceeds even if backup fails (e.g., DB unreachable).
@@ -233,6 +331,8 @@ fi
 
 %post
 %systemd_post %{name}.service
+# Setup alone enables the selected private services; presets must not start them.
+systemd-tmpfiles --create %{_tmpfilesdir}/%{name}.conf >/dev/null 2>&1 || :
 
 # Load SELinux policy module
 semodule -n -i %{_datadir}/selinux/packages/%{name}.pp 2>/dev/null || true
@@ -277,6 +377,7 @@ fi
 
 %preun
 %systemd_preun %{name}.service
+%systemd_preun heimdall-caddy.service heimdall-postgresql.service
 
 # Remove fapolicyd trust entries while the CLI and payload still exist.
 if [ $1 -eq 0 ]; then
@@ -309,8 +410,13 @@ fi
 
 %files
 %license LICENSE.md
+%license %{_licensedir}/%{name}/node
+%license %{_licensedir}/%{name}/postgresql
+%license %{_licensedir}/%{name}/caddy
 %doc README.md CHANGELOG
 %{_unitdir}/%{name}.service
+%{_unitdir}/heimdall-postgresql.service
+%{_unitdir}/heimdall-caddy.service
 %{_tmpfilesdir}/%{name}.conf
 %{_bindir}/%{name}
 %{_bindir}/%{name}-db-setup
@@ -318,12 +424,19 @@ fi
 %attr(0755,root,root) %dir %{_libexecdir}/%{name}
 %attr(0755,root,root) %{_libexecdir}/%{name}/configure.sh
 %attr(0755,root,root) %{_libexecdir}/%{name}/postgres-setup.sh
-%attr(0750,root,heimdall) %dir %{_sysconfdir}/%{name}
+%{_libexecdir}/%{name}/runtime
+%attr(0751,root,heimdall) %dir %{_sysconfdir}/%{name}
+%attr(0750,root,heimdall-caddy) %dir %{_sysconfdir}/%{name}/caddy
+%attr(0640,root,heimdall-caddy) %ghost %config(noreplace) %{_sysconfdir}/%{name}/caddy/Caddyfile
 %attr(0640,root,heimdall) %config(noreplace) %{_sysconfdir}/%{name}/backend.env
 %attr(0755,root,root) %dir %{_datadir}/%{name}
 %attr(0750,heimdall,heimdall) %dir /var/lib/%{name}
 %attr(0700,heimdall,heimdall) %dir /var/lib/%{name}/backups
 %attr(0750,heimdall,heimdall) %dir /var/log/%{name}
+%attr(0700,heimdall-postgres,heimdall-postgres) %dir /var/lib/heimdall-postgresql
+%attr(0700,heimdall-postgres,heimdall-postgres) %dir /var/lib/heimdall-postgresql/18
+%attr(0700,heimdall-caddy,heimdall-caddy) %dir /var/lib/heimdall-caddy
+%{_datadir}/%{name}/runtime-manifest.json
 %{_datadir}/%{name}/apps
 %{_datadir}/%{name}/dist
 %{_datadir}/%{name}/libs

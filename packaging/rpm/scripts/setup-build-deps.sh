@@ -158,12 +158,24 @@ fi
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 3/5: Build packages ==="
+# EL8's default Python 3.6 cannot run the application's node-gyp 12.
+build_python=python3
+if [[ "$el_major" == 8 ]]; then build_python=python39; fi
 ${SUDO} dnf install "${DNF_ARGS[@]}" \
+    gcc \
     gcc-c++ \
+    libicu-devel \
+    openssl-devel \
+    zlib-devel \
+    bison \
+    flex \
+    pkgconfig \
     make \
     git \
     nodejs \
     python3 \
+    "$build_python" \
+    perl-interpreter \
     openssl \
     rpm-build \
     rpmdevtools \
@@ -172,6 +184,8 @@ ${SUDO} dnf install "${DNF_ARGS[@]}" \
     selinux-policy-devel \
     systemd-rpm-macros \
     tar \
+    xz \
+    bzip2 \
     util-linux
 
 # ---------------------------------------------------------------------------

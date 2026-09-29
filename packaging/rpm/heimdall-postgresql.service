@@ -1,0 +1,24 @@
+[Unit]
+Description=Heimdall PostgreSQL
+After=network.target
+
+[Service]
+Type=simple
+User=heimdall-postgres
+Group=heimdall-postgres
+StateDirectory=heimdall-postgresql
+StateDirectoryMode=0700
+RuntimeDirectory=heimdall-postgresql
+RuntimeDirectoryMode=0750
+ExecStart=/usr/libexec/heimdall-server/runtime/postgresql/bin/postgres -D /var/lib/heimdall-postgresql/18/data
+KillSignal=SIGINT
+TimeoutStopSec=300
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/heimdall-postgresql /run/heimdall-postgresql
+
+[Install]
+WantedBy=multi-user.target
