@@ -15,11 +15,6 @@ query() {
     -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$1"
 }
 verify() {
-  for unit in "${units[@]}"; do systemctl is-active --quiet "$unit"; done
-  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-server)/exe")" = "$node"
-  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-postgresql)/exe")" = "$runtime/postgresql/bin/postgres"
-  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-caddy)/exe")" = "$runtime/caddy/caddy"
-  [[ $(systemctl show -p User --value heimdall-server) == heimdall ]]
   mapfile -t roots < <(find /var/lib/heimdall-caddy -name root.crt -type f)
   [[ ${#roots[@]} == 1 ]]
   curl --fail --silent --show-error --retry 30 --retry-connrefused \
@@ -27,6 +22,11 @@ verify() {
     --noproxy '*' --cacert "${roots[0]}" --resolve heimdall.example.test:443:127.0.0.1 \
     https://heimdall.example.test/health/ready -o /tmp/rpm-ready.json
   "$node" -e 'if(require("/tmp/rpm-ready.json").status!=="ok") process.exit(1)'
+  for unit in "${units[@]}"; do systemctl is-active --quiet "$unit"; done
+  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-server)/exe")" = "$node"
+  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-postgresql)/exe")" = "$runtime/postgresql/bin/postgres"
+  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-caddy)/exe")" = "$runtime/caddy/caddy"
+  [[ $(systemctl show -p User --value heimdall-server) == heimdall ]]
   curl --fail --silent --show-error --max-time 10 http://127.0.0.1:3000/health -o /tmp/rpm-health.json
   "$node" -e 'if(require("/tmp/rpm-health.json").version!==process.argv[1]) process.exit(1)' "$(rpm -q --qf '%{VERSION}' heimdall-server)"
   curl --fail --silent --show-error --max-time 10 http://127.0.0.1:3000/ -o /tmp/rpm-index.html
@@ -137,7 +137,7 @@ SHELL
     refuse_upgrade "$2"
     [[ $(cat "$version_file") == 17 ]]
     cp -p /tmp/rpm-pg-version "$version_file"
-    # Force a real pg_dump failure while all services remain alive.
+    # Force a backup connection refusal while all services remain alive.
     cp -p /etc/heimdall-server/backend.env /tmp/rpm-before-backup-failure.env
     sed -i 's/^DATABASE_PASSWORD=.*/DATABASE_PASSWORD=invalid-backup-fixture/' /etc/heimdall-server/backend.env
     refuse_upgrade "$2"
