@@ -176,6 +176,9 @@ ${SUDO} dnf install "${DNF_ARGS[@]}" \
     python3 \
     "$build_python" \
     perl-interpreter \
+    'perl(FindBin)' \
+    'perl(File::Compare)' \
+    'perl(lib)' \
     openssl \
     rpm-build \
     rpmdevtools \

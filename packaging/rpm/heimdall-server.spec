@@ -70,6 +70,9 @@ BuildRequires:  nodejs(engine) >= 22.18.0
 BuildRequires:  python3
 BuildRequires:  /usr/bin/python3.9
 BuildRequires:  /usr/bin/perl
+BuildRequires:  perl(FindBin)
+BuildRequires:  perl(File::Compare)
+BuildRequires:  perl(lib)
 BuildRequires:  selinux-policy-devel
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  /usr/bin/yarn
