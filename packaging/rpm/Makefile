@@ -28,8 +28,9 @@ check-source: check-version
 
 # Target architecture for cross-compilation (default: host arch)
 GOARCH   ?= $(shell go env GOARCH)
+RPM_ARCH ?= $(shell rpm --eval '%{_arch}')
 
-.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version check-source sources cli-src heimdall-cli man stage deps check-upstream bump-version
+.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version check-source sources cli-src heimdall-cli man runtimes stage deps check-upstream bump-version
 
 # Upstream repo for `make check-upstream` (override for forks/mirrors).
 UPSTREAM_REPO ?= mitre/heimdall2
@@ -131,9 +132,12 @@ man: cli-src
 deps:
 	scripts/setup-build-deps.sh
 
+runtimes: check-source
+	python3 scripts/stage-runtimes.py runtime-lock.json "$(RPM_ARCH)" "$(TOPDIR)/SOURCES"
+
 # Stage all source files into rpmbuild tree (Sources 0-22).
 # Single source of truth for which files go into the RPM.
-stage: check-source sources heimdall-cli man
+stage: check-source sources heimdall-cli man runtimes
 	@mkdir -p "$(TOPDIR)/SPECS" "$(TOPDIR)/BUILD" "$(TOPDIR)/RPMS" "$(TOPDIR)/SRPMS"
 	# Retain the selected release when the SRPM is rebuilt without Make macros.
 	sed 's/%global heimdall_release [^}]*/%global heimdall_release $(HEIMDALL_RELEASE)/' \
