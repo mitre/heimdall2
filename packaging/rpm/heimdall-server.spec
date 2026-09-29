@@ -581,6 +581,11 @@ if [ $1 -eq 0 ]; then
         fi
       done < "$ledger"
       if [ -s "$remaining" ]; then
+        if ! chown root:root "$remaining" || ! chmod 0600 "$remaining"; then
+          rm -f "$remaining"
+          echo "WARNING: ownership ledger retained because replacement metadata could not be set." >&2
+          exit 1
+        fi
         mv -f "$remaining" "$ledger" || exit 1
       else
         rm -f "$remaining" "$ledger" || exit 1

@@ -39,11 +39,21 @@ if name == 'getent':
     sys.exit(0)
 if name == 'stat' and args[0] == '-c':
     st = pathlib.Path(args[-1]).stat()
-    print(args[1].replace('%u', '0').replace('%g', '0')
-          .replace('%a', oct(st.st_mode & 0o777)[2:]).replace('%h', str(st.st_nlink)))
+    real = os.environ.get('REAL_METADATA') == '1'
+    print(args[1].replace('%u', str(st.st_uid) if real else '0')
+          .replace('%g', str(st.st_gid) if real else '0')
+          .replace('%a', oct(st.st_mode & 0o7777)[2:]).replace('%h', str(st.st_nlink)))
     sys.exit(0)
 with (root / 'calls').open('a') as out:
     out.write(json.dumps([name] + args) + '\\n')
+if name in ('chown', 'chmod'):
+    if os.environ.get('FAIL_METADATA') == name and pathlib.Path(args[-1]).name.startswith('.selinux-ports.'):
+        sys.exit(1)
+    if name == 'chmod':
+        os.chmod(args[-1], int(args[0], 8))
+    elif os.environ.get('REAL_METADATA') == '1':
+        os.chown(args[-1], 0, 0)
+    sys.exit(0)
 if name == 'systemctl':
     if args[0] == 'is-active':
         queries = [json.loads(line) for line in (root / 'calls').read_text().splitlines()]
@@ -71,7 +81,7 @@ elif name == 'semanage':
         sys.exit(1 if args[-1] == os.environ.get('FAIL_PORT_ADD') else 0)
 ''')
     stub.chmod(0o755)
-    for name in ('getent', 'groupadd', 'useradd', 'systemctl', 'heimdall-cli', 'chown',
+    for name in ('getent', 'groupadd', 'useradd', 'systemctl', 'heimdall-cli', 'chown', 'chmod',
                  'stat', 'semanage', 'semodule', 'systemd-tmpfiles', 'restorecon'):
         (bin_dir / name).symlink_to(stub.name)
     sbin = root / 'usr/sbin'
@@ -231,6 +241,37 @@ ssh_port_t tcp 22, 8443
     assert deleted == [['semanage', 'port', '-d', '-p', 'tcp', '3000'],
                        ['semanage', 'port', '-d', '-p', 'tcp', '55432']], deleted
     assert ledger.read_text() == 'postgresql_port_t tcp 55432\n', ledger.read_text()
+
+    # Native root fixtures exercise actual setgid inheritance and chown metadata.
+    # Unprivileged hosts still exercise both metadata-error retention branches.
+    if os.geteuid() == 0:
+        before = config_dir.stat()
+        os.chown(config_dir, 0, 1234)
+        config_dir.chmod(0o2751)
+        assert config_dir.stat().st_gid == 1234 and config_dir.stat().st_mode & 0o7777 == 0o2751
+        result, calls = run(name='postun', count='0', REAL_METADATA='1',
+                            FAIL_PORT_DELETE='55432', PORT_MAPPINGS='postgresql_port_t tcp 55432\n')
+        assert result.returncode == 0, result.stdout
+        st = ledger.stat()
+        assert (st.st_uid, st.st_gid, st.st_mode & 0o7777) == (0, 0, 0o600), (
+            'replacement ledger inherited group', st.st_uid, st.st_gid, oct(st.st_mode & 0o7777))
+        os.chown(config_dir, before.st_uid, before.st_gid)
+        config_dir.chmod(before.st_mode & 0o7777)
+        print('Replacement ledger real metadata: PASS (setgid parent 0:1234:2751 -> ledger 0:0:600)')
+    else:
+        print('Replacement ledger real setgid metadata: SKIP (requires root; run native OL8 fixture)')
+
+    for failure in ('chown', 'chmod'):
+        original = 'heimdall_server_port_t tcp 3000\npostgresql_port_t tcp 55432\n'
+        ledger.write_text(original)
+        before = ledger.stat()
+        result, calls = run(name='postun', count='0', FAIL_METADATA=failure,
+                            FAIL_PORT_DELETE='55432', PORT_MAPPINGS='heimdall_server_port_t tcp 3000\npostgresql_port_t tcp 55432\n')
+        assert result.returncode != 0, ('metadata failure accepted', failure, result.stdout)
+        st = ledger.stat()
+        assert ledger.read_text() == original and (st.st_ino, st.st_uid, st.st_gid, st.st_mode) == (
+            before.st_ino, before.st_uid, before.st_gid, before.st_mode), (failure, ledger.read_text())
+        assert not list(config_dir.glob('.selinux-ports.*')), failure
 
     # Existing compatible labels are never claimed; conflicts are never stolen.
     ledger.unlink()
