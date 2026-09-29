@@ -50,7 +50,14 @@ export class AuthnService {
     } catch {
       throw new UnauthorizedException('Incorrect Username or Password');
     }
-    if (user && (await compare(password, user.encryptedPassword))) {
+    if (user?.isDisabled) {
+      throw new UnauthorizedException('This account is disabled');
+    }
+    if (
+      user &&
+      !user.isDisabled &&
+      (await compare(password, user.encryptedPassword))
+    ) {
       this.usersService.updateLoginMetadata(user);
       return user;
     } else {
@@ -74,7 +81,7 @@ export class AuthnService {
           );
           if (await compare(JWTSignature, matchingKey.apiKey)) {
             if (matchingKey.type === 'user') {
-              return matchingKey.user;
+              return matchingKey.user?.isDisabled ? null : matchingKey.user;
             } else if (matchingKey.type === 'group') {
               return matchingKey.group;
             } else {
@@ -122,6 +129,10 @@ export class AuthnService {
       user = await this.usersService.findByEmail(email);
     }
 
+    if (user?.isDisabled) {
+      throw new UnauthorizedException('This account is disabled');
+    }
+
     if (user) {
       // If the users info has changed since they last logged in it will be reflected here.
       // Because we find the user by their email, we can't detect a change in email.
@@ -150,6 +161,9 @@ export class AuthnService {
     };
     // Users have their own JWT Secret to allow for session invalidation on sign out
     const loginUser = await this.usersService.findById(user.id);
+    if (loginUser.isDisabled) {
+      throw new UnauthorizedException('This account is disabled');
+    }
     if (
       !loginUser.jwtSecret ||
       this.configService.get('ONE_SESSION_PER_USER')?.toLowerCase() === 'true'
