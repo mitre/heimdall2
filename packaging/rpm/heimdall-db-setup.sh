@@ -83,7 +83,11 @@ run_db_create() {
 
 cd "${APP_DIR}"
 
-run_db_create
+# External databases are provisioned by their administrator; migration credentials
+# need not have cluster-wide CREATEDB permission.
+if [[ ${HEIMDALL_DATABASE_MODE:-} != external ]]; then
+  run_db_create
+fi
 run_sequelize db:migrate
 
 if [[ "${SKIP_SEED}" -eq 0 ]]; then

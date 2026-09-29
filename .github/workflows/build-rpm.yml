@@ -87,6 +87,7 @@ jobs:
           python3 packaging/rpm/tests/runtime-extraction.py
           python3 packaging/rpm/tests/upgrade-scriptlets.py
           python3 packaging/rpm/tests/cli-acquisition.py
+          bash packaging/rpm/tests/setup.sh
           make -C packaging/rpm check-version TOPDIR="$TOPDIR"
 
       - name: Build candidate RPM and verify CLI inputs
