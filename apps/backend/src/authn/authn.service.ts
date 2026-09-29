@@ -50,19 +50,14 @@ export class AuthnService {
     } catch {
       throw new UnauthorizedException('Incorrect Username or Password');
     }
-    if (user?.isDisabled) {
-      throw new UnauthorizedException('This account is disabled');
-    }
-    if (
-      user &&
-      !user.isDisabled &&
-      (await compare(password, user.encryptedPassword))
-    ) {
-      this.usersService.updateLoginMetadata(user);
-      return user;
-    } else {
+    if (!user || !(await compare(password, user.encryptedPassword))) {
       return null;
     }
+    if (user.isDisabled) {
+      throw new UnauthorizedException('This account is disabled');
+    }
+    await this.usersService.updateLoginMetadata(user);
+    return user;
   }
 
   async validateApiKey(apikey: string): Promise<User | Group | null> {
@@ -139,9 +134,9 @@ export class AuthnService {
       if (user.firstName !== firstName || user.lastName !== lastName) {
         user.firstName = firstName;
         user.lastName = lastName;
-        user.save();
+        await user.save();
       }
-      this.usersService.updateLoginMetadata(user);
+      await this.usersService.updateLoginMetadata(user);
     }
 
     return user;
@@ -168,7 +163,7 @@ export class AuthnService {
       !loginUser.jwtSecret ||
       this.configService.get('ONE_SESSION_PER_USER')?.toLowerCase() === 'true'
     ) {
-      this.usersService.updateUserSecret(loginUser);
+      await this.usersService.updateUserSecret(loginUser);
     }
     if (payload.forcePasswordChange || user.role === 'admin') {
       // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.

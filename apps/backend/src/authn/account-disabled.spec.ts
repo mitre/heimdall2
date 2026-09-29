@@ -26,7 +26,13 @@ describe('disabled account authentication', () => {
   );
 
   it('rejects local and external login', async () => {
-    expect(await authn.validateUser(user.email, 'password')).toBeNull();
+    user.encryptedPassword = await hash('correct-password', 4);
+    await expect(
+      authn.validateUser(user.email, 'wrong-password')
+    ).resolves.toBeNull();
+    await expect(
+      authn.validateUser(user.email, 'correct-password')
+    ).rejects.toThrow('This account is disabled');
     await expect(
       authn.validateOrCreateUser(user.email, 'Disabled', 'User', 'oidc')
     ).rejects.toThrow(UnauthorizedException);
