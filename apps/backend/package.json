@@ -55,7 +55,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "connect-pg-simple": "^10.0.0",
-    "dotenv": "^17.0.0",
+    "dotenv": "^18.0.2",
     "eslint-plugin-import": "^2.20.1",
     "express-rate-limit": "^8.0.0",
     "express-session": "^1.17.1",
@@ -88,7 +88,7 @@
     "@swc/core": "^1.13.0",
     "@types/mock-fs": "^4.10.0",
     "mock-fs": "^5.0.0",
-    "unplugin-swc": "^1.5.5",
+    "unplugin-swc": "^2.0.0",
     "vitest": "^4.0.18"
   }
 }

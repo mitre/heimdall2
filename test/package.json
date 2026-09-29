@@ -10,7 +10,7 @@
     "mock-openid": "node support/server/oidc-server.js"
   },
   "devDependencies": {
-    "cypress": "16.0.0"
+    "cypress": "16.1.0"
   },
   "dependencies": {
     "cypress-terminal-report": "^7.1.0",
