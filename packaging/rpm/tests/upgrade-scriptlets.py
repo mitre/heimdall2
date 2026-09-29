@@ -73,10 +73,18 @@ if name == 'systemctl':
 elif name == 'heimdall-cli' and args[0] == 'backup':
     sys.exit(int(os.environ.get('FAIL_BACKUP', '0')))
 elif name == 'semanage':
+    state_file = os.environ.get('PORT_STATE')
     if '-l' in args:
-        print(os.environ.get('PORT_MAPPINGS', ''))
+        if os.environ.get('FAIL_PORT_LIST') == '1':
+            sys.exit(1)
+        print(pathlib.Path(state_file).read_text() if state_file else os.environ.get('PORT_MAPPINGS', ''))
     elif '-d' in args:
-        sys.exit(1 if args[-1] == os.environ.get('FAIL_PORT_DELETE') else 0)
+        if args[-1] == os.environ.get('FAIL_PORT_DELETE'):
+            sys.exit(1)
+        if state_file:
+            state = pathlib.Path(state_file)
+            state.write_text(''.join(line for line in state.read_text().splitlines(True)
+                                     if line.split()[-1] != args[-1]))
     elif '-a' in args:
         sys.exit(1 if args[-1] == os.environ.get('FAIL_PORT_ADD') else 0)
 ''')
@@ -272,6 +280,69 @@ ssh_port_t tcp 22, 8443
         assert ledger.read_text() == original and (st.st_ino, st.st_uid, st.st_gid, st.st_mode) == (
             before.st_ino, before.st_uid, before.st_gid, before.st_mode), (failure, ledger.read_text())
         assert not list(config_dir.glob('.selinux-ports.*')), failure
+
+    # A failed CLI ledger commit may leave ownership only in the pending snapshot.
+    pending = config_dir / 'selinux-ports.pending'
+    ledger.unlink()
+    pending.write_text('heimdall_server_port_t tcp 3000\n')
+    pending.chmod(0o600)
+    ports = root / 'local-ports'
+    ports.write_text('heimdall_server_port_t tcp 3000\n')
+    result, calls = run(name='postun', count='0', PORT_STATE=str(ports))
+    assert result.returncode == 0 and not pending.exists() and ports.read_text() == '', (
+        'pending-only ownership not cleaned', result.stdout, calls)
+
+    # Refresh local mappings between snapshots so a duplicate is not deleted twice.
+    ledger.write_text('heimdall_server_port_t tcp 3000\n')
+    ledger.chmod(0o600)
+    pending.write_text('heimdall_server_port_t tcp 3000\npostgresql_port_t tcp 55432\n')
+    pending.chmod(0o600)
+    ports.write_text(pending.read_text())
+    result, calls = run(name='postun', count='0', PORT_STATE=str(ports))
+    assert result.returncode == 0 and not ledger.exists() and not pending.exists() and ports.read_text() == '', result.stdout
+    assert [c[-1] for c in calls if c[:3] == ['semanage', 'port', '-d']] == ['3000', '55432'], calls
+
+    record = 'postgresql_port_t tcp 55432\n'
+    pending.write_text(record)
+    pending.chmod(0o600)
+    ports.write_text(record)
+    before = pending.stat()
+    result, calls = run(name='postun', count='0', PORT_STATE=str(ports), FAIL_PORT_LIST='1')
+    assert result.returncode == 0 and pending.read_text() == record and pending.stat().st_ino == before.st_ino, result.stdout
+    assert not any(c[:3] == ['semanage', 'port', '-d'] for c in calls), calls
+    directory_metadata = config_dir.stat()
+    if os.geteuid() == 0:
+        os.chown(config_dir, 0, 1234)
+        config_dir.chmod(0o2751)
+    result, calls = run(name='postun', count='0', PORT_STATE=str(ports), FAIL_PORT_DELETE='55432',
+                        REAL_METADATA='1' if os.geteuid() == 0 else '0')
+    assert result.returncode == 0 and pending.read_text() == record and ports.read_text() == record, result.stdout
+    assert pending.stat().st_mode & 0o7777 == 0o600
+    if os.geteuid() == 0:
+        assert (pending.stat().st_uid, pending.stat().st_gid) == (0, 0)
+        os.chown(config_dir, directory_metadata.st_uid, directory_metadata.st_gid)
+        config_dir.chmod(directory_metadata.st_mode & 0o7777)
+    for failure in ('chown', 'chmod'):
+        before = pending.stat()
+        result, calls = run(name='postun', count='0', PORT_STATE=str(ports),
+                            FAIL_PORT_DELETE='55432', FAIL_METADATA=failure)
+        assert result.returncode != 0 and pending.read_text() == record, (failure, result.stdout)
+        st = pending.stat()
+        assert (st.st_ino, st.st_uid, st.st_gid, st.st_mode) == (
+            before.st_ino, before.st_uid, before.st_gid, before.st_mode), failure
+        assert not list(config_dir.glob('.selinux-ports.*')), failure
+    # Administrator changes and unsafe pending paths are left untouched.
+    ports.write_text('http_port_t tcp 55432\n')
+    result, calls = run(name='postun', count='0', PORT_STATE=str(ports))
+    assert result.returncode == 0 and not pending.exists() and ports.read_text() == 'http_port_t tcp 55432\n', result.stdout
+    assert not any(c[:3] == ['semanage', 'port', '-d'] for c in calls), calls
+    pending.symlink_to(outside)
+    result, calls = run(name='postun', count='0', PORT_STATE=str(ports))
+    assert result.returncode == 0 and pending.is_symlink() and outside.read_text() == '18\n', result.stdout
+    assert not any(c[:3] == ['semanage', 'port', '-d'] for c in calls), calls
+    pending.unlink()
+    ledger.write_text(record)
+    ledger.chmod(0o600)
 
     # Existing compatible labels are never claimed; conflicts are never stolen.
     ledger.unlink()

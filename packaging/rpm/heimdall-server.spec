@@ -550,52 +550,53 @@ systemctl daemon-reload >/dev/null 2>&1 || :
 
 # No restart or migration here, including during an upgrade.
 if [ $1 -eq 0 ]; then
-  ledger=%{_sysconfdir}/%{name}/selinux-ports
   config_dir=%{_sysconfdir}/%{name}
-  if [ ! -L "$config_dir" ] && [ -d "$config_dir" ] && \
-     [ "$(stat -c '%%u' "$config_dir")" = 0 ] && \
-     [ $((0$(stat -c '%%a' "$config_dir") & 022)) -eq 0 ] && \
-     [ ! -L "$ledger" ] && [ -f "$ledger" ] && \
-     [ "$(stat -c '%%u:%%g:%%a:%%h' "$ledger")" = 0:0:600:1 ]; then
-    if mappings=$(LC_ALL=C semanage port -l -C); then
-      remaining=$(mktemp "$config_dir/.selinux-ports.XXXXXX") || exit 1
-      while read -r type protocol port extra; do
-        case "$type" in heimdall_server_port_t|postgresql_port_t|http_port_t) ;; *) continue ;; esac
-        [ "$protocol" = tcp ] && [ -z "$extra" ] || continue
-        case "$port" in ''|*[!0-9]*) continue ;; esac
-        [ "$port" -ge 1 ] && [ "$port" -le 65535 ] || continue
-        # Only exact local entries are ours; a later range belongs to its editor.
-        if printf '%%s\n' "$mappings" | awk -v type="$type" -v port="$port" '
-          $1 == type && $2 == "tcp" {
-            for (i = 3; i <= NF; i++) { gsub(/,/, "", $i); if ($i == port) found = 1 }
-          } END { exit !found }
-        '; then
-          semanage port -d -p tcp "$port" || {
-            echo "WARNING: retaining failed SELinux port cleanup for $port." >&2
-            printf '%%s tcp %%s\n' "$type" "$port" >> "$remaining" || {
-              rm -f "$remaining"
-              echo "WARNING: ownership ledger retained because cleanup results could not be saved." >&2
-              exit 1
+  for ledger in "$config_dir/selinux-ports" "$config_dir/selinux-ports.pending"; do
+    if [ ! -L "$config_dir" ] && [ -d "$config_dir" ] && \
+       [ "$(stat -c '%%u' "$config_dir")" = 0 ] && \
+       [ $((0$(stat -c '%%a' "$config_dir") & 022)) -eq 0 ] && \
+       [ ! -L "$ledger" ] && [ -f "$ledger" ] && \
+       [ "$(stat -c '%%u:%%g:%%a:%%h' "$ledger")" = 0:0:600:1 ]; then
+      if mappings=$(LC_ALL=C semanage port -l -C); then
+        remaining=$(mktemp "$config_dir/.selinux-ports.XXXXXX") || exit 1
+        while read -r type protocol port extra; do
+          case "$type" in heimdall_server_port_t|postgresql_port_t|http_port_t) ;; *) continue ;; esac
+          [ "$protocol" = tcp ] && [ -z "$extra" ] || continue
+          case "$port" in ''|*[!0-9]*) continue ;; esac
+          [ "$port" -ge 1 ] && [ "$port" -le 65535 ] || continue
+          # Only exact local entries are ours; a later range belongs to its editor.
+          if printf '%%s\n' "$mappings" | awk -v type="$type" -v port="$port" '
+            $1 == type && $2 == "tcp" {
+              for (i = 3; i <= NF; i++) { gsub(/,/, "", $i); if ($i == port) found = 1 }
+            } END { exit !found }
+          '; then
+            semanage port -d -p tcp "$port" || {
+              echo "WARNING: retaining failed SELinux port cleanup for $port." >&2
+              printf '%%s tcp %%s\n' "$type" "$port" >> "$remaining" || {
+                rm -f "$remaining"
+                echo "WARNING: ownership ledger retained because cleanup results could not be saved." >&2
+                exit 1
+              }
             }
-          }
+          fi
+        done < "$ledger"
+        if [ -s "$remaining" ]; then
+          if ! chown root:root "$remaining" || ! chmod 0600 "$remaining"; then
+            rm -f "$remaining"
+            echo "WARNING: ownership ledger retained because replacement metadata could not be set." >&2
+            exit 1
+          fi
+          mv -f "$remaining" "$ledger" || exit 1
+        else
+          rm -f "$remaining" "$ledger" || exit 1
         fi
-      done < "$ledger"
-      if [ -s "$remaining" ]; then
-        if ! chown root:root "$remaining" || ! chmod 0600 "$remaining"; then
-          rm -f "$remaining"
-          echo "WARNING: ownership ledger retained because replacement metadata could not be set." >&2
-          exit 1
-        fi
-        mv -f "$remaining" "$ledger" || exit 1
       else
-        rm -f "$remaining" "$ledger" || exit 1
+        echo "WARNING: cannot inspect SELinux ports; ownership ledger retained." >&2
       fi
-    else
-      echo "WARNING: cannot inspect SELinux ports; ownership ledger retained." >&2
+    elif [ -e "$ledger" ] || [ -L "$ledger" ]; then
+      echo "WARNING: unsafe SELinux port ledger retained without changes." >&2
     fi
-  elif [ -e "$ledger" ] || [ -L "$ledger" ]; then
-    echo "WARNING: unsafe SELinux port ledger retained without changes." >&2
-  fi
+  done
   semodule -n -r heimdall_server || echo "WARNING: SELinux module retained; inspect remaining port mappings." >&2
   if /usr/sbin/selinuxenabled 2>/dev/null; then
     /usr/sbin/load_policy || echo "WARNING: SELinux policy reload failed." >&2
