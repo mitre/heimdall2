@@ -87,6 +87,13 @@ for release in 0.3.integration 0.4.integration; do
 done
 ```
 
+On a memory-constrained builder, add
+`--build-arg NODE_OPTIONS=--max-old-space-size=2048 --build-arg VUE_BUILD_WORKERS=1`
+to each Docker command. This limits each Node process's V8 old-space heap to
+2048 MiB and sets Vue's parallel worker count to one. `VUE_BUILD_WORKERS` accepts
+positive integers. Both arguments are optional; omitting them preserves the
+default build behavior. Production minification and type checking remain enabled.
+
 Use `linux/amd64` and a separate output directory for x86_64. A platform flag on
 a different host architecture uses emulation; CI uses native runners. Docker
 exports `RPMS/`, `SRPMS/` and the runtime inventory. Its build-specific ignore file

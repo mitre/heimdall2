@@ -26,7 +26,23 @@ COPY . .
 RUN bash packaging/rpm/scripts/setup-build-deps.sh --skip-update
 
 FROM build-env AS builder
-RUN make -C packaging/rpm rpm SOURCE_MODE=workspace TOPDIR=/rpmbuild \
+# Optional limits for builders with less memory than their CPU count suggests.
+ARG NODE_OPTIONS=""
+ARG VUE_BUILD_WORKERS=""
+RUN set -eu; \
+    if [[ -n "$VUE_BUILD_WORKERS" ]]; then \
+      if ! [[ "$VUE_BUILD_WORKERS" =~ ^[1-9][0-9]*$ ]]; then \
+        echo 'VUE_BUILD_WORKERS must be a positive integer' >&2; exit 2; \
+      fi; \
+      vue_config_dir="$(mktemp -d)"; \
+      trap 'rm -rf "$vue_config_dir"' EXIT; \
+      printf '%s\n' '{"type":"commonjs"}' > "$vue_config_dir/package.json"; \
+      printf '%s\n' \
+        "module.exports = { ...require(process.cwd() + '/vue.config.js'), parallel: Number(process.env.VUE_BUILD_WORKERS) };" \
+        > "$vue_config_dir/config.cjs"; \
+      export VUE_CLI_SERVICE_CONFIG_PATH="$vue_config_dir/config.cjs"; \
+    fi; \
+    make -C packaging/rpm rpm SOURCE_MODE=workspace TOPDIR=/rpmbuild \
       HEIMDALL_RELEASE="$HEIMDALL_RELEASE" && \
     bash packaging/rpm/tests/cli-inputs.sh /rpmbuild && \
     bash packaging/rpm/tests/payload.sh \
