@@ -84,6 +84,8 @@ jobs:
           test "$(go env GOVERSION)" = go1.25.8
           python3 packaging/rpm/tests/inputs.py
           python3 packaging/rpm/tests/runtime-inputs.py
+          python3 packaging/rpm/tests/runtime-extraction.py
+          python3 packaging/rpm/tests/upgrade-scriptlets.py
           python3 packaging/rpm/tests/cli-acquisition.py
           make -C packaging/rpm check-version TOPDIR="$TOPDIR"
 
