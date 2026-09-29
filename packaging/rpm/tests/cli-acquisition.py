@@ -21,6 +21,8 @@ def run(*args, **kwargs):
 with tempfile.TemporaryDirectory(prefix='heimdall-cli-inputs-') as temp:
     root = Path(temp)
     os.environ.setdefault('GOCACHE', str(root / 'go-cache'))
+    host_os, host_arch = run('go', 'env', 'GOHOSTOS', 'GOHOSTARCH').splitlines()
+    target_arch = 'arm64' if host_arch == 'amd64' else 'amd64'
     # OL8 uses GNU tar; avoid macOS tar's AppleDouble metadata in this fixture.
     if shutil.which('gtar'):
         (root / 'bin').mkdir()
@@ -50,10 +52,10 @@ import ("fmt"; "github.com/mitre/heimdall-cli/internal/version")
 func main() { fmt.Println(version.Version, version.Commit, version.Date) }
 ''')
     (upstream / 'cmd/gen-manpages/main.go').write_text('''package main
-import ("os"; "path/filepath")
+import ("os"; "path/filepath"; "runtime")
 func main() {
     for _, name := range []string{"heimdall-cli.1", "heimdall-cli-setup.1"} {
-        if err := os.WriteFile(filepath.Join(os.Args[1], name), []byte("fixture manual\\n"), 0644); err != nil { panic(err) }
+        if err := os.WriteFile(filepath.Join(os.Args[1], name), []byte("fixture manual " + runtime.GOOS + "/" + runtime.GOARCH + "\\n"), 0644); err != nil { panic(err) }
     }
 }
 ''')
@@ -73,7 +75,7 @@ func main() {
     run('git', 'clone', '-q', str(upstream), str(cached))
 
     def make(*args, **kwargs):
-        return subprocess.run(['make', '-C', str(packaging), 'GOARCH=amd64',
+        return subprocess.run(['make', '-C', str(packaging), 'GOARCH=' + target_arch,
                                'SOURCE_MODE=workspace', 'TOPDIR=' + str(topdir)] + list(args),
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                               universal_newlines=True, **kwargs)
@@ -119,8 +121,12 @@ func main() {
     assert run('git', '-C', str(cached), 'rev-parse', '--abbrev-ref', 'HEAD') == 'HEAD'
     binary = topdir / 'SOURCES/heimdall-cli'
     metadata = run('go', 'version', '-m', str(binary))
+    assert 'GOOS=linux\n' in metadata, metadata
+    assert 'GOARCH=' + target_arch + '\n' in metadata, metadata
     assert 'vcs.revision=' + pin in metadata, metadata
     assert 'vcs.modified=false' in metadata, metadata
+    manual = topdir / 'cli-man/man1/heimdall-cli.1'
+    assert manual.read_text() == 'fixture manual ' + host_os + '/' + host_arch + '\n', manual.read_text()
     binary_bytes = binary.read_bytes()
     # Linker-injected strings end in NUL; VCS build metadata ends in newline.
     assert pin.encode() + b'\x00' in binary_bytes
@@ -177,4 +183,5 @@ stage rpm:
         assert result.returncode == 64, args
         assert not calls.exists(), args
 
-print('CLI acquisition, immutable provenance, fresh man staging, and wrapper checks passed')
+print('CLI acquisition, immutable provenance, fresh man staging, and wrapper checks passed '
+      '(CLI linux/' + target_arch + '; generator ' + host_os + '/' + host_arch + ')')

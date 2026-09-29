@@ -123,7 +123,8 @@ man: cli-src
 	rm -f "$(TOPDIR)/SOURCES/heimdall-cli-man.tar.gz"
 	mkdir -p "$(TOPDIR)/cli-man/man1" "$(TOPDIR)/SOURCES"
 	output=$$(cd "$(TOPDIR)/cli-man/man1" && pwd) && \
-	cd "$(CLI_DIR)" && go run ./cmd/gen-manpages "$$output"
+	cd "$(CLI_DIR)" && GOOS=$$(go env GOHOSTOS) GOARCH=$$(go env GOHOSTARCH) \
+	  go run ./cmd/gen-manpages "$$output"
 	test -s "$(TOPDIR)/cli-man/man1/heimdall-cli.1"
 	test -s "$(TOPDIR)/cli-man/man1/heimdall-cli-setup.1"
 	tar -C "$(TOPDIR)/cli-man" -czf "$(TOPDIR)/SOURCES/heimdall-cli-man.tar.gz" man1
