@@ -149,4 +149,49 @@ describe('Config Service', () => {
       expect(configService.get('test')).toBe('value');
     });
   });
+
+  describe('Registration policy', () => {
+    it.each([
+      [undefined, true, true],
+      ['false', true, true],
+      ['true', false, false],
+      ['local', false, true],
+      ['sso', true, false],
+      ['local,sso', false, false],
+      ['sso,local', false, false],
+      ['local,local', false, true]
+    ])(
+      'handles REGISTRATION_DISABLED=%s',
+      (value, localAllowed, ssoAllowed) => {
+        const configService = new ConfigService();
+        configService.set('REGISTRATION_DISABLED', value);
+
+        expect(configService.isRegistrationAllowed()).toBe(localAllowed);
+        expect(configService.isRegistrationAllowed('local')).toBe(
+          localAllowed
+        );
+        expect(configService.isRegistrationAllowed('sso')).toBe(ssoAllowed);
+      }
+    );
+
+    it.each([
+      '',
+      ' ',
+      'LOCAL',
+      'local ',
+      'local, sso',
+      'locel',
+      'local,',
+      'local,,sso',
+      'false,sso',
+      'true,local'
+    ])('rejects REGISTRATION_DISABLED=%j', (value) => {
+      const configService = new ConfigService();
+      configService.set('REGISTRATION_DISABLED', value);
+
+      expect(() => configService.validateRegistrationDisabled()).toThrow(
+        'Invalid REGISTRATION_DISABLED value'
+      );
+    });
+  });
 });

@@ -2,13 +2,24 @@ import {SequelizeOptions} from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
 import {StartupSettingsDto} from './dto/startup-settings.dto';
 
+export type RegistrationScope = 'local' | 'sso';
+
 export class ConfigService {
   private readonly appConfig: AppConfig;
   public defaultGithubBaseURL = 'https://github.com/';
   public defaultGithubAPIURL = 'https://api.github.com/';
+  private static readonly REGISTRATION_SCOPES = new Set<RegistrationScope>([
+    'local',
+    'sso'
+  ]);
+
+  validateRegistrationDisabled(): void {
+    this.registrationDisabledScopes();
+  }
 
   constructor() {
     this.appConfig = new AppConfig();
+    this.validateRegistrationDisabled();
   }
 
   public sensitiveKeys = [
@@ -22,8 +33,8 @@ export class ConfigService {
     /data/i
   ];
 
-  isRegistrationAllowed(): boolean {
-    return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
+  isRegistrationAllowed(scope: RegistrationScope = 'local'): boolean {
+    return !this.registrationDisabledScopes().has(scope);
   }
 
   isLocalLoginAllowed(): boolean {
@@ -92,6 +103,30 @@ export class ConfigService {
 
   get(key: string): string | undefined {
     return this.appConfig.get(key);
+  }
+
+  private registrationDisabledScopes(): Set<RegistrationScope> {
+    const value = this.get('REGISTRATION_DISABLED');
+    if (value === undefined || value === 'false') {
+      return new Set();
+    }
+    if (value === 'true') {
+      return new Set(ConfigService.REGISTRATION_SCOPES);
+    }
+
+    const scopes = value.split(',');
+    if (
+      scopes.some(
+        (scope) =>
+          !ConfigService.REGISTRATION_SCOPES.has(scope as RegistrationScope)
+      )
+    ) {
+      throw new Error(
+        `Invalid REGISTRATION_DISABLED value "${value}". ` +
+          'Use false, true, or a comma-separated list containing local and/or sso (lowercase, no spaces).'
+      );
+    }
+    return new Set(scopes as RegistrationScope[]);
   }
 }
 export const supportedOauth: string[] = [
