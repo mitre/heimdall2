@@ -10,6 +10,7 @@ for name in heimdall-server heimdall-cli; do
   chown root:heimdall "$scratch/logs/$name.log"
   chmod 0640 "$scratch/logs/$name.log"
 done
+chown heimdall:heimdall "$scratch/logs/heimdall-server.log"
 sed -e "s|/var/log/heimdall-server|$scratch/logs|g" \
   -e '/^[[:space:]]*postrotate$/,/^[[:space:]]*endscript$/d' \
   /etc/logrotate.d/heimdall-server > "$scratch/logrotate.conf"
@@ -20,6 +21,5 @@ for rotation in 1 2; do
     printf 'new log entry\n' >> "$scratch/logs/$name.log"
   done
 done
-for name in heimdall-server heimdall-cli; do
-  gzip -dc "$scratch/logs/$name.log.2.gz" | grep -Fxq 'old log entry'
-done
+gzip -dc "$scratch/logs/heimdall-server.log.2.gz" | grep -Fxq 'old log entry'
+grep -Fxq 'old log entry' "$scratch/logs/heimdall-cli.log.2"
