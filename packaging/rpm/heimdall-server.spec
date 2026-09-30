@@ -92,6 +92,7 @@ Requires:       selinux-policy-targeted
 Requires:       tar
 Requires:       util-linux
 Requires:       iproute
+Requires:       logrotate
 Requires(pre):  shadow-utils
 Requires(pre):  coreutils
 Requires(pre):  findutils
@@ -241,15 +242,20 @@ cp -a apps/backend/seeders %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/seed-support %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/dist %{buildroot}%{_datadir}/%{name}/apps/backend/
 
-# Strip executable bits from JS files that lack shebangs.
+# Strip upstream executable bits from application code and data without shebangs.
 find %{buildroot}%{_datadir}/%{name}/apps/backend/node_modules \
-  -type f \( -name '*.js' -o -name '*.cjs' -o -name '*.mjs' \) -perm /111 | \
+  -type f \( -name '*.js' -o -name '*.cjs' -o -name '*.mjs' -o -name '*.json' -o -name '*.map' \) -perm /111 | \
 while IFS= read -r file; do
   case "$(LC_ALL=C sed -n '1p' "${file}" 2>/dev/null || true)" in
     '#!'*) ;;
     *) chmod a-x "${file}" ;;
   esac
 done
+
+# This upstream CLI has CRLF line endings and lacks its executable bit.
+bcrypt_cli=%{buildroot}%{_datadir}/%{name}/apps/backend/node_modules/ldapauth-fork/node_modules/bcryptjs/bin/bcrypt
+sed -i 's/\r$//' "$bcrypt_cli"
+chmod 0755 "$bcrypt_cli"
 
 cp -a libs/common %{buildroot}%{_datadir}/%{name}/libs/
 cp -a libs/password-complexity %{buildroot}%{_datadir}/%{name}/libs/

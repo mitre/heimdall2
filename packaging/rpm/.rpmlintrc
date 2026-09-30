@@ -1,7 +1,7 @@
 # rpmlint configuration for heimdall-server.spec
 #
-# Suppress known false positives so CI / dev rpmlint runs are noise-free
-# and real issues stand out.
+# Exempt intentional bundled-runtime layout and upstream dependency data.
+# Keep other packaging errors and individual warnings visible.
 
 # firewalld services live in /usr/lib/firewalld/services per Fedora
 # packaging guidelines for firewalld:
@@ -9,3 +9,33 @@
 # rpmlint's hardcoded-library-path check fires on any /usr/lib/* path
 # without distinguishing arch-specific from noarch — false positive here.
 addFilter(r"hardcoded-library-path in %\{_prefix\}/lib/firewalld/services")
+
+# Go executables are deliberately static; PostgreSQL libraries are private and
+# resolved through their RUNPATH, not registered in the system ldconfig cache.
+addFilter(r"statically-linked-binary /(?:usr/bin/heimdall-cli|usr/libexec/heimdall-server/runtime/caddy/caddy)$")
+addFilter(r"post(?:in|un)-without-ldconfig /usr/libexec/heimdall-server/runtime/postgresql/lib/lib(?:ecpg(?:_compat)?|pgtypes|pq)\.so\.[0-9.]+$")
+# PostgreSQL loads these encoding-conversion modules into its own process.
+addFilter(r"shared-lib-without-dependency-information /usr/libexec/heimdall-server/runtime/postgresql/lib/(?:[a-z0-9_]+_and_[a-z0-9_]+|euc2004_sjis2004)\.so$")
+
+# Match the exact secret-file and private-directory modes declared in %files.
+# Broader permission exceptions would hide accidentally writable files.
+addFilter(r"non-readable /etc/(?:heimdall-server/(?:backend\.env|caddy/Caddyfile)|sysconfig/heimdall-server) 640$")
+addFilter(r"non-standard-dir-perm /etc/heimdall-server 751$")
+addFilter(r"non-standard-dir-perm /(?:etc/heimdall-server/caddy|var/(?:lib|log)/heimdall-server) 750$")
+addFilter(r"non-standard-dir-perm /var/lib/(?:heimdall-server/backups|heimdall-postgresql(?:/18)?|heimdall-caddy) 700$")
+
+# Preserve upstream empty type modules and resolver test fixtures in the pinned
+# dependency tree. Other empty application and dependency files remain visible.
+addFilter(r"zero-length /usr/share/heimdall-server/apps/backend/node_modules/@webassemblyjs/(?:ast/esm/types/(?:basic|nodes|traverse)|wasm-parser/esm/types/decoder)\.js$")
+addFilter(r"zero-length /usr/share/heimdall-server/apps/backend/node_modules/(?:@xtuc/ieee754|base64url|terser)/dist/\.gitkeep$")
+addFilter(r"zero-length /usr/share/heimdall-server/apps/backend/node_modules/(?:eslint-import-resolver-node/node_modules/)?resolve/test/\S+$")
+
+# Declaration files and upstream Git hooks are data, never installed commands.
+addFilter(r"(?:non-executable-script|wrong-script-interpreter) /usr/share/heimdall-server/apps/backend/node_modules/(?:@nestjs/cli/bin/nest\.d\.ts|(?:js-beautify/node_modules/glob|rimraf)/dist/esm/bin\.d\.mts) (?:644 )?/usr/bin/env node$")
+addFilter(r"non-executable-script /usr/share/heimdall-server/apps/backend/node_modules/sequelize-typescript/\.husky/(?:commit-msg|pre-commit) 644 /bin/sh *$")
+
+# Bundled npm trees contain duplicate dependency files and license notices.
+# Keep individual files-duplicate warnings; exempt only the binary's total.
+addFilter(r"^heimdall-server\.(?:aarch64|x86_64): E: files-duplicated-waste [0-9]+$")
+# The installation command is intentional; sudo and cli are command tokens.
+addFilter(r"spelling-error .*%description -l en_US (?:sudo|cli) -> ")

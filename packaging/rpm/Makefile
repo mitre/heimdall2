@@ -195,18 +195,22 @@ rpm-package:
 		echo "RPMs: $$(ls "$(TOPDIR)"/RPMS/*/*.rpm)"; \
 	fi
 
+# The shared filters cover different distro versions and source/binary checks.
+# Only rpmlint 2 supports disabling errors for filters unused in a given run.
+RPMLINT_FLAGS = --file .rpmlintrc $(shell rpmlint --help 2>/dev/null | grep -o -- --ignore-unused-rpmlintrc | head -1)
+
 lint:
-	rpmlint --file .rpmlintrc $(SPEC)
+	rpmlint $(RPMLINT_FLAGS) $(SPEC)
 
 # Lint built RPMs (run after 'make rpm')
 lint-rpm:
 	@if ls "$(TOPDIR)"/RPMS/*/*.rpm >/dev/null 2>&1; then \
-		rpmlint --file .rpmlintrc "$(TOPDIR)"/RPMS/*/*.rpm; \
+		rpmlint $(RPMLINT_FLAGS) "$(TOPDIR)"/RPMS/*/*.rpm; \
 	else \
 		echo "No RPMs found — run 'make rpm' first"; exit 1; \
 	fi
 	@if ls "$(TOPDIR)"/SRPMS/*.src.rpm >/dev/null 2>&1; then \
-		rpmlint --file .rpmlintrc "$(TOPDIR)"/SRPMS/*.src.rpm; \
+		rpmlint $(RPMLINT_FLAGS) "$(TOPDIR)"/SRPMS/*.src.rpm; \
 	fi
 
 clean:

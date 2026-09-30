@@ -116,8 +116,7 @@ jobs:
           test "${#srpms[@]}" -eq 1
           bash packaging/rpm/tests/srpm-rebuild.sh "${srpms[0]}" /tmp/heimdall-srpm-rebuild
 
-      - name: Lint the built packages (advisory)
-        continue-on-error: true
+      - name: Lint the built packages
         run: make -C packaging/rpm lint-rpm TOPDIR="$TOPDIR"
 
       - name: Sign disposable test artifacts
@@ -224,6 +223,7 @@ jobs:
           [[ "$cli_version" == *"$(cat packaging/rpm/heimdall-cli.ref)"* ]]
           find /usr/share/man/man1 -name 'heimdall-cli.1*' | grep -q .
           find /usr/share/man/man1 -name 'heimdall-cli-setup.1*' | grep -q .
+          bash packaging/rpm/tests/logrotate.sh
 
       - name: Verify the installed systemd units
         run: |
@@ -242,14 +242,6 @@ jobs:
           else
             test ! -s diagnostics/systemd-verify.log
           fi
-
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: smoke-diagnostics-${{ matrix.distro }}-${{ matrix.arch }}
-          path: diagnostics/
-          if-no-files-found: ignore
-          retention-days: 7
 
   lifecycle-ol8:
     name: OL8 lifecycle / ${{ matrix.arch }}
@@ -287,14 +279,6 @@ jobs:
           bash packaging/rpm/tests/run-lifecycle.sh '${{ matrix.platform }}' \
             artifacts/first/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.3.integration.el8.${{ matrix.arch }}.rpm \
             artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-2.13.1-0.4.integration.el8.${{ matrix.arch }}.rpm
-
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: ol8-lifecycle-evidence-${{ matrix.arch }}
-          path: packaging/rpm/dist/integration/evidence/
-          if-no-files-found: ignore
-          retention-days: 7
 
   publish:
     name: Attach RPMs to the release
