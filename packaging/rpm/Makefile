@@ -196,17 +196,17 @@ rpm-package:
 	fi
 
 lint:
-	rpmlint -f .rpmlintrc $(SPEC)
+	rpmlint --file .rpmlintrc $(SPEC)
 
 # Lint built RPMs (run after 'make rpm')
 lint-rpm:
 	@if ls "$(TOPDIR)"/RPMS/*/*.rpm >/dev/null 2>&1; then \
-		rpmlint -f .rpmlintrc "$(TOPDIR)"/RPMS/*/*.rpm; \
+		rpmlint --file .rpmlintrc "$(TOPDIR)"/RPMS/*/*.rpm; \
 	else \
 		echo "No RPMs found — run 'make rpm' first"; exit 1; \
 	fi
 	@if ls "$(TOPDIR)"/SRPMS/*.src.rpm >/dev/null 2>&1; then \
-		rpmlint -f .rpmlintrc "$(TOPDIR)"/SRPMS/*.src.rpm; \
+		rpmlint --file .rpmlintrc "$(TOPDIR)"/SRPMS/*.src.rpm; \
 	fi
 
 clean:
