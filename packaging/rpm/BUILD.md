@@ -295,3 +295,18 @@ certificate/CA state. PostgreSQL major upgrades require a separate migration;
 package upgrades reject a mismatched retained cluster major. Removal retains
 application, database and certificate state and accounts. See
 [backup and restore](README.md#backup-and-restore) before recovering.
+
+## Acceptance status
+
+The [September 28 report](../../docs/superpowers/reports/2026-09-28-rpm-integration-acceptance.md)
+applies to the preceding unbundled commit only. Bundled-runtime checks require
+candidate-specific build/install/SRPM evidence, both native OL8 lifecycle runs,
+four fresh deployment combinations, offline setup, coexistence and recovery.
+Do not treat the workflow definition, including its new EL10 jobs, as a completed
+run.
+
+SELinux/fapolicyd runtime acceptance requires an actual enforcing OL8 host.
+Privileged containers and policy compilation cannot establish it. Stock bundled
+runtimes do not establish FIPS validation. EL8 systemd ignores four newer
+hardening directives (`ProtectClock`, `ProtectHostname`, `ProtectKernelLogs`,
+`ProtectProc`); CI exposes those warnings and rejects other unit diagnostics.
