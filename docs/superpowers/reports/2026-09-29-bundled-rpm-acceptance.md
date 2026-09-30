@@ -1,11 +1,17 @@
 # Bundled RPM runtime acceptance — 2026-09-29
 
-**Status: INCOMPLETE.** This living report records implementation and partial
-verification evidence. It does not certify a finished release or a successful
-integrated deployment. Both full native OL8 ARM64 Make builds, their disposable
-test signatures/checksums, both fresh installed-file checks, the clean SRPM
-rebuild and the actual Docker artifacts build passed. Live lifecycle,
-enforcement, remaining native platforms and Actions acceptance are still open.
+**CI and full container acceptance: PASS.**
+[Build RPM run 36646733366](https://github.com/mitre/heimdall2/actions/runs/36646733366)
+completed successfully at application `86544a54d0203d59118942d7dbdf7aa0b0250374`:
+all ten required jobs passed, including both complete native OL8 lifecycle and
+coexistence jobs. The release-publication job was skipped. Four downloaded
+bundles passed all 16 checksums and four exact runtime-inventory checks.
+
+**Overall release acceptance: INCOMPLETE.** The real preceding-package transition,
+full host reboot and enforcing OL8 SELinux/fapolicyd checks remain untested.
+CI exercised disposable containers and test signatures; no production release
+was published. The earlier native local Make, SRPM-rebuild and Docker evidence
+remains recorded separately with its original source and artifact hashes.
 
 Named evidence reports below are retained locally under
 `.superpowers/sdd/2026-09-29-bundled-rpm-runtime/`, which is ignored by Git. They
@@ -18,6 +24,7 @@ are not published repository files or CI artifacts.
 | Application version | `2.13.1` |
 | Exact application source used for final Make builds | `999daab0c6c7f8d51df612c7f93b369d6a929ac8` |
 | Built application tree | `8cd7845f40a0283c7505ec2903e08830e6fbdba1` |
+| Published application source tested by successful CI and full container acceptance | `86544a54d0203d59118942d7dbdf7aa0b0250374` |
 | Task 2 payload implementation | `72cdd37b2b3d0e546a29885d9076d6eac408bf59` |
 | Task 2 extraction guard fix | `5bdeb9917621f5e93bfa9a426f4e9ccffc35f3aa` |
 | Task 5 application upgrade/security, reviewed through pending-ledger cleanup | `461f434e649a42f07dffd6c434402af384d73943` |
@@ -41,11 +48,37 @@ source above; later report-only commits do not change their provenance. See `tas
 `task-5-recovery-rereview-2.md`, `task-5-cli-security-rereview-2.md` and
 `task-5-cli-publication-pin.md`.
 A higher RPM release does not make application 2.13.1 an upgrade for 2.14.0.
+The later CI fixes are not included in the signed local packages from `999daab0c`;
+their recorded hashes and source identity remain unchanged.
+Later report-only commits do not change the tested CI source `86544a54d` or the
+local build source `999daab0c`; their artifact provenance must remain distinct.
 
 Runtime archive URLs, full SHA-256 digests and license-file inventory are committed in
 [`runtime-lock.json`](../../../packaging/rpm/runtime-lock.json). All six selected
 archive records across aarch64/x86_64 were downloaded and rehashed during Task 1.
 Extraction checks on x86_64 archives do not establish native x86_64 execution.
+
+## Successful CI candidates
+
+Run `36646733366` completed at `2026-09-30T00:29:29Z`. Its four native
+Rocky EL8/EL9 × x86_64/aarch64 build jobs included clean SRPM rebuilds and
+disposable signing; all four signed-install jobs and both full native OL8
+lifecycle jobs passed. The aarch64 lifecycle job took 42m 2s and x86_64 took
+45m 38s, including their candidate builds. `ci-36646733366-final.json`
+
+The following bundles contain release `2.13.1-0.4.integration` RPM/SRPMs,
+runtime manifests, disposable public test keys and post-signing `SHA256SUMS`.
+They are preserved locally under `packaging/rpm/dist/bundled-ci-36646733366/`.
+All 16 checksum entries and four architecture-selected lock inventories passed;
+full hashes are retained in `ci-36646733366-bundle-verification.json` and each
+bundle's `SHA256SUMS`. These are test signatures, not production signing keys.
+
+| Download bundle | Signed binary RPM SHA-256 | Signed SRPM SHA-256 |
+| --- | --- | --- |
+| [EL8 x86_64](https://github.com/mitre/heimdall2/actions/runs/36646733366/artifacts/11069164459) | `21db1edf946a8efbbdc0d09417d13aa7ca95f9f3002f16d54ace5a734ccf167b` | `5bb347d601e7969f143aadd39831d81ec08ff522ba85681d9df16751b4370c57` |
+| [EL8 aarch64](https://github.com/mitre/heimdall2/actions/runs/36646733366/artifacts/11069133879) | `843896c16284a1134a673413499c3182df44a6c5edea92a83ad051353d0291f1` | `9d92db9902679fedd9913a6b047836e4a1d491ff766be9ce6249207c700c1cab` |
+| [EL9 x86_64](https://github.com/mitre/heimdall2/actions/runs/36646733366/artifacts/11069283412) | `65bcd2d82ae6a5a458b659fe80b05b0b7ea30302e44fe5980ae9c053f6bc0729` | `5e281771ab256d632eb77ec8e0dd23a77b755833a7a7303c3a6382a8910f9f7d` |
+| [EL9 aarch64](https://github.com/mitre/heimdall2/actions/runs/36646733366/artifacts/11069897459) | `7aad86e1dd0035c4cce41a3f7a54835966aa75123470003825c6c871ef90b66f` | `0a2d48c5a567a1f955e7e205dc0f24b6e70afe14ddc72dda01e91603995a1680` |
 
 ## Environment and evidence retention
 
@@ -53,7 +86,13 @@ Observed runtime environment: Oracle Linux 8.10, native Linux aarch64 containers
 on Docker Desktop running on an ARM64 Mac; systemd 239 was available for unit-file
 validation. Local x86_64 execution would be emulated. A bounded native ARM64
 Rocky EL9 policy/context/scriptlet preflight passed; no native x86_64 or full EL9
-bundled-runtime build/install result has been recorded. `task-5-el9-preflight.md`
+execution was established by that local preflight. Subsequent GitHub-hosted
+checks passed native Rocky EL8/EL9 builds, empty-tree SRPM rebuilds and signed
+install checks on both x86_64 and aarch64, most recently in successful run
+`36646733366`. That run also exercised live systemd services in
+disposable native OL8 CI containers on both architectures; its restart test is
+a container restart, not a full host reboot.
+`task-5-el9-preflight.md`, `ci-36646733366-final.json`
 
 Task-owned resources retained for review/reuse include:
 
@@ -93,6 +132,8 @@ check for this report. Required evidence and input caches remain preserved.
 | Final Make test signing | All four RPM/SRPM signatures passed; six post-sign checksum entries verified after export and independently by the controller | `task-6-final-sign-install.md`, `final-sign-install/signing.log`; disposable test key, not a production signature |
 | Fresh final-package installation | Both releases passed normal GPG-checked DNF installation, payload/provenance/man checks, installed runtimes/linkage, ownership and unit-file checks; the untrusted-key negative gate rejected 0.3 before installation | `final-sign-install/check-03.log`, `final-sign-install/check-04.log`, `task-6-final-sign-install.md`; separate ordinary OL8 ARM64 containers, no live systemd/enforcement |
 | Clean SRPM rebuild | Full 0.4 rebuild in a previously nonexistent TOPDIR passed supplied-source hash and rebuilt-payload checks | `task-6-final-srpm-rebuild.log`; native OL8 ARM64, separately exported unsigned result |
+| Native four-platform CI build/install checks | All four Rocky EL8/EL9 × x86_64/aarch64 build, empty-tree SRPM rebuild, disposable signing, checksum/upload and installed-package jobs passed at `86544a54d` | `ci-36646733366-final.json`; all ten required jobs succeeded |
+| Full live container lifecycle, topology and coexistence | Both native OL8 architectures passed setup, upgrade, restart, backup/restore, port changes, removal/recovery, four remote topologies and same-host limited-role PostgreSQL/system-proxy coexistence | `ci-36646733366-lifecycle-{x86_64,aarch64}.log`; container restart, not host reboot or security enforcement |
 | Actual runtime archive acquisition | Both architecture selections verified | Task 1 report and selected manifests; no executable x86_64 claim |
 | Build toolchain | Native ARM64 complete build succeeded | `task-2-build-final.log`; Python 3.9 fixed node-gyp 12 incompatibility, cleared Make recursion state fixed PostgreSQL generated headers |
 | Exact Node/addon use | Private Node 22.23.3 built and loaded native addon | `task-2-addon-python39.log`, `task-2-addon-load.log`; actual Yarn process executable also inspected |
@@ -126,7 +167,8 @@ commit `7025fee735604bf93afc69a932588ff2600c52e8`), and the workflow YAML parser
 (passed with four native build entries). Logs are retained as
 `task-6-followup-{extraction,upgrade,yaml}.log` in the local evidence directory.
 Both maintained regressions are now wired into the existing pre-build CI fixture
-step. No Actions execution is implied.
+step. That earlier local integration pass did not execute Actions; subsequent
+actual CI results are recorded below.
 
 Representative completed commands recorded in the task evidence include:
 
@@ -339,7 +381,132 @@ private signing material is not distributed.
   this environment error fails safely. The corrected unprivileged native fixture
   used an executable tmpfs and passed; no privileged workaround was used.
 
-## Remaining acceptance gates
+## Published branch and Actions execution
+
+The user authorized pushing the branch and ensuring the pipeline works. The
+controller pushed `feat/rpm-integrated-install` to `mitre/heimdall2` and verified
+the exact remote SHA before each dispatch. The published CLI pin remains
+`d92ed3550e87d73db083827a8c38d22cff47765f`. These manual workflow dispatches do
+not activate the release-event publication job.
+
+| Run | Application source | Observed result |
+| --- | --- | --- |
+| [36634000064](https://github.com/mitre/heimdall2/actions/runs/36634000064), created `2026-09-29T21:32:53Z` | `bce2bdd3bf4fd8a184160fd2d34baa4793646268` | Completed **failure**. Both ARM64 fixture stages failed during manual generation; EL9 x86_64 failed PostgreSQL header generation. Both OL8 lifecycle jobs passed live bundled setup, health and authentication, then correctly refused backup of admin-owned fixture data during the normal upgrade. |
+| [36635983511](https://github.com/mitre/heimdall2/actions/runs/36635983511), created `2026-09-29T21:51:14Z` | `bb0cc48cbd502e0bbf23acc3cef32545d0e8d752` | Completed **cancelled**. All four native build/SRPM/sign/upload jobs and all four installed-package smoke jobs succeeded. The controller then cancelled the superseded lifecycle jobs, which still used the known faulty sentinel ownership. |
+| [36638324848](https://github.com/mitre/heimdall2/actions/runs/36638324848), created `2026-09-29T22:13:58Z` | `46f2c7e37ae81e8c360e24b6780e5131e44d20df` | Completed **failure**. All four build/SRPM/sign/upload and four install jobs passed; all four downloaded bundles verified. ARM64 lifecycle stopped on a Go proxy download error before execution. x86_64 passed upgrade, then its immediate post-restart assertion raced startup. |
+| [36642221582](https://github.com/mitre/heimdall2/actions/runs/36642221582), created `2026-09-29T22:53:49Z` | `effa9261daa625003d2487a07aa2dec2d1068d51` | Completed **failure**. All four build/SRPM/sign/upload and four install jobs passed; downloaded bundles verified. Both OL8 architectures passed the bundled lifecycle and four remote topology combinations, then failed the first same-host external/external coexistence setup. |
+| [36646733366](https://github.com/mitre/heimdall2/actions/runs/36646733366), created `2026-09-29T23:43:47Z` | `86544a54d0203d59118942d7dbdf7aa0b0250374` | Completed **success**. All ten required jobs passed: four build/SRPM/sign/upload, four installed-package and two full OL8 lifecycle/coexistence jobs. Release publication skipped; all four downloaded bundles verified. |
+
+The first run exposed two build-environment failures:
+
+- Make exported the fixture's intentional target `GOARCH=amd64` into the manual
+  generator, causing `exec format error` on native ARM64. Reviewed commit
+  `8a09f943eeeae221daa5846c9b841d69443efcb4` confines host OS/architecture
+  selection to the generator. The strengthened existing fixture checks a CLI
+  built for the opposite CPU and a natively executed generator. It failed against
+  the old recipe, then passed on ordinary Linux ARM64 and macOS ARM64 with
+  inherited cross-OS settings; independent command-line OS override testing also
+  passed. `ci-36634000064-acquisition-fix.md`
+- Minimal EL9 lacked PostgreSQL's Perl `FindBin` and `File::Compare` modules;
+  bounded native reproduction then exposed the separate `lib` pragma dependency.
+  Reviewed commit `bb0cc48cbd502e0bbf23acc3cef32545d0e8d752` declares all three
+  build capabilities in the spec and setup transaction. Actual native EL9
+  PostgreSQL 18.6 header generation passed after the fix, and EL8 provider/import
+  checks passed. Initial and intermediate failures remain preserved. No runtime
+  dependency or resource-limit change was made. `ci-el9-perl-report.md`
+
+Both corrections were independently reviewed, committed and pushed before the
+second dispatch. That run subsequently passed all four native platform checks,
+including checksum verification, signed installation, installed manifest/CLI/man
+provenance and unit-file verification. Its eight successful build/install job
+conclusions and two cancelled lifecycle jobs are retained in
+`ci-36635983511-final.json`. Advisory lint annotations do not change those
+successful required-job conclusions; the overall cancelled run is not a complete
+pipeline pass.
+
+The original lifecycle jobs also exposed fixture-owned data that backup correctly
+refused to dump. Reviewed commit `46f2c7e37ae81e8c360e24b6780e5131e44d20df`
+changes the three existing sentinel creators/readbacks to use the configured
+application role; coexistence captures its bundled credentials before changing
+modes. Native scratch PostgreSQL reproduced the admin-owned-table denial, then
+verified all three application owners, application-role dump/replay and packaged
+CLI backup without elevated role attributes. No backup permission, product code
+or failure guard changed. `ci-sentinel-ownership-report.md`
+
+Run 3 confirmed all four build jobs and all four install jobs, and passed the x86_64 normal
+upgrade and migration-marker checks. It then exposed an immediate service-state
+assertion after container restart, before the harness's existing bounded HTTPS
+readiness request. Reviewed commit `effa9261daa625003d2487a07aa2dec2d1068d51`
+moves that unchanged readiness/JSON check before the strict service/PID/user
+assertions. The extracted-function OL8 regression passes delayed readiness and
+still rejects timeout, inactive service, wrong executable/user and invalid
+readiness JSON. Retry limits, TLS validation and product behavior are unchanged.
+`ci-restart-readiness-report.md`
+
+Run 3's ARM64 lifecycle candidate build separately failed when
+`proxy.golang.org` returned HTTP/2 `INTERNAL_ERROR` for
+`golang.org/x/crypto@v0.48.0`; lifecycle execution had not started. GitHub refused
+a job retry while the run was active. After the distinct x86_64 harness fix was
+reviewed, the controller pushed the new source and dispatched run 4 instead.
+No source change was made for the transient download error.
+
+The controller downloaded run 3's `rpm-el8-x86_64`, `rpm-el8-aarch64`,
+`rpm-el9-x86_64` and `rpm-el9-aarch64` bundles to
+`packaging/rpm/dist/bundled-ci-36638324848/`. All 16 signed RPM/SRPM,
+manifest and public-key checksum entries passed; each manifest exactly matched
+its architecture's locked runtime inventory. `ci-36638324848-artifacts.json`
+records the uploaded artifacts and `ci-36638324848-bundle-verification.json`
+records their hashes and inventory results. These packages retain `46f2c7e37`
+provenance, separate from the local `999daab0c` bundle.
+
+Run 4 repeated all four build/install successes at `effa9261d`. The controller
+downloaded its four bundles to `packaging/rpm/dist/bundled-ci-36642221582/` and
+verified all 16 checksum entries and four exact architecture-selected runtime
+inventories. `ci-36642221582-final.json`, `ci-36642221582-artifacts.json`,
+`ci-36642221582-bundle-verification.json`
+
+Both native OL8 jobs now passed the complete bundled sequence: offline setup,
+reruns and failure propagation, upgrade refusal guards and successful two-release
+upgrade, migration-marker recovery, container restart and state verification,
+SQL/CA/config backup and restore, invalid-SQL and traversal rejection, port
+changes, removal and reinstall recovery. All four fresh bundled/external database
+and proxy combinations then passed authenticated HTTPS, selected-service checks
+and saved-config reruns. The remote database fixtures used the `postgres` role;
+this does not establish limited-role external database acceptance.
+
+Both jobs stopped at the first same-host external/external coexistence setup,
+before occupied-port and ownership-transition assertions. Database setup issued
+`db:create` for an administrator-created external database whose application owner
+lacks `CREATEDB`. `ci-36642221582-lifecycle-{x86_64,aarch64}.log`
+preserves the passed stages and failure. Full host boot, the optional real
+preceding-package transition and enforcement were not exercised.
+
+Reviewed and published commit `86544a54d0203d59118942d7dbdf7aa0b0250374`
+skips database creation only for explicit external mode, preserving migrations,
+optional seeding and bundled/legacy creation. Native PostgreSQL 18.6 reproduced
+the denial, then passed all 29 migrations, one-admin and rerun checks with
+`CREATEDB=false` and `superuser=false`; missing database, bad credentials and
+failed migration still returned errors. The three-file change also extends
+`tests/setup.sh` and newly registers that previously unregistered fixture in CI.
+Host and EL8 Python 3.6 fixture checks passed. Run 5 then passed the actual
+PostgreSQL 13 coexistence scenario on both native OL8 architectures.
+`ci-coexistence-db-report.md`
+
+The complete successful run repeated the bundled lifecycle and four remote
+topologies, then verified the existing same-host PostgreSQL on port 5432 using
+its non-superuser application owner without `CREATEDB`. It preserved system
+PostgreSQL/nginx PIDs and configuration hashes across Heimdall operations, refused occupied port 443,
+and passed external → bundled → external → bundled selection changes while
+retaining private data and CA state. Final package removal preserved the
+administrator-owned services. Both `coexistence.sh verify` calls and complete
+harnesses exited zero. The final API reports success and the controller's watch
+exited zero. Both downloaded lifecycle-evidence artifacts contain 12 scenario
+`result.txt` files in total, all exactly `exit_status=0`; they are retained under
+`packaging/rpm/dist/bundled-ci-36646733366/lifecycle-evidence/`.
+`ci-36646733366-lifecycle-{x86_64,aarch64}.log`,
+`ci-36646733366-final.json`; `task-6-ci-execution.md` retains prior failures.
+
+## Acceptance gates and remaining limits
 
 | Required gate | Status |
 | --- | --- |
@@ -347,29 +514,32 @@ private signing material is not distributed.
 | Final clean committed `SOURCE_MODE=head` native builds, releases 0.3 and 0.4 | Passed on native OL8 ARM64 from application `999daab0c` / CLI `d92ed355` |
 | Final signed RPM/SRPM bundles, matching CLI/man provenance, post-sign hashes | Passed for both Make releases with the disposable test key; all six checksum entries verified |
 | Fresh signed-package installation on native OL8 ARM64 | Both releases passed ordinary GPG-checked DNF/file/runtime checks; no live lifecycle claim |
-| Empty-tree SRPM rebuild | Passed on native OL8 ARM64; all four native Rocky targets pending |
+| Empty-tree SRPM rebuild | Passed locally on native OL8 ARM64 and on all four native Rocky targets, including successful run `36646733366` |
 | Actual Docker artifacts target | Passed from the exact-source workspace context, including CLI/payload checks and all three exports; unsigned outputs remain separate |
-| Four native Rocky EL8/EL9 × x86_64/aarch64 installed-package checks | Pending |
-| Native OL8 ARM64 and x86_64 live systemd lifecycle runs | Signed candidates available; privilege authorization and native-platform execution remain pending |
-| All four fresh database/proxy combinations, offline bundled setup, authenticated HTTPS | Pending |
-| Same-host external PostgreSQL, system proxy coexistence, occupied-port refusal and ownership transitions | Pending |
-| Saved reruns, skipped work, port changes, failed setup/migration and selected-service behavior | Focused/functional coverage passed; installed-host execution pending |
-| Installed backup/CA round-trip, upgrade guards, two-release upgrade, reboot, removal/recovery | Local filesystem/CA fixtures, native scratch backup/SQL and scriptlet fixtures passed; CLI restore/integrated lifecycle pending |
+| Four native Rocky EL8/EL9 × x86_64/aarch64 installed-package checks | All four passed in successful run `36646733366` |
+| Native OL8 ARM64 and x86_64 live systemd bundled lifecycle | Passed on both architectures through removal/reinstall recovery in run 5; separate local harness remains rejected before execution |
+| All four fresh database/proxy combinations, offline bundled setup, authenticated HTTPS | Passed on both native OL8 CI architectures in run 5; same-host limited-role external setup also passed |
+| Same-host external PostgreSQL, system proxy coexistence, occupied-port refusal and ownership transitions | Passed on both architectures in run 5, including system PID/config fingerprints and preserved private data/CA |
+| Saved reruns, skipped work, port changes, failed setup/migration and selected-service behavior | Passed bundled lifecycle, remote topology and coexistence assertions on both architectures in run 5 |
+| Installed backup/CA round-trip, upgrade guards, two-release upgrade, restart, removal/recovery | Passed on both architectures in run 5, including SQL/traversal rejection and restored CA ownership/modes. Restart covered the container |
+| Full host reboot | Not exercised; container restart is the completed CI check |
 | Real preceding-package transition using retained old artifact | Pending |
 | Enforcing OL8 SELinux and fapolicyd, contexts, health/HTTPS and absence of relevant denials | Pending; no suitable authorized host identified |
-| Completed Actions run and four downloadable artifact bundles | Pending; no run dispatched or uploaded for this implementation |
+| Completed Actions run and four downloadable artifact bundles | Passed: run `36646733366` at `86544a54d`, ten required jobs successful; all 16 checksums and four runtime inventories verified after download |
 
-Automatic approval review rejected a proposed `--privileged --cgroupns=private`
-container because it crosses a broad host security boundary and the exact
-privilege scope lacked trusted user authorization. The controller asked for
-explicit approval for disposable OL8 fixtures without host mounts; no answer has
-been received. No privileged local retry or CI workaround is authorized. The
-unprivileged runtime checks above do not close this gate.
+After the user's push/pipeline authorization, automatic approval review again
+rejected the separate local `--privileged --cgroupns=private` harness before
+execution. The stated reason was that privileged containers cross a broad host
+security boundary and that the instruction did not explicitly authorize this
+implementation or its concrete risk. The rejected harness started no local
+privileged fixture and performed no package or service operations. No rejected
+local command was retried or bypassed.
+`task-6-final-local-lifecycle.md` preserves the exact command and rejection.
 
-Application-branch publication/Actions authorization still needs resolution after
-concrete final code is ready. CLI prerequisite publication and the immutable pin
-are complete under the separately authorized reviewed handoff. No application
-push, CI dispatch or artifact upload occurred during this report refresh.
+The GitHub dispatches were independently approved pipeline actions, not retries
+or workarounds for the rejected local harness. The first dispatch preceded that
+local rejection. Live container acceptance is established by the separately
+successful CI run; the local rejected command remains unexecuted.
 
 No enforcing OL8 VM has been identified. Policy compilation, context matching and
 privileged containers cannot establish SELinux/fapolicyd enforcement. Stock
@@ -384,8 +554,11 @@ not be substituted as the built source. Preserve the frozen bundle/context,
 unsigned builder originals, final signed host copies, separate rebuild/Docker
 outputs and original evidence. `task-6-final-native-execution.md`
 
-As final builds and authorized acceptance checks run, record exact source commits,
-commands, platform identities, signed hashes and pass/fail outcomes for each gate.
-Keep the old unsigned artifact table as historical evidence, clearly separate
-from final signed outputs. The existing workflow retains its four artifact names
-and release guard; a workflow definition is not a successful Actions run.
+Successful CI provenance is `86544a54d0203d59118942d7dbdf7aa0b0250374`,
+with its own downloaded signed bundles and final evidence. A later report-only
+commit does not rebuild those artifacts or change the tested code. Preserve both
+provenance sets and the earlier failed logs. The remaining release checks require
+the real preceding artifact and an appropriate host for reboot/enforcement;
+they are not covered by the successful container pipeline.
+The controller rechecked all 23 preserved-file hashes unchanged and confirmed
+the separate CLI checkout remains clean.
