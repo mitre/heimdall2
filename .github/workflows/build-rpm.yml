@@ -84,7 +84,8 @@ jobs:
       - name: Install build dependencies
         run: |
           make -C packaging/rpm deps TOPDIR="$TOPDIR"
-          echo /opt/heimdall-build/go-1.25.8/bin >> "$GITHUB_PATH"
+          # Rocky 10 omits PATH from image metadata; retain the shell's system path.
+          echo "/opt/heimdall-build/go-1.25.8/bin:$PATH" >> "$GITHUB_PATH"
 
       - name: Verify toolchain and source fixtures
         run: |
