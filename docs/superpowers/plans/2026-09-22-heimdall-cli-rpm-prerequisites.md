@@ -449,4 +449,4 @@ private-hostname TLS prerequisites discovered during integration. Existing
 blank-password preservation was retained and tested. Real OL8 `DEV=1` staging
 passed, including the embedded CLI version/commit/date and Source22 man pages.
 Installed-package acceptance is recorded in the
-[RPM acceptance table](../../../packaging/rpm/README.md#acceptance-status).
+[RPM acceptance report](../reports/2026-09-29-bundled-rpm-acceptance.md).

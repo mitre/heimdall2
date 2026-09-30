@@ -32,7 +32,7 @@ if mode in ('head', 'release'):
              'postcss.config.js', 'apps', 'libs', 'test', 'packaging/rpm']
     try:
         if git('status', '--porcelain', '--untracked-files=all', '--', *paths):
-            sys.exit('Uncommitted build inputs; commit them or use the Docker workspace build')
+            sys.exit('Uncommitted build inputs; use SOURCE_MODE=workspace to build current files')
         if mode == 'release':
             try:
                 tagged_commit = git('rev-parse', '--verify', 'refs/tags/v{}^{{commit}}'.format(version))

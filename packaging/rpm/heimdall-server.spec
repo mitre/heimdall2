@@ -54,6 +54,13 @@ ExclusiveArch:  aarch64 x86_64
 # A full Provides: bundled(npm(...)) manifest is not generated; the lockfile in
 # the source archive is the authoritative dependency record.
 
+# EL8's default Python 3.6 is too old for node-gyp; newer EL releases use python3.
+%if 0%{?rhel} == 8
+%global heimdall_build_python /usr/bin/python3.9
+%else
+%global heimdall_build_python /usr/bin/python3
+%endif
+
 BuildRequires:  gcc-c++
 BuildRequires:  gcc
 BuildRequires:  libicu-devel
@@ -68,7 +75,7 @@ BuildRequires:  bzip2
 BuildRequires:  make
 BuildRequires:  nodejs(engine) >= 22.18.0
 BuildRequires:  python3
-BuildRequires:  /usr/bin/python3.9
+BuildRequires:  %{heimdall_build_python}
 BuildRequires:  /usr/bin/perl
 BuildRequires:  perl(FindBin)
 BuildRequires:  perl(File::Compare)
@@ -154,7 +161,7 @@ export NODE_ENV=production
 # Build native addons against the exact Node headers shipped in this archive.
 export npm_config_nodedir="$PWD/runtime-node"
 export npm_config_build_from_source=true
-export npm_config_python=/usr/bin/python3.9
+export npm_config_python=%{heimdall_build_python}
 
 # YARN_CACHE_FOLDER: if caller exported one (e.g. `make rpm CACHE=1`
 # for fast local rebuilds), honor it and leave it in place. Otherwise

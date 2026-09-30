@@ -76,7 +76,7 @@ func main() {
 
     def make(*args, **kwargs):
         return subprocess.run(['make', '-C', str(packaging), 'GOARCH=' + target_arch,
-                               'SOURCE_MODE=workspace', 'TOPDIR=' + str(topdir)] + list(args),
+                               'TOPDIR=' + str(topdir)] + list(args),
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                               universal_newlines=True, **kwargs)
 

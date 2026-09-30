@@ -134,7 +134,7 @@ class InputsTest(unittest.TestCase):
             env=self.make_env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             universal_newlines=True)
 
-    def test_workspace_archive_excludes_local_inputs(self):
+    def test_default_archive_excludes_local_inputs_without_git(self):
         self.prepare_make_fixture()
         excluded = ('.git/config', '.beads/state', '.superpowers/state',
                     'node_modules/dependency', 'apps/backend/node_modules/dependency',
@@ -148,7 +148,7 @@ class InputsTest(unittest.TestCase):
             path.write_text('private marker')
         (self.root / 'apps/backend/local-source.js').write_text('workspace source')
         self.topdir = Path(self.tmp.name) / 'output with spaces'
-        result = self.make('sources', 'SOURCE_MODE=workspace')
+        result = self.make('sources')
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         with tarfile.open(str(self.topdir / 'SOURCES/heimdall2-2.13.1.tar.gz')) as archive:
             names = set(archive.getnames())
@@ -158,13 +158,29 @@ class InputsTest(unittest.TestCase):
             for name in excluded:
                 self.assertNotIn(prefix + name, names)
 
+    def test_default_archive_includes_uncommitted_changes(self):
+        self.prepare_make_fixture()
+        self.commit_fixture()
+        manifest = '{"version":"2.13.1","modified":true}'
+        (self.root / 'apps/backend/package.json').write_text(manifest)
+        (self.root / 'apps/backend/local-source.js').write_text('local source')
+        for args in ((), ('DEV=1',)):
+            with self.subTest(args=args):
+                result = self.make('sources', *args)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                with tarfile.open(str(self.topdir / 'SOURCES/heimdall2-2.13.1.tar.gz')) as archive:
+                    self.assertEqual(archive.extractfile(
+                        'heimdall2-2.13.1/apps/backend/package.json').read().decode(), manifest)
+                    self.assertEqual(archive.extractfile(
+                        'heimdall2-2.13.1/apps/backend/local-source.js').read(), b'local source')
+
     def test_head_archive_uses_committed_snapshot(self):
         self.prepare_make_fixture()
         (self.root / 'committed.txt').write_text('committed source')
         self.commit_fixture()
         (self.root / 'notes.txt').write_text('unrelated untracked note')
         self.topdir = Path(self.tmp.name) / 'output with spaces'
-        result = self.make('sources', 'DEV=1')
+        result = self.make('sources', 'SOURCE_MODE=head')
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         with tarfile.open(str(self.topdir / 'SOURCES/heimdall2-2.13.1.tar.gz')) as archive:
             self.assertIn('heimdall2-2.13.1/committed.txt', archive.getnames())

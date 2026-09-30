@@ -22,5 +22,5 @@ migration.
 ## Known gaps
 
 These have no wiki predecessor and are new documentation work: **RPM install**
-(see `packaging/rpm/INSTALL.md` in the repository), **Docker install**, and
+(see `packaging/rpm/README.md` in the repository), **Docker install**, and
 **Kubernetes / Helm** deployment.

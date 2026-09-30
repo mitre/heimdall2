@@ -2,7 +2,7 @@
 # setup-build-deps.sh — Install repositories and packages needed to build
 # heimdall-server RPMs on RHEL-family systems.
 #
-# Supported: RHEL, Oracle Linux, CentOS Stream, Rocky Linux, AlmaLinux (EL8, EL9)
+# Supported: RHEL, Oracle Linux, CentOS Stream, Rocky Linux, AlmaLinux (EL8, EL9, EL10)
 #
 # Does NOT build anything, fetch source, or run rpmbuild.
 # After running this script, build with: cd heimdall-server && make rpm
@@ -28,7 +28,7 @@ Usage: $SCRIPT_NAME [options]
 Install repositories and packages needed to build heimdall-server RPMs.
 Does NOT build anything, fetch source, or run rpmbuild.
 
-Supported: RHEL, Oracle Linux, CentOS Stream, Rocky Linux, AlmaLinux (EL8, EL9)
+Supported: RHEL, Oracle Linux, CentOS Stream, Rocky Linux, AlmaLinux (EL8, EL9, EL10)
 
 Options:
   --skip-update       Skip 'dnf update' (faster on pre-configured hosts)
@@ -60,9 +60,9 @@ fi
 if [[ -z "${el_major}" || "${el_major}" == "%{?rhel}" ]]; then
     el_major="$(. /etc/os-release 2>/dev/null && printf '%s' "${VERSION_ID%%.*}")"
 fi
-if [[ "${el_major}" != 8 && "${el_major}" != 9 ]]; then
+if [[ "${el_major}" != 8 && "${el_major}" != 9 && "${el_major}" != 10 ]]; then
     echo "Error: unsupported EL major version '${el_major}'." >&2
-    echo "This script supports RHEL, Oracle Linux, CentOS Stream, Rocky, and Alma (EL8/EL9)." >&2
+    echo "This script supports RHEL, Oracle Linux, CentOS Stream, Rocky, and Alma (EL8/EL9/EL10)." >&2
     exit 1
 fi
 

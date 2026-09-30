@@ -161,13 +161,14 @@ If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `
 ### Heimdall Server - RPM
 
 For the **2.13.1 integration candidate**, follow the
-[RPM installation and administration guide](packaging/rpm/INSTALL.md). It covers
+[RPM installation and administration guide](packaging/rpm/README.md). It covers
 prerequisites, signed installation, explicit `heimdall-cli setup`, local or remote
 PostgreSQL, HTTPS, service management, upgrades, backup, restore, and removal.
 
 For building and signing candidates, see the
-[RPM packaging guide](packaging/rpm/README.md). Its acceptance section identifies
-the tested platforms and candidate limitations.
+[RPM packaging guide](packaging/rpm/BUILD.md). The
+[bundled-runtime acceptance report](docs/superpowers/reports/2026-09-29-bundled-rpm-acceptance.md)
+identifies the tested platforms and candidate limitations.
 
 ### Heimdall Server - Docker
 

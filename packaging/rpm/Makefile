@@ -1,6 +1,6 @@
 SPEC     := heimdall-server.spec
 TOPDIR   ?= $(HOME)/rpmbuild-heimdall
-SOURCE_MODE ?= $(if $(filter 1,$(DEV)),head,release)
+SOURCE_MODE ?= workspace
 HEIMDALL_RELEASE ?= 0.1.integration
 
 # Version resolution is deliberately POSIX sed, not `rpmspec`.
@@ -47,8 +47,8 @@ else
   RPMBUILD_PREFIX :=
 endif
 
-# Release and development builds archive validated HEAD. Docker builds may
-# explicitly stage their filtered workspace without Git metadata.
+# Build current files by default, including downloaded sources without Git metadata.
+# Explicit head/release modes archive validated HEAD.
 sources: check-source
 	@mkdir -p "$(TOPDIR)/SOURCES"
 ifeq ($(SOURCE_MODE),workspace)
@@ -64,7 +64,7 @@ else
 	  > "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz"
 endif
 
-# The committed pin files identify the tested CLI. Read them in the shell so
+# The pin files identify the tested CLI. Read them in the shell so
 # malformed file contents cannot become shell syntax through Make expansion.
 override CLI_DIR := $(TOPDIR)/heimdall-cli-src
 
