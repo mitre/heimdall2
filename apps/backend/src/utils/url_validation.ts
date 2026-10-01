@@ -1,7 +1,6 @@
 // Parses `url` and returns it only if it is a bare http(s) origin (protocol +
 // hostname + optional port, no userinfo/path/query/fragment). Returns null
-// otherwise. Shared by AppConfig (admin-supplied TENABLE_HOST_URL) and
-// TenableController (client-supplied host_url)
+// otherwise.
 export function parseHostUrl(url: string): URL | null {
   let parsed: URL;
   try {

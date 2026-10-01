@@ -45,12 +45,17 @@ export default class AppConfig {
   }
 
   getSplunkHostUrl(): string {
-    const splunk_host_url = this.get('SPLUNK_HOST_URL');
-    if (splunk_host_url !== undefined) {
-      return splunk_host_url;
-    } else {
+    const splunk_host_url = this.get('SPLUNK_HOST_URL')?.trim();
+    if (!splunk_host_url) {
       return '';
     }
+    const parsed = parseHostUrl(splunk_host_url);
+    if (!parsed) {
+      throw new Error(
+        `Invalid SPLUNK_HOST_URL "${splunk_host_url}": must be a complete http(s) URL containing only protocol, hostname, and optional port`
+      );
+    }
+    return parsed.origin;
   }
 
   // Newline-separated allowlist of Tenable.SC hosts for the login/proxy endpoints
