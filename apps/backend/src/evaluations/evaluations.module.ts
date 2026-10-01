@@ -1,6 +1,8 @@
 import {Module} from '@nestjs/common';
+import {MulterModule} from '@nestjs/platform-express';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {ConfigModule} from '../config/config.module';
+import {ConfigService} from '../config/config.service';
 import {DatabaseModule} from '../database/database.module';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
@@ -23,6 +25,20 @@ import {EvaluationsService} from './evaluations.service';
       GroupEvaluation
     ]),
     ConfigModule,
+    MulterModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        limits: {
+          files: 100,
+          // MAX_FILE_UPLOAD_SIZE is a per-file limit in MB (default: 50).
+          fileSize:
+            Number.parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') || '50') *
+            1024 *
+            1024
+        }
+      })
+    }),
     DatabaseModule
   ],
   providers: [EvaluationsService, UsersService, GroupsService],
