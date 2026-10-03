@@ -157,8 +157,12 @@ export class AuthnService {
       this.usersService.updateUserSecret(loginUser);
     }
     if (payload.forcePasswordChange || user.role === 'admin') {
-      // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.
-      const expireTime = moment(new Date(Date.now() + ms('600s'))).format(
+      const configuredExpireTime =
+        user.role === 'admin' && this.configService.get('ADMIN_JWT_EXPIRE_TIME');
+      const expiresIn = configuredExpireTime
+        ? limitJWTTime(configuredExpireTime, true)
+        : ms('600s');
+      const expireTime = moment(new Date(Date.now() + expiresIn)).format(
         this.loggingTimeFormat
       );
       this.logger.info({
@@ -167,7 +171,7 @@ export class AuthnService {
       return {
         userID: user.id,
         accessToken: this.jwtService.sign(payload, {
-          expiresIn: '600s',
+          expiresIn: expiresIn / 1000,
           secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
         })
       };
