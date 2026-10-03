@@ -115,6 +115,10 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
         formData.append(key, value);
       }
     }
+    // Client-reported only (not server-verified); omitted if unavailable.
+    if (file.lastModified) {
+      formData.append('lastModified', file.lastModified.toISOString());
+    }
     // Add evaluation data to the form
     if (file.hasOwnProperty('evaluation')) {
       formData.append(
