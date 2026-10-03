@@ -36,31 +36,36 @@ export default class AppConfig {
   }
 
   getExternalUrl(): string {
-    const external_url = this.get('EXTERNAL_URL');
-    if (external_url === undefined) {
+    const externalUrl = this.get('EXTERNAL_URL');
+    if (externalUrl === undefined) {
       return '';
     } else {
-      return external_url;
+      return externalUrl;
     }
   }
 
   getSplunkHostUrl(): string {
-    const splunk_host_url = this.get('SPLUNK_HOST_URL');
-    if (splunk_host_url !== undefined) {
-      return splunk_host_url;
-    } else {
+    const splunkHostUrl = this.get('SPLUNK_HOST_URL')?.trim();
+    if (!splunkHostUrl) {
       return '';
     }
+    const parsed = parseHostUrl(splunkHostUrl);
+    if (!parsed) {
+      throw new Error(
+        `Invalid SPLUNK_HOST_URL "${splunkHostUrl}": must be a complete http(s) URL containing only protocol, hostname, and optional port`
+      );
+    }
+    return parsed.origin;
   }
 
   // Newline-separated allowlist of Tenable.SC hosts for the login/proxy endpoints
   // Entries must include a protocol and may include a port; malformed entries throw at startup.
   getTenableHostUrl(): string[] {
-    const tenable_host_url = this.get('TENABLE_HOST_URL');
-    if (tenable_host_url === undefined) {
+    const tenableHostUrl = this.get('TENABLE_HOST_URL');
+    if (tenableHostUrl === undefined) {
       return [];
     }
-    return tenable_host_url
+    return tenableHostUrl
       .split('\n')
       .map((url) => url.trim())
       .filter((url) => url.length > 0)
