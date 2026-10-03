@@ -27,7 +27,10 @@
           :items-per-page="5"
         >
           <template #[`item.full-name`]="{item}">
-            {{ item.firstName }} {{ item.lastName }}
+            {{ userStatusLabel([item.firstName, item.lastName].filter(Boolean).join(' '), item.isDisabled) }}
+          </template>
+          <template #[`item.email`]="{item}">
+            {{ userStatusLabel(item.email, item.isDisabled) }}
           </template>
           <template #[`item.groupRole`]="{item}">
             <v-select
@@ -65,7 +68,7 @@ import {ISlimUser} from '@heimdall/common/interfaces';
 import Component from 'vue-class-component';
 import {Emit, Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
-import {IVuetifyItems} from '@/utilities/helper_util';
+import {IVuetifyItems, userStatusLabel} from '@/utilities/helper_util';
 import {DataTableHeader} from 'vuetify';
 import Vue from 'vue';
 
@@ -75,6 +78,7 @@ import Vue from 'vue';
   }
 })
 export default class Users extends Vue {
+  userStatusLabel = userStatusLabel;
   @VModel({
     type: Array,
     required: false,
@@ -195,7 +199,8 @@ export default class Users extends Vue {
     return (
       this.currentUsers.find((user) => user.id === this.editedUserID) || {
         id: '0',
-        email: ''
+        email: '',
+        isDisabled: false
       }
     );
   }
@@ -210,9 +215,10 @@ export default class Users extends Vue {
         (user.id !== ServerModule.userInfo.id || this.admin || !this.create)
       ) {
         users.push({
-          text: `${user.firstName || ''} ${user.lastName || ''} (${
-            user.email
-          })`,
+          text: userStatusLabel(
+            `${user.firstName || ''} ${user.lastName || ''} (${user.email})`,
+            user.isDisabled
+          ),
           value: user.id
         });
       }
