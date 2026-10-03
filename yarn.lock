@@ -2460,10 +2460,10 @@
   dependencies:
     path-to-regexp "8.4.2"
 
-"@nestjs/testing@^11.0.1":
-  version "11.2.3"
-  resolved "https://registry.npmjs.org/@nestjs/testing/-/testing-11.2.3.tgz#65f7c35bbaed0927193ea23a5acd90cbda59768c"
-  integrity sha512-7ANDWlkm8Xw4CYIhCNZhtBzANsQUKqjteA2yx/6sjqGyWhekeBKz8wgCJykm0vo+ltrg6U34dZlm2NgiRcNHPQ==
+"@nestjs/testing@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-12.1.1.tgz#1de5b2d8004062919e2dcdf70810cd9ef3cd91de"
+  integrity sha512-kMCTifsIlvfdCs/4F495HY0tjmwHu0d5JoXpr9BsT8CJ1NScfbrx24mlkevFNpq26jTQKR5e82hOfqikad1gSg==
   dependencies:
     tslib "2.8.1"
 
