@@ -114,6 +114,71 @@ describe('Config Service', () => {
       );
       expect(configService.get('DATABASE_NAME')).toEqual('database01');
     });
+
+    it.each([
+      ['alice:alpha:beta:gamma', 'alice', 'alpha:beta:gamma'],
+      ['alice::secret:', 'alice', ':secret:'],
+      ['alice:alpha%3Abeta', 'alice', 'alpha:beta'],
+      ['alice%3Aadmin:secret', 'alice:admin', 'secret'],
+      ['alice%40team:p%40ss%2Fword%3F%23%25', 'alice@team', 'p@ss/word?#%'],
+    ])('should parse credentials %s', (credentials, username, password) => {
+      vi.stubEnv('DATABASE_URL', `postgres://${credentials}@localhost:5432/app`);
+      const configService = new ConfigService();
+      expect(configService.getDbConfig()).toMatchObject({
+        database: 'app',
+        host: 'localhost',
+        password,
+        port: 5432,
+        username,
+      });
+    });
+
+    it.each(['[2001:db8::1]:5433', '[2001:db8::1]'])(
+      'should parse IPv6 host %s',
+      (host) => {
+        vi.stubEnv('DATABASE_URL', `postgres://alice:secret@${host}/app:archive`);
+        expect(new ConfigService().getDbConfig()).toMatchObject({
+          database: 'app:archive',
+          host: '2001:db8::1',
+          port: host.endsWith(':5433') ? 5433 : 5432,
+        });
+      },
+    );
+
+    it('should preserve defaults for omitted URL components', () => {
+      vi.stubEnv('DATABASE_URL', 'postgres://localhost');
+      vi.stubEnv('NODE_ENV', 'test');
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'heimdall-server-test',
+        host: 'localhost',
+        password: '',
+        port: 5432,
+        username: 'postgres',
+      });
+    });
+
+    it('should preserve environment overrides and ignore URL query options', () => {
+      vi.stubEnv(
+        'DATABASE_URL',
+        'postgres://alice:secret@localhost:5432/app?host=other&sslcert=/missing.pem#fragment',
+      );
+      vi.stubEnv('DATABASE_USERNAME', 'override');
+      vi.stubEnv('DATABASE_PASSWORD', 'override:password');
+      vi.stubEnv('DATABASE_SSL', 'false');
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'app',
+        dialectOptions: { ssl: false },
+        host: 'localhost',
+        password: 'override:password',
+        username: 'override',
+      });
+    });
+
+    it('should leave existing configuration intact when the URL cannot be parsed', () => {
+      mock({ '.env': ENV_MOCK_FILE });
+      vi.stubEnv('DATABASE_URL', 'postgres://alice:secret@[invalid/app');
+      expect(new ConfigService().get('DATABASE_USERNAME')).toBe('postgres');
+    });
   });
 
   describe('Tests for thrown errors', () => {

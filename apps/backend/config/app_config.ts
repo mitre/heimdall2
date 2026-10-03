@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import { parse as parseConnectionString } from 'pg-connection-string';
 import {parseHostUrl} from '../src/utils/url_validation';
 
 export default class AppConfig {
@@ -174,36 +175,27 @@ export default class AppConfig {
     const url = this.get('DATABASE_URL');
     if (url === undefined) {
       return false;
-    } else {
-      const pattern =
-        /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/;
-      const matches = url.match(pattern);
-
-      if (matches === null) {
-        return false;
-      }
-
-      this.set(
-        'DATABASE_USERNAME',
-        matches[2] !== undefined ? matches[2].split(':')[0] : undefined
-      );
-      this.set(
-        'DATABASE_PASSWORD',
-        matches[2] !== undefined ? matches[2].split(':')[1] : undefined
-      );
-      this.set(
-        'DATABASE_HOST',
-        matches[3] !== undefined ? matches[3].split(/:(?=\d+$)/)[0] : undefined
-      );
-      this.set(
-        'DATABASE_NAME',
-        matches[4] !== undefined ? matches[4].split('/')[0] : undefined
-      );
-      this.set(
-        'DATABASE_PORT',
-        matches[3] !== undefined ? matches[3].split(/:(?=\d+$)/)[1] : undefined
-      );
-      return true;
     }
+
+    let parsed;
+    try {
+      // Preserve the existing behavior of ignoring query options and fragments.
+      // SSL remains configured through the DATABASE_SSL environment variables.
+      parsed = parseConnectionString(url.split('?', 1)[0].split('#', 1)[0]);
+    } catch {
+      return false;
+    }
+
+    this.set('DATABASE_USERNAME', parsed.user || undefined);
+    this.set('DATABASE_PASSWORD', parsed.password || undefined);
+    // Connection options expect IPv6 addresses without URI brackets.
+    const host = parsed.host;
+    this.set(
+      'DATABASE_HOST',
+      host?.startsWith('[') && host.endsWith(']') ? host.slice(1, -1) : host || undefined,
+    );
+    this.set('DATABASE_NAME', parsed.database || undefined);
+    this.set('DATABASE_PORT', parsed.port || undefined);
+    return true;
   }
 }
