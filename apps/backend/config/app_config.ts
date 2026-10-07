@@ -172,8 +172,8 @@ export default class AppConfig {
   }
 
   parseDatabaseUrl() {
-    const url = this.get('DATABASE_URL');
-    if (!url?.trim()) {
+    const url = this.get('DATABASE_URL')?.trim();
+    if (!url) {
       return false;
     }
 
