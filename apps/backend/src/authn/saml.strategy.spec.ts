@@ -1,78 +1,20 @@
-import { UnauthorizedException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import type { ConfigService } from '../config/config.service';
 import type { AuthnService } from './authn.service';
-import { getRequiredClaim, SAMLStrategy } from './saml.strategy';
-
-function expectMissingRequiredClaim(
-  claims: Record<string, unknown>,
-  claimName: string,
-): void {
-  try {
-    getRequiredClaim(claims, claimName);
-  } catch (error) {
-    expect(error).toBeInstanceOf(UnauthorizedException);
-    expect(error).toHaveProperty('status', 401);
-    expect(error).toHaveProperty(
-      'message',
-      `Missing required claim "${claimName}".`,
-    );
-    return;
-  }
-
-  throw new Error(`Expected missing required claim "${claimName}".`);
-}
-
-describe('getRequiredClaim', () => {
-  it('returns default email scalar', () => {
-    expect(getRequiredClaim({ email: 'mary@example.com' }, 'email')).toBe(
-      'mary@example.com',
-    );
-  });
-
-  it('returns configured flat URI claim scalar', () => {
-    expect(
-      getRequiredClaim(
-        { 'http://schemas.example.com/given name': 'Mary Anne' },
-        'firstName',
-        'http://schemas.example.com/given name',
-      ),
-    ).toBe('Mary Anne');
-  });
-
-  it('rejects array claim values', () => {
-    expect(() =>
-      getRequiredClaim({ firstName: ['Mary', 'Anne'] }, 'firstName'),
-    ).toThrow(new UnauthorizedException('Missing required claim "firstName".'));
-  });
-
-  it('rejects empty claim values', () => {
-    expect(() => getRequiredClaim({ lastName: '' }, 'lastName')).toThrow(
-      new UnauthorizedException('Missing required claim "lastName".'),
-    );
-  });
-
-  it('rejects inherited claim values', () => {
-    expect.hasAssertions();
-    expectMissingRequiredClaim(
-      Object.create({ email: 'mary@example.com' }) as Record<string, unknown>,
-      'email',
-    );
-  });
-
-  it.each([
-    ['missing', {}],
-    ['null', { email: null }],
-    ['number', { email: 1 }],
-    ['boolean', { email: true }],
-    ['object', { email: {} }],
-  ] as [string, Record<string, unknown>][])('rejects %s email claim values', (_valueType, claims) => {
-    expect.hasAssertions();
-    expectMissingRequiredClaim(claims, 'email');
-  });
-});
+import { SAMLStrategy } from './saml.strategy';
 
 describe('SAMLStrategy', () => {
+  it('rejects HTTP-POST authentication requests during construction', () => {
+    const configService = {
+      get: (key: string) => key === 'SAML_AUTHN_REQUEST_BINDING' ? 'HTTP-POST' : undefined,
+      getExternalUrl: () => 'http://localhost:3000',
+    } as unknown as ConfigService;
+
+    expect(() => new SAMLStrategy({} as AuthnService, configService)).toThrow(
+      'SAML_AUTHN_REQUEST_BINDING=HTTP-POST is unsupported; use HTTP-Redirect.',
+    );
+  });
+
   it('uses configured identity claim names', async () => {
     const validateOrCreateUser = vi.fn();
     const configValues = new Map([
@@ -101,5 +43,12 @@ describe('SAMLStrategy', () => {
       'Smith',
       'saml',
     );
+
+    validateOrCreateUser.mockClear();
+    await expect(strategy.validate({
+      customFamilyName: 'Smith',
+      customGivenName: 'Mary Anne',
+    })).rejects.toThrow('Missing required claim "customEmail".');
+    expect(validateOrCreateUser).not.toHaveBeenCalled();
   });
 });

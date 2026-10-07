@@ -2,22 +2,20 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Profile, SamlScopingConfig } from '@node-saml/passport-saml';
 import { Strategy } from '@node-saml/passport-saml';
+import _ from 'lodash';
 import winston from 'winston';
 import { ConfigService } from '../config/config.service';
 import { User } from '../users/user.model';
 import { AuthnService } from './authn.service';
 
-export function getRequiredClaim(
+function getRequiredClaim(
   claims: Record<string, unknown>,
   defaultClaimName: string,
   configuredClaimName?: string,
 ): string {
   const resolvedClaimName = configuredClaimName || defaultClaimName;
-  const claimValue = Object.getOwnPropertyDescriptor(
-    claims,
-    resolvedClaimName,
-  )?.value;
-  if (typeof claimValue === 'string' && claimValue.length > 0) {
+  const claimValue = claims[resolvedClaimName];
+  if (_.isString(claimValue) && claimValue.length > 0) {
     return claimValue;
   }
 
@@ -67,6 +65,10 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
   ) {
+    const authnRequestBinding = configService.get('SAML_AUTHN_REQUEST_BINDING');
+    if (authnRequestBinding === 'HTTP-POST') {
+      throw new Error('SAML_AUTHN_REQUEST_BINDING=HTTP-POST is unsupported; use HTTP-Redirect.');
+    }
     const samlAudience = configService.get('SAML_AUDIENCE');
     const additionalAuthorizeParams = configService.get(
       'SAML_ADDITIONAL_AUTHORIZE_PARAMS',
@@ -94,7 +96,7 @@ export class SAMLStrategy extends PassportStrategy(Strategy as any, 'saml') {
           : samlAudience
             || configService.get('SAML_ISSUER'),
       authnContext: configService.get('SAML_AUTHN_CONTEXT') ? configService.get('SAML_AUTHN_CONTEXT')?.split(',').map(value => value.trim()) : undefined,
-      authnRequestBinding: configService.get('SAML_AUTHN_REQUEST_BINDING'),
+      authnRequestBinding,
       callbackUrl:
         configService.get('SAML_CALLBACK_URL')
         || `${configService.getExternalUrl()}/authn/saml/callback`,

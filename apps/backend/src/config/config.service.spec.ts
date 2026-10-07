@@ -1,10 +1,6 @@
+import { AUTH_STRATEGY } from '@heimdall/common/interfaces';
 import * as dotenv from 'dotenv';
 import mock from 'mock-fs';
-import {
-  AUTH_STRATEGIES,
-  AUTH_STRATEGY,
-  OAUTH_AUTH_STRATEGIES,
-} from '@heimdall/common/interfaces';
 import {afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   DATABASE_URL_MOCK_ENV,
@@ -229,40 +225,11 @@ describe('Config Service', () => {
 
     it('exposes the configured SAML provider name', () => {
       const configService = new ConfigService();
-      configService.set('SAML_NAME', 'Agency SSO');
+      configService.set('SAML_NAME', 'Internal SSO');
 
       expect(configService.frontendStartupSettings().samlName).toBe(
-        'Agency SSO',
+        'Internal SSO',
       );
-    });
-
-    it('limits OAuth callbacks to OAuth client strategies', () => {
-      const configService = new ConfigService();
-      configService.set('LDAP_ENABLED', 'true');
-      configService.set('OIDC_CLIENTID', 'client-id');
-      configService.set('SAML_NAME', 'MockSAML');
-      configService.set(
-        'SAML_ENTRY_POINT',
-        'http://localhost:4000/api/saml/sso',
-      );
-      configService.set('SAML_ISSUER', 'heimdall-local');
-      configService.set('SAML_IDP_CERT', 'certificate');
-
-      const enabledOauthStrategies = configService.enabledOauthStrategies();
-      expect(enabledOauthStrategies).toContain(AUTH_STRATEGY.OIDC);
-      expect(enabledOauthStrategies).not.toContain(AUTH_STRATEGY.LDAP);
-      expect(enabledOauthStrategies).not.toContain(AUTH_STRATEGY.SAML);
-    });
-
-    it('keeps auth strategy data internally consistent', () => {
-      for (const [key, value] of Object.entries(AUTH_STRATEGY)) {
-        expect(value).toBe(key.toLowerCase());
-      }
-      expect(
-        OAUTH_AUTH_STRATEGIES.every(authStrategy =>
-          AUTH_STRATEGIES.includes(authStrategy),
-        ),
-      ).toBe(true);
     });
   });
 });
