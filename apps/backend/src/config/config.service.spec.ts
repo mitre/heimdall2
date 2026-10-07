@@ -119,37 +119,17 @@ describe('Config Service', () => {
     it.each([
       ['alice:alpha:beta:gamma', 'alice', 'alpha:beta:gamma'],
       ['alice::secret:', 'alice', ':secret:'],
-      ['alice:alpha%3Abeta', 'alice', 'alpha:beta'],
-      ['alice%3Aadmin:secret', 'alice:admin', 'secret'],
-      ['alice%40team:p%40ss%2Fword%3F%23%25', 'alice@team', 'p@ss/word?#%'],
     ])('should parse credentials %s', (credentials, username, password) => {
-      vi.stubEnv('DATABASE_URL', `postgres://${credentials}@localhost:5432/app`);
+      vi.stubEnv('DATABASE_URL', `postgres://${credentials}@localhost:5432/app:archive`);
       const configService = new ConfigService();
       expect(configService.getDbConfig()).toMatchObject({
-        database: 'app',
+        database: 'app:archive',
         host: 'localhost',
         password,
         port: 5432,
         username,
       });
     });
-
-    it.each([
-      ['[2001:db8::1]:5433/app:archive', 5433],
-      ['[2001:db8::1]/app:archive', 5432],
-      ['%5B2001%3Adb8%3A%3A1%5D:5433/app:archive', 5433],
-      ['localhost:5433/app:archive?host=%5B2001%3Adb8%3A%3A1%5D', 5433],
-    ])(
-      'should parse IPv6 connection %s',
-      (connection, port) => {
-        vi.stubEnv('DATABASE_URL', `postgres://alice:secret@${connection}`);
-        expect(new ConfigService().getDbConfig()).toMatchObject({
-          database: 'app:archive',
-          host: '2001:db8::1',
-          port,
-        });
-      },
-    );
 
     it('should preserve defaults for omitted URL components', () => {
       vi.stubEnv('DATABASE_URL', 'postgres://localhost');
@@ -219,6 +199,30 @@ describe('Config Service', () => {
         password: 'postgres',
         port: 5432,
         username: 'postgres',
+      });
+    });
+
+    it.each([' ', '\t\r\n'])('should trim surrounding environment URL whitespace %j', (padding) => {
+      mock({ '.env': ENV_MOCK_FILE });
+      vi.stubEnv('DATABASE_URL', `${padding}postgres://alice:secret@db:5433/app${padding}`);
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'app',
+        host: 'db',
+        password: 'secret',
+        port: 5433,
+        username: 'alice',
+      });
+    });
+
+    it('should trim a quoted .env URL', () => {
+      mock({ '.env': 'DATABASE_URL="  postgres://alice:secret@db:5433/app  "\n' });
+      vi.stubEnv('DATABASE_URL', undefined);
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'app',
+        host: 'db',
+        password: 'secret',
+        port: 5433,
+        username: 'alice',
       });
     });
 

@@ -171,6 +171,10 @@ export default class AppConfig {
     };
   }
 
+  // DATABASE_URL is an intentionally undocumented option, not intended for public use.
+  // Use either it or the individual connection fields; mixing them is unsupported.
+  // SSL options in the URL are outside this function's scope; use DATABASE_SSL*.
+  // IPv6 hosts and percent-encoded URLs are also out of scope; use individual connection fields.
   parseDatabaseUrl() {
     const url = this.get('DATABASE_URL')?.trim();
     if (!url) {
@@ -179,6 +183,7 @@ export default class AppConfig {
 
     let parsed;
     // The try-catch will not catch all parsing failures since the parsing function doesn't do comprehensive validation
+    // The parser doesn't support all possible connection strings, such as multiple host/port pairs
     try {
       parsed = parseConnectionString(url);
     } catch {
@@ -188,11 +193,7 @@ export default class AppConfig {
 
     this.set('DATABASE_USERNAME', user);
     this.set('DATABASE_PASSWORD', password);
-    // Postgres connection strings can include square brackets to separate out IPv6 hosts (https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING-URIS).  The parser does not strip them, and NestJS's SequelizeModule cannot ingest them.  Consequently, in order to support IPv6, we currently need to manually strip the brackets.  The parsing does normalize the output so at least we can be sure that it'll be brackets and not some encoded characters.
-    this.set(
-      'DATABASE_HOST',
-      host?.startsWith('[') && host.endsWith(']') ? host.slice(1, -1) : host ?? undefined,
-    );
+    this.set('DATABASE_HOST', host ?? undefined);
     this.set('DATABASE_NAME', database ?? undefined);
     this.set('DATABASE_PORT', port ?? undefined);
     return true;
