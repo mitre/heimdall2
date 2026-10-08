@@ -8,8 +8,20 @@
     "url": "https://github.com/mitre/heimdall2",
     "directory": "libs/common"
   },
-  "main": "index.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "exports": {
+    ".": {"types": "./lib/index.d.ts", "default": "./lib/index.js"},
+    "./interfaces": {
+      "types": "./lib/interfaces/index.d.ts",
+      "default": "./lib/interfaces/index.js"
+    }
+  },
+  "typesVersions": {"*": {"interfaces": ["lib/interfaces/index.d.ts"]}},
   "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start:dev": "tsc -p tsconfig.json --watch",
+    "test:ci": "node test/auth-strategy.cjs",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0"
   }

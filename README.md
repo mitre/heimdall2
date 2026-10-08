@@ -480,13 +480,14 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      yarn start:dev
      ```
 
-This will start both the frontend and backend in development mode, meaning any changes you make to the source code will take effect immediately. Please note we already have a Visual Studio Code workspace file you can use to organize your workspace.
+This starts the frontend, backend, and `libs/common` watcher. When starting apps individually, also run `yarn common build --watch` if editing `libs/common`. A Visual Studio Code workspace file is included.
 
 ### Debugging Heimdall Server
 
 If you are using Visual Studio Code, it is very simple to debug this application locally. First open up the Visual Studio Code workspace and ensure the [Node debugger Auto Attach](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_auto-attach) feature in Visual Studio Code is enabled. Next, open the integrated Visual Studio Code terminal and run:
 
 ```
+yarn common build
 yarn backend start:debug
 ```
 
@@ -496,6 +497,7 @@ Visual Studio Code will then automatically attach a debugger and stop and any br
 
 If you only want to make changes to the frontend (heimdall-lite) use the following command:
 
+    yarn common build
     yarn frontend start:dev
 
 ### Lint and fix files
@@ -508,14 +510,17 @@ To validate and lint your code run:
 
     yarn build
 
+The root build compiles shared interfaces before the applications. Before building a workspace directly with `yarn backend build` or `yarn frontend build`, run `yarn common build`.
+
 ### Run tests
 
 To test your code to make sure everything still works:
 
+    yarn common build
     # Run Frontend Vue Tests
     yarn frontend test
     # Run Backend Nest Tests (see note)
-    yarn backend test:ci-cov
+    yarn backend test:ci
 
 <span style="color:red">**NOTE:**</span> The `Backend Nest Tests` will remove (BULKDELETE) all entries in the configured PostgreSQL server for the following tables:
  - EvaluationTags
