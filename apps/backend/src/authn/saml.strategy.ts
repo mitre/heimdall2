@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import type { Profile, SamlScopingConfig } from '@node-saml/passport-saml';
 import { Strategy } from '@node-saml/passport-saml';
-import _ from 'lodash';
+import isString from 'lodash/isString';
 import winston from 'winston';
 import { ConfigService } from '../config/config.service';
 import { User } from '../users/user.model';
@@ -15,7 +15,7 @@ function getRequiredClaim(
 ): string {
   const resolvedClaimName = configuredClaimName || defaultClaimName;
   const claimValue = claims[resolvedClaimName];
-  if (_.isString(claimValue) && claimValue.length > 0) {
+  if (isString(claimValue) && claimValue.length > 0) {
     return claimValue;
   }
 
