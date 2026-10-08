@@ -70,6 +70,7 @@ export default defineConfig([
             'apps/frontend/vue.config.js',
             'eslint.config.mjs',
             'libs/password-complexity/index.js',
+            'libs/common/test/auth-strategy.cjs',
             'vitest.config.ts',
           ]
         }
@@ -118,6 +119,14 @@ export default defineConfig([
       'unicorn/no-process-exit': 'off',
       'unicorn/prefer-node-protocol': 'off',
       'unicorn/prevent-abbreviations': 'off',
+    },
+  },
+  {
+    files: ['libs/common/test/auth-strategy.cjs'],
+    languageOptions: { globals: { assert: 'off' }, sourceType: 'commonjs' },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      'unicorn/filename-case': 'off',
     },
   },
   {

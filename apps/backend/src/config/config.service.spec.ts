@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import mock from 'mock-fs';
-import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
+import {afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   DATABASE_URL_MOCK_ENV,
   ENV_MOCK_FILE,
@@ -147,6 +147,52 @@ describe('Config Service', () => {
       const configService = new ConfigService();
       configService.set('test', 'value');
       expect(configService.get('test')).toBe('value');
+    });
+  });
+
+  describe('Authentication strategies', () => {
+    const authEnvironmentKeys = [
+      'GITHUB_CLIENTID',
+      'GITLAB_CLIENTID',
+      'GOOGLE_CLIENTID',
+      'OKTA_CLIENTID',
+      'OIDC_CLIENTID',
+      'LDAP_ENABLED',
+      'LOCAL_LOGIN_DISABLED',
+      'TENABLE_HOST_URL',
+    ] as const;
+    let authEnvironment: Record<string, string | undefined>;
+
+    beforeEach(() => {
+      authEnvironment = Object.fromEntries(
+        authEnvironmentKeys.map(key => [key, process.env[key]]),
+      );
+      for (const key of authEnvironmentKeys) {
+        delete process.env[key];
+      }
+    });
+
+    afterEach(() => {
+      for (const key of authEnvironmentKeys) {
+        const value = authEnvironment[key];
+        if (value === undefined) {
+          delete process.env[key];
+        } else {
+          process.env[key] = value;
+        }
+      }
+    });
+
+    it('separates OAuth callbacks from LDAP authentication', () => {
+      const configService = new ConfigService();
+      configService.set('LOCAL_LOGIN_DISABLED', 'true');
+      configService.set('LDAP_ENABLED', 'true');
+      configService.set('OIDC_CLIENTID', 'client-id');
+      expect(configService.enabledAuthStrategies()).toEqual([
+        'ldap',
+        'oidc',
+      ]);
+      expect(configService.enabledOauthStrategies()).toEqual(['oidc']);
     });
   });
 });
