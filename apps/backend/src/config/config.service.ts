@@ -82,6 +82,24 @@ export class ConfigService {
     return this.appConfig.getDbConfig();
   }
 
+  getMaxFilesPerUpload(): number {
+    const raw = this.get('MAX_FILES_PER_UPLOAD')?.trim() || '100';
+
+    // Only an explicit zero disables the cap; numeric underflow must not.
+    if (raw === '0') {
+      return Infinity;
+    }
+
+    const count = Number(raw);
+    if (!Number.isSafeInteger(count) || count <= 0) {
+      throw new Error(
+        'MAX_FILES_PER_UPLOAD must be 0 (unlimited) or a positive safe integer',
+      );
+    }
+
+    return count;
+  }
+
   getMaxFileUploadSizeBytes(): number {
     const raw = this.get('MAX_FILE_UPLOAD_SIZE')?.trim() || '50';
 

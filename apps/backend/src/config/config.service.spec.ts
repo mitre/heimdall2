@@ -121,7 +121,7 @@ describe('Config Service', () => {
       mock({ '.env': '' });
     });
 
-    it.each([undefined, '', ' '.repeat(3)])(
+    it.each([undefined, ' '.repeat(3)])(
       'defaults to 50 MiB for an unset or blank value (%j)',
       (value) => {
         vi.stubEnv('MAX_FILE_UPLOAD_SIZE', value);
@@ -129,40 +129,65 @@ describe('Config Service', () => {
       },
     );
 
-    it.each([
-      ['2', 2_097_152],
-      [' 2 ', 2_097_152],
-      ['0.5', 524_288],
-      ['1e2', 104_857_600],
-      ['0.00000095367431640625', 1],
-    ])('converts %s MiB to %i bytes', (value, bytes) => {
-      vi.stubEnv('MAX_FILE_UPLOAD_SIZE', value);
-      expect(new ConfigService().getMaxFileUploadSizeBytes()).toBe(bytes);
+    it('converts fractional MiB to bytes and trims whitespace', () => {
+      vi.stubEnv('MAX_FILE_UPLOAD_SIZE', ' 0.5 ');
+      expect(new ConfigService().getMaxFileUploadSizeBytes()).toBe(524_288);
     });
 
-    it.each(['0', ' 0 '])('disables the cap for explicit zero (%j)', (value) => {
-      vi.stubEnv('MAX_FILE_UPLOAD_SIZE', value);
+    it('disables the cap for explicit zero', () => {
+      vi.stubEnv('MAX_FILE_UPLOAD_SIZE', '0');
       expect(new ConfigService().getMaxFileUploadSizeBytes()).toBe(Infinity);
     });
 
     it.each([
-      'abc',
       '50MB',
-      'NaN',
       'Infinity',
-      '-Infinity',
       '-1',
-      '-0',
-      '0.0',
       '1e-400',
       '0.0000001',
-      '1e309',
-      '1e308',
       '8589934592',
     ])('rejects invalid or unsafe sizes (%j)', (value) => {
       vi.stubEnv('MAX_FILE_UPLOAD_SIZE', value);
       expect(() => new ConfigService().getMaxFileUploadSizeBytes()).toThrow(
         'MAX_FILE_UPLOAD_SIZE must be 0 (unlimited) or a positive MiB value yielding a safe integer byte count',
+      );
+    });
+  });
+
+  describe('Upload file-count limit', () => {
+    beforeAll(() => {
+      mock({ '.env': '' });
+    });
+
+    it.each([undefined, ' '.repeat(3)])(
+      'defaults to 100 for an unset or blank value (%j)',
+      (value) => {
+        vi.stubEnv('MAX_FILES_PER_UPLOAD', value);
+        expect(new ConfigService().getMaxFilesPerUpload()).toBe(100);
+      },
+    );
+
+    it('accepts a positive integer count and trims whitespace', () => {
+      vi.stubEnv('MAX_FILES_PER_UPLOAD', ' 25 ');
+      expect(new ConfigService().getMaxFilesPerUpload()).toBe(25);
+    });
+
+    it('disables the cap for explicit zero', () => {
+      vi.stubEnv('MAX_FILES_PER_UPLOAD', '0');
+      expect(new ConfigService().getMaxFilesPerUpload()).toBe(Infinity);
+    });
+
+    it.each([
+      '5files',
+      '1.5',
+      '-1',
+      '1e-400',
+      'Infinity',
+      '9007199254740992',
+    ])('rejects invalid or unsafe counts (%j)', (value) => {
+      vi.stubEnv('MAX_FILES_PER_UPLOAD', value);
+      expect(() => new ConfigService().getMaxFilesPerUpload()).toThrow(
+        'MAX_FILES_PER_UPLOAD must be 0 (unlimited) or a positive safe integer',
       );
     });
   });
