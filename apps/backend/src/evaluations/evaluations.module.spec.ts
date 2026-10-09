@@ -44,15 +44,20 @@ describe('EvaluationsModule upload limits', () => {
     return module.get<MulterOptions>(MULTER_MODULE_OPTIONS);
   }
 
-  it('passes both configured limits to Multer', async () => {
+  it('passes the configured limits to Multer', async () => {
     const options = await createOptions({
       MAX_FILE_UPLOAD_SIZE: '0.5',
       MAX_FILES_PER_UPLOAD: '2',
+      MAX_UPLOAD_FIELD_SIZE: '0.25',
     });
-    expect(options.limits).toEqual({ files: 2, fileSize: 524_288 });
+    expect(options.limits).toEqual({
+      fieldSize: 262_144,
+      files: 2,
+      fileSize: 524_288,
+    });
   });
 
-  it.each(['MAX_FILE_UPLOAD_SIZE', 'MAX_FILES_PER_UPLOAD'])(
+  it.each(['MAX_FILE_UPLOAD_SIZE', 'MAX_FILES_PER_UPLOAD', 'MAX_UPLOAD_FIELD_SIZE'])(
     'rejects invalid %s during module initialization',
     async (key) => {
       await expect(createOptions({ [key]: 'invalid' })).rejects.toThrow(key);

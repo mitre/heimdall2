@@ -154,6 +154,22 @@ describe('Config Service', () => {
     });
   });
 
+  describe('Upload field-size limit', () => {
+    beforeAll(() => {
+      mock({ '.env': '' });
+    });
+
+    it.each([
+      [undefined, 1_048_576],
+      [' '.repeat(3), 1_048_576],
+      [' 0.5 ', 524_288],
+      ['0', Infinity],
+    ])('converts MAX_UPLOAD_FIELD_SIZE=%j to %i bytes', (value, bytes) => {
+      vi.stubEnv('MAX_UPLOAD_FIELD_SIZE', value);
+      expect(new ConfigService().getMaxUploadFieldSizeBytes()).toBe(bytes);
+    });
+  });
+
   describe('Upload file-count limit', () => {
     beforeAll(() => {
       mock({ '.env': '' });

@@ -30,6 +30,7 @@ import {EvaluationsService} from './evaluations.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         limits: {
+          fieldSize: configService.getMaxUploadFieldSizeBytes(),
           files: configService.getMaxFilesPerUpload(),
           fileSize: configService.getMaxFileUploadSizeBytes(),
         }
