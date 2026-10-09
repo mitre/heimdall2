@@ -13,6 +13,7 @@ import {Request} from 'express';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';
 import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
+import {LDAPAuthGuard} from '../guards/ldap-auth.guard';
 import {LocalAuthGuard} from '../guards/local-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
@@ -57,7 +58,7 @@ export class AuthnController {
     }
   }
 
-  @UseGuards(AuthGuard('ldap'))
+  @UseGuards(LDAPAuthGuard)
   @Post('login/ldap')
   async loginToLDAP(
     @Req() req: Request

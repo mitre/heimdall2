@@ -30,6 +30,10 @@ export class ConfigService {
     return this.get('LOCAL_LOGIN_DISABLED')?.toLowerCase() !== 'true';
   }
 
+  isLDAPLoginAllowed(): boolean {
+    return this.get('LDAP_ENABLED')?.toLowerCase() === 'true';
+  }
+
   isInProductionMode(): boolean {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }
@@ -56,7 +60,7 @@ export class ConfigService {
       enabledOAuth: this.enabledOauthStrategies(),
       externalUrl: this.getExternalUrl(),
       oidcName: this.get('OIDC_NAME') || '',
-      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
+      ldap: this.isLDAPLoginAllowed(),
       registrationEnabled: this.isRegistrationAllowed(),
       localLoginEnabled: this.isLocalLoginAllowed(),
       tenableHostUrl: this.getTenableHostUrl(),
