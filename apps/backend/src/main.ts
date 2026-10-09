@@ -4,7 +4,6 @@ import {NestExpressApplication} from '@nestjs/platform-express';
 import {json} from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
-import multer from 'multer';
 import winston from 'winston';
 import passport = require('passport');
 import postgresSessionStore = require('connect-pg-simple');
@@ -99,16 +98,6 @@ async function bootstrap() {
       }
     })
   );
-  // Allow for file uploads up to 50 mb
-  multer({
-    limits: {
-      fieldSize:
-        parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') || '50') *
-        1024 *
-        1024
-    }
-  });
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
