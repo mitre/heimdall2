@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import { parse as parseConnectionString } from 'pg-connection-string';
 import {parseHostUrl} from '../src/utils/url_validation';
 
 export default class AppConfig {
@@ -170,40 +171,31 @@ export default class AppConfig {
     };
   }
 
+  // DATABASE_URL is an intentionally undocumented option, not intended for public use.
+  // Use either it or the individual connection fields; mixing them is unsupported.
+  // SSL options in the URL are outside this function's scope; use DATABASE_SSL*.
+  // IPv6 hosts and percent-encoded URLs are also out of scope; use individual connection fields.
   parseDatabaseUrl() {
-    const url = this.get('DATABASE_URL');
-    if (url === undefined) {
+    const url = this.get('DATABASE_URL')?.trim();
+    if (!url) {
       return false;
-    } else {
-      const pattern =
-        /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/;
-      const matches = url.match(pattern);
-
-      if (matches === null) {
-        return false;
-      }
-
-      this.set(
-        'DATABASE_USERNAME',
-        matches[2] !== undefined ? matches[2].split(':')[0] : undefined
-      );
-      this.set(
-        'DATABASE_PASSWORD',
-        matches[2] !== undefined ? matches[2].split(':')[1] : undefined
-      );
-      this.set(
-        'DATABASE_HOST',
-        matches[3] !== undefined ? matches[3].split(/:(?=\d+$)/)[0] : undefined
-      );
-      this.set(
-        'DATABASE_NAME',
-        matches[4] !== undefined ? matches[4].split('/')[0] : undefined
-      );
-      this.set(
-        'DATABASE_PORT',
-        matches[3] !== undefined ? matches[3].split(/:(?=\d+$)/)[1] : undefined
-      );
-      return true;
     }
+
+    let parsed;
+    // The try-catch will not catch all parsing failures since the parsing function doesn't do comprehensive validation
+    // The parser doesn't support all possible connection strings, such as multiple host/port pairs
+    try {
+      parsed = parseConnectionString(url);
+    } catch {
+      return false;
+    }
+    const { database, host, password, port, user } = parsed;
+
+    this.set('DATABASE_USERNAME', user);
+    this.set('DATABASE_PASSWORD', password);
+    this.set('DATABASE_HOST', host ?? undefined);
+    this.set('DATABASE_NAME', database ?? undefined);
+    this.set('DATABASE_PORT', port ?? undefined);
+    return true;
   }
 }

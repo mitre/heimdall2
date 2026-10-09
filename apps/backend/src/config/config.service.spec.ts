@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import mock from 'mock-fs';
 import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
+import AppConfig from '../../config/app_config';
 import {
   DATABASE_URL_MOCK_ENV,
   ENV_MOCK_FILE,
@@ -113,6 +114,128 @@ describe('Config Service', () => {
         '000011112222333344455556666777778889999aaaabbbbccccddddeeeffff'
       );
       expect(configService.get('DATABASE_NAME')).toEqual('database01');
+    });
+
+    it.each([
+      ['alice:alpha:beta:gamma', 'alice', 'alpha:beta:gamma'],
+      ['alice::secret:', 'alice', ':secret:'],
+    ])('should parse credentials %s', (credentials, username, password) => {
+      vi.stubEnv('DATABASE_URL', `postgres://${credentials}@localhost:5432/app:archive`);
+      const configService = new ConfigService();
+      expect(configService.getDbConfig()).toMatchObject({
+        database: 'app:archive',
+        host: 'localhost',
+        password,
+        port: 5432,
+        username,
+      });
+    });
+
+    it('should preserve defaults for omitted URL components', () => {
+      vi.stubEnv('DATABASE_URL', 'postgres://localhost');
+      vi.stubEnv('NODE_ENV', 'test');
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'heimdall-server-test',
+        host: 'localhost',
+        password: '',
+        port: 5432,
+        username: 'postgres',
+      });
+    });
+
+    it('should use URL query options and preserve environment overrides', () => {
+      vi.stubEnv(
+        'DATABASE_URL',
+        'postgres://alice:secret@localhost:5432/app?host=other&port=5433#fragment',
+      );
+      vi.stubEnv('DATABASE_USERNAME', 'override');
+      vi.stubEnv('DATABASE_PASSWORD', 'override:password');
+      vi.stubEnv('DATABASE_SSL', 'false');
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'app',
+        dialectOptions: { ssl: false },
+        host: 'other',
+        password: 'override:password',
+        port: 5433,
+        username: 'override',
+      });
+    });
+
+    it.each([
+      'postgres://alice:secret@localhost:abc/app',
+      'postgres://alice:secret@[invalid/app',
+      'postgres://alice:%FF@localhost/app',
+      'postgres://localhost/app?sslcert=/missing.pem',
+    ])('should return false and preserve settings when parsing fails for %s', (url) => {
+      mock({ '.env': ENV_MOCK_FILE });
+      vi.stubEnv('DATABASE_URL', url);
+      const config = new AppConfig();
+      expect(config.parseDatabaseUrl()).toBe(false);
+      expect(config.getDbConfig()).toMatchObject({
+        database: 'heimdallts_vitest_testing_service_db',
+        host: 'localhost',
+        password: 'postgres',
+        port: 5432,
+        username: 'postgres',
+      });
+    });
+
+    it('should preserve environment overrides for the host and port', () => {
+      vi.stubEnv('DATABASE_URL', 'postgres://localhost/app?host=other&port=5433');
+      vi.stubEnv('DATABASE_HOST', 'override');
+      vi.stubEnv('DATABASE_PORT', '5434');
+      const config = new ConfigService().getDbConfig();
+      expect(config).toMatchObject({ host: 'override', port: 5434 });
+      expect(config.dialectOptions).not.toHaveProperty('host');
+      expect(config.dialectOptions).not.toHaveProperty('port');
+    });
+
+    it.each(['', ' \t '])('should preserve individual settings for a blank .env URL %j', (url) => {
+      mock({ '.env': `${ENV_MOCK_FILE}DATABASE_URL="${url}"\n` });
+      vi.stubEnv('DATABASE_URL', undefined);
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'heimdallts_vitest_testing_service_db',
+        host: 'localhost',
+        password: 'postgres',
+        port: 5432,
+        username: 'postgres',
+      });
+    });
+
+    it.each([' ', '\t\r\n'])('should trim surrounding environment URL whitespace %j', (padding) => {
+      mock({ '.env': ENV_MOCK_FILE });
+      vi.stubEnv('DATABASE_URL', `${padding}postgres://alice:secret@db:5433/app${padding}`);
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'app',
+        host: 'db',
+        password: 'secret',
+        port: 5433,
+        username: 'alice',
+      });
+    });
+
+    it('should trim a quoted .env URL', () => {
+      mock({ '.env': 'DATABASE_URL="  postgres://alice:secret@db:5433/app  "\n' });
+      vi.stubEnv('DATABASE_URL', undefined);
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'app',
+        host: 'db',
+        password: 'secret',
+        port: 5433,
+        username: 'alice',
+      });
+    });
+
+    it.each(['', ' \t '])('should preserve individual settings for a blank environment URL %j', (url) => {
+      mock({ '.env': ENV_MOCK_FILE });
+      vi.stubEnv('DATABASE_URL', url);
+      expect(new ConfigService().getDbConfig()).toMatchObject({
+        database: 'heimdallts_vitest_testing_service_db',
+        host: 'localhost',
+        password: 'postgres',
+        port: 5432,
+        username: 'postgres',
+      });
     });
   });
 
