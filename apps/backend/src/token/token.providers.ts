@@ -29,9 +29,12 @@ export const tokenProviders = [
     useFactory: (configService: ConfigService) => ({
       secret: configService.get('JWT_SECRET') || generateDefault(),
       signOptions: {
-        expiresIn: limitJWTTime(
-          configService.get('JWT_EXPIRE_TIME') || '60s',
-          true
+        // Numeric JWT durations use seconds; limitJWTTime returns milliseconds.
+        expiresIn: Math.floor(
+          limitJWTTime(
+            configService.get('JWT_EXPIRE_TIME') || '60s',
+            true
+          ) / 1000
         )
       }
     })
