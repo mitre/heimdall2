@@ -137,6 +137,7 @@ import Modal from '@/components/global/Modal.vue';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
+import type {AuthStrategy} from '@heimdall/common/interfaces';
 import {
   validatePasswordBoolean,
   validators
@@ -153,7 +154,7 @@ export interface SignupHash {
   password: string;
   passwordConfirmation: string;
   role: string;
-  creationMethod: string;
+  creationMethod: AuthStrategy;
 }
 
 @Component({

@@ -14,7 +14,7 @@
   ],
   "bin": "./src/server.js",
   "scripts": {
-    "prebuild": "rimraf ../../dist/frontend",
+    "prebuild": "rimraf ../../dist/frontend && yarn workspace @heimdall/common build",
     "build": "vue-cli-service build",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0",
@@ -23,7 +23,7 @@
     "make:layout": "vue-cli-service make:layout",
     "make:mixin": "vue-cli-service make:mixin",
     "make:view": "vue-cli-service make:view",
-    "prepack": "vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
+    "prepack": "yarn workspace @heimdall/common build && vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
     "postpack": "mv package.json.orig package.json && rm README.md",
     "start:dev": "vue-cli-service serve",
     "test": "vitest",

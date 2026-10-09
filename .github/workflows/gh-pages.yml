@@ -25,6 +25,9 @@ jobs:
       - name: Install project dependencies
         run: yarn frontend install --frozen-lockfile --production
 
+      - name: Build shared interfaces
+        run: yarn common build
+
       - name: Build Heimdall Lite
         run: yarn frontend build
 
