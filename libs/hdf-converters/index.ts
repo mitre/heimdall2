@@ -12,6 +12,7 @@ export * as ScoutsuiteNistMappingData from './src/mappings/ScoutsuiteNistMapping
 export * from './src/anchore-grype-mapper';
 export * from './src/aws-config-mapper';
 export * from './src/burpsuite-mapper';
+export * from './src/clamav_mapper';
 export * from './src/checkov-mapper';
 export * from './src/ckl-mapper/checklist-jsonix-converter';
 export * from './src/ckl-mapper/checklist-mapper';
