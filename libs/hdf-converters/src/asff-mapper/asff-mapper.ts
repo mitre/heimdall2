@@ -6,7 +6,12 @@ import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from '../base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform
+} from '../base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   getCCIsForNISTTags
@@ -27,6 +32,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['LOW', 0.3],
   ['INFORMATIONAL', 0.0]
 ]);
+const severityToImpact = impactMapping(IMPACT_MAPPING);
 
 const SEVERITY_LABEL = 'Severity.Label';
 const COMPLIANCE_STATUS = 'Compliance.Status';
@@ -431,9 +437,7 @@ export class ASFFMapper extends BaseConverter {
                     defaultFunc
                   );
                 }
-                return typeof impact === 'string'
-                  ? IMPACT_MAPPING.get(impact) || 0
-                  : impact;
+                return _.isString(impact) ? severityToImpact(impact) : impact;
               }
             },
             tags: {
