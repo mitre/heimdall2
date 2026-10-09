@@ -973,8 +973,231 @@
   "passthrough": {
     "auxiliary_data": [
       {
-        "name": "",
-        "data": {}
+        "name": "Anchore Grype",
+        "data": {
+          "source": {
+            "type": "image",
+            "target": {
+              "userInput": "cloudwatch_to_s3:latest",
+              "imageID": "sha256:7e36b65761f2da06282720b87b0d5924a7c3478fb655d38e39f8c5eee55b8317",
+              "manifestDigest": "sha256:256ebbfc5c837807131c5cdfbfb6b7654b75fdac1783ea0ada96f04027c781af",
+              "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+              "tags": [
+                "cloudwatch_to_s3:latest"
+              ],
+              "imageSize": 579981542,
+              "layers": [
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:0044b36762beca646f20eb6730e3575ec671a8857b39485f38ba0e715d375483",
+                  "size": 335259048
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:a8915dcae1e9ecf7d399d9ad10ac6d490a27c0b058bdd7336493ad04e7cedb94",
+                  "size": 658034
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:91c63ef88078acd534edde8be18b12863689593ea79b6c86671426479a2e0111",
+                  "size": 397
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:9a9b5814afc2b76039ada8e0f4445eeec0c487bcf7637b36b20a7f25bb15b369",
+                  "size": 5963928
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:b98baf0908da50e172bd5dedbd8738e0ce574fe1d7229fec407c64e8725685c0",
+                  "size": 216419370
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:734a487fcc033d64cea626bc74e5937eda7014ad9b80d4b3af36f5cce52d2b03",
+                  "size": 21663150
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:a9fee2695ab32ff2b4699c3b605f75b64cc4481af914eff473f4037ae53bcd20",
+                  "size": 8
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:604b2638b886f5a174251db33570afe12d60f3032f10f19ca584c9552b964c25",
+                  "size": 1219
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:ee32108545f0755778ec959105632baa94507b72d5b381f9739e23c58aa59e60",
+                  "size": 16388
+                }
+              ],
+              "manifest": "eyJzY2hlbWFWZXJzaW9uIjoyLCJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmRpc3RyaWJ1dGlvbi5tYW5pZmVzdC52Mitqc29uIiwiY29uZmlnIjp7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuY29udGFpbmVyLmltYWdlLnYxK2pzb24iLCJzaXplIjo0NDUwLCJkaWdlc3QiOiJzaGEyNTY6N2UzNmI2NTc2MWYyZGEwNjI4MjcyMGI4N2IwZDU5MjRhN2MzNDc4ZmI2NTVkMzhlMzlmOGM1ZWVlNTViODMxNyJ9LCJsYXllcnMiOlt7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjozNDU5NDgxNjAsImRpZ2VzdCI6InNoYTI1NjowMDQ0YjM2NzYyYmVjYTY0NmYyMGViNjczMGUzNTc1ZWM2NzFhODg1N2IzOTQ4NWYzOGJhMGU3MTVkMzc1NDgzIn0seyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwic2l6ZSI6NjYwNDgwLCJkaWdlc3QiOiJzaGEyNTY6YTg5MTVkY2FlMWU5ZWNmN2QzOTlkOWFkMTBhYzZkNDkwYTI3YzBiMDU4YmRkNzMzNjQ5M2FkMDRlN2NlZGI5NCJ9LHsibWVkaWFUeXBlIjoiYXBwbGljYXRpb24vdm5kLmRvY2tlci5pbWFnZS5yb290ZnMuZGlmZi50YXIuZ3ppcCIsInNpemUiOjI1NjAsImRpZ2VzdCI6InNoYTI1Njo5MWM2M2VmODgwNzhhY2Q1MzRlZGRlOGJlMThiMTI4NjM2ODk1OTNlYTc5YjZjODY2NzE0MjY0NzlhMmUwMTExIn0seyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwic2l6ZSI6NTk2Nzg3MiwiZGlnZXN0Ijoic2hhMjU2OjlhOWI1ODE0YWZjMmI3NjAzOWFkYThlMGY0NDQ1ZWVlYzBjNDg3YmNmNzYzN2IzNmIyMGE3ZjI1YmIxNWIzNjkifSx7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjoyMjMzMzkwMDgsImRpZ2VzdCI6InNoYTI1NjpiOThiYWYwOTA4ZGE1MGUxNzJiZDVkZWRiZDg3MzhlMGNlNTc0ZmUxZDcyMjlmZWM0MDdjNjRlODcyNTY4NWMwIn0seyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwic2l6ZSI6MjM5NDkzMTIsImRpZ2VzdCI6InNoYTI1Njo3MzRhNDg3ZmNjMDMzZDY0Y2VhNjI2YmM3NGU1OTM3ZWRhNzAxNGFkOWI4MGQ0YjNhZjM2ZjVjY2U1MmQyYjAzIn0seyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwic2l6ZSI6MzA3MiwiZGlnZXN0Ijoic2hhMjU2OmE5ZmVlMjY5NWFiMzJmZjJiNDY5OWMzYjYwNWY3NWI2NGNjNDQ4MWFmOTE0ZWZmNDczZjQwMzdhZTUzYmNkMjAifSx7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjo0MDk2LCJkaWdlc3QiOiJzaGEyNTY6NjA0YjI2MzhiODg2ZjVhMTc0MjUxZGIzMzU3MGFmZTEyZDYwZjMwMzJmMTBmMTljYTU4NGM5NTUyYjk2NGMyNSJ9LHsibWVkaWFUeXBlIjoiYXBwbGljYXRpb24vdm5kLmRvY2tlci5pbWFnZS5yb290ZnMuZGlmZi50YXIuZ3ppcCIsInNpemUiOjIwNDgwLCJkaWdlc3QiOiJzaGEyNTY6ZWUzMjEwODU0NWYwNzU1Nzc4ZWM5NTkxMDU2MzJiYWE5NDUwN2I3MmQ1YjM4MWY5NzM5ZTIzYzU4YWE1OWU2MCJ9XX0=",
+              "config": "eyJhcmNoaXRlY3R1cmUiOiJhcm02NCIsImNvbmZpZyI6eyJFbnYiOlsiTEFORz1lbl9VUy5VVEYtOCIsIlRaPTovZXRjL2xvY2FsdGltZSIsIlBBVEg9L3Zhci9sYW5nL2JpbjovdXNyL2xvY2FsL2JpbjovdXNyL2Jpbi86L2Jpbjovb3B0L2JpbiIsIkxEX0xJQlJBUllfUEFUSD0vdmFyL2xhbmcvbGliOi9saWI2NDovdXNyL2xpYjY0Oi92YXIvcnVudGltZTovdmFyL3J1bnRpbWUvbGliOi92YXIvdGFzazovdmFyL3Rhc2svbGliOi9vcHQvbGliIiwiTEFNQkRBX1RBU0tfUk9PVD0vdmFyL3Rhc2siLCJMQU1CREFfUlVOVElNRV9ESVI9L3Zhci9ydW50aW1lIiwiQVdTX0NBX0JVTkRMRT0vZXRjL3NzbC9jZXJ0cy9NSVRSRS1jaGFpbi50eHQiXSwiRW50cnlwb2ludCI6WyIvbGFtYmRhLWVudHJ5cG9pbnQuc2giXSwiQ21kIjpbImNsb3Vkd2F0Y2hfdG9fczMubGFtYmRhX2hhbmRsZXIiXSwiV29ya2luZ0RpciI6Ii92YXIvdGFzayIsIkxhYmVscyI6eyJjb20uYW1hem9uYXdzLmxhbWJkYS5wbGF0Zm9ybS5rZXJuZWwiOiJrNTEwZ2EifSwiQXJnc0VzY2FwZWQiOnRydWV9LCJjcmVhdGVkIjoiMjAyNC0wNy0xMVQxMjo1NToyNi4xNDc3NzIzNFoiLCJoaXN0b3J5IjpbeyJjcmVhdGVkIjoiMjAyNC0wNy0xMFQxMTozODoyMloiLCJjcmVhdGVkX2J5IjoiQVJDSElURUNUVVJFIGFybTY0IiwiYXV0aG9yIjoiQVdTIExhbWJkYSIsImVtcHR5X2xheWVyIjp0cnVlfSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEwVDExOjM4OjIyWiIsImNyZWF0ZWRfYnkiOiJWQVJJQU5UIHY4IiwiYXV0aG9yIjoiQVdTIExhbWJkYSIsImVtcHR5X2xheWVyIjp0cnVlfSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEwVDExOjM4OjIyWiIsImNyZWF0ZWRfYnkiOiJBREQgZmlsZTo4MmMzOGFhYzljZDcyZjY2YzQ1ZmVjODIxOTM0NmQ3NGFiNDZlZGZmNTM5NzU5ZmFiMDZkNzhiM2ZhOWY0NzExIC8iLCJhdXRob3IiOiJBV1MgTGFtYmRhIn0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMFQxMTozODoyMloiLCJjcmVhdGVkX2J5IjoiQUREIGZpbGU6Njc1NzUzYWFiYjI5Njk4YzhmYTY4ZTU1ZTkzZjUzOGUyZTViOWRmMWE5ODEyZjQ3NjI2M2Q1ZTNhNjIxMTg4NSAvIiwiYXV0aG9yIjoiQVdTIExhbWJkYSJ9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTBUMTE6Mzg6MjJaIiwiY3JlYXRlZF9ieSI6IkFERCBmaWxlOmE2MzM5Y2NmYzA1YmIyMDIzMjM2NzA2OThjNTA0ZTQ2NDRlOGY1NzcyZWNhNjdjODY2ZGNlZmU2Y2Y1NmJkZDQgLyIsImF1dGhvciI6IkFXUyBMYW1iZGEifSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEwVDExOjM4OjIyWiIsImNyZWF0ZWRfYnkiOiJBREQgZmlsZTo5NzEyMzc4MzI3NGQ0MDJmMTJjMzIwZWE1MWJjYWVkMzgwMzQyOTlmZWJiMzU4ZGVlZmNlM2QwOGYwY2E3NTZkIC8iLCJhdXRob3IiOiJBV1MgTGFtYmRhIn0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMFQxMTozODoyMloiLCJjcmVhdGVkX2J5IjoiQUREIGZpbGU6NzExODkyNzlhYjA4YTFjNmY2ZDMzODYyYjkwODEwNTliZGIzMWRhMDU0MWZhNTI1MmI0Yjg3YTczZGEyZGUwMSAvIiwiYXV0aG9yIjoiQVdTIExhbWJkYSJ9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTBUMTE6Mzg6MjJaIiwiY3JlYXRlZF9ieSI6IkFERCBmaWxlOmQ5NGUwMDEwMTRmODIwNzdiMTYzMDY1OTYwYjkzMjFiODZmYTQ2OWIxZWEzNTIwZDA2Mjc1ZjlmODM4ODM3OGEgLyIsImF1dGhvciI6IkFXUyBMYW1iZGEifSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEwVDExOjM4OjIyWiIsImNyZWF0ZWRfYnkiOiJXT1JLRElSIC92YXIvdGFzayIsImF1dGhvciI6IkFXUyBMYW1iZGEiLCJlbXB0eV9sYXllciI6dHJ1ZX0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMFQxMTozODoyMloiLCJjcmVhdGVkX2J5IjoiRU5WIExBTkc9ZW5fVVMuVVRGLTgiLCJhdXRob3IiOiJBV1MgTGFtYmRhIiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTBUMTE6Mzg6MjJaIiwiY3JlYXRlZF9ieSI6IkVOViBUWj06L2V0Yy9sb2NhbHRpbWUiLCJhdXRob3IiOiJBV1MgTGFtYmRhIiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTBUMTE6Mzg6MjJaIiwiY3JlYXRlZF9ieSI6IkVOViBQQVRIPS92YXIvbGFuZy9iaW46L3Vzci9sb2NhbC9iaW46L3Vzci9iaW4vOi9iaW46L29wdC9iaW4iLCJhdXRob3IiOiJBV1MgTGFtYmRhIiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTBUMTE6Mzg6MjJaIiwiY3JlYXRlZF9ieSI6IkVOViBMRF9MSUJSQVJZX1BBVEg9L3Zhci9sYW5nL2xpYjovbGliNjQ6L3Vzci9saWI2NDovdmFyL3J1bnRpbWU6L3Zhci9ydW50aW1lL2xpYjovdmFyL3Rhc2s6L3Zhci90YXNrL2xpYjovb3B0L2xpYiIsImF1dGhvciI6IkFXUyBMYW1iZGEiLCJlbXB0eV9sYXllciI6dHJ1ZX0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMFQxMTozODoyMloiLCJjcmVhdGVkX2J5IjoiRU5WIExBTUJEQV9UQVNLX1JPT1Q9L3Zhci90YXNrIiwiYXV0aG9yIjoiQVdTIExhbWJkYSIsImVtcHR5X2xheWVyIjp0cnVlfSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEwVDExOjM4OjIyWiIsImNyZWF0ZWRfYnkiOiJFTlYgTEFNQkRBX1JVTlRJTUVfRElSPS92YXIvcnVudGltZSIsImF1dGhvciI6IkFXUyBMYW1iZGEiLCJlbXB0eV9sYXllciI6dHJ1ZX0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMFQxMTozODoyMloiLCJjcmVhdGVkX2J5IjoiRU5UUllQT0lOVCBbIFwiL2xhbWJkYS1lbnRyeXBvaW50LnNoXCIgXSIsImF1dGhvciI6IkFXUyBMYW1iZGEiLCJlbXB0eV9sYXllciI6dHJ1ZX0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMFQxMTo0MToyOC45MDE3NTM0NjdaIiwiY3JlYXRlZF9ieSI6Ii9iaW4vc2ggLWMgIyhub3ApICBMQUJFTCBjb20uYW1hem9uYXdzLmxhbWJkYS5wbGF0Zm9ybS5rZXJuZWw9azUxMGdhIiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTFUMTI6NTU6MjYuMTMyMTkwMTc0WiIsImNyZWF0ZWRfYnkiOiJDT1BZIGNsb3Vkd2F0Y2hfdG9fczMvcmVxdWlyZW1lbnRzLnR4dCAvdmFyL3Rhc2sgIyBidWlsZGtpdCIsImNvbW1lbnQiOiJidWlsZGtpdC5kb2NrZXJmaWxlLnYwIn0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMVQxMjo1NToyNi4xNDExMjQ3MTVaIiwiY3JlYXRlZF9ieSI6IkNPUFkgY2xvdWR3YXRjaF90b19zMy9jbG91ZHdhdGNoX3RvX3MzLnB5IC92YXIvdGFzayAjIGJ1aWxka2l0IiwiY29tbWVudCI6ImJ1aWxka2l0LmRvY2tlcmZpbGUudjAifSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTExVDEyOjU1OjI2LjE0Nzc3MjM0WiIsImNyZWF0ZWRfYnkiOiJDT1BZIC4vTUlUUkUtY2hhaW4udHh0IC9ldGMvc3NsL2NlcnRzL01JVFJFLWNoYWluLnR4dCAjIGJ1aWxka2l0IiwiY29tbWVudCI6ImJ1aWxka2l0LmRvY2tlcmZpbGUudjAifSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTExVDEyOjU1OjI2LjE0Nzc3MjM0WiIsImNyZWF0ZWRfYnkiOiJFTlYgQVdTX0NBX0JVTkRMRT0vZXRjL3NzbC9jZXJ0cy9NSVRSRS1jaGFpbi50eHQiLCJjb21tZW50IjoiYnVpbGRraXQuZG9ja2VyZmlsZS52MCIsImVtcHR5X2xheWVyIjp0cnVlfSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTExVDEyOjU1OjI2LjE0Nzc3MjM0WiIsImNyZWF0ZWRfYnkiOiJDTUQgW1wiY2xvdWR3YXRjaF90b19zMy5sYW1iZGFfaGFuZGxlclwiXSIsImNvbW1lbnQiOiJidWlsZGtpdC5kb2NrZXJmaWxlLnYwIiwiZW1wdHlfbGF5ZXIiOnRydWV9XSwib3MiOiJsaW51eCIsInJvb3RmcyI6eyJ0eXBlIjoibGF5ZXJzIiwiZGlmZl9pZHMiOlsic2hhMjU2OjAwNDRiMzY3NjJiZWNhNjQ2ZjIwZWI2NzMwZTM1NzVlYzY3MWE4ODU3YjM5NDg1ZjM4YmEwZTcxNWQzNzU0ODMiLCJzaGEyNTY6YTg5MTVkY2FlMWU5ZWNmN2QzOTlkOWFkMTBhYzZkNDkwYTI3YzBiMDU4YmRkNzMzNjQ5M2FkMDRlN2NlZGI5NCIsInNoYTI1Njo5MWM2M2VmODgwNzhhY2Q1MzRlZGRlOGJlMThiMTI4NjM2ODk1OTNlYTc5YjZjODY2NzE0MjY0NzlhMmUwMTExIiwic2hhMjU2OjlhOWI1ODE0YWZjMmI3NjAzOWFkYThlMGY0NDQ1ZWVlYzBjNDg3YmNmNzYzN2IzNmIyMGE3ZjI1YmIxNWIzNjkiLCJzaGEyNTY6Yjk4YmFmMDkwOGRhNTBlMTcyYmQ1ZGVkYmQ4NzM4ZTBjZTU3NGZlMWQ3MjI5ZmVjNDA3YzY0ZTg3MjU2ODVjMCIsInNoYTI1Njo3MzRhNDg3ZmNjMDMzZDY0Y2VhNjI2YmM3NGU1OTM3ZWRhNzAxNGFkOWI4MGQ0YjNhZjM2ZjVjY2U1MmQyYjAzIiwic2hhMjU2OmE5ZmVlMjY5NWFiMzJmZjJiNDY5OWMzYjYwNWY3NWI2NGNjNDQ4MWFmOTE0ZWZmNDczZjQwMzdhZTUzYmNkMjAiLCJzaGEyNTY6NjA0YjI2MzhiODg2ZjVhMTc0MjUxZGIzMzU3MGFmZTEyZDYwZjMwMzJmMTBmMTljYTU4NGM5NTUyYjk2NGMyNSIsInNoYTI1NjplZTMyMTA4NTQ1ZjA3NTU3NzhlYzk1OTEwNTYzMmJhYTk0NTA3YjcyZDViMzgxZjk3MzllMjNjNThhYTU5ZTYwIl19LCJ2YXJpYW50IjoidjgifQ==",
+              "repoDigests": [],
+              "architecture": "arm64",
+              "os": "linux",
+              "labels": {
+                "com.amazonaws.lambda.platform.kernel": "k510ga"
+              }
+            }
+          },
+          "distro": {
+            "name": "amazonlinux",
+            "version": "2",
+            "idLike": [
+              "centos",
+              "rhel",
+              "fedora"
+            ]
+          },
+          "descriptor": {
+            "name": "grype",
+            "version": "0.79.3",
+            "configuration": {
+              "output": [
+                "json"
+              ],
+              "file": "",
+              "distro": "",
+              "add-cpes-if-none": false,
+              "output-template-file": "",
+              "check-for-app-update": true,
+              "only-fixed": false,
+              "only-notfixed": false,
+              "ignore-wontfix": "",
+              "platform": "",
+              "search": {
+                "scope": "squashed",
+                "unindexed-archives": false,
+                "indexed-archives": true
+              },
+              "ignore": [
+                {
+                  "vulnerability": "",
+                  "reason": "",
+                  "namespace": "",
+                  "fix-state": "",
+                  "package": {
+                    "name": "kernel-headers",
+                    "version": "",
+                    "language": "",
+                    "type": "rpm",
+                    "location": "",
+                    "upstream-name": "kernel"
+                  },
+                  "vex-status": "",
+                  "vex-justification": "",
+                  "match-type": "exact-indirect-match"
+                },
+                {
+                  "vulnerability": "",
+                  "reason": "",
+                  "namespace": "",
+                  "fix-state": "",
+                  "package": {
+                    "name": "linux-headers-.*",
+                    "version": "",
+                    "language": "",
+                    "type": "deb",
+                    "location": "",
+                    "upstream-name": "linux"
+                  },
+                  "vex-status": "",
+                  "vex-justification": "",
+                  "match-type": "exact-indirect-match"
+                },
+                {
+                  "vulnerability": "",
+                  "reason": "",
+                  "namespace": "",
+                  "fix-state": "",
+                  "package": {
+                    "name": "linux-libc-dev",
+                    "version": "",
+                    "language": "",
+                    "type": "deb",
+                    "location": "",
+                    "upstream-name": "linux"
+                  },
+                  "vex-status": "",
+                  "vex-justification": "",
+                  "match-type": "exact-indirect-match"
+                }
+              ],
+              "exclude": [],
+              "db": {
+                "cache-dir": "/Users/atang/Library/Caches/grype/db",
+                "update-url": "https://toolbox-data.anchore.io/grype/databases/listing.json",
+                "ca-cert": "",
+                "auto-update": true,
+                "validate-by-hash-on-start": false,
+                "validate-age": true,
+                "max-allowed-built-age": 432000000000000,
+                "update-available-timeout": 30000000000,
+                "update-download-timeout": 120000000000
+              },
+              "externalSources": {
+                "enable": false,
+                "maven": {
+                  "searchUpstreamBySha1": true,
+                  "baseUrl": "https://search.maven.org/solrsearch/select"
+                }
+              },
+              "match": {
+                "java": {
+                  "using-cpes": false
+                },
+                "dotnet": {
+                  "using-cpes": false
+                },
+                "golang": {
+                  "using-cpes": false,
+                  "always-use-cpe-for-stdlib": true,
+                  "allow-main-module-pseudo-version-comparison": false
+                },
+                "javascript": {
+                  "using-cpes": false
+                },
+                "python": {
+                  "using-cpes": false
+                },
+                "ruby": {
+                  "using-cpes": false
+                },
+                "rust": {
+                  "using-cpes": false
+                },
+                "stock": {
+                  "using-cpes": true
+                }
+              },
+              "fail-on-severity": "",
+              "registry": {
+                "insecure-skip-tls-verify": false,
+                "insecure-use-http": false,
+                "auth": null,
+                "ca-cert": ""
+              },
+              "show-suppressed": false,
+              "by-cve": false,
+              "name": "",
+              "default-image-pull-source": "",
+              "vex-documents": [],
+              "vex-add": [],
+              "match-upstream-kernel-headers": false
+            },
+            "db": {
+              "built": "2024-08-29T01:31:52Z",
+              "schemaVersion": 5,
+              "location": "/Users/atang/Library/Caches/grype/db/5",
+              "checksum": "sha256:755b4c6811bb129d58b2f2a7ff01473c8cbcd08f1916cc6a250144601a7d1d39",
+              "error": null
+            },
+            "timestamp": "2024-08-29T13:47:41.623667-04:00"
+          }
+        }
       }
     ],
     "raw": {
