@@ -36,6 +36,9 @@
         :loading="loading"
         :search="search"
       >
+        <template #[`item.email`]="{item}">
+          {{ userStatusLabel(item.email, item.isDisabled) }}
+        </template>
         <template #[`item.actions`]="{item}">
           <UserModal
             id="adminUserEditModal"
@@ -49,6 +52,19 @@
               </v-icon>
             </template>
           </UserModal>
+          <v-btn
+            v-if="item.role !== 'admin'"
+            icon
+            :aria-label="item.isDisabled ? 'Enable user' : 'Disable user'"
+            :title="item.isDisabled ? 'Enable' : 'Disable'"
+            small
+            class="mr-2"
+            @click="setDisabled(item)"
+          >
+            <v-icon small>
+              {{ item.isDisabled ? 'mdi-account-check' : 'mdi-account-off' }}
+            </v-icon>
+          </v-btn>
           <v-icon small title="Delete" @click="deleteUserDialog(item)">
             mdi-delete
           </v-icon>
@@ -74,6 +90,7 @@ import RegistrationModal from '@/components/global/RegistrationModal.vue';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import UserModal from '@/components/global/UserModal.vue';
 import {SnackbarModule} from '@/store/snackbar';
+import {userStatusLabel} from '@/utilities/helper_util';
 import {IUser} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
@@ -88,6 +105,7 @@ import Component from 'vue-class-component';
   }
 })
 export default class UserManagement extends Vue {
+  userStatusLabel = userStatusLabel;
   loading = true;
   editedUser: IUser | null = null;
   dialogDelete = false;
@@ -143,6 +161,16 @@ export default class UserManagement extends Vue {
     if (id !== -1) {
       this.$set(this.users, id, updatedUser);
     }
+  }
+
+  async setDisabled(user: IUser): Promise<void> {
+    const {data} = await axios.put<IUser>(`/users/${user.id}/disabled`, {
+      isDisabled: !user.isDisabled
+    });
+    this.updateUser(data);
+    SnackbarModule.notify(
+      `${data.email} ${data.isDisabled ? 'disabled' : 'enabled'}`
+    );
   }
 
   getUsers(): void {

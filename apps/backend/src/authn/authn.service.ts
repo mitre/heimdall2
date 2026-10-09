@@ -50,12 +50,14 @@ export class AuthnService {
     } catch {
       throw new UnauthorizedException('Incorrect Username or Password');
     }
-    if (user && (await compare(password, user.encryptedPassword))) {
-      this.usersService.updateLoginMetadata(user);
-      return user;
-    } else {
+    if (!user || !(await compare(password, user.encryptedPassword))) {
       return null;
     }
+    if (user.isDisabled) {
+      throw new UnauthorizedException('This account is disabled');
+    }
+    await this.usersService.updateLoginMetadata(user);
+    return user;
   }
 
   async validateApiKey(apikey: string): Promise<User | Group | null> {
@@ -74,7 +76,7 @@ export class AuthnService {
           );
           if (await compare(JWTSignature, matchingKey.apiKey)) {
             if (matchingKey.type === 'user') {
-              return matchingKey.user;
+              return matchingKey.user?.isDisabled ? null : matchingKey.user;
             } else if (matchingKey.type === 'group') {
               return matchingKey.group;
             } else {
@@ -122,15 +124,19 @@ export class AuthnService {
       user = await this.usersService.findByEmail(email);
     }
 
+    if (user?.isDisabled) {
+      throw new UnauthorizedException('This account is disabled');
+    }
+
     if (user) {
       // If the users info has changed since they last logged in it will be reflected here.
       // Because we find the user by their email, we can't detect a change in email.
       if (user.firstName !== firstName || user.lastName !== lastName) {
         user.firstName = firstName;
         user.lastName = lastName;
-        user.save();
+        await user.save();
       }
-      this.usersService.updateLoginMetadata(user);
+      await this.usersService.updateLoginMetadata(user);
     }
 
     return user;
@@ -150,11 +156,14 @@ export class AuthnService {
     };
     // Users have their own JWT Secret to allow for session invalidation on sign out
     const loginUser = await this.usersService.findById(user.id);
+    if (loginUser.isDisabled) {
+      throw new UnauthorizedException('This account is disabled');
+    }
     if (
       !loginUser.jwtSecret ||
       this.configService.get('ONE_SESSION_PER_USER')?.toLowerCase() === 'true'
     ) {
-      this.usersService.updateUserSecret(loginUser);
+      await this.usersService.updateUserSecret(loginUser);
     }
     if (payload.forcePasswordChange || user.role === 'admin') {
       // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.

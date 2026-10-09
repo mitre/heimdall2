@@ -5,4 +5,5 @@ export interface ISlimUser {
   readonly groupRole?: string;
   readonly firstName?: string;
   readonly lastName?: string;
+  readonly isDisabled: boolean;
 }
