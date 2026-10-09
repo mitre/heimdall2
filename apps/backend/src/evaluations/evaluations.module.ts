@@ -31,11 +31,7 @@ import {EvaluationsService} from './evaluations.service';
       useFactory: (configService: ConfigService) => ({
         limits: {
           files: 100,
-          // MAX_FILE_UPLOAD_SIZE is a per-file limit in MB (default: 50).
-          fileSize:
-            Number.parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') || '50') *
-            1024 *
-            1024
+          fileSize: configService.getMaxFileUploadSizeBytes(),
         }
       })
     }),

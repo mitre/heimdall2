@@ -82,6 +82,24 @@ export class ConfigService {
     return this.appConfig.getDbConfig();
   }
 
+  getMaxFileUploadSizeBytes(): number {
+    const raw = this.get('MAX_FILE_UPLOAD_SIZE')?.trim() || '50';
+
+    // Only an explicit zero disables the cap; numeric underflow must not.
+    if (raw === '0') {
+      return Infinity;
+    }
+
+    const bytes = Number(raw) * 1024 ** 2;
+    if (!Number.isSafeInteger(bytes) || bytes <= 0) {
+      throw new Error(
+        'MAX_FILE_UPLOAD_SIZE must be 0 (unlimited) or a positive MiB value yielding a safe integer byte count',
+      );
+    }
+
+    return bytes;
+  }
+
   getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
   }
