@@ -238,6 +238,9 @@ def stage(args):
                         keys=sorted(key_records, key=lambda record: record['path']),
                         packages=sorted(inventories.values(), key=lambda record: record['nevra']))
         (staging / 'offline-manifest.json').write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
+        offline = Path(__file__).resolve().parent.parent / 'offline'
+        for name in ('install.sh', 'README.txt'):
+            shutil.copyfile(str(offline / name), str(staging / name))
         with (staging / 'SHA256SUMS').open('w') as sums:
             for path in sorted(staging.rglob('*')):
                 if path.is_symlink():

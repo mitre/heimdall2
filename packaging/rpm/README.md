@@ -24,10 +24,46 @@ for other download methods. The application version comes from the root `VERSION
 file. Integration candidates require the [acceptance checks](BUILD.md#acceptance-status)
 for their exact source and artifacts before production use.
 
+## Install an offline bundle
+
+Obtain the distribution-specific offline archive and its external SHA-256 digest
+from a trusted channel. Verify that digest before extracting or executing the
+installer; bundled checksums do not authenticate the archive or its signing keys.
+Choose the exact host distribution ID, EL major and architecture. From its
+extracted directory, run:
+
+```sh
+sha256sum --check SHA256SUMS
+sudo bash ./install.sh
+sudo heimdall-cli setup --interactive
+```
+
+The installer verifies every file and RPM signature before importing keys. It
+uses only the bundled repository with DNF plugins and external repositories
+disabled. The default command asks before dependency updates; `--assumeyes` accepts
+the transaction automatically. It installs the exact Heimdall candidate and
+retains compatible installed dependencies; an older bundle cannot downgrade
+Heimdall. Setup remains a separate operation on a booted systemd host.
+
+For a fully disconnected deployment, choose bundled database and proxy services
+with internal or custom TLS. This deterministic setup uses internal TLS:
+
+```sh
+sudo heimdall-cli setup --non-interactive \
+  --database-mode bundled --proxy-mode bundled --tls-mode internal \
+  --external-url https://heimdall.example.test
+```
+
+Arrange local name resolution and trust the generated public CA certificate at
+`/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt` on clients.
+Default bundled-service configuration and internal/custom TLS need no package
+downloads. ACME and external services retain their connectivity requirements.
+
 ## Requirements
 
 Use a booted EL8/EL9/EL10 systemd host on x86_64 or aarch64 with root/sudo access and
-ordinary OS repositories available for system libraries. The RPM bundles Node.js
+ordinary OS repositories available for system libraries, or a matching verified
+offline bundle. The RPM bundles Node.js
 22.23.3, PostgreSQL 18.6 and Caddy 2.11.4; no NodeSource, PGDG or Caddy repository
 is needed on the runtime host. It is not a statically linked or universally
 offline RPM. Provision memory and disk for your application data, database and
