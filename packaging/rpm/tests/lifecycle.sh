@@ -49,7 +49,7 @@ check_signature() {
   sha256sum "$rpm_path"
 }
 install_candidate() {
-  local rpm_path=$1 phase=$2 action=install
+  local rpm_path=$1 phase=$2 action=install result=0
   local repo_args=()
   case "$phase" in
     install) ;;
@@ -60,11 +60,13 @@ install_candidate() {
   if [[ -n ${RPM_TEST_OFFLINE_BUNDLE:-} ]]; then
     [[ $RPM_TEST_OFFLINE_BUNDLE == /* && -d $RPM_TEST_OFFLINE_BUNDLE ]] || return 1
     [[ $(cat "$RPM_TEST_OFFLINE_BUNDLE/heimdall-nevra") == "$(rpm -qp --qf "$RPM_NEVRA_FORMAT" "$rpm_path")" ]] || return 1
-    timeout 300 bash "$RPM_TEST_OFFLINE_BUNDLE/install.sh" --assumeyes
+    timeout 300 bash "$RPM_TEST_OFFLINE_BUNDLE/install.sh" --assumeyes || result=$?
   else
     timeout 300 dnf "$action" -y "${repo_args[@]}" --setopt=install_weak_deps=False \
-      --setopt=localpkg_gpgcheck=1 "$rpm_path"
+      --setopt=localpkg_gpgcheck=1 "$rpm_path" || result=$?
   fi
+  printf 'phase=%s exit_status=%s candidate=%q\n' "$phase" "$result" "$rpm_path" >> /tmp/rpm-lifecycle-installer-status.log
+  return "$result"
 }
 upgrade() { install_candidate "$1" upgrade; }
 refuse_upgrade() {

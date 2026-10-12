@@ -73,6 +73,67 @@ class OfflineInputsTest(unittest.TestCase):
                 self.assertIn(message, result.stdout)
                 self.assertFalse(marker.exists(), result.stdout)
 
+    @unittest.skipUnless(hasattr(os, 'geteuid') and os.geteuid() == 0 and Path('/usr/libexec/platform-python').is_file(),
+                         'Requires native EL8 Bash for lifecycle target helper')
+    def test_lifecycle_logs_each_installer_status_and_driver_retains_it(self):
+        lifecycle = (SCRIPT.parents[1] / 'tests/lifecycle.sh').read_text()
+        helper = lifecycle[lifecycle.index('install_candidate() {'):lifecycle.index('refuse_upgrade() {')]
+        status_file = self.root / 'installer-status.log'
+        helper = helper.replace('/tmp/rpm-lifecycle-installer-status.log', str(status_file))
+        bundle = self.root / 'offline bundle'
+        bundle.mkdir()
+        (bundle / 'heimdall-nevra').write_text('heimdall-server-fixture\n')
+        (bundle / 'install.sh').write_text('exit "$INSTALL_FIXTURE_STATUS"\n')
+        shell = self.root / 'hook.sh'
+        shell.write_text("""set -euo pipefail
+readonly RPM_NEVRA_FORMAT='%{NEVRA}'
+timeout() { [[ $1 == 300 ]]; shift; "$@"; }
+rpm() { printf '%s' heimdall-server-fixture; }
+dnf() { return "$INSTALL_FIXTURE_STATUS"; }
+""" + helper + """
+for mode in offline legacy; do
+  if [[ $mode == offline ]]; then RPM_TEST_OFFLINE_BUNDLE=$FIXTURE_BUNDLE; else unset RPM_TEST_OFFLINE_BUNDLE; fi
+  for status in 0 1 17; do
+    export INSTALL_FIXTURE_STATUS=$status
+    result=0
+    install_candidate /tmp/candidate.rpm upgrade || result=$?
+    [[ $result == "$status" ]]
+  done
+done
+""")
+        subprocess.run(['bash', str(shell)], env=dict(os.environ, FIXTURE_BUNDLE=str(bundle)), check=True)
+        lines = status_file.read_text().splitlines()
+        self.assertEqual(lines, ['phase=upgrade exit_status={} candidate=/tmp/candidate.rpm'.format(status)
+                                 for status in (0, 1, 17, 0, 1, 17)])
+        driver = (SCRIPT.parents[1] / 'tests/run-offline.sh').read_text()
+        cleanup = 'cleanup() {' + driver.split('cleanup() {', 1)[1].split('\ntrap cleanup EXIT', 1)[0]
+        for status in (0, 17):
+            with self.subTest(cleanup_status=status):
+                logdir = self.root / ('evidence-' + str(status))
+                work = self.root / ('work-' + str(status))
+                logdir.mkdir()
+                work.mkdir()
+                script = self.root / 'cleanup.sh'
+                script.write_text("""set -euo pipefail
+container=fixture
+installed_image=''
+state_volume=''
+config_volume=''
+docker() {
+  case $1 in
+    cp) [[ $2 == fixture:/tmp/rpm-lifecycle-installer-status.log ]] || return 1; cp "$STATUS_SOURCE" "$3" ;;
+    inspect) printf '[]\n' ;;
+    *) return 0 ;;
+  esac
+}
+""" + cleanup + '\ntrap cleanup EXIT\nexit ' + str(status) + '\n')
+                environment = dict(os.environ, STATUS_SOURCE=str(status_file), logdir=str(logdir), work=str(work))
+                result = subprocess.run(['bash', str(script)], env=environment, stdout=subprocess.PIPE,
+                                        stderr=subprocess.STDOUT, universal_newlines=True)
+                self.assertEqual(result.returncode, status, result.stdout)
+                self.assertEqual((logdir / 'installer-status.log').read_bytes(), status_file.read_bytes())
+                self.assertEqual((logdir / 'result.txt').read_text(), 'exit_status={}\n'.format(status))
+
     def make_inputs(self):
         packaging = self.root / 'source tree/packaging/rpm'
         scripts = packaging / 'scripts'

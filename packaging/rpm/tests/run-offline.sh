@@ -22,6 +22,7 @@ cleanup() {
     docker inspect "$container" > "$logdir/last-container.json" 2>/dev/null || true
     mkdir -p "$logdir/last-target"
     docker cp "$container:/tmp/rpm-after-setup.verify" "$logdir/" 2>/dev/null || true
+    docker cp "$container:/tmp/rpm-lifecycle-installer-status.log" "$logdir/installer-status.log" 2>/dev/null || true
     docker cp "$container:/tmp/rpm-offline-evidence/." "$logdir/last-target/" 2>/dev/null || true
     if [[ $result -ne 0 ]]; then
       docker exec "$container" systemctl status --no-pager heimdall-postgresql heimdall-server heimdall-caddy || true
@@ -281,6 +282,7 @@ fi
 step docker exec "$container" bash -c 'rpm -qa --qf "%{NEVRA}\n" | LC_ALL=C sort > /tmp/rpm-final-inventory'
 step docker cp "$container:/tmp/rpm-final-inventory" "$logdir/final-inventory.txt"
 step docker cp "$container:/tmp/rpm-after-setup.verify" "$logdir/"
+step docker cp "$container:/tmp/rpm-lifecycle-installer-status.log" "$logdir/installer-status.log"
 step docker exec "$container" journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy > "$logdir/services-journal.log"
 [[ $(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container") == none ]]
 echo 'Disconnected native install, unassisted setup and available lifecycle checks passed.'
