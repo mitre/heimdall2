@@ -9,37 +9,37 @@ trap 'rm -rf "$scratch"' EXIT
 (cd "$scratch" && rpm2cpio "$rpm_file" | cpio -idm --quiet)
 app="$scratch/usr/share/heimdall-server"
 runtime="$scratch/usr/libexec/heimdall-server/runtime"
-test -x "$runtime/node/bin/node"
-test -x "$runtime/postgresql/bin/postgres"
-test -x "$runtime/postgresql/bin/initdb"
-test -x "$runtime/postgresql/bin/psql"
-test -x "$runtime/postgresql/bin/pg_dump"
-test -x "$runtime/caddy/caddy"
-test -s "$app/runtime-manifest.json"
+[[ -x "$runtime/node/bin/node" ]]
+[[ -x "$runtime/postgresql/bin/postgres" ]]
+[[ -x "$runtime/postgresql/bin/initdb" ]]
+[[ -x "$runtime/postgresql/bin/psql" ]]
+[[ -x "$runtime/postgresql/bin/pg_dump" ]]
+[[ -x "$runtime/caddy/caddy" ]]
+[[ -s "$app/runtime-manifest.json" ]]
 [[ $("$runtime/node/bin/node" --version) == v22.23.3 ]]
 "$runtime/caddy/caddy" version
-test ! -e "$scratch/usr/bin/node"
-test ! -e "$scratch/usr/bin/psql"
-test ! -e "$scratch/usr/bin/caddy"
-test -s "$scratch/usr/lib/systemd/system/heimdall-postgresql.service"
-test -s "$scratch/usr/lib/systemd/system/heimdall-caddy.service"
+[[ ! -e "$scratch/usr/bin/node" ]]
+[[ ! -e "$scratch/usr/bin/psql" ]]
+[[ ! -e "$scratch/usr/bin/caddy" ]]
+[[ -s "$scratch/usr/lib/systemd/system/heimdall-postgresql.service" ]]
+[[ -s "$scratch/usr/lib/systemd/system/heimdall-caddy.service" ]]
 for notice in node/LICENSE postgresql/COPYRIGHT caddy/LICENSE; do
-  test -s "$scratch/usr/share/licenses/heimdall-server/$notice"
+  [[ -s "$scratch/usr/share/licenses/heimdall-server/$notice" ]]
 done
-test -s "$app/apps/backend/dist/src/main.js"
-test -s "$app/apps/backend/dist/db/database.js"
-test -s "$app/dist/frontend/index.html"
-test -x "$app/apps/backend/node_modules/.bin/sequelize"
+[[ -s "$app/apps/backend/dist/src/main.js" ]]
+[[ -s "$app/apps/backend/dist/db/database.js" ]]
+[[ -s "$app/dist/frontend/index.html" ]]
+[[ -x "$app/apps/backend/node_modules/.bin/sequelize" ]]
 find "$app/apps/backend/node_modules" -type f \( -name '*.json' -o -name '*.map' \) -perm /111 > "$scratch/executable-data"
-test ! -s "$scratch/executable-data"
+[[ ! -s "$scratch/executable-data" ]]
 bcrypt_cli="$app/apps/backend/node_modules/ldapauth-fork/node_modules/bcryptjs/bin/bcrypt"
-test -x "$bcrypt_cli"
+[[ -x "$bcrypt_cli" ]]
 ! LC_ALL=C grep -q $'\r' "$bcrypt_cli" || exit 1
 "$runtime/node/bin/node" --check "$bcrypt_cli"
-test -e "$app/libs/password-complexity/index.js"
+[[ -e "$app/libs/password-complexity/index.js" ]]
 [[ $("$runtime/node/bin/node" -p "require(process.argv[1]).version" "$app/apps/backend/package.json") == "$expected_version" ]]
 find "$app/apps/backend/node_modules" -xtype l > "$scratch/broken-links"
-test ! -s "$scratch/broken-links"
+[[ ! -s "$scratch/broken-links" ]]
 NODE_ENV=production "$runtime/node/bin/node" - "$app/apps/backend" <<'NODE'
 const assert = require('assert');
 const fs = require('fs');
@@ -66,10 +66,10 @@ for (const file of fs.readdirSync(path.join(backend, 'seeders'))) {
   if (file.endsWith('.js')) require(path.join(backend, 'seeders', file));
 }
 NODE
-test -x "$scratch/usr/bin/heimdall-cli"
+[[ -x "$scratch/usr/bin/heimdall-cli" ]]
 find "$scratch/usr/share/man/man1" -name 'heimdall-cli-setup.1*' | grep -q .
-test -s "$scratch/usr/libexec/heimdall-server/heimdall-Caddyfile"
-test -s "$scratch/usr/share/selinux/packages/heimdall-server.pp"
+[[ -s "$scratch/usr/libexec/heimdall-server/heimdall-Caddyfile" ]]
+[[ -s "$scratch/usr/share/selinux/packages/heimdall-server.pp" ]]
 rpm -qp --requires "$rpm_file" > "$scratch/requires"
 grep -Fxq logrotate "$scratch/requires"
 ! grep -Eq '^(nodejs|postgresql|caddy)([ (>=]|$)' "$scratch/requires" || exit 1

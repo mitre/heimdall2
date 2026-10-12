@@ -10,7 +10,7 @@ spec="$topdir/SPECS/heimdall-server.spec"
 # Each private archive, inventory and service must be present in the SRPM.
 for source in node-runtime.tar.xz postgresql-runtime.tar.bz2 caddy-runtime.tar.gz \
   runtime-manifest.json heimdall-postgresql.service heimdall-caddy.service; do
-  test -s "$topdir/SOURCES/$source"
+  [[ -s "$topdir/SOURCES/$source" ]]
 done
 python3 - "$topdir/SOURCES" <<'PY'
 import hashlib, json, pathlib, sys
@@ -30,5 +30,5 @@ fi
 rpmbuild --rebuild --define "_topdir $topdir" "$srpm"
 version=$(rpm -qp --qf '%{VERSION}' "$srpm")
 mapfile -t rebuilt < <(find "$topdir/RPMS" -name 'heimdall-server-*.rpm')
-test "${#rebuilt[@]}" -eq 1
+[[ "${#rebuilt[@]}" -eq 1 ]]
 bash "$(dirname "$0")/payload.sh" "${rebuilt[0]}" "$version"

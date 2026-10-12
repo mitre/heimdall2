@@ -34,7 +34,7 @@ sha256sum /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/data/pg_hba.conf > 
 sed -i 's/^RESTART_ON_UPGRADE=.*/RESTART_ON_UPGRADE=true/' /etc/sysconfig/heimdall-server
 dnf upgrade -y --setopt=install_weak_deps=False --setopt=localpkg_gpgcheck=1 "$upgrade"
 [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$(rpm -qp --qf '%{NEVRA}' "$upgrade")" ]]
-test -e /etc/heimdall-server/upgrade-pending
+[[ -e /etc/heimdall-server/upgrade-pending ]]
 if systemctl is-active --quiet heimdall-server; then exit 1; fi
 systemctl is-active --quiet postgresql
 [[ $(systemctl show -p MainPID --value postgresql) == "$(cat /tmp/rpm-previous-pg.pid)" ]]
@@ -43,7 +43,7 @@ heimdall-cli setup --non-interactive
 source /etc/heimdall-server/backend.env
 [[ $HEIMDALL_DATABASE_MODE == external && $HEIMDALL_PROXY_MODE == external ]]
 [[ $(printf '%s\0' "$DATABASE_HOST" "$DATABASE_PORT" "$DATABASE_PASSWORD" "$JWT_SECRET" "$API_KEY_SECRET" | sha256sum) == "$(cat /tmp/rpm-previous-secrets.sha256)" ]]
-test ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION
+[[ ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION ]]
 [[ $(PGPASSWORD="$DATABASE_PASSWORD" psql -h "$DATABASE_HOST" -p "$DATABASE_PORT" \
   -U "$DATABASE_USERNAME" -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" \
   -c 'SELECT id FROM rpm_previous_sentinel') == 7 ]]

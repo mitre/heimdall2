@@ -13,12 +13,13 @@ if mode not in ('check', 'head', 'release', 'workspace'):
     sys.exit('Unknown source mode')
 
 version_file = (repo / 'VERSION').read_text().rstrip('\n')
-match = re.fullmatch(r'v?([0-9][0-9A-Za-z._+~^]*)', version_file)
+match = re.fullmatch(r'v?(\d[\dA-Za-z._+~^]*)', version_file, re.ASCII)
 if not match:
     sys.exit('Invalid VERSION: expected an RPM-safe version with an optional leading v')
 version = match.group(1)
 spec = (repo / 'packaging/rpm/heimdall-server.spec').read_text()
-if re.findall(r'^Version:[ \t]*(.*)$', spec, re.MULTILINE) != ['@HEIMDALL_VERSION@']:
+spec_versions = re.findall(r'^Version:(.*)$', spec, re.MULTILINE)
+if [value.lstrip(' \t') for value in spec_versions] != ['@HEIMDALL_VERSION@']:
     sys.exit('RPM spec must contain one Version: @HEIMDALL_VERSION@ template field')
 versions = {}
 for app in ('backend', 'frontend'):

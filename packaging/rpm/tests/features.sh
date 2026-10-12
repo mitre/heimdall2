@@ -6,7 +6,10 @@ source /etc/heimdall-server/backend.env
 [[ $DATABASE_NAME == heimdall-server-production ]]
 pg=(runuser -u heimdall-postgres -- "$runtime/postgresql/bin/psql"
   -h /run/heimdall-postgresql -p 55432 -U heimdall-postgres -v ON_ERROR_STOP=1 -At)
-query() { "${pg[@]}" -d "$DATABASE_NAME" -c "$1"; }
+query() {
+  local sql=$1
+  "${pg[@]}" -d "$DATABASE_NAME" -c "$sql"
+}
 migrations=$(query 'SELECT COUNT(*) FROM "SequelizeMeta"')
 tables=$(query "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public'")
 sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-recovery-env.sha256
@@ -15,7 +18,7 @@ find /etc/heimdall-server/caddy -type f -exec sha256sum {} \; > /tmp/rpm-recover
 mkdir -p /tmp/heimdall-recovery
 heimdall-cli backup --output /tmp/heimdall-recovery
 archive=$(find /tmp/heimdall-recovery -maxdepth 1 -name '*.tar.gz' -print -quit)
-test -s "$archive"
+[[ -s "$archive" ]]
 [[ $(stat -c %a "$archive") == 600 ]]
 tar -tzf "$archive" > /tmp/rpm-recovery-members
 grep -q '/database.sql$' /tmp/rpm-recovery-members
@@ -46,7 +49,7 @@ if heimdall-cli restore /tmp/rpm-traversal-recovery.tar.gz > /tmp/rpm-traversal.
   echo 'Restore incorrectly accepted a traversal entry.' >&2
   exit 1
 fi
-test ! -e /tmp/rpm-escaped
+[[ ! -e /tmp/rpm-escaped ]]
 rm -rf "$invalid"
 # Prove private CA files return from the backup, not merely from retained state.
 find /var/lib/heimdall-caddy -type f \( -name root.crt -o -name root.key \) -delete

@@ -11,9 +11,10 @@ set -a
 source /etc/heimdall-server/backend.env
 set +a
 query() {
+  local sql=$1
   PGPASSWORD="$DATABASE_PASSWORD" /usr/libexec/heimdall-server/runtime/postgresql/bin/psql \
     -h "$DATABASE_HOST" -p "$DATABASE_PORT" -U "$DATABASE_USERNAME" \
-    -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$1"
+    -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$sql"
 }
 expected=$(find /usr/share/heimdall-server/apps/backend/migrations \
   -maxdepth 1 -name '*.js' -type f | wc -l)

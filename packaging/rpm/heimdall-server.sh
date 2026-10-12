@@ -18,7 +18,7 @@ if [[ -f "${ENV_FILE}" ]]; then
 fi
 
 NODE_BIN=/usr/libexec/heimdall-server/runtime/node/bin/node
-test -x "$NODE_BIN"
+[[ -x "$NODE_BIN" ]]
 
 if [[ -z "${DATABASE_PASSWORD:-}" ]]; then
   echo "DATABASE_PASSWORD is not set in ${ENV_FILE}." >&2

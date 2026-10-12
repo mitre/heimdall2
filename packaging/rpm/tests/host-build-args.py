@@ -57,4 +57,22 @@ esac
                     assert args[args.index('--secret') + 1] == 'id=corp_ca,src=' + str(ca), (case, args)
     assert not failures, '\n'.join(failures)
 
-print('RPM host build arguments: PASS (both platforms, with and without a CA)')
+    invalid_root = root / 'invalid-inputs'
+    invalid_root.mkdir()
+    empty = root / 'empty.rpm'
+    empty.touch()
+    for invalid in (root / 'missing.rpm', empty):
+        for script, inputs in (
+            ('run-lifecycle.sh', [invalid, artifact]),
+            ('run-lifecycle.sh', [artifact, invalid]),
+            ('sign-rpms.sh', [key, artifact, invalid]),
+            ('remote-database.sh', [invalid]),
+        ):
+            result = subprocess.run(
+                ['/bin/bash', str(TESTS / script), 'linux/arm64'] + list(map(str, inputs)),
+                cwd=str(invalid_root), env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                universal_newlines=True)
+            assert result.returncode == 1, (script, inputs, result.returncode, result.stdout)
+            assert not (invalid_root / 'packaging').exists(), (script, 'started work with invalid RPM')
+
+print('RPM host build arguments: PASS (both platforms, with and without a CA; missing/empty RPMs rejected)')

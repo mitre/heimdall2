@@ -67,10 +67,7 @@ class RuntimeInputsTest(unittest.TestCase):
             os.chdir(str(self.sources))
             with patch.object(sys, 'argv', [str(script), 'x86_64']), \
                     patch.object(self.module.urllib.request, 'urlopen', side_effect=self.download):
-                try:
-                    runpy.run_path(str(script), run_name='__main__')
-                except SystemExit as error:
-                    self.fail('Runtime CLI failed: ' + str(error))
+                runpy.run_path(str(script), run_name='__main__')
         finally:
             os.chdir(str(previous))
         manifest = json.loads((self.sources / 'runtime-manifest.json').read_text())

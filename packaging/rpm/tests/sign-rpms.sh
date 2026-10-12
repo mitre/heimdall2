@@ -10,7 +10,7 @@ if [[ ${1:-} == --container ]]; then
   public=${2:?public key output}
   shift 2
   [[ $# -gt 0 ]] || exit 64
-  for artifact in "$@"; do test -s "$artifact"; done
+  for artifact in "$@"; do [[ -s "$artifact" ]]; done
   dnf install -y rpm-sign gnupg2
   export GNUPGHOME
   GNUPGHOME=$(mktemp -d /tmp/heimdall-rpm-sign.XXXXXX)
@@ -27,9 +27,9 @@ if [[ ${1:-} == --container ]]; then
   gpg --batch --pinentry-mode loopback --passphrase '' --quick-generate-key \
     'Heimdall disposable RPM test <rpm-test@example.invalid>' rsa2048 sign 1d
   fingerprint=$(gpg --batch --with-colons --list-secret-keys | awk -F: '$1 == "fpr" {print $10; exit}')
-  test -n "$fingerprint"
+  [[ -n "$fingerprint" ]]
   gpg --batch --armor --export "$fingerprint" > "$public"
-  test -s "$public"
+  [[ -s "$public" ]]
   rpm --import "$public"
   for artifact in "$@"; do
     # EL8's signing macro passes filenames to GPG without quoting them.
@@ -49,7 +49,7 @@ platform=${1:?platform or --container}
 public=${2:?public key output}
 shift 2
 [[ $# -gt 0 ]] || exit 64
-for artifact in "$@"; do test -s "$artifact"; done
+for artifact in "$@"; do [[ -s "$artifact" ]] || exit 1; done
 name="heimdall-rpm-signer-${platform##*/}-$$-$RANDOM"
 image="heimdall-integration-test:${platform##*/}"
 build_args=(--platform "$platform")

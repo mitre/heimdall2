@@ -8,8 +8,8 @@ platform=${1:?platform}
 [[ $platform == linux/arm64 || $platform == linux/amd64 ]] || exit 64
 initial=$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${2:?initial rpm}")
 upgrade=$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${3:?upgrade rpm}")
-test -s "$initial"
-test -s "$upgrade"
+[[ -s "$initial" ]] || exit 1
+[[ -s "$upgrade" ]] || exit 1
 name="heimdall-integration-${platform##*/}-$$-$RANDOM"
 image="heimdall-integration-test:${platform##*/}"
 logdir="packaging/rpm/dist/integration/evidence/$name"
@@ -87,7 +87,7 @@ for db_mode in bundled external; do
 done
 step bash packaging/rpm/tests/remote-database.sh "$platform" "$upgrade" coexist
 if [[ -n ${RPM_TEST_PREVIOUS_RPM:-} ]]; then
-  test -s "$RPM_TEST_PREVIOUS_RPM"
+  [[ -s "$RPM_TEST_PREVIOUS_RPM" ]] || exit 1
   docker inspect "$container" > "$logdir/bundled-container.json"
   step docker rm -f "$container"
   container=''

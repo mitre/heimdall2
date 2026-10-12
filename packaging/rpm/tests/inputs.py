@@ -45,7 +45,8 @@ class InputsTest(unittest.TestCase):
         self.assertIn('version mismatch', result.stderr)
 
     def test_rejects_unsafe_version(self):
-        for version in ('', 'vv2.14.0', ' v2.14.0', '2.14.0;id', '2.14.0\n3.0.0', '2.14.0-rc1'):
+        for version in ('', 'vv2.14.0', ' v2.14.0', '2.14.0;id', '2.14.0\n3.0.0',
+                        '2.14.0-rc1', '\u0662.14.0', '2.\u0661\u0664.0'):
             with self.subTest(version=version):
                 (self.root / 'VERSION').write_text(version + '\n')
                 result = self.check()
@@ -54,12 +55,21 @@ class InputsTest(unittest.TestCase):
 
     def test_rejects_non_template_spec_version(self):
         for value in ('Version: 2.13.1\n', '',
+                      'Version: @HEIMDALL_VERSION@ \n',
                       'Version: @HEIMDALL_VERSION@\nVersion: @HEIMDALL_VERSION@\n'):
             with self.subTest(value=value):
                 (self.root / 'packaging/rpm/heimdall-server.spec').write_text(value)
                 result = self.check()
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn('spec must contain one Version:', result.stderr)
+
+    def test_spec_version_allows_horizontal_whitespace(self):
+        for whitespace in ('', ' ', '\t ', ' ' * 100000):
+            with self.subTest(whitespace_length=len(whitespace)):
+                (self.root / 'packaging/rpm/heimdall-server.spec').write_text(
+                    'Version:' + whitespace + '@HEIMDALL_VERSION@\n')
+                result = self.check()
+                self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_symlinked_in_tree_topdir(self):
         link = Path(self.tmp.name) / 'source-link'

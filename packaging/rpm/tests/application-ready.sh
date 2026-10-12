@@ -18,9 +18,10 @@ assert.strictEqual(settings.localLoginEnabled, true);
 assert.strictEqual(settings.externalUrl, process.argv[3]);
 NODE
 query() {
+  local sql=$1
   PGPASSWORD="$DATABASE_PASSWORD" PGCONNECT_TIMEOUT=5 "$runtime/postgresql/bin/psql" \
     -h "$DATABASE_HOST" -p "$DATABASE_PORT" -U "$DATABASE_USERNAME" \
-    -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$1"
+    -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$sql"
 }
 expected=$(find /usr/share/heimdall-server/apps/backend/migrations -maxdepth 1 -name '*.js' -type f | wc -l)
 migrations=$(query 'SELECT COUNT(*) FROM "SequelizeMeta"')

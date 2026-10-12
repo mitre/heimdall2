@@ -4,15 +4,17 @@ set -euo pipefail
 runtime=/usr/libexec/heimdall-server/runtime
 node="$runtime/node/bin/node"
 units=(heimdall-server heimdall-caddy heimdall-postgresql)
+readonly RPM_NEVRA_FORMAT='%{NEVRA}'
 diagnostics() {
   systemctl status --no-pager "${units[@]}" >&2 || true
   journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy -n 100 >&2 || true
 }
 trap diagnostics ERR
 query() {
+  local sql=$1
   runuser -u heimdall-postgres -- "$runtime/postgresql/bin/psql" \
     -h /run/heimdall-postgresql -p 55432 -U heimdall-postgres \
-    -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$1"
+    -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$sql"
 }
 verify() {
   mapfile -t roots < <(find /var/lib/heimdall-caddy -name root.crt -type f)
@@ -20,9 +22,9 @@ verify() {
   bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
     --cacert "${roots[0]}" --resolve heimdall.example.test:443:127.0.0.1
   for unit in "${units[@]}"; do systemctl is-active --quiet "$unit"; done
-  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-server)/exe")" = "$node"
-  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-postgresql)/exe")" = "$runtime/postgresql/bin/postgres"
-  test "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-caddy)/exe")" = "$runtime/caddy/caddy"
+  [[ "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-server)/exe")" == "$node" ]]
+  [[ "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-postgresql)/exe")" == "$runtime/postgresql/bin/postgres" ]]
+  [[ "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-caddy)/exe")" == "$runtime/caddy/caddy" ]]
   [[ $(systemctl show -p User --value heimdall-server) == heimdall ]]
   "$node" -e 'if(require("/usr/share/heimdall-server/apps/backend/package.json").version!==process.argv[1]) process.exit(1)' "$(rpm -q --qf '%{VERSION}' heimdall-server)"
   curl --fail --silent --show-error --max-time 10 http://127.0.0.1:3000/ -o /tmp/rpm-index.html
@@ -39,27 +41,30 @@ verify_state() {
   [[ $(query 'SELECT COUNT(*) FROM "SequelizeMeta"') -eq $expected ]]
 }
 check_signature() {
-  test -s "${RPM_TEST_GPG_KEY:?public test signing key required}"
+  local rpm_path=$1
+  [[ -s "${RPM_TEST_GPG_KEY:?public test signing key required}" ]]
   rpm --import "$RPM_TEST_GPG_KEY"
-  rpmkeys --checksig --verbose "$1" | tee /tmp/rpm-signature.log
+  rpmkeys --checksig --verbose "$rpm_path" | tee /tmp/rpm-signature.log
   grep -Eq 'Signature.*: OK' /tmp/rpm-signature.log
-  sha256sum "$1"
+  sha256sum "$rpm_path"
 }
 upgrade() {
+  local rpm_path=$1
   timeout 300 dnf upgrade -y --disablerepo='*' --setopt=install_weak_deps=False \
-    --setopt=localpkg_gpgcheck=1 "$1"
+    --setopt=localpkg_gpgcheck=1 "$rpm_path"
 }
 refuse_upgrade() {
-  before=$(rpm -q --qf '%{NEVRA}' heimdall-server)
-  if upgrade "$1" > /tmp/rpm-refused-upgrade.log 2>&1; then
+  local rpm_path=$1
+  before=$(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server)
+  if upgrade "$rpm_path" > /tmp/rpm-refused-upgrade.log 2>&1; then
     cat /tmp/rpm-refused-upgrade.log
     echo 'Upgrade unexpectedly accepted an unsafe fixture.' >&2
     exit 1
   fi
   cat /tmp/rpm-refused-upgrade.log
-  [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$before" ]]
+  [[ $(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server) == "$before" ]]
   for unit in "${units[@]}"; do systemctl is-active --quiet "$unit"; done
-  test ! -e /etc/heimdall-server/upgrade-pending
+  [[ ! -e /etc/heimdall-server/upgrade-pending ]]
 }
 case ${1:-} in
   install)
@@ -74,10 +79,10 @@ OIDC_NAME='RPM fixture login'
 ENV
     sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-before-install.sha256
     timeout 300 dnf install -y --setopt=install_weak_deps=False --setopt=localpkg_gpgcheck=1 "$2"
-    [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$(rpm -qp --qf '%{NEVRA}' "$2")" ]]
+    [[ $(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server) == "$(rpm -qp --qf "$RPM_NEVRA_FORMAT" "$2")" ]]
     sha256sum --check /tmp/rpm-before-install.sha256
     for unit in "${units[@]}"; do if systemctl is-active --quiet "$unit"; then exit 1; fi; done
-    test ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION
+    [[ ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION ]]
     ;;
   setup)
     # The host runner disconnects networking before this full setup.
@@ -111,7 +116,7 @@ SHELL
     [[ $OIDC_NAME == 'RPM fixture login' && $LOCAL_LOGIN_DISABLED == false ]]
     sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-lifecycle-env.sha256
     find /var/lib/heimdall-caddy -name root.crt -type f -exec sha256sum {} \; > /tmp/rpm-lifecycle-ca.sha256
-    test -s /tmp/rpm-lifecycle-ca.sha256
+    [[ -s /tmp/rpm-lifecycle-ca.sha256 ]]
     cat /etc/os-release
     uname -m
     rpm -q heimdall-server systemd
@@ -134,25 +139,25 @@ SHELL
     refuse_upgrade "$2"
     cp -p /tmp/rpm-before-backup-failure.env /etc/heimdall-server/backend.env
     upgrade "$2"
-    [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$(rpm -qp --qf '%{NEVRA}' "$2")" ]]
+    [[ $(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server) == "$(rpm -qp --qf "$RPM_NEVRA_FORMAT" "$2")" ]]
     for unit in "${units[@]}"; do if systemctl is-active --quiet "$unit"; then exit 1; fi; done
-    test -e /etc/heimdall-server/upgrade-pending
+    [[ -e /etc/heimdall-server/upgrade-pending ]]
     sha256sum --check /tmp/rpm-lifecycle-env.sha256
-    test -n "$(find /var/lib/heimdall-server/backups -name '*.tar.gz' -print -quit)"
+    [[ -n "$(find /var/lib/heimdall-server/backups -name '*.tar.gz' -print -quit)" ]]
     heimdall-cli setup --non-interactive --reconfigure
-    test -e /etc/heimdall-server/upgrade-pending
+    [[ -e /etc/heimdall-server/upgrade-pending ]]
     heimdall-cli setup --non-interactive --skip-db || true
-    test -e /etc/heimdall-server/upgrade-pending
+    [[ -e /etc/heimdall-server/upgrade-pending ]]
     if systemctl is-active --quiet heimdall-server; then exit 1; fi
     migration=/usr/share/heimdall-server/apps/backend/migrations/99999999999999-rpm-failure.js
     printf 'module.exports = { up: async () => { throw new Error("RPM migration failure fixture"); }, down: async () => {} };\n' > "$migration"
     if heimdall-cli setup --non-interactive > /tmp/rpm-migration-failure.log 2>&1; then exit 1; fi
     cat /tmp/rpm-migration-failure.log
-    test -e /etc/heimdall-server/upgrade-pending
+    [[ -e /etc/heimdall-server/upgrade-pending ]]
     if systemctl is-active --quiet heimdall-server; then exit 1; fi
     rm "$migration"
     heimdall-cli setup --non-interactive
-    test ! -e /etc/heimdall-server/upgrade-pending
+    [[ ! -e /etc/heimdall-server/upgrade-pending ]]
     verify_state
     ;;
   verify) verify_state ;;

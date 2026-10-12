@@ -92,7 +92,7 @@ NGINX
       --external-url https://heimdall.example.test:8443
     if systemctl is-active --quiet heimdall-postgresql; then exit 1; fi
     if systemctl is-active --quiet heimdall-caddy; then exit 1; fi
-    test -s /var/lib/heimdall-postgresql/18/data/PG_VERSION
+    [[ -s /var/lib/heimdall-postgresql/18/data/PG_VERSION ]]
     sha256sum --check /tmp/rpm-coexist-ca.sha256
     bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test:8443 \
       --cacert "$RPM_TEST_PROXY_CA" --resolve heimdall.example.test:8443:127.0.0.1

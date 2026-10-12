@@ -5,7 +5,7 @@ set -euo pipefail
 platform=${1:?platform}
 [[ $platform == linux/arm64 || $platform == linux/amd64 ]] || exit 64
 artifact=$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${2:?rpm}")
-test -s "$artifact"
+[[ -s "$artifact" ]] || exit 1
 db_mode=${3:-external}
 proxy_mode=${4:-bundled}
 [[ $db_mode == bundled || $db_mode == external || $db_mode == coexist ]] || exit 64

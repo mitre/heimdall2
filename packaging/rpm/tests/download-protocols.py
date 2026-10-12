@@ -14,10 +14,12 @@ class DownloadProtocolsTest(unittest.TestCase):
     def test_package_downloads_only_allow_https(self):
         for script in ('scripts/setup-build-deps.sh', 'tests/previous-package.sh'):
             source = (RPM / script).read_text().replace('\\\n', '')
+            constants = {'$' + name: shlex.split(value)[0]
+                         for name, value in re.findall(r'^readonly (\w+)=(.+)$', source, re.MULTILINE)}
             commands = re.findall(r'^\s*(?:\$\{SUDO\}\s+)?(curl\s+.+)$', source, re.MULTILINE)
             self.assertTrue(commands, script)
             for command in commands:
-                args = shlex.split(command)
+                args = [constants.get(arg, arg) for arg in shlex.split(command)]
                 if '|' in args:
                     args = args[:args.index('|')]
                 url_index = next(i for i, arg in enumerate(args) if arg.startswith('https://'))

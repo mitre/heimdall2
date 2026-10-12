@@ -19,15 +19,16 @@ if [[ ${RPM_TEST_COEXIST:-0} == 0 ]]; then
   if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy)$' /tmp/heimdall-installed-packages.txt; then exit 1; fi
 fi
 heimdall-cli "${args[@]}"
-test "$(heimdall-cli config get HEIMDALL_DATABASE_MODE | sed -n 's/^HEIMDALL_DATABASE_MODE=//p')" = "$db_mode"
-test "$(heimdall-cli config get HEIMDALL_PROXY_MODE | sed -n 's/^HEIMDALL_PROXY_MODE=//p')" = "$proxy_mode"
+[[ "$(heimdall-cli config get HEIMDALL_DATABASE_MODE | sed -n 's/^HEIMDALL_DATABASE_MODE=//p')" == "$db_mode" ]]
+[[ "$(heimdall-cli config get HEIMDALL_PROXY_MODE | sed -n 's/^HEIMDALL_PROXY_MODE=//p')" == "$proxy_mode" ]]
 private_process() {
-  systemctl is-active --quiet "$1"
+  local unit=$1 executable=$2
+  systemctl is-active --quiet "$unit"
   for attempt in $(seq 1 30); do
-    if [[ $(readlink -f "/proc/$(systemctl show -p MainPID --value "$1")/exe") == "$2" ]]; then return; fi
+    if [[ $(readlink -f "/proc/$(systemctl show -p MainPID --value "$unit")/exe") == "$executable" ]]; then return; fi
     sleep 1
   done
-  echo "Unexpected executable for $1" >&2
+  echo "Unexpected executable for $unit" >&2
   return 1
 }
 private_process heimdall-server "$runtime/node/bin/node"
@@ -35,7 +36,7 @@ if [[ $db_mode == bundled ]]; then
   private_process heimdall-postgresql "$runtime/postgresql/bin/postgres"
 else
   if systemctl is-active --quiet heimdall-postgresql; then exit 1; fi
-  test ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION
+  [[ ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION ]]
 fi
 if [[ $proxy_mode == bundled ]]; then
   private_process heimdall-caddy "$runtime/caddy/caddy"
@@ -44,7 +45,7 @@ if [[ $proxy_mode == bundled ]]; then
     [[ ${#certs[@]} == 0 ]] || break
     sleep 1
   done
-  test "${#certs[@]}" -eq 1
+  [[ "${#certs[@]}" -eq 1 ]]
   ca=${certs[0]}
   address=127.0.0.1
 else

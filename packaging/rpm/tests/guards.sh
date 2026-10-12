@@ -4,10 +4,10 @@ set -euo pipefail
 tests=$(cd "$(dirname "$0")" && pwd)
 unset HEIMDALL_RPM_TEST RPM_TEST_GPG_KEY
 reject() {
-  local result=0
-  bash "$tests/$1" "${@:2}" >/dev/null 2>&1 || result=$?
+  local script=$1 result=0
+  bash "$tests/$script" "${@:2}" >/dev/null 2>&1 || result=$?
   [[ $result == 64 ]] || {
-    echo "$1 returned $result instead of refusing the unsafe invocation (64)." >&2
+    echo "$script returned $result instead of refusing the unsafe invocation (64)." >&2
     exit 1
   }
 }
