@@ -115,7 +115,7 @@ if [[ $installed != "$nevra" ]]; then
   dnf "${dnf_args[@]}" -y --setopt=tsflags=test "$action" "$nevra"
   # RPM can report a failed scriptlet while DNF returns zero.
   dnf "${dnf_args[@]}" "${answer_args[@]}" --setopt=tsflags= "$action" "$nevra" 2>&1 | tee "$work/transaction.log"
-  if grep -Eqi 'scriptlet.*(fail|error)|error.*scriptlet' "$work/transaction.log"; then fail 'RPM scriptlet failure; inspect the transaction above.'; fi
+  if grep -Eqi '^(warning|error): %[^ ]+ scriptlet failed(,|$)|^Error in [A-Z]+ scriptlet in rpm package( |$)' "$work/transaction.log"; then fail 'RPM scriptlet failure; inspect the transaction above.'; fi
 fi
 [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$nevra" ]] || fail 'Installed Heimdall NEVRA does not match the bundle; downgrades are not supported.'
 echo "Installed and verified $nevra. Run heimdall-cli setup to configure the application."

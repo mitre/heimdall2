@@ -53,6 +53,9 @@ if [[ -n ${HEIMDALL_OFFLINE_REJECTION:-} ]]; then
   exit 0
 fi
 
+# A valid path containing diagnostic words must still install successfully.
+cp -a -- "$bundle" "$work/scriptlet-failure bundle"
+bundle=$work/'scriptlet-failure bundle'
 inventory > "$work/before"
 bash "$bundle/install.sh" --assumeyes
 IFS= read -r expected < "$bundle/heimdall-nevra"
