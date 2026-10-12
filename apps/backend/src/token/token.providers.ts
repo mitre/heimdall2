@@ -1,8 +1,8 @@
 import * as crypto from 'crypto';
-import {JwtModule} from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import ms from 'ms';
-import {ConfigModule} from '../config/config.module';
-import {ConfigService} from '../config/config.service';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
 
 export function generateDefault(): string {
   return crypto.randomBytes(64).toString('hex');
@@ -29,9 +29,9 @@ export const tokenProviders = [
       signOptions: {
         expiresIn: limitJWTTime(
           configService.get('JWT_EXPIRE_TIME') || '60s',
-          true
-        )
-      }
-    })
-  })
+          true,
+        ),
+      },
+    }),
+  }),
 ];

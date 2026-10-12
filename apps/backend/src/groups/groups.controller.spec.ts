@@ -1,37 +1,37 @@
-import type {AddressInfo} from 'node:net';
-import {ForbiddenError} from '@casl/ability';
-import type {ExecutionContext, INestApplication} from '@nestjs/common';
-import {SequelizeModule} from '@nestjs/sequelize';
-import type {TestingModule} from '@nestjs/testing';
-import {Test} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
-import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
+import type { AddressInfo } from 'node:net';
+import { ForbiddenError } from '@casl/ability';
+import type { ExecutionContext, INestApplication } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { EVALUATION_1 } from '../../test/constants/evaluations-test.constant';
 import {
   GROUP_1,
   PRIVATE_GROUP,
-  UPDATE_GROUP
+  UPDATE_GROUP,
 } from '../../test/constants/groups-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  CREATE_USER_DTO_TEST_OBJ_2
+  CREATE_USER_DTO_TEST_OBJ_2,
 } from '../../test/constants/users-test.constant';
-import {AuthzService} from '../authz/authz.service';
-import {ConfigModule} from '../config/config.module';
-import {CryptoModule} from '../crypto/crypto.module';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {EvaluationsService} from '../evaluations/evaluations.service';
-import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
-import {GroupUser} from '../group-users/group-user.model';
-import {JwtAuthGuard} from '../guards/jwt-auth.guard';
-import {SlimUserDto} from '../users/dto/slim-user.dto';
-import {User} from '../users/user.model';
-import {UsersService} from '../users/users.service';
-import {Group} from './group.model';
-import {GroupsController} from './groups.controller';
-import {GroupsService} from './groups.service';
+import { AuthzService } from '../authz/authz.service';
+import { ConfigModule } from '../config/config.module';
+import { CryptoModule } from '../crypto/crypto.module';
+import { DatabaseModule } from '../database/database.module';
+import { DatabaseService } from '../database/database.service';
+import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
+import { Evaluation } from '../evaluations/evaluation.model';
+import { EvaluationsService } from '../evaluations/evaluations.service';
+import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { SlimUserDto } from '../users/dto/slim-user.dto';
+import { User } from '../users/user.model';
+import { UsersService } from '../users/users.service';
+import { Group } from './group.model';
+import { GroupsController } from './groups.controller';
+import { GroupsService } from './groups.service';
 
 describe('GroupsController', () => {
   let groupsController: GroupsController;
@@ -56,16 +56,16 @@ describe('GroupsController', () => {
           GroupEvaluation,
           Evaluation,
           EvaluationTag,
-          User
-        ])
+          User,
+        ]),
       ],
       providers: [
         AuthzService,
         DatabaseService,
         GroupsService,
         UsersService,
-        EvaluationsService
-      ]
+        EvaluationsService,
+      ],
     }).compile();
 
     groupsService = module.get<GroupsService>(GroupsService);
@@ -89,8 +89,8 @@ describe('GroupsController', () => {
       expect.assertions(3);
 
       const response = await groupsController.create(
-        {user: basicUser},
-        PRIVATE_GROUP
+        { user: basicUser },
+        PRIVATE_GROUP,
       );
       const group = await groupsService.findByPkBang(response.id);
       expect(response.name).toEqual(PRIVATE_GROUP.name);
@@ -110,7 +110,7 @@ describe('GroupsController', () => {
     it('findAll should only return public groups and groups the user is explicitly added to', async () => {
       expect.assertions(1);
 
-      const groups = await groupsController.findAll({user: basicUser});
+      const groups = await groupsController.findAll({ user: basicUser });
       expect(groups.length).toEqual(1);
     });
 
@@ -119,7 +119,7 @@ describe('GroupsController', () => {
 
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
-      const groups = await groupsController.findAll({user: basicUser});
+      const groups = await groupsController.findAll({ user: basicUser });
       expect(groups.length).toEqual(2);
     });
 
@@ -128,9 +128,9 @@ describe('GroupsController', () => {
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
       const allGroups = await groupsService.findAll();
       const publicGroups = allGroups.filter(
-        (group) => group.public && group.id !== privateGroup.id
+        group => group.public && group.id !== privateGroup.id,
       );
-      const groups = await groupsController.findForUser({user: basicUser});
+      const groups = await groupsController.findForUser({ user: basicUser });
       expect(groups.length).toEqual(1 + publicGroups.length);
     });
 
@@ -138,10 +138,10 @@ describe('GroupsController', () => {
       const otherUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
       await groupsService.addUserToGroup(privateGroup, otherUser, 'member');
-      const groups = await groupsController.findForUser({user: basicUser});
+      const groups = await groupsController.findForUser({ user: basicUser });
 
       expect(groups[0].users).toContainEqual(
-        new SlimUserDto(otherUser, 'member')
+        new SlimUserDto(otherUser, 'member'),
       );
     });
   });
@@ -161,9 +161,9 @@ describe('GroupsController', () => {
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
       const response = await groupsController.update(
-        {user: owner},
+        { user: owner },
         privateGroup.id,
-        UPDATE_GROUP
+        UPDATE_GROUP,
       );
       expect(response.id).toEqual(privateGroup.id);
       expect(response.name).toEqual(UPDATE_GROUP.name);
@@ -179,20 +179,20 @@ describe('GroupsController', () => {
 
       await expect(
         groupsController.update(
-          {user: basicUser},
+          { user: basicUser },
           privateGroup.id,
-          UPDATE_GROUP
-        )
+          UPDATE_GROUP,
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
 
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
       await expect(
         groupsController.update(
-          {user: basicUser},
+          { user: basicUser },
           privateGroup.id,
-          UPDATE_GROUP
-        )
+          UPDATE_GROUP,
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
 
@@ -204,8 +204,8 @@ describe('GroupsController', () => {
 
       await groupsController.addUserToGroup(
         privateGroup.id,
-        {user: owner},
-        {groupRole: 'member', userId: basicUser.id}
+        { user: owner },
+        { groupRole: 'member', userId: basicUser.id },
       );
 
       const groupMembers = await privateGroup.$get('users');
@@ -220,9 +220,9 @@ describe('GroupsController', () => {
       await expect(
         groupsController.addUserToGroup(
           privateGroup.id,
-          {user: basicUser},
-          {groupRole: 'member', userId: user.id}
-        )
+          { user: basicUser },
+          { groupRole: 'member', userId: user.id },
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
 
@@ -231,14 +231,14 @@ describe('GroupsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: basicUser.id
+        userId: basicUser.id,
       });
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
 
       await groupsController.addEvaluationToGroup(
         privateGroup.id,
-        {user: basicUser},
-        {id: evaluation.id}
+        { user: basicUser },
+        { id: evaluation.id },
       );
 
       const groupEvaluations = await privateGroup.$get('evaluations');
@@ -250,36 +250,36 @@ describe('GroupsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: basicUser.id
+        userId: basicUser.id,
       });
 
       await expect(
         groupsController.addEvaluationToGroup(
           privateGroup.id,
-          {user: basicUser},
-          {id: evaluation.id}
-        )
+          { user: basicUser },
+          { id: evaluation.id },
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
 
     it('should stop members from adding an evaluation they do not have access to', async () => {
       expect.assertions(1);
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
 
       await expect(
         groupsController.addEvaluationToGroup(
           privateGroup.id,
-          {user: basicUser},
-          {id: evaluation.id}
-        )
+          { user: basicUser },
+          { id: evaluation.id },
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
@@ -297,8 +297,8 @@ describe('GroupsController', () => {
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
       const response = await groupsController.remove(
-        {user: owner},
-        privateGroup.id
+        { user: owner },
+        privateGroup.id,
       );
       expect(response.id).toEqual(privateGroup.id);
       expect(response.name).toEqual(privateGroup.name);
@@ -310,13 +310,13 @@ describe('GroupsController', () => {
       expect.assertions(2);
 
       await expect(
-        groupsController.remove({user: basicUser}, privateGroup.id)
+        groupsController.remove({ user: basicUser }, privateGroup.id),
       ).rejects.toBeInstanceOf(ForbiddenError);
 
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
       await expect(
-        groupsController.remove({user: basicUser}, privateGroup.id)
+        groupsController.remove({ user: basicUser }, privateGroup.id),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
 
@@ -325,7 +325,7 @@ describe('GroupsController', () => {
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: basicUser.id
+        userId: basicUser.id,
       });
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
@@ -333,8 +333,8 @@ describe('GroupsController', () => {
       expect(evaluationsBeforeRemove.length).toEqual(1);
       await groupsController.removeEvaluationFromGroup(
         privateGroup.id,
-        {user: basicUser},
-        {id: evaluation.id}
+        { user: basicUser },
+        { id: evaluation.id },
       );
       const evaluationsAfterRemove = await privateGroup.$get('evaluations');
       expect(evaluationsAfterRemove.length).toEqual(0);
@@ -343,21 +343,21 @@ describe('GroupsController', () => {
     it('should prevent non-members from removing an evaluation', async () => {
       expect.assertions(1);
       const evaluationOwner = await usersService.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
       );
       const evaluation = await evaluationsService.create({
         ...EVALUATION_1,
         data: {},
-        userId: evaluationOwner.id
+        userId: evaluationOwner.id,
       });
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
 
       await expect(
         groupsController.removeEvaluationFromGroup(
           privateGroup.id,
-          {user: basicUser},
-          {id: evaluation.id}
-        )
+          { user: basicUser },
+          { id: evaluation.id },
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
 
@@ -370,8 +370,8 @@ describe('GroupsController', () => {
       expect(usersBeforeRemove.length).toEqual(2);
       await groupsController.removeUserFromGroup(
         privateGroup.id,
-        {user: basicUser},
-        {userId: user.id}
+        { user: basicUser },
+        { userId: user.id },
       );
       const usersAfterRemove = await privateGroup.$get('users');
       expect(usersAfterRemove.length).toEqual(1);
@@ -386,8 +386,8 @@ describe('GroupsController', () => {
       expect(usersBeforeRemove.length).toEqual(2);
       await groupsController.removeUserFromGroup(
         privateGroup.id,
-        {user: basicUser},
-        {userId: user.id}
+        { user: basicUser },
+        { userId: user.id },
       );
       const usersAfterRemove = await privateGroup.$get('users');
       expect(usersAfterRemove.length).toEqual(1);
@@ -401,9 +401,9 @@ describe('GroupsController', () => {
       await expect(
         groupsController.removeUserFromGroup(
           privateGroup.id,
-          {user: basicUser},
-          {userId: user.id}
-        )
+          { user: basicUser },
+          { userId: user.id },
+        ),
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
@@ -429,9 +429,9 @@ describe('GroupsController route resolution', () => {
 
   const allowWithCurrentUser = {
     canActivate: (context: ExecutionContext): boolean => {
-      context.switchToHttp().getRequest<{user: User}>().user = currentUser;
+      context.switchToHttp().getRequest<{ user: User }>().user = currentUser;
       return true;
-    }
+    },
   };
 
   beforeAll(async () => {
@@ -447,16 +447,16 @@ describe('GroupsController route resolution', () => {
           GroupEvaluation,
           Evaluation,
           EvaluationTag,
-          User
-        ])
+          User,
+        ]),
       ],
       providers: [
         AuthzService,
         DatabaseService,
         GroupsService,
         UsersService,
-        EvaluationsService
-      ]
+        EvaluationsService,
+      ],
     })
       // Auth is not what these tests are about; the routing table is.
       .overrideGuard(JwtAuthGuard)
@@ -515,7 +515,7 @@ describe('GroupsController route resolution', () => {
     const response = await fetch(`${baseUrl}/groups/${created.id}`);
 
     expect(response.status).toBe(200);
-    const body = (await response.json()) as {id: string};
+    const body = (await response.json()) as { id: string };
     expect(body.id).toBe(created.id);
   });
 });

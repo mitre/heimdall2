@@ -3,7 +3,7 @@ import type {ISlimUser} from '@heimdall/common/interfaces';
 import {mount} from '@vue/test-utils';
 import {describe, expect, it} from 'vitest';
 import Vuetify from 'vuetify';
-import {addElemWithDataAppToBody} from '../util/testingUtils';
+import {addElemWithDataAppToBody} from '../util/testing-utils';
 
 addElemWithDataAppToBody();
 

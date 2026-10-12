@@ -1,11 +1,11 @@
-import {validators} from '@heimdall/password-complexity';
-import {BadRequestException, Injectable, PipeTransform} from '@nestjs/common';
+import { validators } from '@heimdall/password-complexity';
+import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 
 export function validatePassword(password?: string): string[] {
   return typeof password === 'string'
     ? validators
-        .filter((validator) => !validator.check(password))
-        .map((validator) => validator.name)
+      .filter(validator => !validator.check(password))
+      .map(validator => validator.name)
     : ['Password must be of type string'];
 }
 
@@ -19,11 +19,13 @@ export class PasswordComplexityPipe implements PipeTransform {
       return value;
     }
     if (
-      typeof value.password === 'string' &&
-      validatePassword(value.password).length === 0
+      typeof value.password === 'string'
+      && validatePassword(value.password).length === 0
     ) {
       return value;
     }
-    throw new BadRequestException(validatePassword(value.password).join(', '));
+    throw new BadRequestException(
+      validatePassword(value.password).join(', '),
+    );
   }
 }

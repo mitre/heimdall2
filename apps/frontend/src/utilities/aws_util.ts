@@ -155,8 +155,7 @@ function isAWSError(e: unknown): e is {name: string; message: string} {
  * The error class is untyped since they've distributed their error/exception classes all over.
  * If the code is not recognized, coughs it back up as an erroname
  */
-export function transcribeError(
-  error: unknown): string {
+export function transcribeError(error: unknown): string {
   if (isAWSError(error)) {
     const {name, message} = error;
     switch (name) {

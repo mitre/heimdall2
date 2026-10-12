@@ -8,7 +8,7 @@ export type IFileInfo = {
   toolVersion: string;
   platform: string;
   duration: string;
-}
+};
 
 // Info used for profile status reporting; lvl 1
 export type IStatistics = {
@@ -22,7 +22,7 @@ export type IStatistics = {
   passingTestsFailedResult: number;
   failedTests: number;
   totalTests: number;
-}
+};
 
 // Info used for profile result severity reporting; lvl 1
 export type ISeverity = {
@@ -31,32 +31,32 @@ export type ISeverity = {
   medium: number;
   high: number;
   critical: number;
-}
+};
 
 // Info used for profile compliance reporting; lvl 1
 export type ICompliance = {
   level: string;
   color: string;
-}
+};
 
 // Container for specific info on each result; lvl 2
 export type IDetail = {
   name: string;
   value: string;
   class?: string;
-}
+};
 
 // Status of a specific result; lvl 2
 export type IResultStatus = {
   status: string;
   icon: string;
-}
+};
 
 // Severity of a specific result; lvl 2
 export type IResultSeverity = {
   severity: string;
   icon: string;
-}
+};
 
 // Container for all results; lvl 1
 export type IResultSet = {
@@ -67,7 +67,7 @@ export type IResultSet = {
   } & {resultStatus: IResultStatus} & {resultSeverity: IResultSeverity} & {
     controlTags: string[];
   })[];
-}
+};
 
 // All used icons; lvl 1
 export type IIcons = Record<string, string>;
@@ -85,4 +85,4 @@ export type IOutputData = {
   showCode: boolean;
   exportType: string;
   icons: IIcons;
-}
+};

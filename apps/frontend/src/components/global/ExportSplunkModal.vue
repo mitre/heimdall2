@@ -96,7 +96,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Logger} from 'winston';
 import {SnackbarModule} from '../../store/snackbar';
-import AuthStep from '../global/upload_tabs/splunk/AuthStep.vue';
+import AuthStep from '../global/upload-tabs/splunk/AuthStep.vue';
 
 @Component({
   components: {

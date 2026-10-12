@@ -1,6 +1,6 @@
-import {ISlimUser} from '@heimdall/common/interfaces';
-import {IsOptional, IsString} from 'class-validator';
-import {User} from '../user.model';
+import { ISlimUser } from '@heimdall/common/interfaces';
+import { IsOptional, IsString } from 'class-validator';
+import { User } from '../user.model';
 
 export class SlimUserDto implements ISlimUser {
   @IsString()

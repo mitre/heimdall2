@@ -7,9 +7,9 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
-  Table
+  Table,
 } from 'sequelize-typescript';
-import {Evaluation} from '../evaluations/evaluation.model';
+import { Evaluation } from '../evaluations/evaluation.model';
 
 @Table
 export class EvaluationTag extends Model {

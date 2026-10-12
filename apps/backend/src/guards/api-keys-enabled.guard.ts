@@ -1,6 +1,6 @@
-import {CanActivate, ExecutionContext, Injectable} from '@nestjs/common';
-import {Observable} from 'rxjs';
-import {ConfigService} from '../config/config.service';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { ConfigService } from '../config/config.service';
 
 @Injectable()
 export class APIKeysEnabled implements CanActivate {
@@ -10,7 +10,7 @@ export class APIKeysEnabled implements CanActivate {
   }
 
   canActivate(
-    _context: ExecutionContext
+    _context: ExecutionContext,
   ): boolean | Observable<boolean> | Promise<boolean> {
     return Boolean(this.configService.get('API_KEY_SECRET'));
   }

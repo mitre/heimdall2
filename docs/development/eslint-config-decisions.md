@@ -94,8 +94,6 @@ correctness value:
 - **`unicorn/consistent-compound-words`** — its three hits rename **exported types of a published
   package** (`FileMetaData`, `GenericPayloadWithMetaData`), which every consumer of hdf-converters
   would have to follow.
-- **`unicorn/filename-case`** — disabled to preserve the existing filenames and imports.
-  The RPM branch's naming-only changes have been reversed; packaging does not require them.
 
 ### 3.4 Style family with dangerous or valueless fixers
 
@@ -123,6 +121,10 @@ a typed-inputs project, not a lint sweep.
 
 ### 3.7 Rules reconfigured rather than disabled
 
+- **`unicorn/filename-case: kebabCase`** — the rule's own default, what NestJS generates, and what
+  the repo already is (`apps/backend/src` alone: 56 kebab-case files, zero snake_case). The previous
+  `snakeCase` setting matched nothing and produced 343 errors, hidden until `|| true` came out.
+  Packages with a different *measured* convention get scoped case unions rather than renames.
 - **`@typescript-eslint/no-unused-vars`** with `^_` ignore patterns on args, caught errors,
   destructured arrays and vars. The underscore prefix is the ecosystem's intentionally-unused
   marker and this codebase already uses it; unmarked unused vars still flag.
@@ -201,8 +203,8 @@ This branch added **six**, each carrying an impossibility rationale at its site:
 
 | Site | Rule | Why no code fix exists |
 |---|---|---|
-| `apps/backend/config/app_config.ts` | `security/detect-non-literal-fs-filename` | Reads an operator-configured TLS path |
-| `apps/backend/config/app_config.ts` | `security/detect-object-injection` | `process.env` is the platform's exotic object — no `.get()`, and a dynamically named variable requires bracket access |
+| `apps/backend/config/app-config.ts:17` | `security/detect-non-literal-fs-filename` | Reads an operator-configured TLS path |
+| `apps/backend/config/app-config.ts:62` | `security/detect-object-injection` | `process.env` is the platform's exotic object — no `.get()`, and a dynamically named variable requires bracket access |
 | `apps/backend/src/authn/ldap.strategy.ts:83` | `unicorn/prefer-at` | `.at()` widened the type |
 | `apps/backend/src/casl/casl-exception.filter.ts:10` | `promise/valid-params` | Nest's base filter signature |
 | `apps/backend/src/tenable/tenable.controller.ts:25` | `@typescript-eslint/consistent-type-definitions` | Module augmentation requires `interface` |
@@ -216,9 +218,7 @@ Pre-existing disables not added by this work (`vue/no-v-html` in the control-tab
 Prettier **3.9.6** with `eslint-config-prettier` **10.1.8**, configured last in
 `eslint.config.mjs` so formatting rules defer to it. `eslint-plugin-prettier` is deliberately not
 used — Prettier's own documentation discourages running it as an ESLint rule. `.prettierrc.json`
-uses single quotes, no bracket spacing, and no trailing commas to match the existing source
-layout. Scripts are `yarn format` and `yarn format:check`.
-ESLint also leaves existing comment spacing and blank lines between class members unchanged.
+sets `singleQuote` only. Scripts are `yarn format` and `yarn format:check`.
 
 **The repo-wide reformat has not run yet** — roughly 576 files. It is card `heimdall2-fhtn`, and
 `.git-blame-ignore-revs` is already scaffolded for that commit.
@@ -235,8 +235,8 @@ misleading. Corrected:
 - **"Fix the `@eslint/markdown` crash"** — handled, with an ignore and an upstream note in the
   config.
 - **`unicorn/consistent-boolean-name` listed as ERROR / "legitimate"** — it is now **off** (§3.3).
-- **`unicorn/filename-case` described as a four-case union** — it is now disabled to avoid
-  naming-only changes (§3.3).
+- **`unicorn/filename-case` described as a four-case union** — it is now `kebabCase` with scoped
+  unions only where a different convention was measured.
 - **`perfectionist/*` rows described as disabled overrides** — the preset is not extended at all, by
   design (§2).
 - **`@typescript-eslint/restrict-template-expressions` described as reconfigured** with

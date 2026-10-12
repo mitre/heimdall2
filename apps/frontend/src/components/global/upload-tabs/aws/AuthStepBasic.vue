@@ -52,7 +52,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import FileList from '@/components/global/upload-tabs/aws/FileList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {requireFieldRule} from '@/utilities/upload_util';
 

@@ -1,12 +1,12 @@
-import {forwardRef, Module} from '@nestjs/common';
-import {SequelizeModule} from '@nestjs/sequelize';
-import {AuthzModule} from '../authz/authz.module';
-import {ConfigModule} from '../config/config.module';
-import {CryptoModule} from '../crypto/crypto.module';
-import {GroupsModule} from '../groups/groups.module';
-import {User} from './user.model';
-import {UsersController} from './users.controller';
-import {UsersService} from './users.service';
+import { forwardRef, Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { AuthzModule } from '../authz/authz.module';
+import { ConfigModule } from '../config/config.module';
+import { CryptoModule } from '../crypto/crypto.module';
+import { GroupsModule } from '../groups/groups.module';
+import { User } from './user.model';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   controllers: [UsersController],
@@ -16,8 +16,8 @@ import {UsersService} from './users.service';
     AuthzModule,
     ConfigModule,
     CryptoModule,
-    forwardRef(() => GroupsModule)
+    forwardRef(() => GroupsModule),
   ],
-  providers: [UsersService]
+  providers: [UsersService],
 })
 export class UsersModule {}

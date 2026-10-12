@@ -4,10 +4,16 @@
 
 import type {ColorHack} from '@/store/color_hack';
 import Chroma from 'chroma-js';
-import type {HierarchyNode} from 'd3-hierarchy';
+import type { HierarchyNode} from 'd3-hierarchy';
 import {hierarchy} from 'd3-hierarchy';
-import type {ContextualizedControl, NistHierarchyNode} from 'inspecjs';
-import {FULL_NIST_HIERARCHY, NistControl} from 'inspecjs';
+import type {
+  ContextualizedControl,
+  NistHierarchyNode
+} from 'inspecjs';
+import {
+  FULL_NIST_HIERARCHY,
+  NistControl
+} from 'inspecjs';
 import {control_unique_key} from './format_util';
 
 // How deep into nist trees we allow
@@ -152,6 +158,7 @@ function populate_tree_map(
       parent.children.push(leaf);
       leaf.parent = parent;
     } else {
+       
       console.warn(
         `Warning: unable to assign control ${leaf.nist_control.rawText} to valid treemap leaf`
       );

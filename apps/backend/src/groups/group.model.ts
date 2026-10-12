@@ -10,12 +10,12 @@ import {
   PrimaryKey,
   Table,
   Unique,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
-import {GroupUser} from '../group-users/group-user.model';
-import {User} from '../users/user.model';
+import { Evaluation } from '../evaluations/evaluation.model';
+import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { User } from '../users/user.model';
 
 @Table
 export class Group extends Model {
@@ -30,7 +30,7 @@ export class Group extends Model {
   declare desc: string;
 
   @BelongsToMany(() => Evaluation, () => GroupEvaluation)
-  declare evaluations: (Evaluation & {GroupEvaluation: GroupEvaluation})[];
+  declare evaluations: (Evaluation & { GroupEvaluation: GroupEvaluation })[];
 
   @PrimaryKey
   @AutoIncrement
@@ -54,5 +54,5 @@ export class Group extends Model {
   declare updatedAt: Date;
 
   @BelongsToMany(() => User, () => GroupUser)
-  declare users: (User & {GroupUser: GroupUser})[];
+  declare users: (User & { GroupUser: GroupUser })[];
 }

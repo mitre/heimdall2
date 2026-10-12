@@ -1,25 +1,23 @@
-import {Module} from '@nestjs/common';
-import {SequelizeModule} from '@nestjs/sequelize';
-import {createLogger, format, transports} from 'winston';
-import {ConfigModule} from '../config/config.module';
-import {ConfigService} from '../config/config.service';
-import {DatabaseService} from './database.service';
+import { Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { createLogger, format, transports } from 'winston';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
+import { DatabaseService } from './database.service';
 
 const line = '________________________________________________\n';
 const logger = createLogger({
   format: format.combine(
-    format.colorize({all: true}),
-    format.timestamp({format: 'MMM-DD-YYYY HH:mm:ss Z'}),
-    format.errors({stack: true}),
+    format.colorize({ all: true }),
+    format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
+    format.errors({ stack: true }),
     format.align(),
     format.printf(
-      (info) =>
-        `${line}[${String(info.timestamp)}] Query(${String(
-          info.queryType
-        )}): ${String(info.message)}`
-    )
+      info =>
+        `${line}[${String(info.timestamp)}] Query(${String(info.queryType)}): ${String(info.message)}`,
+    ),
   ),
-  transports: [new transports.Console()]
+  transports: [new transports.Console()],
 });
 
 const localConfigService = new ConfigService();
@@ -34,21 +32,21 @@ function getSynchronize(configService: ConfigService): boolean {
 
 function logQuery(
   sql: string,
-  connection: {bind: string[]; fields: string[]; type: string}
+  connection: { bind: string[]; fields: string[]; type: string },
 ) {
   logger.info({
     message: `${sql} [${sanitize(connection.fields, connection.bind).join(
-      ', '
+      ', ',
     )}]`,
-    queryType: connection.type
+    queryType: connection.type,
   });
 }
 
 function sanitize(fields: string[], values?: string[]): string[] {
   return (
     values?.map((value, index) => {
-      return localConfigService.sensitiveKeys.some((regex) =>
-        regex.test(fields[index + 1])
+      return localConfigService.sensitiveKeys.some(regex =>
+        regex.test(fields[index + 1]),
       )
         ? 'REDACTED'
         : value;
@@ -73,19 +71,19 @@ function sanitize(fields: string[], values?: string[]): string[] {
               bind: string[];
               fields: string[];
               type: string;
-            }
+            },
           );
         },
         pool: {
           acquire: 30_000,
           idle: 10_000,
           max: 5,
-          min: 0
+          min: 0,
         },
-        synchronize: getSynchronize(configService)
-      })
-    })
+        synchronize: getSynchronize(configService),
+      }),
+    }),
   ],
-  providers: [DatabaseService]
+  providers: [DatabaseService],
 })
 export class DatabaseModule {}

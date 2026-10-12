@@ -18,7 +18,7 @@ import {
 type ICweEntry = {
   cweId: number;
   name: string;
-}
+};
 
 const IMPACT_MAPPING = new Map<string, number>([
   ['critical', 0.9],
@@ -199,6 +199,7 @@ export class DependencyTrackMapper extends BaseConverter {
       }
     }
   };
+
   constructor(dtJson: string, withRaw = false) {
     super(JSON.parse(dtJson));
     this.withRaw = withRaw;

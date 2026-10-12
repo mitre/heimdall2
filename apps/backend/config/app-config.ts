@@ -8,7 +8,7 @@ import * as dotenv from 'dotenv';
  */
 export function resolveSslMaterial(
   value: string,
-  label: string
+  label: string,
 ): Buffer | string {
   if (value.includes('-BEGIN')) {
     return value;
@@ -21,14 +21,14 @@ export function resolveSslMaterial(
     return fs.readFileSync(value);
   } catch (error) {
     throw new Error(`SSL ${label} file does not exist or is unreadable`, {
-      cause: error
+      cause: error,
     });
   }
 }
 
 // DATABASE_URL anatomy: scheme://user:password@host:port/name?query
-const DATABASE_URL_PATTERN =
-  /^(?:[^\s#/:?]+:\/{2})?(?:(?<userinfo>[^\s#/?@]+)@)?(?<hostPort>[^\s#/?]+)?(?:\/(?<name>[^\s#?]*))?(?:\?[^\s#]*)?(?:#\S*)?$/;
+const DATABASE_URL_PATTERN
+  = /^(?:[^\s#/:?]+:\/{2})?(?:(?<userinfo>[^\s#/?@]+)@)?(?<hostPort>[^\s#/?]+)?(?:\/(?<name>[^\s#?]*))?(?:\?[^\s#]*)?(?:#\S*)?$/;
 // The host:port boundary — the colon directly before a trailing port number.
 const HOST_PORT_SEPARATOR = /:(?=\d+$)/v;
 
@@ -53,7 +53,7 @@ export default class AppConfig {
     }
     if (this.parseDatabaseUrl()) {
       console.log(
-        'DATABASE_URL parsed into smaller components (i.e. DATABASE_USER)'
+        'DATABASE_URL parsed into smaller components (i.e. DATABASE_USER)',
       );
     }
   }
@@ -76,7 +76,7 @@ export default class AppConfig {
     const nodeEnvironment = this.get('NODE_ENV');
     if (nodeEnvironment === undefined) {
       throw new TypeError(
-        'NODE_ENV and DATABASE_NAME are undefined. Unable to set database or use the default based on environment.'
+        'NODE_ENV and DATABASE_NAME are undefined. Unable to set database or use the default based on environment.',
       );
     }
     return `heimdall-server-${nodeEnvironment.toLowerCase()}`;
@@ -86,14 +86,14 @@ export default class AppConfig {
     return {
       database: this.getDatabaseName(),
       dialect: 'postgres' as const,
-      dialectOptions: {ssl: this.getSSLConfig()},
+      dialectOptions: { ssl: this.getSSLConfig() },
       host: this.get('DATABASE_HOST') || '127.0.0.1',
       password: this.get('DATABASE_PASSWORD') || '',
       port: Number(this.get('DATABASE_PORT')) || 5432,
       role: this.get('DATABASE_USERNAME') || 'postgres',
       ssl: Boolean(this.get('DATABASE_SSL')),
       user: this.get('DATABASE_USERNAME') || 'postgres',
-      username: this.get('DATABASE_USERNAME') || 'postgres'
+      username: this.get('DATABASE_USERNAME') || 'postgres',
     };
   }
 
@@ -113,8 +113,8 @@ export default class AppConfig {
 
   getSSLConfig() {
     if (
-      !this.get('DATABASE_SSL') ||
-      this.get('DATABASE_SSL')?.toLowerCase() === 'false'
+      !this.get('DATABASE_SSL')
+      || this.get('DATABASE_SSL')?.toLowerCase() === 'false'
     ) {
       return false;
     }
@@ -138,8 +138,8 @@ export default class AppConfig {
       cert: sslCert,
       key: sslKey,
       rejectUnauthorized:
-        this.get('DATABASE_SSL_INSECURE') &&
-        this.get('DATABASE_SSL_INSECURE')?.toLowerCase() !== 'true'
+        this.get('DATABASE_SSL_INSECURE')
+        && this.get('DATABASE_SSL_INSECURE')?.toLowerCase() !== 'true',
     };
   }
 
@@ -170,27 +170,23 @@ export default class AppConfig {
 
       this.set(
         'DATABASE_USERNAME',
-        userinfo === undefined ? undefined : userinfo.split(':', 1)[0]
+        userinfo === undefined ? undefined : userinfo.split(':', 1)[0],
       );
       this.set(
         'DATABASE_PASSWORD',
-        userinfo === undefined ? undefined : userinfo.split(':', 2)[1]
+        userinfo === undefined ? undefined : userinfo.split(':', 2)[1],
       );
       this.set(
         'DATABASE_HOST',
-        hostPort === undefined
-          ? undefined
-          : hostPort.split(HOST_PORT_SEPARATOR, 1)[0]
+        hostPort === undefined ? undefined : hostPort.split(HOST_PORT_SEPARATOR, 1)[0],
       );
       this.set(
         'DATABASE_NAME',
-        name === undefined ? undefined : name.split('/', 1)[0]
+        name === undefined ? undefined : name.split('/', 1)[0],
       );
       this.set(
         'DATABASE_PORT',
-        hostPort === undefined
-          ? undefined
-          : hostPort.split(HOST_PORT_SEPARATOR, 2)[1]
+        hostPort === undefined ? undefined : hostPort.split(HOST_PORT_SEPARATOR, 2)[1],
       );
       return true;
     }

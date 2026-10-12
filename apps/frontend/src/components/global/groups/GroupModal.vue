@@ -102,7 +102,7 @@
 
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
-import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue';
+import GroupAPIKeysModal from '@/components/global/groups/GroupApiKeysModal.vue';
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {ServerModule} from '@/store/server';

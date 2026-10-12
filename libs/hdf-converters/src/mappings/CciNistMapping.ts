@@ -1,6 +1,6 @@
 import {XMLParser} from 'fast-xml-parser';
 import _ from 'lodash';
-import {CCI_List} from '../utils/CCI_List';
+import {CCI_List} from '../utils/cci-list';
 import {data} from './CciNistMappingData';
 import {CciNistMappingItem} from './CciNistMappingItem';
 

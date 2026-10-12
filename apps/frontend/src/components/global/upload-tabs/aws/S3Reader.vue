@@ -60,9 +60,9 @@
 import {_Object, ListObjectsV2Command, S3Client} from '@aws-sdk/client-s3';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import AuthStepBasic from '@/components/global/upload_tabs/aws/AuthStepBasic.vue';
-import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import AuthStepBasic from '@/components/global/upload-tabs/aws/AuthStepBasic.vue';
+import AuthStepMFA from '@/components/global/upload-tabs/aws/AuthStepMfa.vue';
+import FileList from '@/components/global/upload-tabs/aws/FileList.vue';
 import {FileID} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {

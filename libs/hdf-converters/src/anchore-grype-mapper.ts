@@ -27,7 +27,7 @@ function skipSeverityNegligibleOrUnknown(controls: unknown[]): unknown[] {
       // Filter to controls whose highest rating severity is either `negligible` or `unknown`
       .filter((control) => {
         const rating = _.get(control, 'tags.severity', '') as string;
-        //console.log(rating)
+        // console.log(rating)
         return rating === 'Negligible' || rating === 'Unknown';
       })
       // For every result contained by that control, set the status to skipped and request a manual review
@@ -226,7 +226,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
       passthrough: {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
           return {
-            auxiliary_data: [{name: '', data: _.omit([])}], //Insert service name and mapped fields to be removed
+            auxiliary_data: [{name: '', data: _.omit([])}], // Insert service name and mapped fields to be removed
             ...(this.withRaw && {raw: data})
           };
         }

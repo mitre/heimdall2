@@ -1,23 +1,23 @@
-import {Ability} from '@casl/ability';
+import { Ability } from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions} from 'sequelize';
-import {v4} from 'uuid';
-import {AuthnService} from '../authn/authn.service';
-import {Action} from '../casl/casl-ability.factory';
-import {ConfigService} from '../config/config.service';
-import {verifyPassword} from '../crypto/password';
-import {PasswordService} from '../crypto/password.service';
-import {GroupsService} from '../groups/groups.service';
-import {CreateUserDto} from './dto/create-user.dto';
-import {DeleteUserDto} from './dto/delete-user.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
-import {User} from './user.model';
+import { InjectModel } from '@nestjs/sequelize';
+import { FindOptions } from 'sequelize';
+import { v4 } from 'uuid';
+import { AuthnService } from '../authn/authn.service';
+import { Action } from '../casl/casl-ability.factory';
+import { ConfigService } from '../config/config.service';
+import { verifyPassword } from '../crypto/password';
+import { PasswordService } from '../crypto/password.service';
+import { GroupsService } from '../groups/groups.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.model';
 
 @Injectable()
 export class UsersService {
@@ -26,7 +26,7 @@ export class UsersService {
     private readonly userModel: typeof User,
     private readonly configService: ConfigService,
     private readonly groupsService: GroupsService,
-    private readonly passwordService: PasswordService
+    private readonly passwordService: PasswordService,
   ) {}
 
   async adminFindAllUsers(): Promise<User[]> {
@@ -50,7 +50,7 @@ export class UsersService {
       // ADR-006 §4 site 1: PBKDF2 via the validated module, PHC output (§2).
       // PasswordHashError (missing password, over-cap length) maps to 400.
       user.encryptedPassword = await this.passwordService.hash(
-        createUserDto.password
+        createUserDto.password,
       );
     } catch {
       throw new BadRequestException();
@@ -59,13 +59,11 @@ export class UsersService {
   }
 
   async findAllUsers(): Promise<User[]> {
-    return this.userModel.findAll<User>({
-      attributes: ['id', 'email', 'title', 'firstName', 'lastName']
-    });
+    return this.userModel.findAll<User>({ attributes: ['id', 'email', 'title', 'firstName', 'lastName'] });
   }
 
   async findByEmail(email: string): Promise<User> {
-    return this.findOneBang({where: {email}});
+    return this.findOneBang({ where: { email } });
   }
 
   async findById(id: string): Promise<User> {
@@ -73,7 +71,7 @@ export class UsersService {
   }
 
   async findByPkBang(
-    identifier: Buffer | number | string | undefined
+    identifier: Buffer | number | string | undefined,
   ): Promise<User> {
     const user = await this.userModel.findByPk<User>(identifier);
     if (user === null) {
@@ -93,39 +91,39 @@ export class UsersService {
   async remove(
     userToDelete: User,
     deleteUserDto: DeleteUserDto,
-    abac: Ability
+    abac: Ability,
   ): Promise<User> {
     if (abac.cannot(Action.DeleteNoPassword, userToDelete)) {
       // Site 3 (ADR-006 §4): verify-only — consumes .valid alone, never
       // rehashes. Handles PBKDF2 and legacy bcrypt; refuses bcrypt under
       // FIPS like any failed verification.
-      const {valid} = await verifyPassword({
+      const { valid } = await verifyPassword({
         hash: userToDelete.encryptedPassword,
-        password: deleteUserDto.password || ''
+        password: deleteUserDto.password || '',
       });
       if (!valid) {
         throw new ForbiddenException(
-          'Password was incorrect, could not delete account'
+          'Password was incorrect, could not delete account',
         );
       }
     }
 
-    const adminCount = await this.userModel.count({where: {role: 'admin'}});
+    const adminCount = await this.userModel.count({ where: { role: 'admin' } });
     // Do not allow the administrator to destroy the only
     // administrator account
     if (userToDelete.role === 'admin' && adminCount < 2) {
       throw new ForbiddenException(
-        'Cannot destroy only administrator account, please promote another user to administrator first'
+        'Cannot destroy only administrator account, please promote another user to administrator first',
       );
     }
     // Clean up groups owned by user
     const allGroups = await this.groupsService.findAll();
     await Promise.all(
       allGroups.map(async (group) => {
-        if (group.users.some((user) => user.id === userToDelete.id)) {
+        if (group.users.some(user => user.id === userToDelete.id)) {
           await this.groupsService.ensureGroupHasOwner(group, userToDelete);
         }
-      })
+      }),
     );
     await userToDelete.destroy();
     return userToDelete;
@@ -134,16 +132,16 @@ export class UsersService {
   async update(
     userToUpdate: User,
     updateUserDto: UpdateUserDto,
-    abac: Ability
+    abac: Ability,
   ): Promise<User> {
     if (!abac.can('update-no-password', userToUpdate)) {
       await AuthnService.prototype.testPassword(updateUserDto, userToUpdate);
     }
     if (
-      (updateUserDto.password === undefined ||
-        updateUserDto.password === null) &&
-      userToUpdate.forcePasswordChange &&
-      !abac.can('skip-force-password-change', userToUpdate)
+      (updateUserDto.password === undefined
+        || updateUserDto.password === null)
+      && userToUpdate.forcePasswordChange
+      && !abac.can('skip-force-password-change', userToUpdate)
     ) {
       throw new BadRequestException('You must change your password');
     }
@@ -153,7 +151,7 @@ export class UsersService {
         // (§2). Over-cap length (§6 approved range) maps to 400, matching
         // create(); bcryptjs silently truncated at 72 bytes instead.
         userToUpdate.encryptedPassword = await this.passwordService.hash(
-          updateUserDto.password
+          updateUserDto.password,
         );
       } catch {
         throw new BadRequestException();
@@ -165,14 +163,14 @@ export class UsersService {
     userToUpdate.firstName = updateUserDto.firstName || userToUpdate.firstName;
     userToUpdate.lastName = updateUserDto.lastName || userToUpdate.lastName;
     userToUpdate.title = updateUserDto.title || userToUpdate.title;
-    userToUpdate.organization =
-      updateUserDto.organization || userToUpdate.organization;
+    userToUpdate.organization
+      = updateUserDto.organization || userToUpdate.organization;
     if (abac.can('update-role', userToUpdate)) {
       // Only admins can update roles
       userToUpdate.role = updateUserDto.role || userToUpdate.role;
     }
-    userToUpdate.forcePasswordChange =
-      updateUserDto.forcePasswordChange || userToUpdate.forcePasswordChange;
+    userToUpdate.forcePasswordChange
+      = updateUserDto.forcePasswordChange || userToUpdate.forcePasswordChange;
     return userToUpdate.save();
   }
 
@@ -190,15 +188,15 @@ export class UsersService {
   async updateEncryptedPassword(
     userId: string,
     originalHash: string,
-    newHash: string
+    newHash: string,
   ): Promise<number> {
     const [affected] = await this.userModel.update(
-      {encryptedPassword: newHash},
+      { encryptedPassword: newHash },
       {
         fields: ['encryptedPassword'],
         silent: true,
-        where: {encryptedPassword: originalHash, id: userId}
-      }
+        where: { encryptedPassword: originalHash, id: userId },
+      },
     );
     return affected;
   }

@@ -55,7 +55,7 @@ function collateShaAndFilenames(
   const shaFilePairs: string[][] = [];
   for (const [sha, file] of Object.entries(currLevel)) {
     if (_.has(file, 'name')) {
-      //name always array of size 1
+      // name always array of size 1
       const name: string = _.get(file, 'name[0]') || '';
       shaFilePairs.push([sha, name]);
     }
@@ -246,6 +246,7 @@ export class ConveyorMapper extends BaseConverter {
       }
     ]
   };
+
   constructor(
     remappedConveyorResults: Record<string, unknown>,
     data: Record<string, unknown>,

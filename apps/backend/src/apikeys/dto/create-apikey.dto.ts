@@ -1,5 +1,5 @@
-import {ICreateApiKey} from '@heimdall/common/interfaces';
-import {IsOptional, IsString} from 'class-validator';
+import { ICreateApiKey } from '@heimdall/common/interfaces';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateApiKeyDto implements ICreateApiKey {
   @IsString()

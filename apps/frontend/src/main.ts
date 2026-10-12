@@ -32,8 +32,7 @@ new Vue({
         // A request without a URL resolves to the page's own origin, which is
         // what passing undefined did before this parameter was typed.
         const origin =
-          URL.parse(error.config?.url ?? '', location.origin)?.origin ??
-          '';
+          URL.parse(error.config?.url ?? '', location.origin)?.origin ?? '';
         // If there is no backend token then it is safe to assume this request
         // originated from the login page and should not perform the logout action.
         if (

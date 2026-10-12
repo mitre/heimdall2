@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import {
   GITLAB_CANONICAL_SECRET_ENV,
   GITLAB_LEGACY_SECRET_ENV,
-} from '../../test/constants/environment_test.constant';
+} from '../../test/constants/environment-test.constant';
 import { ConfigService } from '../config/config.service';
 import { AuthnService } from './authn.service';
 import { GitlabStrategy } from './gitlab.strategy';

@@ -1,4 +1,4 @@
-/////Interfaces for ExecJSON focused on ASFF
+/// //Interfaces for ExecJSON focused on ASFF
 
 export type IOptions = {
   input: string;
@@ -6,11 +6,11 @@ export type IOptions = {
   target: string;
   region: string;
   regionAttribute?: boolean;
-}
+};
 
 export type IExecJSONASFF = {
   Findings: IFindingASFF[];
-}
+};
 
 export type IFindingASFF = {
   SchemaVersion: string;
@@ -37,18 +37,18 @@ export type IFindingASFF = {
   Workflow?: {Status: string};
   RecordState?: string;
   FindingProviderFields: IFindingProviderFieldsASFF;
-}
+};
 
 export type ISeverityASFF = {
   Product?: number;
   Label: string;
   Normalized?: number;
   Original?: string;
-}
+};
 
 export type IRemediationASFF = {
   Recommendation: {Text: string; Url?: string};
-}
+};
 
 export type IProductFieldsASFF = {
   Check?: string | Record<string, unknown>;
@@ -62,7 +62,7 @@ export type IProductFieldsASFF = {
   'aws/securityhub/annotation'?: string;
   'Resources:0/Id'?: string;
   'aws/securityhub/FindingId'?: string;
-}
+};
 
 export type IResourcesASFF = {
   Type: string;
@@ -72,7 +72,7 @@ export type IResourcesASFF = {
   Details?: {
     AwsIamRole: {AssumeRolePolicyDocument: string | Record<string, unknown>};
   };
-}
+};
 
 export type IComplianceASFF = {
   Status: string;
@@ -85,4 +85,4 @@ export type IComplianceASFF = {
 export type IFindingProviderFieldsASFF = {
   Severity: {Label: string; Original?: string};
   Types: string[] | Record<string, unknown>;
-}
+};

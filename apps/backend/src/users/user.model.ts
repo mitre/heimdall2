@@ -11,10 +11,10 @@ import {
   PrimaryKey,
   Table,
   Unique,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
-import {GroupUser} from '../group-users/group-user.model';
-import {Group} from '../groups/group.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { Group } from '../groups/group.model';
 
 @Table
 export class User extends Model {
@@ -46,7 +46,7 @@ export class User extends Model {
   declare forcePasswordChange: boolean | undefined;
 
   @BelongsToMany(() => Group, () => GroupUser)
-  declare groups: (Group & {GroupUser: GroupUser})[];
+  declare groups: (Group & { GroupUser: GroupUser })[];
 
   @PrimaryKey
   @AutoIncrement

@@ -38,8 +38,8 @@ const branding = {
   mitreSecondaryYellow: '#FFE23C',
   mitreSecondaryOrange: '#F7901E',
   mitreSecondaryRed: '#C6401D',
-  mitreSectionBackground: '#f3f2f2', //#eff3f5;
-  mitreSectionBorder: '#cfcfcf', //#b4bfae
+  mitreSectionBackground: '#f3f2f2', // #eff3f5;
+  mitreSectionBorder: '#cfcfcf', // #b4bfae
   mitreCardShadow: '#d6d6d6'
 };
 
@@ -84,7 +84,7 @@ const vuetify = new Vuetify({
 });
 export default vuetify;
 
-/*** colors from new MII homepage ***/
+/** * colors from new MII homepage ***/
 /*
 @highlightGrey: #999999;
 @cardLabelIcons: #aaaaaa;
@@ -100,7 +100,7 @@ export default vuetify;
 @link-color: @fontLink;         //#0015E8;
 @sectionBackground: #f3f2f2;    //#eff3f5;
 @sectionBorder: #cfcfcf;        //#b4bfae
-/*outlook chart states*/
+/*outlook chart states */
 /*
 @outlookBusy: #9698ce;
 @outlookOut: #a96ead;

@@ -1,54 +1,48 @@
 import {
   ForbiddenException,
   Injectable,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions, Op} from 'sequelize';
-import {createLogger, format, transports} from 'winston';
-import AppConfig from '../../config/app_config';
-import {Evaluation} from '../evaluations/evaluation.model';
-import {GroupUser} from '../group-users/group-user.model';
-import {User} from '../users/user.model';
-import {CreateGroupDto} from './dto/create-group.dto';
-import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
-import {Group} from './group.model';
+import { InjectModel } from '@nestjs/sequelize';
+import { FindOptions, Op } from 'sequelize';
+import { createLogger, format, transports } from 'winston';
+import AppConfig from '../../config/app-config';
+import { Evaluation } from '../evaluations/evaluation.model';
+import { GroupUser } from '../group-users/group-user.model';
+import { User } from '../users/user.model';
+import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupUserRoleDto } from './dto/update-group-user.dto';
+import { Group } from './group.model';
 @Injectable()
 export class GroupsService {
   private readonly line = '_______________________________________________\n';
   public logger = createLogger({
     format: format.combine(
-      format.timestamp({format: 'MMM-DD-YYYY HH:mm:ss Z'}),
+      format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
       format.printf(
-        (info) =>
-          `${this.line}[${String([info.timestamp])}] (Group Service): ${String(
-            info.message
-          )}`
-      )
+        info =>
+          `${this.line}[${String([info.timestamp])}] (Group Service): ${String(info.message)}`,
+      ),
     ),
-    transports: [new transports.Console()]
+    transports: [new transports.Console()],
   });
 
   constructor(
     @InjectModel(Group)
     private readonly groupModel: typeof Group,
     @InjectModel(User)
-    private readonly userModel: typeof User
+    private readonly userModel: typeof User,
   ) {}
 
   async addEvaluationToGroup(
     group: Group,
-    evaluation: Evaluation
+    evaluation: Evaluation,
   ): Promise<void> {
-    await group.$add('evaluation', evaluation, {
-      through: {createdAt: new Date(), updatedAt: new Date()}
-    });
+    await group.$add('evaluation', evaluation, { through: { createdAt: new Date(), updatedAt: new Date() } });
   }
 
   async addUserToGroup(group: Group, user: User, role: string): Promise<void> {
-    await group.$add('user', user, {
-      through: {createdAt: new Date(), role: role, updatedAt: new Date()}
-    });
+    await group.$add('user', user, { through: { createdAt: new Date(), role: role, updatedAt: new Date() } });
   }
 
   async count(): Promise<number> {
@@ -57,11 +51,11 @@ export class GroupsService {
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
     const sameNamedGroups = await this.groupModel.findAll({
-      where: {name: createGroupDto.name}
+      where: { name: createGroupDto.name },
     });
     if (sameNamedGroups.length > 0) {
       throw new ForbiddenException(
-        'Duplicate key detected. The names of groups must be unique.'
+        'Duplicate key detected. The names of groups must be unique.',
       );
     }
 
@@ -71,30 +65,28 @@ export class GroupsService {
 
   async ensureGroupHasOwner(
     group: Group,
-    user: GroupUser | User
+    user: GroupUser | User,
   ): Promise<void> {
     const groupUsers = await group.$get('users');
     const owners = groupUsers.filter(
-      (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
+      userOnGroup => userOnGroup.GroupUser.role === 'owner',
     );
     // If there are no more owners, set an admin to owner
     if (
-      (owners.length < 2 &&
-        owners.some(
-          (owner) => owner.id === ('userId' in user ? user.userId : user.id)
-        )) ||
-      owners.length === 0
+      (owners.length < 2
+        && owners.some(
+          owner => owner.id === ('userId' in user ? user.userId : user.id),
+        ))
+        || owners.length === 0
     ) {
       const appConfig = new AppConfig();
       // If default admin is not found, use admin with lowest ID
-      const admin =
-        (await this.userModel.findOne({
-          where: {email: appConfig.getDefaultAdmin(), role: 'admin'}
-        })) ||
-        (await this.userModel.findOne({
-          order: [['id', 'ASC']],
-          where: {role: 'admin'}
-        }));
+      const admin
+        = (await this.userModel.findOne({ where: { email: appConfig.getDefaultAdmin(), role: 'admin' } }))
+          || (await this.userModel.findOne({
+            order: [['id', 'ASC']],
+            where: { role: 'admin' },
+          }));
       if (admin === null) {
         // No admin found in system
         throw new ForbiddenException('No admin to be promoted');
@@ -103,10 +95,10 @@ export class GroupsService {
         const adminId = admin.id;
         const usersInGroup = await group.$get('users');
         const adminInGroup = usersInGroup.find(
-          (userOnGroup) => userOnGroup.id === adminId
+          userOnGroup => userOnGroup.id === adminId,
         );
         if (adminInGroup) {
-          await adminInGroup.GroupUser.update({role: 'owner'});
+          await adminInGroup.GroupUser.update({ role: 'owner' });
         } else {
           await this.addUserToGroup(group, admin, 'owner');
         }
@@ -115,26 +107,26 @@ export class GroupsService {
   }
 
   async findAll(): Promise<Group[]> {
-    return this.groupModel.findAll<Group>({include: 'users'});
+    return this.groupModel.findAll<Group>({ include: 'users' });
   }
 
   async findByIds(id: string[]): Promise<Group[]> {
     return this.groupModel.findAll({
       include: 'users',
-      where: {id: {[Op.in]: id}}
+      where: { id: { [Op.in]: id } },
     });
   }
 
   // This method is used to find groups by group name,
   // primarily to sync user roles from an external provider
   async findByName(name: string): Promise<Group> {
-    return this.findOneBang({where: {name}});
+    return this.findOneBang({ where: { name } });
   }
 
   async findByPkBang(id: string): Promise<Group> {
     // Users must be included for determining permissions on the group.
     // Other assocations should be called by their ID separately and not eagerly loaded.
-    const group = await this.groupModel.findByPk(id, {include: 'users'});
+    const group = await this.groupModel.findByPk(id, { include: 'users' });
     if (group === null) {
       throw new NotFoundException('Group with given id not found');
     }
@@ -157,7 +149,7 @@ export class GroupsService {
 
   async removeEvaluationFromGroup(
     group: Group,
-    evaluation: Evaluation
+    evaluation: Evaluation,
   ): Promise<Group> {
     return group.$remove('evaluation', evaluation);
   }
@@ -172,9 +164,9 @@ export class GroupsService {
   // It will additionally remove the user from any groups not in the list.
   // Called from oidc.strategy.ts, if OIDC_EXTERNAL_GROUPS is enabled
   async syncUserGroups(user: User, groups: string[]) {
-    const currentGroups = await user.$get('groups', {include: [User]});
+    const currentGroups = await user.$get('groups', { include: [User] });
     const groupsToLeave = currentGroups.filter(
-      (group) => !groups.includes(group.name)
+      group => !groups.includes(group.name),
     );
 
     // Remove user from any groups that they should not be in
@@ -205,29 +197,30 @@ export class GroupsService {
     // Add user to existing groups that they aren't in yet
     await Promise.all(
       existingGroups
-        .filter((existingGroup) =>
-          currentGroups.every((group) => group.name !== existingGroup.name)
+        .filter(
+          existingGroup =>
+            currentGroups.every(group => group.name !== existingGroup.name),
         )
-        .map((existingGroup) =>
-          this.addUserToGroup(existingGroup, user, 'member')
-        )
+        .map(existingGroup =>
+          this.addUserToGroup(existingGroup, user, 'member'),
+        ),
     );
 
     // Ensure we didn't leave any dangling groups
     await Promise.all(
       groupsToLeave.map(async (group) => {
         await this.ensureGroupHasOwner(group, user);
-      })
+      }),
     );
   }
 
   async update(groupToUpdate: Group, groupDto: CreateGroupDto): Promise<Group> {
     const sameNamedGroups = await this.groupModel.findAll({
-      where: {name: groupDto.name}
+      where: { name: groupDto.name },
     });
     if (sameNamedGroups.length > 1) {
       throw new ForbiddenException(
-        'Duplicate key detected. The names of groups must be unique.'
+        'Duplicate key detected. The names of groups must be unique.',
       );
     }
     return groupToUpdate.update(groupDto);
@@ -235,14 +228,12 @@ export class GroupsService {
 
   async updateGroupUserRole(
     group: Group,
-    updateGroupUser: UpdateGroupUserRoleDto
+    updateGroupUser: UpdateGroupUserRoleDto,
   ): Promise<GroupUser | undefined> {
-    const groupUser = await GroupUser.findOne({
-      where: {groupId: group.id, userId: updateGroupUser.userId}
-    });
+    const groupUser = await GroupUser.findOne({ where: { groupId: group.id, userId: updateGroupUser.userId } });
     if (groupUser) {
       await this.ensureGroupHasOwner(group, groupUser);
     }
-    return groupUser?.update({role: updateGroupUser.groupRole});
+    return groupUser?.update({ role: updateGroupUser.groupRole });
   }
 }

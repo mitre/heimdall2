@@ -5,7 +5,7 @@ import {ScoutsuiteNistMappingItem} from './ScoutsuiteNistMappingItem';
 export type ISCOUTSUITEJSONID = {
   RULE: string;
   'NIST-ID': string;
-}
+};
 
 export class ScoutsuiteNistMapping {
   data: ScoutsuiteNistMappingItem[];
@@ -17,6 +17,7 @@ export class ScoutsuiteNistMapping {
       this.data = data.map((line) => new ScoutsuiteNistMappingItem(line));
     }
   }
+
   nistTag(rule: string): string[] {
     if (rule === '' || rule === undefined) {
       return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;

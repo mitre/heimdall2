@@ -84,7 +84,7 @@
 
 <script lang="ts">
 import RefreshButton from '@/components/generic/RefreshButton.vue';
-import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
+import LoadFileList from '@/components/global/upload-tabs/LoadFileList.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
 import {FileID} from '@/store/report_intake';

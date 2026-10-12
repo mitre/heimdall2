@@ -316,7 +316,7 @@ export default class Compare extends Vue {
     return new ComparisonContext(selectedData);
   }
 
-  /** Yields the control pairings that have changed*/
+  /** Yields the control pairings that have changed */
   get delta_sets(): [string, ControlSeries][] {
     return this.searched_sets.filter(([_id, series]) => {
       const controls = Object.values(series).map(

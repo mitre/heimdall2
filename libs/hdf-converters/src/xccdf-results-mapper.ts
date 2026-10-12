@@ -137,7 +137,7 @@ function getProfiles(
 type IIdent = {
   system: string;
   text: string;
-}
+};
 
 function extractCci(input: IIdent | IIdent[]): string[] {
   const inputArray = asArray(input);

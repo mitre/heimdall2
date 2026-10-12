@@ -1,6 +1,4 @@
 {
   "$schema": "https://json.schemastore.org/prettierrc",
-  "singleQuote": true,
-  "bracketSpacing": false,
-  "trailingComma": "none"
+  "singleQuote": true
 }

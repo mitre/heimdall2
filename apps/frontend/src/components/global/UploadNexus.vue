@@ -71,13 +71,13 @@
 
 <script lang="ts">
 import Modal from '@/components/global/Modal.vue';
-import S3Reader from '@/components/global/upload_tabs/aws/S3Reader.vue';
-import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
-import FileReader from '@/components/global/upload_tabs/FileReader.vue';
-import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';
-import SampleList from '@/components/global/upload_tabs/SampleList.vue';
-import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
-import TenableReader from '@/components/global/upload_tabs/tenable/TenableReader.vue';
+import S3Reader from '@/components/global/upload-tabs/aws/S3Reader.vue';
+import DatabaseReader from '@/components/global/upload-tabs/DatabaseReader.vue';
+import FileReader from '@/components/global/upload-tabs/FileReader.vue';
+import HelpFooter from '@/components/global/upload-tabs/HelpFooter.vue';
+import SampleList from '@/components/global/upload-tabs/SampleList.vue';
+import SplunkReader from '@/components/global/upload-tabs/splunk/SplunkReader.vue';
+import TenableReader from '@/components/global/upload-tabs/tenable/TenableReader.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
 import {FilteredDataModule} from '@/store/data_filters';

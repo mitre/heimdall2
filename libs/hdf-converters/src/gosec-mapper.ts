@@ -137,6 +137,7 @@ export class GosecMapper extends BaseConverter {
       }
     }
   };
+
   constructor(gosecJson: string, withRaw = false) {
     super(JSON.parse(gosecJson));
     this.withRaw = withRaw;

@@ -1,14 +1,14 @@
-import {IEvalPaginationParams} from '@heimdall/common/interfaces';
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions, Op, Sequelize, WhereOptions} from 'sequelize';
-import {DatabaseService} from '../database/database.service';
-import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
-import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
-import {Evaluation} from './evaluation.model';
+import { IEvalPaginationParams } from '@heimdall/common/interfaces';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { FindOptions, Op, Sequelize, WhereOptions } from 'sequelize';
+import { DatabaseService } from '../database/database.service';
+import { CreateEvaluationTagDto } from '../evaluation-tags/dto/create-evaluation-tag.dto';
+import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
+import { Group } from '../groups/group.model';
+import { User } from '../users/user.model';
+import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
+import { Evaluation } from './evaluation.model';
 
 type EvaluationsResponse = {
   evaluations: Evaluation[];
@@ -35,7 +35,7 @@ export class EvaluationsService {
   constructor(
     @InjectModel(Evaluation)
     private readonly evaluationModel: typeof Evaluation,
-    private readonly databaseService: DatabaseService
+    private readonly databaseService: DatabaseService,
   ) {}
 
   /*
@@ -102,8 +102,8 @@ export class EvaluationsService {
     userId?: string;
   }): Promise<Evaluation> {
     return Evaluation.create<Evaluation>(
-      {...evaluation},
-      {include: [EvaluationTag]}
+      { ...evaluation },
+      { include: [EvaluationTag] },
     );
   }
 
@@ -111,47 +111,45 @@ export class EvaluationsService {
     return role === 'admin'
       ? this.evaluationModel.count()
       : this.evaluationModel.count({
-          col: 'id',
-          distinct: true,
-          include: [User, {include: [User], model: Group}],
-          where: {
-            [Op.or]: [
-              {public: {[Op.eq]: 'true'}},
-              {'$user.email$': {[Op.like]: userEmail}},
-              {
-                [Op.and]: {
-                  '$groups->users.id$': {
-                    [Op.eq]: Sequelize.literal(
-                      `(SELECT id FROM "Users" WHERE "email" LIKE '${userEmail}')`
-                    )
-                  }
-                }
-              }
-            ]
-          }
-        });
+        col: 'id',
+        distinct: true,
+        include: [User, { include: [User], model: Group }],
+        where: {
+          [Op.or]: [
+            { public: { [Op.eq]: 'true' } },
+            { '$user.email$': { [Op.like]: userEmail } },
+            {
+              [Op.and]: {
+                '$groups->users.id$': {
+                  [Op.eq]: Sequelize.literal(
+                    `(SELECT id FROM "Users" WHERE "email" LIKE '${userEmail}')`,
+                  ),
+                },
+              },
+            },
+          ],
+        },
+      });
   }
 
   async findAll(): Promise<Evaluation[]> {
     return this.evaluationModel.findAll<Evaluation>({
-      attributes: {exclude: ['data']},
-      include: [EvaluationTag, User, {include: [User], model: Group}]
+      attributes: { exclude: ['data'] },
+      include: [EvaluationTag, User, { include: [User], model: Group }],
     });
   }
 
   async findById(id: string): Promise<Evaluation> {
-    return this.findByPkBang(id, {
-      include: [EvaluationTag, User, Group, {include: [User], model: Group}]
-    });
+    return this.findByPkBang(id, { include: [EvaluationTag, User, Group, { include: [User], model: Group }] });
   }
 
   async findByPkBang(
     identifier: Buffer | number | string | undefined,
-    options: Pick<FindOptions, 'include'>
+    options: Pick<FindOptions, 'include'>,
   ): Promise<Evaluation> {
     const evaluation = await this.evaluationModel.findByPk<Evaluation>(
       identifier,
-      options
+      options,
     );
     if (evaluation === null) {
       throw new NotFoundException('Evaluation with given id not found');
@@ -162,17 +160,17 @@ export class EvaluationsService {
   async getAllEvaluations(
     parameters: IEvalPaginationParams,
     email: string,
-    role: string
+    role: string,
   ): Promise<EvaluationsResponse> {
     const queryResponse: EvaluationsResponse = {
       evaluations: [],
-      totalItems: 0
+      totalItems: 0,
     };
     const whereClause = this.getWhereClauseAll(role, email);
 
     const data = await this.evaluationModel.findAll<Evaluation>({
-      attributes: {exclude: ['data']},
-      include: [EvaluationTag, User, {include: [User], model: Group}],
+      attributes: { exclude: ['data'] },
+      include: [EvaluationTag, User, { include: [User], model: Group }],
       limit: Number(parameters.limit) * this.totalGroupMembers,
       offset: parameters.offset,
       order:
@@ -180,14 +178,14 @@ export class EvaluationsService {
           ? [[parameters.order[0], parameters.order[1]]]
           : [[parameters.order[0], parameters.order[1], parameters.order[2]]],
       subQuery: false, // enable where clause to reference attributes from the included models
-      where: whereClause
+      where: whereClause,
     });
     const totalItems = await this.evaluationCount(email, role);
 
     const totalPages = Math.ceil(totalItems / parameters.limit);
     const totalReturned = Number(parameters.offset) + Number(parameters.limit);
     const onPage = Math.ceil(
-      totalReturned / 100 / (Number(parameters.limit) / 100)
+      totalReturned / 100 / (Number(parameters.limit) / 100),
     );
     if (onPage == totalPages) {
       const returnCnt = totalItems - Number(parameters.offset);
@@ -204,19 +202,19 @@ export class EvaluationsService {
     const evaluationTags = await EvaluationTag.findAll({
       attributes: ['evaluationId'],
       raw: true,
-      where: {value: {[Op.iRegexp]: tagValue}}
+      where: { value: { [Op.iRegexp]: tagValue } },
     });
-    return evaluationTags.map((tag) => tag.evaluationId);
+    return evaluationTags.map(tag => tag.evaluationId);
   }
 
   async getEvaluationsWithClause(
     parameters: IEvalPaginationParams,
     email: string,
-    role: string
+    role: string,
   ): Promise<EvaluationsResponse> {
     const queryResponse: EvaluationsResponse = {
       evaluations: [],
-      totalItems: 0
+      totalItems: 0,
     };
 
     const whereClauseParameters: WhereClauseParameters = {
@@ -225,7 +223,7 @@ export class EvaluationsService {
       operator: parameters.operator === undefined ? 'OR' : parameters.operator,
       role: role,
       searchFields:
-        parameters.searchFields === undefined ? [''] : parameters.searchFields
+        parameters.searchFields === undefined ? [''] : parameters.searchFields,
     };
 
     const whereClause = await this.getWhereClauseSearch(
@@ -233,11 +231,11 @@ export class EvaluationsService {
       whereClauseParameters.operator,
       whereClauseParameters.email,
       whereClauseParameters.role,
-      whereClauseParameters.action
+      whereClauseParameters.action,
     );
     const data = await this.evaluationModel.findAll<Evaluation>({
-      attributes: {exclude: ['data']},
-      include: [EvaluationTag, User, {include: [User], model: Group}],
+      attributes: { exclude: ['data'] },
+      include: [EvaluationTag, User, { include: [User], model: Group }],
       limit: Number(parameters.limit) * this.totalGroupMembers,
       offset: parameters.offset,
       order:
@@ -245,14 +243,14 @@ export class EvaluationsService {
           ? [[parameters.order[0], parameters.order[1]]]
           : [[parameters.order[0], parameters.order[1], parameters.order[2]]],
       subQuery: false,
-      where: whereClause
+      where: whereClause,
     });
     const totalItems = await this.searchItemsCount(whereClauseParameters);
 
     const totalPages = Math.ceil(totalItems / parameters.limit);
     const totalReturned = Number(parameters.offset) + Number(parameters.limit);
     const onPage = Math.ceil(
-      totalReturned / 100 / (Number(parameters.limit) / 100)
+      totalReturned / 100 / (Number(parameters.limit) / 100),
     );
     if (onPage === totalPages) {
       const returnCnt = totalItems - Number(parameters.offset);
@@ -268,7 +266,7 @@ export class EvaluationsService {
 
   getWhereClauseAll(role: string, email: string): WhereOptions {
     const whereClause = this.getWhereClauseBaseCriteria(role, email);
-    return {[Op.or]: whereClause};
+    return { [Op.or]: whereClause };
   }
 
   getWhereClauseBaseCriteria(role: string, email: string): WhereOptions[] {
@@ -277,21 +275,21 @@ export class EvaluationsService {
     // element would lock the array to that one shape and reject the rest.
     // Both callers consume the result as the operand of [Op.or]/[Op.and],
     // so the array — not a single WhereOptions — is the honest return type.
-    const baseCriteria: WhereOptions[] = [{public: {[Op.eq]: 'true'}}];
+    const baseCriteria: WhereOptions[] = [{ public: { [Op.eq]: 'true' } }];
     if (role === 'admin') {
-      baseCriteria.push({public: {[Op.eq]: 'false'}});
+      baseCriteria.push({ public: { [Op.eq]: 'false' } });
     } else {
       baseCriteria.push(
-        {'$user.email$': {[Op.like]: email}},
+        { '$user.email$': { [Op.like]: email } },
         {
           [Op.and]: {
             '$groups->users.id$': {
               [Op.eq]: Sequelize.literal(
-                `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`
-              )
-            }
-          }
-        }
+                `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`,
+              ),
+            },
+          },
+        },
       );
     }
     return baseCriteria;
@@ -302,53 +300,49 @@ export class EvaluationsService {
     operation: string,
     email: string,
     role: string,
-    action: string
+    action: string,
   ): Promise<WhereOptions> {
     const searchFields = [];
     const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
 
     if (fields[0] !== '()') {
-      searchFields.push({filename: {[Op.iRegexp]: fields[0]}});
+      searchFields.push({ filename: { [Op.iRegexp]: fields[0] } });
     }
     if (fields[1] !== '()') {
-      searchFields.push({'$groups.name$': {[Op.iRegexp]: fields[1]}});
+      searchFields.push({ '$groups.name$': { [Op.iRegexp]: fields[1] } });
     }
     if (fields[2] !== '()') {
       if (action === 'count') {
-        searchFields.push({
-          '$evaluationTags.value$': {[Op.iRegexp]: fields[2]}
-        });
+        searchFields.push({ '$evaluationTags.value$': { [Op.iRegexp]: fields[2] } });
       } else {
         const evaluationIds = await this.getEvaluationIdsForTagName(fields[2]);
 
         searchFields.push({
           [Op.or]: [
-            {id: {[Op.in]: evaluationIds}},
-            {'$evaluationTags.value$': {[Op.iRegexp]: fields[2]}}
-          ]
+            { id: { [Op.in]: evaluationIds } },
+            { '$evaluationTags.value$': { [Op.iRegexp]: fields[2] } },
+          ],
         });
       }
     }
 
     if (operation === 'AND') {
       // Expected outcome: an OR baseCriteria AND an AND searchFields
-      return {[Op.and]: searchFields, [Op.or]: baseCriteria};
+      return { [Op.and]: searchFields, [Op.or]: baseCriteria };
     }
     // Expected outcome: an OR baseCriteria AND an OR searchFields
-    return {
-      [Op.and]: [{[Op.or]: baseCriteria}, {[Op.and]: {[Op.or]: searchFields}}]
-    };
+    return { [Op.and]: [{ [Op.or]: baseCriteria }, { [Op.and]: { [Op.or]: searchFields } }] };
   }
 
   async groups(id: string): Promise<Group[]> {
     const evaluation = await this.findByPkBang(id, {
-      include: {include: [User], model: Group}
+      include: { include: [User], model: Group },
     });
     return evaluation.groups;
   }
 
   async remove(id: string): Promise<Evaluation> {
-    const evaluation = await this.findByPkBang(id, {include: [EvaluationTag]});
+    const evaluation = await this.findByPkBang(id, { include: [EvaluationTag] });
     await this.databaseService.sequelize.transaction(async (transaction) => {
       if (evaluation.evaluationTags !== null) {
         // Promise.all, not a bare await of the ARRAY (a no-op): the tag
@@ -356,38 +350,38 @@ export class EvaluationsService {
         // transaction can commit while they are still in flight.
         await Promise.all(
           evaluation.evaluationTags.map((evaluationTag) =>
-            evaluationTag.destroy({transaction})
-          )
+            evaluationTag.destroy({ transaction }),
+          ),
         );
       }
-      return evaluation.destroy({transaction});
+      return evaluation.destroy({ transaction });
     });
     return evaluation;
   }
 
   async searchItemsCount(
-    whereClauseParameters: WhereClauseParameters
+    whereClauseParameters: WhereClauseParameters,
   ): Promise<number> {
     const whereClause = await this.getWhereClauseSearch(
       whereClauseParameters.searchFields,
       whereClauseParameters.operator,
       whereClauseParameters.email,
       whereClauseParameters.role,
-      'count'
+      'count',
     );
     return this.evaluationModel.count({
       col: 'id',
       distinct: true,
-      include: [EvaluationTag, User, {include: [User], model: Group}],
-      where: whereClause
+      include: [EvaluationTag, User, { include: [User], model: Group }],
+      where: whereClause,
     });
   }
 
   async update(
     id: string,
-    updateEvaluationDto: UpdateEvaluationDto
+    updateEvaluationDto: UpdateEvaluationDto,
   ): Promise<Evaluation> {
-    const evaluation = await this.findByPkBang(id, {include: [EvaluationTag]});
+    const evaluation = await this.findByPkBang(id, { include: [EvaluationTag] });
     return evaluation.update(updateEvaluationDto);
   }
 }

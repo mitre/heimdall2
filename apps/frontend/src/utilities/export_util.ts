@@ -17,7 +17,7 @@ export async function saveSingleOrMultipleFiles(
             d.byteOffset,
             d.byteOffset + d.byteLength
           ) as ArrayBuffer)
-        : d;
+        : (d);
     const blob = new Blob([part]);
     saveAs(blob, cleanUpFilename(files[0]?.filename));
   } else {
@@ -34,6 +34,7 @@ export async function saveSingleOrMultipleFiles(
         // Convert Blob to ArrayBuffer asynchronously
         binaryData = await file.data.arrayBuffer();
       } else {
+         
         console.warn(`Unsupported file type for ${file.filename}`);
         continue;
       }

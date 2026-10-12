@@ -4,7 +4,7 @@ import {mount} from '@vue/test-utils';
 import {beforeEach, describe, expect, it} from 'vitest';
 import type Vue from 'vue';
 import Vuetify from 'vuetify';
-import {addElemWithDataAppToBody} from '../util/testingUtils';
+import {addElemWithDataAppToBody} from '../util/testing-utils';
 
 addElemWithDataAppToBody();
 

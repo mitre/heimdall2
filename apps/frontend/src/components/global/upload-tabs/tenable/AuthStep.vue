@@ -51,12 +51,15 @@
 </template>
 
 <script lang="ts">
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import FileList from '@/components/global/upload-tabs/aws/FileList.vue';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {AuthInfo,
-  INCORRECT_CREDENTIALS_MSG, TenableUtil} from '@/utilities/tenable_util';
+import {
+  AuthInfo,
+  INCORRECT_CREDENTIALS_MSG,
+  TenableUtil
+} from '@/utilities/tenable_util';
 import {requireFieldRule} from '@/utilities/upload_util';
 
 import Vue from 'vue';

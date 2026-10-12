@@ -214,69 +214,69 @@ export default class FileList extends Vue {
             }
             // If the scan is completed, we can load the results
             default: {
-              try {
-                const resultData: unknown = await new TenableUtil(
-                  this.tenableConfig
-                ).getVulnerabilities(execution.id);
-                if (resultData) {
-                  // Check is this scan is already loaded
-                  let isLoaded = false;
-                  const loadedFiles = InspecDataModule.allEvaluationFiles;
+            try {
+              const resultData: unknown = await new TenableUtil(
+                this.tenableConfig
+              ).getVulnerabilities(execution.id);
+              if (resultData) {
+                // Check is this scan is already loaded
+                let isLoaded = false;
+                const loadedFiles = InspecDataModule.allEvaluationFiles;
 
-                  // We need to check if loaded zip file contained multiple scans, where they are
-                  // loaded as [scanId]-[ReportHost] (i.e. 9214-mitre-saf-rhel8-mitre.org)
-                  // if they are, just use the scanId for the Map key. If the scan contains a single
-                  // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
-                  const loadedMap = new Map(
-                    loadedFiles.map((obj) => {
-                      const separatorIndex = obj.filename.includes('-')
-                        ? obj.filename.indexOf('-')
-                        : obj.filename.indexOf('.');
-                      // substring treated a missing separator (-1) as 0 and
-                      // yielded ''; slice would take all-but-last, so keep the
-                      // empty-name behavior explicit.
-                      return [
-                        separatorIndex === -1
-                          ? ''
-                          : obj.filename.slice(0, separatorIndex),
-                        obj.uniqueId
-                      ];
-                    })
-                  );
-
-                  isLoaded =
-                    typeof execution.id === 'string' &&
-                    loadedMap.has(execution.id);
-                  if (!isLoaded) {
-                    try {
-                      const textFile: FileLoadOptions = {
-                        filename: execution.id + '.nessus',
-                        data:
-                          typeof resultData === 'string'
-                            ? resultData
-                            : JSON.stringify(resultData)
-                      };
-                      // .loadFile evaluates to data if file is not provided
-                      return await InspecIntakeModule.loadFile(textFile);
-                    } catch (error) {
-                      SnackbarModule.failure(String(error));
-                    }
-                  }
-                } else {
-                  SnackbarModule.failure(
-                    'Attempted to load an undefined execution'
-                  );
-                  throw new Error('Attempted to load an undefined execution');
-                }
-              } catch (error) {
-                // Also catches the undefined-execution throw above, exactly
-                // as the old outer .catch did.
-                const message =
-                  error instanceof Error ? error.message : String(error);
-                SnackbarModule.failure(
-                  `Failed to load scan results for execution. Scan Id: ${execution.id}, ${message}`
+                // We need to check if loaded zip file contained multiple scans, where they are
+                // loaded as [scanId]-[ReportHost] (i.e. 9214-mitre-saf-rhel8-mitre.org)
+                // if they are, just use the scanId for the Map key. If the scan contains a single
+                // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
+                const loadedMap = new Map(
+                  loadedFiles.map((obj) => {
+                    const separatorIndex = obj.filename.includes('-')
+                      ? obj.filename.indexOf('-')
+                      : obj.filename.indexOf('.');
+                    // substring treated a missing separator (-1) as 0 and
+                    // yielded ''; slice would take all-but-last, so keep the
+                    // empty-name behavior explicit.
+                    return [
+                      separatorIndex === -1
+                        ? ''
+                        : obj.filename.slice(0, separatorIndex),
+                      obj.uniqueId
+                    ];
+                  })
                 );
+
+                isLoaded =
+                  typeof execution.id === 'string' &&
+                  loadedMap.has(execution.id);
+                if (!isLoaded) {
+                  try {
+                    const textFile: FileLoadOptions = {
+                      filename: execution.id + '.nessus',
+                      data:
+                        typeof resultData === 'string'
+                          ? resultData
+                          : JSON.stringify(resultData)
+                    };
+                    // .loadFile evaluates to data if file is not provided
+                    return await InspecIntakeModule.loadFile(textFile);
+                  } catch (error) {
+                    SnackbarModule.failure(String(error));
+                  }
+                }
+              } else {
+                SnackbarModule.failure(
+                  'Attempted to load an undefined execution'
+                );
+                throw new Error('Attempted to load an undefined execution');
               }
+            } catch (error) {
+              // Also catches the undefined-execution throw above, exactly
+              // as the old outer .catch did.
+              const message =
+                error instanceof Error ? error.message : String(error);
+              SnackbarModule.failure(
+                `Failed to load scan results for execution. Scan Id: ${execution.id}, ${message}`
+              );
+            }
             }
           }
         }

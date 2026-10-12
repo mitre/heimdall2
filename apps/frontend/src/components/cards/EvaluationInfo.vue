@@ -50,7 +50,7 @@
 <script lang="ts">
 import GroupRow from '@/components/global/groups/GroupRow.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
-import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import EditEvaluationModal from '@/components/global/upload-tabs/EditEvaluationModal.vue';
 import {
   EvaluationFile,
   ProfileFile,

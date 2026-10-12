@@ -8,7 +8,7 @@ import type Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import type {EvaluationFile, ProfileFile} from '../../src/store/report_intake';
-import {loadAll} from '../util/testingUtils';
+import {loadAll} from '../util/testing-utils';
 
 const vuetify = new Vuetify();
 const localVue = createLocalVue();

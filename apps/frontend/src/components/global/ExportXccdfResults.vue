@@ -34,7 +34,7 @@ export interface FileData {
 export default class ExportXCCDF extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, required: true}) readonly isResultView!: boolean;
-  //exports .zip of XCCDFs if multiple are selected, if one is selected it will export that single file
+  // exports .zip of XCCDFs if multiple are selected, if one is selected it will export that single file
   async exportXCCDF(): Promise<void> {
     const {data: template} = await axios.get<string>(
       `/static/export/xccdfTemplate.xml`

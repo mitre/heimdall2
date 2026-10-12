@@ -9,10 +9,10 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt
+  UpdatedAt,
 } from 'sequelize-typescript';
-import {Group} from '../groups/group.model';
-import {User} from '../users/user.model';
+import { Group } from '../groups/group.model';
+import { User } from '../users/user.model';
 
 @Table
 export class ApiKey extends Model {
@@ -24,7 +24,7 @@ export class ApiKey extends Model {
   @Column(DataType.DATE)
   declare createdAt: Date;
 
-  @BelongsTo(() => Group, {constraints: false})
+  @BelongsTo(() => Group, { constraints: false })
   declare group: Group;
 
   @ForeignKey(() => Group)
@@ -48,7 +48,7 @@ export class ApiKey extends Model {
   @Column(DataType.DATE)
   declare updatedAt: Date;
 
-  @BelongsTo(() => User, {constraints: false})
+  @BelongsTo(() => User, { constraints: false })
   declare user: User;
 
   @ForeignKey(() => User)
