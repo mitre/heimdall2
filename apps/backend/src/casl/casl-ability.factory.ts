@@ -3,13 +3,13 @@ import {
   createMongoAbility,
   ExtractSubjectType,
   InferSubjects,
-  MongoAbility,
+  MongoAbility
 } from '@casl/ability';
-import { Injectable } from '@nestjs/common';
-import { Evaluation } from '../evaluations/evaluation.model';
-import { GroupUser } from '../group-users/group-user.model';
-import { Group } from '../groups/group.model';
-import { User } from '../users/user.model';
+import {Injectable} from '@nestjs/common';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
+import {User} from '../users/user.model';
 
 export enum Action {
   AddEvaluation = 'add-evaluation',
@@ -26,7 +26,7 @@ export enum Action {
   Update = 'update',
   UpdateNoPassword = 'update-no-password',
   UpdateRole = 'update-role',
-  ViewStatistics = 'view-statistics',
+  ViewStatistics = 'view-statistics'
 }
 
 export type AppAbility = MongoAbility<PossibleAbilities>;
@@ -58,14 +58,14 @@ export class CaslAbilityFactory {
   // user abilities and non-registered user abilities. Useful for the
   // few anonymous endpoints we have.
   createForAnonymous(): MongoAbility {
-    const { build, cannot } = new AbilityBuilder(createMongoAbility);
+    const {build, cannot} = new AbilityBuilder(createMongoAbility);
     cannot(Action.Manage, 'all');
 
     return build();
   }
 
   createForUser(user: User): MongoAbility {
-    const { build, can, cannot } = new AbilityBuilder(createMongoAbility);
+    const {build, can, cannot} = new AbilityBuilder(createMongoAbility);
     if (user.role === 'admin') {
       // all is a special keyword in CASL that represents "any subject".
       // read-write access to everything
@@ -73,41 +73,47 @@ export class CaslAbilityFactory {
       // Read statistics about this heimdall deployment
       can(Action.ViewStatistics, 'all');
       // Force admins to supply their password when editing their own user.
-      cannot(Action.Manage, User, { id: user.id });
+      cannot(Action.Manage, User, {id: user.id});
     }
     can([Action.ReadSlim], User);
 
-    can([Action.Read, Action.Update, Action.Delete], User, { id: user.id });
+    can([Action.Read, Action.Update, Action.Delete], User, {id: user.id});
 
     can([Action.Create], Group);
 
-    can([Action.Read], Group, { public: true });
+    can([Action.Read], Group, {public: true});
     // Trying to compare the whole object here doesn't work since the
     // user object includes `GroupUser` and therefore the passed in user
     // is not equal to the user on the Group
     can<GroupQuery>(
       [Action.Read, Action.AddEvaluation, Action.RemoveEvaluation],
       Group,
-      { 'users.id': user.id },
+      {'users.id': user.id}
     );
 
-    can<GroupQuery>([Action.Manage], Group, { users: { $elemMatch: { 'GroupUser.role': 'owner', id: user.id } } });
+    can<GroupQuery>([Action.Manage], Group, {
+      users: {$elemMatch: {'GroupUser.role': 'owner', id: user.id}}
+    });
 
     // This really isn't the best method to do this since
     // it requires every evaluation to have a join on Groups and then another join on Users
     can([Action.Create], Evaluation);
 
-    can(Action.Read, Evaluation, { public: true });
+    can(Action.Read, Evaluation, {public: true});
 
-    can([Action.Manage], Evaluation, { userId: user.id });
+    can([Action.Manage], Evaluation, {userId: user.id});
 
-    can<EvaluationQuery>([Action.Read], Evaluation, { 'groups.users.id': user.id });
+    can<EvaluationQuery>([Action.Read], Evaluation, {
+      'groups.users.id': user.id
+    });
 
-    can<EvaluationQuery>([Action.Manage], Evaluation, { 'groups.users': { $elemMatch: { 'GroupUser.role': 'owner', id: user.id } } });
+    can<EvaluationQuery>([Action.Manage], Evaluation, {
+      'groups.users': {$elemMatch: {'GroupUser.role': 'owner', id: user.id}}
+    });
 
     return build({
-      detectSubjectType: object =>
-        object.constructor as ExtractSubjectType<Subjects>,
+      detectSubjectType: (object) =>
+        object.constructor as ExtractSubjectType<Subjects>
     });
   }
 }

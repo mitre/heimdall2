@@ -160,9 +160,7 @@ export default class TagRow extends Vue {
     SnackbarModule.notify('Deleted tag successfully.');
     if (this.onLoadingPanel) {
       await EvaluationModule.getAllEvaluations(this.params);
-      if (
-        EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
-      ) {
+      if (EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined) {
         await EvaluationModule.loadEvaluation(this.evaluation.id);
       }
     } else {

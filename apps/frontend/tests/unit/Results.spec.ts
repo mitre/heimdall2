@@ -1,8 +1,8 @@
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
 import type {Filter} from '@/store/data_filters';
-import { FilteredDataModule} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import Results from '@/views/Results.vue';
-import type { Wrapper} from '@vue/test-utils';
+import type {Wrapper} from '@vue/test-utils';
 import {shallowMount} from '@vue/test-utils';
 import type {ContextualizedControl} from 'inspecjs';
 import {beforeEach, describe, expect, it} from 'vitest';
@@ -14,7 +14,7 @@ import {
   loadSample,
   removeAllFiles,
   DataLoadApproach
-} from '../util/testing-utils';
+} from '../util/testingUtils';
 
 interface ListElt {
   // A unique id to be used as a key.
@@ -70,7 +70,6 @@ describe.sequential('Datatable', () => {
     expect(
       (
         controlTableWrapper.vm as Vue & {
-           
           items: any[];
         }
       ).items.length
@@ -102,7 +101,6 @@ describe.sequential('Datatable', () => {
     expect(
       (
         controlTableWrapper.vm as Vue & {
-           
           items: any[];
         }
       ).items.length
@@ -123,7 +121,6 @@ describe.sequential('Datatable', () => {
     expect(
       (
         controlTableWrapper.vm as Vue & {
-           
           items: any[];
         }
       ).items
@@ -157,7 +154,6 @@ describe.sequential('Datatable', () => {
     expect(
       (
         controlTableWrapper.vm as Vue & {
-           
           items: any[];
         }
       ).items.length

@@ -5,7 +5,7 @@ export type INESSUSJSONID = {
   pluginFamily: string;
   pluginID: string | number;
   'NIST-ID': string;
-};
+}
 
 export class NessusPluginsNistMapping {
   data: NessusPluginsNistMappingItem[];
@@ -19,7 +19,6 @@ export class NessusPluginsNistMapping {
       });
     }
   }
-
   nistFilter(family: string, id: string, defaultNist: string[]): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
     const matches: string[] = [];

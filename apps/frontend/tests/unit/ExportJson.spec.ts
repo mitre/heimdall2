@@ -4,7 +4,7 @@ import {shallowMount} from '@vue/test-utils';
 import {describe, expect, it} from 'vitest';
 import type Vue from 'vue';
 import Vuetify from 'vuetify';
-import {addElemWithDataAppToBody} from '../util/testing-utils';
+import {addElemWithDataAppToBody} from '../util/testingUtils';
 
 addElemWithDataAppToBody();
 

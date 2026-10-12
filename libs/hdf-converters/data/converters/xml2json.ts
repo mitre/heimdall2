@@ -20,7 +20,7 @@ export type ICCIList = {
       }[];
     }[];
   };
-};
+}
 
 if (!pathToInfile || !pathToOutfile) {
   console.error(`You must provide the path to both an input and ouput file.`);

@@ -1,11 +1,11 @@
-import type { Agent } from 'http';
-import { Strategy } from '@govtechsg/passport-openidconnect';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { createLogger, format, transports } from 'winston';
-import { ConfigService } from '../config/config.service';
-import { GroupsService } from '../groups/groups.service';
-import { AuthnService } from './authn.service';
+import type {Agent} from 'http';
+import {Strategy} from '@govtechsg/passport-openidconnect';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {PassportStrategy} from '@nestjs/passport';
+import {createLogger, format, transports} from 'winston';
+import {ConfigService} from '../config/config.service';
+import {GroupsService} from '../groups/groups.service';
+import {AuthnService} from './authn.service';
 
 type OIDCProfile = {
   _json: {
@@ -17,32 +17,33 @@ type OIDCProfile = {
   };
   _raw: string;
   displayName: string;
-  emails: [{ value: string }];
+  emails: [{value: string}];
   id: string;
-  name: { familyName: string; givenName: string };
+  name: {familyName: string; givenName: string};
 };
 
 @Injectable()
-
 export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
   private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   public logger = createLogger({
     format: format.combine(
-      format.timestamp({ format: this.loggingTimeFormat }),
+      format.timestamp({format: this.loggingTimeFormat}),
       format.printf(
-        info =>
-          `${this.line}[${String([info.timestamp])}] (Authn Service): ${String(info.message)}`,
-      ),
+        (info) =>
+          `${this.line}[${String([info.timestamp])}] (Authn Service): ${String(
+            info.message
+          )}`
+      )
     ),
-    transports: [new transports.Console()],
+    transports: [new transports.Console()]
   });
 
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
     private readonly groupsService: GroupsService,
-    private readonly httpsAgent?: Agent,
+    private readonly httpsAgent?: Agent
   ) {
     super(
       {
@@ -56,9 +57,9 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
         pkce:
           configService.get('OIDC_USES_PKCE_S256') === 'true'
             ? 'S256'
-            : (configService.get('OIDC_USES_PKCE_PLAIN') === 'true'
-              ? 'plain'
-              : undefined),
+            : configService.get('OIDC_USES_PKCE_PLAIN') === 'true'
+            ? 'plain'
+            : undefined,
         proxy:
           configService.get('OIDC_USE_HTTPS_PROXY') === 'true'
             ? true
@@ -66,7 +67,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
         scope: ['openid', 'email', 'profile'],
         skipUserProfile: false,
         tokenURL: configService.get('OIDC_TOKEN_URL') || 'disabled',
-        userInfoURL: configService.get('OIDC_USER_INFO_URL') || 'disabled',
+        userInfoURL: configService.get('OIDC_USER_INFO_URL') || 'disabled'
       },
       // using the 9-arity function so that we can access the underlying JSON response and extract the 'email_verified' attribute
       async (
@@ -79,7 +80,7 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
         _refreshToken: string,
         _parameters: object,
 
-        done: any,
+        done: any
       ) => {
         return this.validate(
           _issuer,
@@ -90,9 +91,9 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
           _accessToken,
           _refreshToken,
           _parameters,
-          done,
+          done
         );
-      },
+      }
     );
   }
 
@@ -106,26 +107,26 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
     _refreshToken: string,
     _parameters: object,
 
-    done: any,
+    done: any
   ) {
     this.logger.debug('in oidc strategy file');
     this.logger.debug(JSON.stringify(uiProfile, null, 2));
     const userData = uiProfile._json;
-    const { email, email_verified, family_name, given_name, groups } = userData;
+    const {email, email_verified, family_name, given_name, groups} = userData;
     if (
-      this.configService.get('OIDC_USES_VERIFIED_EMAIL') === 'false'
-      || email_verified
+      this.configService.get('OIDC_USES_VERIFIED_EMAIL') === 'false' ||
+      email_verified
     ) {
       const user = await this.authnService.validateOrCreateUser(
         email,
         given_name,
         family_name,
-        'oidc',
+        'oidc'
       );
 
       if (
-        this.configService.get('OIDC_EXTERNAL_GROUPS') === 'true'
-        && groups !== undefined
+        this.configService.get('OIDC_EXTERNAL_GROUPS') === 'true' &&
+        groups !== undefined
       ) {
         await this.groupsService.syncUserGroups(user, groups);
       }
@@ -134,8 +135,8 @@ export class OidcStrategy extends PassportStrategy(Strategy as any, 'oidc') {
     }
     return done(
       new UnauthorizedException(
-        'Please verify your name and email with your identity provider before logging into Heimdall.',
-      ),
+        'Please verify your name and email with your identity provider before logging into Heimdall.'
+      )
     );
   }
 }

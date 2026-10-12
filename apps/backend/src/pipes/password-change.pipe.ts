@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import {BadRequestException, Injectable, PipeTransform} from '@nestjs/common';
 import levenshtein from 'js-levenshtein';
 
 // Safe to share: matchAll iterates an internal clone and never advances the
@@ -24,22 +24,22 @@ export class PasswordChangePipe implements PipeTransform {
     passwordConfirmation: string | undefined;
   }): Record<string, unknown> {
     if (
-      (!value.password && !value.passwordConfirmation)
-      || !value.currentPassword
+      (!value.password && !value.passwordConfirmation) ||
+      !value.currentPassword
     ) {
       return value;
     }
     if (
-      typeof value.password == 'string'
-      && typeof value.currentPassword == 'string'
-      && levenshtein(value.password, value.currentPassword) > 8
-      && this.classesChanged(value.password, value.currentPassword)
+      typeof value.password == 'string' &&
+      typeof value.currentPassword == 'string' &&
+      levenshtein(value.password, value.currentPassword) > 8 &&
+      this.classesChanged(value.password, value.currentPassword)
     ) {
       return value;
     }
     throw new BadRequestException(
-      'A minimum of four character classes must be changed when updating a password.'
-      + ' A minimum of eight of the total number of characters must be changed when updating a password.',
+      'A minimum of four character classes must be changed when updating a password.' +
+        ' A minimum of eight of the total number of characters must be changed when updating a password.'
     );
   }
 }

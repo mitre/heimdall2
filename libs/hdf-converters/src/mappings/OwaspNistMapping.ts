@@ -8,7 +8,7 @@ export type IOWASPJSONID = {
   'NIST-ID': string;
   Rev: number;
   'NIST Name': string;
-};
+}
 
 export class OwaspNistMapping {
   data: OwaspNistMappingItem[];

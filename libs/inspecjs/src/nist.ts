@@ -344,7 +344,7 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
       asNode = existingNode;
       asNode.control = asControl;
     } else {
-      // Make it fresh
+      //Make it fresh
       asNode = {
         control: asControl,
         children: []

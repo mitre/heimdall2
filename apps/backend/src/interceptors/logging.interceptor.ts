@@ -2,16 +2,16 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  NestInterceptor,
+  NestInterceptor
 } from '@nestjs/common';
-import { Request } from 'express';
+import {Request} from 'express';
 import _ from 'lodash';
-import { Observable } from 'rxjs';
-import { createLogger, format, transports } from 'winston';
-import { ConfigService } from '../config/config.service';
-import { SlimUserDto } from '../users/dto/slim-user.dto';
-import { UserDto } from '../users/dto/user.dto';
-import { User } from '../users/user.model';
+import {Observable} from 'rxjs';
+import {createLogger, format, transports} from 'winston';
+import {ConfigService} from '../config/config.service';
+import {SlimUserDto} from '../users/dto/slim-user.dto';
+import {UserDto} from '../users/dto/user.dto';
+import {User} from '../users/user.model';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -20,15 +20,17 @@ export class LoggingInterceptor implements NestInterceptor {
 
   public logger = createLogger({
     format: format.combine(
-      format.timestamp({ format: 'MMM-DD-YYYY HH:mm:ss Z' }),
+      format.timestamp({format: 'MMM-DD-YYYY HH:mm:ss Z'}),
       format.printf(
-        info =>
-          `${this.line}[${String([info.timestamp])}] (Interceptor): ${String(info.ip)} ${String(
-            info.referer
-          )} ${String(info.userAgent)} ${String(info.user)} ${String(info.message)}`,
-      ),
+        (info) =>
+          `${this.line}[${String([info.timestamp])}] (Interceptor): ${String(
+            info.ip
+          )} ${String(info.referer)} ${String(info.userAgent)} ${String(
+            info.user
+          )} ${String(info.message)}`
+      )
     ),
-    transports: [new transports.Console()],
+    transports: [new transports.Console()]
   });
 
   constructor(configService: ConfigService) {
@@ -38,8 +40,8 @@ export class LoggingInterceptor implements NestInterceptor {
   getRealIP(request: Request): string | unknown {
     const forwarded = Object.entries(request.headers).find(
       ([header]) =>
-        header.toLowerCase() === 'x-forwarded-for'
-        || header.toLowerCase() === 'x-real-ip',
+        header.toLowerCase() === 'x-forwarded-for' ||
+        header.toLowerCase() === 'x-real-ip'
     );
     if (!forwarded) {
       return request.ip;
@@ -52,7 +54,7 @@ export class LoggingInterceptor implements NestInterceptor {
   }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<void> {
-    const request: Request & { user?: User } = context
+    const request: Request & {user?: User} = context
       .switchToHttp()
       .getRequest();
     const method = request.method;
@@ -65,16 +67,18 @@ export class LoggingInterceptor implements NestInterceptor {
     this.logger.info({
       ip: this.getRealIP(request),
       message: `${_.startCase(
-        calledMethod,
+        calledMethod
       )} (${method}) ${requestParameters} ${endpoint}`,
       referer: referer,
       user: this.userToString(callingUser),
-      userAgent: userAgent,
+      userAgent: userAgent
     });
     return next.handle();
   }
 
-  redact(object?: Record<string, unknown>): Record<string, unknown> | undefined {
+  redact(
+    object?: Record<string, unknown>
+  ): Record<string, unknown> | undefined {
     if (!_.isObject(object)) {
       return undefined;
     }
@@ -88,10 +92,10 @@ export class LoggingInterceptor implements NestInterceptor {
     // can never hit the prototype setter here.
     return Object.fromEntries(
       Object.entries(object).map(([key, value]) =>
-        this.configService.sensitiveKeys.some(regex => regex.test(key))
+        this.configService.sensitiveKeys.some((regex) => regex.test(key))
           ? [key, '[REDACTED]']
-          : [key, value],
-      ),
+          : [key, value]
+      )
     );
   }
 

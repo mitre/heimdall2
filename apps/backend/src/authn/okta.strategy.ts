@@ -1,14 +1,14 @@
-import type { Agent } from 'http';
-import { Strategy } from '@govtechsg/passport-openidconnect';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { createLogger, format, transports } from 'winston';
-import { ConfigService } from '../config/config.service';
-import { AuthnService } from './authn.service';
+import type {Agent} from 'http';
+import {Strategy} from '@govtechsg/passport-openidconnect';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {PassportStrategy} from '@nestjs/passport';
+import {createLogger, format, transports} from 'winston';
+import {ConfigService} from '../config/config.service';
+import {AuthnService} from './authn.service';
 
 type Profile = {
   displayName: string;
-  emails: { value: string }[];
+  emails: {value: string}[];
   id: string;
   name: {
     familyName: string;
@@ -19,39 +19,42 @@ type Profile = {
 };
 
 @Injectable()
-
 export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
   private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   public logger = createLogger({
     format: format.combine(
-      format.timestamp({ format: this.loggingTimeFormat }),
+      format.timestamp({format: this.loggingTimeFormat}),
       format.printf(
-        info =>
-          `${this.line}[${String([info.timestamp])}] (Authn Service): ${String(info.message)}`,
-      ),
+        (info) =>
+          `${this.line}[${String([info.timestamp])}] (Authn Service): ${String(
+            info.message
+          )}`
+      )
     ),
-    transports: [new transports.Console()],
+    transports: [new transports.Console()]
   });
 
   constructor(
     private readonly authnService: AuthnService,
     private readonly configService: ConfigService,
-    private readonly httpsAgent?: Agent,
+    private readonly httpsAgent?: Agent
   ) {
     super(
       {
         agent: httpsAgent,
         authorizationURL:
-          configService.get('OKTA_AUTHORIZATION_URL')
-          || `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/authorize`,
+          configService.get('OKTA_AUTHORIZATION_URL') ||
+          `https://${
+            configService.get('OKTA_DOMAIN') || 'disabled'
+          }/oauth2/v1/authorize`,
         callbackURL: `${configService.getExternalUrl()}/authn/okta_callback`,
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
         issuer:
-          configService.get('OKTA_ISSUER_URL')
-          || `https://${configService.get('OKTA_DOMAIN')}`
-          || 'disabled',
+          configService.get('OKTA_ISSUER_URL') ||
+          `https://${configService.get('OKTA_DOMAIN')}` ||
+          'disabled',
         proxy:
           configService.get('OKTA_USE_HTTPS_PROXY') === 'true'
             ? true
@@ -59,21 +62,25 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
         scope: ['openid', 'email', 'profile'],
         skipUserProfile: false,
         tokenURL:
-          configService.get('OKTA_TOKEN_URL')
-          || `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/token`,
+          configService.get('OKTA_TOKEN_URL') ||
+          `https://${
+            configService.get('OKTA_DOMAIN') || 'disabled'
+          }/oauth2/v1/token`,
         userInfoURL:
-          configService.get('OKTA_USER_INFO_URL')
-          || `https://${configService.get('OKTA_DOMAIN') || 'disabled'}/oauth2/v1/userinfo`,
+          configService.get('OKTA_USER_INFO_URL') ||
+          `https://${
+            configService.get('OKTA_DOMAIN') || 'disabled'
+          }/oauth2/v1/userinfo`
       },
       // Okta has no concept of a 'verified' email - the account has to have an email address associated with it - which is why we can use the 3-arity function since we don't need access to the underlying JSON response
       async (
         _issuer: string,
         profile: Profile,
 
-        done: any,
+        done: any
       ) => {
         return this.validate(_issuer, profile, done);
-      },
+      }
     );
   }
 
@@ -81,7 +88,7 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
     _issuer: string,
     profile: Profile,
 
-    done: any,
+    done: any
   ) {
     this.logger.debug('in okta strategy file');
     this.logger.debug(JSON.stringify(profile, null, 2));
@@ -90,7 +97,7 @@ export class OktaStrategy extends PassportStrategy(Strategy as any, 'okta') {
         profile.emails[0].value,
         profile.name.givenName,
         profile.name.familyName,
-        'okta',
+        'okta'
       );
       return done(null, user);
     }

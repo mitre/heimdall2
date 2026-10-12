@@ -1,14 +1,14 @@
-import { Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { ConfigModule } from '../config/config.module';
-import { DatabaseModule } from '../database/database.module';
-import { Evaluation } from '../evaluations/evaluation.model';
-import { EvaluationsService } from '../evaluations/evaluations.service';
-import { Group } from '../groups/group.model';
-import { User } from '../users/user.model';
-import { EvaluationTag } from './evaluation-tag.model';
-import { EvaluationTagsController } from './evaluation-tags.controller';
-import { EvaluationTagsService } from './evaluation-tags.service';
+import {Module} from '@nestjs/common';
+import {SequelizeModule} from '@nestjs/sequelize';
+import {ConfigModule} from '../config/config.module';
+import {DatabaseModule} from '../database/database.module';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {EvaluationsService} from '../evaluations/evaluations.service';
+import {Group} from '../groups/group.model';
+import {User} from '../users/user.model';
+import {EvaluationTag} from './evaluation-tag.model';
+import {EvaluationTagsController} from './evaluation-tags.controller';
+import {EvaluationTagsService} from './evaluation-tags.service';
 
 @Module({
   controllers: [EvaluationTagsController],
@@ -16,8 +16,8 @@ import { EvaluationTagsService } from './evaluation-tags.service';
   imports: [
     SequelizeModule.forFeature([Evaluation, Group, User, EvaluationTag]),
     ConfigModule,
-    DatabaseModule,
+    DatabaseModule
   ],
-  providers: [EvaluationsService, EvaluationTagsService],
+  providers: [EvaluationsService, EvaluationTagsService]
 })
 export class EvaluationTagsModule {}

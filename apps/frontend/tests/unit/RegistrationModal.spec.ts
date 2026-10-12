@@ -5,7 +5,7 @@ import {describe, expect, it, vi} from 'vitest';
 import Vue from 'vue';
 import Vuelidate from 'vuelidate';
 import Vuetify from 'vuetify';
-import {addElemWithDataAppToBody} from '../util/testing-utils';
+import {addElemWithDataAppToBody} from '../util/testingUtils';
 
 Vue.use(Vuelidate);
 addElemWithDataAppToBody();

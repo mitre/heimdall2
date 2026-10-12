@@ -54,7 +54,7 @@ export type ILookupPathASFF = {
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
-};
+}
 
 export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   mappings: () => MappedTransform<IExecJSONASFF, ILookupPathASFF> = () => ({
@@ -206,7 +206,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         return _.chunk(
           value,
           ATTRIBUTE_CHARACTER_LIMIT -
-            (type.length + attribute.length + 2) /* the slashes */
+            (type.length + attribute.length + 2) /*the slashes*/
         ).map((chunk) => `${type}/${attribute}/${chunk.join('')}`);
       });
     return finding;
@@ -364,13 +364,13 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     return restrictedResults;
   }
 
-  // Convert from HDF to ASFF
+  //Convert from HDF to ASFF
   toAsff(): IFindingASFF[] {
     if (this.mappings() === undefined) {
       throw new Error('Mappings must be provided');
     } else {
-      // Recursively transform the data into ASFF format
-      // Returns an array of the findings
+      //Recursively transform the data into ASFF format
+      //Returns an array of the findings
       let resList: IFindingASFF[] = this.controlsToSegments().map(
         (segment, index) => {
           this.index = index;

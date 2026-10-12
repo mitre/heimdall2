@@ -16,7 +16,7 @@
 const ALLOWED_PROTOCOLS = new Set(['http:', 'https:']);
 
 // Operators supply additional hosts as one delimited string, because
-// app-config.ts reads every setting as a single string (see getTenableHostUrl).
+// app_config.ts reads every setting as a single string (see getTenableHostUrl).
 const ENTRY_SEPARATOR = /[\s,]+/v;
 
 // Discriminated on a STRING literal rather than a boolean `allowed` flag. This

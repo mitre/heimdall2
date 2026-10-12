@@ -1,10 +1,10 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {PassportStrategy} from '@nestjs/passport';
 import axios from 'axios';
-import { Strategy } from 'passport-github';
-import { ConfigService } from '../config/config.service';
-import { User } from '../users/user.model';
-import { AuthnService } from './authn.service';
+import {Strategy} from 'passport-github';
+import {ConfigService} from '../config/config.service';
+import {User} from '../users/user.model';
+import {AuthnService} from './authn.service';
 
 type GithubEmail = {
   email: string;
@@ -20,48 +20,48 @@ type GithubProfile = {
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
     super({
       authorizationURL: `
         ${
-          configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL')
-          || configService.defaultGithubBaseURL
+          configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ||
+          configService.defaultGithubBaseURL
         }login/oauth/authorize`,
       clientID: configService.get('GITHUB_CLIENTID') || 'disabled',
       clientSecret: configService.get('GITHUB_CLIENTSECRET') || 'disabled',
       passReqToCallback: true,
       scope: 'user:email',
       tokenURL: `${
-        configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL')
-        || configService.defaultGithubBaseURL
+        configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ||
+        configService.defaultGithubBaseURL
       }login/oauth/access_token`,
       userProfileURL: `${
-        configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL')
-        || configService.defaultGithubAPIURL
-      }user`,
+        configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+        configService.defaultGithubAPIURL
+      }user`
     });
   }
 
   async validate(
     _request: Record<string, unknown>,
-    accessToken: string,
+    accessToken: string
   ): Promise<User> {
     // Get user's linked emails from Github
-    const { data: githubEmails } = await axios.get<GithubEmail[]>(
+    const {data: githubEmails} = await axios.get<GithubEmail[]>(
       `${
-        this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL')
-        || this.configService.defaultGithubAPIURL
+        this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+        this.configService.defaultGithubAPIURL
       }user/emails`,
-      { headers: { Authorization: `token ${accessToken}` } },
+      {headers: {Authorization: `token ${accessToken}`}}
     );
     // Get user's info
-    const { data: userInfoResponse } = await axios.get<GithubProfile>(
+    const {data: userInfoResponse} = await axios.get<GithubProfile>(
       `${
-        this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL')
-        || this.configService.defaultGithubAPIURL
+        this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+        this.configService.defaultGithubAPIURL
       }user`,
-      { headers: { Authorization: `token ${accessToken}` } },
+      {headers: {Authorization: `token ${accessToken}`}}
     );
     let firstName = userInfoResponse.login;
     let lastName = '';
@@ -79,11 +79,11 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         primaryEmail.email,
         firstName,
         lastName,
-        'github',
+        'github'
       );
     }
     throw new UnauthorizedException(
-      'Please verify your email with Github before logging into Heimdall.',
+      'Please verify your email with Github before logging into Heimdall.'
     );
   }
 }

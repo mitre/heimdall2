@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '../config/config.module';
-import { TenableController } from './tenable.controller';
-import { TenableService } from './tenable.service';
+import {Module} from '@nestjs/common';
+import {ConfigModule} from '../config/config.module';
+import {TenableController} from './tenable.controller';
+import {TenableService} from './tenable.service';
 
 // NestJS module definition for the Tenable proxy feature.
 // Registers the controller and service needed for routing Tenable requests.
@@ -15,6 +15,6 @@ import { TenableService } from './tenable.service';
   // provide ConfigService directly and never exercise module wiring.
   imports: [ConfigModule],
   // Provides logic for proxying and interacting with Tenable API
-  providers: [TenableService],
+  providers: [TenableService]
 })
 export class TenableModule {}

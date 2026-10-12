@@ -174,7 +174,6 @@ export class SnykMapper extends BaseConverter {
       }
     }
   };
-
   constructor(snykJson: Record<string, unknown>) {
     super(snykJson);
   }

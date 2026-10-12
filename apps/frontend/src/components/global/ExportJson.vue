@@ -48,7 +48,7 @@ export default class ExportJSON extends Vue {
     return fileData;
   }
 
-  // exports .zip of jsons if multiple are selected, if one is selected it will export that .json file
+  //exports .zip of jsons if multiple are selected, if one is selected it will export that .json file
   async export_json(): Promise<void> {
     const files = this.populate_files();
     await saveSingleOrMultipleFiles(files, 'json');

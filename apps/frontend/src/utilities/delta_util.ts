@@ -52,7 +52,8 @@ export class ControlChange {
     for (let i = firstSelected + 1; i < this.values.length; i++) {
       // Non-null proven by the loop bound (and firstSelected >= 0 above).
       const value = this.values.at(i)!;
-      if (value !== first && value !== NOT_SELECTED) {
+      if (value !== first && value !== NOT_SELECTED
+      ) {
         return true;
       }
     }

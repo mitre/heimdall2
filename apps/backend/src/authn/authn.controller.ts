@@ -6,17 +6,17 @@ import {
   Req,
   UseFilters,
   UseGuards,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
-import { createLogger, format, transports } from 'winston';
-import { ConfigService } from '../config/config.service';
-import { AuthenticationExceptionFilter } from '../filters/authentication-exception.filter';
-import { LocalAuthGuard } from '../guards/local-auth.guard';
-import { LoggingInterceptor } from '../interceptors/logging.interceptor';
-import { User } from '../users/user.model';
-import { AuthnService } from './authn.service';
+import {AuthGuard} from '@nestjs/passport';
+import {Request} from 'express';
+import {createLogger, format, transports} from 'winston';
+import {ConfigService} from '../config/config.service';
+import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
+import {LocalAuthGuard} from '../guards/local-auth.guard';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
+import {User} from '../users/user.model';
+import {AuthnService} from './authn.service';
 
 @UseInterceptors(LoggingInterceptor)
 @Controller('authn')
@@ -25,18 +25,20 @@ export class AuthnController {
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   public logger = createLogger({
     format: format.combine(
-      format.timestamp({ format: this.loggingTimeFormat }),
+      format.timestamp({format: this.loggingTimeFormat}),
       format.printf(
-        info =>
-          `${this.line}[${String([info.timestamp])}] (Authn Controller): ${String(info.message)}`,
-      ),
+        (info) =>
+          `${this.line}[${String([
+            info.timestamp
+          ])}] (Authn Controller): ${String(info.message)}`
+      )
     ),
-    transports: [new transports.Console()],
+    transports: [new transports.Console()]
   });
 
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {}
 
   @Get('github/callback')
@@ -92,15 +94,15 @@ export class AuthnController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
-    @Req() request: Request,
-  ): Promise<{ accessToken: string; userID: string }> {
+    @Req() request: Request
+  ): Promise<{accessToken: string; userID: string}> {
     this.logger.debug('in the local login func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     if (this.configService.isLocalLoginAllowed()) {
       return this.authnService.login(request.user as User);
     }
     throw new ForbiddenException(
-      'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.',
+      'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
     );
   }
 
@@ -108,8 +110,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('github'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToGithub(
-    @Req() request: Request,
-  ): Promise<{ accessToken: string; userID: string }> {
+    @Req() request: Request
+  ): Promise<{accessToken: string; userID: string}> {
     this.logger.debug('in the github login func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     return this.authnService.login(request.user as User);
@@ -119,8 +121,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('gitlab'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToGitlab(
-    @Req() request: Request,
-  ): Promise<{ accessToken: string; userID: string }> {
+    @Req() request: Request
+  ): Promise<{accessToken: string; userID: string}> {
     this.logger.debug('in the gitlab login func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     return this.authnService.login(request.user as User);
@@ -130,8 +132,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('google'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToGoogle(
-    @Req() request: Request,
-  ): Promise<{ accessToken: string; userID: string }> {
+    @Req() request: Request
+  ): Promise<{accessToken: string; userID: string}> {
     this.logger.debug('in the google login func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     return this.authnService.login(request.user as User);
@@ -140,8 +142,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('ldap'))
   @Post('login/ldap')
   async loginToLDAP(
-    @Req() request: Request,
-  ): Promise<{ accessToken: string; userID: string }> {
+    @Req() request: Request
+  ): Promise<{accessToken: string; userID: string}> {
     this.logger.debug('in the ldap login func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     return this.authnService.login(request.user as User);
@@ -151,8 +153,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('oidc'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToOIDC(
-    @Req() request: Request,
-  ): Promise<{ accessToken: string; userID: string }> {
+    @Req() request: Request
+  ): Promise<{accessToken: string; userID: string}> {
     this.logger.debug('in the oidc login func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     return this.authnService.login(request.user as User);
@@ -162,8 +164,8 @@ export class AuthnController {
   @UseGuards(AuthGuard('okta'))
   @UseFilters(new AuthenticationExceptionFilter())
   async loginToOkta(
-    @Req() request: Request,
-  ): Promise<{ accessToken: string; userID: string }> {
+    @Req() request: Request
+  ): Promise<{accessToken: string; userID: string}> {
     this.logger.debug('in the okta login func');
     this.logger.debug(JSON.stringify(request.session, null, 2));
     return this.authnService.login(request.user as User);
@@ -174,10 +176,14 @@ export class AuthnController {
     session: {
       accessToken: string;
       userID: string;
-    },
+    }
   ): void {
-    request.res?.cookie('userID', session.userID, { secure: this.configService.isInProductionMode() });
-    request.res?.cookie('accessToken', session.accessToken, { secure: this.configService.isInProductionMode() });
+    request.res?.cookie('userID', session.userID, {
+      secure: this.configService.isInProductionMode()
+    });
+    request.res?.cookie('accessToken', session.accessToken, {
+      secure: this.configService.isInProductionMode()
+    });
     request.res?.redirect('/');
   }
 }

@@ -1,17 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
+import {Injectable} from '@nestjs/common';
+import {PassportStrategy} from '@nestjs/passport';
 import _ from 'lodash';
 import Strategy from 'passport-ldapauth';
-import { resolveSslMaterial } from '../../config/app-config';
-import { ConfigService } from '../config/config.service';
-import type { User } from '../users/user.model';
-import { AuthnService } from './authn.service';
+import {resolveSslMaterial} from '../../config/app_config';
+import {ConfigService} from '../config/config.service';
+import type {User} from '../users/user.model';
+import {AuthnService} from './authn.service';
 
 @Injectable()
 export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
   static getSSLConfig(configService: ConfigService) {
-    const isSslEnabled
-      = (configService.get('LDAP_SSL') ?? '').toLowerCase() === 'true';
+    const isSslEnabled =
+      (configService.get('LDAP_SSL') ?? '').toLowerCase() === 'true';
     if (!isSslEnabled) {
       return false;
     }
@@ -27,18 +27,18 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       }
     }
 
-    const isSslInsecure
-      = (configService.get('LDAP_SSL_INSECURE') ?? '').toLowerCase() === 'true';
+    const isSslInsecure =
+      (configService.get('LDAP_SSL_INSECURE') ?? '').toLowerCase() === 'true';
 
     return {
       ca: sslCA,
-      rejectUnauthorized: !isSslInsecure,
+      rejectUnauthorized: !isSslInsecure
     };
   }
 
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
     const sslConfig = LDAPStrategy.getSSLConfig(configService);
     super({
@@ -47,18 +47,18 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
         bindDN: configService.get('LDAP_BINDDN'),
         searchBase: configService.get('LDAP_SEARCHBASE') || 'disabled',
         searchFilter:
-          configService.get('LDAP_SEARCHFILTER')
-          || '(sAMAccountName={{username}})',
+          configService.get('LDAP_SEARCHFILTER') ||
+          '(sAMAccountName={{username}})',
         url: `${sslConfig ? 'ldaps' : 'ldap'}://${configService.get(
-          'LDAP_HOST',
+          'LDAP_HOST'
         )}:${configService.get('LDAP_PORT') || '389'}`,
         ...(sslConfig && {
           tlsOptions: {
             ca: sslConfig.ca,
-            rejectUnauthorized: sslConfig.rejectUnauthorized,
-          },
-        }),
-      },
+            rejectUnauthorized: sslConfig.rejectUnauthorized
+          }
+        })
+      }
     });
   }
 
@@ -67,12 +67,12 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
   // Calling done() here directly passed the UNAWAITED promise as req.user
   // and fired done() a second time when the mixin completed.
   validate(user: unknown): Promise<User> {
-    const { firstName, lastName } = this.authnService.splitName(
-      _.get(user, this.configService.get('LDAP_NAMEFIELD') || 'name'),
+    const {firstName, lastName} = this.authnService.splitName(
+      _.get(user, this.configService.get('LDAP_NAMEFIELD') || 'name')
     );
     const email: string = _.get(
       user,
-      this.configService.get('LDAP_MAILFIELD') || 'mail',
+      this.configService.get('LDAP_MAILFIELD') || 'mail'
     );
     return this.authnService.validateOrCreateUser(
       // `.at(0)` returns `string | undefined`, but validateOrCreateUser
@@ -84,7 +84,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       Array.isArray(email) ? email[0] : email,
       firstName,
       lastName,
-      'ldap',
+      'ldap'
     );
   }
 }

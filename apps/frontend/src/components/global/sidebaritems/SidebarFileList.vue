@@ -68,12 +68,12 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  // checks if file is selected
+  //checks if file is selected
   get selected(): boolean {
     return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
   }
 
-  // removes uploaded file from the currently observed files
+  //removes uploaded file from the currently observed files
   async remove_file(): Promise<void> {
     // The evaluation lookup reads the file entry, so it must finish
     // before removeFile deletes that entry.
@@ -85,7 +85,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     this.navigateWithNoErrors(`/${this.current_route}`);
   }
 
-  // saves file to database
+  //saves file to database
   save_file() {
     if (this.file?.database_id) {
       SnackbarModule.failure('This file is already in the database.');
@@ -95,7 +95,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  // determines if the use can save the file
+  //determines if the use can save the file
   get disable_saving() {
     return this.file?.database_id !== undefined || this.saving;
   }
@@ -123,10 +123,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       ? 'evaluation.data'
       : 'profile.data';
     const serializedData = JSON.stringify(_.get(file, dataPath));
-    formData.append(
-      'data',
-      new Blob([serializedData], {type: 'text/plain'})
-    );
+    formData.append('data', new Blob([serializedData], {type: 'text/plain'}));
     try {
       const response = await axios.post<IEvaluation>('/evaluations', formData);
       SnackbarModule.notify('File saved successfully');
@@ -139,7 +136,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       // reading it and reported nothing.
       SnackbarModule.failure(
         axios.isAxiosError<{message?: string}>(error)
-          ? (error.response?.data?.message ?? error.message)
+          ? error.response?.data?.message ?? error.message
           : String(error)
       );
     } finally {
@@ -147,7 +144,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  // gives different icons for a file if it is just a profile
+  //gives different icons for a file if it is just a profile
   get icon(): string {
     if (Object.hasOwn(this.file, 'profile')) {
       return 'mdi-note';

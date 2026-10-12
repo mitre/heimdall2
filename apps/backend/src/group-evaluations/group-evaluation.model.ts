@@ -8,10 +8,10 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
+  UpdatedAt
 } from 'sequelize-typescript';
-import { Evaluation } from '../evaluations/evaluation.model';
-import { Group } from '../groups/group.model';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {Group} from '../groups/group.model';
 
 @Table
 export class GroupEvaluation extends Model {

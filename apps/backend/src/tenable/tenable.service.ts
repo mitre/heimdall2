@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import axios from 'axios';
-import { Request } from 'express';
-import { ConfigService } from '../config/config.service';
-import { createTenableAgents } from './tenable-filtering-agent';
+import {Request} from 'express';
+import {ConfigService} from '../config/config.service';
+import {createTenableAgents} from './tenable-filtering-agent';
 
 type TenableCredentials = {
   accesskey: string;
@@ -19,14 +19,14 @@ export class TenableService {
     // Both agents, because axios selects by the target's protocol. Configured
     // here as well as on the login probe in tenable.controller.ts — two axios
     // configurations, and filtering one does not filter the other.
-    const { httpAgent, httpsAgent } = createTenableAgents({
-      allowPrivateAddresses: this.configService.isTenablePrivateAddressAllowed(),
+    const {httpAgent, httpsAgent} = createTenableAgents({
+      allowPrivateAddresses: this.configService.isTenablePrivateAddressAllowed()
     });
     const axiosInstance = axios.create({
       baseURL: creds.host_url,
       headers: {
         'Content-Type': request.get('content-type') || 'application/json',
-        'x-apikey': `accesskey=${creds.accesskey}; secretkey=${creds.secretkey}`,
+        'x-apikey': `accesskey=${creds.accesskey}; secretkey=${creds.secretkey}`
       },
       // The SECOND of three SSRF controls (heimdall2-86f6.12). The allowlist
       // decides where a request may be SENT; it cannot decide where the
@@ -42,7 +42,7 @@ export class TenableService {
       // does not fix the other.
       maxRedirects: 0,
       httpAgent,
-      httpsAgent,
+      httpsAgent
     });
 
     const method = request.method;
@@ -58,7 +58,7 @@ export class TenableService {
         method === 'POST' && request.get('content-type')?.includes('zip')
           ? 'arraybuffer'
           : 'json',
-      url,
+      url
     });
   }
 }

@@ -192,7 +192,9 @@ export default class Users extends Vue {
     // where the old blind index crashed on undefined.
     const userBeingDeleted =
       userToDelete === -1 ? undefined : this.currentUsers.at(userToDelete);
-    if (userBeingDeleted?.groupRole === 'owner' && this.numberOfOwners() < 2) {
+    if (userBeingDeleted?.groupRole === 'owner' &&
+      this.numberOfOwners() < 2
+    ) {
       saveable = false;
     }
     if (this.editedUserID !== '0') {

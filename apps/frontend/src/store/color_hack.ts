@@ -97,7 +97,6 @@ export class ColorHack extends VuexModule {
         case 'Empty':
           return 'black';
         default:
-           
           console.warn(`No color defined for ${String(status)}`);
           return 'rgb(187, 187, 187)';
       }

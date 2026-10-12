@@ -145,7 +145,6 @@ export class DBProtectMapper extends BaseConverter {
       }
     }
   };
-
   constructor(dbProtectXml: string, withRaw = false) {
     super(compileFindings(parseXml(dbProtectXml)));
     this.withRaw = withRaw;

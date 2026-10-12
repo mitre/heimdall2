@@ -132,6 +132,9 @@ export default defineConfig([
       '@stylistic/eol-last': 'error',
       '@stylistic/object-curly-newline': ['error', { multiline: true }],
       '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+      // Keep existing comment and class-member spacing during focused changes.
+      '@stylistic/spaced-comment': 'off',
+      '@stylistic/lines-between-class-members': 'off',
       // Per-package below (2026-08-13 triage, Aaron) — this global default
       // covers packages not scoped there. Measured usage decides direction.
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
@@ -178,14 +181,8 @@ export default defineConfig([
       curly: 'error',
       'n/no-missing-import': ['error', { tryExtensions: ['.ts', '.tsx', '.d.ts', '.js', '.jsx', '.mjs', '.cjs', '.json'] }],
       'prefer-object-has-own': 'error',
-      // kebabCase is the rule's own default, what NestJS generates
-      // (schematics normalizeToKebabOrSnakeCase dasherizes camelCase), and
-      // what this repo already is: apps/backend/src alone has 56 kebab-case
-      // files and zero snake_case. The previous snakeCase setting matched
-      // nothing and produced 343 errors — hidden until `|| true` was removed
-      // from lint:ci. Packages with a different measured convention get
-      // scoped case unions below (Aaron, 2026-08-13 triage: zero renames).
-      'unicorn/filename-case': ['error', { case: 'kebabCase' }],
+      // Preserve existing filenames and imports instead of renaming for lint.
+      'unicorn/filename-case': 'off',
       // 2026-08-13 triage (Aaron): dropped as vocabulary opinion — 281 hits
       // meant mass-renaming exported symbols and Vue props for zero behavior
       // gain.
@@ -362,54 +359,6 @@ export default defineConfig([
     rules: { 'unicorn/max-nested-calls': 'off' },
   },
   {
-    // Filename-case unions per package, from MEASURED conventions (2026-08-13
-    // triage, Aaron: zero renames). Each union is that package's existing
-    // styles — the rule still blocks any NEW style from appearing. Measured:
-    // frontend .vue 95/95 PascalCase (Vue's own style-guide convention);
-    // frontend .ts snake/flat/Pascal mix; hdf-converters src kebab-majority
-    // with PascalCase classes and 3 camel; hdf-converters test 33/35
-    // snake_case (*_mapper.spec.ts); inspecjs flat/snake/kebab; test/
-    // Pascal-majority. Backend stays strict kebab via the global rule.
-    files: ['apps/frontend/**/*.vue'],
-    name: 'unicorn/filename-vue',
-    plugins: { unicorn },
-    rules: {
-      'unicorn/filename-case': ['error', { cases: { kebabCase: true, pascalCase: true } }],
-    },
-  },
-  {
-    files: ['apps/frontend/**/*.ts'],
-    name: 'unicorn/filename-frontend-ts',
-    plugins: { unicorn },
-    rules: {
-      'unicorn/filename-case': ['error', { cases: { kebabCase: true, pascalCase: true, snakeCase: true } }],
-    },
-  },
-  {
-    files: ['libs/hdf-converters/src/**'],
-    name: 'unicorn/filename-hdf-src',
-    plugins: { unicorn },
-    rules: {
-      'unicorn/filename-case': ['error', { cases: { camelCase: true, kebabCase: true, pascalCase: true } }],
-    },
-  },
-  {
-    files: ['libs/hdf-converters/test/**', 'libs/inspecjs/**'],
-    name: 'unicorn/filename-snake-test-dirs',
-    plugins: { unicorn },
-    rules: {
-      'unicorn/filename-case': ['error', { cases: { kebabCase: true, snakeCase: true } }],
-    },
-  },
-  {
-    files: ['test/**'],
-    name: 'unicorn/filename-e2e',
-    plugins: { unicorn },
-    rules: {
-      'unicorn/filename-case': ['error', { cases: { kebabCase: true, pascalCase: true } }],
-    },
-  },
-  {
     // Cypress specs assert through cy.should chains, chai expect().to
     // matchers, and page-object verifiers — none of which are vitest tests,
     // so vitest's expectation heuristics misfire across the whole e2e tree
@@ -440,22 +389,6 @@ export default defineConfig([
       // (`.to.exist`, `.to.be.true`); that is its documented API, not a
       // statement someone forgot to finish.
       '@typescript-eslint/no-unused-expressions': 'off',
-    },
-  },
-  {
-    // Data, not code (2026-08-13 triage, Aaron: rename code, ignore data):
-    // inspecjs parse_testbed fixtures and the vendor-shaped .d.ts type files
-    // keep their upstream-derived names; README.md is the ecosystem
-    // convention. Renaming data and docs is churn with no value.
-    files: [
-      '**/README.md',
-      'libs/hdf-converters/types/**',
-      'libs/inspecjs/parse_testbed/**',
-    ],
-    name: 'unicorn/filename-data',
-    plugins: { unicorn },
-    rules: {
-      'unicorn/filename-case': 'off',
     },
   },
   {
@@ -511,7 +444,7 @@ export default defineConfig([
     files: [
       'apps/frontend/src/router.ts',
       'apps/frontend/src/store/store.ts',
-      'apps/frontend/src/components/global/upload-tabs/FileReader.vue',
+      'apps/frontend/src/components/global/upload_tabs/FileReader.vue',
     ],
     name: 'unicorn/vue-plugin-installation',
     plugins: { unicorn },

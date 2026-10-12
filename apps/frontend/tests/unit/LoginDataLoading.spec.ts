@@ -18,7 +18,7 @@ import {ServerModule} from '@/store/server';
 import type {IGroup, IStartupSettings, IUser} from '@heimdall/common/interfaces';
 import {mount} from '@vue/test-utils';
 import Vuetify from 'vuetify';
-import {addElemWithDataAppToBody} from '../util/testing-utils';
+import {addElemWithDataAppToBody} from '../util/testingUtils';
 import axios from 'axios';
 import Vue from 'vue';
 import vueCookiesPlugin from 'vue-cookies';

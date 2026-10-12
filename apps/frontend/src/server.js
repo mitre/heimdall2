@@ -16,13 +16,11 @@ let port = 8000;
 if (process.argv.length > 2) {
   port = Number.parseInt(process.argv[2]);
   if (Number.isNaN(port) || port < 1 || port >= 65_536) {
-     
     console.error(`Error: ${process.argv[2]} is not a valid port.`);
     return;
   }
 }
 
- 
 console.log(`Serving Heimdall on port ${port}`);
 
 express()

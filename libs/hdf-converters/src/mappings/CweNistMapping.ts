@@ -7,7 +7,7 @@ export type ICWEJSONID = {
   'NIST-ID': string;
   Rev: number;
   'NIST Name': string;
-};
+}
 
 export class CweNistMapping {
   data: CweNistMappingItem[];
@@ -21,7 +21,6 @@ export class CweNistMapping {
       });
     }
   }
-
   nistFilter(identifiers: string[] | string, defaultNist?: string[]): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
     if (!Array.isArray(identifiers)) {

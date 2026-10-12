@@ -11,23 +11,23 @@ describe('conveyor_mapper', () => {
       )
     );
     const mapped = mapper.toHdf();
-    // fs.writeFileSync(
+    //fs.writeFileSync(
     //  'sample_jsons/conveyor_mapper/conveyor-moldy-hdf.json',
     //  JSON.stringify(mapped['Moldy'], null, 2)
-    // );
-    // fs.writeFileSync(
+    //);
+    //fs.writeFileSync(
     //  'sample_jsons/conveyor_mapper/conveyor-stigma-hdf.json',
     //  JSON.stringify(mapped['Stigma'], null, 2)
-    // );
-    // fs.writeFileSync(
+    //);
+    //fs.writeFileSync(
     //  'sample_jsons/conveyor_mapper/conveyor-codequality-hdf.json',
     //  JSON.stringify(mapped['CodeQuality'], null, 2)
-    // );
-    // fs.writeFileSync(
+    //);
+    //fs.writeFileSync(
     //  'sample_jsons/conveyor_mapper/conveyor-clamav-hdf.json',
     //  JSON.stringify(mapped['Clamav'], null, 2)
-    // );
-    // fs.writeFileSync(
+    //);
+    //fs.writeFileSync(
     //  'sample_jsons/conveyor_mapper/conveyor-hdf.json',
     //  JSON.stringify(mapped, null, 2)
     // );
