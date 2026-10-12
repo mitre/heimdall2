@@ -7,7 +7,27 @@ set -euo pipefail
 [[ $# == 1 ]] || { echo 'Usage: offline-install.sh BUNDLE_DIRECTORY' >&2; exit 64; }
 bundle=$(realpath -- "$1")
 work=$(mktemp -d /tmp/offline-test.XXXXXX)
-trap 'rm -rf -- "$work"' EXIT
+evidence=/tmp/rpm-offline-evidence
+mkdir -p "$evidence"
+cleanup() {
+  result=$?
+  for inventory_file in before after rerun; do
+    [[ ! -f $work/$inventory_file ]] || cp "$work/$inventory_file" "$evidence/$inventory_file"
+  done
+  rm -rf -- "$work"
+  printf 'exit_status=%s\n' "$result" > "$evidence/result.txt"
+  exit "$result"
+}
+trap cleanup EXIT
+cat /etc/os-release > "$evidence/os-release"
+uname -m > "$evidence/architecture"
+transaction() {
+  local phase=$1 result=0
+  shift
+  "$@" 2>&1 | tee "$evidence/$phase.log" || result=$?
+  printf '%s exit_status=%s\n' "$phase" "$result" | tee -a "$evidence/transactions.log"
+  return "$result"
+}
 inventory() { rpm -qa --qf '%{NEVRA}\n' | LC_ALL=C sort; }
 rehash() { (cd -- "$1"; find . -type f ! -name SHA256SUMS -printf '%P\n' | LC_ALL=C sort | while IFS= read -r path; do sha256sum -- "$path"; done) > "$1/SHA256SUMS"; }
 
@@ -44,7 +64,7 @@ if [[ -n ${HEIMDALL_OFFLINE_REJECTION:-} ]]; then
   inventory > "$work/before"
   args=(--assumeyes)
   [[ $HEIMDALL_OFFLINE_REJECTION != argument ]] || args+=(--unexpected)
-  if bash "$bad/install.sh" "${args[@]}"; then
+  if transaction rejection bash "$bad/install.sh" "${args[@]}"; then
     echo "Invalid offline bundle was accepted: $HEIMDALL_OFFLINE_REJECTION" >&2; exit 1
   fi
   inventory > "$work/after"
@@ -53,16 +73,36 @@ if [[ -n ${HEIMDALL_OFFLINE_REJECTION:-} ]]; then
   exit 0
 fi
 
+# A separate minimal candidate pair proves a new, genuinely vendor-signed dependency.
+if [[ -n ${HEIMDALL_OFFLINE_DEPENDENCY_UPGRADE_BUNDLE:-} ]]; then
+  next=$HEIMDALL_OFFLINE_DEPENDENCY_UPGRADE_BUNDLE
+  [[ $next == /* && -d $next ]]
+  inventory > "$work/before"
+  if rpm -q tree; then echo 'New dependency fixture requires tree to be initially absent.' >&2; exit 1; fi
+  transaction install bash "$bundle/install.sh" --assumeyes
+  [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$(cat "$bundle/heimdall-nevra")" ]]
+  if rpm -q tree; then echo 'Initial bundle unexpectedly supplied tree.' >&2; exit 1; fi
+  inventory > "$work/after"
+  transaction upgrade bash "$next/install.sh" --assumeyes
+  [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$(cat "$next/heimdall-nevra")" ]]
+  rpm -q --requires heimdall-server | grep -qx tree
+  [[ $(rpm -q --qf '%{VENDOR}' tree) == "$(rpm -q --qf '%{VENDOR}' oraclelinux-release)" ]]
+  rpm -V heimdall-server tree
+  inventory > "$work/rerun"
+  echo 'Disconnected upgrade supplied previously absent, Oracle-signed tree from the second complete bundle.'
+  exit 0
+fi
+
 # A valid path containing diagnostic words must still install successfully.
 cp -a -- "$bundle" "$work/scriptlet-failure bundle"
 bundle=$work/'scriptlet-failure bundle'
 inventory > "$work/before"
-bash "$bundle/install.sh" --assumeyes
+transaction install bash "$bundle/install.sh" --assumeyes
 IFS= read -r expected < "$bundle/heimdall-nevra"
 [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$expected" ]]
 rpm -V heimdall-server
 inventory > "$work/after"
-bash "$bundle/install.sh" --assumeyes
+transaction rerun bash "$bundle/install.sh" --assumeyes
 inventory > "$work/rerun"
 [[ $(cat "$work/after") == $(cat "$work/rerun") ]]
 runtime=/usr/libexec/heimdall-server/runtime

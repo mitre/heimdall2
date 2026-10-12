@@ -30,6 +30,49 @@ class OfflineInputsTest(unittest.TestCase):
         self.release = self.root / 'os-release'
         self.release.write_text('ID="rhel"\nVERSION_ID="8.6"\nPLATFORM_ID="platform:el8"\n')
 
+    def test_driver_rejects_unsafe_archives_before_target_creation(self):
+        driver = self.root / 'runner/packaging/rpm/tests/run-offline.sh'
+        driver.parent.mkdir(parents=True)
+        driver.write_text((SCRIPT.parents[1] / 'tests/run-offline.sh').read_text())
+        tools = self.root / 'tools'
+        tools.mkdir()
+        marker = self.root / 'docker-called'
+        docker = tools / 'docker'
+        docker.write_text('#!/bin/sh\ntouch "$DOCKER_MARKER"\nexit 77\n')
+        docker.chmod(0o755)
+        environment = dict(os.environ, DOCKER_MARKER=str(marker),
+                           PATH=str(tools) + os.pathsep + os.environ['PATH'])
+        cases = ('checksum', 'sidecar-path', 'traversal', 'other-root',
+                 'symlink', 'hardlink', 'fifo', 'duplicate')
+        for case in cases:
+            with self.subTest(case=case):
+                archive = self.root / ('heimdall-offline-' + case + '.tar.gz')
+                top = archive.name[:-7]
+                with tarfile.open(str(archive), 'w:gz') as output:
+                    candidate = tarfile.TarInfo(top + '/repo/Packages/heimdall-server-fixture.rpm')
+                    candidate.size = 1
+                    output.addfile(candidate, io.BytesIO(b'x'))
+                    bad = tarfile.TarInfo(top + '/extra')
+                    if case == 'traversal': bad.name = top + '/../escape'
+                    if case == 'other-root': bad.name = 'outside/file'
+                    if case == 'symlink': bad.type = tarfile.SYMTYPE; bad.linkname = '../outside'
+                    if case == 'hardlink': bad.type = tarfile.LNKTYPE; bad.linkname = '../outside'
+                    if case == 'fifo': bad.type = tarfile.FIFOTYPE
+                    if case == 'duplicate': bad.name = top + '//repo/Packages/heimdall-server-fixture.rpm'
+                    output.addfile(bad)
+                digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+                if case == 'checksum': digest = '0' * 64
+                name = archive.name if case != 'sidecar-path' else '../' + archive.name
+                Path(str(archive) + '.sha256').write_text(digest + '  ' + name + '\n')
+                result = subprocess.run(['bash', str(driver), 'linux/arm64', 'unused-image', str(archive)],
+                                        env=environment, stdout=subprocess.PIPE,
+                                        stderr=subprocess.STDOUT, universal_newlines=True)
+                self.assertNotEqual(result.returncode, 0, result.stdout)
+                message = ('Archive checksum mismatch' if case == 'checksum' else
+                           'Sidecar must contain' if case == 'sidecar-path' else 'Unsafe or duplicate')
+                self.assertIn(message, result.stdout)
+                self.assertFalse(marker.exists(), result.stdout)
+
     def make_inputs(self):
         packaging = self.root / 'source tree/packaging/rpm'
         scripts = packaging / 'scripts'

@@ -363,6 +363,68 @@ sidecars; it never publishes OS dependencies as individual release assets.
 Stable publication still requires durable signing and candidate-specific offline
 and enforcing-SELinux acceptance evidence; attestations are not RPM signatures.
 
+### Disconnected native acceptance driver
+
+Pull a matching maintained base image on the connected outer host, then supply
+one archive and its adjacent `.sha256` sidecar. A second complete bundle from a
+newer candidate enables the upgrade, removal and recovery assertions:
+
+```sh
+docker pull --platform linux/arm64 oraclelinux:8
+bash packaging/rpm/tests/run-offline.sh linux/arm64 oraclelinux:8 \
+  /approved/heimdall-offline-ol-el8-aarch64-VERSION-FIRST-RELEASE.tar.gz \
+  /approved/heimdall-offline-ol-el8-aarch64-VERSION-SECOND-RELEASE.tar.gz
+```
+
+The host needs Bash, Python 3.6+, Git, Docker and `shasum`. For the unsigned
+rejection fixture, install `rpmsign` on the outer host or set
+`HEIMDALL_OFFLINE_UNSIGNED_RPM` to an unsigned copy prepared by the connected
+producer. No target bootstrap runs. The driver requires a native matching Docker
+daemon and an already pulled image, verifies archive sidecars, rejects unsafe
+archive entries, and copies files with `docker cp` so host bind-mount policy
+cannot alter the proof.
+
+Every negative case starts in its own fresh `--network=none` target. Closure
+verification runs separately from installation. The pristine installed target
+must pass `rpm -V`, runtime execution and installer idempotence before it is
+committed and booted with systemd. The lifecycle fixture seeds its known test
+administrator before the first real setup. Bundled Node then checks HTTP200 JSON
+within 60 seconds; private psql verifies every migration, and the target loader
+checks its native ELF files before authenticated inspection. The maintained
+Rocky 8/9/10 and Oracle 8 images already provide curl and ldd. A future image
+missing curl fails with a test prerequisite after unassisted setup; supply a
+separate signed test-only local repository at that point, never add it to the
+shipped bundle.
+
+Evidence under `packaging/rpm/dist/offline/evidence/` records input hashes,
+source status, OS/architecture, network mode, initial/final RPM inventories,
+transaction statuses/logs, readiness, migrations, loader checks and service
+journals. Cleanup removes only the driver's containers, temporary files and
+committed test image and its two owned volumes. Systemd uses image-populated
+volumes at `/var/lib` and `/etc/heimdall-server` so the existing restore's atomic
+directory renames share a filesystem; Docker overlayfs lower directories reject
+those renames with `EXDEV`. Volume names and mounts are recorded. A Docker
+restart checks container persistence; it cannot
+establish full host reboot or enforcing SELinux acceptance.
+
+`RPM_TEST_OFFLINE_BUNDLE` is the optional absolute bundle directory inside the
+existing lifecycle target. It must match the candidate RPM's NEVRA. Initial
+installation uses the first bundle and signing key; upgrade and recovery use
+the second bundle and its signing key. The original signature, unsafe-upgrade,
+backup, migration-gate, sentinel, secrets and private-CA assertions still run.
+The Oracle lane also builds a separate disposable candidate pair whose second
+spec requires `tree`. Its fresh disconnected target proves tree absent before
+and after the first install, then installs the genuinely Oracle-signed package
+from the second complete closure. Those fixtures never alter the application
+spec or become release assets.
+
+The six public Rocky offline jobs cover initial installation, internal TLS,
+authenticated readiness, database, backup/restore and container restart. They
+receive one release each and therefore do **not** establish offline upgrade or
+removal/recovery acceptance for Rocky. The two native Oracle 8 jobs receive both
+bundles and run those additional checks. The public release depends on all
+these jobs; their workflow definitions alone do not show a successful run.
+
 ### Acceptance signing
 
 For locally built candidates, run from the repository root to sign the binaries
@@ -416,6 +478,53 @@ application, database and certificate state and accounts. See
 The [historical bundled-runtime report](https://github.com/mitre/heimdall2/blob/5486a8b7f26da3ea90635f970e8b983142cdb0b8/docs/superpowers/reports/2026-09-29-bundled-rpm-acceptance.md)
 records acceptance of earlier source and artifacts. It does not certify this
 standalone branch or packages built from the current `VERSION`.
+
+The 2026-10-12 native Oracle Linux 8.10/aarch64 disconnected run passed for
+actual Heimdall 2.14.0 application source
+`0c87a76c55981d035aa61e58c9f27e55a78468c4`, with releases
+`0.4.integration.el8` and `0.5.integration.el8`. Both archives contain 191 RPMs.
+Their SHA-256 values are, respectively:
+
+```text
+9840ebef94de7ede645a9bc810ba4e2657d5fd65c08813f68da16652ddc2ef7f
+35786c0bd6bddef01c03e23a7564e1ef00ff823d208b27685ba0fb9512fe8067
+```
+
+The local [run result](dist/offline/evidence/heimdall-offline-arm64-67063-23066/result.txt),
+[input record](dist/offline/evidence/heimdall-offline-arm64-67063-23066/inputs.txt),
+[transaction/lifecycle log](dist/offline/evidence/heimdall-offline-arm64-67063-23066/output.log),
+[command statuses](dist/offline/evidence/heimdall-offline-arm64-67063-23066/command-status.log)
+and [systemd target](dist/offline/evidence/heimdall-offline-arm64-67063-23066/services-container.json)
+record the executed proof. It includes all 21 rejection cases on fresh targets,
+empty-root closure, pristine install and idempotence, unassisted internal TLS,
+HTTP200 JSON, 28 migrations, 69 native ELF loader checks, authenticated access,
+unsafe-upgrade/backup refusal, migration failure gating, real upgrade, container
+restart, backup/restore, removal and sentinel/secrets/private-CA recovery. No
+inspection tools were added to the targets. The separate
+[new-dependency result](dist/offline/evidence/dependency/output.log) proves the
+second 18-RPM fixture bundle supplies original Oracle
+`tree-1.7.0-15.el8.aarch64`, absent from the first 17-RPM closure and its target.
+These evidence paths are local generated output; CI uploads matching logs for
+seven days. Preserve candidate evidence in an approved durable store before
+claiming release acceptance.
+
+The [post-setup RPM verification](dist/offline/evidence/heimdall-offline-arm64-67063-23066/rpm-after-setup.verify)
+contains only changed `backend.env` content/time and mode changes for
+`/var/lib/heimdall-server` and `/var/log/heimdall-server`. The pinned CLI
+`d92ed3550e87d73db083827a8c38d22cff47765f` hardens those directories to
+`heimdall:heimdall:0750`; the existing unit's `StateDirectory` and `LogsDirectory`
+defaults set them to `0755` when services start. The driver verifies both mode
+properties, actual `heimdall:heimdall:755` metadata and
+`root:heimdall:640` for `backend.env`, and fails on all other verification lines.
+
+| Candidate-specific case | Executed status |
+| --- | --- |
+| Oracle 8.10/aarch64 two-bundle Docker lifecycle and real vendor dependency | Passed for the exact local artifacts above. |
+| Oracle 8/x86_64 two-bundle lifecycle | Unrun here; native CI lane defined. |
+| Rocky 8/9/10 on x86_64 and aarch64 | All six native initial-install/service jobs defined; unrun here. |
+| Rocky two-release offline upgrade/removal/recovery | Unrun; the six jobs receive only one candidate each. |
+| RHEL, AlmaLinux, other Oracle majors and historical minor/EUS targets | Unrun; require matching approved vendor/snapshot artifacts. |
+| Enforcing SELinux, enabled host fapolicyd, AVC inspection and full VM reboot | Unrun on every vendor/platform here; Docker results cannot substitute. |
 
 Before release, record candidate-specific build, signed-install and clean SRPM
 rebuild evidence for the target distribution and architecture. Run both native

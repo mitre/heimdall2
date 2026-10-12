@@ -48,11 +48,25 @@ check_signature() {
   grep -Eq 'Signature.*: OK' /tmp/rpm-signature.log
   sha256sum "$rpm_path"
 }
-upgrade() {
-  local rpm_path=$1
-  timeout 300 dnf upgrade -y --disablerepo='*' --setopt=install_weak_deps=False \
-    --setopt=localpkg_gpgcheck=1 "$rpm_path"
+install_candidate() {
+  local rpm_path=$1 phase=$2 action=install
+  local repo_args=()
+  case "$phase" in
+    install) ;;
+    upgrade) action=upgrade; repo_args=(--disablerepo='*') ;;
+    recover) repo_args=(--disablerepo='*') ;;
+    *) return 64 ;;
+  esac
+  if [[ -n ${RPM_TEST_OFFLINE_BUNDLE:-} ]]; then
+    [[ $RPM_TEST_OFFLINE_BUNDLE == /* && -d $RPM_TEST_OFFLINE_BUNDLE ]] || return 1
+    [[ $(cat "$RPM_TEST_OFFLINE_BUNDLE/heimdall-nevra") == "$(rpm -qp --qf "$RPM_NEVRA_FORMAT" "$rpm_path")" ]] || return 1
+    timeout 300 bash "$RPM_TEST_OFFLINE_BUNDLE/install.sh" --assumeyes
+  else
+    timeout 300 dnf "$action" -y "${repo_args[@]}" --setopt=install_weak_deps=False \
+      --setopt=localpkg_gpgcheck=1 "$rpm_path"
+  fi
 }
+upgrade() { install_candidate "$1" upgrade; }
 refuse_upgrade() {
   local rpm_path=$1
   before=$(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server)
@@ -78,7 +92,7 @@ LOCAL_LOGIN_DISABLED=false
 OIDC_NAME='RPM fixture login'
 ENV
     sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-before-install.sha256
-    timeout 300 dnf install -y --setopt=install_weak_deps=False --setopt=localpkg_gpgcheck=1 "$2"
+    install_candidate "$2" install
     [[ $(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server) == "$(rpm -qp --qf "$RPM_NEVRA_FORMAT" "$2")" ]]
     sha256sum --check /tmp/rpm-before-install.sha256
     for unit in "${units[@]}"; do if systemctl is-active --quiet "$unit"; then exit 1; fi; done
@@ -177,7 +191,7 @@ SHELL
     ;;
   recover)
     check_signature "${2:?RPM}"
-    dnf install -y --disablerepo='*' --setopt=localpkg_gpgcheck=1 --setopt=install_weak_deps=False "$2"
+    install_candidate "$2" recover
     cp -p /tmp/rpm-retained.env /etc/heimdall-server/backend.env
     heimdall-cli setup --non-interactive
     verify_state

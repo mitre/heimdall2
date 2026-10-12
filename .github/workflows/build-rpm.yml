@@ -298,6 +298,50 @@ jobs:
             test ! -s diagnostics/systemd-verify.log
           fi
 
+  offline-test:
+    name: disconnected ${{ matrix.distro }} / ${{ matrix.arch }}
+    needs: build
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: x86_64, runner: ubuntu-latest, platform: linux/amd64}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: x86_64, runner: ubuntu-latest, platform: linux/amd64}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: x86_64, runner: ubuntu-latest, platform: linux/amd64}
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: aarch64, runner: ubuntu-24.04-arm, platform: linux/arm64}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: aarch64, runner: ubuntu-24.04-arm, platform: linux/arm64}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: aarch64, runner: ubuntu-24.04-arm, platform: linux/arm64}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: offline-rocky-${{ matrix.distro }}-${{ matrix.arch }}
+          path: offline
+
+      - name: Prepare outer host only
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm
+          docker pull --platform '${{ matrix.platform }}' '${{ matrix.image }}'
+
+      - name: Verify disconnected install and service operation
+        run: |
+          mapfile -d '' -t bundles < <(find offline -name '*.tar.gz' -print0)
+          test "${#bundles[@]}" -eq 1
+          bash packaging/rpm/tests/run-offline.sh '${{ matrix.platform }}' '${{ matrix.image }}' "${bundles[0]}"
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: offline-evidence-rocky-${{ matrix.distro }}-${{ matrix.arch }}
+          path: packaging/rpm/dist/offline/evidence/
+          retention-days: 7
+          if-no-files-found: warn
+
   lifecycle-ol8:
     name: OL8 lifecycle / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
@@ -363,7 +407,43 @@ jobs:
                 OFFLINE_REPOS="${repos[*]}" OFFLINE_RELEASEVER=8 \
                 OFFLINE_OS_KEY_DIR=/offline-inputs/os-keys OFFLINE_HEIMDALL_KEY=/artifacts/RPM-TEST-GPG-KEY
             done
+            # Disposable candidate specs only: production application requirements stay unchanged.
+            dnf install -y rpm-build
+            for release in 1 2; do
+              topdir="/fixture-$release"
+              mkdir -p "$topdir"/{SPECS,SOURCES}
+              cp /artifacts/first/runtime-manifest.json "$topdir/SOURCES/runtime-manifest.json"
+              cat > "$topdir/SPECS/fixture.spec" <<SPEC
+          Name: heimdall-server
+          Version: 0.0.$release
+          Release: 0.1.integration.el8
+          Summary: Disconnected upgrade dependency fixture
+          License: MIT
+          Requires: bash
+          %description
+          Disposable test fixture.
+          %install
+          mkdir -p %{buildroot}/usr/share/heimdall-offline-fixture
+          echo $release > %{buildroot}/usr/share/heimdall-offline-fixture/release
+          %files
+          /usr/share/heimdall-offline-fixture/release
+          SPEC
+              if [[ $release == 2 ]]; then sed -i '/Requires: bash/a Requires: tree' "$topdir/SPECS/fixture.spec"; fi
+              rpmbuild --define "_topdir $topdir" -bb "$topdir/SPECS/fixture.spec"
+            done
+            fixtures=(/fixture-{1,2}/RPMS/${{ matrix.arch }}/heimdall-server-*.rpm)
+            HEIMDALL_RPM_TEST=1 bash /workspace/packaging/rpm/tests/sign-rpms.sh --container /fixture-key.asc "${fixtures[@]}"
+            for release in 1 2; do
+              candidates=(/fixture-$release/RPMS/${{ matrix.arch }}/heimdall-server-*.rpm)
+              make -C /workspace/packaging/rpm offline TOPDIR="/fixture-$release" OFFLINE_RPM="${candidates[0]}" \
+                OFFLINE_REPOSDIR=/offline-inputs/repos OFFLINE_VARSDIR=/offline-inputs/vars \
+                OFFLINE_REPOS="${repos[*]}" OFFLINE_RELEASEVER=8 \
+                OFFLINE_OS_KEY_DIR=/offline-inputs/os-keys OFFLINE_HEIMDALL_KEY=/fixture-key.asc
+            done
           PRODUCER
+          mkdir -p artifacts/dependency-first artifacts/dependency-second
+          docker cp "$producer:/fixture-1/OFFLINE/." artifacts/dependency-first/
+          docker cp "$producer:/fixture-2/OFFLINE/." artifacts/dependency-second/
           mkdir -p artifacts/offline-first artifacts/offline-second
           docker cp "$producer:/offline-first/OFFLINE/." artifacts/offline-first/
           docker cp "$producer:/offline-second/OFFLINE/." artifacts/offline-second/
@@ -379,6 +459,54 @@ jobs:
           retention-days: 7
           if-no-files-found: error
 
+      - name: Verify disconnected upgrade introduces a real Oracle dependency
+        run: |
+          fixture="heimdall-offline-dependency-${{ matrix.arch }}"
+          docker pull --platform '${{ matrix.platform }}' oraclelinux:8
+          docker run -d --name "$fixture" --network=none --platform '${{ matrix.platform }}' \
+            --entrypoint /bin/bash -e HEIMDALL_RPM_TEST=1 oraclelinux:8 -c 'sleep infinity'
+          mkdir -p packaging/rpm/dist/offline/evidence/dependency
+          cleanup() {
+            result=$?
+            docker cp "$fixture:/tmp/rpm-offline-evidence/." packaging/rpm/dist/offline/evidence/dependency/ || true
+            docker rm -f "$fixture" >/dev/null
+            exit "$result"
+          }
+          trap cleanup EXIT
+          test "$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$fixture")" = none
+          docker inspect "$fixture" > packaging/rpm/dist/offline/evidence/dependency/container.json
+          for release in first second; do
+            mapfile -d '' -t bundles < <(find "artifacts/dependency-$release" -name '*.tar.gz' -print0)
+            test "${#bundles[@]}" -eq 1
+            (cd "$(dirname "${bundles[0]}")" && sha256sum --check "$(basename "${bundles[0]}").sha256")
+            mkdir "artifacts/dependency-$release/extracted"
+            tar -xzf "${bundles[0]}" -C "artifacts/dependency-$release/extracted"
+            bundle="artifacts/dependency-$release/extracted/$(basename "${bundles[0]}" .tar.gz)"
+            docker cp "$bundle" "$fixture:/tmp/$release"
+          done
+          docker cp packaging/rpm/tests/. "$fixture:/tmp/rpm-tests"
+          timeout 900 docker exec -e HEIMDALL_OFFLINE_DEPENDENCY_UPGRADE_BUNDLE=/tmp/second \
+            "$fixture" bash /tmp/rpm-tests/offline-install.sh /tmp/first \
+            | tee packaging/rpm/dist/offline/evidence/dependency/output.log
+
+      - name: Verify disconnected two-bundle Oracle Linux lifecycle
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm
+          docker pull --platform '${{ matrix.platform }}' oraclelinux:8
+          mapfile -d '' -t first < <(find artifacts/offline-first -name '*.tar.gz' -print0)
+          mapfile -d '' -t second < <(find artifacts/offline-second -name '*.tar.gz' -print0)
+          test "${#first[@]}" -eq 1 && test "${#second[@]}" -eq 1
+          bash packaging/rpm/tests/run-offline.sh '${{ matrix.platform }}' oraclelinux:8 "${first[0]}" "${second[0]}"
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: offline-evidence-ol-el8-${{ matrix.arch }}
+          path: packaging/rpm/dist/offline/evidence/
+          retention-days: 7
+          if-no-files-found: warn
+
       - name: Verify real package lifecycle
         env:
           RPM_TEST_GPG_KEY: ${{ github.workspace }}/artifacts/RPM-TEST-GPG-KEY
@@ -390,7 +518,7 @@ jobs:
 
   publish:
     name: Attach RPMs and offline bundles to the release
-    needs: [build, smoke-test, lifecycle-ol8]
+    needs: [build, smoke-test, offline-test, lifecycle-ol8]
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     permissions:
@@ -406,7 +534,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          pattern: offline-*
+          pattern: offline-{rocky,ol}-*
           path: offline
           merge-multiple: true
 
