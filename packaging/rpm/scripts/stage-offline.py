@@ -58,7 +58,7 @@ def run(command):
     # Repository diagnostics may contain authenticated URLs or subscription paths.
     try:
         return subprocess.run([str(value) for value in command], check=True,
-                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                               universal_newlines=True,
                               env=dict(os.environ, LC_ALL='C')).stdout
     except subprocess.CalledProcessError:
@@ -135,7 +135,10 @@ def stage(args):
                 raise ValueError('Repository and variable inputs must be regular files')
         setattr(args, field, path)
     repositories = configparser.ConfigParser(interpolation=None, strict=True)
-    repositories.read([str(path) for path in sorted(args.reposdir.glob('*.repo'))])
+    try:
+        repositories.read([str(path) for path in sorted(args.reposdir.glob('*.repo'))])
+    except configparser.Error:
+        raise ValueError('Invalid repository configuration') from None
     if any(not repositories.has_section(repo) for repo in args.repo):
         raise ValueError('An approved repository is missing from reposdir')
     output = Path(args.output)

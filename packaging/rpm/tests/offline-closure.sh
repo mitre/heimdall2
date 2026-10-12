@@ -6,7 +6,15 @@ set -euo pipefail
 [[ $# == 1 && -d $1 && ! -L $1 ]] || { echo 'Usage: offline-closure.sh BUNDLE_DIRECTORY' >&2; exit 1; }
 bundle=$(cd -- "$1" && pwd -P)
 
-python3 - "$bundle" <<'PY'
+if command -v python3 >/dev/null 2>&1; then
+  python=python3
+elif [[ -x /usr/libexec/platform-python ]]; then
+  python=/usr/libexec/platform-python
+else
+  echo 'Closure verification requires python3 or /usr/libexec/platform-python.' >&2
+  exit 1
+fi
+"$python" - "$bundle" <<'PY'
 import hashlib
 import json
 from pathlib import Path

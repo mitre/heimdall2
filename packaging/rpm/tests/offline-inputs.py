@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Offline collector input and publication checks without native RPM tools."""
 import argparse
+import contextlib
+import io
 import hashlib
 import importlib.util
 import json
@@ -262,6 +264,42 @@ class OfflineInputsTest(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.collect(args, run)
                 self.assertFalse(args.output.exists())
+
+    def test_repository_parser_errors_do_not_print_credentials(self):
+        args = self.inputs()
+        (args.reposdir / 'baseos.repo').write_text('baseurl=https://user:secret@example.invalid/private\n')
+        argv = [str(SCRIPT)]
+        for name in ('rpm', 'runtime_manifest', 'reposdir', 'varsdir', 'heimdall_key', 'output', 'releasever'):
+            argv.extend(['--' + name.replace('_', '-'), str(getattr(args, name))])
+        argv.extend(['--repo', 'baseos', '--os-key', str(args.os_key[0])])
+        error = io.StringIO()
+        with patch.object(sys, 'argv', argv), patch.object(self.module.os, 'geteuid', return_value=0), contextlib.redirect_stderr(error):
+            with self.assertRaises(SystemExit):
+                self.module.main()
+        self.assertNotIn('secret', error.getvalue())
+        self.assertIn('repository configuration', error.getvalue())
+        self.assertFalse(args.output.exists())
+
+    def test_rpm_query_warnings_do_not_pollute_metadata(self):
+        rpm = self.root / 'rpm'
+        rpm.write_bytes(b'signed candidate')
+        executable = self.root / 'bin/rpm'
+        executable.parent.mkdir()
+        executable.write_text("#!/bin/sh\nprintf 'warning: Header V4 RSA/SHA256 Signature: NOKEY\\n' >&2\nprintf 'heimdall-server-2.14.0-1.el8.x86_64\\theimdall-server\\tx86_64\\tHeimdall\\theimdall-server-2.14.0-1.el8.src.rpm'\n")
+        executable.chmod(0o755)
+        with patch.dict(os.environ, {'PATH': str(executable.parent)}):
+            record = self.module.package_record(rpm, self.root)
+        self.assertEqual(record['nevra'], 'heimdall-server-2.14.0-1.el8.x86_64')
+
+    @unittest.skipUnless(hasattr(os, 'geteuid') and os.geteuid() == 0 and Path('/usr/libexec/platform-python').is_file(),
+                         'Requires root on native EL8 with platform-python')
+    def test_closure_falls_back_to_el8_platform_python(self):
+        environment = dict(os.environ, PATH=str(self.root), HEIMDALL_RPM_TEST='1')
+        result = subprocess.run(['/bin/bash', str(SCRIPT.parents[1] / 'tests/offline-closure.sh'), str(self.root)],
+                                env=environment, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('SHA256SUMS', result.stdout)
+        self.assertNotIn('command not found', result.stdout)
 
     def test_closure_requires_disposable_opt_in(self):
         script = SCRIPT.parents[1] / 'tests/offline-closure.sh'
