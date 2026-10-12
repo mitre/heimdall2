@@ -29,6 +29,8 @@ addFilter(r"non-standard-dir-perm /var/lib/(?:heimdall-server/backups|heimdall-p
 addFilter(r"zero-length /usr/share/heimdall-server/apps/backend/node_modules/@webassemblyjs/(?:ast/esm/types/(?:basic|nodes|traverse)|wasm-parser/esm/types/decoder)\.js$")
 addFilter(r"zero-length /usr/share/heimdall-server/apps/backend/node_modules/(?:@xtuc/ieee754|base64url|terser)/dist/\.gitkeep$")
 addFilter(r"zero-length /usr/share/heimdall-server/apps/backend/node_modules/(?:eslint-import-resolver-node/node_modules/)?resolve/test/\S+$")
+addFilter(r"zero-length /usr/share/heimdall-server/apps/backend/node_modules/eslint-import-resolver-node/node_modules/resolve/npm-debug\.log\.357d1f5f60a5f00f2e0c325cef16bbd4$")
+addFilter(r"zero-length /usr/share/heimdall-server/libs/common/index\.ts$")
 
 # Declaration files and upstream Git hooks are data, never installed commands.
 addFilter(r"(?:non-executable-script|wrong-script-interpreter) /usr/share/heimdall-server/apps/backend/node_modules/(?:@nestjs/cli/bin/nest\.d\.ts|(?:js-beautify/node_modules/glob|rimraf)/dist/esm/bin\.d\.mts) (?:644 )?/usr/bin/env node$")
