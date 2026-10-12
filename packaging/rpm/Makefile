@@ -122,7 +122,8 @@ deps:
 	scripts/setup-build-deps.sh
 
 runtimes: check-source
-	python3 scripts/stage-runtimes.py runtime-lock.json "$(RPM_ARCH)" "$(TOPDIR)/SOURCES"
+	@mkdir -p "$(TOPDIR)/SOURCES"
+	cd "$(TOPDIR)/SOURCES" && python3 "$(CURDIR)/scripts/stage-runtimes.py" "$(RPM_ARCH)"
 
 # Retain the resolved version and release in independent SRPM rebuilds.
 render-spec: check-source
@@ -216,7 +217,7 @@ check-upstream: check-version
 	if command -v gh >/dev/null 2>&1; then \
 		gh_tag=$$(gh release view --repo $(UPSTREAM_REPO) --json tagName -q '.tagName' 2>/dev/null); \
 	else \
-		gh_tag=$$(curl -sfL -o /dev/null -w '%{url_effective}\n' \
+		gh_tag=$$(curl --proto '=https' --proto-redir '=https' -sfL -o /dev/null -w '%{url_effective}\n' \
 			https://github.com/$(UPSTREAM_REPO)/releases/latest \
 			| sed 's|.*/tag/||'); \
 	fi; \

@@ -9,7 +9,7 @@ for artifact in "$previous" "$upgrade"; do
   rpmkeys --checksig --verbose "$artifact" | tee /tmp/rpm-previous-signature.log
   grep -Eq 'Signature.*: OK' /tmp/rpm-previous-signature.log
 done
-curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
+curl --proto '=https' --proto-redir '=https' -fsSL https://rpm.nodesource.com/setup_22.x | bash -
 dnf module reset -y postgresql
 dnf module enable -y postgresql:13
 dnf install -y --setopt=install_weak_deps=False --setopt=localpkg_gpgcheck=1 "$previous" postgresql-server

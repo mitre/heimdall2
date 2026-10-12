@@ -94,6 +94,7 @@ jobs:
           python3 packaging/rpm/tests/inputs.py
           python3 packaging/rpm/tests/version-srpm.py
           python3 packaging/rpm/tests/runtime-inputs.py
+          python3 packaging/rpm/tests/download-protocols.py
           python3 packaging/rpm/tests/runtime-extraction.py
           python3 packaging/rpm/tests/upgrade-scriptlets.py
           python3 packaging/rpm/tests/application-readiness.py

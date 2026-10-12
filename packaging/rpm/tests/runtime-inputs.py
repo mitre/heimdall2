@@ -5,7 +5,11 @@ import hashlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
+import runpy
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -48,6 +52,99 @@ class RuntimeInputsTest(unittest.TestCase):
 
     def download(self, url, timeout):
         return io.BytesIO(self.payloads[url])
+
+    def test_cli_uses_bundled_lock_and_current_directory(self):
+        scripts = self.root / 'packaging/scripts'
+        scripts.mkdir(parents=True)
+        script = scripts / SCRIPT.name
+        shutil.copyfile(str(SCRIPT), str(script))
+        (scripts.parent / 'runtime-lock.json').write_text(json.dumps(self.lock))
+        self.sources.mkdir()
+        # A lock in the output directory must not override the bundled pin.
+        (self.sources / 'runtime-lock.json').write_text('{}')
+        previous = Path.cwd()
+        try:
+            os.chdir(str(self.sources))
+            with patch.object(sys, 'argv', [str(script), 'x86_64']), \
+                    patch.object(self.module.urllib.request, 'urlopen', side_effect=self.download):
+                try:
+                    runpy.run_path(str(script), run_name='__main__')
+                except SystemExit as error:
+                    self.fail('Runtime CLI failed: ' + str(error))
+        finally:
+            os.chdir(str(previous))
+        manifest = json.loads((self.sources / 'runtime-manifest.json').read_text())
+        self.assertEqual(manifest['architecture'], 'x86_64')
+        self.assertEqual((self.sources / 'node-runtime.tar.xz').read_bytes(), b'node x86_64')
+
+    def test_rejects_symlinked_staging_files_without_touching_targets(self):
+        for filename in ARCHIVES.values():
+            for dangling in (False, True):
+                with self.subTest(filename=filename, dangling=dangling):
+                    self.sources = self.root / '{}-{}'.format(filename, dangling)
+                    self.sources.mkdir()
+                    manifest = self.sources / 'runtime-manifest.json'
+                    manifest.write_text('stale')
+                    target = self.root / 'outside'
+                    if not dangling:
+                        target.write_bytes(b'preserve me')
+                    link = self.sources / filename
+                    link.symlink_to(target)
+                    try:
+                        with patch.object(self.module.urllib.request, 'urlopen', side_effect=self.download):
+                            with self.assertRaisesRegex(ValueError, 'symlink'):
+                                self.stage()
+                        self.assertTrue(link.is_symlink())
+                        self.assertFalse(manifest.exists())
+                        if dangling:
+                            self.assertFalse(target.exists())
+                        else:
+                            self.assertEqual(target.read_bytes(), b'preserve me')
+                    finally:
+                        if link.is_symlink():
+                            link.unlink()
+                        if target.exists():
+                            target.unlink()
+
+    def test_replaces_manifest_symlink_without_touching_target(self):
+        for dangling in (False, True):
+            with self.subTest(dangling=dangling):
+                self.sources = self.root / str(dangling)
+                self.sources.mkdir()
+                target = self.root / ('outside-' + str(dangling))
+                if not dangling:
+                    target.write_bytes(b'preserve me')
+                manifest = self.sources / 'runtime-manifest.json'
+                manifest.symlink_to(target)
+                with patch.object(self.module.urllib.request, 'urlopen', side_effect=self.download):
+                    expected = self.stage()
+                self.assertFalse(manifest.is_symlink())
+                self.assertEqual(json.loads(manifest.read_text()), expected)
+                if dangling:
+                    self.assertFalse(target.exists())
+                else:
+                    self.assertEqual(target.read_bytes(), b'preserve me')
+
+    def test_make_stages_in_custom_topdir(self):
+        packaging = self.root / 'packaging with spaces'
+        scripts = packaging / 'scripts'
+        scripts.mkdir(parents=True)
+        shutil.copyfile(str(SCRIPT), str(scripts / SCRIPT.name))
+        shutil.copyfile(str(SCRIPT.parents[1] / 'Makefile'), str(packaging / 'Makefile'))
+        (packaging / 'runtime-lock.json').write_text(json.dumps(self.lock))
+        self.sources = self.root / 'build output/SOURCES'
+        self.sources.mkdir(parents=True)
+        for name, filename in ARCHIVES.items():
+            arch = 'any' if name == 'postgresql' else 'x86_64'
+            (self.sources / filename).write_bytes(self.payloads['https://example.invalid/{}-{}'.format(name, arch)])
+        result = subprocess.run(
+            ['make', '-C', str(packaging), '-o', 'check-source', 'runtimes',
+             'TOPDIR=../build output', 'RPM_ARCH=x86_64', 'GOARCH=amd64'],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        manifest = json.loads((self.sources / 'runtime-manifest.json').read_text())
+        self.assertEqual(manifest['architecture'], 'x86_64')
+        self.assertFalse((packaging / 'runtime-manifest.json').exists())
 
     def test_rejects_corrupt_archive_before_publication(self):
         # Corruption of the last download must not publish earlier downloads either.

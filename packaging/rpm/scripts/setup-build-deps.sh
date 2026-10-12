@@ -125,7 +125,7 @@ fi
 # may not have Node.js 22 on all EL8/EL9 minor versions and distro variants.
 if ! rpm -q nodesource-release >/dev/null 2>&1; then
     echo "  Installing NodeSource repo for Node.js 22..."
-    curl -fsSL https://rpm.nodesource.com/setup_22.x | ${SUDO} bash -
+    curl --proto '=https' --proto-redir '=https' -fsSL https://rpm.nodesource.com/setup_22.x | ${SUDO} bash -
 else
     echo "  NodeSource: already installed"
 fi
@@ -207,7 +207,7 @@ fi
 if ! command -v yarn >/dev/null 2>&1 || \
    ! rpm -qf "$(command -v yarn)" >/dev/null 2>&1 || \
    [[ "$(yarn --version)" != 1.22.22 ]]; then
-    ${SUDO} curl -fsSL https://dl.yarnpkg.com/rpm/yarn.repo \
+    ${SUDO} curl --proto '=https' --proto-redir '=https' -fsSL https://dl.yarnpkg.com/rpm/yarn.repo \
         -o /etc/yum.repos.d/yarn.repo
     if rpm -q yarnpkg >/dev/null 2>&1; then
         ${SUDO} dnf swap "${DNF_ARGS[@]}" yarnpkg yarn-1.22.22
@@ -234,7 +234,7 @@ if [[ "$installed_go" != "$GO_VERSION" ]]; then
     go_archive=$(mktemp)
     trap 'rm -f "$go_archive"' EXIT
     echo "  Installing Go ${GO_VERSION}..."
-    curl --fail --location "https://go.dev/dl/go${GO_VERSION}.linux-${arch_suffix}.tar.gz" -o "$go_archive"
+    curl --proto '=https' --proto-redir '=https' --fail --location "https://go.dev/dl/go${GO_VERSION}.linux-${arch_suffix}.tar.gz" -o "$go_archive"
     ${SUDO} install -d "/opt/heimdall-build/go-${GO_VERSION}"
     ${SUDO} tar -C "/opt/heimdall-build/go-${GO_VERSION}" --strip-components=1 -xzf "$go_archive"
     rm -f "$go_archive"

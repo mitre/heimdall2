@@ -49,6 +49,7 @@ RUN set -eu; \
       /rpmbuild/RPMS/$(rpm -E '%{_arch}')/heimdall-server-*.rpm "$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)"
 
 FROM scratch AS artifacts
+USER 1001:1001
 COPY --from=builder /rpmbuild/RPMS /RPMS
 COPY --from=builder /rpmbuild/SRPMS /SRPMS
 COPY --from=builder /rpmbuild/SOURCES/runtime-manifest.json /runtime-manifest.json

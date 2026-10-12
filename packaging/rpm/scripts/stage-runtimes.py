@@ -67,7 +67,7 @@ def stage(lock_path: Path, arch: str, sources: Path) -> dict:
     sources.mkdir(parents=True, exist_ok=True)
     manifest_path = sources / 'runtime-manifest.json'
     # A failed rerun must not leave a success marker for stale or corrupt inputs.
-    if manifest_path.exists():
+    if manifest_path.exists() or manifest_path.is_symlink():
         manifest_path.unlink()
     temporary = []
     pending = []
@@ -75,6 +75,8 @@ def stage(lock_path: Path, arch: str, sources: Path) -> dict:
         # Check every cached input before fetching or publishing anything new.
         for name, record in manifest['runtimes'].items():
             destination = sources / record['archive']
+            if destination.is_symlink():
+                raise ValueError('Runtime archive must not be a symlink: ' + destination.name)
             if destination.exists():
                 verify(destination, record['sha256'], name)
         for name, record in manifest['runtimes'].items():
@@ -105,9 +107,9 @@ def stage(lock_path: Path, arch: str, sources: Path) -> dict:
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        sys.exit('Usage: stage-runtimes.py LOCK ARCH SOURCES')
+    if len(sys.argv) != 2:
+        sys.exit('Usage: stage-runtimes.py ARCH (run from the RPM SOURCES directory)')
     try:
-        stage(Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3]))
+        stage(Path(__file__).resolve().parents[1] / 'runtime-lock.json', sys.argv[1], Path.cwd())
     except (OSError, ValueError) as error:
         sys.exit(str(error))
