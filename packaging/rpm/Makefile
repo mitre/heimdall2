@@ -18,7 +18,7 @@ check-source: check-version
 GOARCH   ?= $(shell go env GOARCH)
 RPM_ARCH ?= $(shell rpm --eval '%{_arch}')
 
-.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version check-source sources cli-src heimdall-cli man runtimes render-spec stage deps check-upstream
+.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version check-source sources cli-src heimdall-cli man runtimes render-spec stage deps check-upstream offline
 
 # Upstream repo for `make check-upstream` (override for forks/mirrors).
 UPSTREAM_REPO ?= mitre/heimdall2
@@ -160,6 +160,54 @@ rpm: stage
 	@$(if $(filter 1,$(CACHE)),mkdir -p "$(YARN_CACHE)",true)
 	$(RPMBUILD_PREFIX) rpmbuild -ba --define "_topdir $(TOPDIR)" --define "heimdall_release $(HEIMDALL_RELEASE)" "$(TOPDIR)/SPECS/$(SPEC)"
 	@echo "RPMs: $$(ls "$(TOPDIR)"/RPMS/*/*.rpm)"
+
+# Collection consumes an already signed RPM; it never rebuilds or signs packages.
+export TOPDIR OFFLINE_RPM OFFLINE_REPOSDIR OFFLINE_VARSDIR OFFLINE_REPOS
+export OFFLINE_RELEASEVER OFFLINE_OS_KEY_DIR OFFLINE_HEIMDALL_KEY
+
+offline:
+	@bash -eu -o pipefail -c '\
+	for variable in TOPDIR OFFLINE_RPM OFFLINE_REPOSDIR OFFLINE_VARSDIR OFFLINE_REPOS OFFLINE_RELEASEVER OFFLINE_OS_KEY_DIR OFFLINE_HEIMDALL_KEY; do \
+	  [[ -n "$${!variable:-}" ]] || { echo "ERROR: $$variable is required" >&2; exit 1; }; \
+	done; \
+	[[ "$$TOPDIR" = /* ]] || { echo "ERROR: TOPDIR must be absolute and outside the source tree" >&2; exit 1; }; \
+	python3 -c "import os, sys; from pathlib import Path; source = Path(\"../..\").resolve(); topdir = Path(os.environ[\"TOPDIR\"]).resolve(); sys.exit(\"TOPDIR must be outside the source tree\" if topdir == source or source in topdir.parents else 0)"; \
+	for variable in OFFLINE_RPM OFFLINE_HEIMDALL_KEY; do \
+	  [[ "$${!variable}" = /* && -f "$${!variable}" && ! -L "$${!variable}" ]] || { echo "ERROR: $$variable must be an absolute regular file" >&2; exit 1; }; \
+	done; \
+	for variable in OFFLINE_REPOSDIR OFFLINE_VARSDIR OFFLINE_OS_KEY_DIR; do \
+	  [[ "$${!variable}" = /* && -d "$${!variable}" && ! -L "$${!variable}" ]] || { echo "ERROR: $$variable must be an absolute directory" >&2; exit 1; }; \
+	done; \
+	[[ -f "$$TOPDIR/SOURCES/runtime-manifest.json" ]] || { echo "ERROR: runtime-manifest.json is required" >&2; exit 1; }; \
+	set -f; repos=(); \
+	for repo in $$OFFLINE_REPOS; do \
+	  [[ "$$repo" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*$$ ]] || { echo "ERROR: Invalid repository ID" >&2; exit 1; }; \
+	  repos+=(--repo "$$repo"); \
+	done; \
+	[[ "$${#repos[@]}" -gt 0 ]] || { echo "ERROR: OFFLINE_REPOS is required" >&2; exit 1; }; \
+	keys=(); \
+	while IFS= read -r -d "" key; do keys+=(--os-key "$$key"); done < <(find "$$OFFLINE_OS_KEY_DIR" -maxdepth 1 -type f -print0 | sort -z); \
+	[[ "$${#keys[@]}" -gt 0 ]] || { echo "ERROR: OFFLINE_OS_KEY_DIR needs approved public keys" >&2; exit 1; }; \
+	mkdir -p "$$TOPDIR/OFFLINE"; \
+	work=$$(mktemp -d "$$TOPDIR/OFFLINE/.build-XXXXXX"); \
+	trap "rm -rf -- \"\$$work\"" EXIT; \
+	python3 scripts/stage-offline.py --rpm "$$OFFLINE_RPM" \
+	  --runtime-manifest "$$TOPDIR/SOURCES/runtime-manifest.json" \
+	  --reposdir "$$OFFLINE_REPOSDIR" --varsdir "$$OFFLINE_VARSDIR" \
+	  --releasever "$$OFFLINE_RELEASEVER" --heimdall-key "$$OFFLINE_HEIMDALL_KEY" \
+	  --output "$$work/bundle" "$${repos[@]}" "$${keys[@]}" >/dev/null; \
+	read -r distro major arch < "$$work/bundle/target"; \
+	metadata=$$(rpm -qp --qf "%{VERSION} %{RELEASE}\n" "$$OFFLINE_RPM"); \
+	read -r version release extra <<< "$$metadata"; \
+	[[ "$$version" =~ ^[A-Za-z0-9][A-Za-z0-9._+~-]*$$ && "$$release" =~ ^[A-Za-z0-9][A-Za-z0-9._+~-]*$$ && -z "$$extra" ]] || { echo "ERROR: Invalid RPM version or release" >&2; exit 1; }; \
+	bundle_name="heimdall-offline-$$distro-el$$major-$$arch-$$version-$$release"; \
+	archive="$$bundle_name.tar.gz"; \
+	[[ ! -e "$$TOPDIR/OFFLINE/$$archive" && ! -L "$$TOPDIR/OFFLINE/$$archive" && ! -e "$$TOPDIR/OFFLINE/$$archive.sha256" && ! -L "$$TOPDIR/OFFLINE/$$archive.sha256" ]] || { echo "ERROR: Refusing stale offline artifact" >&2; exit 1; }; \
+	mv "$$work/bundle" "$$work/$$bundle_name"; \
+	tar -C "$$work" -czf "$$work/$$archive" "$$bundle_name"; \
+	(cd "$$work" && sha256sum "$$archive" > "$$archive.sha256"); \
+	mv "$$work/$$archive" "$$work/$$archive.sha256" "$$TOPDIR/OFFLINE/"; \
+	echo "$$TOPDIR/OFFLINE/$$archive"'
 
 # Iterate fast on spec edits — skips %prep + %build (no tarball
 # extraction, no `yarn install`, no node build) and re-runs only

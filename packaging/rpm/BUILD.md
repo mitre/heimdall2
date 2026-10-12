@@ -229,7 +229,8 @@ binaries need their own signature.
 ## CI artifacts and test signatures
 
 The Build RPM workflow defines builds and install checks for Rocky Linux 8, 9
-and 10 on x86_64 and aarch64. Its six bundles use
+and 10 on x86_64 and aarch64. It uses the maintained
+`rockylinux/rockylinux:{8,9,10}` images. Its six standalone artifacts use
 `rpm-{el8,el9,el10}-{x86_64,aarch64}` names.
 Each contains a binary RPM, SRPM, `RPM-TEST-GPG-KEY`, `runtime-manifest.json`, and
 `SHA256SUMS`. Checksums are computed **after** test signing changes the RPM bytes.
@@ -254,6 +255,113 @@ acceptance keys and deletes its private key. These are not durable distribution
 signatures. The configured RPM repository remains disabled; repository hosting
 and production signing are separate release work. The existing publication guard
 rejects integration RPMs.
+
+### Producing an offline archive
+
+Run collection as root on a connected native EL8, EL9 or EL10 producer with
+DNF4, RPM/rpmkeys, Python 3.6 or newer, GnuPG, `createrepo_c`, Bash, GNU tar and
+coreutils. Build and finally sign the Heimdall RPM first. Collection verifies
+that signature and retains the original signatures of the OS dependency RPMs;
+never send those dependency packages through the Heimdall signing script.
+The target architecture comes from the native producer and must match the RPM
+and `SOURCES/runtime-manifest.json` created by the application build.
+
+Before installing build tools that add repositories, preserve the distribution's
+approved BaseOS/AppStream repository definitions, required non-secret files from
+`/etc/dnf/vars` or `/etc/yum/vars`, and the public signing keys owned by its release
+packages. Use isolated directories containing only these selected inputs. An
+empty variables directory is valid. Record the exact enabled repository IDs;
+the collector disables every repository before enabling this explicit list.
+Do not enable EPEL, NodeSource or another vendor to repair a failed solve.
+CI captures Rocky inputs before `make deps` and builds Oracle Linux bundles in
+a separate matching Oracle producer after the candidates have been signed.
+
+For example, run from the repository root, with the exact signed candidate
+and approved source directories selected by the operator:
+
+```sh
+make -C packaging/rpm offline TOPDIR=/tmp/heimdall-rpmbuild \
+  OFFLINE_RPM=/tmp/heimdall-rpmbuild/RPMS/x86_64/heimdall-server-2.14.0-0.4.integration.el8.x86_64.rpm \
+  OFFLINE_REPOSDIR=/tmp/heimdall-offline-sources \
+  OFFLINE_VARSDIR=/tmp/heimdall-offline-vars \
+  OFFLINE_REPOS='baseos appstream' OFFLINE_RELEASEVER=8 \
+  OFFLINE_OS_KEY_DIR=/tmp/heimdall-offline-os-keys \
+  OFFLINE_HEIMDALL_KEY=/tmp/heimdall-rpmbuild/RPM-TEST-GPG-KEY
+```
+
+All paths are absolute, and `TOPDIR` must remain outside the source tree so
+source packaging cannot include staged offline artifacts. `OFFLINE_RPM` is one
+finally signed binary RPM, never a glob. `OFFLINE_OS_KEY_DIR` contains only
+approved OS public-key regular files. Collection passes each as a separate
+`--os-key` argument, so paths with spaces work. `OFFLINE_REPOS` is a
+whitespace-separated list of repository IDs. Use the explicit EL major or a
+matching minor release value required by an approved repository snapshot as
+`OFFLINE_RELEASEVER`. No application build or signing target runs here.
+
+The equivalent direct collector invocation uses a fresh, absent output path
+with an existing parent:
+
+```sh
+python3 packaging/rpm/scripts/stage-offline.py \
+  --rpm /tmp/heimdall-rpmbuild/RPMS/x86_64/heimdall-server-2.14.0-0.4.integration.el8.x86_64.rpm \
+  --runtime-manifest /tmp/heimdall-rpmbuild/SOURCES/runtime-manifest.json \
+  --reposdir /tmp/heimdall-offline-sources --varsdir /tmp/heimdall-offline-vars \
+  --repo baseos --repo appstream --releasever 8 \
+  --os-key /tmp/heimdall-offline-os-keys/RPM-GPG-KEY-Rocky-8 \
+  --heimdall-key /tmp/heimdall-rpmbuild/RPM-TEST-GPG-KEY \
+  --output /tmp/heimdall-rpmbuild/offline-bundle
+```
+
+Repeat `--repo` and `--os-key` for each approved input. Compare the full primary
+fingerprints shown by `gpg --show-keys --with-fingerprint KEY_FILE` with the
+trusted distribution authority and Heimdall release authority before collecting.
+The manifest records these fingerprints, public-key hashes, downloaded
+`repomd.xml` hashes, the producer version and every package's NEVRA, vendor,
+source RPM and SHA-256. This identifies the actual source snapshot without
+shipping its URLs or credentials.
+
+Make emits one archive path under `TOPDIR/OFFLINE`, named
+`heimdall-offline-DISTRO-elMAJOR-ARCH-VERSION-RELEASE.tar.gz`, and a same-name
+`.sha256` sidecar. Existing names are refused; use a fresh build tree for another
+collection. The archive contains exactly one matching top-level directory with
+`repo/Packages`, `repo/repodata`, exported public keys, `target`, `heimdall-nevra`,
+`offline-manifest.json`, the unchanged `runtime-manifest.json`, `install.sh`,
+`README.txt` and internal `SHA256SUMS`. It contains no producer repository
+configuration, subscription certificates, authentication material or private keys.
+The application RPM retains runtime license notices and its SRPM remains in the
+separate standalone artifact.
+
+```sh
+python3 packaging/rpm/tests/offline-inputs.py
+git diff --check
+tar -tzf "$OFFLINE_ARCHIVE"
+(cd "$(dirname "$OFFLINE_ARCHIVE")" && sha256sum -c "$(basename "$OFFLINE_ARCHIVE").sha256")
+```
+
+Set `OFFLINE_ARCHIVE` to the single path emitted by Make. Extract into a fresh
+inspection directory, check the internal `SHA256SUMS`, public-key fingerprints
+and inventory, and query all RPM architectures to confirm they match the target
+or are `noarch`. Use the same distribution and a compatible vendor/repository
+snapshot on the target. Current major-version repositories can contain newer
+packages than historical minor images; arbitrary historical minor or RHEL EUS
+compatibility is not established. Collection or installation failures require a
+matching approved source snapshot; do not force conflicting package replacements.
+
+RHEL installation media or approved internal mirrors can supply the required
+packages without registering the disconnected target. On RHEL, Oracle Linux or
+AlmaLinux, supply that distribution's own repositories, variables and keys.
+Rocky archives are labelled `rocky` and cannot establish RHEL compatibility.
+Use the vendor's existing approved artifact destination; never automatically
+publish protected vendor RPMs or archives to a public release.
+
+CI additionally uploads `offline-rocky-{el8,el9,el10}-{x86_64,aarch64}` and
+`offline-ol-el8-{x86_64,aarch64}` artifacts, each containing uniquely named
+archives and sidecars, with seven-day retention. Release handling checks their
+sidecars and applies the integration-release rejection to the bundled Heimdall
+RPM as well as standalone RPMs. It attests and attaches whole archives and
+sidecars; it never publishes OS dependencies as individual release assets.
+Stable publication still requires durable signing and candidate-specific offline
+and enforcing-SELinux acceptance evidence; attestations are not RPM signatures.
 
 ### Acceptance signing
 

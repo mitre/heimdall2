@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tarfile
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -28,6 +29,102 @@ class OfflineInputsTest(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.release = self.root / 'os-release'
         self.release.write_text('ID="rhel"\nVERSION_ID="8.6"\nPLATFORM_ID="platform:el8"\n')
+
+    def make_inputs(self):
+        packaging = self.root / 'source tree/packaging/rpm'
+        scripts = packaging / 'scripts'
+        scripts.mkdir(parents=True)
+        (packaging / 'Makefile').write_text((SCRIPT.parent.parent / 'Makefile').read_text().replace('\nrpm:', '\nunused-rpm:').replace('\ndeps:', '\nunused-deps:'))
+        with (packaging / 'Makefile').open('a') as makefile:
+            makefile.write('\nrpm deps sign:\n\t@touch "$(TOPDIR)/unexpected-build"; exit 1\n')
+        (scripts / 'stage-offline.py').write_text(
+            'import json, pathlib, sys\n'
+            'args = sys.argv[1:]\n'
+            'pathlib.Path("arguments.json").write_text(json.dumps(args))\n'
+            'output = pathlib.Path(args[args.index("--output") + 1])\n'
+            'output.mkdir()\n'
+            '(output / "target").write_text("rocky 8 x86_64\\n")\n'
+            '(output / "heimdall-nevra").write_text("heimdall-server-2.14.0-0.4.integration.el8.x86_64\\n")\n')
+        tools = self.root / 'tools'
+        tools.mkdir()
+        rpm_tool = tools / 'rpm'
+        rpm_tool.write_text('#!/bin/sh\n[ "$1" = -qp ] || exit 1\nprintf "2.14.0 0.4.integration.el8\\n"\n')
+        rpm_tool.chmod(0o755)
+        topdir = self.root / 'output tree'
+        inputs = {'TOPDIR': str(topdir), 'OFFLINE_REPOS': 'baseos appstream',
+                  'OFFLINE_RELEASEVER': '8'}
+        for name in ('OFFLINE_REPOSDIR', 'OFFLINE_VARSDIR', 'OFFLINE_OS_KEY_DIR'):
+            path = self.root / (name + ' directory')
+            path.mkdir()
+            inputs[name] = str(path)
+        for name in ('OFFLINE_RPM', 'OFFLINE_HEIMDALL_KEY'):
+            path = self.root / (name + ' file')
+            path.write_bytes(b'input')
+            inputs[name] = str(path)
+        for name in ('first key.asc', 'second key.asc'):
+            (Path(inputs['OFFLINE_OS_KEY_DIR']) / name).write_bytes(b'public key')
+        (topdir / 'SOURCES').mkdir(parents=True)
+        (topdir / 'SOURCES/runtime-manifest.json').write_text('{}')
+        return packaging, topdir, inputs, dict(os.environ, COPYFILE_DISABLE='1', PATH=str(tools) + os.pathsep + os.environ['PATH'])
+
+    def run_make(self, packaging, inputs, environment):
+        return subprocess.run(['make', '-C', str(packaging), 'offline'] +
+                              [name + '=' + value for name, value in inputs.items()],
+                              env=environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                              universal_newlines=True)
+
+    def test_make_archives_in_custom_topdir_without_rebuilding_or_signing(self):
+        packaging, topdir, inputs, environment = self.make_inputs()
+        result = self.run_make(packaging, inputs, environment)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        args = json.loads((packaging / 'arguments.json').read_text())
+        output = Path(args[args.index('--output') + 1])
+        self.assertEqual(args, ['--rpm', inputs['OFFLINE_RPM'], '--runtime-manifest',
+                               str(topdir / 'SOURCES/runtime-manifest.json'),
+                               '--reposdir', inputs['OFFLINE_REPOSDIR'], '--varsdir', inputs['OFFLINE_VARSDIR'],
+                               '--releasever', '8', '--heimdall-key', inputs['OFFLINE_HEIMDALL_KEY'],
+                               '--output', str(output), '--repo', 'baseos', '--repo', 'appstream',
+                               '--os-key', str(Path(inputs['OFFLINE_OS_KEY_DIR']) / 'first key.asc'),
+                               '--os-key', str(Path(inputs['OFFLINE_OS_KEY_DIR']) / 'second key.asc')])
+        self.assertEqual(output.name, 'bundle')
+        self.assertEqual(output.parent.parent, topdir / 'OFFLINE')
+        basename = 'heimdall-offline-rocky-el8-x86_64-2.14.0-0.4.integration.el8'
+        archive = topdir / 'OFFLINE' / (basename + '.tar.gz')
+        self.assertTrue(archive.is_file())
+        with tarfile.open(str(archive)) as tar:
+            self.assertEqual(set(tar.getnames()), {basename, basename + '/target', basename + '/heimdall-nevra'})
+        sidecar = archive.with_name(archive.name + '.sha256')
+        self.assertEqual(sidecar.read_text(), hashlib.sha256(archive.read_bytes()).hexdigest() + '  ' + archive.name + '\n')
+        self.assertFalse(output.parent.exists())
+        self.assertFalse((topdir / 'unexpected-build').exists())
+        self.assertIn(str(archive), result.stdout)
+        # Reusing the artifact name must preserve both already published files.
+        before = archive.read_bytes(), sidecar.read_bytes()
+        repeated = self.run_make(packaging, inputs, environment)
+        self.assertNotEqual(repeated.returncode, 0)
+        self.assertEqual((archive.read_bytes(), sidecar.read_bytes()), before)
+
+    def test_make_missing_required_input_fails_before_output_creation(self):
+        packaging, topdir, inputs, environment = self.make_inputs()
+        for name in inputs:
+            if name == 'TOPDIR':
+                continue
+            with self.subTest(variable=name):
+                incomplete = dict(inputs, **{name: ''})
+                result = self.run_make(packaging, incomplete, environment)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(name, result.stderr)
+                self.assertFalse((topdir / 'OFFLINE').exists())
+                self.assertFalse((packaging / 'arguments.json').exists())
+
+    def test_make_rejects_topdir_in_source_tree(self):
+        packaging, topdir, inputs, environment = self.make_inputs()
+        inside = packaging.parents[1] / 'output'
+        inputs['TOPDIR'] = str(inside)
+        result = self.run_make(packaging, inputs, environment)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('outside the source tree', result.stderr)
+        self.assertFalse(inside.exists())
 
     def test_reads_major_without_pinning_minor(self):
         self.assertEqual(self.module.read_target(self.release),

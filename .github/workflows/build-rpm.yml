@@ -56,16 +56,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {distro: el8, image: rockylinux:8, arch: x86_64, runner: ubuntu-latest}
-          - {distro: el9, image: rockylinux:9, arch: x86_64, runner: ubuntu-latest}
-          - {distro: el10, image: rockylinux/rockylinux:10, arch: x86_64, runner: ubuntu-latest}
-          - {distro: el8, image: rockylinux:8, arch: aarch64, runner: ubuntu-24.04-arm}
-          - {distro: el9, image: rockylinux:9, arch: aarch64, runner: ubuntu-24.04-arm}
-          - {distro: el10, image: rockylinux/rockylinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: aarch64, runner: ubuntu-24.04-arm}
 
     steps:
       - name: Bootstrap git and make
-        run: dnf install -y git make
+        run: dnf install -y git make python3
 
       - uses: actions/checkout@v6
         with:
@@ -76,9 +76,45 @@ jobs:
       - name: Configure Git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
+      - name: Capture clean distribution repository inputs
+        run: |
+          python3 - <<'PYTHON'
+          import configparser, os, shutil, subprocess
+          from pathlib import Path
+          root = Path(os.environ['TOPDIR']) / 'offline-inputs'
+          for name in ('repos', 'vars', 'os-keys'):
+              (root / name).mkdir(parents=True)
+          owned = subprocess.check_output(['rpm', '-ql', 'rocky-release', 'rocky-repos', 'rocky-gpg-keys'], universal_newlines=True).splitlines()
+          enabled = subprocess.check_output(['dnf', '-q', 'repolist', '--enabled'], universal_newlines=True)
+          repos = [line.split()[0] for line in enabled.splitlines() if line.split() and line.split()[0] in ('baseos', 'appstream')]
+          if set(repos) != {'baseos', 'appstream'} or len(repos) != 2:
+              raise SystemExit('Expected enabled stock BaseOS and AppStream repositories')
+          source = configparser.ConfigParser(interpolation=None)
+          source.read([path for path in owned if path.endswith('.repo')])
+          selected = configparser.ConfigParser(interpolation=None)
+          keys = set()
+          for repo in repos:
+              selected[repo] = dict(source[repo])
+              for url in source[repo]['gpgkey'].split():
+                  if not url.startswith('file:///') or url[7:] not in owned:
+                      raise SystemExit('Expected a release-owned distribution public key')
+                  keys.add(url[7:])
+          with (root / 'repos/stock.repo').open('w') as output:
+              selected.write(output)
+          for path in sorted(keys):
+              shutil.copyfile(path, str(root / 'os-keys' / Path(path).name))
+          for path in owned:
+              if Path(path).parent in (Path('/etc/dnf/vars'), Path('/etc/yum/vars')) and Path(path).is_file():
+                  shutil.copyfile(path, str(root / 'vars' / Path(path).name))
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write('OFFLINE_REPOS=' + ' '.join(repos) + '\n')
+          print('Approved OS repositories: ' + ' '.join(repos))
+          PYTHON
+
       - name: Install build dependencies
         run: |
           make -C packaging/rpm deps TOPDIR="$TOPDIR"
+          dnf install -y createrepo_c gnupg2 findutils tar
           # Rocky 10 omits PATH from image metadata; retain the shell's system path.
           echo "/opt/heimdall-build/go-1.25.8/bin:$PATH" >> "$GITHUB_PATH"
 
@@ -89,6 +125,7 @@ jobs:
           python3 packaging/rpm/tests/inputs.py
           python3 packaging/rpm/tests/version-srpm.py
           python3 packaging/rpm/tests/runtime-inputs.py
+          python3 packaging/rpm/tests/offline-inputs.py
           python3 packaging/rpm/tests/download-protocols.py
           python3 packaging/rpm/tests/runtime-extraction.py
           python3 packaging/rpm/tests/upgrade-scriptlets.py
@@ -126,6 +163,19 @@ jobs:
           bash packaging/rpm/tests/sign-rpms.sh --container \
             "$TOPDIR/RPM-TEST-GPG-KEY" "${rpms[@]}"
 
+      - name: Collect and archive the signed offline repository
+        run: |
+          major='${{ matrix.distro }}'
+          major=${major#el}
+          test "$(rpm --eval '%{_arch}')" = '${{ matrix.arch }}'
+          mapfile -d '' -t candidates < <(find "$TOPDIR/RPMS" -type f -name 'heimdall-server-*.${{ matrix.arch }}.rpm' -print0)
+          test "${#candidates[@]}" -eq 1
+          make -C packaging/rpm offline TOPDIR="$TOPDIR" \
+            OFFLINE_RPM="${candidates[0]}" OFFLINE_REPOSDIR="$TOPDIR/offline-inputs/repos" \
+            OFFLINE_VARSDIR="$TOPDIR/offline-inputs/vars" OFFLINE_REPOS="$OFFLINE_REPOS" \
+            OFFLINE_RELEASEVER="$major" OFFLINE_OS_KEY_DIR="$TOPDIR/offline-inputs/os-keys" \
+            OFFLINE_HEIMDALL_KEY="$TOPDIR/RPM-TEST-GPG-KEY"
+
       - name: Record runtime inventory and checksums
         run: |
           cp "$TOPDIR/SOURCES/runtime-manifest.json" "$TOPDIR/runtime-manifest.json"
@@ -150,6 +200,15 @@ jobs:
           retention-days: 7
           if-no-files-found: error
 
+      - uses: actions/upload-artifact@v7
+        with:
+          name: offline-rocky-${{ matrix.distro }}-${{ matrix.arch }}
+          path: |
+            ${{ env.TOPDIR }}/OFFLINE/*.tar.gz
+            ${{ env.TOPDIR }}/OFFLINE/*.tar.gz.sha256
+          retention-days: 7
+          if-no-files-found: error
+
   smoke-test:
     name: install ${{ matrix.distro }} / ${{ matrix.arch }}
     needs: build
@@ -161,12 +220,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {distro: el8, image: rockylinux:8, arch: x86_64, runner: ubuntu-latest}
-          - {distro: el9, image: rockylinux:9, arch: x86_64, runner: ubuntu-latest}
-          - {distro: el10, image: rockylinux/rockylinux:10, arch: x86_64, runner: ubuntu-latest}
-          - {distro: el8, image: rockylinux:8, arch: aarch64, runner: ubuntu-24.04-arm}
-          - {distro: el9, image: rockylinux:9, arch: aarch64, runner: ubuntu-24.04-arm}
-          - {distro: el10, image: rockylinux/rockylinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: aarch64, runner: ubuntu-24.04-arm}
 
     steps:
       - name: Install checkout and payload inspection tools
@@ -269,6 +328,57 @@ jobs:
             "artifacts/first/RPMS/${{ matrix.arch }}/heimdall-server-${version}-0.3.integration.el8.${{ matrix.arch }}.rpm" \
             "artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-${version}-0.4.integration.el8.${{ matrix.arch }}.rpm"
 
+      - name: Collect signed Oracle Linux offline bundles
+        run: |
+          producer="heimdall-offline-ol8-${{ matrix.arch }}"
+          docker run -d --name "$producer" --platform '${{ matrix.platform }}' \
+            --entrypoint /bin/bash oraclelinux:8 -c 'sleep infinity'
+          trap 'docker rm -f "$producer" >/dev/null' EXIT
+          docker exec "$producer" mkdir -p /workspace/packaging
+          docker cp packaging/rpm "$producer:/workspace/packaging/rpm"
+          docker cp artifacts "$producer:/artifacts"
+          docker exec -i "$producer" bash -eu -o pipefail <<'PRODUCER'
+            mkdir -p /offline-inputs/{repos,vars,os-keys}
+            mapfile -t repos < <(dnf -q repolist --enabled | awk '$1 == "ol8_baseos_latest" || $1 == "ol8_appstream" { print $1 }')
+            test "${#repos[@]}" -eq 2
+            rpm -ql oraclelinux-release oraclelinux-release-el8 | while IFS= read -r path; do
+              case "$path" in
+                /etc/yum.repos.d/oracle-linux-ol8.repo) cp "$path" /offline-inputs/repos/ ;;
+                /etc/dnf/vars/*|/etc/yum/vars/*) test ! -f "$path" || cp "$path" /offline-inputs/vars/ ;;
+              esac
+            done
+            key=/etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+            rpm -qf "$key" | grep -q "^oraclelinux-release"
+            cp "$key" /offline-inputs/os-keys/oracle.asc
+            dnf install -y make python3 createrepo_c gnupg2 findutils tar
+            test "$(rpm --eval '%{_arch}')" = '${{ matrix.arch }}'
+            for release in first second; do
+              topdir="/offline-$release"
+              mkdir -p "$topdir/SOURCES"
+              cp "/artifacts/$release/runtime-manifest.json" "$topdir/SOURCES/"
+              mapfile -d "" -t candidates < <(find "/artifacts/$release/RPMS" -type f -name "heimdall-server-*.${{ matrix.arch }}.rpm" -print0)
+              test "${#candidates[@]}" -eq 1
+              make -C /workspace/packaging/rpm offline TOPDIR="$topdir" OFFLINE_RPM="${candidates[0]}" \
+                OFFLINE_REPOSDIR=/offline-inputs/repos OFFLINE_VARSDIR=/offline-inputs/vars \
+                OFFLINE_REPOS="${repos[*]}" OFFLINE_RELEASEVER=8 \
+                OFFLINE_OS_KEY_DIR=/offline-inputs/os-keys OFFLINE_HEIMDALL_KEY=/artifacts/RPM-TEST-GPG-KEY
+            done
+          PRODUCER
+          mkdir -p artifacts/offline-first artifacts/offline-second
+          docker cp "$producer:/offline-first/OFFLINE/." artifacts/offline-first/
+          docker cp "$producer:/offline-second/OFFLINE/." artifacts/offline-second/
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: offline-ol-el8-${{ matrix.arch }}
+          path: |
+            artifacts/offline-first/*.tar.gz
+            artifacts/offline-first/*.tar.gz.sha256
+            artifacts/offline-second/*.tar.gz
+            artifacts/offline-second/*.tar.gz.sha256
+          retention-days: 7
+          if-no-files-found: error
+
       - name: Verify real package lifecycle
         env:
           RPM_TEST_GPG_KEY: ${{ github.workspace }}/artifacts/RPM-TEST-GPG-KEY
@@ -279,7 +389,7 @@ jobs:
             "artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-${version}-0.4.integration.el8.${{ matrix.arch }}.rpm"
 
   publish:
-    name: Attach RPMs to the release
+    name: Attach RPMs and offline bundles to the release
     needs: [build, smoke-test, lifecycle-ol8]
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
@@ -294,6 +404,12 @@ jobs:
           path: rpms
           merge-multiple: true
 
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: offline-*
+          path: offline
+          merge-multiple: true
+
       - name: Reject integration artifacts before publication
         run: |
           sudo apt-get update
@@ -306,6 +422,20 @@ jobs:
               *integration*) echo "Refusing to publish integration artifact: $artifact" >&2; exit 1 ;;
             esac
           done
+          mapfile -d '' -t archives < <(find offline -name '*.tar.gz' -print0)
+          test "${#archives[@]}" -gt 0
+          for archive in "${archives[@]}"; do
+            (cd "$(dirname "$archive")" && sha256sum --check "$(basename "$archive").sha256")
+            inspection=$(mktemp -d)
+            tar -xzf "$archive" -C "$inspection" --wildcards '*/repo/Packages/heimdall-server-*.rpm'
+            mapfile -d '' -t candidates < <(find "$inspection" -name 'heimdall-server-*.rpm' -print0)
+            test "${#candidates[@]}" -eq 1
+            release=$(rpm -qp --qf '%{RELEASE}' "${candidates[0]}")
+            case "$release" in
+              *integration*) echo "Refusing to publish integration bundle: $archive" >&2; exit 1 ;;
+            esac
+            rm -rf "$inspection"
+          done
 
       - name: List artifacts
         run: find rpms -name '*.rpm' -printf '%f\n' | sort
@@ -315,9 +445,15 @@ jobs:
       # and parameterize lifecycle releases before enabling stable publication.
       - uses: actions/attest-build-provenance@v4
         with:
-          subject-path: "rpms/**/*.rpm"
+          subject-path: |
+            rpms/**/*.rpm
+            offline/**/*.tar.gz
+            offline/**/*.tar.gz.sha256
 
       - uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228  # v3.0.2
         with:
-          files: rpms/**/*.rpm
+          files: |
+            rpms/**/*.rpm
+            offline/**/*.tar.gz
+            offline/**/*.tar.gz.sha256
           fail_on_unmatched_files: true
