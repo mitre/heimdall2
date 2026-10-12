@@ -1,0 +1,329 @@
+name: Build RPM
+
+# Rocky/Oracle builds/install checks and native OL8 lifecycle checks cover separate
+# artifacts. Integration candidates are never eligible for release publication.
+on:
+  pull_request:
+    paths:
+      - "packaging/**"
+      - "apps/**"
+      - "libs/**"
+      - "test/**"
+      - package.json
+      - yarn.lock
+      - lerna.json
+      - tsconfig.json
+      - postcss.config.js
+      - VERSION
+      - .github/workflows/build-rpm.yml
+  push:
+    branches: [master]
+    paths:
+      - "packaging/**"
+      - "apps/**"
+      - "libs/**"
+      - "test/**"
+      - package.json
+      - yarn.lock
+      - lerna.json
+      - tsconfig.json
+      - postcss.config.js
+      - VERSION
+      - .github/workflows/build-rpm.yml
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  HEIMDALL_RELEASE: 0.4.integration
+  GOTOOLCHAIN: local
+
+jobs:
+  build:
+    name: ${{ matrix.distro }} / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.image }}
+    permissions:
+      contents: read
+    env:
+      # Keep all staging, checks, listing and uploads outside the source tree.
+      TOPDIR: /tmp/heimdall-rpmbuild
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {distro: el8, image: rockylinux:8, arch: x86_64, runner: ubuntu-latest}
+          - {distro: el9, image: rockylinux:9, arch: x86_64, runner: ubuntu-latest}
+          - {distro: el10, image: rockylinux/rockylinux:10, arch: x86_64, runner: ubuntu-latest}
+          - {distro: ol10, image: oraclelinux:10, arch: x86_64, runner: ubuntu-latest}
+          - {distro: el8, image: rockylinux:8, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el9, image: rockylinux:9, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el10, image: rockylinux/rockylinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: ol10, image: oraclelinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
+
+    steps:
+      - name: Bootstrap git and make
+        run: dnf install -y git make
+
+      - uses: actions/checkout@v6
+        with:
+          # Release mode requires HEAD to match the VERSION tag.
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Configure Git and RPM distribution
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          # Keep Rocky and Oracle EL10 package filenames distinct, including SRPM rebuilds.
+          printf '%%dist .%s\n' '${{ matrix.distro }}' >> "$HOME/.rpmmacros"
+
+      - name: Install build dependencies
+        run: |
+          make -C packaging/rpm deps TOPDIR="$TOPDIR"
+          # Rocky 10 omits PATH from image metadata; retain the shell's system path.
+          echo "/opt/heimdall-build/go-1.25.8/bin:$PATH" >> "$GITHUB_PATH"
+
+      - name: Verify toolchain and source fixtures
+        run: |
+          test "$(go env GOVERSION)" = go1.25.8
+          bash packaging/rpm/tests/build-python.sh
+          python3 packaging/rpm/tests/inputs.py
+          python3 packaging/rpm/tests/version-srpm.py
+          python3 packaging/rpm/tests/runtime-inputs.py
+          python3 packaging/rpm/tests/runtime-extraction.py
+          python3 packaging/rpm/tests/upgrade-scriptlets.py
+          python3 packaging/rpm/tests/application-readiness.py
+          python3 packaging/rpm/tests/cli-acquisition.py
+          bash packaging/rpm/tests/setup.sh
+          make -C packaging/rpm check-version TOPDIR="$TOPDIR"
+
+      - name: Build candidate RPM and verify CLI inputs
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == release ]]; then
+            source_mode=release
+          else
+            source_mode=head
+          fi
+          make -C packaging/rpm rpm SOURCE_MODE="$source_mode" \
+            TOPDIR="$TOPDIR" HEIMDALL_RELEASE="$HEIMDALL_RELEASE"
+          bash packaging/rpm/tests/cli-inputs.sh "$TOPDIR"
+
+      - name: Rebuild the SRPM in an empty tree
+        run: |
+          mapfile -t srpms < <(find "$TOPDIR/SRPMS" -name '*.src.rpm')
+          test "${#srpms[@]}" -eq 1
+          bash packaging/rpm/tests/srpm-rebuild.sh "${srpms[0]}" /tmp/heimdall-srpm-rebuild
+
+      - name: Lint the built packages
+        run: make -C packaging/rpm lint-rpm TOPDIR="$TOPDIR"
+
+      - name: Sign disposable test artifacts
+        env:
+          HEIMDALL_RPM_TEST: "1"
+        run: |
+          mapfile -d '' -t rpms < <(find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -print0)
+          test "${#rpms[@]}" -gt 0
+          bash packaging/rpm/tests/sign-rpms.sh --container \
+            "$TOPDIR/RPM-TEST-GPG-KEY" "${rpms[@]}"
+
+      - name: Record runtime inventory and checksums
+        run: |
+          cp "$TOPDIR/SOURCES/runtime-manifest.json" "$TOPDIR/runtime-manifest.json"
+          cd "$TOPDIR"
+          find RPMS SRPMS -type f -name '*.rpm' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+          sha256sum runtime-manifest.json RPM-TEST-GPG-KEY >> SHA256SUMS
+
+      - name: Record what was built
+        run: |
+          find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -printf '%f\n' | sort
+          cat packaging/rpm/heimdall-cli.repo packaging/rpm/heimdall-cli.ref
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
+          path: |
+            ${{ env.TOPDIR }}/RPMS/**/*.rpm
+            ${{ env.TOPDIR }}/SRPMS/*.rpm
+            ${{ env.TOPDIR }}/RPM-TEST-GPG-KEY
+            ${{ env.TOPDIR }}/runtime-manifest.json
+            ${{ env.TOPDIR }}/SHA256SUMS
+          retention-days: 7
+          if-no-files-found: error
+
+  smoke-test:
+    name: install ${{ matrix.distro }} / ${{ matrix.arch }}
+    needs: build
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.image }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {distro: el8, image: rockylinux:8, arch: x86_64, runner: ubuntu-latest}
+          - {distro: el9, image: rockylinux:9, arch: x86_64, runner: ubuntu-latest}
+          - {distro: el10, image: rockylinux/rockylinux:10, arch: x86_64, runner: ubuntu-latest}
+          - {distro: ol10, image: oraclelinux:10, arch: x86_64, runner: ubuntu-latest}
+          - {distro: el8, image: rockylinux:8, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el9, image: rockylinux:9, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el10, image: rockylinux/rockylinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: ol10, image: oraclelinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
+
+    steps:
+      - name: Install checkout and payload inspection tools
+        run: |
+          dnf install -y git cpio systemd findutils
+          command -v rpm2cpio
+          command -v curl
+          command -v find
+
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
+          path: rpms
+
+      - name: Verify checksums and install the signed package
+        run: |
+          (cd rpms && sha256sum --check SHA256SUMS)
+          mapfile -d '' -t rpms < <(find rpms -name 'heimdall-server-*.${{ matrix.arch }}.rpm' -print0)
+          test "${#rpms[@]}" -eq 1
+          rpm --import rpms/RPM-TEST-GPG-KEY
+          rpm --checksig --verbose "${rpms[0]}"
+          # No local server is needed for a payload-only install. Retain man pages
+          # even when the minimal image's DNF configuration defaults to nodocs.
+          dnf install -y --setopt=localpkg_gpgcheck=1 --setopt=install_weak_deps=False \
+            --setopt=tsflags= "${rpms[0]}"
+          version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
+          bash packaging/rpm/tests/payload.sh "${rpms[0]}" "$version"
+
+      - name: Verify installed manifest, CLI provenance and man pages
+        run: |
+          rpm -q heimdall-server
+          rpm -V heimdall-server
+          cmp rpms/runtime-manifest.json /usr/share/heimdall-server/runtime-manifest.json
+          runtime=/usr/libexec/heimdall-server/runtime
+          "$runtime/node/bin/node" --version
+          "$runtime/postgresql/bin/postgres" --version
+          "$runtime/postgresql/bin/psql" --version
+          "$runtime/caddy/caddy" version
+          rpm -qa --qf '%{NAME}\n' > /tmp/installed-packages
+          if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy)$' /tmp/installed-packages; then exit 1; fi
+          for name in node postgresql caddy; do
+            test -n "$(find /usr/share/licenses/heimdall-server -type f -ipath "*$name*" -print -quit)"
+          done
+          cli_version=$(heimdall-cli --version)
+          printf '%s\n' "$cli_version"
+          version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
+          [[ "$cli_version" == *"$version"* ]]
+          [[ "$cli_version" == *"$(cat packaging/rpm/heimdall-cli.ref)"* ]]
+          find /usr/share/man/man1 -name 'heimdall-cli.1*' | grep -q .
+          find /usr/share/man/man1 -name 'heimdall-cli-setup.1*' | grep -q .
+          bash packaging/rpm/tests/logrotate.sh
+
+      - name: Verify the installed systemd units
+        run: |
+          mkdir -p diagnostics
+          systemd-analyze verify /usr/lib/systemd/system/heimdall-{server,postgresql,caddy}.service 2>&1 \
+            | tee diagnostics/systemd-verify.log
+          if [[ '${{ matrix.distro }}' == el8 ]]; then
+            # systemd 239 ignores these four newer settings. Keep the directives
+            # for newer systems, expose the limitation, and reject other warnings.
+            awk '!/^\/usr\/lib\/systemd\/system\/heimdall-(server|postgresql|caddy).service:[0-9]+: Unknown lvalue '\''(ProtectClock|ProtectHostname|ProtectKernelLogs|ProtectProc)'\'' in section '\''Service'\''$/' \
+              diagnostics/systemd-verify.log > diagnostics/unexpected.log
+            test ! -s diagnostics/unexpected.log
+            if [[ -s diagnostics/systemd-verify.log ]]; then
+              echo '::warning::EL8 systemd ignores the newer hardening settings listed in systemd-verify.log.'
+            fi
+          else
+            test ! -s diagnostics/systemd-verify.log
+          fi
+
+  lifecycle-ol8:
+    name: OL8 lifecycle / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {runner: ubuntu-latest, platform: linux/amd64, arch: x86_64}
+          - {runner: ubuntu-24.04-arm, platform: linux/arm64, arch: aarch64}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build two OL8 candidate releases
+        run: |
+          docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
+            --build-arg HEIMDALL_RELEASE=0.3.integration --target artifacts \
+            --output type=local,dest=artifacts/first .
+          docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
+            --build-arg HEIMDALL_RELEASE=0.4.integration --target artifacts \
+            --output type=local,dest=artifacts/second .
+
+      - name: Sign disposable lifecycle candidates
+        run: |
+          version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
+          bash packaging/rpm/tests/sign-rpms.sh '${{ matrix.platform }}' artifacts/RPM-TEST-GPG-KEY \
+            "artifacts/first/RPMS/${{ matrix.arch }}/heimdall-server-${version}-0.3.integration.el8.${{ matrix.arch }}.rpm" \
+            "artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-${version}-0.4.integration.el8.${{ matrix.arch }}.rpm"
+
+      - name: Verify real package lifecycle
+        env:
+          RPM_TEST_GPG_KEY: ${{ github.workspace }}/artifacts/RPM-TEST-GPG-KEY
+        run: |
+          version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
+          bash packaging/rpm/tests/run-lifecycle.sh '${{ matrix.platform }}' \
+            "artifacts/first/RPMS/${{ matrix.arch }}/heimdall-server-${version}-0.3.integration.el8.${{ matrix.arch }}.rpm" \
+            "artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-${version}-0.4.integration.el8.${{ matrix.arch }}.rpm"
+
+  publish:
+    name: Attach RPMs to the release
+    needs: [build, smoke-test, lifecycle-ol8]
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: rpm-*
+          path: rpms
+          merge-multiple: true
+
+      - name: Reject integration artifacts before publication
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm
+          mapfile -d '' -t artifacts < <(find rpms -name '*.rpm' -print0)
+          test "${#artifacts[@]}" -gt 0
+          for artifact in "${artifacts[@]}"; do
+            release=$(rpm -qp --qf '%{RELEASE}' "$artifact")
+            case "$release" in
+              *integration*) echo "Refusing to publish integration artifact: $artifact" >&2; exit 1 ;;
+            esac
+          done
+
+      - name: List artifacts
+        run: find rpms -name '*.rpm' -printf '%f\n' | sort
+
+      # Provenance attestations describe the build; they are not RPM signatures.
+      # A future stable milestone must replace ephemeral acceptance-test signing
+      # and parameterize lifecycle releases before enabling stable publication.
+      - uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: "rpms/**/*.rpm"
+
+      - uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228  # v3.0.2
+        with:
+          files: rpms/**/*.rpm
+          fail_on_unmatched_files: true

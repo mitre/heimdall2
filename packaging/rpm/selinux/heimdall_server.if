@@ -1,0 +1,95 @@
+## <summary>policy for heimdall-server</summary>
+
+########################################
+## <summary>
+##  Execute heimdall-server in the heimdall_server domain.
+## </summary>
+## <param name="domain">
+## <summary>
+##  Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`heimdall_server_domtrans',`
+    gen_require(`
+        type heimdall_server_t, heimdall_server_exec_t;
+    ')
+
+    corecmd_search_bin($1)
+    domtrans_pattern($1, heimdall_server_exec_t, heimdall_server_t)
+')
+
+########################################
+## <summary>
+##  Allow a domain to connect to heimdall-server TCP port.
+## </summary>
+## <param name="domain">
+## <summary>
+##  Domain allowed access.
+## </summary>
+## </param>
+#
+interface(`heimdall_server_connect_port',`
+    gen_require(`
+        type heimdall_server_port_t;
+    ')
+
+    allow $1 heimdall_server_port_t:tcp_socket name_connect;
+')
+
+########################################
+## <summary>
+##  Manage systemd unit for heimdall-server.
+## </summary>
+## <param name="domain">
+## <summary>
+##  Domain allowed access.
+## </summary>
+## </param>
+#
+interface(`heimdall_server_systemctl',`
+    gen_require(`
+        type heimdall_server_t;
+        type heimdall_server_unit_file_t;
+    ')
+
+    systemd_exec_systemctl($1)
+    allow $1 heimdall_server_unit_file_t:file read_file_perms;
+    allow $1 heimdall_server_unit_file_t:service manage_service_perms;
+
+    ps_process_pattern($1, heimdall_server_t)
+')
+
+########################################
+## <summary>
+##  Full administration of heimdall-server.
+## </summary>
+## <param name="domain">
+## <summary>
+##  Domain allowed access.
+## </summary>
+## </param>
+## <param name="role">
+## <summary>
+##  Role allowed access.
+## </summary>
+## </param>
+## <rolecap/>
+#
+interface(`heimdall_server_admin',`
+    gen_require(`
+        type heimdall_server_t;
+        type heimdall_server_unit_file_t;
+    ')
+
+    allow $1 heimdall_server_t:process { signal_perms };
+    ps_process_pattern($1, heimdall_server_t)
+
+    tunable_policy(`deny_ptrace',`',`
+        allow $1 heimdall_server_t:process ptrace;
+    ')
+
+    heimdall_server_systemctl($1)
+    admin_pattern($1, heimdall_server_unit_file_t)
+    allow $1 heimdall_server_unit_file_t:service all_service_perms;
+')

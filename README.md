@@ -25,6 +25,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
     - [Heimdall Lite](#heimdall-lite-1)
       - [Running via npm](#running-via-npm)
       - [Running via Docker](#running-via-docker)
+    - [Heimdall Server - RPM](#heimdall-server---rpm)
     - [Heimdall Server - Docker](#heimdall-server---docker)
       - [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
       - [Updating Docker Container](#updating-docker-container)
@@ -156,6 +157,15 @@ You can then access Heimdall-Lite at [`http://localhost:8080`](http://localhost:
 If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `mitre/heimdall-lite:release-latest` with `mitre/heimdall-lite:latest`.
 
 ---
+
+### Heimdall Server - RPM
+
+RPM packaging includes Heimdall Server, its administration CLI, and private Node.js,
+PostgreSQL, and Caddy runtimes. Setup supports bundled or external databases and
+HTTPS proxies. See the [installation guide](packaging/rpm/README.md) and
+[build and verification guide](packaging/rpm/BUILD.md). Packages use the root
+`VERSION` file; this standalone packaging branch requires candidate-specific
+acceptance before production use.
 
 ### Heimdall Server - Docker
 

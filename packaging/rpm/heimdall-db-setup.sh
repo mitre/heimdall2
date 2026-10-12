@@ -1,0 +1,95 @@
+#!/bin/bash
+set -euo pipefail
+
+APP_ROOT="/usr/share/heimdall-server"
+APP_DIR="${APP_ROOT}/apps/backend"
+ENV_FILE="/etc/heimdall-server/backend.env"
+SEQUELIZE_BIN="${APP_DIR}/node_modules/.bin/sequelize"
+
+usage() {
+  echo "Usage: $0 [--skip-seed]" >&2
+}
+
+SKIP_SEED=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --skip-seed)
+      SKIP_SEED=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage
+      exit 64
+      ;;
+  esac
+done
+
+if [[ -f "${ENV_FILE}" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  if ! source "${ENV_FILE}"; then
+    set +a
+    echo "Failed to parse ${ENV_FILE}" >&2
+    exit 1
+  fi
+  set +a
+fi
+
+export NODE_ENV="${NODE_ENV:-production}"
+
+if [[ ! -d "${APP_DIR}" ]]; then
+  echo "Application directory not found: ${APP_DIR}" >&2
+  exit 1
+fi
+
+NODE_BIN=/usr/libexec/heimdall-server/runtime/node/bin/node
+if [[ ! -x "$NODE_BIN" || ! -x "${SEQUELIZE_BIN}" ]]; then
+  echo "Missing required executables in ${APP_DIR}/node_modules/.bin" >&2
+  exit 1
+fi
+if [[ ! -s "${APP_DIR}/dist/db/database.js" ]]; then
+  echo "Missing compiled database configuration: ${APP_DIR}/dist/db/database.js" >&2
+  exit 1
+fi
+
+run_sequelize() {
+  "$NODE_BIN" "${SEQUELIZE_BIN}" "$@"
+}
+
+run_db_create() {
+  local output=""
+
+  if output="$(run_sequelize db:create 2>&1)"; then
+    if [[ -n "${output}" ]]; then
+      echo "${output}"
+    fi
+    return 0
+  fi
+
+  if [[ "${output}" == *"already exists"* ]]; then
+    echo "${output}" >&2
+    echo "Database already exists. Continuing with migrations." >&2
+    return 0
+  fi
+
+  echo "${output}" >&2
+  return 1
+}
+
+cd "${APP_DIR}"
+
+# External databases are provisioned by their administrator; migration credentials
+# need not have cluster-wide CREATEDB permission.
+if [[ ${HEIMDALL_DATABASE_MODE:-} != external ]]; then
+  run_db_create
+fi
+run_sequelize db:migrate
+
+if [[ "${SKIP_SEED}" -eq 0 ]]; then
+  run_sequelize db:seed:all
+fi
