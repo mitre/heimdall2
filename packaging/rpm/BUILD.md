@@ -229,10 +229,8 @@ binaries need their own signature.
 ## CI artifacts and test signatures
 
 The Build RPM workflow defines builds and install checks for Rocky Linux 8, 9
-and 10 and Oracle Linux 10 on x86_64 and aarch64. Its eight bundles use
-`rpm-{el8,el9,el10,ol10}-{x86_64,aarch64}` names. Oracle Linux 10 packages use
-the `.ol10` RPM distribution tag to keep their filenames distinct from Rocky's
-`.el10` packages.
+and 10 on x86_64 and aarch64. Its six bundles use
+`rpm-{el8,el9,el10}-{x86_64,aarch64}` names.
 Each contains a binary RPM, SRPM, `RPM-TEST-GPG-KEY`, `runtime-manifest.json`, and
 `SHA256SUMS`. Checksums are computed **after** test signing changes the RPM bytes.
 

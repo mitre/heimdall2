@@ -1,6 +1,6 @@
 name: Build RPM
 
-# Rocky/Oracle builds/install checks and native OL8 lifecycle checks cover separate
+# Rocky builds/install checks and native OL8 lifecycle checks cover separate
 # artifacts. Integration candidates are never eligible for release publication.
 on:
   pull_request:
@@ -59,11 +59,9 @@ jobs:
           - {distro: el8, image: rockylinux:8, arch: x86_64, runner: ubuntu-latest}
           - {distro: el9, image: rockylinux:9, arch: x86_64, runner: ubuntu-latest}
           - {distro: el10, image: rockylinux/rockylinux:10, arch: x86_64, runner: ubuntu-latest}
-          - {distro: ol10, image: oraclelinux:10, arch: x86_64, runner: ubuntu-latest}
           - {distro: el8, image: rockylinux:8, arch: aarch64, runner: ubuntu-24.04-arm}
           - {distro: el9, image: rockylinux:9, arch: aarch64, runner: ubuntu-24.04-arm}
           - {distro: el10, image: rockylinux/rockylinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
-          - {distro: ol10, image: oraclelinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
 
     steps:
       - name: Bootstrap git and make
@@ -75,11 +73,8 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Configure Git and RPM distribution
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          # Keep Rocky and Oracle EL10 package filenames distinct, including SRPM rebuilds.
-          printf '%%dist .%s\n' '${{ matrix.distro }}' >> "$HOME/.rpmmacros"
+      - name: Configure Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Install build dependencies
         run: |
@@ -169,11 +164,9 @@ jobs:
           - {distro: el8, image: rockylinux:8, arch: x86_64, runner: ubuntu-latest}
           - {distro: el9, image: rockylinux:9, arch: x86_64, runner: ubuntu-latest}
           - {distro: el10, image: rockylinux/rockylinux:10, arch: x86_64, runner: ubuntu-latest}
-          - {distro: ol10, image: oraclelinux:10, arch: x86_64, runner: ubuntu-latest}
           - {distro: el8, image: rockylinux:8, arch: aarch64, runner: ubuntu-24.04-arm}
           - {distro: el9, image: rockylinux:9, arch: aarch64, runner: ubuntu-24.04-arm}
           - {distro: el10, image: rockylinux/rockylinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
-          - {distro: ol10, image: oraclelinux:10, arch: aarch64, runner: ubuntu-24.04-arm}
 
     steps:
       - name: Install checkout and payload inspection tools
