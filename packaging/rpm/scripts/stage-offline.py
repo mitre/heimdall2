@@ -122,6 +122,10 @@ def isolated_directory(path):
     path = Path(path)
     if not path.is_absolute() or path.is_symlink() or not path.is_dir():
         raise ValueError('Expected an absolute isolated directory: ' + str(path))
+    path = path.resolve()
+    # DNF splits directory list options even when they occupy a single argument.
+    if not re.fullmatch(r'/[^\x00-\x20\x7f,]+', str(path)):
+        raise ValueError('DNF input directories must not contain spaces, commas, or control characters')
     for child in path.rglob('*'):
         if child.is_symlink() or not child.is_file():
             raise ValueError('Repository and variable inputs must be regular files')

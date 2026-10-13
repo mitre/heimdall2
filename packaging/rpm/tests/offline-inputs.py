@@ -396,6 +396,44 @@ docker() {
                     self.collect(args)
                 self.assertFalse(args.output.exists())
 
+    def test_collector_rejects_dnf_directory_list_delimiters(self):
+        for field in ('reposdir', 'varsdir'):
+            for separator in (',', ' ', '\t', '\n', '\x7f'):
+                with self.subTest(field=field, separator=separator), tempfile.TemporaryDirectory() as tmp:
+                    self.root = Path(tmp)
+                    args = self.inputs()
+                    source = getattr(args, field)
+                    destination = source.with_name(source.name + separator + 'extra')
+                    source.rename(destination)
+                    setattr(args, field, destination)
+                    with self.assertRaises(ValueError):
+                        self.collect(args)
+                    self.assertFalse(args.output.exists())
+
+    def test_collector_rejects_directory_delimiters_hidden_by_parent_symlink(self):
+        args = self.inputs()
+        parent = self.root / 'unsafe,parent'
+        parent.mkdir()
+        link = self.root / 'alias'
+        link.symlink_to(parent, target_is_directory=True)
+        args.reposdir.rename(parent / 'reposdir')
+        args.reposdir = link / 'reposdir'
+        with self.assertRaises(ValueError):
+            self.collect(args)
+        self.assertFalse(args.output.exists())
+
+    def test_collector_accepts_unicode_and_safe_parent_symlinks_for_directories(self):
+        args = self.inputs()
+        link = self.root / 'alias'
+        link.symlink_to(self.root, target_is_directory=True)
+        for field in ('reposdir', 'varsdir'):
+            source = getattr(args, field)
+            destination = source.with_name(source.name + '-entrée')
+            source.rename(destination)
+            setattr(args, field, link / destination.name)
+        self.assertEqual(self.collect(args), args.output)
+        self.assertTrue((args.output / 'offline-manifest.json').is_file())
+
     def test_publishes_inventory_preserving_runtime_bytes(self):
         args = self.inputs()
         original = args.runtime_manifest.read_bytes()

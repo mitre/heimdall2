@@ -307,6 +307,10 @@ whitespace-separated list of repository IDs. Use the explicit EL major or a
 matching minor release value required by an approved repository snapshot as
 `OFFLINE_RELEASEVER`. No application build or signing target runs here.
 
+The resolved `OFFLINE_REPOSDIR` and `OFFLINE_VARSDIR` paths must not contain
+spaces, commas, or control characters: DNF parses these options as directory
+lists even when shell quoting preserves a single argument.
+
 The equivalent direct collector invocation uses a fresh, absent output path
 with an existing parent:
 
