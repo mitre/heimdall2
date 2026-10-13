@@ -2,23 +2,24 @@
 
 ## Install an Actions artifact
 
-Download the `rpm-el8-x86_64.zip` artifact for the intended commit, extract it,
-and copy the extracted directory to an EL8 x86_64 machine. From the directory
-containing `SHA256SUMS` and `RPMS/`, run:
+Download the `rpm-el8-x86_64.zip` artifact for the intended commit, extract it
+into a fresh directory, and copy that directory to a Rocky Linux 8 x86_64
+machine. It contains one complete installation archive and its checksum sidecar:
 
 ```sh
+sha256sum --check heimdall-rocky-el8-x86_64-*.tar.gz.sha256
+tar -xzf heimdall-rocky-el8-x86_64-*.tar.gz
+cd heimdall-rocky-el8-x86_64-*/
 sha256sum --check SHA256SUMS
-sudo rpm --import RPM-TEST-GPG-KEY
-sudo dnf install --setopt=localpkg_gpgcheck=1 \
-  ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm
+sudo bash ./install.sh
 rpm -q heimdall-server
 sudo heimdall-cli setup --interactive
 ```
 
-The ZIP contains the binary under `RPMS/x86_64/`; `SRPMS/` contains the source
-RPM and is not the install target. The `--setopt=localpkg_gpgcheck=1` option
-checks the local RPM's signature against the imported key. For EL9, EL10 or aarch64,
-download the matching artifact and use its `RPMS/<architecture>/` binary.
+The archive includes the signed application RPM, dependency RPMs, public keys,
+and installer. For Rocky Linux 9, 10 or aarch64, download the matching
+`rpm-elMAJOR-ARCH` artifact. Oracle Linux 8 uses `rpm-ol-el8-ARCH` artifacts.
+Use the archive for the exact host distribution, EL major and architecture.
 See [builds and artifact downloads](BUILD.md#ci-artifacts-and-test-signatures)
 for other download methods. The application version comes from the root `VERSION`
 file. Integration candidates require the [acceptance checks](BUILD.md#acceptance-status)

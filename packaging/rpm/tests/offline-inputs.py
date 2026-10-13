@@ -192,7 +192,7 @@ docker() {
                                '--os-key', str(Path(inputs['OFFLINE_OS_KEY_DIR']) / 'second key.asc')])
         self.assertEqual(output.name, 'bundle')
         self.assertEqual(output.parent.parent, topdir / 'OFFLINE')
-        basename = 'heimdall-offline-rocky-el8-x86_64-2.14.0-0.4.integration.el8'
+        basename = 'heimdall-rocky-el8-x86_64-2.14.0-0.4.integration.el8'
         archive = topdir / 'OFFLINE' / (basename + '.tar.gz')
         self.assertTrue(archive.is_file())
         with tarfile.open(str(archive)) as tar:
@@ -206,7 +206,8 @@ docker() {
         before = archive.read_bytes(), sidecar.read_bytes()
         repeated = self.run_make(packaging, inputs, environment)
         self.assertNotEqual(repeated.returncode, 0)
-        self.assertEqual((archive.read_bytes(), sidecar.read_bytes()), before)
+        self.assertEqual(archive.read_bytes(), before[0])
+        self.assertEqual(sidecar.read_bytes(), before[1])
 
     def test_make_missing_required_input_fails_before_output_creation(self):
         packaging, topdir, inputs, environment = self.make_inputs()
@@ -355,6 +356,45 @@ docker() {
                 with patch.object(self.module.subprocess, 'run', return_value=subprocess.CompletedProcess([], status, output)):
                     with self.assertRaises(ValueError):
                         self.module.verify_signature(self.root / 'rpm', self.root / 'db')
+
+    def test_collector_rejects_traversal_and_control_characters_in_inputs(self):
+        for field in ('rpm', 'runtime_manifest'):
+            for kind in ('traversal', 'newline'):
+                with self.subTest(field=field, kind=kind), tempfile.TemporaryDirectory() as tmp:
+                    self.root = Path(tmp)
+                    args = self.inputs()
+                    source = getattr(args, field)
+                    if kind == 'traversal':
+                        directory = self.root / 'nested'
+                        directory.mkdir()
+                        unsafe = directory / '..' / source.name
+                    else:
+                        unsafe = source.with_name(source.name + '\n')
+                        source.rename(unsafe)
+                    setattr(args, field, unsafe)
+                    with self.assertRaises(ValueError):
+                        self.collect(args)
+                    self.assertFalse(args.output.exists())
+
+    def test_collector_accepts_spaces_and_unicode_in_input_paths(self):
+        args = self.inputs()
+        for field in ('rpm', 'runtime_manifest'):
+            source = getattr(args, field)
+            destination = source.with_name(source.name + ' entrée')
+            source.rename(destination)
+            setattr(args, field, destination)
+        self.assertEqual(self.collect(args), args.output)
+        self.assertTrue((args.output / 'offline-manifest.json').is_file())
+
+    def test_collector_rejects_invalid_release_versions(self):
+        for releasever in ('--setopt=gpgcheck=0', '8\n', '8.١', '9'):
+            with self.subTest(releasever=releasever), tempfile.TemporaryDirectory() as tmp:
+                self.root = Path(tmp)
+                args = self.inputs()
+                args.releasever = releasever
+                with self.assertRaises(ValueError):
+                    self.collect(args)
+                self.assertFalse(args.output.exists())
 
     def test_publishes_inventory_preserving_runtime_bytes(self):
         args = self.inputs()
@@ -619,7 +659,7 @@ docker() {
             if command[0] == 'dnf':
                 raise subprocess.CalledProcessError(1, command, output='https://user:secret@example.invalid/private')
             return self.fake_run(command, **kwargs)
-        with self.assertRaises(Exception) as error:
+        with self.assertRaises(ValueError) as error:
             self.collect(args, run)
         self.assertNotIn('secret', str(error.exception))
         self.assertFalse(args.output.exists())

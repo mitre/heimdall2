@@ -68,7 +68,10 @@ install_candidate() {
   printf 'phase=%s exit_status=%s candidate=%q\n' "$phase" "$result" "$rpm_path" >> /tmp/rpm-lifecycle-installer-status.log
   return "$result"
 }
-upgrade() { install_candidate "$1" upgrade; }
+upgrade() {
+  local rpm_path=$1
+  install_candidate "$rpm_path" upgrade
+}
 refuse_upgrade() {
   local rpm_path=$1
   before=$(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server)

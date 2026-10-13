@@ -230,10 +230,13 @@ binaries need their own signature.
 
 The Build RPM workflow defines builds and install checks for Rocky Linux 8, 9
 and 10 on x86_64 and aarch64. It uses the maintained
-`rockylinux/rockylinux:{8,9,10}` images. Its six standalone artifacts use
-`rpm-{el8,el9,el10}-{x86_64,aarch64}` names.
-Each contains a binary RPM, SRPM, `RPM-TEST-GPG-KEY`, `runtime-manifest.json`, and
-`SHA256SUMS`. Checksums are computed **after** test signing changes the RPM bytes.
+`rockylinux/rockylinux:{8,9,10}` images. Its six artifacts use
+`rpm-{el8,el9,el10}-{x86_64,aarch64}` names. Oracle Linux 8 lifecycle jobs publish
+`rpm-ol-el8-{x86_64,aarch64}` artifacts. Each contains one complete installation
+archive and its `.sha256` sidecar. The archive includes the signed application
+RPM, dependency RPMs, public keys, `runtime-manifest.json`, installer, and
+internal `SHA256SUMS`. Checksums are computed **after** test signing changes the
+RPM bytes. The earlier Oracle candidate remains an internal lifecycle fixture.
 
 Open the repository's **Actions → Build RPM**, select a completed successful run
 for the intended commit, and download the matching artifact. With GitHub CLI:
@@ -242,14 +245,16 @@ for the intended commit, and download the matching artifact. With GitHub CLI:
 gh run download RUN_ID --repo mitre/heimdall2 \
   --name rpm-el8-x86_64 --dir /tmp/heimdall-candidate
 cd /tmp/heimdall-candidate
+sha256sum --check heimdall-rocky-el8-x86_64-*.tar.gz.sha256
+tar -xzf heimdall-rocky-el8-x86_64-*.tar.gz
+cd heimdall-rocky-el8-x86_64-*/
 sha256sum --check SHA256SUMS
-sudo rpm --import RPM-TEST-GPG-KEY
-sudo dnf install --setopt=localpkg_gpgcheck=1 \
-  ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm
+sudo bash ./install.sh
 sudo heimdall-cli setup --interactive
 ```
 
-Replace `RUN_ID` with the verified run ID. Artifact retention is seven days.
+Replace `RUN_ID` with the verified run ID and use a fresh download directory.
+This example targets Rocky Linux 8 x86_64. Artifact retention is seven days.
 The public key must come from that same trusted run. The signer uses disposable
 acceptance keys and deletes its private key. These are not durable distribution
 signatures. The configured RPM repository remains disabled; repository hosting
@@ -325,15 +330,15 @@ source RPM and SHA-256. This identifies the actual source snapshot without
 shipping its URLs or credentials.
 
 Make emits one archive path under `TOPDIR/OFFLINE`, named
-`heimdall-offline-DISTRO-elMAJOR-ARCH-VERSION-RELEASE.tar.gz`, and a same-name
+`heimdall-DISTRO-elMAJOR-ARCH-VERSION-RELEASE.tar.gz`, and a same-name
 `.sha256` sidecar. Existing names are refused; use a fresh build tree for another
 collection. The archive contains exactly one matching top-level directory with
 `repo/Packages`, `repo/repodata`, exported public keys, `target`, `heimdall-nevra`,
 `offline-manifest.json`, the unchanged `runtime-manifest.json`, `install.sh`,
 `README.txt` and internal `SHA256SUMS`. It contains no producer repository
 configuration, subscription certificates, authentication material or private keys.
-The application RPM retains runtime license notices and its SRPM remains in the
-separate standalone artifact.
+The application RPM retains runtime license notices. The SRPM is built and
+rebuilt in CI for validation and remains under `TOPDIR/SRPMS`; it is not uploaded.
 
 ```sh
 python3 packaging/rpm/tests/offline-inputs.py
@@ -358,12 +363,12 @@ Rocky archives are labelled `rocky` and cannot establish RHEL compatibility.
 Use the vendor's existing approved artifact destination; never automatically
 publish protected vendor RPMs or archives to a public release.
 
-CI additionally uploads `offline-rocky-{el8,el9,el10}-{x86_64,aarch64}` and
-`offline-ol-el8-{x86_64,aarch64}` artifacts, each containing uniquely named
-archives and sidecars, with seven-day retention. Release handling checks their
-sidecars and applies the integration-release rejection to the bundled Heimdall
-RPM as well as standalone RPMs. It attests and attaches whole archives and
-sidecars; it never publishes OS dependencies as individual release assets.
+CI uploads only the complete archives and sidecars under the `rpm-*` artifact
+names above, with seven-day retention. Release handling checks their sidecars
+and rejects integration releases by inspecting the bundled Heimdall RPM. It
+attests and attaches whole archives and sidecars; it never publishes OS
+dependencies as individual release assets. Test logs remain in the workflow
+output; evidence directories are not uploaded as artifacts.
 Stable publication still requires durable signing and candidate-specific offline
 and enforcing-SELinux acceptance evidence; attestations are not RPM signatures.
 
@@ -376,8 +381,8 @@ newer candidate enables the upgrade, removal and recovery assertions:
 ```sh
 docker pull --platform linux/arm64 oraclelinux:8
 bash packaging/rpm/tests/run-offline.sh linux/arm64 oraclelinux:8 \
-  /approved/heimdall-offline-ol-el8-aarch64-VERSION-FIRST-RELEASE.tar.gz \
-  /approved/heimdall-offline-ol-el8-aarch64-VERSION-SECOND-RELEASE.tar.gz
+  /approved/heimdall-ol-el8-aarch64-VERSION-FIRST-RELEASE.tar.gz \
+  /approved/heimdall-ol-el8-aarch64-VERSION-SECOND-RELEASE.tar.gz
 ```
 
 The host needs Bash, Python 3.6+, Git, Docker and `shasum`. For the unsigned
@@ -508,8 +513,8 @@ inspection tools were added to the targets. The separate
 [new-dependency result](dist/offline/evidence/dependency/output.log) proves the
 second 18-RPM fixture bundle supplies original Oracle
 `tree-1.7.0-15.el8.aarch64`, absent from the first 17-RPM closure and its target.
-These evidence paths are local generated output; CI uploads matching logs for
-seven days. Preserve candidate evidence in an approved durable store before
+These evidence paths are local generated output; CI does not upload evidence
+artifacts. Preserve candidate evidence in an approved durable store before
 claiming release acceptance.
 
 The [post-setup RPM verification](dist/offline/evidence/heimdall-offline-arm64-67063-23066/rpm-after-setup.verify)

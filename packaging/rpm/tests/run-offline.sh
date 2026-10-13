@@ -56,7 +56,8 @@ except subprocess.TimeoutExpired:
   return "$result"
 }
 extract() {
-  python3 - "$1" "$2" <<'PY'
+  local archive=$1 destination=$2
+  python3 - "$archive" "$destination" <<'PY'
 import hashlib, pathlib, re, sys, tarfile
 archive = pathlib.Path(sys.argv[1]).resolve(strict=True)
 line = pathlib.Path(str(archive) + '.sha256').read_text()

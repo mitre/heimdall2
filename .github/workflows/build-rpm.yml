@@ -176,13 +176,6 @@ jobs:
             OFFLINE_RELEASEVER="$major" OFFLINE_OS_KEY_DIR="$TOPDIR/offline-inputs/os-keys" \
             OFFLINE_HEIMDALL_KEY="$TOPDIR/RPM-TEST-GPG-KEY"
 
-      - name: Record runtime inventory and checksums
-        run: |
-          cp "$TOPDIR/SOURCES/runtime-manifest.json" "$TOPDIR/runtime-manifest.json"
-          cd "$TOPDIR"
-          find RPMS SRPMS -type f -name '*.rpm' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
-          sha256sum runtime-manifest.json RPM-TEST-GPG-KEY >> SHA256SUMS
-
       - name: Record what was built
         run: |
           find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -printf '%f\n' | sort
@@ -191,18 +184,6 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
-          path: |
-            ${{ env.TOPDIR }}/RPMS/**/*.rpm
-            ${{ env.TOPDIR }}/SRPMS/*.rpm
-            ${{ env.TOPDIR }}/RPM-TEST-GPG-KEY
-            ${{ env.TOPDIR }}/runtime-manifest.json
-            ${{ env.TOPDIR }}/SHA256SUMS
-          retention-days: 7
-          if-no-files-found: error
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: offline-rocky-${{ matrix.distro }}-${{ matrix.arch }}
           path: |
             ${{ env.TOPDIR }}/OFFLINE/*.tar.gz
             ${{ env.TOPDIR }}/OFFLINE/*.tar.gz.sha256
@@ -230,7 +211,7 @@ jobs:
     steps:
       - name: Install checkout and payload inspection tools
         run: |
-          dnf install -y git cpio systemd findutils
+          dnf install -y git cpio systemd findutils tar gzip
           command -v rpm2cpio
           command -v curl
           command -v find
@@ -244,10 +225,16 @@ jobs:
 
       - name: Verify checksums and install the signed package
         run: |
-          (cd rpms && sha256sum --check SHA256SUMS)
-          mapfile -d '' -t rpms < <(find rpms -name 'heimdall-server-*.${{ matrix.arch }}.rpm' -print0)
+          mapfile -d '' -t archives < <(find rpms -name '*.tar.gz' -print0)
+          test "${#archives[@]}" -eq 1
+          (cd rpms && sha256sum --check "$(basename "${archives[0]}").sha256")
+          tar -xzf "${archives[0]}" -C rpms
+          bundle="rpms/$(basename "${archives[0]}" .tar.gz)"
+          (cd "$bundle" && sha256sum --check SHA256SUMS)
+          echo "RPM_BUNDLE=$bundle" >> "$GITHUB_ENV"
+          mapfile -d '' -t rpms < <(find "$bundle/repo/Packages" -name 'heimdall-server-*.${{ matrix.arch }}.rpm' -print0)
           test "${#rpms[@]}" -eq 1
-          rpm --import rpms/RPM-TEST-GPG-KEY
+          rpm --import "$bundle/keys/heimdall.asc"
           rpm --checksig --verbose "${rpms[0]}"
           # No local server is needed for a payload-only install. Retain man pages
           # even when the minimal image's DNF configuration defaults to nodocs.
@@ -260,7 +247,7 @@ jobs:
         run: |
           rpm -q heimdall-server
           rpm -V heimdall-server
-          cmp rpms/runtime-manifest.json /usr/share/heimdall-server/runtime-manifest.json
+          cmp "$RPM_BUNDLE/runtime-manifest.json" /usr/share/heimdall-server/runtime-manifest.json
           runtime=/usr/libexec/heimdall-server/runtime
           "$runtime/node/bin/node" --version
           "$runtime/postgresql/bin/postgres" --version
@@ -319,7 +306,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: offline-rocky-${{ matrix.distro }}-${{ matrix.arch }}
+          name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
           path: offline
 
       - name: Prepare outer host only
@@ -333,14 +320,6 @@ jobs:
           mapfile -d '' -t bundles < <(find offline -name '*.tar.gz' -print0)
           test "${#bundles[@]}" -eq 1
           bash packaging/rpm/tests/run-offline.sh '${{ matrix.platform }}' '${{ matrix.image }}' "${bundles[0]}"
-
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: offline-evidence-rocky-${{ matrix.distro }}-${{ matrix.arch }}
-          path: packaging/rpm/dist/offline/evidence/
-          retention-days: 7
-          if-no-files-found: warn
 
   lifecycle-ol8:
     name: OL8 lifecycle / ${{ matrix.arch }}
@@ -452,10 +431,8 @@ jobs:
 
       - uses: actions/upload-artifact@v7
         with:
-          name: offline-ol-el8-${{ matrix.arch }}
+          name: rpm-ol-el8-${{ matrix.arch }}
           path: |
-            artifacts/offline-first/*.tar.gz
-            artifacts/offline-first/*.tar.gz.sha256
             artifacts/offline-second/*.tar.gz
             artifacts/offline-second/*.tar.gz.sha256
           retention-days: 7
@@ -501,14 +478,6 @@ jobs:
           test "${#first[@]}" -eq 1 && test "${#second[@]}" -eq 1
           bash packaging/rpm/tests/run-offline.sh '${{ matrix.platform }}' oraclelinux:8 "${first[0]}" "${second[0]}"
 
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: offline-evidence-ol-el8-${{ matrix.arch }}
-          path: packaging/rpm/dist/offline/evidence/
-          retention-days: 7
-          if-no-files-found: warn
-
       - name: Verify real package lifecycle
         env:
           RPM_TEST_GPG_KEY: ${{ github.workspace }}/artifacts/RPM-TEST-GPG-KEY
@@ -519,7 +488,7 @@ jobs:
             "artifacts/second/RPMS/${{ matrix.arch }}/heimdall-server-${version}-0.4.integration.el8.${{ matrix.arch }}.rpm"
 
   publish:
-    name: Attach RPMs and offline bundles to the release
+    name: Attach RPM bundles to the release
     needs: [build, smoke-test, offline-test, lifecycle-ol8]
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
@@ -534,25 +503,11 @@ jobs:
           path: rpms
           merge-multiple: true
 
-      - uses: actions/download-artifact@v8
-        with:
-          pattern: offline-{rocky,ol}-*
-          path: offline
-          merge-multiple: true
-
       - name: Reject integration artifacts before publication
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm
-          mapfile -d '' -t artifacts < <(find rpms -name '*.rpm' -print0)
-          test "${#artifacts[@]}" -gt 0
-          for artifact in "${artifacts[@]}"; do
-            release=$(rpm -qp --qf '%{RELEASE}' "$artifact")
-            case "$release" in
-              *integration*) echo "Refusing to publish integration artifact: $artifact" >&2; exit 1 ;;
-            esac
-          done
-          mapfile -d '' -t archives < <(find offline -name '*.tar.gz' -print0)
+          mapfile -d '' -t archives < <(find rpms -name '*.tar.gz' -print0)
           test "${#archives[@]}" -gt 0
           for archive in "${archives[@]}"; do
             (cd "$(dirname "$archive")" && sha256sum --check "$(basename "$archive").sha256")
@@ -568,7 +523,7 @@ jobs:
           done
 
       - name: List artifacts
-        run: find rpms -name '*.rpm' -printf '%f\n' | sort
+        run: find rpms -name '*.tar.gz' -printf '%f\n' | sort
 
       # Provenance attestations describe the build; they are not RPM signatures.
       # A future stable milestone must replace ephemeral acceptance-test signing
@@ -576,14 +531,12 @@ jobs:
       - uses: actions/attest-build-provenance@v4
         with:
           subject-path: |
-            rpms/**/*.rpm
-            offline/**/*.tar.gz
-            offline/**/*.tar.gz.sha256
+            rpms/**/*.tar.gz
+            rpms/**/*.tar.gz.sha256
 
       - uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228  # v3.0.2
         with:
           files: |
-            rpms/**/*.rpm
-            offline/**/*.tar.gz
-            offline/**/*.tar.gz.sha256
+            rpms/**/*.tar.gz
+            rpms/**/*.tar.gz.sha256
           fail_on_unmatched_files: true

@@ -29,7 +29,10 @@ transaction() {
   return "$result"
 }
 inventory() { rpm -qa --qf '%{NEVRA}\n' | LC_ALL=C sort; }
-rehash() { (cd -- "$1"; shopt -s globstar dotglob nullglob; for path in **/*; do [[ ! -f $path || $path == SHA256SUMS ]] || sha256sum -- "$path"; done) > "$1/SHA256SUMS"; }
+rehash() {
+  local directory=$1
+  (cd -- "$directory"; shopt -s globstar dotglob nullglob; for path in **/*; do [[ ! -f $path || $path == SHA256SUMS ]] || sha256sum -- "$path"; done) > "$directory/SHA256SUMS"
+}
 
 # Select one case per fresh container, keeping the original bundle untouched.
 if [[ -n ${HEIMDALL_OFFLINE_REJECTION:-} ]]; then

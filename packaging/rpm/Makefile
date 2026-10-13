@@ -200,7 +200,7 @@ offline:
 	metadata=$$(rpm -qp --qf "%{VERSION} %{RELEASE}\n" "$$OFFLINE_RPM"); \
 	read -r version release extra <<< "$$metadata"; \
 	[[ "$$version" =~ ^[A-Za-z0-9][A-Za-z0-9._+~-]*$$ && "$$release" =~ ^[A-Za-z0-9][A-Za-z0-9._+~-]*$$ && -z "$$extra" ]] || { echo "ERROR: Invalid RPM version or release" >&2; exit 1; }; \
-	bundle_name="heimdall-offline-$$distro-el$$major-$$arch-$$version-$$release"; \
+	bundle_name="heimdall-$$distro-el$$major-$$arch-$$version-$$release"; \
 	archive="$$bundle_name.tar.gz"; \
 	[[ ! -e "$$TOPDIR/OFFLINE/$$archive" && ! -L "$$TOPDIR/OFFLINE/$$archive" && ! -e "$$TOPDIR/OFFLINE/$$archive.sha256" && ! -L "$$TOPDIR/OFFLINE/$$archive.sha256" ]] || { echo "ERROR: Refusing stale offline artifact" >&2; exit 1; }; \
 	mv "$$work/bundle" "$$work/$$bundle_name"; \
