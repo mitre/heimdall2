@@ -231,9 +231,9 @@ release; CI uses this for the EL8 upgrade fixture.
 ## CI artifacts and test signatures
 
 The Build RPM workflow defines native builds for Rocky Linux 8, 9 and 10 on
-x86_64 and aarch64, using `rockylinux/rockylinux:{8,9,10}`. Its six artifacts use
-`rpm-{el8,el9,el10}-{x86_64,aarch64}` names. Oracle Linux 8 lifecycle jobs install
-these same EL8 packages and upload only test evidence; they do not build packages.
+x86_64 and aarch64, using `rockylinux/rockylinux:{8,9,10}`. Its only uploaded
+artifacts are `rpm-{el8,el9,el10}-{x86_64,aarch64}`. Oracle Linux 8 lifecycle jobs
+install these same EL8 candidates. Test diagnostics are recorded in workflow logs.
 Each installable artifact contains:
 
 - `RPMS/<arch>/`: signed binary RPM.
@@ -242,10 +242,11 @@ Each installable artifact contains:
 - `runtime-manifest.json`: inventory of the pinned application runtimes.
 - `SHA256SUMS`: checksums calculated after signing.
 
-The existing EL8 SRPM rebuild supplies a lower-release binary for upgrade tests,
-signed with the same key as the candidate. Its `upgrade-fixture-el8-<arch>`
-artifact contains that binary and its checksums and is excluded from publication.
-EL9 and EL10 SRPM rebuilds retain the candidate release.
+Each Oracle Linux 8 lifecycle job rebuilds the downloaded EL8 SRPM in a native
+Rocky Linux 8 container at a lower release for upgrade tests. This fixture is
+signed with a separate disposable key and remains local to the job; both public
+keys are trusted for the lifecycle checks. EL9 and EL10 SRPM rebuilds retain the
+candidate release in their build jobs.
 
 The RPM also records the build distribution's ICU package and private library
 hashes in `/usr/share/heimdall-server/icu-manifest.json`, with its notices under

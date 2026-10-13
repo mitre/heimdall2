@@ -4,12 +4,67 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import textwrap
 import unittest
 
 TESTS = Path(__file__).resolve().parent
 
 
 class LifecycleStatusTests(unittest.TestCase):
+    def test_local_upgrade_fixture_preserves_keys_and_builder_failures(self):
+        workflow = (TESTS.parents[2] / '.github/workflows/build-rpm.yml').read_text()
+        marker = '      - name: Build the upgrade fixture locally\n'
+        self.assertTrue(marker in workflow, 'Upgrade fixtures must be built in the test job')
+        step = workflow.split(marker, 1)[1].split('\n      - ', 1)[0]
+        program = textwrap.dedent(step.split('        run: |\n', 1)[1])
+        for arch, platform in [('aarch64', 'linux/arm64'), ('x86_64', 'linux/amd64')]:
+            for status in (0, 17):
+                with self.subTest(arch=arch, status=status), tempfile.TemporaryDirectory() as temp:
+                    root = Path(temp)
+                    current = root / 'artifacts/current'
+                    (current / 'SRPMS').mkdir(parents=True)
+                    (current / 'SRPMS/candidate.src.rpm').write_text('source RPM')
+                    (current / 'RPM-TEST-GPG-KEY').write_text('current key\n')
+                    script = root / 'fixture.sh'
+                    script.write_text('''set -euo pipefail
+docker() {
+  case $1 in
+    build) return 0 ;;
+    create) printf 'fixture-builder\\n' ;;
+    start) return 0 ;;
+    inspect) printf '%s\\n' "$BUILDER_STATUS" ;;
+    cp)
+      case $2 in
+        artifacts/current/SRPMS/candidate.src.rpm) [[ $3 == fixture-builder:/tmp/candidate.src.rpm ]] ;;
+        fixture-builder:/tmp/upgrade-fixture/RPMS)
+          mkdir -p "$3/$FIXTURE_ARCH"
+          printf 'previous RPM\\n' > "$3/$FIXTURE_ARCH/previous.rpm" ;;
+        fixture-builder:/tmp/upgrade-fixture/RPM-TEST-GPG-KEY)
+          printf 'fixture key\\n' > "$3" ;;
+        *) return 92 ;;
+      esac ;;
+    rm) printf 'cleaned\\n' > cleanup.log ;;
+    *) return 93 ;;
+  esac
+}
+''' + program.replace('${{ matrix.platform }}', platform))
+                    result = subprocess.run(['bash', str(script)], cwd=temp,
+                                            env=dict(os.environ, BUILDER_STATUS=str(status),
+                                                     FIXTURE_ARCH=arch, UPGRADE_FIXTURE_RELEASE='0.3.integration'),
+                                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                            universal_newlines=True)
+                    self.assertEqual(result.returncode, status, result.stdout)
+                    self.assertEqual((root / 'cleanup.log').read_text(), 'cleaned\n')
+                    self.assertEqual((current / 'RPM-TEST-GPG-KEY').read_text(), 'current key\n')
+                    combined = root / 'artifacts/RPM-TEST-GPG-KEY'
+                    if status == 0:
+                        self.assertEqual(combined.read_text(), 'current key\nfixture key\n')
+                        self.assertEqual((root / 'artifacts/previous/RPMS' / arch / 'previous.rpm').read_text(),
+                                         'previous RPM\n')
+                    else:
+                        self.assertFalse(combined.exists())
+                        self.assertFalse((root / 'artifacts/previous').exists())
+
     def test_installer_preserves_status_and_disables_repositories(self):
         lifecycle = (TESTS / 'lifecycle.sh').read_text()
         helper = lifecycle[lifecycle.index('install_candidate() {'):lifecycle.index('refuse_upgrade() {')]

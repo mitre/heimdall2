@@ -113,14 +113,11 @@ jobs:
           bash packaging/rpm/tests/cli-inputs.sh "$TOPDIR"
 
       - name: Rebuild the SRPM in an empty tree
+        if: matrix.distro != 'el8'
         run: |
           mapfile -t srpms < <(find "$TOPDIR/SRPMS" -name '*.src.rpm')
           test "${#srpms[@]}" -eq 1
-          rebuild_args=()
-          if [[ '${{ matrix.distro }}' == el8 ]]; then
-            rebuild_args+=("$UPGRADE_FIXTURE_RELEASE")
-          fi
-          bash packaging/rpm/tests/srpm-rebuild.sh "${srpms[0]}" "$REBUILD_TOPDIR" "${rebuild_args[@]}"
+          bash packaging/rpm/tests/srpm-rebuild.sh "${srpms[0]}" "$REBUILD_TOPDIR"
 
       - name: Lint the built packages
         run: make -C packaging/rpm lint-rpm TOPDIR="$TOPDIR"
@@ -129,11 +126,7 @@ jobs:
         env:
           HEIMDALL_RPM_TEST: "1"
         run: |
-          signing_paths=("$TOPDIR/RPMS" "$TOPDIR/SRPMS")
-          if [[ '${{ matrix.distro }}' == el8 ]]; then
-            signing_paths+=("$REBUILD_TOPDIR/RPMS")
-          fi
-          mapfile -d '' -t rpms < <(find "${signing_paths[@]}" -name '*.rpm' -print0)
+          mapfile -d '' -t rpms < <(find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -print0)
           test "${#rpms[@]}" -gt 0
           bash packaging/rpm/tests/sign-rpms.sh --container \
             "$TOPDIR/RPM-TEST-GPG-KEY" "${rpms[@]}"
@@ -158,20 +151,6 @@ jobs:
             ${{ env.TOPDIR }}/RPM-TEST-GPG-KEY
             ${{ env.TOPDIR }}/runtime-manifest.json
             ${{ env.TOPDIR }}/SHA256SUMS
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: Record upgrade fixture checksum
-        if: matrix.distro == 'el8'
-        run: cd "$REBUILD_TOPDIR" && sha256sum RPMS/*/*.rpm > SHA256SUMS
-
-      - uses: actions/upload-artifact@v7
-        if: matrix.distro == 'el8'
-        with:
-          name: upgrade-fixture-el8-${{ matrix.arch }}
-          path: |
-            ${{ env.REBUILD_TOPDIR }}/RPMS/**/*.rpm
-            ${{ env.REBUILD_TOPDIR }}/SHA256SUMS
           retention-days: 7
           if-no-files-found: error
 
@@ -334,12 +313,12 @@ jobs:
           timeout 300 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh verify
           test "$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container")" = none
 
-      - uses: actions/upload-artifact@v7
+      - name: Record direct install diagnostics
         if: always()
-        with:
-          name: direct-install-evidence-${{ matrix.distro }}-${{ matrix.arch }}
-          path: diagnostics
-          retention-days: 7
+        run: |
+          if [[ -d diagnostics ]]; then
+            find diagnostics -type f -print -exec cat {} \;
+          fi
 
   lifecycle-ol8:
     name: OL8 lifecycle / ${{ matrix.arch }}
@@ -356,36 +335,58 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Prepare the upgrade fixture builder
+        run: |
+          docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
+            --build-arg BASE_IMAGE=rockylinux/rockylinux:8 --target build-env -t heimdall-upgrade-builder .
+
       - uses: actions/download-artifact@v8
         with:
           name: rpm-el8-${{ matrix.arch }}
           path: artifacts/current
 
-      - uses: actions/download-artifact@v8
-        with:
-          name: upgrade-fixture-el8-${{ matrix.arch }}
-          path: artifacts/previous
-
       - name: Verify downloaded package checksums
+        run: cd artifacts/current && sha256sum --check SHA256SUMS
+
+      - name: Build the upgrade fixture locally
         run: |
-          (cd artifacts/current && sha256sum --check SHA256SUMS)
-          (cd artifacts/previous && sha256sum --check SHA256SUMS)
+          srpms=(artifacts/current/SRPMS/*.src.rpm)
+          test "${#srpms[@]}" -eq 1
+          test -s "${srpms[0]}"
+          builder=$(docker create --platform '${{ matrix.platform }}' \
+            -e UPGRADE_FIXTURE_RELEASE -e HEIMDALL_RPM_TEST=1 \
+            heimdall-upgrade-builder bash -euo pipefail -c '
+              bash packaging/rpm/tests/srpm-rebuild.sh /tmp/candidate.src.rpm \
+                /tmp/upgrade-fixture "$UPGRADE_FIXTURE_RELEASE"
+              bash packaging/rpm/tests/sign-rpms.sh --container \
+                /tmp/upgrade-fixture/RPM-TEST-GPG-KEY /tmp/upgrade-fixture/RPMS/*/*.rpm
+            ')
+          trap 'docker rm -f "$builder" >/dev/null' EXIT
+          docker cp "${srpms[0]}" "$builder:/tmp/candidate.src.rpm"
+          docker start --attach "$builder"
+          result=$(docker inspect --format '{{.State.ExitCode}}' "$builder")
+          test "$result" -eq 0 || exit "$result"
+          mkdir -p artifacts/previous
+          docker cp "$builder:/tmp/upgrade-fixture/RPMS" artifacts/previous/RPMS
+          docker cp "$builder:/tmp/upgrade-fixture/RPM-TEST-GPG-KEY" artifacts/previous/RPM-TEST-GPG-KEY
+          cat artifacts/current/RPM-TEST-GPG-KEY artifacts/previous/RPM-TEST-GPG-KEY \
+            > artifacts/RPM-TEST-GPG-KEY
 
       - name: Verify real package lifecycle
         env:
-          RPM_TEST_GPG_KEY: ${{ github.workspace }}/artifacts/current/RPM-TEST-GPG-KEY
+          RPM_TEST_GPG_KEY: ${{ github.workspace }}/artifacts/RPM-TEST-GPG-KEY
         run: |
           version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
           bash packaging/rpm/tests/run-lifecycle.sh '${{ matrix.platform }}' \
             "artifacts/previous/RPMS/${{ matrix.arch }}/heimdall-server-${version}-${UPGRADE_FIXTURE_RELEASE}.el8.${{ matrix.arch }}.rpm" \
             "artifacts/current/RPMS/${{ matrix.arch }}/heimdall-server-${version}-${HEIMDALL_RELEASE}.el8.${{ matrix.arch }}.rpm"
 
-      - uses: actions/upload-artifact@v7
+      - name: Record lifecycle diagnostics
         if: always()
-        with:
-          name: lifecycle-evidence-ol8-${{ matrix.arch }}
-          path: packaging/rpm/dist/integration/evidence
-          retention-days: 7
+        run: |
+          if [[ -d packaging/rpm/dist/integration/evidence ]]; then
+            find packaging/rpm/dist/integration/evidence -type f -print -exec cat {} \;
+          fi
 
   publish:
     name: Attach RPMs to the release
@@ -397,7 +398,7 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      # Publish only the six EL/architecture artifacts, excluding upgrade fixtures.
+      # Publish the six EL/architecture artifacts.
       - uses: actions/download-artifact@v8
         with:
           pattern: rpm-el*

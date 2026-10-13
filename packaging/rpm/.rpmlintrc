@@ -18,6 +18,8 @@ addFilter(r"post(?:in|un)-without-ldconfig /usr/libexec/heimdall-server/runtime/
 addFilter(r"binary-or-shlib-defines-rpath /usr/libexec/heimdall-server/runtime/postgresql/(?:bin|lib)/[a-zA-Z0-9_.]+ \['/usr/libexec/heimdall-server/runtime/postgresql/lib'\]$")
 # PostgreSQL loads these encoding-conversion modules into its own process.
 addFilter(r"shared-lib-without-dependency-information /usr/libexec/heimdall-server/runtime/postgresql/lib/(?:[a-z0-9_]+_and_[a-z0-9_]+|euc2004_sjis2004)\.so$")
+# ICU's data-only library legitimately has no DT_NEEDED dependencies.
+addFilter(r"shared-lib-without-dependency-information /usr/libexec/heimdall-server/runtime/postgresql/lib/libicudata\.so\.[0-9]+(?:\.[0-9]+)*$")
 
 # Match the exact secret-file and private-directory modes declared in %files.
 # Broader permission exceptions would hide accidentally writable files.
