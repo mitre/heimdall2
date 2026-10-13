@@ -226,14 +226,15 @@ tag to match your SRPM. The second path must not exist. Run with privileges to
 install declared BuildRequires via `dnf builddep`. The helper verifies supplied runtime hashes,
 rebuilds in the empty tree and checks the resulting binary payload. Rebuilt
 binaries need their own signature. An optional third argument overrides the
-release; CI uses this for the EL8 upgrade fixture.
+release for local upgrade fixtures.
 
 ## CI artifacts and test signatures
 
 The Build RPM workflow defines native builds for Rocky Linux 8, 9 and 10 on
 x86_64 and aarch64, using `rockylinux/rockylinux:{8,9,10}`. Its only uploaded
-artifacts are `rpm-{el8,el9,el10}-{x86_64,aarch64}`. Oracle Linux 8 lifecycle jobs
-install these same EL8 candidates. Test diagnostics are recorded in workflow logs.
+artifacts are the six `rpm-{el8,el9,el10}-{x86_64,aarch64}` combinations. Each has
+build, signed-install and disconnected-install checks; there are no dedicated
+Oracle Linux jobs. Test diagnostics are recorded in workflow logs.
 Each installable artifact contains:
 
 - `RPMS/<arch>/`: signed binary RPM.
@@ -242,11 +243,9 @@ Each installable artifact contains:
 - `runtime-manifest.json`: inventory of the pinned application runtimes.
 - `SHA256SUMS`: checksums calculated after signing.
 
-Each Oracle Linux 8 lifecycle job rebuilds the downloaded EL8 SRPM in a native
-Rocky Linux 8 container at a lower release for upgrade tests. This fixture is
-signed with a separate disposable key and remains local to the job; both public
-keys are trusted for the lifecycle checks. EL9 and EL10 SRPM rebuilds retain the
-candidate release in their build jobs.
+Each of the six native build jobs rebuilds its SRPM in an empty tree, retaining
+the candidate release. These rebuilds are checked locally within the build job
+and do not create additional uploaded artifacts.
 
 The RPM also records the build distribution's ICU package and private library
 hashes in `/usr/share/heimdall-server/icu-manifest.json`, with its notices under
@@ -286,13 +285,11 @@ that baseline from the target distribution, then disables networking and all
 DNF repositories before installing the signed application RPM. System ICU and
 separate application runtime packages are absent from that fresh fixture.
 
-The native Rocky lanes test this direct installation for each EL major and
-architecture. The Oracle Linux 8 lifecycle lanes additionally exercise setup,
-upgrade, restart, backup/restore, removal and recovery using the generic EL8
-candidate and its signed lower-release rebuild.
-The same lifecycle helper always invokes DNF. Additional scenarios cover external
-services and coexistence. A workflow definition is not evidence of a completed
-run; preserve results for the exact candidate before release.
+The native Rocky lanes test direct installation, setup and restart for each EL
+major and architecture. The manual lifecycle runner remains available for
+upgrade, backup/restore, removal, recovery, external services and coexistence;
+its installation helper always invokes DNF. A workflow definition is not evidence
+of a completed run; preserve results for the exact candidate before release.
 
 ### Acceptance signing
 
@@ -358,15 +355,15 @@ built and signed a native Oracle Linux 8/aarch64 candidate, then verified DNF
 installation, setup, private ICU loading, application readiness and restart with
 networking disabled. The plan records the exact candidate and remaining limits.
 
-The workflow defines Rocky EL8/9/10 native lanes and Oracle Linux 8 lifecycle
-lanes. RHEL, historical minor/EUS targets, enforcing SELinux, enabled host
-fapolicyd, AVC inspection, and full VM reboot require separate candidate-specific
-validation. Docker tests cannot establish those host properties.
+The workflow defines Rocky EL8/9/10 native build, install and disconnected-test
+lanes. RHEL, Oracle Linux, historical minor/EUS targets, enforcing SELinux,
+enabled host fapolicyd, AVC inspection, and full VM reboot require separate
+candidate-specific validation. Docker tests cannot establish those host properties.
 
 Before release, record candidate-specific build, signed-install and clean SRPM
-rebuild evidence for the target distribution and architecture. Run both native
-OL8 lifecycle suites, all four database/proxy deployment combinations, offline
-setup, coexistence, backup/restore, a real preceding-package upgrade and a full
+rebuild evidence for the target distribution and architecture. Run the manual
+lifecycle suites, all four database/proxy deployment combinations, offline setup,
+coexistence, backup/restore, a real preceding-package upgrade and a full
 host reboot. The `/server` response verifies the application endpoint; database
 queries, migrations and authenticated application access need separate checks.
 The workflow definition, including its EL10 jobs, is not a completed run.

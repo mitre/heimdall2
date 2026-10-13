@@ -1,6 +1,6 @@
 name: Build RPM
 
-# Rocky builds supply all packages, including those tested on Oracle Linux 8.
+# Rocky builds supply all six EL/architecture packages.
 # Integration candidates are never eligible for release publication.
 on:
   pull_request:
@@ -40,7 +40,6 @@ defaults:
 
 env:
   HEIMDALL_RELEASE: 0.4.integration
-  UPGRADE_FIXTURE_RELEASE: 0.3.integration
   GOTOOLCHAIN: local
 
 jobs:
@@ -113,7 +112,6 @@ jobs:
           bash packaging/rpm/tests/cli-inputs.sh "$TOPDIR"
 
       - name: Rebuild the SRPM in an empty tree
-        if: matrix.distro != 'el8'
         run: |
           mapfile -t srpms < <(find "$TOPDIR/SRPMS" -name '*.src.rpm')
           test "${#srpms[@]}" -eq 1
@@ -320,77 +318,9 @@ jobs:
             find diagnostics -type f -print -exec cat {} \;
           fi
 
-  lifecycle-ol8:
-    name: OL8 lifecycle / ${{ matrix.arch }}
-    needs: build
-    runs-on: ${{ matrix.runner }}
-    permissions:
-      contents: read
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - {runner: ubuntu-latest, platform: linux/amd64, arch: x86_64}
-          - {runner: ubuntu-24.04-arm, platform: linux/arm64, arch: aarch64}
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Prepare the upgrade fixture builder
-        run: |
-          docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
-            --build-arg BASE_IMAGE=rockylinux/rockylinux:8 --target build-env -t heimdall-upgrade-builder .
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: rpm-el8-${{ matrix.arch }}
-          path: artifacts/current
-
-      - name: Verify downloaded package checksums
-        run: cd artifacts/current && sha256sum --check SHA256SUMS
-
-      - name: Build the upgrade fixture locally
-        run: |
-          srpms=(artifacts/current/SRPMS/*.src.rpm)
-          test "${#srpms[@]}" -eq 1
-          test -s "${srpms[0]}"
-          builder=$(docker create --platform '${{ matrix.platform }}' \
-            -e UPGRADE_FIXTURE_RELEASE -e HEIMDALL_RPM_TEST=1 \
-            heimdall-upgrade-builder bash -euo pipefail -c '
-              bash packaging/rpm/tests/srpm-rebuild.sh /tmp/candidate.src.rpm \
-                /tmp/upgrade-fixture "$UPGRADE_FIXTURE_RELEASE"
-              bash packaging/rpm/tests/sign-rpms.sh --container \
-                /tmp/upgrade-fixture/RPM-TEST-GPG-KEY /tmp/upgrade-fixture/RPMS/*/*.rpm
-            ')
-          trap 'docker rm -f "$builder" >/dev/null' EXIT
-          docker cp "${srpms[0]}" "$builder:/tmp/candidate.src.rpm"
-          docker start --attach "$builder"
-          result=$(docker inspect --format '{{.State.ExitCode}}' "$builder")
-          test "$result" -eq 0 || exit "$result"
-          mkdir -p artifacts/previous
-          docker cp "$builder:/tmp/upgrade-fixture/RPMS" artifacts/previous/RPMS
-          docker cp "$builder:/tmp/upgrade-fixture/RPM-TEST-GPG-KEY" artifacts/previous/RPM-TEST-GPG-KEY
-          cat artifacts/current/RPM-TEST-GPG-KEY artifacts/previous/RPM-TEST-GPG-KEY \
-            > artifacts/RPM-TEST-GPG-KEY
-
-      - name: Verify real package lifecycle
-        env:
-          RPM_TEST_GPG_KEY: ${{ github.workspace }}/artifacts/RPM-TEST-GPG-KEY
-        run: |
-          version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
-          bash packaging/rpm/tests/run-lifecycle.sh '${{ matrix.platform }}' \
-            "artifacts/previous/RPMS/${{ matrix.arch }}/heimdall-server-${version}-${UPGRADE_FIXTURE_RELEASE}.el8.${{ matrix.arch }}.rpm" \
-            "artifacts/current/RPMS/${{ matrix.arch }}/heimdall-server-${version}-${HEIMDALL_RELEASE}.el8.${{ matrix.arch }}.rpm"
-
-      - name: Record lifecycle diagnostics
-        if: always()
-        run: |
-          if [[ -d packaging/rpm/dist/integration/evidence ]]; then
-            find packaging/rpm/dist/integration/evidence -type f -print -exec cat {} \;
-          fi
-
   publish:
     name: Attach RPMs to the release
-    needs: [build, smoke-test, disconnected-test, lifecycle-ol8]
+    needs: [build, smoke-test, disconnected-test]
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     permissions:
@@ -444,7 +374,7 @@ jobs:
 
       # Provenance attestations describe the build; they are not RPM signatures.
       # A future stable milestone must replace ephemeral acceptance-test signing
-      # and parameterize lifecycle releases before enabling stable publication.
+      # and select stable RPM releases before enabling stable publication.
       - uses: actions/attest-build-provenance@v4
         with:
           subject-path: publish/*

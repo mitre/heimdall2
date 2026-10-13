@@ -28,7 +28,7 @@ if sed -n '/^%prep/,/^%install/p' "$spec" | grep -Eq 'stage-runtimes|curl|wget|u
   exit 1
 fi
 rebuild_args=(--define "_topdir $topdir")
-# The EL8 CI rebuild also supplies the older release for upgrade acceptance.
+# Local upgrade tests can request a lower-release fixture.
 if [[ -n ${3:-} ]]; then rebuild_args+=(--define "heimdall_release $3"); fi
 rpmbuild --rebuild "${rebuild_args[@]}" "$srpm"
 version=$(rpm -qp --qf '%{VERSION}' "$srpm")
