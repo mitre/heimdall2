@@ -50,20 +50,17 @@ check_signature() {
 }
 install_candidate() {
   local rpm_path=$1 phase=$2 action=install result=0
-  local repo_args=()
   case "$phase" in
-    install) ;;
-    upgrade) action=upgrade; repo_args=(--disablerepo='*') ;;
-    recover) repo_args=(--disablerepo='*') ;;
+    install|recover) ;;
+    upgrade) action=upgrade ;;
     *) return 64 ;;
   esac
-  if [[ -n ${RPM_TEST_OFFLINE_BUNDLE:-} ]]; then
-    [[ $RPM_TEST_OFFLINE_BUNDLE == /* && -d $RPM_TEST_OFFLINE_BUNDLE ]] || return 1
-    [[ $(cat "$RPM_TEST_OFFLINE_BUNDLE/heimdall-nevra") == "$(rpm -qp --qf "$RPM_NEVRA_FORMAT" "$rpm_path")" ]] || return 1
-    timeout 300 bash "$RPM_TEST_OFFLINE_BUNDLE/install.sh" --assumeyes || result=$?
-  else
-    timeout 300 dnf "$action" -y "${repo_args[@]}" --setopt=install_weak_deps=False \
-      --setopt=localpkg_gpgcheck=1 "$rpm_path" || result=$?
+  timeout 300 dnf "$action" -y --disablerepo='*' --setopt=install_weak_deps=False \
+    --setopt=localpkg_gpgcheck=1 --setopt=tsflags= "$rpm_path" \
+    2>&1 | tee /tmp/rpm-lifecycle-transaction.log || result=$?
+  # DNF can return success even when a post-transaction scriptlet fails.
+  if [[ $result == 0 ]] && grep -Eiq 'scriptlet.*fail|error.*scriptlet' /tmp/rpm-lifecycle-transaction.log; then
+    result=1
   fi
   printf 'phase=%s exit_status=%s candidate=%q\n' "$phase" "$result" "$rpm_path" >> /tmp/rpm-lifecycle-installer-status.log
   return "$result"
@@ -99,6 +96,7 @@ ENV
     sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-before-install.sha256
     install_candidate "$2" install
     [[ $(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server) == "$(rpm -qp --qf "$RPM_NEVRA_FORMAT" "$2")" ]]
+    bash /tmp/rpm-tests/installed-icu.sh
     sha256sum --check /tmp/rpm-before-install.sha256
     for unit in "${units[@]}"; do if systemctl is-active --quiet "$unit"; then exit 1; fi; done
     [[ ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION ]]

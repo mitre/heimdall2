@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
+ARG BASE_IMAGE=oraclelinux:8
 FROM golang:1.25.8 AS go-toolchain
-FROM oraclelinux:8 AS trusted-base
+FROM ${BASE_IMAGE} AS trusted-base
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN --mount=type=secret,id=corp_ca \
     if [[ -s /run/secrets/corp_ca ]]; then \
@@ -10,8 +11,8 @@ RUN --mount=type=secret,id=corp_ca \
 ENV NODE_EXTRA_CA_CERTS=/etc/pki/tls/certs/ca-bundle.crt
 
 FROM trusted-base AS test-host
-RUN mkdir -p /usr/share/man/man1 && \
-    dnf install -y systemd procps-ng && dnf clean all
+COPY packaging/rpm/tests/prepare-host.sh /tmp/prepare-host.sh
+RUN HEIMDALL_RPM_TEST=1 bash /tmp/prepare-host.sh && rm /tmp/prepare-host.sh
 CMD ["/sbin/init"]
 
 FROM trusted-base AS build-env

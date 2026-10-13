@@ -4,8 +4,8 @@ Version:        @HEIMDALL_VERSION@
 Release:        %{heimdall_release}%{?dist}
 Summary:        Heimdall server for security result persistence and review
 
-# Node's complete third-party notices are shipped in node/LICENSE.
-License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND ISC AND Unicode-3.0 AND ICU AND Zlib AND LicenseRef-Public-Domain AND PostgreSQL
+# Node and ICU's complete third-party notices are shipped in their license dirs.
+License:        Apache-2.0 AND MIT AND BSD-2-Clause AND BSD-3-Clause AND ISC AND Unicode-3.0 AND Unicode-DFS-2016 AND ICU AND Zlib AND LicenseRef-Public-Domain AND PostgreSQL
 URL:            https://github.com/mitre/heimdall2
 Source0:        https://github.com/mitre/heimdall2/archive/refs/tags/v%{version}.tar.gz#/heimdall2-%{version}.tar.gz
 Source1:        heimdall-server.service
@@ -46,9 +46,9 @@ ExclusiveArch:  aarch64 x86_64
 # automatic RPM dependency/provide generation.
 %global __requires_exclude_from ^%{_datadir}/%{name}/(apps/backend/node_modules|libs)/.*$
 %global __provides_exclude_from ^(%{_datadir}/%{name}/(apps/backend/node_modules|libs)|%{_libexecdir}/%{name}/runtime/postgresql/lib)/.*$
-# These observed SONAME requirements resolve through PostgreSQL's private RUNPATH.
-# Keep all base OS ELF requirements, including OpenSSL, ICU and zlib.
-%global __requires_exclude ^lib(ecpg[.]so[.]6|ecpg_compat[.]so[.]3|pgtypes[.]so[.]3|pq[.]so[.]5)[(][)][(]64bit[)]$
+# Only these bundled SONAMEs resolve through PostgreSQL's private RPATH.
+# Keep their base OS ELF requirements, including glibc, OpenSSL and zlib.
+%global __requires_exclude ^lib(ecpg[.]so[.]6|ecpg_compat[.]so[.]3|pgtypes[.]so[.]3|pq[.]so[.]5|icu(data|i18n|uc)[.]so[.][0-9]+)[(][)][(]64bit[)]$
 
 # Note: node_modules are vendored at build time via `yarn install --frozen-lockfile`.
 # A full Provides: bundled(npm(...)) manifest is not generated; the lockfile in
@@ -90,6 +90,7 @@ Requires:       openssl
 Requires:       policycoreutils-python-utils
 Requires:       selinux-policy-targeted
 Requires:       tar
+Requires:       gzip
 Requires:       util-linux
 Requires:       iproute
 Requires:       logrotate
@@ -199,6 +200,8 @@ cp %{SOURCE9} %{SOURCE10} %{SOURCE11} selinux/
 make -f /usr/share/selinux/devel/Makefile -C selinux heimdall_server.pp
 
 pushd runtime-postgresql
+# ICU's indirect dependencies need the same private path as PostgreSQL itself.
+sed -i 's/,--enable-new-dtags$/,--disable-new-dtags/' src/makefiles/Makefile.linux
 ./configure --prefix=%{_libexecdir}/%{name}/runtime/postgresql \
   --with-icu --with-ssl=openssl --with-zlib --without-readline
 # PostgreSQL generates headers only at MAKELEVEL=0; Make also launches rpmbuild.
@@ -231,6 +234,50 @@ install -m 0644 %{SOURCE26} %{buildroot}%{_datadir}/%{name}/runtime-manifest.jso
 install -D -m 0644 runtime-node/LICENSE %{buildroot}%{_licensedir}/%{name}/node/LICENSE
 install -D -m 0644 runtime-postgresql/COPYRIGHT %{buildroot}%{_licensedir}/%{name}/postgresql/COPYRIGHT
 install -D -m 0644 runtime-caddy/LICENSE %{buildroot}%{_licensedir}/%{name}/caddy/LICENSE
+
+# Copy the builder's matching ICU runtime, retaining its distribution provenance.
+python3 - <<'PY'
+import glob
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+
+library_dir = "%{buildroot}%{_libexecdir}/%{name}/runtime/postgresql/lib"
+license_dir = "%{buildroot}%{_licensedir}/%{name}/icu"
+os.makedirs(license_dir)
+fields = ['name', 'epoch', 'version', 'release', 'arch', 'source_rpm', 'vendor', 'license', 'url']
+tags = ['NAME', 'EPOCHNUM', 'VERSION', 'RELEASE', 'ARCH', 'SOURCERPM', 'VENDOR', 'LICENSE', 'URL']
+query = '\\n'.join('%%{' + tag + '}' for tag in tags)
+package = dict(zip(fields, subprocess.check_output(['rpm', '-q', '--qf', query, 'libicu'], universal_newlines=True).splitlines()))
+manifest = {'package': package, 'libraries': [], 'license_files': []}
+for name in ['libicudata', 'libicui18n', 'libicuuc']:
+    sources = sorted(glob.glob('%{_libdir}/' + name + '.so.*'))
+    if not sources:
+        raise SystemExit('Missing ICU runtime library: ' + name)
+    binaries = {os.path.realpath(source) for source in sources}
+    if len(binaries) != 1:
+        raise SystemExit('Ambiguous ICU runtime library: ' + name)
+    binary = binaries.pop()
+    target = os.path.join(library_dir, os.path.basename(binary))
+    shutil.copy2(binary, target)
+    for source in sources:
+        if os.path.basename(source) != os.path.basename(binary):
+            os.symlink(os.path.basename(binary), os.path.join(library_dir, os.path.basename(source)))
+    with open(target, 'rb') as stream:
+        digest = hashlib.sha256(stream.read()).hexdigest()
+    manifest['libraries'].append({'path': 'postgresql/lib/' + os.path.basename(binary), 'source_sha256': digest})
+for source in subprocess.check_output(['rpm', '-qL', 'libicu'], universal_newlines=True).splitlines():
+    if os.path.isfile(source):
+        shutil.copy2(source, license_dir)
+        manifest['license_files'].append('icu/' + os.path.basename(source))
+if not manifest['license_files']:
+    raise SystemExit('Missing ICU license notices')
+with open('%{buildroot}%{_datadir}/%{name}/icu-manifest.json', 'w') as stream:
+    json.dump(manifest, stream, indent=2, sort_keys=True)
+    stream.write('\n')
+PY
 
 cp -a apps/backend/package.json %{buildroot}%{_datadir}/%{name}/apps/backend/
 cp -a apps/backend/node_modules %{buildroot}%{_datadir}/%{name}/apps/backend/
@@ -326,6 +373,23 @@ install -d -m 0700 %{buildroot}/var/lib/heimdall-caddy
 # packaging guidelines on symlinks.
 ln -sr %{buildroot}%{_sysconfdir}/%{name}/backend.env \
        %{buildroot}%{_datadir}/%{name}/apps/backend/.env
+
+%check
+# RPM strips ELF metadata after install; record both original and packaged bytes.
+# shortcut: --nocheck omits packaged hashes; move this if that build mode is supported.
+python3 - <<'PY'
+import hashlib
+import json
+manifest_path = '%{buildroot}%{_datadir}/%{name}/icu-manifest.json'
+with open(manifest_path) as stream:
+    manifest = json.load(stream)
+for library in manifest['libraries']:
+    with open('%{buildroot}%{_libexecdir}/%{name}/runtime/' + library['path'], 'rb') as stream:
+        library['sha256'] = hashlib.sha256(stream.read()).hexdigest()
+with open(manifest_path, 'w') as stream:
+    json.dump(manifest, stream, indent=2, sort_keys=True)
+    stream.write('\n')
+PY
 
 %pre
 # Refuse unsafe/incompatible state before backup, service stops, or replacement.
@@ -623,6 +687,7 @@ fi
 %license %{_licensedir}/%{name}/node
 %license %{_licensedir}/%{name}/postgresql
 %license %{_licensedir}/%{name}/caddy
+%license %{_licensedir}/%{name}/icu
 %doc README.md CHANGELOG
 %{_unitdir}/%{name}.service
 %{_unitdir}/heimdall-postgresql.service
@@ -647,6 +712,7 @@ fi
 %attr(0700,heimdall-postgres,heimdall-postgres) %dir /var/lib/heimdall-postgresql/18
 %attr(0700,heimdall-caddy,heimdall-caddy) %dir /var/lib/heimdall-caddy
 %{_datadir}/%{name}/runtime-manifest.json
+%{_datadir}/%{name}/icu-manifest.json
 %{_datadir}/%{name}/apps
 %{_datadir}/%{name}/dist
 %{_datadir}/%{name}/libs

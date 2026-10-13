@@ -55,6 +55,10 @@ with tempfile.TemporaryDirectory(prefix='heimdall-version-srpm-') as temp:
         rebuilt_spec = rebuilt / 'SPECS/heimdall-server.spec'
         assert run('rpmspec', '-q', '--srpm', '--qf', '%{VERSION} %{RELEASE}',
                    '--define', 'dist .el8', str(rebuilt_spec)) == expected
+        # CI reuses the EL8 rebuild as the older release for upgrade acceptance.
+        assert run('rpmspec', '-q', '--srpm', '--qf', '%{VERSION} %{RELEASE}',
+                   '--define', 'dist .el8', '--define', 'heimdall_release 0.3.integration',
+                   str(rebuilt_spec)) == version + ' 0.3.integration.el8'
         archive = rebuilt / ('SOURCES/heimdall2-' + version + '.tar.gz')
         with tarfile.open(str(archive)) as contents:
             assert contents.extractfile('heimdall2-' + version + '/VERSION').read() == (

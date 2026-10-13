@@ -12,6 +12,7 @@ reject() {
   }
 }
 reject lifecycle.sh verify
+reject prepare-host.sh
 reject features.sh
 reject sign-rpms.sh --container /tmp/unused-key /tmp/unused.rpm
 reject run-lifecycle.sh linux/arm64 /tmp/unused.rpm /tmp/unused.rpm

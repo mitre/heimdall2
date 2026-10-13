@@ -27,7 +27,10 @@ if sed -n '/^%prep/,/^%install/p' "$spec" | grep -Eq 'stage-runtimes|curl|wget|u
   echo 'Runtime fetch found in SRPM build stages.' >&2
   exit 1
 fi
-rpmbuild --rebuild --define "_topdir $topdir" "$srpm"
+rebuild_args=(--define "_topdir $topdir")
+# The EL8 CI rebuild also supplies the older release for upgrade acceptance.
+if [[ -n ${3:-} ]]; then rebuild_args+=(--define "heimdall_release $3"); fi
+rpmbuild --rebuild "${rebuild_args[@]}" "$srpm"
 version=$(rpm -qp --qf '%{VERSION}' "$srpm")
 mapfile -t rebuilt < <(find "$topdir/RPMS" -name 'heimdall-server-*.rpm')
 [[ "${#rebuilt[@]}" -eq 1 ]]

@@ -1,5 +1,7 @@
 # Offline RPM bundles design
 
+> Superseded on 2026-10-13 by [direct RPM installation](../plans/2026-10-13-direct-rpm-install.md). The user chose DNF installation of a single application RPM with OS prerequisites already installed. This document records the previous design.
+
 ## Approved objective
 
 The user requested every installation dependency in the deliverable so that an

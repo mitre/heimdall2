@@ -6,14 +6,14 @@ sudo heimdall-cli setup --interactive
 ```
 
 Select one RPM matching the host's EL major and architecture. The RPM contains
-Heimdall, its CLI, Node.js 22.23.3, PostgreSQL 18.6, and Caddy 2.11.4. DNF resolves
-ordinary OS libraries and systemd from your configured OS repositories. Setup
+Heimdall, its CLI, Node.js 22.23.3, PostgreSQL 18.6, Caddy 2.11.4, and private ICU libraries. DNF checks the
+[host prerequisites](README.md#requirements), which must already be installed
+on a disconnected host. Connected hosts can use approved OS repositories. Setup
 configures the included runtimes; it does not download runtime packages.
 
 The application version comes from the root [`VERSION`](../../VERSION) file.
 Releases `0.3.integration` and `0.4.integration` exercise bundled-runtime upgrades
-within that version. This standalone packaging branch has no completed runtime
-acceptance yet. Use disposable hosts until the [acceptance checks](#acceptance-status)
+within that version. Release acceptance for this packaging branch is incomplete. Use disposable hosts until the [acceptance checks](#acceptance-status)
 have passed for the exact candidate source and artifacts.
 
 ## Installation choices
@@ -116,6 +116,7 @@ To build the current files using Docker:
 ```sh
 for release in 0.3.integration 0.4.integration; do
   docker build --platform linux/arm64 -f packaging/rpm/Dockerfile.ol8 \
+    --build-arg BASE_IMAGE=rockylinux/rockylinux:8 \
     --build-arg "HEIMDALL_RELEASE=$release" --target artifacts \
     --output "type=local,dest=packaging/rpm/dist/bundled-arm64/$release" .
 done
@@ -224,219 +225,73 @@ Run this example from the repository root and adjust the release and distributio
 tag to match your SRPM. The second path must not exist. Run with privileges to
 install declared BuildRequires via `dnf builddep`. The helper verifies supplied runtime hashes,
 rebuilds in the empty tree and checks the resulting binary payload. Rebuilt
-binaries need their own signature.
+binaries need their own signature. An optional third argument overrides the
+release; CI uses this for the EL8 upgrade fixture.
 
 ## CI artifacts and test signatures
 
-The Build RPM workflow defines builds and install checks for Rocky Linux 8, 9
-and 10 on x86_64 and aarch64. It uses the maintained
-`rockylinux/rockylinux:{8,9,10}` images. Its six artifacts use
-`rpm-{el8,el9,el10}-{x86_64,aarch64}` names. Oracle Linux 8 lifecycle jobs publish
-`rpm-ol-el8-{x86_64,aarch64}` artifacts. Each contains one complete installation
-archive and its `.sha256` sidecar. The archive includes the signed application
-RPM, dependency RPMs, public keys, `runtime-manifest.json`, installer, and
-internal `SHA256SUMS`. Checksums are computed **after** test signing changes the
-RPM bytes. The earlier Oracle candidate remains an internal lifecycle fixture.
+The Build RPM workflow defines native builds for Rocky Linux 8, 9 and 10 on
+x86_64 and aarch64, using `rockylinux/rockylinux:{8,9,10}`. Its six artifacts use
+`rpm-{el8,el9,el10}-{x86_64,aarch64}` names. Oracle Linux 8 lifecycle jobs install
+these same EL8 packages and upload only test evidence; they do not build packages.
+Each installable artifact contains:
 
-Open the repository's **Actions → Build RPM**, select a completed successful run
-for the intended commit, and download the matching artifact. With GitHub CLI:
+- `RPMS/<arch>/`: signed binary RPM.
+- `SRPMS/`: signed source RPM.
+- `RPM-TEST-GPG-KEY`: disposable acceptance public key.
+- `runtime-manifest.json`: inventory of the pinned application runtimes.
+- `SHA256SUMS`: checksums calculated after signing.
+
+The existing EL8 SRPM rebuild supplies a lower-release binary for upgrade tests,
+signed with the same key as the candidate. Its `upgrade-fixture-el8-<arch>`
+artifact contains that binary and its checksums and is excluded from publication.
+EL9 and EL10 SRPM rebuilds retain the candidate release.
+
+The RPM also records the build distribution's ICU package and private library
+hashes in `/usr/share/heimdall-server/icu-manifest.json`, with its notices under
+`/usr/share/licenses/heimdall-server/`. An SRPM rebuild uses the target builder's
+`libicu-devel` and records that builder's ICU package; it does not fetch a second
+ICU runtime at installation time. Keep the RPM `%check` stage enabled: it records
+the packaged library hashes after RPM strips ELF metadata.
+
+Open **Actions → Build RPM**, select a successful run for the intended commit,
+and download the artifact matching the host's EL major and architecture. With
+GitHub CLI:
 
 ```sh
 gh run download RUN_ID --repo mitre/heimdall2 \
   --name rpm-el8-x86_64 --dir /tmp/heimdall-candidate
 cd /tmp/heimdall-candidate
-sha256sum --check heimdall-rocky-el8-x86_64-*.tar.gz.sha256
-tar -xzf heimdall-rocky-el8-x86_64-*.tar.gz
-cd heimdall-rocky-el8-x86_64-*/
 sha256sum --check SHA256SUMS
-sudo bash ./install.sh
+sudo rpm --import RPM-TEST-GPG-KEY
+sudo dnf install --setopt=localpkg_gpgcheck=1 \
+  ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm
 sudo heimdall-cli setup --interactive
 ```
 
-Replace `RUN_ID` with the verified run ID and use a fresh download directory.
-This example targets Rocky Linux 8 x86_64. Artifact retention is seven days.
-The public key must come from that same trusted run. The signer uses disposable
-acceptance keys and deletes its private key. These are not durable distribution
-signatures. The configured RPM repository remains disabled; repository hosting
-and production signing are separate release work. The existing publication guard
-rejects integration RPMs.
+Use a fresh directory and a public key from that same trusted run. Artifact
+retention is seven days. These keys are not durable distribution signatures;
+production signing and repository hosting remain release work. Publication
+rejects integration RPMs and selects canonical Rocky builds, keeping artifacts
+separate during verification so architecture-specific manifests and signing
+keys cannot overwrite each other.
 
-### Producing an offline archive
+### Disconnected DNF acceptance
 
-Run collection as root on a connected native EL8, EL9 or EL10 producer with
-DNF4, RPM/rpmkeys, Python 3.6 or newer, GnuPG, `createrepo_c`, Bash, GNU tar and
-coreutils. Build and finally sign the Heimdall RPM first. Collection verifies
-that signature and retains the original signatures of the OS dependency RPMs;
-never send those dependency packages through the Heimdall signing script.
-The same empty-root solve includes DNF and RPM so the archive supplies matching
-installer libraries and Python RPM bindings when dependency updates require them.
-The target installer still requests only the exact Heimdall candidate; DNF selects
-the necessary dependency updates from the local repository.
-The target architecture comes from the native producer and must match the RPM
-and `SOURCES/runtime-manifest.json` created by the application build.
+The artifact contains the application RPM and its private runtimes; it does not
+contain an OS repository or a separate installer. The target must satisfy the
+[documented host baseline](README.md#requirements). The CI fixture provisions
+that baseline from the target distribution, then disables networking and all
+DNF repositories before installing the signed application RPM. System ICU and
+separate application runtime packages are absent from that fresh fixture.
 
-Before installing build tools that add repositories, preserve the distribution's
-approved BaseOS/AppStream repository definitions, required non-secret files from
-`/etc/dnf/vars` or `/etc/yum/vars`, and the public signing keys owned by its release
-packages. Use isolated directories containing only these selected inputs. An
-empty variables directory is valid. Record the exact enabled repository IDs;
-the collector disables every repository before enabling this explicit list.
-Do not enable EPEL, NodeSource or another vendor to repair a failed solve.
-CI captures Rocky inputs before `make deps` and builds Oracle Linux bundles in
-a separate matching Oracle producer after the candidates have been signed.
-
-For example, run from the repository root, with the exact signed candidate
-and approved source directories selected by the operator:
-
-```sh
-make -C packaging/rpm offline TOPDIR=/tmp/heimdall-rpmbuild \
-  OFFLINE_RPM=/tmp/heimdall-rpmbuild/RPMS/x86_64/heimdall-server-2.14.0-0.4.integration.el8.x86_64.rpm \
-  OFFLINE_REPOSDIR=/tmp/heimdall-offline-sources \
-  OFFLINE_VARSDIR=/tmp/heimdall-offline-vars \
-  OFFLINE_REPOS='baseos appstream' OFFLINE_RELEASEVER=8 \
-  OFFLINE_OS_KEY_DIR=/tmp/heimdall-offline-os-keys \
-  OFFLINE_HEIMDALL_KEY=/tmp/heimdall-rpmbuild/RPM-TEST-GPG-KEY
-```
-
-All paths are absolute, and `TOPDIR` must remain outside the source tree so
-source packaging cannot include staged offline artifacts. `OFFLINE_RPM` is one
-finally signed binary RPM, never a glob. `OFFLINE_OS_KEY_DIR` contains only
-approved OS public-key regular files. Collection passes each as a separate
-`--os-key` argument, so paths with spaces work. `OFFLINE_REPOS` is a
-whitespace-separated list of repository IDs. Use the explicit EL major or a
-matching minor release value required by an approved repository snapshot as
-`OFFLINE_RELEASEVER`. No application build or signing target runs here.
-
-The resolved `OFFLINE_REPOSDIR` and `OFFLINE_VARSDIR` paths must not contain
-spaces, commas, or control characters: DNF parses these options as directory
-lists even when shell quoting preserves a single argument.
-
-The equivalent direct collector invocation uses a fresh, absent output path
-with an existing parent:
-
-```sh
-python3 packaging/rpm/scripts/stage-offline.py \
-  --rpm /tmp/heimdall-rpmbuild/RPMS/x86_64/heimdall-server-2.14.0-0.4.integration.el8.x86_64.rpm \
-  --runtime-manifest /tmp/heimdall-rpmbuild/SOURCES/runtime-manifest.json \
-  --reposdir /tmp/heimdall-offline-sources --varsdir /tmp/heimdall-offline-vars \
-  --repo baseos --repo appstream --releasever 8 \
-  --os-key /tmp/heimdall-offline-os-keys/RPM-GPG-KEY-Rocky-8 \
-  --heimdall-key /tmp/heimdall-rpmbuild/RPM-TEST-GPG-KEY \
-  --output /tmp/heimdall-rpmbuild/offline-bundle
-```
-
-Repeat `--repo` and `--os-key` for each approved input. Compare the full primary
-fingerprints shown by `gpg --show-keys --with-fingerprint KEY_FILE` with the
-trusted distribution authority and Heimdall release authority before collecting.
-The manifest records these fingerprints, public-key hashes, downloaded
-`repomd.xml` hashes, the producer version and every package's NEVRA, vendor,
-source RPM and SHA-256. This identifies the actual source snapshot without
-shipping its URLs or credentials.
-
-Make emits one archive path under `TOPDIR/OFFLINE`, named
-`heimdall-DISTRO-elMAJOR-ARCH-VERSION-RELEASE.tar.gz`, and a same-name
-`.sha256` sidecar. Existing names are refused; use a fresh build tree for another
-collection. The archive contains exactly one matching top-level directory with
-`repo/Packages`, `repo/repodata`, exported public keys, `target`, `heimdall-nevra`,
-`offline-manifest.json`, the unchanged `runtime-manifest.json`, `install.sh`,
-`README.txt` and internal `SHA256SUMS`. It contains no producer repository
-configuration, subscription certificates, authentication material or private keys.
-The application RPM retains runtime license notices. The SRPM is built and
-rebuilt in CI for validation and remains under `TOPDIR/SRPMS`; it is not uploaded.
-
-```sh
-python3 packaging/rpm/tests/offline-inputs.py
-git diff --check
-tar -tzf "$OFFLINE_ARCHIVE"
-(cd "$(dirname "$OFFLINE_ARCHIVE")" && sha256sum -c "$(basename "$OFFLINE_ARCHIVE").sha256")
-```
-
-Set `OFFLINE_ARCHIVE` to the single path emitted by Make. Extract into a fresh
-inspection directory, check the internal `SHA256SUMS`, public-key fingerprints
-and inventory, and query all RPM architectures to confirm they match the target
-or are `noarch`. Use the same distribution and a compatible vendor/repository
-snapshot on the target. Current major-version repositories can contain newer
-packages than historical minor images; arbitrary historical minor or RHEL EUS
-compatibility is not established. Collection or installation failures require a
-matching approved source snapshot; do not force conflicting package replacements.
-
-RHEL installation media or approved internal mirrors can supply the required
-packages without registering the disconnected target. On RHEL, Oracle Linux or
-AlmaLinux, supply that distribution's own repositories, variables and keys.
-Rocky archives are labelled `rocky` and cannot establish RHEL compatibility.
-Use the vendor's existing approved artifact destination; never automatically
-publish protected vendor RPMs or archives to a public release.
-
-CI uploads only the complete archives and sidecars under the `rpm-*` artifact
-names above, with seven-day retention. Release handling checks their sidecars
-and rejects integration releases by inspecting the bundled Heimdall RPM. It
-attests and attaches whole archives and sidecars; it never publishes OS
-dependencies as individual release assets. Test logs remain in the workflow
-output; evidence directories are not uploaded as artifacts.
-Stable publication still requires durable signing and candidate-specific offline
-and enforcing-SELinux acceptance evidence; attestations are not RPM signatures.
-
-### Disconnected native acceptance driver
-
-Pull a matching maintained base image on the connected outer host, then supply
-one archive and its adjacent `.sha256` sidecar. A second complete bundle from a
-newer candidate enables the upgrade, removal and recovery assertions:
-
-```sh
-docker pull --platform linux/arm64 oraclelinux:8
-bash packaging/rpm/tests/run-offline.sh linux/arm64 oraclelinux:8 \
-  /approved/heimdall-ol-el8-aarch64-VERSION-FIRST-RELEASE.tar.gz \
-  /approved/heimdall-ol-el8-aarch64-VERSION-SECOND-RELEASE.tar.gz
-```
-
-The host needs Bash, Python 3.6+, Git, Docker and `shasum`. For the unsigned
-rejection fixture, install `rpmsign` on the outer host or set
-`HEIMDALL_OFFLINE_UNSIGNED_RPM` to an unsigned copy prepared by the connected
-producer. No target bootstrap runs. The driver requires a native matching Docker
-daemon and an already pulled image, verifies archive sidecars, rejects unsafe
-archive entries, and copies files with `docker cp` so host bind-mount policy
-cannot alter the proof.
-
-Every negative case starts in its own fresh `--network=none` target. Closure
-verification runs separately from installation. The pristine installed target
-must pass `rpm -V`, runtime execution and installer idempotence before it is
-committed and booted with systemd. The lifecycle fixture seeds its known test
-administrator before the first real setup. Bundled Node then checks HTTP200 JSON
-within 60 seconds; private psql verifies every migration, and the target loader
-checks its native ELF files before authenticated inspection. The maintained
-Rocky 8/9/10 and Oracle 8 images already provide curl and ldd. A future image
-missing curl fails with a test prerequisite after unassisted setup; supply a
-separate signed test-only local repository at that point, never add it to the
-shipped bundle.
-
-Evidence under `packaging/rpm/dist/offline/evidence/` records input hashes,
-source status, OS/architecture, network mode, initial/final RPM inventories,
-transaction statuses/logs, readiness, migrations, loader checks and service
-journals. Cleanup removes only the driver's containers, temporary files and
-committed test image and its two owned volumes. Systemd uses image-populated
-volumes at `/var/lib` and `/etc/heimdall-server` so the existing restore's atomic
-directory renames share a filesystem; Docker overlayfs lower directories reject
-those renames with `EXDEV`. Volume names and mounts are recorded. A Docker
-restart checks container persistence; it cannot
-establish full host reboot or enforcing SELinux acceptance.
-
-`RPM_TEST_OFFLINE_BUNDLE` is the optional absolute bundle directory inside the
-existing lifecycle target. It must match the candidate RPM's NEVRA. Initial
-installation uses the first bundle and signing key; upgrade and recovery use
-the second bundle and its signing key. The original signature, unsafe-upgrade,
-backup, migration-gate, sentinel, secrets and private-CA assertions still run.
-The Oracle lane also builds a separate disposable candidate pair whose second
-spec requires `tree`. Its fresh disconnected target proves tree absent before
-and after the first install, then installs the genuinely Oracle-signed package
-from the second complete closure. Those fixtures never alter the application
-spec or become release assets.
-
-The six public Rocky offline jobs cover initial installation, internal TLS,
-authenticated readiness, database, backup/restore and container restart. They
-receive one release each and therefore do **not** establish offline upgrade or
-removal/recovery acceptance for Rocky. The two native Oracle 8 jobs receive both
-bundles and run those additional checks. The public release depends on all
-these jobs; their workflow definitions alone do not show a successful run.
+The native Rocky lanes test this direct installation for each EL major and
+architecture. The Oracle Linux 8 lifecycle lanes additionally exercise setup,
+upgrade, restart, backup/restore, removal and recovery using the generic EL8
+candidate and its signed lower-release rebuild.
+The same lifecycle helper always invokes DNF. Additional scenarios cover external
+services and coexistence. A workflow definition is not evidence of a completed
+run; preserve results for the exact candidate before release.
 
 ### Acceptance signing
 
@@ -492,52 +347,20 @@ The [historical bundled-runtime report](https://github.com/mitre/heimdall2/blob/
 records acceptance of earlier source and artifacts. It does not certify this
 standalone branch or packages built from the current `VERSION`.
 
-The 2026-10-12 native Oracle Linux 8.10/aarch64 disconnected run passed for
-actual Heimdall 2.14.0 application source
-`0c87a76c55981d035aa61e58c9f27e55a78468c4`, with releases
-`0.4.integration.el8` and `0.5.integration.el8`. Both archives contain 191 RPMs.
-Their SHA-256 values are, respectively:
+The 2026-10-12 offline-bundle results apply to the retired dependency-repository
+installer. They do not certify this direct-RPM delivery model or its private ICU
+libraries. The prior design is retained in
+[the historical bundle design](../../docs/superpowers/specs/2026-10-12-offline-rpm-bundles-design.md).
 
-```text
-9840ebef94de7ede645a9bc810ba4e2657d5fd65c08813f68da16652ddc2ef7f
-35786c0bd6bddef01c03e23a7564e1ef00ff823d208b27685ba0fb9512fe8067
-```
+The [2026-10-13 direct-RPM validation](../../docs/superpowers/plans/2026-10-13-direct-rpm-install.md#verification-result)
+built and signed a native Oracle Linux 8/aarch64 candidate, then verified DNF
+installation, setup, private ICU loading, application readiness and restart with
+networking disabled. The plan records the exact candidate and remaining limits.
 
-The local [run result](dist/offline/evidence/heimdall-offline-arm64-67063-23066/result.txt),
-[input record](dist/offline/evidence/heimdall-offline-arm64-67063-23066/inputs.txt),
-[transaction/lifecycle log](dist/offline/evidence/heimdall-offline-arm64-67063-23066/output.log),
-[command statuses](dist/offline/evidence/heimdall-offline-arm64-67063-23066/command-status.log)
-and [systemd target](dist/offline/evidence/heimdall-offline-arm64-67063-23066/services-container.json)
-record the executed proof. It includes all 21 rejection cases on fresh targets,
-empty-root closure, pristine install and idempotence, unassisted internal TLS,
-HTTP200 JSON, 28 migrations, 69 native ELF loader checks, authenticated access,
-unsafe-upgrade/backup refusal, migration failure gating, real upgrade, container
-restart, backup/restore, removal and sentinel/secrets/private-CA recovery. No
-inspection tools were added to the targets. The separate
-[new-dependency result](dist/offline/evidence/dependency/output.log) proves the
-second 18-RPM fixture bundle supplies original Oracle
-`tree-1.7.0-15.el8.aarch64`, absent from the first 17-RPM closure and its target.
-These evidence paths are local generated output; CI does not upload evidence
-artifacts. Preserve candidate evidence in an approved durable store before
-claiming release acceptance.
-
-The [post-setup RPM verification](dist/offline/evidence/heimdall-offline-arm64-67063-23066/rpm-after-setup.verify)
-contains only changed `backend.env` content/time and mode changes for
-`/var/lib/heimdall-server` and `/var/log/heimdall-server`. The pinned CLI
-`d92ed3550e87d73db083827a8c38d22cff47765f` hardens those directories to
-`heimdall:heimdall:0750`; the existing unit's `StateDirectory` and `LogsDirectory`
-defaults set them to `0755` when services start. The driver verifies both mode
-properties, actual `heimdall:heimdall:755` metadata and
-`root:heimdall:640` for `backend.env`, and fails on all other verification lines.
-
-| Candidate-specific case | Executed status |
-| --- | --- |
-| Oracle 8.10/aarch64 two-bundle Docker lifecycle and real vendor dependency | Passed for the exact local artifacts above. |
-| Oracle 8/x86_64 two-bundle lifecycle | Unrun here; native CI lane defined. |
-| Rocky 8/9/10 on x86_64 and aarch64 | All six native initial-install/service jobs defined; unrun here. |
-| Rocky two-release offline upgrade/removal/recovery | Unrun; the six jobs receive only one candidate each. |
-| RHEL, AlmaLinux, other Oracle majors and historical minor/EUS targets | Unrun; require matching approved vendor/snapshot artifacts. |
-| Enforcing SELinux, enabled host fapolicyd, AVC inspection and full VM reboot | Unrun on every vendor/platform here; Docker results cannot substitute. |
+The workflow defines Rocky EL8/9/10 native lanes and Oracle Linux 8 lifecycle
+lanes. RHEL, historical minor/EUS targets, enforcing SELinux, enabled host
+fapolicyd, AVC inspection, and full VM reboot require separate candidate-specific
+validation. Docker tests cannot establish those host properties.
 
 Before release, record candidate-specific build, signed-install and clean SRPM
 rebuild evidence for the target distribution and architecture. Run both native

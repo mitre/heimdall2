@@ -1,5 +1,7 @@
 # Offline RPM Bundles Implementation Plan
 
+> Superseded on 2026-10-13 by [direct RPM installation](../plans/2026-10-13-direct-rpm-install.md). The user chose DNF installation of a single application RPM with OS prerequisites already installed. This document records the previous design.
+
 ## Execution status (2026-10-12)
 
 All four implementation tasks are committed. Native Oracle Linux 8/aarch64

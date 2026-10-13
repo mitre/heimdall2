@@ -16,6 +16,14 @@ runtime="$scratch/usr/libexec/heimdall-server/runtime"
 [[ -x "$runtime/postgresql/bin/pg_dump" ]]
 [[ -x "$runtime/caddy/caddy" ]]
 [[ -s "$app/runtime-manifest.json" ]]
+[[ -s "$app/icu-manifest.json" ]]
+for library in libicudata libicui18n libicuuc; do
+  compgen -G "$runtime/postgresql/lib/$library.so.*" > /dev/null
+done
+# DT_RPATH applies to ICU's indirect data-library dependency; DT_RUNPATH does not.
+readelf -d "$runtime/postgresql/bin/postgres" > "$scratch/postgres-dynamic"
+grep -Eq '\(RPATH\).*\[/usr/libexec/heimdall-server/runtime/postgresql/lib\]' "$scratch/postgres-dynamic"
+! grep -Fq '(RUNPATH)' "$scratch/postgres-dynamic"
 [[ $("$runtime/node/bin/node" --version) == v22.23.3 ]]
 "$runtime/caddy/caddy" version
 [[ ! -e "$scratch/usr/bin/node" ]]
@@ -26,6 +34,29 @@ runtime="$scratch/usr/libexec/heimdall-server/runtime"
 for notice in node/LICENSE postgresql/COPYRIGHT caddy/LICENSE; do
   [[ -s "$scratch/usr/share/licenses/heimdall-server/$notice" ]]
 done
+"$runtime/node/bin/node" - "$scratch" <<'NODE'
+const assert = require('assert');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const root = process.argv[2];
+const manifest = JSON.parse(fs.readFileSync(path.join(root, 'usr/share/heimdall-server/icu-manifest.json')));
+assert.strictEqual(manifest.package.name, 'libicu');
+for (const key of ['version', 'release', 'arch', 'source_rpm', 'license']) assert.ok(manifest.package[key]);
+assert.deepStrictEqual(manifest.libraries.map(file => file.path.split('/').pop().split('.so.')[0]).sort(),
+  ['libicudata', 'libicui18n', 'libicuuc']);
+for (const file of manifest.libraries) {
+  assert.match(file.path, /^postgresql\/lib\/libicu(data|i18n|uc)\.so\.[0-9.]+$/);
+  assert.match(file.source_sha256, /^[a-f0-9]{64}$/);
+  const bytes = fs.readFileSync(path.join(root, 'usr/libexec/heimdall-server/runtime', file.path));
+  assert.strictEqual(crypto.createHash('sha256').update(bytes).digest('hex'), file.sha256);
+}
+assert.ok(manifest.license_files.length);
+for (const file of manifest.license_files) {
+  assert.match(file, /^icu\/[^/]+$/);
+  assert.ok(fs.statSync(path.join(root, 'usr/share/licenses/heimdall-server', file)).size > 0);
+}
+NODE
 [[ -s "$app/apps/backend/dist/src/main.js" ]]
 [[ -s "$app/apps/backend/dist/db/database.js" ]]
 [[ -s "$app/dist/frontend/index.html" ]]
@@ -72,13 +103,14 @@ find "$scratch/usr/share/man/man1" -name 'heimdall-cli-setup.1*' | grep -q .
 [[ -s "$scratch/usr/share/selinux/packages/heimdall-server.pp" ]]
 rpm -qp --requires "$rpm_file" > "$scratch/requires"
 grep -Fxq logrotate "$scratch/requires"
+grep -Fxq gzip "$scratch/requires"
 ! grep -Eq '^(nodejs|postgresql|caddy)([ (>=]|$)' "$scratch/requires" || exit 1
-! grep -Eq '^lib(pq|ecpg|pgtypes)' "$scratch/requires" || exit 1
-for library in libc libstdc++ libssl libcrypto libicuuc libz; do
+! grep -Eq '^lib(pq|ecpg|pgtypes|icu)' "$scratch/requires" || exit 1
+for library in libc libstdc++ libssl libcrypto libz; do
   grep -Fq "$library.so." "$scratch/requires"
 done
 rpm -qp --provides "$rpm_file" > "$scratch/provides"
-! grep -Eq '^(nodejs\(engine\)|lib(pq|ecpg|pgtypes))' "$scratch/provides" || exit 1
+! grep -Eq '^(nodejs\(engine\)|lib(pq|ecpg|pgtypes|icu))' "$scratch/provides" || exit 1
 grep -Fxq 'bundled(nodejs) = 22.23.3' "$scratch/provides"
 grep -Fxq 'bundled(postgresql) = 18.6' "$scratch/provides"
 grep -Fxq 'bundled(caddy) = 2.11.4' "$scratch/provides"

@@ -20,6 +20,7 @@ cleanup() {
   result=$?
   if [[ -n $container ]]; then
     docker inspect "$container" > "$logdir/container.json" 2>/dev/null || true
+    docker cp "$container:/tmp/rpm-lifecycle-installer-status.log" "$logdir/installer-status.log" 2>/dev/null || true
     if [[ $result -ne 0 ]]; then
       docker exec "$container" systemctl status --no-pager heimdall-postgresql heimdall-server heimdall-caddy || true
       docker exec "$container" journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy -n 100 || true
@@ -60,18 +61,18 @@ step docker build "${build_args[@]}" \
   -f packaging/rpm/Dockerfile.ol8 --target test-host -t "$image" .
 docker image inspect "$image" > "$logdir/image.json"
 container=$(docker create --name "$name" --platform "$platform" --runtime=runc \
+  --network=none \
   --privileged --cgroupns=private --tmpfs /run --tmpfs /run/lock \
   -e container=docker -e HEIMDALL_RPM_TEST=1 \
   -e RPM_TEST_GPG_KEY=/tmp/rpm-test-signing.asc "$image")
 step docker start "$container"
 wait_bus
-step docker exec "$container" dnf makecache
 docker cp packaging/rpm/tests/. "$container:/tmp/rpm-tests"
 docker cp "$RPM_TEST_GPG_KEY" "$container:/tmp/rpm-test-signing.asc"
 docker cp "$initial" "$container:/tmp/initial.rpm"
 docker cp "$upgrade" "$container:/tmp/upgrade.rpm"
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh install /tmp/initial.rpm
-step docker network disconnect bridge "$container"
+[[ $(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container") == none ]]
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh setup
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh upgrade /tmp/upgrade.rpm
 step docker restart "$container"

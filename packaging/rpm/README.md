@@ -1,50 +1,52 @@
 # Heimdall Server RPM installation
 
-## Install an Actions artifact
+## Install an RPM
 
-Download the `rpm-el8-x86_64.zip` artifact for the intended commit, extract it
-into a fresh directory, and copy that directory to a Rocky Linux 8 x86_64
-machine. It contains one complete installation archive and its checksum sidecar:
+Download the `rpm-el8-x86_64` Actions artifact for the intended commit and extract
+it into a fresh directory. Select the artifact matching the host's EL major and
+CPU architecture: `rpm-el{8,9,10}-{x86_64,aarch64}`. The package does not require
+Rocky's distribution ID; DNF checks the actual RPM dependencies on the host.
+RHEL and historical minor releases still need candidate-specific validation.
+
+The artifact contains `RPMS/`, `SRPMS/`, `RPM-TEST-GPG-KEY`,
+`runtime-manifest.json`, and `SHA256SUMS`. Obtain the artifact and public key from
+the same trusted workflow run. For EL8 x86_64:
 
 ```sh
-sha256sum --check heimdall-rocky-el8-x86_64-*.tar.gz.sha256
-tar -xzf heimdall-rocky-el8-x86_64-*.tar.gz
-cd heimdall-rocky-el8-x86_64-*/
 sha256sum --check SHA256SUMS
-sudo bash ./install.sh
+sudo rpm --import RPM-TEST-GPG-KEY
+sudo dnf install --setopt=localpkg_gpgcheck=1 \
+  ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm
 rpm -q heimdall-server
 sudo heimdall-cli setup --interactive
 ```
 
-The archive includes the signed application RPM, dependency RPMs, public keys,
-and installer. For Rocky Linux 9, 10 or aarch64, download the matching
-`rpm-elMAJOR-ARCH` artifact. Oracle Linux 8 uses `rpm-ol-el8-ARCH` artifacts.
-Use the archive for the exact host distribution, EL major and architecture.
+Select exactly one binary RPM. Installation uses DNF directly; no separate
+installer is needed. Test keys are disposable, so production delivery requires
+a durable signing key. The shipped repository definition is disabled. Once an
+approved RPM repository is configured, the installation command is
+`sudo dnf install heimdall-server`.
+
 See [builds and artifact downloads](BUILD.md#ci-artifacts-and-test-signatures)
-for other download methods. The application version comes from the root `VERSION`
-file. Integration candidates require the [acceptance checks](BUILD.md#acceptance-status)
-for their exact source and artifacts before production use.
+for download methods and [acceptance status](BUILD.md#acceptance-status) for
+validation limits. The application version comes from the root `VERSION` file.
 
-## Install an offline bundle
+## Disconnected installation
 
-Obtain the distribution-specific offline archive and its external SHA-256 digest
-from a trusted channel. Verify that digest before extracting or executing the
-installer; bundled checksums do not authenticate the archive or its signing keys.
-Choose the exact host distribution ID, EL major and architecture. From its
-extracted directory, run:
+Provision the [host prerequisites](#requirements) before disconnecting the host,
+then transfer the signed RPM and trusted public key. Use the same DNF installation
+with repositories disabled to prevent metadata requests:
 
 ```sh
-sha256sum --check SHA256SUMS
-sudo bash ./install.sh
+sudo rpm --import RPM-TEST-GPG-KEY
+sudo dnf --disablerepo='*' install --setopt=localpkg_gpgcheck=1 \
+  --setopt=install_weak_deps=False \
+  ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm
 sudo heimdall-cli setup --interactive
 ```
 
-The installer verifies every file and RPM signature before importing keys. It
-uses only the bundled repository with DNF plugins and external repositories
-disabled. The default command asks before dependency updates; `--assumeyes` accepts
-the transaction automatically. It installs the exact Heimdall candidate and
-retains compatible installed dependencies; an older bundle cannot downgrade
-Heimdall. Setup remains a separate operation on a booted systemd host.
+DNF reports missing host dependencies; the RPM does not download or install
+nested packages. OS dependency RPMs are not included in the artifact.
 
 For a fully disconnected deployment, choose bundled database and proxy services
 with internal or custom TLS. This deterministic setup uses internal TLS:
@@ -62,13 +64,28 @@ downloads. ACME and external services retain their connectivity requirements.
 
 ## Requirements
 
-Use a booted EL8/EL9/EL10 systemd host on x86_64 or aarch64 with root/sudo access and
-ordinary OS repositories available for system libraries, or a matching verified
-offline bundle. The RPM bundles Node.js
-22.23.3, PostgreSQL 18.6 and Caddy 2.11.4; no NodeSource, PGDG or Caddy repository
-is needed on the runtime host. It is not a statically linked or universally
-offline RPM. Provision memory and disk for your application data, database and
-backups; allow at least 2 GB RAM, preferably 4 GB for a small deployment.
+Use a booted EL8/EL9/EL10 systemd host on x86_64 or aarch64 with root/sudo access.
+The RPM bundles Node.js 22.23.3, PostgreSQL 18.6, PostgreSQL's ICU libraries, and
+Caddy 2.11.4. No NodeSource, PGDG or Caddy repository is needed on the runtime
+host. Runtime updates, including private ICU security fixes, arrive in a new
+Heimdall RPM.
+
+The host supplies glibc, libgcc, libstdc++, OpenSSL (libraries and command), zlib,
+systemd, `policycoreutils-python-utils`, `selinux-policy-targeted`, `tar`,
+`gzip`, `util-linux`, `iproute`, `logrotate`, `shadow-utils`, `coreutils`,
+`findutils`, `gawk`, `diffutils`, and the standard shell/text utilities. On connected hosts,
+DNF can resolve missing prerequisites from approved OS repositories. On
+disconnected hosts, these and their dependencies must already be installed at
+versions satisfying the candidate RPM. Inspect the exact requirements with
+`rpm -qp --requires ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm`.
+
+Choose the RPM for the host's EL major; an EL8 RPM is not an EL10 build. Building
+on a recent EL minor release can introduce requirements unavailable on an older
+minor/EUS host. DNF's dependency checks remain enabled; forcing an incompatible
+package is not the installation path.
+
+Provision memory and disk for application data, database and backups; allow at
+least 2 GB RAM, preferably 4 GB for a small deployment.
 
 For an external database, provision PostgreSQL 13–18 and a database role with
 permission to create the application schema and run migrations. For an external
@@ -79,9 +96,6 @@ The install transaction creates accounts and files. It does not initialize a
 cluster, migrate schemas or start the application/private services. Setup needs
 systemd running as PID 1; an ordinary container can install and inspect the RPM,
 while the CI lifecycle tests use a privileged container booted with systemd.
-
-Test keys are disposable. Use your distribution's durable signing process for
-production delivery. The shipped repository definition is disabled.
 
 ## Setup
 
@@ -146,7 +160,8 @@ Use setup's mode flags rather than generic `config set` to change ownership.
 
 Runtime executables live under `/usr/libexec/heimdall-server/runtime/`. There
 are no global Node, PostgreSQL or Caddy aliases. The inventory is
-`/usr/share/heimdall-server/runtime-manifest.json`; runtime notices are in
+`/usr/share/heimdall-server/runtime-manifest.json`, with private ICU provenance in
+`/usr/share/heimdall-server/icu-manifest.json`; runtime notices are in
 `/usr/share/licenses/heimdall-server/`. Do not replace these RPM-owned files
 independently. Runtime patches arrive in new server RPMs.
 
