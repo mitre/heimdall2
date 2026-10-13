@@ -115,13 +115,14 @@ for package in "${packages[@]}"; do
   grep -Eq 'Signature.*: OK' <<< "$signature" || { echo "Unsigned RPM: ${package##*/}" >&2; exit 1; }
 done
 [[ $candidates == 1 ]] || { echo 'Expected exactly one signed Heimdall candidate.' >&2; exit 1; }
+repo_uri=$("$python" -c 'import pathlib, sys; print(pathlib.Path(sys.argv[1]).as_uri())' "$bundle/repo")
 dnf -y --noplugins --config "$config" \
   --installroot "$verification_root" --releasever "$major" \
   --forcearch "$arch" --setopt=reposdir="$empty_repos" \
   --setopt=varsdir="$work/vars" \
   --setopt=module_platform_id="platform:el$major" \
   --setopt=install_weak_deps=True --disablerepo='*' \
-  --repofrompath="heimdall-offline,$bundle/repo" \
+  --repofrompath="heimdall-offline,$repo_uri" \
   --enablerepo=heimdall-offline \
   --setopt=heimdall-offline.gpgcheck=True \
   --setopt=heimdall-offline.gpgkey= \

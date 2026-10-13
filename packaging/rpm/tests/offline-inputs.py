@@ -376,6 +376,16 @@ docker() {
             self.assertEqual(digest, hashlib.sha256((args.output / name).read_bytes()).hexdigest())
         self.assertEqual(actual, expected)
 
+    def test_collects_installer_stack_with_candidate_in_empty_root(self):
+        args = self.inputs()
+        def run(command, **kwargs):
+            if command[0] == 'dnf':
+                self.assertEqual([str(value) for value in command[-3:-1]], ['dnf', 'rpm'])
+                root = Path(command[command.index('--installroot') + 1])
+                self.assertEqual(list(root.iterdir()), [])
+            return self.fake_run(command, **kwargs)
+        self.collect(args, run)
+
     def test_rejects_candidate_arch_release_source_and_unsigned(self):
         for mutation in ('arch', 'release', 'source', 'unsigned'):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as tmp:
@@ -510,6 +520,97 @@ docker() {
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('HEIMDALL_RPM_TEST=1', result.stdout)
+
+    def test_local_repository_arguments_use_escaped_file_uris(self):
+        installer = (SCRIPT.parents[1] / 'offline/install.sh').read_text()
+        closure = (SCRIPT.parents[1] / 'tests/offline-closure.sh').read_text()
+        fragments = {
+            'installer': installer[installer.index('cat > "$work/dnf.conf"'):installer.index('\naction=install')]
+                         + '\ndnf "${dnf_args[@]}"\n',
+            'closure': closure[closure.index('[[ $candidates == 1 ]]'):closure.index('\ninstalled=')],
+        }
+        for label, fragment in fragments.items():
+            for name in ('offline bundle', 'bundle%#?$releasever', 'bundle-é'):
+                with self.subTest(script=label, directory=name):
+                    bundle = self.root / name
+                    bundle.mkdir(exist_ok=True)
+                    script = self.root / 'repo-arguments.sh'
+                    script.write_text('set -euo pipefail\nexport LC_ALL=C\n'
+                                      'candidates=1\nmajor=8\narch=x86_64\nnevra=fixture\n'
+                                      'dnf() { for argument; do case $argument in '
+                                      '--repofrompath=*) printf "%s\\n" "$argument";; esac; done; }\n'
+                                      + fragment)
+                    environment = dict(os.environ, bundle=str(bundle), work=str(self.root),
+                                       config=str(self.root / 'dnf.conf'), verification_root=str(self.root),
+                                       empty_repos=str(self.root), python=sys.executable)
+                    result = subprocess.run(['bash', str(script)], env=environment, stdout=subprocess.PIPE,
+                                            stderr=subprocess.STDOUT, universal_newlines=True)
+                    self.assertEqual(result.returncode, 0, result.stdout)
+                    self.assertEqual(result.stdout.strip(), '--repofrompath=heimdall-offline,' +
+                                     (bundle / 'repo').as_uri())
+
+    @unittest.skipUnless(hasattr(os, 'geteuid') and os.geteuid() == 0 and Path('/usr/libexec/platform-python').is_file(),
+                         'Requires native EL8 Bash and sha256sum')
+    def test_installer_dnf_can_open_unicode_repository_paths(self):
+        source = (SCRIPT.parents[1] / 'offline/install.sh').read_text()
+        calls = [line.strip() for line in source.splitlines() if '--setopt=tsflags=' in line]
+        self.assertEqual(len(calls), 2)
+        path = self.root / 'bundle-é'
+        path.write_text('fixture\n')
+        script = self.root / 'dnf-locale.sh'
+        script.write_text('set -euo pipefail\nexport LC_ALL=C\n'
+                          'dnf_args=(); answer_args=(); action=install; nevra=fixture\n'
+                          'dnf() { /usr/libexec/platform-python -c \'import os; '
+                          'from urllib.parse import unquote, urlparse; '
+                          'print(open(unquote(urlparse(os.environ["FIXTURE_URI"]).path)).read(), end="")\'; }\n'
+                          + '\n'.join(calls) + '\n')
+        result = subprocess.run(['/bin/bash', str(script)],
+                                env=dict(os.environ, FIXTURE_URI=path.as_uri(), work=str(self.root)),
+                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+        self.assertEqual(result.returncode, 0, result.stdout)
+        self.assertEqual(result.stdout, 'fixture\nfixture\n')
+
+    @unittest.skipUnless(hasattr(os, 'geteuid') and os.geteuid() == 0 and Path('/usr/libexec/platform-python').is_file(),
+                         'Requires native EL8 Bash and sha256sum')
+    def test_installer_inventory_on_minimal_path_without_find(self):
+        source = (SCRIPT.parents[1] / 'offline/install.sh').read_text()
+        inventory = source[:source.index('\nmapfile -t target')]
+        key_selection = next(line for line in source.splitlines() if line.startswith('os_keys=('))
+        tools = self.root / 'tools'
+        tools.mkdir()
+        for name in ('dirname', 'sha256sum'):
+            (tools / name).symlink_to('/usr/bin/' + name)
+        for mutation in ('valid', 'hidden', 'symlink', 'special'):
+            with self.subTest(mutation=mutation):
+                bundle = self.root / mutation
+                bundle.mkdir()
+                required = ('target', 'heimdall-nevra', 'offline-manifest.json', 'runtime-manifest.json',
+                            'README.txt', 'keys/heimdall.asc', 'keys/os/visible.asc', 'keys/os/.hidden.asc',
+                            'repo/repodata/repomd.xml', 'nested/file')
+                for name in required:
+                    path = bundle / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text('fixture\n')
+                (bundle / 'install.sh').write_text(inventory + '\n' + key_selection + '\n'
+                                                  '[[ ${#os_keys[@]} == 1 && ${os_keys[0]##*/} == visible.asc ]] '
+                                                  '|| fail "Hidden key selected"\necho inventory-verified\n')
+                entries = [hashlib.sha256(path.read_bytes()).hexdigest() + '  ' + str(path.relative_to(bundle))
+                           for path in bundle.rglob('*') if path.is_file()]
+                (bundle / 'SHA256SUMS').write_text('\n'.join(entries) + '\n')
+                if mutation == 'hidden': (bundle / '.unlisted').write_text('fixture')
+                if mutation == 'symlink': (bundle / '.link').symlink_to(bundle / 'nested', target_is_directory=True)
+                if mutation == 'special': os.mkfifo(str(bundle / '.fifo'))
+                result = subprocess.run(['/bin/bash', str(bundle / 'install.sh')],
+                                        env=dict(os.environ, PATH=str(tools)), stdout=subprocess.PIPE,
+                                        stderr=subprocess.STDOUT, universal_newlines=True)
+                self.assertNotIn('command not found', result.stdout)
+                if mutation == 'valid':
+                    self.assertEqual(result.returncode, 0, result.stdout)
+                    self.assertIn('inventory-verified', result.stdout)
+                else:
+                    self.assertNotEqual(result.returncode, 0, result.stdout)
+                    self.assertIn('Checksum inventory omits bundle files' if mutation == 'hidden' else 'Symlink or special file',
+                                  result.stdout)
 
     def test_failed_solver_leaves_inputs_and_output_untouched(self):
         args = self.inputs()

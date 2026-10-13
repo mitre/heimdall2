@@ -4,6 +4,9 @@ Obtain this archive and its external SHA-256 digest through a trusted channel.
 Verify the archive digest before extracting or executing its installer. Bundled
 checksums alone cannot establish the authenticity of an archive or its keys.
 Use the archive matching the host distribution ID, EL major and architecture.
+The archive includes the DNF/RPM dependency stack to support matching installer
+library updates. Use a compatible distribution repository snapshot; compatibility
+with arbitrary historical minor releases or third-party packages is not established.
 
 From the extracted directory on the target host:
 

@@ -199,7 +199,8 @@ def stage(args):
                    '--setopt=*.skip_if_unavailable=False', '--setopt=sslverify=True',
                    '--setopt=*.sslverify=True', '--disablerepo=*']
         command.extend('--enablerepo=' + repo for repo in args.repo)
-        command.extend(['install', '--downloadonly', '--downloaddir', downloads, copied_candidate])
+        # Keep installed DNF's RPM bindings compatible when application dependencies update RPM.
+        command.extend(['install', '--downloadonly', '--downloaddir', downloads, 'dnf', 'rpm', copied_candidate])
         run(command)
         inventories = {candidate['nevra']: package_record(copied_candidate, staging)}
         for source in sorted(downloads.rglob('*.rpm')):

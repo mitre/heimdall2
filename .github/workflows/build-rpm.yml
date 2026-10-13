@@ -391,6 +391,8 @@ jobs:
                 /etc/dnf/vars/*|/etc/yum/vars/*) test ! -f "$path" || cp "$path" /offline-inputs/vars/ ;;
               esac
             done
+            # Oracle's release postinstall creates these vars without RPM ownership.
+            cp /etc/dnf/vars/ocidomain /etc/dnf/vars/ociregion /offline-inputs/vars/
             key=/etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
             rpm -qf "$key" | grep -q "^oraclelinux-release"
             cp "$key" /offline-inputs/os-keys/oracle.asc

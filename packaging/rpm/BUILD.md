@@ -263,6 +263,10 @@ DNF4, RPM/rpmkeys, Python 3.6 or newer, GnuPG, `createrepo_c`, Bash, GNU tar and
 coreutils. Build and finally sign the Heimdall RPM first. Collection verifies
 that signature and retains the original signatures of the OS dependency RPMs;
 never send those dependency packages through the Heimdall signing script.
+The same empty-root solve includes DNF and RPM so the archive supplies matching
+installer libraries and Python RPM bindings when dependency updates require them.
+The target installer still requests only the exact Heimdall candidate; DNF selects
+the necessary dependency updates from the local repository.
 The target architecture comes from the native producer and must match the RPM
 and `SOURCES/runtime-manifest.json` created by the application build.
 

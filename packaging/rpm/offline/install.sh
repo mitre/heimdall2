@@ -19,13 +19,15 @@ cd -- "$bundle"
 
 # Treat every bundle file as an input, including keys, metadata and this script.
 declare -A files=() checked=()
-while IFS= read -r -d '' path; do
+shopt -s globstar dotglob nullglob
+for path in ./**/*; do
   [[ ! -L $path && ( -d $path || -f $path ) ]] || fail "Symlink or special file: $path"
   name=${path#./}
   [[ $name =~ ^[A-Za-z0-9_./+:~-]+$ && /$name/ != *'/../'* && /$name/ != *'/./'* ]] || fail "Unsafe bundle path: $name"
   if [[ $name == *.rpm && ! $name =~ ^repo/Packages/[A-Za-z0-9_.+:~-]+\.rpm$ ]]; then fail "Unexpected RPM path: $name"; fi
   [[ ! -f $path || $name == SHA256SUMS ]] || files["$name"]=1
-done < <(find . -mindepth 1 -print0)
+done
+shopt -u globstar dotglob
 [[ -f SHA256SUMS ]] || fail 'Missing SHA256SUMS.'
 while IFS= read -r line || [[ -n $line ]]; do
   [[ $line =~ ^([0-9a-f]{64})\ \ ([A-Za-z0-9_./+:~-]+)$ ]] || fail 'Malformed checksum entry.'
@@ -102,8 +104,18 @@ varsdir=$work/vars
 cachedir=$work/cache
 logdir=$work/log
 CONF
+# Encode bytes so DNF cannot treat directory characters as URL syntax or variables.
+repo_uri=file://
+for ((i=0; i<${#bundle}; i++)); do
+  character=${bundle:i:1}
+  case $character in
+    [A-Za-z0-9._~/-]) repo_uri+=$character ;;
+    *) printf -v byte '%d' "'$character"; printf -v escaped '%%%02X' "$((byte & 255))"; repo_uri+=$escaped ;;
+  esac
+done
+repo_uri+=/repo
 dnf_args=(--noplugins --config "$work/dnf.conf" --disablerepo='*'
-  --repofrompath="heimdall-offline,$bundle/repo" --enablerepo=heimdall-offline
+  --repofrompath="heimdall-offline,$repo_uri" --enablerepo=heimdall-offline
   --setopt=heimdall-offline.gpgcheck=True --setopt=heimdall-offline.gpgkey=
   --setopt=heimdall-offline.module_hotfixes=True
   --setopt=localpkg_gpgcheck=True --setopt=install_weak_deps=True)
@@ -112,9 +124,9 @@ installed=$(rpm -q --qf '%{NEVRA}' heimdall-server 2>/dev/null || true)
 if rpm -q heimdall-server >/dev/null 2>&1; then action=upgrade; fi
 if [[ $installed != "$nevra" ]]; then
   for key in "${os_keys[@]}" "$bundle/keys/heimdall.asc"; do rpm --import "$key"; done
-  dnf "${dnf_args[@]}" -y --setopt=tsflags=test "$action" "$nevra"
+  LC_ALL=C.UTF-8 dnf "${dnf_args[@]}" -y --setopt=tsflags=test "$action" "$nevra"
   # RPM can report a failed scriptlet while DNF returns zero.
-  dnf "${dnf_args[@]}" "${answer_args[@]}" --setopt=tsflags= "$action" "$nevra" 2>&1 | tee "$work/transaction.log"
+  LC_ALL=C.UTF-8 dnf "${dnf_args[@]}" "${answer_args[@]}" --setopt=tsflags= "$action" "$nevra" 2>&1 | tee "$work/transaction.log"
   if grep -Eqi '^(warning|error): %[^ ]+ scriptlet failed(,|$)|^Error in [A-Z]+ scriptlet in rpm package( |$)' "$work/transaction.log"; then fail 'RPM scriptlet failure; inspect the transaction above.'; fi
 fi
 [[ $(rpm -q --qf '%{NEVRA}' heimdall-server) == "$nevra" ]] || fail 'Installed Heimdall NEVRA does not match the bundle; downgrades are not supported.'

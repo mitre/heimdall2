@@ -29,7 +29,7 @@ transaction() {
   return "$result"
 }
 inventory() { rpm -qa --qf '%{NEVRA}\n' | LC_ALL=C sort; }
-rehash() { (cd -- "$1"; find . -type f ! -name SHA256SUMS -printf '%P\n' | LC_ALL=C sort | while IFS= read -r path; do sha256sum -- "$path"; done) > "$1/SHA256SUMS"; }
+rehash() { (cd -- "$1"; shopt -s globstar dotglob nullglob; for path in **/*; do [[ ! -f $path || $path == SHA256SUMS ]] || sha256sum -- "$path"; done) > "$1/SHA256SUMS"; }
 
 # Select one case per fresh container, keeping the original bundle untouched.
 if [[ -n ${HEIMDALL_OFFLINE_REJECTION:-} ]]; then
@@ -94,8 +94,8 @@ if [[ -n ${HEIMDALL_OFFLINE_DEPENDENCY_UPGRADE_BUNDLE:-} ]]; then
 fi
 
 # A valid path containing diagnostic words must still install successfully.
-cp -a -- "$bundle" "$work/scriptlet-failure bundle"
-bundle=$work/'scriptlet-failure bundle'
+cp -a -- "$bundle" "$work/scriptlet-failure bundle%#?é"
+bundle=$work/'scriptlet-failure bundle%#?é'
 inventory > "$work/before"
 transaction install bash "$bundle/install.sh" --assumeyes
 IFS= read -r expected < "$bundle/heimdall-nevra"
