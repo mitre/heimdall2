@@ -82,7 +82,7 @@ step docker exec "$container" bash /tmp/rpm-tests/features.sh
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh remove
 step docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh recover /tmp/upgrade.rpm
 for db_mode in bundled external; do
-  for proxy_mode in bundled external; do
+  for proxy_mode in nginx bundled external; do
     step bash packaging/rpm/tests/remote-database.sh "$platform" "$upgrade" "$db_mode" "$proxy_mode"
   done
 done

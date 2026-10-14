@@ -8,8 +8,8 @@ mkdir -p "$topdir"/{SOURCES,SPECS,BUILD,BUILDROOT,RPMS,SRPMS}
 rpm -ivh --define "_topdir $topdir" "$srpm"
 spec="$topdir/SPECS/heimdall-server.spec"
 # Each private archive, inventory and service must be present in the SRPM.
-for source in node-runtime.tar.xz postgresql-runtime.tar.bz2 caddy-runtime.tar.gz \
-  runtime-manifest.json heimdall-postgresql.service heimdall-caddy.service; do
+for source in node-runtime.tar.xz postgresql-runtime.tar.bz2 caddy-runtime.tar.gz nginx-runtime.tar.gz \
+  runtime-manifest.json heimdall-postgresql.service heimdall-caddy.service heimdall-nginx.service; do
   [[ -s "$topdir/SOURCES/$source" ]]
 done
 python3 - "$topdir/SOURCES" <<'PY'

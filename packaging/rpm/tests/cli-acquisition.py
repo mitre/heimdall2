@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Exercise CLI provenance and fresh man staging with a tiny local Git repository."""
 import json
+import hashlib
 import os
 from pathlib import Path
 import shutil
@@ -67,6 +68,12 @@ func main() {
     run('git', '-C', str(upstream), '-c', 'user.name=RPM Test',
         '-c', 'user.email=rpm-test@example.invalid', 'commit', '-qm', 'CLI fixture', env=commit_env)
     pin = run('git', '-C', str(upstream), 'rev-parse', 'HEAD')
+    generator = upstream / 'cmd/gen-manpages/main.go'
+    generator.write_text(generator.read_text().replace('fixture manual ', 'patched manual '))
+    patch = run('git', '-C', str(upstream), 'diff') + '\n'
+    (packaging / 'heimdall-cli-nginx.patch').write_text(patch)
+    patch_hash = hashlib.sha256(patch.encode()).hexdigest()
+    run('git', '-C', str(upstream), 'restore', 'cmd/gen-manpages/main.go')
     (packaging / 'heimdall-cli.repo').write_text(str(upstream) + '\n')
     ref_file = packaging / 'heimdall-cli.ref'
     topdir = root / 'output'
@@ -124,12 +131,13 @@ func main() {
     assert 'GOOS=linux\n' in metadata, metadata
     assert 'GOARCH=' + target_arch + '\n' in metadata, metadata
     assert 'vcs.revision=' + pin in metadata, metadata
-    assert 'vcs.modified=false' in metadata, metadata
+    assert 'vcs.modified=true' in metadata, metadata
+    assert not run('git', '-C', str(cached), 'status', '--porcelain'), 'patch dirtied pinned source'
     manual = topdir / 'cli-man/man1/heimdall-cli.1'
-    assert manual.read_text() == 'fixture manual ' + host_os + '/' + host_arch + '\n', manual.read_text()
+    assert manual.read_text() == 'patched manual ' + host_os + '/' + host_arch + '\n', manual.read_text()
     binary_bytes = binary.read_bytes()
     # Linker-injected strings end in NUL; VCS build metadata ends in newline.
-    assert pin.encode() + b'\x00' in binary_bytes
+    assert (pin + '+rpm.' + patch_hash).encode() + b'\x00' in binary_bytes
     assert any(value in binary_bytes for value in (
         b'2026-09-22T12:00:00+00:00\x00', b'2026-09-22T12:00:00Z\x00'))
     result = make('heimdall-cli', 'man', 'TOPDIR=' + os.path.relpath(str(topdir), str(packaging)))
@@ -145,12 +153,22 @@ func main() {
         assert set(archive.getnames()) == {'man1', 'man1/heimdall-cli.1', 'man1/heimdall-cli-setup.1'}
     run('bash', str(RPM / 'tests/cli-inputs.sh'), str(topdir))
 
+    (packaging / 'heimdall-cli-nginx.patch').write_text('invalid patch\n')
+    result = make('heimdall-cli')
+    assert result.returncode != 0, 'invalid CLI patch was silently ignored'
+    (packaging / 'heimdall-cli-nginx.patch').write_text(patch)
+
     # A generator failure cannot leave yesterday's successful archive usable.
     (upstream / 'cmd/gen-manpages/main.go').write_text('package main\nimport "os"\nfunc main() { os.Exit(1) }\n')
     run('git', '-C', str(upstream), 'add', '.')
     run('git', '-C', str(upstream), '-c', 'user.name=RPM Test',
         '-c', 'user.email=rpm-test@example.invalid', 'commit', '-qm', 'Broken generator', env=commit_env)
     ref_file.write_text(run('git', '-C', str(upstream), 'rev-parse', 'HEAD') + '\n')
+    # Keep a valid patch so this check reaches the failing manual generator.
+    version_source = upstream / 'internal/version/version.go'
+    version_source.write_text(version_source.read_text() + '// RPM build\n')
+    (packaging / 'heimdall-cli-nginx.patch').write_text(run('git', '-C', str(upstream), 'diff') + '\n')
+    run('git', '-C', str(upstream), 'restore', 'internal/version/version.go')
     result = make('man')
     assert result.returncode != 0
     assert not (topdir / 'SOURCES/heimdall-cli-man.tar.gz').exists()

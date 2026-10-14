@@ -12,7 +12,7 @@ import urllib.request
 
 ARCHITECTURES = {'x86_64', 'aarch64'}
 ARCHIVES = {'node': 'node-runtime.tar.xz', 'postgresql': 'postgresql-runtime.tar.bz2',
-            'caddy': 'caddy-runtime.tar.gz'}
+            'caddy': 'caddy-runtime.tar.gz', 'nginx': 'nginx-runtime.tar.gz'}
 
 
 def validate_archive(record, name):
@@ -34,12 +34,12 @@ def runtime_inventory(runtime, name, filename, arch):
             or '..' in PurePosixPath(path).parts or path == '.' for path in licenses):
         raise ValueError('Runtime license_files must contain relative file paths for ' + name)
     archives = runtime.get('archives')
-    keys = {'any'} if name == 'postgresql' else ARCHITECTURES
+    keys = {'any'} if name in ('postgresql', 'nginx') else ARCHITECTURES
     if not isinstance(archives, dict) or set(archives) != keys:
         raise ValueError('Invalid runtime archive architectures for ' + name)
     for record in archives.values():
         validate_archive(record, name)
-    selected = archives['any' if name == 'postgresql' else arch]
+    selected = archives['any' if name in ('postgresql', 'nginx') else arch]
     return {
         'version': runtime['version'], 'license_files': licenses,
         'url': selected['url'], 'sha256': selected['sha256'], 'archive': filename,
@@ -53,7 +53,7 @@ def inventory(lock, arch):
         raise ValueError('Runtime lock schema must be 1')
     runtimes = lock.get('runtimes')
     if not isinstance(runtimes, dict) or set(runtimes) != set(ARCHIVES):
-        raise ValueError('Runtime lock must contain exactly node, postgresql, and caddy')
+        raise ValueError('Runtime lock must contain exactly node, postgresql, caddy, and nginx')
     result = {'schema': 1, 'architecture': arch, 'runtimes': {}}
     for name, filename in ARCHIVES.items():
         result['runtimes'][name] = runtime_inventory(runtimes[name], name, filename, arch)
@@ -97,7 +97,7 @@ def stage(lock_path: Path, arch: str, sources: Path) -> dict:
                     shutil.copyfileobj(response, output)
             verify(path, record['sha256'], name)
             pending.append((path, destination))
-        # No new archive is published until all three inputs have passed verification.
+        # No new archive is published until all runtime inputs have passed verification.
         for path, destination in pending:
             path.replace(destination)
         with tempfile.NamedTemporaryFile(mode='w', dir=str(sources), prefix='.runtime-manifest.', delete=False) as output:

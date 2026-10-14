@@ -30,19 +30,23 @@ After installing the RPM, complete the initial setup by running:
 sudo heimdall-cli setup --interactive
 ```
 
-The RPM includes private Node.js, PostgreSQL and Caddy runtimes. Setup asks
+The RPM includes private Node.js, PostgreSQL, Caddy and Nginx runtimes. Setup asks
 independently for **--database-mode bundled|external** and
-**--proxy-mode bundled|external|none**. External databases may run on localhost;
+**--proxy-mode nginx|bundled|external|none**. External databases may run on localhost;
 setup tests connectivity and migrates the application but never controls the
 external service. Supported external PostgreSQL server majors are 13 through 18.
-The two private services remain disabled until selected by setup.
+The private database and proxy services remain disabled until selected by setup.
 
-Fresh defaults are bundled/bundled. Flags override saved selections; saved
+Fresh defaults are bundled/nginx. Text fields start empty; Enter accepts the
+default shown in the question. The address prompt defaults to localhost;
+setup stores the complete HTTPS URL. Flags override saved selections; saved
 selections override defaults. Existing configured systems without mode keys use
 external/external and retain endpoints. Temporary **--skip-db** and **--skip-tls**
 do not change ownership. **--reconfigure** writes configuration only; run full
 setup afterward to apply topology changes. Changing databases does not copy data.
 
+**--proxy-mode nginx** automatically generates a self-signed certificate for
+the configured host. Clients must trust its public certificate.
 Bundled Caddy supports **--tls-mode acme|internal|custom**. Custom mode also takes
 **--tls-cert** and **--tls-key**. External proxies forward to the configured
 application port. A port conflict returns an error without stopping its owner.
@@ -65,7 +69,7 @@ RESTART_ON_UPGRADE setting does not override this requirement.
 
 Ordinary runtime patches arrive through a new server RPM. A retained PostgreSQL
 cluster with a different major blocks replacement; major migration is separate.
-Backups contain logical SQL, configuration and owned Caddy certificate/CA state.
+Backups contain logical SQL, configuration and owned proxy certificate/CA state.
 Restore into an empty recovery database, then run full setup before serving.
 Removal retains data, certificates, backups and accounts, including modified
 configuration saved by RPM as .rpmsave.
@@ -157,8 +161,9 @@ sudo heimdall-cli status
 
 **/usr/libexec/heimdall-server/**
 
-:   Setup helpers and private runtimes under runtime/node, runtime/postgresql
-    and runtime/caddy. No global node, psql or caddy aliases are installed.
+:   Setup helpers and private runtimes under runtime/node, runtime/postgresql,
+    runtime/caddy and runtime/nginx. No global node, psql, caddy or nginx aliases
+    are installed.
 
 **/usr/share/heimdall-server/runtime-manifest.json**
 
@@ -177,6 +182,14 @@ sudo heimdall-cli status
     as heimdall-caddy. State lives under /var/lib/heimdall-caddy, and the admin
     socket is /run/heimdall-caddy/admin.sock.
 
+**/etc/heimdall-server/nginx/nginx.conf**
+
+:   Private Nginx configuration. The service is heimdall-nginx.service, running
+    as heimdall-nginx. Temporary request files live under /var/lib/heimdall-nginx,
+    and the PID file is /run/heimdall-nginx/nginx.pid. The generated public
+    certificate and private key are nginx/certs/server.crt and server.key;
+    normal setup reruns preserve them.
+
 **/var/lib/heimdall-server/**
 
 :   Variable data directory owned by the heimdall user. Contains the
@@ -189,7 +202,7 @@ sudo heimdall-cli status
 
 **/etc/pki/heimdall-server/**
 
-:   Legacy certificate directory. Managed private Caddy certificates and CA
+:   Legacy certificate directory. Managed private proxy certificates and CA
     state are retained in its private configuration/state directories.
 
 **/usr/share/selinux/packages/heimdall-server.pp**
@@ -264,7 +277,7 @@ EL8 ignores ProtectClock, ProtectHostname, ProtectKernelLogs and ProtectProc.
 ### Firewalld
 
 A service definition is shipped at
-**/usr/lib/firewalld/services/heimdall-server.xml**. When Caddy is
+**/usr/lib/firewalld/services/heimdall-server.xml**. When a managed HTTPS proxy is
 configured as a reverse proxy, the setup script opens HTTPS (port 443)
 instead of the application port.
 

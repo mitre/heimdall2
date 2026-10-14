@@ -18,6 +18,7 @@ runtime="$scratch/usr/libexec/heimdall-server/runtime"
 [[ -x "$runtime/postgresql/bin/psql" ]]
 [[ -x "$runtime/postgresql/bin/pg_dump" ]]
 [[ -x "$runtime/caddy/caddy" ]]
+[[ -x "$runtime/nginx/sbin/nginx" ]]
 [[ -s "$app/runtime-manifest.json" ]]
 [[ -s "$app/icu-manifest.json" ]]
 for library in libicudata libicui18n libicuuc; do
@@ -29,12 +30,16 @@ grep -Eq '\(RPATH\).*\[/usr/libexec/heimdall-server/runtime/postgresql/lib\]' "$
 ! grep -Fq '(RUNPATH)' "$scratch/postgres-dynamic"
 [[ $("$runtime/node/bin/node" --version) == v22.23.3 ]]
 "$runtime/caddy/caddy" version
+"$runtime/nginx/sbin/nginx" -v 2>&1 | grep -Fxq 'nginx version: nginx/1.30.6'
 [[ ! -e "$scratch/usr/bin/node" ]]
 [[ ! -e "$scratch/usr/bin/psql" ]]
 [[ ! -e "$scratch/usr/bin/caddy" ]]
+[[ ! -e "$scratch/usr/sbin/nginx" ]]
+[[ ! -e "$scratch/etc/nginx" ]]
 [[ -s "$scratch/usr/lib/systemd/system/heimdall-postgresql.service" ]]
 [[ -s "$scratch/usr/lib/systemd/system/heimdall-caddy.service" ]]
-for notice in node/LICENSE postgresql/COPYRIGHT caddy/LICENSE; do
+[[ -s "$scratch/usr/lib/systemd/system/heimdall-nginx.service" ]]
+for notice in node/LICENSE postgresql/COPYRIGHT caddy/LICENSE nginx/LICENSE; do
   [[ -s "$scratch/usr/share/licenses/heimdall-server/$notice" ]]
 done
 "$runtime/node/bin/node" - "$scratch" <<'NODE'
@@ -107,7 +112,7 @@ find "$scratch/usr/share/man/man1" -name 'heimdall-cli-setup.1*' | grep -q .
 rpm -qp --requires "$rpm_file" > "$scratch/requires"
 grep -Fxq logrotate "$scratch/requires"
 grep -Fxq gzip "$scratch/requires"
-! grep -Eq '^(nodejs|postgresql|caddy)([ (>=]|$)' "$scratch/requires" || exit 1
+! grep -Eq '^(nodejs|postgresql|caddy|nginx)([ (>=]|$)' "$scratch/requires" || exit 1
 ! grep -Eq '^lib(pq|ecpg|pgtypes|icu)' "$scratch/requires" || exit 1
 for library in libc libstdc++ libssl libcrypto libz; do
   grep -Fq "$library.so." "$scratch/requires"
@@ -117,3 +122,4 @@ rpm -qp --provides "$rpm_file" > "$scratch/provides"
 grep -Fxq 'bundled(nodejs) = 22.23.3' "$scratch/provides"
 grep -Fxq 'bundled(postgresql) = 18.6' "$scratch/provides"
 grep -Fxq 'bundled(caddy) = 2.11.4' "$scratch/provides"
+grep -Fxq 'bundled(nginx) = 1.30.6' "$scratch/provides"

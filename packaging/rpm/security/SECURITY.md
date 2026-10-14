@@ -24,7 +24,7 @@ compilation alone does not establish successful loading or runtime confinement.
   `/usr/libexec/heimdall-server/runtime/node/bin/node`. Node's V8 JIT requires
   `execmem`; the policy retains that permission.
 - **postgresql_t** — the stock PostgreSQL domain, used by the private server.
-- **httpd_t** — the stock HTTP service domain, used by private Caddy. The policy
+- **httpd_t** — the stock HTTP service domain, used by private Caddy and Nginx. The policy
   permits traversal to its configuration, management of HTTP state, and reverse
   proxy connections to `heimdall_server_port_t`.
 - **heimdall_server_port_t** — the TCP port type registered for the
@@ -33,7 +33,7 @@ compilation alone does not establish successful loading or runtime confinement.
   port (default TCP 55432); external database ports must also permit connection.
 - **http_port_t** — the HTTP/HTTPS listeners, normally TCP 80 and 443.
 
-Bundled and system PostgreSQL instances share `postgresql_t`; bundled Caddy and
+Bundled and system PostgreSQL instances share `postgresql_t`; bundled Caddy/Nginx and
 system HTTP daemons share `httpd_t`. SELinux does not isolate instances sharing
 these domains. Dedicated accounts and private filesystem modes provide that
 separation. `NoNewPrivileges=true` remains enabled; the policy includes systemd
@@ -41,7 +41,7 @@ transition permissions for all three domains.
 
 Private PostgreSQL data and sockets use `postgresql_db_t` and
 `postgresql_var_run_t`. Its libraries use `lib_t`; only `postgres`, `initdb`, and
-`pg_ctl` are server entry points. Private Caddy configuration, certificate state,
+`pg_ctl` are server entry points. Private proxy configuration, certificate state,
 and sockets use `httpd_config_t`, `httpd_var_lib_t`, and `httpd_var_run_t`.
 
 ### Changing the listen port
@@ -93,15 +93,15 @@ operator's SELinux login/role policy.
 
 ## fapolicyd and FIPS
 
-`heimdall-cli fapolicyd add` refreshes trust for the private Node/PostgreSQL/Caddy
+`heimdall-cli fapolicyd add` refreshes trust for the private Node/PostgreSQL/Caddy/Nginx
 executables, PostgreSQL shared libraries, and application native `.node` addons.
 Install/upgrade invokes the same native CLI command; removal deletes only owned
 trust entries. Mutable configuration, database files, and certificate storage
 are not blanket-trusted. Inspect trust-command failures and exercise services
 with fapolicyd running in enforcing mode; that gate remains unverified here.
 
-Existing host FIPS checks remain relevant. Stock bundled Node, PostgreSQL, and
-Caddy binaries do not establish FIPS validation or compliance. Do not describe
+Existing host FIPS checks remain relevant. Stock bundled Node, PostgreSQL, Caddy, and
+Nginx binaries do not establish FIPS validation or compliance. Do not describe
 this RPM as FIPS-validated without separate evidence for the complete deployed
 cryptographic configuration.
 
@@ -115,17 +115,17 @@ requirement, after an operator has taken and verified a separate backup.
 `RESTART_ON_UPGRADE` is retired. RPM scriptlets do not evaluate sysconfig as shell.
 
 After backup, RPM creates root-owned `/etc/heimdall-server/upgrade-pending` and
-stops only the app, private Caddy, and private PostgreSQL, in that order. Both the
+stops only the app, private Caddy, private PostgreSQL, and private Nginx. Both the
 unit and launcher block application startup while the marker exists, including
 restart attempts by an older package's uninstall scriptlet. Run
 `sudo heimdall-cli setup --non-interactive` after upgrading. Successful full setup
 applies migrations before clearing the marker and starting selected services;
 failed migration, `--skip-db`, and `--reconfigure` leave it in place.
 
-Removal stops/disables only the three Heimdall units. It retains application and
+Removal stops/disables only the four Heimdall units. It retains application and
 database data, secrets, certificates, configuration, and service accounts. It
-does not administer system PostgreSQL, Caddy, or other proxies. Backups contain
-logical SQL plus configuration and optional private Caddy CA/certificate state;
+does not administer system PostgreSQL, Caddy, Nginx, or other proxies. Backups contain
+logical SQL plus configuration and optional private proxy CA/certificate state;
 they never substitute a copy of the live PostgreSQL data tree for `pg_dump`.
 RPM may retain modified packaged configuration with a `.rpmsave` suffix; restore
 that configuration before setting up a reinstalled package.
@@ -135,7 +135,7 @@ that configuration before setting up a reinstalled package.
 A service definition is shipped at
 `/usr/lib/firewalld/services/heimdall-server.xml`.
 
-- **With bundled Caddy (default):** Setup configures Caddy as a TLS reverse
+- **With managed Nginx (default) or bundled Caddy:** Setup configures a TLS reverse
   proxy and opens port **443** (HTTPS) via the `heimdall-server` firewalld
   service. The application port (3000) is not exposed externally.
 - **With proxy mode `none`:** Setup can expose the selected application port
@@ -258,7 +258,7 @@ ausearch -k heimdall-data                 # data directory changes
 | AU-9 (Audit Protection) | Log files 0640, audit rules in 40- slot (before -e 2) |
 | AC-6 (Least Privilege) | systemd: CapabilityBoundingSet=, ProtectSystem=strict |
 | CM-5 (Access Restrictions) | backend.env 0640 root:heimdall |
-| SC-7 (Boundary Protection) | SELinux policy, firewalld, Caddy TLS |
+| SC-7 (Boundary Protection) | SELinux policy, firewalld, managed proxy TLS |
 
 ## systemd Hardening (active by default)
 
@@ -276,11 +276,14 @@ The service unit includes comprehensive sandboxing:
 
 | Path | Mode | Owner | Purpose |
 |------|------|-------|---------|
-| `/etc/heimdall-server/` | 0751 | root:heimdall | Caddy can traverse to its private subdirectory |
+| `/etc/heimdall-server/` | 0751 | root:heimdall | Private proxies can traverse to their subdirectories |
 | `/etc/heimdall-server/backend.env` | 0640 | root:heimdall | Credentials (DB, JWT, OAuth) |
-| `/etc/heimdall-server/caddy/` | 0750 | root:heimdall-caddy | Private proxy configuration |
+| `/etc/heimdall-server/caddy/` | 0750 | root:heimdall-caddy | Private Caddy configuration |
+| `/etc/heimdall-server/nginx/` and `nginx/certs/` | 0750 | root:heimdall-nginx | Private Nginx configuration and certificates |
+| `/etc/heimdall-server/nginx/certs/server.key` | 0640 | root:heimdall-nginx | Generated private TLS key |
 | `/var/lib/heimdall-postgresql/` | 0700 | heimdall-postgres:heimdall-postgres | Private database state |
 | `/var/lib/heimdall-caddy/` | 0700 | heimdall-caddy:heimdall-caddy | Private certificate/CA state |
+| `/var/lib/heimdall-nginx/` | 0700 | heimdall-nginx:heimdall-nginx | Private request/proxy temporary files |
 | `/etc/sysconfig/heimdall-server` | 0640 | root:root | Service path overrides |
 | `/etc/rsyslog.d/30-heimdall-server.conf` | 0644 | root:root | Rsyslog routing rules |
 | `/etc/logrotate.d/heimdall-server` | 0644 | root:root | Log rotation policy |

@@ -6,7 +6,8 @@ sudo heimdall-cli setup --interactive
 ```
 
 Select one RPM matching the host's EL major and architecture. The RPM contains
-Heimdall, its CLI, Node.js 22.23.3, PostgreSQL 18.6, Caddy 2.11.4, and private ICU libraries. DNF checks the
+Heimdall, its CLI, Node.js 22.23.3, PostgreSQL 18.6, Caddy 2.11.4, Nginx 1.30.6,
+and private ICU libraries. DNF checks the
 [host prerequisites](README.md#requirements). Connected hosts can use approved OS
 repositories; disconnected hosts use the complete dependency bundle matching
 their distribution and recorded Core baseline. Setup
@@ -23,8 +24,10 @@ The wizard independently asks which database and HTTPS proxy to use:
 
 | Database mode | Proxy mode | Services managed by Heimdall |
 | --- | --- | --- |
+| `bundled` | `nginx` | Private PostgreSQL, application, private Nginx with self-signed TLS |
 | `bundled` | `bundled` | Private PostgreSQL, application, private Caddy |
 | `bundled` | `external` | Private PostgreSQL and application |
+| `external` | `nginx` | Application and private Nginx with self-signed TLS |
 | `external` | `bundled` | Application and private Caddy |
 | `external` | `external` | Application |
 
@@ -49,13 +52,15 @@ sudo heimdall-cli setup --non-interactive \
 
 Configure an external proxy to forward to the configured application port
 (default `http://127.0.0.1:3000`). `--proxy-mode none` retains HTTP-only development
-operation. Bundled Caddy supports `--tls-mode acme`, `internal`, or `custom`;
+operation. Managed Nginx (`--proxy-mode nginx`) automatically creates a
+self-signed certificate and works offline; clients must trust its public
+certificate. Bundled Caddy supports `--tls-mode acme`, `internal`, or `custom`;
 custom mode also takes `--tls-cert` and `--tls-key`. Internal CA operation does not
 need internet after the RPM and OS dependencies are installed; clients must trust
 its root certificate. ACME requires the appropriate public connectivity.
 
 Flags override saved selections; saved selections override fresh defaults
-(`bundled`/`bundled`). Existing configured installations without mode keys default
+(`bundled`/`nginx`). Existing configured installations without mode keys default
 to `external`/`external`, preserving their endpoints. Reruns retain secrets,
 selections and custom settings. `--skip-db` and `--skip-tls` skip work for that run;
 they do not select ownership. `--reconfigure` only writes configuration. Apply
@@ -222,12 +227,15 @@ verification. See [Red Hat's shared system certificate documentation](https://do
   inputs. `SOURCE_MODE=release` additionally requires HEAD at the version tag.
   CI selects these stricter modes explicitly.
 - `heimdall-cli.repo` and `heimdall-cli.ref` select a fetchable full immutable CLI
-  commit. Binary and generated man pages come from that same clean checkout.
+  commit. `heimdall-cli-nginx.patch` adds the RPM's Nginx setup support. Both the
+  binary and generated man pages use a fresh patched copy; the pinned checkout
+  remains clean. The CLI version records the base commit and `+rpm.<SHA-256>` of
+  the patch so the shipped source can be identified exactly.
 - `runtime-lock.json` records runtime versions, archive URLs, SHA-256 digests and
   notices. Runtime patch updates change the lock and ship in a new server RPM.
 - Go 1.25.8 builds the CLI; Yarn Classic 1.22.22 installs frozen application
   dependencies. Native addons use the exact private Node executable being shipped.
-- Source23–28 contain the runtime archives, selected manifest and private units.
+- Source23–30 contain the runtime archives, selected manifest and private units.
   An SRPM rebuild uses these supplied runtime inputs. Yarn dependency downloads
   still require network. Build on the SRPM's target architecture.
 
@@ -372,7 +380,7 @@ saved selections and starts services only after migration succeeds.
 verified backup. `RESTART_ON_UPGRADE` does not bypass the migration gate.
 
 Configuration uses `%config(noreplace)`; review `.rpmnew` files without replacing
-existing secrets. Backup includes logical SQL, configuration and private Caddy
+existing secrets. Backup includes logical SQL, configuration and private proxy
 certificate/CA state. PostgreSQL major upgrades require a separate migration;
 package upgrades reject a mismatched retained cluster major. Removal retains
 application, database and certificate state and accounts. See

@@ -18,7 +18,7 @@ check-source: check-version
 GOARCH   ?= $(shell go env GOARCH)
 RPM_ARCH ?= $(shell rpm --eval '%{_arch}')
 
-.PHONY: srpm rpm rpm-install rpm-package offline-dependencies clean lint lint-rpm check-version check-source sources cli-src heimdall-cli man runtimes render-spec stage deps check-upstream
+.PHONY: srpm rpm rpm-install rpm-package offline-dependencies clean lint lint-rpm check-version check-source sources cli-src cli-build-src heimdall-cli man runtimes render-spec stage deps check-upstream
 
 # Upstream repo for `make check-upstream` (override for forks/mirrors).
 UPSTREAM_REPO ?= mitre/heimdall2
@@ -55,6 +55,7 @@ endif
 # The pin files identify the tested CLI. Read them in the shell so
 # malformed file contents cannot become shell syntax through Make expansion.
 override CLI_DIR := $(TOPDIR)/heimdall-cli-src
+override CLI_BUILD_DIR := $(TOPDIR)/heimdall-cli-build
 
 cli-src: check-source
 	@test "$(origin HEIMDALL_CLI_REPO)" = undefined && test "$(origin HEIMDALL_CLI_REF)" = undefined || { \
@@ -82,36 +83,43 @@ cli-src: check-source
 	test -z "$$(git -C "$(CLI_DIR)" status --porcelain --untracked-files=all --ignored)"; \
 	echo "heimdall-cli source at $$cli_ref"
 
+# Keep the pinned source pristine; the RPM patch is applied to a disposable copy.
+cli-build-src: cli-src
+	rm -rf "$(CLI_BUILD_DIR)"
+	git clone --quiet --no-hardlinks -- "$(CLI_DIR)" "$(CLI_BUILD_DIR)"
+	git -C "$(CLI_BUILD_DIR)" apply --check "$(CURDIR)/heimdall-cli-nginx.patch"
+	git -C "$(CLI_BUILD_DIR)" apply "$(CURDIR)/heimdall-cli-nginx.patch"
+
 # Build Go CLI binary for the target platform (static, no CGO).
 # Produces a flat binary at rpmbuild/SOURCES/heimdall-cli (spec Source15).
-# All three version fields (Version/Commit/Date) are injected so
-# `heimdall-cli --version` shows real provenance.
+# Version, base commit plus RPM patch digest, and base date identify the source.
 #
 # CLI_COMMIT is resolved from the CLI checkout, not from heimdall2. The previous
 # `git rev-parse HEAD` ran in the packaging repo and stamped the wrong commit
 # into the binary's version output.
-heimdall-cli: cli-src
+heimdall-cli: cli-build-src
 	@mkdir -p "$(TOPDIR)/SOURCES"
 	output=$$(cd "$(TOPDIR)/SOURCES" && pwd) && \
-	cd "$(CLI_DIR)" && GOOS=linux GOARCH="$(GOARCH)" CGO_ENABLED=0 \
+	patch_hash=$$(python3 -c 'import hashlib,sys; print(hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest())' "$(CURDIR)/heimdall-cli-nginx.patch") && \
+	cd "$(CLI_BUILD_DIR)" && GOOS=linux GOARCH="$(GOARCH)" CGO_ENABLED=0 \
 	  go build -trimpath \
 	  -ldflags="-s -w \
 	    -X 'github.com/mitre/heimdall-cli/internal/version.Version=$(VERSION)' \
-	    -X 'github.com/mitre/heimdall-cli/internal/version.Commit=$$(git rev-parse HEAD)' \
+	    -X 'github.com/mitre/heimdall-cli/internal/version.Commit=$$(git rev-parse HEAD)+rpm.$$patch_hash' \
 	    -X 'github.com/mitre/heimdall-cli/internal/version.Date=$$(git show -s --format=%cI HEAD)'" \
 	  -o "$$output/heimdall-cli" \
 	  ./cmd/heimdall-cli
 	@echo "Built: $(TOPDIR)/SOURCES/heimdall-cli (linux/$(GOARCH))"
 
 # Generate man pages from the CLI command tree.
-# Generated from the same pinned checkout as the binary, so the pages can never
+# Generated from the same patched checkout as the binary, so the pages can never
 # drift from the commands they document.
-man: cli-src
+man: cli-build-src
 	rm -rf "$(TOPDIR)/cli-man"
 	rm -f "$(TOPDIR)/SOURCES/heimdall-cli-man.tar.gz"
 	mkdir -p "$(TOPDIR)/cli-man/man1" "$(TOPDIR)/SOURCES"
 	output=$$(cd "$(TOPDIR)/cli-man/man1" && pwd) && \
-	cd "$(CLI_DIR)" && GOOS=$$(go env GOHOSTOS) GOARCH=$$(go env GOHOSTARCH) \
+	cd "$(CLI_BUILD_DIR)" && GOOS=$$(go env GOHOSTOS) GOARCH=$$(go env GOHOSTARCH) \
 	  go run ./cmd/gen-manpages "$$output"
 	test -s "$(TOPDIR)/cli-man/man1/heimdall-cli.1"
 	test -s "$(TOPDIR)/cli-man/man1/heimdall-cli-setup.1"
@@ -132,7 +140,7 @@ render-spec: check-source
 	  -e 's/%global heimdall_release [^}]*/%global heimdall_release $(HEIMDALL_RELEASE)/' \
 	  "$(SPEC)" > "$(TOPDIR)/SPECS/$(SPEC)"
 
-# Stage all source files into rpmbuild tree (Sources 0-28).
+# Stage all source files into rpmbuild tree (Sources 0-30).
 # Single source of truth for which files go into the RPM.
 stage: check-source sources heimdall-cli man runtimes render-spec
 	@mkdir -p "$(TOPDIR)/BUILD" "$(TOPDIR)/RPMS" "$(TOPDIR)/SRPMS"
@@ -143,7 +151,7 @@ stage: check-source sources heimdall-cli man runtimes render-spec
 	cp firewalld/* "$(TOPDIR)/SOURCES/"
 	@# Sources 1-8, 14, 16-19: service, config, scripts
 	cp heimdall-backend.env heimdall-server.service heimdall-server.sh \
-	   heimdall-postgresql.service heimdall-caddy.service \
+	   heimdall-postgresql.service heimdall-caddy.service heimdall-nginx.service \
 	   heimdall-configure.sh heimdall-postgres-setup.sh heimdall-setup.sh \
 	   heimdall-db-setup.sh heimdall-server-tmpfiles.conf heimdall-server.repo \
 	   heimdall-Caddyfile heimdall-sysconfig \

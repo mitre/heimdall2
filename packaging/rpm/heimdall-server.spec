@@ -35,6 +35,8 @@ Source25:       caddy-runtime.tar.gz
 Source26:       runtime-manifest.json
 Source27:       heimdall-postgresql.service
 Source28:       heimdall-caddy.service
+Source29:       nginx-runtime.tar.gz
+Source30:       heimdall-nginx.service
 
 # JS application with native addons: disable debug/debuginfo subpackages.
 %global debug_package %{nil}
@@ -105,6 +107,7 @@ Requires(preun): diffutils
 Provides:       bundled(nodejs) = 22.23.3
 Provides:       bundled(postgresql) = 18.6
 Provides:       bundled(caddy) = 2.11.4
+Provides:       bundled(nginx) = 1.30.6
 Recommends:     firewalld-filesystem
 
 %description
@@ -127,6 +130,7 @@ for archive, directory, strip in [
     ("%{SOURCE23}", "runtime-node", True),
     ("%{SOURCE24}", "runtime-postgresql", True),
     ("%{SOURCE25}", "runtime-caddy", False),
+    ("%{SOURCE29}", "runtime-nginx", True),
 ]:
     os.mkdir(directory)
     root = os.path.realpath(directory) + os.sep
@@ -210,6 +214,20 @@ sed -i 's/,--enable-new-dtags$/,--disable-new-dtags/' src/makefiles/Makefile.lin
 env -u MAKELEVEL -u MAKEFLAGS -u MFLAGS make %{?_smp_mflags}
 popd
 
+pushd runtime-nginx
+./configure --prefix=%{_libexecdir}/%{name}/runtime/nginx \
+  --conf-path=%{_sysconfdir}/%{name}/nginx/nginx.conf \
+  --pid-path=/run/heimdall-nginx/nginx.pid --lock-path=/run/heimdall-nginx/nginx.lock \
+  --error-log-path=stderr --http-log-path=/dev/null \
+  --http-client-body-temp-path=/var/lib/heimdall-nginx/client_temp \
+  --http-proxy-temp-path=/var/lib/heimdall-nginx/proxy_temp \
+  --http-fastcgi-temp-path=/var/lib/heimdall-nginx/fastcgi_temp \
+  --http-uwsgi-temp-path=/var/lib/heimdall-nginx/uwsgi_temp \
+  --http-scgi-temp-path=/var/lib/heimdall-nginx/scgi_temp \
+  --with-http_ssl_module --without-http_rewrite_module --without-pcre
+env -u MAKELEVEL -u MAKEFLAGS -u MFLAGS make %{?_smp_mflags}
+popd
+
 %install
 rm -rf %{buildroot}
 
@@ -232,6 +250,9 @@ install -D -m 0755 runtime-node/bin/node \
   %{buildroot}%{_libexecdir}/%{name}/runtime/node/bin/node
 install -D -m 0755 runtime-caddy/caddy \
   %{buildroot}%{_libexecdir}/%{name}/runtime/caddy/caddy
+install -D -m 0755 runtime-nginx/objs/nginx \
+  %{buildroot}%{_libexecdir}/%{name}/runtime/nginx/sbin/nginx
+install -D -m 0644 runtime-nginx/LICENSE %{buildroot}%{_licensedir}/%{name}/nginx/LICENSE
 install -m 0644 %{SOURCE26} %{buildroot}%{_datadir}/%{name}/runtime-manifest.json
 install -D -m 0644 runtime-node/LICENSE %{buildroot}%{_licensedir}/%{name}/node/LICENSE
 install -D -m 0644 runtime-postgresql/COPYRIGHT %{buildroot}%{_licensedir}/%{name}/postgresql/COPYRIGHT
@@ -312,6 +333,8 @@ cp -a dist %{buildroot}%{_datadir}/%{name}/
 install -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 install -m 0644 %{SOURCE27} %{buildroot}%{_unitdir}/heimdall-postgresql.service
 install -m 0644 %{SOURCE28} %{buildroot}%{_unitdir}/heimdall-caddy.service
+install -m 0644 %{SOURCE30} %{buildroot}%{_unitdir}/heimdall-nginx.service
+install -d -m 0750 %{buildroot}%{_sysconfdir}/%{name}/nginx/certs
 install -d -m 0750 %{buildroot}%{_sysconfdir}/%{name}/caddy
 install -m 0640 %{SOURCE2} %{buildroot}%{_sysconfdir}/%{name}/backend.env
 install -m 0644 %{SOURCE8} %{buildroot}%{_tmpfilesdir}/%{name}.conf
@@ -367,6 +390,7 @@ install -d -m 0700 %{buildroot}/var/lib/%{name}/backups
 install -d -m 0750 %{buildroot}/var/log/%{name}
 install -d -m 0700 %{buildroot}/var/lib/heimdall-postgresql/18
 install -d -m 0700 %{buildroot}/var/lib/heimdall-caddy
+install -d -m 0700 %{buildroot}/var/lib/heimdall-nginx
 
 # Relative symlink: avoids rpmbuild's "absolute-symlink" warning AND
 # lets rpmbuild's file-recognition step resolve the target inside
@@ -403,7 +427,7 @@ if [ "$1" -gt 1 ]; then
       inactive:3|failed:3) return 1 ;;
       unknown:4)
         # Older packages did not install these private units.
-        case "$1" in heimdall-caddy.service|heimdall-postgresql.service) return 1 ;; esac ;;
+        case "$1" in heimdall-caddy.service|heimdall-postgresql.service|heimdall-nginx.service) return 1 ;; esac ;;
     esac
     echo "Cannot safely determine state of $1 (status $query_status, state '$state'); upgrade aborted." >&2
     exit 1
@@ -481,7 +505,7 @@ if [ "$1" -gt 1 ]; then
   fi
 
   active=false
-  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service; do
+  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service heimdall-nginx.service; do
     if unit_running "$unit"; then active=true; fi
   done
   if [ "$active" = true ] && [ -s "$config_dir/backend.env" ]; then
@@ -495,7 +519,7 @@ if [ "$1" -gt 1 ]; then
     fi
   fi
   (umask 077; touch "$marker") && chown root:root "$marker" && chmod 0600 "$marker" || exit 1
-  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service; do
+  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service heimdall-nginx.service; do
     if unit_running "$unit"; then
       systemctl stop "$unit" || exit 1
     fi
@@ -514,6 +538,10 @@ getent group heimdall-caddy >/dev/null || groupadd -r heimdall-caddy
 getent passwd heimdall-caddy >/dev/null || \
   useradd -r -g heimdall-caddy -d /var/lib/heimdall-caddy -s /sbin/nologin \
   -c "Heimdall HTTPS proxy" heimdall-caddy
+getent group heimdall-nginx >/dev/null || groupadd -r heimdall-nginx
+getent passwd heimdall-nginx >/dev/null || \
+  useradd -r -g heimdall-nginx -d /var/lib/heimdall-nginx -s /sbin/nologin \
+  -c "Heimdall Nginx HTTPS proxy" heimdall-nginx
 
 %post
 # Setup alone enables the selected private services; presets must not start them.
@@ -527,10 +555,10 @@ if /usr/sbin/selinuxenabled 2>/dev/null; then
   /usr/sbin/load_policy || echo "WARNING: SELinux policy reload failed." >&2
   for path in %{_datadir}/%{name} %{_libexecdir}/%{name}/runtime \
               %{_sysconfdir}/%{name} /var/lib/%{name} /var/log/%{name} \
-              /var/lib/heimdall-postgresql /var/lib/heimdall-caddy \
-              /run/%{name} /run/heimdall-postgresql /run/heimdall-caddy \
+              /var/lib/heimdall-postgresql /var/lib/heimdall-caddy /var/lib/heimdall-nginx \
+              /run/%{name} /run/heimdall-postgresql /run/heimdall-caddy /run/heimdall-nginx \
               %{_unitdir}/%{name}.service %{_unitdir}/heimdall-postgresql.service \
-              %{_unitdir}/heimdall-caddy.service; do
+              %{_unitdir}/heimdall-caddy.service %{_unitdir}/heimdall-nginx.service; do
     if [ -L "$path" ]; then
       echo "WARNING: refusing to relabel symbolic link $path." >&2
       continue
@@ -611,7 +639,7 @@ fi
 
 %preun
 if [ $1 -eq 0 ]; then
-  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service; do
+  for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service heimdall-nginx.service; do
     systemctl stop "$unit" || exit 1
     systemctl disable "$unit" || exit 1
   done
@@ -689,11 +717,13 @@ fi
 %license %{_licensedir}/%{name}/node
 %license %{_licensedir}/%{name}/postgresql
 %license %{_licensedir}/%{name}/caddy
+%license %{_licensedir}/%{name}/nginx
 %license %{_licensedir}/%{name}/icu
 %doc README.md CHANGELOG
 %{_unitdir}/%{name}.service
 %{_unitdir}/heimdall-postgresql.service
 %{_unitdir}/heimdall-caddy.service
+%{_unitdir}/heimdall-nginx.service
 %{_tmpfilesdir}/%{name}.conf
 %{_bindir}/%{name}
 %{_bindir}/%{name}-db-setup
@@ -705,6 +735,11 @@ fi
 %attr(0751,root,heimdall) %dir %{_sysconfdir}/%{name}
 %attr(0750,root,heimdall-caddy) %dir %{_sysconfdir}/%{name}/caddy
 %attr(0640,root,heimdall-caddy) %ghost %config(noreplace) %{_sysconfdir}/%{name}/caddy/Caddyfile
+%attr(0750,root,heimdall-nginx) %dir %{_sysconfdir}/%{name}/nginx
+%attr(0750,root,heimdall-nginx) %dir %{_sysconfdir}/%{name}/nginx/certs
+%attr(0640,root,heimdall-nginx) %ghost %config(noreplace) %{_sysconfdir}/%{name}/nginx/nginx.conf
+%attr(0640,root,heimdall-nginx) %ghost %config(noreplace) %{_sysconfdir}/%{name}/nginx/certs/server.crt
+%attr(0640,root,heimdall-nginx) %ghost %config(noreplace) %{_sysconfdir}/%{name}/nginx/certs/server.key
 %attr(0640,root,heimdall) %config(noreplace) %{_sysconfdir}/%{name}/backend.env
 %attr(0755,root,root) %dir %{_datadir}/%{name}
 %attr(0750,heimdall,heimdall) %dir /var/lib/%{name}
@@ -713,6 +748,7 @@ fi
 %attr(0700,heimdall-postgres,heimdall-postgres) %dir /var/lib/heimdall-postgresql
 %attr(0700,heimdall-postgres,heimdall-postgres) %dir /var/lib/heimdall-postgresql/18
 %attr(0700,heimdall-caddy,heimdall-caddy) %dir /var/lib/heimdall-caddy
+%attr(0700,heimdall-nginx,heimdall-nginx) %dir /var/lib/heimdall-nginx
 %{_datadir}/%{name}/runtime-manifest.json
 %{_datadir}/%{name}/icu-manifest.json
 %{_datadir}/%{name}/apps

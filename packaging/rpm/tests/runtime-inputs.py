@@ -20,7 +20,7 @@ sys.dont_write_bytecode = True
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'scripts/stage-runtimes.py'
 ARCHIVES = {'node': 'node-runtime.tar.xz', 'postgresql': 'postgresql-runtime.tar.bz2',
-            'caddy': 'caddy-runtime.tar.gz'}
+            'caddy': 'caddy-runtime.tar.gz', 'nginx': 'nginx-runtime.tar.gz'}
 
 
 class RuntimeInputsTest(unittest.TestCase):
@@ -35,9 +35,9 @@ class RuntimeInputsTest(unittest.TestCase):
         self.lock_path = self.root / 'lock.json'
         self.payloads = {}
         self.lock = {'schema': 1, 'runtimes': {}}
-        for name, version in [('node', '22.23.3'), ('postgresql', '18.6'), ('caddy', '2.11.4')]:
+        for name, version in [('node', '22.23.3'), ('postgresql', '18.6'), ('caddy', '2.11.4'), ('nginx', '1.30.6')]:
             archives = {}
-            for arch in (['any'] if name == 'postgresql' else ['x86_64', 'aarch64']):
+            for arch in (['any'] if name in ('postgresql', 'nginx') else ['x86_64', 'aarch64']):
                 url = 'https://example.invalid/{}-{}'.format(name, arch)
                 payload = '{} {}'.format(name, arch).encode()
                 self.payloads[url] = payload
@@ -132,7 +132,7 @@ class RuntimeInputsTest(unittest.TestCase):
         self.sources = self.root / 'build output/SOURCES'
         self.sources.mkdir(parents=True)
         for name, filename in ARCHIVES.items():
-            arch = 'any' if name == 'postgresql' else 'x86_64'
+            arch = 'any' if name in ('postgresql', 'nginx') else 'x86_64'
             (self.sources / filename).write_bytes(self.payloads['https://example.invalid/{}-{}'.format(name, arch)])
         result = subprocess.run(
             ['make', '-C', str(packaging), '-o', 'check-source', 'runtimes',
@@ -145,7 +145,7 @@ class RuntimeInputsTest(unittest.TestCase):
 
     def test_rejects_corrupt_archive_before_publication(self):
         # Corruption of the last download must not publish earlier downloads either.
-        self.payloads['https://example.invalid/caddy-x86_64'] = b'corrupt'
+        self.payloads['https://example.invalid/nginx-any'] = b'corrupt'
         with patch.object(self.module.urllib.request, 'urlopen', side_effect=self.download):
             with self.assertRaisesRegex(ValueError, 'SHA-256'):
                 self.stage()
@@ -161,10 +161,10 @@ class RuntimeInputsTest(unittest.TestCase):
                 self.assertEqual(result, written)
                 self.assertEqual(written['schema'], 1)
                 self.assertEqual(written['architecture'], arch)
-                self.assertEqual(set(written['runtimes']), {'node', 'postgresql', 'caddy'})
+                self.assertEqual(set(written['runtimes']), {'node', 'postgresql', 'caddy', 'nginx'})
                 self.assertNotIn(str(self.root), json.dumps(written))
                 for name, filename in ARCHIVES.items():
-                    selected = 'any' if name == 'postgresql' else arch
+                    selected = 'any' if name in ('postgresql', 'nginx') else arch
                     expected = self.lock['runtimes'][name]
                     inventory = written['runtimes'][name]
                     self.assertEqual(inventory, dict(expected['archives'][selected],

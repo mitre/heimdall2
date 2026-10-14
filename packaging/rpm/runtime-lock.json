@@ -38,6 +38,16 @@
           "sha256": "52d42ae12b3462097e9868da6dfed3c9648ae12edd3b3638102312af84cb6904"
         }
       }
+    },
+    "nginx": {
+      "version": "1.30.6",
+      "license_files": ["LICENSE"],
+      "archives": {
+        "any": {
+          "url": "https://nginx.org/download/nginx-1.30.6.tar.gz",
+          "sha256": "3cf46f5ed7504d460125866b7bea99fb357f31d887e2e63b35503310e9b8b6c8"
+        }
+      }
     }
   }
 }

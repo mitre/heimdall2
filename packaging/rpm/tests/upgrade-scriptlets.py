@@ -10,7 +10,7 @@ import tempfile
 
 RPM = Path(__file__).resolve().parents[1]
 SPEC = (RPM / 'heimdall-server.spec').read_text()
-UNITS = ['heimdall-server.service', 'heimdall-caddy.service', 'heimdall-postgresql.service']
+UNITS = ['heimdall-server.service', 'heimdall-caddy.service', 'heimdall-postgresql.service', 'heimdall-nginx.service']
 
 
 def scriptlet(name, root):
@@ -209,12 +209,23 @@ elif name == 'semanage':
     assert ['systemctl', 'stop', UNITS[2]] not in calls, calls
     marker.unlink()
 
+    result, calls = run(ACTIVE_UNITS='heimdall-nginx.service')
+    assert result.returncode == 0 and marker.exists(), (result.stdout, calls)
+    assert mutating(calls) == [
+        ['heimdall-cli', 'backup', '-o', str(root / 'var/lib/heimdall-server/backups')],
+        ['systemctl', 'stop', 'heimdall-nginx.service']], calls
+    marker.unlink()
+
     result, calls = run(ACTIVE_UNITS='')
     assert result.returncode == 0 and marker.exists() and not mutating(calls), (result.stdout, calls)
     marker.unlink()
     result, calls = run(FAIL_QUERY=UNITS[1], QUERY_STATUS='4', QUERY_OUTPUT='unknown')
     assert result.returncode == 0 and marker.exists(), ('old private unit rejected', result.stdout)
     assert ['systemctl', 'stop', UNITS[1]] not in calls, calls
+    marker.unlink()
+    result, calls = run(FAIL_QUERY=UNITS[3], QUERY_STATUS='4', QUERY_OUTPUT='unknown')
+    assert result.returncode == 0 and marker.exists(), ('old Nginx unit rejected', result.stdout)
+    assert ['systemctl', 'stop', UNITS[3]] not in calls, calls
     marker.unlink()
     result, calls = run(count='1')
     assert result.returncode == 0 and not marker.exists() and not mutating(calls), (result.stdout, calls)

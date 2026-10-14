@@ -53,13 +53,17 @@ NGINX
     fingerprint > /tmp/rpm-system-after
     cmp /tmp/rpm-system-before /tmp/rpm-system-after
     # An occupied port must be reported without taking its system owner down.
-    if heimdall-cli setup --non-interactive --proxy-mode bundled --tls-mode internal \
-      > /tmp/rpm-occupied443.log 2>&1; then
-      echo 'Bundled Caddy unexpectedly accepted occupied port 443.' >&2
-      exit 1
-    fi
-    cat /tmp/rpm-occupied443.log
-    grep -Eq '443|in use|already.*listen|bind' /tmp/rpm-occupied443.log
+    for proxy_mode in bundled nginx; do
+      tls_mode=internal
+      if [[ $proxy_mode == nginx ]]; then tls_mode=self-signed; fi
+      if heimdall-cli setup --non-interactive --proxy-mode "$proxy_mode" --tls-mode "$tls_mode" \
+        > /tmp/rpm-occupied443.log 2>&1; then
+        echo "$proxy_mode unexpectedly accepted occupied port 443." >&2
+        exit 1
+      fi
+      cat /tmp/rpm-occupied443.log
+      grep -Eq '443|in use|already.*listen|bind' /tmp/rpm-occupied443.log
+    done
     systemctl is-active --quiet nginx postgresql
     fingerprint > /tmp/rpm-system-after
     cmp /tmp/rpm-system-before /tmp/rpm-system-after
@@ -85,6 +89,23 @@ NGINX
     sha256sum "${roots[0]}" > /tmp/rpm-coexist-ca.sha256
     bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
       --cacert "${roots[0]}" --resolve heimdall.example.test:443:127.0.0.1
+    # Switching owned proxies must leave the system Nginx service untouched.
+    heimdall-cli setup --non-interactive --proxy-mode nginx --tls-mode self-signed
+    systemctl is-active --quiet heimdall-nginx
+    if systemctl is-active --quiet heimdall-caddy; then exit 1; fi
+    nginx_cert=/etc/heimdall-server/nginx/certs/server.crt
+    sha256sum "$nginx_cert" /etc/heimdall-server/nginx/certs/server.key > /tmp/rpm-coexist-nginx.sha256
+    bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
+      --cacert "$nginx_cert" --resolve heimdall.example.test:443:127.0.0.1
+    heimdall-cli set-port 3001
+    bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
+      --cacert "$nginx_cert" --resolve heimdall.example.test:443:127.0.0.1
+    heimdall-cli set-port 3000
+    heimdall-cli setup --non-interactive --proxy-mode bundled --tls-mode internal
+    if systemctl is-active --quiet heimdall-nginx; then exit 1; fi
+    sha256sum --check /tmp/rpm-coexist-ca.sha256 /tmp/rpm-coexist-nginx.sha256
+    fingerprint > /tmp/rpm-system-after
+    cmp /tmp/rpm-system-before /tmp/rpm-system-after
     # Each replacement is validated before the owned service is stopped.
     heimdall-cli setup --non-interactive --database-mode external --proxy-mode external \
       --db-host 127.0.0.1 --db-port 5432 --db-user "$RPM_TEST_DB_USER" \

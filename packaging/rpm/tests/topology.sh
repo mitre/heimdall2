@@ -5,10 +5,14 @@ set -euo pipefail
 db_mode=${1:?database mode}
 proxy_mode=${2:?proxy mode}
 [[ $db_mode == bundled || $db_mode == external ]] || exit 64
-[[ $proxy_mode == bundled || $proxy_mode == external ]] || exit 64
+[[ $proxy_mode == nginx || $proxy_mode == bundled || $proxy_mode == external ]] || exit 64
 runtime=/usr/libexec/heimdall-server/runtime
 args=(setup --non-interactive --database-mode "$db_mode" --proxy-mode "$proxy_mode"
   --external-url https://heimdall.example.test --tls-mode internal)
+if [[ $proxy_mode == nginx ]]; then
+  # Omitting proxy and TLS flags exercises the new-install defaults.
+  args=(setup --non-interactive --database-mode "$db_mode" --external-url heimdall.example.test)
+fi
 if [[ $db_mode == external ]]; then
   args+=(--db-host "${RPM_TEST_DB_HOST:?}" --db-port "${RPM_TEST_DB_PORT:?}"
     --db-user "${RPM_TEST_DB_USER:?}" --db-password "${RPM_TEST_DB_PASSWORD:?}"
@@ -16,7 +20,7 @@ if [[ $db_mode == external ]]; then
 fi
 if [[ ${RPM_TEST_COEXIST:-0} == 0 ]]; then
   rpm -qa --qf '%{NAME}\n' > /tmp/heimdall-installed-packages.txt
-  if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy)$' /tmp/heimdall-installed-packages.txt; then exit 1; fi
+  if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy|nginx)$' /tmp/heimdall-installed-packages.txt; then exit 1; fi
 fi
 heimdall-cli "${args[@]}"
 [[ "$(heimdall-cli config get HEIMDALL_DATABASE_MODE | sed -n 's/^HEIMDALL_DATABASE_MODE=//p')" == "$db_mode" ]]
@@ -38,7 +42,16 @@ else
   if systemctl is-active --quiet heimdall-postgresql; then exit 1; fi
   [[ ! -e /var/lib/heimdall-postgresql/18/data/PG_VERSION ]]
 fi
-if [[ $proxy_mode == bundled ]]; then
+if [[ $proxy_mode == nginx ]]; then
+  private_process heimdall-nginx "$runtime/nginx/sbin/nginx"
+  if systemctl is-active --quiet heimdall-caddy; then exit 1; fi
+  ca=/etc/heimdall-server/nginx/certs/server.crt
+  key=/etc/heimdall-server/nginx/certs/server.key
+  [[ $(stat -c '%U:%G:%a' "$key") == root:heimdall-nginx:640 ]]
+  openssl verify -CAfile "$ca" -verify_hostname heimdall.example.test "$ca"
+  sha256sum "$ca" "$key" > /tmp/rpm-topology-cert.sha256
+  address=127.0.0.1
+elif [[ $proxy_mode == bundled ]]; then
   private_process heimdall-caddy "$runtime/caddy/caddy"
   for attempt in $(seq 1 30); do
     mapfile -t certs < <(find /var/lib/heimdall-caddy -name root.crt -type f)
@@ -58,5 +71,6 @@ bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test "${curl_a
 sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-topology-env.sha256
 heimdall-cli setup --non-interactive
 sha256sum --check /tmp/rpm-topology-env.sha256
+if [[ $proxy_mode == nginx ]]; then sha256sum --check /tmp/rpm-topology-cert.sha256; fi
 bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test "${curl_args[@]}"
 printf 'PASS topology database=%s proxy=%s\n' "$db_mode" "$proxy_mode"

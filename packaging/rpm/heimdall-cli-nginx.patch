@@ -1,0 +1,1978 @@
+diff --git a/README.md b/README.md
+index 4fac11f..1e3e41d 100644
+--- a/README.md
++++ b/README.md
+@@ -30,7 +30,7 @@ See [`docs/testing.md`](./docs/testing.md) for the unit / functional / integrati
+ ## Bundled RPM setup
+ 
+ The architecture-specific `heimdall-server` RPM includes this CLI, Node.js 22.23.3,
+-PostgreSQL 18.6 server/client tools, and Caddy 2.11.4. Setup does not install or
++PostgreSQL 18.6 server/client tools, Nginx, and Caddy 2.11.4. Setup does not install or
+ download runtimes. Base OS libraries and systemd remain prerequisites.
+ 
+ ```sh
+@@ -39,9 +39,11 @@ sudo heimdall-cli setup --interactive
+ ```
+ 
+ Choose database and proxy ownership independently. Fresh installations default
+-to `--database-mode bundled --proxy-mode bundled`. All four bundled/external
+-combinations are supported; an existing database on localhost is still external
+-when explicitly selected. `--proxy-mode none` supports HTTP-only development.
++to `--database-mode bundled --proxy-mode nginx --tls-mode self-signed`.
++Database and proxy choices remain independent; an existing database on localhost is still external
++when explicitly selected. Managed Nginx serves HTTPS on port 443 with a generated
++RSA-4096 certificate. `--proxy-mode bundled` retains Caddy, and `--proxy-mode none`
++supports HTTP-only development. Older runtimes retain the Caddy default.
+ Bundled Caddy supports `--tls-mode acme`, `internal`, or `custom`; custom mode
+ uses `--tls-cert` and `--tls-key`. External PostgreSQL majors **13–18** are
+ supported, using the private version-18 clients. Newer servers require a newer
+@@ -49,14 +51,17 @@ compatible RPM/client; setup and backup refuse them.
+ 
+ Interactive setup displays each public URL, JWT expiration, and local certificate
+ lifetime default. The public URL uses the supplied or saved `EXTERNAL_URL`, then
+-`https://` plus saved `NGINX_HOST`, and finally `https://localhost`. Enter accepts
+-the displayed value. JWT expiration (`JWT_EXPIRE_TIME`) defaults to `1d` and
++saved `NGINX_HOST`, and finally `localhost`. Enter accepts the displayed value.
++Bare hostnames, IP addresses, and host/port values become HTTPS URLs; the no-TLS
++choice uses HTTP. Supplied full HTTP/HTTPS URLs are preserved. JWT expiration (`JWT_EXPIRE_TIME`) defaults to `1d` and
+ accepts durations such as `25m`; Heimdall caps the effective lifetime at two days.
+ 
+ For locally issued HTTPS certificates, setup asks for the requested lifetime in
+ whole days (1–365, default `7`) and saves `HEIMDALL_TLS_CERT_DAYS`. ACME, supplied
+ certificates, external proxies, HTTP, and `--skip-tls` omit this question. Existing
+-certificates and CA state are preserved; changes apply to new issuance. Bundled
++valid matching certificates and CA state are preserved; changes apply to new issuance.
++Nginx refuses incomplete, invalid, expired, or hostname-mismatched certificate pairs;
++replace both managed certificate files before running setup again. Bundled
+ Caddy configures its intermediate CA lifetime to allow the requested leaf lifetime
+ during normal renewal. An existing intermediate CA can temporarily shorten newly
+ issued certificates until it renews. Standalone Caddy keeps its administrator's
+@@ -65,7 +70,7 @@ setup again to change the saved lifetime; non-interactive reruns preserve it.
+ 
+ ```sh
+ sudo heimdall-cli setup --non-interactive \
+-  --database-mode external --proxy-mode bundled --tls-mode internal \
++  --database-mode external --proxy-mode nginx --tls-mode self-signed \
+   --db-host db.example.com --db-port 5432 --db-user heimdall \
+   --db-name heimdall --db-password 'replace-me' \
+   --external-url https://heimdall.example.test
+@@ -85,6 +90,9 @@ an administrator change; the CLI does not stop or relabel its owner.
+ | Node.js | `/usr/libexec/heimdall-server/runtime/node/bin/node` |
+ | PostgreSQL | `/usr/libexec/heimdall-server/runtime/postgresql/{bin,lib,share}` |
+ | PostgreSQL state/socket | `/var/lib/heimdall-postgresql/18/data`, `/run/heimdall-postgresql`; account `heimdall-postgres`, default `127.0.0.1:55432` |
++| Nginx | `/usr/libexec/heimdall-server/runtime/nginx/sbin/nginx`; account `heimdall-nginx` |
++| Nginx config/certificates | `/etc/heimdall-server/nginx/nginx.conf`, `/etc/heimdall-server/nginx/certs/server.crt`, `server.key` |
++| Nginx state | `/var/lib/heimdall-nginx`, `/run/heimdall-nginx` |
+ | Caddy | `/usr/libexec/heimdall-server/runtime/caddy/caddy`; account `heimdall-caddy` |
+ | Caddy config/state/socket | `/etc/heimdall-server/caddy/Caddyfile`, `/var/lib/heimdall-caddy`, `/run/heimdall-caddy/admin.sock` |
+ | Saved setup | `/etc/heimdall-server/backend.env` |
+diff --git a/internal/cmd/backup.go b/internal/cmd/backup.go
+index 62e9920..f40031c 100644
+--- a/internal/cmd/backup.go
++++ b/internal/cmd/backup.go
+@@ -44,7 +44,7 @@ func NewBackupCmd(runner *BackupRunner) *cobra.Command {
+ 		Short: "Backup database and configuration to a timestamped archive",
+ 		Long: `Create a backup of the Heimdall Server database and configuration. The
+ backup includes a pg_dump of the PostgreSQL database and a copy of the
+-backend.env configuration file. Private Caddy configuration and certificate/CA
++backend.env configuration file. Private proxy configuration and certificate/CA
+ state are included when present. These are packaged into a private (0600), timestamped
+ tar.gz archive named heimdall-backup-YYYYMMDD-HHMMSS.tar.gz.
+ 
+@@ -128,7 +128,7 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
+ 			} else if err != nil {
+ 				return err
+ 			} else if !info.IsDir() {
+-				return fmt.Errorf("expected private Caddy directory: %s", source)
++				return fmt.Errorf("expected private proxy directory: %s", source)
+ 			}
+ 			if err := walkRecoveryTree(r.FS, source, func(string, os.FileInfo) error { return nil }); err != nil {
+ 				return err
+@@ -212,7 +212,7 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
+ 			if info.IsDir() {
+ 				return r.FS.MkdirAll(dest, 0700)
+ 			}
+-			// The descriptor stays beneath the owned source even if Caddy swaps
++			// The descriptor stays beneath the owned source even if the proxy swaps
+ 			// a descendant after preflight. Never copy an outside hard-link inode.
+ 			input, err := root.Open(rel)
+ 			if err != nil {
+@@ -242,7 +242,7 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
+ 				return closeErr
+ 			}
+ 			mode := os.FileMode(0600)
+-			if name == "caddy-config" {
++			if name == "caddy-config" || name == "nginx-config" {
+ 				mode = opened.Mode().Perm() & 0640
+ 			}
+ 			return runChecked(r.Exec, "chmod", fmt.Sprintf("%04o", mode), dest)
+@@ -315,7 +315,7 @@ func recoveryTrees(paths Paths) map[string]string {
+ 	if config == "" {
+ 		config = ConfigDir
+ 	}
+-	return map[string]string{"caddy-config": filepath.Join(config, "caddy"), "caddy-state": "/var/lib/heimdall-caddy"}
++	return map[string]string{"caddy-config": filepath.Join(config, "caddy"), "caddy-state": "/var/lib/heimdall-caddy", "nginx-config": filepath.Join(config, "nginx")}
+ }
+ 
+ // Validate every object, including all directory ancestors, without following links.
+diff --git a/internal/cmd/deployment.go b/internal/cmd/deployment.go
+index cac85d3..ec0ba77 100644
+--- a/internal/cmd/deployment.go
++++ b/internal/cmd/deployment.go
+@@ -31,11 +31,14 @@ func resolveDeployment(env map[string]string, requested Deployment, configured b
+ 	if d.DatabaseMode != "bundled" && d.DatabaseMode != "external" {
+ 		return Deployment{}, fmt.Errorf("database mode must be bundled or external")
+ 	}
+-	if d.ProxyMode != "bundled" && d.ProxyMode != "external" && d.ProxyMode != "none" {
+-		return Deployment{}, fmt.Errorf("proxy mode must be bundled, external, or none")
++	if d.ProxyMode != "nginx" && d.ProxyMode != "bundled" && d.ProxyMode != "external" && d.ProxyMode != "none" {
++		return Deployment{}, fmt.Errorf("proxy mode must be nginx, bundled, external, or none")
+ 	}
+-	if d.TLSMode != "acme" && d.TLSMode != "internal" && d.TLSMode != "custom" {
+-		return Deployment{}, fmt.Errorf("TLS mode must be acme, internal, or custom")
++	if d.TLSMode != "self-signed" && d.TLSMode != "acme" && d.TLSMode != "internal" && d.TLSMode != "custom" {
++		return Deployment{}, fmt.Errorf("TLS mode must be self-signed, acme, internal, or custom")
++	}
++	if (d.ProxyMode == "nginx") != (d.TLSMode == "self-signed") {
++		return Deployment{}, fmt.Errorf("nginx proxy requires self-signed TLS; self-signed TLS requires nginx proxy")
+ 	}
+ 	return d, nil
+ }
+diff --git a/internal/cmd/fapolicyd.go b/internal/cmd/fapolicyd.go
+index 865caf3..5019429 100644
+--- a/internal/cmd/fapolicyd.go
++++ b/internal/cmd/fapolicyd.go
+@@ -59,6 +59,7 @@ func (r *FapolicydRunner) Add() error {
+ 		"/usr/libexec/heimdall-server/runtime/postgresql/bin",
+ 		"/usr/libexec/heimdall-server/runtime/postgresql/lib",
+ 		"/usr/libexec/heimdall-server/runtime/caddy",
++		"/usr/libexec/heimdall-server/runtime/nginx",
+ 	} {
+ 		if err := safeManagedPath(r.FS, root+"/.heimdall-trust-check"); err != nil {
+ 			return err
+diff --git a/internal/cmd/fapolicyd_test.go b/internal/cmd/fapolicyd_test.go
+index c3991c7..c6123ca 100644
+--- a/internal/cmd/fapolicyd_test.go
++++ b/internal/cmd/fapolicyd_test.go
+@@ -241,7 +241,7 @@ var _ = fmt.Sprintf
+ 
+ func TestFapolicyd_PrivateRuntimeAndErrors(t *testing.T) {
+ 	r, _, fs, _, _ := newFapolicydForTest()
+-	paths := []string{"/usr/libexec/heimdall-server/runtime/node/bin/node", "/usr/libexec/heimdall-server/runtime/postgresql/bin/postgres", "/usr/libexec/heimdall-server/runtime/postgresql/lib/libpq.so.5", "/usr/libexec/heimdall-server/runtime/caddy/caddy", "/usr/share/heimdall-server/node_modules/argon2.node"}
++	paths := []string{"/usr/libexec/heimdall-server/runtime/node/bin/node", "/usr/libexec/heimdall-server/runtime/postgresql/bin/postgres", "/usr/libexec/heimdall-server/runtime/postgresql/lib/libpq.so.5", "/usr/libexec/heimdall-server/runtime/caddy/caddy", "/usr/libexec/heimdall-server/runtime/nginx/sbin/nginx", "/usr/share/heimdall-server/node_modules/argon2.node"}
+ 	for _, p := range paths {
+ 		fs.Files[p] = nil
+ 	}
+diff --git a/internal/cmd/nginx.go b/internal/cmd/nginx.go
+new file mode 100644
+index 0000000..5a94ac6
+--- /dev/null
++++ b/internal/cmd/nginx.go
+@@ -0,0 +1,267 @@
++package cmd
++
++import (
++	"crypto/rand"
++	"crypto/rsa"
++	"crypto/tls"
++	"crypto/x509"
++	"crypto/x509/pkix"
++	"encoding/pem"
++	"fmt"
++	"math/big"
++	"net"
++	"net/url"
++	"strconv"
++	"strings"
++	"time"
++)
++
++const bundledNginxService = "heimdall-nginx"
++
++type nginxUpdate = caddyUpdate
++
++func normalizeExternalURL(raw, mode string) (string, error) {
++	if strings.ContainsAny(raw, "\r\n\t\x00") {
++		return "", fmt.Errorf("EXTERNAL_URL contains unsafe characters")
++	}
++	if !strings.Contains(raw, "://") {
++		if net.ParseIP(raw) != nil && strings.Contains(raw, ":") {
++			raw = "[" + raw + "]"
++		}
++		scheme := "https"
++		if mode == "none" {
++			scheme = "http"
++		}
++		raw = scheme + "://" + raw
++	}
++	u, err := url.Parse(raw)
++	if err != nil {
++		return "", fmt.Errorf("invalid EXTERNAL_URL: %w", err)
++	}
++	origin := *u
++	origin.Path, origin.RawPath = "", ""
++	if _, err := validatePublicURL(origin.String()); err != nil {
++		return "", err
++	}
++	if u.Path == "/" {
++		u.Path, u.RawPath = "", ""
++	}
++	return u.String(), nil
++}
++
++func renderPrivateNginx(env map[string]string, dir string) (string, error) {
++	port, err := strconv.Atoi(envDefault(env, "PORT", DefaultAppPort))
++	if err != nil || port < 1 || port > 65535 {
++		return "", fmt.Errorf("PORT must be between 1 and 65535")
++	}
++	u, err := validatePublicURL(env["EXTERNAL_URL"])
++	if err != nil {
++		return "", err
++	}
++	if env["HEIMDALL_TLS_MODE"] != "self-signed" || u.Scheme != "https" || (u.Port() != "" && u.Port() != "443") {
++		return "", fmt.Errorf("managed Nginx requires self-signed TLS and an HTTPS external URL on port 443")
++	}
++	return fmt.Sprintf(`worker_processes auto;
++pid /run/heimdall-nginx/nginx.pid;
++error_log stderr warn;
++events { worker_connections 1024; }
++http {
++    access_log syslog:server=unix:/dev/log,tag=heimdall_nginx;
++    client_body_temp_path /var/lib/heimdall-nginx/client_body;
++    proxy_temp_path /var/lib/heimdall-nginx/proxy;
++    map $http_upgrade $connection_upgrade { default upgrade; '' close; }
++    server {
++        listen 443 ssl;
++        listen [::]:443 ssl;
++        server_name %s;
++        ssl_certificate %s;
++        ssl_certificate_key %s;
++        ssl_protocols TLSv1.2 TLSv1.3;
++        client_max_body_size 500m;
++        location / {
++            proxy_pass http://127.0.0.1:%d;
++            proxy_http_version 1.1;
++            proxy_set_header Host $http_host;
++            proxy_set_header X-Real-IP $remote_addr;
++            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
++            proxy_set_header X-Forwarded-Proto $scheme;
++            proxy_set_header Upgrade $http_upgrade;
++            proxy_set_header Connection $connection_upgrade;
++        }
++    }
++}
++`, strconv.Quote(u.Hostname()), strconv.Quote(dir+"/certs/server.crt"), strconv.Quote(dir+"/certs/server.key"), port), nil
++}
++
++func selfSignedCertificate(host string, days int) ([]byte, []byte, error) {
++	key, err := rsa.GenerateKey(rand.Reader, 4096)
++	if err != nil {
++		return nil, nil, err
++	}
++	serial, err := rand.Int(rand.Reader, new(big.Int).Lsh(big.NewInt(1), 128))
++	if err != nil {
++		return nil, nil, err
++	}
++	now := time.Now().UTC()
++	cert := &x509.Certificate{SerialNumber: serial, Subject: pkix.Name{CommonName: host}, NotBefore: now, NotAfter: now.Add(time.Duration(days) * 24 * time.Hour), SignatureAlgorithm: x509.SHA256WithRSA, KeyUsage: x509.KeyUsageDigitalSignature | x509.KeyUsageKeyEncipherment, ExtKeyUsage: []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth}, BasicConstraintsValid: true}
++	if ip := net.ParseIP(host); ip != nil {
++		cert.IPAddresses = []net.IP{ip}
++	} else {
++		cert.DNSNames = []string{host}
++	}
++	der, err := x509.CreateCertificate(rand.Reader, cert, cert, &key.PublicKey, key)
++	if err != nil {
++		return nil, nil, err
++	}
++	return pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: der}), pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)}), nil
++}
++
++func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, error) {
++	dir := r.Paths.ConfigDir + "/nginx"
++	config, err := renderPrivateNginx(env, dir)
++	if err != nil {
++		return nil, err
++	}
++	binary := r.Paths.RuntimePath("nginx", "sbin", "nginx")
++	if err := requireRegular(r.FS, binary); err != nil {
++		return nil, err
++	}
++	owner := bundledNginxService
++	if r.previousProxyMode == "bundled" {
++		owner = bundledCaddyService
++	}
++	if err := checkOwnedPort(r.Exec, r.Systemd, 443, owner, false); err != nil {
++		return nil, err
++	}
++	update := &nginxUpdate{runner: r, unit: bundledNginxService, group: "heimdall-nginx", runDir: "/run/heimdall-nginx", config: config, pending: dir + "/nginx.conf.pending", certs: map[string][]byte{}}
++	update.active, err = r.Systemd.IsActive(bundledNginxService)
++	if err != nil {
++		return nil, err
++	}
++	state, err := r.Systemd.ShowProperty(bundledNginxService, "UnitFileState")
++	if err != nil {
++		return nil, err
++	}
++	update.enabled = state == "enabled" || state == "enabled-runtime"
++	for _, path := range []string{dir + "/nginx.conf", dir + "/certs/server.crt", dir + "/certs/server.key"} {
++		saved, err := snapshotFile(r.FS, path)
++		if err != nil {
++			return nil, err
++		}
++		update.saved = append(update.saved, saved)
++	}
++	u, _ := validatePublicURL(env["EXTERNAL_URL"])
++	cert, key := update.saved[1], update.saved[2]
++	if cert.exists != key.exists {
++		return nil, fmt.Errorf("incomplete Nginx certificate/key pair; restore both files before setup")
++	}
++	if cert.exists {
++		pair, err := tls.X509KeyPair(cert.data, key.data)
++		if err != nil {
++			return nil, fmt.Errorf("invalid Nginx certificate/key: %w", err)
++		}
++		leaf, err := x509.ParseCertificate(pair.Certificate[0])
++		if err != nil {
++			return nil, fmt.Errorf("invalid Nginx certificate: %w", err)
++		}
++		if err := leaf.VerifyHostname(u.Hostname()); err != nil {
++			return nil, fmt.Errorf("existing Nginx certificate does not match external hostname: %w", err)
++		}
++		if time.Now().Before(leaf.NotBefore) || !time.Now().Before(leaf.NotAfter) {
++			return nil, fmt.Errorf("existing Nginx certificate is outside its validity period; replace the certificate/key pair before setup")
++		}
++	} else {
++		days, err := certificateLifetimeDays(env)
++		if err != nil {
++			return nil, err
++		}
++		crt, pemKey, err := selfSignedCertificate(u.Hostname(), days)
++		if err != nil {
++			return nil, fmt.Errorf("generating Nginx certificate: %w", err)
++		}
++		update.certs[cert.path], update.certs[key.path] = crt, pemKey
++	}
++	for _, path := range []string{update.pending, cert.path + ".pending", key.path + ".pending", "/var/lib/heimdall-nginx/.heimdall-check", "/run/heimdall-nginx/.heimdall-check"} {
++		if err := safeManagedPath(r.FS, path); err != nil {
++			return nil, err
++		}
++	}
++	for _, path := range []string{dir, dir + "/certs"} {
++		if err := r.FS.MkdirAll(path, 0750); err != nil {
++			return nil, err
++		}
++		if err := runChecked(r.Exec, "chown", "root:heimdall-nginx", path); err != nil {
++			return nil, err
++		}
++		if err := runChecked(r.Exec, "chmod", "0750", path); err != nil {
++			return nil, err
++		}
++	}
++	if err := runChecked(r.Exec, "chmod", "0751", r.Paths.ConfigDir); err != nil {
++		return nil, err
++	}
++	for _, path := range []string{"/var/lib/heimdall-nginx", "/run/heimdall-nginx"} {
++		if err := r.FS.MkdirAll(path, 0750); err != nil {
++			return nil, err
++		}
++		if err := runChecked(r.Exec, "chown", "heimdall-nginx:heimdall-nginx", path); err != nil {
++			return nil, err
++		}
++	}
++	if err := runChecked(r.Exec, "runuser", "-u", "heimdall-nginx", "--", "mkdir", "-p", "/var/lib/heimdall-nginx/client_body", "/var/lib/heimdall-nginx/proxy"); err != nil {
++		return nil, err
++	}
++	if cert.exists {
++		for _, path := range []string{cert.path, key.path} {
++			if err := runChecked(r.Exec, "chown", "root:heimdall-nginx", path); err != nil {
++				return nil, err
++			}
++			if err := runChecked(r.Exec, "chmod", "0640", path); err != nil {
++				return nil, err
++			}
++		}
++	}
++	defer update.cleanup()
++	candidate := config
++	for path, data := range update.certs {
++		if err := r.FS.RemoveAll(path + ".pending"); err != nil {
++			return nil, err
++		}
++		if err := r.FS.WriteFile(path+".pending", data, 0640); err != nil {
++			return nil, err
++		}
++		if err := runChecked(r.Exec, "chown", "root:heimdall-nginx", path+".pending"); err != nil {
++			return nil, err
++		}
++		if err := runChecked(r.Exec, "chmod", "0640", path+".pending"); err != nil {
++			return nil, err
++		}
++		candidate = strings.ReplaceAll(candidate, strconv.Quote(path), strconv.Quote(path+".pending"))
++	}
++	if err := r.FS.RemoveAll(update.pending); err != nil {
++		return nil, err
++	}
++	if err := r.FS.WriteFile(update.pending, []byte(candidate), 0640); err != nil {
++		return nil, err
++	}
++	if err := runChecked(r.Exec, "chown", "root:heimdall-nginx", update.pending); err != nil {
++		return nil, err
++	}
++	if err := runChecked(r.Exec, "chmod", "0640", update.pending); err != nil {
++		return nil, err
++	}
++	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.RuntimePath("nginx"), dir); err != nil {
++		return nil, err
++	}
++	if err := runChecked(r.Exec, "runuser", "-u", "heimdall-nginx", "--", binary, "-t", "-c", update.pending); err != nil {
++		return nil, fmt.Errorf("validating Nginx configuration as service account: %w", err)
++	}
++	return update, nil
++}
++
++func proxyPortOwner(previous, fallback string) string {
++	if previous == "nginx" {
++		return bundledNginxService
++	}
++	return fallback
++}
+diff --git a/internal/cmd/nginx_lifecycle_test.go b/internal/cmd/nginx_lifecycle_test.go
+new file mode 100644
+index 0000000..2bebcf4
+--- /dev/null
++++ b/internal/cmd/nginx_lifecycle_test.go
+@@ -0,0 +1,165 @@
++package cmd
++
++import (
++	"archive/tar"
++	"bytes"
++	"encoding/json"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++
++	"github.com/stretchr/testify/require"
++)
++
++func TestNginxStatusReportsSelectedService(t *testing.T) {
++	for _, asJSON := range []bool{false, true} {
++		r, out := newTestStatusRunner()
++		r.JSON = asJSON
++		env := r.Env.(*FakeEnvManager).Env
++		env["HEIMDALL_DATABASE_MODE"], env["HEIMDALL_PROXY_MODE"], env["HEIMDALL_TLS_MODE"] = "external", "nginx", "self-signed"
++		env["EXTERNAL_URL"] = "https://heimdall.example.test"
++		fs := r.FS.(*FakeFileSystem)
++		fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{"runtimes":{"nginx":{"version":"1.28.3"}}}`)
++		fs.Files[r.Paths.RuntimePath("postgresql", "bin", "psql")] = nil
++		r.Systemd.(*FakeSystemdRunner).ActiveServices["heimdall-nginx"] = true
++		require.NoError(t, r.Run())
++		if asJSON {
++			var report struct {
++				Services map[string]bool   `json:"managed_services"`
++				Runtimes map[string]string `json:"runtimes"`
++			}
++			require.NoError(t, json.Unmarshal(out.Bytes(), &report))
++			require.Equal(t, map[string]bool{"heimdall-nginx": true}, report.Services)
++			require.Equal(t, "1.28.3", report.Runtimes["nginx"])
++		} else {
++			require.Contains(t, out.String(), "Bundled nginx: 1.28.3")
++			require.Contains(t, out.String(), "heimdall-nginx running: true")
++		}
++		require.NotContains(t, out.String(), "heimdall-caddy")
++	}
++}
++
++func TestNginxDiagnosticsReportsSelectedService(t *testing.T) {
++	r, sd, _, out := newServiceRunner()
++	r.Env.(*FakeEnvManager).Env["HEIMDALL_PROXY_MODE"] = "nginx"
++	sd.ActiveServices["heimdall-nginx"] = true
++	require.NoError(t, r.Diag())
++	require.Contains(t, out.String(), "heimdall-nginx running: true (journalctl -u heimdall-nginx)")
++	require.NotContains(t, out.String(), "heimdall-caddy")
++}
++
++func TestNginxSELinuxRegistersHTTPS(t *testing.T) {
++	r := &SetupRunner{ProxyMode: "nginx", DatabaseMode: "external"}
++	ports, err := r.selectedSELinuxPorts(map[string]string{"PORT": "3210", "EXTERNAL_URL": "https://heimdall.example.test"})
++	require.NoError(t, err)
++	require.Equal(t, []selinuxPort{{"heimdall_server_port_t", "3210"}, {"http_port_t", "443"}}, ports)
++}
++
++func TestNginxRecoveryRoundTrip(t *testing.T) {
++	p, fs, e := recoveryFixture(t, true)
++	originalEnv := []byte("DATABASE_PASSWORD=secret\nHEIMDALL_DATABASE_MODE=external\nHEIMDALL_PROXY_MODE=nginx\nHEIMDALL_TLS_MODE=self-signed\n")
++	require.NoError(t, os.WriteFile(p.EnvFile, originalEnv, 0640))
++	originals := map[string]string{"nginx.conf": "proxy_pass http://127.0.0.1:3210;", "certs/server.crt": "original certificate", "certs/server.key": "original private key"}
++	for path, content := range originals {
++		target := filepath.Join(p.ConfigDir, "nginx", path)
++		require.NoError(t, os.MkdirAll(filepath.Dir(target), 0750))
++		require.NoError(t, os.WriteFile(target, []byte(content), 0640))
++	}
++	out := new(bytes.Buffer)
++	backup := &BackupRunner{Paths: p, FS: fs, Exec: e, Env: &FileEnvManager{Path: p.EnvFile}, Out: out, ErrOut: out}
++	require.NoError(t, backup.Run(filepath.Dir(p.ConfigDir)))
++	archives, err := filepath.Glob(filepath.Join(filepath.Dir(p.ConfigDir), "heimdall-backup-*.tar.gz"))
++	require.NoError(t, err)
++	require.Len(t, archives, 1)
++	for path := range originals {
++		require.NoError(t, os.WriteFile(filepath.Join(p.ConfigDir, "nginx", path), []byte("replaced"), 0666))
++	}
++	require.NoError(t, recoveryRestore(p, fs, e).Run(archives[0]))
++	for path, expected := range originals {
++		target := filepath.Join(p.ConfigDir, "nginx", path)
++		content, err := os.ReadFile(target)
++		require.NoError(t, err)
++		require.Equal(t, expected, string(content))
++		info, err := os.Stat(target)
++		require.NoError(t, err)
++		require.Equal(t, os.FileMode(0640), info.Mode().Perm())
++	}
++	require.Equal(t, "-- sentinel SQL\n", e.sql)
++	var stops []string
++	var nginxOwner bool
++	for _, call := range e.calls {
++		if call.Name == "systemctl" {
++			stops = append(stops, strings.Join(call.Args, " "))
++		}
++		if call.Name == "chown" && call.Args[0] == "root:heimdall-nginx" {
++			nginxOwner = true
++		}
++	}
++	require.Equal(t, []string{"stop heimdall-server", "stop heimdall-nginx"}, stops)
++	require.True(t, nginxOwner)
++}
++
++func TestNginxBackupRejectsUnsafeSources(t *testing.T) {
++	for _, kind := range []string{"symlink", "hardlink"} {
++		t.Run(kind, func(t *testing.T) {
++			p, fs, e := recoveryFixture(t, true)
++			outside := filepath.Join(filepath.Dir(p.ConfigDir), "outside")
++			require.NoError(t, os.WriteFile(outside, []byte("outside secret"), 0600))
++			require.NoError(t, os.MkdirAll(p.ConfigDir+"/nginx/certs", 0750))
++			target := p.ConfigDir + "/nginx/certs/server.key"
++			if kind == "symlink" {
++				require.NoError(t, os.Symlink(outside, target))
++			} else {
++				require.NoError(t, os.Link(outside, target))
++			}
++			r := &BackupRunner{Paths: p, FS: fs, Exec: e, Env: &FileEnvManager{Path: p.EnvFile}, Out: new(bytes.Buffer), ErrOut: new(bytes.Buffer)}
++			require.Error(t, r.Run(filepath.Dir(p.ConfigDir)))
++			require.Empty(t, e.calls)
++		})
++	}
++}
++
++func TestNginxRestoreRejectsLinksBeforeMutation(t *testing.T) {
++	for _, kind := range []byte{tar.TypeSymlink, tar.TypeLink} {
++		p, fs, e := recoveryFixture(t, true)
++		archive := recoveryArchive(t, []*tar.Header{{Name: "backup/backend.env", Mode: 0640, Typeflag: tar.TypeReg}, {Name: "backup/nginx-config/certs/server.key", Typeflag: kind, Linkname: "/etc/shadow"}}, []string{"PORT=3210\n", ""})
++		require.Error(t, recoveryRestore(p, fs, e).Run(archive))
++		require.Empty(t, e.calls)
++	}
++}
++
++func TestNginxSetPortRollbackAndConfigDelegation(t *testing.T) {
++	for _, failure := range []string{"validate", "restart", "reload", "none"} {
++		t.Run(failure, func(t *testing.T) {
++			setup := bundledSetupFixture(t)
++			env := setup.Env.(*FakeEnvManager).Env
++			env["HEIMDALL_PROXY_MODE"], env["HEIMDALL_TLS_MODE"] = "nginx", "self-signed"
++			fs := setup.FS.(*FakeFileSystem)
++			fs.Files[setup.Paths.RuntimePath("nginx", "sbin", "nginx")] = nil
++			fs.Files[setup.Paths.ConfigDir+"/nginx/nginx.conf"] = []byte("old config\n")
++			sd := &portFailureSystemd{FakeSystemdRunner: setup.Systemd.(*FakeSystemdRunner), failure: failure}
++			sd.ActiveServices["heimdall-nginx"] = true
++			exec := setup.Exec.(*FakeExecRunner)
++			if failure == "validate" {
++				exec.Results["runuser -u heimdall-nginx -- "+setup.Paths.RuntimePath("nginx", "sbin", "nginx")+" -t -c "+setup.Paths.ConfigDir+"/nginx/nginx.conf.pending"] = FakeExecResult{ExitCode: 1}
++			}
++			port := &SetPortRunner{Exec: exec, Env: setup.Env, Systemd: sd, FS: fs, Paths: setup.Paths, Out: setup.Out}
++			cfg := &ConfigRunner{Env: setup.Env, Out: setup.Out, Port: port}
++			err := cfg.Set("PORT", "4567")
++			if failure == "none" {
++				require.NoError(t, err)
++				require.Equal(t, "4567", env["PORT"])
++				require.Contains(t, string(fs.Files[setup.Paths.ConfigDir+"/nginx/nginx.conf"]), "127.0.0.1:4567")
++				require.Contains(t, sd.Actions, "reload:heimdall-nginx")
++			} else {
++				require.Error(t, err)
++				require.Equal(t, "3210", setup.Env.(*FakeEnvManager).Env["PORT"])
++				require.Equal(t, "old config\n", string(fs.Files[setup.Paths.ConfigDir+"/nginx/nginx.conf"]))
++			}
++			if failure == "validate" {
++				require.Empty(t, sd.Actions)
++			}
++		})
++	}
++}
+diff --git a/internal/cmd/nginx_test.go b/internal/cmd/nginx_test.go
+new file mode 100644
+index 0000000..6f7562a
+--- /dev/null
++++ b/internal/cmd/nginx_test.go
+@@ -0,0 +1,186 @@
++package cmd
++
++import (
++	"crypto/rand"
++	"crypto/rsa"
++	"crypto/x509"
++	"encoding/pem"
++	"strings"
++	"testing"
++	"time"
++
++	"github.com/stretchr/testify/assert"
++	"github.com/stretchr/testify/require"
++)
++
++func TestSetupNginxDefaultAndBareURL(t *testing.T) {
++	r, _, _ := newTestSetupRunner()
++	fs := r.FS.(*FakeFileSystem)
++	fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
++	fs.Files[r.Paths.RuntimePath("nginx", "sbin", "nginx")] = []byte("nginx")
++	p := &FakePrompter{IsTTY: true}
++	r.Prompter = p
++	command := NewSetupCmd(r)
++	command.SetArgs([]string{"--interactive", "--reconfigure"})
++	require.NoError(t, command.Execute())
++	env := r.Env.(*FakeEnvManager).Env
++	assert.Equal(t, "nginx", env["HEIMDALL_PROXY_MODE"])
++	assert.Equal(t, "self-signed", env["HEIMDALL_TLS_MODE"])
++	assert.Equal(t, "localhost", p.InputDefaults["External URL"])
++	assert.Equal(t, "https://localhost", env["EXTERNAL_URL"])
++}
++
++func TestSetupBareExternalURL(t *testing.T) {
++	for _, tc := range []struct{ raw, mode, want string }{
++		{"localhost", "bundled", "https://localhost"},
++		{"host.example:8443", "external", "https://host.example:8443"},
++		{"[::1]:3000", "none", "http://[::1]:3000"},
++		{"::1", "external", "https://[::1]"},
++	} {
++		t.Run(tc.raw, func(t *testing.T) {
++			r, _, _ := newTestSetupRunner()
++			command := NewSetupCmd(r)
++			command.SetArgs([]string{"--non-interactive", "--reconfigure", "--external-url=" + tc.raw, "--proxy-mode=" + tc.mode})
++			require.NoError(t, command.Execute())
++			env := r.Env.(*FakeEnvManager).Env
++			assert.Equal(t, tc.want, env["EXTERNAL_URL"])
++			if strings.Contains(tc.raw, "::1") {
++				assert.Equal(t, "::1", env["NGINX_HOST"])
++			}
++		})
++	}
++}
++
++func TestNginxConfigurationAndCertificateReuse(t *testing.T) {
++	r, _, _ := newTestSetupRunner()
++	fs := r.FS.(*FakeFileSystem)
++	fs.Files[r.Paths.RuntimePath("nginx", "sbin", "nginx")] = []byte("nginx")
++	env := map[string]string{"EXTERNAL_URL": "https://[::1]", "PORT": "4321", "HEIMDALL_TLS_MODE": "self-signed", "HEIMDALL_TLS_CERT_DAYS": "7"}
++	update, err := r.prepareBundledNginx(env)
++	require.NoError(t, err)
++	require.NoError(t, update.apply())
++	dir := r.Paths.ConfigDir + "/nginx"
++	config := string(fs.Files[dir+"/nginx.conf"])
++	assert.Contains(t, config, "listen 443 ssl;")
++	assert.Contains(t, config, "proxy_pass http://127.0.0.1:4321;")
++	assert.Contains(t, config, "proxy_set_header Upgrade $http_upgrade;")
++	assert.NotContains(t, config, "return ")
++	assert.NotContains(t, config, "rewrite ")
++	block, _ := pem.Decode(fs.Files[dir+"/certs/server.crt"])
++	require.NotNil(t, block)
++	cert, err := x509.ParseCertificate(block.Bytes)
++	require.NoError(t, err)
++	assert.NoError(t, cert.VerifyHostname("::1"))
++	assert.Equal(t, x509.SHA256WithRSA, cert.SignatureAlgorithm)
++	assert.Equal(t, 4096, cert.PublicKey.(*rsa.PublicKey).N.BitLen())
++	assert.InDelta(t, 7*24*time.Hour.Seconds(), cert.NotAfter.Sub(cert.NotBefore).Seconds(), 1)
++	before := string(fs.Files[dir+"/certs/server.key"])
++	update, err = r.prepareBundledNginx(env)
++	require.NoError(t, err)
++	require.NoError(t, update.apply())
++	assert.Equal(t, before, string(fs.Files[dir+"/certs/server.key"]))
++	env["EXTERNAL_URL"] = "https://other.example"
++	_, err = r.prepareBundledNginx(env)
++	require.ErrorContains(t, err, "certificate")
++	assert.Equal(t, before, string(fs.Files[dir+"/certs/server.key"]))
++}
++
++func TestSetupRejectsMalformedExternalURL(t *testing.T) {
++	for _, raw := range []string{"ftp://localhost", "localhost;include evil;", "localhost\nPORT=4000", "https://localhost/path", "localhost:99999", "https://user@localhost"} {
++		t.Run(raw, func(t *testing.T) {
++			r, _, _ := newTestSetupRunner()
++			r.FS.(*FakeFileSystem).Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
++			command := NewSetupCmd(r)
++			command.SetArgs([]string{"--non-interactive", "--reconfigure", "--external-url=" + raw})
++			require.Error(t, command.Execute())
++			assert.Empty(t, r.Env.(*FakeEnvManager).Env)
++		})
++	}
++}
++
++func TestNginxSavedProxySwitches(t *testing.T) {
++	for _, mode := range []string{"bundled", "external", "none"} {
++		t.Run(mode, func(t *testing.T) {
++			r, _, _ := newTestSetupRunner()
++			fs := r.FS.(*FakeFileSystem)
++			fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
++			fs.Files[r.Paths.RuntimePath("nginx", "sbin", "nginx")] = []byte("nginx")
++			r.Env.(*FakeEnvManager).Env = map[string]string{"JWT_SECRET": "saved", "HEIMDALL_PROXY_MODE": "nginx", "HEIMDALL_TLS_MODE": "self-signed"}
++			command := NewSetupCmd(r)
++			command.SetArgs([]string{"--non-interactive", "--reconfigure", "--proxy-mode=" + mode})
++			require.NoError(t, command.Execute())
++			assert.Equal(t, mode, r.Env.(*FakeEnvManager).Env["HEIMDALL_PROXY_MODE"])
++			assert.NotEqual(t, "self-signed", r.Env.(*FakeEnvManager).Env["HEIMDALL_TLS_MODE"])
++		})
++	}
++}
++
++func TestNginxFirstOptionKeepsCaddyAvailable(t *testing.T) {
++	r, _, _ := newTestSetupRunner()
++	fs := r.FS.(*FakeFileSystem)
++	fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
++	fs.Files[r.Paths.RuntimePath("nginx", "sbin", "nginx")] = []byte("nginx")
++	r.Prompter = &FakePrompter{IsTTY: true, Selects: map[string]int{"TLS/SSL setup": 1}}
++	command := NewSetupCmd(r)
++	command.SetArgs([]string{"--interactive", "--reconfigure"})
++	require.NoError(t, command.Execute())
++	assert.Equal(t, "bundled", r.Env.(*FakeEnvManager).Env["HEIMDALL_PROXY_MODE"])
++	assert.Equal(t, "internal", r.Env.(*FakeEnvManager).Env["HEIMDALL_TLS_MODE"])
++}
++
++func TestOwnedNginxPortRecognizesServiceWorkers(t *testing.T) {
++	exec := &FakeExecRunner{Results: map[string]FakeExecResult{
++		"ss -H -ltnp":          {Stdout: `LISTEN 0 511 0.0.0.0:443 0.0.0.0:* users:(("nginx",pid=101,fd=5),("nginx",pid=100,fd=5))`},
++		"cat /proc/101/cgroup": {Stdout: "0::/system.slice/heimdall-nginx.service\n"},
++	}}
++	sd := &FakeSystemdRunner{ActiveServices: map[string]bool{bundledNginxService: true}, Properties: map[string]string{bundledNginxService + ":MainPID": "100", bundledNginxService + ":ControlGroup": "/system.slice/heimdall-nginx.service"}}
++	require.NoError(t, checkOwnedPort(exec, sd, 443, bundledNginxService, false))
++	exec.Results["cat /proc/101/cgroup"] = FakeExecResult{Stdout: "0::/system.slice/foreign.service\n"}
++	require.Error(t, checkOwnedPort(exec, sd, 443, bundledNginxService, false))
++}
++
++func TestNginxRefusesInvalidSavedCertificatePairs(t *testing.T) {
++	crt, key, err := selfSignedCertificate("localhost", 7)
++	require.NoError(t, err)
++	block, _ := pem.Decode(crt)
++	leaf, err := x509.ParseCertificate(block.Bytes)
++	require.NoError(t, err)
++	keyBlock, _ := pem.Decode(key)
++	privateKey, err := x509.ParsePKCS1PrivateKey(keyBlock.Bytes)
++	require.NoError(t, err)
++	datedCertificate := func(start time.Time) []byte {
++		copy := *leaf
++		copy.NotBefore, copy.NotAfter = start, start.Add(24*time.Hour)
++		der, err := x509.CreateCertificate(rand.Reader, &copy, &copy, &privateKey.PublicKey, privateKey)
++		require.NoError(t, err)
++		return pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: der})
++	}
++	for _, tc := range []struct {
++		name      string
++		cert, key []byte
++	}{
++		{"missing key", crt, nil}, {"missing certificate", nil, key},
++		{"malformed certificate", []byte("invalid PEM"), key},
++		{"malformed key", crt, []byte("invalid PEM")},
++		{"expired", datedCertificate(time.Now().Add(-48 * time.Hour)), key},
++		{"future validity", datedCertificate(time.Now().Add(24 * time.Hour)), key},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			r, _, _ := newTestSetupRunner()
++			fs := r.FS.(*FakeFileSystem)
++			fs.Files[r.Paths.RuntimePath("nginx", "sbin", "nginx")] = []byte("nginx")
++			dir := r.Paths.ConfigDir + "/nginx/certs/"
++			if tc.cert != nil {
++				fs.Files[dir+"server.crt"] = tc.cert
++			}
++			if tc.key != nil {
++				fs.Files[dir+"server.key"] = tc.key
++			}
++			_, err := r.prepareBundledNginx(map[string]string{"EXTERNAL_URL": "https://localhost", "HEIMDALL_TLS_MODE": "self-signed"})
++			require.Error(t, err)
++			assert.Equal(t, tc.cert, fs.Files[dir+"server.crt"])
++			assert.Equal(t, tc.key, fs.Files[dir+"server.key"])
++			assert.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
++		})
++	}
++}
+diff --git a/internal/cmd/prompter_test.go b/internal/cmd/prompter_test.go
+index 215c952..0427d1b 100644
+--- a/internal/cmd/prompter_test.go
++++ b/internal/cmd/prompter_test.go
+@@ -1,12 +1,48 @@
+ package cmd
+ 
+ import (
++	"os"
++	"path/filepath"
++	"strings"
+ 	"testing"
+ 
++	xansi "github.com/charmbracelet/x/ansi"
+ 	"github.com/stretchr/testify/assert"
+ 	"github.com/stretchr/testify/require"
+ )
+ 
++func TestHuhPrompterInputDefaults(t *testing.T) {
++	for _, tc := range []struct {
++		name, input, fallback, want, title string
++	}{
++		{"Enter accepts default", "\n", "localhost", "localhost", "External URL (default: localhost)"},
++		{"typed value overrides default", "example.test\n", "localhost", "example.test", "External URL (default: localhost)"},
++		{"no default", "\n", "", "", "External URL"},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			dir := t.TempDir()
++			inputPath := filepath.Join(dir, "input")
++			require.NoError(t, os.WriteFile(inputPath, []byte(tc.input), 0600))
++			input, err := os.Open(inputPath)
++			require.NoError(t, err)
++			defer input.Close()
++			output, err := os.Create(filepath.Join(dir, "output"))
++			require.NoError(t, err)
++			defer output.Close()
++			stdin, stdout := os.Stdin, os.Stdout
++			t.Cleanup(func() { os.Stdin, os.Stdout = stdin, stdout })
++			os.Stdin, os.Stdout = input, output
++			value, err := (&huhPrompter{}).Input("External URL", tc.fallback)
++			os.Stdin, os.Stdout = stdin, stdout
++			require.NoError(t, err)
++			assert.Equal(t, tc.want, value)
++			shown, err := os.ReadFile(output.Name())
++			require.NoError(t, err)
++			assert.Equal(t, tc.title, strings.TrimSpace(xansi.Strip(string(shown))))
++		})
++	}
++}
++
+ func TestFakePrompter_Input(t *testing.T) {
+ 	p := &FakePrompter{
+ 		Inputs: map[string]string{
+diff --git a/internal/cmd/restore.go b/internal/cmd/restore.go
+index 5bf9396..b9d163b 100644
+--- a/internal/cmd/restore.go
++++ b/internal/cmd/restore.go
+@@ -46,7 +46,7 @@ a temporary directory, backend.env is restored with proper ownership
+ using psql.
+ 
+ The database credentials are read from the restored backend.env, so
+-the restore is self-contained. Private Caddy configuration and certificate/CA
++the restore is self-contained. Private proxy configuration and certificate/CA
+ state are restored when present; older archives are accepted. RPM restores stop
+ the app and selected private proxy, and block app startup until successful setup
+ and migrations. PostgreSQL remains available for logical SQL restore. Requires root privileges.`,
+@@ -204,8 +204,15 @@ func (r *RestoreRunner) Run(archive string) error {
+ 		if err := runChecked(r.Exec, "systemctl", "stop", ServiceName); err != nil {
+ 			return err
+ 		}
+-		if existing["HEIMDALL_PROXY_MODE"] == "bundled" {
+-			if err := runChecked(r.Exec, "systemctl", "stop", bundledCaddyService); err != nil {
++		proxyUnit := ""
++		switch existing["HEIMDALL_PROXY_MODE"] {
++		case "bundled":
++			proxyUnit = bundledCaddyService
++		case "nginx":
++			proxyUnit = bundledNginxService
++		}
++		if proxyUnit != "" {
++			if err := runChecked(r.Exec, "systemctl", "stop", proxyUnit); err != nil {
+ 				return err
+ 			}
+ 		}
+@@ -245,9 +252,9 @@ func (r *RestoreRunner) Run(archive string) error {
+ 	return nil
+ }
+ 
+-// Never write or change metadata through Caddy-owned descendants. Prepare a
++// Never write or change metadata through proxy-owned descendants. Prepare a
+ // complete replacement beneath a root-only sibling, then move directory entries.
+-// The protected parent remains root-owned even after its child belongs to Caddy.
++// The protected parent remains root-owned even after its child belongs to the proxy.
+ func (r *RestoreRunner) restoreRecoveryTree(source, dest, kind string) (result error) {
+ 	parent := filepath.Dir(dest)
+ 	output, code, err := r.Exec.Run("mktemp", "-d", filepath.Join(parent, ".heimdall-restore.XXXXXX"))
+@@ -284,8 +291,11 @@ func (r *RestoreRunner) restoreRecoveryTree(source, dest, kind string) (result e
+ 		if info.IsDir() {
+ 			mode = 0700
+ 		}
+-		if kind == "caddy-config" {
++		if kind == "caddy-config" || kind == "nginx-config" {
+ 			owner = "root:heimdall-caddy"
++			if kind == "nginx-config" {
++				owner = "root:heimdall-nginx"
++			}
+ 			mode = info.Mode().Perm() & 0640
+ 			if info.IsDir() {
+ 				mode = 0750
+@@ -437,7 +447,7 @@ func extractRecoveryArchive(archive, dest string) (string, error) {
+ 			if rel != top || !entry.Type().IsRegular() {
+ 				return fmt.Errorf("invalid archive file: %s", rel)
+ 			}
+-		case "caddy-config", "caddy-state":
++		case "caddy-config", "caddy-state", "nginx-config":
+ 			if rel == top && !entry.IsDir() {
+ 				return fmt.Errorf("invalid archive directory: %s", rel)
+ 			}
+diff --git a/internal/cmd/runtime.go b/internal/cmd/runtime.go
+index 5413236..44f52ff 100644
+--- a/internal/cmd/runtime.go
++++ b/internal/cmd/runtime.go
+@@ -274,12 +274,18 @@ func (p *huhPrompter) newForm(groups ...*huh.Group) *huh.Form {
+ }
+ 
+ func (p *huhPrompter) Input(prompt string, defaultValue string) (string, error) {
+-	result := defaultValue
++	if defaultValue != "" {
++		prompt += fmt.Sprintf(" (default: %s)", defaultValue)
++	}
++	var result string
+ 	err := p.newForm(
+ 		huh.NewGroup(
+ 			huh.NewInput().Title(prompt).Value(&result),
+ 		),
+ 	).Run()
++	if err == nil && result == "" {
++		result = defaultValue
++	}
+ 	return result, err
+ }
+ 
+diff --git a/internal/cmd/schema.go b/internal/cmd/schema.go
+index 3e5e855..36731c5 100644
+--- a/internal/cmd/schema.go
++++ b/internal/cmd/schema.go
+@@ -78,8 +78,8 @@ func schemaEntries() []ConfigEntry {
+ 
+ 		// Deployment ownership is applied by setup, not a service restart.
+ 		{Key: "HEIMDALL_DATABASE_MODE", Category: "database", Type: "str", Choices: []string{"bundled", "external"}, Description: "Database ownership; change through setup."},
+-		{Key: "HEIMDALL_PROXY_MODE", Category: "proxy", Type: "str", Choices: []string{"bundled", "external", "none"}, Description: "Proxy ownership; change through setup."},
+-		{Key: "HEIMDALL_TLS_MODE", Category: "proxy", Type: "str", Choices: []string{"acme", "internal", "custom"}, Description: "Bundled proxy TLS mode; change through setup."},
++		{Key: "HEIMDALL_PROXY_MODE", Category: "proxy", Type: "str", Choices: []string{"nginx", "bundled", "external", "none"}, Description: "Proxy ownership; change through setup."},
++		{Key: "HEIMDALL_TLS_MODE", Category: "proxy", Type: "str", Choices: []string{"self-signed", "acme", "internal", "custom"}, Description: "Bundled proxy TLS mode; change through setup."},
+ 		{Key: "HEIMDALL_TLS_CERT", Category: "proxy", Type: "path", Description: "Custom TLS certificate path; change through setup."},
+ 		{Key: "HEIMDALL_TLS_KEY", Category: "proxy", Type: "path", Description: "Custom TLS private key path; change through setup."},
+ 		{Key: "HEIMDALL_TLS_CERT_DAYS", Category: "proxy", Type: "int", Default: "7", Validation: "1-365", Description: "Requested lifetime in days for new local certificates; change through setup."},
+diff --git a/internal/cmd/security.go b/internal/cmd/security.go
+index 394263a..7c88ad2 100644
+--- a/internal/cmd/security.go
++++ b/internal/cmd/security.go
+@@ -339,6 +339,9 @@ func (r *SetupRunner) selectedSELinuxPorts(env map[string]string) ([]selinuxPort
+ 	if !r.SkipDB && r.DatabaseMode == "bundled" {
+ 		ports = append(ports, selinuxPort{"postgresql_port_t", strconv.Itoa(r.DBPort)})
+ 	}
++	if !r.SkipTLS && r.ProxyMode == "nginx" {
++		ports = append(ports, selinuxPort{"http_port_t", "443"})
++	}
+ 	if !r.SkipTLS && r.ProxyMode == "bundled" {
+ 		u, err := validatePublicURL(env["EXTERNAL_URL"])
+ 		if err != nil {
+diff --git a/internal/cmd/service.go b/internal/cmd/service.go
+index ef74b9f..df37d4b 100644
+--- a/internal/cmd/service.go
++++ b/internal/cmd/service.go
+@@ -104,8 +104,8 @@ func (r *ServiceRunner) Diag() error {
+ 
+ 	if env, err := r.Env.ReadEnv(); err == nil {
+ 		fmt.Fprintf(r.Out, "  Database: %s (%s:%s)\n  Proxy: %s (%s)\n", env["HEIMDALL_DATABASE_MODE"], env["DATABASE_HOST"], env["DATABASE_PORT"], env["HEIMDALL_PROXY_MODE"], env["EXTERNAL_URL"])
+-		for _, item := range []struct{ key, unit string }{{"HEIMDALL_DATABASE_MODE", bundledPGService}, {"HEIMDALL_PROXY_MODE", bundledCaddyService}} {
+-			if env[item.key] == "bundled" {
++		for _, item := range []struct{ key, mode, unit string }{{"HEIMDALL_DATABASE_MODE", "bundled", bundledPGService}, {"HEIMDALL_PROXY_MODE", "bundled", bundledCaddyService}, {"HEIMDALL_PROXY_MODE", "nginx", bundledNginxService}} {
++			if env[item.key] == item.mode {
+ 				active, _ := r.Systemd.IsActive(item.unit)
+ 				fmt.Fprintf(r.Out, "  %s running: %t (journalctl -u %s)\n", item.unit, active, item.unit)
+ 			}
+diff --git a/internal/cmd/set_port.go b/internal/cmd/set_port.go
+index 28643fc..b3b0a75 100644
+--- a/internal/cmd/set_port.go
++++ b/internal/cmd/set_port.go
+@@ -69,14 +69,18 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
+ 		if err := checkOwnedPort(r.Exec, r.Systemd, p, ServiceName, false); err != nil {
+ 			return err
+ 		}
+-		if env["HEIMDALL_PROXY_MODE"] == "bundled" {
++		if env["HEIMDALL_PROXY_MODE"] == "bundled" || env["HEIMDALL_PROXY_MODE"] == "nginx" {
+ 			candidate := make(map[string]string, len(env))
+ 			for key, value := range env {
+ 				candidate[key] = value
+ 			}
+ 			candidate["PORT"] = portStr
+ 			setup := &SetupRunner{Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Env: r.Env, Out: r.Out}
+-			proxy, err = setup.prepareBundledCaddy(candidate)
++			if env["HEIMDALL_PROXY_MODE"] == "nginx" {
++				proxy, err = setup.prepareBundledNginx(candidate)
++			} else {
++				proxy, err = setup.prepareBundledCaddy(candidate)
++			}
+ 			if err != nil {
+ 				return err
+ 			}
+@@ -160,7 +164,7 @@ three system layers in a single operation:
+   3. firewalld: Opens the new port in the permanent firewall rules
+ 
+ An existing incompatible SELinux port assignment is refused before changes.
+-With bundled Caddy, its upstream is validated and updated with rollback on
++With a managed proxy, its upstream is validated and updated with rollback on
+ failure. After updating all layers, the application is restarted.
+ The port must be between 1 and 65535. Requires root privileges.`,
+ 		Example: `  # Change the listen port to 8443
+diff --git a/internal/cmd/setup.go b/internal/cmd/setup.go
+index 50713b9..58c2de8 100644
+--- a/internal/cmd/setup.go
++++ b/internal/cmd/setup.go
+@@ -33,13 +33,14 @@ type SetupRunner struct {
+ 	ErrOut   io.Writer
+ 	Paths    Paths
+ 
+-	DatabaseMode   string
+-	ProxyMode      string
+-	TLSMode        string
+-	flagChanged    map[string]bool
+-	bundledRuntime bool
+-	stageConfig    bool
+-	pendingConfig  map[string]string
++	DatabaseMode      string
++	ProxyMode         string
++	TLSMode           string
++	flagChanged       map[string]bool
++	bundledRuntime    bool
++	previousProxyMode string
++	stageConfig       bool
++	pendingConfig     map[string]string
+ 
+ 	// Flags
+ 	Interactive bool
+@@ -85,16 +86,18 @@ orchestrates seven steps in sequence:
+   2. PostgreSQL      Bootstrap selected bundled PostgreSQL (external servers unchanged)
+   3. Connection test Verify database connectivity with SELECT 1
+   4. Migrations      Run heimdall-server-db-setup to create/update schema
+-  5. TLS proxy       Configure Caddy as a reverse proxy with HTTPS
++  5. TLS proxy       Configure the selected reverse proxy with HTTPS
+   6. Security        Apply SELinux policies, fapolicyd trust, and firewalld rules
+   7. Service start   Enable and start the heimdall-server systemd unit
+ 
+ Steps can be selectively skipped with --skip-db and --skip-tls. Use
+ --reconfigure to re-run only step 1 without restarting the full pipeline.
+ The bundled RPM defaults to bundled database and proxy ownership on a fresh
+-installation. Choose each independently with --database-mode and --proxy-mode;
++installation (Nginx with a generated self-signed certificate when available).
++Choose each independently with --database-mode and --proxy-mode;
+ external PostgreSQL 13–18 is supported, including on localhost. --proxy-mode none
+-is HTTP-only development. Bundled TLS supports acme, internal, and custom.
++is HTTP-only development. Nginx uses self-signed TLS. Bundled Caddy TLS supports
++acme, internal, and custom.
+ Saved selections are reused; explicit flags override them. Temporary skips do
+ not change ownership. Setup does not download or install bundled runtimes.
+ 
+@@ -144,8 +147,8 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
+ 
+ 	flags := cmd.Flags()
+ 	flags.StringVar(&runner.DatabaseMode, "database-mode", "", "Database ownership: bundled or external")
+-	flags.StringVar(&runner.ProxyMode, "proxy-mode", "", "Proxy ownership: bundled, external, or none")
+-	flags.StringVar(&runner.TLSMode, "tls-mode", "", "Bundled proxy TLS: acme, internal, or custom")
++	flags.StringVar(&runner.ProxyMode, "proxy-mode", "", "Proxy ownership: nginx, bundled (Caddy), external, or none")
++	flags.StringVar(&runner.TLSMode, "tls-mode", "", "Proxy TLS: self-signed (Nginx), acme, internal, or custom")
+ 	flags.BoolVar(&runner.Interactive, "interactive", false, "Prompt for configuration values")
+ 	flags.BoolVar(&runner.NonInteract, "non-interactive", false, "Accept defaults and auto-generate secrets")
+ 	flags.StringVar(&runner.DBHost, "db-host", "localhost", "Database host")
+@@ -246,7 +249,7 @@ func (r *SetupRunner) Run() error {
+ 	fmt.Fprintln(r.Out)
+ 	if r.SkipTLS {
+ 		fmt.Fprintln(r.Out, "=== Step 5/7: TLS reverse proxy (skipped -- --skip-tls) ===")
+-	} else if r.ProxyMode != "bundled" {
++	} else if r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
+ 		fmt.Fprintf(r.Out, "=== Step 5/7: TLS reverse proxy (skipped -- %s proxy) ===\n", r.ProxyMode)
+ 		fmt.Fprintf(r.Out, "  Backend address: http://127.0.0.1:%s\n", envDefault(existing, "PORT", DefaultAppPort))
+ 	} else {
+@@ -294,7 +297,7 @@ func (r *SetupRunner) printSummary(isLocalDB bool) {
+ 	}
+ 	if r.SkipTLS {
+ 		fmt.Fprintln(r.Out, "  TLS reverse proxy:    skip (--skip-tls)")
+-	} else if r.ProxyMode != "bundled" {
++	} else if r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
+ 		fmt.Fprintf(r.Out, "  TLS reverse proxy:    skip (%s)\n", r.ProxyMode)
+ 	} else {
+ 		fmt.Fprintln(r.Out, "  TLS reverse proxy:    run")
+@@ -352,12 +355,12 @@ func (r *SetupRunner) printDryRun(isLocalDB bool) error {
+ 	fmt.Fprintln(r.Out)
+ 	if r.SkipTLS {
+ 		fmt.Fprintln(r.Out, "=== Step 5/7: TLS reverse proxy (skipped -- --skip-tls) ===")
+-	} else if r.ProxyMode != "bundled" {
++	} else if r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
+ 		fmt.Fprintf(r.Out, "=== Step 5/7: TLS reverse proxy (skipped -- %s proxy) ===\n", r.ProxyMode)
+ 		fmt.Fprintf(r.Out, "  Backend address: http://127.0.0.1:%s\n", envDefault(existing, "PORT", DefaultAppPort))
+ 	} else {
+ 		fmt.Fprintln(r.Out, "=== Step 5/7: TLS reverse proxy ===")
+-		fmt.Fprintln(r.Out, "  Would configure Caddy TLS reverse proxy")
++		fmt.Fprintf(r.Out, "  Would configure %s TLS reverse proxy\n", r.ProxyMode)
+ 		if r.TLSCert != "" {
+ 			fmt.Fprintf(r.Out, "  Cert: %s\n  Key: %s\n", r.TLSCert, r.TLSKey)
+ 		}
+@@ -409,6 +412,7 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+ 		return nil, err
+ 	}
+ 	requested := Deployment{r.DatabaseMode, r.ProxyMode, r.TLSMode}
++	r.previousProxyMode = existing["HEIMDALL_PROXY_MODE"]
+ 	configured := isConfigured(existing)
+ 	if !r.bundledRuntime && requested.DatabaseMode == "" && existing["HEIMDALL_DATABASE_MODE"] == "" {
+ 		host := envDefault(existing, "DATABASE_HOST", "localhost")
+@@ -423,6 +427,16 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+ 	if !r.bundledRuntime && requested.ProxyMode == "" && existing["HEIMDALL_PROXY_MODE"] == "" {
+ 		requested.ProxyMode = "bundled"
+ 	}
++	nginxAvailable := r.bundledRuntime && r.FS.Exists(r.Paths.RuntimePath("nginx", "sbin", "nginx"))
++	if nginxAvailable && !configured && requested.ProxyMode == "" && existing["HEIMDALL_PROXY_MODE"] == "" && (requested.TLSMode == "" || requested.TLSMode == "self-signed") && r.TLSCert == "" && r.TLSKey == "" {
++		requested.ProxyMode = "nginx"
++	}
++	if requested.ProxyMode == "nginx" && requested.TLSMode == "" && existing["HEIMDALL_PROXY_MODE"] != "nginx" {
++		requested.TLSMode = "self-signed"
++	}
++	if requested.ProxyMode != "" && requested.ProxyMode != "nginx" && requested.TLSMode == "" && existing["HEIMDALL_TLS_MODE"] == "self-signed" {
++		requested.TLSMode = defaultTLSMode(envDefault(existing, "EXTERNAL_URL", r.ExternalURL), r.TLSCert, r.TLSKey)
++	}
+ 	d, err := resolveDeployment(existing, requested, configured)
+ 	if err != nil {
+ 		return nil, err
+@@ -471,7 +485,7 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+ 	r.ExternalURL = resolve("EXTERNAL_URL", "external-url", r.ExternalURL, "")
+ 	r.TLSCert = resolve("HEIMDALL_TLS_CERT", "tls-cert", r.TLSCert, "")
+ 	r.TLSKey = resolve("HEIMDALL_TLS_KEY", "tls-key", r.TLSKey, "")
+-	if requested.TLSMode == "" {
++	if requested.TLSMode == "" && d.ProxyMode != "nginx" {
+ 		if (r.flagChanged["tls-cert"] || r.flagChanged["tls-key"]) && r.TLSCert != "" && r.TLSKey != "" {
+ 			d.TLSMode = "custom"
+ 		} else if existing["HEIMDALL_TLS_MODE"] == "" {
+@@ -483,6 +497,9 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+ 		}
+ 	}
+ 	r.DatabaseMode, r.ProxyMode, r.TLSMode = d.DatabaseMode, d.ProxyMode, d.TLSMode
++	if r.ProxyMode == "nginx" && !nginxAvailable {
++		return nil, fmt.Errorf("private Nginx runtime is unavailable; reinstall the current heimdall-server RPM")
++	}
+ 	if r.ProxyMode == "bundled" && !r.SkipTLS {
+ 		if (r.TLSCert == "") != (r.TLSKey == "") {
+ 			return nil, fmt.Errorf("--tls-cert and --tls-key must be provided together")
+@@ -619,6 +636,8 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+ 	// --- TLS topology ---
+ 	fmt.Fprintln(r.Out)
+ 	tlsOptions := []string{"Caddy reverse proxy (automatic HTTPS)", "External SSL termination (load balancer, nginx)", "BYO certificate (provide cert and key paths)", "No TLS (development/testing only)"}
++	nginxAvailable := r.bundledRuntime && r.FS.Exists(r.Paths.RuntimePath("nginx", "sbin", "nginx"))
++	nginxOption := "Nginx reverse proxy (generated self-signed certificate)"
+ 	tlsDefault := tlsOptions[0]
+ 	switch r.ProxyMode {
+ 	case "external":
+@@ -630,14 +649,31 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+ 			tlsDefault = tlsOptions[2]
+ 		}
+ 	}
++	if nginxAvailable {
++		tlsOptions = append([]string{nginxOption}, tlsOptions...)
++		if r.ProxyMode == "nginx" {
++			tlsDefault = nginxOption
++		}
++	}
+ 	tlsChoice, err := r.Prompter.Select("TLS/SSL setup", tlsDefault, tlsOptions)
+ 	if err != nil {
+ 		return err
+ 	}
+ 
++	if tlsChoice < 0 || tlsChoice >= len(tlsOptions) {
++		return fmt.Errorf("invalid TLS selection")
++	}
++	if nginxAvailable {
++		tlsChoice--
++	}
+ 	switch tlsChoice {
++	case -1:
++		r.ProxyMode, r.TLSMode = "nginx", "self-signed"
+ 	case 0: // Caddy
+ 		r.ProxyMode = "bundled"
++		if r.TLSMode == "self-signed" {
++			r.TLSMode = "internal"
++		}
+ 
+ 	case 1: // External SSL termination
+ 		r.ProxyMode = "external"
+@@ -660,26 +696,34 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+ 		r.ProxyMode = "none"
+ 	}
+ 
++	if r.ProxyMode != "nginx" && r.TLSMode == "self-signed" {
++		r.TLSMode = "internal"
++	}
++
+ 	// --- Application config ---
+ 	fmt.Fprintln(r.Out)
+ 	defaultExternalURL := r.ExternalURL
+ 	if defaultExternalURL == "" {
+-		defaultExternalURL = "https://" + def("NGINX_HOST", "localhost")
++		defaultExternalURL = def("NGINX_HOST", "localhost")
+ 	}
+-	externalURL, err := r.Prompter.Input(fmt.Sprintf("External URL (default: %s)", defaultExternalURL), defaultExternalURL)
++	externalURL, err := r.Prompter.Input("External URL", defaultExternalURL)
+ 	if err != nil {
+ 		return err
+ 	}
+ 	if externalURL == "" {
+ 		externalURL = defaultExternalURL
+ 	}
++	externalURL, err = normalizeExternalURL(externalURL, r.ProxyMode)
++	if err != nil {
++		return err
++	}
+ 	adminEmail, err := r.Prompter.Input("Admin email", def("ADMIN_EMAIL", "admin@heimdall.local"))
+ 	if err != nil {
+ 		return err
+ 	}
+ 	jwtDefault := def("JWT_EXPIRE_TIME", "1d")
+ 	fmt.Fprintln(r.Out, "  Heimdall caps JWT lifetimes at 2 days.")
+-	jwtExpire, err := r.Prompter.Input(fmt.Sprintf("JWT expiration (e.g. 1d or 25m; default: %s)", jwtDefault), jwtDefault)
++	jwtExpire, err := r.Prompter.Input("JWT expiration (e.g. 1d or 25m)", jwtDefault)
+ 	if err != nil {
+ 		return err
+ 	}
+@@ -727,13 +771,13 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+ 	if err != nil {
+ 		return fmt.Errorf("invalid external URL: %w", err)
+ 	}
+-	localTLS := r.TLSMode == "internal"
++	localTLS := r.TLSMode == "internal" || r.TLSMode == "self-signed"
+ 	if !r.bundledRuntime {
+ 		strategy := determineTLSStrategy(u.Hostname(), r.TLSCert, r.TLSKey)
+ 		localTLS = strategy == tlsPrivate || strategy == tlsIP
+ 	}
+-	if r.ProxyMode == "bundled" && !r.SkipTLS && u.Scheme == "https" && localTLS {
+-		certDays, err = r.Prompter.Input(fmt.Sprintf("Certificate lifetime in days (default: %s)", certDays), certDays)
++	if (r.ProxyMode == "bundled" || r.ProxyMode == "nginx") && !r.SkipTLS && u.Scheme == "https" && localTLS {
++		certDays, err = r.Prompter.Input("Certificate lifetime in days", certDays)
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -745,7 +789,7 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+ 			return err
+ 		}
+ 		fmt.Fprintln(r.Out, "  Applies to new certificates; existing certificates are preserved.")
+-		if r.bundledRuntime || net.ParseIP(u.Hostname()) == nil {
++		if r.ProxyMode == "bundled" && (r.bundledRuntime || net.ParseIP(u.Hostname()) == nil) {
+ 			fmt.Fprintln(r.Out, "  Caddy may shorten new certificates to the current CA's remaining validity.")
+ 		}
+ 	}
+@@ -851,25 +895,7 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
+ 		fmt.Fprintln(r.Out, "  API_KEY_SECRET auto-generated")
+ 	}
+ 
+-	// Derive NGINX_HOST from external URL
+ 	nginxHost := envDefault(existing, "NGINX_HOST", "localhost")
+-	if externalURL != "" {
+-		h := externalURL
+-		for _, prefix := range []string{"https://", "http://"} {
+-			if len(h) > len(prefix) && h[:len(prefix)] == prefix {
+-				h = h[len(prefix):]
+-				break
+-			}
+-		}
+-		if idx := strings.IndexAny(h, ":/"); idx >= 0 {
+-			h = h[:idx]
+-		}
+-		nginxHost = h
+-	}
+-	if externalURL == "" && nginxHost != "" {
+-		externalURL = "https://" + nginxHost
+-	}
+-
+ 	// Show summary of configuration
+ 	fmt.Fprintln(r.Out)
+ 	fmt.Fprintln(r.Out, "  Configuration summary:")
+@@ -930,7 +956,7 @@ func (r *SetupRunner) stepConfigureNonInteractive(existing map[string]string) er
+ 	adminEmail := envDefault(existing, "ADMIN_EMAIL", "admin@heimdall.local")
+ 	externalURL := r.ExternalURL
+ 	if externalURL == "" {
+-		externalURL = "https://" + nginxHost
++		externalURL = nginxHost
+ 	}
+ 
+ 	return r.writeConfig(existing, dbHost, dbPort, dbUser, dbPassword, dbName,
+@@ -942,6 +968,24 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
+ 	dbHost, dbPort, dbUser, dbPassword, dbName,
+ 	jwtSecret, apiKeySecret, nginxHost, externalURL, adminEmail string) error {
+ 
++	if externalURL == "" {
++		externalURL = nginxHost
++	}
++	var err error
++	externalURL, err = normalizeExternalURL(externalURL, r.ProxyMode)
++	if err != nil {
++		return err
++	}
++	u, _ := url.Parse(externalURL)
++	if r.bundledRuntime {
++		if _, err := validatePublicURL(externalURL); err != nil {
++			return err
++		}
++	}
++	nginxHost = u.Hostname()
++	if r.ProxyMode == "nginx" && (u.Scheme != "https" || (u.Port() != "" && u.Port() != "443")) {
++		return fmt.Errorf("managed Nginx requires an HTTPS external URL on port 443")
++	}
+ 	// Preserve saved values unless the interactive wizard supplied replacements.
+ 	port := DefaultAppPort
+ 	if v, ok := existing["PORT"]; ok && v != "" {
+@@ -992,6 +1036,9 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
+ 	entries["HEIMDALL_TLS_MODE"] = r.TLSMode
+ 	entries["HEIMDALL_TLS_CERT"] = r.TLSCert
+ 	entries["HEIMDALL_TLS_KEY"] = r.TLSKey
++	if _, err := resolveDeployment(entries, Deployment{}, true); err != nil {
++		return err
++	}
+ 	if _, err := resolveDBConfig(entries); err != nil {
+ 		return err
+ 	}
+@@ -1431,7 +1478,7 @@ func (r *SetupRunner) stepSecurityPolicies() error {
+ 	// firewalld
+ 	active, _ := r.Systemd.IsActive("firewalld")
+ 	if active {
+-		if r.SkipTLS || (r.bundledRuntime && r.ProxyMode != "bundled") {
++		if r.SkipTLS || (r.bundledRuntime && r.ProxyMode != "bundled" && r.ProxyMode != "nginx") {
+ 			r.Exec.Run("firewall-cmd", "--permanent", fmt.Sprintf("--add-port=%s/tcp", port))
+ 			fmt.Fprintf(r.Out, "  firewalld: port %s/tcp enabled\n", port)
+ 		} else {
+@@ -1631,11 +1678,33 @@ func checkOwnedPort(exec ExecRunner, systemd SystemdRunner, port int, unit strin
+ 	pidNum, _ := strconv.Atoi(strings.TrimSpace(pid))
+ 	for _, line := range strings.Split(strings.TrimSpace(out), "\n") {
+ 		fields := strings.Fields(line)
+-		if !active || pidNum <= 0 || len(fields) < 6 || (fields[0] != "LISTEN" && fields[0] != "UNCONN") || !strings.HasSuffix(fields[3], ":"+strconv.Itoa(port)) || !strings.Contains(line, "pid="+strings.TrimSpace(pid)+",") {
++		if !active || pidNum <= 0 || len(fields) < 6 || (fields[0] != "LISTEN" && fields[0] != "UNCONN") || !strings.HasSuffix(fields[3], ":"+strconv.Itoa(port)) {
+ 			return fmt.Errorf("port %d is occupied by a process outside %s; choose another port or reconfigure its owner", port, unit)
+ 		}
+-		for _, match := range regexp.MustCompile(`pid=([0-9]+),`).FindAllStringSubmatch(line, -1) {
+-			if match[1] != strings.TrimSpace(pid) {
++		owners := regexp.MustCompile(`pid=([0-9]+),`).FindAllStringSubmatch(line, -1)
++		if len(owners) == 0 {
++			return fmt.Errorf("cannot identify listener owner on port %d", port)
++		}
++		for _, match := range owners {
++			if match[1] == strings.TrimSpace(pid) {
++				continue
++			}
++			group, err := systemd.ShowProperty(unit, "ControlGroup")
++			if err != nil || !strings.HasPrefix(group, "/") || group == "/" {
++				return fmt.Errorf("cannot verify worker ownership for %s", unit)
++			}
++			out, code, err := exec.Run("cat", "/proc/"+match[1]+"/cgroup")
++			if err != nil || code != 0 {
++				return fmt.Errorf("cannot verify listener process %s on port %d", match[1], port)
++			}
++			owned := false
++			for _, entry := range strings.Split(strings.TrimSpace(out), "\n") {
++				fields := strings.SplitN(entry, ":", 3)
++				if len(fields) == 3 && fields[2] == group {
++					owned = true
++				}
++			}
++			if !owned {
+ 				return fmt.Errorf("port %d has another owner", port)
+ 			}
+ 		}
+@@ -1730,14 +1799,15 @@ func (s savedFile) restore(fs FileSystem) error {
+ }
+ 
+ type caddyUpdate struct {
+-	runner  *SetupRunner
+-	config  string
+-	pending string
+-	saved   []savedFile
+-	certs   map[string][]byte
+-	active  bool
+-	enabled bool
+-	applied bool
++	runner              *SetupRunner
++	unit, group, runDir string
++	config              string
++	pending             string
++	saved               []savedFile
++	certs               map[string][]byte
++	active              bool
++	enabled             bool
++	applied             bool
+ }
+ 
+ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate, error) {
+@@ -1763,16 +1833,16 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
+ 		ports = append(ports, 80)
+ 	}
+ 	for _, p := range ports {
+-		if err := checkOwnedPort(r.Exec, r.Systemd, p, bundledCaddyService, false); err != nil {
++		if err := checkOwnedPort(r.Exec, r.Systemd, p, proxyPortOwner(r.previousProxyMode, bundledCaddyService), false); err != nil {
+ 			return nil, err
+ 		}
+ 	}
+ 	if u.Scheme == "https" {
+-		if err := checkOwnedPort(r.Exec, r.Systemd, port, bundledCaddyService, true); err != nil {
++		if err := checkOwnedPort(r.Exec, r.Systemd, port, proxyPortOwner(r.previousProxyMode, bundledCaddyService), true); err != nil {
+ 			return nil, err
+ 		}
+ 	}
+-	update := &caddyUpdate{runner: r, config: config, pending: dir + "/Caddyfile.pending", certs: map[string][]byte{}}
++	update := &caddyUpdate{runner: r, unit: bundledCaddyService, group: "heimdall-caddy", runDir: "/run/heimdall-caddy", config: config, pending: dir + "/Caddyfile.pending", certs: map[string][]byte{}}
+ 	update.active, err = r.Systemd.IsActive(bundledCaddyService)
+ 	if err != nil {
+ 		return nil, err
+@@ -1850,6 +1920,9 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
+ 		if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", path+".pending"); err != nil {
+ 			return nil, err
+ 		}
++		if err := runChecked(r.Exec, "chmod", "0640", path+".pending"); err != nil {
++			return nil, err
++		}
+ 	}
+ 	if err := r.FS.WriteFile(update.pending, []byte(candidate), 0640); err != nil {
+ 		return nil, err
+@@ -1857,6 +1930,9 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
+ 	if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", update.pending); err != nil {
+ 		return nil, err
+ 	}
++	if err := runChecked(r.Exec, "chmod", "0640", update.pending); err != nil {
++		return nil, err
++	}
+ 	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/caddy", r.Paths.ConfigDir+"/caddy", "/var/lib/heimdall-caddy"); err != nil {
+ 		return nil, err
+ 	}
+@@ -1887,7 +1963,7 @@ func (u *caddyUpdate) apply() (err error) {
+ 		if err := r.FS.WriteFile(path, data, 0640); err != nil {
+ 			return err
+ 		}
+-		if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", path); err != nil {
++		if err := runChecked(r.Exec, "chown", "root:"+u.group, path); err != nil {
+ 			return err
+ 		}
+ 		if err := runChecked(r.Exec, "chmod", "0640", path); err != nil {
+@@ -1900,7 +1976,7 @@ func (u *caddyUpdate) apply() (err error) {
+ 	if err := r.FS.WriteFile(u.pending, []byte(u.config), 0640); err != nil {
+ 		return err
+ 	}
+-	if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", u.pending); err != nil {
++	if err := runChecked(r.Exec, "chown", "root:"+u.group, u.pending); err != nil {
+ 		return err
+ 	}
+ 	if err := runChecked(r.Exec, "chmod", "0640", u.pending); err != nil {
+@@ -1909,32 +1985,32 @@ func (u *caddyUpdate) apply() (err error) {
+ 	if err := r.FS.Rename(u.pending, u.saved[0].path); err != nil {
+ 		return err
+ 	}
+-	if err := r.FS.MkdirAll("/run/heimdall-caddy", 0750); err != nil {
++	if err := r.FS.MkdirAll(u.runDir, 0750); err != nil {
+ 		return err
+ 	}
+-	if err := runChecked(r.Exec, "chown", "heimdall-caddy:heimdall-caddy", "/run/heimdall-caddy"); err != nil {
++	if err := runChecked(r.Exec, "chown", u.group+":"+u.group, u.runDir); err != nil {
+ 		return err
+ 	}
+-	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.ConfigDir+"/caddy", "/var/lib/heimdall-caddy", "/run/heimdall-caddy"); err != nil {
++	if err := restoreSELinuxPaths(r.Exec, r.FS, filepath.Dir(u.pending), "/var/lib/"+u.group, u.runDir); err != nil {
+ 		return err
+ 	}
+-	if err := r.Systemd.Enable(bundledCaddyService); err != nil {
++	if err := r.Systemd.Enable(u.unit); err != nil {
+ 		return err
+ 	}
+ 	if u.active {
+-		err = r.Systemd.Reload(bundledCaddyService)
++		err = r.Systemd.Reload(u.unit)
+ 	} else {
+-		err = r.Systemd.Start(bundledCaddyService)
++		err = r.Systemd.Start(u.unit)
+ 	}
+ 	if err != nil {
+ 		return err
+ 	}
+-	active, err := r.Systemd.IsActive(bundledCaddyService)
++	active, err := r.Systemd.IsActive(u.unit)
+ 	if err != nil {
+ 		return err
+ 	}
+ 	if !active {
+-		return fmt.Errorf("private Caddy is not active after activation")
++		return fmt.Errorf("private proxy is not active after activation")
+ 	}
+ 	return nil
+ }
+@@ -1948,12 +2024,12 @@ func (u *caddyUpdate) rollback() error {
+ 		errs = append(errs, saved.restore(u.runner.FS))
+ 	}
+ 	if u.active {
+-		errs = append(errs, u.runner.Systemd.Reload(bundledCaddyService))
++		errs = append(errs, u.runner.Systemd.Reload(u.unit))
+ 	} else {
+-		errs = append(errs, u.runner.Systemd.Stop(bundledCaddyService))
++		errs = append(errs, u.runner.Systemd.Stop(u.unit))
+ 	}
+ 	if !u.enabled {
+-		errs = append(errs, runChecked(u.runner.Exec, "systemctl", "disable", bundledCaddyService))
++		errs = append(errs, runChecked(u.runner.Exec, "systemctl", "disable", u.unit))
+ 	}
+ 	return errors.Join(errs...)
+ }
+@@ -1988,7 +2064,7 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+ 	if err := checkOwnedPort(r.Exec, r.Systemd, port, ServiceName, false); err != nil {
+ 		return err
+ 	}
+-	if !r.SkipTLS && r.ProxyMode != "bundled" {
++	if !r.SkipTLS && r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
+ 		target, err := validatePublicURL(env["EXTERNAL_URL"])
+ 		if err != nil {
+ 			return err
+@@ -2004,6 +2080,9 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+ 			if err := r.rejectPrivateEndpoint(target.Hostname(), proxyPort, bundledCaddyService); err != nil {
+ 				return err
+ 			}
++			if err := r.rejectPrivateEndpoint(target.Hostname(), proxyPort, bundledNginxService); err != nil {
++				return err
++			}
+ 		}
+ 	}
+ 	if !r.SkipDB && r.DatabaseMode == "external" {
+@@ -2054,8 +2133,12 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+ 		return err
+ 	}
+ 	var proxy *caddyUpdate
+-	if !r.SkipTLS && r.ProxyMode == "bundled" {
+-		proxy, err = r.prepareBundledCaddy(env)
++	if !r.SkipTLS && (r.ProxyMode == "bundled" || r.ProxyMode == "nginx") {
++		if r.ProxyMode == "nginx" {
++			proxy, err = r.prepareBundledNginx(env)
++		} else {
++			proxy, err = r.prepareBundledCaddy(env)
++		}
+ 		if err != nil {
+ 			return err
+ 		}
+@@ -2212,6 +2295,30 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+ 		}
+ 	}
+ 	if proxy != nil {
++		oldUnit := ""
++		if existing["HEIMDALL_PROXY_MODE"] == "bundled" && r.ProxyMode == "nginx" {
++			oldUnit = bundledCaddyService
++		}
++		if existing["HEIMDALL_PROXY_MODE"] == "nginx" && r.ProxyMode == "bundled" {
++			oldUnit = bundledNginxService
++		}
++		if oldUnit != "" {
++			active, e := r.Systemd.IsActive(oldUnit)
++			if e != nil {
++				return e
++			}
++			state, e := r.Systemd.ShowProperty(oldUnit, "UnitFileState")
++			if e != nil {
++				return e
++			}
++			disabled = append(disabled, struct {
++				unit            string
++				active, enabled bool
++			}{oldUnit, active, state == "enabled" || state == "enabled-runtime"})
++			if e := runChecked(r.Exec, "systemctl", "disable", "--now", oldUnit); e != nil {
++				return e
++			}
++		}
+ 		if err := proxy.apply(); err != nil {
+ 			return err
+ 		}
+@@ -2221,20 +2328,21 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+ 	}
+ 	// Replacements passed their applicable preflight checks. Retain deselected state.
+ 	for _, selection := range []struct {
+-		skip            bool
+-		mode, key, unit string
++		skip                       bool
++		mode, key, unit, ownedMode string
+ 	}{
+-		{r.SkipDB, r.DatabaseMode, "HEIMDALL_DATABASE_MODE", bundledPGService},
+-		{r.SkipTLS, r.ProxyMode, "HEIMDALL_PROXY_MODE", bundledCaddyService},
++		{r.SkipDB, r.DatabaseMode, "HEIMDALL_DATABASE_MODE", bundledPGService, "bundled"},
++		{r.SkipTLS, r.ProxyMode, "HEIMDALL_PROXY_MODE", bundledCaddyService, "bundled"},
++		{r.SkipTLS, r.ProxyMode, "HEIMDALL_PROXY_MODE", bundledNginxService, "nginx"},
+ 	} {
+-		if selection.skip || selection.mode == "bundled" {
++		if selection.skip || selection.mode == selection.ownedMode || (proxy != nil && selection.key == "HEIMDALL_PROXY_MODE") {
+ 			continue
+ 		}
+ 		active, err := r.Systemd.IsActive(selection.unit)
+ 		if err != nil {
+ 			return err
+ 		}
+-		if existing[selection.key] == "bundled" || active || (selection.unit == bundledPGService && dependency.exists) {
++		if existing[selection.key] == selection.ownedMode || (selection.unit == bundledPGService && dependency.exists) {
+ 			state, err := r.Systemd.ShowProperty(selection.unit, "UnitFileState")
+ 			if err != nil {
+ 				return err
+@@ -2248,7 +2356,7 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+ 			}
+ 		}
+ 	}
+-	if r.ProxyMode != "bundled" {
++	if r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
+ 		fmt.Fprintf(r.Out, "  Backend address: http://127.0.0.1:%s\n", envDefault(env, "PORT", DefaultAppPort))
+ 	}
+ 	if err := r.stepSecurityPolicies(); err != nil {
+diff --git a/internal/cmd/setup_expiration_test.go b/internal/cmd/setup_expiration_test.go
+index 39d2a6e..f2e0555 100644
+--- a/internal/cmd/setup_expiration_test.go
++++ b/internal/cmd/setup_expiration_test.go
+@@ -1,7 +1,6 @@
+ package cmd
+ 
+ import (
+-	"fmt"
+ 	"strings"
+ 	"testing"
+ 
+@@ -41,8 +40,8 @@ func TestInteractiveExpirationDefaultsAndPersistence(t *testing.T) {
+ 			if daysDefault == "" {
+ 				daysDefault = "7"
+ 			}
+-			jwtPrompt := fmt.Sprintf("JWT expiration (e.g. 1d or 25m; default: %s)", jwtDefault)
+-			daysPrompt := fmt.Sprintf("Certificate lifetime in days (default: %s)", daysDefault)
++			jwtPrompt := "JWT expiration (e.g. 1d or 25m)"
++			daysPrompt := "Certificate lifetime in days"
+ 			if tc.answer {
+ 				p.Inputs = map[string]string{jwtPrompt: tc.inputJWT, daysPrompt: tc.inputDays}
+ 			}
+@@ -103,7 +102,7 @@ func TestInteractiveCertificateLifetimePromptOwnership(t *testing.T) {
+ 			}
+ 			assert.Equal(t, tc.prompt, prompted)
+ 			assert.Equal(t, "14", r.Env.(*FakeEnvManager).Env["HEIMDALL_TLS_CERT_DAYS"])
+-			assert.Equal(t, "1d", p.InputDefaults["JWT expiration (e.g. 1d or 25m; default: 1d)"])
++			assert.Equal(t, "1d", p.InputDefaults["JWT expiration (e.g. 1d or 25m)"])
+ 		})
+ 	}
+ }
+@@ -141,13 +140,13 @@ func TestInteractiveInvalidExpirationHasNoSideEffects(t *testing.T) {
+ 	for _, tc := range []struct {
+ 		name, title, value string
+ 	}{
+-		{"JWT garbage", "JWT expiration (e.g. 1d or 25m; default: 1d)", "garbage"},
+-		{"JWT zero", "JWT expiration (e.g. 1d or 25m; default: 1d)", "0m"},
+-		{"JWT negative", "JWT expiration (e.g. 1d or 25m; default: 1d)", "-1d"},
+-		{"JWT newline", "JWT expiration (e.g. 1d or 25m; default: 1d)", "1d\nPORT=1234"},
+-		{"certificate zero", "Certificate lifetime in days (default: 7)", "0"},
+-		{"certificate over limit", "Certificate lifetime in days (default: 7)", "366"},
+-		{"certificate fraction", "Certificate lifetime in days (default: 7)", "1.5"},
++		{"JWT garbage", "JWT expiration (e.g. 1d or 25m)", "garbage"},
++		{"JWT zero", "JWT expiration (e.g. 1d or 25m)", "0m"},
++		{"JWT negative", "JWT expiration (e.g. 1d or 25m)", "-1d"},
++		{"JWT newline", "JWT expiration (e.g. 1d or 25m)", "1d\nPORT=1234"},
++		{"certificate zero", "Certificate lifetime in days", "0"},
++		{"certificate over limit", "Certificate lifetime in days", "366"},
++		{"certificate fraction", "Certificate lifetime in days", "1.5"},
+ 	} {
+ 		t.Run(tc.name, func(t *testing.T) {
+ 			r, p := expirationSetupFixture(t)
+diff --git a/internal/cmd/setup_test.go b/internal/cmd/setup_test.go
+index f1c539b..56e61d7 100644
+--- a/internal/cmd/setup_test.go
++++ b/internal/cmd/setup_test.go
+@@ -608,13 +608,20 @@ func TestInteractiveRPMExternalURLDefault(t *testing.T) {
+ 		{"saved URL", map[string]string{"EXTERNAL_URL": "https://saved.example.com", "NGINX_HOST": "old.example.com"}, nil, false, "https://saved.example.com", "saved.example.com"},
+ 		{"explicit URL", map[string]string{"EXTERNAL_URL": "https://saved.example.com"}, []string{"--external-url=https://flag.example.com"}, false, "https://flag.example.com", "flag.example.com"},
+ 		{"cleared input keeps displayed default", map[string]string{"EXTERNAL_URL": "https://saved.example.com", "NGINX_HOST": "old.example.com"}, nil, true, "https://saved.example.com", "saved.example.com"},
+-		{"no TLS keeps existing fallback convention", nil, []string{"--proxy-mode=none"}, false, "https://localhost", "localhost"},
++		{"no TLS uses HTTP", nil, []string{"--proxy-mode=none"}, false, "http://localhost", "localhost"},
+ 	} {
+ 		t.Run(tc.name, func(t *testing.T) {
+ 			r, _, _ := newTestSetupRunner()
+ 			r.FS.(*FakeFileSystem).Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
+ 			r.Env.(*FakeEnvManager).Env = tc.saved
+-			prompt := "External URL (default: " + tc.wantURL + ")"
++			displayDefault := tc.wantURL
++			if tc.saved["EXTERNAL_URL"] == "" && len(tc.args) == 0 {
++				displayDefault = tc.wantHost
++			}
++			if tc.wantURL == "https://localhost" || tc.wantURL == "http://localhost" {
++				displayDefault = "localhost"
++			}
++			prompt := "External URL"
+ 			prompter := &FakePrompter{IsTTY: true}
+ 			if tc.clearInput {
+ 				prompter.Inputs = map[string]string{prompt: ""}
+@@ -624,7 +631,7 @@ func TestInteractiveRPMExternalURLDefault(t *testing.T) {
+ 			cmd.SetArgs(append([]string{"--interactive", "--reconfigure"}, tc.args...))
+ 			require.NoError(t, cmd.Execute())
+ 			assert.Contains(t, prompter.InputDefaults, prompt)
+-			assert.Equal(t, tc.wantURL, prompter.InputDefaults[prompt])
++			assert.Equal(t, displayDefault, prompter.InputDefaults[prompt])
+ 			env := r.Env.(*FakeEnvManager).Env
+ 			assert.Equal(t, tc.wantURL, env["EXTERNAL_URL"])
+ 			assert.Equal(t, tc.wantHost, env["NGINX_HOST"])
+@@ -668,8 +675,8 @@ func TestInteractive_ExternalDB_ExternalSSL(t *testing.T) {
+ 			"Database password": "Str0ng!Pass#2026",
+ 			"Confirm password":  "Str0ng!Pass#2026",
+ 			"Database name":     "heimdall_prod",
+-			"External URL (default: https://localhost)": "https://heimdall.example.com",
+-			"Admin email": "admin@example.com",
++			"External URL":      "https://heimdall.example.com",
++			"Admin email":       "admin@example.com",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -702,10 +709,10 @@ func TestInteractive_LocalDB_Caddy(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "localpass",
+-			"Confirm password":                          "localpass",
+-			"External URL (default: https://localhost)": "https://heimdall.local",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "localpass",
++			"Confirm password":  "localpass",
++			"External URL":      "https://heimdall.local",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -731,16 +738,16 @@ func TestInteractive_ExternalDB_BYOCert(t *testing.T) {
+ 			"TLS/SSL setup":  2, // BYO certificate
+ 		},
+ 		Inputs: map[string]string{
+-			"Database host":                             "db.example.com",
+-			"Database port":                             "5432",
+-			"Database user":                             "heimdall",
+-			"Database password":                         "secret",
+-			"Confirm password":                          "secret",
+-			"Database name":                             "heimdall_prod",
+-			"TLS certificate path":                      "/etc/pki/tls/certs/heimdall.crt",
+-			"TLS private key path":                      "/etc/pki/tls/private/heimdall.key",
+-			"External URL (default: https://localhost)": "https://heimdall.example.com",
+-			"Admin email":                               "admin@example.com",
++			"Database host":        "db.example.com",
++			"Database port":        "5432",
++			"Database user":        "heimdall",
++			"Database password":    "secret",
++			"Confirm password":     "secret",
++			"Database name":        "heimdall_prod",
++			"TLS certificate path": "/etc/pki/tls/certs/heimdall.crt",
++			"TLS private key path": "/etc/pki/tls/private/heimdall.key",
++			"External URL":         "https://heimdall.example.com",
++			"Admin email":          "admin@example.com",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -763,10 +770,10 @@ func TestInteractive_LocalDB_NoTLS(t *testing.T) {
+ 			"TLS/SSL setup":  3, // No TLS
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "devpass",
+-			"Confirm password":                          "devpass",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "devpass",
++			"Confirm password":  "devpass",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -841,8 +848,8 @@ func TestInteractive_RerunEditConfig(t *testing.T) {
+ 			"Database user":     "postgres",             // kept
+ 			"Database password": "",                     // blank keeps the existing password
+ 			"Database name":     "olddb",                // kept
+-			"External URL (default: https://old.example.com)": "https://old.example.com",
+-			"Admin email": "old@example.com",
++			"External URL":      "https://old.example.com",
++			"Admin email":       "old@example.com",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -892,9 +899,9 @@ func TestInteractive_EmptyPasswordAutoGenerates(t *testing.T) {
+ 			"TLS/SSL setup":  3, // No TLS
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "", // empty = auto-generate
+-			"External URL (default: https://localhost)": "",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "", // empty = auto-generate
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -921,10 +928,10 @@ func TestInteractive_ExistingSecretsPreserved(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "pass",
+-			"Confirm password":                          "pass",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "pass",
++			"Confirm password":  "pass",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -948,10 +955,10 @@ func TestInteractive_SecretsAutoGenerated(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "pass",
+-			"Confirm password":                          "pass",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "pass",
++			"Confirm password":  "pass",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -976,10 +983,10 @@ func TestInteractive_DeriveExternalURL(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "pass",
+-			"Confirm password":                          "pass",
+-			"External URL (default: https://localhost)": "https://heimdall.example.com:443/app",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "pass",
++			"Confirm password":  "pass",
++			"External URL":      "https://heimdall.example.com:443/app",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1002,10 +1009,10 @@ func TestInteractive_URLDerivesNginxHostFromHTTP(t *testing.T) {
+ 			"TLS/SSL setup":  0,
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "pass",
+-			"Confirm password":                          "pass",
+-			"External URL (default: https://localhost)": "http://heimdall.internal:8080/path",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "pass",
++			"Confirm password":  "pass",
++			"External URL":      "http://heimdall.internal:8080/path",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1027,10 +1034,10 @@ func TestInteractive_EmptyURLUsesDefault(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "pass",
+-			"Confirm password":                          "pass",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "pass",
++			"Confirm password":  "pass",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1054,10 +1061,10 @@ func TestSetupCmd_InteractiveFlagWorks(t *testing.T) {
+ 			"TLS/SSL setup":  3, // No TLS (avoids TLS step)
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "testpass",
+-			"Confirm password":                          "testpass",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "testpass",
++			"Confirm password":  "testpass",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1087,10 +1094,10 @@ func TestInteractive_StartFresh(t *testing.T) {
+ 			"TLS/SSL setup":              3, // No TLS
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "fresh-pass",
+-			"Confirm password":                          "fresh-pass",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "fresh-pass",
++			"Confirm password":  "fresh-pass",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1294,8 +1301,8 @@ func TestInteractive_ExternalDB_ConnectivityTestPasses(t *testing.T) {
+ 			"Database password": "pass123",
+ 			"Confirm password":  "pass123",
+ 			"Database name":     "heimdall",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email": "admin@heimdall.local",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1322,8 +1329,8 @@ func TestInteractive_ExternalDB_ConnectivityTestFails(t *testing.T) {
+ 			"Database password": "pass123",
+ 			"Confirm password":  "pass123",
+ 			"Database name":     "heimdall",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email": "admin@heimdall.local",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1366,10 +1373,10 @@ func TestInteractive_LocalDB_SkipsConnectivityTest(t *testing.T) {
+ 			"TLS/SSL setup":  3, // No TLS
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password":                         "pass",
+-			"Confirm password":                          "pass",
+-			"External URL (default: https://localhost)": "",
+-			"Admin email":                               "admin@heimdall.local",
++			"Database password": "pass",
++			"Confirm password":  "pass",
++			"External URL":      "",
++			"Admin email":       "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+diff --git a/internal/cmd/status.go b/internal/cmd/status.go
+index 635217b..5a9ae58 100644
+--- a/internal/cmd/status.go
++++ b/internal/cmd/status.go
+@@ -118,8 +118,8 @@ func (r *StatusRunner) Run() error {
+ 	}
+ 	units := map[string]bool{}
+ 	if bundledRuntime {
+-		for _, item := range []struct{ mode, unit string }{{deployment.DatabaseMode, bundledPGService}, {deployment.ProxyMode, bundledCaddyService}} {
+-			if item.mode == "bundled" {
++		for _, item := range []struct{ mode, selected, unit string }{{deployment.DatabaseMode, "bundled", bundledPGService}, {deployment.ProxyMode, "bundled", bundledCaddyService}, {deployment.ProxyMode, "nginx", bundledNginxService}} {
++			if item.mode == item.selected {
+ 				active, err := r.Systemd.IsActive(item.unit)
+ 				if err != nil {
+ 					return err
+@@ -144,12 +144,16 @@ func (r *StatusRunner) Run() error {
+ 
+ 	fmt.Fprintf(r.Out, "Heimdall Server v%s\n", version)
+ 	if bundledRuntime {
+-		for _, name := range []string{"node", "postgresql", "caddy"} {
+-			fmt.Fprintf(r.Out, "  Bundled %s: %s\n", name, runtimes[name])
++		for _, name := range []string{"node", "postgresql", "caddy", "nginx"} {
++			if version, ok := runtimes[name]; ok {
++				fmt.Fprintf(r.Out, "  Bundled %s: %s\n", name, version)
++			}
+ 		}
+ 		fmt.Fprintf(r.Out, "  Proxy: %s (%s)\n", deployment.ProxyMode, env["EXTERNAL_URL"])
+-		if deployment.ProxyMode == "bundled" {
+-			fmt.Fprintf(r.Out, "  %s running: %t\n", bundledCaddyService, units[bundledCaddyService])
++		for _, unit := range []string{bundledCaddyService, bundledNginxService} {
++			if active, selected := units[unit]; selected {
++				fmt.Fprintf(r.Out, "  %s running: %t\n", unit, active)
++			}
+ 		}
+ 	}
+ 

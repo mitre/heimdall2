@@ -9,7 +9,7 @@ artifact=$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "${2:
 db_mode=${3:-external}
 proxy_mode=${4:-bundled}
 [[ $db_mode == bundled || $db_mode == external || $db_mode == coexist ]] || exit 64
-[[ $proxy_mode == bundled || $proxy_mode == external ]] || exit 64
+[[ $proxy_mode == nginx || $proxy_mode == bundled || $proxy_mode == external ]] || exit 64
 name="heimdall-topology-${platform##*/}-${db_mode}-${proxy_mode}-$$-$RANDOM"
 image="heimdall-integration-test:${platform##*/}"
 logdir="packaging/rpm/dist/integration/evidence/$name"
@@ -24,7 +24,7 @@ cleanup() {
     if [[ $result -ne 0 ]]; then docker logs "$owned" || true; fi
   done
   if [[ $result -ne 0 && -n $app_id ]]; then
-    docker exec "$app_id" journalctl --no-pager -u heimdall-server -u heimdall-postgresql -u heimdall-caddy -u postgresql -u nginx -n 150 || true
+    docker exec "$app_id" journalctl --no-pager -u heimdall-server -u heimdall-postgresql -u heimdall-caddy -u heimdall-nginx -u postgresql -u nginx -n 150 || true
   fi
   for owned in "$proxy_id" "$database_id" "$app_id"; do
     [[ -z $owned ]] || docker rm -fv "$owned" >/dev/null || result=1

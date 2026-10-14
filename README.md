@@ -161,8 +161,9 @@ If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `
 ### Heimdall Server - RPM
 
 RPM packaging includes Heimdall Server, its administration CLI, and private Node.js,
-PostgreSQL, and Caddy runtimes. Setup supports bundled or external databases and
-HTTPS proxies. See the [installation guide](packaging/rpm/README.md) and
+PostgreSQL, Caddy, and Nginx runtimes. Setup defaults to a bundled database and
+Nginx with an automatically generated self-signed certificate, with external
+database and proxy options. See the [installation guide](packaging/rpm/README.md) and
 [build and verification guide](packaging/rpm/BUILD.md). Packages use the root
 `VERSION` file; this standalone packaging branch requires candidate-specific
 acceptance before production use.

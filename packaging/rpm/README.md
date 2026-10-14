@@ -160,12 +160,14 @@ bundle resolved for the host's baseline. Do not bypass dependency checks with
 `rpm --nodeps` or mix packages from different distributions.
 
 For guided setup, replace the final setup command in either block with
-`sudo heimdall-cli setup --interactive`. Choose bundled database and proxy
-services with internal or custom TLS for a fully disconnected deployment.
+`sudo heimdall-cli setup --interactive`. Choose the bundled database and Nginx
+with its automatic self-signed certificate, or bundled Caddy with internal or
+custom TLS for a fully disconnected deployment.
 
-Arrange local name resolution and trust the generated public CA certificate at
-`/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt` on clients.
-Default bundled-service configuration and internal/custom TLS need no package
+Arrange local name resolution and trust the generated public certificate on
+clients: `/etc/heimdall-server/nginx/certs/server.crt` for Nginx, or
+`/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt` for Caddy.
+Nginx self-signed TLS and Caddy internal/custom TLS need no package
 downloads. ACME and external services retain their connectivity requirements.
 
 ## Requirements
@@ -177,9 +179,9 @@ systemd, RPM/DNF, glibc, foundational libraries and utilities, and SELinux polic
 These core OS packages are not included as Heimdall dependencies to upgrade the
 operating system. CI tests Rocky Linux; RHEL needs separate qualification.
 
-The RPM bundles Node.js 22.23.3, PostgreSQL 18.6, PostgreSQL's ICU libraries, and
-Caddy 2.11.4. No NodeSource, PGDG or Caddy repository is needed on the runtime
-host. Runtime updates, including private ICU security fixes, arrive in a new
+The RPM bundles Node.js 22.23.3, PostgreSQL 18.6, PostgreSQL's ICU libraries,
+Caddy 2.11.4 and Nginx 1.30.6. No NodeSource, PGDG, Caddy or Nginx repository is
+needed on the runtime host. Runtime updates, including private ICU security fixes, arrive in a new
 Heimdall RPM.
 
 Runtime OS requirements are glibc, libgcc, libstdc++, OpenSSL (libraries and command), zlib,
@@ -221,21 +223,26 @@ The wizard independently selects the database and proxy:
 
 | Database | Proxy | Result |
 | --- | --- | --- |
+| bundled | nginx | Private PostgreSQL and private Nginx with a self-signed certificate |
 | bundled | bundled | Private PostgreSQL and private Caddy |
 | bundled | external | Private PostgreSQL and your HTTPS proxy |
+| external | nginx | Your database and private Nginx with a self-signed certificate |
 | external | bundled | Your database and private Caddy |
 | external | external | Your database and HTTPS proxy |
 
-New installations default to bundled/bundled. Explicit flags override saved
+New installations default to bundled/nginx. The first proxy choice generates a
+self-signed certificate automatically. Text fields start empty; pressing Enter
+accepts the default shown in the question. The address default is `localhost`;
+setup stores the complete HTTPS URL. Explicit flags override saved
 values, and saved values override defaults. Configured installations without mode
 keys default to external/external and preserve endpoints. Hostname never implies
 ownership: `--database-mode external --db-host localhost` is supported.
 
 ```sh
-# Bundled database and private HTTPS proxy using an internal CA.
+# Bundled database and private Nginx with an automatic self-signed certificate.
 sudo heimdall-cli setup --non-interactive \
-  --database-mode bundled --proxy-mode bundled --tls-mode internal \
-  --external-url https://heimdall.example.com
+  --database-mode bundled --proxy-mode nginx \
+  --external-url heimdall.example.com
 
 # Bundled database; HTTPS terminated by an existing proxy.
 sudo heimdall-cli setup --non-interactive \
@@ -274,10 +281,11 @@ Use setup's mode flags rather than generic `config set` to change ownership.
 | --- | --- | --- | --- |
 | Application | `heimdall-server` | `heimdall` | `/var/lib/heimdall-server` |
 | PostgreSQL | `heimdall-postgresql` | `heimdall-postgres` | `/var/lib/heimdall-postgresql/18/data` |
+| Nginx | `heimdall-nginx` | `heimdall-nginx` | `/var/lib/heimdall-nginx` |
 | Caddy | `heimdall-caddy` | `heimdall-caddy` | `/var/lib/heimdall-caddy` |
 
 Runtime executables live under `/usr/libexec/heimdall-server/runtime/`. There
-are no global Node, PostgreSQL or Caddy aliases. The inventory is
+are no global Node, PostgreSQL, Caddy or Nginx aliases. The inventory is
 `/usr/share/heimdall-server/runtime-manifest.json`, with private ICU provenance in
 `/usr/share/heimdall-server/icu-manifest.json`; runtime notices are in
 `/usr/share/licenses/heimdall-server/`. Do not replace these RPM-owned files
@@ -301,6 +309,17 @@ rejected with an upgrade instruction. SCRAM configuration does not by itself
 establish FIPS validation of the bundled runtimes.
 
 ## TLS and external proxies
+
+The default `--proxy-mode nginx` uses the private Nginx service and automatically
+generates a self-signed certificate for the configured hostname or IP address.
+It works without network access after installation. The configuration is
+`/etc/heimdall-server/nginx/nginx.conf`; the certificate and private key are
+`/etc/heimdall-server/nginx/certs/server.crt` and `server.key`. The certificate
+lifetime defaults to seven days and can be set during interactive setup. Setup
+preserves valid certificates on normal reruns; replace both files to renew an
+expired certificate or change its hostname. Browsers require explicit trust in the public
+certificate; distribute only `server.crt`, never the private key. Nginx listens
+on HTTPS port 443 and forwards to the application port.
 
 Bundled Caddy owns `/etc/heimdall-server/caddy/Caddyfile` and uses the private admin
 socket `/run/heimdall-caddy/admin.sock`. It forwards to the configured `PORT`,
@@ -354,7 +373,7 @@ summary, check the HTTP response and inspect logs:
 sudo heimdall-cli status
 curl -fsS --retry 30 --retry-connrefused --retry-delay 1 \
   --retry-max-time 60 --max-time 5 http://localhost:3000/server
-sudo journalctl -u heimdall-server -u heimdall-postgresql -u heimdall-caddy -n 100
+sudo journalctl -u heimdall-server -u heimdall-postgresql -u heimdall-nginx -u heimdall-caddy -n 100
 ```
 
 `/server` returns application startup settings; it does not test database
@@ -398,7 +417,8 @@ sudo heimdall-cli status
 ```
 
 `set-port` updates the application configuration and selected private proxy
-upstream along with host port integration. With bundled Caddy, browser access
+upstream along with host port integration. With a managed HTTPS proxy,
+browser access
 continues to use HTTPS on port 443; this command changes the backend port.
 An external proxy must be updated by its operator.
 
@@ -428,7 +448,7 @@ between bundled and external database/proxy services. Additional login/OIDC
 settings and credentials survive normal setup reruns.
 
 CLI path overrides require matching systemd configuration; they do not relocate
-the fixed RPM runtime or PostgreSQL/Caddy state.
+the fixed RPM runtime or PostgreSQL/Caddy/Nginx state.
 
 ## Single Sign-On (SSO) and External Authentication
 
@@ -581,14 +601,14 @@ sudo heimdall-cli backup -o /root
 
 Retain the printed archive securely outside the server. Confirm it contains
 `database.sql` and `backend.env`; configuration-only output is not a database
-backup. New archives also contain `caddy-config/` and `caddy-state/` when present,
-including managed certificates/CA state with private permissions. They do not
+backup. Archives also contain private proxy configuration and certificate/state files
+when present, retaining their private permissions. They do not
 archive live PostgreSQL data files. Archives are mode `0600`.
 
 Before restoring, securely review the saved configuration and prepare an empty
 target database and required role. Restore uses the archived database endpoint;
 copying an archive to another host does not redirect that connection. It replays
-logical SQL and does not empty an existing database. Older backups without Caddy
+logical SQL and does not empty an existing database. Older backups without proxy
 entries remain supported.
 
 ```sh
@@ -602,7 +622,7 @@ Use the actual archive filename. Restore keeps the application stopped pending
 successful setup/migrations. Verify data, HTTPS and login before resuming use.
 On failure, leave services stopped and repair the cause before retrying against
 an empty recovery database; partially applied SQL is not rolled back wholesale.
-The CLI restores only Heimdall-owned Caddy resources, never an external proxy.
+The CLI restores only Heimdall-owned proxy resources, never an external proxy.
 
 ## Upgrading
 
@@ -647,9 +667,10 @@ sudo dnf remove --noautoremove heimdall-server
 ```
 
 `--noautoremove` keeps dependencies that DNF might otherwise remove as unused.
-Removal stops/disables only Heimdall's three units and removes its package files
+Removal stops/disables only Heimdall's four units and removes its package files
 and host integration. It retains application data, private PostgreSQL data,
-private Caddy state, backups and accounts. Modified configuration may be renamed
+private Caddy/Nginx state, backups and accounts. Modified configuration may be
+renamed
 to `.rpmsave`; keep the verified backup rather than relying on a pathname.
 System PostgreSQL and external proxies remain operator-owned.
 

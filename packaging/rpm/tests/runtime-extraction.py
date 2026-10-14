@@ -14,12 +14,12 @@ PROGRAM = SPEC.read_text().split("python3 - <<'PY'\n", 1)[1].split('\nPY\n', 1)[
 
 
 class RuntimeExtractionTest(unittest.TestCase):
-    def check_archive(self, kind):
+    def check_archive(self, kind, selected=23):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
-            for number in (23, 24, 25):
+            for number in (23, 24, 25, 29):
                 with tarfile.open(str(root / str(number)), 'w') as archive:
-                    if number != 23:
+                    if number != selected:
                         continue
                     member = tarfile.TarInfo('node/bin/node')
                     if kind == 'traversal':
@@ -48,38 +48,52 @@ class RuntimeExtractionTest(unittest.TestCase):
                         member.linkname = 'node/sub/link'
                         archive.addfile(member)
             program = PROGRAM
-            for number in (23, 24, 25):
+            for number in (23, 24, 25, 29):
                 program = program.replace('%{SOURCE' + str(number) + '}',
                                           str(root / str(number)))
             result = subprocess.run([sys.executable, '-c', program], cwd=tmp,
                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             if kind == 'file':
                 self.assertEqual(result.returncode, 0, result.stderr.decode())
-                self.assertEqual((root / 'runtime-node/bin/node').read_bytes(), b'ok')
+                self.assertEqual((root / ('runtime-node' if selected == 23 else 'runtime-nginx') / 'bin/node').read_bytes(), b'ok')
             else:
                 self.assertNotEqual(result.returncode, 0, 'Unsafe archive accepted: ' + kind)
             self.assertFalse((root / 'escape').exists())
 
     def test_regular_file(self):
-        self.check_archive('file')
+        for selected in (23, 29):
+            with self.subTest(source=selected):
+                self.check_archive('file', selected)
 
     def test_path_traversal(self):
-        self.check_archive('traversal')
+        for selected in (23, 29):
+            with self.subTest(source=selected):
+                self.check_archive('traversal', selected)
 
     def test_absolute_path(self):
-        self.check_archive('absolute')
+        for selected in (23, 29):
+            with self.subTest(source=selected):
+                self.check_archive('absolute', selected)
 
     def test_symlink_escape(self):
-        self.check_archive('symlink')
+        for selected in (23, 29):
+            with self.subTest(source=selected):
+                self.check_archive('symlink', selected)
 
     def test_hardlink_escape(self):
-        self.check_archive('hardlink')
+        for selected in (23, 29):
+            with self.subTest(source=selected):
+                self.check_archive('hardlink', selected)
 
     def test_device_member(self):
-        self.check_archive('device')
+        for selected in (23, 29):
+            with self.subTest(source=selected):
+                self.check_archive('device', selected)
 
     def test_hardlink_cannot_relocate_symlink(self):
-        self.check_archive('relocated_symlink')
+        for selected in (23, 29):
+            with self.subTest(source=selected):
+                self.check_archive('relocated_symlink', selected)
 
 
 if __name__ == '__main__':

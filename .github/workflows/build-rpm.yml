@@ -219,9 +219,10 @@ jobs:
           bash packaging/rpm/tests/installed-icu.sh
           "$runtime/postgresql/bin/psql" --version
           "$runtime/caddy/caddy" version
+          "$runtime/nginx/sbin/nginx" -v
           rpm -qa --qf '%{NAME}\n' > /tmp/installed-packages
-          if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy)$' /tmp/installed-packages; then exit 1; fi
-          for name in node postgresql caddy; do
+          if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy|nginx)$' /tmp/installed-packages; then exit 1; fi
+          for name in node postgresql caddy nginx; do
             test -n "$(find /usr/share/licenses/heimdall-server -type f -ipath "*$name*" -print -quit)"
           done
           cli_version=$(heimdall-cli --version)
@@ -229,6 +230,8 @@ jobs:
           version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
           [[ "$cli_version" == *"$version"* ]]
           [[ "$cli_version" == *"$(cat packaging/rpm/heimdall-cli.ref)"* ]]
+          patch_hash=$(sha256sum packaging/rpm/heimdall-cli-nginx.patch | cut -d ' ' -f 1)
+          [[ "$cli_version" == *"+rpm.$patch_hash"* ]]
           find /usr/share/man/man1 -name 'heimdall-cli.1*' | grep -q .
           find /usr/share/man/man1 -name 'heimdall-cli-setup.1*' | grep -q .
           bash packaging/rpm/tests/logrotate.sh
@@ -236,12 +239,12 @@ jobs:
       - name: Verify the installed systemd units
         run: |
           mkdir -p diagnostics
-          systemd-analyze verify /usr/lib/systemd/system/heimdall-{server,postgresql,caddy}.service 2>&1 \
+          systemd-analyze verify /usr/lib/systemd/system/heimdall-{server,postgresql,caddy,nginx}.service 2>&1 \
             | tee diagnostics/systemd-verify.log
           if [[ '${{ matrix.distro }}' == el8 ]]; then
             # systemd 239 ignores these four newer settings. Keep the directives
             # for newer systems, expose the limitation, and reject other warnings.
-            awk '!/^\/usr\/lib\/systemd\/system\/heimdall-(server|postgresql|caddy).service:[0-9]+: Unknown lvalue '\''(ProtectClock|ProtectHostname|ProtectKernelLogs|ProtectProc)'\'' in section '\''Service'\''$/' \
+            awk '!/^\/usr\/lib\/systemd\/system\/heimdall-(server|postgresql|caddy|nginx).service:[0-9]+: Unknown lvalue '\''(ProtectClock|ProtectHostname|ProtectKernelLogs|ProtectProc)'\'' in section '\''Service'\''$/' \
               diagnostics/systemd-verify.log > diagnostics/unexpected.log
             test ! -s diagnostics/unexpected.log
             if [[ -s diagnostics/systemd-verify.log ]]; then
@@ -296,7 +299,7 @@ jobs:
             docker cp "$container:/tmp/rpm-lifecycle-installer-status.log" diagnostics/installer-status.log || true
             docker cp "$container:/tmp/rpm-offline-baseline.tsv" diagnostics/baseline.tsv || true
             docker cp "$container:/tmp/rpm-missing-dependencies.log" diagnostics/missing-dependencies.log || true
-            docker exec "$container" journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy > diagnostics/services.log || true
+            docker exec "$container" journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy -u heimdall-nginx > diagnostics/services.log || true
             docker rm -f "$container" >/dev/null || result=1
             exit "$result"
           }
@@ -328,6 +331,8 @@ jobs:
             [[ -x $python ]] || python=/usr/libexec/platform-python
             "$python" /tmp/rpm-tests/offline-baseline.py verify /tmp/os-dependencies.json
           '
+          # Exercise fresh Nginx defaults before the explicit Caddy lifecycle checks.
+          timeout 900 docker exec "$container" bash /tmp/rpm-tests/topology.sh bundled nginx
           timeout 900 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh setup
           docker restart "$container"
           for attempt in $(seq 1 60); do

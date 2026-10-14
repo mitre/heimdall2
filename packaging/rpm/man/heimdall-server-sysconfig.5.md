@@ -55,13 +55,13 @@ file.
 
 :   Variable data directory owned by the heimdall user. Contains the
     backups/ subdirectory for pre-upgrade and on-demand database backups.
-    Private PostgreSQL and Caddy state are separate sibling directories and
+    Private PostgreSQL, Caddy and Nginx state are separate sibling directories and
     are not relocated or recursively reowned by this application setting.
 
 **HEIMDALL_CONFIG_DIR**=_/etc/heimdall-server_
 
 :   Configuration directory containing backend.env and any additional
-    configuration files. Owned by root:heimdall with mode 0751 for private Caddy traversal;
+    configuration files. Owned by root:heimdall with mode 0751 so private proxies can traverse to their own subdirectories;
     backend.env remains root:heimdall 0640.
 
 **HEIMDALL_LIBEXEC_DIR**=_/usr/libexec/heimdall-server_
