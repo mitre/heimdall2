@@ -82,8 +82,35 @@ by this candidate on its recorded baseline, not a complete operating system.
 
 ## Disconnected installation
 
-Start with the [host baseline](#requirements), then transfer the complete bundle
-from a trusted workflow run. The host must match the manifest's distribution,
+Transfer the complete bundle for the host's EL major and CPU architecture from a
+trusted workflow run. Run the commands from the extracted bundle's root directory.
+Both options below configure bundled database and proxy services with internal
+TLS. Replace `heimdall.example.test` with the hostname clients will use.
+
+### OS dependencies already installed
+
+If the host already has the [OS prerequisites](#requirements), use this shorter
+block. It installs only the Heimdall RPM. Each step runs only if the previous one
+succeeds:
+
+```sh
+sha256sum --check SHA256SUMS &&
+sudo rpm --import RPM-TEST-GPG-KEY &&
+sudo dnf --disablerepo='*' install \
+  --setopt=localpkg_gpgcheck=1 --setopt=install_weak_deps=False \
+  ./RPMS/*/heimdall-server-*.rpm &&
+sudo heimdall-cli setup --non-interactive \
+  --database-mode bundled --proxy-mode bundled --tls-mode internal \
+  --external-url https://heimdall.example.test
+```
+
+If DNF reports missing OS dependencies, use the longer block below to install
+them from the bundle on a matching host. Do not proceed to setup after a failed
+installation.
+
+### OS dependencies missing
+
+When installing the included OS RPMs, the host must match the manifest's distribution,
 version and architecture and satisfy its recorded package baseline. The dependency
 collector currently supports Rocky Linux only. RHEL support requires adapting it
 to approved RHEL repositories and validating a RHEL baseline; this is not yet
@@ -120,7 +147,9 @@ sudo rpm --import ./OS-GPG-KEYS/*
 sudo dnf --disablerepo='*' install --setopt=localpkg_gpgcheck=1 \
   --setopt=install_weak_deps=False \
   ./RPMS/*/heimdall-server-*.rpm ./OS-RPMS/*/*.rpm
-sudo heimdall-cli setup --interactive
+sudo heimdall-cli setup --non-interactive \
+  --database-mode bundled --proxy-mode bundled --tls-mode internal \
+  --external-url https://heimdall.example.test
 )
 ```
 
@@ -130,14 +159,9 @@ update, first apply an approved offline update for that distribution or obtain a
 bundle resolved for the host's baseline. Do not bypass dependency checks with
 `rpm --nodeps` or mix packages from different distributions.
 
-For a fully disconnected deployment, choose bundled database and proxy services
-with internal or custom TLS. This deterministic setup uses internal TLS:
-
-```sh
-sudo heimdall-cli setup --non-interactive \
-  --database-mode bundled --proxy-mode bundled --tls-mode internal \
-  --external-url https://heimdall.example.test
-```
+For guided setup, replace the final setup command in either block with
+`sudo heimdall-cli setup --interactive`. Choose bundled database and proxy
+services with internal or custom TLS for a fully disconnected deployment.
 
 Arrange local name resolution and trust the generated public CA certificate at
 `/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt` on clients.
@@ -147,8 +171,8 @@ downloads. ACME and external services retain their connectivity requirements.
 ## Requirements
 
 Use a booted EL8/EL9/EL10 systemd host on x86_64 or aarch64 with root/sudo access.
-The offline bundle assumes a maintained Core installation, with the exact package
-versions recorded in `os-dependencies.json`. The host supplies its kernel,
+The included OS dependency RPMs assume a maintained Core installation, with the
+exact package versions recorded in `os-dependencies.json`. The host supplies its kernel,
 systemd, RPM/DNF, glibc, foundational libraries and utilities, and SELinux policy.
 These core OS packages are not included as Heimdall dependencies to upgrade the
 operating system. CI tests Rocky Linux; RHEL needs separate qualification.
