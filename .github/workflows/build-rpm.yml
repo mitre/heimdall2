@@ -133,7 +133,7 @@ jobs:
             "$TOPDIR/RPM-TEST-GPG-KEY" "${rpms[@]}"
 
       - name: Bundle vendor dependencies for the minimal OS baseline
-        run: make -C packaging/rpm offline-dependencies TOPDIR="$TOPDIR" CI_BASELINE_DIR="$TOPDIR/ci-baseline"
+        run: make -C packaging/rpm offline-dependencies TOPDIR="$TOPDIR"
 
       - name: Record artifact checksums
         run: |
@@ -159,13 +159,6 @@ jobs:
             ${{ env.TOPDIR }}/RPM-TEST-GPG-KEY
             ${{ env.TOPDIR }}/runtime-manifest.json
             ${{ env.TOPDIR }}/SHA256SUMS
-          retention-days: 7
-          if-no-files-found: error
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: heimdall-ci-baseline-${{ matrix.distro }}-${{ matrix.arch }}
-          path: ${{ env.TOPDIR }}/ci-baseline/
           retention-days: 7
           if-no-files-found: error
 
@@ -286,12 +279,7 @@ jobs:
           name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
           path: rpms
 
-      - uses: actions/download-artifact@v8
-        with:
-          name: heimdall-ci-baseline-${{ matrix.distro }}-${{ matrix.arch }}
-          path: ci-baseline
-
-      - name: Prepare the saved OS baseline without network access
+      - name: Prepare current OS packages before disconnecting
         run: |
           docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
             --build-arg BASE_IMAGE='${{ matrix.image }}' --target offline-test-host -t heimdall-direct-test .

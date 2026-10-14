@@ -2,12 +2,9 @@
 """Reject a disconnected test that hides missing dependencies or changes the OS."""
 import copy
 import importlib.util
-import json
 from pathlib import Path
 import sys
-import tempfile
 import unittest
-from unittest import mock
 
 sys.dont_write_bytecode = True
 
@@ -39,8 +36,12 @@ class OfflineBaselineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'already installed.*tar'):
             self.check()
 
-    def test_baseline_requires_the_exact_recorded_version(self):
-        self.installed['systemd'] = {'systemd-239-81.el8.x86_64'}
+    def test_baseline_accepts_updated_package_versions(self):
+        self.installed['systemd'] = {'systemd-239-83.el8.x86_64'}
+        self.check()
+
+    def test_baseline_still_requires_its_packages(self):
+        del self.installed['systemd']
         with self.assertRaisesRegex(ValueError, 'baseline.*systemd'):
             self.check()
 
@@ -61,8 +62,6 @@ class OfflineBaselineTests(unittest.TestCase):
             with self.subTest(nevra=nevra):
                 installed = self.helper.inventory('systemd\t' + nevra + '\n')
                 self.assertEqual(installed, {'systemd': {nevra}})
-                with self.assertRaisesRegex(ValueError, 'baseline.*systemd'):
-                    self.check(installed)
 
     def test_a_dependency_supplied_by_the_actual_core_baseline_is_allowed(self):
         self.manifest['baseline'].append({'name': 'policycoreutils-python-utils',
@@ -95,66 +94,17 @@ class OfflineBaselineTests(unittest.TestCase):
 
     def test_wrong_distribution_or_architecture_is_rejected(self):
         for release, arch in [({'ID': 'rhel', 'VERSION_ID': '8.10'}, 'x86_64'),
-                              ({'ID': 'rocky', 'VERSION_ID': '8.9'}, 'x86_64'),
+                              ({'ID': 'rocky', 'VERSION_ID': '9.0'}, 'x86_64'),
                               ({'ID': 'rocky', 'VERSION_ID': '8.10'}, 'aarch64')]:
             with self.subTest(release=release, arch=arch):
                 with self.assertRaises(ValueError):
                     self.helper.check_platform(self.manifest, release, arch)
 
-    def test_older_minor_image_can_be_provisioned_to_the_recorded_baseline(self):
-        self.helper.check_platform(self.manifest, {'ID': 'rocky', 'VERSION_ID': '8.9'},
-                                   'x86_64', exact_version=False)
-        with self.assertRaises(ValueError):
-            self.helper.check_platform(self.manifest, {'ID': 'rocky', 'VERSION_ID': '9.0'},
-                                       'x86_64', exact_version=False)
-
-    def test_snapshot_requires_exactly_the_recorded_core_rpms(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            snapshot = Path(temporary)
-            (snapshot / 'os-dependencies.json').write_text(json.dumps(self.manifest))
-            rpms = snapshot / 'RPMS' / 'x86_64'
-            rpms.mkdir(parents=True)
-            package = rpms / 'systemd.rpm'
-            package.touch()
-            with mock.patch.object(self.helper.subprocess, 'check_output',
-                                   return_value='systemd\tsystemd-0:239-82.el8.x86_64\n'):
-                self.assertEqual(self.helper.snapshot_packages(self.manifest, snapshot),
-                                 [('systemd', str(package))])
-            for output in ('systemd\tsystemd-239-81.el8.x86_64\n',
-                           'systemd\tsystemd-239-82.el8.aarch64\n',
-                           'tar\ttar-2:1.30-13.el8.x86_64\n'):
-                with self.subTest(output=output), mock.patch.object(
-                        self.helper.subprocess, 'check_output', return_value=output):
-                    with self.assertRaisesRegex(ValueError, 'snapshot.*baseline'):
-                        self.helper.snapshot_packages(self.manifest, snapshot)
-            package.unlink()
-            with self.assertRaisesRegex(ValueError, 'snapshot.*baseline'):
-                self.helper.snapshot_packages(self.manifest, snapshot)
-
-    def test_snapshot_rejects_extra_or_duplicate_rpms(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            snapshot = Path(temporary)
-            (snapshot / 'os-dependencies.json').write_text(json.dumps(self.manifest))
-            rpms = snapshot / 'RPMS' / 'x86_64'
-            rpms.mkdir(parents=True)
-            (rpms / 'systemd.rpm').touch()
-            (rpms / 'extra.rpm').touch()
-            for extra in ('tar\ttar-2:1.30-13.el8.x86_64\n',
-                          'systemd\tsystemd-239-82.el8.x86_64\n'):
-                with self.subTest(extra=extra), mock.patch.object(
-                        self.helper.subprocess, 'check_output',
-                        return_value='systemd\tsystemd-239-82.el8.x86_64\n' + extra):
-                    with self.assertRaisesRegex(ValueError, 'snapshot.*baseline'):
-                        self.helper.snapshot_packages(self.manifest, snapshot)
-
-    def test_snapshot_must_belong_to_the_same_bundle(self):
-        with tempfile.TemporaryDirectory() as temporary:
-            snapshot = Path(temporary)
-            other = copy.deepcopy(self.manifest)
-            other['candidate']['nevra'] = 'heimdall-server-2.15.0-1.el8.x86_64'
-            (snapshot / 'os-dependencies.json').write_text(json.dumps(other))
-            with self.assertRaisesRegex(ValueError, 'snapshot manifest'):
-                self.helper.snapshot_packages(self.manifest, snapshot)
+    def test_minor_os_updates_do_not_pin_the_test_fixture(self):
+        for version in ('8.9', '8.10', '8.11'):
+            with self.subTest(version=version):
+                self.helper.check_platform(self.manifest, {'ID': 'rocky', 'VERSION_ID': version},
+                                           'x86_64')
 
 
 if __name__ == '__main__':

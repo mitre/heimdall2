@@ -324,13 +324,12 @@ The dependency resolver calculates additions independently for each EL version
 and architecture; it does not hard-code the eight packages from the EL8 baseline
 assessment or include core OS updates.
 
-CI saves the exact vendor-signed Core RPMs during dependency resolution in a
-separate test artifact, excluded from release bundles. The fixture verifies its
-checksums and provisions that baseline with networking and repositories disabled,
-so later mirror changes cannot invalidate the recorded package versions.
-It then installs the signed application and OS dependency RPMs together. This
-checks that dependency resolution does not rely on packages preinstalled by the
-build environment.
+CI provisions the Core package names from current vendor repositories, without
+requiring the exact OS package versions recorded during dependency resolution.
+No separate Core snapshot artifact is created. After preparing the host, CI
+disables networking and repositories, then installs the signed application and
+OS dependency RPMs together. This checks that dependency resolution does not rely
+on packages preinstalled by the build environment.
 System ICU and separate application runtime packages are absent from that fresh
 fixture. Vendor keys and the Heimdall test key are imported before installation;
 local RPM signature checks remain enabled.

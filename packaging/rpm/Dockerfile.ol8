@@ -18,8 +18,7 @@ CMD ["/sbin/init"]
 FROM trusted-base AS offline-test-host
 COPY packaging/rpm/tests/prepare-offline-host.sh packaging/rpm/tests/offline-baseline.py /tmp/
 COPY rpms/os-dependencies.json /tmp/os-dependencies.json
-RUN --network=none --mount=type=bind,source=ci-baseline,target=/tmp/ci-baseline \
-    HEIMDALL_RPM_TEST=1 bash /tmp/prepare-offline-host.sh /tmp/os-dependencies.json /tmp/ci-baseline
+RUN HEIMDALL_RPM_TEST=1 bash /tmp/prepare-offline-host.sh /tmp/os-dependencies.json
 CMD ["/sbin/init"]
 
 FROM trusted-base AS build-env

@@ -33,7 +33,7 @@ class OfflineDependencies(unittest.TestCase):
         self.candidate = Package('heimdall-server', repo='@commandline')
         self.extra = Package('checkpolicy')
 
-    def collect_fixture(self, root, snapshot=None, unsigned=None):
+    def collect_fixture(self, root, unsigned=None):
         output = root / 'bundle'
         output.mkdir()
         candidate = root / 'candidate.rpm'
@@ -76,99 +76,37 @@ class OfflineDependencies(unittest.TestCase):
                              return_value='heimdall-server\t1.el9\tx86_64'), \
                 patch.object(collector.subprocess, 'check_call'), \
                 patch.object(collector.subprocess, 'run', side_effect=signature):
-            if snapshot is None:
-                collector.collect(candidate, output)
-            else:
-                collector.collect(candidate, output, snapshot)
+            collector.collect(candidate, output)
         return output
 
-    def test_ci_snapshot_contains_signed_core_and_checksums_without_changing_bundle(self):
+    def test_collection_contains_signed_dependencies_and_vendor_keys(self):
         with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            snapshot = root / 'ci-baseline'
-            output = self.collect_fixture(root, snapshot)
+            output = self.collect_fixture(Path(temp))
+            self.assertEqual(set(p.name for p in output.iterdir()), set(collector.OUTPUT_NAMES))
             self.assertEqual(sorted(p.name for p in (output / 'OS-RPMS/x86_64').iterdir()),
                              ['checkpolicy-1.x86_64.rpm'])
-            self.assertEqual(sorted(p.name for p in (snapshot / 'RPMS/x86_64').iterdir()),
-                             ['systemd-1.x86_64.rpm'])
             self.assertEqual((output / 'OS-RPMS/x86_64/checkpolicy-1.x86_64.rpm').read_bytes(),
                              b'checkpolicy')
-            self.assertEqual((snapshot / 'RPMS/x86_64/systemd-1.x86_64.rpm').read_bytes(), b'systemd')
             manifest = json.loads((output / 'os-dependencies.json').read_text())
             self.assertEqual(manifest['dependencies'], [{'name': 'checkpolicy',
                 'nevra': 'checkpolicy-1.x86_64', 'path': 'OS-RPMS/x86_64/checkpolicy-1.x86_64.rpm',
                 'sha256': hashlib.sha256(b'checkpolicy').hexdigest(), 'repository': 'baseos'}])
-            self.assertEqual((snapshot / 'OS-GPG-KEYS/vendor-key').read_bytes(), b'vendor key')
-            self.assertEqual((snapshot / 'os-dependencies.json').read_bytes(),
-                             (output / 'os-dependencies.json').read_bytes())
-            checksums = dict(line.split('  ', 1)[::-1]
-                             for line in (snapshot / 'SHA256SUMS').read_text().splitlines())
-            self.assertEqual(set(checksums), {'RPMS/x86_64/systemd-1.x86_64.rpm',
-                                             'OS-GPG-KEYS/vendor-key', 'os-dependencies.json'})
-            for path, digest in checksums.items():
-                self.assertEqual(digest, hashlib.sha256((snapshot / path).read_bytes()).hexdigest())
+            self.assertEqual((output / 'OS-GPG-KEYS/vendor-key').read_bytes(), b'vendor key')
 
-    def test_collection_without_ci_snapshot_keeps_the_existing_bundle_layout(self):
-        with tempfile.TemporaryDirectory() as temp:
-            output = self.collect_fixture(Path(temp))
-            self.assertEqual(set(p.name for p in output.iterdir()), set(collector.OUTPUT_NAMES))
-            manifest = json.loads((output / 'os-dependencies.json').read_text())
-            self.assertEqual([p['name'] for p in manifest['dependencies']], ['checkpolicy'])
-
-    def test_unsigned_packages_cannot_publish_snapshot_or_bundle(self):
-        for unsigned in ('systemd', 'checkpolicy'):
-            with self.subTest(unsigned=unsigned), tempfile.TemporaryDirectory() as temp:
-                root = Path(temp)
-                snapshot = root / 'ci-baseline'
-                with self.assertRaisesRegex(ValueError, 'Vendor signature'):
-                    self.collect_fixture(root, snapshot, unsigned=unsigned)
-                self.assertFalse(snapshot.exists())
-                self.assertEqual(list((root / 'bundle').iterdir()), [])
-
-    def test_ci_snapshot_destination_is_never_overwritten(self):
-        for kind in ('directory', 'file', 'broken-symlink'):
-            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as temp:
-                root = Path(temp)
-                snapshot = root / 'ci-baseline'
-                if kind == 'directory':
-                    snapshot.mkdir()
-                elif kind == 'file':
-                    snapshot.write_text('existing contents')
-                else:
-                    snapshot.symlink_to(root / 'missing')
-                with self.assertRaisesRegex(ValueError, 'already exists'):
-                    self.collect_fixture(root, snapshot)
-                if kind == 'directory':
-                    self.assertEqual(list(snapshot.iterdir()), [])
-                elif kind == 'file':
-                    self.assertEqual(snapshot.read_text(), 'existing contents')
-                else:
-                    self.assertTrue(snapshot.is_symlink())
-                    self.assertFalse((root / 'missing').exists())
-                self.assertEqual(list((root / 'bundle').iterdir()), [])
-
-    def test_ci_snapshot_parent_must_exist(self):
+    def test_unsigned_packages_cannot_publish_bundle(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            with self.assertRaisesRegex(ValueError, 'parent'):
-                self.collect_fixture(root, root / 'missing/ci-baseline')
-            self.assertFalse((root / 'missing').exists())
+            with self.assertRaisesRegex(ValueError, 'Vendor signature'):
+                self.collect_fixture(root, unsigned='checkpolicy')
+            self.assertEqual(list((root / 'bundle').iterdir()), [])
 
-    def test_ci_snapshot_cannot_overlap_normal_bundle_outputs(self):
-        for name in collector.OUTPUT_NAMES:
-            with self.subTest(name=name), tempfile.TemporaryDirectory() as temp:
-                root = Path(temp)
-                with self.assertRaisesRegex(ValueError, 'overlap'):
-                    self.collect_fixture(root, root / 'bundle' / name)
-                self.assertEqual(list((root / 'bundle').iterdir()), [])
-
-    def test_ci_baseline_rejects_other_repositories_and_architectures(self):
+    def test_dependencies_reject_other_repositories_and_architectures(self):
         for repository, arch in [('epel', 'x86_64'), ('baseos', 'i686')]:
             with self.subTest(repository=repository, arch=arch), tempfile.TemporaryDirectory() as temp:
                 root = Path(temp)
-                self.core.reponame, self.core.arch = repository, arch
+                self.extra.reponame, self.extra.arch = repository, arch
                 with self.assertRaisesRegex(ValueError, 'repository or architecture'):
-                    self.collect_fixture(root, root / 'ci-baseline')
+                    self.collect_fixture(root)
 
     def test_only_additional_packages_are_bundled(self):
         self.assertEqual(collector.dependency_delta(

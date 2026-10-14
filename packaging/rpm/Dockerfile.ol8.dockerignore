@@ -13,7 +13,6 @@
 **/.env.*
 **/*.log
 **/*.rpm
-!ci-baseline/RPMS/**/*.rpm
 **/rpmbuild
 **/man/man1
 **/cli-man

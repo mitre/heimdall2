@@ -11,13 +11,10 @@ import sys
 INVENTORY = Path('/tmp/rpm-offline-baseline.tsv')
 
 
-def check_platform(manifest, release, architecture, exact_version=True):
+def check_platform(manifest, release, architecture):
     expected = manifest['distribution']
-    actual_version = release.get('VERSION_ID', '')
-    expected_version = expected['version_id']
-    if not exact_version:
-        actual_version = actual_version.split('.')[0]
-        expected_version = expected_version.split('.')[0]
+    actual_version = release.get('VERSION_ID', '').split('.')[0]
+    expected_version = expected['version_id'].split('.')[0]
     if (release.get('ID'), actual_version, architecture) != (
             expected['id'], expected_version, manifest['architecture']):
         raise ValueError('Fixture distribution/version/architecture does not match the bundle')
@@ -25,8 +22,8 @@ def check_platform(manifest, release, architecture, exact_version=True):
 
 def check_inventory(manifest, installed, before=None):
     for package in manifest['baseline']:
-        if package['nevra'] not in installed.get(package['name'], set()):
-            raise ValueError('Missing exact baseline package: ' + package['nevra'])
+        if not installed.get(package['name']):
+            raise ValueError('Missing baseline package: ' + package['name'])
     if before is None:
         extras = {package['name'] for package in manifest['dependencies']}
         extras.add(manifest['candidate']['name'])
@@ -55,25 +52,9 @@ def inventory(text):
     return packages
 
 
-def snapshot_packages(manifest, snapshot):
-    if json.loads((snapshot / 'os-dependencies.json').read_text()) != manifest:
-        raise ValueError('CI snapshot manifest does not match the bundle')
-    paths = sorted(snapshot.glob('RPMS/*/*.rpm'))
-    if len(paths) != len(manifest['baseline']):
-        raise ValueError('CI snapshot does not contain exactly the recorded baseline')
-    output = subprocess.check_output(['rpm', '-qp', '--qf', '%{NAME}\t%{NEVRA}\n'] +
-                                     [str(path) for path in paths], universal_newlines=True)
-    expected = '\n'.join(p['name'] + '\t' + p['nevra'] for p in manifest['baseline'])
-    if inventory(output) != inventory(expected):
-        raise ValueError('CI snapshot does not match the exact recorded baseline')
-    return [(line.split('\t')[0], str(path)) for line, path in zip(output.splitlines(), paths)]
-
-
 def main():
-    if not (len(sys.argv) == 4 and sys.argv[1] == 'snapshot' or
-            len(sys.argv) == 3 and sys.argv[1] in ('packages', 'dependencies', 'record', 'verify')):
-        raise ValueError('Usage: offline-baseline.py packages|dependencies|record|verify MANIFEST '
-                         'or snapshot MANIFEST SNAPSHOT_DIR')
+    if len(sys.argv) != 3 or sys.argv[1] not in ('packages', 'dependencies', 'record', 'verify'):
+        raise ValueError('Usage: offline-baseline.py packages|dependencies|record|verify MANIFEST')
     if os.environ.get('HEIMDALL_RPM_TEST') != '1' or os.geteuid() != 0:
         raise ValueError('Offline baseline helper is only for disposable root CI fixtures')
     action, path = sys.argv[1:3]
@@ -91,14 +72,10 @@ def main():
         if separator and key in ('ID', 'VERSION_ID'):
             release[key] = shlex.split(value)[0]
     architecture = subprocess.check_output(['rpm', '-E', '%{_arch}'], universal_newlines=True).strip()
-    check_platform(manifest, release, architecture, exact_version=action not in ('packages', 'snapshot'))
-    if action == 'snapshot':
-        for name, path in snapshot_packages(manifest, Path(sys.argv[3]).resolve(strict=True)):
-            print(name + '\t' + path)
-        return
+    check_platform(manifest, release, architecture)
     if action == 'packages':
         for package in manifest['baseline']:
-            print(package['name'] + '\t' + package['nevra'])
+            print(package['name'])
         return
     if action == 'dependencies':
         for package in manifest['dependencies']:

@@ -59,15 +59,6 @@ def check_output(output):
             raise ValueError('Bundle output already exists: ' + str(output / name))
 
 
-def check_ci_baseline(destination, output):
-    if destination.resolve() in {(output / name).resolve() for name in OUTPUT_NAMES}:
-        raise ValueError('CI baseline must not overlap normal bundle outputs: ' + str(destination))
-    if os.path.lexists(str(destination)):
-        raise ValueError('CI baseline output already exists: ' + str(destination))
-    if not destination.parent.is_dir():
-        raise ValueError('CI baseline parent directory must already exist: ' + str(destination.parent))
-
-
 def verify_signature(database, package):
     result = subprocess.run(['rpmkeys', '--dbpath', str(database), '--checksig',
                              '--verbose', str(package)],
@@ -128,31 +119,11 @@ def write_dependency_rpms(dependencies, trust, stage, architecture):
     return records
 
 
-def write_ci_baseline(baseline, trust, stage, snapshot, architecture):
-    core_directory = snapshot / 'RPMS' / architecture
-    core_directory.mkdir(parents=True)
-    for package in baseline:
-        source = Path(package.localPkg())
-        verify_signature(trust, source)
-        target = core_directory / source.name
-        if target.exists():
-            raise ValueError('Baseline RPM filenames conflict: ' + source.name)
-        shutil.copyfile(str(source), str(target))
-    shutil.copytree(str(stage / 'OS-GPG-KEYS'), str(snapshot / 'OS-GPG-KEYS'))
-    shutil.copyfile(str(stage / DEPENDENCY_MANIFEST),
-                    str(snapshot / DEPENDENCY_MANIFEST))
-    checksums = [sha256(path) + '  ' + str(path.relative_to(snapshot))
-                 for path in sorted(snapshot.rglob('*')) if path.is_file()]
-    (snapshot / 'SHA256SUMS').write_text('\n'.join(checksums) + '\n')
-
-
-def collect(candidate, output, ci_baseline=None):
+def collect(candidate, output):
     # The build Python can lack DNF; import only when collecting, not for host-side tests.
     import dnf
 
     check_output(output)
-    if ci_baseline is not None:
-        check_ci_baseline(ci_baseline, output)
     distribution = read_os_release(Path('/etc/os-release'))
     metadata = subprocess.check_output(['rpm', '-qp', '--queryformat',
         '%{NAME}\t%{RELEASE}\t%{ARCH}', str(candidate)], universal_newlines=True).split('\t')
@@ -197,11 +168,10 @@ def collect(candidate, output, ci_baseline=None):
             base.package_install(package)
             base.resolve()
             dependencies = dependency_delta(baseline, list(base.transaction.install_set), package)
-            downloads = dependencies + (baseline if ci_baseline is not None else [])
-            for dependency in downloads:
+            for dependency in dependencies:
                 if dependency.reponame not in REPOSITORIES or dependency.arch not in (architecture, 'noarch'):
                     raise ValueError('Dependency has an unexpected repository or architecture: ' + str(dependency))
-            base.download_packages(downloads)
+            base.download_packages(dependencies)
             trust = work / 'rpmdb'
             trust.mkdir()
             subprocess.check_call(['rpm', '--dbpath', str(trust), '--initdb'])
@@ -218,13 +188,7 @@ def collect(candidate, output, ci_baseline=None):
                 'repositories': sorted(repo.id for repo in repositories),
                 'dependencies': records}
             (stage / DEPENDENCY_MANIFEST).write_text(json.dumps(manifest, indent=2) + '\n')
-            if ci_baseline is not None:
-                snapshot = work / 'ci-baseline'
-                write_ci_baseline(baseline, trust, stage, snapshot, architecture)
         check_output(output)
-        if ci_baseline is not None:
-            check_ci_baseline(ci_baseline, output)
-            snapshot.rename(ci_baseline)
         for name in OUTPUT_NAMES:
             (stage / name).rename(output / name)
     print('Collected {} vendor-signed OS dependency RPMs for Rocky {} {} into {}'.format(
@@ -232,12 +196,10 @@ def collect(candidate, output, ci_baseline=None):
 
 
 def main():
-    if len(sys.argv) not in (3, 4):
-        sys.exit('Usage: bundle-os-dependencies.py CANDIDATE_RPM OUTPUT_DIR [CI_BASELINE_DIR]')
+    if len(sys.argv) != 3:
+        sys.exit('Usage: bundle-os-dependencies.py CANDIDATE_RPM OUTPUT_DIR')
     try:
-        ci_baseline = Path(sys.argv[3]).absolute() if len(sys.argv) == 4 else None
-        collect(Path(sys.argv[1]).resolve(strict=True), Path(sys.argv[2]).resolve(strict=True),
-                ci_baseline)
+        collect(Path(sys.argv[1]).resolve(strict=True), Path(sys.argv[2]).resolve(strict=True))
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
         sys.exit(str(error))
 
