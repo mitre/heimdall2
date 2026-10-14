@@ -48,6 +48,9 @@ def inventory(text):
     packages = {}
     for line in text.splitlines():
         name, nevra = line.split('\t')
+        # RPM prints an explicit zero epoch that DNF omits from its NEVRA.
+        if nevra.startswith(name + '-0:'):
+            nevra = name + '-' + nevra[len(name) + 3:]
         packages.setdefault(name, set()).add(nevra)
     return packages
 

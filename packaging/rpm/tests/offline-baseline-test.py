@@ -41,6 +41,26 @@ class OfflineBaselineTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'baseline.*systemd'):
             self.check()
 
+    def test_inventory_treats_explicit_and_omitted_zero_epoch_as_identical(self):
+        expected = {'libldb': {'libldb-4.23.5-12.el9_8.aarch64'},
+                    'python3-samba-dc': {'python3-samba-dc-4.23.5-12.el9_8.aarch64'}}
+        for epoch in ('', '0:'):
+            with self.subTest(epoch=epoch):
+                output = ('libldb\tlibldb-{}4.23.5-12.el9_8.aarch64\n'
+                          'python3-samba-dc\tpython3-samba-dc-{}4.23.5-12.el9_8.aarch64\n').format(epoch, epoch)
+                self.assertEqual(self.helper.inventory(output), expected)
+
+    def test_inventory_preserves_other_package_identity_differences(self):
+        for nevra in ('systemd-1:239-82.el8.x86_64',
+                      'systemd-240-82.el8.x86_64',
+                      'systemd-239-83.el8.x86_64',
+                      'systemd-239-82.el8.aarch64'):
+            with self.subTest(nevra=nevra):
+                installed = self.helper.inventory('systemd\t' + nevra + '\n')
+                self.assertEqual(installed, {'systemd': {nevra}})
+                with self.assertRaisesRegex(ValueError, 'baseline.*systemd'):
+                    self.check(installed)
+
     def test_a_dependency_supplied_by_the_actual_core_baseline_is_allowed(self):
         self.manifest['baseline'].append({'name': 'policycoreutils-python-utils',
                                          'nevra': 'policycoreutils-python-utils-3-1.noarch'})
