@@ -16,7 +16,22 @@ query() {
     -h /run/heimdall-postgresql -p 55432 -U heimdall-postgres \
     -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" -c "$sql"
 }
+wait_for_boot() {
+  local boot_state attempt
+  # Core's network-online job can still be waiting on a disconnected boot.
+  for attempt in {1..180}; do
+    boot_state=$(systemctl is-system-running) || true
+    case "$boot_state" in
+      running|degraded) return 0 ;;
+      starting|initializing) sleep 1 ;;
+      *) echo "Unexpected boot state: $boot_state" >&2; return 1 ;;
+    esac
+  done
+  echo 'Timed out waiting for the offline host to finish booting.' >&2
+  return 1
+}
 verify() {
+  wait_for_boot
   mapfile -t roots < <(find /var/lib/heimdall-caddy -name root.crt -type f)
   [[ ${#roots[@]} == 1 ]]
   bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \

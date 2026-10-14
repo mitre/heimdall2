@@ -78,6 +78,38 @@ install_candidate /tmp/candidate.rpm install '/tmp/os packages/policy.rpm' /tmp/
                                     stderr=subprocess.STDOUT, universal_newlines=True)
             self.assertEqual(result.returncode, 0, result.stdout)
 
+    def test_boot_wait_accepts_settled_boot_and_rejects_stalled_or_stopped_boot(self):
+        lifecycle = (TESTS / 'lifecycle.sh').read_text()
+        self.assertIn('wait_for_boot() {', lifecycle)
+        helper = lifecycle[lifecycle.index('wait_for_boot() {'):lifecycle.index('verify() {')]
+        for state, status, minimum in [('running', 0, 1), ('degraded', 0, 3),
+                                       ('stopping', 1, 1), ('starting', 1, 180)]:
+            with self.subTest(state=state), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                calls = root / 'calls'
+                calls.write_text('0')
+                script = root / 'fixture.sh'
+                script.write_text('''set -euo pipefail
+systemctl() {
+  [[ "$*" == is-system-running ]] || return 91
+  count=$(cat "$CALLS")
+  count=$((count + 1))
+  printf '%s\\n' "$count" > "$CALLS"
+  if [[ $FINAL_STATE == degraded && $count -lt 3 ]]; then
+    printf 'starting\\n'
+  else
+    printf '%s\\n' "$FINAL_STATE"
+  fi
+  [[ $FINAL_STATE == running ]]
+}
+sleep() { [[ $1 == 1 ]]; }
+''' + helper + '\nwait_for_boot\n')
+                result = subprocess.run(['bash', str(script)],
+                    env=dict(os.environ, CALLS=str(calls), FINAL_STATE=state),
+                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+                self.assertEqual(result.returncode, status, result.stdout)
+                self.assertEqual(int(calls.read_text()), minimum)
+
     def test_driver_retains_status_evidence(self):
         driver = (TESTS / 'run-lifecycle.sh').read_text()
         cleanup = 'cleanup() {' + driver.split('cleanup() {', 1)[1].split('\ntrap cleanup EXIT', 1)[0]
