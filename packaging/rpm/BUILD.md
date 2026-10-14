@@ -232,7 +232,9 @@ release for local upgrade fixtures.
 
 The Build RPM workflow defines native builds for Rocky Linux 8, 9 and 10 on
 x86_64 and aarch64, using `rockylinux/rockylinux:{8,9,10}`. Its only uploaded
-artifacts are the six `rpm-{el8,el9,el10}-{x86_64,aarch64}` combinations. Each has
+artifacts are the six
+`heimdall-server-rpm-bundle-{el8,el9,el10}-{x86_64,aarch64}` combinations. The name
+identifies the product, RPM bundle, target EL major and CPU architecture. Each has
 build, signed-install and disconnected-install checks; there are no dedicated
 Oracle Linux jobs. Test diagnostics are recorded in workflow logs.
 Each installable artifact contains:
@@ -260,12 +262,12 @@ GitHub CLI:
 
 ```sh
 gh run download RUN_ID --repo mitre/heimdall2 \
-  --name rpm-el8-x86_64 --dir /tmp/heimdall-candidate
+  --name heimdall-server-rpm-bundle-el8-x86_64 --dir /tmp/heimdall-candidate
 cd /tmp/heimdall-candidate
 sha256sum --check SHA256SUMS
 sudo rpm --import RPM-TEST-GPG-KEY
 sudo dnf install --setopt=localpkg_gpgcheck=1 \
-  ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm
+  ./RPMS/*/heimdall-server-*.rpm
 sudo heimdall-cli setup --interactive
 ```
 

@@ -4,6 +4,9 @@ rpm_file=$(realpath "${1:?RPM file}")
 expected_version=${2:?expected version}
 scratch=$(mktemp -d)
 trap 'rm -rf "$scratch"' EXIT
+rpm -qpl "$rpm_file" > "$scratch/files"
+# Private copies of OS libraries must not claim their global build-ID paths.
+! grep -Eq '^/usr/lib/\.build-id(/|$)' "$scratch/files" || exit 1
 [[ $(rpm -qp --qf '%{VERSION}' "$rpm_file") == "$expected_version" ]]
 [[ $(rpm -qp --qf '%{ARCH}' "$rpm_file") == "$(rpm -E '%{_arch}')" ]]
 (cd "$scratch" && rpm2cpio "$rpm_file" | cpio -idm --quiet)

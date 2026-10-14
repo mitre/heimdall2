@@ -39,6 +39,8 @@ Source28:       heimdall-caddy.service
 # JS application with native addons: disable debug/debuginfo subpackages.
 %global debug_package %{nil}
 %global _debugsource_packages 0
+# Private copies of OS libraries must not own the system libraries' build-ID links.
+%global _build_id_links none
 
 ExclusiveArch:  aarch64 x86_64
 

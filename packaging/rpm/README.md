@@ -2,26 +2,32 @@
 
 ## Install an RPM
 
-Download the `rpm-el8-x86_64` Actions artifact for the intended commit and extract
-it into a fresh directory. Select the artifact matching the host's EL major and
-CPU architecture: `rpm-el{8,9,10}-{x86_64,aarch64}`. The package does not require
-Rocky's distribution ID; DNF checks the actual RPM dependencies on the host.
+Download the Actions artifact for the intended commit that matches the host's
+EL major and CPU architecture:
+`heimdall-server-rpm-bundle-el{8,9,10}-{x86_64,aarch64}`. For example,
+`heimdall-server-rpm-bundle-el10-x86_64` targets Enterprise Linux 10 on Intel/AMD
+64-bit CPUs; `aarch64` identifies ARM64. The bundle contains the installable RPM
+and the supporting files described in [artifact layout](#artifact-layout).
+Extract it into a fresh directory and run the commands below from that directory.
+The package does not require Rocky's distribution ID; DNF checks the actual RPM
+dependencies on the host.
 RHEL and historical minor releases still need candidate-specific validation.
 
-The artifact contains `RPMS/`, `SRPMS/`, `RPM-TEST-GPG-KEY`,
-`runtime-manifest.json`, and `SHA256SUMS`. Obtain the artifact and public key from
-the same trusted workflow run. For EL8 x86_64:
+Obtain the artifact and public key from the same trusted workflow run. Each
+artifact contains one binary RPM, so the install command works across versions,
+EL majors and architectures without editing the filename:
 
 ```sh
 sha256sum --check SHA256SUMS
 sudo rpm --import RPM-TEST-GPG-KEY
 sudo dnf install --setopt=localpkg_gpgcheck=1 \
-  ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm
+  ./RPMS/*/heimdall-server-*.rpm
 rpm -q heimdall-server
 sudo heimdall-cli setup --interactive
 ```
 
-Select exactly one binary RPM. Installation uses DNF directly; no separate
+Keep only the selected artifact in this directory so the glob matches exactly
+one binary RPM. Installation uses DNF directly; no separate
 installer is needed. Test keys are disposable, so production delivery requires
 a durable signing key. The shipped repository definition is disabled. Once an
 approved RPM repository is configured, the installation command is
@@ -30,6 +36,36 @@ approved RPM repository is configured, the installation command is
 See [builds and artifact downloads](BUILD.md#ci-artifacts-and-test-signatures)
 for download methods and [acceptance status](BUILD.md#acceptance-status) for
 validation limits. The application version comes from the root `VERSION` file.
+See [service status](#verify-and-operate) after setup and
+[uninstall and recovery](#uninstall-and-recover) when removing the package.
+
+## Artifact layout
+
+The extracted Actions artifact has this structure; placeholders vary with the
+application version, RPM release, EL major and CPU architecture:
+
+```text
+.
+├── RPMS/
+│   └── <arch>/
+│       └── heimdall-server-<version>-<release>.el<major>.<arch>.rpm
+├── SRPMS/
+│   └── heimdall-server-<version>-<release>.el<major>.src.rpm
+├── RPM-TEST-GPG-KEY
+├── runtime-manifest.json
+└── SHA256SUMS
+```
+
+| Path | Purpose |
+| --- | --- |
+| `RPMS/<arch>/*.rpm` | Signed installable package containing Heimdall and its bundled runtimes. |
+| `SRPMS/*.src.rpm` | Signed source package containing sources and the RPM build recipe for rebuilding; not needed for installation. |
+| `RPM-TEST-GPG-KEY` | Public test signing key to import before DNF verifies the RPM signature. |
+| `runtime-manifest.json` | Inventory of the bundled application runtimes. |
+| `SHA256SUMS` | Checksums for both RPMs, the public key and the runtime inventory, calculated after signing. |
+
+Run `sha256sum --check SHA256SUMS` from the extracted artifact's root directory
+before installation. Host dependency RPMs are not included.
 
 ## Disconnected installation
 
@@ -41,7 +77,7 @@ with repositories disabled to prevent metadata requests:
 sudo rpm --import RPM-TEST-GPG-KEY
 sudo dnf --disablerepo='*' install --setopt=localpkg_gpgcheck=1 \
   --setopt=install_weak_deps=False \
-  ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm
+  ./RPMS/*/heimdall-server-*.rpm
 sudo heimdall-cli setup --interactive
 ```
 
@@ -77,7 +113,7 @@ systemd, `policycoreutils-python-utils`, `selinux-policy-targeted`, `tar`,
 DNF can resolve missing prerequisites from approved OS repositories. On
 disconnected hosts, these and their dependencies must already be installed at
 versions satisfying the candidate RPM. Inspect the exact requirements with
-`rpm -qp --requires ./RPMS/x86_64/heimdall-server-*.el8.x86_64.rpm`.
+`rpm -qp --requires ./RPMS/*/heimdall-server-*.rpm`.
 
 Choose the RPM for the host's EL major; an EL8 RPM is not an EL10 build. Building
 on a recent EL minor release can introduce requirements unavailable on an older
@@ -217,6 +253,21 @@ firewall and cloud security groups yourself; Heimdall does not modify its servic
 
 ## Verify and operate
 
+For a quick check of whether the application is running:
+
+```sh
+systemctl is-active heimdall-server
+sudo systemctl status heimdall-server --no-pager
+```
+
+`active` means the service is running; `inactive` means it is stopped, and
+`failed` means it failed. The detailed status includes recent logs. Check boot
+startup separately with `systemctl is-enabled heimdall-server`; `enabled` does
+not mean it is currently running.
+
+For the application and its selected database/proxy services, use the CLI
+summary, check the HTTP response and inspect logs:
+
 ```sh
 sudo heimdall-cli status
 curl -fsS --retry 30 --retry-connrefused --retry-delay 1 \
@@ -250,23 +301,52 @@ docker update --restart unless-stopped ol8-systemd
 Replace `ol8-systemd` with your container name. Docker must itself start after a
 host reboot; a container you manually stop stays stopped with this policy.
 
-`backend.env` is root-owned, group `heimdall`, mode `0640`. It contains secrets.
-Use `heimdall-cli config list` and the installed man pages for all settings.
-`HEIMDALL_DATABASE_MODE`, `HEIMDALL_PROXY_MODE` and `HEIMDALL_TLS_MODE` preserve
-selections. Additional login/OIDC settings and credentials survive normal reruns.
-
 ```sh
-sudo heimdall-cli set-port 8443
-sudo heimdall-cli validate
 sudo heimdall-cli logs --lines 100
-sudo heimdall-cli reset-password admin@example.com
 sudo heimdall-cli diag
 ```
 
+## Change configuration
+
+Use the CLI to change the backend port, for example to port 3003:
+
+```sh
+sudo heimdall-cli set-port 3003
+sudo heimdall-cli status
+```
+
 `set-port` updates the application configuration and selected private proxy
-upstream along with host port integration. An external proxy must be updated by
-its operator. CLI path overrides require matching systemd configuration; they do
-not relocate the fixed RPM runtime or PostgreSQL/Caddy state.
+upstream along with host port integration. With bundled Caddy, browser access
+continues to use HTTPS on port 443; this command changes the backend port.
+An external proxy must be updated by its operator.
+
+For other application settings, edit `/etc/heimdall-server/backend.env`. It
+controls database connections, authentication, logging, `EXTERNAL_URL` and other
+application settings. Validate the changes before restarting:
+
+```sh
+sudoedit /etc/heimdall-server/backend.env
+sudo heimdall-cli validate && sudo systemctl restart heimdall-server
+sudo systemctl status heimdall-server --no-pager
+```
+
+List configuration with:
+
+```sh
+sudo heimdall-cli config list
+```
+
+See the [configuration reference](man/heimdall-server-backend.env.5.md) for
+available settings.
+
+`backend.env` is root-owned, group `heimdall`, mode `0640`. It contains secrets.
+`HEIMDALL_DATABASE_MODE`, `HEIMDALL_PROXY_MODE` and `HEIMDALL_TLS_MODE` preserve
+selections. Use [`heimdall-cli setup`](#setup) with the mode flags when switching
+between bundled and external database/proxy services. Additional login/OIDC
+settings and credentials survive normal setup reruns.
+
+CLI path overrides require matching systemd configuration; they do not relocate
+the fixed RPM runtime or PostgreSQL/Caddy state.
 
 ## Single Sign-On (SSO) and External Authentication
 
@@ -446,11 +526,13 @@ The CLI restores only Heimdall-owned Caddy resources, never an external proxy.
 
 ```sh
 sudo heimdall-cli backup
-sudo dnf upgrade ./heimdall-server-*.rpm
+sudo dnf upgrade --setopt=localpkg_gpgcheck=1 ./RPMS/*/heimdall-server-*.rpm
 sudo heimdall-cli setup --non-interactive
 sudo heimdall-cli status
 ```
 
+Run from the extracted artifact directory after checking its checksums and
+importing its trusted signing key as in [installation](#install-an-rpm).
 Select exactly one RPM with a newer application version or, for the same version,
 a higher RPM release. The lifecycle tests compare releases `0.3.integration` and
 `0.4.integration` of the application version in `VERSION`; a higher release cannot
@@ -472,13 +554,17 @@ existing secrets. Runtime patches ship through the next server RPM. A retained
 PostgreSQL cluster with an incompatible major blocks the transaction before file
 replacement. PostgreSQL major migration requires a separate planned operation.
 
-## Removal and recovery
+## Uninstall and recover
+
+Create and verify a backup using [backup and restore](#backup-and-restore), then
+remove the installed package by name. The original RPM file is not required:
 
 ```sh
 sudo heimdall-cli backup -o /root
-sudo dnf remove heimdall-server
+sudo dnf remove --noautoremove heimdall-server
 ```
 
+`--noautoremove` keeps dependencies that DNF might otherwise remove as unused.
 Removal stops/disables only Heimdall's three units and removes its package files
 and host integration. It retains application data, private PostgreSQL data,
 private Caddy state, backups and accounts. Modified configuration may be renamed

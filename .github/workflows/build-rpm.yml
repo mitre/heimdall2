@@ -142,7 +142,7 @@ jobs:
 
       - uses: actions/upload-artifact@v7
         with:
-          name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
+          name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
           path: |
             ${{ env.TOPDIR }}/RPMS/**/*.rpm
             ${{ env.TOPDIR }}/SRPMS/*.src.rpm
@@ -182,7 +182,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
+          name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
           path: rpms
 
       - name: Verify checksums and install the signed package
@@ -263,7 +263,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: rpm-${{ matrix.distro }}-${{ matrix.arch }}
+          name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
           path: rpms
 
       - name: Prepare the OS baseline before disconnecting
@@ -331,7 +331,7 @@ jobs:
       # Publish the six EL/architecture artifacts.
       - uses: actions/download-artifact@v8
         with:
-          pattern: rpm-el*
+          pattern: heimdall-server-rpm-bundle-el*
           path: rpms
           merge-multiple: false
 
@@ -340,7 +340,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rpm
           mkdir publish
-          for directory in rpms/rpm-el*; do
+          for directory in rpms/heimdall-server-rpm-bundle-el*; do
             test -d "$directory"
             (cd "$directory" && sha256sum --check SHA256SUMS)
             sudo rpm --import "$directory/RPM-TEST-GPG-KEY"
