@@ -97,6 +97,8 @@ jobs:
           python3 packaging/rpm/tests/upgrade-scriptlets.py
           python3 packaging/rpm/tests/application-readiness.py
           python3 packaging/rpm/tests/cli-acquisition.py
+          python3 packaging/rpm/tests/os-dependencies.py
+          python3 packaging/rpm/tests/offline-baseline-test.py
           bash packaging/rpm/tests/setup.sh
           make -C packaging/rpm check-version TOPDIR="$TOPDIR"
 
@@ -129,11 +131,15 @@ jobs:
           bash packaging/rpm/tests/sign-rpms.sh --container \
             "$TOPDIR/RPM-TEST-GPG-KEY" "${rpms[@]}"
 
-      - name: Record direct artifact checksums
+      - name: Bundle vendor dependencies for the minimal OS baseline
+        run: make -C packaging/rpm offline-dependencies TOPDIR="$TOPDIR"
+
+      - name: Record artifact checksums
         run: |
           cp "$TOPDIR/SOURCES/runtime-manifest.json" "$TOPDIR/runtime-manifest.json"
           (cd "$TOPDIR" && sha256sum RPMS/*/*.rpm SRPMS/*.src.rpm \
-            RPM-TEST-GPG-KEY runtime-manifest.json > SHA256SUMS)
+            OS-RPMS/*/*.rpm OS-GPG-KEYS/* RPM-TEST-GPG-KEY \
+            runtime-manifest.json os-dependencies.json > SHA256SUMS)
 
       - name: Record what was built
         run: |
@@ -146,6 +152,9 @@ jobs:
           path: |
             ${{ env.TOPDIR }}/RPMS/**/*.rpm
             ${{ env.TOPDIR }}/SRPMS/*.src.rpm
+            ${{ env.TOPDIR }}/OS-RPMS/**/*.rpm
+            ${{ env.TOPDIR }}/OS-GPG-KEYS/*
+            ${{ env.TOPDIR }}/os-dependencies.json
             ${{ env.TOPDIR }}/RPM-TEST-GPG-KEY
             ${{ env.TOPDIR }}/runtime-manifest.json
             ${{ env.TOPDIR }}/SHA256SUMS
@@ -269,7 +278,7 @@ jobs:
       - name: Prepare the OS baseline before disconnecting
         run: |
           docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
-            --build-arg BASE_IMAGE='${{ matrix.image }}' --target test-host -t heimdall-direct-test .
+            --build-arg BASE_IMAGE='${{ matrix.image }}' --target offline-test-host -t heimdall-direct-test .
 
       - name: Verify disconnected DNF install and service operation
         run: |
@@ -285,12 +294,15 @@ jobs:
             result=$?
             docker inspect "$container" > diagnostics/container.json || true
             docker cp "$container:/tmp/rpm-lifecycle-installer-status.log" diagnostics/installer-status.log || true
+            docker cp "$container:/tmp/rpm-offline-baseline.tsv" diagnostics/baseline.tsv || true
+            docker cp "$container:/tmp/rpm-missing-dependencies.log" diagnostics/missing-dependencies.log || true
             docker exec "$container" journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy > diagnostics/services.log || true
             docker rm -f "$container" >/dev/null || result=1
             exit "$result"
           }
           trap cleanup EXIT
           docker cp packaging/rpm/tests/. "$container:/tmp/rpm-tests"
+          docker cp rpms/. "$container:/tmp/rpm-bundle"
           docker cp rpms/RPM-TEST-GPG-KEY "$container:/tmp/rpm-test-signing.asc"
           docker cp "${candidates[0]}" "$container:/tmp/initial.rpm"
           docker start "$container"
@@ -300,7 +312,22 @@ jobs:
             test "$attempt" -lt 60
           done
           test "$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container")" = none
-          timeout 600 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh install /tmp/initial.rpm
+          timeout 600 docker exec "$container" bash -c '
+            set -euo pipefail
+            rpm --import /tmp/rpm-test-signing.asc /tmp/rpm-bundle/OS-GPG-KEYS/*
+            # Prove the host does not already supply the missing OS dependencies.
+            if dnf install -y --disablerepo="*" --setopt=install_weak_deps=False \
+                --setopt=localpkg_gpgcheck=1 /tmp/initial.rpm > /tmp/rpm-missing-dependencies.log 2>&1; then
+              echo "Candidate unexpectedly installed without bundled dependencies." >&2
+              exit 1
+            fi
+            cat /tmp/rpm-missing-dependencies.log
+            grep -Eq "nothing provides|is needed by" /tmp/rpm-missing-dependencies.log
+            bash /tmp/rpm-tests/lifecycle.sh install /tmp/initial.rpm /tmp/rpm-bundle/OS-RPMS/*/*.rpm
+            python=/usr/bin/python3
+            [[ -x $python ]] || python=/usr/libexec/platform-python
+            "$python" /tmp/rpm-tests/offline-baseline.py verify /tmp/os-dependencies.json
+          '
           timeout 900 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh setup
           docker restart "$container"
           for attempt in $(seq 1 60); do
@@ -366,6 +393,14 @@ jobs:
               cp "$directory/$name" "publish/$id-$name"
               names+=("$id-$name")
             done
+            sudo rpm --import "$directory"/OS-GPG-KEYS/*
+            for dependency in "$directory"/OS-RPMS/*/*.rpm; do
+              rpm --checksig --verbose "$dependency" | tee /tmp/rpm-publish-signature.log
+              grep -Eq 'Signature.*: OK' /tmp/rpm-publish-signature.log
+            done
+            # Preserve vendor dependencies, keys and baseline metadata together.
+            tar -czf "publish/$id.tar.gz" -C "$directory" .
+            names+=("$id.tar.gz")
             (cd publish && sha256sum "${names[@]}" > "$id-SHA256SUMS")
           done
 

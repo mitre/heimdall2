@@ -18,7 +18,7 @@ check-source: check-version
 GOARCH   ?= $(shell go env GOARCH)
 RPM_ARCH ?= $(shell rpm --eval '%{_arch}')
 
-.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version check-source sources cli-src heimdall-cli man runtimes render-spec stage deps check-upstream
+.PHONY: srpm rpm rpm-install rpm-package offline-dependencies clean lint lint-rpm check-version check-source sources cli-src heimdall-cli man runtimes render-spec stage deps check-upstream
 
 # Upstream repo for `make check-upstream` (override for forks/mirrors).
 UPSTREAM_REPO ?= mitre/heimdall2
@@ -160,6 +160,12 @@ rpm: stage
 	@$(if $(filter 1,$(CACHE)),mkdir -p "$(YARN_CACHE)",true)
 	$(RPMBUILD_PREFIX) rpmbuild -ba --define "_topdir $(TOPDIR)" --define "heimdall_release $(HEIMDALL_RELEASE)" "$(TOPDIR)/SPECS/$(SPEC)"
 	@echo "RPMs: $$(ls "$(TOPDIR)"/RPMS/*/*.rpm)"
+
+# Run after signing: the dependency manifest records the signed candidate hash.
+offline-dependencies:
+	@set -eu; set -- "$(TOPDIR)"/RPMS/*/heimdall-server-*.rpm; \
+	  test "$$#" -eq 1 && test -f "$$1"; \
+	  python3 scripts/bundle-os-dependencies.py "$$1" "$(TOPDIR)"
 
 # Iterate fast on spec edits — skips %prep + %build (no tarball
 # extraction, no `yarn install`, no node build) and re-runs only

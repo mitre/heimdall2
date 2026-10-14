@@ -6,16 +6,19 @@ Download the Actions artifact for the intended commit that matches the host's
 EL major and CPU architecture:
 `heimdall-server-rpm-bundle-el{8,9,10}-{x86_64,aarch64}`. For example,
 `heimdall-server-rpm-bundle-el10-x86_64` targets Enterprise Linux 10 on Intel/AMD
-64-bit CPUs; `aarch64` identifies ARM64. The bundle contains the installable RPM
-and the supporting files described in [artifact layout](#artifact-layout).
+64-bit CPUs; `aarch64` identifies ARM64. The bundle contains the installable RPM,
+additional OS dependency RPMs and the supporting files described in
+[artifact layout](#artifact-layout).
 Extract it into a fresh directory and run the commands below from that directory.
-The package does not require Rocky's distribution ID; DNF checks the actual RPM
-dependencies on the host.
+For connected installation, DNF resolves dependencies from the host's approved
+repositories. The included OS dependency RPMs come from Rocky Linux and are only
+for the matching Rocky baseline; do not install them on RHEL or another vendor's
+distribution. See [disconnected installation](#disconnected-installation).
 RHEL and historical minor releases still need candidate-specific validation.
 
 Obtain the artifact and public key from the same trusted workflow run. Each
-artifact contains one binary RPM, so the install command works across versions,
-EL majors and architectures without editing the filename:
+artifact contains one Heimdall binary RPM, so the install command works across
+versions, EL majors and architectures without editing the filename:
 
 ```sh
 sha256sum --check SHA256SUMS
@@ -51,8 +54,14 @@ application version, RPM release, EL major and CPU architecture:
 │       └── heimdall-server-<version>-<release>.el<major>.<arch>.rpm
 ├── SRPMS/
 │   └── heimdall-server-<version>-<release>.el<major>.src.rpm
+├── OS-RPMS/
+│   └── <arch>/
+│       └── <dependency>-<version>-<release>.<arch-or-noarch>.rpm
+├── OS-GPG-KEYS/
+│   └── <vendor-public-key>
 ├── RPM-TEST-GPG-KEY
 ├── runtime-manifest.json
+├── os-dependencies.json
 └── SHA256SUMS
 ```
 
@@ -60,29 +69,66 @@ application version, RPM release, EL major and CPU architecture:
 | --- | --- |
 | `RPMS/<arch>/*.rpm` | Signed installable package containing Heimdall and its bundled runtimes. |
 | `SRPMS/*.src.rpm` | Signed source package containing sources and the RPM build recipe for rebuilding; not needed for installation. |
+| `OS-RPMS/*/*.rpm` | Vendor-signed OS packages missing from the recorded Core baseline, including their additional dependencies. |
+| `OS-GPG-KEYS/*` | Public OS vendor signing keys used to verify those dependency RPMs. |
 | `RPM-TEST-GPG-KEY` | Public test signing key to import before DNF verifies the RPM signature. |
 | `runtime-manifest.json` | Inventory of the bundled application runtimes. |
-| `SHA256SUMS` | Checksums for both RPMs, the public key and the runtime inventory, calculated after signing. |
+| `os-dependencies.json` | Target distribution, version and architecture, candidate RPM hash, exact Core baseline, and dependency RPM versions, hashes and source repositories. |
+| `SHA256SUMS` | Checksums for the RPMs, public keys and manifests, calculated after signing. |
 
 Run `sha256sum --check SHA256SUMS` from the extracted artifact's root directory
-before installation. Host dependency RPMs are not included.
+before installation. The OS RPM directories contain only the additions needed
+by this candidate on its recorded baseline, not a complete operating system.
 
 ## Disconnected installation
 
-Provision the [host prerequisites](#requirements) before disconnecting the host,
-then transfer the signed RPM and trusted public key. Use the same DNF installation
-with repositories disabled to prevent metadata requests:
+Start with the [host baseline](#requirements), then transfer the complete bundle
+from a trusted workflow run. The host must match the manifest's distribution,
+version and architecture and satisfy its recorded package baseline. The dependency
+collector currently supports Rocky Linux only. RHEL support requires adapting it
+to approved RHEL repositories and validating a RHEL baseline; this is not yet
+implemented. Matching the EL major alone does not make Rocky dependency RPMs
+appropriate for RHEL. Connected RHEL installation can resolve the application
+RPM's dependencies from approved RHEL repositories, subject to candidate validation.
+
+The following block checks the target before importing keys, then installs the
+application and additional OS RPMs in one DNF transaction. Repositories are
+disabled to prevent metadata requests. A failed check stops the block:
 
 ```sh
+(
+set -e
+sha256sum --check SHA256SUMS
+. /etc/os-release
+heimdall_python=python3
+if [ -x /usr/libexec/platform-python ]; then
+  heimdall_python=/usr/libexec/platform-python
+fi
+"$heimdall_python" - "$ID" "$VERSION_ID" "$(uname -m)" <<'PY'
+import json
+import sys
+
+with open("os-dependencies.json") as stream:
+    manifest = json.load(stream)
+expected = (manifest["distribution"]["id"],
+            manifest["distribution"]["version_id"], manifest["architecture"])
+if tuple(sys.argv[1:]) != expected:
+    raise SystemExit("Bundle target mismatch: expected " + " ".join(expected))
+PY
 sudo rpm --import RPM-TEST-GPG-KEY
+sudo rpm --import ./OS-GPG-KEYS/*
 sudo dnf --disablerepo='*' install --setopt=localpkg_gpgcheck=1 \
   --setopt=install_weak_deps=False \
-  ./RPMS/*/heimdall-server-*.rpm
+  ./RPMS/*/heimdall-server-*.rpm ./OS-RPMS/*/*.rpm
 sudo heimdall-cli setup --interactive
+)
 ```
 
-DNF reports missing host dependencies; the RPM does not download or install
-nested packages. OS dependency RPMs are not included in the artifact.
+DNF checks dependencies and signatures for every package. The application RPM
+does not download or install nested packages. If the transaction needs a core OS
+update, first apply an approved offline update for that distribution or obtain a
+bundle resolved for the host's baseline. Do not bypass dependency checks with
+`rpm --nodeps` or mix packages from different distributions.
 
 For a fully disconnected deployment, choose bundled database and proxy services
 with internal or custom TLS. This deterministic setup uses internal TLS:
@@ -101,18 +147,30 @@ downloads. ACME and external services retain their connectivity requirements.
 ## Requirements
 
 Use a booted EL8/EL9/EL10 systemd host on x86_64 or aarch64 with root/sudo access.
+The offline bundle assumes a maintained Core installation, with the exact package
+versions recorded in `os-dependencies.json`. The host supplies its kernel,
+systemd, RPM/DNF, glibc, foundational libraries and utilities, and SELinux policy.
+These core OS packages are not included as Heimdall dependencies to upgrade the
+operating system. CI tests Rocky Linux; RHEL needs separate qualification.
+
 The RPM bundles Node.js 22.23.3, PostgreSQL 18.6, PostgreSQL's ICU libraries, and
 Caddy 2.11.4. No NodeSource, PGDG or Caddy repository is needed on the runtime
 host. Runtime updates, including private ICU security fixes, arrive in a new
 Heimdall RPM.
 
-The host supplies glibc, libgcc, libstdc++, OpenSSL (libraries and command), zlib,
+Runtime OS requirements are glibc, libgcc, libstdc++, OpenSSL (libraries and command), zlib,
 systemd, `policycoreutils-python-utils`, `selinux-policy-targeted`, `tar`,
 `gzip`, `util-linux`, `iproute`, `logrotate`, `shadow-utils`, `coreutils`,
-`findutils`, `gawk`, `diffutils`, and the standard shell/text utilities. On connected hosts,
-DNF can resolve missing prerequisites from approved OS repositories. On
-disconnected hosts, these and their dependencies must already be installed at
-versions satisfying the candidate RPM. Inspect the exact requirements with
+`findutils`, `gawk`, `diffutils`, and the standard shell/text utilities. On connected
+hosts, DNF can resolve missing prerequisites from approved OS repositories. The
+offline bundle supplies the required additions to its recorded baseline. For the
+assessed lean Rocky 8.10 Core baseline, these were `openssl`, `tar`,
+`policycoreutils-python-utils`, `checkpolicy`, `python3-audit`,
+`python3-libsemanage`, `python3-policycoreutils`, and `python3-setools`. The build
+resolves the actual list for each candidate, EL version and architecture; it does
+not assume these eight packages are sufficient for every host.
+
+Inspect the exact application requirements with
 `rpm -qp --requires ./RPMS/*/heimdall-server-*.rpm`.
 
 Choose the RPM for the host's EL major; an EL8 RPM is not an EL10 build. Building

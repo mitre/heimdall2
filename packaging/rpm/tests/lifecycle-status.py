@@ -54,6 +54,30 @@ if install_candidate /tmp/candidate.rpm install; then exit 95; fi
                 for phase in ('install', 'upgrade', 'recover') for status in (0, 1, 17)
             ] + ['phase=install exit_status=1 candidate=/tmp/candidate.rpm'])
 
+    def test_installer_passes_os_rpms_in_the_same_transaction(self):
+        lifecycle = (TESTS / 'lifecycle.sh').read_text()
+        helper = lifecycle[lifecycle.index('install_candidate() {'):lifecycle.index('refuse_upgrade() {')]
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            helper = helper.replace('/tmp/rpm-lifecycle-installer-status.log', str(root / 'status.log'))
+            helper = helper.replace('/tmp/rpm-lifecycle-transaction.log', str(root / 'transaction.log'))
+            script = root / 'fixture.sh'
+            script.write_text('''set -euo pipefail
+timeout() { shift; "$@"; }
+dnf() {
+  [[ " $* " == *" --disablerepo=* "* ]] || return 92
+  [[ " $* " == *" --setopt=localpkg_gpgcheck=1 "* ]] || return 93
+  [[ ${@: -3:1} == /tmp/candidate.rpm ]] || return 94
+  [[ ${@: -2:1} == '/tmp/os packages/policy.rpm' ]] || return 95
+  [[ ${@: -1} == /tmp/python.rpm ]] || return 96
+}
+''' + helper + '''
+install_candidate /tmp/candidate.rpm install '/tmp/os packages/policy.rpm' /tmp/python.rpm
+''')
+            result = subprocess.run(['bash', str(script)], stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT, universal_newlines=True)
+            self.assertEqual(result.returncode, 0, result.stdout)
+
     def test_driver_retains_status_evidence(self):
         driver = (TESTS / 'run-lifecycle.sh').read_text()
         cleanup = 'cleanup() {' + driver.split('cleanup() {', 1)[1].split('\ntrap cleanup EXIT', 1)[0]
