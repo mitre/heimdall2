@@ -173,7 +173,7 @@ rpm: stage
 offline-dependencies:
 	@set -eu; set -- "$(TOPDIR)"/RPMS/*/heimdall-server-*.rpm; \
 	  test "$$#" -eq 1 && test -f "$$1"; \
-	  python3 scripts/bundle-os-dependencies.py "$$1" "$(TOPDIR)"
+	  python3 scripts/bundle-os-dependencies.py "$$1" "$(TOPDIR)" $(if $(CI_BASELINE_DIR),"$(CI_BASELINE_DIR)")
 
 # Iterate fast on spec edits — skips %prep + %build (no tarball
 # extraction, no `yarn install`, no node build) and re-runs only

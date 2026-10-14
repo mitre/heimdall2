@@ -55,12 +55,28 @@ def inventory(text):
     return packages
 
 
+def snapshot_packages(manifest, snapshot):
+    if json.loads((snapshot / 'os-dependencies.json').read_text()) != manifest:
+        raise ValueError('CI snapshot manifest does not match the bundle')
+    paths = sorted(snapshot.glob('RPMS/*/*.rpm'))
+    if len(paths) != len(manifest['baseline']):
+        raise ValueError('CI snapshot does not contain exactly the recorded baseline')
+    output = subprocess.check_output(['rpm', '-qp', '--qf', '%{NAME}\t%{NEVRA}\n'] +
+                                     [str(path) for path in paths], universal_newlines=True)
+    expected = '\n'.join(p['name'] + '\t' + p['nevra'] for p in manifest['baseline'])
+    if inventory(output) != inventory(expected):
+        raise ValueError('CI snapshot does not match the exact recorded baseline')
+    return [(line.split('\t')[0], str(path)) for line, path in zip(output.splitlines(), paths)]
+
+
 def main():
-    if len(sys.argv) != 3 or sys.argv[1] not in ('packages', 'dependencies', 'record', 'verify'):
-        raise ValueError('Usage: offline-baseline.py packages|dependencies|record|verify MANIFEST')
+    if not (len(sys.argv) == 4 and sys.argv[1] == 'snapshot' or
+            len(sys.argv) == 3 and sys.argv[1] in ('packages', 'dependencies', 'record', 'verify')):
+        raise ValueError('Usage: offline-baseline.py packages|dependencies|record|verify MANIFEST '
+                         'or snapshot MANIFEST SNAPSHOT_DIR')
     if os.environ.get('HEIMDALL_RPM_TEST') != '1' or os.geteuid() != 0:
         raise ValueError('Offline baseline helper is only for disposable root CI fixtures')
-    action, path = sys.argv[1:]
+    action, path = sys.argv[1:3]
     manifest = json.loads(Path(path).read_text())
     if manifest['schema'] != 1 or not manifest['baseline']:
         raise ValueError('Unsupported or empty offline baseline manifest')
@@ -75,7 +91,11 @@ def main():
         if separator and key in ('ID', 'VERSION_ID'):
             release[key] = shlex.split(value)[0]
     architecture = subprocess.check_output(['rpm', '-E', '%{_arch}'], universal_newlines=True).strip()
-    check_platform(manifest, release, architecture, exact_version=action != 'packages')
+    check_platform(manifest, release, architecture, exact_version=action not in ('packages', 'snapshot'))
+    if action == 'snapshot':
+        for name, path in snapshot_packages(manifest, Path(sys.argv[3]).resolve(strict=True)):
+            print(name + '\t' + path)
+        return
     if action == 'packages':
         for package in manifest['baseline']:
             print(package['name'] + '\t' + package['nevra'])

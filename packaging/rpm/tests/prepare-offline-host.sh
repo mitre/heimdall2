@@ -1,32 +1,27 @@
 #!/bin/bash
 # Provision only the recorded OS baseline; bundled additions stay uninstalled.
 set -euo pipefail
-[[ ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 && $# == 1 ]] || exit 64
+[[ ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 && $# == 2 ]] || exit 64
 manifest=$1
+snapshot=$2
 helper="$(dirname "$0")/offline-baseline.py"
 python=python3
 command -v "$python" >/dev/null || python=/usr/libexec/platform-python
 packages=$(mktemp)
 trap 'rm -f "$packages"' EXIT
-"$python" "$helper" packages "$manifest" > "$packages"
-declare -A exact
+(cd "$snapshot" && sha256sum --strict --check SHA256SUMS)
+"$python" "$helper" snapshot "$manifest" "$snapshot" > "$packages"
+rpm --import "$snapshot"/OS-GPG-KEYS/*
 baseline=()
-while IFS=$'\t' read -r name nevra; do
-  exact["$name"]=$nevra
-  baseline+=("$nevra")
+while IFS=$'\t' read -r name package; do
+  baseline+=("$package")
 done < "$packages"
-dnf_options=(-y --setopt=install_weak_deps=False --setopt=tsflags= \
+dnf_options=(-y --disablerepo='*' --setopt=localpkg_gpgcheck=1 \
+  --setopt=install_weak_deps=False --setopt=tsflags= \
   --setopt=clean_requirements_on_remove=False)
-# Minimal container variants conflict with the regular Core packages.
-for pair in coreutils-single:coreutils curl-minimal:curl libcurl-minimal:libcurl; do
-  minimal=${pair%%:*}
-  regular=${pair#*:}
-  if [[ -n ${exact[$regular]:-} ]] && rpm -q "$minimal" >/dev/null 2>&1; then
-    dnf "${dnf_options[@]}" swap "$minimal" "${exact[$regular]}"
-  fi
-done
-if ! dnf "${dnf_options[@]}" install "${baseline[@]}"; then
-  echo 'Unable to install the exact recorded Core baseline. Check the DNF error above; the recorded repository snapshot must remain available.' >&2
+# Allow the regular Core packages to replace conflicting minimal image variants.
+if ! dnf "${dnf_options[@]}" --allowerasing install "${baseline[@]}"; then
+  echo 'Unable to install the saved Core baseline. Check the DNF error above.' >&2
   exit 1
 fi
 "$python" "$helper" dependencies "$manifest" > "$packages"

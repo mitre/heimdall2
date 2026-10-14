@@ -2,9 +2,12 @@
 """Reject a disconnected test that hides missing dependencies or changes the OS."""
 import copy
 import importlib.util
+import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
+from unittest import mock
 
 sys.dont_write_bytecode = True
 
@@ -104,6 +107,54 @@ class OfflineBaselineTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.helper.check_platform(self.manifest, {'ID': 'rocky', 'VERSION_ID': '9.0'},
                                        'x86_64', exact_version=False)
+
+    def test_snapshot_requires_exactly_the_recorded_core_rpms(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            snapshot = Path(temporary)
+            (snapshot / 'os-dependencies.json').write_text(json.dumps(self.manifest))
+            rpms = snapshot / 'RPMS' / 'x86_64'
+            rpms.mkdir(parents=True)
+            package = rpms / 'systemd.rpm'
+            package.touch()
+            with mock.patch.object(self.helper.subprocess, 'check_output',
+                                   return_value='systemd\tsystemd-0:239-82.el8.x86_64\n'):
+                self.assertEqual(self.helper.snapshot_packages(self.manifest, snapshot),
+                                 [('systemd', str(package))])
+            for output in ('systemd\tsystemd-239-81.el8.x86_64\n',
+                           'systemd\tsystemd-239-82.el8.aarch64\n',
+                           'tar\ttar-2:1.30-13.el8.x86_64\n'):
+                with self.subTest(output=output), mock.patch.object(
+                        self.helper.subprocess, 'check_output', return_value=output):
+                    with self.assertRaisesRegex(ValueError, 'snapshot.*baseline'):
+                        self.helper.snapshot_packages(self.manifest, snapshot)
+            package.unlink()
+            with self.assertRaisesRegex(ValueError, 'snapshot.*baseline'):
+                self.helper.snapshot_packages(self.manifest, snapshot)
+
+    def test_snapshot_rejects_extra_or_duplicate_rpms(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            snapshot = Path(temporary)
+            (snapshot / 'os-dependencies.json').write_text(json.dumps(self.manifest))
+            rpms = snapshot / 'RPMS' / 'x86_64'
+            rpms.mkdir(parents=True)
+            (rpms / 'systemd.rpm').touch()
+            (rpms / 'extra.rpm').touch()
+            for extra in ('tar\ttar-2:1.30-13.el8.x86_64\n',
+                          'systemd\tsystemd-239-82.el8.x86_64\n'):
+                with self.subTest(extra=extra), mock.patch.object(
+                        self.helper.subprocess, 'check_output',
+                        return_value='systemd\tsystemd-239-82.el8.x86_64\n' + extra):
+                    with self.assertRaisesRegex(ValueError, 'snapshot.*baseline'):
+                        self.helper.snapshot_packages(self.manifest, snapshot)
+
+    def test_snapshot_must_belong_to_the_same_bundle(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            snapshot = Path(temporary)
+            other = copy.deepcopy(self.manifest)
+            other['candidate']['nevra'] = 'heimdall-server-2.15.0-1.el8.x86_64'
+            (snapshot / 'os-dependencies.json').write_text(json.dumps(other))
+            with self.assertRaisesRegex(ValueError, 'snapshot manifest'):
+                self.helper.snapshot_packages(self.manifest, snapshot)
 
 
 if __name__ == '__main__':
