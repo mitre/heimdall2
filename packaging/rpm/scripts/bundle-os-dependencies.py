@@ -68,6 +68,19 @@ def verify_signature(database, package):
         raise ValueError('Vendor signature verification failed for {}:\n{}'.format(package, result.stdout))
 
 
+def copy_repository_key(key, destination):
+    url = urlparse(key)
+    if url.scheme != 'file' or url.netloc:
+        raise ValueError('Repository signing keys must be local file URLs: ' + key)
+    source = Path(unquote(url.path))
+    if not source.is_absolute() or not source.is_file():
+        raise ValueError('Repository signing key is missing: ' + str(source))
+    target = destination / source.name
+    if target.exists() and target.read_bytes() != source.read_bytes():
+        raise ValueError('Repository signing key filenames conflict: ' + source.name)
+    shutil.copyfile(str(source), str(target))
+
+
 def copy_repository_keys(repositories, destination):
     destination.mkdir()
     for repo in repositories:
@@ -76,16 +89,16 @@ def copy_repository_keys(repositories, destination):
         if not repo.gpgkey:
             raise ValueError('Repository has no vendor signing keys: ' + repo.id)
         for key in repo.gpgkey:
-            url = urlparse(key)
-            if url.scheme != 'file' or url.netloc:
-                raise ValueError('Repository signing keys must be local file URLs: ' + key)
-            source = Path(unquote(url.path))
-            if not source.is_absolute() or not source.is_file():
-                raise ValueError('Repository signing key is missing: ' + str(source))
-            target = destination / source.name
-            if target.exists() and target.read_bytes() != source.read_bytes():
-                raise ValueError('Repository signing key filenames conflict: ' + source.name)
-            shutil.copyfile(str(source), str(target))
+            copy_repository_key(key, destination)
+
+
+def read_os_release(path):
+    distribution = {}
+    for line in path.read_text().splitlines():
+        if '=' in line and not line.startswith('#'):
+            name, value = line.split('=', 1)
+            distribution[name] = ''.join(shlex.split(value))
+    return distribution
 
 
 def collect(candidate, output):
@@ -93,11 +106,7 @@ def collect(candidate, output):
     import dnf
 
     check_output(output)
-    distribution = {}
-    for line in Path('/etc/os-release').read_text().splitlines():
-        if '=' in line and not line.startswith('#'):
-            name, value = line.split('=', 1)
-            distribution[name] = ''.join(shlex.split(value))
+    distribution = read_os_release(Path('/etc/os-release'))
     metadata = subprocess.check_output(['rpm', '-qp', '--queryformat',
         '%{NAME}\t%{RELEASE}\t%{ARCH}', str(candidate)], universal_newlines=True).split('\t')
     if len(metadata) != 3:

@@ -43,9 +43,10 @@ class OfflineDependencies(unittest.TestCase):
 
     def test_multilib_baseline_does_not_hide_package_changes(self):
         second = Package('systemd', arch='i686')
+        changed = Package('systemd', '2')
         with self.assertRaisesRegex(ValueError, 'baseline'):
             collector.dependency_delta([self.core, second],
-                [Package('systemd', '2'), second, self.candidate], self.candidate)
+                [changed, second, self.candidate], self.candidate)
 
     def test_wrong_candidate_is_rejected(self):
         with self.assertRaisesRegex(ValueError, 'candidate'):
@@ -103,8 +104,9 @@ class OfflineDependencies(unittest.TestCase):
                 values = {'id': 'baseos', 'gpgcheck': True, 'sslverify': True,
                           'gpgkey': [key.as_uri()]}
                 values.update(settings)
+                repo = SimpleNamespace(**values)
                 with self.assertRaises(ValueError):
-                    collector.copy_repository_keys([SimpleNamespace(**values)], root / str(index))
+                    collector.copy_repository_keys([repo], root / str(index))
 
     def test_conflicting_vendor_keys_are_rejected(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -118,6 +120,14 @@ class OfflineDependencies(unittest.TestCase):
             repo = SimpleNamespace(id='baseos', gpgcheck=True, sslverify=True, gpgkey=keys)
             with self.assertRaisesRegex(ValueError, 'filenames conflict'):
                 collector.copy_repository_keys([repo], root / 'keys')
+
+    def test_os_release_reader_preserves_quoted_values_and_ignores_comments(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / 'os-release'
+            path.write_text('# ignored="unterminated\n\nID=rocky\nVERSION_ID="9.8"\n'
+                            'NAME="Rocky Linux"\n')
+            self.assertEqual(collector.read_os_release(path),
+                {'ID': 'rocky', 'VERSION_ID': '9.8', 'NAME': 'Rocky Linux'})
 
     def test_host_repository_variables_survive_isolated_installroot(self):
         class Substitutions(dict):
