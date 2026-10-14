@@ -8,7 +8,12 @@ export function generateDefault(): string {
   return crypto.randomBytes(64).toString('hex');
 }
 
-export function limitJWTTime(time: string, logLimit: boolean) {
+/**
+ * @param time Duration string; unitless values are milliseconds.
+ * @param logLimit Log when capped.
+ * @returns Seconds, capped at two days.
+ */
+export function limitJWTTime(time: string, logLimit: boolean): number {
   const timeMs = ms(time);
   const maxDays = ms('2d'); // limit to two days
   if (timeMs > maxDays) {
@@ -16,9 +21,9 @@ export function limitJWTTime(time: string, logLimit: boolean) {
       // eslint-disable-next-line no-console
       console.log('JWT Expire time has been limited to two days maximum.');
     }
-    return maxDays;
+    return maxDays / 1000;
   } else {
-    return timeMs;
+    return timeMs / 1000;
   }
 }
 

@@ -9,7 +9,6 @@ import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import moment from 'moment';
-import ms from 'ms';
 import winston from 'winston';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigService} from '../config/config.service';
@@ -161,8 +160,8 @@ export class AuthnService {
         user.role === 'admin' && this.configService.get('ADMIN_JWT_EXPIRE_TIME');
       const expiresIn = configuredExpireTime
         ? limitJWTTime(configuredExpireTime, true)
-        : ms('600s');
-      const expireTime = moment(new Date(Date.now() + expiresIn)).format(
+        : 600;
+      const expireTime = moment(new Date(Date.now() + expiresIn * 1000)).format(
         this.loggingTimeFormat
       );
       this.logger.info({
@@ -171,7 +170,7 @@ export class AuthnService {
       return {
         userID: user.id,
         accessToken: this.jwtService.sign(payload, {
-          expiresIn: expiresIn / 1000,
+          expiresIn,
           secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
         })
       };
@@ -180,7 +179,7 @@ export class AuthnService {
         this.configService.get('JWT_EXPIRE_TIME') || '60s',
         false
       );
-      const expireTime = moment(new Date(Date.now() + expiresIn)).format(
+      const expireTime = moment(new Date(Date.now() + expiresIn * 1000)).format(
         this.loggingTimeFormat
       );
       this.logger.info({
