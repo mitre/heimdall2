@@ -567,45 +567,7 @@ if /usr/sbin/selinuxenabled 2>/dev/null; then
     restorecon -R "$path" || echo "WARNING: could not relabel $path." >&2
   done
 
-  # Do not claim existing mappings or replace another service's assignment.
-  ledger=%{_sysconfdir}/%{name}/selinux-ports
-  config_dir=%{_sysconfdir}/%{name}
-  if [ -L "$config_dir" ] || [ ! -d "$config_dir" ] || \
-     [ "$(stat -c '%%u' "$config_dir")" != 0 ] || \
-     [ $((0$(stat -c '%%a' "$config_dir") & 022)) -ne 0 ] || \
-     [ -L "$ledger" ] || { [ -e "$ledger" ] && \
-       { [ ! -f "$ledger" ] || [ "$(stat -c '%%u:%%g:%%a:%%h' "$ledger")" != 0:0:600:1 ]; }; }; then
-    echo "WARNING: unsafe SELinux port ledger; no port mappings changed." >&2
-  elif (umask 077; touch "$ledger") && chown root:root "$ledger" && chmod 0600 "$ledger"; then
-    for registration in heimdall_server_port_t:3000 postgresql_port_t:55432; do
-      type=${registration%%:*}
-      port=${registration#*:}
-      mappings=$(LC_ALL=C semanage port -l) || {
-        echo "WARNING: cannot read SELinux ports; resolve before setup." >&2
-        break
-      }
-      if printf '%%s\n' "$mappings" | awk -v type="$type" -v port="$port" '
-        $1 == type && $2 == "tcp" {
-          for (i = 3; i <= NF; i++) {
-            gsub(/,/, "", $i); n = split($i, range, "-")
-            if ((n == 1 && range[1] == port) || (n == 2 && port >= range[1] && port <= range[2])) found = 1
-          }
-        } END { exit !found }
-      '; then
-        continue
-      fi
-      if semanage port -a -t "$type" -p tcp "$port"; then
-        if ! printf '%%s tcp %%s\n' "$type" "$port" >> "$ledger"; then
-          echo "WARNING: cannot record owned SELinux port $port; reverting registration." >&2
-          semanage port -d -p tcp "$port" || echo "WARNING: port $port requires manual cleanup." >&2
-        fi
-      else
-        echo "WARNING: TCP $port could not be labeled $type; resolve the conflict or select another port during setup." >&2
-      fi
-    done
-  else
-    echo "WARNING: could not create SELinux port ledger; no port mappings changed." >&2
-  fi
+  # Setup validates and registers only the selected ports after configuration.
 fi
 
 # Register bundled binaries with the fapolicyd trust database.

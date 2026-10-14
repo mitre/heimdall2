@@ -355,19 +355,25 @@ ssh_port_t tcp 22, 8443
     ledger.write_text(record)
     ledger.chmod(0o600)
 
-    # Existing compatible labels are never claimed; conflicts are never stolen.
+    # Installation defers port ownership to setup, including when 3000 conflicts.
     ledger.unlink()
     result, calls = run(name='post', count='1', FAIL_PORT_ADD='3000',
                         PORT_MAPPINGS='ntop_port_t tcp 3000\npostgresql_port_t tcp 5432\n')
     assert result.returncode == 0, result.stdout
-    assert ledger.read_text() == 'postgresql_port_t tcp 55432\n', ledger.read_text()
-    assert 'conflict' in result.stdout and not any('-m' in c for c in calls), (result.stdout, calls)
+    assert not ledger.exists(), result.stdout
+    assert not any(c[0] == 'semanage' for c in calls), calls
     assert not any(c[0] == 'systemctl' and c[1] in ('start', 'enable', 'restart', 'try-restart') for c in calls), calls
-    ledger.unlink()
+    # Upgrades retain custom-port configuration and setup's existing ownership ledger.
+    saved_env = 'PORT=3003\nDATABASE_HOST=localhost\nDATABASE_PASSWORD=fixture\n'
+    (config_dir / 'backend.env').write_text(saved_env)
+    ledger.write_text('heimdall_server_port_t tcp 3003\npostgresql_port_t tcp 55432\n')
+    ledger.chmod(0o600)
+    saved_ledger = ledger.read_bytes()
     result, calls = run(name='post', count='2',
-                        PORT_MAPPINGS='heimdall_server_port_t tcp 3000\npostgresql_port_t tcp 55432\n')
-    assert result.returncode == 0 and ledger.read_text() == '', (result.stdout, calls)
-    assert not any(c[:3] == ['semanage', 'port', '-a'] for c in calls), calls
+                        PORT_MAPPINGS='heimdall_server_port_t tcp 3003\npostgresql_port_t tcp 55432\n')
+    assert result.returncode == 0 and ledger.read_bytes() == saved_ledger, (result.stdout, calls)
+    assert (config_dir / 'backend.env').read_text() == saved_env
+    assert not any(c[0] == 'semanage' for c in calls), calls
     ledger.unlink()
     ledger.symlink_to(outside)
     result, calls = run(name='post', count='2')

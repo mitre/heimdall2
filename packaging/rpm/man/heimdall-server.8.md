@@ -250,13 +250,17 @@ because the Node.js V8 JIT engine requires syscalls outside the
 ### SELinux
 
 The RPM ships a custom policy module that confines the service to the
-**heimdall_server_t** domain. The policy registers TCP port 3000 as
-**heimdall_server_port_t**. If the listen port is changed, register the
-new port:
+**heimdall_server_t** domain. Setup validates and registers the selected backend
+port as **heimdall_server_port_t**, refusing assignments owned by another service.
+Interactive setup asks for **Backend port** (saved **PORT**, otherwise 3000).
+Automated setup can select a different port:
 
 ```bash
-sudo semanage port -a -t heimdall_server_port_t -p tcp 8443
+sudo heimdall-cli setup --non-interactive --port 3003
 ```
+
+Reruns and upgrades preserve the selected port. Managed HTTPS stays on port 443.
+Use **heimdall-cli set-port** to change the backend port on a running installation.
 
 The policy includes a tunable for PostgreSQL connectivity:
 

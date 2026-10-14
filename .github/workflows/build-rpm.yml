@@ -112,6 +112,7 @@ jobs:
           make -C packaging/rpm rpm SOURCE_MODE="$source_mode" \
             TOPDIR="$TOPDIR" HEIMDALL_RELEASE="$HEIMDALL_RELEASE"
           bash packaging/rpm/tests/cli-inputs.sh "$TOPDIR"
+          (cd "$TOPDIR/heimdall-cli-build" && go test ./...)
 
       - name: Rebuild the SRPM in an empty tree
         run: |
@@ -332,7 +333,7 @@ jobs:
             "$python" /tmp/rpm-tests/offline-baseline.py verify /tmp/os-dependencies.json
           '
           # Exercise fresh Nginx defaults before the explicit Caddy lifecycle checks.
-          timeout 900 docker exec "$container" bash /tmp/rpm-tests/topology.sh bundled nginx
+          timeout 900 docker exec "$container" bash /tmp/rpm-tests/topology.sh bundled nginx 3003
           timeout 900 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh setup
           docker restart "$container"
           for attempt in $(seq 1 60); do

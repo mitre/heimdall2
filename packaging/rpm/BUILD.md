@@ -227,7 +227,7 @@ verification. See [Red Hat's shared system certificate documentation](https://do
   inputs. `SOURCE_MODE=release` additionally requires HEAD at the version tag.
   CI selects these stricter modes explicitly.
 - `heimdall-cli.repo` and `heimdall-cli.ref` select a fetchable full immutable CLI
-  commit. `heimdall-cli-nginx.patch` adds the RPM's Nginx setup support. Both the
+  commit. `heimdall-cli-nginx.patch` adds the RPM's Nginx and backend port setup support. Both the
   binary and generated man pages use a fresh patched copy; the pinned checkout
   remains clean. The CLI version records the base commit and `+rpm.<SHA-256>` of
   the patch so the shipped source can be identified exactly.

@@ -242,7 +242,7 @@ ownership: `--database-mode external --db-host localhost` is supported.
 # Bundled database and private Nginx with an automatic self-signed certificate.
 sudo heimdall-cli setup --non-interactive \
   --database-mode bundled --proxy-mode nginx \
-  --external-url heimdall.example.com
+  --external-url heimdall.example.com --port 3003
 
 # Bundled database; HTTPS terminated by an existing proxy.
 sudo heimdall-cli setup --non-interactive \
@@ -267,8 +267,26 @@ External database mode still runs connectivity checks and migrations.
 `--skip-db` skips that work only for the current invocation; `--skip-tls` likewise
 skips TLS work without changing saved proxy ownership.
 
+Interactive setup asks for **Backend port**, defaulting to the saved `PORT` or
+`3000` on a new installation. Automated setup accepts `--port 3003`; an explicit
+value replaces the saved port. Setup checks the range (1–65535), listener ownership
+and SELinux assignments before changing configuration or services. If a port
+conflicts, interactive setup asks again; automated setup fails and names the
+conflict. For example, if RHEL assigns `3000` to `ntop_port_t`, choose an available
+port such as `3003`. Setup never replaces another service's SELinux assignment.
+The selected port is registered during setup, not RPM installation.
+
+The backend port is separate from public HTTPS. Managed Nginx and Caddy continue
+to listen on port **443** and forward to the selected backend port. For QEMU user
+networking, forward a host port to guest port 443, for example
+`hostfwd=tcp::443-:443`, and browse to `https://localhost`. Changing the
+backend port does not require changing that forwarding rule. Set `EXTERNAL_URL`
+to the URL clients use; an external proxy's operator must update its upstream
+when the backend port changes.
+
 A normal `sudo heimdall-cli setup --non-interactive` rerun preserves credentials,
-selections, comments and additional configuration. `--reconfigure` writes config
+the backend port, selections, comments and additional configuration, including
+after RPM upgrades. `--reconfigure` writes config
 only; apply a topology change with a subsequent full setup. Moving away from a
 bundled component stops/disables only its private service after replacement
 settings validate, retaining state. A database mode change does not copy data.
@@ -409,7 +427,8 @@ sudo heimdall-cli diag
 
 ## Change configuration
 
-Use the CLI to change the backend port, for example to port 3003:
+For first-time setup, choose **Backend port** interactively or pass `setup --port`.
+For an already running installation, use the CLI to change it, for example to port 3003:
 
 ```sh
 sudo heimdall-cli set-port 3003

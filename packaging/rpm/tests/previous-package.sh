@@ -47,4 +47,4 @@ source /etc/heimdall-server/backend.env
 [[ $(PGPASSWORD="$DATABASE_PASSWORD" psql -h "$DATABASE_HOST" -p "$DATABASE_PORT" \
   -U "$DATABASE_USERNAME" -v ON_ERROR_STOP=1 -At -d "$DATABASE_NAME" \
   -c 'SELECT id FROM rpm_previous_sentinel') == 7 ]]
-bash /tmp/rpm-tests/application-ready.sh http://localhost:3000
+bash /tmp/rpm-tests/application-ready.sh "http://localhost:${PORT:-3000}"

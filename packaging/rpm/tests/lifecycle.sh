@@ -32,6 +32,7 @@ wait_for_boot() {
 }
 verify() {
   wait_for_boot
+  source /etc/heimdall-server/backend.env
   mapfile -t roots < <(find /var/lib/heimdall-caddy -name root.crt -type f)
   [[ ${#roots[@]} == 1 ]]
   bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
@@ -42,7 +43,7 @@ verify() {
   [[ "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-caddy)/exe")" == "$runtime/caddy/caddy" ]]
   [[ $(systemctl show -p User --value heimdall-server) == heimdall ]]
   "$node" -e 'if(require("/usr/share/heimdall-server/apps/backend/package.json").version!==process.argv[1]) process.exit(1)' "$(rpm -q --qf '%{VERSION}' heimdall-server)"
-  curl --fail --silent --show-error --max-time 10 http://127.0.0.1:3000/ -o /tmp/rpm-index.html
+  curl --fail --silent --show-error --max-time 10 "http://127.0.0.1:${PORT:-3000}/" -o /tmp/rpm-index.html
   grep -qi '<html' /tmp/rpm-index.html
 }
 verify_state() {
@@ -119,18 +120,19 @@ ENV
     ;;
   setup)
     # The host runner disconnects networking before this full setup.
-    bash /tmp/rpm-tests/topology.sh bundled bundled
+    bash /tmp/rpm-tests/topology.sh bundled bundled 3003
     source /etc/heimdall-server/backend.env
     printf '%s\0' "$DATABASE_PASSWORD" "$JWT_SECRET" "$API_KEY_SECRET" | sha256sum > /tmp/rpm-secrets.sha256
     bash /tmp/rpm-tests/database.sh
-    # Missing systemd must fail without touching configuration; reconfigure works.
+    # Without systemd, setup cannot verify the running backend listener's owner.
     sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-shell-env.sha256
     unshare --mount --propagation private bash -s <<'SHELL'
 set -euo pipefail
 mount -t tmpfs tmpfs /run
 if heimdall-server-setup --non-interactive --skip-db --skip-tls > /tmp/rpm-shell-no-manager.log 2>&1; then exit 1; fi
 sha256sum --check /tmp/rpm-shell-env.sha256
-heimdall-server-setup --non-interactive --reconfigure
+if heimdall-server-setup --non-interactive --reconfigure > /tmp/rpm-shell-no-owner.log 2>&1; then exit 1; fi
+sha256sum --check /tmp/rpm-shell-env.sha256
 SHELL
     heimdall-server-setup --non-interactive
     install -d /run/systemd/system/heimdall-server.service.d
