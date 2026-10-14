@@ -267,8 +267,9 @@ External database mode still runs connectivity checks and migrations.
 `--skip-db` skips that work only for the current invocation; `--skip-tls` likewise
 skips TLS work without changing saved proxy ownership.
 
-Interactive setup asks for **Backend port**, defaulting to the saved `PORT` or
-`3000` on a new installation. Automated setup accepts `--port 3003`; an explicit
+Interactive setup asks for **Backend port** before displaying the configuration
+summary, defaulting to the saved `PORT` or `3000` on a new installation. The
+summary includes the selected port. Automated setup accepts `--port 3003`; an explicit
 value replaces the saved port. Setup checks the range (1–65535), listener ownership
 and SELinux assignments before changing configuration or services. If a port
 conflicts, interactive setup asks again; automated setup fails and names the
