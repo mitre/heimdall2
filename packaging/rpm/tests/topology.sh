@@ -11,6 +11,9 @@ runtime=/usr/libexec/heimdall-server/runtime
 args=(setup --non-interactive --database-mode "$db_mode" --proxy-mode "$proxy_mode"
   --external-url https://heimdall.example.test --tls-mode internal)
 if [[ $proxy_mode == nginx ]]; then
+  # Require the same privileged-port capability as a normal host.
+  sysctl -q -w net.ipv4.ip_unprivileged_port_start=1024
+  [[ $(sysctl -n net.ipv4.ip_unprivileged_port_start) == 1024 ]]
   # Omitting proxy and TLS flags exercises the new-install defaults.
   args=(setup --non-interactive --database-mode "$db_mode" --external-url heimdall.example.test)
 fi

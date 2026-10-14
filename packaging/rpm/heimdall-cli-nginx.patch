@@ -176,10 +176,10 @@ index c3991c7..c6123ca 100644
  	}
 diff --git a/internal/cmd/nginx.go b/internal/cmd/nginx.go
 new file mode 100644
-index 0000000..5a94ac6
+index 0000000..959f484
 --- /dev/null
 +++ b/internal/cmd/nginx.go
-@@ -0,0 +1,267 @@
+@@ -0,0 +1,270 @@
 +package cmd
 +
 +import (
@@ -435,7 +435,10 @@ index 0000000..5a94ac6
 +	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.RuntimePath("nginx"), dir); err != nil {
 +		return nil, err
 +	}
-+	if err := runChecked(r.Exec, "runuser", "-u", "heimdall-nginx", "--", binary, "-t", "-c", update.pending); err != nil {
++	// Nginx config tests bind listeners, so grant the service's bind capability.
++	if err := runChecked(r.Exec, "setpriv", "--reuid=heimdall-nginx", "--regid=heimdall-nginx", "--init-groups",
++		"--inh-caps=-all,+net_bind_service", "--ambient-caps=-all,+net_bind_service", "--bounding-set=-all,+net_bind_service",
++		"--", binary, "-t", "-c", update.pending); err != nil {
 +		return nil, fmt.Errorf("validating Nginx configuration as service account: %w", err)
 +	}
 +	return update, nil
@@ -449,7 +452,7 @@ index 0000000..5a94ac6
 +}
 diff --git a/internal/cmd/nginx_lifecycle_test.go b/internal/cmd/nginx_lifecycle_test.go
 new file mode 100644
-index 0000000..2bebcf4
+index 0000000..2dc16a9
 --- /dev/null
 +++ b/internal/cmd/nginx_lifecycle_test.go
 @@ -0,0 +1,165 @@
@@ -597,7 +600,7 @@ index 0000000..2bebcf4
 +			sd.ActiveServices["heimdall-nginx"] = true
 +			exec := setup.Exec.(*FakeExecRunner)
 +			if failure == "validate" {
-+				exec.Results["runuser -u heimdall-nginx -- "+setup.Paths.RuntimePath("nginx", "sbin", "nginx")+" -t -c "+setup.Paths.ConfigDir+"/nginx/nginx.conf.pending"] = FakeExecResult{ExitCode: 1}
++				exec.Results["setpriv --reuid=heimdall-nginx --regid=heimdall-nginx --init-groups --inh-caps=-all,+net_bind_service --ambient-caps=-all,+net_bind_service --bounding-set=-all,+net_bind_service -- "+setup.Paths.RuntimePath("nginx", "sbin", "nginx")+" -t -c "+setup.Paths.ConfigDir+"/nginx/nginx.conf.pending"] = FakeExecResult{ExitCode: 1}
 +			}
 +			port := &SetPortRunner{Exec: exec, Env: setup.Env, Systemd: sd, FS: fs, Paths: setup.Paths, Out: setup.Out}
 +			cfg := &ConfigRunner{Env: setup.Env, Out: setup.Out, Port: port}
@@ -620,10 +623,10 @@ index 0000000..2bebcf4
 +}
 diff --git a/internal/cmd/nginx_test.go b/internal/cmd/nginx_test.go
 new file mode 100644
-index 0000000..6f7562a
+index 0000000..d488cea
 --- /dev/null
 +++ b/internal/cmd/nginx_test.go
-@@ -0,0 +1,186 @@
+@@ -0,0 +1,202 @@
 +package cmd
 +
 +import (
@@ -638,6 +641,22 @@ index 0000000..6f7562a
 +	"github.com/stretchr/testify/assert"
 +	"github.com/stretchr/testify/require"
 +)
++
++func TestNginxValidationUsesServiceBindCapability(t *testing.T) {
++	r, _, _ := newTestSetupRunner()
++	binary := r.Paths.RuntimePath("nginx", "sbin", "nginx")
++	pending := r.Paths.ConfigDir + "/nginx/nginx.conf.pending"
++	r.FS.(*FakeFileSystem).Files[binary] = []byte("nginx")
++	exec := r.Exec.(*FakeExecRunner)
++	exec.Results["runuser -u heimdall-nginx -- "+binary+" -t -c "+pending] = FakeExecResult{ExitCode: 1, Stdout: "bind() to 0.0.0.0:443 failed (13: Permission denied)"}
++	_, err := r.prepareBundledNginx(map[string]string{"EXTERNAL_URL": "https://localhost", "HEIMDALL_TLS_MODE": "self-signed"})
++	require.NoError(t, err)
++	require.Contains(t, exec.Calls, FakeExecCall{Name: "setpriv", Args: []string{
++		"--reuid=heimdall-nginx", "--regid=heimdall-nginx", "--init-groups",
++		"--inh-caps=-all,+net_bind_service", "--ambient-caps=-all,+net_bind_service",
++		"--bounding-set=-all,+net_bind_service", "--", binary, "-t", "-c", pending,
++	}})
++}
 +
 +func TestSetupNginxDefaultAndBareURL(t *testing.T) {
 +	r, _, _ := newTestSetupRunner()
