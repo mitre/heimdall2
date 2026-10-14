@@ -13,7 +13,8 @@ import sys
 import tempfile
 from urllib.parse import unquote, urlparse
 
-OUTPUT_NAMES = ('OS-RPMS', 'OS-GPG-KEYS', 'os-dependencies.json')
+DEPENDENCY_MANIFEST = 'os-dependencies.json'
+OUTPUT_NAMES = ('OS-RPMS', 'OS-GPG-KEYS', DEPENDENCY_MANIFEST)
 REPOSITORIES = ('baseos', 'appstream')
 
 
@@ -110,6 +111,41 @@ def read_os_release(path):
     return distribution
 
 
+def write_dependency_rpms(dependencies, trust, stage, architecture):
+    rpm_directory = stage / 'OS-RPMS' / architecture
+    rpm_directory.mkdir(parents=True)
+    records = []
+    for dependency in dependencies:
+        source = Path(dependency.localPkg())
+        verify_signature(trust, source)
+        target = rpm_directory / source.name
+        if target.exists():
+            raise ValueError('Dependency RPM filenames conflict: ' + source.name)
+        shutil.copyfile(str(source), str(target))
+        records.append({'name': dependency.name, 'nevra': str(dependency),
+            'path': str(target.relative_to(stage)), 'sha256': sha256(target),
+            'repository': dependency.reponame})
+    return records
+
+
+def write_ci_baseline(baseline, trust, stage, snapshot, architecture):
+    core_directory = snapshot / 'RPMS' / architecture
+    core_directory.mkdir(parents=True)
+    for package in baseline:
+        source = Path(package.localPkg())
+        verify_signature(trust, source)
+        target = core_directory / source.name
+        if target.exists():
+            raise ValueError('Baseline RPM filenames conflict: ' + source.name)
+        shutil.copyfile(str(source), str(target))
+    shutil.copytree(str(stage / 'OS-GPG-KEYS'), str(snapshot / 'OS-GPG-KEYS'))
+    shutil.copyfile(str(stage / DEPENDENCY_MANIFEST),
+                    str(snapshot / DEPENDENCY_MANIFEST))
+    checksums = [sha256(path) + '  ' + str(path.relative_to(snapshot))
+                 for path in sorted(snapshot.rglob('*')) if path.is_file()]
+    (snapshot / 'SHA256SUMS').write_text('\n'.join(checksums) + '\n')
+
+
 def collect(candidate, output, ci_baseline=None):
     # The build Python can lack DNF; import only when collecting, not for host-side tests.
     import dnf
@@ -171,19 +207,7 @@ def collect(candidate, output, ci_baseline=None):
             subprocess.check_call(['rpm', '--dbpath', str(trust), '--initdb'])
             keys = sorted((stage / 'OS-GPG-KEYS').iterdir())
             subprocess.check_call(['rpmkeys', '--dbpath', str(trust), '--import'] + [str(key) for key in keys])
-            rpm_directory = stage / 'OS-RPMS' / architecture
-            rpm_directory.mkdir(parents=True)
-            records = []
-            for dependency in dependencies:
-                source = Path(dependency.localPkg())
-                verify_signature(trust, source)
-                target = rpm_directory / source.name
-                if target.exists():
-                    raise ValueError('Dependency RPM filenames conflict: ' + source.name)
-                shutil.copyfile(str(source), str(target))
-                records.append({'name': dependency.name, 'nevra': str(dependency),
-                    'path': str(target.relative_to(stage)), 'sha256': sha256(target),
-                    'repository': dependency.reponame})
+            records = write_dependency_rpms(dependencies, trust, stage, architecture)
             manifest = {'schema': 1,
                 'distribution': {'id': distribution['ID'], 'version_id': distribution['VERSION_ID']},
                 'architecture': architecture, 'baseline_group': 'core',
@@ -193,24 +217,10 @@ def collect(candidate, output, ci_baseline=None):
                 'candidate': {'name': package.name, 'nevra': str(package), 'sha256': sha256(candidate)},
                 'repositories': sorted(repo.id for repo in repositories),
                 'dependencies': records}
-            (stage / 'os-dependencies.json').write_text(json.dumps(manifest, indent=2) + '\n')
+            (stage / DEPENDENCY_MANIFEST).write_text(json.dumps(manifest, indent=2) + '\n')
             if ci_baseline is not None:
                 snapshot = work / 'ci-baseline'
-                core_directory = snapshot / 'RPMS' / architecture
-                core_directory.mkdir(parents=True)
-                for package in baseline:
-                    source = Path(package.localPkg())
-                    verify_signature(trust, source)
-                    target = core_directory / source.name
-                    if target.exists():
-                        raise ValueError('Baseline RPM filenames conflict: ' + source.name)
-                    shutil.copyfile(str(source), str(target))
-                shutil.copytree(str(stage / 'OS-GPG-KEYS'), str(snapshot / 'OS-GPG-KEYS'))
-                shutil.copyfile(str(stage / 'os-dependencies.json'),
-                                str(snapshot / 'os-dependencies.json'))
-                checksums = [sha256(path) + '  ' + str(path.relative_to(snapshot))
-                             for path in sorted(snapshot.rglob('*')) if path.is_file()]
-                (snapshot / 'SHA256SUMS').write_text('\n'.join(checksums) + '\n')
+                write_ci_baseline(baseline, trust, stage, snapshot, architecture)
         check_output(output)
         if ci_baseline is not None:
             check_ci_baseline(ci_baseline, output)

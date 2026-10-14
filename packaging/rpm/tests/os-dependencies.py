@@ -33,7 +33,7 @@ class OfflineDependencies(unittest.TestCase):
         self.candidate = Package('heimdall-server', repo='@commandline')
         self.extra = Package('checkpolicy')
 
-    def collect_fixture(self, root, snapshot=None, unsigned=False):
+    def collect_fixture(self, root, snapshot=None, unsigned=None):
         output = root / 'bundle'
         output.mkdir()
         candidate = root / 'candidate.rpm'
@@ -62,7 +62,7 @@ class OfflineDependencies(unittest.TestCase):
 
         def signature(command, **kwargs):
             text = 'Header V4 RSA/SHA256 Signature, key ID deadbeef: OK\n'
-            if unsigned and Path(command[-1]).name.startswith('systemd-'):
+            if unsigned and Path(command[-1]).name.startswith(unsigned + '-'):
                 text = 'digests OK\n'
             return subprocess.CompletedProcess(command, 0, stdout=text)
 
@@ -91,6 +91,13 @@ class OfflineDependencies(unittest.TestCase):
                              ['checkpolicy-1.x86_64.rpm'])
             self.assertEqual(sorted(p.name for p in (snapshot / 'RPMS/x86_64').iterdir()),
                              ['systemd-1.x86_64.rpm'])
+            self.assertEqual((output / 'OS-RPMS/x86_64/checkpolicy-1.x86_64.rpm').read_bytes(),
+                             b'checkpolicy')
+            self.assertEqual((snapshot / 'RPMS/x86_64/systemd-1.x86_64.rpm').read_bytes(), b'systemd')
+            manifest = json.loads((output / 'os-dependencies.json').read_text())
+            self.assertEqual(manifest['dependencies'], [{'name': 'checkpolicy',
+                'nevra': 'checkpolicy-1.x86_64', 'path': 'OS-RPMS/x86_64/checkpolicy-1.x86_64.rpm',
+                'sha256': hashlib.sha256(b'checkpolicy').hexdigest(), 'repository': 'baseos'}])
             self.assertEqual((snapshot / 'OS-GPG-KEYS/vendor-key').read_bytes(), b'vendor key')
             self.assertEqual((snapshot / 'os-dependencies.json').read_bytes(),
                              (output / 'os-dependencies.json').read_bytes())
@@ -108,14 +115,15 @@ class OfflineDependencies(unittest.TestCase):
             manifest = json.loads((output / 'os-dependencies.json').read_text())
             self.assertEqual([p['name'] for p in manifest['dependencies']], ['checkpolicy'])
 
-    def test_unsigned_core_cannot_publish_snapshot_or_bundle(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            snapshot = root / 'ci-baseline'
-            with self.assertRaisesRegex(ValueError, 'Vendor signature'):
-                self.collect_fixture(root, snapshot, unsigned=True)
-            self.assertFalse(snapshot.exists())
-            self.assertEqual(list((root / 'bundle').iterdir()), [])
+    def test_unsigned_packages_cannot_publish_snapshot_or_bundle(self):
+        for unsigned in ('systemd', 'checkpolicy'):
+            with self.subTest(unsigned=unsigned), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                snapshot = root / 'ci-baseline'
+                with self.assertRaisesRegex(ValueError, 'Vendor signature'):
+                    self.collect_fixture(root, snapshot, unsigned=unsigned)
+                self.assertFalse(snapshot.exists())
+                self.assertEqual(list((root / 'bundle').iterdir()), [])
 
     def test_ci_snapshot_destination_is_never_overwritten(self):
         for kind in ('directory', 'file', 'broken-symlink'):
