@@ -89,6 +89,23 @@ describe('AuthnService login expiry', () => {
     });
   });
 
+  describe.each(['admin', 'user'])('%s password-change sessions', (role) => {
+    it.each(['5s', '60m'])(
+      'lasts ten minutes even when normal sessions use %s',
+      async (setting) => {
+        const { authn } = await service(setting, setting);
+        const { accessToken } = await authn.login({
+          email: 'user@example.test',
+          forcePasswordChange: true,
+          id: 'user-1',
+          role,
+        });
+        const payload = verify(accessToken, 'test-secretuser-secret') as JwtPayload;
+        expect(payload.exp).toBe(Number(payload.iat) + 600);
+      },
+    );
+  });
+
   it.each([
     ['admin', false],
     ['user', false],

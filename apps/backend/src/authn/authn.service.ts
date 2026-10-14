@@ -155,43 +155,33 @@ export class AuthnService {
     ) {
       this.usersService.updateUserSecret(loginUser);
     }
-    if (payload.forcePasswordChange || user.role === 'admin') {
-      const configuredExpireTime =
-        user.role === 'admin' && this.configService.get('ADMIN_JWT_EXPIRE_TIME');
-      const expiresIn = configuredExpireTime
-        ? limitJWTTime(configuredExpireTime, true)
-        : 600;
-      const expireTime = moment(new Date(Date.now() + expiresIn * 1000)).format(
-        this.loggingTimeFormat
+    let expiresInSeconds: number;
+    if (payload.forcePasswordChange) {
+      expiresInSeconds = 600;
+    } else if (user.role === 'admin') {
+      expiresInSeconds = limitJWTTime(
+        this.configService.get('ADMIN_JWT_EXPIRE_TIME') || '600s',
+        true
       );
-      this.logger.info({
-        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
-      });
-      return {
-        userID: user.id,
-        accessToken: this.jwtService.sign(payload, {
-          expiresIn,
-          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
-        })
-      };
     } else {
-      const expiresIn = limitJWTTime(
+      expiresInSeconds = limitJWTTime(
         this.configService.get('JWT_EXPIRE_TIME') || '60s',
         false
       );
-      const expireTime = moment(new Date(Date.now() + expiresIn * 1000)).format(
-        this.loggingTimeFormat
-      );
-      this.logger.info({
-        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
-      });
-      return {
-        userID: user.id,
-        accessToken: this.jwtService.sign(payload, {
-          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
-        })
-      };
     }
+    const expireTime = moment(new Date(Date.now() + expiresInSeconds * 1000)).format(
+      this.loggingTimeFormat
+    );
+    this.logger.info({
+      message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
+    });
+    return {
+      userID: user.id,
+      accessToken: this.jwtService.sign(payload, {
+        expiresIn: expiresInSeconds,
+        secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
+      })
+    };
   }
 
   splitName(fullName: string): {firstName: string; lastName: string} {
