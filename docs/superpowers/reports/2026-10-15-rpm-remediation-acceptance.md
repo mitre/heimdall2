@@ -5,10 +5,10 @@ All eleven audit findings are fixed, with task reviews and a clean scoped final 
 ## Candidate and scope
 
 - Branch: `codex/rpm-audit-remediation`, isolated from `feat/rpm-packaging` at `885d04dd5e94208f2d0b4795d320d8d8baf76f42`.
-- Final source candidate: `44c5ed66033a3986da92aa8ff0098b28bf1fa934`. The subsequent acceptance commit changes documentation only.
+- Audited source candidate before the CI follow-up below: `44c5ed66033a3986da92aa8ff0098b28bf1fa934`. The subsequent acceptance commit changes documentation only.
 - Application version: `2.14.0`. No application dependency or runtime service was added.
 - CLI base: `ea29e299ca0206519dd324c9543c74cba80c1963`.
-- Final CLI patch SHA-256: `d2229fa541a1cee48e1c2148dbe6048dbd940daa32b5a7fba52201a76452c582`.
+- Audited CLI patch SHA-256: `d2229fa541a1cee48e1c2148dbe6048dbd940daa32b5a7fba52201a76452c582`.
 - Requirements: [implementation plan](../plans/2026-10-15-rpm-branch-audit-remediation.md) and [design](../specs/2026-10-15-rpm-branch-audit-remediation-design.md).
 
 The full review covered the remediation range from the base through `638665b46`. Its two minor findings—changed-block lint and unconditional public-port-443 documentation—were corrected at `44c5ed660` and independently re-reviewed. No functional blocker remains from that source review. This conclusion does not certify a release artifact.
@@ -129,3 +129,18 @@ Raw evidence is local and temporary; copy it before OS cleanup if needed. It con
 | Converters and fixture probes | `/var/folders/rr/lcgqr3hn5h71g3_f4fkgzg1w0000gp/T/heimdall-application-gates.u7vugdz0` |
 | Failed candidate builds | `/tmp/heimdall-remediation-rpm-build.log`, `/tmp/heimdall-remediation-rpm-build-retry.log`, `/tmp/heimdall-remediation-rpm-linux-cache.log` |
 | Staged candidate inputs | `/Users/Shared/Docker/heimdall2/.superpowers/rpm-remediation-verification-lmfto4z5/candidate-rpmbuild` |
+
+
+## CI follow-up — 2026-10-15
+
+The published PR head `885d04dd5e94208f2d0b4795d320d8d8baf76f42` had two EL10 lifecycle failures in [Build RPM run 38771262302](https://github.com/mitre/heimdall2/actions/runs/38771262302). All six builds, six install checks and the other four lifecycle jobs passed. These are results for the old head, not the unpublished remediation.
+
+The failures were reproduced with Rocky 10 systemd 257: an absent optional `firewalld` unit reports `inactive` with exit 4. Commit `90d189d69` makes the shared CLI adapter accept only that combination while retaining errors for unexpected states/statuses and manager failures. Five regression cases cover the accepted and rejected combinations. The original behavior failed the new regression; the fix passed focused, full and functional Go suites on native Linux/aarch64 with Go 1.25.8. Patch application, source formatting and independent scoped review passed. The new patch SHA-256 is `29993da844f52c65fb7334a3bf7b1d4a3408efbc156ffba461f43c25fdc968f1`. Full candidate RPM CI still needs to run after publication.
+
+SonarCloud analyzed the published `885d04dd5` head at `2026-10-15T16:42:53Z`: quality gate OK, zero new bugs/vulnerabilities/code smells, zero unresolved issues and zero security hotspots. Both GitHub Sonar checks passed. The newer remediation candidate requires its own analysis.
+
+GitGuardian check `116547355227` still reports three unique Generic Password incidents across 36 PR commits. Incidents [35530560](https://dashboard.gitguardian.com/workspace/788708/incidents/35530560), [35530559](https://dashboard.gitguardian.com/workspace/788708/incidents/35530559) and [29091197](https://dashboard.gitguardian.com/workspace/788708/incidents/29091197) cover eight effective dummy test inputs introduced in `ca42fc3de`. They flow through `FakePrompter` into a setup runner with fake command, filesystem, environment and database adapters; they are test credentials. No credential values are reproduced here.
+
+GitGuardian scans every PR commit, so a source-only deletion does not clear these historical findings. An authorized workspace incident editor must classify them as test credentials, or use the supported test-credential check action if available. No configured GitGuardian credential or matching available plugin was found, so that classification remains externally blocked. See [GitGuardian's check behavior and supported actions](https://docs.gitguardian.com/internal-monitoring/prevent/detect-secrets-in-real-time-in-github). No history was rewritten or security check disabled.
+
+The existing five-minute heartbeat was reactivated for this chat to follow the actual PR head, investigate new failures and report meaningful changes. It must not report completion while GitGuardian or any other applicable check remains failed. Local CI-fix evidence is in `/tmp/heimdall-el10-systemctl-reproduction.log`, `/tmp/heimdall-el10-isactive-red.log` and `/tmp/heimdall-el10-isactive-green.log`.
