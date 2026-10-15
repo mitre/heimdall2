@@ -78,6 +78,59 @@ index 4fac11f..fe9610c 100644
  | Caddy | `/usr/libexec/heimdall-server/runtime/caddy/caddy`; account `heimdall-caddy` |
  | Caddy config/state/socket | `/etc/heimdall-server/caddy/Caddyfile`, `/var/lib/heimdall-caddy`, `/run/heimdall-caddy/admin.sock` |
  | Saved setup | `/etc/heimdall-server/backend.env` |
+diff --git a/internal/cmd/add_cert.go b/internal/cmd/add_cert.go
+index 60d1498..f867db2 100644
+--- a/internal/cmd/add_cert.go
++++ b/internal/cmd/add_cert.go
+@@ -38,12 +38,10 @@ func (r *AddCertRunner) Run(certPath string) error {
+ 	}
+ 	fmt.Fprintf(r.Out, "Copied %s to %s\n", basename, dest)
+ 
+-	_, _, err := r.Exec.Run("update-ca-trust")
+-	if err != nil {
+-		fmt.Fprintf(r.Out, "Warning: update-ca-trust failed.\n")
+-	} else {
+-		fmt.Fprintln(r.Out, "System trust store updated.")
++	if err := runChecked(r.Exec, "update-ca-trust"); err != nil {
++		return fmt.Errorf("updating system trust store: %w", err)
+ 	}
++	fmt.Fprintln(r.Out, "System trust store updated.")
+ 
+ 	// OS-level consolidated CA bundle path — see comment above.
+ 	caBundle := "/etc/pki/tls/certs/ca-bundle.crt"
+diff --git a/internal/cmd/add_cert_test.go b/internal/cmd/add_cert_test.go
+index ae81b84..96cb128 100644
+--- a/internal/cmd/add_cert_test.go
++++ b/internal/cmd/add_cert_test.go
+@@ -2,6 +2,7 @@ package cmd
+ 
+ import (
+ 	"bytes"
++	"fmt"
+ 	"testing"
+ 
+ 	"github.com/stretchr/testify/assert"
+@@ -77,6 +78,20 @@ func TestAddCert_SkipsEnvUpdateIfAlreadySet(t *testing.T) {
+ 	assert.NotContains(t, out.String(), "Set NODE_EXTRA_CA_CERTS")
+ }
+ 
++func TestAddCertTrustFailureStopsConfiguration(t *testing.T) {
++	for _, result := range []FakeExecResult{
++		{ExitCode: 1, Stdout: "could not rebuild trust"},
++		{Err: fmt.Errorf("could not execute update-ca-trust")},
++	} {
++		r, exec, env, fs, out := newAddCertRunner()
++		fs.Files["/tmp/corporate.pem"] = []byte("certificate")
++		exec.Results["update-ca-trust"] = result
++		require.Error(t, r.Run("/tmp/corporate.pem"))
++		require.NotContains(t, out.String(), "System trust store updated")
++		require.Empty(t, env.Env["NODE_EXTRA_CA_CERTS"])
++	}
++}
++
+ func TestAddCert_FileNotExists(t *testing.T) {
+ 	r := &AddCertRunner{
+ 		Env:       &FakeEnvManager{Env: map[string]string{}},
 diff --git a/internal/cmd/backup.go b/internal/cmd/backup.go
 index 62e9920..f40031c 100644
 --- a/internal/cmd/backup.go
