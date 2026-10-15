@@ -2050,7 +2050,7 @@ index 0000000..a600d06
 +	}
 +}
 diff --git a/internal/cmd/runtime.go b/internal/cmd/runtime.go
-index 5413236..2ce3434 100644
+index 5413236..445d48f 100644
 --- a/internal/cmd/runtime.go
 +++ b/internal/cmd/runtime.go
 @@ -22,7 +22,7 @@ func (r *execRunner) Run(name string, args ...string) (string, int, error) {
@@ -2093,7 +2093,18 @@ index 5413236..2ce3434 100644
  }
  
  // systemdRunner implements SystemdRunner using systemctl.
-@@ -274,12 +270,18 @@ func (p *huhPrompter) newForm(groups ...*huh.Group) *huh.Form {
+@@ -72,6 +68,10 @@ func (r *systemdRunner) IsActive(service string) (bool, error) {
+ 	if exit, ok := err.(*exec.ExitError); ok && exit.ExitCode() == 3 && (state == "inactive" || state == "failed") {
+ 		return false, nil
+ 	}
++	// Newer systemd returns 4 for an absent unit, which is also inactive.
++	if exit, ok := err.(*exec.ExitError); ok && exit.ExitCode() == 4 && state == "inactive" {
++		return false, nil
++	}
+ 	if err != nil {
+ 		return false, err
+ 	}
+@@ -274,12 +274,18 @@ func (p *huhPrompter) newForm(groups ...*huh.Group) *huh.Form {
  }
  
  func (p *huhPrompter) Input(prompt string, defaultValue string) (string, error) {
@@ -2114,7 +2125,7 @@ index 5413236..2ce3434 100644
  }
  
 diff --git a/internal/cmd/runtime_test.go b/internal/cmd/runtime_test.go
-index e60c50c..57bc474 100644
+index e60c50c..b44de54 100644
 --- a/internal/cmd/runtime_test.go
 +++ b/internal/cmd/runtime_test.go
 @@ -188,7 +188,12 @@ esac
@@ -2131,7 +2142,17 @@ index e60c50c..57bc474 100644
   *) echo 1 ;;
  esac
  `
-@@ -365,3 +370,19 @@ printf '%s\n' "$*" >> "$SYSTEMCTL_FIXTURE/actions"
+@@ -305,6 +310,9 @@ func TestRealSystemdIsActiveStates(t *testing.T) {
+ 		{"active", "active", "0", true, false}, {"inactive", "inactive", "3", false, false}, {"failed unit", "failed", "3", false, false},
+ 		{"manager failure", "", "1", false, true}, {"unexpected output", "surprise", "0", false, true},
+ 		{"inactive wrong exit", "inactive", "1", false, true}, {"active wrong exit", "active", "3", false, true},
++		{"EL10 absent unit", "inactive", "4", false, false},
++		{"absent exit without state", "", "4", false, true}, {"unknown absent state", "unknown", "4", false, true},
++		{"active absent exit", "active", "4", false, true}, {"failed absent exit", "failed", "4", false, true},
+ 	} {
+ 		t.Run(tc.name, func(t *testing.T) {
+ 			dir := t.TempDir()
+@@ -365,3 +373,19 @@ printf '%s\n' "$*" >> "$SYSTEMCTL_FIXTURE/actions"
  		require.Contains(t, string(data), action)
  	}
  }
