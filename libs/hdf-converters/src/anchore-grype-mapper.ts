@@ -87,8 +87,14 @@ export class AnchoreGrypeMapper extends BaseConverter {
         {
           data: {
             path: 'relatedVulnerabilities',
-            transformer: (data: Record<string, unknown>): string =>
-              `${JSON.stringify(_.get(data, 'cvss'), null, 2)}`
+            transformer: (data: Record<string, unknown>[]): string => {
+              const cvssRecords = data.flatMap(({cvss}) =>
+                Array.isArray(cvss) ? cvss : []
+              );
+              return cvssRecords.length > 0
+                ? JSON.stringify(cvssRecords, null, 2)
+                : '';
+            }
           },
           label: 'check'
         }

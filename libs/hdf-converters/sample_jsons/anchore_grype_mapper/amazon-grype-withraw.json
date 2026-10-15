@@ -39,7 +39,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"security-advisories@github.com\",\n    \"type\": \"Secondary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\",\n    \"metrics\": {\n      \"baseScore\": 7.5,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -87,7 +87,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N\",\n    \"metrics\": {\n      \"baseScore\": 7.5,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 9.1,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 5.2\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -138,7 +138,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"134c704f-9b21-4f2e-91b3-4a467353bcc0\",\n    \"type\": \"Secondary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 9.1,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 5.2\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -207,7 +207,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:L/A:N\",\n    \"metrics\": {\n      \"baseScore\": 3.3,\n      \"exploitabilityScore\": 1.8,\n      \"impactScore\": 1.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"cna@python.org\",\n    \"type\": \"Secondary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N\",\n    \"metrics\": {\n      \"baseScore\": 5.5,\n      \"exploitabilityScore\": 1.8,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -267,7 +267,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -312,7 +312,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -378,7 +378,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -426,7 +426,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -477,7 +477,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -582,7 +582,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -643,7 +643,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -701,7 +701,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -777,7 +777,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 5.9,\n      \"exploitabilityScore\": 2.2,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -843,7 +843,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"security@huntr.dev\",\n    \"type\": \"Secondary\",\n    \"version\": \"3.0\",\n    \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 8.8,\n      \"exploitabilityScore\": 2.8,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -888,7 +888,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -936,7 +936,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"security-advisories@github.com\",\n    \"type\": \"Secondary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N\",\n    \"metrics\": {\n      \"baseScore\": 4.4,\n      \"exploitabilityScore\": 0.7,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -967,7 +967,7 @@
           ]
         }
       ],
-      "sha256": "2170ec5567c87f86622f3c24c3f21c220ac81773ca25a481e17cd64cab559fee"
+      "sha256": "fe62bcfabec3a0f2f4dd5b90371b413d9aa1bbe6c5ba69f4323b19e27d316162"
     }
   ],
   "passthrough": {

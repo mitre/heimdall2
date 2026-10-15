@@ -39,7 +39,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:N/C:P/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.4,\n      \"exploitabilityScore\": 10,\n      \"impactScore\": 4.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 9.1,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 5.2\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -96,7 +96,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 5,\n      \"exploitabilityScore\": 10,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.5,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -141,7 +141,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -186,7 +186,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -237,7 +237,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -297,7 +297,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -357,7 +357,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -417,7 +417,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -477,7 +477,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -537,7 +537,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -597,7 +597,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -657,7 +657,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -717,7 +717,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 6.5,\n      \"exploitabilityScore\": 8,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.2,\n      \"exploitabilityScore\": 1.2,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -777,7 +777,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 5,\n      \"exploitabilityScore\": 10,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.5,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"cve@mitre.org\",\n    \"type\": \"Secondary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.5,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -840,7 +840,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:L/AC:M/Au:N/C:P/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 3.3,\n      \"exploitabilityScore\": 3.4,\n      \"impactScore\": 4.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 5.3,\n      \"exploitabilityScore\": 1,\n      \"impactScore\": 4.2\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -900,7 +900,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -972,7 +972,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -1041,7 +1041,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -1125,7 +1125,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:N/C:P/I:P/A:P\",\n    \"metrics\": {\n      \"baseScore\": 7.5,\n      \"exploitabilityScore\": 10,\n      \"impactScore\": 6.4\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 9.8,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -1221,7 +1221,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -1278,7 +1278,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -1350,7 +1350,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -1413,7 +1413,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -1479,7 +1479,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -1533,7 +1533,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -1662,7 +1662,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:M/Au:N/C:P/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 5.8,\n      \"exploitabilityScore\": 8.6,\n      \"impactScore\": 4.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.4,\n      \"exploitabilityScore\": 2.2,\n      \"impactScore\": 5.2\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -1770,7 +1770,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:M/Au:N/C:P/I:P/A:N\",\n    \"metrics\": {\n      \"baseScore\": 5.8,\n      \"exploitabilityScore\": 8.6,\n      \"impactScore\": 4.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N\",\n    \"metrics\": {\n      \"baseScore\": 7.4,\n      \"exploitabilityScore\": 2.2,\n      \"impactScore\": 5.2\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -1887,7 +1887,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 5,\n      \"exploitabilityScore\": 10,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.5,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -1992,7 +1992,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 5,\n      \"exploitabilityScore\": 10,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 7.5,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -2133,7 +2133,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2199,7 +2199,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2262,7 +2262,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2349,7 +2349,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2427,7 +2427,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2499,7 +2499,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2568,7 +2568,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2616,7 +2616,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2697,7 +2697,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -2769,7 +2769,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 4.3,\n      \"exploitabilityScore\": 8.6,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 5.9,\n      \"exploitabilityScore\": 2.2,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -2901,7 +2901,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 4.3,\n      \"exploitabilityScore\": 8.6,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 5.9,\n      \"exploitabilityScore\": 2.2,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -3012,7 +3012,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 4.3,\n      \"exploitabilityScore\": 8.6,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 5.9,\n      \"exploitabilityScore\": 2.2,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -3135,7 +3135,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:N/AC:M/Au:N/C:N/I:P/A:N\",\n    \"metrics\": {\n      \"baseScore\": 4.3,\n      \"exploitabilityScore\": 8.6,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N\",\n    \"metrics\": {\n      \"baseScore\": 3.7,\n      \"exploitabilityScore\": 2.2,\n      \"impactScore\": 1.4\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -3210,7 +3210,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -3275,7 +3275,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"2.0\",\n    \"vector\": \"AV:L/AC:L/Au:N/C:N/I:N/A:P\",\n    \"metrics\": {\n      \"baseScore\": 2.1,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 2.9\n    },\n    \"vendorMetadata\": {}\n  },\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H\",\n    \"metrics\": {\n      \"baseScore\": 5.5,\n      \"exploitabilityScore\": 1.8,\n      \"impactScore\": 3.6\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -3350,7 +3350,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -3419,7 +3419,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "[\n  {\n    \"source\": \"nvd@nist.gov\",\n    \"type\": \"Primary\",\n    \"version\": \"3.1\",\n    \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n    \"metrics\": {\n      \"baseScore\": 9.8,\n      \"exploitabilityScore\": 3.9,\n      \"impactScore\": 5.9\n    },\n    \"vendorMetadata\": {}\n  }\n]",
               "label": "check"
             }
           ],
@@ -3536,7 +3536,7 @@
               "label": "fix"
             },
             {
-              "data": "undefined",
+              "data": "",
               "label": "check"
             }
           ],
@@ -3645,7 +3645,7 @@
           ]
         }
       ],
-      "sha256": "ea1f2402024ada0c5f9e9638e16db526956e7a6bdfecce199c5d0beb869a2c2a"
+      "sha256": "0a62461f0355854d12d66cd814ee512bc2cd9e0c725f5485c4f242913eba1a2d"
     }
   ],
   "passthrough": {
