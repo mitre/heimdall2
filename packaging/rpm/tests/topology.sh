@@ -86,4 +86,5 @@ heimdall-cli setup --non-interactive
 sha256sum --check /tmp/rpm-topology-env.sha256
 if [[ $proxy_mode == nginx ]]; then sha256sum --check /tmp/rpm-topology-cert.sha256; fi
 bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test "${curl_args[@]}"
+bash /tmp/rpm-tests/reset-password.sh
 printf 'PASS topology database=%s proxy=%s\n' "$db_mode" "$proxy_mode"
