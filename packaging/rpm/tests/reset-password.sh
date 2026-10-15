@@ -9,7 +9,10 @@ scratch=$(mktemp -d)
 export PGPASSWORD="$DATABASE_PASSWORD" PGCONNECT_TIMEOUT=5
 pg=("$runtime/postgresql/bin/psql" -X -v ON_ERROR_STOP=1 -At
   -h "$DATABASE_HOST" -p "$DATABASE_PORT" -U "$DATABASE_USERNAME" -d "$DATABASE_NAME")
-query() { "${pg[@]}" -c "$1"; }
+query() {
+  local sql=$1
+  "${pg[@]}" -c "$sql"
+}
 email=rpm-test@example.invalid
 before=$(query "SELECT \"encryptedPassword\" FROM \"Users\" WHERE email='$email'")
 [[ -n $before ]]
