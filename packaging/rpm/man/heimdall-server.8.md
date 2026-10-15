@@ -255,10 +255,10 @@ port as **heimdall_server_port_t**, refusing assignments owned by another servic
 Interactive setup asks for **Backend port** (saved **PORT**, otherwise 3000).
 Backend ports must be between 1024 and 65535; the application runs without
 privileged-port capabilities.
-Automated setup can select a different port:
+Automated setup can set the backend port explicitly:
 
 ```bash
-sudo heimdall-cli setup --non-interactive --port 3003
+sudo heimdall-cli setup --non-interactive --port 3000
 ```
 
 Reruns and upgrades preserve the selected port. Managed HTTPS stays on port 443.
