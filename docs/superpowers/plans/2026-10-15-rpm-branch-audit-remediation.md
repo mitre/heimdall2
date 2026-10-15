@@ -10,6 +10,12 @@
 
 **Spec:** `docs/superpowers/specs/2026-10-15-rpm-branch-audit-remediation-design.md`. Read it before implementation; F1–F11 map directly to Tasks 1–11.
 
+## Execution status — 2026-10-15
+
+Tasks 1–12 are implemented and independently reviewed. Task 13 is partially complete: the real reset fixture, portable checks and freshly exported Linux CLI suites passed, and the [acceptance report](../reports/2026-10-15-rpm-remediation-acceptance.md) records the application checks and remaining gates. The final source candidate is `44c5ed66033a3986da92aa8ff0098b28bf1fa934`; this status update changes documentation only.
+
+The local OL8/aarch64 package build failed during dependency linking and produced no RPM/SRPM. Automatic approval review rejected the remote branch push and workflow dispatch because source publication and remote CI were not explicitly authorized. Tasks 13.3–13.7 remain open; the report distinguishes partial evidence from release qualification. Checked implementation steps represent the reviewed outcomes, including the execution amendments below, rather than a claim that every illustrative snippet was used unchanged.
+
 ## Global Constraints
 
 - Keep application version `2.14.0`; `VERSION` remains authoritative.
@@ -75,14 +81,14 @@ Only intended source/tests/docs belong in that disposable checkout. Review `git 
 
 **Interfaces:** Consumes the existing `InputsTest.prepare_make_fixture()` and `InputsTest.make(*args)` fixtures and `sources` Make target. Produces the same source archive layout without local registry authentication files; no interface changes.
 
-- [ ] **Step 1: Extend the actual source-archive regression.** Add these entries to `excluded` in `test_default_archive_excludes_local_inputs_without_git`; its existing loop writes a private marker and checks archive membership:
+- [x] **Step 1: Extend the actual source-archive regression.** Add these entries to `excluded` in `test_default_archive_excludes_local_inputs_without_git`; its existing loop writes a private marker and checks archive membership:
 
 ```python
 '.npmrc', 'apps/backend/.npmrc',
 '.yarnrc.yml', 'apps/frontend/.yarnrc.yml',
 ```
 
-- [ ] **Step 2: Run the regression before editing archive behavior.**
+- [x] **Step 2: Run the regression before editing archive behavior.**
 
 ```bash
 python3 packaging/rpm/tests/inputs.py InputsTest.test_default_archive_excludes_local_inputs_without_git -v
@@ -90,7 +96,7 @@ python3 packaging/rpm/tests/inputs.py InputsTest.test_default_archive_excludes_l
 
 Expected: FAIL because the archive contains `.npmrc`.
 
-- [ ] **Step 3: Add the two tar exclusions and Docker context patterns.**
+- [x] **Step 3: Add the two tar exclusions and Docker context patterns.**
 
 ```make
 	  --exclude=.npmrc --exclude=.yarnrc.yml \
@@ -103,7 +109,7 @@ Expected: FAIL because the archive contains `.npmrc`.
 
 In `BUILD.md`, add: “Workspace source archives and Docker build contexts exclude local `.npmrc` and `.yarnrc.yml` files. Authenticate package downloads through the build environment; do not put credentials into distributable sources.” This does not introduce a new credential transport feature.
 
-- [ ] **Step 4: Verify source and actual Docker-context filtering.**
+- [x] **Step 4: Verify source and actual Docker-context filtering.**
 
 ```bash
 python3 packaging/rpm/tests/inputs.py -v
@@ -121,7 +127,7 @@ test ! -e "$rpm_context_fixture-export/.yarnrc.yml"
 
 Expected: all source-input tests pass; export contains `source.txt` and neither credential file.
 
-- [ ] **Step 5: Commit the reviewed change.**
+- [x] **Step 5: Commit the reviewed change.**
 
 ```bash
 git add packaging/rpm/Makefile packaging/rpm/Dockerfile.ol8.dockerignore packaging/rpm/tests/inputs.py packaging/rpm/BUILD.md
@@ -130,11 +136,13 @@ git commit -m "fix(rpm): exclude registry credentials from build inputs"
 
 ## Task 2: Reject unsafe cleanup paths (F2)
 
+**Execution amendment:** The reviewed implementation is stricter than the original examples below. Cleanup accepts only a missing or non-symlink external build directory whose direct entries belong to the existing build layout: `BUILD`, `BUILDROOT`, `RPMS`, `SOURCES`, `SPECS`, `SRPMS`, `heimdall-cli-src`, `heimdall-cli-build`, `cli-man`, `RPM-TEST-GPG-KEY`, `runtime-manifest.json`, or `SHA256SUMS`. It rejects unexpected entries and TOPDIR symlinks before deleting anything, preserves the original protected-path rules, and does not traverse an allowed-name child symlink. The valid-clean regression uses `SOURCES/artifact`; additional regressions cover unrelated contents and symlink preservation. This amendment supersedes the broader external-directory cleanup examples in Steps 1 and 3.
+
 **Files:** Modify `packaging/rpm/scripts/check-inputs.py`, `packaging/rpm/Makefile`, `packaging/rpm/tests/inputs.py`, `packaging/rpm/BUILD.md`.
 
 **Interfaces:** Extend existing `check-inputs.py REPO TOPDIR MODE` with mode `clean`. It returns zero only for an allowed cleanup path and does not read application version metadata in this mode.
 
-- [ ] **Step 1: Add these methods to the existing `InputsTest` class.** Real deletion cases stay inside its temporary fixture; actual home/root paths go only to the read-only validator.
+- [x] **Step 1: Add these methods to the existing `InputsTest` class.** Real deletion cases stay inside its temporary fixture; actual home/root paths go only to the read-only validator.
 
 ```python
     def test_clean_rejects_protected_paths(self):
@@ -205,13 +213,13 @@ Add the explicit empty-value case:
 
 Do not pass real root/home directories to the unfixed Make recipe.
 
-- [ ] **Step 2: Run the tests and confirm the copied source-deletion cases fail.**
+- [x] **Step 2: Run the tests and confirm the copied source-deletion cases fail.**
 
 ```bash
 python3 packaging/rpm/tests/inputs.py -v
 ```
 
-- [ ] **Step 3: Add cleanup validation before reading VERSION or manifests.** Keep the existing resolved `repo` and `topdir` values:
+- [x] **Step 3: Add cleanup validation before reading VERSION or manifests.** Keep the existing resolved `repo` and `topdir` values:
 
 ```python
 if mode not in ('check', 'head', 'release', 'workspace', 'clean'):
@@ -231,7 +239,7 @@ clean:
 
 Document the protected paths and continued cleanup support when VERSION is missing in `BUILD.md`. No ownership-marker framework is needed for this defect.
 
-- [ ] **Step 4: Run all source-input and CLI acquisition regressions.**
+- [x] **Step 4: Run all source-input and CLI acquisition regressions.**
 
 ```bash
 python3 packaging/rpm/tests/inputs.py -v
@@ -240,7 +248,7 @@ python3 packaging/rpm/tests/cli-acquisition.py
 
 Expected: protected paths retain all contents; valid external output, including a path with spaces, is removed; unrelated siblings remain.
 
-- [ ] **Step 5: Commit.**
+- [x] **Step 5: Commit.**
 
 ```bash
 git add packaging/rpm/scripts/check-inputs.py packaging/rpm/Makefile packaging/rpm/tests/inputs.py packaging/rpm/BUILD.md
@@ -253,7 +261,7 @@ git commit -m "fix(rpm): reject protected cleanup paths"
 
 **Interfaces:** Consumes `RestoreRunner.Run(archive string) error`, existing `env` (archive) and `existing` (current installation). No signature changes. Preserve stop-before-config-write ordering, archive validation and recovery markers.
 
-- [ ] **Step 1: Add the regression.**
+- [x] **Step 1: Add the regression.**
 
 Add this to `internal/cmd/restore_test.go`, using existing imports (`os`, `strings`, `testing`, `require`) and helpers:
 
@@ -296,7 +304,7 @@ func TestRestoreProxyDisableFailurePreservesCurrentConfig(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Confirm the regression fails on the original behavior.**
+- [x] **Step 2: Confirm the regression fails on the original behavior.**
 
 ```bash
 cd "$rpm_plan_topdir/heimdall-cli-build"
@@ -305,7 +313,7 @@ go test ./internal/cmd -run 'TestRestoreProxy'
 
 Expected: changed-mode cases fail because they see `stop` rather than `disable --now`; same-mode cases pass.
 
-- [ ] **Step 3: Apply the minimal fix.**
+- [x] **Step 3: Apply the minimal fix.**
 
 Replace only the existing `if proxyUnit != ""` body in RestoreRunner.Run:
 
@@ -323,7 +331,7 @@ if proxyUnit != "" {
 
 The same-mode path remains `stop`; it must preserve enablement. Legacy archives without a proxy mode conservatively retire the previously selected managed proxy because later setup defaults configured legacy files to external ownership.
 
-- [ ] **Step 4: Verify the fix and connected behavior.**
+- [x] **Step 4: Verify the fix and connected behavior.**
 
 ```bash
 go test ./internal/cmd -run 'TestRestoreProxy|TestNginxRecovery|TestRecoveryArchive|TestRestore'
@@ -332,7 +340,7 @@ go test ./internal/cmd -run 'TestRestoreProxy|TestNginxRecovery|TestRecoveryArch
 Expected: all tests pass; a disable failure leaves backend.env intact, no restore SQL runs, and the pending marker remains.
 
 Host acceptance in Task 13 must cover both managed transitions, managed-to-external/none, same-mode recovery, and reboot.
-- [ ] **Step 5: Commit the verified change.**
+- [x] **Step 5: Commit the verified change.**
 
 Regenerate and apply-check `packaging/rpm/heimdall-cli-nginx.patch` using the pinned-source commands above.
 
@@ -348,7 +356,7 @@ git commit -m "fix(rpm): disable deselected proxy during restore"
 
 **Interfaces:** Produces `ConfigService.getTrustProxy(): boolean | 'loopback'`. Bootstrap consumes it once before sessions and rate limiting. Managed modes are exactly `nginx` and `bundled`; external/non-RPM behavior remains as before.
 
-- [ ] **Step 1: Add the regression.**
+- [x] **Step 1: Add the regression.**
 
 ```ts
 import express from 'express';
@@ -405,7 +413,7 @@ describe('proxy trust', () => {
 });
 ```
 
-- [ ] **Step 2: Confirm the regression fails on the original behavior.**
+- [x] **Step 2: Confirm the regression fails on the original behavior.**
 
 ```bash
 yarn backend test:ci src/config/config.proxy.spec.ts
@@ -413,7 +421,7 @@ yarn backend test:ci src/config/config.proxy.spec.ts
 
 Expected: the helper does not yet exist; the separately reproduced current bootstrap also combines 21 forwarded clients into one login limit.
 
-- [ ] **Step 3: Apply the minimal fix.**
+- [x] **Step 3: Apply the minimal fix.**
 
 Add this methodto the existing `ConfigService` class:
 
@@ -437,7 +445,7 @@ In `main.ts`, before registering sessions/rate limiting:
 
 Delete the existing nested production `set('trust proxy', true)` block. In the session options, use `proxy: trustProxy === true ? true : undefined`, so managed loopback mode inherits the Express policy while the pre-existing external OAuth/Tenable behavior is preserved. The tests below exercise the actual Express IP getter without listening; they supplement, rather than replace, the separate real rate-limit regression and HTTPS session smoke checks.
 
-- [ ] **Step 4: Verify the fix and connected behavior.**
+- [x] **Step 4: Verify the fix and connected behavior.**
 
 ```bash
 yarn backend test:ci src/config/config.proxy.spec.ts src/config/config.service.spec.ts
@@ -447,7 +455,7 @@ yarn backend build
 Expected: proxy/config tests and compilation pass. Task 13 exercises the real login limiter and secure session cookies.
 
 
-- [ ] **Step 5: Commit the verified change.**
+- [x] **Step 5: Commit the verified change.**
 
 ```bash
 git add apps/backend/src/config/config.service.ts apps/backend/src/config/config.proxy.spec.ts apps/backend/src/main.ts
@@ -461,7 +469,7 @@ git commit -m "fix(backend): trust managed loopback proxies for local login"
 
 **Interfaces:** Produces `DefaultRPMAppPort = "3002"` in `internal/cmd/config_types.go`; keeps `DefaultAppPort = "3000"`. Uses existing `SetupRunner.readConfiguration()`, `isConfigured`, saved `PORT`, and Cobra `flagChanged` precedence. Existing installations and explicit overrides retain their port and conflict checks.
 
-- [ ] **Step 1: Add the complete default-resolution regression and update fresh-RPM expectations.**
+- [x] **Step 1: Add the complete default-resolution regression and update fresh-RPM expectations.**
 
 Create `internal/cmd/rpm_default_port_test.go` in the extracted patched CLI, then include it in the regenerated RPM patch. The file uses existing test fixtures and requires no new production interfaces. It checks real Cobra flag tracking, repeated setup persistence, nil-flagChanged direct runners, stock SELinux default selection, and unchanged state on default/saved/explicit conflicts.
 
@@ -630,7 +638,7 @@ Update exactly three existing expectations in `internal/cmd/setup_port_test.go`:
 
 These are the fresh RPM expectations in `TestSetupBackendPortDefaultsOverridesAndPersistence`, `TestSetupBackendPortInteractiveDefaults`, and `TestSetupBackendPortPromptBeforeSummary`. Keep the same file's explicit `--port=3000`, saved values, and `ntop_port_t` refusal cases. Keep `internal/cmd/config_types_test.go`'s `DefaultAppPort == "3000"` assertion. The new behavior tests already exercise `DefaultRPMAppPort`; an extra constant-only assertion is unnecessary.
 
-- [ ] **Step 2: Confirm the defect.**
+- [x] **Step 2: Confirm the defect.**
 
 ```bash
 cd "$rpm_plan_topdir/heimdall-cli-build"
@@ -639,7 +647,7 @@ go test ./internal/cmd -run '^TestSetup(RPMDefault|BackendPort)' -count=1
 
 Expected: fresh RPM gets 3000; stock-policy test fails because ntop_port_t owns 3000–3001. Saved, explicit and standalone cases still pass.
 
-- [ ] **Step 3: Change only the fresh RPM default and its shipped template.**
+- [x] **Step 3: Change only the fresh RPM default and its shipped template.**
 
 The repository builds the pinned CLI through `/Users/Shared/Docker/heimdall2/packaging/rpm/heimdall-cli-nginx.patch`. Make these edits in the extracted patched CLI, then regenerate the patch against pristine `ea29e299ca0206519dd324c9543c74cba80c1963`. The following relative source paths are patch members, not a checked-in CLI directory.
 
@@ -684,7 +692,7 @@ interactive mode.
 
 Change `/Users/Shared/Docker/heimdall2/packaging/rpm/heimdall-backend.env:5` to `PORT=3002`. This is required: the shipped template is a saved value, so merely changing CLI fallback does not fix a normal RPM install. The `%config(noreplace)` package behavior must continue to preserve existing backend.env files.
 
-- [ ] **Step 4: Update the connected RPM fixtures and current documentation.**
+- [x] **Step 4: Update the connected RPM fixtures and current documentation.**
 
 All paths below are relative to `/Users/Shared/Docker/heimdall2/`.
 
@@ -728,7 +736,7 @@ Exact repository files and current lines:
 
 Keep `internal/cmd/schema.go`'s shared PORT default 3000. It is also used by standalone CLI. Its description may mention the fresh RPM default without changing its shared default. Keep the historical changelog entries at `packaging/rpm/heimdall-server.spec:759,783`. Keep old Caddyfile/backup/restore fixtures and tests explicitly setting 3000: they prove existing settings remain supported.
 
-- [ ] **Step 5: Verify resolution, compatibility and patch export.**
+- [x] **Step 5: Verify resolution, compatibility and patch export.**
 
 ```bash
 go test ./internal/cmd -run '^TestSetup(RPMDefault|BackendPort)' -count=1
@@ -742,7 +750,7 @@ rg -n '3000|3001|3002' packaging/rpm
 
 Expected: new defaults and preserved legacy/explicit settings pass; every remaining 3000/3001 occurrence is an intentional legacy, conflict or standalone case. Real no-override setup under each supported stock policy remains Task 13 acceptance, not a mock-derived claim.
 
-- [ ] **Step 6: Commit the coordinated default change.** Regenerate/apply-check the CLI patch first.
+- [x] **Step 6: Commit the coordinated default change.** Regenerate/apply-check the CLI patch first.
 
 ```bash
 git add packaging/rpm/heimdall-cli-nginx.patch packaging/rpm/heimdall-backend.env \
@@ -759,11 +767,13 @@ git commit -m "fix(rpm): use a free fresh backend default and retain saved ports
 
 ## Task 6: Open the selected Caddy public port and preserve rollback (F6)
 
+**Execution amendment:** Preserve the existing runtime-before-permanent firewall mutation order; the endpoint fix does not require the illustrative lexical scope sort below. Existing rollback regressions verify that sequence.
+
 **Files:** Modify `packaging/rpm/heimdall-cli-nginx.patch`, `packaging/rpm/security/SECURITY.md`; patched CLI `internal/cmd/firewall.go`, `firewall_test.go`, `setup.go`, `set_port.go`.
 
 **Interfaces:** Change `SetupRunner.configureFirewall(port, mode, previousPort, externalURL string) (undo func() error, err error)`. Both production callers must pass the saved `EXTERNAL_URL`. Reuse `validateBackendPort(value string, env map[string]string) error` in set-port before mutation.
 
-- [ ] **Step 1: Add the regression.**
+- [x] **Step 1: Add the regression.**
 
 Add `fmt` to `firewall_test.go` imports and these tests:
 
@@ -846,7 +856,7 @@ func TestSetPortRejectsStoppedProxyPublicPort(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Confirm the regression fails on the original behavior.**
+- [x] **Step 2: Confirm the regression fails on the original behavior.**
 
 ```bash
 cd "$rpm_plan_topdir/heimdall-cli-build"
@@ -855,7 +865,7 @@ go test ./internal/cmd -run 'TestCaddyCustom|TestSetPortRejectsStopped'
 
 Expected: custom 8443 rules are absent, transition/rollback expectations fail, and stopped-proxy collision is accepted.
 
-- [ ] **Step 3: Apply the minimal fix.**
+- [x] **Step 3: Apply the minimal fix.**
 
 Current signature:
 
@@ -962,7 +972,7 @@ if err := setup.validateBackendPort(portStr, env); err != nil { return err }
 
 Use `setup.prepareBundledNginx(candidate)` / `setup.prepareBundledCaddy(candidate)` in the existing branch and `setup.configureFirewall(portStr, env["HEIMDALL_PROXY_MODE"], oldPort, env["EXTERNAL_URL"])` at the firewall call. Remove the inner setup declaration and later firewall-only SetupRunner declaration. Remove the now-unused `p, _ := strconv.Atoi(portStr)` and `strconv` import. The schema validation at the top remains, and selected SELinux ports are applied once after the shared read-only preflight.
 
-- [ ] **Step 4: Verify the fix and connected behavior.**
+- [x] **Step 4: Verify the fix and connected behavior.**
 
 ```bash
 go test ./internal/cmd -run 'TestCaddyCustom|TestManagedProxy|TestBackendFirewall|TestUnownedNonmanaged|TestFirewall|TestSetPort'
@@ -972,7 +982,7 @@ go test ./...
 Expected: all tests pass, including existing unowned-rule and zone tests.
 
 Update SECURITY.md to say “Open the configured managed proxy endpoint; keep the application port private.” Describe `firewalld-ports` as CLI-owned TCP port rules for backend or custom public endpoints. Keep the 443 Nginx restriction. Task 13 verifies 8443 from another host, permanent rules after reboot, and return to 443.
-- [ ] **Step 5: Commit the verified change.**
+- [x] **Step 5: Commit the verified change.**
 
 Regenerate and apply-check `packaging/rpm/heimdall-cli-nginx.patch` using the pinned-source commands above.
 
@@ -988,7 +998,7 @@ git commit -m "fix(rpm): manage the selected public firewall port"
 
 **Interfaces:** Produces `ExecRunner.RunWithEnvAndStdin(env map[string]string, stdin, name string, args ...string) (stdout string, exitCode int, err error)`. Existing RunWithEnv/RunWithStdin become wrappers. Preserve child-only credentials, preparePGEnv TLS-file cleanup, exit codes and current SQL variable quoting.
 
-- [ ] **Step 1: Add the regression.**
+- [x] **Step 1: Add the regression.**
 
 Add to reset_password_test.go:
 
@@ -1046,7 +1056,7 @@ func TestRealExecRunnerCombinesInputAndPrivateTLS(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Confirm the regression fails on the original behavior.**
+- [x] **Step 2: Confirm the regression fails on the original behavior.**
 
 ```bash
 cd "$rpm_plan_topdir/heimdall-cli-build"
@@ -1055,7 +1065,7 @@ go test ./internal/cmd -run 'TestResetPassword|TestRealExecRunner|TestRealRPMCli
 
 Expected: the new interface is missing; after adding its adapter, reset still fails the stdin assertion until its invocation changes. Actual PostgreSQL has already demonstrated the colon syntax failure with -c.
 
-- [ ] **Step 3: Apply the minimal fix.**
+- [x] **Step 3: Apply the minimal fix.**
 
 Add to `internal/cmd/interfaces.go`:
 
@@ -1106,7 +1116,7 @@ stdout, code, err := r.Exec.RunWithEnvAndStdin(pgEnv, sql+"\n", binary,
 
 `-X` prevents psqlrc from changing the operation; `ON_ERROR_STOP=1` is essential because stdin SQL errors otherwise need not produce a failing process exit. Retain `UPDATE 0` detection, database failure handling, and no generated-password success output on failure.
 
-- [ ] **Step 4: Verify the fix and connected behavior.**
+- [x] **Step 4: Verify the fix and connected behavior.**
 
 ```bash
 go test ./internal/cmd -run 'TestResetPassword|TestRealExecRunner|TestRealRPMClientRouting|TestRecovery'
@@ -1117,7 +1127,7 @@ go test -tags functional ./internal/cmd
 Expected: all tests pass; child TLS files are readable during execution and removed afterward. Missing accounts and SQL errors return failure without a generated-password success message.
 
 Task 13 includes a real CLI reset against both bundled and external databases plus application login. Keep that gate: a fake returning `UPDATE 1` did not catch this defect.
-- [ ] **Step 5: Commit the verified change.**
+- [x] **Step 5: Commit the verified change.**
 
 Regenerate and apply-check `packaging/rpm/heimdall-cli-nginx.patch` using the pinned-source commands above.
 
@@ -1133,7 +1143,7 @@ git commit -m "fix(rpm): reset passwords through checked psql input"
 
 **Interfaces:** Consumes existing ConfigService.get(key). Registers Multer options `{limits: {files: 100, fileSize: bytes}}` in EvaluationsModule. Route uses `AnyFilesInterceptor()` so it inherits the complete limits object. No new helper file or dependency.
 
-- [ ] **Step 1: Add the regression.**
+- [x] **Step 1: Add the regression.**
 
 ```ts
 import 'reflect-metadata';
@@ -1203,7 +1213,7 @@ describe('evaluation upload limits', () => {
 });
 ```
 
-- [ ] **Step 2: Confirm the regression fails on the original behavior.**
+- [x] **Step 2: Confirm the regression fails on the original behavior.**
 
 ```bash
 yarn backend test:ci src/evaluations/evaluations.upload.spec.ts
@@ -1211,7 +1221,7 @@ yarn backend test:ci src/evaluations/evaluations.upload.spec.ts
 
 Expected: the module lacks effective upload options. The independent current-route probe accepted 2 MiB under a 1 MiB setting.
 
-- [ ] **Step 3: Apply the minimal fix.**
+- [x] **Step 3: Apply the minimal fix.**
 
 For F8,import `MulterModule` from `@nestjs/platform-express` and `ConfigService` into `evaluations.module.ts`. Add this dynamic module to the existing module's `imports` array:
 
@@ -1234,7 +1244,7 @@ For F8,import `MulterModule` from `@nestjs/platform-express` and `ConfigService`
 Change the controller decorator to `AnyFilesInterceptor()` and delete the unused standalone `multer(...)` call/import from `main.ts`. Nest shallow-merges module and route options; leaving the current route `{limits:{files:100}}` would silently overwrite `fileSize`. The installed Multer/Busboy rejects files **at or above** its byte cap, which the boundary test below explicitly records. Document the cap as an exclusive byte bound consistent with the installed parser; do not claim inclusive behavior.
 Use this manual text: “Positive integer MiB per file; default 50. Files reaching the configured byte cap are rejected with HTTP 413. A request accepts at most 100 files.”
 
-- [ ] **Step 4: Verify the fix and connected behavior.**
+- [x] **Step 4: Verify the fix and connected behavior.**
 
 ```bash
 yarn backend test:ci src/evaluations/evaluations.upload.spec.ts
@@ -1244,7 +1254,7 @@ yarn backend build
 Expected: sub-cap files pass, at/above-cap files return PayloadTooLargeException, 101 files fail, invalid config fails on initialization.
 
 
-- [ ] **Step 5: Commit the verified change.**
+- [x] **Step 5: Commit the verified change.**
 
 ```bash
 git add apps/backend/src/main.ts apps/backend/src/evaluations/evaluations.module.ts apps/backend/src/evaluations/evaluations.controller.ts apps/backend/src/evaluations/evaluations.upload.spec.ts packaging/rpm/man/heimdall-server-backend.env.5.md
@@ -1258,7 +1268,7 @@ git commit -m "fix(backend): enforce configured multipart file size"
 
 **Interfaces:** Keeps `ensureGroupHasOwner`, `removeUserFromGroup`, and `updateGroupUserRole` signatures. Candidate administrators exclude the departing user in both configured-email and fallback queries. Keeping owner role does not invoke replacement.
 
-- [ ] **Step 1: Add the regression.**
+- [x] **Step 1: Add the regression.**
 
 ```ts
 import {Op} from 'sequelize';
@@ -1333,7 +1343,7 @@ it('allows the sole administrator to retain their owner role', async () => {
 });
 ```
 
-- [ ] **Step 2: Confirm the regression fails on the original behavior.**
+- [x] **Step 2: Confirm the regression fails on the original behavior.**
 
 ```bash
 yarn backend test:ci src/groups/groups.owner.spec.ts
@@ -1341,7 +1351,7 @@ yarn backend test:ci src/groups/groups.owner.spec.ts
 
 Expected: removing/demoting the default admin loses the owner, and sole-admin removal is incorrectly allowed.
 
-- [ ] **Step 3: Apply the minimal fix.**
+- [x] **Step 3: Apply the minimal fix.**
 
 Use the existing `Op` import and change the two candidate queries and the role-update guard:
 
@@ -1365,7 +1375,7 @@ return groupUser?.update({role: updateGroupUser.groupRole});
 
 Retain the existing promotion/addition branch and `ForbiddenException('No admin to be promoted')`. The users service also calls this guard during user deletion; run its integration suite. No new transaction/locking architecture is justified by this single-operation defect.
 
-- [ ] **Step 4: Verify the fix and connected behavior.**
+- [x] **Step 4: Verify the fix and connected behavior.**
 
 ```bash
 yarn backend test:ci src/groups/groups.owner.spec.ts
@@ -1375,7 +1385,7 @@ yarn backend build
 Expected: all focused cases pass. Run existing database-backed groups/users suites only in Task 13’s disposable database.
 
 
-- [ ] **Step 5: Commit the verified change.**
+- [x] **Step 5: Commit the verified change.**
 
 ```bash
 git add apps/backend/src/groups/groups.service.ts apps/backend/src/groups/groups.owner.spec.ts
@@ -1389,7 +1399,7 @@ git commit -m "fix(backend): preserve group ownership when an admin leaves"
 
 **Interfaces:** Keeps `EvaluationsService.remove(id: string)` and its managed transaction. Every tag.destroy and evaluation.destroy receives the same transaction; Promise.all consumes the mapped promises directly.
 
-- [ ] **Step 1: Add the regression.**
+- [x] **Step 1: Add the regression.**
 
 ```ts
 import {setImmediate} from 'node:timers/promises';
@@ -1446,7 +1456,7 @@ it('does not delete the evaluation or commit when tag deletion rejects', async (
 });
 ```
 
-- [ ] **Step 2: Confirm the regression fails on the original behavior.**
+- [x] **Step 2: Confirm the regression fails on the original behavior.**
 
 ```bash
 yarn backend test:ci src/evaluations/evaluations.transaction.spec.ts
@@ -1454,7 +1464,7 @@ yarn backend test:ci src/evaluations/evaluations.transaction.spec.ts
 
 Expected: the parent delete/commit is observed before the delayed tag resolves; a rejected tag does not reject the removal correctly.
 
-- [ ] **Step 3: Apply the minimal fix.**
+- [x] **Step 3: Apply the minimal fix.**
 
 Replace only the nested-array await with:
 
@@ -1467,7 +1477,7 @@ Replace only the nested-array await with:
 ```
 Leave the existing nullable-tags guard, evaluation.destroy, and transaction boundary intact.
 
-- [ ] **Step 4: Verify the fix and connected behavior.**
+- [x] **Step 4: Verify the fix and connected behavior.**
 
 ```bash
 yarn backend test:ci src/evaluations/evaluations.transaction.spec.ts
@@ -1477,7 +1487,7 @@ yarn backend build
 Expected: event order is tag → evaluation → commit, and tag failures prevent successful parent deletion/commit. No unhandled promise rejection remains.
 
 
-- [ ] **Step 5: Commit the verified change.**
+- [x] **Step 5: Commit the verified change.**
 
 ```bash
 git add apps/backend/src/evaluations/evaluations.service.ts apps/backend/src/evaluations/evaluations.transaction.spec.ts
@@ -1491,7 +1501,7 @@ git commit -m "fix(backend): await tag deletion within evaluation transaction"
 
 **Interfaces:** Consumes existing runChecked(ExecRunner, command, args...) error. Keeps AddCertRunner.Run(certPath string) error and retains the copied anchor for retry; no new rollback of system trust bundles.
 
-- [ ] **Step 1: Add the regression.**
+- [x] **Step 1: Add the regression.**
 
 Add `fmt` to the test imports and this table test:
 
@@ -1511,7 +1521,7 @@ func TestAddCertTrustFailureStopsConfiguration(t *testing.T) {
 }
 ```
 
-- [ ] **Step 2: Confirm the regression fails on the original behavior.**
+- [x] **Step 2: Confirm the regression fails on the original behavior.**
 
 ```bash
 cd "$rpm_plan_topdir/heimdall-cli-build"
@@ -1520,7 +1530,7 @@ go test ./internal/cmd -run TestAddCertTrustFailureStopsConfiguration
 
 Expected: exit-code-only failure returns success and writes NODE_EXTRA_CA_CERTS on the reviewed code.
 
-- [ ] **Step 3: Apply the minimal fix.**
+- [x] **Step 3: Apply the minimal fix.**
 
 Replace the unchecked update-ca-trust conditional with:
 
@@ -1531,7 +1541,7 @@ if err := runChecked(r.Exec, "update-ca-trust"); err != nil {
 fmt.Fprintln(r.Out, "System trust store updated.")
 ```
 
-- [ ] **Step 4: Verify the fix and connected behavior.**
+- [x] **Step 4: Verify the fix and connected behavior.**
 
 ```bash
 go test ./internal/cmd -run TestAddCert
@@ -1542,7 +1552,7 @@ go test -tags functional ./internal/cmd
 Expected: nonzero and execution-error cases fail clearly, no success message/config mutation occurs, and existing successful installation still passes.
 
 
-- [ ] **Step 5: Commit the verified change.**
+- [x] **Step 5: Commit the verified change.**
 
 Regenerate and apply-check `packaging/rpm/heimdall-cli-nginx.patch` using the pinned-source commands above.
 
@@ -1557,7 +1567,7 @@ git commit -m "fix(rpm): fail certificate installation when trust update fails"
 
 **Interfaces:** The fixture scripts exit nonzero on regression. Run them after checkout in `lifecycle-test`, on the Ubuntu runner with Docker and `shasum`, before downloading/building application artifacts. No new test framework or dependency.
 
-- [ ] **Step 1: Confirm the current CI gap.**
+- [x] **Step 1: Confirm the current CI gap.**
 
 ```bash
 rg -n 'guards.sh|host-build-args.py|remote-readiness.py' .github/workflows/build-rpm.yml
@@ -1565,7 +1575,7 @@ rg -n 'guards.sh|host-build-args.py|remote-readiness.py' .github/workflows/build
 
 Expected before the change: no matches, although all three files exist and pass independently.
 
-- [ ] **Step 2: Add this step immediately after lifecycle-test’s checkout.**
+- [x] **Step 2: Add this step immediately after lifecycle-test’s checkout.**
 
 ```yaml
       - name: Verify host-runner guards and readiness fixtures
@@ -1577,7 +1587,7 @@ Expected before the change: no matches, although all three files exist and pass 
 
 Do not place this step in the minimal Rocky build container without its prerequisites; the fixtures test host orchestration, including `shasum` and process-substitution paths.
 
-- [ ] **Step 3: Run the same commands on Linux.**
+- [x] **Step 3: Run the same commands on Linux.**
 
 ```bash
 bash packaging/rpm/tests/guards.sh
@@ -1588,7 +1598,7 @@ git diff --check
 
 Expected: guards reject unsafe fixture invocation, both architecture build-argument cases pass, and delayed/failed/wrong-result database readiness cases pass with cleanup.
 
-- [ ] **Step 4: Commit.**
+- [x] **Step 4: Commit.**
 
 ```bash
 git add .github/workflows/build-rpm.yml
@@ -1603,7 +1613,9 @@ git commit -m "test(rpm): run host guard and readiness fixtures in CI"
 
 Each acceptance step is a separate checkpoint; do not combine failures into one “tests passed” statement. Long builds/host runs naturally exceed a small code-edit step.
 
-- [ ] **Step 1: Add an actual password reset/application-login regression.** Create `packaging/rpm/tests/reset-password.sh` with this content. It runs on the disposable topology fixture, which already created `rpm-test@example.invalid`. Its known password is only a fixture value. It restores the previous hash so subsequent readiness checks still work.
+**Verification status:** Steps 1, 2 and 8 are complete. The native Linux CLI suites used the final patch export. Portable fixtures passed after their documented Linux prerequisites were supplied. Source/doc whitespace checks passed; the literal CLI patch contains nested-diff context whitespace and is validated by clean application to the pin. Step 3 is partial: application builds, backend/frontend/InSpec and 175/176 converter tests passed; Splunk, schema and browser qualification remain open, and strict lint retains only baseline diagnostics. Step 4 has direct HTTP evidence but no HTTPS session callback. Steps 5–7 have no qualifying candidate artifacts or enforcing-host evidence. See the acceptance report for exact provenance and limits.
+
+- [x] **Step 1: Add an actual password reset/application-login regression.** Create `packaging/rpm/tests/reset-password.sh` with this content. It runs on the disposable topology fixture, which already created `rpm-test@example.invalid`. Its known password is only a fixture value. It restores the previous hash so subsequent readiness checks still work.
 
 ```bash
 #!/bin/bash
@@ -1661,7 +1673,7 @@ bash /tmp/rpm-tests/reset-password.sh
 
 The fixture connections use password auth without TLS; the Go adapter test covers inline TLS material. Real TLS/verify-full database acceptance remains Step 7. Run this script first with the original packaged CLI: it must fail at the successful-reset call with the `psql` colon syntax error. Run it after Task 7: it must pass in both database modes. Do not accept a skipped test because the private psql binary was unavailable.
 
-- [ ] **Step 2: Run all portable package checks and the regenerated CLI suites.**
+- [x] **Step 2: Run all portable package checks and the regenerated CLI suites.**
 
 ```bash
 bash packaging/rpm/tests/build-python.sh
@@ -1871,7 +1883,7 @@ fi
 
 Repeat default and policy qualification for every supported EL major and architecture; record the specific OS/policy versions. An unavailable VM is a release gate, never an assumed pass. Default stock policy checks on cached EL8/9/10 images already supported choosing 3002, but they do not prove running process confinement.
 
-- [ ] **Step 8: Commit evidence-supported documentation.**
+- [x] **Step 8: Commit evidence-supported documentation.**
 
 ```bash
 git add packaging/rpm/BUILD.md docs/superpowers/reports/2026-10-15-rpm-remediation-acceptance.md
