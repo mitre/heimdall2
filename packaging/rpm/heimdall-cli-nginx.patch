@@ -223,10 +223,10 @@ index c3991c7..c6123ca 100644
  	}
 diff --git a/internal/cmd/firewall.go b/internal/cmd/firewall.go
 new file mode 100644
-index 0000000..d340e7a
+index 0000000..c2f9510
 --- /dev/null
 +++ b/internal/cmd/firewall.go
-@@ -0,0 +1,226 @@
+@@ -0,0 +1,253 @@
 +package cmd
 +
 +import (
@@ -252,8 +252,8 @@ index 0000000..d340e7a
 +
 +var firewallZone = regexp.MustCompile(`^[A-Za-z0-9_.-]+$`)
 +
-+// Track only exact backend rules this CLI created; pre-existing rules belong to the administrator.
-+func (r *SetupRunner) configureFirewall(port, mode, previousPort string) (undo func() error, err error) {
++// Track only exact TCP port rules this CLI created; pre-existing rules belong to the administrator.
++func (r *SetupRunner) configureFirewall(port, mode, previousPort, externalURL string) (undo func() error, err error) {
 +	undo = func() error { return nil }
 +	active, err := r.Systemd.IsActive("firewalld")
 +	if err != nil {
@@ -302,13 +302,43 @@ index 0000000..d340e7a
 +			return undo, fmt.Errorf("invalid firewalld ownership ledger %s", ledger)
 +		}
 +		n, parseErr := strconv.Atoi(strings.TrimSuffix(fields[2], "/tcp"))
-+		if !strings.HasSuffix(fields[2], "/tcp") || parseErr != nil || n < 1024 || n > 65535 {
++		if !strings.HasSuffix(fields[2], "/tcp") || parseErr != nil || n < 1 || n > 65535 {
 +			return undo, fmt.Errorf("invalid firewalld ownership ledger %s", ledger)
 +		}
 +		rule := firewallRule{fields[0], fields[1], "port", fields[2]}
 +		owned[rule.record()] = rule
 +	}
 +	managed := mode == "bundled" || mode == "nginx"
++	kind, value := "port", port+"/tcp"
++	if mode == "nginx" {
++		kind, value = "service", "https"
++	} else if mode == "bundled" {
++		target, err := validatePublicURL(externalURL)
++		if err != nil {
++			return undo, err
++		}
++		publicPort := "80"
++		if target.Scheme == "https" {
++			publicPort = "443"
++		}
++		if target.Port() != "" {
++			n, _ := strconv.Atoi(target.Port())
++			publicPort = strconv.Itoa(n)
++		}
++		switch publicPort {
++		case "443":
++			kind, value = "service", "https"
++		case "80":
++			kind, value = "service", "http"
++		default:
++			kind, value = "port", publicPort+"/tcp"
++		}
++	}
++	desired := map[string]firewallRule{}
++	for _, scope := range []string{"runtime", "permanent"} {
++		rule := firewallRule{scope, zone, kind, value}
++		desired[rule.record()] = rule
++	}
 +	if managed {
 +		for _, scope := range []string{"runtime", "permanent"} {
 +			args := []string{"--get-zones"}
@@ -350,7 +380,7 @@ index 0000000..d340e7a
 +	var changes []change
 +	for _, key := range slices.Sorted(maps.Keys(owned)) {
 +		rule := owned[key]
-+		if !managed && rule.zone == zone && rule.value == port+"/tcp" {
++		if _, keep := desired[rule.record()]; keep {
 +			continue
 +		}
 +		exists, err := present(rule)
@@ -364,10 +394,7 @@ index 0000000..d340e7a
 +		}
 +	}
 +	for _, scope := range []string{"runtime", "permanent"} {
-+		rule := firewallRule{scope, zone, "port", port + "/tcp"}
-+		if managed {
-+			rule.kind, rule.value = "service", "https"
-+		}
++		rule := desired[scope+" "+zone+" "+value]
 +		exists, err := present(rule)
 +		if err != nil {
 +			return undo, err
@@ -447,7 +474,7 @@ index 0000000..d340e7a
 +		return undo, err
 +	}
 +	if managed {
-+		fmt.Fprintln(r.Out, "  firewalld: HTTPS enabled; CLI-managed backend ports closed")
++		fmt.Fprintf(r.Out, "  firewalld: proxy endpoint %s enabled; CLI-managed backend ports closed\n", value)
 +	} else {
 +		fmt.Fprintf(r.Out, "  firewalld: port %s/tcp enabled\n", port)
 +	}
@@ -455,13 +482,14 @@ index 0000000..d340e7a
 +}
 diff --git a/internal/cmd/firewall_test.go b/internal/cmd/firewall_test.go
 new file mode 100644
-index 0000000..e69ca16
+index 0000000..1c07bfa
 --- /dev/null
 +++ b/internal/cmd/firewall_test.go
-@@ -0,0 +1,251 @@
+@@ -0,0 +1,360 @@
 +package cmd
 +
 +import (
++	"fmt"
 +	"maps"
 +	"strings"
 +	"testing"
@@ -690,7 +718,7 @@ index 0000000..e69ca16
 +}
 +
 +func TestFirewallRejectsInvalidOwnershipLedgerBeforeMutation(t *testing.T) {
-+	for _, data := range []string{"runtime public 81/tcp\n", "runtime public 3456/udp\n", "other public 3456/tcp\n", "runtime public 3456/tcp extra\n"} {
++	for _, data := range []string{"runtime public 0/tcp\n", "runtime public 3456/udp\n", "other public 3456/tcp\n", "runtime public 3456/tcp extra\n"} {
 +		t.Run(data, func(t *testing.T) {
 +			r, e := firewallFixture(t, "none")
 +			require.NoError(t, r.FS.WriteFile(r.Paths.ConfigDir+"/firewalld-ports", []byte(data), 0600))
@@ -709,6 +737,114 @@ index 0000000..e69ca16
 +	assert.False(t, r.FS.Exists(r.Paths.ConfigDir+"/firewalld-ports"))
 +	assert.False(t, r.FS.Exists(r.Paths.ConfigDir+"/firewalld-ports.pending"))
 +	assert.Equal(t, "3210", r.Env.(*FakeEnvManager).Env["PORT"])
++}
++
++func TestCaddyCustomPublicPortForSetupAndSetPort(t *testing.T) {
++	for _, command := range []string{"setup", "set-port"} {
++		t.Run(command, func(t *testing.T) {
++			r, exec := firewallFixture(t, "bundled")
++			r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://heimdall.example.test:8443"
++			backend := "3210"
++			if command == "setup" {
++				require.NoError(t, firewallSetup(t, r))
++			} else {
++				backend = "3456"
++				require.NoError(t, firewallSetPort(r, backend))
++			}
++			ledger, err := r.FS.ReadFile(r.Paths.ConfigDir + "/firewalld-ports")
++			require.NoError(t, err)
++			for _, scope := range []string{"runtime", "permanent"} {
++				assert.True(t, exec.rules[scope+" public 8443/tcp"])
++				assert.False(t, exec.rules[scope+" public "+backend+"/tcp"])
++				assert.Contains(t, string(ledger), scope+" public 8443/tcp\n")
++			}
++			before := maps.Clone(exec.rules)
++			require.NoError(t, firewallSetup(t, r))
++			assert.Equal(t, before, exec.rules)
++		})
++	}
++}
++
++func TestCaddyCustomPublicPortOwnership(t *testing.T) {
++	for _, preexisting := range []bool{false, true} {
++		t.Run(fmt.Sprint(preexisting), func(t *testing.T) {
++			r, exec := firewallFixture(t, "bundled")
++			r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://heimdall.example.test:8443"
++			if preexisting {
++				exec.rules["runtime public 8443/tcp"] = true
++				exec.rules["permanent public 8443/tcp"] = true
++			}
++			exec.rules["runtime dmz 9000/tcp"] = true
++			require.NoError(t, firewallSetup(t, r))
++			require.NoError(t, firewallSetup(t, r, "--external-url=https://heimdall.example.test:9443"))
++			for _, scope := range []string{"runtime", "permanent"} {
++				assert.Equal(t, preexisting, exec.rules[scope+" public 8443/tcp"])
++				assert.True(t, exec.rules[scope+" public 9443/tcp"])
++			}
++			assert.True(t, exec.rules["runtime dmz 9000/tcp"])
++			require.NoError(t, firewallSetup(t, r, "--external-url=https://heimdall.example.test"))
++			for _, scope := range []string{"runtime", "permanent"} {
++				assert.Equal(t, preexisting, exec.rules[scope+" public 8443/tcp"])
++				assert.False(t, exec.rules[scope+" public 9443/tcp"])
++				assert.True(t, exec.rules[scope+" public https"])
++			}
++		})
++	}
++}
++
++func TestCaddyCustomPublicPortFirewallFailureRollsBack(t *testing.T) {
++	for _, failure := range []string{"firewall", "ledger", "restart"} {
++		t.Run(failure, func(t *testing.T) {
++			r, exec := firewallFixture(t, "bundled")
++			r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://heimdall.example.test:8443"
++			exec.rules["runtime dmz 9000/tcp"] = true
++			before := maps.Clone(exec.rules)
++			switch failure {
++			case "firewall":
++				exec.failure = "--permanent --add-port=8443/tcp"
++			case "ledger":
++				r.FS.(*securityFS).failRename = true
++			case "restart":
++				r.Systemd = &portFailureSystemd{
++					FakeSystemdRunner: r.Systemd.(*FakeSystemdRunner), failure: "restart",
++				}
++			}
++			require.Error(t, firewallSetPort(r, "3456"))
++			assert.Equal(t, before, exec.rules)
++			assert.Equal(t, "3210", r.Env.(*FakeEnvManager).Env["PORT"])
++			assert.False(t, r.FS.Exists(r.Paths.ConfigDir+"/firewalld-ports"))
++		})
++	}
++}
++
++func TestSetPortRejectsStoppedProxyPublicPort(t *testing.T) {
++	r, exec := firewallFixture(t, "bundled")
++	r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://heimdall.example.test:8443"
++	require.ErrorContains(t, firewallSetPort(r, "8443"), "reserved for the selected proxy")
++	assert.Empty(t, exec.rules)
++	assert.Equal(t, "3210", r.Env.(*FakeEnvManager).Env["PORT"])
++	assert.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
++}
++
++func TestCaddyPublicEndpointFirewallRules(t *testing.T) {
++	for _, tc := range []struct{ endpoint, rule string }{
++		{"http://heimdall.example.test", "http"},
++		{"https://heimdall.example.test", "https"},
++		{"https://heimdall.example.test:00443", "https"},
++		{"http://heimdall.example.test:81", "81/tcp"},
++	} {
++		t.Run(tc.endpoint, func(t *testing.T) {
++			r, exec := firewallFixture(t, "bundled")
++			r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = tc.endpoint
++			for range 2 {
++				require.NoError(t, firewallSetPort(r, "3456"))
++				for _, scope := range []string{"runtime", "permanent"} {
++					assert.True(t, exec.rules[scope+" public "+tc.rule])
++					assert.False(t, exec.rules[scope+" public 3456/tcp"])
++				}
++			}
++		})
++	}
 +}
 diff --git a/internal/cmd/interfaces.go b/internal/cmd/interfaces.go
 index ee273ee..54e2f9d 100644
@@ -2000,7 +2136,7 @@ index 394263a..7c88ad2 100644
  		u, err := validatePublicURL(env["EXTERNAL_URL"])
  		if err != nil {
 diff --git a/internal/cmd/security_test.go b/internal/cmd/security_test.go
-index 4bf34be..dc209e9 100644
+index 4bf34be..5518503 100644
 --- a/internal/cmd/security_test.go
 +++ b/internal/cmd/security_test.go
 @@ -50,7 +50,7 @@ func TestStepSecurityPolicies_CustomPort(t *testing.T) {
@@ -2012,11 +2148,13 @@ index 4bf34be..dc209e9 100644
  	require.NoError(t, r.stepSecurityPolicies())
  	require.Contains(t, string(fs.Files[r.Paths.ConfigDir+"/selinux-ports"]), "tcp 8443")
  	require.Contains(t, out.String(), "firewalld: port 8443/tcp enabled")
-@@ -73,20 +73,21 @@ func TestStepSecurityPolicies_FapolicydAbsent(t *testing.T) {
+@@ -72,21 +72,22 @@ func TestStepSecurityPolicies_FapolicydAbsent(t *testing.T) {
+ }
  
  func TestStepSecurityPolicies_FirewalldActiveWithTLS(t *testing.T) {
- 	r, out := newSecurityTestRunner(map[string]string{})
+-	r, out := newSecurityTestRunner(map[string]string{})
 -	r.Systemd.(*FakeSystemdRunner).ActiveServices["firewalld"] = true
++	r, out := newSecurityTestRunner(map[string]string{"EXTERNAL_URL": "https://heimdall.example.test"})
 +	enableFirewall(r)
 +	r.ProxyMode = "bundled"
  	r.SkipTLS = false
@@ -2025,7 +2163,7 @@ index 4bf34be..dc209e9 100644
 +	require.NoError(t, r.stepSecurityPolicies())
  
 -	assert.Contains(t, out.String(), "firewalld: HTTPS (443) enabled")
-+	assert.Contains(t, out.String(), "firewalld: HTTPS enabled")
++	assert.Contains(t, out.String(), "firewalld: proxy endpoint https enabled")
  }
  
  func TestStepSecurityPolicies_FirewalldActiveSkipTLS(t *testing.T) {
@@ -2087,10 +2225,18 @@ index ef74b9f..3bd57e3 100644
  This output is suitable for attaching to bug reports or support tickets.`,
  		Example: `  # Print diagnostic report to terminal
 diff --git a/internal/cmd/set_port.go b/internal/cmd/set_port.go
-index 28643fc..3fff4c2 100644
+index 28643fc..9af67c1 100644
 --- a/internal/cmd/set_port.go
 +++ b/internal/cmd/set_port.go
-@@ -34,10 +34,10 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
+@@ -4,7 +4,6 @@ import (
+ 	"errors"
+ 	"fmt"
+ 	"io"
+-	"strconv"
+ 
+ 	"github.com/spf13/cobra"
+ )
+@@ -34,9 +33,8 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
  	if r.Paths.AppDir == "" {
  		r.Paths = DefaultPaths()
  	}
@@ -2100,14 +2246,32 @@ index 28643fc..3fff4c2 100644
 +	if err := ValidateValue("PORT", portStr); err != nil {
 +		return err
  	}
-+	p, _ := strconv.Atoi(portStr)
  
  	env, err := r.Env.ReadEnv()
+@@ -52,10 +50,14 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
  	if err != nil {
-@@ -69,29 +69,39 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
- 		if err := checkOwnedPort(r.Exec, r.Systemd, p, ServiceName, false); err != nil {
+ 		return err
+ 	}
+-	ports := []selinuxPort{{"heimdall_server_port_t", portStr}}
+-	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, ports, false); err != nil {
++	setup := &SetupRunner{
++		Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Env: r.Env, Out: r.Out,
++		DatabaseMode: env["HEIMDALL_DATABASE_MODE"], ProxyMode: env["HEIMDALL_PROXY_MODE"],
++	}
++	if err := setup.validateBackendPort(portStr, env); err != nil {
+ 		return err
+ 	}
++	ports := []selinuxPort{{"heimdall_server_port_t", portStr}}
+ 	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, ports, true); err != nil {
+ 		return err
+ 	}
+@@ -66,32 +68,38 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
+ 		if err != nil {
  			return err
  		}
+-		if err := checkOwnedPort(r.Exec, r.Systemd, p, ServiceName, false); err != nil {
+-			return err
+-		}
 -		if env["HEIMDALL_PROXY_MODE"] == "bundled" {
 +		if env["HEIMDALL_PROXY_MODE"] == "bundled" || env["HEIMDALL_PROXY_MODE"] == "nginx" {
  			candidate := make(map[string]string, len(env))
@@ -2115,7 +2279,7 @@ index 28643fc..3fff4c2 100644
  				candidate[key] = value
  			}
  			candidate["PORT"] = portStr
- 			setup := &SetupRunner{Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Env: r.Env, Out: r.Out}
+-			setup := &SetupRunner{Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Env: r.Env, Out: r.Out}
 -			proxy, err = setup.prepareBundledCaddy(candidate)
 +			if env["HEIMDALL_PROXY_MODE"] == "nginx" {
 +				proxy, err = setup.prepareBundledNginx(candidate)
@@ -2151,12 +2315,11 @@ index 28643fc..3fff4c2 100644
  			}
  		}
  		if proxy != nil {
-@@ -102,17 +112,17 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
+@@ -102,17 +110,16 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
  		}
  		err = errors.Join(append([]error{err}, rollback...)...)
  	}()
-+	firewall := &SetupRunner{Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Out: r.Out}
-+	rollbackFirewall, err = firewall.configureFirewall(portStr, env["HEIMDALL_PROXY_MODE"], oldPort)
++	rollbackFirewall, err = setup.configureFirewall(portStr, env["HEIMDALL_PROXY_MODE"], oldPort, env["EXTERNAL_URL"])
 +	if err != nil {
 +		return err
 +	}
@@ -2174,12 +2337,12 @@ index 28643fc..3fff4c2 100644
  	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.ConfigDir); err != nil {
  		return err
  	}
-@@ -157,12 +167,12 @@ three system layers in a single operation:
+@@ -157,12 +164,12 @@ three system layers in a single operation:
    1. Config:    Sets PORT in backend.env to the new value
    2. SELinux:   Registers the new port as heimdall_server_port_t so the
                 service is allowed to bind under enforcing mode
 -  3. firewalld: Opens the new port in the permanent firewall rules
-+  3. firewalld: Exposes HTTPS for a managed proxy, or the backend port otherwise
++  3. firewalld: Exposes the configured managed proxy endpoint, or the backend port otherwise
  
  An existing incompatible SELinux port assignment is refused before changes.
 -With bundled Caddy, its upstream is validated and updated with rollback on
@@ -2254,7 +2417,7 @@ index 6025936..9c58c68 100644
  
  func TestSetPort_RestartsService(t *testing.T) {
 diff --git a/internal/cmd/setup.go b/internal/cmd/setup.go
-index 50713b9..e0bb523 100644
+index 50713b9..fe3e78b 100644
 --- a/internal/cmd/setup.go
 +++ b/internal/cmd/setup.go
 @@ -33,17 +33,21 @@ type SetupRunner struct {
@@ -2930,7 +3093,7 @@ index 50713b9..e0bb523 100644
  	r.Exec.Run("chmod", "0750", r.Paths.LogDir)
  	fmt.Fprintln(r.Out, "  File permissions hardened")
 -	return nil
-+	r.rollbackFirewall, err = r.configureFirewall(port, r.ProxyMode, r.previousBackendPort)
++	r.rollbackFirewall, err = r.configureFirewall(port, r.ProxyMode, r.previousBackendPort, env["EXTERNAL_URL"])
 +	return err
  }
  
