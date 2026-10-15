@@ -169,6 +169,8 @@ class InputsTest(unittest.TestCase):
                     'dist/build', 'packaging/rpm/rpmbuild/generated',
                     '.env', 'apps/backend/.env-secret', 'apps/backend/.env.local',
                     'apps/frontend/.env.development.local', 'package.rpm',
+                    '.npmrc', 'apps/backend/.npmrc',
+                    '.yarnrc.yml', 'apps/frontend/.yarnrc.yml',
                     'certs/corporate-ca.pem', '.cache/item', 'coverage/report',
                     'data/pgdata/base/private-database')
         for name in excluded:

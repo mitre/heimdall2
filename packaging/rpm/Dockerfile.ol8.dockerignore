@@ -4,6 +4,8 @@
 .codex
 .agents
 **/node_modules
+**/.npmrc
+**/.yarnrc.yml
 **/dist
 **/coverage
 **/.cache

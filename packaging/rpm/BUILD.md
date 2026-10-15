@@ -142,6 +142,10 @@ excludes Git metadata, secrets, caches, execution scratch and prior outputs. If
 needed, pass `--secret id=corp_ca,src=/path/to/ca-bundle.crt` for a corporate CA.
 Keep TLS and signature verification enabled.
 
+Workspace source archives and Docker build contexts exclude local `.npmrc` and
+`.yarnrc.yml` files. Authenticate package downloads through the build environment;
+do not put credentials into distributable sources.
+
 ### x86_64 builds under QEMU
 
 When building an x86_64 RPM in a container on an ARM host, QEMU can crash while

@@ -42,6 +42,7 @@ sources: check-source
 ifeq ($(SOURCE_MODE),workspace)
 	tar -C ../.. --exclude=.git --exclude=.beads --exclude=.superpowers \
 	  --exclude=node_modules --exclude=dist --exclude=rpmbuild \
+	  --exclude=.npmrc --exclude=.yarnrc.yml \
 	  --exclude=.env --exclude='.env-*' --exclude='.env.*' \
 	  --exclude='*.rpm' --exclude=certs --exclude=.cache --exclude=coverage --exclude=./data \
 	  --transform 's|^\.|heimdall2-$(VERSION)|' \
