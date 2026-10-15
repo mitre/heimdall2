@@ -66,14 +66,13 @@ check_signature() {
 }
 install_candidate() {
   local rpm_path=$1 phase=$2 action=install result=0
-  shift 2
   case "$phase" in
     install|recover) ;;
     upgrade) action=upgrade ;;
     *) return 64 ;;
   esac
   timeout 300 dnf "$action" -y --disablerepo='*' --setopt=install_weak_deps=False \
-    --setopt=localpkg_gpgcheck=1 --setopt=tsflags= "$rpm_path" "$@" \
+    --setopt=localpkg_gpgcheck=1 --setopt=tsflags= "$rpm_path" \
     2>&1 | tee /tmp/rpm-lifecycle-transaction.log || result=$?
   # DNF can return success even when a post-transaction scriptlet fails.
   if [[ $result == 0 ]] && grep -Eiq 'scriptlet.*fail|error.*scriptlet' /tmp/rpm-lifecycle-transaction.log; then
@@ -111,7 +110,7 @@ LOCAL_LOGIN_DISABLED=false
 OIDC_NAME='RPM fixture login'
 ENV
     sha256sum /etc/heimdall-server/backend.env > /tmp/rpm-before-install.sha256
-    install_candidate "$2" install "${@:3}"
+    install_candidate "$2" install
     [[ $(rpm -q --qf "$RPM_NEVRA_FORMAT" heimdall-server) == "$(rpm -qp --qf "$RPM_NEVRA_FORMAT" "$2")" ]]
     bash /tmp/rpm-tests/installed-icu.sh
     sha256sum --check /tmp/rpm-before-install.sha256
@@ -217,5 +216,5 @@ SHELL
     heimdall-cli setup --non-interactive
     verify_state
     ;;
-  *) echo 'Usage: lifecycle.sh install RPM [OS_RPM ...] | setup | upgrade RPM | verify | remove | recover RPM' >&2; exit 64 ;;
+  *) echo 'Usage: lifecycle.sh install RPM | setup | upgrade RPM | verify | remove | recover RPM' >&2; exit 64 ;;
 esac

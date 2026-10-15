@@ -15,12 +15,6 @@ COPY packaging/rpm/tests/prepare-host.sh /tmp/prepare-host.sh
 RUN HEIMDALL_RPM_TEST=1 bash /tmp/prepare-host.sh && rm /tmp/prepare-host.sh
 CMD ["/sbin/init"]
 
-FROM trusted-base AS offline-test-host
-COPY packaging/rpm/tests/prepare-offline-host.sh packaging/rpm/tests/offline-baseline.py /tmp/
-COPY rpms/os-dependencies.json /tmp/os-dependencies.json
-RUN HEIMDALL_RPM_TEST=1 bash /tmp/prepare-offline-host.sh /tmp/os-dependencies.json
-CMD ["/sbin/init"]
-
 FROM trusted-base AS build-env
 COPY --from=go-toolchain /usr/local/go /usr/local/go
 ENV PATH=/usr/local/go/bin:$PATH

@@ -7,11 +7,11 @@ sudo heimdall-cli setup --interactive
 
 Select one RPM matching the host's EL major and architecture. The RPM contains
 Heimdall, its CLI, Node.js 22.23.3, PostgreSQL 18.6, Caddy 2.11.4, Nginx 1.30.6,
-and private ICU libraries. DNF checks the
-[host prerequisites](README.md#requirements). Connected hosts can use approved OS
-repositories; disconnected hosts use the complete dependency bundle matching
-their distribution and recorded Core baseline. Setup
-configures the included runtimes; it does not download runtime packages.
+and private ICU libraries. The host must meet the
+[installation requirements](README.md#requirements). DNF resolves OS dependencies
+from an approved source: RHEL repositories, an internal mirror or local media.
+OS dependency RPMs are not included in the Heimdall bundle. Setup configures the
+included runtimes; it does not download runtime packages.
 
 The application version comes from the root [`VERSION`](../../VERSION) file.
 Releases `0.3.integration` and `0.4.integration` exercise bundled-runtime upgrades
@@ -116,24 +116,6 @@ bash packaging/rpm/tests/cli-inputs.sh "$HOME/rpmbuild-heimdall"
 Use the same TOPDIR for staging, lint and inspection. The wrapper
 `./packaging/rpm/setup-rpm-build-env.sh --build` provides the same Make path.
 Local builds are unsigned until explicitly signed.
-
-To add offline OS dependencies, use a matching Rocky Linux build host with its
-BaseOS and AppStream repositories and sign the final Heimdall RPM first. Then run:
-
-```sh
-make -C packaging/rpm offline-dependencies TOPDIR="$HOME/rpmbuild-heimdall"
-```
-
-This resolves the candidate's additional dependencies against the distribution's
-Core baseline, retaining vendor signatures. It writes `OS-RPMS/`, public vendor
-keys in `OS-GPG-KEYS/`, and `os-dependencies.json` under the same TOPDIR. The
-manifest records the exact baseline, target distribution/version/architecture,
-candidate hash and dependency provenance. Regenerate it if the signed candidate
-changes. Core OS packages, including systemd and glibc, remain host prerequisites.
-The collector currently supports Rocky Linux only. RHEL support would require
-adapting its repository selection to approved RHEL repository IDs and qualifying
-the resulting RHEL baseline; this is not implemented. CI's Rocky dependency RPMs
-must not be used as RHEL dependencies.
 
 To build the current files using Docker:
 
@@ -263,19 +245,14 @@ x86_64 and aarch64, using `rockylinux/rockylinux:{8,9,10}`. Its only uploaded
 artifacts are the six
 `heimdall-server-rpm-bundle-{el8,el9,el10}-{x86_64,aarch64}` combinations. The name
 identifies the product, RPM bundle, target EL major and CPU architecture. Each has
-build, signed-install and disconnected-install checks; there are no dedicated
+build, signed-install and systemd lifecycle checks; there are no dedicated
 Oracle Linux jobs. Test diagnostics are recorded in workflow logs.
 Each installable artifact contains:
 
 - `RPMS/<arch>/`: signed binary RPM.
 - `SRPMS/`: signed source RPM.
-- `OS-RPMS/<arch>/`: additional vendor-signed OS dependencies, including `noarch`
-  RPMs, resolved for this candidate and its recorded Rocky Core baseline.
-- `OS-GPG-KEYS/`: public vendor keys for the OS dependency RPMs.
 - `RPM-TEST-GPG-KEY`: disposable acceptance public key.
 - `runtime-manifest.json`: inventory of the pinned application runtimes.
-- `os-dependencies.json`: target distribution, version and architecture, exact
-  baseline, candidate hash and dependency versions, hashes and source repositories.
 - `SHA256SUMS`: checksums calculated after signing.
 
 Each of the six native build jobs rebuilds its SRPM in an empty tree, retaining
@@ -311,29 +288,22 @@ rejects integration RPMs and selects canonical Rocky builds, keeping artifacts
 separate during verification so architecture-specific manifests and signing
 keys cannot overwrite each other.
 
-Published release archives retain the complete bundle, including OS dependency
-RPMs, their public keys and manifest. The dependencies target Rocky Linux's
-recorded baseline; generating bundles for RHEL and other vendors is not yet
-supported.
+Releases publish individual binary and source RPMs, public signing keys, runtime
+manifests and checksums. Installations and upgrades resolve OS dependencies
+through the host's configured approved source.
 
-### Disconnected DNF acceptance
+### DNF and systemd acceptance
 
-The artifact contains the application RPM, its private runtimes and the
-additional OS RPMs required on its recorded Core baseline. There is no separate
-installer. The target must satisfy the [documented host baseline](README.md#requirements).
-The dependency resolver calculates additions independently for each EL version
-and architecture; it does not hard-code the eight packages from the EL8 baseline
-assessment or include core OS updates.
+The artifact contains the application RPM and its private runtimes. There is no
+separate installer. The target must satisfy the
+[documented host requirements](README.md#requirements). Signed-install smoke
+tests use DNF with the distribution's repositories enabled to resolve OS
+dependencies. Local RPM signature checks remain enabled.
 
-CI provisions the Core package names from current vendor repositories, without
-requiring the exact OS package versions recorded during dependency resolution.
-No separate Core snapshot artifact is created. After preparing the host, CI
-disables networking and repositories, then installs the signed application and
-OS dependency RPMs together. This checks that dependency resolution does not rely
-on packages preinstalled by the build environment.
-System ICU and separate application runtime packages are absent from that fresh
-fixture. Vendor keys and the Heimdall test key are imported before installation;
-local RPM signature checks remain enabled.
+The systemd lifecycle fixture installs OS prerequisites from the distribution's
+repositories before disabling networking. It then installs the signed Heimdall
+RPM and tests setup and restart without runtime downloads. System ICU and
+separate application runtime packages are absent from that fixture.
 
 The native Rocky lanes test direct installation, setup and restart for each EL
 major and architecture. The manual lifecycle runner remains available for
@@ -404,10 +374,10 @@ The [2026-10-13 direct-RPM validation](../../docs/superpowers/plans/2026-10-13-d
 built and signed a native Oracle Linux 8/aarch64 candidate, then verified DNF
 installation, setup, private ICU loading, application readiness and restart with
 networking disabled. The plan records the exact candidate and remaining limits.
-That test preinstalled OS dependencies; it does not certify the new bundles
-resolved against a Core baseline.
+That test preinstalled OS dependencies; it does not certify later candidates or
+repository availability on other target hosts.
 
-The workflow defines Rocky EL8/9/10 native build, install and disconnected-test
+The workflow defines Rocky EL8/9/10 native build, install and systemd lifecycle
 lanes. RHEL, Oracle Linux, historical minor/EUS targets, enforcing SELinux,
 enabled host fapolicyd, AVC inspection, and full VM reboot require separate
 candidate-specific validation. Docker tests cannot establish those host properties.

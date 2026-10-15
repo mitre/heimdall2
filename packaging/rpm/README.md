@@ -39,17 +39,16 @@ and HTTPS proxies are also supported.
   x86_64 or aarch64 architecture. Match the RPM to the host's EL major and architecture.
 - At least 2 GB RAM; 4 GB is preferable for a small deployment. Allow disk space
   for application data, PostgreSQL and backups.
-- Approved OS repositories, or the matching offline dependency bundle. The host
-  supplies its kernel, systemd, RPM/DNF, glibc, foundational libraries and SELinux
-  policy. The offline bundle requires the Core baseline recorded in
-  `os-dependencies.json`; it is not an operating-system update.
+- DNF configured with an approved OS package source for the host's distribution,
+  release and architecture: RHEL repositories, an internal mirror or local media.
+  The host supplies its kernel, systemd, RPM/DNF, glibc, foundational libraries
+  and SELinux policy. OS dependency RPMs are not included in the Heimdall bundle.
 - For an external database: PostgreSQL 13–18 and a role permitted to create the
   application schema and run migrations. External services remain operator-managed.
 
 CI tests Rocky Linux. RHEL and older minor/EUS releases need separate
-qualification; see [acceptance status](BUILD.md#acceptance-status). Never install
-Rocky dependency RPMs on RHEL or another vendor's distribution. On connected
-hosts, DNF resolves dependencies from approved OS repositories. Inspect exact
+qualification; see [acceptance status](BUILD.md#acceptance-status). DNF resolves
+dependencies from the host's configured approved OS source. Inspect exact
 requirements with `rpm -qp --requires ./RPMS/*/heimdall-server-*.rpm`.
 
 ## Install an RPM
@@ -76,54 +75,14 @@ with [setup](#setup) or [manual installation](#manual-installation).
 
 ## Disconnected installation
 
-Transfer the complete bundle from a trusted workflow run and work from its
-extracted root directory. If OS dependencies are already installed:
-
-```sh
-sha256sum --check SHA256SUMS &&
-sudo rpm --import RPM-TEST-GPG-KEY &&
-sudo dnf --disablerepo='*' install \
-  --setopt=localpkg_gpgcheck=1 --setopt=install_weak_deps=False \
-  ./RPMS/*/heimdall-server-*.rpm
-```
-
-If dependencies are missing, the included `OS-RPMS` are for the exact Rocky
-Linux distribution, version, architecture and Core baseline in
-`os-dependencies.json`. Matching only the EL major is insufficient. RHEL offline
-dependency collection is not implemented; use approved RHEL packages instead.
-The following block checks the bundle target before installing both sets of RPMs:
-
-```sh
-(
-set -e
-sha256sum --check SHA256SUMS
-. /etc/os-release
-heimdall_python=python3
-if [ -x /usr/libexec/platform-python ]; then
-  heimdall_python=/usr/libexec/platform-python
-fi
-"$heimdall_python" - "$ID" "$VERSION_ID" "$(uname -m)" <<'PY'
-import json
-import sys
-
-with open("os-dependencies.json") as stream:
-    manifest = json.load(stream)
-expected = (manifest["distribution"]["id"],
-            manifest["distribution"]["version_id"], manifest["architecture"])
-if tuple(sys.argv[1:]) != expected:
-    raise SystemExit("Bundle target mismatch: expected " + " ".join(expected))
-PY
-sudo rpm --import RPM-TEST-GPG-KEY
-sudo rpm --import ./OS-GPG-KEYS/*
-sudo dnf --disablerepo='*' install --setopt=localpkg_gpgcheck=1 \
-  --setopt=install_weak_deps=False \
-  ./RPMS/*/heimdall-server-*.rpm ./OS-RPMS/*/*.rpm
-)
-```
+Configure DNF to use an approved internal mirror reachable from the host or a
+local-media repository containing the OS dependencies. Use packages for the
+host's distribution, release and architecture. Transfer the Heimdall bundle from
+a trusted workflow run, then follow [Install an RPM](#install-an-rpm); keep the
+configured OS source enabled during installation and upgrades.
 
 Do not proceed after a failed installation or bypass dependency checks with
-`rpm --nodeps`. If a core OS update is required, apply an approved offline update
-or obtain a bundle for the host's baseline.
+`rpm --nodeps`.
 
 Then use [setup](#setup) or [manual installation](#manual-installation). Bundled
 PostgreSQL with Nginx self-signed TLS, or Caddy internal/custom TLS, requires no
