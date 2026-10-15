@@ -273,6 +273,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Verify host-runner guards and readiness fixtures
+        run: |
+          bash packaging/rpm/tests/guards.sh
+          python3 packaging/rpm/tests/host-build-args.py
+          python3 packaging/rpm/tests/remote-readiness.py
+
       - uses: actions/download-artifact@v8
         with:
           name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
