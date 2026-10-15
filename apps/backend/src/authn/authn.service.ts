@@ -13,7 +13,6 @@ import winston from 'winston';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigService} from '../config/config.service';
 import {Group} from '../groups/group.model';
-import {limitJWTTime} from '../token/token.providers';
 import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
@@ -159,15 +158,9 @@ export class AuthnService {
     if (payload.forcePasswordChange) {
       expiresInSeconds = 600;
     } else if (user.role === 'admin') {
-      expiresInSeconds = limitJWTTime(
-        this.configService.get('ADMIN_JWT_EXPIRE_TIME') || '600s',
-        true
-      );
+      expiresInSeconds = this.configService.getJwtExpirySettings().adminSeconds;
     } else {
-      expiresInSeconds = limitJWTTime(
-        this.configService.get('JWT_EXPIRE_TIME') || '60s',
-        false
-      );
+      expiresInSeconds = this.configService.getJwtExpirySettings().userSeconds;
     }
     const expireTime = moment(new Date(Date.now() + expiresInSeconds * 1000)).format(
       this.loggingTimeFormat

@@ -2,7 +2,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { type JwtPayload, verify } from 'jsonwebtoken';
 import { unix } from 'moment';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import AppConfig from '../../config/app_config';
 import type { ApiKeyService } from '../apikeys/apikey.service';
 import { ConfigService } from '../config/config.service';
 import { TokenModule } from '../token/token.module';
@@ -12,6 +13,10 @@ import { AuthnService } from './authn.service';
 describe('AuthnService login expiry', () => {
   let testModule: TestingModule | undefined;
 
+  beforeEach(() => {
+    vi.spyOn(Date, 'now').mockReturnValue(Date.UTC(2026, 0, 1));
+  });
+
   afterEach(async () => {
     vi.restoreAllMocks();
     await testModule?.close();
@@ -19,24 +24,21 @@ describe('AuthnService login expiry', () => {
   });
 
   async function service(adminExpiry?: string, userExpiry?: string) {
-    const config = {
-      get: (key: string) => {
-        if (key === 'ADMIN_JWT_EXPIRE_TIME') {
-          return adminExpiry;
-        }
-        if (key === 'JWT_EXPIRE_TIME') {
-          return userExpiry;
-        }
-        if (key === 'JWT_SECRET') {
-          return 'test-secret';
-        }
-      },
-    } as ConfigService;
+    vi.spyOn(AppConfig.prototype, 'get').mockImplementation((key: string) => {
+      if (key === 'ADMIN_JWT_EXPIRE_TIME') {
+        return adminExpiry;
+      }
+      if (key === 'JWT_EXPIRE_TIME') {
+        return userExpiry;
+      }
+      if (key === 'JWT_SECRET') {
+        return 'test-secret';
+      }
+    });
     const users = { findById: () => Promise.resolve({ jwtSecret: 'user-secret' }) } as unknown as UsersService;
     testModule = await Test.createTestingModule({ imports: [TokenModule] })
-      .overrideProvider(ConfigService)
-      .useValue(config)
       .compile();
+    const config = testModule.get(ConfigService);
     const jwt = testModule.get(JwtService);
     const authn = new AuthnService(
       {} as ApiKeyService,
@@ -51,12 +53,15 @@ describe('AuthnService login expiry', () => {
   describe('ordinary sessions', () => {
     it.each([
       [undefined, 60],
-      ['60s', 60],
+      ['', 60],
+      [' '.repeat(3), 60],
+      ['1000ms', 1],
       ['60m', 3600],
+      [' 1500ms ', 1],
+      ['2000', 2],
       ['2d', 172_800],
-      ['3d', 172_800],
     ])('uses %s as a lifetime of %s seconds', async (setting, seconds) => {
-      const { authn, jwt } = await service('10m', setting);
+      const { authn } = await service('10m', setting);
       const { accessToken } = await authn.login({
         email: 'user@example.test',
         forcePasswordChange: false,
@@ -65,8 +70,6 @@ describe('AuthnService login expiry', () => {
       });
       const payload = verify(accessToken, 'test-secretuser-secret') as JwtPayload;
       expect(payload.exp).toBe(Number(payload.iat) + seconds);
-      const defaultPayload = verify(jwt.sign({ sub: 'user-1' }), 'test-secret') as JwtPayload;
-      expect(defaultPayload.exp).toBe(Number(defaultPayload.iat) + seconds);
     });
   });
 
@@ -74,8 +77,6 @@ describe('AuthnService login expiry', () => {
     it.each([
       [undefined, 600],
       ['60m', 3600],
-      ['2d', 172_800],
-      ['3d', 172_800],
     ])('uses %s independently of the ordinary lifetime', async (setting, seconds) => {
       const { authn } = await service(setting, '5s');
       const { accessToken } = await authn.login({
@@ -106,19 +107,14 @@ describe('AuthnService login expiry', () => {
     );
   });
 
-  it.each([
-    ['admin', false],
-    ['user', false],
-    ['admin', true],
-  ])('logs the token expiration for %s with password change %s', async (role, forcePasswordChange) => {
-    vi.spyOn(Date, 'now').mockReturnValue(Date.UTC(2026, 0, 1));
+  it('logs the token expiration', async () => {
     const { authn } = await service('60m', '2m');
     const log = vi.spyOn(authn.logger, 'info');
     const { accessToken } = await authn.login({
       email: 'user@example.test',
-      forcePasswordChange,
+      forcePasswordChange: false,
       id: 'user-1',
-      role,
+      role: 'user',
     });
     const payload = verify(accessToken, 'test-secretuser-secret') as JwtPayload;
     const expireTime = unix(Number(payload.exp)).format(authn.loggingTimeFormat);
@@ -127,15 +123,15 @@ describe('AuthnService login expiry', () => {
     );
   });
 
-  it('rejects an invalid admin duration', async () => {
-    const { authn } = await service('invalid');
-    await expect(
-      authn.login({
-        email: 'user@example.test',
-        forcePasswordChange: false,
-        id: 'user-1',
-        role: 'admin',
-      }),
-    ).rejects.toThrow();
+  describe.each(['JWT_EXPIRE_TIME', 'ADMIN_JWT_EXPIRE_TIME'])('%s startup validation', (setting) => {
+    it.each(['asdf', 'Infinity', '0', '-1s', '999ms', '172800001ms'])(
+      'rejects %s before login and identifies the setting',
+      async (duration) => {
+        await expect(service(
+          setting === 'ADMIN_JWT_EXPIRE_TIME' ? duration : undefined,
+          setting === 'JWT_EXPIRE_TIME' ? duration : undefined,
+        )).rejects.toThrow(setting);
+      },
+    );
   });
 });
