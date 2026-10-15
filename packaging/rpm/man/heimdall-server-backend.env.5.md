@@ -203,8 +203,8 @@ external/external and preserve their endpoints. Temporary **--skip-db** and
 
 **MAX_FILE_UPLOAD_SIZE**=_50_
 
-:   Maximum evaluation file upload size in megabytes. Increase this if
-    users need to upload large HDF results files.
+:   Positive integer MiB per file; default 50. Files reaching the configured
+    byte cap are rejected with HTTP 413. A request accepts at most 100 files.
 
 ## PASSWORD POLICY
 
