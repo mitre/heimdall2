@@ -208,6 +208,7 @@ lint-rpm:
 	fi
 
 clean:
+	python3 scripts/check-inputs.py ../.. "$(TOPDIR)" clean
 	rm -rf "$(TOPDIR)"
 
 # Compare VERSION against the latest GitHub release on UPSTREAM_REPO.

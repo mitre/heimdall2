@@ -8,9 +8,28 @@ import sys
 if len(sys.argv) != 4:
     sys.exit('Usage: check-inputs.py REPO TOPDIR MODE')
 repo, topdir = (Path(value).resolve() for value in sys.argv[1:3])
+topdir_input = Path(sys.argv[2])
 mode = sys.argv[3]
-if mode not in ('check', 'head', 'release', 'workspace'):
+if mode not in ('check', 'head', 'release', 'workspace', 'clean'):
     sys.exit('Unknown source mode')
+if mode == 'clean':
+    protected = (not sys.argv[2] or topdir_input.is_symlink()
+                 or topdir == repo or repo in topdir.parents or topdir in repo.parents
+                 or topdir == Path.home().resolve())
+    if protected:
+        sys.exit('Refusing to clean protected RPM topdir')
+    if topdir.exists():
+        if not topdir.is_dir():
+            sys.exit('Refusing to clean RPM topdir that is not a directory')
+        allowed = {'BUILD', 'BUILDROOT', 'RPMS', 'SOURCES', 'SPECS', 'SRPMS',
+                   'heimdall-cli-src', 'heimdall-cli-build', 'cli-man',
+                   'RPM-TEST-GPG-KEY', 'runtime-manifest.json', 'SHA256SUMS'}
+        unexpected = sorted(child.name for child in topdir.iterdir()
+                             if child.name not in allowed)
+        if unexpected:
+            sys.exit('Refusing to clean RPM topdir with unexpected entries: '
+                     + ', '.join(unexpected))
+    sys.exit(0)
 
 version_file = (repo / 'VERSION').read_text().rstrip('\n')
 match = re.fullmatch(r'v?(\d[\dA-Za-z._+~^]*)', version_file, re.ASCII)

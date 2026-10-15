@@ -115,7 +115,12 @@ bash packaging/rpm/tests/cli-inputs.sh "$HOME/rpmbuild-heimdall"
 `RPMS/<arch>/` contains the binary and `SRPMS/` the source RPM under that TOPDIR.
 Use the same TOPDIR for staging, lint and inspection. The wrapper
 `./packaging/rpm/setup-rpm-build-env.sh --build` provides the same Make path.
-Local builds are unsigned until explicitly signed.
+Run `make -C packaging/rpm clean TOPDIR="$HOME/rpmbuild-heimdall"` to remove its
+build output. Cleanup is limited to a non-symlink directory outside the source
+tree and its ancestors; its top-level entries must be the known RPM build
+outputs, and unrelated files prevent deletion. A missing TOPDIR is harmless,
+and cleanup works when `VERSION` is missing. Local builds are unsigned until
+explicitly signed.
 
 To build the current files using Docker:
 
