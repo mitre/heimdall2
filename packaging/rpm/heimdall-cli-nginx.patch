@@ -1431,7 +1431,7 @@ index 215c952..0427d1b 100644
  	p := &FakePrompter{
  		Inputs: map[string]string{
 diff --git a/internal/cmd/restore.go b/internal/cmd/restore.go
-index 5bf9396..b9d163b 100644
+index 5bf9396..a8e696b 100644
 --- a/internal/cmd/restore.go
 +++ b/internal/cmd/restore.go
 @@ -46,7 +46,7 @@ a temporary directory, backend.env is restored with proper ownership
@@ -1443,7 +1443,7 @@ index 5bf9396..b9d163b 100644
  state are restored when present; older archives are accepted. RPM restores stop
  the app and selected private proxy, and block app startup until successful setup
  and migrations. PostgreSQL remains available for logical SQL restore. Requires root privileges.`,
-@@ -204,8 +204,15 @@ func (r *RestoreRunner) Run(archive string) error {
+@@ -204,8 +204,19 @@ func (r *RestoreRunner) Run(archive string) error {
  		if err := runChecked(r.Exec, "systemctl", "stop", ServiceName); err != nil {
  			return err
  		}
@@ -1457,11 +1457,15 @@ index 5bf9396..b9d163b 100644
 +			proxyUnit = bundledNginxService
 +		}
 +		if proxyUnit != "" {
-+			if err := runChecked(r.Exec, "systemctl", "stop", proxyUnit); err != nil {
++			args := []string{"stop", proxyUnit}
++			if existing["HEIMDALL_PROXY_MODE"] != env["HEIMDALL_PROXY_MODE"] {
++				args = []string{"disable", "--now", proxyUnit}
++			}
++			if err := runChecked(r.Exec, "systemctl", args...); err != nil {
  				return err
  			}
  		}
-@@ -245,9 +252,9 @@ func (r *RestoreRunner) Run(archive string) error {
+@@ -245,9 +256,9 @@ func (r *RestoreRunner) Run(archive string) error {
  	return nil
  }
  
@@ -1473,7 +1477,7 @@ index 5bf9396..b9d163b 100644
  func (r *RestoreRunner) restoreRecoveryTree(source, dest, kind string) (result error) {
  	parent := filepath.Dir(dest)
  	output, code, err := r.Exec.Run("mktemp", "-d", filepath.Join(parent, ".heimdall-restore.XXXXXX"))
-@@ -284,8 +291,11 @@ func (r *RestoreRunner) restoreRecoveryTree(source, dest, kind string) (result e
+@@ -284,8 +295,11 @@ func (r *RestoreRunner) restoreRecoveryTree(source, dest, kind string) (result e
  		if info.IsDir() {
  			mode = 0700
  		}
@@ -1486,7 +1490,7 @@ index 5bf9396..b9d163b 100644
  			mode = info.Mode().Perm() & 0640
  			if info.IsDir() {
  				mode = 0750
-@@ -437,7 +447,7 @@ func extractRecoveryArchive(archive, dest string) (string, error) {
+@@ -437,7 +451,7 @@ func extractRecoveryArchive(archive, dest string) (string, error) {
  			if rel != top || !entry.Type().IsRegular() {
  				return fmt.Errorf("invalid archive file: %s", rel)
  			}
@@ -1495,6 +1499,73 @@ index 5bf9396..b9d163b 100644
  			if rel == top && !entry.IsDir() {
  				return fmt.Errorf("invalid archive directory: %s", rel)
  			}
+diff --git a/internal/cmd/restore_test.go b/internal/cmd/restore_test.go
+index b0f299a..65dfd22 100644
+--- a/internal/cmd/restore_test.go
++++ b/internal/cmd/restore_test.go
+@@ -341,12 +341,14 @@ func TestRestoreLegacyConfigOnlyRPMRequiresSetup(t *testing.T) {
+ 	require.Empty(t, e.sql)
+ 	require.FileExists(t, p.ConfigDir+"/upgrade-pending")
+ 	require.Contains(t, r.Out.(*bytes.Buffer).String(), "configuration only")
++	var actions []string
+ 	for _, call := range e.calls {
+ 		require.NotEqual(t, "psql", filepath.Base(call.Name))
+ 		if call.Name == "systemctl" {
+-			require.Equal(t, "stop", call.Args[0])
++			actions = append(actions, strings.Join(call.Args, " "))
+ 		}
+ 	}
++	require.Equal(t, []string{"stop heimdall-server", "disable --now heimdall-caddy"}, actions)
+ }
+ 
+ func TestRestoreRejectsUnsafeDestinationsBeforeMutation(t *testing.T) {
+@@ -580,3 +582,46 @@ func (e *recoveryStagingGuard) Run(name string, args ...string) (string, int, er
+ 	}
+ 	return e.recoveryExec.Run(name, args...)
+ }
++
++func TestRestoreProxyOwnershipTransition(t *testing.T) {
++	for _, oldMode := range []string{"bundled", "nginx"} {
++		for _, newMode := range []string{"bundled", "nginx", "external", "none", ""} {
++			t.Run(oldMode+" to "+newMode, func(t *testing.T) {
++				p, fs, exec := recoveryFixture(t, true)
++				before := "DATABASE_PASSWORD=old-secret\nHEIMDALL_PROXY_MODE=" + oldMode + "\n"
++				require.NoError(t, os.WriteFile(p.EnvFile, []byte(before), 0640))
++				archived := "DATABASE_PASSWORD=new-secret\nHEIMDALL_DATABASE_MODE=external\nHEIMDALL_PROXY_MODE=" + newMode + "\n"
++				require.NoError(t, recoveryRestore(p, fs, exec).Run(oldRecoveryArchive(t, archived, true)))
++				unit := bundledCaddyService
++				if oldMode == "nginx" {
++					unit = bundledNginxService
++				}
++				action := "stop " + unit
++				if oldMode != newMode {
++					action = "disable --now " + unit
++				}
++				var actions []string
++				for _, call := range exec.calls {
++					if call.Name == "systemctl" {
++						actions = append(actions, strings.Join(call.Args, " "))
++					}
++				}
++				require.Equal(t, []string{"stop heimdall-server", action}, actions)
++			})
++		}
++	}
++}
++
++func TestRestoreProxyDisableFailurePreservesCurrentConfig(t *testing.T) {
++	p, fs, exec := recoveryFixture(t, true)
++	before, err := os.ReadFile(p.EnvFile)
++	require.NoError(t, err)
++	exec.fail = "systemctl disable --now heimdall-caddy"
++	archive := oldRecoveryArchive(t, "DATABASE_PASSWORD=secret\nHEIMDALL_PROXY_MODE=nginx\n", true)
++	require.Error(t, recoveryRestore(p, fs, exec).Run(archive))
++	after, err := os.ReadFile(p.EnvFile)
++	require.NoError(t, err)
++	require.Equal(t, before, after)
++	require.Empty(t, exec.sql)
++	require.True(t, fs.Exists(p.ConfigDir+"/upgrade-pending"))
++}
 diff --git a/internal/cmd/runtime.go b/internal/cmd/runtime.go
 index 5413236..44f52ff 100644
 --- a/internal/cmd/runtime.go
