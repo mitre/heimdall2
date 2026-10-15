@@ -3,7 +3,7 @@ set -euo pipefail
 [[ -e /.dockerenv && ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 ]] || exit 64
 runtime=/usr/libexec/heimdall-server/runtime
 source /etc/heimdall-server/backend.env
-original_port=${PORT:-3000}
+original_port=${PORT:-3002}
 [[ $DATABASE_NAME == heimdall-server-production ]]
 pg=(runuser -u heimdall-postgres -- "$runtime/postgresql/bin/psql"
   -h /run/heimdall-postgresql -p 55432 -U heimdall-postgres -v ON_ERROR_STOP=1 -At)
@@ -68,7 +68,7 @@ mapfile -t private_keys < <(find /var/lib/heimdall-caddy -type f -name root.key)
 heimdall-cli setup --non-interactive
 bash /tmp/rpm-tests/lifecycle.sh verify
 # Selected private proxy must follow port changes, retaining its CA and secrets.
-heimdall-cli set-port 3001
+heimdall-cli set-port 3456
 mapfile -t roots < <(find /var/lib/heimdall-caddy -name root.crt -type f)
 bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
   --cacert "${roots[0]}" --resolve heimdall.example.test:443:127.0.0.1

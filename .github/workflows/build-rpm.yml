@@ -314,7 +314,7 @@ jobs:
           test "$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container")" = none
           timeout 600 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh install /tmp/initial.rpm
           # Exercise fresh Nginx defaults before the explicit Caddy lifecycle checks.
-          timeout 900 docker exec "$container" bash /tmp/rpm-tests/topology.sh bundled nginx 3003
+          timeout 900 docker exec "$container" bash /tmp/rpm-tests/topology.sh bundled nginx
           timeout 900 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh setup
           docker restart "$container"
           for attempt in $(seq 1 60); do

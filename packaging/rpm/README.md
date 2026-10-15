@@ -103,7 +103,7 @@ replacing the hostname:
 
 ```dotenv
 NODE_ENV=production
-PORT=3000
+PORT=3002
 EXTERNAL_URL=https://heimdall.example.com
 HEIMDALL_DATABASE_MODE=bundled
 HEIMDALL_PROXY_MODE=nginx
@@ -158,11 +158,12 @@ For a new installation without prompts:
 ```sh
 sudo heimdall-cli setup --non-interactive \
   --database-mode bundled --proxy-mode nginx --tls-mode self-signed \
-  --external-url https://heimdall.example.com --port 3000
+  --external-url https://heimdall.example.com
 ```
 
-Replace the hostname with the address clients use. The backend defaults to
-**3000**; managed HTTPS listens on **443**. Setup rejects listener or SELinux port
+Replace the hostname with the address clients use. Fresh RPM installations default
+to backend port **3002**; saved and legacy ports remain unchanged. Managed HTTPS
+listens on **443**. Setup rejects listener or SELinux port
 conflicts; choose another available backend port if needed. Public port 443 must
 also be available for a managed proxy.
 
@@ -184,7 +185,7 @@ opening setup; the wizard requires `setup --interactive`.
 sudo heimdall-cli status
 sudo systemctl status heimdall-server --no-pager
 curl -fsS --retry 30 --retry-connrefused --retry-delay 1 \
-  --retry-max-time 60 --max-time 5 http://localhost:3000/server
+  --retry-max-time 60 --max-time 5 http://localhost:3002/server
 ```
 
 `active` means running; `enabled` means configured to start at boot. Successful
@@ -230,7 +231,7 @@ sudo heimdall-cli validate && sudo systemctl restart heimdall-server
 Keep the file `root:heimdall`, mode `0640`. See the
 [configuration reference](man/heimdall-server-backend.env.5.md) for available keys.
 
-To set the backend port, use `sudo heimdall-cli set-port 3000`. This updates host
+To set the backend port, use `sudo heimdall-cli set-port 3002`. This updates host
 port integration and the managed proxy's upstream; public HTTPS remains on 443.
 An external proxy's operator must update its upstream separately.
 

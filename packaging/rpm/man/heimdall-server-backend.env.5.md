@@ -35,7 +35,7 @@ After changing any value, restart the service:
 :   Node.js environment. Must be **production** for deployed instances.
     Controls logging verbosity, error detail, and security headers.
 
-**PORT**=_3000_
+**PORT**=_3002_
 
 :   TCP port the application listens on, between 1024 and 65535. Use
     **heimdall-cli set-port** to update SELinux and the selected proxy together.

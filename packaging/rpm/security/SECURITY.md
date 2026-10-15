@@ -29,7 +29,7 @@ compilation alone does not establish successful loading or runtime confinement.
   permits traversal to its configuration, management of HTTP state, and reverse
   proxy connections to `heimdall_server_port_t`.
 - **heimdall_server_port_t** — the TCP port type registered for the
-  application listen port (default TCP 3000).
+  application listen port (fresh RPM default TCP 3002).
 - **postgresql_port_t** — the TCP port type for the selected private database
   port (default TCP 55432); external database ports must also permit connection.
 - **http_port_t** — the HTTP/HTTPS listeners, normally TCP 80 and 443.

@@ -4,7 +4,7 @@ set -euo pipefail
 [[ ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 ]] || exit 64
 db_mode=${1:?database mode}
 proxy_mode=${2:?proxy mode}
-backend_port=${3:-3000}
+backend_port=${3:-3002}
 [[ $db_mode == bundled || $db_mode == external ]] || exit 64
 [[ $proxy_mode == nginx || $proxy_mode == bundled || $proxy_mode == external ]] || exit 64
 runtime=/usr/libexec/heimdall-server/runtime
@@ -22,7 +22,9 @@ if [[ $db_mode == external ]]; then
     --db-user "${RPM_TEST_DB_USER:?}" --db-password "${RPM_TEST_DB_PASSWORD:?}"
     --db-name "${RPM_TEST_DB_NAME:?}")
 fi
-args+=(--port "$backend_port")
+if [[ $# -ge 3 ]]; then
+  args+=(--port "$backend_port")
+fi
 if [[ ${RPM_TEST_COEXIST:-0} == 0 ]]; then
   rpm -qa --qf '%{NAME}\n' > /tmp/heimdall-installed-packages.txt
   if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy|nginx)$' /tmp/heimdall-installed-packages.txt; then exit 1; fi
