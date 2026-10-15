@@ -38,7 +38,7 @@ http {
     ssl_certificate /etc/nginx/rpm-fixture.crt;
     ssl_certificate_key /etc/nginx/rpm-fixture.key;
     location / {
-      proxy_pass http://127.0.0.1:3000;
+      proxy_pass http://127.0.0.1:3002;
       proxy_set_header Host $host;
       proxy_set_header X-Forwarded-Proto https;
     }
@@ -97,10 +97,10 @@ NGINX
     sha256sum "$nginx_cert" /etc/heimdall-server/nginx/certs/server.key > /tmp/rpm-coexist-nginx.sha256
     bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
       --cacert "$nginx_cert" --resolve heimdall.example.test:443:127.0.0.1
-    heimdall-cli set-port 3001
+    heimdall-cli set-port 3003
     bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
       --cacert "$nginx_cert" --resolve heimdall.example.test:443:127.0.0.1
-    heimdall-cli set-port 3000
+    heimdall-cli set-port 3002
     heimdall-cli setup --non-interactive --proxy-mode bundled --tls-mode internal
     if systemctl is-active --quiet heimdall-nginx; then exit 1; fi
     sha256sum --check /tmp/rpm-coexist-ca.sha256 /tmp/rpm-coexist-nginx.sha256

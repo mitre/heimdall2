@@ -599,6 +599,18 @@ elif [ $1 -eq 2 ]; then
   echo ""
 fi
 
+%posttrans
+# Rsyslog must reopen its configuration after the transaction, not just its logs.
+if command -v rsyslogd >/dev/null 2>&1; then
+  if rsyslogd -N1 >/dev/null 2>&1; then
+    if systemctl is-active --quiet rsyslog.service; then
+      systemctl restart rsyslog.service || echo "WARNING: rsyslog restart failed; file logging may be unavailable." >&2
+    fi
+  else
+    echo "WARNING: rsyslog configuration validation failed; run rsyslogd -N1 before restarting for file logging." >&2
+  fi
+fi
+
 %preun
 if [ $1 -eq 0 ]; then
   for unit in heimdall-server.service heimdall-caddy.service heimdall-postgresql.service heimdall-nginx.service; do
@@ -619,8 +631,18 @@ fi
 %postun
 systemctl daemon-reload >/dev/null 2>&1 || :
 
-# No restart or migration here, including during an upgrade.
+# No application restart or migration here, including during an upgrade.
 if [ $1 -eq 0 ]; then
+  # Drop the removed route from an already-running daemon after final erase.
+  if command -v rsyslogd >/dev/null 2>&1; then
+    if rsyslogd -N1 >/dev/null 2>&1; then
+      if systemctl is-active --quiet rsyslog.service; then
+        systemctl restart rsyslog.service || echo "WARNING: rsyslog restart failed; removed Heimdall log routing may remain active." >&2
+      fi
+    else
+      echo "WARNING: rsyslog configuration validation failed; run rsyslogd -N1 before restarting to remove Heimdall log routing." >&2
+    fi
+  fi
   config_dir=%{_sysconfdir}/%{name}
   for ledger in "$config_dir/selinux-ports" "$config_dir/selinux-ports.pending"; do
     if [ ! -L "$config_dir" ] && [ -d "$config_dir" ] && \

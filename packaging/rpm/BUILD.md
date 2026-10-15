@@ -51,13 +51,15 @@ sudo heimdall-cli setup --non-interactive \
 ```
 
 Configure an external proxy to forward to the configured application port
-(default `http://127.0.0.1:3000`). `--proxy-mode none` retains HTTP-only development
+(default `http://127.0.0.1:3002`). `--proxy-mode none` retains HTTP-only development
 operation. Managed Nginx (`--proxy-mode nginx`) automatically creates a
 self-signed certificate and works offline; clients must trust its public
 certificate. Bundled Caddy supports `--tls-mode acme`, `internal`, or `custom`;
 custom mode also takes `--tls-cert` and `--tls-key`. Internal CA operation does not
 need internet after the RPM and OS dependencies are installed; clients must trust
-its root certificate. ACME requires the appropriate public connectivity.
+its root certificate. Both managed proxies require an HTTPS external URL on port
+443. Use an external proxy for a custom public port. ACME requires the appropriate
+public connectivity.
 
 Flags override saved selections; saved selections override fresh defaults
 (`bundled`/`nginx`). Existing configured installations without mode keys default

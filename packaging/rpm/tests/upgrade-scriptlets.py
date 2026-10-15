@@ -14,7 +14,8 @@ UNITS = ['heimdall-server.service', 'heimdall-caddy.service', 'heimdall-postgres
 
 
 def scriptlet(name, root):
-    text = re.split(r'\n%(?:pre|post|preun|postun|files)\n',
+    assert '\n%' + name + '\n' in SPEC, 'Missing RPM ' + name + ' scriptlet'
+    text = re.split(r'\n%(?:pre|post|preun|postun|posttrans|files)\n',
                     SPEC.split('\n%' + name + '\n', 1)[1], maxsplit=1)[0]
     for macro, value in {'name': 'heimdall-server', '_sysconfdir': '/etc',
                          '_datadir': '/usr/share', '_bindir': '/usr/bin',
@@ -55,6 +56,8 @@ if name in ('chown', 'chmod'):
         os.chown(args[-1], 0, 0)
     sys.exit(0)
 if name == 'systemctl':
+    if args[0] == 'restart':
+        sys.exit(int(os.environ.get('FAIL_RESTART', '0')))
     if args[0] == 'is-active':
         queries = [json.loads(line) for line in (root / 'calls').read_text().splitlines()]
         count = sum(c[:2] == ['systemctl', 'is-active'] and c[-1] == args[-1] for c in queries)
@@ -70,6 +73,8 @@ if name == 'systemctl':
         if os.environ.get('EXPECT_PENDING', '1') == '1' and not (root / 'etc/heimdall-server/upgrade-pending').is_file():
             sys.exit(8)
         sys.exit(1 if args[-1] == os.environ.get('FAIL_STOP') else 0)
+elif name == 'rsyslogd':
+    sys.exit(int(os.environ.get('FAIL_RSYSLOG_VALIDATION', '0')))
 elif name == 'heimdall-cli' and args[0] == 'backup':
     sys.exit(int(os.environ.get('FAIL_BACKUP', '0')))
 elif name == 'semanage':
@@ -90,7 +95,7 @@ elif name == 'semanage':
 ''')
     stub.chmod(0o755)
     for name in ('getent', 'groupadd', 'useradd', 'systemctl', 'heimdall-cli', 'chown', 'chmod',
-                 'stat', 'semanage', 'semodule', 'systemd-tmpfiles', 'restorecon'):
+                 'stat', 'semanage', 'semodule', 'systemd-tmpfiles', 'restorecon', 'rsyslogd'):
         (bin_dir / name).symlink_to(stub.name)
     sbin = root / 'usr/sbin'
     sbin.mkdir(parents=True)
@@ -403,5 +408,29 @@ ssh_port_t tcp 22, 8443
     dropin.symlink_to(outside)
     result, calls = run(name='preun', count='0', EXPECT_PENDING='0')
     assert result.returncode == 0 and dropin.is_symlink(), result.stdout
+
+    # Config changes take effect after install/upgrade and after final erase only.
+    for name, count in [('posttrans', '1'), ('posttrans', '2'), ('postun', '0')]:
+        for active, invalid, restart_failure in [('1', '0', '0'), ('0', '0', '0'),
+                                                 ('1', '1', '0'), ('1', '0', '1')]:
+            result, calls = run(name=name, count=count,
+                                ACTIVE_UNITS='rsyslog.service' if active == '1' else '',
+                                FAIL_RSYSLOG_VALIDATION=invalid, FAIL_RESTART=restart_failure)
+            assert result.returncode == 0, (name, result.stdout, calls)
+            assert ['rsyslogd', '-N1'] in calls, (name, calls)
+            restarts = [c for c in calls if c[:2] == ['systemctl', 'restart']]
+            assert restarts == ([['systemctl', 'restart', 'rsyslog.service']]
+                                if active == '1' and invalid == '0' else []), (name, calls)
+            assert not any(c[:2] == ['systemctl', 'start'] for c in calls), calls
+            if invalid == '1' or restart_failure == '1':
+                assert 'WARNING:' in result.stdout, result.stdout
+    result, calls = run(name='postun', count='1', ACTIVE_UNITS='rsyslog.service')
+    assert result.returncode == 0 and not any(c[0] == 'rsyslogd' or
+        c[:2] == ['systemctl', 'restart'] for c in calls), calls
+    (bin_dir / 'rsyslogd').unlink()
+    for name, count in [('posttrans', '1'), ('postun', '0')]:
+        result, calls = run(name=name, count=count, PATH=str(bin_dir), ACTIVE_UNITS='rsyslog.service')
+        assert result.returncode == 0, (name, result.stdout)
+        assert not any(c[:2] == ['systemctl', 'restart'] for c in calls), calls
 
 print('RPM upgrade guards: PASS (major/path/boolean, backup/stop failures, marker, explicit restart, owned port/unit cleanup)')

@@ -43,6 +43,7 @@ ifeq ($(SOURCE_MODE),workspace)
 	tar -C ../.. --exclude=.git --exclude=.beads --exclude=.superpowers \
 	  --exclude=node_modules --exclude=dist --exclude=rpmbuild \
 	  --exclude=.env --exclude='.env-*' --exclude='.env.*' \
+	  --exclude=manifest.yml --exclude=.npmrc \
 	  --exclude='*.rpm' --exclude=certs --exclude=.cache --exclude=coverage --exclude=./data \
 	  --transform 's|^\.|heimdall2-$(VERSION)|' \
 	  -czf "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz" .

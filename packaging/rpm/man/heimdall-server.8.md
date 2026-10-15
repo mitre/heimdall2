@@ -16,7 +16,7 @@ managing InSpec and other security scan results. It stores evaluation data
 in PostgreSQL and serves a web interface for reviewing, comparing, and
 sharing compliance results.
 
-The server listens on a configurable TCP port (default 3000) and is
+The server listens on a configurable TCP port (default 3002) and is
 typically deployed behind a TLS reverse proxy such as Caddy, nginx, or a
 load balancer. The RPM package ships a systemd service unit that runs the
 application as the unprivileged **heimdall** user with extensive security
@@ -47,6 +47,10 @@ setup afterward to apply topology changes. Changing databases does not copy data
 
 **--proxy-mode nginx** automatically generates a self-signed certificate for
 the configured host. Clients must trust its public certificate.
+Managed Nginx and Caddy require an HTTPS external URL on port 443.
+Other public ports require **--proxy-mode external**. Invalid managed URLs are
+rejected before configuration or services change.
+
 Bundled Caddy supports **--tls-mode acme|internal|custom**. Custom mode also takes
 **--tls-cert** and **--tls-key**. External proxies forward to the configured
 application port. A port conflict returns an error without stopping its owner.
@@ -252,13 +256,15 @@ because the Node.js V8 JIT engine requires syscalls outside the
 The RPM ships a custom policy module that confines the service to the
 **heimdall_server_t** domain. Setup validates and registers the selected backend
 port as **heimdall_server_port_t**, refusing assignments owned by another service.
-Interactive setup asks for **Backend port** (saved **PORT**, otherwise 3000).
+Interactive setup asks for **Backend port** (saved **PORT**, otherwise 3002 for a
+new RPM installation). Existing configured installations retain their legacy
+default when **PORT** is unset.
 Backend ports must be between 1024 and 65535; the application runs without
 privileged-port capabilities.
 Automated setup can set the backend port explicitly:
 
 ```bash
-sudo heimdall-cli setup --non-interactive --port 3000
+sudo heimdall-cli setup --non-interactive --port 3002
 ```
 
 Reruns and upgrades preserve the selected port. Managed HTTPS stays on port 443.

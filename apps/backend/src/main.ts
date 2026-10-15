@@ -30,6 +30,8 @@ const logger = winston.createLogger({
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+  const trustProxy = configService.getTrustProxy();
+  app.set('trust proxy', trustProxy);
   app.set('query parser', 'extended');
   app.enableShutdownHooks();
   app.use(
@@ -73,7 +75,7 @@ async function bootstrap() {
           },
           tableName: 'session'
         }),
-        proxy: configService.isInProductionMode() ? true : undefined,
+        proxy: trustProxy === true ? true : undefined,
         cookie: {
           maxAge: 60 * 60 * 1000, // 1 hour
           secure: configService.isInProductionMode()
@@ -82,9 +84,6 @@ async function bootstrap() {
         resave: false
       })
     );
-    if (configService.isInProductionMode()) {
-      app.getHttpAdapter().getInstance().set('trust proxy', true);
-    }
     app.use(passport.session());
   }
   app.use(

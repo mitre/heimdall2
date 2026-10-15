@@ -11,6 +11,8 @@
 **/.env
 **/.env-*
 **/.env.*
+**/manifest.yml
+**/.npmrc
 **/*.log
 **/*.rpm
 **/rpmbuild

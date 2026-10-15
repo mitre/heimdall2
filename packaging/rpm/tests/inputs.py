@@ -168,6 +168,7 @@ class InputsTest(unittest.TestCase):
                     'node_modules/dependency', 'apps/backend/node_modules/dependency',
                     'dist/build', 'packaging/rpm/rpmbuild/generated',
                     '.env', 'apps/backend/.env-secret', 'apps/backend/.env.local',
+                    'manifest.yml', '.npmrc', 'apps/backend/.npmrc',
                     'apps/frontend/.env.development.local', 'package.rpm',
                     'certs/corporate-ca.pem', '.cache/item', 'coverage/report',
                     'data/pgdata/base/private-database')
@@ -176,6 +177,9 @@ class InputsTest(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('private marker')
         (self.root / 'apps/backend/local-source.js').write_text('workspace source')
+        (self.root / 'manifest.yml.example').write_text('public manifest template')
+        (self.root / 'manifest.yml').write_text('DATABASE_PASSWORD: fake-build-secret')
+        (self.root / '.npmrc').write_text('//registry.npmjs.org/:_authToken=fake-build-token')
         nested_data = self.root / 'libs/hdf-converters/data/fixture.json'
         nested_data.parent.mkdir(parents=True)
         nested_data.write_text('application data')
@@ -187,6 +191,8 @@ class InputsTest(unittest.TestCase):
             prefix = 'heimdall2-2.13.1/'
             self.assertIn(prefix + 'apps/backend/local-source.js', names)
             self.assertIn(prefix + 'VERSION', names)
+            self.assertEqual(archive.extractfile(prefix + 'manifest.yml.example').read(),
+                             b'public manifest template')
             self.assertEqual(archive.extractfile(
                 prefix + 'libs/hdf-converters/data/fixture.json').read(), b'application data')
             for name in excluded:

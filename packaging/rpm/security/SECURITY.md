@@ -29,7 +29,7 @@ compilation alone does not establish successful loading or runtime confinement.
   permits traversal to its configuration, management of HTTP state, and reverse
   proxy connections to `heimdall_server_port_t`.
 - **heimdall_server_port_t** — the TCP port type registered for the
-  application listen port (default TCP 3000).
+  application listen port (default TCP 3002).
 - **postgresql_port_t** — the TCP port type for the selected private database
   port (default TCP 55432); external database ports must also permit connection.
 - **http_port_t** — the HTTP/HTTPS listeners, normally TCP 80 and 443.
@@ -217,7 +217,7 @@ stdout in plaintext. To prevent exposure:
 
 ## Active Configs (shipped in /etc/)
 
-These are installed by the RPM and active by default:
+These are installed by the RPM:
 
 | File | Purpose |
 |------|---------|
@@ -225,6 +225,13 @@ These are installed by the RPM and active by default:
 | `/etc/logrotate.d/heimdall-server` | 90-day log rotation (FedRAMP Moderate AU-11) |
 
 ## Logging Architecture
+
+Journald is the primary log store. File copies require rsyslog with its journal
+input configured. After installation or upgrade, the RPM validates the installed
+rsyslog configuration and restarts rsyslog only if it is already running. Final
+removal does the same after removing the route. Validation or restart failures
+produce warnings; run `rsyslogd -N1`, correct any errors, then restart rsyslog.
+The RPM does not install or start rsyslog on hosts that do not use it.
 
 ```text
 NestJS app (stdout/stderr)

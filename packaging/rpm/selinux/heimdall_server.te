@@ -46,7 +46,7 @@ files_tmp_file(heimdall_server_tmp_t)
 type heimdall_server_tmpfs_t;
 files_tmpfs_file(heimdall_server_tmpfs_t)
 
-# TCP port (3000 by default, registered via semanage)
+# TCP port (3002 by default, registered via semanage)
 type heimdall_server_port_t;
 corenet_port(heimdall_server_port_t)
 
