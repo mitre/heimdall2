@@ -117,10 +117,10 @@ Use the same TOPDIR for staging, lint and inspection. The wrapper
 `./packaging/rpm/setup-rpm-build-env.sh --build` provides the same Make path.
 Run `make -C packaging/rpm clean TOPDIR="$HOME/rpmbuild-heimdall"` to remove its
 build output. Cleanup is limited to a non-symlink directory outside the source
-tree and its ancestors; its top-level entries must be the known RPM build
-outputs, and unrelated files prevent deletion. A missing TOPDIR is harmless,
-and cleanup works when `VERSION` is missing. Local builds are unsigned until
-explicitly signed.
+tree and its ancestors, and refuses the home directory itself. Its top-level
+entries must be the known RPM build outputs; unrelated files prevent deletion.
+A missing TOPDIR is harmless, and cleanup works when `VERSION` is missing. Local
+builds are unsigned until explicitly signed.
 
 To build the current files using Docker:
 

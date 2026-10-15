@@ -220,8 +220,8 @@ class InputsTest(unittest.TestCase):
     def test_make_clean_rejects_external_symlink_topdir(self):
         self.prepare_make_fixture()
         target = Path(self.tmp.name) / 'external-output'
-        target.mkdir()
-        sentinel = target / 'preserve me'
+        (target / 'SOURCES').mkdir(parents=True)
+        sentinel = target / 'SOURCES/artifact'
         sentinel.write_text('build output')
         self.topdir = Path(self.tmp.name) / 'output-link'
         self.topdir.symlink_to(target, target_is_directory=True)
