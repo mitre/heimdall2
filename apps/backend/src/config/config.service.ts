@@ -34,6 +34,15 @@ export class ConfigService {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }
 
+  getTrustProxy(): boolean | 'loopback' {
+    if (['nginx', 'bundled'].includes(this.get('HEIMDALL_PROXY_MODE') || '')) {
+      return 'loopback';
+    }
+    return this.isInProductionMode() && Boolean(
+      this.enabledOauthStrategies().length || this.getTenableHostUrl().length
+    );
+  }
+
   enabledOauthStrategies() {
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
