@@ -169,12 +169,16 @@ class InputsTest(unittest.TestCase):
                     'dist/build', 'packaging/rpm/rpmbuild/generated',
                     '.env', 'apps/backend/.env-secret', 'apps/backend/.env.local',
                     'apps/frontend/.env.development.local', 'package.rpm',
-                    'certs/corporate-ca.pem', '.cache/item', 'coverage/report')
+                    'certs/corporate-ca.pem', '.cache/item', 'coverage/report',
+                    'data/pgdata/base/private-database')
         for name in excluded:
             path = self.root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('private marker')
         (self.root / 'apps/backend/local-source.js').write_text('workspace source')
+        nested_data = self.root / 'libs/hdf-converters/data/fixture.json'
+        nested_data.parent.mkdir(parents=True)
+        nested_data.write_text('application data')
         self.topdir = Path(self.tmp.name) / 'output with spaces'
         result = self.make('sources')
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -183,8 +187,21 @@ class InputsTest(unittest.TestCase):
             prefix = 'heimdall2-2.13.1/'
             self.assertIn(prefix + 'apps/backend/local-source.js', names)
             self.assertIn(prefix + 'VERSION', names)
+            self.assertEqual(archive.extractfile(
+                prefix + 'libs/hdf-converters/data/fixture.json').read(), b'application data')
             for name in excluded:
                 self.assertNotIn(prefix + name, names)
+
+    def test_default_archive_excludes_symlinked_database_directory(self):
+        self.prepare_make_fixture()
+        database = Path(self.tmp.name) / 'database'
+        database.mkdir()
+        (database / 'private-data').write_text('private database')
+        (self.root / 'data').symlink_to(database, target_is_directory=True)
+        result = self.make('sources')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        with tarfile.open(str(self.topdir / 'SOURCES/heimdall2-2.13.1.tar.gz')) as archive:
+            self.assertNotIn('heimdall2-2.13.1/data', archive.getnames())
 
     def test_default_archive_includes_uncommitted_changes(self):
         self.prepare_make_fixture()

@@ -5,7 +5,7 @@
 # Supported: RHEL, Oracle Linux, CentOS Stream, Rocky Linux, AlmaLinux (EL8, EL9, EL10)
 #
 # Does NOT build anything, fetch source, or run rpmbuild.
-# After running this script, build with: cd heimdall-server && make rpm
+# From the repository root, build with: make -C packaging/rpm rpm
 #
 # Usage:
 #   sudo ./scripts/setup-build-deps.sh [options]
@@ -36,8 +36,8 @@ Options:
   --with-pgdg         Also install PGDG PostgreSQL repository
   -h, --help          Show this help
 
-After running, build with:
-  cd heimdall-server && make rpm GOARCH=amd64
+After running, build from the repository root with:
+  make -C packaging/rpm rpm
 EOF
     exit "${1:-0}"
 }
@@ -251,17 +251,16 @@ echo ""
 echo "=========================================="
 echo " Build dependencies installed."
 echo ""
-echo " Build the RPM:"
-echo "   cd heimdall-server"
+echo " Build the RPM from the repository root:"
 echo "   export PATH=/opt/heimdall-build/go-${GO_VERSION}/bin:\$PATH"
-echo "   make rpm GOARCH=amd64"
+echo "   make -C packaging/rpm rpm"
 echo ""
 echo " Or step by step:"
-echo "   make sources          # Download upstream source"
-echo "   make heimdall-cli     # Build Go CLI binary"
-echo "   make man              # Generate man pages"
-echo "   make stage            # Stage all files for rpmbuild"
-echo "   make rpm              # Run rpmbuild"
+echo "   make -C packaging/rpm sources          # Archive current source"
+echo "   make -C packaging/rpm heimdall-cli     # Build Go CLI binary"
+echo "   make -C packaging/rpm man              # Generate man pages"
+echo "   make -C packaging/rpm stage            # Stage all files for rpmbuild"
+echo "   make -C packaging/rpm rpm              # Run rpmbuild"
 echo ""
-echo " For build options: make -n rpm"
+echo " For build options: make -n -C packaging/rpm rpm"
 echo "=========================================="

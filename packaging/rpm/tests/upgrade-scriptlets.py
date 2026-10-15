@@ -22,7 +22,7 @@ def scriptlet(name, root):
                          '_unitdir': '/usr/lib/systemd/system'}.items():
         text = text.replace('%{' + macro + '}', value)
     text = text.replace('%%', '%')
-    for prefix in ('/etc/', '/var/lib/', '/usr/share/', '/usr/sbin/'):
+    for prefix in ('/etc/', '/var/lib/', '/usr/share/', '/usr/sbin/', '/usr/bin/'):
         text = text.replace(prefix, str(root) + prefix)
     return text
 
@@ -357,9 +357,13 @@ ssh_port_t tcp 22, 8443
 
     # Installation defers port ownership to setup, including when 3000 conflicts.
     ledger.unlink()
+    installed_launcher = root / 'usr/bin/heimdall-server'
+    installed_launcher.parent.mkdir(parents=True)
+    installed_launcher.write_text('#!/bin/bash\n')
     result, calls = run(name='post', count='1', FAIL_PORT_ADD='3000',
                         PORT_MAPPINGS='ntop_port_t tcp 3000\npostgresql_port_t tcp 5432\n')
     assert result.returncode == 0, result.stdout
+    assert ['restorecon', '-R', str(installed_launcher)] in calls, calls
     assert not ledger.exists(), result.stdout
     assert not any(c[0] == 'semanage' for c in calls), calls
     assert not any(c[0] == 'systemctl' and c[1] in ('start', 'enable', 'restart', 'try-restart') for c in calls), calls

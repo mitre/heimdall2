@@ -253,6 +253,8 @@ The RPM ships a custom policy module that confines the service to the
 **heimdall_server_t** domain. Setup validates and registers the selected backend
 port as **heimdall_server_port_t**, refusing assignments owned by another service.
 Interactive setup asks for **Backend port** (saved **PORT**, otherwise 3000).
+Backend ports must be between 1024 and 65535; the application runs without
+privileged-port capabilities.
 Automated setup can select a different port:
 
 ```bash
@@ -283,7 +285,8 @@ EL8 ignores ProtectClock, ProtectHostname, ProtectKernelLogs and ProtectProc.
 A service definition is shipped at
 **/usr/lib/firewalld/services/heimdall-server.xml**. When a managed HTTPS proxy is
 configured as a reverse proxy, the setup script opens HTTPS (port 443)
-instead of the application port.
+instead of the application port. **set-port** and **setup --skip-tls** retain
+this policy for managed proxies.
 
 ## ENVIRONMENT
 

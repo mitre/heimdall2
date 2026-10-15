@@ -43,7 +43,7 @@ ifeq ($(SOURCE_MODE),workspace)
 	tar -C ../.. --exclude=.git --exclude=.beads --exclude=.superpowers \
 	  --exclude=node_modules --exclude=dist --exclude=rpmbuild \
 	  --exclude=.env --exclude='.env-*' --exclude='.env.*' \
-	  --exclude='*.rpm' --exclude=certs --exclude=.cache --exclude=coverage \
+	  --exclude='*.rpm' --exclude=certs --exclude=.cache --exclude=coverage --exclude=./data \
 	  --transform 's|^\.|heimdall2-$(VERSION)|' \
 	  -czf "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz" .
 else
@@ -175,30 +175,22 @@ offline-dependencies:
 	  test "$$#" -eq 1 && test -f "$$1"; \
 	  python3 scripts/bundle-os-dependencies.py "$$1" "$(TOPDIR)"
 
-# Iterate fast on spec edits — skips %prep + %build (no tarball
-# extraction, no `yarn install`, no node build) and re-runs only
-# %install + %check + %files + binary packaging against the BUILD
-# tree from the previous `make rpm`. Use after editing %install,
-# %files, %post/%postun scriptlets, or any spec metadata.
-# Requires a prior successful `make rpm`.
-rpm-install:
+# Reuse a prior BUILD tree: run %install + %check, then package the files.
+# Shortcut RPMs retain RPM's unsatisfiable dependency for local testing only.
+rpm-install: render-spec
 	rpmbuild --short-circuit -bi --define "_topdir $(TOPDIR)" "$(TOPDIR)/SPECS/$(SPEC)"
+	rpmbuild --short-circuit -bb --define "_topdir $(TOPDIR)" "$(TOPDIR)/SPECS/$(SPEC)"
 	@echo "RPMs: $$(ls "$(TOPDIR)"/RPMS/*/*.rpm)"
 
-# Fastest possible iteration — skips %prep + %build + %install,
-# re-runs only %check + %files selection + binary packaging against
-# the existing BUILDROOT. Use after editing only %files / %changelog
-# / metadata when the BUILDROOT contents themselves don't need to
-# change. If BUILDROOT has been cleaned (a full `make rpm` does this
-# at the end of packaging on most rpmbuild versions), falls back to
-# `rpm-install` automatically so the target always works.
-rpm-package:
+# Package an existing BUILDROOT without rerunning %install or %check.
+# If BUILDROOT was cleaned, restore it with rpm-install before packaging.
+rpm-package: render-spec
 	@buildroot_dir="$(TOPDIR)/BUILDROOT"; \
 	if [ ! -d "$$buildroot_dir" ] || [ -z "$$(ls -A "$$buildroot_dir" 2>/dev/null)" ]; then \
 		echo "BUILDROOT empty (cleaned by previous build) — running rpm-install first"; \
 		$(MAKE) rpm-install; \
 	else \
-		rpmbuild --short-circuit -bb --define "_topdir $(TOPDIR)" "$(TOPDIR)/SPECS/$(SPEC)"; \
+		rpmbuild --short-circuit -bb --define "_topdir $(TOPDIR)" "$(TOPDIR)/SPECS/$(SPEC)" && \
 		echo "RPMs: $$(ls "$(TOPDIR)"/RPMS/*/*.rpm)"; \
 	fi
 

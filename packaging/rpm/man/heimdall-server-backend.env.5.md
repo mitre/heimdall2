@@ -37,8 +37,9 @@ After changing any value, restart the service:
 
 **PORT**=_3000_
 
-:   TCP port the application listens on. If changed, update SELinux and
-    firewalld accordingly (or use **heimdall-cli set-port**).
+:   TCP port the application listens on, between 1024 and 65535. Use
+    **heimdall-cli set-port** to update SELinux and the selected proxy together.
+    Managed HTTPS proxies do not require opening the backend port in firewalld.
 
 **EXTERNAL_URL**=_(unset)_
 

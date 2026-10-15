@@ -89,6 +89,7 @@ jobs:
           test "$(go env GOVERSION)" = go1.25.8
           bash packaging/rpm/tests/build-python.sh
           python3 packaging/rpm/tests/inputs.py
+          python3 packaging/rpm/tests/build-shortcuts.py
           python3 packaging/rpm/tests/version-srpm.py
           python3 packaging/rpm/tests/runtime-inputs.py
           python3 packaging/rpm/tests/lifecycle-status.py
@@ -236,6 +237,13 @@ jobs:
           find /usr/share/man/man1 -name 'heimdall-cli.1*' | grep -q .
           find /usr/share/man/man1 -name 'heimdall-cli-setup.1*' | grep -q .
           bash packaging/rpm/tests/logrotate.sh
+
+      - name: Verify installed SELinux permissions
+        run: |
+          dnf install -y python3-setools
+          python=python3
+          if [[ -x /usr/libexec/platform-python ]]; then python=/usr/libexec/platform-python; fi
+          "$python" packaging/rpm/tests/selinux-policy.py
 
       - name: Verify the installed systemd units
         run: |

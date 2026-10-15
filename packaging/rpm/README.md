@@ -270,7 +270,7 @@ skips TLS work without changing saved proxy ownership.
 Interactive setup asks for **Backend port** before displaying the configuration
 summary, defaulting to the saved `PORT` or `3000` on a new installation. The
 summary includes the selected port. Automated setup accepts `--port 3003`; an explicit
-value replaces the saved port. Setup checks the range (1–65535), listener ownership
+value replaces the saved port. Setup checks the range (1024–65535), listener ownership
 and SELinux assignments before changing configuration or services. If a port
 conflicts, interactive setup asks again; automated setup fails and names the
 conflict. For example, if RHEL assigns `3000` to `ntop_port_t`, choose an available
@@ -438,8 +438,9 @@ sudo heimdall-cli status
 
 `set-port` updates the application configuration and selected private proxy
 upstream along with host port integration. With a managed HTTPS proxy,
-browser access
-continues to use HTTPS on port 443; this command changes the backend port.
+browser access continues to use HTTPS on port 443; this command changes the
+backend port without opening it in firewalld. Setup's `--skip-tls` flag also
+retains the managed proxy's firewall policy.
 An external proxy must be updated by its operator.
 
 For other application settings, edit `/etc/heimdall-server/backend.env`. It

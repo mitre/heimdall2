@@ -20,4 +20,5 @@
 **/rpm-test-ca.crt
 certs
 nginx/certs
+data
 .DS_Store

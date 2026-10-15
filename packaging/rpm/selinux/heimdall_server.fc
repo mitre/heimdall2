@@ -12,6 +12,7 @@
 /etc/heimdall-server/nginx(/.*)?               gen_context(system_u:object_r:httpd_config_t,s0)
 
 # Application and native addons
+/usr/bin/heimdall-server                     -- gen_context(system_u:object_r:heimdall_server_exec_t,s0)
 /usr/share/heimdall-server(/.*)?               gen_context(system_u:object_r:heimdall_server_exec_t,s0)
 
 # Private runtime parents/share, executable clients, and shared libraries.

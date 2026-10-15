@@ -221,7 +221,8 @@ verification. See [Red Hat's shared system certificate documentation](https://do
   matching application manifests for application upgrades; a higher RPM release
   cannot make an older application version an upgrade.
 - `SOURCE_MODE=workspace` is the default. It includes local source changes and
-  excludes Git metadata, environment files, certificates, caches and build outputs.
+  excludes Git metadata, environment files, certificates, caches, build outputs,
+  and the root `data/` directory used by Docker's PostgreSQL service.
   Git history is not required for the downloaded Heimdall source tree.
 - For an explicit build from Git, `SOURCE_MODE=head` archives clean committed
   inputs. `SOURCE_MODE=release` additionally requires HEAD at the version tag.

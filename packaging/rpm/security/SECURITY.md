@@ -20,8 +20,9 @@ compilation alone does not establish successful loading or runtime confinement.
 
 ### Domain and port types
 
-- **heimdall_server_t** — the application domain, entered through private Node at
-  `/usr/libexec/heimdall-server/runtime/node/bin/node`. Node's V8 JIT requires
+- **heimdall_server_t** — the application domain, entered through the
+  `/usr/bin/heimdall-server` launcher and retained when it executes private Node
+  at `/usr/libexec/heimdall-server/runtime/node/bin/node`. Node's V8 JIT requires
   `execmem`; the policy retains that permission.
 - **postgresql_t** — the stock PostgreSQL domain, used by the private server.
 - **httpd_t** — the stock HTTP service domain, used by private Caddy and Nginx. The policy
@@ -136,14 +137,21 @@ A service definition is shipped at
 `/usr/lib/firewalld/services/heimdall-server.xml`.
 
 - **With managed Nginx (default) or bundled Caddy:** Setup configures a TLS reverse
-  proxy and opens port **443** (HTTPS) via the `heimdall-server` firewalld
-  service. The application port (3000) is not exposed externally.
+  proxy and opens port **443** via firewalld's `https` service. Setup and
+  `set-port` do not open the application port, including `setup --skip-tls`.
 - **With proxy mode `none`:** Setup can expose the selected application port
   directly for HTTP-only development.
 
 External proxies remain operator-managed. `--skip-tls` temporarily skips proxy
 configuration; it does not change the saved proxy ownership mode. Review the
-host's firewall policy for the chosen deployment.
+host's firewall policy for the chosen deployment; the backend listens on all
+interfaces, so an independently opened port permits direct HTTP access.
+
+The CLI records the backend port rules it creates in
+`/etc/heimdall-server/firewalld-ports` and removes those rules when changing ports
+or switching to a managed proxy. It preserves administrator-created rules. If
+an existing explicit rule exposes the backend port during managed proxy setup,
+the command stops and prints the exact cleanup command for operator review.
 
 ## Enabling Audit Rules
 

@@ -103,11 +103,17 @@ manage_dirs_pattern(heimdall_server_t, heimdall_server_tmpfs_t, heimdall_server_
 manage_files_pattern(heimdall_server_t, heimdall_server_tmpfs_t, heimdall_server_tmpfs_t)
 fs_tmpfs_filetrans(heimdall_server_t, heimdall_server_tmpfs_t, { dir file })
 
-# Execute bundled Node.js and native .node modules
+# Read the application tree and execute bundled Node.js/native .node modules.
+list_dirs_pattern(heimdall_server_t, heimdall_server_exec_t, heimdall_server_exec_t)
+read_lnk_files_pattern(heimdall_server_t, heimdall_server_exec_t, heimdall_server_exec_t)
 allow heimdall_server_t heimdall_server_exec_t:file { execute execute_no_trans map };
 
+# The confined launcher uses bash and dirname/mkdir/chown before executing Node.
+corecmd_exec_shell(heimdall_server_t)
+corecmd_exec_bin(heimdall_server_t)
+
 # System access
-sysnet_read_config(heimdall_server_t)
+sysnet_dns_name_resolve(heimdall_server_t)
 files_read_etc_files(heimdall_server_t)
 auth_read_passwd(heimdall_server_t)
 miscfiles_read_localization(heimdall_server_t)
@@ -121,6 +127,9 @@ domain_use_interactive_fds(heimdall_server_t)
 # Outbound HTTP/HTTPS (OAuth callbacks, external APIs)
 corenet_tcp_connect_http_port(heimdall_server_t)
 corenet_tcp_connect_http_cache_port(heimdall_server_t)
+
+# LDAP/LDAPS authentication.
+corenet_tcp_connect_ldap_port(heimdall_server_t)
 
 # PostgreSQL — enabled by tunable (default: true)
 tunable_policy(`heimdall_server_connect_postgresql',`

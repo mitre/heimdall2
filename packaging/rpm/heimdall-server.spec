@@ -553,7 +553,7 @@ semodule -n -i %{_datadir}/selinux/packages/%{name}.pp || \
   echo "WARNING: Heimdall SELinux policy registration failed; resolve before setup." >&2
 if /usr/sbin/selinuxenabled 2>/dev/null; then
   /usr/sbin/load_policy || echo "WARNING: SELinux policy reload failed." >&2
-  for path in %{_datadir}/%{name} %{_libexecdir}/%{name}/runtime \
+  for path in %{_bindir}/%{name} %{_datadir}/%{name} %{_libexecdir}/%{name}/runtime \
               %{_sysconfdir}/%{name} /var/lib/%{name} /var/log/%{name} \
               /var/lib/heimdall-postgresql /var/lib/heimdall-caddy /var/lib/heimdall-nginx \
               /run/%{name} /run/heimdall-postgresql /run/heimdall-caddy /run/heimdall-nginx \
