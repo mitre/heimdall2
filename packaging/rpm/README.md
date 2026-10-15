@@ -162,10 +162,10 @@ sudo heimdall-cli setup --non-interactive \
 ```
 
 Replace the hostname with the address clients use. Fresh RPM installations default
-to backend port **3002**; saved and legacy ports remain unchanged. Managed HTTPS
-listens on **443**. Setup rejects listener or SELinux port
-conflicts; choose another available backend port if needed. Public port 443 must
-also be available for a managed proxy.
+to backend port **3002**; saved and legacy ports remain unchanged. Nginx listens on
+**443**; Caddy uses its configured public HTTPS endpoint. Setup rejects listener
+or SELinux port conflicts; choose another available backend port if needed.
+The selected public HTTPS port must also be available for a managed proxy.
 
 Explicit flags override saved values, which override defaults. Normal reruns
 preserve credentials, comments and extra settings. Existing configured files
@@ -232,7 +232,8 @@ Keep the file `root:heimdall`, mode `0640`. See the
 [configuration reference](man/heimdall-server-backend.env.5.md) for available keys.
 
 To set the backend port, use `sudo heimdall-cli set-port 3002`. This updates host
-port integration and the managed proxy's upstream; public HTTPS remains on 443.
+port integration and the managed proxy's upstream; Nginx remains on 443 and
+Caddy retains its configured public HTTPS endpoint.
 An external proxy's operator must update its upstream separately.
 
 Change database/proxy ownership through full `setup` with mode flags, not

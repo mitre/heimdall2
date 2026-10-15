@@ -64,6 +64,13 @@ async function bootstrap() {
   ) {
     app.use(
       session({
+        cookie: {
+          maxAge: 60 * 60 * 1000, // 1 hour
+          secure: configService.isInProductionMode()
+        },
+        proxy: trustProxy === true ? true : undefined,
+        resave: false,
+        saveUninitialized: false,
         secret: generateDefault(),
         store: new (postgresSessionStore(session))({
           conObject: {
@@ -74,13 +81,6 @@ async function bootstrap() {
           },
           tableName: 'session'
         }),
-        proxy: trustProxy === true ? true : undefined,
-        cookie: {
-          maxAge: 60 * 60 * 1000, // 1 hour
-          secure: configService.isInProductionMode()
-        },
-        saveUninitialized: false,
-        resave: false
       })
     );
     app.use(passport.session());

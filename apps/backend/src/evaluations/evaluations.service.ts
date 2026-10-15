@@ -343,9 +343,9 @@ export class EvaluationsService {
     await this.databaseService.sequelize.transaction(async (transaction) => {
       if (evaluation.evaluationTags !== null) {
         await Promise.all(
-          evaluation.evaluationTags.map((evaluationTag) =>
-            evaluationTag.destroy({transaction})
-          )
+          evaluation.evaluationTags.map(evaluationTag =>
+            evaluationTag.destroy({ transaction }),
+          ),
         );
       }
       return evaluation.destroy({transaction});

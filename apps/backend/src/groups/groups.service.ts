@@ -115,10 +115,10 @@ export class GroupsService {
       // If default admin is not found, use admin with lowest ID
       const admin =
         (await this.userModel.findOne({
-          where: {role: 'admin', email: appConfig.getDefaultAdmin(), id: {[Op.ne]: userId}}
+          where: { email: appConfig.getDefaultAdmin(), id: { [Op.ne]: userId }, role: 'admin' },
         })) ||
         (await this.userModel.findOne({
-          where: {role: 'admin', id: {[Op.ne]: userId}},
+          where: { id: { [Op.ne]: userId }, role: 'admin' },
           order: [['id', 'ASC']]
         }));
       if (admin !== null) {

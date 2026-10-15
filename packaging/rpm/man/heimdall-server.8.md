@@ -263,8 +263,10 @@ Automated setup can set the backend port explicitly:
 sudo heimdall-cli setup --non-interactive --port 3002
 ```
 
-Reruns and upgrades preserve the selected port. Managed HTTPS stays on port 443.
-Use **heimdall-cli set-port** to change the backend port on a running installation.
+Reruns and upgrades preserve the selected port. Nginx uses public HTTPS port 443;
+Caddy uses its configured public HTTPS endpoint. Use **heimdall-cli set-port** to
+change the backend port on a running installation while preserving that public
+endpoint.
 
 The policy includes a tunable for PostgreSQL connectivity:
 
