@@ -162,6 +162,23 @@ index cac85d3..ec0ba77 100644
  	}
  	return d, nil
  }
+diff --git a/internal/cmd/fakes_test.go b/internal/cmd/fakes_test.go
+index 108e1d4..70e41c2 100644
+--- a/internal/cmd/fakes_test.go
++++ b/internal/cmd/fakes_test.go
+@@ -123,6 +123,12 @@ func (f *FakeExecRunner) RunWithEnv(env map[string]string, name string, args ...
+ 	return "", 0, nil
+ }
+ 
++func (f *FakeExecRunner) RunWithEnvAndStdin(env map[string]string, stdin, name string, args ...string) (string, int, error) {
++	out, code, err := f.RunWithEnv(env, name, args...)
++	f.Calls[len(f.Calls)-1].Stdin = stdin
++	return out, code, err
++}
++
+ func (f *FakeExecRunner) RunWithStdin(stdin, name string, args ...string) (string, int, error) {
+ 	f.Calls = append(f.Calls, FakeExecCall{Name: name, Args: args, Stdin: stdin})
+ 	key := execKey(name, args)
 diff --git a/internal/cmd/fapolicyd.go b/internal/cmd/fapolicyd.go
 index 865caf3..5019429 100644
 --- a/internal/cmd/fapolicyd.go
@@ -676,6 +693,18 @@ index 0000000..e69ca16
 +	assert.False(t, r.FS.Exists(r.Paths.ConfigDir+"/firewalld-ports.pending"))
 +	assert.Equal(t, "3210", r.Env.(*FakeEnvManager).Env["PORT"])
 +}
+diff --git a/internal/cmd/interfaces.go b/internal/cmd/interfaces.go
+index ee273ee..54e2f9d 100644
+--- a/internal/cmd/interfaces.go
++++ b/internal/cmd/interfaces.go
+@@ -6,6 +6,7 @@ import "os"
+ type ExecRunner interface {
+ 	Run(name string, args ...string) (stdout string, exitCode int, err error)
+ 	RunWithEnv(env map[string]string, name string, args ...string) (stdout string, exitCode int, err error)
++	RunWithEnvAndStdin(env map[string]string, stdin, name string, args ...string) (stdout string, exitCode int, err error)
+ 	// RunWithStdin runs the command with the given string piped to its stdin.
+ 	// Used for tools (e.g. psql) that read multi-statement input from stdin.
+ 	RunWithStdin(stdin string, name string, args ...string) (stdout string, exitCode int, err error)
 diff --git a/internal/cmd/nginx.go b/internal/cmd/nginx.go
 new file mode 100644
 index 0000000..eaf4bae
@@ -1430,6 +1459,87 @@ index 215c952..0427d1b 100644
  func TestFakePrompter_Input(t *testing.T) {
  	p := &FakePrompter{
  		Inputs: map[string]string{
+diff --git a/internal/cmd/reset_password.go b/internal/cmd/reset_password.go
+index 03e2290..3c4d882 100644
+--- a/internal/cmd/reset_password.go
++++ b/internal/cmd/reset_password.go
+@@ -101,11 +101,10 @@ func (r *ResetPasswordRunner) Run(email, password string) error {
+ 	sql := `UPDATE "Users" SET "encryptedPassword" = :'hash', "passwordChangedAt" = NOW(), "forcePasswordChange" = false, "updatedAt" = NOW() WHERE email = :'email';`
+ 
+ 	pgEnv := dbCfg.PgEnv()
+-	stdout, code, err := r.Exec.RunWithEnv(pgEnv, binary,
++	stdout, code, err := r.Exec.RunWithEnvAndStdin(pgEnv, sql+"\n", binary,
+ 		"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User,
+-		"-d", dbCfg.DBName,
+-		"-v", "hash="+hashed, "-v", "email="+email,
+-		"-tAc", sql,
++		"-d", dbCfg.DBName, "-X", "-v", "ON_ERROR_STOP=1",
++		"-v", "hash="+hashed, "-v", "email="+email, "-tA",
+ 	)
+ 	if err != nil {
+ 		return fmt.Errorf("database update failed: %w", err)
+diff --git a/internal/cmd/reset_password_test.go b/internal/cmd/reset_password_test.go
+index 25b5482..c28c085 100644
+--- a/internal/cmd/reset_password_test.go
++++ b/internal/cmd/reset_password_test.go
+@@ -3,6 +3,7 @@ package cmd
+ import (
+ 	"bytes"
+ 	"fmt"
++	"strings"
+ 	"testing"
+ 
+ 	"github.com/stretchr/testify/assert"
+@@ -81,21 +82,24 @@ func TestResetPassword_UserNotFound(t *testing.T) {
+ 	env := &FakeEnvManager{Env: map[string]string{
+ 		"DATABASE_PASSWORD": "secret",
+ 	}}
+-	runner, _, _ := newResetPasswordRunner(exec, env)
++	runner, out, _ := newResetPasswordRunner(exec, env)
+ 
+-	err := runner.Run("nobody@example.com", "aB1!cD2@eF3#gH4$")
++	err := runner.Run("nobody@example.com", "")
+ 	require.Error(t, err)
+ 	assert.Contains(t, err.Error(), "user not found")
++	assert.NotContains(t, out.String(), "Password reset for")
++	assert.NotContains(t, out.String(), "New password:")
+ }
+ 
+ func TestResetPassword_PsqlFailure(t *testing.T) {
+-	for _, failure := range []FakeExecResult{{ExitCode: 1, Err: fmt.Errorf("connection refused")}, {ExitCode: 1}} {
++	for _, failure := range []FakeExecResult{{ExitCode: 1, Err: fmt.Errorf("connection refused")}, {ExitCode: 1}, {Stdout: "ERROR: SQL fixture failure", ExitCode: 3}} {
+ 		exec := &FakeExecRunner{Results: map[string]FakeExecResult{"psql -h": failure}}
+ 		env := &FakeEnvManager{Env: map[string]string{"DATABASE_PASSWORD": "secret"}}
+ 		runner, out, _ := newResetPasswordRunner(exec, env)
+-		err := runner.Run("admin@heimdall.local", "aB1!cD2@eF3#gH4$")
++		err := runner.Run("admin@heimdall.local", "")
+ 		require.ErrorContains(t, err, "database update failed")
+ 		require.NotContains(t, out.String(), "Password reset for")
++		require.NotContains(t, out.String(), "New password:")
+ 	}
+ }
+ 
+@@ -201,3 +205,20 @@ func TestResetPassword_InteractiveBlankAutoGenerates(t *testing.T) {
+ 	require.NoError(t, err)
+ 	assert.Contains(t, runner.Out.(*bytes.Buffer).String(), "New password:")
+ }
++
++func TestResetPasswordUsesInputAndPrivateConnectionEnvironment(t *testing.T) {
++	exec := &FakeExecRunner{Results: map[string]FakeExecResult{"psql -h": {Stdout: "UPDATE 1"}}}
++	env := &FakeEnvManager{Env: map[string]string{"DATABASE_PASSWORD": "db-secret"}}
++	runner, _, _ := newResetPasswordRunner(exec, env)
++	require.NoError(t, runner.Run("admin+audit@example.com", "aB1!cD2@eF3#gH4$"))
++	require.Len(t, exec.Calls, 1)
++	call := exec.Calls[0]
++	require.Contains(t, call.Stdin, "WHERE email = :'email'")
++	require.Contains(t, call.Args, "hash=$2a$14$testhash")
++	require.Contains(t, call.Args, "email=admin+audit@example.com")
++	require.Contains(t, call.Args, "-X")
++	require.Contains(t, call.Args, "ON_ERROR_STOP=1")
++	require.NotContains(t, call.Args, "-tAc")
++	require.Equal(t, "db-secret", call.Env["PGPASSWORD"])
++	require.NotContains(t, strings.Join(call.Args, " "), "db-secret")
++}
 diff --git a/internal/cmd/restore.go b/internal/cmd/restore.go
 index 5bf9396..a8e696b 100644
 --- a/internal/cmd/restore.go
@@ -1500,10 +1610,21 @@ index 5bf9396..a8e696b 100644
  				return fmt.Errorf("invalid archive directory: %s", rel)
  			}
 diff --git a/internal/cmd/restore_test.go b/internal/cmd/restore_test.go
-index b0f299a..65dfd22 100644
+index b0f299a..21eefae 100644
 --- a/internal/cmd/restore_test.go
 +++ b/internal/cmd/restore_test.go
-@@ -341,12 +341,14 @@ func TestRestoreLegacyConfigOnlyRPMRequiresSetup(t *testing.T) {
+@@ -126,6 +126,10 @@ func (e *recoveryExec) RunWithEnv(env map[string]string, name string, args ...st
+ 	}
+ 	return "", 1, fmt.Errorf("unexpected database command %s", key)
+ }
++func (e *recoveryExec) RunWithEnvAndStdin(map[string]string, string, string, ...string) (string, int, error) {
++	return "", 1, fmt.Errorf("unexpected stdin command")
++}
++
+ func (e *recoveryExec) RunWithStdin(string, string, ...string) (string, int, error) {
+ 	return "", 1, fmt.Errorf("unexpected stdin command")
+ }
+@@ -341,12 +345,14 @@ func TestRestoreLegacyConfigOnlyRPMRequiresSetup(t *testing.T) {
  	require.Empty(t, e.sql)
  	require.FileExists(t, p.ConfigDir+"/upgrade-pending")
  	require.Contains(t, r.Out.(*bytes.Buffer).String(), "configuration only")
@@ -1519,7 +1640,7 @@ index b0f299a..65dfd22 100644
  }
  
  func TestRestoreRejectsUnsafeDestinationsBeforeMutation(t *testing.T) {
-@@ -580,3 +582,46 @@ func (e *recoveryStagingGuard) Run(name string, args ...string) (string, int, er
+@@ -580,3 +586,46 @@ func (e *recoveryStagingGuard) Run(name string, args ...string) (string, int, er
  	}
  	return e.recoveryExec.Run(name, args...)
  }
@@ -1567,10 +1688,50 @@ index b0f299a..65dfd22 100644
 +	require.True(t, fs.Exists(p.ConfigDir+"/upgrade-pending"))
 +}
 diff --git a/internal/cmd/runtime.go b/internal/cmd/runtime.go
-index 5413236..44f52ff 100644
+index 5413236..2ce3434 100644
 --- a/internal/cmd/runtime.go
 +++ b/internal/cmd/runtime.go
-@@ -274,12 +274,18 @@ func (p *huhPrompter) newForm(groups ...*huh.Group) *huh.Form {
+@@ -22,7 +22,7 @@ func (r *execRunner) Run(name string, args ...string) (string, int, error) {
+ 	return r.RunWithEnv(nil, name, args...)
+ }
+ 
+-func (r *execRunner) RunWithEnv(env map[string]string, name string, args ...string) (string, int, error) {
++func (r *execRunner) RunWithEnvAndStdin(env map[string]string, stdin, name string, args ...string) (string, int, error) {
+ 	prepared, cleanup, err := preparePGEnv(env)
+ 	if err != nil {
+ 		return "", 1, err
+@@ -30,6 +30,7 @@ func (r *execRunner) RunWithEnv(env map[string]string, name string, args ...stri
+ 	defer cleanup()
+ 	env = prepared
+ 	c := exec.Command(name, args...)
++	c.Stdin = strings.NewReader(stdin)
+ 	if env != nil {
+ 		c.Env = os.Environ()
+ 		for k, v := range env {
+@@ -46,17 +47,12 @@ func (r *execRunner) RunWithEnv(env map[string]string, name string, args ...stri
+ 	return string(out), 0, nil
+ }
+ 
++func (r *execRunner) RunWithEnv(env map[string]string, name string, args ...string) (string, int, error) {
++	return r.RunWithEnvAndStdin(env, "", name, args...)
++}
++
+ func (r *execRunner) RunWithStdin(stdin, name string, args ...string) (string, int, error) {
+-	c := exec.Command(name, args...)
+-	c.Stdin = strings.NewReader(stdin)
+-	out, err := c.CombinedOutput()
+-	if err != nil {
+-		if exitErr, ok := err.(*exec.ExitError); ok {
+-			return string(out), exitErr.ExitCode(), nil
+-		}
+-		return string(out), 1, err
+-	}
+-	return string(out), 0, nil
++	return r.RunWithEnvAndStdin(nil, stdin, name, args...)
+ }
+ 
+ // systemdRunner implements SystemdRunner using systemctl.
+@@ -274,12 +270,18 @@ func (p *huhPrompter) newForm(groups ...*huh.Group) *huh.Form {
  }
  
  func (p *huhPrompter) Input(prompt string, defaultValue string) (string, error) {
@@ -1590,6 +1751,44 @@ index 5413236..44f52ff 100644
  	return result, err
  }
  
+diff --git a/internal/cmd/runtime_test.go b/internal/cmd/runtime_test.go
+index e60c50c..57bc474 100644
+--- a/internal/cmd/runtime_test.go
++++ b/internal/cmd/runtime_test.go
+@@ -188,7 +188,12 @@ esac
+ case "$*" in
+  *server_version_num*) echo 180006 ;;
+  *information_schema*) echo 7 ;;
+- *UPDATE*) echo 'UPDATE 1' ;;
++ *-tA*)
++  input=$(cat)
++  case "$input" in
++   *"UPDATE \"Users\" SET"*) echo 'UPDATE 1' ;;
++   *) exit 97 ;;
++  esac ;;
+  *) echo 1 ;;
+ esac
+ `
+@@ -365,3 +370,19 @@ printf '%s\n' "$*" >> "$SYSTEMCTL_FIXTURE/actions"
+ 		require.Contains(t, string(data), action)
+ 	}
+ }
++
++func TestRealExecRunnerCombinesInputAndPrivateTLS(t *testing.T) {
++	skipIfWindows(t)
++	pem := "-----BEGIN CERTIFICATE-----\nfixture\n-----END CERTIFICATE-----\n"
++	env := map[string]string{"PGPASSWORD": "test-secret", "PGSSLROOTCERT": pem}
++	out, code, err := (&execRunner{}).RunWithEnvAndStdin(env, "SQL input\n", "sh", "-c",
++		`test "$PGPASSWORD" = test-secret && test -f "$PGSSLROOTCERT" || exit 91; printf '%s\n' "$PGSSLROOTCERT"; cat`)
++	require.NoError(t, err)
++	require.Zero(t, code)
++	path, payload, ok := strings.Cut(out, "\n")
++	require.True(t, ok)
++	require.Equal(t, "SQL input\n", payload)
++	_, err = os.Stat(path)
++	require.True(t, os.IsNotExist(err))
++	require.Equal(t, pem, env["PGSSLROOTCERT"])
++}
 diff --git a/internal/cmd/schema.go b/internal/cmd/schema.go
 index 3e5e855..ddc3e48 100644
 --- a/internal/cmd/schema.go
