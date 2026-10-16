@@ -9,7 +9,9 @@ canonical version is [`VERSION`](./VERSION), initially `v0.9.0`. CLI release
 tags use `apps/heimdall-cli/vX.Y.Z`; server tags retain `vX.Y.Z`. CLI tags do not
 publish server packages, images, Pages, or Iron Bank updates. This release
 contract accepts stable versions only. See [`COMPAT.md`](./COMPAT.md) for
-server compatibility and pending validation.
+server compatibility and pending validation. Maintainers should follow the
+[release runbook](./CONTRIBUTING.md#release-process) for verified archives and
+independent release drafts.
 
 The server RPM builds this module and its man pages from the same source tree.
 Runtime updates ship through a rebuilt server RPM. Standalone archives do not

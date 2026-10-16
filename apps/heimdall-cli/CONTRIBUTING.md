@@ -245,12 +245,51 @@ Therefore:
 
 ## Release Process
 
-Maintainers handle releases, but you can help by:
+CLI and server versions advance independently. Each server RPM includes the
+CLI source and version from that RPM's own source commit. A standalone CLI
+release does not modify existing server installations.
 
-1. Keeping CHANGELOG.md updated
-2. Following semantic versioning in PRs
-3. Highlighting breaking changes
-4. Testing release candidates
+1. Update CLI `VERSION`, `CHANGELOG.md`, and tested pairs in `COMPAT.md`. Leave
+   root `VERSION` and application manifests unchanged.
+2. Merge after CLI CI and the existing Build RPM matrix pass for all six
+   EL8/EL9/EL10 × x86_64/aarch64 combinations. Record actual platform results,
+   including source extraction, installed CLI version/provenance, manpages,
+   SRPM rebuild, and disconnected lifecycle checks. Keep compatibility pending
+   until those results exist; preserve the stable RPM publication gate.
+3. Run **Release Heimdall CLI** manually with that exact commit SHA in `ref`.
+   Manual runs accept a commit, branch, or tag and only upload workflow
+   artifacts; they cannot create or change releases. Download both archives
+   and their checksums. Inspect version/commit/date metadata, manuals, license,
+   and checksums using the [archive checks](./docs/testing.md#release-archive-verification).
+   A successful hosted manual run is required before calling release CI ready.
+4. Once approved, create and push `apps/heimdall-cli/v0.9.0` at that exact
+   commit. The workflow validates the exact tag and CLI version, reruns CLI CI,
+   and builds verified native Linux amd64 and arm64 archives. It creates or
+   updates a populated draft with `--latest=false` after all checks pass.
+   Creating this public tag is a release operation; do not use a production tag
+   to test the workflow.
+5. Review the draft and publish it in GitHub, retaining the **not latest**
+   setting. Verify that server publishing jobs are skipped and the server
+   draft remains intact. Attestation and draft creation are first-release
+   acceptance checks until exercised on GitHub.
+6. Verify downloaded release assets from the directory containing both archives:
+
+   ```sh
+   sha256sum --check heimdall-cli_0.9.0_SHA256SUMS
+   gh attestation verify heimdall-cli_0.9.0_linux_amd64.tar.gz --repo mitre/heimdall2
+   ```
+
+7. If draft generation fails, fix the underlying workflow or build failure and
+   rerun. An existing draft can receive corrected assets. The workflow refuses
+   to overwrite published CLI assets; use a new patch release for a published
+   defect.
+
+Release builds use no restored Go cache, persisted checkout credential, npm
+package, GoReleaser, or standalone RPM. CLI archives contain a static binary,
+license, README, compatibility notes, and manuals. Tag runs publish two archives
+and a combined versioned `SHA256SUMS` file to the draft; manual runs retain
+per-archive checksum files as workflow artifacts. Local YAML checks cannot
+validate hosted runner availability, GitHub permissions, or attestations.
 
 ## Questions?
 

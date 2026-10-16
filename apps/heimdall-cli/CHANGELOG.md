@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Imported the fully patched CLI into `mitre/heimdall2` at
+  `apps/heimdall-cli`, with independent version `0.9.0`, scoped release tags,
+  native Linux amd64/arm64 CI, and verified archive release drafts. See the
+  [release runbook](./CONTRIBUTING.md#release-process); hosted release and RPM
+  matrix acceptance remain pending.
 - Interactive setup prompts for JWT expiration and local certificate lifetime,
   with defaults of one day and seven days respectively.
 - Extracted to its own repository from `mitre/saf-packaging`. The `go.mod`

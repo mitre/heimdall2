@@ -65,6 +65,55 @@ Privileged integration and optional VM end-to-end suites remain separate from
 native CI. The existing Build RPM workflow supplies installation and disconnected
 lifecycle coverage across EL8/EL9/EL10 on x86_64 and aarch64.
 
+## Release archive verification
+
+From the repository root on Linux, build the archive with the packaging commands
+in `.github/workflows/heimdall-cli-release.yml`. Use Go 1.26.9 with
+`GOTOOLCHAIN=local`; run only `--version`, `--help`, and `setup --help` for the
+binary smoke check. No administrative setup is needed. The workflow generates
+manuals from the same module and checks exact version/commit/date metadata.
+
+Run this same archive validator locally, replacing the path with the archive
+you built or downloaded:
+
+```sh
+python3 - /tmp/heimdall-cli_0.9.0_linux_arm64.tar.gz <<'PY'
+import sys
+import tarfile
+from pathlib import PurePosixPath
+with tarfile.open(sys.argv[1]) as archive:
+    files = {}
+    for member in archive.getmembers():
+        path = PurePosixPath(member.name)
+        assert not path.is_absolute() and ".." not in path.parts, member.name
+        assert member.isfile() or member.isdir(), member.name
+        if member.isfile():
+            files[str(path)] = member
+    required = {"heimdall-cli", "LICENSE.md", "README.md", "COMPAT.md",
+                "man/man1/heimdall-cli.1", "man/man1/heimdall-cli-setup.1"}
+    assert required <= set(files), required - set(files)
+    assert all(name in required or name.startswith("man/man1/") for name in files)
+    assert files["heimdall-cli"].mode & 0o111
+PY
+```
+
+From a directory containing downloaded manual-run artifacts, run
+`sha256sum --check heimdall-cli_0.9.0_linux_arm64.tar.gz.sha256` for arm64
+(and the corresponding amd64 file). The draft contains the combined
+`heimdall-cli_0.9.0_SHA256SUMS`; verify it with `sha256sum --check` after downloading
+both archives. Confirm a corrupted copy fails checksum verification and a
+tarball missing `LICENSE.md` fails the validator. Keep negative fixtures outside
+upload directories. Extract a verified archive into an empty directory, inspect
+the manuals and docs, and run its binary's `--version` on the matching native
+Linux architecture.
+
+Local smoke checks and actionlint do not validate GitHub permissions, native
+hosted ARM availability, artifact upload, attestations, or draft behavior. The
+[release runbook](../CONTRIBUTING.md#release-process) requires a successful hosted
+manual artifact run before release readiness, plus the existing full RPM matrix
+before marking a CLI/server pair tested. Attestation/draft behavior remains a
+first-release acceptance check.
+
 ## Integration Tests — Container Helpers
 
 The integration layer (`//go:build integration`) provides two reusable container helpers in `internal/cmd/integration_helper_test.go`:

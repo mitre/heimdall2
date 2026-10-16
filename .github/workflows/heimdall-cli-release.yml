@@ -1,0 +1,181 @@
+name: Release Heimdall CLI
+on:
+  push:
+    tags: ['apps/heimdall-cli/v*']
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Commit, branch, or tag to validate; manual runs never publish'
+        type: string
+        required: true
+        default: master
+permissions:
+  contents: read
+concurrency:
+  group: cli-release-${{ github.event.inputs.ref || github.ref }}
+  cancel-in-progress: false
+env:
+  GOTOOLCHAIN: local
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      tag: ${{ steps.source.outputs.tag }}
+      version: ${{ steps.source.outputs.version }}
+      sha: ${{ steps.source.outputs.sha }}
+      date: ${{ steps.source.outputs.date }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate the selected source
+        id: source
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == push ]]; then
+            version=$(python3 apps/heimdall-cli/scripts/check-release.py "$RELEASE_TAG")
+            tag=$RELEASE_TAG
+          else
+            make -C apps/heimdall-cli check-version
+            version=$(sed 's/^v//' apps/heimdall-cli/VERSION)
+            tag="apps/heimdall-cli/v$version"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "date=$(git show -s --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
+
+  checks:
+    needs: prepare
+    uses: ./.github/workflows/heimdall-cli-ci.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+
+  build:
+    needs: [prepare, checks]
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {arch: amd64, runner: ubuntu-24.04}
+          - {arch: arm64, runner: ubuntu-24.04-arm}
+    env:
+      CLI_VERSION: ${{ needs.prepare.outputs.version }}
+      CLI_SHA: ${{ needs.prepare.outputs.sha }}
+      CLI_DATE: ${{ needs.prepare.outputs.date }}
+      CLI_ARCH: ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: apps/heimdall-cli/go.mod
+          cache: false
+      - name: Build and verify native archive
+        run: |
+          set -euo pipefail
+          test "$(go env GOHOSTARCH)" = "$CLI_ARCH"
+          test "$(git rev-parse HEAD)" = "$CLI_SHA"
+          stage="$RUNNER_TEMP/cli-package"
+          mkdir -p "$stage" artifacts
+          make -C apps/heimdall-cli build GOOS=linux GOARCH="$CLI_ARCH" \
+            OUTPUT="$stage/heimdall-cli" COMMIT="$CLI_SHA" DATE="$CLI_DATE"
+          version=$("$stage/heimdall-cli" --version)
+          [[ "$version" == *"$CLI_VERSION (commit $CLI_SHA, built $CLI_DATE)"* ]]
+          "$stage/heimdall-cli" --help > "$RUNNER_TEMP/cli-help.txt"
+          "$stage/heimdall-cli" setup --help > "$RUNNER_TEMP/cli-setup-help.txt"
+          (cd apps/heimdall-cli && go mod verify &&
+            go run -mod=readonly ./cmd/gen-manpages "$stage/man/man1")
+          cp apps/heimdall-cli/{LICENSE.md,README.md,COMPAT.md} "$stage/"
+          test -s "$stage/man/man1/heimdall-cli.1"
+          test -s "$stage/man/man1/heimdall-cli-setup.1"
+          archive="heimdall-cli_${CLI_VERSION}_linux_${CLI_ARCH}.tar.gz"
+          tar -C "$stage" -czf "artifacts/$archive" .
+          python3 - "artifacts/$archive" <<'PY'
+          import sys
+          import tarfile
+          from pathlib import PurePosixPath
+          with tarfile.open(sys.argv[1]) as archive:
+              files = {}
+              for member in archive.getmembers():
+                  path = PurePosixPath(member.name)
+                  assert not path.is_absolute() and ".." not in path.parts, member.name
+                  assert member.isfile() or member.isdir(), member.name
+                  if member.isfile():
+                      files[str(path)] = member
+              required = {"heimdall-cli", "LICENSE.md", "README.md", "COMPAT.md",
+                          "man/man1/heimdall-cli.1", "man/man1/heimdall-cli-setup.1"}
+              assert required <= set(files), required - set(files)
+              assert all(name in required or name.startswith("man/man1/") for name in files)
+              assert files["heimdall-cli"].mode & 0o111
+          PY
+          (cd artifacts && sha256sum "$archive" > "$archive.sha256" &&
+            sha256sum --check "$archive.sha256")
+          mkdir "$RUNNER_TEMP/cli-unpacked"
+          tar -xzf "artifacts/$archive" -C "$RUNNER_TEMP/cli-unpacked"
+          cmp "$stage/heimdall-cli" "$RUNNER_TEMP/cli-unpacked/heimdall-cli"
+          cmp "$stage/LICENSE.md" "$RUNNER_TEMP/cli-unpacked/LICENSE.md"
+          "$RUNNER_TEMP/cli-unpacked/heimdall-cli" --version
+          git diff --exit-code -- apps/heimdall-cli/go.mod apps/heimdall-cli/go.sum
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: heimdall-cli-release-${{ matrix.arch }}
+          path: artifacts/*
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: [prepare, checks, build]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/apps/heimdall-cli/v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    env:
+      CLI_TAG: ${{ needs.prepare.outputs.tag }}
+      CLI_VERSION: ${{ needs.prepare.outputs.version }}
+      CLI_SHA: ${{ needs.prepare.outputs.sha }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: heimdall-cli-release-*
+          merge-multiple: true
+          path: downloaded
+      - name: Verify exact assets and assemble release checksums
+        run: |
+          set -euo pipefail
+          mkdir release
+          test "$(find downloaded -maxdepth 1 -type f | wc -l)" -eq 4
+          for arch in amd64 arm64; do
+            archive="heimdall-cli_${CLI_VERSION}_linux_${arch}.tar.gz"
+            (cd downloaded && sha256sum --check "$archive.sha256")
+            cp "downloaded/$archive" release/
+            cat "downloaded/$archive.sha256" >> "release/heimdall-cli_${CLI_VERSION}_SHA256SUMS"
+          done
+          (cd release && sha256sum --check "heimdall-cli_${CLI_VERSION}_SHA256SUMS")
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: release/*
+      - name: Populate an independent CLI draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if draft=$(gh release view "$CLI_TAG" --json isDraft --jq .isDraft); then
+            test "$draft" = true || { echo 'Refusing to replace a published CLI release' >&2; exit 1; }
+          else
+            gh release create "$CLI_TAG" --verify-tag --draft --latest=false \
+              --title "heimdall-cli v$CLI_VERSION" \
+              --notes "Independent Heimdall administration CLI. Source: $CLI_SHA. Compatibility and release notes: https://github.com/$GH_REPO/tree/$CLI_SHA/apps/heimdall-cli"
+          fi
+          gh release upload "$CLI_TAG" release/* --clobber
