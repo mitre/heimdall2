@@ -16,7 +16,7 @@ LDFLAGS := -s -w \
 .PHONY: check-version
 check-version:
 	@test "$$(wc -l < VERSION)" -eq 1
-	@LC_ALL=C grep -Eq '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$$' VERSION
+	@LC_ALL=C grep -E '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$$' VERSION | cmp -s VERSION -
 
 build: check-version
 	@mkdir -p "$$(dirname "$(OUTPUT)")"

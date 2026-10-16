@@ -56,5 +56,27 @@ class ReleaseTest(unittest.TestCase):
         (self.cli / "VERSION").write_text("v0.9.0\nv0.9.1\n")
         self.assertNotEqual(self.check("apps/heimdall-cli/v0.9.0").returncode, 0)
 
+class MakeVersionTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.cli = pathlib.Path(self.tmp.name)
+        shutil.copy2(CHECK.parents[1] / "Makefile", self.cli / "Makefile")
+
+    def test_requires_complete_canonical_version(self):
+        for content, valid in ((b"v0.9.0\n", True),
+                               (b"v0.9.0\n ", False),
+                               (b"v0.9.0\njunk", False),
+                               (b"v0.9.0", False),
+                               (b"v0.9.0\n\n", False),
+                               (b"v00.9.0\n", False),
+                               (b"", False)):
+            with self.subTest(content=content):
+                (self.cli / "VERSION").write_bytes(content)
+                result = subprocess.run(
+                    ["make", "-C", str(self.cli), "check-version"],
+                    capture_output=True, text=True)
+                self.assertEqual(result.returncode == 0, valid, result.stderr)
+
 if __name__ == "__main__":
     unittest.main()
