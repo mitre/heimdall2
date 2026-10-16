@@ -1,0 +1,17 @@
+# rpmlint filters for heimdall-cli — invoked via:
+#   rpmlint -f heimdall-cli/.rpmlintrc <rpm>
+
+# Static Go binary (CGO_ENABLED=0). This is intentional, not a build mistake.
+addFilter(r"heimdall-cli\.(x86_64|aarch64): W: statically-linked-binary /usr/bin/heimdall-cli")
+
+# nFPM ships pre-stripped binaries via -ldflags="-s -w". rpmlint sometimes
+# still flags the section header layout — false positive for Go binaries.
+addFilter(r"heimdall-cli\.(x86_64|aarch64): W: unstripped-binary-or-object /usr/bin/heimdall-cli")
+
+# "heimdall" is a proper noun (Norse mythology + product name), not a typo.
+addFilter(r"spelling-error.*heimdall")
+
+# Source URL pointing at the saf-packaging repo (multi-product) rather than
+# a per-product repo is intentional for v1 — heimdall-cli is one of several
+# products in this monorepo.
+addFilter(r"invalid-url URL")
