@@ -23,6 +23,6 @@ done
 topdir=$(python3 -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "$topdir")
 cd "$(dirname "$0")"
 # Dependency installation runs in a child process; keep its selected Go on PATH.
-export PATH="/opt/heimdall-build/go-${GO_VERSION:-1.25.8}/bin:$PATH"
+export PATH="/opt/heimdall-build/go-${GO_VERSION:-1.26.9}/bin:$PATH"
 if [[ $deps -eq 1 ]]; then make deps; fi
 exec make "$target" "TOPDIR=$topdir" "DEV=$dev"

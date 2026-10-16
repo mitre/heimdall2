@@ -187,7 +187,7 @@ stage rpm:
     run('bash', str(wrapper), '--skip-deps', '--dev', '--topdir', 'wrapper output', cwd=str(root))
     rows = calls.read_text().splitlines()
     assert rows[:3] == ['stage', '1', str(root.resolve() / 'wrapper output')], rows
-    assert rows[3].startswith('/opt/heimdall-build/go-1.25.8/bin:'), rows
+    assert rows[3].startswith('/opt/heimdall-build/go-1.26.9/bin:'), rows
     calls.unlink()
     run('bash', str(wrapper), '--build', env=dict(os.environ, GO_VERSION='1.26.0'))
     rows = calls.read_text().splitlines()

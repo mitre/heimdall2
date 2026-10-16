@@ -79,7 +79,7 @@ following commands from that directory. Release builds produce a static Go
 binary; administration commands require the Linux host tools and services they
 manage.
 
-1. **Install Go 1.25.8** (see `go.mod`) and set `GOTOOLCHAIN=local`.
+1. **Install Go 1.26.9** (see `go.mod`) and set `GOTOOLCHAIN=local`.
 
 2. **Build**:
    ```bash

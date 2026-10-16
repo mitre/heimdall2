@@ -5,13 +5,13 @@ package cmd
 //
 //	go build -ldflags "-X 'github.com/mitre/heimdall2/apps/heimdall-cli/internal/cmd.AppDir=/custom'"
 var (
-	EnvFile     = "/etc/heimdall-server/backend.env"
-	AppDir      = "/usr/share/heimdall-server"
-	DataDir     = "/var/lib/heimdall-server"
-	LibExecDir  = "/usr/libexec/heimdall-server"
-	CertDir     = "/etc/pki/heimdall-server"
-	ConfigDir   = "/etc/heimdall-server"
-	LogDir      = "/var/log/heimdall-server"
+	EnvFile    = "/etc/heimdall-server/backend.env"
+	AppDir     = "/usr/share/heimdall-server"
+	DataDir    = "/var/lib/heimdall-server"
+	LibExecDir = "/usr/libexec/heimdall-server"
+	CertDir    = "/etc/pki/heimdall-server"
+	ConfigDir  = "/etc/heimdall-server"
+	LogDir     = "/var/log/heimdall-server"
 )
 
 // Paths holds resolved filesystem paths for the Heimdall installation.

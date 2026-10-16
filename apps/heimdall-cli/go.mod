@@ -1,9 +1,10 @@
 module github.com/mitre/heimdall2/apps/heimdall-cli
 
-go 1.25.8
+go 1.26.9
 
 require (
 	charm.land/huh/v2 v2.0.3
+	github.com/charmbracelet/x/ansi v0.11.6
 	github.com/lib/pq v1.12.3
 	github.com/moby/moby/api v1.54.1
 	github.com/spf13/cobra v1.10.2
@@ -29,7 +30,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/charmbracelet/colorprofile v0.4.2 // indirect
 	github.com/charmbracelet/ultraviolet v0.0.0-20260205113103-524a6607adb8 // indirect
-	github.com/charmbracelet/x/ansi v0.11.6 // indirect
 	github.com/charmbracelet/x/exp/ordered v0.1.0 // indirect
 	github.com/charmbracelet/x/exp/strings v0.0.0-20240722160745-212f7b056ed0 // indirect
 	github.com/charmbracelet/x/term v0.2.2 // indirect

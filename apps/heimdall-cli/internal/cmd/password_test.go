@@ -22,7 +22,7 @@ func TestValidatePassword_MissingClasses(t *testing.T) {
 	assert.NotEmpty(t, errs)
 	found := false
 	for _, e := range errs {
-		if strings.Contains(e,"lowercase, uppercase") {
+		if strings.Contains(e, "lowercase, uppercase") {
 			found = true
 		}
 	}
@@ -36,7 +36,7 @@ func TestValidatePassword_ConsecutiveSameClass(t *testing.T) {
 	assert.NotEmpty(t, errs)
 	found := false
 	for _, e := range errs {
-		if strings.Contains(e,"consecutive") {
+		if strings.Contains(e, "consecutive") {
 			found = true
 		}
 	}

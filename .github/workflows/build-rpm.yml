@@ -82,11 +82,11 @@ jobs:
           make -C packaging/rpm deps TOPDIR="$TOPDIR"
           dnf install -y gnupg2 findutils tar
           # Rocky 10 omits PATH from image metadata; retain the shell's system path.
-          echo "/opt/heimdall-build/go-1.25.8/bin:$PATH" >> "$GITHUB_PATH"
+          echo "/opt/heimdall-build/go-1.26.9/bin:$PATH" >> "$GITHUB_PATH"
 
       - name: Verify toolchain and source fixtures
         run: |
-          test "$(go env GOVERSION)" = go1.25.8
+          test "$(go env GOVERSION)" = go1.26.9
           bash packaging/rpm/tests/build-python.sh
           python3 packaging/rpm/tests/inputs.py
           python3 packaging/rpm/tests/build-shortcuts.py

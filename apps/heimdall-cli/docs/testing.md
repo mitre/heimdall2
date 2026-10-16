@@ -1,7 +1,7 @@
 # heimdall-cli Testing Guide
 
 Four layers, each with a Makefile target; non-unit layers use build tags.
-Run these commands from `apps/heimdall-cli` using Go 1.25.8 and
+Run these commands from `apps/heimdall-cli` using Go 1.26.9 and
 `GOTOOLCHAIN=local`.
 
 | Layer | Tag | Target | What it covers | Speed |
@@ -20,6 +20,50 @@ make test-integration   # spins up Docker containers (testcontainers-go)
 make test-e2e VM=oracle # SSH to OrbStack VM, run binary there
 make test-all           # test + test-functional
 ```
+
+## Native CI checks
+
+`Heimdall CLI CI` runs on every pull request and pushes to `master`, with
+native Linux jobs named `CLI / amd64` and `CLI / arm64`. It also accepts an
+optional reusable-workflow `ref` input for validating an exact release commit;
+release validation disables Actions cache reuse. Both jobs use Go 1.26.9 with
+`GOTOOLCHAIN=local`, read-only repository permissions, and no publishing secrets.
+After the first successful hosted run, maintainers should add these stable check
+names to repository rules while preserving existing required checks.
+
+Run the same checks locally from this module directory:
+
+```bash
+export GOTOOLCHAIN=local
+test "$(go env GOVERSION)" = go1.26.9
+test -z "$(gofmt -l .)"
+go mod download
+go mod verify
+go mod tidy -diff
+go vet ./...
+go test -race -count=1 -coverprofile=coverage.out ./...
+go test -count=1 -tags functional ./internal/cmd/
+python3 tests/test_release.py
+GOBIN="${TMPDIR:-/tmp}/heimdall-cli-tools" go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+"${TMPDIR:-/tmp}/heimdall-cli-tools/govulncheck" ./...
+```
+
+Race tests require CGO and a C compiler; do not globally disable CGO for these
+checks. CI uploads each architecture's `coverage.out` for seven days. The amd64
+job runs the vulnerability gate and fails on reachable vulnerabilities or scanner
+errors. Fix findings in the supported toolchain or affected dependencies before
+merging; the gate must not be suppressed or converted to a warning.
+
+Run the packaging fixtures from the repository root:
+
+```bash
+python3 packaging/rpm/tests/inputs.py
+python3 packaging/rpm/tests/cli-acquisition.py
+```
+
+Privileged integration and optional VM end-to-end suites remain separate from
+native CI. The existing Build RPM workflow supplies installation and disconnected
+lifecycle coverage across EL8/EL9/EL10 on x86_64 and aarch64.
 
 ## Integration Tests — Container Helpers
 

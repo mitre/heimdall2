@@ -73,10 +73,10 @@ func TestIsPrivateHostname(t *testing.T) {
 		{"mitre.org", false},
 
 		// Edge cases
-		{"", true},                    // empty string has no dots → private
-		{"192.168.1.1", false},        // IP address has dots → not caught as private
-		{"10.0.0.1", false},           // IP address
-		{"a.b", false},               // two-label, not a private suffix
+		{"", true},                       // empty string has no dots → private
+		{"192.168.1.1", false},           // IP address has dots → not caught as private
+		{"10.0.0.1", false},              // IP address
+		{"a.b", false},                   // two-label, not a private suffix
 		{"heimdall.internal.com", false}, // .internal is not the suffix here
 	}
 

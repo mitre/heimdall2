@@ -16,7 +16,7 @@ automatically upgrade an RPM-owned executable.
 
 ## Build
 
-From the repository root, using Go 1.25.8:
+From the repository root, using Go 1.26.9:
 
 ```sh
 make -C apps/heimdall-cli build
