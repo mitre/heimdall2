@@ -1,3 +1,5 @@
+.DEFAULT_GOAL := build
+
 MODULE := github.com/mitre/heimdall2/apps/heimdall-cli
 BIN := heimdall-cli
 override VERSION := $(shell sed 's/^v//' VERSION)
