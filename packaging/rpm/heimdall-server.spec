@@ -380,7 +380,7 @@ install -d %{buildroot}%{_datadir}/%{name}/security
 install -m 0644 %{SOURCE20} %{buildroot}%{_datadir}/%{name}/security/40-heimdall.rules
 install -m 0644 %{SOURCE21} %{buildroot}%{_datadir}/%{name}/security/SECURITY.md
 
-# Man pages generated from the pinned CLI and carried in the source package.
+# Man pages generated from the in-tree CLI and carried in the source package.
 install -d %{buildroot}%{_mandir}/man1
 install -p -m 0644 rpm-man/man1/*.1 %{buildroot}%{_mandir}/man1/
 

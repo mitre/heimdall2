@@ -226,7 +226,7 @@ rpm -qf /usr/bin/yarn >/dev/null
 # ---------------------------------------------------------------------------
 # Distro Go packages are typically too old (1.20-1.21). We install the
 # official Go tarball from go.dev which works on all EL variants.
-GO_VERSION="${GO_VERSION:-1.25.8}"
+GO_VERSION="${GO_VERSION:-1.26.9}"
 echo ""
 echo "=== Step 5/5: Go ==="
 installed_go=$(go version 2>/dev/null | awk '{sub(/^go/, "", $3); print $3}' || true)

@@ -92,7 +92,7 @@ This runs [the dependency setup script](scripts/setup-build-deps.sh), which
 configures build repositories, runs `dnf update`, and installs GCC/G++, development
 libraries, Git, Python (including Python 3.9 on EL8), RPM build tools, SELinux and
 systemd build macros, archive tools, Node.js 22, Yarn Classic 1.22.22, and Go
-1.25.8. Yarn must be installed as an RPM to satisfy the RPM build requirements;
+1.26.9. Yarn must be installed as an RPM to satisfy the RPM build requirements;
 an npm-global or Corepack installation alone is insufficient. The script handles
 root versus sudo automatically.
 
@@ -100,7 +100,7 @@ After dependency installation succeeds, build the RPM from the current files.
 A clone or downloaded source archive works; no Git commits or tags are required:
 
 ```sh
-export PATH="/opt/heimdall-build/go-1.25.8/bin:$PATH"
+export PATH="/opt/heimdall-build/go-1.26.9/bin:$PATH"
 make -C packaging/rpm rpm TOPDIR="$HOME/rpmbuild-heimdall" \
   HEIMDALL_RELEASE=0.3.integration
 ```
@@ -218,14 +218,20 @@ verification. See [Red Hat's shared system certificate documentation](https://do
 - For an explicit build from Git, `SOURCE_MODE=head` archives clean committed
   inputs. `SOURCE_MODE=release` additionally requires HEAD at the version tag.
   CI selects these stricter modes explicitly.
-- `heimdall-cli.repo` and `heimdall-cli.ref` select a fetchable full immutable CLI
-  commit. `heimdall-cli-nginx.patch` adds the RPM's Nginx and backend port setup support. Both the
-  binary and generated man pages use a fresh patched copy; the pinned checkout
-  remains clean. The CLI version records the base commit and `+rpm.<SHA-256>` of
-  the patch so the shipped source can be identified exactly.
+- The CLI and its manuals are built from `apps/heimdall-cli` extracted from the
+  server's Source0 archive into `TOPDIR/heimdall-cli-build`. No separate CLI
+  repository is fetched or patched. `apps/heimdall-cli/VERSION` governs the CLI
+  version independently of the server package version.
+- CLI provenance in workspace mode is `source.<SHA-256 of Source0>` with build
+  date `unknown`. HEAD and server release modes record the full Heimdall commit
+  and its commit date; server release mode requires the root `vX.Y.Z` tag.
+- Building from a checkout needs network access for Go modules, Yarn dependencies
+  and pinned runtime archives unless they are already cached. Installing the RPM
+  needs no Go toolchain, CLI source fetch, or application runtime download;
+  DNF still resolves OS dependencies from the host's configured repositories.
 - `runtime-lock.json` records runtime versions, archive URLs, SHA-256 digests and
   notices. Runtime patch updates change the lock and ship in a new server RPM.
-- Go 1.25.8 builds the CLI; Yarn Classic 1.22.22 installs frozen application
+- Go 1.26.9 builds the CLI; Yarn Classic 1.22.22 installs frozen application
   dependencies. Native addons use the exact private Node executable being shipped.
 - Source23–30 contain the runtime archives, selected manifest and private units.
   An SRPM rebuild uses these supplied runtime inputs. Yarn dependency downloads

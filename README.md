@@ -168,6 +168,12 @@ database and proxy options. See the [installation guide](packaging/rpm/README.md
 `VERSION` file; this standalone packaging branch requires candidate-specific
 acceptance before production use.
 
+### Heimdall CLI
+
+The bundled administration CLI has its own version. See the
+[CLI guide](apps/heimdall-cli/README.md) and
+[compatibility notes](apps/heimdall-cli/COMPAT.md).
+
 ### Heimdall Server - Docker
 
 Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience. This process will also deploy an NGINX webserver in front of Heimdall to handle TLS.

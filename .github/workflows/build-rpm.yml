@@ -44,6 +44,7 @@ env:
 
 jobs:
   build:
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v')
     name: ${{ matrix.distro }} / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     container: ${{ matrix.image }}
@@ -82,11 +83,11 @@ jobs:
           make -C packaging/rpm deps TOPDIR="$TOPDIR"
           dnf install -y gnupg2 findutils tar
           # Rocky 10 omits PATH from image metadata; retain the shell's system path.
-          echo "/opt/heimdall-build/go-1.25.8/bin:$PATH" >> "$GITHUB_PATH"
+          echo "/opt/heimdall-build/go-1.26.9/bin:$PATH" >> "$GITHUB_PATH"
 
       - name: Verify toolchain and source fixtures
         run: |
-          test "$(go env GOVERSION)" = go1.25.8
+          test "$(go env GOVERSION)" = go1.26.9
           bash packaging/rpm/tests/build-python.sh
           python3 packaging/rpm/tests/inputs.py
           python3 packaging/rpm/tests/build-shortcuts.py
@@ -98,6 +99,7 @@ jobs:
           python3 packaging/rpm/tests/upgrade-scriptlets.py
           python3 packaging/rpm/tests/application-readiness.py
           python3 packaging/rpm/tests/cli-acquisition.py
+          python3 packaging/rpm/tests/release-routing.py
           bash packaging/rpm/tests/setup.sh
           make -C packaging/rpm check-version TOPDIR="$TOPDIR"
 
@@ -140,7 +142,8 @@ jobs:
       - name: Record what was built
         run: |
           find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -printf '%f\n' | sort
-          cat packaging/rpm/heimdall-cli.repo packaging/rpm/heimdall-cli.ref
+          git rev-parse HEAD
+          cat apps/heimdall-cli/VERSION
 
       - uses: actions/upload-artifact@v7
         with:
@@ -220,11 +223,10 @@ jobs:
           done
           cli_version=$(heimdall-cli --version)
           printf '%s\n' "$cli_version"
-          version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
-          [[ "$cli_version" == *"$version"* ]]
-          [[ "$cli_version" == *"$(cat packaging/rpm/heimdall-cli.ref)"* ]]
-          patch_hash=$(sha256sum packaging/rpm/heimdall-cli-nginx.patch | cut -d ' ' -f 1)
-          [[ "$cli_version" == *"+rpm.$patch_hash"* ]]
+          version=$(sed 's/^v//' apps/heimdall-cli/VERSION)
+          commit=$(git rev-parse HEAD)
+          date=$(git show -s --format=%cI HEAD)
+          [[ "$cli_version" == *"$version (commit $commit, built $date)"* ]]
           find /usr/share/man/man1 -name 'heimdall-cli.1*' | grep -q .
           find /usr/share/man/man1 -name 'heimdall-cli-setup.1*' | grep -q .
           bash packaging/rpm/tests/logrotate.sh
@@ -341,7 +343,7 @@ jobs:
   publish:
     name: Attach RPMs to the release
     needs: [build, smoke-test, lifecycle-test]
-    if: github.event_name == 'release'
+    if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
