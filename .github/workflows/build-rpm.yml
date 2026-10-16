@@ -185,6 +185,9 @@ jobs:
 
       - uses: actions/checkout@v6
 
+      - name: Configure Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - uses: actions/download-artifact@v8
         with:
           name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
