@@ -1,26 +1,36 @@
-MODULE   := github.com/mitre/heimdall2/apps/heimdall-cli
-BIN      := heimdall-cli
-VERSION  ?= $(shell git describe --tags --dirty 2>/dev/null || echo 0.9.0-dev)
-COMMIT   ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo none)
-DATE     ?= $(shell date -u +%Y-%m-%dT%H:%M:%SZ)
-LDFLAGS  := -s -w \
+MODULE := github.com/mitre/heimdall2/apps/heimdall-cli
+BIN := heimdall-cli
+override VERSION := $(shell sed 's/^v//' VERSION)
+COMMIT ?= development
+DATE ?= unknown
+OUTPUT ?= $(BIN)
+LDFLAGS := -s -w \
 	-X $(MODULE)/internal/version.Version=$(VERSION) \
 	-X $(MODULE)/internal/version.Commit=$(COMMIT) \
 	-X $(MODULE)/internal/version.Date=$(DATE)
 
-.PHONY: build build-fips build-linux-amd64 build-linux-arm64 test test-functional test-integration test-e2e test-all lint clean snapshot man completions release-prep
+.PHONY: build build-fips build-linux-amd64 build-linux-arm64 test test-functional test-integration test-e2e test-all lint clean man completions
 
-build:
-	CGO_ENABLED=0 go build -ldflags "$(LDFLAGS)" -o $(BIN) ./cmd/heimdall-cli
+.PHONY: check-version
+check-version:
+	@test "$$(wc -l < VERSION)" -eq 1
+	@LC_ALL=C grep -Eq '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$$' VERSION
 
-build-fips:
-	GOEXPERIMENT=boringcrypto CGO_ENABLED=1 go build -ldflags "$(LDFLAGS)" -o $(BIN)-fips ./cmd/heimdall-cli
+build: check-version
+	@mkdir -p "$$(dirname "$(OUTPUT)")"
+	CGO_ENABLED=0 go build -mod=readonly -trimpath -buildvcs=false \
+	  -ldflags "$(LDFLAGS)" -o "$(OUTPUT)" ./cmd/heimdall-cli
 
 build-linux-amd64:
-	GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o $(BIN)-linux-amd64 ./cmd/heimdall-cli
+	$(MAKE) build GOOS=linux GOARCH=amd64 OUTPUT=$(BIN)-linux-amd64
 
 build-linux-arm64:
-	GOOS=linux GOARCH=arm64 go build -ldflags "$(LDFLAGS)" -o $(BIN)-linux-arm64 ./cmd/heimdall-cli
+	$(MAKE) build GOOS=linux GOARCH=arm64 OUTPUT=$(BIN)-linux-arm64
+
+build-fips: check-version
+	GOEXPERIMENT=boringcrypto CGO_ENABLED=1 go build -mod=readonly \
+	  -trimpath -buildvcs=false -ldflags "$(LDFLAGS)" \
+	  -o $(BIN)-fips ./cmd/heimdall-cli
 
 test:
 	go test ./...
@@ -39,9 +49,6 @@ test-all: test test-functional
 lint:
 	golangci-lint run ./...
 
-snapshot:
-	goreleaser release --snapshot --clean
-
 coverage:
 	go test -coverprofile=coverage.out ./internal/cmd/
 	go tool cover -func=coverage.out | tail -1
@@ -56,10 +63,6 @@ completions:
 	go run ./cmd/heimdall-cli completion bash > completions/heimdall-cli.bash
 	go run ./cmd/heimdall-cli completion zsh  > completions/heimdall-cli.zsh
 	go run ./cmd/heimdall-cli completion fish > completions/heimdall-cli.fish
-
-# Stage everything goreleaser packages into the RPM (man pages + completions).
-# Invoked by goreleaser's before: hooks; safe to run standalone.
-release-prep: man completions
 
 clean:
 	rm -f $(BIN) $(BIN)-fips $(BIN)-linux-*

@@ -60,12 +60,12 @@ Please include:
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone git@github.com:your-username/heimdall-cli.git
-   cd heimdall-cli
+   git clone git@github.com:your-username/heimdall2.git
+   cd heimdall2
    ```
 3. **Add the upstream repository**:
    ```bash
-   git remote add upstream git@github.com:mitre/heimdall-cli.git
+   git remote add upstream git@github.com:mitre/heimdall2.git
    ```
 4. **Create a feature branch**:
    ```bash
@@ -74,9 +74,12 @@ Please include:
 
 ### Development Setup
 
-heimdall-cli is a single static Go binary with no runtime dependencies.
+The CLI module lives in `apps/heimdall-cli` within `mitre/heimdall2`. Run the
+following commands from that directory. Release builds produce a static Go
+binary; administration commands require the Linux host tools and services they
+manage.
 
-1. **Install Go** (see `go.mod` for the required version).
+1. **Install Go 1.25.8** (see `go.mod`) and set `GOTOOLCHAIN=local`.
 
 2. **Build**:
    ```bash
@@ -94,6 +97,13 @@ heimdall-cli is a single static Go binary with no runtime dependencies.
    make man
    make completions
    ```
+
+The module's `VERSION` is independent of the server version. `make build`
+uses that file and accepts `OUTPUT`, `GOOS`, `GOARCH`, `COMMIT`, and `DATE`;
+provenance defaults to `development` / `unknown`. CLI release tags use
+`apps/heimdall-cli/vX.Y.Z`. From the repository root, run
+`python3 apps/heimdall-cli/tests/test_release.py` for the release-validator
+regression tests. See [COMPAT.md](./COMPAT.md) before pairing releases.
 
 ### Making Changes
 
@@ -245,9 +255,9 @@ Maintainers handle releases, but you can help by:
 ## Questions?
 
 Feel free to:
-- Open a [GitHub Discussion](https://github.com/mitre/heimdall-cli/discussions)
+- Open a [GitHub Discussion](https://github.com/mitre/heimdall2/discussions)
 - Email us at saf@mitre.org
-- Check our [Wiki](https://github.com/mitre/heimdall-cli/wiki)
+- Check our [Wiki](https://github.com/mitre/heimdall2/wiki)
 
 ## Recognition
 

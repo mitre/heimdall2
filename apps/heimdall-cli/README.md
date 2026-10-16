@@ -4,24 +4,53 @@ Admin CLI for Heimdall Server installations on Linux. Handles install-time setup
 
 ## Versioning
 
-heimdall-cli uses **independent semver**, decoupled from `heimdall-server`. Standalone releases use [`COMPAT.md`](./COMPAT.md) for server compatibility. The bundled server RPM builds the CLI binary and man pages from one full immutable commit pin; runtime updates ship through a rebuilt server RPM.
+heimdall-cli uses independent semver, decoupled from `heimdall-server`. Its
+canonical version is [`VERSION`](./VERSION), initially `v0.9.0`. CLI release
+tags use `apps/heimdall-cli/vX.Y.Z`; server tags retain `vX.Y.Z`. This release
+contract accepts stable versions only. See [`COMPAT.md`](./COMPAT.md) for
+server compatibility and pending validation.
 
-This follows the pattern of `kubectl`, `gh`, `stripe-cli`, `heroku-cli` — standalone CLIs that manage a service.
-
-| Version | Meaning |
-|---|---|
-| `0.9.x` | Pre-1.0 stabilization. Real and shipping; API and UX may still change. |
-| `1.0.0` | Reserved for after the TUI/admin-UX improvements land and we have real-world soak time. Commits to backwards compat. |
-
-`heimdall-cli --version` on an unbuilt/dev binary reports `0.9.0-dev`. Released binaries report the git tag (e.g. `0.9.0`).
+The server RPM builds this module and its man pages from the same source tree.
+Runtime updates ship through a rebuilt server RPM. Standalone archives do not
+automatically upgrade an RPM-owned executable.
 
 ## Build
 
+From the repository root, using Go 1.25.8:
+
 ```sh
-make build           # native binary
-make build-fips      # FIPS-mode binary (boringcrypto)
-make snapshot        # full goreleaser snapshot under dist/
+make -C apps/heimdall-cli build
+make -C apps/heimdall-cli man
 ```
+
+The binary is written to `apps/heimdall-cli/heimdall-cli`. Within the module,
+`make build` uses the same build contract. To select a target and record caller-supplied
+provenance:
+
+```sh
+make -C apps/heimdall-cli build OUTPUT=/tmp/heimdall-cli \
+  GOOS=linux GOARCH=amd64 COMMIT='<revision>' DATE='<ISO-date>'
+```
+
+`VERSION` always comes from the module's version file, even if a command-line
+variable attempts to override it. `COMMIT` defaults to `development` and `DATE`
+to `unknown`; source builds never infer the parent repository's identity.
+`heimdall-cli --version` reports the version and provenance. Direct `go run`
+uses `dev (commit none, built unknown)`.
+
+Release binaries support `linux/amd64` and `linux/arm64` with `CGO_ENABLED=0`.
+macOS can be a development host; Linux is the supported runtime. The optional
+`make build-fips` target uses boringcrypto and is outside the release matrix;
+it does not establish FIPS certification.
+
+Before a release, validate the scoped tag at the checked-out commit:
+
+```sh
+python3 apps/heimdall-cli/scripts/check-release.py apps/heimdall-cli/v0.9.0
+```
+
+The validator requires a matching canonical CLI version, a tag pointing to
+`HEAD`, and clean CLI source. It prints the version without `v` on success.
 
 ## Tests
 

@@ -1,6 +1,8 @@
 # heimdall-cli Testing Guide
 
-Three layers, each with a build tag and a Makefile target.
+Four layers, each with a Makefile target; non-unit layers use build tags.
+Run these commands from `apps/heimdall-cli` using Go 1.25.8 and
+`GOTOOLCHAIN=local`.
 
 | Layer | Tag | Target | What it covers | Speed |
 |---|---|---|---|---|
@@ -87,18 +89,33 @@ Integration tests need a Docker-compatible socket. The helper auto-detects [OrbS
 
 `PGGSSENCMODE` (set by Homebrew for `libpq`) is unset for the test process — `lib/pq` does not recognize it. Original value is restored after the test via `t.Cleanup`.
 
-No manual env vars required: `make test-integration` works out of the box on a Mac with OrbStack installed.
+Run a Docker-compatible daemon with permission to start privileged Linux
+containers and pull the PostgreSQL and UBI init images. Systemd tests require
+privileged containers; merely having a Docker socket is insufficient. The
+auto-detected OrbStack socket can support macOS development.
 
 ### Linux (CI runners, dev VMs)
 
 GitHub Actions Linux runners ship Docker. Privileged containers (needed for systemd) work natively. The OrbStack auto-detect is skipped (no socket file at the OrbStack path), and standard Docker socket discovery applies.
 
-For local testing on the OrbStack VMs (centos-arm64-9, oracle-9-x86) prefer running tests on the VM since podman is native there — the `/Users/alippold/...` shared mount makes the source tree available without copy.
+The daemon must allow privileged containers and have access to the required
+images. Integration tests exercise real PostgreSQL and systemd and are separate
+from the server RPM installation and disconnected lifecycle matrix.
 
 ### Windows
 
-Integration tests are not supported on native Windows — use WSL2 with Docker Desktop, or skip and rely on CI for integration coverage.
+Native Windows is not a supported CLI runtime or integration-test host. Use
+a Linux environment for runtime validation.
 
-## Cross-Platform CLI Considerations
+## Runtime and Optional End-to-End Tests
 
-The integration test layer runs on Linux (CI) and macOS (dev). The CLI itself targets Linux + macOS + Windows via build tags — see epic `saf-packaging-alk` for the platform-portability epic. Tests that assert OS-specific behavior should use `runtime.GOOS` checks or build tags to scope correctly.
+Linux is the supported runtime, with releases for `linux/amd64` and
+`linux/arm64`. macOS can be a development host for builds, unit/functional
+tests, and Docker-backed integration tests. Tests that assert OS-specific
+behavior should use `runtime.GOOS` checks or build tags.
+
+OrbStack end-to-end tests are optional and require an existing arm64 Linux VM,
+working `orb` CLI access, SSH access via `<vm>@orb`, and the VM's administrative
+prerequisites. Run
+`make test-e2e VM=oracle` with the intended VM name. They are not part of
+`make test-all` and do not replace the EL8/9/10 × x86_64/aarch64 RPM matrix.

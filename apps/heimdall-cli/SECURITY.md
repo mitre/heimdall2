@@ -14,7 +14,7 @@ The MITRE SAF team takes security seriously. If you discover a security vulnerab
 ### Contact Information
 
 - **Email**: [saf-security@mitre.org](mailto:saf-security@mitre.org)
-- **GitHub**: Use the [Security tab](https://github.com/mitre/heimdall-cli/security) to report vulnerabilities privately
+- **GitHub**: Use the [Security tab](https://github.com/mitre/heimdall2/security) to report vulnerabilities privately
 
 ### What to Include
 
