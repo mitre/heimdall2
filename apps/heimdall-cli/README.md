@@ -6,7 +6,8 @@ Admin CLI for Heimdall Server installations on Linux. Handles install-time setup
 
 heimdall-cli uses independent semver, decoupled from `heimdall-server`. Its
 canonical version is [`VERSION`](./VERSION), initially `v0.9.0`. CLI release
-tags use `apps/heimdall-cli/vX.Y.Z`; server tags retain `vX.Y.Z`. This release
+tags use `apps/heimdall-cli/vX.Y.Z`; server tags retain `vX.Y.Z`. CLI tags do not
+publish server packages, images, Pages, or Iron Bank updates. This release
 contract accepts stable versions only. See [`COMPAT.md`](./COMPAT.md) for
 server compatibility and pending validation.
 

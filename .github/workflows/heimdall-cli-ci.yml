@@ -64,6 +64,7 @@ jobs:
         run: |
           python3 packaging/rpm/tests/inputs.py
           python3 packaging/rpm/tests/cli-acquisition.py
+          python3 packaging/rpm/tests/release-routing.py
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: heimdall-cli-coverage-${{ matrix.arch }}

@@ -44,6 +44,7 @@ env:
 
 jobs:
   build:
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v')
     name: ${{ matrix.distro }} / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     container: ${{ matrix.image }}
@@ -98,6 +99,7 @@ jobs:
           python3 packaging/rpm/tests/upgrade-scriptlets.py
           python3 packaging/rpm/tests/application-readiness.py
           python3 packaging/rpm/tests/cli-acquisition.py
+          python3 packaging/rpm/tests/release-routing.py
           bash packaging/rpm/tests/setup.sh
           make -C packaging/rpm check-version TOPDIR="$TOPDIR"
 
@@ -341,7 +343,7 @@ jobs:
   publish:
     name: Attach RPMs to the release
     needs: [build, smoke-test, lifecycle-test]
-    if: github.event_name == 'release'
+    if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
