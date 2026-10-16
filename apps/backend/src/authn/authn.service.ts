@@ -8,7 +8,7 @@ import {compare} from 'bcryptjs';
 import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
-import moment from 'moment';
+import { unix } from 'moment';
 import winston from 'winston';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigService} from '../config/config.service';
@@ -162,7 +162,15 @@ export class AuthnService {
     } else {
       expiresInSeconds = this.configService.getJwtExpirySettings().userSeconds;
     }
-    const expireTime = moment(new Date(Date.now() + expiresInSeconds * 1000)).format(
+    const issuedAtSeconds = Math.floor(Date.now() / 1000);
+    const accessToken = this.jwtService.sign(
+      { ...payload, iat: issuedAtSeconds },
+      {
+        expiresIn: expiresInSeconds,
+        secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret,
+      }
+    );
+    const expireTime = unix(issuedAtSeconds + expiresInSeconds).format(
       this.loggingTimeFormat
     );
     this.logger.info({
@@ -170,10 +178,7 @@ export class AuthnService {
     });
     return {
       userID: user.id,
-      accessToken: this.jwtService.sign(payload, {
-        expiresIn: expiresInSeconds,
-        secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
-      })
+      accessToken
     };
   }
 

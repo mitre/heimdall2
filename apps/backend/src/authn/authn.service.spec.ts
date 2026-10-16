@@ -107,8 +107,12 @@ describe('AuthnService login expiry', () => {
     );
   });
 
-  it('logs the token expiration', async () => {
+  it('logs the token expiration across a second boundary', async () => {
     const { authn } = await service('60m', '2m');
+    const issuedAtMs = Date.UTC(2026, 0, 1) + 999;
+    vi.spyOn(Date, 'now')
+      .mockReturnValueOnce(issuedAtMs)
+      .mockReturnValue(issuedAtMs + 1000);
     const log = vi.spyOn(authn.logger, 'info');
     const { accessToken } = await authn.login({
       email: 'user@example.test',
@@ -117,6 +121,7 @@ describe('AuthnService login expiry', () => {
       role: 'user',
     });
     const payload = verify(accessToken, 'test-secretuser-secret') as JwtPayload;
+    expect(payload.iat).toBe(Math.floor(issuedAtMs / 1000));
     const expireTime = unix(Number(payload.exp)).format(authn.loggingTimeFormat);
     expect(log).toHaveBeenCalledWith(
       expect.objectContaining({ message: `New session for User<ID: user-1> expires at ${expireTime}` }),
@@ -133,5 +138,20 @@ describe('AuthnService login expiry', () => {
         )).rejects.toThrow(setting);
       },
     );
+  });
+
+  it('does not log a new session if signing fails', async () => {
+    const { authn, jwt } = await service();
+    vi.spyOn(jwt, 'sign').mockImplementation(() => {
+      throw new Error('Signing failed');
+    });
+    const log = vi.spyOn(authn.logger, 'info');
+    await expect(authn.login({
+      email: 'user@example.test',
+      forcePasswordChange: false,
+      id: 'user-1',
+      role: 'user',
+    })).rejects.toThrow('Signing failed');
+    expect(log).not.toHaveBeenCalled();
   });
 });
