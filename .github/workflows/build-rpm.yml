@@ -140,7 +140,8 @@ jobs:
       - name: Record what was built
         run: |
           find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -printf '%f\n' | sort
-          cat packaging/rpm/heimdall-cli.repo packaging/rpm/heimdall-cli.ref
+          git rev-parse HEAD
+          cat apps/heimdall-cli/VERSION
 
       - uses: actions/upload-artifact@v7
         with:
@@ -220,11 +221,10 @@ jobs:
           done
           cli_version=$(heimdall-cli --version)
           printf '%s\n' "$cli_version"
-          version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
-          [[ "$cli_version" == *"$version"* ]]
-          [[ "$cli_version" == *"$(cat packaging/rpm/heimdall-cli.ref)"* ]]
-          patch_hash=$(sha256sum packaging/rpm/heimdall-cli-nginx.patch | cut -d ' ' -f 1)
-          [[ "$cli_version" == *"+rpm.$patch_hash"* ]]
+          version=$(sed 's/^v//' apps/heimdall-cli/VERSION)
+          commit=$(git rev-parse HEAD)
+          date=$(git show -s --format=%cI HEAD)
+          [[ "$cli_version" == *"$version (commit $commit, built $date)"* ]]
           find /usr/share/man/man1 -name 'heimdall-cli.1*' | grep -q .
           find /usr/share/man/man1 -name 'heimdall-cli-setup.1*' | grep -q .
           bash packaging/rpm/tests/logrotate.sh

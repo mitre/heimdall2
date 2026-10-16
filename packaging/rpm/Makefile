@@ -18,7 +18,7 @@ check-source: check-version
 GOARCH   ?= $(shell go env GOARCH)
 RPM_ARCH ?= $(shell rpm --eval '%{_arch}')
 
-.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version check-source sources cli-src cli-build-src heimdall-cli man runtimes render-spec stage deps check-upstream
+.PHONY: srpm rpm rpm-install rpm-package clean lint lint-rpm check-version check-source sources cli-build-src heimdall-cli man runtimes render-spec stage deps check-upstream
 
 # Upstream repo for `make check-upstream` (override for forks/mirrors).
 UPSTREAM_REPO ?= mitre/heimdall2
@@ -54,67 +54,36 @@ else
 	  > "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz"
 endif
 
-# The pin files identify the tested CLI. Read them in the shell so
-# malformed file contents cannot become shell syntax through Make expansion.
-override CLI_DIR := $(TOPDIR)/heimdall-cli-src
 override CLI_BUILD_DIR := $(TOPDIR)/heimdall-cli-build
 
-cli-src: check-source
-	@test "$(origin HEIMDALL_CLI_REPO)" = undefined && test "$(origin HEIMDALL_CLI_REF)" = undefined || { \
-	  echo 'ERROR: CLI pin overrides are unsupported; update heimdall-cli.repo and heimdall-cli.ref' >&2; exit 1; }
-	@set -eu; \
-	cli_repo=$$(cat heimdall-cli.repo); cli_ref=$$(cat heimdall-cli.ref); \
-	test "$${#cli_ref}" -eq 40 && printf '%s\n' "$$cli_ref" | LC_ALL=C grep -Eq '^[0-9a-f]{40}$$' || { \
-	  echo 'ERROR: heimdall-cli.ref must contain exactly 40 lowercase hex characters' >&2; exit 1; }; \
-	test -n "$$cli_repo" && test "$$(printf '%s\n' "$$cli_repo" | wc -l)" -eq 1 || { \
-	  echo 'ERROR: heimdall-cli.repo must contain one repository URL' >&2; exit 1; }; \
-	mkdir -p "$(TOPDIR)"; \
-	if [ -e "$(CLI_DIR)" ]; then \
-	  test -d "$(CLI_DIR)/.git" && test ! -L "$(CLI_DIR)" || { \
-	    echo 'ERROR: CLI source path is not an owned Git checkout' >&2; exit 1; }; \
-	  test "$$(git -C "$(CLI_DIR)" remote get-url origin)" = "$$cli_repo" || { \
-	    echo 'ERROR: CLI repository mismatch' >&2; exit 1; }; \
-	  test -z "$$(git -C "$(CLI_DIR)" status --porcelain --untracked-files=all --ignored)" || { \
-	    echo 'ERROR: Uncommitted CLI inputs; use a clean checkout' >&2; exit 1; }; \
-	else \
-	  git clone --quiet --no-checkout -- "$$cli_repo" "$(CLI_DIR)"; \
-	fi; \
-	git -C "$(CLI_DIR)" fetch --quiet origin "$$cli_ref"; \
-	git -C "$(CLI_DIR)" checkout --quiet --detach "$$cli_ref"; \
-	test "$$(git -C "$(CLI_DIR)" rev-parse HEAD)" = "$$cli_ref"; \
-	test -z "$$(git -C "$(CLI_DIR)" status --porcelain --untracked-files=all --ignored)"; \
-	echo "heimdall-cli source at $$cli_ref"
-
-# Keep the pinned source pristine; the RPM patch is applied to a disposable copy.
-cli-build-src: cli-src
+cli-build-src: sources
 	rm -rf "$(CLI_BUILD_DIR)"
-	git clone --quiet --no-hardlinks -- "$(CLI_DIR)" "$(CLI_BUILD_DIR)"
-	git -C "$(CLI_BUILD_DIR)" apply --check "$(CURDIR)/heimdall-cli-nginx.patch"
-	git -C "$(CLI_BUILD_DIR)" apply "$(CURDIR)/heimdall-cli-nginx.patch"
+	mkdir -p "$(CLI_BUILD_DIR)"
+	tar -xzf "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz" \
+	  -C "$(CLI_BUILD_DIR)" --strip-components=3 \
+	  "heimdall2-$(VERSION)/apps/heimdall-cli"
+	test -s "$(CLI_BUILD_DIR)/go.mod"
+	test -s "$(CLI_BUILD_DIR)/VERSION"
 
-# Build Go CLI binary for the target platform (static, no CGO).
-# Produces a flat binary at rpmbuild/SOURCES/heimdall-cli (spec Source15).
-# Version, base commit plus RPM patch digest, and base date identify the source.
-#
-# CLI_COMMIT is resolved from the CLI checkout, not from heimdall2. The previous
-# `git rev-parse HEAD` ran in the packaging repo and stamped the wrong commit
-# into the binary's version output.
+# Build Source15 from the CLI module in the server source archive.
 heimdall-cli: cli-build-src
 	@mkdir -p "$(TOPDIR)/SOURCES"
-	output=$$(cd "$(TOPDIR)/SOURCES" && pwd) && \
-	patch_hash=$$(python3 -c 'import hashlib,sys; print(hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest())' "$(CURDIR)/heimdall-cli-nginx.patch") && \
-	cd "$(CLI_BUILD_DIR)" && GOOS=linux GOARCH="$(GOARCH)" CGO_ENABLED=0 \
-	  go build -trimpath \
-	  -ldflags="-s -w \
-	    -X 'github.com/mitre/heimdall-cli/internal/version.Version=$(VERSION)' \
-	    -X 'github.com/mitre/heimdall-cli/internal/version.Commit=$$(git rev-parse HEAD)+rpm.$$patch_hash' \
-	    -X 'github.com/mitre/heimdall-cli/internal/version.Date=$$(git show -s --format=%cI HEAD)'" \
-	  -o "$$output/heimdall-cli" \
-	  ./cmd/heimdall-cli
-	@echo "Built: $(TOPDIR)/SOURCES/heimdall-cli (linux/$(GOARCH))"
+	@set -eu; \
+	output=$$(cd "$(TOPDIR)/SOURCES" && pwd); \
+	rm -f "$$output/heimdall-cli"; \
+	if [ "$(SOURCE_MODE)" = workspace ]; then \
+	  digest=$$(python3 -c 'import hashlib,sys; print(hashlib.sha256(open(sys.argv[1], "rb").read()).hexdigest())' \
+	    "$$output/heimdall2-$(VERSION).tar.gz"); \
+	  commit="source.$$digest"; date=unknown; \
+	else \
+	  commit=$$(git -C ../.. rev-parse HEAD); \
+	  date=$$(git -C ../.. show -s --format=%cI HEAD); \
+	fi; \
+	$(MAKE) -C "$(CLI_BUILD_DIR)" build GOOS=linux GOARCH="$(GOARCH)" \
+	  OUTPUT="$$output/heimdall-cli" COMMIT="$$commit" DATE="$$date"
 
 # Generate man pages from the CLI command tree.
-# Generated from the same patched checkout as the binary, so the pages can never
+# Generated from the same extracted source as the binary, so the pages can never
 # drift from the commands they document.
 man: cli-build-src
 	rm -rf "$(TOPDIR)/cli-man"
@@ -122,7 +91,7 @@ man: cli-build-src
 	mkdir -p "$(TOPDIR)/cli-man/man1" "$(TOPDIR)/SOURCES"
 	output=$$(cd "$(TOPDIR)/cli-man/man1" && pwd) && \
 	cd "$(CLI_BUILD_DIR)" && GOOS=$$(go env GOHOSTOS) GOARCH=$$(go env GOHOSTARCH) \
-	  go run ./cmd/gen-manpages "$$output"
+	  go run -mod=readonly ./cmd/gen-manpages "$$output"
 	test -s "$(TOPDIR)/cli-man/man1/heimdall-cli.1"
 	test -s "$(TOPDIR)/cli-man/man1/heimdall-cli-setup.1"
 	tar -C "$(TOPDIR)/cli-man" -czf "$(TOPDIR)/SOURCES/heimdall-cli-man.tar.gz" man1

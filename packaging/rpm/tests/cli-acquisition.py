@@ -42,14 +42,25 @@ with tempfile.TemporaryDirectory(prefix='heimdall-cli-inputs-') as temp:
         path.mkdir(parents=True)
         (path / 'package.json').write_text(json.dumps({'version': '2.13.1'}))
 
-    upstream = root / 'upstream with spaces'
+    run('git', '-C', str(source), 'init', '-q')
+    run('git', '-C', str(source), 'symbolic-ref', 'HEAD', 'refs/heads/main')
+    run('git', '-C', str(source), 'add', '.')
+    commit_env = dict(os.environ, GIT_AUTHOR_DATE='2026-09-22T12:00:00+00:00',
+                      GIT_COMMITTER_DATE='2026-09-22T12:00:00+00:00')
+    run('git', '-C', str(source), '-c', 'user.name=RPM Test',
+        '-c', 'user.email=rpm-test@example.invalid', 'commit', '-qm', 'Server fixture', env=commit_env)
+
+    upstream = source / 'apps/heimdall-cli'
     for name in ('cmd/heimdall-cli', 'cmd/gen-manpages', 'internal/version'):
-        (upstream / name).mkdir(parents=True)
-    (upstream / 'go.mod').write_text('module github.com/mitre/heimdall-cli\n\ngo 1.20\n')
+        (upstream / name).mkdir(parents=True, exist_ok=True)
+    (upstream / 'VERSION').write_text('v0.9.0\n')
+    shutil.copy2(str(RPM.parents[1] / 'apps/heimdall-cli/Makefile'), str(upstream / 'Makefile'))
+    (upstream / 'go.mod').write_text(
+        'module github.com/mitre/heimdall2/apps/heimdall-cli\n\ngo 1.20\n')
     (upstream / 'internal/version/version.go').write_text(
         'package version\nvar Version, Commit, Date string\n')
     (upstream / 'cmd/heimdall-cli/main.go').write_text('''package main
-import ("fmt"; "github.com/mitre/heimdall-cli/internal/version")
+import ("fmt"; "github.com/mitre/heimdall2/apps/heimdall-cli/internal/version")
 func main() { fmt.Println(version.Version, version.Commit, version.Date) }
 ''')
     (upstream / 'cmd/gen-manpages/main.go').write_text('''package main
@@ -60,26 +71,9 @@ func main() {
     }
 }
 ''')
-    run('git', '-C', str(upstream), 'init', '-q')
-    run('git', '-C', str(upstream), 'symbolic-ref', 'HEAD', 'refs/heads/main')
-    run('git', '-C', str(upstream), 'add', '.')
-    commit_env = dict(os.environ, GIT_AUTHOR_DATE='2026-09-22T12:00:00+00:00',
-                      GIT_COMMITTER_DATE='2026-09-22T12:00:00+00:00')
-    run('git', '-C', str(upstream), '-c', 'user.name=RPM Test',
-        '-c', 'user.email=rpm-test@example.invalid', 'commit', '-qm', 'CLI fixture', env=commit_env)
-    pin = run('git', '-C', str(upstream), 'rev-parse', 'HEAD')
-    generator = upstream / 'cmd/gen-manpages/main.go'
-    generator.write_text(generator.read_text().replace('fixture manual ', 'patched manual '))
-    patch = run('git', '-C', str(upstream), 'diff') + '\n'
-    (packaging / 'heimdall-cli-nginx.patch').write_text(patch)
-    patch_hash = hashlib.sha256(patch.encode()).hexdigest()
-    run('git', '-C', str(upstream), 'restore', 'cmd/gen-manpages/main.go')
-    (packaging / 'heimdall-cli.repo').write_text(str(upstream) + '\n')
-    ref_file = packaging / 'heimdall-cli.ref'
-    topdir = root / 'output'
-    cached = topdir / 'heimdall-cli-src'
-    topdir.mkdir()
-    run('git', 'clone', '-q', str(upstream), str(cached))
+    # Keep a sibling output to verify clean handles a spaced TOPDIR safely.
+    (root / 'output').mkdir()
+    topdir = root / 'output with spaces'
 
     def make(*args, **kwargs):
         return subprocess.run(['make', '-C', str(packaging), 'GOARCH=' + target_arch,
@@ -88,59 +82,32 @@ func main() {
                               universal_newlines=True, **kwargs)
 
     def reject(message, *args, **kwargs):
-        result = make('cli-src', *args, **kwargs)
+        result = make('cli-build-src', *args, **kwargs)
         assert result.returncode != 0, 'accepted ' + message
         assert message in result.stderr, result.stdout + result.stderr
 
-    # A mutable/malformed file pin must fail before touching the cached checkout.
-    for bad_pin in ('main', pin[:12], 'g' * 40, '', pin + '\nmain'):
-        ref_file.write_text(bad_pin + '\n')
-        reject('40 lowercase hex')
-    ref_file.write_text(pin + '\n')
-    for name, value in (('HEIMDALL_CLI_REF', pin), ('HEIMDALL_CLI_REPO', str(upstream))):
-        reject('pin overrides', name + '=' + value)
-        reject('pin overrides', env=dict(os.environ, **{name: value}))
-
-    (cached / 'untracked.go').write_text('package main\n')
-    reject('Uncommitted CLI inputs')
-    (cached / 'untracked.go').unlink()
-    tracked = cached / 'go.mod'
-    tracked.write_text(tracked.read_text() + '// dirty\n')
-    reject('Uncommitted CLI inputs')
-    run('git', '-C', str(cached), 'add', 'go.mod')
-    reject('Uncommitted CLI inputs')
-    run('git', '-C', str(cached), 'restore', '--staged', 'go.mod')
-    run('git', '-C', str(cached), 'restore', 'go.mod')
-    (cached / '.git/info/exclude').write_text('ignored.go\n')
-    (cached / 'ignored.go').write_text('package main\n')
-    reject('Uncommitted CLI inputs')
-    (cached / 'ignored.go').unlink()
-    run('git', '-C', str(cached), 'remote', 'set-url', 'origin', str(root / 'other'))
-    reject('CLI repository mismatch')
-    assert run('git', '-C', str(cached), 'rev-parse', 'HEAD') == pin
-    shutil.rmtree(str(cached))
-    topdir = root / 'output with spaces'
-    cached = topdir / 'heimdall-cli-src'
-
     result = make('heimdall-cli', 'man')
     assert result.returncode == 0, result.stdout + result.stderr
-    assert run('git', '-C', str(cached), 'rev-parse', 'HEAD') == pin
-    assert run('git', '-C', str(cached), 'rev-parse', '--abbrev-ref', 'HEAD') == 'HEAD'
+    assert (topdir / 'heimdall-cli-build/go.mod').read_text() == (upstream / 'go.mod').read_text()
+    assert not (topdir / 'heimdall-cli-src').exists()
     binary = topdir / 'SOURCES/heimdall-cli'
+    archive = topdir / 'SOURCES/heimdall2-2.13.1.tar.gz'
+    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+    assert b'0.9.0\x00' in binary.read_bytes()
+    assert ('source.' + digest).encode() + b'\x00' in binary.read_bytes()
+    assert b'unknown\x00' in binary.read_bytes()
+    with tarfile.open(str(archive)) as packed:
+        assert 'heimdall2-2.13.1/apps/heimdall-cli/go.mod' in packed.getnames()
     metadata = run('go', 'version', '-m', str(binary))
     assert 'GOOS=linux\n' in metadata, metadata
     assert 'GOARCH=' + target_arch + '\n' in metadata, metadata
-    assert 'vcs.revision=' + pin in metadata, metadata
-    assert 'vcs.modified=true' in metadata, metadata
-    assert not run('git', '-C', str(cached), 'status', '--porcelain'), 'patch dirtied pinned source'
+    assert 'vcs.revision=' not in metadata, metadata
     manual = topdir / 'cli-man/man1/heimdall-cli.1'
-    assert manual.read_text() == 'patched manual ' + host_os + '/' + host_arch + '\n', manual.read_text()
+    assert manual.read_text() == 'fixture manual ' + host_os + '/' + host_arch + '\n', manual.read_text()
     binary_bytes = binary.read_bytes()
-    # Linker-injected strings end in NUL; VCS build metadata ends in newline.
-    assert (pin + '+rpm.' + patch_hash).encode() + b'\x00' in binary_bytes
-    assert any(value in binary_bytes for value in (
-        b'2026-09-22T12:00:00+00:00\x00', b'2026-09-22T12:00:00Z\x00'))
-    result = make('heimdall-cli', 'man', 'TOPDIR=' + os.path.relpath(str(topdir), str(packaging)))
+    # Reuse Source0: gzip headers can timestamp otherwise identical workspace archives.
+    result = make('-o', 'sources', 'heimdall-cli', 'man',
+                  'TOPDIR=' + os.path.relpath(str(topdir), str(packaging)))
     assert result.returncode == 0, result.stdout + result.stderr
     assert binary.read_bytes() == binary_bytes
 
@@ -149,29 +116,60 @@ func main() {
     result = make('man')
     assert result.returncode == 0, result.stdout + result.stderr
     assert not stale.exists()
-    with tarfile.open(str(topdir / 'SOURCES/heimdall-cli-man.tar.gz')) as archive:
-        assert set(archive.getnames()) == {'man1', 'man1/heimdall-cli.1', 'man1/heimdall-cli-setup.1'}
+    with tarfile.open(str(topdir / 'SOURCES/heimdall-cli-man.tar.gz')) as packed:
+        assert set(packed.getnames()) == {'man1', 'man1/heimdall-cli.1', 'man1/heimdall-cli-setup.1'}
     run('bash', str(RPM / 'tests/cli-inputs.sh'), str(topdir))
 
-    (packaging / 'heimdall-cli-nginx.patch').write_text('invalid patch\n')
-    result = make('heimdall-cli')
-    assert result.returncode != 0, 'invalid CLI patch was silently ignored'
-    (packaging / 'heimdall-cli-nginx.patch').write_text(patch)
+    # HEAD mode excludes ignored working-tree Go sources.
+    run('git', '-C', str(source), 'add', '.')
+    run('git', '-C', str(source), '-c', 'user.name=RPM Test',
+        '-c', 'user.email=rpm-test@example.invalid', 'commit', '-qm', 'In-tree CLI',
+        env=commit_env)
+    pin = run('git', '-C', str(source), 'rev-parse', 'HEAD')
+    (source / '.git/info/exclude').write_text('apps/heimdall-cli/ignored.go\n')
+    (upstream / 'ignored.go').write_text('this must never compile\n')
+    result = make('heimdall-cli', 'man', 'SOURCE_MODE=head')
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert not (topdir / 'heimdall-cli-build/ignored.go').exists()
+    assert pin.encode() + b'\x00' in binary.read_bytes()
+    assert any(value in binary.read_bytes() for value in (
+        b'2026-09-22T12:00:00+00:00\x00', b'2026-09-22T12:00:00Z\x00'))
+    (upstream / 'ignored.go').unlink()
 
-    # A generator failure cannot leave yesterday's successful archive usable.
-    (upstream / 'cmd/gen-manpages/main.go').write_text('package main\nimport "os"\nfunc main() { os.Exit(1) }\n')
-    run('git', '-C', str(upstream), 'add', '.')
-    run('git', '-C', str(upstream), '-c', 'user.name=RPM Test',
-        '-c', 'user.email=rpm-test@example.invalid', 'commit', '-qm', 'Broken generator', env=commit_env)
-    ref_file.write_text(run('git', '-C', str(upstream), 'rev-parse', 'HEAD') + '\n')
-    # Keep a valid patch so this check reaches the failing manual generator.
-    version_source = upstream / 'internal/version/version.go'
-    version_source.write_text(version_source.read_text() + '// RPM build\n')
-    (packaging / 'heimdall-cli-nginx.patch').write_text(run('git', '-C', str(upstream), 'diff') + '\n')
-    run('git', '-C', str(upstream), 'restore', 'internal/version/version.go')
-    result = make('man')
+    # Untracked input is accepted in workspace mode and rejected in HEAD mode.
+    (upstream / 'new.go').write_text('package main\n')
+    reject('Uncommitted build inputs', 'SOURCE_MODE=head')
+    result = make('cli-build-src', 'SOURCE_MODE=workspace')
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (topdir / 'heimdall-cli-build/new.go').exists()
+    (upstream / 'new.go').unlink()
+
+    # Server release mode uses the server tag; the CLI has its own version.
+    result = make('cli-build-src', 'SOURCE_MODE=release')
+    assert result.returncode != 0
+    run('git', '-C', str(source), 'tag', 'v2.13.1')
+    result = make('heimdall-cli', 'man', 'SOURCE_MODE=release')
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert b'0.9.0\x00' in binary.read_bytes()
+
+    # A downloaded source archive needs no Git repository.
+    shutil.rmtree(str(source / '.git'))
+    result = make('heimdall-cli', 'man', 'SOURCE_MODE=workspace')
+    assert result.returncode == 0, result.stdout + result.stderr
+    digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+    assert ('source.' + digest).encode() + b'\x00' in binary.read_bytes()
+
+    # Failed generators and compiles cannot leave successful artifacts usable.
+    generator = upstream / 'cmd/gen-manpages/main.go'
+    generator.write_text('package main\nimport "os"\nfunc main() { os.Exit(1) }\n')
+    result = make('man', 'SOURCE_MODE=workspace')
     assert result.returncode != 0
     assert not (topdir / 'SOURCES/heimdall-cli-man.tar.gz').exists()
+    main = upstream / 'cmd/heimdall-cli/main.go'
+    main.write_text('not valid Go source\n')
+    result = make('heimdall-cli', 'SOURCE_MODE=workspace')
+    assert result.returncode != 0
+    assert not (topdir / 'SOURCES/heimdall-cli').exists()
     result = make('clean')
     assert result.returncode == 0, result.stdout + result.stderr
     assert not topdir.exists()

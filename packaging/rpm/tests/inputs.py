@@ -94,7 +94,8 @@ class InputsTest(unittest.TestCase):
         self.assertEqual(self.check('head').returncode, 0)
         (self.root / 'notes.txt').write_text('unrelated')
         self.assertEqual(self.check('head').returncode, 0)
-        for path in ('apps/backend/new-file.txt', 'test/package.json', 'yarn.lock'):
+        for path in ('apps/backend/new-file.txt', 'apps/heimdall-cli/new.go',
+                     'test/package.json', 'yarn.lock'):
             with self.subTest(path=path):
                 input_file = self.root / path
                 input_file.parent.mkdir(parents=True, exist_ok=True)
@@ -337,13 +338,12 @@ class InputsTest(unittest.TestCase):
             self.assertIn('heimdall2-2.13.1/committed.txt', archive.getnames())
             self.assertNotIn('heimdall2-2.13.1/notes.txt', archive.getnames())
 
-    def test_parallel_stage_rejects_inputs_before_cli_acquisition(self):
+    def test_parallel_stage_rejects_inputs_before_cli_extraction(self):
         self.prepare_make_fixture()
         self.commit_fixture()
         (self.root / 'test').mkdir()
         (self.root / 'test/package.json').write_text('dirty input')
-        result = self.make('-j4', 'stage', 'SOURCE_MODE=head',
-                           'HEIMDALL_CLI_REPO=/no-such-local-cli-repo')
+        result = self.make('-j4', 'stage', 'SOURCE_MODE=head')
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('Uncommitted build inputs', result.stderr)
         self.assertNotIn('does not exist', result.stderr)
