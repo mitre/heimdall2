@@ -366,53 +366,58 @@ func (e *fapolicydUpdateFailure) Run(name string, args ...string) (string, int, 
 func TestFapolicydSnapshotPublicationFailures(t *testing.T) {
 	for _, failure := range []string{"write", "chown", "chmod", "rename", "update", "rollback", "re-notification"} {
 		t.Run(failure, func(t *testing.T) {
-			r, ex, fs, sd, out := newFapolicydForTest()
-			path := "/usr/share/heimdall-server/native.node"
-			trust := "/etc/fapolicyd/trust.d/" + fapolicydTrustFile
-			fs.Files[path] = []byte("replacement")
-			fs.Files[trust] = []byte("original owned inventory\n")
-			fs.Files["/etc/fapolicyd/trust.d/operator"] = []byte("administrator inventory\n")
-			wrapped := &fapolicydPublishFailure{FakeFileSystem: fs}
-			r.FS = wrapped
-			updates := &fapolicydUpdateFailure{FakeExecRunner: ex, fs: fs, failAgain: failure == "re-notification"}
-			switch failure {
-			case "write":
-				wrapped.writeFails = true
-			case "chown", "chmod":
-				arg := "root:root"
-				if failure == "chmod" {
-					arg = "0600"
-				}
-				ex.Results[failure+" "+arg+" "+trust+".pending"] = FakeExecResult{ExitCode: 1, Stdout: "metadata denied"}
-			case "rename":
-				wrapped.renameAt = 1
-			default:
-				r.Exec = updates
-				sd.ActiveServices[fapolicydService] = true
-				if failure == "rollback" {
-					wrapped.renameAt = 2
-				}
-			}
-			err := r.Add()
-			require.Error(t, err)
-			require.NotContains(t, out.String(), "trust entries added")
-			require.Equal(t, "administrator inventory\n", string(fs.Files["/etc/fapolicyd/trust.d/operator"]))
-			if failure == "rollback" {
-				require.ErrorContains(t, err, "native update failed")
-				require.ErrorContains(t, err, "snapshot rename denied")
-				require.Len(t, updates.snapshots, 1)
-			} else {
-				require.Equal(t, "original owned inventory\n", string(fs.Files[trust]))
-			}
-			if failure == "update" || failure == "re-notification" {
-				require.ErrorContains(t, err, "native update failed")
-				require.Len(t, updates.snapshots, 2)
-				require.Contains(t, updates.snapshots[0], path+" ")
-				require.Equal(t, "original owned inventory\n", updates.snapshots[1])
-			}
-			if failure == "re-notification" {
-				require.ErrorContains(t, err, "native re-notification failed")
-			}
+			testFapolicydSnapshotPublicationFailure(t, failure)
 		})
+	}
+}
+
+func testFapolicydSnapshotPublicationFailure(t *testing.T, failure string) {
+	t.Helper()
+	r, ex, fs, sd, out := newFapolicydForTest()
+	path := "/usr/share/heimdall-server/native.node"
+	trust := "/etc/fapolicyd/trust.d/" + fapolicydTrustFile
+	fs.Files[path] = []byte("replacement")
+	fs.Files[trust] = []byte("original owned inventory\n")
+	fs.Files["/etc/fapolicyd/trust.d/operator"] = []byte("administrator inventory\n")
+	wrapped := &fapolicydPublishFailure{FakeFileSystem: fs}
+	r.FS = wrapped
+	updates := &fapolicydUpdateFailure{FakeExecRunner: ex, fs: fs, failAgain: failure == "re-notification"}
+	switch failure {
+	case "write":
+		wrapped.writeFails = true
+	case "chown", "chmod":
+		arg := "root:root"
+		if failure == "chmod" {
+			arg = "0600"
+		}
+		ex.Results[failure+" "+arg+" "+trust+".pending"] = FakeExecResult{ExitCode: 1, Stdout: "metadata denied"}
+	case "rename":
+		wrapped.renameAt = 1
+	default:
+		r.Exec = updates
+		sd.ActiveServices[fapolicydService] = true
+		if failure == "rollback" {
+			wrapped.renameAt = 2
+		}
+	}
+	err := r.Add()
+	require.Error(t, err)
+	require.NotContains(t, out.String(), "trust entries added")
+	require.Equal(t, "administrator inventory\n", string(fs.Files["/etc/fapolicyd/trust.d/operator"]))
+	if failure == "rollback" {
+		require.ErrorContains(t, err, "native update failed")
+		require.ErrorContains(t, err, "snapshot rename denied")
+		require.Len(t, updates.snapshots, 1)
+	} else {
+		require.Equal(t, "original owned inventory\n", string(fs.Files[trust]))
+	}
+	if failure == "update" || failure == "re-notification" {
+		require.ErrorContains(t, err, "native update failed")
+		require.Len(t, updates.snapshots, 2)
+		require.Contains(t, updates.snapshots[0], path+" ")
+		require.Equal(t, "original owned inventory\n", updates.snapshots[1])
+	}
+	if failure == "re-notification" {
+		require.ErrorContains(t, err, "native re-notification failed")
 	}
 }

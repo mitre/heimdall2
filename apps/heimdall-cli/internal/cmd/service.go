@@ -78,19 +78,7 @@ func (r *ServiceRunner) Diag() error {
 	fmt.Fprintln(r.Out, "=== Heimdall Server Diagnostic Report ===")
 	fmt.Fprintln(r.Out)
 
-	// OS info
-	fmt.Fprintln(r.Out, "--- OS ---")
-	if out, _, err := r.Exec.Run("cat", "/etc/os-release"); err == nil {
-		for _, line := range strings.Split(out, "\n") {
-			if strings.HasPrefix(line, "NAME=") || strings.HasPrefix(line, "VERSION=") || strings.HasPrefix(line, "ID=") {
-				fmt.Fprintf(r.Out, "  %s\n", line)
-			}
-		}
-	}
-	if out, _, err := r.Exec.Run("uname", "-rm"); err == nil {
-		fmt.Fprintf(r.Out, "  Kernel: %s\n", strings.TrimSpace(out))
-	}
-	fmt.Fprintln(r.Out)
+	r.diagnosticOS()
 
 	// Service status
 	fmt.Fprintln(r.Out, "--- Service ---")
@@ -133,36 +121,9 @@ func (r *ServiceRunner) Diag() error {
 	}
 	fmt.Fprintln(r.Out)
 
-	// Disk usage
-	fmt.Fprintln(r.Out, "--- Disk Usage ---")
-	for _, d := range []string{r.Paths.AppDir, r.Paths.DataDir, r.Paths.ConfigDir} {
-		out, _, _ := r.Exec.Run("du", "-sh", d)
-		if out != "" {
-			fmt.Fprintf(r.Out, "  %s\n", strings.TrimSpace(out))
-		}
-	}
-	fmt.Fprintln(r.Out)
+	r.diagnosticResources()
 
-	// Memory
-	fmt.Fprintln(r.Out, "--- Memory ---")
-	out, _, _ = r.Exec.Run("free", "-h")
-	for i, line := range strings.Split(out, "\n") {
-		if i < 2 {
-			fmt.Fprintf(r.Out, "  %s\n", line)
-		}
-	}
-	fmt.Fprintln(r.Out)
-
-	// Listening ports
-	fmt.Fprintln(r.Out, "--- Listening Ports ---")
-	out, _, _ = r.Exec.Run("ss", "-tlnp")
-	for _, line := range strings.Split(out, "\n") {
-		fields := strings.Fields(line)
-		selectedPort := len(fields) >= 4 && (strings.HasSuffix(fields[3], ":"+envDefault(env, "PORT", DefaultAppPort)) || strings.HasSuffix(fields[3], ":"+envDefault(env, "DATABASE_PORT", "5432")) || strings.HasSuffix(fields[3], ":443"))
-		if strings.Contains(line, "heimdall") || selectedPort {
-			fmt.Fprintf(r.Out, "  %s\n", line)
-		}
-	}
+	r.diagnosticPorts(env)
 
 	return nil
 }
@@ -328,4 +289,58 @@ This output is suitable for attaching to bug reports or support tickets.`,
 			return runner.Diag()
 		},
 	}
+}
+
+func (r *ServiceRunner) diagnosticOS() {
+	// OS info
+	fmt.Fprintln(r.Out, "--- OS ---")
+	if out, _, err := r.Exec.Run("cat", "/etc/os-release"); err == nil {
+		for _, line := range strings.Split(out, "\n") {
+			if strings.HasPrefix(line, "NAME=") || strings.HasPrefix(line, "VERSION=") || strings.HasPrefix(line, "ID=") {
+				fmt.Fprintf(r.Out, "  %s\n", line)
+			}
+		}
+	}
+	if out, _, err := r.Exec.Run("uname", "-rm"); err == nil {
+		fmt.Fprintf(r.Out, "  Kernel: %s\n", strings.TrimSpace(out))
+	}
+	fmt.Fprintln(r.Out)
+
+}
+
+func (r *ServiceRunner) diagnosticPorts(env map[string]string) {
+	// Listening ports
+	fmt.Fprintln(r.Out, "--- Listening Ports ---")
+	out, _, _ := r.Exec.Run("ss", "-tlnp")
+	for _, line := range strings.Split(out, "\n") {
+		fields := strings.Fields(line)
+		selectedPort := len(fields) >= 4 && (strings.HasSuffix(fields[3], ":"+envDefault(env, "PORT", DefaultAppPort)) || strings.HasSuffix(fields[3], ":"+envDefault(env, "DATABASE_PORT", "5432")) || strings.HasSuffix(fields[3], ":443"))
+		if strings.Contains(line, "heimdall") || selectedPort {
+			fmt.Fprintf(r.Out, "  %s\n", line)
+		}
+	}
+
+}
+
+func (r *ServiceRunner) diagnosticResources() {
+	// Disk usage
+	fmt.Fprintln(r.Out, "--- Disk Usage ---")
+	for _, d := range []string{r.Paths.AppDir, r.Paths.DataDir, r.Paths.ConfigDir} {
+		out, _, _ := r.Exec.Run("du", "-sh", d)
+		if out != "" {
+			fmt.Fprintf(r.Out, "  %s\n", strings.TrimSpace(out))
+		}
+	}
+	fmt.Fprintln(r.Out)
+
+	// Memory
+	fmt.Fprintln(r.Out, "--- Memory ---")
+	out, _, _ := r.Exec.Run("free", "-h")
+	for i, line := range strings.Split(out, "\n") {
+		if i < 2 {
+			fmt.Fprintf(r.Out, "  %s\n", line)
+		}
+	}
+	fmt.Fprintln(r.Out)
+
 }

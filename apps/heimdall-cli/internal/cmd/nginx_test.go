@@ -178,9 +178,9 @@ func TestNginxRefusesInvalidSavedCertificatePairs(t *testing.T) {
 	privateKey, err := x509.ParsePKCS1PrivateKey(keyBlock.Bytes)
 	require.NoError(t, err)
 	datedCertificate := func(start time.Time) []byte {
-		copy := *leaf
-		copy.NotBefore, copy.NotAfter = start, start.Add(24*time.Hour)
-		der, err := x509.CreateCertificate(rand.Reader, &copy, &copy, &privateKey.PublicKey, privateKey)
+		certificate := *leaf
+		certificate.NotBefore, certificate.NotAfter = start, start.Add(24*time.Hour)
+		der, err := x509.CreateCertificate(rand.Reader, &certificate, &certificate, &privateKey.PublicKey, privateKey)
 		require.NoError(t, err)
 		return pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: der})
 	}

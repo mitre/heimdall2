@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // Registers the PostgreSQL database/sql driver.
 	"github.com/stretchr/testify/require"
 )
 

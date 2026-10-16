@@ -10,6 +10,17 @@ import (
 	"time"
 )
 
+const (
+	postgresLoopback          = "127.0.0.1"
+	postgresHBAFile           = "/pg_hba.conf"
+	psqlStopOnError           = "ON_ERROR_STOP=1"
+	psqlUserVariable          = "db_user="
+	postgresConfigFile        = "/postgresql.conf"
+	postgresVersionFile       = "/PG_VERSION"
+	postgresManagedConfigFile = "/heimdall.conf"
+	bundledPGOwner            = "heimdall-postgres:heimdall-postgres"
+)
+
 // PostgresBootstrapRunner replaces heimdall-postgres-setup.sh with a
 // native Go implementation. It probes for a PostgreSQL installation
 // (PGDG 13+ or system), initializes the data directory if needed,
@@ -107,7 +118,7 @@ func (r *PostgresBootstrapRunner) validateInputs() error {
 // isRemoteHost reports whether DBHost points anywhere other than this
 // machine. For remote DBs we skip local bootstrap entirely.
 func (r *PostgresBootstrapRunner) isRemoteHost() bool {
-	return r.DBHost != "127.0.0.1" && r.DBHost != "localhost"
+	return r.DBHost != postgresLoopback && r.DBHost != "localhost"
 }
 
 // pgInstall captures everything we need to know about a detected
@@ -188,7 +199,7 @@ const hbaMarker = "# Heimdall"
 // the configured DB user. Idempotent: the marker comment makes a second
 // run a no-op. Reads/writes via the FileSystem interface — never sed.
 func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
-	hbaPath := install.DataDir + "/pg_hba.conf"
+	hbaPath := install.DataDir + postgresHBAFile
 	if !r.FS.Exists(hbaPath) {
 		return nil
 	}
@@ -246,9 +257,9 @@ SELECT format('ALTER ROLE %I CREATEDB', :'db_user') \gexec
 // string interpolation of credentials into SQL).
 func (r *PostgresBootstrapRunner) configureRole(install *pgInstall) error {
 	args := append(r.adminPrefix(install), []string{
-		"-v", "ON_ERROR_STOP=1",
+		"-v", psqlStopOnError,
 		"-d", "postgres",
-		"-v", "db_user=" + r.DBUser,
+		"-v", psqlUserVariable + r.DBUser,
 		"-v", "db_pass=" + r.DBPassword,
 	}...)
 	stdout, code, err := r.Exec.RunWithStdin(roleSetupSQL, "runuser", args...)
@@ -274,9 +285,9 @@ const passwordFormatSQL = `SELECT rolpassword FROM pg_authid WHERE rolname = :'d
 func (r *PostgresBootstrapRunner) verifyPasswordFormat(install *pgInstall) error {
 	args := append(r.adminPrefix(install), []string{
 		"-tA", // tuples-only, unaligned — clean single value
-		"-v", "ON_ERROR_STOP=1",
+		"-v", psqlStopOnError,
 		"-d", "postgres",
-		"-v", "db_user=" + r.DBUser,
+		"-v", psqlUserVariable + r.DBUser,
 	}...)
 	stdout, code, err := r.Exec.RunWithStdin(passwordFormatSQL, "runuser", args...)
 	if err != nil {
@@ -303,7 +314,7 @@ WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = :'db_name') \gexec
 // ensureDatabase creates the application database when missing.
 func (r *PostgresBootstrapRunner) ensureDatabase(install *pgInstall) error {
 	args := append(r.adminPrefix(install), []string{
-		"-v", "ON_ERROR_STOP=1",
+		"-v", psqlStopOnError,
 		"-d", "postgres",
 		"-v", "db_name=" + r.DBName,
 	}...)
@@ -312,7 +323,7 @@ func (r *PostgresBootstrapRunner) ensureDatabase(install *pgInstall) error {
 		sql = `SELECT format('CREATE DATABASE %I OWNER %I', :'db_name', :'db_user')
 WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = :'db_name') \gexec
 `
-		args = append(args, "-v", "db_user="+r.DBUser)
+		args = append(args, "-v", psqlUserVariable+r.DBUser)
 	}
 	stdout, code, err := r.Exec.RunWithStdin(sql, "runuser", args...)
 	if err != nil {
@@ -358,7 +369,7 @@ func (r *PostgresBootstrapRunner) testConnection(install *pgInstall) error {
 // configurePasswordEncryption ensures `password_encryption = scram-sha-256`
 // is present in postgresql.conf. Idempotent: appends only when missing.
 func (r *PostgresBootstrapRunner) configurePasswordEncryption(install *pgInstall) error {
-	confPath := install.DataDir + "/postgresql.conf"
+	confPath := install.DataDir + postgresConfigFile
 	if !r.FS.Exists(confPath) {
 		return nil
 	}
@@ -404,7 +415,7 @@ func (r *PostgresBootstrapRunner) startService(install *pgInstall) error {
 // `initdb` argument; the system postgresql-server package uses
 // `--initdb` instead.
 func (r *PostgresBootstrapRunner) ensureDataDir(install *pgInstall) error {
-	if r.FS.Exists(install.DataDir + "/PG_VERSION") {
+	if r.FS.Exists(install.DataDir + postgresVersionFile) {
 		return nil
 	}
 	if install.SetupBin == "" {
@@ -451,7 +462,7 @@ func (r *PostgresBootstrapRunner) adminPrefix(install *pgInstall) []string {
 }
 
 func (r *PostgresBootstrapRunner) bundledPreflight() (*pgInstall, error) {
-	if r.DBHost != "127.0.0.1" && r.DBHost != "localhost" {
+	if r.DBHost != postgresLoopback && r.DBHost != "localhost" {
 		return nil, fmt.Errorf("bundled PostgreSQL requires DATABASE_HOST=127.0.0.1 or localhost")
 	}
 	if r.DBPort < 1 || r.DBPort > 65535 {
@@ -466,41 +477,15 @@ func (r *PostgresBootstrapRunner) bundledPreflight() (*pgInstall, error) {
 			return nil, err
 		}
 	}
-	for _, path := range []string{install.DataDir + "/PG_VERSION", install.DataDir + "/postgresql.conf", install.DataDir + "/postgresql.auto.conf", install.DataDir + "/pg_hba.conf", install.DataDir + "/heimdall.conf", bundledPGSocket + "/.s.PGSQL." + strconv.Itoa(r.DBPort) + ".lock"} {
+	for _, path := range []string{install.DataDir + postgresVersionFile, install.DataDir + postgresConfigFile, install.DataDir + "/postgresql.auto.conf", install.DataDir + postgresHBAFile, install.DataDir + postgresManagedConfigFile, bundledPGSocket + "/.s.PGSQL." + strconv.Itoa(r.DBPort) + ".lock"} {
 		if err := safeManagedPath(r.FS, path); err != nil {
 			return nil, err
 		}
 	}
-	version, err := r.FS.ReadFile(install.DataDir + "/PG_VERSION")
-	if err == nil {
-		if strings.TrimSpace(string(version)) != "18" {
-			return nil, fmt.Errorf("bundled PostgreSQL requires cluster major 18; found %q; perform a separate database migration", strings.TrimSpace(string(version)))
-		}
-		for _, file := range []string{"postgresql.conf", "pg_hba.conf"} {
-			if err := requireRegular(r.FS, install.DataDir+"/"+file); err != nil {
-				return nil, err
-			}
-		}
-	} else if !os.IsNotExist(err) {
+	if err := r.validateBundledCluster(install); err != nil {
 		return nil, err
-	} else {
-		entries, err := r.FS.ReadDir(install.DataDir)
-		if err != nil && !os.IsNotExist(err) {
-			return nil, err
-		}
-		if len(entries) != 0 {
-			return nil, fmt.Errorf("refusing to initialize nonempty PostgreSQL data directory without PG_VERSION: %s", install.DataDir)
-		}
 	}
-	if data, err := r.FS.ReadFile(install.DataDir + "/postgresql.auto.conf"); err == nil {
-		for _, line := range strings.Split(string(data), "\n") {
-			key, _, _ := strings.Cut(strings.TrimSpace(line), "=")
-			switch strings.TrimSpace(key) {
-			case "port", "listen_addresses", "unix_socket_directories":
-				return nil, fmt.Errorf("remove the %s override from postgresql.auto.conf before applying bundled configuration", strings.TrimSpace(key))
-			}
-		}
-	} else if !os.IsNotExist(err) {
+	if err := r.validateBundledOverrides(install); err != nil {
 		return nil, err
 	}
 	if err := checkOwnedPort(r.Exec, r.Systemd, r.DBPort, install.Service, false); err != nil {
@@ -509,16 +494,56 @@ func (r *PostgresBootstrapRunner) bundledPreflight() (*pgInstall, error) {
 	return install, nil
 }
 
+func (r *PostgresBootstrapRunner) validateBundledCluster(install *pgInstall) error {
+	version, err := r.FS.ReadFile(install.DataDir + postgresVersionFile)
+	if err == nil {
+		if strings.TrimSpace(string(version)) != "18" {
+			return fmt.Errorf("bundled PostgreSQL requires cluster major 18; found %q; perform a separate database migration", strings.TrimSpace(string(version)))
+		}
+		for _, file := range []string{"postgresql.conf", "pg_hba.conf"} {
+			if err := requireRegular(r.FS, install.DataDir+"/"+file); err != nil {
+				return err
+			}
+		}
+	} else if !os.IsNotExist(err) {
+		return err
+	} else {
+		entries, err := r.FS.ReadDir(install.DataDir)
+		if err != nil && !os.IsNotExist(err) {
+			return err
+		}
+		if len(entries) != 0 {
+			return fmt.Errorf("refusing to initialize nonempty PostgreSQL data directory without PG_VERSION: %s", install.DataDir)
+		}
+	}
+	return nil
+}
+
+func (r *PostgresBootstrapRunner) validateBundledOverrides(install *pgInstall) error {
+	if data, err := r.FS.ReadFile(install.DataDir + "/postgresql.auto.conf"); err == nil {
+		for _, line := range strings.Split(string(data), "\n") {
+			key, _, _ := strings.Cut(strings.TrimSpace(line), "=")
+			switch strings.TrimSpace(key) {
+			case "port", "listen_addresses", "unix_socket_directories":
+				return fmt.Errorf("remove the %s override from postgresql.auto.conf before applying bundled configuration", strings.TrimSpace(key))
+			}
+		}
+	} else if !os.IsNotExist(err) {
+		return err
+	}
+	return nil
+}
+
 func (r *PostgresBootstrapRunner) runBundled() error {
 	install, err := r.bundledPreflight()
 	if err != nil {
 		return err
 	}
-	if !r.FS.Exists(install.DataDir + "/PG_VERSION") {
+	if !r.FS.Exists(install.DataDir + postgresVersionFile) {
 		if err := r.FS.MkdirAll(install.DataDir, 0700); err != nil {
 			return err
 		}
-		if err := runChecked(r.Exec, "chown", "heimdall-postgres:heimdall-postgres", filepath.Dir(install.DataDir), install.DataDir); err != nil {
+		if err := runChecked(r.Exec, "chown", bundledPGOwner, filepath.Dir(install.DataDir), install.DataDir); err != nil {
 			return err
 		}
 		if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/postgresql", "/var/lib/heimdall-postgresql"); err != nil {
@@ -528,12 +553,12 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 			return err
 		}
 		// initdb success must leave a real cluster, not merely a zero exit status.
-		version, err := r.FS.ReadFile(install.DataDir + "/PG_VERSION")
+		version, err := r.FS.ReadFile(install.DataDir + postgresVersionFile)
 		if err != nil || strings.TrimSpace(string(version)) != "18" {
 			return fmt.Errorf("initdb did not create a PostgreSQL 18 cluster")
 		}
 	}
-	confPath := install.DataDir + "/postgresql.conf"
+	confPath := install.DataDir + postgresConfigFile
 	conf, err := r.FS.ReadFile(confPath)
 	if err != nil {
 		return err
@@ -551,13 +576,13 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 		return err
 	}
 	settings := fmt.Sprintf("listen_addresses = '127.0.0.1'\nport = %d\nunix_socket_directories = '%s'\npassword_encryption = 'scram-sha-256'\n", r.DBPort, install.SocketDir)
-	if err := r.FS.WriteFile(install.DataDir+"/heimdall.conf", []byte(settings), 0600); err != nil {
+	if err := r.FS.WriteFile(install.DataDir+postgresManagedConfigFile, []byte(settings), 0600); err != nil {
 		return err
 	}
-	if err := runChecked(r.Exec, "chown", "heimdall-postgres:heimdall-postgres", confPath, install.DataDir+"/heimdall.conf"); err != nil {
+	if err := runChecked(r.Exec, "chown", bundledPGOwner, confPath, install.DataDir+postgresManagedConfigFile); err != nil {
 		return err
 	}
-	hbaPath := install.DataDir + "/pg_hba.conf"
+	hbaPath := install.DataDir + postgresHBAFile
 	hba, err := r.FS.ReadFile(hbaPath)
 	if err != nil {
 		return err
@@ -573,13 +598,13 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 	if err := r.FS.WriteFile(hbaPath, []byte(scram+strings.Join(preserved, "\n")+"\n"), 0600); err != nil {
 		return err
 	}
-	if err := runChecked(r.Exec, "chown", "heimdall-postgres:heimdall-postgres", hbaPath); err != nil {
+	if err := runChecked(r.Exec, "chown", bundledPGOwner, hbaPath); err != nil {
 		return err
 	}
 	if err := r.FS.MkdirAll(install.SocketDir, 0750); err != nil {
 		return err
 	}
-	if err := runChecked(r.Exec, "chown", "heimdall-postgres:heimdall-postgres", install.SocketDir); err != nil {
+	if err := runChecked(r.Exec, "chown", bundledPGOwner, install.SocketDir); err != nil {
 		return err
 	}
 	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/postgresql", "/var/lib/heimdall-postgresql", install.SocketDir); err != nil {
@@ -612,8 +637,8 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 	if err := r.ensureDatabase(install); err != nil {
 		return err
 	}
-	cfg := DBConfig{Host: "127.0.0.1", Port: r.DBPort, User: r.DBUser, Password: r.DBPassword, DBName: r.DBName}
-	out, code, err := r.Exec.RunWithEnv(cfg.PgEnv(), install.PsqlBin, "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", cfg.DBName, "-v", "ON_ERROR_STOP=1", "-c", "SELECT 1")
+	cfg := DBConfig{Host: postgresLoopback, Port: r.DBPort, User: r.DBUser, Password: r.DBPassword, DBName: r.DBName}
+	out, code, err := r.Exec.RunWithEnv(cfg.PgEnv(), install.PsqlBin, "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", cfg.DBName, "-v", psqlStopOnError, "-c", "SELECT 1")
 	if err != nil || code != 0 {
 		return fmt.Errorf("bundled PostgreSQL connection failed (exit %d): %s: %v", code, strings.TrimSpace(out), err)
 	}
@@ -627,7 +652,7 @@ func checkPostgresServer(exec ExecRunner, paths Paths, fs FileSystem, cfg DBConf
 	if err != nil {
 		return err
 	}
-	out, code, err := exec.RunWithEnv(cfg.PgEnv(), binary, "-X", "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", cfg.DBName, "-v", "ON_ERROR_STOP=1", "-tAc", "SHOW server_version_num")
+	out, code, err := exec.RunWithEnv(cfg.PgEnv(), binary, "-X", "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", cfg.DBName, "-v", psqlStopOnError, "-tAc", "SHOW server_version_num")
 	if err != nil || code != 0 {
 		return fmt.Errorf("checking PostgreSQL server version failed (exit %d): %v", code, err)
 	}

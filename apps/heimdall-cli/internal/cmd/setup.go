@@ -20,6 +20,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const (
+	flagTLSMode                      = "tls-mode"
+	flagExternalURL                  = "external-url"
+	flagTLSCert                      = "tls-cert"
+	flagTLSKey                       = "tls-key"
+	databasePasswordPrompt           = "Database password"
+	defaultDatabaseName              = "heimdall-server-production"
+	tlsSelfSigned                    = "self-signed"
+	loopbackIPv4                     = "127.0.0.1"
+	httpsURLPrefix                   = "https://"
+	defaultAdminEmail                = "admin@heimdall.local"
+	generatedDatabasePasswordMessage = "  DATABASE_PASSWORD auto-generated"
+	configFileOwner                  = "root:heimdall"
+	caddyConfigSuffix                = "/caddy"
+	caddyKeySuffix                   = "/certs/server.key"
+	caddyCertSuffix                  = "/certs/server.crt"
+	systemdEnabledRuntime            = "enabled-runtime"
+	pendingFileSuffix                = ".pending"
+	caddyConfigOwner                 = "root:heimdall-caddy"
+)
+
 // SetupRunner orchestrates the 7-step setup process using injected dependencies.
 type SetupRunner struct {
 	Exec     ExecRunner
@@ -146,7 +167,7 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
 		RunE: func(cmd *cobra.Command, args []string) error {
 			initIO(&runner.Out, &runner.ErrOut, cmd)
 			runner.flagChanged = map[string]bool{}
-			for _, name := range []string{"port", "db-host", "db-port", "db-user", "db-password", "db-name", "external-url", "tls-cert", "tls-key", "tls-mode"} {
+			for _, name := range []string{"port", flagDBHost, flagDBPort, flagDBUser, flagDBPassword, flagDBName, flagExternalURL, flagTLSCert, flagTLSKey, flagTLSMode} {
 				runner.flagChanged[name] = cmd.Flags().Changed(name)
 			}
 			return runner.Run()
@@ -156,18 +177,18 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
 	flags := cmd.Flags()
 	flags.StringVar(&runner.DatabaseMode, "database-mode", "", "Database ownership: bundled or external")
 	flags.StringVar(&runner.ProxyMode, "proxy-mode", "", "Proxy ownership: nginx, bundled (Caddy), external, or none")
-	flags.StringVar(&runner.TLSMode, "tls-mode", "", "Proxy TLS: self-signed (Nginx), acme, internal, or custom")
+	flags.StringVar(&runner.TLSMode, flagTLSMode, "", "Proxy TLS: self-signed (Nginx), acme, internal, or custom")
 	flags.BoolVar(&runner.Interactive, "interactive", false, "Prompt for configuration values")
 	flags.BoolVar(&runner.NonInteract, "non-interactive", false, "Accept defaults and auto-generate secrets")
 	flags.StringVar(&runner.Port, "port", DefaultAppPort, "Backend listen port (1024-65535; default shown is standalone; fresh RPM default 3002; saved PORT wins unless explicitly set)")
-	flags.StringVar(&runner.DBHost, "db-host", "localhost", "Database host")
-	flags.IntVar(&runner.DBPort, "db-port", 5432, "Database port")
-	flags.StringVar(&runner.DBUser, "db-user", "postgres", "Database user")
-	flags.StringVar(&runner.DBPassword, "db-password", "", "Database password")
-	flags.StringVar(&runner.DBName, "db-name", "heimdall-server-production", "Database name")
-	flags.StringVar(&runner.ExternalURL, "external-url", "", "Public URL (e.g. https://heimdall.example.com)")
-	flags.StringVar(&runner.TLSCert, "tls-cert", "", "Path to TLS certificate (PEM)")
-	flags.StringVar(&runner.TLSKey, "tls-key", "", "Path to TLS private key (PEM)")
+	flags.StringVar(&runner.DBHost, flagDBHost, "localhost", "Database host")
+	flags.IntVar(&runner.DBPort, flagDBPort, 5432, "Database port")
+	flags.StringVar(&runner.DBUser, flagDBUser, "postgres", "Database user")
+	flags.StringVar(&runner.DBPassword, flagDBPassword, "", databasePasswordPrompt)
+	flags.StringVar(&runner.DBName, flagDBName, defaultDatabaseName, "Database name")
+	flags.StringVar(&runner.ExternalURL, flagExternalURL, "", "Public URL (e.g. https://heimdall.example.com)")
+	flags.StringVar(&runner.TLSCert, flagTLSCert, "", "Path to TLS certificate (PEM)")
+	flags.StringVar(&runner.TLSKey, flagTLSKey, "", "Path to TLS private key (PEM)")
 	flags.BoolVar(&runner.SkipDB, "skip-db", false, "Skip PostgreSQL bootstrap and migrations")
 	flags.BoolVar(&runner.SkipTLS, "skip-tls", false, "Skip TLS reverse proxy setup")
 	flags.BoolVar(&runner.Reconfigure, "reconfigure", false, "Re-run only the configuration step")
@@ -224,6 +245,33 @@ func (r *SetupRunner) Run() (err error) {
 		return nil
 	}
 
+	if err := r.runDatabaseSteps(isLocalDB); err != nil {
+		return err
+	}
+	if err := r.runProxyStep(); err != nil {
+		return err
+	}
+
+	// Step 6: Security policies
+	fmt.Fprintln(r.Out)
+	fmt.Fprintln(r.Out, "Security policies")
+	if err := r.stepSecurityPolicies(); err != nil {
+		return err
+	}
+
+	// Step 7: Start service
+	fmt.Fprintln(r.Out)
+	fmt.Fprintln(r.Out, "Starting service")
+	if err := r.stepStartService(); err != nil {
+		return WrapError(err, "service start failed",
+			"Check config: sudo heimdall-cli validate && sudo systemctl status "+ServiceName)
+	}
+
+	r.printCompletionBanner()
+	return nil
+}
+
+func (r *SetupRunner) runDatabaseSteps(isLocalDB bool) error {
 	// Step 2: PostgreSQL bootstrap
 	fmt.Fprintln(r.Out)
 	if r.SkipDB {
@@ -262,7 +310,10 @@ func (r *SetupRunner) Run() (err error) {
 		}
 	}
 
-	// Step 5: TLS reverse proxy
+	return nil
+}
+
+func (r *SetupRunner) runProxyStep() error {
 	fmt.Fprintln(r.Out)
 	if r.SkipTLS {
 		fmt.Fprintln(r.Out, "TLS reverse proxy (skipped -- --skip-tls)")
@@ -277,22 +328,6 @@ func (r *SetupRunner) Run() (err error) {
 		}
 	}
 
-	// Step 6: Security policies
-	fmt.Fprintln(r.Out)
-	fmt.Fprintln(r.Out, "Security policies")
-	if err := r.stepSecurityPolicies(); err != nil {
-		return err
-	}
-
-	// Step 7: Start service
-	fmt.Fprintln(r.Out)
-	fmt.Fprintln(r.Out, "Starting service")
-	if err := r.stepStartService(); err != nil {
-		return WrapError(err, "service start failed",
-			"Check config: sudo heimdall-cli validate && sudo systemctl status "+ServiceName)
-	}
-
-	r.printCompletionBanner()
 	return nil
 }
 
@@ -425,13 +460,78 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	requested := Deployment{r.DatabaseMode, r.ProxyMode, r.TLSMode}
 	r.previousProxyMode = existing["HEIMDALL_PROXY_MODE"]
 	r.previousBackendPort = existing["PORT"]
 	configured := isConfigured(existing)
+	requested := r.requestedDeployment(existing, configured)
+	nginxAvailable := r.bundledRuntime && r.FS.Exists(r.Paths.RuntimePath("nginx", "sbin", "nginx"))
+	d, err := resolveDeployment(existing, requested, configured)
+	if err != nil {
+		return nil, err
+	}
+	values, err := r.configurationValues(existing, d, configured)
+	if err != nil {
+		return nil, err
+	}
+	host, port, user := r.databaseDefaults(d.DatabaseMode)
+	resolve := func(key, flag, value, fallback string) string {
+		return r.resolveConfigValue(values, key, flag, value, fallback)
+	}
+	r.Port = resolve("PORT", "port", r.Port, DefaultAppPort)
+	// Keep saved and explicit ports, including the historical standalone default.
+	if r.bundledRuntime && !configured && values["PORT"] == "" &&
+		!r.flagChanged["port"] && r.Port == DefaultAppPort {
+		r.Port = DefaultRPMAppPort
+	}
+	if !r.Interactive || r.flagChanged["port"] {
+		if err := ValidateValue("PORT", r.Port); err != nil {
+			return nil, WrapError(err, "invalid backend port", "Choose a port from 1024 to 65535 with --port")
+		}
+	}
+	values["DATABASE_HOST"] = resolve("DATABASE_HOST", flagDBHost, r.DBHost, host)
+	values["DATABASE_PORT"] = resolve("DATABASE_PORT", flagDBPort, strconv.Itoa(r.DBPort), port)
+	values["DATABASE_USERNAME"] = resolve("DATABASE_USERNAME", flagDBUser, r.DBUser, user)
+	values["DATABASE_PASSWORD"] = resolve("DATABASE_PASSWORD", flagDBPassword, r.DBPassword, "")
+	values["DATABASE_NAME"] = resolve("DATABASE_NAME", flagDBName, r.DBName, defaultDatabaseName)
+	cfg, err := resolveDBConfig(values)
+	if err != nil {
+		return nil, err
+	}
+	r.DBHost, r.DBPort, r.DBUser, r.DBPassword, r.DBName = cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName
+	r.ExternalURL = resolve("EXTERNAL_URL", flagExternalURL, r.ExternalURL, "")
+	r.TLSCert = resolve("HEIMDALL_TLS_CERT", flagTLSCert, r.TLSCert, "")
+	r.TLSKey = resolve("HEIMDALL_TLS_KEY", flagTLSKey, r.TLSKey, "")
+	r.resolveConfiguredTLS(existing, requested, &d)
+	r.DatabaseMode, r.ProxyMode, r.TLSMode = d.DatabaseMode, d.ProxyMode, d.TLSMode
+	if err := r.validateConfiguredTLS(nginxAvailable); err != nil {
+		return nil, err
+	}
+	if configured && r.bundledRuntime && existing["HEIMDALL_DATABASE_MODE"] == "" && requested.DatabaseMode == "" {
+		fmt.Fprintln(r.Out, "  Existing installation: defaulting database and proxy ownership to external; endpoints are preserved.")
+	}
+	return existing, nil
+}
+
+func (r *SetupRunner) requestedDeployment(existing map[string]string, configured bool) Deployment {
+	requested := Deployment{r.DatabaseMode, r.ProxyMode, r.TLSMode}
+	r.resolveLegacyDeployment(existing, &requested)
+	nginxAvailable := r.bundledRuntime && r.FS.Exists(r.Paths.RuntimePath("nginx", "sbin", "nginx"))
+	if nginxAvailable && !configured && requested.ProxyMode == "" && existing["HEIMDALL_PROXY_MODE"] == "" && (requested.TLSMode == "" || requested.TLSMode == tlsSelfSigned) && r.TLSCert == "" && r.TLSKey == "" {
+		requested.ProxyMode = "nginx"
+	}
+	if requested.ProxyMode == "nginx" && requested.TLSMode == "" && existing["HEIMDALL_PROXY_MODE"] != "nginx" {
+		requested.TLSMode = tlsSelfSigned
+	}
+	if requested.ProxyMode != "" && requested.ProxyMode != "nginx" && requested.TLSMode == "" && existing["HEIMDALL_TLS_MODE"] == tlsSelfSigned {
+		requested.TLSMode = defaultTLSMode(envDefault(existing, "EXTERNAL_URL", r.ExternalURL), r.TLSCert, r.TLSKey)
+	}
+	return requested
+}
+
+func (r *SetupRunner) resolveLegacyDeployment(existing map[string]string, requested *Deployment) {
 	if !r.bundledRuntime && requested.DatabaseMode == "" && existing["HEIMDALL_DATABASE_MODE"] == "" {
 		host := envDefault(existing, "DATABASE_HOST", "localhost")
-		if r.DBHost != "" && ((r.flagChanged == nil && r.DBHost != "localhost") || r.flagChanged["db-host"]) {
+		if r.DBHost != "" && ((r.flagChanged == nil && r.DBHost != "localhost") || r.flagChanged[flagDBHost]) {
 			host = r.DBHost
 		}
 		requested.DatabaseMode = "external"
@@ -442,24 +542,17 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
 	if !r.bundledRuntime && requested.ProxyMode == "" && existing["HEIMDALL_PROXY_MODE"] == "" {
 		requested.ProxyMode = "bundled"
 	}
-	nginxAvailable := r.bundledRuntime && r.FS.Exists(r.Paths.RuntimePath("nginx", "sbin", "nginx"))
-	if nginxAvailable && !configured && requested.ProxyMode == "" && existing["HEIMDALL_PROXY_MODE"] == "" && (requested.TLSMode == "" || requested.TLSMode == "self-signed") && r.TLSCert == "" && r.TLSKey == "" {
-		requested.ProxyMode = "nginx"
+}
+
+func (r *SetupRunner) databaseDefaults(databaseMode string) (host, port, user string) {
+	host, port, user = "localhost", "5432", "postgres"
+	if r.bundledRuntime && databaseMode == "bundled" {
+		host, port, user = loopbackIPv4, "55432", "heimdall"
 	}
-	if requested.ProxyMode == "nginx" && requested.TLSMode == "" && existing["HEIMDALL_PROXY_MODE"] != "nginx" {
-		requested.TLSMode = "self-signed"
-	}
-	if requested.ProxyMode != "" && requested.ProxyMode != "nginx" && requested.TLSMode == "" && existing["HEIMDALL_TLS_MODE"] == "self-signed" {
-		requested.TLSMode = defaultTLSMode(envDefault(existing, "EXTERNAL_URL", r.ExternalURL), r.TLSCert, r.TLSKey)
-	}
-	d, err := resolveDeployment(existing, requested, configured)
-	if err != nil {
-		return nil, err
-	}
-	host, port, user := "localhost", "5432", "postgres"
-	if r.bundledRuntime && d.DatabaseMode == "bundled" {
-		host, port, user = "127.0.0.1", "55432", "heimdall"
-	}
+	return host, port, user
+}
+
+func (r *SetupRunner) configurationValues(existing map[string]string, d Deployment, configured bool) (map[string]string, error) {
 	values := map[string]string{}
 	for k, v := range existing {
 		values[k] = v
@@ -477,67 +570,47 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
 		}
 		values["DATABASE_HOST"], values["DATABASE_PORT"], values["DATABASE_USERNAME"], values["DATABASE_PASSWORD"], values["DATABASE_NAME"] = cfg.Host, cfg.PortStr(), cfg.User, cfg.Password, cfg.DBName
 	}
-	resolve := func(key, flag, value, fallback string) string {
-		changed := r.flagChanged[flag]
-		if r.flagChanged == nil {
-			changed = value != "" && value != "0" && value != fallback
-		}
-		if changed {
-			return value
-		}
-		return envDefault(values, key, fallback)
+	return values, nil
+}
+
+func (r *SetupRunner) resolveConfigValue(values map[string]string, key, flag, value, fallback string) string {
+	changed := r.flagChanged[flag]
+	if r.flagChanged == nil {
+		changed = value != "" && value != "0" && value != fallback
 	}
-	r.Port = resolve("PORT", "port", r.Port, DefaultAppPort)
-	// Keep saved and explicit ports, including the historical standalone default.
-	if r.bundledRuntime && !configured && values["PORT"] == "" &&
-		!r.flagChanged["port"] && r.Port == DefaultAppPort {
-		r.Port = DefaultRPMAppPort
+	if changed {
+		return value
 	}
-	if !r.Interactive || r.flagChanged["port"] {
-		if err := ValidateValue("PORT", r.Port); err != nil {
-			return nil, WrapError(err, "invalid backend port", "Choose a port from 1024 to 65535 with --port")
-		}
-	}
-	values["DATABASE_HOST"] = resolve("DATABASE_HOST", "db-host", r.DBHost, host)
-	values["DATABASE_PORT"] = resolve("DATABASE_PORT", "db-port", strconv.Itoa(r.DBPort), port)
-	values["DATABASE_USERNAME"] = resolve("DATABASE_USERNAME", "db-user", r.DBUser, user)
-	values["DATABASE_PASSWORD"] = resolve("DATABASE_PASSWORD", "db-password", r.DBPassword, "")
-	values["DATABASE_NAME"] = resolve("DATABASE_NAME", "db-name", r.DBName, "heimdall-server-production")
-	cfg, err := resolveDBConfig(values)
-	if err != nil {
-		return nil, err
-	}
-	r.DBHost, r.DBPort, r.DBUser, r.DBPassword, r.DBName = cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName
-	r.ExternalURL = resolve("EXTERNAL_URL", "external-url", r.ExternalURL, "")
-	r.TLSCert = resolve("HEIMDALL_TLS_CERT", "tls-cert", r.TLSCert, "")
-	r.TLSKey = resolve("HEIMDALL_TLS_KEY", "tls-key", r.TLSKey, "")
+	return envDefault(values, key, fallback)
+}
+
+func (r *SetupRunner) resolveConfiguredTLS(existing map[string]string, requested Deployment, d *Deployment) {
 	if requested.TLSMode == "" && d.ProxyMode != "nginx" {
-		if (r.flagChanged["tls-cert"] || r.flagChanged["tls-key"]) && r.TLSCert != "" && r.TLSKey != "" {
+		if (r.flagChanged[flagTLSCert] || r.flagChanged[flagTLSKey]) && r.TLSCert != "" && r.TLSKey != "" {
 			d.TLSMode = "custom"
 		} else if existing["HEIMDALL_TLS_MODE"] == "" {
 			externalURL := r.ExternalURL
 			if externalURL == "" && existing["NGINX_HOST"] != "" {
-				externalURL = "https://" + existing["NGINX_HOST"]
+				externalURL = httpsURLPrefix + existing["NGINX_HOST"]
 			}
 			d.TLSMode = defaultTLSMode(externalURL, r.TLSCert, r.TLSKey)
 		}
 	}
-	r.DatabaseMode, r.ProxyMode, r.TLSMode = d.DatabaseMode, d.ProxyMode, d.TLSMode
+}
+
+func (r *SetupRunner) validateConfiguredTLS(nginxAvailable bool) error {
 	if r.ProxyMode == "nginx" && !nginxAvailable {
-		return nil, fmt.Errorf("private Nginx runtime is unavailable; reinstall the current heimdall-server RPM")
+		return fmt.Errorf("private Nginx runtime is unavailable; reinstall the current heimdall-server RPM")
 	}
 	if r.ProxyMode == "bundled" && !r.SkipTLS {
 		if (r.TLSCert == "") != (r.TLSKey == "") {
-			return nil, fmt.Errorf("--tls-cert and --tls-key must be provided together")
+			return fmt.Errorf("--tls-cert and --tls-key must be provided together")
 		}
 		if r.TLSMode == "custom" && (r.TLSCert == "" || r.TLSKey == "") {
-			return nil, fmt.Errorf("custom TLS requires --tls-cert and --tls-key")
+			return fmt.Errorf("custom TLS requires --tls-cert and --tls-key")
 		}
 	}
-	if configured && r.bundledRuntime && existing["HEIMDALL_DATABASE_MODE"] == "" && requested.DatabaseMode == "" {
-		fmt.Fprintln(r.Out, "  Existing installation: defaulting database and proxy ownership to external; endpoints are preserved.")
-	}
-	return existing, nil
+	return nil
 }
 
 func defaultTLSMode(externalURL, cert, key string) string {
@@ -561,15 +634,41 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 			Suggestion: "Run without --interactive, or use --non-interactive for defaults",
 		}
 	}
-
-	// Helper: resolve default from existing value or fallback
-	def := func(key, fallback string) string {
-		if v, ok := existing[key]; ok && v != "" {
-			return v
-		}
-		return fallback
+	existing, rerun, err := r.interactiveExistingConfiguration(existing)
+	if err != nil {
+		return err
 	}
+	if rerun {
+		return r.interactiveWriteConfig(existing, existing)
+	}
+	prompted, err := r.interactiveDatabase()
+	if err != nil {
+		return err
+	}
+	tlsChoice, err := r.interactiveProxyChoice()
+	if err != nil {
+		return err
+	}
+	if err := r.applyInteractiveProxy(tlsChoice); err != nil {
+		return err
+	}
+	application, err := r.interactiveApplication(existing)
+	if err != nil {
+		return err
+	}
+	if err := r.interactiveTLSMode(existing, application["EXTERNAL_URL"], tlsChoice); err != nil {
+		return err
+	}
+	certDays, err := r.interactiveCertificateLifetime(existing, application["EXTERNAL_URL"])
+	if err != nil {
+		return err
+	}
+	maps.Copy(prompted, application)
+	prompted["HEIMDALL_TLS_CERT_DAYS"] = certDays
+	return r.interactiveWriteConfig(existing, prompted)
+}
 
+func (r *SetupRunner) interactiveExistingConfiguration(existing map[string]string) (map[string]string, bool, error) {
 	// --- Re-run detection ---
 	hasExisting := isConfigured(existing)
 	if hasExisting && !r.bundledRuntime {
@@ -581,23 +680,27 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 				"Start fresh",
 			})
 		if err != nil {
-			return err
+			return existing, false, err
 		}
 
 		switch action {
 		case 0: // Re-run — keep existing config, just rewrite and continue
 			fmt.Fprintln(r.Out, "  Re-running with existing configuration")
-			return r.interactiveWriteConfig(existing, existing)
+			return existing, true, nil
 		case 1: // Edit — show prompts with existing values as defaults
 			// fall through to the full wizard below (existing values as defaults)
 		case 2: // Start fresh — clear existing and run full wizard
 			existing = map[string]string{}
-			if !r.flagChanged["db-password"] {
+			if !r.flagChanged[flagDBPassword] {
 				r.DBPassword = ""
 			}
 		}
 	}
 
+	return existing, false, nil
+}
+
+func (r *SetupRunner) interactiveDatabase() (map[string]string, error) {
 	// --- Database topology ---
 	fmt.Fprintln(r.Out)
 	dbOptions := []string{"Local PostgreSQL (installed on this machine)", "External PostgreSQL (including an existing same-host instance)"}
@@ -610,7 +713,7 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 	}
 	dbChoice, err := r.Prompter.Select("Database setup", dbDefault, dbOptions)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var dbHost, dbPort, dbUser, dbPassword, dbName string
@@ -622,7 +725,7 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 		dbUser = "postgres"
 		dbName = r.DBName
 		if r.bundledRuntime {
-			dbHost, dbPort, dbUser = "127.0.0.1", "55432", "heimdall"
+			dbHost, dbPort, dbUser = loopbackIPv4, "55432", "heimdall"
 			if r.DatabaseMode == "bundled" {
 				dbHost, dbPort, dbUser = r.DBHost, strconv.Itoa(r.DBPort), r.DBUser
 			}
@@ -631,34 +734,41 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 
 		dbPassword, err = r.interactivePassword(r.DBPassword)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 	case 1: // External PostgreSQL — prompt for all DB fields
 		r.DatabaseMode = "external"
 		dbHost, err = r.Prompter.Input("Database host", r.DBHost)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		dbPort, err = r.Prompter.Input("Database port", strconv.Itoa(r.DBPort))
 		if err != nil {
-			return err
+			return nil, err
 		}
 		dbUser, err = r.Prompter.Input("Database user", r.DBUser)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		dbPassword, err = r.interactivePassword(r.DBPassword)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		dbName, err = r.Prompter.Input("Database name", r.DBName)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 	}
 
+	return map[string]string{
+		"DATABASE_HOST": dbHost, "DATABASE_PORT": dbPort,
+		"DATABASE_USERNAME": dbUser, "DATABASE_PASSWORD": dbPassword, "DATABASE_NAME": dbName,
+	}, nil
+}
+
+func (r *SetupRunner) interactiveProxyChoice() (int, error) {
 	// --- TLS topology ---
 	fmt.Fprintln(r.Out)
 	tlsOptions := []string{"Caddy reverse proxy (automatic HTTPS)", "External SSL termination (load balancer, nginx)", "BYO certificate (provide cert and key paths)", "No TLS (development/testing only)"}
@@ -683,21 +793,25 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 	}
 	tlsChoice, err := r.Prompter.Select("TLS/SSL setup", tlsDefault, tlsOptions)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	if tlsChoice < 0 || tlsChoice >= len(tlsOptions) {
-		return fmt.Errorf("invalid TLS selection")
+		return 0, fmt.Errorf("invalid TLS selection")
 	}
 	if nginxAvailable {
 		tlsChoice--
 	}
+	return tlsChoice, nil
+}
+
+func (r *SetupRunner) applyInteractiveProxy(tlsChoice int) error {
 	switch tlsChoice {
 	case -1:
-		r.ProxyMode, r.TLSMode = "nginx", "self-signed"
+		r.ProxyMode, r.TLSMode = "nginx", tlsSelfSigned
 	case 0: // Caddy
 		r.ProxyMode = "bundled"
-		if r.TLSMode == "self-signed" {
+		if r.TLSMode == tlsSelfSigned {
 			r.TLSMode = "internal"
 		}
 
@@ -707,97 +821,121 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 	case 2: // BYO certificate
 		r.ProxyMode = "bundled"
 		r.TLSMode = "custom"
-		certPath, certErr := r.Prompter.Input("TLS certificate path", r.TLSCert)
-		if certErr != nil {
-			return certErr
+		if err := r.interactiveCustomCertificate(); err != nil {
+			return err
 		}
-		keyPath, keyErr := r.Prompter.Input("TLS private key path", r.TLSKey)
-		if keyErr != nil {
-			return keyErr
-		}
-		r.TLSCert = certPath
-		r.TLSKey = keyPath
 
 	case 3: // No TLS
 		r.ProxyMode = "none"
 	}
 
-	if r.ProxyMode != "nginx" && r.TLSMode == "self-signed" {
+	if r.ProxyMode != "nginx" && r.TLSMode == tlsSelfSigned {
 		r.TLSMode = "internal"
 	}
 
+	return nil
+}
+
+func (r *SetupRunner) interactiveCustomCertificate() error {
+	cert, err := r.Prompter.Input("TLS certificate path", r.TLSCert)
+	if err != nil {
+		return err
+	}
+	key, err := r.Prompter.Input("TLS private key path", r.TLSKey)
+	if err != nil {
+		return err
+	}
+	r.TLSCert, r.TLSKey = cert, key
+	return nil
+}
+
+func (r *SetupRunner) interactiveApplication(existing map[string]string) (map[string]string, error) {
 	// --- Application config ---
 	fmt.Fprintln(r.Out)
 	defaultExternalURL := r.ExternalURL
 	if defaultExternalURL == "" {
-		defaultExternalURL = def("NGINX_HOST", "localhost")
+		defaultExternalURL = envDefault(existing, "NGINX_HOST", "localhost")
 	}
 	externalURL, err := r.Prompter.Input("External URL", defaultExternalURL)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if externalURL == "" {
 		externalURL = defaultExternalURL
 	}
 	externalURL, err = normalizeExternalURL(externalURL, r.ProxyMode)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	adminEmail, err := r.Prompter.Input("Admin email", def("ADMIN_EMAIL", "admin@heimdall.local"))
+	adminEmail, err := r.Prompter.Input("Admin email", envDefault(existing, "ADMIN_EMAIL", defaultAdminEmail))
 	if err != nil {
-		return err
+		return nil, err
 	}
-	jwtDefault := def("JWT_EXPIRE_TIME", "1d")
+	jwtDefault := envDefault(existing, "JWT_EXPIRE_TIME", "1d")
 	fmt.Fprintln(r.Out, "  Heimdall caps JWT lifetimes at 2 days.")
 	jwtExpire, err := r.Prompter.Input("JWT expiration (e.g. 1d or 25m)", jwtDefault)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	jwtExpire = strings.TrimSpace(jwtExpire)
 	if jwtExpire == "" {
 		jwtExpire = jwtDefault
 	}
 	if err := ValidateValue("JWT_EXPIRE_TIME", jwtExpire); err != nil {
-		return err
+		return nil, err
 	}
 
+	return map[string]string{"EXTERNAL_URL": externalURL, "ADMIN_EMAIL": adminEmail, "JWT_EXPIRE_TIME": jwtExpire}, nil
+}
+
+func (r *SetupRunner) interactiveTLSMode(existing map[string]string, externalURL string, tlsChoice int) error {
 	if r.ProxyMode == "bundled" && tlsChoice == 0 {
 		mode := r.TLSMode
-		if existing["HEIMDALL_TLS_MODE"] == "" && !r.flagChanged["tls-mode"] {
+		if existing["HEIMDALL_TLS_MODE"] == "" && !r.flagChanged[flagTLSMode] {
 			mode = defaultTLSMode(externalURL, "", "")
 		}
-		if r.bundledRuntime {
-			options := []string{"internal", "acme", "custom"}
-			choice, err := r.Prompter.Select("TLS mode", mode, options)
-			if err != nil {
-				return err
-			}
-			if choice < 0 || choice >= len(options) {
-				return fmt.Errorf("invalid TLS selection")
-			}
-			mode = options[choice]
-			if mode == "custom" {
-				r.TLSCert, err = r.Prompter.Input("TLS certificate path", r.TLSCert)
-				if err != nil {
-					return err
-				}
-				r.TLSKey, err = r.Prompter.Input("TLS private key path", r.TLSKey)
-				if err != nil {
-					return err
-				}
-			}
+		var err error
+		mode, err = r.interactiveCaddyMode(mode)
+		if err != nil {
+			return err
 		}
+
 		r.TLSMode = mode
 	}
 	if r.ProxyMode == "bundled" && r.TLSMode == "custom" && (r.TLSCert == "" || r.TLSKey == "") {
 		return fmt.Errorf("custom TLS requires certificate and key paths")
 	}
-	certDays := def("HEIMDALL_TLS_CERT_DAYS", "7")
+	return nil
+}
+
+func (r *SetupRunner) interactiveCaddyMode(mode string) (string, error) {
+	if !r.bundledRuntime {
+		return mode, nil
+	}
+	options := []string{"internal", "acme", "custom"}
+	choice, err := r.Prompter.Select("TLS mode", mode, options)
+	if err != nil {
+		return "", err
+	}
+	if choice < 0 || choice >= len(options) {
+		return "", fmt.Errorf("invalid TLS selection")
+	}
+	mode = options[choice]
+	if mode == "custom" {
+		if err := r.interactiveCustomCertificate(); err != nil {
+			return "", err
+		}
+	}
+	return mode, nil
+}
+
+func (r *SetupRunner) interactiveCertificateLifetime(existing map[string]string, externalURL string) (string, error) {
+	certDays := envDefault(existing, "HEIMDALL_TLS_CERT_DAYS", "7")
 	u, err := url.Parse(externalURL)
 	if err != nil {
-		return fmt.Errorf("invalid external URL: %w", err)
+		return "", fmt.Errorf("invalid external URL: %w", err)
 	}
-	localTLS := r.TLSMode == "internal" || r.TLSMode == "self-signed"
+	localTLS := r.TLSMode == "internal" || r.TLSMode == tlsSelfSigned
 	if !r.bundledRuntime {
 		strategy := determineTLSStrategy(u.Hostname(), r.TLSCert, r.TLSKey)
 		localTLS = strategy == tlsPrivate || strategy == tlsIP
@@ -805,14 +943,14 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 	if (r.ProxyMode == "bundled" || r.ProxyMode == "nginx") && !r.SkipTLS && u.Scheme == "https" && localTLS {
 		certDays, err = r.Prompter.Input("Certificate lifetime in days", certDays)
 		if err != nil {
-			return err
+			return "", err
 		}
 		certDays = strings.TrimSpace(certDays)
 		if certDays == "" {
-			certDays = def("HEIMDALL_TLS_CERT_DAYS", "7")
+			certDays = envDefault(existing, "HEIMDALL_TLS_CERT_DAYS", "7")
 		}
 		if err := ValidateValue("HEIMDALL_TLS_CERT_DAYS", certDays); err != nil {
-			return err
+			return "", err
 		}
 		fmt.Fprintln(r.Out, "  Applies to new certificates; existing certificates are preserved.")
 		if r.ProxyMode == "bundled" && (r.bundledRuntime || net.ParseIP(u.Hostname()) == nil) {
@@ -820,26 +958,14 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
 		}
 	}
 
-	// Build the prompted values map
-	prompted := map[string]string{
-		"DATABASE_HOST":          dbHost,
-		"DATABASE_PORT":          dbPort,
-		"DATABASE_USERNAME":      dbUser,
-		"DATABASE_PASSWORD":      dbPassword,
-		"DATABASE_NAME":          dbName,
-		"EXTERNAL_URL":           externalURL,
-		"ADMIN_EMAIL":            adminEmail,
-		"JWT_EXPIRE_TIME":        jwtExpire,
-		"HEIMDALL_TLS_CERT_DAYS": certDays,
-	}
-	return r.interactiveWriteConfig(existing, prompted)
+	return certDays, nil
 }
 
 // interactivePassword handles the password prompt with auto-generation for empty input.
 func (r *SetupRunner) interactivePassword(existingPass string) (string, error) {
 	if existingPass != "" {
 		fmt.Fprintln(r.Out, "  Database password: [already set -- press Enter to keep]")
-		dbPassword, err := r.Prompter.Password("Database password")
+		dbPassword, err := r.Prompter.Password(databasePasswordPrompt)
 		if err != nil {
 			return "", err
 		}
@@ -849,7 +975,7 @@ func (r *SetupRunner) interactivePassword(existingPass string) (string, error) {
 		return dbPassword, nil
 	}
 
-	dbPassword, err := ConfirmPassword(r.Prompter, "Database password", true)
+	dbPassword, err := ConfirmPassword(r.Prompter, databasePasswordPrompt, true)
 	if err != nil {
 		return "", err
 	}
@@ -859,7 +985,7 @@ func (r *SetupRunner) interactivePassword(existingPass string) (string, error) {
 			return "", fmt.Errorf("generating password: %w", err)
 		}
 		dbPassword = hex.EncodeToString(b)
-		fmt.Fprintln(r.Out, "  DATABASE_PASSWORD auto-generated")
+		fmt.Fprintln(r.Out, generatedDatabasePasswordMessage)
 	}
 	return dbPassword, nil
 }
@@ -886,10 +1012,10 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
 		dbUser = "postgres"
 	}
 	if dbName == "" {
-		dbName = "heimdall-server-production"
+		dbName = defaultDatabaseName
 	}
 	if adminEmail == "" {
-		adminEmail = "admin@heimdall.local"
+		adminEmail = defaultAdminEmail
 	}
 
 	// Auto-generate password if still empty
@@ -899,7 +1025,7 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
 			return fmt.Errorf("generating password: %w", err)
 		}
 		dbPassword = hex.EncodeToString(b)
-		fmt.Fprintln(r.Out, "  DATABASE_PASSWORD auto-generated")
+		fmt.Fprintln(r.Out, generatedDatabasePasswordMessage)
 	}
 
 	// Secrets — preserve existing, only generate if missing
@@ -925,8 +1051,11 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
 	settings := maps.Clone(existing)
 	settings["JWT_EXPIRE_TIME"] = envDefault(prompted, "JWT_EXPIRE_TIME", envDefault(existing, "JWT_EXPIRE_TIME", "1d"))
 	settings["HEIMDALL_TLS_CERT_DAYS"] = envDefault(prompted, "HEIMDALL_TLS_CERT_DAYS", envDefault(existing, "HEIMDALL_TLS_CERT_DAYS", "7"))
-	return r.writeConfig(settings, dbHost, dbPort, dbUser, dbPassword, dbName,
-		jwtSecret, apiKeySecret, nginxHost, externalURL, adminEmail)
+	return r.writeConfig(settings, map[string]string{
+		"DATABASE_HOST": dbHost, "DATABASE_PORT": dbPort, "DATABASE_USERNAME": dbUser,
+		"DATABASE_PASSWORD": dbPassword, "DATABASE_NAME": dbName, "JWT_SECRET": jwtSecret,
+		"API_KEY_SECRET": apiKeySecret, "NGINX_HOST": nginxHost, "EXTERNAL_URL": externalURL, "ADMIN_EMAIL": adminEmail,
+	})
 }
 
 // stepConfigureNonInteractive uses CLI flags, existing values, and defaults.
@@ -940,7 +1069,7 @@ func (r *SetupRunner) stepConfigureNonInteractive(existing map[string]string) er
 			return fmt.Errorf("generating password: %w", err)
 		}
 		dbPassword = hex.EncodeToString(b)
-		fmt.Fprintln(r.Out, "  DATABASE_PASSWORD auto-generated")
+		fmt.Fprintln(r.Out, generatedDatabasePasswordMessage)
 	}
 
 	jwtSecret := existing["JWT_SECRET"]
@@ -964,41 +1093,32 @@ func (r *SetupRunner) stepConfigureNonInteractive(existing map[string]string) er
 	}
 
 	nginxHost := envDefault(existing, "NGINX_HOST", "localhost")
-	adminEmail := envDefault(existing, "ADMIN_EMAIL", "admin@heimdall.local")
+	adminEmail := envDefault(existing, "ADMIN_EMAIL", defaultAdminEmail)
 	externalURL := r.ExternalURL
 	if externalURL == "" {
 		externalURL = nginxHost
 	}
 
-	return r.writeConfig(existing, dbHost, dbPort, dbUser, dbPassword, dbName,
-		jwtSecret, apiKeySecret, nginxHost, externalURL, adminEmail)
+	return r.writeConfig(existing, map[string]string{
+		"DATABASE_HOST": dbHost, "DATABASE_PORT": dbPort, "DATABASE_USERNAME": dbUser,
+		"DATABASE_PASSWORD": dbPassword, "DATABASE_NAME": dbName, "JWT_SECRET": jwtSecret,
+		"API_KEY_SECRET": apiKeySecret, "NGINX_HOST": nginxHost, "EXTERNAL_URL": externalURL, "ADMIN_EMAIL": adminEmail,
+	})
 }
 
 // writeConfig writes the resolved config to the env file.
-func (r *SetupRunner) writeConfig(existing map[string]string,
-	dbHost, dbPort, dbUser, dbPassword, dbName,
-	jwtSecret, apiKeySecret, nginxHost, externalURL, adminEmail string) error {
+func (r *SetupRunner) writeConfig(existing, values map[string]string) error {
+	dbHost, dbPort, dbUser := values["DATABASE_HOST"], values["DATABASE_PORT"], values["DATABASE_USERNAME"]
+	dbPassword, dbName := values["DATABASE_PASSWORD"], values["DATABASE_NAME"]
+	jwtSecret, apiKeySecret := values["JWT_SECRET"], values["API_KEY_SECRET"]
+	nginxHost, externalURL, adminEmail := values["NGINX_HOST"], values["EXTERNAL_URL"], values["ADMIN_EMAIL"]
 
 	if r.Reconfigure && existing["HEIMDALL_PROXY_MODE"] != "" && existing["HEIMDALL_PROXY_MODE"] != r.ProxyMode {
 		return &CLIError{Summary: "proxy ownership changes require full setup", Suggestion: "Run heimdall-cli setup without --reconfigure to change proxy ownership"}
 	}
-	if externalURL == "" {
-		externalURL = nginxHost
-	}
-	var err error
-	externalURL, err = normalizeExternalURL(externalURL, r.ProxyMode)
+	externalURL, nginxHost, err := r.configurationURL(externalURL, nginxHost)
 	if err != nil {
 		return err
-	}
-	u, _ := url.Parse(externalURL)
-	if r.bundledRuntime {
-		if _, err := validatePublicURL(externalURL); err != nil {
-			return err
-		}
-	}
-	nginxHost = u.Hostname()
-	if r.ProxyMode == "nginx" && (u.Scheme != "https" || (u.Port() != "" && u.Port() != "443")) {
-		return fmt.Errorf("managed Nginx requires an HTTPS external URL on port 443")
 	}
 	// Preserve saved values unless the interactive wizard supplied replacements.
 	jwtExpire := "1d"
@@ -1081,6 +1201,32 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
 	r.DBName = dbName
 	r.ExternalURL = externalURL
 
+	return r.persistConfiguration(entries)
+}
+
+func (r *SetupRunner) configurationURL(externalURL, nginxHost string) (string, string, error) {
+	if externalURL == "" {
+		externalURL = nginxHost
+	}
+	var err error
+	externalURL, err = normalizeExternalURL(externalURL, r.ProxyMode)
+	if err != nil {
+		return "", "", err
+	}
+	u, _ := url.Parse(externalURL)
+	if r.bundledRuntime {
+		if _, err := validatePublicURL(externalURL); err != nil {
+			return "", "", err
+		}
+	}
+	nginxHost = u.Hostname()
+	if r.ProxyMode == "nginx" && (u.Scheme != "https" || (u.Port() != "" && u.Port() != "443")) {
+		return "", "", fmt.Errorf("managed Nginx requires an HTTPS external URL on port 443")
+	}
+	return externalURL, nginxHost, nil
+}
+
+func (r *SetupRunner) persistConfiguration(entries map[string]string) error {
 	if r.stageConfig {
 		r.pendingConfig = entries
 		return nil
@@ -1094,7 +1240,7 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
 		return fmt.Errorf("writing env file: %w", err)
 	}
 	// Set file permissions (matches heimdall-configure.sh)
-	r.Exec.Run("chown", "root:heimdall", r.Env.GetEnvFilePath())
+	r.Exec.Run("chown", configFileOwner, r.Env.GetEnvFilePath())
 	r.Exec.Run("chmod", "0640", r.Env.GetEnvFilePath())
 
 	fmt.Fprintf(r.Out, "  Configuration saved to %s\n", r.Env.GetEnvFilePath())
@@ -1242,26 +1388,21 @@ func determineTLSStrategy(host, tlsCert, tlsKey string) tlsStrategy {
 
 // resolveExternalHost extracts the hostname from EXTERNAL_URL, flags, or the
 // system hostname, and ensures EXTERNAL_URL is persisted in backend.env.
-func (r *SetupRunner) resolveExternalHost() (host, url string) {
-	url = r.ExternalURL
-	if url == "" {
+func (r *SetupRunner) resolveExternalHost() (host, externalURL string) {
+	externalURL = r.ExternalURL
+	if externalURL == "" {
 		env, _ := r.Env.ReadEnv()
-		url = env["EXTERNAL_URL"]
+		externalURL = env["EXTERNAL_URL"]
 	}
 
-	if url != "" {
-		// Strip scheme and port/path: https://foo.example.com:443/bar → foo.example.com
-		h := url
-		for _, prefix := range []string{"https://", "http://"} {
-			if len(h) > len(prefix) && h[:len(prefix)] == prefix {
-				h = h[len(prefix):]
-				break
-			}
+	if externalURL != "" {
+		address := externalURL
+		if !strings.Contains(address, "://") {
+			address = "//" + address
 		}
-		if idx := strings.IndexAny(h, ":/"); idx >= 0 {
-			h = h[:idx]
+		if parsed, err := url.Parse(address); err == nil {
+			host = parsed.Hostname()
 		}
-		host = h
 	}
 
 	if host == "" {
@@ -1274,16 +1415,16 @@ func (r *SetupRunner) resolveExternalHost() (host, url string) {
 		if host == "" {
 			host = "localhost"
 		}
-		url = "https://" + host
+		externalURL = httpsURLPrefix + host
 	}
 
 	// Persist EXTERNAL_URL if not already set
 	env, _ := r.Env.ReadEnv()
 	if env["EXTERNAL_URL"] == "" {
-		r.Env.WriteEnvKey("EXTERNAL_URL", url)
-		fmt.Fprintf(r.Out, "  Set EXTERNAL_URL=%s\n", url)
+		r.Env.WriteEnvKey("EXTERNAL_URL", externalURL)
+		fmt.Fprintf(r.Out, "  Set EXTERNAL_URL=%s\n", externalURL)
 	}
-	return host, url
+	return host, externalURL
 }
 
 func (r *SetupRunner) runTLSCommand(name string, args ...string) error {
@@ -1562,7 +1703,7 @@ func (r *SetupRunner) stepSecurityPolicies() error {
 	}
 
 	// File permission hardening
-	r.Exec.Run("chown", "root:heimdall", r.Paths.ConfigDir)
+	r.Exec.Run("chown", configFileOwner, r.Paths.ConfigDir)
 	configMode := "0750"
 	if r.bundledRuntime {
 		configMode = "0751"
@@ -1628,13 +1769,13 @@ func (r *SetupRunner) printCompletionBanner() {
 // detectCloud checks cloud metadata endpoints.
 func (r *SetupRunner) detectCloud() string {
 	// EC2
-	out, exitCode, _ := r.Exec.Run("curl", "-sf", "-m", "2", "http://169.254.169.254/latest/meta-data/instance-id")
+	out, exitCode, _ := r.Exec.Run("curl", "-sf", "-m", "2", "http://169.254.169.254/latest/meta-data/instance-id") // NOSONAR: AWS defines this fixed, non-routable link-local metadata endpoint.
 	if exitCode == 0 && out != "" {
 		return "ec2"
 	}
 	// Azure
 	out, exitCode, _ = r.Exec.Run("curl", "-sf", "-m", "2", "-H", "Metadata:true",
-		"http://169.254.169.254/metadata/instance?api-version=2021-02-01")
+		"http://169.254.169.254/metadata/instance?api-version=2021-02-01") // NOSONAR: Azure defines this fixed, non-routable link-local metadata endpoint.
 	if exitCode == 0 && out != "" {
 		return "azure"
 	}
@@ -1750,41 +1891,58 @@ func checkOwnedPort(exec ExecRunner, systemd SystemdRunner, port int, unit strin
 	if err != nil {
 		return err
 	}
-	pidNum, _ := strconv.Atoi(strings.TrimSpace(pid))
 	for _, line := range strings.Split(strings.TrimSpace(out), "\n") {
-		fields := strings.Fields(line)
-		if !active || pidNum <= 0 || len(fields) < 6 || (fields[0] != "LISTEN" && fields[0] != "UNCONN") || !strings.HasSuffix(fields[3], ":"+strconv.Itoa(port)) {
-			return fmt.Errorf("port %d is occupied by a process outside %s; choose another port or reconfigure its owner", port, unit)
+		if err := validateOwnedListener(line, port, unit, active, pid); err != nil {
+			return err
 		}
-		owners := regexp.MustCompile(`pid=([0-9]+),`).FindAllStringSubmatch(line, -1)
-		if len(owners) == 0 {
-			return fmt.Errorf("cannot identify listener owner on port %d", port)
-		}
-		for _, match := range owners {
-			if match[1] == strings.TrimSpace(pid) {
-				continue
-			}
-			group, err := systemd.ShowProperty(unit, "ControlGroup")
-			if err != nil || !strings.HasPrefix(group, "/") || group == "/" {
-				return fmt.Errorf("cannot verify worker ownership for %s", unit)
-			}
-			out, code, err := exec.Run("cat", "/proc/"+match[1]+"/cgroup")
-			if err != nil || code != 0 {
-				return fmt.Errorf("cannot verify listener process %s on port %d", match[1], port)
-			}
-			owned := false
-			for _, entry := range strings.Split(strings.TrimSpace(out), "\n") {
-				fields := strings.SplitN(entry, ":", 3)
-				if len(fields) == 3 && fields[2] == group {
-					owned = true
-				}
-			}
-			if !owned {
-				return fmt.Errorf("port %d has another owner", port)
-			}
+		if err := checkListenerWorkers(exec, systemd, line, port, unit, pid); err != nil {
+			return err
 		}
 	}
 	return nil
+}
+
+func validateOwnedListener(line string, port int, unit string, active bool, pid string) error {
+	pidNum, _ := strconv.Atoi(strings.TrimSpace(pid))
+	fields := strings.Fields(line)
+	if !active || pidNum <= 0 || len(fields) < 6 || (fields[0] != "LISTEN" && fields[0] != "UNCONN") || !strings.HasSuffix(fields[3], ":"+strconv.Itoa(port)) {
+		return fmt.Errorf("port %d is occupied by a process outside %s; choose another port or reconfigure its owner", port, unit)
+	}
+	return nil
+}
+
+func checkListenerWorkers(exec ExecRunner, systemd SystemdRunner, line string, port int, unit, pid string) error {
+	owners := regexp.MustCompile(`pid=([0-9]+),`).FindAllStringSubmatch(line, -1)
+	if len(owners) == 0 {
+		return fmt.Errorf("cannot identify listener owner on port %d", port)
+	}
+	for _, match := range owners {
+		if match[1] == strings.TrimSpace(pid) {
+			continue
+		}
+		if err := checkListenerControlGroup(exec, systemd, unit, match[1], port); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func checkListenerControlGroup(exec ExecRunner, systemd SystemdRunner, unit, pid string, port int) error {
+	group, err := systemd.ShowProperty(unit, "ControlGroup")
+	if err != nil || !strings.HasPrefix(group, "/") || group == "/" {
+		return fmt.Errorf("cannot verify worker ownership for %s", unit)
+	}
+	out, code, err := exec.Run("cat", "/proc/"+pid+"/cgroup")
+	if err != nil || code != 0 {
+		return fmt.Errorf("cannot verify listener process %s on port %d", pid, port)
+	}
+	for _, entry := range strings.Split(strings.TrimSpace(out), "\n") {
+		fields := strings.SplitN(entry, ":", 3)
+		if len(fields) == 3 && fields[2] == group {
+			return nil
+		}
+	}
+	return fmt.Errorf("port %d has another owner", port)
 }
 
 const bundledCaddyService = "heimdall-caddy"
@@ -1799,7 +1957,7 @@ func certificateLifetimeDays(env map[string]string) (int, error) {
 }
 
 func renderBundledCaddy(env map[string]string) (string, error) {
-	return renderPrivateCaddy(env, ConfigDir+"/caddy")
+	return renderPrivateCaddy(env, ConfigDir+caddyConfigSuffix)
 }
 
 func renderPrivateCaddy(env map[string]string, dir string) (string, error) {
@@ -1824,7 +1982,7 @@ func renderPrivateCaddy(env map[string]string, dir string) (string, error) {
 		global += fmt.Sprintf("\tpki {\n\t\tca local {\n\t\t\tintermediate_lifetime %dh\n\t\t}\n\t}\n", days*24*6)
 		tlsLine = fmt.Sprintf("\ttls {\n\t\tissuer internal {\n\t\t\tlifetime %dh\n\t\t}\n\t}\n", days*24)
 	case "custom":
-		tlsLine = fmt.Sprintf("\ttls %s %s\n", strconv.Quote(dir+"/certs/server.crt"), strconv.Quote(dir+"/certs/server.key"))
+		tlsLine = fmt.Sprintf("\ttls %s %s\n", strconv.Quote(dir+caddyCertSuffix), strconv.Quote(dir+caddyKeySuffix))
 	case "acme":
 		if email := env["ADMIN_EMAIL"]; email != "" {
 			if strings.ContainsAny(email, "\r\n{}") {
@@ -1887,7 +2045,7 @@ type caddyUpdate struct {
 }
 
 func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate, error) {
-	dir := r.Paths.ConfigDir + "/caddy"
+	dir := r.Paths.ConfigDir + caddyConfigSuffix
 	config, err := renderPrivateCaddy(env, dir)
 	if err != nil {
 		return nil, err
@@ -1896,6 +2054,33 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate, 
 	if err := requireRegular(r.FS, binary); err != nil {
 		return nil, err
 	}
+	if err := r.checkCaddyPorts(env); err != nil {
+		return nil, err
+	}
+	update := &caddyUpdate{runner: r, unit: bundledCaddyService, group: bundledCaddyService, runDir: "/run/heimdall-caddy", config: config, pending: dir + "/Caddyfile.pending", certs: map[string][]byte{}}
+	if err := update.snapshotCaddy(dir); err != nil {
+		return nil, err
+	}
+	candidate, err := update.customCaddyCertificates(env, dir)
+	if err != nil {
+		return nil, err
+	}
+	if err := r.prepareCaddyDirectories(dir); err != nil {
+		return nil, err
+	}
+	defer update.cleanup()
+	if err := update.stageCaddyConfiguration(candidate); err != nil {
+		return nil, err
+	}
+	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/caddy", r.Paths.ConfigDir+caddyConfigSuffix, "/var/lib/heimdall-caddy"); err != nil {
+		return nil, err
+	}
+	if err := runChecked(r.Exec, "runuser", "-u", bundledCaddyService, "--", "env", "XDG_DATA_HOME=/var/lib/heimdall-caddy/data", "XDG_CONFIG_HOME=/var/lib/heimdall-caddy/config", binary, "validate", "--config", update.pending, "--adapter", "caddyfile"); err != nil {
+		return nil, fmt.Errorf("validating private Caddy configuration: %w", err)
+	}
+	return update, nil
+}
+func (r *SetupRunner) checkCaddyPorts(env map[string]string) error {
 	u, _ := url.Parse(env["EXTERNAL_URL"])
 	port := 443
 	if u.Scheme == "http" {
@@ -1910,117 +2095,130 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate, 
 	}
 	for _, p := range ports {
 		if err := checkOwnedPort(r.Exec, r.Systemd, p, proxyPortOwner(r.previousProxyMode, bundledCaddyService), false); err != nil {
-			return nil, err
+			return err
 		}
 	}
 	if u.Scheme == "https" {
 		if err := checkOwnedPort(r.Exec, r.Systemd, port, proxyPortOwner(r.previousProxyMode, bundledCaddyService), true); err != nil {
-			return nil, err
+			return err
 		}
 	}
-	update := &caddyUpdate{runner: r, unit: bundledCaddyService, group: "heimdall-caddy", runDir: "/run/heimdall-caddy", config: config, pending: dir + "/Caddyfile.pending", certs: map[string][]byte{}}
-	update.active, err = r.Systemd.IsActive(bundledCaddyService)
+	return nil
+}
+
+func (u *caddyUpdate) snapshotCaddy(dir string) error {
+	r := u.runner
+	var err error
+	u.active, err = r.Systemd.IsActive(bundledCaddyService)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	state, err := r.Systemd.ShowProperty(bundledCaddyService, "UnitFileState")
 	if err != nil {
-		return nil, err
+		return err
 	}
-	update.enabled = state == "enabled" || state == "enabled-runtime"
-	for _, path := range []string{dir + "/Caddyfile", dir + "/certs/server.crt", dir + "/certs/server.key"} {
+	u.enabled = state == "enabled" || state == systemdEnabledRuntime
+	for _, path := range []string{dir + "/Caddyfile", dir + caddyCertSuffix, dir + caddyKeySuffix} {
 		saved, err := snapshotFile(r.FS, path)
 		if err != nil {
-			return nil, err
+			return err
 		}
-		update.saved = append(update.saved, saved)
+		u.saved = append(u.saved, saved)
 	}
-	for _, path := range []string{update.pending, dir + "/certs/server.crt.pending", dir + "/certs/server.key.pending", "/var/lib/heimdall-caddy/data/.heimdall-check", "/var/lib/heimdall-caddy/config/.heimdall-check", "/run/heimdall-caddy/.heimdall-check"} {
+	for _, path := range []string{u.pending, dir + "/certs/server.crt.pending", dir + "/certs/server.key.pending", "/var/lib/heimdall-caddy/data/.heimdall-check", "/var/lib/heimdall-caddy/config/.heimdall-check", "/run/heimdall-caddy/.heimdall-check"} {
 		if err := safeManagedPath(r.FS, path); err != nil {
-			return nil, err
+			return err
 		}
 	}
-	candidate := config
+	return nil
+}
+
+func (u *caddyUpdate) customCaddyCertificates(env map[string]string, dir string) (string, error) {
+	r := u.runner
+	candidate := u.config
 	if env["HEIMDALL_TLS_MODE"] == "custom" {
 		cert, err := r.FS.ReadFile(env["HEIMDALL_TLS_CERT"])
 		if err != nil {
-			return nil, fmt.Errorf("reading custom TLS certificate: %w", err)
+			return "", fmt.Errorf("reading custom TLS certificate: %w", err)
 		}
 		key, err := r.FS.ReadFile(env["HEIMDALL_TLS_KEY"])
 		if err != nil {
-			return nil, fmt.Errorf("reading custom TLS key: %w", err)
+			return "", fmt.Errorf("reading custom TLS key: %w", err)
 		}
 		if _, err := tls.X509KeyPair(cert, key); err != nil {
-			return nil, fmt.Errorf("invalid custom TLS certificate/key: %w", err)
+			return "", fmt.Errorf("invalid custom TLS certificate/key: %w", err)
 		}
-		update.certs[dir+"/certs/server.crt"] = cert
-		update.certs[dir+"/certs/server.key"] = key
-		for path := range update.certs {
-			candidate = strings.ReplaceAll(candidate, strconv.Quote(path), strconv.Quote(path+".pending"))
+		u.certs[dir+caddyCertSuffix] = cert
+		u.certs[dir+caddyKeySuffix] = key
+		for path := range u.certs {
+			candidate = strings.ReplaceAll(candidate, strconv.Quote(path), strconv.Quote(path+pendingFileSuffix))
 		}
 	}
+	return candidate, nil
+}
+
+func (r *SetupRunner) prepareCaddyDirectories(dir string) error {
 	for _, path := range []string{dir, dir + "/certs"} {
 		if err := r.FS.MkdirAll(path, 0750); err != nil {
-			return nil, err
+			return err
 		}
-		if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", path); err != nil {
-			return nil, err
+		if err := runChecked(r.Exec, "chown", caddyConfigOwner, path); err != nil {
+			return err
 		}
 		if err := runChecked(r.Exec, "chmod", "0750", path); err != nil {
-			return nil, err
+			return err
 		}
 	}
 	if err := runChecked(r.Exec, "chmod", "0751", r.Paths.ConfigDir); err != nil {
-		return nil, err
+		return err
 	}
 	// Validation uses exactly the service account and private state locations.
 	for _, path := range []string{"/var/lib/heimdall-caddy/data", "/var/lib/heimdall-caddy/config"} {
 		if err := r.FS.MkdirAll(path, 0700); err != nil {
-			return nil, err
+			return err
 		}
 		if err := runChecked(r.Exec, "chown", "heimdall-caddy:heimdall-caddy", path); err != nil {
-			return nil, err
+			return err
 		}
 	}
-	defer update.cleanup()
-	if err := r.FS.RemoveAll(update.pending); err != nil {
-		return nil, err
-	}
-	for path, data := range update.certs {
-		if err := r.FS.RemoveAll(path + ".pending"); err != nil {
-			return nil, err
-		}
-		if err := r.FS.WriteFile(path+".pending", data, 0640); err != nil {
-			return nil, err
-		}
-		if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", path+".pending"); err != nil {
-			return nil, err
-		}
-		if err := runChecked(r.Exec, "chmod", "0640", path+".pending"); err != nil {
-			return nil, err
-		}
-	}
-	if err := r.FS.WriteFile(update.pending, []byte(candidate), 0640); err != nil {
-		return nil, err
-	}
-	if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", update.pending); err != nil {
-		return nil, err
-	}
-	if err := runChecked(r.Exec, "chmod", "0640", update.pending); err != nil {
-		return nil, err
-	}
-	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/caddy", r.Paths.ConfigDir+"/caddy", "/var/lib/heimdall-caddy"); err != nil {
-		return nil, err
-	}
-	if err := runChecked(r.Exec, "runuser", "-u", "heimdall-caddy", "--", "env", "XDG_DATA_HOME=/var/lib/heimdall-caddy/data", "XDG_CONFIG_HOME=/var/lib/heimdall-caddy/config", binary, "validate", "--config", update.pending, "--adapter", "caddyfile"); err != nil {
-		return nil, fmt.Errorf("validating private Caddy configuration: %w", err)
-	}
-	return update, nil
+	return nil
 }
+
+func (u *caddyUpdate) stageCaddyConfiguration(candidate string) error {
+	r := u.runner
+	if err := r.FS.RemoveAll(u.pending); err != nil {
+		return err
+	}
+	for path, data := range u.certs {
+		if err := r.FS.RemoveAll(path + pendingFileSuffix); err != nil {
+			return err
+		}
+		if err := r.FS.WriteFile(path+pendingFileSuffix, data, 0640); err != nil {
+			return err
+		}
+		if err := runChecked(r.Exec, "chown", caddyConfigOwner, path+pendingFileSuffix); err != nil {
+			return err
+		}
+		if err := runChecked(r.Exec, "chmod", "0640", path+pendingFileSuffix); err != nil {
+			return err
+		}
+	}
+	if err := r.FS.WriteFile(u.pending, []byte(candidate), 0640); err != nil {
+		return err
+	}
+	if err := runChecked(r.Exec, "chown", caddyConfigOwner, u.pending); err != nil {
+		return err
+	}
+	if err := runChecked(r.Exec, "chmod", "0640", u.pending); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (u *caddyUpdate) cleanup() {
 	_ = u.runner.FS.RemoveAll(u.pending)
 	for path := range u.certs {
-		_ = u.runner.FS.RemoveAll(path + ".pending")
+		_ = u.runner.FS.RemoveAll(path + pendingFileSuffix)
 	}
 }
 func (u *caddyUpdate) apply() (err error) {
@@ -2113,71 +2311,46 @@ func (u *caddyUpdate) rollback() error {
 const databaseDependency = "/etc/systemd/system/heimdall-server.service.d/database.conf"
 const databaseDependencyContent = "[Unit]\nRequires=heimdall-postgresql.service\nAfter=heimdall-postgresql.service\n"
 
+type serviceState struct {
+	unit            string
+	active, enabled bool
+}
+
+type bundledSetupUpdate struct {
+	runner                                                             *SetupRunner
+	existing, env                                                      map[string]string
+	marker                                                             string
+	originalMarker, before, dependency                                 savedFile
+	selectedPorts                                                      []selinuxPort
+	proxy                                                              *caddyUpdate
+	previousPG                                                         []savedFile
+	disabled                                                           []serviceState
+	pgWasActive, pgWasEnabled                                          bool
+	markerRemoved, pgChanged, wrote, dependencyChanged, startAttempted bool
+}
+
 // RPM setup stages settings until every replacement can be validated. A failed
 // activation restores configuration; a migration failure always leaves the app stopped.
 func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
-	env := r.pendingConfig
-	marker := r.Paths.ConfigDir + "/upgrade-pending"
-	if err := rootManagedFile(r.FS, marker); err != nil {
+	u := &bundledSetupUpdate{runner: r, existing: existing, env: r.pendingConfig, marker: r.Paths.ConfigDir + "/upgrade-pending"}
+	if err := u.prepare(); err != nil {
 		return err
 	}
-	originalMarker, err := snapshotFile(r.FS, marker)
-	if err != nil {
-		return err
-	}
-	markerRemoved := false
-	selectedPorts, err := r.selectedSELinuxPorts(env)
-	if err != nil {
-		return err
-	}
-	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, selectedPorts, false); err != nil {
-		return err
-	}
-	portValue := envDefault(env, "PORT", DefaultAppPort)
-	if err := ValidateValue("PORT", portValue); err != nil {
-		return err
-	}
-	port, _ := strconv.Atoi(portValue)
-	if err := checkOwnedPort(r.Exec, r.Systemd, port, ServiceName, false); err != nil {
-		return err
-	}
-	if !r.SkipTLS && r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
-		target, err := validatePublicURL(env["EXTERNAL_URL"])
+	defer func() {
 		if err != nil {
-			return err
+			err = errors.Join(err, u.rollback())
 		}
-		if r.ProxyMode == "external" {
-			proxyPort := 443
-			if target.Scheme == "http" {
-				proxyPort = 80
-			}
-			if target.Port() != "" {
-				proxyPort, _ = strconv.Atoi(target.Port())
-			}
-			if err := r.rejectPrivateEndpoint(target.Hostname(), proxyPort, bundledCaddyService); err != nil {
-				return err
-			}
-			if err := r.rejectPrivateEndpoint(target.Hostname(), proxyPort, bundledNginxService); err != nil {
-				return err
-			}
-		}
-	}
-	if !r.SkipDB && r.DatabaseMode == "external" {
-		if err := r.rejectPrivateEndpoint(r.DBHost, r.DBPort, bundledPGService); err != nil {
-			return err
-		}
-	}
+	}()
+	return u.activate()
+}
 
-	before, err := snapshotFile(r.FS, r.Env.GetEnvFilePath())
-	if err != nil {
+func (u *bundledSetupUpdate) prepare() error {
+	r := u.runner
+	if err := u.preflight(); err != nil {
 		return err
 	}
-	dependency, err := snapshotFile(r.FS, databaseDependency)
-	if err != nil {
+	if err := u.snapshotConfiguration(); err != nil {
 		return err
-	}
-	if dependency.exists && string(dependency.data) != databaseDependencyContent {
-		return fmt.Errorf("refusing to replace an unrecognized database dependency: %s", databaseDependency)
 	}
 	if !r.SkipDB && r.DatabaseMode == "bundled" {
 		bootstrap := &PostgresBootstrapRunner{Paths: r.Paths, FS: r.FS, Exec: r.Exec, Systemd: r.Systemd, DBHost: r.DBHost, DBPort: r.DBPort, DBUser: r.DBUser}
@@ -2191,218 +2364,367 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
 	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime", r.Paths.AppDir, r.Paths.ConfigDir); err != nil {
 		return err
 	}
-	if !r.SkipDB && r.DatabaseMode == "external" {
-		cfg, err := resolveDBConfig(env)
-		if err != nil {
-			return err
-		}
-		if err := configureDBConnector(r.DB, r.Paths, r.FS, cfg); err != nil {
-			return err
-		}
-		if err := r.DB.TestConnection(cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName); err != nil {
-			return err
-		}
-		if err := checkPostgresServer(r.Exec, r.Paths, r.FS, cfg); err != nil {
-			return err
-		}
-	}
-	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, selectedPorts, true); err != nil {
+	if err := r.testExternalDatabase(u.env); err != nil {
 		return err
 	}
-	var proxy *caddyUpdate
-	if !r.SkipTLS && (r.ProxyMode == "bundled" || r.ProxyMode == "nginx") {
-		if r.ProxyMode == "nginx" {
-			proxy, err = r.prepareBundledNginx(env)
-		} else {
-			proxy, err = r.prepareBundledCaddy(env)
-		}
-		if err != nil {
-			return err
-		}
-		if r.TLSMode == "custom" {
-			env["HEIMDALL_TLS_CERT"] = r.Paths.ConfigDir + "/caddy/certs/server.crt"
-			env["HEIMDALL_TLS_KEY"] = r.Paths.ConfigDir + "/caddy/certs/server.key"
-		}
+	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, u.selectedPorts, true); err != nil {
+		return err
 	}
-	var previousPG []savedFile
-	pgWasActive, pgWasEnabled := false, false
-	if !r.SkipDB && r.DatabaseMode == "bundled" {
-		pgWasActive, err = r.Systemd.IsActive(bundledPGService)
-		if err != nil {
-			return err
-		}
-		state, err := r.Systemd.ShowProperty(bundledPGService, "UnitFileState")
-		if err != nil {
-			return err
-		}
-		pgWasEnabled = state == "enabled" || state == "enabled-runtime"
-		if r.FS.Exists(bundledPGData + "/PG_VERSION") {
-			for _, file := range []string{"postgresql.conf", "heimdall.conf", "pg_hba.conf"} {
-				snapshot, err := snapshotFile(r.FS, bundledPGData+"/"+file)
-				if err != nil {
-					return err
-				}
-				previousPG = append(previousPG, snapshot)
-			}
-		}
+	if err := u.prepareProxy(); err != nil {
+		return err
 	}
-	pgChanged := false
-	var disabled []struct {
-		unit            string
-		active, enabled bool
-	}
-	wrote, dependencyChanged, startAttempted := false, false, false
-	defer func() {
-		if err == nil {
-			return
-		}
-		var rollback []error
-		if markerRemoved {
-			markerErr := func() error {
-				if err := rootManagedFile(r.FS, marker); err != nil {
-					return err
-				}
-				if err := r.FS.WriteFile(marker, originalMarker.data, 0600); err != nil {
-					return err
-				}
-				if err := runChecked(r.Exec, "chown", "root:root", marker); err != nil {
-					return err
-				}
-				return runChecked(r.Exec, "chmod", "0600", marker)
-			}()
-			rollback = append(rollback, markerErr)
-		}
-		// Stop any partially started app before restoring prior configuration.
-		if startAttempted {
-			rollback = append(rollback, r.Systemd.Stop(ServiceName))
-		}
-		if proxy != nil {
-			rollback = append(rollback, proxy.rollback())
-		}
-		if pgChanged && (existing["HEIMDALL_DATABASE_MODE"] == "bundled" || dependency.exists) && existing["DATABASE_USERNAME"] == r.DBUser && existing["DATABASE_PASSWORD"] != "" && existing["DATABASE_PASSWORD"] != r.DBPassword {
-			previous := &PostgresBootstrapRunner{Paths: r.Paths, Exec: r.Exec, DBPort: r.DBPort, DBUser: r.DBUser, DBPassword: existing["DATABASE_PASSWORD"]}
-			install := &pgInstall{PsqlBin: r.Paths.RuntimePath("postgresql", "bin", "psql"), SocketDir: bundledPGSocket, OSUser: "heimdall-postgres"}
-			if readyErr := previous.waitReady(install); readyErr != nil {
-				rollback = append(rollback, readyErr)
-			} else {
-				rollback = append(rollback, previous.configureRole(install))
-			}
-		}
-		if pgChanged {
-			for _, saved := range previousPG {
-				rollback = append(rollback, saved.restore(r.FS))
-			}
-			if pgWasActive {
-				rollback = append(rollback, r.Systemd.Restart(bundledPGService))
-			} else {
-				rollback = append(rollback, r.Systemd.Stop(bundledPGService))
-			}
-		}
+	return u.snapshotPostgres()
+}
 
-		if pgChanged && !pgWasEnabled {
-			rollback = append(rollback, runChecked(r.Exec, "systemctl", "disable", bundledPGService))
-		}
-		if wrote {
-			rollback = append(rollback, r.Env.WriteEnvFile(existing))
-			if _, fileBacked := r.Env.(*FileEnvManager); fileBacked {
-				rollback = append(rollback, before.restore(r.FS))
-			}
-		}
-		if dependencyChanged {
-			rollback = append(rollback, dependency.restore(r.FS), runChecked(r.Exec, "systemctl", "daemon-reload"))
-		}
-		for _, unit := range disabled {
-			if unit.enabled {
-				rollback = append(rollback, r.Systemd.Enable(unit.unit))
-			}
-			if unit.active {
-				rollback = append(rollback, r.Systemd.Start(unit.unit))
-			}
-		}
+func (u *bundledSetupUpdate) preflight() error {
+	r := u.runner
+	if err := rootManagedFile(r.FS, u.marker); err != nil {
+		return err
+	}
+	var err error
+	u.originalMarker, err = snapshotFile(r.FS, u.marker)
+	if err != nil {
+		return err
+	}
+	u.selectedPorts, err = r.selectedSELinuxPorts(u.env)
+	if err != nil {
+		return err
+	}
+	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, u.selectedPorts, false); err != nil {
+		return err
+	}
+	portValue := envDefault(u.env, "PORT", DefaultAppPort)
+	if err := ValidateValue("PORT", portValue); err != nil {
+		return err
+	}
+	port, _ := strconv.Atoi(portValue)
+	if err := checkOwnedPort(r.Exec, r.Systemd, port, ServiceName, false); err != nil {
+		return err
+	}
+	return r.validateExternalEndpoints(u.env)
+}
 
-		err = errors.Join(append([]error{err}, rollback...)...)
-	}()
+func (r *SetupRunner) validateExternalEndpoints(env map[string]string) error {
+	if !r.SkipTLS && r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
+		target, err := validatePublicURL(env["EXTERNAL_URL"])
+		if err != nil {
+			return err
+		}
+		if r.ProxyMode == "external" {
+			for _, unit := range []string{bundledCaddyService, bundledNginxService} {
+				if err := r.rejectPrivateEndpoint(target.Hostname(), publicURLPort(target), unit); err != nil {
+					return err
+				}
+			}
+		}
+	}
+	if !r.SkipDB && r.DatabaseMode == "external" {
+		return r.rejectPrivateEndpoint(r.DBHost, r.DBPort, bundledPGService)
+	}
+	return nil
+}
+
+func publicURLPort(u *url.URL) int {
+	port := 443
+	if u.Scheme == "http" {
+		port = 80
+	}
+	if u.Port() != "" {
+		port, _ = strconv.Atoi(u.Port())
+	}
+	return port
+}
+
+func (u *bundledSetupUpdate) snapshotConfiguration() error {
+	r := u.runner
+	var err error
+	u.before, err = snapshotFile(r.FS, r.Env.GetEnvFilePath())
+	if err != nil {
+		return err
+	}
+	u.dependency, err = snapshotFile(r.FS, databaseDependency)
+	if err != nil {
+		return err
+	}
+	if u.dependency.exists && string(u.dependency.data) != databaseDependencyContent {
+		return fmt.Errorf("refusing to replace an unrecognized database dependency: %s", databaseDependency)
+	}
+	return nil
+}
+
+func (r *SetupRunner) testExternalDatabase(env map[string]string) error {
+	if r.SkipDB || r.DatabaseMode != "external" {
+		return nil
+	}
+	cfg, err := resolveDBConfig(env)
+	if err != nil {
+		return err
+	}
+	if err := configureDBConnector(r.DB, r.Paths, r.FS, cfg); err != nil {
+		return err
+	}
+	if err := r.DB.TestConnection(cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName); err != nil {
+		return err
+	}
+	return checkPostgresServer(r.Exec, r.Paths, r.FS, cfg)
+}
+
+func (u *bundledSetupUpdate) prepareProxy() error {
+	r := u.runner
+	if r.SkipTLS || (r.ProxyMode != "bundled" && r.ProxyMode != "nginx") {
+		return nil
+	}
+	var err error
+	if r.ProxyMode == "nginx" {
+		u.proxy, err = r.prepareBundledNginx(u.env)
+	} else {
+		u.proxy, err = r.prepareBundledCaddy(u.env)
+	}
+	if err != nil {
+		return err
+	}
+	if r.TLSMode == "custom" {
+		u.env["HEIMDALL_TLS_CERT"] = r.Paths.ConfigDir + "/caddy/certs/server.crt"
+		u.env["HEIMDALL_TLS_KEY"] = r.Paths.ConfigDir + "/caddy/certs/server.key"
+	}
+	return nil
+}
+
+func (u *bundledSetupUpdate) snapshotPostgres() error {
+	r := u.runner
+	if r.SkipDB || r.DatabaseMode != "bundled" {
+		return nil
+	}
+	var err error
+	u.pgWasActive, err = r.Systemd.IsActive(bundledPGService)
+	if err != nil {
+		return err
+	}
+	state, err := r.Systemd.ShowProperty(bundledPGService, "UnitFileState")
+	if err != nil {
+		return err
+	}
+	u.pgWasEnabled = state == "enabled" || state == systemdEnabledRuntime
+	if r.FS.Exists(bundledPGData + "/PG_VERSION") {
+		for _, file := range []string{"postgresql.conf", "heimdall.conf", "pg_hba.conf"} {
+			snapshot, err := snapshotFile(r.FS, bundledPGData+"/"+file)
+			if err != nil {
+				return err
+			}
+			u.previousPG = append(u.previousPG, snapshot)
+		}
+	}
+	return nil
+}
+
+func (u *bundledSetupUpdate) rollback() error {
+	r := u.runner
+	var rollback []error
+	if u.markerRemoved {
+		rollback = append(rollback, u.restoreMarker())
+	}
+	// Stop any partially started app before restoring prior configuration.
+	if u.startAttempted {
+		rollback = append(rollback, r.Systemd.Stop(ServiceName))
+	}
+	if u.proxy != nil {
+		rollback = append(rollback, u.proxy.rollback())
+	}
+	rollback = append(rollback, u.restorePostgres())
+	if u.wrote {
+		rollback = append(rollback, r.Env.WriteEnvFile(u.existing))
+		if _, fileBacked := r.Env.(*FileEnvManager); fileBacked {
+			rollback = append(rollback, u.before.restore(r.FS))
+		}
+	}
+	if u.dependencyChanged {
+		rollback = append(rollback, u.dependency.restore(r.FS), runChecked(r.Exec, "systemctl", "daemon-reload"))
+	}
+	rollback = append(rollback, u.restoreDisabledServices())
+	return errors.Join(rollback...)
+}
+
+func (u *bundledSetupUpdate) restoreMarker() error {
+	r := u.runner
+	if err := rootManagedFile(r.FS, u.marker); err != nil {
+		return err
+	}
+	if err := r.FS.WriteFile(u.marker, u.originalMarker.data, 0600); err != nil {
+		return err
+	}
+	if err := runChecked(r.Exec, "chown", "root:root", u.marker); err != nil {
+		return err
+	}
+	return runChecked(r.Exec, "chmod", "0600", u.marker)
+}
+
+func (u *bundledSetupUpdate) restorePostgresPassword() error {
+	r := u.runner
+	existing := u.existing
+	if (existing["HEIMDALL_DATABASE_MODE"] != "bundled" && !u.dependency.exists) || existing["DATABASE_USERNAME"] != r.DBUser || existing["DATABASE_PASSWORD"] == "" || existing["DATABASE_PASSWORD"] == r.DBPassword {
+		return nil
+	}
+	previous := &PostgresBootstrapRunner{Paths: r.Paths, Exec: r.Exec, DBPort: r.DBPort, DBUser: r.DBUser, DBPassword: existing["DATABASE_PASSWORD"]}
+	install := &pgInstall{PsqlBin: r.Paths.RuntimePath("postgresql", "bin", "psql"), SocketDir: bundledPGSocket, OSUser: "heimdall-postgres"}
+	if err := previous.waitReady(install); err != nil {
+		return err
+	}
+	return previous.configureRole(install)
+}
+
+func (u *bundledSetupUpdate) restorePostgres() error {
+	if !u.pgChanged {
+		return nil
+	}
+	r := u.runner
+	rollback := []error{u.restorePostgresPassword()}
+	for _, saved := range u.previousPG {
+		rollback = append(rollback, saved.restore(r.FS))
+	}
+	if u.pgWasActive {
+		rollback = append(rollback, r.Systemd.Restart(bundledPGService))
+	} else {
+		rollback = append(rollback, r.Systemd.Stop(bundledPGService))
+	}
+	if !u.pgWasEnabled {
+		rollback = append(rollback, runChecked(r.Exec, "systemctl", "disable", bundledPGService))
+	}
+	return errors.Join(rollback...)
+}
+
+func (u *bundledSetupUpdate) restoreDisabledServices() error {
+	var rollback []error
+	for _, unit := range u.disabled {
+		if unit.enabled {
+			rollback = append(rollback, u.runner.Systemd.Enable(unit.unit))
+		}
+		if unit.active {
+			rollback = append(rollback, u.runner.Systemd.Start(unit.unit))
+		}
+	}
+	return errors.Join(rollback...)
+}
+
+func (u *bundledSetupUpdate) activate() error {
+	r := u.runner
 	r.printSummary(r.DatabaseMode == "bundled")
-	if !r.SkipDB || r.FS.Exists(marker) {
+	if !r.SkipDB || r.FS.Exists(u.marker) {
 		if err := r.Systemd.Stop(ServiceName); err != nil {
 			return err
 		}
 	}
-	wrote = true
-	if err := r.Env.WriteEnvFile(env); err != nil {
+	u.wrote = true
+	if err := r.Env.WriteEnvFile(u.env); err != nil {
 		return err
 	}
-	if err := runChecked(r.Exec, "chown", "root:heimdall", r.Env.GetEnvFilePath()); err != nil {
+	if err := runChecked(r.Exec, "chown", configFileOwner, r.Env.GetEnvFilePath()); err != nil {
 		return err
 	}
 	if err := runChecked(r.Exec, "chmod", "0640", r.Env.GetEnvFilePath()); err != nil {
 		return err
 	}
-	if !r.SkipDB {
-		if r.DatabaseMode == "bundled" {
-			pgChanged = true
-			if err := r.stepPostgresBootstrap(); err != nil {
-				return err
-			}
-			if err := r.stepConnectionTest(); err != nil {
-				return err
-			}
-		}
-		if err := r.stepMigrations(); err != nil {
+	if err := u.migrateDatabase(); err != nil {
+		return err
+	}
+	if err := u.activateProxy(); err != nil {
+		return err
+	}
+	if err := u.disableDeselectedServices(); err != nil {
+		return err
+	}
+	if r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
+		fmt.Fprintf(r.Out, "  Backend address: http://127.0.0.1:%s\n", envDefault(u.env, "PORT", DefaultAppPort))
+	}
+	if err := r.stepSecurityPolicies(); err != nil {
+		return err
+	}
+	return u.startApplication()
+}
+
+func (u *bundledSetupUpdate) migrateDatabase() error {
+	r := u.runner
+	if r.SkipDB {
+		return nil
+	}
+	if r.DatabaseMode == "bundled" {
+		u.pgChanged = true
+		if err := r.stepPostgresBootstrap(); err != nil {
 			return err
 		}
-		if r.DatabaseMode == "bundled" {
-			if err := r.FS.MkdirAll(filepath.Dir(databaseDependency), 0755); err != nil {
-				return err
-			}
-			dependencyChanged = true
-			if err := r.FS.WriteFile(databaseDependency, []byte(databaseDependencyContent), 0644); err != nil {
-				return err
-			}
-		} else if dependency.exists {
-			dependencyChanged = true
-			if err := r.FS.RemoveAll(databaseDependency); err != nil {
-				return err
-			}
-		}
-		if dependencyChanged {
-			if err := runChecked(r.Exec, "systemctl", "daemon-reload"); err != nil {
-				return err
-			}
-		}
-	}
-	if proxy != nil {
-		oldUnit := ""
-		if existing["HEIMDALL_PROXY_MODE"] == "bundled" && r.ProxyMode == "nginx" {
-			oldUnit = bundledCaddyService
-		}
-		if existing["HEIMDALL_PROXY_MODE"] == "nginx" && r.ProxyMode == "bundled" {
-			oldUnit = bundledNginxService
-		}
-		if oldUnit != "" {
-			active, e := r.Systemd.IsActive(oldUnit)
-			if e != nil {
-				return e
-			}
-			state, e := r.Systemd.ShowProperty(oldUnit, "UnitFileState")
-			if e != nil {
-				return e
-			}
-			disabled = append(disabled, struct {
-				unit            string
-				active, enabled bool
-			}{oldUnit, active, state == "enabled" || state == "enabled-runtime"})
-			if e := runChecked(r.Exec, "systemctl", "disable", "--now", oldUnit); e != nil {
-				return e
-			}
-		}
-		if err := proxy.apply(); err != nil {
+		if err := r.stepConnectionTest(); err != nil {
 			return err
 		}
-		if r.TLSMode == "internal" {
-			fmt.Fprintln(r.Out, "  Import the private Caddy CA where needed:", bundledCaddyRoot)
+	}
+	if err := r.stepMigrations(); err != nil {
+		return err
+	}
+	if err := u.updateDatabaseDependency(); err != nil {
+		return err
+	}
+	if u.dependencyChanged {
+		return runChecked(r.Exec, "systemctl", "daemon-reload")
+	}
+	return nil
+}
+
+func (u *bundledSetupUpdate) updateDatabaseDependency() error {
+	r := u.runner
+	if r.DatabaseMode == "bundled" {
+		if err := r.FS.MkdirAll(filepath.Dir(databaseDependency), 0755); err != nil {
+			return err
+		}
+		u.dependencyChanged = true
+		return r.FS.WriteFile(databaseDependency, []byte(databaseDependencyContent), 0644)
+	}
+	if u.dependency.exists {
+		u.dependencyChanged = true
+		return r.FS.RemoveAll(databaseDependency)
+	}
+	return nil
+}
+
+func (u *bundledSetupUpdate) activateProxy() error {
+	if u.proxy == nil {
+		return nil
+	}
+	r := u.runner
+	oldUnit := ""
+	if u.existing["HEIMDALL_PROXY_MODE"] == "bundled" && r.ProxyMode == "nginx" {
+		oldUnit = bundledCaddyService
+	}
+	if u.existing["HEIMDALL_PROXY_MODE"] == "nginx" && r.ProxyMode == "bundled" {
+		oldUnit = bundledNginxService
+	}
+	if oldUnit != "" {
+		active, err := r.Systemd.IsActive(oldUnit)
+		if err != nil {
+			return err
+		}
+		if err := u.disableService(oldUnit, active); err != nil {
+			return err
 		}
 	}
+	if err := u.proxy.apply(); err != nil {
+		return err
+	}
+	if r.TLSMode == "internal" {
+		fmt.Fprintln(r.Out, "  Import the private Caddy CA where needed:", bundledCaddyRoot)
+	}
+	return nil
+}
+
+func (u *bundledSetupUpdate) disableService(unit string, active bool) error {
+	r := u.runner
+	state, err := r.Systemd.ShowProperty(unit, "UnitFileState")
+	if err != nil {
+		return err
+	}
+	u.disabled = append(u.disabled, serviceState{unit, active, state == "enabled" || state == systemdEnabledRuntime})
+	return runChecked(r.Exec, "systemctl", "disable", "--now", unit)
+}
+
+func (u *bundledSetupUpdate) disableDeselectedServices() error {
+	r := u.runner
 	// Replacements passed their applicable preflight checks. Retain deselected state.
 	for _, selection := range []struct {
 		skip                       bool
@@ -2412,47 +2734,38 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
 		{r.SkipTLS, r.ProxyMode, "HEIMDALL_PROXY_MODE", bundledCaddyService, "bundled"},
 		{r.SkipTLS, r.ProxyMode, "HEIMDALL_PROXY_MODE", bundledNginxService, "nginx"},
 	} {
-		if selection.skip || selection.mode == selection.ownedMode || (proxy != nil && selection.key == "HEIMDALL_PROXY_MODE") {
+		if selection.skip || selection.mode == selection.ownedMode || (u.proxy != nil && selection.key == "HEIMDALL_PROXY_MODE") {
 			continue
 		}
 		active, err := r.Systemd.IsActive(selection.unit)
 		if err != nil {
 			return err
 		}
-		if existing[selection.key] == selection.ownedMode || (selection.unit == bundledPGService && dependency.exists) {
-			state, err := r.Systemd.ShowProperty(selection.unit, "UnitFileState")
-			if err != nil {
-				return err
-			}
-			disabled = append(disabled, struct {
-				unit            string
-				active, enabled bool
-			}{selection.unit, active, state == "enabled" || state == "enabled-runtime"})
-			if err := runChecked(r.Exec, "systemctl", "disable", "--now", selection.unit); err != nil {
+		if u.existing[selection.key] == selection.ownedMode || (selection.unit == bundledPGService && u.dependency.exists) {
+			if err := u.disableService(selection.unit, active); err != nil {
 				return err
 			}
 		}
 	}
-	if r.ProxyMode != "bundled" && r.ProxyMode != "nginx" {
-		fmt.Fprintf(r.Out, "  Backend address: http://127.0.0.1:%s\n", envDefault(env, "PORT", DefaultAppPort))
-	}
-	if err := r.stepSecurityPolicies(); err != nil {
-		return err
-	}
-	if r.FS.Exists(marker) {
+	return nil
+}
+
+func (u *bundledSetupUpdate) startApplication() error {
+	r := u.runner
+	if r.FS.Exists(u.marker) {
 		if r.SkipDB {
 			fmt.Fprintln(r.Out, "Upgrade pending: migrations were skipped; application remains stopped. Run setup --non-interactive.")
 			return nil
 		}
-		if err := rootManagedFile(r.FS, marker); err != nil {
+		if err := rootManagedFile(r.FS, u.marker); err != nil {
 			return err
 		}
-		if err := r.FS.RemoveAll(marker); err != nil {
+		if err := r.FS.RemoveAll(u.marker); err != nil {
 			return err
 		}
-		markerRemoved = true
+		u.markerRemoved = true
 	}
-	startAttempted = true
+	u.startAttempted = true
 	if err := r.stepStartService(); err != nil {
 		return err
 	}
@@ -2485,27 +2798,9 @@ func validatePublicURL(raw string) (*url.URL, error) {
 // Reject a demonstrably dependent local endpoint before disabling its provider.
 // A public hostname alone does not establish that a remote proxy depends on us.
 func (r *SetupRunner) rejectPrivateEndpoint(host string, port int, unit string) error {
-	var addresses []net.IP
-	if strings.EqualFold(strings.TrimSuffix(host, "."), "localhost") {
-		addresses = []net.IP{net.ParseIP("127.0.0.1"), net.ParseIP("::1")}
-	} else if ip := net.ParseIP(host); ip != nil {
-		local := ip.IsLoopback()
-		if !local {
-			interfaces, err := net.InterfaceAddrs()
-			if err != nil {
-				return fmt.Errorf("checking local addresses: %w", err)
-			}
-			for _, address := range interfaces {
-				iface, _, err := net.ParseCIDR(address.String())
-				if err == nil && iface.Equal(ip) {
-					local = true
-					break
-				}
-			}
-		}
-		if local {
-			addresses = []net.IP{ip}
-		}
+	addresses, err := localEndpointAddresses(host)
+	if err != nil {
+		return err
 	}
 	if len(addresses) == 0 {
 		return nil
@@ -2534,36 +2829,70 @@ func (r *SetupRunner) rejectPrivateEndpoint(host string, port int, unit string) 
 		return nil
 	}
 	for _, line := range strings.Split(strings.TrimSpace(out), "\n") {
-		fields := strings.Fields(line)
-		if len(fields) < 5 || fields[0] != "LISTEN" {
-			return fmt.Errorf("cannot parse listener while checking external endpoint on port %d", port)
-		}
-		address, listenPort, err := net.SplitHostPort(fields[3])
-		if err != nil || listenPort != strconv.Itoa(port) {
-			return fmt.Errorf("unexpected listener while checking external endpoint on port %d", port)
-		}
-		listenIP := net.ParseIP(address)
-		if address != "*" && listenIP == nil {
-			return fmt.Errorf("invalid listener address while checking external endpoint on port %d", port)
-		}
-		matches := false
-		for _, ip := range addresses {
-			if address == "*" || listenIP.Equal(ip) || (listenIP.IsUnspecified() && (listenIP.To4() == nil || ip.To4() != nil)) {
-				matches = true
-				break
-			}
-		}
-		if matches {
-			owners := regexp.MustCompile(`pid=([0-9]+),`).FindAllStringSubmatch(line, -1)
-			if len(owners) == 0 {
-				return fmt.Errorf("cannot identify listener owner for external endpoint %s:%d", host, port)
-			}
-			for _, owner := range owners {
-				if owner[1] == pid {
-					return fmt.Errorf("external endpoint %s:%d is still served by %s; choose an independent endpoint before deselecting that service", host, port, unit)
-				}
-			}
+		if err := rejectPrivateListener(line, addresses, host, port, unit, pid); err != nil {
+			return err
 		}
 	}
 	return nil
+}
+
+func localEndpointAddresses(host string) ([]net.IP, error) {
+	if strings.EqualFold(strings.TrimSuffix(host, "."), "localhost") {
+		return []net.IP{net.ParseIP(loopbackIPv4), net.ParseIP("::1")}, nil
+	}
+	ip := net.ParseIP(host)
+	if ip == nil {
+		return nil, nil
+	}
+	if ip.IsLoopback() {
+		return []net.IP{ip}, nil
+	}
+	interfaces, err := net.InterfaceAddrs()
+	if err != nil {
+		return nil, fmt.Errorf("checking local addresses: %w", err)
+	}
+	for _, address := range interfaces {
+		iface, _, err := net.ParseCIDR(address.String())
+		if err == nil && iface.Equal(ip) {
+			return []net.IP{ip}, nil
+		}
+	}
+	return nil, nil
+}
+
+func rejectPrivateListener(line string, addresses []net.IP, host string, port int, unit, pid string) error {
+	fields := strings.Fields(line)
+	if len(fields) < 5 || fields[0] != "LISTEN" {
+		return fmt.Errorf("cannot parse listener while checking external endpoint on port %d", port)
+	}
+	address, listenPort, err := net.SplitHostPort(fields[3])
+	if err != nil || listenPort != strconv.Itoa(port) {
+		return fmt.Errorf("unexpected listener while checking external endpoint on port %d", port)
+	}
+	listenIP := net.ParseIP(address)
+	if address != "*" && listenIP == nil {
+		return fmt.Errorf("invalid listener address while checking external endpoint on port %d", port)
+	}
+	if !listenerMatchesAddresses(address, listenIP, addresses) {
+		return nil
+	}
+	owners := regexp.MustCompile(`pid=([0-9]+),`).FindAllStringSubmatch(line, -1)
+	if len(owners) == 0 {
+		return fmt.Errorf("cannot identify listener owner for external endpoint %s:%d", host, port)
+	}
+	for _, owner := range owners {
+		if owner[1] == pid {
+			return fmt.Errorf("external endpoint %s:%d is still served by %s; choose an independent endpoint before deselecting that service", host, port, unit)
+		}
+	}
+	return nil
+}
+
+func listenerMatchesAddresses(address string, listenIP net.IP, addresses []net.IP) bool {
+	for _, ip := range addresses {
+		if address == "*" || listenIP.Equal(ip) || (listenIP.IsUnspecified() && (listenIP.To4() == nil || ip.To4() != nil)) {
+			return true
+		}
+	}
+	return false
 }

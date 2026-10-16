@@ -83,18 +83,7 @@ func (m *FileEnvManager) WriteEnvFile(entries map[string]string) error {
 	if len(data) != 0 {
 		lines = strings.Split(strings.TrimSuffix(string(data), "\n"), "\n")
 	}
-	for i, line := range lines {
-		for key, previous := range ParseEnv(line) {
-			value, updating := entries[key]
-			if !updating {
-				continue
-			}
-			seen[key] = true
-			if value != previous {
-				lines[i] = key + "=" + encoded[key]
-			}
-		}
-	}
+	updateEnvLines(lines, entries, encoded, seen)
 	var missing []string
 	for key := range entries {
 		if !seen[key] {
@@ -121,4 +110,19 @@ func MaskSecret(val string) string {
 		return "***"
 	}
 	return val[:3] + "***" + val[len(val)-3:]
+}
+
+func updateEnvLines(lines []string, entries, encoded map[string]string, seen map[string]bool) {
+	for i, line := range lines {
+		for key, previous := range ParseEnv(line) {
+			value, updating := entries[key]
+			if !updating {
+				continue
+			}
+			seen[key] = true
+			if value != previous {
+				lines[i] = key + "=" + encoded[key]
+			}
+		}
+	}
 }

@@ -448,53 +448,58 @@ func (e *recoverySwapOnStop) Run(name string, args ...string) (string, int, erro
 func TestRestoreConfinesPublicationAfterPreflight(t *testing.T) {
 	for _, kind := range []string{"leaf symlink", "leaf hardlink", "ancestor symlink", "root symlink"} {
 		t.Run(kind, func(t *testing.T) {
-			p, fs, e := recoveryFixture(t, true)
-			require.NoError(t, os.MkdirAll(fs.state+"/data", 0700))
-			require.NoError(t, os.WriteFile(fs.state+"/data/key", []byte("old state"), 0600))
-			outsideDir := filepath.Join(filepath.Dir(p.ConfigDir), "outside")
-			require.NoError(t, os.MkdirAll(outsideDir+"/data", 0700))
-			for _, file := range []string{outsideDir + "/key", outsideDir + "/data/key"} {
-				require.NoError(t, os.WriteFile(file, []byte("untouched"), 0644))
-				require.NoError(t, os.Chmod(file, 0644))
-			}
-			archive := recoveryArchive(t, []*tar.Header{{Name: "backup/backend.env", Mode: 0640, Typeflag: tar.TypeReg}, {Name: "backup/caddy-state/data/key", Mode: 0600, Typeflag: tar.TypeReg}}, []string{"DATABASE_PASSWORD=old\nHEIMDALL_PROXY_MODE=bundled\n", "restored private key"})
-			r := recoveryRestore(p, fs, e)
-			swap := &recoverySwapOnStop{recoveryExec: e, swap: func() error {
-				target := fs.state + "/data/key"
-				outside := outsideDir + "/key"
-				if kind == "ancestor symlink" {
-					target = fs.state + "/data"
-					outside = outsideDir
-				}
-				if kind == "root symlink" {
-					target = fs.state
-					outside = outsideDir
-				}
-				if err := os.Rename(target, target+".before-swap"); err != nil {
-					return err
-				}
-				if kind == "leaf hardlink" {
-					return os.Link(outside, target)
-				}
-				return os.Symlink(outside, target)
-			}}
-			r.Exec = swap
-			require.NoError(t, r.Run(archive))
-			require.True(t, swap.swapped)
-			for _, file := range []string{outsideDir + "/key", outsideDir + "/data/key"} {
-				data, err := os.ReadFile(file)
-				require.NoError(t, err)
-				require.Equal(t, "untouched", string(data))
-				info, err := os.Stat(file)
-				require.NoError(t, err)
-				require.Equal(t, os.FileMode(0644), info.Mode().Perm())
-			}
-			data, err := os.ReadFile(fs.state + "/data/key")
-			require.NoError(t, err)
-			require.Equal(t, "restored private key", string(data))
-			require.FileExists(t, p.ConfigDir+"/upgrade-pending")
+			checkRestorePublicationAfterPreflight(t, kind)
 		})
 	}
+}
+
+func checkRestorePublicationAfterPreflight(t *testing.T, kind string) {
+	t.Helper()
+	p, fs, e := recoveryFixture(t, true)
+	require.NoError(t, os.MkdirAll(fs.state+"/data", 0700))
+	require.NoError(t, os.WriteFile(fs.state+"/data/key", []byte("old state"), 0600))
+	outsideDir := filepath.Join(filepath.Dir(p.ConfigDir), "outside")
+	require.NoError(t, os.MkdirAll(outsideDir+"/data", 0700))
+	for _, file := range []string{outsideDir + "/key", outsideDir + "/data/key"} {
+		require.NoError(t, os.WriteFile(file, []byte("untouched"), 0644))
+		require.NoError(t, os.Chmod(file, 0644))
+	}
+	archive := recoveryArchive(t, []*tar.Header{{Name: "backup/backend.env", Mode: 0640, Typeflag: tar.TypeReg}, {Name: "backup/caddy-state/data/key", Mode: 0600, Typeflag: tar.TypeReg}}, []string{"DATABASE_PASSWORD=old\nHEIMDALL_PROXY_MODE=bundled\n", "restored private key"})
+	r := recoveryRestore(p, fs, e)
+	swap := &recoverySwapOnStop{recoveryExec: e, swap: func() error {
+		target := fs.state + "/data/key"
+		outside := outsideDir + "/key"
+		if kind == "ancestor symlink" {
+			target = fs.state + "/data"
+			outside = outsideDir
+		}
+		if kind == "root symlink" {
+			target = fs.state
+			outside = outsideDir
+		}
+		if err := os.Rename(target, target+".before-swap"); err != nil {
+			return err
+		}
+		if kind == "leaf hardlink" {
+			return os.Link(outside, target)
+		}
+		return os.Symlink(outside, target)
+	}}
+	r.Exec = swap
+	require.NoError(t, r.Run(archive))
+	require.True(t, swap.swapped)
+	for _, file := range []string{outsideDir + "/key", outsideDir + "/data/key"} {
+		data, err := os.ReadFile(file)
+		require.NoError(t, err)
+		require.Equal(t, "untouched", string(data))
+		info, err := os.Stat(file)
+		require.NoError(t, err)
+		require.Equal(t, os.FileMode(0644), info.Mode().Perm())
+	}
+	data, err := os.ReadFile(fs.state + "/data/key")
+	require.NoError(t, err)
+	require.Equal(t, "restored private key", string(data))
+	require.FileExists(t, p.ConfigDir+"/upgrade-pending")
 }
 
 type recoveryPublicationFailureFS struct {
@@ -591,29 +596,34 @@ func TestRestoreProxyOwnershipTransition(t *testing.T) {
 	for _, oldMode := range []string{"bundled", "nginx"} {
 		for _, newMode := range []string{"bundled", "nginx", "external", "none", ""} {
 			t.Run(oldMode+" to "+newMode, func(t *testing.T) {
-				p, fs, exec := recoveryFixture(t, true)
-				before := "DATABASE_PASSWORD=old-secret\nHEIMDALL_PROXY_MODE=" + oldMode + "\n"
-				require.NoError(t, os.WriteFile(p.EnvFile, []byte(before), 0640))
-				archived := "DATABASE_PASSWORD=new-secret\nHEIMDALL_DATABASE_MODE=external\nHEIMDALL_PROXY_MODE=" + newMode + "\n"
-				require.NoError(t, recoveryRestore(p, fs, exec).Run(oldRecoveryArchive(t, archived, true)))
-				unit := bundledCaddyService
-				if oldMode == "nginx" {
-					unit = bundledNginxService
-				}
-				action := "stop " + unit
-				if oldMode != newMode {
-					action = "disable --now " + unit
-				}
-				var actions []string
-				for _, call := range exec.calls {
-					if call.Name == "systemctl" {
-						actions = append(actions, strings.Join(call.Args, " "))
-					}
-				}
-				require.Equal(t, []string{"stop heimdall-server", action}, actions)
+				checkRestoreProxyOwnershipTransition(t, oldMode, newMode)
 			})
 		}
 	}
+}
+
+func checkRestoreProxyOwnershipTransition(t *testing.T, oldMode, newMode string) {
+	t.Helper()
+	p, fs, exec := recoveryFixture(t, true)
+	before := "DATABASE_PASSWORD=old-secret\nHEIMDALL_PROXY_MODE=" + oldMode + "\n"
+	require.NoError(t, os.WriteFile(p.EnvFile, []byte(before), 0640))
+	archived := "DATABASE_PASSWORD=new-secret\nHEIMDALL_DATABASE_MODE=external\nHEIMDALL_PROXY_MODE=" + newMode + "\n"
+	require.NoError(t, recoveryRestore(p, fs, exec).Run(oldRecoveryArchive(t, archived, true)))
+	unit := bundledCaddyService
+	if oldMode == "nginx" {
+		unit = bundledNginxService
+	}
+	action := "stop " + unit
+	if oldMode != newMode {
+		action = "disable --now " + unit
+	}
+	var actions []string
+	for _, call := range exec.calls {
+		if call.Name == "systemctl" {
+			actions = append(actions, strings.Join(call.Args, " "))
+		}
+	}
+	require.Equal(t, []string{"stop heimdall-server", action}, actions)
 }
 
 func TestRestoreProxyDisableFailurePreservesCurrentConfig(t *testing.T) {

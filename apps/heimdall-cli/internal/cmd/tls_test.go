@@ -477,6 +477,9 @@ func TestLocalCertificateLifetime(t *testing.T) {
 			require.True(t, found, "legacy Caddy must receive the requested local certificate lifetime")
 		})
 	}
+}
+
+func TestLegacyIPCertificateLifetime(t *testing.T) {
 	for _, tc := range []struct{ days, want string }{{"", "7"}, {"30", "30"}} {
 		t.Run("legacy_ip_"+tc.days, func(t *testing.T) {
 			r, _ := newTLSTestRunner(map[string]string{

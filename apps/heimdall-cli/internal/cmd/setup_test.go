@@ -573,6 +573,22 @@ func TestResolveExternalHost_StripsPortAndPath(t *testing.T) {
 	assert.Equal(t, "heimdall.example.com", host)
 }
 
+func TestResolveExternalHost_URLForms(t *testing.T) {
+	for _, tc := range []struct{ address, host string }{
+		{"https://[::1]:8443/api", "::1"},
+		{"http://heimdall.example.com:8080/api", "heimdall.example.com"},
+		{"heimdall.example.com:8443/api", "heimdall.example.com"},
+	} {
+		t.Run(tc.address, func(t *testing.T) {
+			r, _, _ := newTestSetupRunner()
+			r.ExternalURL = tc.address
+			host, address := r.resolveExternalHost()
+			require.Equal(t, tc.host, host)
+			require.Equal(t, tc.address, address)
+		})
+	}
+}
+
 func TestResolveExternalHost_FallsBackToHostname(t *testing.T) {
 	r, _, _ := newTestSetupRunner()
 	r.Exec.(*FakeExecRunner).Results["hostname -f"] = FakeExecResult{Stdout: "myserver.local"}
@@ -1469,55 +1485,62 @@ func TestSetupRequiredServiceFailures(t *testing.T) {
 	for _, service := range []string{ServiceName, "caddy"} {
 		for _, failure := range []string{"enable", "restart", "is-active", "inactive"} {
 			t.Run(service+"/"+failure, func(t *testing.T) {
-				dir := t.TempDir()
-				calls := filepath.Join(dir, "calls")
-				require.NoError(t, os.WriteFile(filepath.Join(dir, "systemctl"), []byte(`#!/bin/sh
+				checkSetupRequiredServiceFailure(t, service, failure)
+			})
+		}
+	}
+}
+
+func checkSetupRequiredServiceFailure(t *testing.T, service, failure string) {
+	t.Helper()
+	dir := t.TempDir()
+	calls := filepath.Join(dir, "calls")
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "systemctl"), []byte(`#!/bin/sh
 printf '%s\n' "$*" >> "$SYSTEMCTL_CALLS"
 if [ "$1" = "$SYSTEMCTL_FAILURE" ]; then exit 1; fi
 if [ "$1" = is-active ]; then
   if [ "$SYSTEMCTL_FAILURE" = inactive ]; then echo inactive; else echo active; fi
 fi
 `), 0755))
-				t.Setenv("PATH", dir)
-				t.Setenv("SYSTEMCTL_CALLS", calls)
-				t.Setenv("SYSTEMCTL_FAILURE", failure)
-				r, out, _ := newTestSetupRunner()
-				r.Env.(*FakeEnvManager).Env["DATABASE_PASSWORD"] = "existing"
-				if service == "caddy" {
-					r, out = newTLSTestRunner(map[string]string{"EXTERNAL_URL": "https://heimdall.internal"})
-				}
-				r.Systemd = &systemdRunner{}
-				var err error
-				if service == "caddy" {
-					err = r.stepTLS()
-				} else {
-					err = r.stepStartService()
-				}
-				require.Error(t, err)
-				require.NotContains(t, out.String(), "enabled and running")
-				require.NotContains(t, out.String(), "Service enabled and started")
-				data, readErr := os.ReadFile(calls)
-				require.NoError(t, readErr)
-				want := "enable " + service + "\n"
-				if failure != "enable" {
-					want += "restart " + service + "\n"
-				}
-				if failure == "is-active" || failure == "inactive" {
-					want += "is-active " + service + "\n"
-				}
-				require.Equal(t, want, string(data))
-			})
-		}
+	t.Setenv("PATH", dir)
+	t.Setenv("SYSTEMCTL_CALLS", calls)
+	t.Setenv("SYSTEMCTL_FAILURE", failure)
+	r, out, _ := newTestSetupRunner()
+	r.Env.(*FakeEnvManager).Env["DATABASE_PASSWORD"] = "existing"
+	if service == "caddy" {
+		r, out = newTLSTestRunner(map[string]string{"EXTERNAL_URL": "https://heimdall.internal"})
 	}
+	r.Systemd = &systemdRunner{binary: filepath.Join(dir, "systemctl")}
+	var err error
+	if service == "caddy" {
+		err = r.stepTLS()
+	} else {
+		err = r.stepStartService()
+	}
+	require.Error(t, err)
+	require.NotContains(t, out.String(), "enabled and running")
+	require.NotContains(t, out.String(), "Service enabled and started")
+	data, readErr := os.ReadFile(calls)
+	require.NoError(t, readErr)
+	want := "enable " + service + "\n"
+	if failure != "enable" {
+		want += "restart " + service + "\n"
+	}
+	if failure == "is-active" || failure == "inactive" {
+		want += "is-active " + service + "\n"
+	}
+	require.Equal(t, want, string(data))
+}
+
+type setupRPMChoice struct {
+	name                              string
+	saved                             map[string]string
+	args                              []string
+	database, proxy, host, port, user string
 }
 
 func TestSetupRPMChoicesAndDryRun(t *testing.T) {
-	for _, tc := range []struct {
-		name                              string
-		saved                             map[string]string
-		args                              []string
-		database, proxy, host, port, user string
-	}{
+	for _, tc := range []setupRPMChoice{
 		{"fresh template", map[string]string{"DATABASE_HOST": "localhost", "DATABASE_PORT": "5432", "DATABASE_USERNAME": "postgres"}, nil, "bundled", "bundled", "127.0.0.1", "55432", "heimdall"},
 		{"saved selection", map[string]string{"DATABASE_PASSWORD": "saved", "HEIMDALL_DATABASE_MODE": "bundled", "HEIMDALL_PROXY_MODE": "none", "DATABASE_HOST": "127.0.0.1", "DATABASE_PORT": "55433", "DATABASE_USERNAME": "app"}, nil, "bundled", "none", "127.0.0.1", "55433", "app"},
 		{"legacy localhost", map[string]string{"DATABASE_PASSWORD": "saved", "DATABASE_HOST": "localhost"}, nil, "external", "external", "localhost", "5432", "postgres"},
@@ -1525,54 +1548,57 @@ func TestSetupRPMChoicesAndDryRun(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			for _, dry := range []bool{false, true} {
-				r, out, _ := newTestSetupRunner()
-				fs := r.FS.(*FakeFileSystem)
-				fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
-				r.Env.(*FakeEnvManager).Env = tc.saved
-				before, err := r.Env.ReadEnv()
-				require.NoError(t, err)
-				files := map[string][]byte{}
-				for k, v := range fs.Files {
-					files[k] = append([]byte(nil), v...)
-				}
-				cmd := NewSetupCmd(r)
-				args := append([]string{"--non-interactive", "--reconfigure", "--skip-db", "--skip-tls"}, tc.args...)
-				if dry {
-					args = append(args, "--dry-run")
-				}
-				cmd.SetArgs(args)
-				err = cmd.Execute()
-				if !dry && before["HEIMDALL_PROXY_MODE"] != "" && before["HEIMDALL_PROXY_MODE"] != tc.proxy {
-					require.ErrorContains(t, err, "full setup")
-					require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
-					require.Empty(t, r.Exec.(*FakeExecRunner).Calls)
-					require.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
-					continue
-				}
-				require.NoError(t, err)
-				if dry {
-					require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
-					require.Equal(t, files, fs.Files)
-					require.Empty(t, fs.Dirs)
-					require.Empty(t, r.Exec.(*FakeExecRunner).Calls)
-					require.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
-					require.Contains(t, out.String(), tc.host+":"+tc.port)
-					require.Contains(t, out.String(), "Database mode: "+tc.database)
-				} else {
-					env := r.Env.(*FakeEnvManager).Env
-					require.Equal(t, tc.database, env["HEIMDALL_DATABASE_MODE"])
-					require.Equal(t, tc.proxy, env["HEIMDALL_PROXY_MODE"])
-					require.Equal(t, tc.host, env["DATABASE_HOST"])
-					require.Equal(t, tc.port, env["DATABASE_PORT"])
-					require.Equal(t, tc.user, env["DATABASE_USERNAME"])
-					for k, v := range before {
-						if k == "DATABASE_PASSWORD" {
-							require.Equal(t, v, env[k])
-						}
-					}
-				}
+				checkSetupRPMChoice(t, tc, dry)
 			}
 		})
+	}
+}
+
+func checkSetupRPMChoice(t *testing.T, tc setupRPMChoice, dry bool) {
+	t.Helper()
+	r, out, _ := newTestSetupRunner()
+	fs := r.FS.(*FakeFileSystem)
+	fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
+	r.Env.(*FakeEnvManager).Env = tc.saved
+	before, err := r.Env.ReadEnv()
+	require.NoError(t, err)
+	files := map[string][]byte{}
+	for k, v := range fs.Files {
+		files[k] = append([]byte(nil), v...)
+	}
+	cmd := NewSetupCmd(r)
+	args := append([]string{"--non-interactive", "--reconfigure", "--skip-db", "--skip-tls"}, tc.args...)
+	if dry {
+		args = append(args, "--dry-run")
+	}
+	cmd.SetArgs(args)
+	err = cmd.Execute()
+	if !dry && before["HEIMDALL_PROXY_MODE"] != "" && before["HEIMDALL_PROXY_MODE"] != tc.proxy {
+		require.ErrorContains(t, err, "full setup")
+		require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
+		require.Empty(t, r.Exec.(*FakeExecRunner).Calls)
+		require.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
+		return
+	}
+	require.NoError(t, err)
+	if dry {
+		require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
+		require.Equal(t, files, fs.Files)
+		require.Empty(t, fs.Dirs)
+		require.Empty(t, r.Exec.(*FakeExecRunner).Calls)
+		require.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
+		require.Contains(t, out.String(), tc.host+":"+tc.port)
+		require.Contains(t, out.String(), "Database mode: "+tc.database)
+	} else {
+		env := r.Env.(*FakeEnvManager).Env
+		require.Equal(t, tc.database, env["HEIMDALL_DATABASE_MODE"])
+		require.Equal(t, tc.proxy, env["HEIMDALL_PROXY_MODE"])
+		require.Equal(t, tc.host, env["DATABASE_HOST"])
+		require.Equal(t, tc.port, env["DATABASE_PORT"])
+		require.Equal(t, tc.user, env["DATABASE_USERNAME"])
+		if password, ok := before["DATABASE_PASSWORD"]; ok {
+			require.Equal(t, password, env["DATABASE_PASSWORD"])
+		}
 	}
 }
 
@@ -1818,53 +1844,58 @@ func TestBundledSetupPrivateServicesAndDependency(t *testing.T) {
 func TestBundledSetupTransitionsAndMigrationFailure(t *testing.T) {
 	for _, target := range []string{"external", "bundled", "migration failure"} {
 		t.Run(target, func(t *testing.T) {
-			r := bundledSetupFixture(t)
-			fs := r.FS.(*FakeFileSystem)
-			sd := r.Systemd.(*FakeSystemdRunner)
-			exec := r.Exec.(*FakeExecRunner)
-			fs.Files[databaseDependency] = []byte(databaseDependencyContent)
-			fs.Files[r.Paths.ConfigDir+"/caddy/Caddyfile"] = []byte("keep old config\n")
-			fs.Files["/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt"] = []byte("keep CA")
-			sd.ActiveServices[bundledPGService], sd.ActiveServices[bundledCaddyService] = true, true
-			if target == "bundled" {
-				r.Env.(*FakeEnvManager).Env["HEIMDALL_DATABASE_MODE"] = "external"
-				r.Env.(*FakeEnvManager).Env["HEIMDALL_PROXY_MODE"] = "external"
-				r.DatabaseMode = "bundled"
-				r.ProxyMode = "bundled"
-				delete(fs.Files, databaseDependency)
-			} else {
-				r.DatabaseMode = "external"
-				r.ProxyMode = "external"
-				r.DBHost, r.DBPort = "db.external.test", 5432
-				r.flagChanged = map[string]bool{"db-host": true, "db-port": true}
-			}
-			if target == "migration failure" {
-				exec.Results["heimdall-server-db-setup"] = FakeExecResult{ExitCode: 1}
-			}
-			before, _ := r.Env.ReadEnv()
-			err := r.Run()
-			if target == "migration failure" {
-				require.Error(t, err)
-				require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
-				require.NotContains(t, sd.Actions, "restart:"+ServiceName)
-			} else {
-				require.NoError(t, err)
-			}
-			disabled := []string{}
-			for _, c := range exec.Calls {
-				if c.Name == "systemctl" && len(c.Args) == 3 && c.Args[0] == "disable" {
-					disabled = append(disabled, c.Args[2])
-				}
-			}
-			if target == "external" {
-				require.ElementsMatch(t, []string{bundledPGService, bundledCaddyService}, disabled)
-				require.NotContains(t, fs.Files, databaseDependency)
-			} else {
-				require.Empty(t, disabled)
-			}
-			require.Equal(t, "keep CA", string(fs.Files["/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt"]))
+			checkBundledSetupTransition(t, target)
 		})
 	}
+}
+
+func checkBundledSetupTransition(t *testing.T, target string) {
+	t.Helper()
+	r := bundledSetupFixture(t)
+	fs := r.FS.(*FakeFileSystem)
+	sd := r.Systemd.(*FakeSystemdRunner)
+	exec := r.Exec.(*FakeExecRunner)
+	fs.Files[databaseDependency] = []byte(databaseDependencyContent)
+	fs.Files[r.Paths.ConfigDir+"/caddy/Caddyfile"] = []byte("keep old config\n")
+	fs.Files["/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt"] = []byte("keep CA")
+	sd.ActiveServices[bundledPGService], sd.ActiveServices[bundledCaddyService] = true, true
+	if target == "bundled" {
+		r.Env.(*FakeEnvManager).Env["HEIMDALL_DATABASE_MODE"] = "external"
+		r.Env.(*FakeEnvManager).Env["HEIMDALL_PROXY_MODE"] = "external"
+		r.DatabaseMode = "bundled"
+		r.ProxyMode = "bundled"
+		delete(fs.Files, databaseDependency)
+	} else {
+		r.DatabaseMode = "external"
+		r.ProxyMode = "external"
+		r.DBHost, r.DBPort = "db.external.test", 5432
+		r.flagChanged = map[string]bool{"db-host": true, "db-port": true}
+	}
+	if target == "migration failure" {
+		exec.Results["heimdall-server-db-setup"] = FakeExecResult{ExitCode: 1}
+	}
+	before, _ := r.Env.ReadEnv()
+	err := r.Run()
+	if target == "migration failure" {
+		require.Error(t, err)
+		require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
+		require.NotContains(t, sd.Actions, "restart:"+ServiceName)
+	} else {
+		require.NoError(t, err)
+	}
+	disabled := []string{}
+	for _, c := range exec.Calls {
+		if c.Name == "systemctl" && len(c.Args) == 3 && c.Args[0] == "disable" {
+			disabled = append(disabled, c.Args[2])
+		}
+	}
+	if target == "external" {
+		require.ElementsMatch(t, []string{bundledPGService, bundledCaddyService}, disabled)
+		require.NotContains(t, fs.Files, databaseDependency)
+	} else {
+		require.Empty(t, disabled)
+	}
+	require.Equal(t, "keep CA", string(fs.Files["/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt"]))
 }
 
 func TestBundledSetupFailedPortChangeRestoresPostgresConfig(t *testing.T) {
@@ -1927,11 +1958,13 @@ func TestBundledFailedSetupRestoresPreviousRolePassword(t *testing.T) {
 	require.Equal(t, []string{"db_pass=new-password", "db_pass=keep-password"}, passwords)
 }
 
+type externalEndpointCase struct {
+	name, host, address, pid string
+	proxy, fail              bool
+}
+
 func TestBundledExternalTransitionEndpointIndependence(t *testing.T) {
-	for _, tc := range []struct {
-		name, host, address, pid string
-		proxy, fail              bool
-	}{
+	for _, tc := range []externalEndpointCase{
 		{"private database", "127.0.0.1", "127.0.0.1", "123", false, true},
 		{"private localhost database", "localhost", "127.0.0.1", "123", false, true},
 		{"private wildcard database", "127.0.0.1", "0.0.0.0", "123", false, true},
@@ -1942,62 +1975,67 @@ func TestBundledExternalTransitionEndpointIndependence(t *testing.T) {
 		{"remote load balancer same URL", "heimdall.example.test", "0.0.0.0", "123", true, false},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			r := bundledSetupFixture(t)
-			fs := r.FS.(*FakeFileSystem)
-			sd := r.Systemd.(*FakeSystemdRunner)
-			exec := r.Exec.(*FakeExecRunner)
-			unit, port := bundledPGService, 55432
-			if tc.proxy {
-				unit, port = bundledCaddyService, 443
-				r.ProxyMode = "external"
-				r.SkipDB = true
-				r.ExternalURL = "https://" + tc.host
-			} else {
-				r.DatabaseMode = "external"
-				r.SkipTLS = true
-				r.DBHost = tc.host
-				r.flagChanged = map[string]bool{"db-host": true}
-			}
-			sd.ActiveServices[unit] = true
-			sd.Properties[unit+":MainPID"] = "123"
-			exec.Results[fmt.Sprintf("ss -H -ltnp sport = :%d", port)] = FakeExecResult{Stdout: fmt.Sprintf("LISTEN 0 100 %s:%d 0.0.0.0:* users:((\"listener\",pid=%s,fd=1))", tc.address, port, tc.pid)}
-			// The same port can have an independent listener on another loopback address.
-			if tc.name == "other loopback database" {
-				result := exec.Results["ss -H -ltnp sport = :55432"]
-				result.Stdout += "\nLISTEN 0 100 127.0.0.2:55432 0.0.0.0:* users:((\"other\",pid=456,fd=1))"
-				exec.Results["ss -H -ltnp sport = :55432"] = result
-			}
-			before, _ := r.Env.ReadEnv()
-			files := map[string]string{}
-			for path, data := range fs.Files {
-				files[path] = string(data)
-			}
-			err := r.Run()
-			if tc.fail {
-				require.ErrorContains(t, err, "still served by "+unit)
-				require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
-				require.Empty(t, sd.Actions)
-				require.Empty(t, fs.Dirs)
-				after := map[string]string{}
-				for path, data := range fs.Files {
-					after[path] = string(data)
-				}
-				require.Equal(t, files, after)
-				for _, call := range exec.Calls {
-					require.True(t, call.Name == "ss" || (call.Name == "systemctl" && len(call.Args) == 1 && call.Args[0] == "show-environment"), "unexpected call before refusing dependent endpoint: %+v", call)
-				}
-			} else {
-				require.NoError(t, err)
-				disabled := false
-				for _, call := range exec.Calls {
-					if call.Name == "systemctl" && strings.Join(call.Args, " ") == "disable --now "+unit {
-						disabled = true
-					}
-				}
-				require.True(t, disabled, "old private service should be deselected only after independent replacement validation")
-			}
+			checkBundledExternalEndpoint(t, tc)
 		})
 	}
+}
+
+func checkBundledExternalEndpoint(t *testing.T, tc externalEndpointCase) {
+	t.Helper()
+	r := bundledSetupFixture(t)
+	fs := r.FS.(*FakeFileSystem)
+	sd := r.Systemd.(*FakeSystemdRunner)
+	exec := r.Exec.(*FakeExecRunner)
+	unit, port := bundledPGService, 55432
+	if tc.proxy {
+		unit, port = bundledCaddyService, 443
+		r.ProxyMode = "external"
+		r.SkipDB = true
+		r.ExternalURL = "https://" + tc.host
+	} else {
+		r.DatabaseMode = "external"
+		r.SkipTLS = true
+		r.DBHost = tc.host
+		r.flagChanged = map[string]bool{"db-host": true}
+	}
+	sd.ActiveServices[unit] = true
+	sd.Properties[unit+":MainPID"] = "123"
+	exec.Results[fmt.Sprintf("ss -H -ltnp sport = :%d", port)] = FakeExecResult{Stdout: fmt.Sprintf("LISTEN 0 100 %s:%d 0.0.0.0:* users:((\"listener\",pid=%s,fd=1))", tc.address, port, tc.pid)}
+	// The same port can have an independent listener on another loopback address.
+	if tc.name == "other loopback database" {
+		result := exec.Results["ss -H -ltnp sport = :55432"]
+		result.Stdout += "\nLISTEN 0 100 127.0.0.2:55432 0.0.0.0:* users:((\"other\",pid=456,fd=1))"
+		exec.Results["ss -H -ltnp sport = :55432"] = result
+	}
+	before, _ := r.Env.ReadEnv()
+	files := map[string]string{}
+	for path, data := range fs.Files {
+		files[path] = string(data)
+	}
+	err := r.Run()
+	if tc.fail {
+		require.ErrorContains(t, err, "still served by "+unit)
+		require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
+		require.Empty(t, sd.Actions)
+		require.Empty(t, fs.Dirs)
+		after := map[string]string{}
+		for path, data := range fs.Files {
+			after[path] = string(data)
+		}
+		require.Equal(t, files, after)
+		for _, call := range exec.Calls {
+			require.True(t, call.Name == "ss" || (call.Name == "systemctl" && len(call.Args) == 1 && call.Args[0] == "show-environment"), "unexpected call before refusing dependent endpoint: %+v", call)
+		}
+		return
+	}
+	require.NoError(t, err)
+	disabled := false
+	for _, call := range exec.Calls {
+		if call.Name == "systemctl" && strings.Join(call.Args, " ") == "disable --now "+unit {
+			disabled = true
+		}
+	}
+	require.True(t, disabled, "old private service should be deselected only after independent replacement validation")
 }
 
 func TestBundledExternalEndpointInspectionErrorsDoNotDisableServices(t *testing.T) {

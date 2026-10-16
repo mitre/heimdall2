@@ -64,30 +64,8 @@ func resolveDBConfig(env map[string]string) (DBConfig, error) {
 	for key, value := range env {
 		values[key] = value
 	}
-	if raw := env["DATABASE_URL"]; raw != "" {
-		u, err := url.Parse(raw)
-		if err != nil || (u.Scheme != "postgres" && u.Scheme != "postgresql") || u.Hostname() == "" || u.User == nil || strings.TrimPrefix(u.Path, "/") == "" {
-			return DBConfig{}, fmt.Errorf("DATABASE_URL must be a PostgreSQL URL with host, user and database")
-		}
-		// Heimdall's AppConfig parser keeps percent escapes literal and uses
-		// the first password/name segment. Do not silently use decoded credentials.
-		userinfo := strings.SplitN(strings.TrimPrefix(raw, u.Scheme+"://"), "@", 2)[0]
-		parts := strings.Split(userinfo, ":")
-		password := ""
-		if len(parts) > 1 {
-			password = parts[1]
-		}
-		name := strings.SplitN(strings.TrimPrefix(u.EscapedPath(), "/"), "/", 2)[0]
-		components := map[string]string{"DATABASE_HOST": u.Hostname(), "DATABASE_PORT": u.Port(), "DATABASE_USERNAME": parts[0], "DATABASE_PASSWORD": password, "DATABASE_NAME": name}
-		if components["DATABASE_PORT"] == "" {
-			components["DATABASE_PORT"] = "5432"
-		}
-		for key, value := range components {
-			if saved := env[key]; saved != "" && saved != value {
-				return DBConfig{}, fmt.Errorf("%s conflicts with DATABASE_URL; update the URL and individual settings together", key)
-			}
-			values[key] = value
-		}
+	if err := mergeDatabaseURL(env["DATABASE_URL"], values); err != nil {
+		return DBConfig{}, err
 	}
 	if p := values["DATABASE_PORT"]; p != "" {
 		port, err := strconv.Atoi(p)
@@ -96,28 +74,67 @@ func resolveDBConfig(env map[string]string) (DBConfig, error) {
 		}
 	}
 	cfg := ExtractDBConfig(values)
-	cfg.SSLMode = "disable"
-	if ssl := env["DATABASE_SSL"]; ssl != "" && !strings.EqualFold(ssl, "false") {
-		cfg.SSLMode = "verify-full"
-		cfg.SSLCA, cfg.SSLCert, cfg.SSLKey = env["DATABASE_SSL_CA"], env["DATABASE_SSL_CERT"], env["DATABASE_SSL_KEY"]
-		if strings.EqualFold(env["DATABASE_SSL_INSECURE"], "true") {
-			cfg.SSLMode = "require"
-			// libpq require verifies when a root file exists. ENOTDIR here disables
-			// that implicit verification on libpq 13–18, including ambient root.crt.
-			cfg.SSLCA = "/dev/null/heimdall-no-root.crt"
-		} else if cfg.SSLCA == "" {
-			// Explicit bundle paths work with both the RPM's libpq 18 and older
-			// standalone clients, which do not support sslrootcert=system.
-			for _, path := range []string{"/etc/pki/tls/certs/ca-bundle.crt", "/etc/ssl/certs/ca-certificates.crt", "/etc/ssl/cert.pem"} {
-				if info, err := os.Stat(path); err == nil && info.Mode().IsRegular() {
-					cfg.SSLCA = path
-					break
-				}
-			}
-			if cfg.SSLCA == "" {
-				return DBConfig{}, fmt.Errorf("verified PostgreSQL TLS requires DATABASE_SSL_CA or an installed system CA bundle")
-			}
-		}
+	if err := cfg.configureTLS(env); err != nil {
+		return DBConfig{}, err
 	}
 	return cfg, nil
+}
+
+func mergeDatabaseURL(raw string, values map[string]string) error {
+	if raw == "" {
+		return nil
+	}
+
+	u, err := url.Parse(raw)
+	if err != nil || (u.Scheme != "postgres" && u.Scheme != "postgresql") || u.Hostname() == "" || u.User == nil || strings.TrimPrefix(u.Path, "/") == "" {
+		return fmt.Errorf("DATABASE_URL must be a PostgreSQL URL with host, user and database")
+	}
+	// Heimdall's AppConfig parser keeps percent escapes literal and uses
+	// the first password/name segment. Do not silently use decoded credentials.
+	userinfo := strings.SplitN(strings.TrimPrefix(raw, u.Scheme+"://"), "@", 2)[0]
+	parts := strings.Split(userinfo, ":")
+	password := ""
+	if len(parts) > 1 {
+		password = parts[1]
+	}
+	name := strings.SplitN(strings.TrimPrefix(u.EscapedPath(), "/"), "/", 2)[0]
+	components := map[string]string{"DATABASE_HOST": u.Hostname(), "DATABASE_PORT": u.Port(), "DATABASE_USERNAME": parts[0], "DATABASE_PASSWORD": password, "DATABASE_NAME": name}
+	if components["DATABASE_PORT"] == "" {
+		components["DATABASE_PORT"] = "5432"
+	}
+	for key, value := range components {
+		if saved := values[key]; saved != "" && saved != value {
+			return fmt.Errorf("%s conflicts with DATABASE_URL; update the URL and individual settings together", key)
+		}
+		values[key] = value
+	}
+	return nil
+}
+
+func (cfg *DBConfig) configureTLS(env map[string]string) error {
+	cfg.SSLMode = "disable"
+	if ssl := env["DATABASE_SSL"]; ssl == "" || strings.EqualFold(ssl, "false") {
+		return nil
+	}
+	cfg.SSLMode = "verify-full"
+	cfg.SSLCA, cfg.SSLCert, cfg.SSLKey = env["DATABASE_SSL_CA"], env["DATABASE_SSL_CERT"], env["DATABASE_SSL_KEY"]
+	if strings.EqualFold(env["DATABASE_SSL_INSECURE"], "true") {
+		cfg.SSLMode = "require"
+		// libpq require verifies when a root file exists. ENOTDIR here disables
+		// that implicit verification on libpq 13–18, including ambient root.crt.
+		cfg.SSLCA = "/dev/null/heimdall-no-root.crt"
+	} else if cfg.SSLCA == "" {
+		// Explicit bundle paths work with both the RPM's libpq 18 and older
+		// standalone clients, which do not support sslrootcert=system.
+		for _, path := range []string{"/etc/pki/tls/certs/ca-bundle.crt", "/etc/ssl/certs/ca-certificates.crt", "/etc/ssl/cert.pem"} {
+			if info, err := os.Stat(path); err == nil && info.Mode().IsRegular() {
+				cfg.SSLCA = path
+				break
+			}
+		}
+		if cfg.SSLCA == "" {
+			return fmt.Errorf("verified PostgreSQL TLS requires DATABASE_SSL_CA or an installed system CA bundle")
+		}
+	}
+	return nil
 }

@@ -122,18 +122,9 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 	}
 	trees := map[string]string{}
 	if rpm {
-		for name, source := range recoveryTrees(r.Paths) {
-			if info, err := r.FS.Lstat(source); os.IsNotExist(err) {
-				continue
-			} else if err != nil {
-				return err
-			} else if !info.IsDir() {
-				return fmt.Errorf("expected private proxy directory: %s", source)
-			}
-			if err := walkRecoveryTree(r.FS, source, func(string, os.FileInfo) error { return nil }); err != nil {
-				return err
-			}
-			trees[name] = source
+		trees, err = r.recoverySources()
+		if err != nil {
+			return err
 		}
 		if err := checkPostgresServer(r.Exec, r.Paths, r.FS, dbCfg); err != nil {
 			return fmt.Errorf("cannot back up database: %w; newer servers require a heimdall-server RPM with compatible PostgreSQL clients", err)
@@ -186,89 +177,22 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 	}
 
 	// Copy backend.env
-	if err := r.FS.CopyFile(envPath, filepath.Join(backupDir, "backend.env")); err != nil {
+	if err := r.FS.CopyFile(envPath, filepath.Join(backupDir, recoveryEnvFile)); err != nil {
 		fmt.Fprintf(r.ErrOut, "Config:   copy failed: %v\n", err)
 		return fmt.Errorf("failed to back up config: %w", err)
 	}
-	if err := runChecked(r.Exec, "chmod", "0600", filepath.Join(backupDir, "backend.env")); err != nil {
+	if err := runChecked(r.Exec, "chmod", "0600", filepath.Join(backupDir, recoveryEnvFile)); err != nil {
 		return err
 	}
 	for name, source := range trees {
-		canonical, err := r.FS.EvalSymlinks(source)
-		if err != nil {
+		if err := r.backupRecoveryTree(backupDir, name, source); err != nil {
 			return err
-		}
-		root, err := os.OpenRoot(canonical)
-		if err != nil {
-			return err
-		}
-		defer root.Close()
-		if err := walkRecoveryTree(r.FS, source, func(path string, info os.FileInfo) error {
-			rel, err := filepath.Rel(source, path)
-			if err != nil {
-				return err
-			}
-			dest := filepath.Join(backupDir, name, rel)
-			if info.IsDir() {
-				return r.FS.MkdirAll(dest, 0700)
-			}
-			// The descriptor stays beneath the owned source even if the proxy swaps
-			// a descendant after preflight. Never copy an outside hard-link inode.
-			input, err := root.Open(rel)
-			if err != nil {
-				return err
-			}
-			defer input.Close()
-			opened, err := input.Stat()
-			if err != nil {
-				return err
-			}
-			if !opened.Mode().IsRegular() {
-				return fmt.Errorf("unexpected backup source: %s", path)
-			}
-			if stat, ok := opened.Sys().(*syscall.Stat_t); ok && stat.Nlink > 1 {
-				return fmt.Errorf("hard-linked backup source: %s", path)
-			}
-			output, err := os.OpenFile(dest, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
-			if err != nil {
-				return err
-			}
-			_, copyErr := io.Copy(output, input)
-			closeErr := output.Close()
-			if copyErr != nil {
-				return copyErr
-			}
-			if closeErr != nil {
-				return closeErr
-			}
-			mode := os.FileMode(0600)
-			if name == "caddy-config" || name == "nginx-config" {
-				mode = opened.Mode().Perm() & 0640
-			}
-			return runChecked(r.Exec, "chmod", fmt.Sprintf("%04o", mode), dest)
-		}); err != nil {
-			return fmt.Errorf("backing up %s: %w", name, err)
 		}
 	}
 	fmt.Fprintln(r.Out, "Config:   backed up")
 
-	// Database backup
-	if dbCfg.Password != "" {
-		dumpFile := filepath.Join(backupDir, "database.sql")
-		pgEnv := dbCfg.PgEnv()
-		_, exitCode, err := r.Exec.RunWithEnv(pgEnv, binary,
-			"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, dbCfg.DBName, "-f", dumpFile)
-		if err != nil || exitCode != 0 {
-			fmt.Fprintln(r.ErrOut, "Database: backup FAILED")
-			if err != nil {
-				return fmt.Errorf("failed to back up database: %w", err)
-			}
-			return fmt.Errorf("failed to back up database: pg_dump exited with status %d", exitCode)
-		} else {
-			fmt.Fprintln(r.Out, "Database: backed up")
-		}
-	} else {
-		fmt.Fprintln(r.Out, "Database: skipped (no password configured)")
+	if err := r.backupDatabase(dbCfg, binary, backupDir); err != nil {
+		return err
 	}
 
 	// Keep the archive separate so a partial workspace cleanup cannot destroy
@@ -281,13 +205,8 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 	if err := archiveFile.Close(); err != nil {
 		return err
 	}
-	if err := runChecked(r.Exec, "chmod", "0600", temporaryArchive); err != nil {
+	if err := r.createBackupArchive(temporaryArchive, staging, backupName); err != nil {
 		return err
-	}
-	_, exitCode, err := r.Exec.RunWithEnv(map[string]string{"COPYFILE_DISABLE": "1"}, "tar", "czf", temporaryArchive, "-C", staging, backupName)
-	if err != nil || exitCode != 0 {
-		fmt.Fprintln(r.ErrOut, "Archive creation failed")
-		return fmt.Errorf("failed to create archive")
 	}
 
 	keepArchive, archiveReady = true, true
@@ -315,7 +234,7 @@ func recoveryTrees(paths Paths) map[string]string {
 	if config == "" {
 		config = ConfigDir
 	}
-	return map[string]string{"caddy-config": filepath.Join(config, "caddy"), "caddy-state": "/var/lib/heimdall-caddy", "nginx-config": filepath.Join(config, "nginx")}
+	return map[string]string{"caddy-config": filepath.Join(config, "caddy"), "caddy-state": "/var/lib/heimdall-caddy", recoveryNginxConfig: filepath.Join(config, "nginx")}
 }
 
 // Validate every object, including all directory ancestors, without following links.
@@ -513,5 +432,121 @@ func removeBackupPublication(output, dir *os.File, name string) error {
 	if err := unix.Unlinkat(int(output.Fd()), name, unix.AT_REMOVEDIR); err != nil {
 		return fmt.Errorf("cleaning publication directory %s: %w", name, err)
 	}
+	return nil
+}
+
+func (r *BackupRunner) recoverySources() (map[string]string, error) {
+	trees := map[string]string{}
+	for name, source := range recoveryTrees(r.Paths) {
+		if info, err := r.FS.Lstat(source); os.IsNotExist(err) {
+			continue
+		} else if err != nil {
+			return nil, err
+		} else if !info.IsDir() {
+			return nil, fmt.Errorf("expected private proxy directory: %s", source)
+		}
+		if err := walkRecoveryTree(r.FS, source, func(string, os.FileInfo) error { return nil }); err != nil {
+			return nil, err
+		}
+		trees[name] = source
+	}
+	return trees, nil
+}
+
+func (r *BackupRunner) backupRecoveryTree(backupDir, name, source string) error {
+	canonical, err := r.FS.EvalSymlinks(source)
+	if err != nil {
+		return err
+	}
+	root, err := os.OpenRoot(canonical)
+	if err != nil {
+		return err
+	}
+	defer root.Close()
+	if err := walkRecoveryTree(r.FS, source, func(path string, info os.FileInfo) error {
+		return r.copyRecoveryEntry(root, source, backupDir, name, path, info)
+	}); err != nil {
+		return fmt.Errorf("backing up %s: %w", name, err)
+	}
+	return nil
+}
+
+func (r *BackupRunner) copyRecoveryEntry(root *os.Root, source, backupDir, name, path string, info os.FileInfo) error {
+	rel, err := filepath.Rel(source, path)
+	if err != nil {
+		return err
+	}
+	dest := filepath.Join(backupDir, name, rel)
+	if info.IsDir() {
+		return r.FS.MkdirAll(dest, 0700)
+	}
+	// The descriptor stays beneath the owned source even if the proxy swaps
+	// a descendant after preflight. Never copy an outside hard-link inode.
+	input, err := root.Open(rel)
+	if err != nil {
+		return err
+	}
+	defer input.Close()
+	opened, err := input.Stat()
+	if err != nil {
+		return err
+	}
+	if !opened.Mode().IsRegular() {
+		return fmt.Errorf("unexpected backup source: %s", path)
+	}
+	if stat, ok := opened.Sys().(*syscall.Stat_t); ok && stat.Nlink > 1 {
+		return fmt.Errorf("hard-linked backup source: %s", path)
+	}
+	output, err := os.OpenFile(dest, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	if err != nil {
+		return err
+	}
+	_, copyErr := io.Copy(output, input)
+	closeErr := output.Close()
+	if copyErr != nil {
+		return copyErr
+	}
+	if closeErr != nil {
+		return closeErr
+	}
+	mode := os.FileMode(0600)
+	if name == "caddy-config" || name == recoveryNginxConfig {
+		mode = opened.Mode().Perm() & 0640
+	}
+	return runChecked(r.Exec, "chmod", fmt.Sprintf("%04o", mode), dest)
+}
+
+func (r *BackupRunner) backupDatabase(dbCfg DBConfig, binary, backupDir string) error {
+	if dbCfg.Password != "" {
+		dumpFile := filepath.Join(backupDir, "database.sql")
+		pgEnv := dbCfg.PgEnv()
+		_, exitCode, err := r.Exec.RunWithEnv(pgEnv, binary,
+			"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, dbCfg.DBName, "-f", dumpFile)
+		if err != nil || exitCode != 0 {
+			fmt.Fprintln(r.ErrOut, "Database: backup FAILED")
+			if err != nil {
+				return fmt.Errorf("failed to back up database: %w", err)
+			}
+			return fmt.Errorf("failed to back up database: pg_dump exited with status %d", exitCode)
+		} else {
+			fmt.Fprintln(r.Out, "Database: backed up")
+		}
+	} else {
+		fmt.Fprintln(r.Out, "Database: skipped (no password configured)")
+	}
+
+	return nil
+}
+
+func (r *BackupRunner) createBackupArchive(temporaryArchive, staging, backupName string) error {
+	if err := runChecked(r.Exec, "chmod", "0600", temporaryArchive); err != nil {
+		return err
+	}
+	_, exitCode, err := r.Exec.RunWithEnv(map[string]string{"COPYFILE_DISABLE": "1"}, "tar", "czf", temporaryArchive, "-C", staging, backupName)
+	if err != nil || exitCode != 0 {
+		fmt.Fprintln(r.ErrOut, "Archive creation failed")
+		return fmt.Errorf("failed to create archive")
+	}
+
 	return nil
 }

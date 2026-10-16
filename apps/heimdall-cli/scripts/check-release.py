@@ -9,7 +9,7 @@ repo = cli.parents[1]
 if len(sys.argv) != 2:
     sys.exit("Usage: check-release.py apps/heimdall-cli/vX.Y.Z")
 version = (cli / "VERSION").read_text()
-if not re.fullmatch(r"v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\n", version):
+if not re.fullmatch(r"v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\n", version, flags=re.ASCII):
     sys.exit("CLI VERSION must contain one canonical vX.Y.Z line")
 version = version.strip()
 tag = sys.argv[1]

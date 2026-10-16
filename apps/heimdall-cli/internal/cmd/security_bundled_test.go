@@ -42,11 +42,11 @@ func (f *securityFS) Lstat(path string) (os.FileInfo, error) {
 	}
 	return securityInfo{i, mode, uid}, nil
 }
-func (f *securityFS) Rename(old, new string) error {
+func (f *securityFS) Rename(old, renamed string) error {
 	if f.failRename {
 		return fmt.Errorf("rename denied")
 	}
-	return f.FakeFileSystem.Rename(old, new)
+	return f.FakeFileSystem.Rename(old, renamed)
 }
 func enableSELinux(r *SetupRunner) (*FakeFileSystem, *FakeExecRunner) {
 	fs := r.FS.(*FakeFileSystem)
@@ -124,42 +124,47 @@ func TestBundledSELinuxConflictsPrecedeMutation(t *testing.T) {
 func TestBundledSELinuxLedgerAndFailures(t *testing.T) {
 	for _, mode := range []string{"new", "compatible", "query failure", "add failure", "unsafe ledger", "rename failure"} {
 		t.Run(mode, func(t *testing.T) {
-			r := bundledSetupFixture(t)
-			r.SkipDB = true
-			r.SkipTLS = true
-			fs, ex := enableSELinux(r)
-			ledger := r.Paths.ConfigDir + "/selinux-ports"
-			switch mode {
-			case "compatible":
-				ex.Results["semanage port -l"] = FakeExecResult{Stdout: "heimdall_server_port_t tcp 3000, 3200-3220\n"}
-			case "query failure":
-				ex.Results["semanage port -l"] = FakeExecResult{ExitCode: 1}
-			case "add failure":
-				ex.Results["semanage port -a"] = FakeExecResult{ExitCode: 1}
-			case "unsafe ledger":
-				fs.Files[ledger] = []byte("http_port_t tcp 8443\n")
-				r.FS.(*securityFS).badPath = ledger
-				r.FS.(*securityFS).badMode = 0666
-			case "rename failure":
-				r.FS.(*securityFS).failRename = true
-			}
-			err := r.Run()
-			if mode == "new" {
-				require.NoError(t, err)
-				require.Equal(t, "heimdall_server_port_t tcp 3210\n", string(fs.Files[ledger]))
-			} else if mode == "compatible" {
-				require.NoError(t, err)
-				require.False(t, fs.Exists(ledger))
-			} else {
-				require.Error(t, err)
-				require.NotContains(t, r.Systemd.(*FakeSystemdRunner).Actions, "restart:"+ServiceName)
-			}
-			for _, c := range ex.Calls {
-				if c.Name == "semanage" {
-					require.NotContains(t, c.Args, "-m")
-				}
-			}
+			checkBundledSELinuxLedger(t, mode)
 		})
+	}
+}
+
+func checkBundledSELinuxLedger(t *testing.T, mode string) {
+	t.Helper()
+	r := bundledSetupFixture(t)
+	r.SkipDB = true
+	r.SkipTLS = true
+	fs, ex := enableSELinux(r)
+	ledger := r.Paths.ConfigDir + "/selinux-ports"
+	switch mode {
+	case "compatible":
+		ex.Results["semanage port -l"] = FakeExecResult{Stdout: "heimdall_server_port_t tcp 3000, 3200-3220\n"}
+	case "query failure":
+		ex.Results["semanage port -l"] = FakeExecResult{ExitCode: 1}
+	case "add failure":
+		ex.Results["semanage port -a"] = FakeExecResult{ExitCode: 1}
+	case "unsafe ledger":
+		fs.Files[ledger] = []byte("http_port_t tcp 8443\n")
+		r.FS.(*securityFS).badPath = ledger
+		r.FS.(*securityFS).badMode = 0666
+	case "rename failure":
+		r.FS.(*securityFS).failRename = true
+	}
+	err := r.Run()
+	if mode == "new" {
+		require.NoError(t, err)
+		require.Equal(t, "heimdall_server_port_t tcp 3210\n", string(fs.Files[ledger]))
+	} else if mode == "compatible" {
+		require.NoError(t, err)
+		require.False(t, fs.Exists(ledger))
+	} else {
+		require.Error(t, err)
+		require.NotContains(t, r.Systemd.(*FakeSystemdRunner).Actions, "restart:"+ServiceName)
+	}
+	for _, c := range ex.Calls {
+		if c.Name == "semanage" {
+			require.NotContains(t, c.Args, "-m")
+		}
 	}
 }
 func TestSetPortSELinuxConflictAndFailedAddPreserveConfig(t *testing.T) {
@@ -208,17 +213,7 @@ func (s *labelOrderSystemd) check(unit string) {
 		require.False(s.t, s.fs.Exists(DefaultPaths().ConfigDir+"/upgrade-pending"))
 	}
 	for _, p := range paths {
-		found := false
-		for _, c := range s.exec.Calls {
-			if c.Name == "restorecon" {
-				for _, a := range c.Args {
-					if a == p || strings.HasPrefix(p, a+"/") {
-						found = true
-					}
-				}
-			}
-		}
-		require.True(s.t, found, "%s must be relabeled before %s starts", p, unit)
+		require.True(s.t, wasRelabeled(s.exec.Calls, p), "%s must be relabeled before %s starts", p, unit)
 	}
 }
 func TestBundledSELinuxLabelsBeforePrivateServicesStart(t *testing.T) {
@@ -333,57 +328,62 @@ func TestSecurityRound1LedgerFailureAndRetry(t *testing.T) {
 func TestSecurityRound1PendingLedgerReconciliation(t *testing.T) {
 	for _, mode := range []string{"exact", "changed type", "range", "absent", "query failure", "rename failure", "unsafe", "preflight"} {
 		t.Run(mode, func(t *testing.T) {
-			r := bundledSetupFixture(t)
-			fs, ex := enableSELinux(r)
-			ledger := r.Paths.ConfigDir + "/selinux-ports"
-			canonical := "http_port_t tcp 8443\n"
-			pending := "heimdall_server_port_t tcp 3210\n"
-			fs.Files[ledger] = []byte(canonical)
-			fs.Files[ledger+".pending"] = []byte(pending)
-			local := FakeExecResult{Stdout: "heimdall_server_port_t tcp 3210\n"}
-			switch mode {
-			case "changed type":
-				local.Stdout = "ssh_port_t tcp 3210\n"
-			case "range":
-				local.Stdout = "heimdall_server_port_t tcp 3200-3220\n"
-			case "absent":
-				local.Stdout = ""
-			case "query failure":
-				local.ExitCode = 1
-			case "rename failure":
-				r.FS.(*securityFS).failRename = true
-			case "unsafe":
-				r.FS.(*securityFS).badPath = ledger + ".pending"
-				r.FS.(*securityFS).badMode = 0666
-			}
-			ex.Results["semanage port -l -C"] = local
-			err := configureSELinuxPorts(ex, r.FS, r.Paths.ConfigDir, []selinuxPort{{"http_port_t", "443"}}, mode != "preflight")
-			retained := mode == "query failure" || mode == "rename failure" || mode == "unsafe" || mode == "preflight"
-			if retained && mode != "preflight" {
-				require.Error(t, err)
-			} else {
-				require.NoError(t, err)
-			}
-			if retained {
-				require.Equal(t, pending, string(fs.Files[ledger+".pending"]))
-			} else {
-				require.False(t, fs.Exists(ledger+".pending"))
-			}
-			if mode == "exact" {
-				require.Equal(t, canonical+pending, string(fs.Files[ledger]))
-			} else {
-				require.Equal(t, canonical, string(fs.Files[ledger]))
-			}
-			for _, c := range ex.Calls {
-				if c.Name == "semanage" {
-					require.NotContains(t, c.Args, "-a")
-					require.NotContains(t, c.Args, "-d")
-				}
-				if mode == "preflight" {
-					require.NotContains(t, []string{"chown", "chmod"}, c.Name)
-				}
-			}
+			checkPendingLedgerReconciliation(t, mode)
 		})
+	}
+}
+
+func checkPendingLedgerReconciliation(t *testing.T, mode string) {
+	t.Helper()
+	r := bundledSetupFixture(t)
+	fs, ex := enableSELinux(r)
+	ledger := r.Paths.ConfigDir + "/selinux-ports"
+	canonical := "http_port_t tcp 8443\n"
+	pending := "heimdall_server_port_t tcp 3210\n"
+	fs.Files[ledger] = []byte(canonical)
+	fs.Files[ledger+".pending"] = []byte(pending)
+	local := FakeExecResult{Stdout: "heimdall_server_port_t tcp 3210\n"}
+	switch mode {
+	case "changed type":
+		local.Stdout = "ssh_port_t tcp 3210\n"
+	case "range":
+		local.Stdout = "heimdall_server_port_t tcp 3200-3220\n"
+	case "absent":
+		local.Stdout = ""
+	case "query failure":
+		local.ExitCode = 1
+	case "rename failure":
+		r.FS.(*securityFS).failRename = true
+	case "unsafe":
+		r.FS.(*securityFS).badPath = ledger + ".pending"
+		r.FS.(*securityFS).badMode = 0666
+	}
+	ex.Results["semanage port -l -C"] = local
+	err := configureSELinuxPorts(ex, r.FS, r.Paths.ConfigDir, []selinuxPort{{"http_port_t", "443"}}, mode != "preflight")
+	retained := mode == "query failure" || mode == "rename failure" || mode == "unsafe" || mode == "preflight"
+	if retained && mode != "preflight" {
+		require.Error(t, err)
+	} else {
+		require.NoError(t, err)
+	}
+	if retained {
+		require.Equal(t, pending, string(fs.Files[ledger+".pending"]))
+	} else {
+		require.False(t, fs.Exists(ledger+".pending"))
+	}
+	if mode == "exact" {
+		require.Equal(t, canonical+pending, string(fs.Files[ledger]))
+	} else {
+		require.Equal(t, canonical, string(fs.Files[ledger]))
+	}
+	for _, c := range ex.Calls {
+		if c.Name == "semanage" {
+			require.NotContains(t, c.Args, "-a")
+			require.NotContains(t, c.Args, "-d")
+		}
+		if mode == "preflight" {
+			require.NotContains(t, []string{"chown", "chmod"}, c.Name)
+		}
 	}
 }
 
@@ -562,37 +562,56 @@ func (f *securityAliasFS) FindFiles(root, pattern string) ([]string, error) {
 func TestSecurityRound1PrivateAliasInventory(t *testing.T) {
 	for _, kind := range []string{"ordinary", "missing", "external", "unlisted"} {
 		t.Run(kind, func(t *testing.T) {
-			r, ex, fs, _, _ := newFapolicydForTest()
-			trust := "/etc/fapolicyd/trust.d/" + fapolicydTrustFile
-			fs.Files[trust] = []byte("previous trusted inventory\n")
-			alias := "/usr/libexec/heimdall-server/runtime/postgresql/lib/libpq.so.5"
-			target := alias + ".18"
-			fs.Files[alias] = nil
-			wrapped := &securityAliasFS{securityFS: &securityFS{FakeFileSystem: fs, badPath: alias, badMode: os.ModeSymlink | 0777}, target: target}
-			r.FS = wrapped
-			if kind == "missing" {
-				wrapped.target = ""
-			} else {
-				if kind == "external" {
-					wrapped.target = "/var/lib/operator/libpq.so.5.18"
-				}
-				fs.Files[wrapped.target] = nil
-			}
-			if kind == "unlisted" {
-				wrapped.hidden = target
-			}
-			err := r.Add()
-			if kind != "ordinary" {
-				require.Error(t, err)
-				require.Equal(t, "previous trusted inventory\n", string(fs.Files[trust]))
-				for _, c := range ex.Calls {
-					require.NotEqual(t, "fapolicyd-cli", c.Name)
-				}
-				return
-			}
-			require.NoError(t, err)
-			require.NotContains(t, string(fs.Files[trust]), alias+" ")
-			require.Contains(t, string(fs.Files[trust]), target+" ")
+			checkPrivateAliasInventory(t, kind)
 		})
 	}
+}
+
+func checkPrivateAliasInventory(t *testing.T, kind string) {
+	t.Helper()
+	r, ex, fs, _, _ := newFapolicydForTest()
+	trust := "/etc/fapolicyd/trust.d/" + fapolicydTrustFile
+	fs.Files[trust] = []byte("previous trusted inventory\n")
+	alias := "/usr/libexec/heimdall-server/runtime/postgresql/lib/libpq.so.5"
+	target := alias + ".18"
+	fs.Files[alias] = nil
+	wrapped := &securityAliasFS{securityFS: &securityFS{FakeFileSystem: fs, badPath: alias, badMode: os.ModeSymlink | 0777}, target: target}
+	r.FS = wrapped
+	if kind == "missing" {
+		wrapped.target = ""
+	} else {
+		if kind == "external" {
+			wrapped.target = "/var/lib/operator/libpq.so.5.18"
+		}
+		fs.Files[wrapped.target] = nil
+	}
+	if kind == "unlisted" {
+		wrapped.hidden = target
+	}
+	err := r.Add()
+	if kind != "ordinary" {
+		require.Error(t, err)
+		require.Equal(t, "previous trusted inventory\n", string(fs.Files[trust]))
+		for _, c := range ex.Calls {
+			require.NotEqual(t, "fapolicyd-cli", c.Name)
+		}
+		return
+	}
+	require.NoError(t, err)
+	require.NotContains(t, string(fs.Files[trust]), alias+" ")
+	require.Contains(t, string(fs.Files[trust]), target+" ")
+}
+
+func wasRelabeled(calls []FakeExecCall, path string) bool {
+	for _, call := range calls {
+		if call.Name != "restorecon" {
+			continue
+		}
+		for _, arg := range call.Args {
+			if arg == path || strings.HasPrefix(path, arg+"/") {
+				return true
+			}
+		}
+	}
+	return false
 }

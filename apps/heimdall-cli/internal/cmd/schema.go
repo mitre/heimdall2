@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -200,31 +201,15 @@ func ValidateValue(key, value string) error {
 		return nil // unknown keys pass validation
 	}
 	if key == "JWT_EXPIRE_TIME" {
-		match := jwtDurationPattern.FindStringSubmatch(value)
-		if len(value) > 100 || match == nil {
-			return fmt.Errorf("JWT_EXPIRE_TIME must be a positive duration such as 1d or 25m")
-		}
-		n, err := strconv.ParseFloat(match[1], 64)
-		if err != nil || n <= 0 {
-			return fmt.Errorf("JWT_EXPIRE_TIME must be a positive duration such as 1d or 25m")
+		if err := validateJWTDuration(value); err != nil {
+			return err
 		}
 	}
 
 	switch entry.Type {
 	case "int":
-		n, err := strconv.Atoi(value)
-		if err != nil {
-			return fmt.Errorf("%s must be an integer", key)
-		}
-		if entry.Validation != "" {
-			parts := strings.SplitN(entry.Validation, "-", 2)
-			if len(parts) == 2 {
-				lo, _ := strconv.Atoi(parts[0])
-				hi, _ := strconv.Atoi(parts[1])
-				if n < lo || n > hi {
-					return fmt.Errorf("%s must be %s", key, entry.Validation)
-				}
-			}
+		if err := validateInteger(entry, key, value); err != nil {
+			return err
 		}
 	case "bool":
 		lower := strings.ToLower(value)
@@ -233,17 +218,8 @@ func ValidateValue(key, value string) error {
 		}
 	}
 
-	if len(entry.Choices) > 0 {
-		found := false
-		for _, c := range entry.Choices {
-			if value == c {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return fmt.Errorf("%s must be one of: %s", key, strings.Join(entry.Choices, ", "))
-		}
+	if len(entry.Choices) > 0 && !slices.Contains(entry.Choices, value) {
+		return fmt.Errorf("%s must be one of: %s", key, strings.Join(entry.Choices, ", "))
 	}
 
 	return nil
@@ -268,4 +244,34 @@ func SortedCategories() []Category {
 		return sorted[i].Order < sorted[j].Order
 	})
 	return sorted
+}
+
+func validateJWTDuration(value string) error {
+	match := jwtDurationPattern.FindStringSubmatch(value)
+	if len(value) > 100 || match == nil {
+		return fmt.Errorf("JWT_EXPIRE_TIME must be a positive duration such as 1d or 25m")
+	}
+	n, err := strconv.ParseFloat(match[1], 64)
+	if err != nil || n <= 0 {
+		return fmt.Errorf("JWT_EXPIRE_TIME must be a positive duration such as 1d or 25m")
+	}
+	return nil
+}
+
+func validateInteger(entry ConfigEntry, key, value string) error {
+	n, err := strconv.Atoi(value)
+	if err != nil {
+		return fmt.Errorf("%s must be an integer", key)
+	}
+	if entry.Validation != "" {
+		parts := strings.SplitN(entry.Validation, "-", 2)
+		if len(parts) == 2 {
+			lo, _ := strconv.Atoi(parts[0])
+			hi, _ := strconv.Atoi(parts[1])
+			if n < lo || n > hi {
+				return fmt.Errorf("%s must be %s", key, entry.Validation)
+			}
+		}
+	}
+	return nil
 }

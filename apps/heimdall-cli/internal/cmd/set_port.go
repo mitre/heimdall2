@@ -61,28 +61,9 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
 	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, ports, true); err != nil {
 		return err
 	}
-	var proxy *caddyUpdate
-	var before savedFile
-	if bundled {
-		before, err = snapshotFile(r.FS, r.Env.GetEnvFilePath())
-		if err != nil {
-			return err
-		}
-		if env["HEIMDALL_PROXY_MODE"] == "bundled" || env["HEIMDALL_PROXY_MODE"] == "nginx" {
-			candidate := make(map[string]string, len(env))
-			for key, value := range env {
-				candidate[key] = value
-			}
-			candidate["PORT"] = portStr
-			if env["HEIMDALL_PROXY_MODE"] == "nginx" {
-				proxy, err = setup.prepareBundledNginx(candidate)
-			} else {
-				proxy, err = setup.prepareBundledCaddy(candidate)
-			}
-			if err != nil {
-				return err
-			}
-		}
+	proxy, before, err := r.preparePortChange(setup, env, portStr, bundled)
+	if err != nil {
+		return err
 	}
 	wrote, restarted := false, false
 	var rollbackFirewall func() error
@@ -90,25 +71,7 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
 		if err == nil {
 			return
 		}
-		var rollback []error
-		if rollbackFirewall != nil {
-			rollback = append(rollback, rollbackFirewall())
-		}
-		if wrote {
-			rollback = append(rollback, r.Env.WriteEnvFile(env))
-			if bundled {
-				if _, ok := r.Env.(*FileEnvManager); ok {
-					rollback = append(rollback, before.restore(r.FS))
-				}
-			}
-		}
-		if proxy != nil {
-			rollback = append(rollback, proxy.rollback())
-		}
-		if restarted {
-			rollback = append(rollback, r.Systemd.Restart(ServiceName))
-		}
-		err = errors.Join(append([]error{err}, rollback...)...)
+		err = errors.Join(err, r.rollbackPortChange(env, before, proxy, wrote, restarted, bundled, rollbackFirewall))
 	}()
 	rollbackFirewall, err = setup.configureFirewall(portStr, env["HEIMDALL_PROXY_MODE"], oldPort, env["EXTERNAL_URL"])
 	if err != nil {
@@ -185,4 +148,60 @@ The port must be between 1024 and 65535. Requires root privileges.`,
 			return runner.Run(args[0])
 		},
 	}
+}
+
+func (r *SetPortRunner) preparePortChange(setup *SetupRunner, env map[string]string, portStr string, bundled bool) (*caddyUpdate, savedFile, error) {
+	var proxy *caddyUpdate
+	var before savedFile
+	var err error
+	if bundled {
+		before, err = snapshotFile(r.FS, r.Env.GetEnvFilePath())
+		if err != nil {
+			return nil, before, err
+		}
+		if env["HEIMDALL_PROXY_MODE"] == "bundled" || env["HEIMDALL_PROXY_MODE"] == "nginx" {
+			candidate := make(map[string]string, len(env))
+			for key, value := range env {
+				candidate[key] = value
+			}
+			candidate["PORT"] = portStr
+			if env["HEIMDALL_PROXY_MODE"] == "nginx" {
+				proxy, err = setup.prepareBundledNginx(candidate)
+			} else {
+				proxy, err = setup.prepareBundledCaddy(candidate)
+			}
+			if err != nil {
+				return nil, before, err
+			}
+		}
+	}
+	return proxy, before, nil
+}
+
+func (r *SetPortRunner) restorePortConfig(env map[string]string, before savedFile, bundled bool) error {
+	var rollback []error
+	rollback = append(rollback, r.Env.WriteEnvFile(env))
+	if bundled {
+		if _, ok := r.Env.(*FileEnvManager); ok {
+			rollback = append(rollback, before.restore(r.FS))
+		}
+	}
+	return errors.Join(rollback...)
+}
+
+func (r *SetPortRunner) rollbackPortChange(env map[string]string, before savedFile, proxy *caddyUpdate, wrote, restarted, bundled bool, rollbackFirewall func() error) error {
+	var rollback []error
+	if rollbackFirewall != nil {
+		rollback = append(rollback, rollbackFirewall())
+	}
+	if wrote {
+		rollback = append(rollback, r.restorePortConfig(env, before, bundled))
+	}
+	if proxy != nil {
+		rollback = append(rollback, proxy.rollback())
+	}
+	if restarted {
+		rollback = append(rollback, r.Systemd.Restart(ServiceName))
+	}
+	return errors.Join(rollback...)
 }

@@ -770,52 +770,57 @@ func TestBundledPostgresNeverUsesSystemSocket(t *testing.T) {
 func TestBundledPostgresPreflightAndFailures(t *testing.T) {
 	for _, failure := range []string{"major", "nonempty", "remote", "port", "initdb", "enable", "sql", "missing runtime", "unexpected path"} {
 		t.Run(failure, func(t *testing.T) {
-			setup := bundledSetupFixture(t)
-			_, err := setup.readConfiguration()
-			require.NoError(t, err)
-			fs := setup.FS.(*FakeFileSystem)
-			exec := setup.Exec.(*FakeExecRunner)
-			sd := setup.Systemd.(*FakeSystemdRunner)
-			switch failure {
-			case "major":
-				fs.Files[bundledPGData+"/PG_VERSION"] = []byte("17")
-			case "nonempty":
-				delete(fs.Files, bundledPGData+"/PG_VERSION")
-			case "remote":
-				setup.DBHost = "elsewhere.test"
-			case "port":
-				setup.DBPort = 65536
-			case "initdb":
-				for path := range fs.Files {
-					if strings.HasPrefix(path, bundledPGData+"/") {
-						delete(fs.Files, path)
-					}
-				}
-				exec.Results["runuser -u heimdall-postgres"] = FakeExecResult{ExitCode: 1}
-			case "enable":
-				sd.Err = fmt.Errorf("enable refused")
-			case "sql":
-				exec.Results["runuser -u heimdall-postgres"] = FakeExecResult{ExitCode: 1}
-			case "missing runtime":
-				delete(fs.Files, setup.Paths.RuntimePath("postgresql", "bin", "postgres"))
-			case "unexpected path":
-				fs.Files["/var/lib/heimdall-postgresql"] = []byte("not directory")
-			}
-			before := map[string]string{}
-			for path, data := range fs.Files {
-				before[path] = string(data)
-			}
-			require.Error(t, setup.stepPostgresBootstrap())
-			require.NotContains(t, setup.Out.(*bytes.Buffer).String(), "bootstrap complete")
-			if failure != "initdb" && failure != "enable" && failure != "sql" {
-				require.Empty(t, sd.Actions)
-				after := map[string]string{}
-				for path, data := range fs.Files {
-					after[path] = string(data)
-				}
-				require.Equal(t, before, after)
-			}
+			testBundledPostgresPreflightFailure(t, failure)
 		})
+	}
+}
+
+func testBundledPostgresPreflightFailure(t *testing.T, failure string) {
+	t.Helper()
+	setup := bundledSetupFixture(t)
+	_, err := setup.readConfiguration()
+	require.NoError(t, err)
+	fs := setup.FS.(*FakeFileSystem)
+	exec := setup.Exec.(*FakeExecRunner)
+	sd := setup.Systemd.(*FakeSystemdRunner)
+	switch failure {
+	case "major":
+		fs.Files[bundledPGData+"/PG_VERSION"] = []byte("17")
+	case "nonempty":
+		delete(fs.Files, bundledPGData+"/PG_VERSION")
+	case "remote":
+		setup.DBHost = "elsewhere.test"
+	case "port":
+		setup.DBPort = 65536
+	case "initdb":
+		for path := range fs.Files {
+			if strings.HasPrefix(path, bundledPGData+"/") {
+				delete(fs.Files, path)
+			}
+		}
+		exec.Results["runuser -u heimdall-postgres"] = FakeExecResult{ExitCode: 1}
+	case "enable":
+		sd.Err = fmt.Errorf("enable refused")
+	case "sql":
+		exec.Results["runuser -u heimdall-postgres"] = FakeExecResult{ExitCode: 1}
+	case "missing runtime":
+		delete(fs.Files, setup.Paths.RuntimePath("postgresql", "bin", "postgres"))
+	case "unexpected path":
+		fs.Files["/var/lib/heimdall-postgresql"] = []byte("not directory")
+	}
+	before := map[string]string{}
+	for path, data := range fs.Files {
+		before[path] = string(data)
+	}
+	require.Error(t, setup.stepPostgresBootstrap())
+	require.NotContains(t, setup.Out.(*bytes.Buffer).String(), "bootstrap complete")
+	if failure != "initdb" && failure != "enable" && failure != "sql" {
+		require.Empty(t, sd.Actions)
+		after := map[string]string{}
+		for path, data := range fs.Files {
+			after[path] = string(data)
+		}
+		require.Equal(t, before, after)
 	}
 }
 

@@ -107,10 +107,7 @@ func TestSetupRPMDefaultAvoidsStockSELinuxPort(t *testing.T) {
 }
 
 func TestSetupRPMDefaultPortConflictsStillFailBeforeMutation(t *testing.T) {
-	for _, tc := range []struct {
-		name, saved, argument, port, problem string
-		occupied                             bool
-	}{
+	for _, tc := range []rpmPortConflict{
 		{name: "default occupied", port: "3002", problem: "occupied", occupied: true},
 		{name: "default SELinux conflict", port: "3002", problem: "other_port_t"},
 		{name: "explicit legacy SELinux conflict", argument: "3000", port: "3000", problem: "other_port_t"},
@@ -118,33 +115,43 @@ func TestSetupRPMDefaultPortConflictsStillFailBeforeMutation(t *testing.T) {
 	} {
 		for _, reconfigure := range []bool{false, true} {
 			t.Run(tc.name+map[bool]string{false: " full", true: " reconfigure"}[reconfigure], func(t *testing.T) {
-				r, _, _ := newTestSetupRunner()
-				fs := r.FS.(*FakeFileSystem)
-				fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
-				if tc.saved != "" {
-					r.Env.(*FakeEnvManager).Env["PORT"] = tc.saved
-				}
-				exec := r.Exec.(*FakeExecRunner)
-				if tc.occupied {
-					exec.Results["ss -H -ltnp sport = :"+tc.port] = FakeExecResult{Stdout: `LISTEN 0 100 127.0.0.1:` + tc.port + ` 0.0.0.0:* users:(("other",pid=123,fd=1))`}
-				} else {
-					fs.Files["/sys/fs/selinux/enforce"] = []byte("1")
-					exec.Results["semanage port -l"] = FakeExecResult{Stdout: "other_port_t tcp " + tc.port + "\n"}
-				}
-				unchanged := assertSetupPortUnchanged(t, r)
-				command := NewSetupCmd(r)
-				args := []string{"--non-interactive"}
-				if reconfigure {
-					args = append(args, "--reconfigure")
-				}
-				if tc.argument != "" {
-					args = append(args, "--port="+tc.argument)
-				}
-				command.SetArgs(args)
-				err := command.Execute()
-				require.ErrorContains(t, err, tc.problem)
-				unchanged()
+				checkRPMPortConflict(t, tc, reconfigure)
 			})
 		}
 	}
+}
+
+type rpmPortConflict struct {
+	name, saved, argument, port, problem string
+	occupied                             bool
+}
+
+func checkRPMPortConflict(t *testing.T, tc rpmPortConflict, reconfigure bool) {
+	t.Helper()
+	r, _, _ := newTestSetupRunner()
+	fs := r.FS.(*FakeFileSystem)
+	fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
+	if tc.saved != "" {
+		r.Env.(*FakeEnvManager).Env["PORT"] = tc.saved
+	}
+	exec := r.Exec.(*FakeExecRunner)
+	if tc.occupied {
+		exec.Results["ss -H -ltnp sport = :"+tc.port] = FakeExecResult{Stdout: `LISTEN 0 100 127.0.0.1:` + tc.port + ` 0.0.0.0:* users:(("other",pid=123,fd=1))`}
+	} else {
+		fs.Files["/sys/fs/selinux/enforce"] = []byte("1")
+		exec.Results["semanage port -l"] = FakeExecResult{Stdout: "other_port_t tcp " + tc.port + "\n"}
+	}
+	unchanged := assertSetupPortUnchanged(t, r)
+	command := NewSetupCmd(r)
+	args := []string{"--non-interactive"}
+	if reconfigure {
+		args = append(args, "--reconfigure")
+	}
+	if tc.argument != "" {
+		args = append(args, "--port="+tc.argument)
+	}
+	command.SetArgs(args)
+	err := command.Execute()
+	require.ErrorContains(t, err, tc.problem)
+	unchanged()
 }

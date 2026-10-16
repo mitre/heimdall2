@@ -320,7 +320,7 @@ func TestRealSystemdIsActiveStates(t *testing.T) {
 			t.Setenv("PATH", dir)
 			t.Setenv("SYSTEMCTL_STATE", tc.state)
 			t.Setenv("SYSTEMCTL_STATUS", tc.status)
-			active, err := (&systemdRunner{}).IsActive(bundledPGService)
+			active, err := (&systemdRunner{binary: filepath.Join(dir, "systemctl")}).IsActive(bundledPGService)
 			require.Equal(t, tc.active, active)
 			if tc.fail {
 				require.Error(t, err)
@@ -330,11 +330,24 @@ func TestRealSystemdIsActiveStates(t *testing.T) {
 		})
 	}
 	t.Run("missing executable", func(t *testing.T) {
-		t.Setenv("PATH", t.TempDir())
-		active, err := (&systemdRunner{}).IsActive(bundledPGService)
+		dir := t.TempDir()
+		t.Setenv("PATH", dir)
+		active, err := (&systemdRunner{binary: filepath.Join(dir, "systemctl")}).IsActive(bundledPGService)
 		require.False(t, active)
 		require.Error(t, err)
 	})
+}
+
+func TestRealSystemdIgnoresAmbientPath(t *testing.T) {
+	skipIfWindows(t)
+	dir := t.TempDir()
+	marker := filepath.Join(dir, "called")
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "systemctl"), []byte("#!/bin/sh\nprintf called > \"$SYSTEMCTL_MARKER\"\nprintf active\n"), 0755))
+	t.Setenv("SYSTEMCTL_MARKER", marker)
+	t.Setenv("PATH", dir)
+	_, _ = (&systemdRunner{}).IsActive(bundledPGService)
+	_, err := os.Stat(marker)
+	require.True(t, os.IsNotExist(err), "must not execute systemctl from ambient PATH")
 }
 
 func TestRealSystemdInactiveSetupAndStatus(t *testing.T) {
@@ -360,7 +373,7 @@ printf '%s\n' "$*" >> "$SYSTEMCTL_FIXTURE/actions"
 `
 	require.NoError(t, os.WriteFile(filepath.Join(dir, "systemctl"), []byte(script), 0755))
 	setup := bundledSetupFixture(t)
-	setup.Systemd = &systemdRunner{}
+	setup.Systemd = &systemdRunner{binary: filepath.Join(dir, "systemctl")}
 	out := new(bytes.Buffer)
 	status := &StatusRunner{Exec: setup.Exec, Systemd: setup.Systemd, Env: setup.Env, FS: setup.FS, DB: setup.DB, Paths: setup.Paths, Out: out, JSON: true}
 	require.NoError(t, status.Run())

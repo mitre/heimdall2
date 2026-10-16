@@ -56,10 +56,19 @@ func (r *execRunner) RunWithStdin(stdin, name string, args ...string) (string, i
 }
 
 // systemdRunner implements SystemdRunner using systemctl.
-type systemdRunner struct{}
+type systemdRunner struct{ binary string }
+
+func (r *systemdRunner) command(args ...string) *exec.Cmd {
+	binary := r.binary
+	if binary == "" {
+		// Service management runs as root; never search the caller's PATH.
+		binary = "/usr/bin/systemctl"
+	}
+	return exec.Command(binary, args...)
+}
 
 func (r *systemdRunner) IsActive(service string) (bool, error) {
-	c := exec.Command("systemctl", "is-active", service)
+	c := r.command("is-active", service)
 	out, err := c.Output()
 	state := strings.TrimSpace(string(out))
 	if err == nil && state == "active" {
@@ -78,25 +87,25 @@ func (r *systemdRunner) IsActive(service string) (bool, error) {
 	return false, fmt.Errorf("unexpected systemctl is-active state %q for %s", state, service)
 }
 func (r *systemdRunner) Start(service string) error {
-	return exec.Command("systemctl", "start", service).Run()
+	return r.command("start", service).Run()
 }
 func (r *systemdRunner) Stop(service string) error {
-	return exec.Command("systemctl", "stop", service).Run()
+	return r.command("stop", service).Run()
 }
 func (r *systemdRunner) Restart(service string) error {
-	return exec.Command("systemctl", "restart", service).Run()
+	return r.command("restart", service).Run()
 }
 func (r *systemdRunner) Enable(service string) error {
-	return exec.Command("systemctl", "enable", service).Run()
+	return r.command("enable", service).Run()
 }
 func (r *systemdRunner) EnableNow(service string) error {
-	return exec.Command("systemctl", "enable", "--now", service).Run()
+	return r.command("enable", "--now", service).Run()
 }
 func (r *systemdRunner) Reload(service string) error {
-	return exec.Command("systemctl", "reload", service).Run()
+	return r.command("reload", service).Run()
 }
 func (r *systemdRunner) ShowProperty(service, property string) (string, error) {
-	c := exec.Command("systemctl", "show", "-p", property, "--value", service)
+	c := r.command("show", "-p", property, "--value", service)
 	out, err := c.Output()
 	return strings.TrimSpace(string(out)), err
 }
@@ -111,7 +120,7 @@ func (r *osFileSystem) WriteFile(path string, data []byte, perm os.FileMode) err
 func (r *osFileSystem) EvalSymlinks(path string) (string, error)   { return filepath.EvalSymlinks(path) }
 func (r *osFileSystem) Lstat(path string) (os.FileInfo, error)     { return os.Lstat(path) }
 func (r *osFileSystem) ReadDir(path string) ([]os.DirEntry, error) { return os.ReadDir(path) }
-func (r *osFileSystem) Rename(old, new string) error               { return os.Rename(old, new) }
+func (r *osFileSystem) Rename(old, renamed string) error           { return os.Rename(old, renamed) }
 func (r *osFileSystem) Stat(path string) (os.FileInfo, error)      { return os.Stat(path) }
 func (r *osFileSystem) CopyFile(src, dst string) error {
 	info, err := os.Stat(src)
@@ -184,14 +193,14 @@ func preparePGEnv(env map[string]string) (map[string]string, func(), error) {
 		f, err := os.CreateTemp("", "heimdall-pg-tls-*")
 		if err != nil {
 			cleanup()
-			return nil, func() {}, fmt.Errorf("preparing PostgreSQL TLS material: %w", err)
+			return nil, func() { /* Temporary files were already removed. */ }, fmt.Errorf("preparing PostgreSQL TLS material: %w", err)
 		}
 		files = append(files, f.Name())
 		_, writeErr := f.WriteString(result[key])
 		closeErr := f.Close()
 		if writeErr != nil || closeErr != nil {
 			cleanup()
-			return nil, func() {}, fmt.Errorf("writing PostgreSQL TLS material")
+			return nil, func() { /* Temporary files were already removed. */ }, fmt.Errorf("writing PostgreSQL TLS material")
 		}
 		result[key] = f.Name()
 	}
@@ -273,7 +282,7 @@ func (p *huhPrompter) newForm(groups ...*huh.Group) *huh.Form {
 	return f
 }
 
-func (p *huhPrompter) Input(prompt string, defaultValue string) (string, error) {
+func (p *huhPrompter) Input(prompt, defaultValue string) (string, error) {
 	if defaultValue != "" {
 		prompt += fmt.Sprintf(" (default: %s)", defaultValue)
 	}

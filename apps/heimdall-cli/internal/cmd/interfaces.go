@@ -67,7 +67,7 @@ type DBConnector interface {
 // Prompter handles interactive user input. Production uses charm/huh,
 // tests inject FakePrompter with preset answers.
 type Prompter interface {
-	Input(prompt string, defaultValue string) (string, error)
+	Input(prompt, defaultValue string) (string, error)
 	Password(prompt string) (string, error)
 	Confirm(prompt string, defaultValue bool) (bool, error)
 	Select(prompt string, defaultValue string, options []string) (int, error)

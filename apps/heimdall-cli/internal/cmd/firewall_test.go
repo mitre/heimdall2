@@ -38,7 +38,15 @@ func (e *firewallExec) Run(name string, args ...string) (string, int, error) {
 		}
 		return "public dmz\n", 0, nil
 	}
-	scope, zone, action, value := "runtime", "public", "", ""
+	scope, zone, action, value := parseFirewallTestArgs(args)
+	if full == "--reload" {
+		e.reload()
+		return "", 0, nil
+	}
+	return e.changeRule(full, scope, zone, action, value)
+}
+func parseFirewallTestArgs(args []string) (scope, zone, action, value string) {
+	scope, zone, action, value = "runtime", "public", "", ""
 	for _, arg := range args {
 		if arg == "--permanent" {
 			scope = "permanent"
@@ -52,19 +60,23 @@ func (e *firewallExec) Run(name string, args ...string) (string, int, error) {
 			}
 		}
 	}
-	if full == "--reload" {
-		for key := range e.rules {
-			if strings.HasPrefix(key, "runtime ") {
-				delete(e.rules, key)
-			}
+	return scope, zone, action, value
+}
+
+func (e *firewallExec) reload() {
+	for key := range e.rules {
+		if strings.HasPrefix(key, "runtime ") {
+			delete(e.rules, key)
 		}
-		for key := range e.rules {
-			if strings.HasPrefix(key, "permanent ") {
-				e.rules[strings.Replace(key, "permanent ", "runtime ", 1)] = true
-			}
-		}
-		return "", 0, nil
 	}
+	for key := range e.rules {
+		if strings.HasPrefix(key, "permanent ") {
+			e.rules[strings.Replace(key, "permanent ", "runtime ", 1)] = true
+		}
+	}
+}
+
+func (e *firewallExec) changeRule(full, scope, zone, action, value string) (string, int, error) {
 	if action == "" {
 		return "unexpected firewall command: " + full, 2, nil
 	}
@@ -90,6 +102,7 @@ func (e *firewallExec) Run(name string, args ...string) (string, int, error) {
 	}
 	return "", 0, nil
 }
+
 func firewallFixture(t *testing.T, mode string) (*SetupRunner, *firewallExec) {
 	r := bundledSetupFixture(t)
 	r.FS.(*FakeFileSystem).Files[r.Paths.RuntimePath("nginx", "sbin", "nginx")] = nil

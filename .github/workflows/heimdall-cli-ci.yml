@@ -47,6 +47,8 @@ jobs:
           go mod download
           go mod verify
           go mod tidy -diff
+          go -C tools mod verify
+          go -C tools mod tidy -diff
           go vet ./...
       - name: Run native unit and functional tests
         run: |
@@ -56,7 +58,7 @@ jobs:
       - name: Check reachable dependency vulnerabilities
         if: matrix.arch == 'amd64'
         run: |
-          GOBIN="$RUNNER_TEMP/cli-tools" go install golang.org/x/vuln/cmd/govulncheck@v1.1.4
+          GOBIN="$RUNNER_TEMP/cli-tools" go -C tools install -mod=readonly golang.org/x/vuln/cmd/govulncheck
           "$RUNNER_TEMP/cli-tools/govulncheck" ./...
       - name: Run packaging source and release-isolation fixtures
         if: matrix.arch == 'amd64'

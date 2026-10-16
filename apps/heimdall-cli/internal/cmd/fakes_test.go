@@ -366,7 +366,7 @@ type FakePrompter struct {
 	Err           error // returned by all methods when non-nil
 }
 
-func (f *FakePrompter) Input(prompt string, defaultValue string) (string, error) {
+func (f *FakePrompter) Input(prompt, defaultValue string) (string, error) {
 	if f.Err != nil {
 		return "", f.Err
 	}
@@ -485,12 +485,12 @@ type fakeDirEntry struct{ os.FileInfo }
 
 func (d fakeDirEntry) Type() os.FileMode          { return d.Mode().Type() }
 func (d fakeDirEntry) Info() (os.FileInfo, error) { return d.FileInfo, nil }
-func (f *FakeFileSystem) Rename(old, new string) error {
+func (f *FakeFileSystem) Rename(old, renamed string) error {
 	data, err := f.ReadFile(old)
 	if err != nil {
 		return err
 	}
-	f.Files[new] = data
+	f.Files[renamed] = data
 	delete(f.Files, old)
 	return nil
 }

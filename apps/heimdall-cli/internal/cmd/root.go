@@ -10,6 +10,21 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	flagDBHost     = "db-host"
+	flagDBPort     = "db-port"
+	flagDBUser     = "db-user"
+	flagDBPassword = "db-password"
+	flagDBName     = "db-name"
+	flagAppDir     = "app-dir"
+	flagDataDir    = "data-dir"
+	flagLibexecDir = "libexec-dir"
+	flagConfigDir  = "config-dir"
+	flagCertDir    = "cert-dir"
+	flagLogDir     = "log-dir"
+	flagEnvFile    = "env-file"
+)
+
 // NewRootCmd creates the root command. Using a constructor (not package-level var)
 // so each test gets a fresh command tree.
 func NewRootCmd() *cobra.Command {
@@ -47,11 +62,11 @@ FILES:
 
 	// Global persistent flags
 	pf := root.PersistentFlags()
-	pf.String("db-host", "localhost", "Database host")
-	pf.Int("db-port", 5432, "Database port")
-	pf.String("db-user", "postgres", "Database user")
-	pf.String("db-password", "", "Database password")
-	pf.String("db-name", "heimdall-server-production", "Database name")
+	pf.String(flagDBHost, "localhost", "Database host")
+	pf.Int(flagDBPort, 5432, "Database port")
+	pf.String(flagDBUser, "postgres", "Database user")
+	pf.String(flagDBPassword, "", "Database password")
+	pf.String(flagDBName, "heimdall-server-production", "Database name")
 	pf.BoolP("verbose", "v", false, "Verbose output")
 	pf.String("config", "", "Config file path")
 
@@ -65,27 +80,27 @@ FILES:
 	registerPathDefaults(v)
 
 	// Path override flags (empty default = only active when explicitly set)
-	pf.String("app-dir", "", "Application directory")
-	pf.String("data-dir", "", "Data directory")
-	pf.String("libexec-dir", "", "Libexec directory")
-	pf.String("config-dir", "", "Configuration directory")
-	pf.String("cert-dir", "", "Certificate directory")
-	pf.String("log-dir", "", "Log directory")
-	pf.String("env-file", "", "Environment file path")
+	pf.String(flagAppDir, "", "Application directory")
+	pf.String(flagDataDir, "", "Data directory")
+	pf.String(flagLibexecDir, "", "Libexec directory")
+	pf.String(flagConfigDir, "", "Configuration directory")
+	pf.String(flagCertDir, "", "Certificate directory")
+	pf.String(flagLogDir, "", "Log directory")
+	pf.String(flagEnvFile, "", "Environment file path")
 
-	_ = v.BindPFlag("app-dir", pf.Lookup("app-dir"))
-	_ = v.BindPFlag("data-dir", pf.Lookup("data-dir"))
-	_ = v.BindPFlag("libexec-dir", pf.Lookup("libexec-dir"))
-	_ = v.BindPFlag("config-dir", pf.Lookup("config-dir"))
-	_ = v.BindPFlag("cert-dir", pf.Lookup("cert-dir"))
-	_ = v.BindPFlag("log-dir", pf.Lookup("log-dir"))
-	_ = v.BindPFlag("env-file", pf.Lookup("env-file"))
+	_ = v.BindPFlag(flagAppDir, pf.Lookup(flagAppDir))
+	_ = v.BindPFlag(flagDataDir, pf.Lookup(flagDataDir))
+	_ = v.BindPFlag(flagLibexecDir, pf.Lookup(flagLibexecDir))
+	_ = v.BindPFlag(flagConfigDir, pf.Lookup(flagConfigDir))
+	_ = v.BindPFlag(flagCertDir, pf.Lookup(flagCertDir))
+	_ = v.BindPFlag(flagLogDir, pf.Lookup(flagLogDir))
+	_ = v.BindPFlag(flagEnvFile, pf.Lookup(flagEnvFile))
 
-	_ = v.BindPFlag("db-host", pf.Lookup("db-host"))
-	_ = v.BindPFlag("db-port", pf.Lookup("db-port"))
-	_ = v.BindPFlag("db-user", pf.Lookup("db-user"))
-	_ = v.BindPFlag("db-password", pf.Lookup("db-password"))
-	_ = v.BindPFlag("db-name", pf.Lookup("db-name"))
+	_ = v.BindPFlag(flagDBHost, pf.Lookup(flagDBHost))
+	_ = v.BindPFlag(flagDBPort, pf.Lookup(flagDBPort))
+	_ = v.BindPFlag(flagDBUser, pf.Lookup(flagDBUser))
+	_ = v.BindPFlag(flagDBPassword, pf.Lookup(flagDBPassword))
+	_ = v.BindPFlag(flagDBName, pf.Lookup(flagDBName))
 	_ = v.BindPFlag("verbose", pf.Lookup("verbose"))
 
 	root.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {

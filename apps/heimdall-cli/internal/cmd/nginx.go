@@ -16,7 +16,11 @@ import (
 	"time"
 )
 
-const bundledNginxService = "heimdall-nginx"
+const (
+	bundledNginxService = "heimdall-nginx"
+	nginxConfigOwner    = "root:heimdall-nginx"
+	nginxPendingSuffix  = ".pending"
+)
 
 type nginxUpdate = caddyUpdate
 
@@ -134,7 +138,7 @@ func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, 
 	if err := checkOwnedPort(r.Exec, r.Systemd, 443, owner, false); err != nil {
 		return nil, err
 	}
-	update := &nginxUpdate{runner: r, unit: bundledNginxService, group: "heimdall-nginx", runDir: "/run/heimdall-nginx", config: config, pending: dir + "/nginx.conf.pending", certs: map[string][]byte{}}
+	update := &nginxUpdate{runner: r, unit: bundledNginxService, group: bundledNginxService, runDir: "/run/heimdall-nginx", config: config, pending: dir + "/nginx.conf.pending", certs: map[string][]byte{}}
 	update.active, err = r.Systemd.IsActive(bundledNginxService)
 	if err != nil {
 		return nil, err
@@ -157,19 +161,8 @@ func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, 
 		return nil, fmt.Errorf("incomplete Nginx certificate/key pair; restore both files before setup")
 	}
 	if cert.exists {
-		pair, err := tls.X509KeyPair(cert.data, key.data)
-		if err != nil {
-			return nil, fmt.Errorf("invalid Nginx certificate/key: %w", err)
-		}
-		leaf, err := x509.ParseCertificate(pair.Certificate[0])
-		if err != nil {
-			return nil, fmt.Errorf("invalid Nginx certificate: %w", err)
-		}
-		if err := leaf.VerifyHostname(u.Hostname()); err != nil {
-			return nil, fmt.Errorf("existing Nginx certificate does not match external hostname: %w", err)
-		}
-		if time.Now().Before(leaf.NotBefore) || !time.Now().Before(leaf.NotAfter) {
-			return nil, fmt.Errorf("existing Nginx certificate is outside its validity period; replace the certificate/key pair before setup")
+		if err := validateNginxCertificate(cert.data, key.data, u.Hostname()); err != nil {
+			return nil, err
 		}
 	} else {
 		days, err := certificateLifetimeDays(env)
@@ -182,7 +175,7 @@ func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, 
 		}
 		update.certs[cert.path], update.certs[key.path] = crt, pemKey
 	}
-	for _, path := range []string{update.pending, cert.path + ".pending", key.path + ".pending", "/var/lib/heimdall-nginx/.heimdall-check", "/run/heimdall-nginx/.heimdall-check"} {
+	for _, path := range []string{update.pending, cert.path + nginxPendingSuffix, key.path + nginxPendingSuffix, "/var/lib/heimdall-nginx/.heimdall-check", "/run/heimdall-nginx/.heimdall-check"} {
 		if err := safeManagedPath(r.FS, path); err != nil {
 			return nil, err
 		}
@@ -191,7 +184,7 @@ func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, 
 		if err := r.FS.MkdirAll(path, 0750); err != nil {
 			return nil, err
 		}
-		if err := runChecked(r.Exec, "chown", "root:heimdall-nginx", path); err != nil {
+		if err := runChecked(r.Exec, "chown", nginxConfigOwner, path); err != nil {
 			return nil, err
 		}
 		if err := runChecked(r.Exec, "chmod", "0750", path); err != nil {
@@ -209,12 +202,12 @@ func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, 
 			return nil, err
 		}
 	}
-	if err := runChecked(r.Exec, "runuser", "-u", "heimdall-nginx", "--", "mkdir", "-p", "/var/lib/heimdall-nginx/client_body", "/var/lib/heimdall-nginx/proxy"); err != nil {
+	if err := runChecked(r.Exec, "runuser", "-u", bundledNginxService, "--", "mkdir", "-p", "/var/lib/heimdall-nginx/client_body", "/var/lib/heimdall-nginx/proxy"); err != nil {
 		return nil, err
 	}
 	if cert.exists {
 		for _, path := range []string{cert.path, key.path} {
-			if err := runChecked(r.Exec, "chown", "root:heimdall-nginx", path); err != nil {
+			if err := runChecked(r.Exec, "chown", nginxConfigOwner, path); err != nil {
 				return nil, err
 			}
 			if err := runChecked(r.Exec, "chmod", "0640", path); err != nil {
@@ -225,19 +218,19 @@ func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, 
 	defer update.cleanup()
 	candidate := config
 	for path, data := range update.certs {
-		if err := r.FS.RemoveAll(path + ".pending"); err != nil {
+		if err := r.FS.RemoveAll(path + nginxPendingSuffix); err != nil {
 			return nil, err
 		}
-		if err := r.FS.WriteFile(path+".pending", data, 0640); err != nil {
+		if err := r.FS.WriteFile(path+nginxPendingSuffix, data, 0640); err != nil {
 			return nil, err
 		}
-		if err := runChecked(r.Exec, "chown", "root:heimdall-nginx", path+".pending"); err != nil {
+		if err := runChecked(r.Exec, "chown", nginxConfigOwner, path+nginxPendingSuffix); err != nil {
 			return nil, err
 		}
-		if err := runChecked(r.Exec, "chmod", "0640", path+".pending"); err != nil {
+		if err := runChecked(r.Exec, "chmod", "0640", path+nginxPendingSuffix); err != nil {
 			return nil, err
 		}
-		candidate = strings.ReplaceAll(candidate, strconv.Quote(path), strconv.Quote(path+".pending"))
+		candidate = strings.ReplaceAll(candidate, strconv.Quote(path), strconv.Quote(path+nginxPendingSuffix))
 	}
 	if err := r.FS.RemoveAll(update.pending); err != nil {
 		return nil, err
@@ -245,7 +238,7 @@ func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, 
 	if err := r.FS.WriteFile(update.pending, []byte(candidate), 0640); err != nil {
 		return nil, err
 	}
-	if err := runChecked(r.Exec, "chown", "root:heimdall-nginx", update.pending); err != nil {
+	if err := runChecked(r.Exec, "chown", nginxConfigOwner, update.pending); err != nil {
 		return nil, err
 	}
 	if err := runChecked(r.Exec, "chmod", "0640", update.pending); err != nil {
@@ -268,4 +261,22 @@ func proxyPortOwner(previous, fallback string) string {
 		return bundledNginxService
 	}
 	return fallback
+}
+
+func validateNginxCertificate(cert, key []byte, host string) error {
+	pair, err := tls.X509KeyPair(cert, key)
+	if err != nil {
+		return fmt.Errorf("invalid Nginx certificate/key: %w", err)
+	}
+	leaf, err := x509.ParseCertificate(pair.Certificate[0])
+	if err != nil {
+		return fmt.Errorf("invalid Nginx certificate: %w", err)
+	}
+	if err := leaf.VerifyHostname(host); err != nil {
+		return fmt.Errorf("existing Nginx certificate does not match external hostname: %w", err)
+	}
+	if time.Now().Before(leaf.NotBefore) || !time.Now().Before(leaf.NotAfter) {
+		return fmt.Errorf("existing Nginx certificate is outside its validity period; replace the certificate/key pair before setup")
+	}
+	return nil
 }

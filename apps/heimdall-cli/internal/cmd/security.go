@@ -46,16 +46,8 @@ func rootManagedFile(fs FileSystem, path string) error {
 		if err != nil {
 			return err
 		}
-		if info.Mode().Perm()&0022 != 0 {
-			return fmt.Errorf("unsafe writable managed path: %s", current)
-		}
-		if stat, ok := info.Sys().(*syscall.Stat_t); ok {
-			if stat.Uid != 0 || (current == path && (stat.Gid != 0 || stat.Nlink != 1)) {
-				return fmt.Errorf("expected root-owned managed path: %s", current)
-			}
-		}
-		if current == path && info.Mode().Perm() != 0600 {
-			return fmt.Errorf("expected mode 0600: %s", current)
+		if err := validateRootManagedInfo(info, current, path); err != nil {
+			return err
 		}
 	}
 	return nil
@@ -87,35 +79,11 @@ func matchSELinuxPort(output string, wanted selinuxPort, exactLocal bool) (bool,
 		if f[1] != "tcp" {
 			continue
 		}
-		for _, span := range strings.Split(strings.Join(f[2:], ""), ",") {
-			low, high, ranged := strings.Cut(span, "-")
-			start, e1 := strconv.Atoi(low)
-			end := start
-			var e2 error
-			if ranged {
-				end, e2 = strconv.Atoi(high)
-			}
-			if e1 != nil || e2 != nil || start < 0 || end > 65535 || end < start {
-				return false, fmt.Errorf("invalid SELinux port range: %q", span)
-			}
-			port, _ := strconv.Atoi(wanted.port)
-			if port < start || port > end {
-				continue
-			}
-			if exactLocal {
-				if start == end && f[0] == wanted.kind {
-					compatible = true
-				}
-				continue
-			}
-			if f[0] == "unreserved_port_t" || f[0] == "reserved_port_t" || f[0] == "ephemeral_port_t" || f[0] == "port_t" {
-				continue
-			}
-			if f[0] != wanted.kind {
-				return false, fmt.Errorf("SELinux TCP port %s belongs to %s; choose another port (requires %s)", wanted.port, f[0], wanted.kind)
-			}
-			compatible = true
+		matched, err := matchSELinuxPortSpans(f, wanted, exactLocal)
+		if err != nil {
+			return false, err
 		}
+		compatible = compatible || matched
 	}
 	return compatible, nil
 }
@@ -159,26 +127,9 @@ func configureSELinuxPorts(exec ExecRunner, fs FileSystem, configDir string, por
 	if err != nil || code != 0 {
 		return fmt.Errorf("listing SELinux ports (exit %d): %s: %v", code, strings.TrimSpace(out), err)
 	}
-	var additions []selinuxPort
-	seen := map[string]string{}
-	for _, p := range ports {
-		if !validSELinuxPort(p) {
-			return fmt.Errorf("invalid selected SELinux port")
-		}
-		if kind, ok := seen[p.port]; ok {
-			if kind != p.kind {
-				return fmt.Errorf("SELinux port %s selected for incompatible services", p.port)
-			}
-			continue
-		}
-		seen[p.port] = p.kind
-		compatible, err := selinuxPortCompatible(out, p)
-		if err != nil {
-			return err
-		}
-		if !compatible {
-			additions = append(additions, p)
-		}
+	additions, err := missingSELinuxPorts(out, ports)
+	if err != nil {
+		return err
 	}
 	ledger := configDir + "/selinux-ports"
 	pending := ledger + ".pending"
@@ -190,33 +141,9 @@ func configureSELinuxPorts(exec ExecRunner, fs FileSystem, configDir string, por
 	if err != nil {
 		return err
 	}
-	if fs.Exists(pending) {
-		local, err := localSELinuxPorts(exec)
-		if err != nil {
-			return err
-		}
-		for _, line := range strings.Split(strings.TrimSpace(string(interrupted)), "\n") {
-			f := strings.Fields(line)
-			if len(f) == 0 {
-				continue
-			}
-			matches, err := matchSELinuxPort(local, selinuxPort{f[0], f[2]}, true)
-			if err != nil {
-				return err
-			}
-			if matches {
-				data = appendPortRecord(data, selinuxPort{f[0], f[2]})
-			}
-		}
-		if apply {
-			// Keep the original pending snapshot until its merged replacement is durable.
-			if err := savePortLedger(exec, fs, ledger, ledger+".reconcile", data); err != nil {
-				return fmt.Errorf("reconciling %s; retained pending ownership: %w", pending, err)
-			}
-			if err := fs.RemoveAll(pending); err != nil {
-				return err
-			}
-		}
+	data, err = reconcileSELinuxLedger(exec, fs, ledger, pending, data, interrupted, apply)
+	if err != nil {
+		return err
 	}
 	if len(additions) == 0 {
 		return nil
@@ -358,4 +285,119 @@ func (r *SetupRunner) selectedSELinuxPorts(env map[string]string) ([]selinuxPort
 		ports = append(ports, selinuxPort{"http_port_t", port})
 	}
 	return ports, nil
+}
+
+func validateRootManagedInfo(info os.FileInfo, current, path string) error {
+	if info.Mode().Perm()&0022 != 0 {
+		return fmt.Errorf("unsafe writable managed path: %s", current)
+	}
+	if stat, ok := info.Sys().(*syscall.Stat_t); ok {
+		if stat.Uid != 0 || (current == path && (stat.Gid != 0 || stat.Nlink != 1)) {
+			return fmt.Errorf("expected root-owned managed path: %s", current)
+		}
+	}
+	if current == path && info.Mode().Perm() != 0600 {
+		return fmt.Errorf("expected mode 0600: %s", current)
+	}
+	return nil
+}
+
+func matchSELinuxPortSpans(f []string, wanted selinuxPort, exactLocal bool) (bool, error) {
+	compatible := false
+	for _, span := range strings.Split(strings.Join(f[2:], ""), ",") {
+		start, end, err := parseSELinuxPortSpan(span)
+		if err != nil {
+			return false, err
+		}
+		port, _ := strconv.Atoi(wanted.port)
+		if port < start || port > end {
+			continue
+		}
+		if exactLocal {
+			if start == end && f[0] == wanted.kind {
+				compatible = true
+			}
+			continue
+		}
+		if f[0] == "unreserved_port_t" || f[0] == "reserved_port_t" || f[0] == "ephemeral_port_t" || f[0] == "port_t" {
+			continue
+		}
+		if f[0] != wanted.kind {
+			return false, fmt.Errorf("SELinux TCP port %s belongs to %s; choose another port (requires %s)", wanted.port, f[0], wanted.kind)
+		}
+		compatible = true
+	}
+	return compatible, nil
+}
+
+func parseSELinuxPortSpan(span string) (int, int, error) {
+	low, high, ranged := strings.Cut(span, "-")
+	start, e1 := strconv.Atoi(low)
+	end := start
+	var e2 error
+	if ranged {
+		end, e2 = strconv.Atoi(high)
+	}
+	if e1 != nil || e2 != nil || start < 0 || end > 65535 || end < start {
+		return 0, 0, fmt.Errorf("invalid SELinux port range: %q", span)
+	}
+	return start, end, nil
+}
+
+func missingSELinuxPorts(out string, ports []selinuxPort) ([]selinuxPort, error) {
+	var additions []selinuxPort
+	seen := map[string]string{}
+	for _, p := range ports {
+		if !validSELinuxPort(p) {
+			return nil, fmt.Errorf("invalid selected SELinux port")
+		}
+		if kind, ok := seen[p.port]; ok {
+			if kind != p.kind {
+				return nil, fmt.Errorf("SELinux port %s selected for incompatible services", p.port)
+			}
+			continue
+		}
+		seen[p.port] = p.kind
+		compatible, err := selinuxPortCompatible(out, p)
+		if err != nil {
+			return nil, err
+		}
+		if !compatible {
+			additions = append(additions, p)
+		}
+	}
+	return additions, nil
+}
+
+func reconcileSELinuxLedger(exec ExecRunner, fs FileSystem, ledger, pending string, data, interrupted []byte, apply bool) ([]byte, error) {
+	if !fs.Exists(pending) {
+		return data, nil
+	}
+	local, err := localSELinuxPorts(exec)
+	if err != nil {
+		return nil, err
+	}
+	for _, line := range strings.Split(strings.TrimSpace(string(interrupted)), "\n") {
+		f := strings.Fields(line)
+		if len(f) == 0 {
+			continue
+		}
+		matches, err := matchSELinuxPort(local, selinuxPort{f[0], f[2]}, true)
+		if err != nil {
+			return nil, err
+		}
+		if matches {
+			data = appendPortRecord(data, selinuxPort{f[0], f[2]})
+		}
+	}
+	if apply {
+		// Keep the original pending snapshot until its merged replacement is durable.
+		if err := savePortLedger(exec, fs, ledger, ledger+".reconcile", data); err != nil {
+			return nil, fmt.Errorf("reconciling %s; retained pending ownership: %w", pending, err)
+		}
+		if err := fs.RemoveAll(pending); err != nil {
+			return nil, err
+		}
+	}
+	return data, nil
 }
