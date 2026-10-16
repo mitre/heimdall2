@@ -4,6 +4,8 @@
 .codex
 .agents
 **/node_modules
+**/.npmrc
+**/.yarnrc.yml
 **/dist
 **/coverage
 **/.cache
@@ -12,7 +14,6 @@
 **/.env-*
 **/.env.*
 **/manifest.yml
-**/.npmrc
 **/*.log
 **/*.rpm
 **/rpmbuild

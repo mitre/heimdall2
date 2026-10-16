@@ -42,8 +42,9 @@ sources: check-source
 ifeq ($(SOURCE_MODE),workspace)
 	tar -C ../.. --exclude=.git --exclude=.beads --exclude=.superpowers \
 	  --exclude=node_modules --exclude=dist --exclude=rpmbuild \
+	  --exclude=.npmrc --exclude=.yarnrc.yml \
 	  --exclude=.env --exclude='.env-*' --exclude='.env.*' \
-	  --exclude=manifest.yml --exclude=.npmrc \
+	  --exclude=manifest.yml \
 	  --exclude='*.rpm' --exclude=certs --exclude=.cache --exclude=coverage --exclude=./data \
 	  --transform 's|^\.|heimdall2-$(VERSION)|' \
 	  -czf "$(TOPDIR)/SOURCES/heimdall2-$(VERSION).tar.gz" .
@@ -208,6 +209,7 @@ lint-rpm:
 	fi
 
 clean:
+	python3 scripts/check-inputs.py ../.. "$(TOPDIR)" clean
 	rm -rf "$(TOPDIR)"
 
 # Compare VERSION against the latest GitHub release on UPSTREAM_REPO.

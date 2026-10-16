@@ -273,6 +273,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Verify host-runner guards and readiness fixtures
+        run: |
+          bash packaging/rpm/tests/guards.sh
+          python3 packaging/rpm/tests/host-build-args.py
+          python3 packaging/rpm/tests/remote-readiness.py
+
       - uses: actions/download-artifact@v8
         with:
           name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
@@ -314,7 +320,7 @@ jobs:
           test "$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container")" = none
           timeout 600 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh install /tmp/initial.rpm
           # Exercise fresh Nginx defaults before the explicit Caddy lifecycle checks.
-          timeout 900 docker exec "$container" bash /tmp/rpm-tests/topology.sh bundled nginx 3003
+          timeout 900 docker exec "$container" bash /tmp/rpm-tests/topology.sh bundled nginx
           timeout 900 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh setup
           docker restart "$container"
           for attempt in $(seq 1 60); do

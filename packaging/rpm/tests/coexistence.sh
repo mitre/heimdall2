@@ -97,7 +97,7 @@ NGINX
     sha256sum "$nginx_cert" /etc/heimdall-server/nginx/certs/server.key > /tmp/rpm-coexist-nginx.sha256
     bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
       --cacert "$nginx_cert" --resolve heimdall.example.test:443:127.0.0.1
-    heimdall-cli set-port 3003
+    heimdall-cli set-port 3456
     bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
       --cacert "$nginx_cert" --resolve heimdall.example.test:443:127.0.0.1
     heimdall-cli set-port 3002

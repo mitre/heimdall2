@@ -22,7 +22,9 @@ if [[ $db_mode == external ]]; then
     --db-user "${RPM_TEST_DB_USER:?}" --db-password "${RPM_TEST_DB_PASSWORD:?}"
     --db-name "${RPM_TEST_DB_NAME:?}")
 fi
-if [[ $# -ge 3 ]]; then args+=(--port "$backend_port"); fi
+if [[ $# -ge 3 ]]; then
+  args+=(--port "$backend_port")
+fi
 if [[ ${RPM_TEST_COEXIST:-0} == 0 ]]; then
   rpm -qa --qf '%{NAME}\n' > /tmp/heimdall-installed-packages.txt
   if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy|nginx)$' /tmp/heimdall-installed-packages.txt; then exit 1; fi
@@ -84,4 +86,5 @@ heimdall-cli setup --non-interactive
 sha256sum --check /tmp/rpm-topology-env.sha256
 if [[ $proxy_mode == nginx ]]; then sha256sum --check /tmp/rpm-topology-cert.sha256; fi
 bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test "${curl_args[@]}"
+bash /tmp/rpm-tests/reset-password.sh
 printf 'PASS topology database=%s proxy=%s\n' "$db_mode" "$proxy_mode"

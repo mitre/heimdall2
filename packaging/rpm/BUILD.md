@@ -57,9 +57,7 @@ self-signed certificate and works offline; clients must trust its public
 certificate. Bundled Caddy supports `--tls-mode acme`, `internal`, or `custom`;
 custom mode also takes `--tls-cert` and `--tls-key`. Internal CA operation does not
 need internet after the RPM and OS dependencies are installed; clients must trust
-its root certificate. Both managed proxies require an HTTPS external URL on port
-443. Use an external proxy for a custom public port. ACME requires the appropriate
-public connectivity.
+its root certificate. ACME requires the appropriate public connectivity.
 
 Flags override saved selections; saved selections override fresh defaults
 (`bundled`/`nginx`). Existing configured installations without mode keys default
@@ -117,7 +115,12 @@ bash packaging/rpm/tests/cli-inputs.sh "$HOME/rpmbuild-heimdall"
 `RPMS/<arch>/` contains the binary and `SRPMS/` the source RPM under that TOPDIR.
 Use the same TOPDIR for staging, lint and inspection. The wrapper
 `./packaging/rpm/setup-rpm-build-env.sh --build` provides the same Make path.
-Local builds are unsigned until explicitly signed.
+Run `make -C packaging/rpm clean TOPDIR="$HOME/rpmbuild-heimdall"` to remove its
+build output. Cleanup is limited to a non-symlink directory outside the source
+tree and its ancestors, and refuses the home directory itself. Its top-level
+entries must be the known RPM build outputs; unrelated files prevent deletion.
+A missing TOPDIR is harmless, and cleanup works when `VERSION` is missing. Local
+builds are unsigned until explicitly signed.
 
 To build the current files using Docker:
 
@@ -143,6 +146,10 @@ exports `RPMS/`, `SRPMS/` and the runtime inventory. Its build-specific ignore f
 excludes Git metadata, secrets, caches, execution scratch and prior outputs. If
 needed, pass `--secret id=corp_ca,src=/path/to/ca-bundle.crt` for a corporate CA.
 Keep TLS and signature verification enabled.
+
+Workspace source archives and Docker build contexts exclude local `.npmrc` and
+`.yarnrc.yml` files. Authenticate package downloads through the build environment;
+do not put credentials into distributable sources.
 
 ### x86_64 builds under QEMU
 
@@ -363,6 +370,13 @@ application, database and certificate state and accounts. See
 
 ## Acceptance status
 
+The [2026-10-15 remediation report](../../docs/superpowers/reports/2026-10-15-rpm-remediation-acceptance.md)
+records eleven reviewed fixes and source-level verification for candidate
+`44c5ed66033a3986da92aa8ff0098b28bf1fa934`. Package qualification remains
+incomplete: the local OL8/aarch64 build failed during dependency linking and
+produced no RPM/SRPM. Remote CI awaits explicit approval, and the report lists
+the remaining browser, TLS, lifecycle and enforcing-host gates.
+
 The [historical bundled-runtime report](https://github.com/mitre/heimdall2/blob/5486a8b7f26da3ea90635f970e8b983142cdb0b8/docs/superpowers/reports/2026-09-29-bundled-rpm-acceptance.md)
 records acceptance of earlier source and artifacts. It does not certify this
 standalone branch or packages built from the current `VERSION`.
@@ -386,7 +400,7 @@ candidate-specific validation. Docker tests cannot establish those host properti
 
 Before release, record candidate-specific build, signed-install and clean SRPM
 rebuild evidence for the target distribution and architecture. Run the manual
-lifecycle suites, all four database/proxy deployment combinations, offline setup,
+lifecycle suites, all six database/proxy deployment combinations, offline setup,
 coexistence, backup/restore, a real preceding-package upgrade and a full
 host reboot. The `/server` response verifies the application endpoint; database
 queries, migrations and authenticated application access need separate checks.

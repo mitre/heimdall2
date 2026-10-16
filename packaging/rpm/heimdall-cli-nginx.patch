@@ -1,5 +1,5 @@
 diff --git a/README.md b/README.md
-index 4fac11f..208f264 100644
+index 4fac11f..fe9610c 100644
 --- a/README.md
 +++ b/README.md
 @@ -30,7 +30,7 @@ See [`docs/testing.md`](./docs/testing.md) for the unit / functional / integrati
@@ -11,7 +11,7 @@ index 4fac11f..208f264 100644
  download runtimes. Base OS libraries and systemd remain prerequisites.
  
  ```sh
-@@ -39,24 +39,44 @@ sudo heimdall-cli setup --interactive
+@@ -39,24 +39,39 @@ sudo heimdall-cli setup --interactive
  ```
  
  Choose database and proxy ownership independently. Fresh installations default
@@ -33,10 +33,9 @@ index 4fac11f..208f264 100644
 -`https://` plus saved `NGINX_HOST`, and finally `https://localhost`. Enter accepts
 -the displayed value. JWT expiration (`JWT_EXPIRE_TIME`) defaults to `1d` and
 +Interactive setup displays each backend port, public URL, JWT expiration, and local
-+certificate lifetime default. **Backend port** uses saved `PORT`, or `3002` on a
-+fresh RPM installation to avoid stock EL8 SELinux ports 3000–3001. Standalone and
-+already configured installations without `PORT` keep their legacy default `3000`.
-+Set `--port 3456` to override it non-interactively; an explicit
++certificate lifetime default. **Backend port** uses saved `PORT`, otherwise `3002`
++for a fresh RPM installation or `3000` for standalone and configured legacy
++installations. Set `--port 3456` to override it non-interactively; an explicit
 +`--port 3000` also overrides a saved custom value. Listener conflicts, incompatible
 +SELinux assignments, and ports selected for the managed proxy or database are
 +rejected before any configuration or service changes, including `--reconfigure`.
@@ -47,11 +46,7 @@ index 4fac11f..208f264 100644
 +The public URL uses the supplied or saved `EXTERNAL_URL`, then
 +saved `NGINX_HOST`, and finally `localhost`. Enter accepts the displayed value.
 +Bare hostnames, IP addresses, and host/port values become HTTPS URLs; the no-TLS
-+choice uses HTTP. Managed RPM Caddy and Nginx require an HTTPS URL on port 443 and
-+reject other
-+public ports before configuration or service changes. External proxies retain
-+custom public ports; no-TLS development retains HTTP URLs. JWT expiration
-+(`JWT_EXPIRE_TIME`) defaults to `1d` and
++choice uses HTTP. Supplied full HTTP/HTTPS URLs are preserved. JWT expiration (`JWT_EXPIRE_TIME`) defaults to `1d` and
  accepts durations such as `25m`; Heimdall caps the effective lifetime at two days.
  
  For locally issued HTTPS certificates, setup asks for the requested lifetime in
@@ -64,7 +59,7 @@ index 4fac11f..208f264 100644
  Caddy configures its intermediate CA lifetime to allow the requested leaf lifetime
  during normal renewal. An existing intermediate CA can temporarily shorten newly
  issued certificates until it renews. Standalone Caddy keeps its administrator's
-@@ -65,7 +85,7 @@ setup again to change the saved lifetime; non-interactive reruns preserve it.
+@@ -65,7 +80,7 @@ setup again to change the saved lifetime; non-interactive reruns preserve it.
  
  ```sh
  sudo heimdall-cli setup --non-interactive \
@@ -73,7 +68,7 @@ index 4fac11f..208f264 100644
    --db-host db.example.com --db-port 5432 --db-user heimdall \
    --db-name heimdall --db-password 'replace-me' \
    --external-url https://heimdall.example.test
-@@ -85,6 +105,9 @@ an administrator change; the CLI does not stop or relabel its owner.
+@@ -85,6 +100,9 @@ an administrator change; the CLI does not stop or relabel its owner.
  | Node.js | `/usr/libexec/heimdall-server/runtime/node/bin/node` |
  | PostgreSQL | `/usr/libexec/heimdall-server/runtime/postgresql/{bin,lib,share}` |
  | PostgreSQL state/socket | `/var/lib/heimdall-postgresql/18/data`, `/run/heimdall-postgresql`; account `heimdall-postgres`, default `127.0.0.1:55432` |
@@ -83,6 +78,59 @@ index 4fac11f..208f264 100644
  | Caddy | `/usr/libexec/heimdall-server/runtime/caddy/caddy`; account `heimdall-caddy` |
  | Caddy config/state/socket | `/etc/heimdall-server/caddy/Caddyfile`, `/var/lib/heimdall-caddy`, `/run/heimdall-caddy/admin.sock` |
  | Saved setup | `/etc/heimdall-server/backend.env` |
+diff --git a/internal/cmd/add_cert.go b/internal/cmd/add_cert.go
+index 60d1498..f867db2 100644
+--- a/internal/cmd/add_cert.go
++++ b/internal/cmd/add_cert.go
+@@ -38,12 +38,10 @@ func (r *AddCertRunner) Run(certPath string) error {
+ 	}
+ 	fmt.Fprintf(r.Out, "Copied %s to %s\n", basename, dest)
+ 
+-	_, _, err := r.Exec.Run("update-ca-trust")
+-	if err != nil {
+-		fmt.Fprintf(r.Out, "Warning: update-ca-trust failed.\n")
+-	} else {
+-		fmt.Fprintln(r.Out, "System trust store updated.")
++	if err := runChecked(r.Exec, "update-ca-trust"); err != nil {
++		return fmt.Errorf("updating system trust store: %w", err)
+ 	}
++	fmt.Fprintln(r.Out, "System trust store updated.")
+ 
+ 	// OS-level consolidated CA bundle path — see comment above.
+ 	caBundle := "/etc/pki/tls/certs/ca-bundle.crt"
+diff --git a/internal/cmd/add_cert_test.go b/internal/cmd/add_cert_test.go
+index ae81b84..96cb128 100644
+--- a/internal/cmd/add_cert_test.go
++++ b/internal/cmd/add_cert_test.go
+@@ -2,6 +2,7 @@ package cmd
+ 
+ import (
+ 	"bytes"
++	"fmt"
+ 	"testing"
+ 
+ 	"github.com/stretchr/testify/assert"
+@@ -77,6 +78,20 @@ func TestAddCert_SkipsEnvUpdateIfAlreadySet(t *testing.T) {
+ 	assert.NotContains(t, out.String(), "Set NODE_EXTRA_CA_CERTS")
+ }
+ 
++func TestAddCertTrustFailureStopsConfiguration(t *testing.T) {
++	for _, result := range []FakeExecResult{
++		{ExitCode: 1, Stdout: "could not rebuild trust"},
++		{Err: fmt.Errorf("could not execute update-ca-trust")},
++	} {
++		r, exec, env, fs, out := newAddCertRunner()
++		fs.Files["/tmp/corporate.pem"] = []byte("certificate")
++		exec.Results["update-ca-trust"] = result
++		require.Error(t, r.Run("/tmp/corporate.pem"))
++		require.NotContains(t, out.String(), "System trust store updated")
++		require.Empty(t, env.Env["NODE_EXTRA_CA_CERTS"])
++	}
++}
++
+ func TestAddCert_FileNotExists(t *testing.T) {
+ 	r := &AddCertRunner{
+ 		Env:       &FakeEnvManager{Env: map[string]string{}},
 diff --git a/internal/cmd/backup.go b/internal/cmd/backup.go
 index 62e9920..f40031c 100644
 --- a/internal/cmd/backup.go
@@ -132,71 +180,6 @@ index 62e9920..f40031c 100644
  }
  
  // Validate every object, including all directory ancestors, without following links.
-diff --git a/internal/cmd/caddy_port_test.go b/internal/cmd/caddy_port_test.go
-new file mode 100644
-index 0000000..0623d56
---- /dev/null
-+++ b/internal/cmd/caddy_port_test.go
-@@ -0,0 +1,59 @@
-+package cmd
-+
-+import (
-+	"testing"
-+
-+	"github.com/stretchr/testify/require"
-+)
-+
-+func TestSetupManagedCaddyRejectsNonHTTPS443BeforeMutation(t *testing.T) {
-+	for _, raw := range []string{"https://heimdall.example.test:8443", "http://heimdall.example.test"} {
-+		for _, interactive := range []bool{false, true} {
-+			for _, reconfigure := range []bool{false, true} {
-+				name := raw + map[bool]string{false: " non-interactive", true: " interactive"}[interactive] + map[bool]string{false: " full", true: " reconfigure"}[reconfigure]
-+				t.Run(name, func(t *testing.T) {
-+					r := bundledSetupFixture(t)
-+					r.Prompter = &FakePrompter{IsTTY: true}
-+					unchanged := assertSetupPortUnchanged(t, r)
-+					args := []string{"--external-url=" + raw}
-+					if interactive {
-+						args = append(args, "--interactive")
-+					} else {
-+						args = append(args, "--non-interactive")
-+					}
-+					if reconfigure {
-+						args = append(args, "--reconfigure")
-+					}
-+					command := NewSetupCmd(r)
-+					command.SetArgs(args)
-+					require.ErrorContains(t, command.Execute(), "managed Caddy requires an HTTPS external URL on port 443")
-+					unchanged()
-+				})
-+			}
-+		}
-+	}
-+}
-+
-+func TestSetupCaddyPortContractPreservesExternalAndStandaloneURLs(t *testing.T) {
-+	for _, tc := range []struct {
-+		name, raw, mode string
-+		rpm             bool
-+	}{
-+		{"managed implicit 443", "https://heimdall.example.test", "bundled", true},
-+		{"managed explicit 443", "https://heimdall.example.test:443", "bundled", true},
-+		{"external custom port", "https://heimdall.example.test:8443", "external", true},
-+		{"HTTP development", "http://heimdall.example.test:8443", "none", true},
-+		{"standalone Caddy custom port", "https://heimdall.example.test:8443", "bundled", false},
-+	} {
-+		t.Run(tc.name, func(t *testing.T) {
-+			r, _, _ := newTestSetupRunner()
-+			if tc.rpm {
-+				r.FS.(*FakeFileSystem).Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
-+			}
-+			command := NewSetupCmd(r)
-+			command.SetArgs([]string{"--non-interactive", "--reconfigure", "--proxy-mode=" + tc.mode, "--external-url=" + tc.raw})
-+			require.NoError(t, command.Execute())
-+			require.Equal(t, tc.raw, r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"])
-+		})
-+	}
-+}
 diff --git a/internal/cmd/config_test.go b/internal/cmd/config_test.go
 index 37a8f7a..22a543a 100644
 --- a/internal/cmd/config_test.go
@@ -210,6 +193,22 @@ index 37a8f7a..22a543a 100644
  		t.Errorf("expected range error, got: %v", err)
  	}
  }
+diff --git a/internal/cmd/config_types.go b/internal/cmd/config_types.go
+index ac5d669..d552518 100644
+--- a/internal/cmd/config_types.go
++++ b/internal/cmd/config_types.go
+@@ -44,8 +44,9 @@ const ServiceName = "heimdall-server"
+ 
+ // Default port constants.
+ const (
+-	DefaultAppPort = "3000"
+-	DefaultDBPort  = 5432
++	DefaultAppPort    = "3000"
++	DefaultRPMAppPort = "3002"
++	DefaultDBPort     = 5432
+ )
+ 
+ // SecretsSet lists env keys whose values must be masked in output.
 diff --git a/internal/cmd/deployment.go b/internal/cmd/deployment.go
 index cac85d3..ec0ba77 100644
 --- a/internal/cmd/deployment.go
@@ -233,6 +232,23 @@ index cac85d3..ec0ba77 100644
  	}
  	return d, nil
  }
+diff --git a/internal/cmd/fakes_test.go b/internal/cmd/fakes_test.go
+index 108e1d4..70e41c2 100644
+--- a/internal/cmd/fakes_test.go
++++ b/internal/cmd/fakes_test.go
+@@ -123,6 +123,12 @@ func (f *FakeExecRunner) RunWithEnv(env map[string]string, name string, args ...
+ 	return "", 0, nil
+ }
+ 
++func (f *FakeExecRunner) RunWithEnvAndStdin(env map[string]string, stdin, name string, args ...string) (string, int, error) {
++	out, code, err := f.RunWithEnv(env, name, args...)
++	f.Calls[len(f.Calls)-1].Stdin = stdin
++	return out, code, err
++}
++
+ func (f *FakeExecRunner) RunWithStdin(stdin, name string, args ...string) (string, int, error) {
+ 	f.Calls = append(f.Calls, FakeExecCall{Name: name, Args: args, Stdin: stdin})
+ 	key := execKey(name, args)
 diff --git a/internal/cmd/fapolicyd.go b/internal/cmd/fapolicyd.go
 index 865caf3..5019429 100644
 --- a/internal/cmd/fapolicyd.go
@@ -260,10 +276,10 @@ index c3991c7..c6123ca 100644
  	}
 diff --git a/internal/cmd/firewall.go b/internal/cmd/firewall.go
 new file mode 100644
-index 0000000..d340e7a
+index 0000000..c2f9510
 --- /dev/null
 +++ b/internal/cmd/firewall.go
-@@ -0,0 +1,226 @@
+@@ -0,0 +1,253 @@
 +package cmd
 +
 +import (
@@ -289,8 +305,8 @@ index 0000000..d340e7a
 +
 +var firewallZone = regexp.MustCompile(`^[A-Za-z0-9_.-]+$`)
 +
-+// Track only exact backend rules this CLI created; pre-existing rules belong to the administrator.
-+func (r *SetupRunner) configureFirewall(port, mode, previousPort string) (undo func() error, err error) {
++// Track only exact TCP port rules this CLI created; pre-existing rules belong to the administrator.
++func (r *SetupRunner) configureFirewall(port, mode, previousPort, externalURL string) (undo func() error, err error) {
 +	undo = func() error { return nil }
 +	active, err := r.Systemd.IsActive("firewalld")
 +	if err != nil {
@@ -339,13 +355,43 @@ index 0000000..d340e7a
 +			return undo, fmt.Errorf("invalid firewalld ownership ledger %s", ledger)
 +		}
 +		n, parseErr := strconv.Atoi(strings.TrimSuffix(fields[2], "/tcp"))
-+		if !strings.HasSuffix(fields[2], "/tcp") || parseErr != nil || n < 1024 || n > 65535 {
++		if !strings.HasSuffix(fields[2], "/tcp") || parseErr != nil || n < 1 || n > 65535 {
 +			return undo, fmt.Errorf("invalid firewalld ownership ledger %s", ledger)
 +		}
 +		rule := firewallRule{fields[0], fields[1], "port", fields[2]}
 +		owned[rule.record()] = rule
 +	}
 +	managed := mode == "bundled" || mode == "nginx"
++	kind, value := "port", port+"/tcp"
++	if mode == "nginx" {
++		kind, value = "service", "https"
++	} else if mode == "bundled" {
++		target, err := validatePublicURL(externalURL)
++		if err != nil {
++			return undo, err
++		}
++		publicPort := "80"
++		if target.Scheme == "https" {
++			publicPort = "443"
++		}
++		if target.Port() != "" {
++			n, _ := strconv.Atoi(target.Port())
++			publicPort = strconv.Itoa(n)
++		}
++		switch publicPort {
++		case "443":
++			kind, value = "service", "https"
++		case "80":
++			kind, value = "service", "http"
++		default:
++			kind, value = "port", publicPort+"/tcp"
++		}
++	}
++	desired := map[string]firewallRule{}
++	for _, scope := range []string{"runtime", "permanent"} {
++		rule := firewallRule{scope, zone, kind, value}
++		desired[rule.record()] = rule
++	}
 +	if managed {
 +		for _, scope := range []string{"runtime", "permanent"} {
 +			args := []string{"--get-zones"}
@@ -387,7 +433,7 @@ index 0000000..d340e7a
 +	var changes []change
 +	for _, key := range slices.Sorted(maps.Keys(owned)) {
 +		rule := owned[key]
-+		if !managed && rule.zone == zone && rule.value == port+"/tcp" {
++		if _, keep := desired[rule.record()]; keep {
 +			continue
 +		}
 +		exists, err := present(rule)
@@ -401,10 +447,7 @@ index 0000000..d340e7a
 +		}
 +	}
 +	for _, scope := range []string{"runtime", "permanent"} {
-+		rule := firewallRule{scope, zone, "port", port + "/tcp"}
-+		if managed {
-+			rule.kind, rule.value = "service", "https"
-+		}
++		rule := desired[scope+" "+zone+" "+value]
 +		exists, err := present(rule)
 +		if err != nil {
 +			return undo, err
@@ -484,7 +527,7 @@ index 0000000..d340e7a
 +		return undo, err
 +	}
 +	if managed {
-+		fmt.Fprintln(r.Out, "  firewalld: HTTPS enabled; CLI-managed backend ports closed")
++		fmt.Fprintf(r.Out, "  firewalld: proxy endpoint %s enabled; CLI-managed backend ports closed\n", value)
 +	} else {
 +		fmt.Fprintf(r.Out, "  firewalld: port %s/tcp enabled\n", port)
 +	}
@@ -492,13 +535,14 @@ index 0000000..d340e7a
 +}
 diff --git a/internal/cmd/firewall_test.go b/internal/cmd/firewall_test.go
 new file mode 100644
-index 0000000..e69ca16
+index 0000000..1c07bfa
 --- /dev/null
 +++ b/internal/cmd/firewall_test.go
-@@ -0,0 +1,251 @@
+@@ -0,0 +1,360 @@
 +package cmd
 +
 +import (
++	"fmt"
 +	"maps"
 +	"strings"
 +	"testing"
@@ -727,7 +771,7 @@ index 0000000..e69ca16
 +}
 +
 +func TestFirewallRejectsInvalidOwnershipLedgerBeforeMutation(t *testing.T) {
-+	for _, data := range []string{"runtime public 81/tcp\n", "runtime public 3456/udp\n", "other public 3456/tcp\n", "runtime public 3456/tcp extra\n"} {
++	for _, data := range []string{"runtime public 0/tcp\n", "runtime public 3456/udp\n", "other public 3456/tcp\n", "runtime public 3456/tcp extra\n"} {
 +		t.Run(data, func(t *testing.T) {
 +			r, e := firewallFixture(t, "none")
 +			require.NoError(t, r.FS.WriteFile(r.Paths.ConfigDir+"/firewalld-ports", []byte(data), 0600))
@@ -747,6 +791,126 @@ index 0000000..e69ca16
 +	assert.False(t, r.FS.Exists(r.Paths.ConfigDir+"/firewalld-ports.pending"))
 +	assert.Equal(t, "3210", r.Env.(*FakeEnvManager).Env["PORT"])
 +}
++
++func TestCaddyCustomPublicPortForSetupAndSetPort(t *testing.T) {
++	for _, command := range []string{"setup", "set-port"} {
++		t.Run(command, func(t *testing.T) {
++			r, exec := firewallFixture(t, "bundled")
++			r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://heimdall.example.test:8443"
++			backend := "3210"
++			if command == "setup" {
++				require.NoError(t, firewallSetup(t, r))
++			} else {
++				backend = "3456"
++				require.NoError(t, firewallSetPort(r, backend))
++			}
++			ledger, err := r.FS.ReadFile(r.Paths.ConfigDir + "/firewalld-ports")
++			require.NoError(t, err)
++			for _, scope := range []string{"runtime", "permanent"} {
++				assert.True(t, exec.rules[scope+" public 8443/tcp"])
++				assert.False(t, exec.rules[scope+" public "+backend+"/tcp"])
++				assert.Contains(t, string(ledger), scope+" public 8443/tcp\n")
++			}
++			before := maps.Clone(exec.rules)
++			require.NoError(t, firewallSetup(t, r))
++			assert.Equal(t, before, exec.rules)
++		})
++	}
++}
++
++func TestCaddyCustomPublicPortOwnership(t *testing.T) {
++	for _, preexisting := range []bool{false, true} {
++		t.Run(fmt.Sprint(preexisting), func(t *testing.T) {
++			r, exec := firewallFixture(t, "bundled")
++			r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://heimdall.example.test:8443"
++			if preexisting {
++				exec.rules["runtime public 8443/tcp"] = true
++				exec.rules["permanent public 8443/tcp"] = true
++			}
++			exec.rules["runtime dmz 9000/tcp"] = true
++			require.NoError(t, firewallSetup(t, r))
++			require.NoError(t, firewallSetup(t, r, "--external-url=https://heimdall.example.test:9443"))
++			for _, scope := range []string{"runtime", "permanent"} {
++				assert.Equal(t, preexisting, exec.rules[scope+" public 8443/tcp"])
++				assert.True(t, exec.rules[scope+" public 9443/tcp"])
++			}
++			assert.True(t, exec.rules["runtime dmz 9000/tcp"])
++			require.NoError(t, firewallSetup(t, r, "--external-url=https://heimdall.example.test"))
++			for _, scope := range []string{"runtime", "permanent"} {
++				assert.Equal(t, preexisting, exec.rules[scope+" public 8443/tcp"])
++				assert.False(t, exec.rules[scope+" public 9443/tcp"])
++				assert.True(t, exec.rules[scope+" public https"])
++			}
++		})
++	}
++}
++
++func TestCaddyCustomPublicPortFirewallFailureRollsBack(t *testing.T) {
++	for _, failure := range []string{"firewall", "ledger", "restart"} {
++		t.Run(failure, func(t *testing.T) {
++			r, exec := firewallFixture(t, "bundled")
++			r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://heimdall.example.test:8443"
++			exec.rules["runtime dmz 9000/tcp"] = true
++			before := maps.Clone(exec.rules)
++			switch failure {
++			case "firewall":
++				exec.failure = "--permanent --add-port=8443/tcp"
++			case "ledger":
++				r.FS.(*securityFS).failRename = true
++			case "restart":
++				r.Systemd = &portFailureSystemd{
++					FakeSystemdRunner: r.Systemd.(*FakeSystemdRunner), failure: "restart",
++				}
++			}
++			require.Error(t, firewallSetPort(r, "3456"))
++			assert.Equal(t, before, exec.rules)
++			assert.Equal(t, "3210", r.Env.(*FakeEnvManager).Env["PORT"])
++			assert.False(t, r.FS.Exists(r.Paths.ConfigDir+"/firewalld-ports"))
++		})
++	}
++}
++
++func TestSetPortRejectsStoppedProxyPublicPort(t *testing.T) {
++	r, exec := firewallFixture(t, "bundled")
++	r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://heimdall.example.test:8443"
++	require.ErrorContains(t, firewallSetPort(r, "8443"), "reserved for the selected proxy")
++	assert.Empty(t, exec.rules)
++	assert.Equal(t, "3210", r.Env.(*FakeEnvManager).Env["PORT"])
++	assert.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
++}
++
++func TestCaddyPublicEndpointFirewallRules(t *testing.T) {
++	for _, tc := range []struct{ endpoint, rule string }{
++		{"http://heimdall.example.test", "http"},
++		{"https://heimdall.example.test", "https"},
++		{"https://heimdall.example.test:00443", "https"},
++		{"http://heimdall.example.test:81", "81/tcp"},
++	} {
++		t.Run(tc.endpoint, func(t *testing.T) {
++			r, exec := firewallFixture(t, "bundled")
++			r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = tc.endpoint
++			for range 2 {
++				require.NoError(t, firewallSetPort(r, "3456"))
++				for _, scope := range []string{"runtime", "permanent"} {
++					assert.True(t, exec.rules[scope+" public "+tc.rule])
++					assert.False(t, exec.rules[scope+" public 3456/tcp"])
++				}
++			}
++		})
++	}
++}
+diff --git a/internal/cmd/interfaces.go b/internal/cmd/interfaces.go
+index ee273ee..54e2f9d 100644
+--- a/internal/cmd/interfaces.go
++++ b/internal/cmd/interfaces.go
+@@ -6,6 +6,7 @@ import "os"
+ type ExecRunner interface {
+ 	Run(name string, args ...string) (stdout string, exitCode int, err error)
+ 	RunWithEnv(env map[string]string, name string, args ...string) (stdout string, exitCode int, err error)
++	RunWithEnvAndStdin(env map[string]string, stdin, name string, args ...string) (stdout string, exitCode int, err error)
+ 	// RunWithStdin runs the command with the given string piped to its stdin.
+ 	// Used for tools (e.g. psql) that read multi-statement input from stdin.
+ 	RunWithStdin(stdin string, name string, args ...string) (stdout string, exitCode int, err error)
 diff --git a/internal/cmd/nginx.go b/internal/cmd/nginx.go
 new file mode 100644
 index 0000000..eaf4bae
@@ -1501,8 +1665,89 @@ index 215c952..0427d1b 100644
  func TestFakePrompter_Input(t *testing.T) {
  	p := &FakePrompter{
  		Inputs: map[string]string{
+diff --git a/internal/cmd/reset_password.go b/internal/cmd/reset_password.go
+index 03e2290..3c4d882 100644
+--- a/internal/cmd/reset_password.go
++++ b/internal/cmd/reset_password.go
+@@ -101,11 +101,10 @@ func (r *ResetPasswordRunner) Run(email, password string) error {
+ 	sql := `UPDATE "Users" SET "encryptedPassword" = :'hash', "passwordChangedAt" = NOW(), "forcePasswordChange" = false, "updatedAt" = NOW() WHERE email = :'email';`
+ 
+ 	pgEnv := dbCfg.PgEnv()
+-	stdout, code, err := r.Exec.RunWithEnv(pgEnv, binary,
++	stdout, code, err := r.Exec.RunWithEnvAndStdin(pgEnv, sql+"\n", binary,
+ 		"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User,
+-		"-d", dbCfg.DBName,
+-		"-v", "hash="+hashed, "-v", "email="+email,
+-		"-tAc", sql,
++		"-d", dbCfg.DBName, "-X", "-v", "ON_ERROR_STOP=1",
++		"-v", "hash="+hashed, "-v", "email="+email, "-tA",
+ 	)
+ 	if err != nil {
+ 		return fmt.Errorf("database update failed: %w", err)
+diff --git a/internal/cmd/reset_password_test.go b/internal/cmd/reset_password_test.go
+index 25b5482..c28c085 100644
+--- a/internal/cmd/reset_password_test.go
++++ b/internal/cmd/reset_password_test.go
+@@ -3,6 +3,7 @@ package cmd
+ import (
+ 	"bytes"
+ 	"fmt"
++	"strings"
+ 	"testing"
+ 
+ 	"github.com/stretchr/testify/assert"
+@@ -81,21 +82,24 @@ func TestResetPassword_UserNotFound(t *testing.T) {
+ 	env := &FakeEnvManager{Env: map[string]string{
+ 		"DATABASE_PASSWORD": "secret",
+ 	}}
+-	runner, _, _ := newResetPasswordRunner(exec, env)
++	runner, out, _ := newResetPasswordRunner(exec, env)
+ 
+-	err := runner.Run("nobody@example.com", "aB1!cD2@eF3#gH4$")
++	err := runner.Run("nobody@example.com", "")
+ 	require.Error(t, err)
+ 	assert.Contains(t, err.Error(), "user not found")
++	assert.NotContains(t, out.String(), "Password reset for")
++	assert.NotContains(t, out.String(), "New password:")
+ }
+ 
+ func TestResetPassword_PsqlFailure(t *testing.T) {
+-	for _, failure := range []FakeExecResult{{ExitCode: 1, Err: fmt.Errorf("connection refused")}, {ExitCode: 1}} {
++	for _, failure := range []FakeExecResult{{ExitCode: 1, Err: fmt.Errorf("connection refused")}, {ExitCode: 1}, {Stdout: "ERROR: SQL fixture failure", ExitCode: 3}} {
+ 		exec := &FakeExecRunner{Results: map[string]FakeExecResult{"psql -h": failure}}
+ 		env := &FakeEnvManager{Env: map[string]string{"DATABASE_PASSWORD": "secret"}}
+ 		runner, out, _ := newResetPasswordRunner(exec, env)
+-		err := runner.Run("admin@heimdall.local", "aB1!cD2@eF3#gH4$")
++		err := runner.Run("admin@heimdall.local", "")
+ 		require.ErrorContains(t, err, "database update failed")
+ 		require.NotContains(t, out.String(), "Password reset for")
++		require.NotContains(t, out.String(), "New password:")
+ 	}
+ }
+ 
+@@ -201,3 +205,20 @@ func TestResetPassword_InteractiveBlankAutoGenerates(t *testing.T) {
+ 	require.NoError(t, err)
+ 	assert.Contains(t, runner.Out.(*bytes.Buffer).String(), "New password:")
+ }
++
++func TestResetPasswordUsesInputAndPrivateConnectionEnvironment(t *testing.T) {
++	exec := &FakeExecRunner{Results: map[string]FakeExecResult{"psql -h": {Stdout: "UPDATE 1"}}}
++	env := &FakeEnvManager{Env: map[string]string{"DATABASE_PASSWORD": "db-secret"}}
++	runner, _, _ := newResetPasswordRunner(exec, env)
++	require.NoError(t, runner.Run("admin+audit@example.com", "aB1!cD2@eF3#gH4$"))
++	require.Len(t, exec.Calls, 1)
++	call := exec.Calls[0]
++	require.Contains(t, call.Stdin, "WHERE email = :'email'")
++	require.Contains(t, call.Args, "hash=$2a$14$testhash")
++	require.Contains(t, call.Args, "email=admin+audit@example.com")
++	require.Contains(t, call.Args, "-X")
++	require.Contains(t, call.Args, "ON_ERROR_STOP=1")
++	require.NotContains(t, call.Args, "-tAc")
++	require.Equal(t, "db-secret", call.Env["PGPASSWORD"])
++	require.NotContains(t, strings.Join(call.Args, " "), "db-secret")
++}
 diff --git a/internal/cmd/restore.go b/internal/cmd/restore.go
-index 5bf9396..b9d163b 100644
+index 5bf9396..a8e696b 100644
 --- a/internal/cmd/restore.go
 +++ b/internal/cmd/restore.go
 @@ -46,7 +46,7 @@ a temporary directory, backend.env is restored with proper ownership
@@ -1514,7 +1759,7 @@ index 5bf9396..b9d163b 100644
  state are restored when present; older archives are accepted. RPM restores stop
  the app and selected private proxy, and block app startup until successful setup
  and migrations. PostgreSQL remains available for logical SQL restore. Requires root privileges.`,
-@@ -204,8 +204,15 @@ func (r *RestoreRunner) Run(archive string) error {
+@@ -204,8 +204,19 @@ func (r *RestoreRunner) Run(archive string) error {
  		if err := runChecked(r.Exec, "systemctl", "stop", ServiceName); err != nil {
  			return err
  		}
@@ -1528,11 +1773,15 @@ index 5bf9396..b9d163b 100644
 +			proxyUnit = bundledNginxService
 +		}
 +		if proxyUnit != "" {
-+			if err := runChecked(r.Exec, "systemctl", "stop", proxyUnit); err != nil {
++			args := []string{"stop", proxyUnit}
++			if existing["HEIMDALL_PROXY_MODE"] != env["HEIMDALL_PROXY_MODE"] {
++				args = []string{"disable", "--now", proxyUnit}
++			}
++			if err := runChecked(r.Exec, "systemctl", args...); err != nil {
  				return err
  			}
  		}
-@@ -245,9 +252,9 @@ func (r *RestoreRunner) Run(archive string) error {
+@@ -245,9 +256,9 @@ func (r *RestoreRunner) Run(archive string) error {
  	return nil
  }
  
@@ -1544,7 +1793,7 @@ index 5bf9396..b9d163b 100644
  func (r *RestoreRunner) restoreRecoveryTree(source, dest, kind string) (result error) {
  	parent := filepath.Dir(dest)
  	output, code, err := r.Exec.Run("mktemp", "-d", filepath.Join(parent, ".heimdall-restore.XXXXXX"))
-@@ -284,8 +291,11 @@ func (r *RestoreRunner) restoreRecoveryTree(source, dest, kind string) (result e
+@@ -284,8 +295,11 @@ func (r *RestoreRunner) restoreRecoveryTree(source, dest, kind string) (result e
  		if info.IsDir() {
  			mode = 0700
  		}
@@ -1557,7 +1806,7 @@ index 5bf9396..b9d163b 100644
  			mode = info.Mode().Perm() & 0640
  			if info.IsDir() {
  				mode = 0750
-@@ -437,7 +447,7 @@ func extractRecoveryArchive(archive, dest string) (string, error) {
+@@ -437,7 +451,7 @@ func extractRecoveryArchive(archive, dest string) (string, error) {
  			if rel != top || !entry.Type().IsRegular() {
  				return fmt.Errorf("invalid archive file: %s", rel)
  			}
@@ -1566,6 +1815,84 @@ index 5bf9396..b9d163b 100644
  			if rel == top && !entry.IsDir() {
  				return fmt.Errorf("invalid archive directory: %s", rel)
  			}
+diff --git a/internal/cmd/restore_test.go b/internal/cmd/restore_test.go
+index b0f299a..21eefae 100644
+--- a/internal/cmd/restore_test.go
++++ b/internal/cmd/restore_test.go
+@@ -126,6 +126,10 @@ func (e *recoveryExec) RunWithEnv(env map[string]string, name string, args ...st
+ 	}
+ 	return "", 1, fmt.Errorf("unexpected database command %s", key)
+ }
++func (e *recoveryExec) RunWithEnvAndStdin(map[string]string, string, string, ...string) (string, int, error) {
++	return "", 1, fmt.Errorf("unexpected stdin command")
++}
++
+ func (e *recoveryExec) RunWithStdin(string, string, ...string) (string, int, error) {
+ 	return "", 1, fmt.Errorf("unexpected stdin command")
+ }
+@@ -341,12 +345,14 @@ func TestRestoreLegacyConfigOnlyRPMRequiresSetup(t *testing.T) {
+ 	require.Empty(t, e.sql)
+ 	require.FileExists(t, p.ConfigDir+"/upgrade-pending")
+ 	require.Contains(t, r.Out.(*bytes.Buffer).String(), "configuration only")
++	var actions []string
+ 	for _, call := range e.calls {
+ 		require.NotEqual(t, "psql", filepath.Base(call.Name))
+ 		if call.Name == "systemctl" {
+-			require.Equal(t, "stop", call.Args[0])
++			actions = append(actions, strings.Join(call.Args, " "))
+ 		}
+ 	}
++	require.Equal(t, []string{"stop heimdall-server", "disable --now heimdall-caddy"}, actions)
+ }
+ 
+ func TestRestoreRejectsUnsafeDestinationsBeforeMutation(t *testing.T) {
+@@ -580,3 +586,46 @@ func (e *recoveryStagingGuard) Run(name string, args ...string) (string, int, er
+ 	}
+ 	return e.recoveryExec.Run(name, args...)
+ }
++
++func TestRestoreProxyOwnershipTransition(t *testing.T) {
++	for _, oldMode := range []string{"bundled", "nginx"} {
++		for _, newMode := range []string{"bundled", "nginx", "external", "none", ""} {
++			t.Run(oldMode+" to "+newMode, func(t *testing.T) {
++				p, fs, exec := recoveryFixture(t, true)
++				before := "DATABASE_PASSWORD=old-secret\nHEIMDALL_PROXY_MODE=" + oldMode + "\n"
++				require.NoError(t, os.WriteFile(p.EnvFile, []byte(before), 0640))
++				archived := "DATABASE_PASSWORD=new-secret\nHEIMDALL_DATABASE_MODE=external\nHEIMDALL_PROXY_MODE=" + newMode + "\n"
++				require.NoError(t, recoveryRestore(p, fs, exec).Run(oldRecoveryArchive(t, archived, true)))
++				unit := bundledCaddyService
++				if oldMode == "nginx" {
++					unit = bundledNginxService
++				}
++				action := "stop " + unit
++				if oldMode != newMode {
++					action = "disable --now " + unit
++				}
++				var actions []string
++				for _, call := range exec.calls {
++					if call.Name == "systemctl" {
++						actions = append(actions, strings.Join(call.Args, " "))
++					}
++				}
++				require.Equal(t, []string{"stop heimdall-server", action}, actions)
++			})
++		}
++	}
++}
++
++func TestRestoreProxyDisableFailurePreservesCurrentConfig(t *testing.T) {
++	p, fs, exec := recoveryFixture(t, true)
++	before, err := os.ReadFile(p.EnvFile)
++	require.NoError(t, err)
++	exec.fail = "systemctl disable --now heimdall-caddy"
++	archive := oldRecoveryArchive(t, "DATABASE_PASSWORD=secret\nHEIMDALL_PROXY_MODE=nginx\n", true)
++	require.Error(t, recoveryRestore(p, fs, exec).Run(archive))
++	after, err := os.ReadFile(p.EnvFile)
++	require.NoError(t, err)
++	require.Equal(t, before, after)
++	require.Empty(t, exec.sql)
++	require.True(t, fs.Exists(p.ConfigDir+"/upgrade-pending"))
++}
 diff --git a/internal/cmd/rpm_default_port_test.go b/internal/cmd/rpm_default_port_test.go
 new file mode 100644
 index 0000000..a600d06
@@ -1723,9 +2050,60 @@ index 0000000..a600d06
 +	}
 +}
 diff --git a/internal/cmd/runtime.go b/internal/cmd/runtime.go
-index 5413236..44f52ff 100644
+index 5413236..445d48f 100644
 --- a/internal/cmd/runtime.go
 +++ b/internal/cmd/runtime.go
+@@ -22,7 +22,7 @@ func (r *execRunner) Run(name string, args ...string) (string, int, error) {
+ 	return r.RunWithEnv(nil, name, args...)
+ }
+ 
+-func (r *execRunner) RunWithEnv(env map[string]string, name string, args ...string) (string, int, error) {
++func (r *execRunner) RunWithEnvAndStdin(env map[string]string, stdin, name string, args ...string) (string, int, error) {
+ 	prepared, cleanup, err := preparePGEnv(env)
+ 	if err != nil {
+ 		return "", 1, err
+@@ -30,6 +30,7 @@ func (r *execRunner) RunWithEnv(env map[string]string, name string, args ...stri
+ 	defer cleanup()
+ 	env = prepared
+ 	c := exec.Command(name, args...)
++	c.Stdin = strings.NewReader(stdin)
+ 	if env != nil {
+ 		c.Env = os.Environ()
+ 		for k, v := range env {
+@@ -46,17 +47,12 @@ func (r *execRunner) RunWithEnv(env map[string]string, name string, args ...stri
+ 	return string(out), 0, nil
+ }
+ 
++func (r *execRunner) RunWithEnv(env map[string]string, name string, args ...string) (string, int, error) {
++	return r.RunWithEnvAndStdin(env, "", name, args...)
++}
++
+ func (r *execRunner) RunWithStdin(stdin, name string, args ...string) (string, int, error) {
+-	c := exec.Command(name, args...)
+-	c.Stdin = strings.NewReader(stdin)
+-	out, err := c.CombinedOutput()
+-	if err != nil {
+-		if exitErr, ok := err.(*exec.ExitError); ok {
+-			return string(out), exitErr.ExitCode(), nil
+-		}
+-		return string(out), 1, err
+-	}
+-	return string(out), 0, nil
++	return r.RunWithEnvAndStdin(nil, stdin, name, args...)
+ }
+ 
+ // systemdRunner implements SystemdRunner using systemctl.
+@@ -72,6 +68,10 @@ func (r *systemdRunner) IsActive(service string) (bool, error) {
+ 	if exit, ok := err.(*exec.ExitError); ok && exit.ExitCode() == 3 && (state == "inactive" || state == "failed") {
+ 		return false, nil
+ 	}
++	// Newer systemd returns 4 for an absent unit, which is also inactive.
++	if exit, ok := err.(*exec.ExitError); ok && exit.ExitCode() == 4 && state == "inactive" {
++		return false, nil
++	}
+ 	if err != nil {
+ 		return false, err
+ 	}
 @@ -274,12 +274,18 @@ func (p *huhPrompter) newForm(groups ...*huh.Group) *huh.Form {
  }
  
@@ -1746,6 +2124,54 @@ index 5413236..44f52ff 100644
  	return result, err
  }
  
+diff --git a/internal/cmd/runtime_test.go b/internal/cmd/runtime_test.go
+index e60c50c..b44de54 100644
+--- a/internal/cmd/runtime_test.go
++++ b/internal/cmd/runtime_test.go
+@@ -188,7 +188,12 @@ esac
+ case "$*" in
+  *server_version_num*) echo 180006 ;;
+  *information_schema*) echo 7 ;;
+- *UPDATE*) echo 'UPDATE 1' ;;
++ *-tA*)
++  input=$(cat)
++  case "$input" in
++   *"UPDATE \"Users\" SET"*) echo 'UPDATE 1' ;;
++   *) exit 97 ;;
++  esac ;;
+  *) echo 1 ;;
+ esac
+ `
+@@ -305,6 +310,9 @@ func TestRealSystemdIsActiveStates(t *testing.T) {
+ 		{"active", "active", "0", true, false}, {"inactive", "inactive", "3", false, false}, {"failed unit", "failed", "3", false, false},
+ 		{"manager failure", "", "1", false, true}, {"unexpected output", "surprise", "0", false, true},
+ 		{"inactive wrong exit", "inactive", "1", false, true}, {"active wrong exit", "active", "3", false, true},
++		{"EL10 absent unit", "inactive", "4", false, false},
++		{"absent exit without state", "", "4", false, true}, {"unknown absent state", "unknown", "4", false, true},
++		{"active absent exit", "active", "4", false, true}, {"failed absent exit", "failed", "4", false, true},
+ 	} {
+ 		t.Run(tc.name, func(t *testing.T) {
+ 			dir := t.TempDir()
+@@ -365,3 +373,19 @@ printf '%s\n' "$*" >> "$SYSTEMCTL_FIXTURE/actions"
+ 		require.Contains(t, string(data), action)
+ 	}
+ }
++
++func TestRealExecRunnerCombinesInputAndPrivateTLS(t *testing.T) {
++	skipIfWindows(t)
++	pem := "-----BEGIN CERTIFICATE-----\nfixture\n-----END CERTIFICATE-----\n"
++	env := map[string]string{"PGPASSWORD": "test-secret", "PGSSLROOTCERT": pem}
++	out, code, err := (&execRunner{}).RunWithEnvAndStdin(env, "SQL input\n", "sh", "-c",
++		`test "$PGPASSWORD" = test-secret && test -f "$PGSSLROOTCERT" || exit 91; printf '%s\n' "$PGSSLROOTCERT"; cat`)
++	require.NoError(t, err)
++	require.Zero(t, code)
++	path, payload, ok := strings.Cut(out, "\n")
++	require.True(t, ok)
++	require.Equal(t, "SQL input\n", payload)
++	_, err = os.Stat(path)
++	require.True(t, os.IsNotExist(err))
++	require.Equal(t, pem, env["PGSSLROOTCERT"])
++}
 diff --git a/internal/cmd/schema.go b/internal/cmd/schema.go
 index 3e5e855..ddc3e48 100644
 --- a/internal/cmd/schema.go
@@ -1784,7 +2210,7 @@ index 394263a..7c88ad2 100644
  		u, err := validatePublicURL(env["EXTERNAL_URL"])
  		if err != nil {
 diff --git a/internal/cmd/security_test.go b/internal/cmd/security_test.go
-index 4bf34be..dc209e9 100644
+index 4bf34be..5518503 100644
 --- a/internal/cmd/security_test.go
 +++ b/internal/cmd/security_test.go
 @@ -50,7 +50,7 @@ func TestStepSecurityPolicies_CustomPort(t *testing.T) {
@@ -1796,11 +2222,13 @@ index 4bf34be..dc209e9 100644
  	require.NoError(t, r.stepSecurityPolicies())
  	require.Contains(t, string(fs.Files[r.Paths.ConfigDir+"/selinux-ports"]), "tcp 8443")
  	require.Contains(t, out.String(), "firewalld: port 8443/tcp enabled")
-@@ -73,20 +73,21 @@ func TestStepSecurityPolicies_FapolicydAbsent(t *testing.T) {
+@@ -72,21 +72,22 @@ func TestStepSecurityPolicies_FapolicydAbsent(t *testing.T) {
+ }
  
  func TestStepSecurityPolicies_FirewalldActiveWithTLS(t *testing.T) {
- 	r, out := newSecurityTestRunner(map[string]string{})
+-	r, out := newSecurityTestRunner(map[string]string{})
 -	r.Systemd.(*FakeSystemdRunner).ActiveServices["firewalld"] = true
++	r, out := newSecurityTestRunner(map[string]string{"EXTERNAL_URL": "https://heimdall.example.test"})
 +	enableFirewall(r)
 +	r.ProxyMode = "bundled"
  	r.SkipTLS = false
@@ -1809,7 +2237,7 @@ index 4bf34be..dc209e9 100644
 +	require.NoError(t, r.stepSecurityPolicies())
  
 -	assert.Contains(t, out.String(), "firewalld: HTTPS (443) enabled")
-+	assert.Contains(t, out.String(), "firewalld: HTTPS enabled")
++	assert.Contains(t, out.String(), "firewalld: proxy endpoint https enabled")
  }
  
  func TestStepSecurityPolicies_FirewalldActiveSkipTLS(t *testing.T) {
@@ -1871,10 +2299,18 @@ index ef74b9f..3bd57e3 100644
  This output is suitable for attaching to bug reports or support tickets.`,
  		Example: `  # Print diagnostic report to terminal
 diff --git a/internal/cmd/set_port.go b/internal/cmd/set_port.go
-index 28643fc..3fff4c2 100644
+index 28643fc..9af67c1 100644
 --- a/internal/cmd/set_port.go
 +++ b/internal/cmd/set_port.go
-@@ -34,10 +34,10 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
+@@ -4,7 +4,6 @@ import (
+ 	"errors"
+ 	"fmt"
+ 	"io"
+-	"strconv"
+ 
+ 	"github.com/spf13/cobra"
+ )
+@@ -34,9 +33,8 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
  	if r.Paths.AppDir == "" {
  		r.Paths = DefaultPaths()
  	}
@@ -1884,14 +2320,32 @@ index 28643fc..3fff4c2 100644
 +	if err := ValidateValue("PORT", portStr); err != nil {
 +		return err
  	}
-+	p, _ := strconv.Atoi(portStr)
  
  	env, err := r.Env.ReadEnv()
+@@ -52,10 +50,14 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
  	if err != nil {
-@@ -69,29 +69,39 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
- 		if err := checkOwnedPort(r.Exec, r.Systemd, p, ServiceName, false); err != nil {
+ 		return err
+ 	}
+-	ports := []selinuxPort{{"heimdall_server_port_t", portStr}}
+-	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, ports, false); err != nil {
++	setup := &SetupRunner{
++		Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Env: r.Env, Out: r.Out,
++		DatabaseMode: env["HEIMDALL_DATABASE_MODE"], ProxyMode: env["HEIMDALL_PROXY_MODE"],
++	}
++	if err := setup.validateBackendPort(portStr, env); err != nil {
+ 		return err
+ 	}
++	ports := []selinuxPort{{"heimdall_server_port_t", portStr}}
+ 	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, ports, true); err != nil {
+ 		return err
+ 	}
+@@ -66,32 +68,38 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
+ 		if err != nil {
  			return err
  		}
+-		if err := checkOwnedPort(r.Exec, r.Systemd, p, ServiceName, false); err != nil {
+-			return err
+-		}
 -		if env["HEIMDALL_PROXY_MODE"] == "bundled" {
 +		if env["HEIMDALL_PROXY_MODE"] == "bundled" || env["HEIMDALL_PROXY_MODE"] == "nginx" {
  			candidate := make(map[string]string, len(env))
@@ -1899,7 +2353,7 @@ index 28643fc..3fff4c2 100644
  				candidate[key] = value
  			}
  			candidate["PORT"] = portStr
- 			setup := &SetupRunner{Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Env: r.Env, Out: r.Out}
+-			setup := &SetupRunner{Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Env: r.Env, Out: r.Out}
 -			proxy, err = setup.prepareBundledCaddy(candidate)
 +			if env["HEIMDALL_PROXY_MODE"] == "nginx" {
 +				proxy, err = setup.prepareBundledNginx(candidate)
@@ -1935,12 +2389,11 @@ index 28643fc..3fff4c2 100644
  			}
  		}
  		if proxy != nil {
-@@ -102,17 +112,17 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
+@@ -102,17 +110,16 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
  		}
  		err = errors.Join(append([]error{err}, rollback...)...)
  	}()
-+	firewall := &SetupRunner{Paths: r.Paths, Exec: r.Exec, FS: r.FS, Systemd: r.Systemd, Out: r.Out}
-+	rollbackFirewall, err = firewall.configureFirewall(portStr, env["HEIMDALL_PROXY_MODE"], oldPort)
++	rollbackFirewall, err = setup.configureFirewall(portStr, env["HEIMDALL_PROXY_MODE"], oldPort, env["EXTERNAL_URL"])
 +	if err != nil {
 +		return err
 +	}
@@ -1958,12 +2411,12 @@ index 28643fc..3fff4c2 100644
  	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.ConfigDir); err != nil {
  		return err
  	}
-@@ -157,12 +167,12 @@ three system layers in a single operation:
+@@ -157,12 +164,12 @@ three system layers in a single operation:
    1. Config:    Sets PORT in backend.env to the new value
    2. SELinux:   Registers the new port as heimdall_server_port_t so the
                 service is allowed to bind under enforcing mode
 -  3. firewalld: Opens the new port in the permanent firewall rules
-+  3. firewalld: Exposes HTTPS for a managed proxy, or the backend port otherwise
++  3. firewalld: Exposes the configured managed proxy endpoint, or the backend port otherwise
  
  An existing incompatible SELinux port assignment is refused before changes.
 -With bundled Caddy, its upstream is validated and updated with rollback on
@@ -2038,7 +2491,7 @@ index 6025936..9c58c68 100644
  
  func TestSetPort_RestartsService(t *testing.T) {
 diff --git a/internal/cmd/setup.go b/internal/cmd/setup.go
-index 50713b9..e71c714 100644
+index 50713b9..fe3e78b 100644
 --- a/internal/cmd/setup.go
 +++ b/internal/cmd/setup.go
 @@ -33,17 +33,21 @@ type SetupRunner struct {
@@ -2070,7 +2523,7 @@ index 50713b9..e71c714 100644
  	DBHost      string
  	DBPort      int
  	DBUser      string
-@@ -85,16 +89,21 @@ orchestrates seven steps in sequence:
+@@ -85,16 +89,23 @@ orchestrates seven steps in sequence:
    2. PostgreSQL      Bootstrap selected bundled PostgreSQL (external servers unchanged)
    3. Connection test Verify database connectivity with SELECT 1
    4. Migrations      Run heimdall-server-db-setup to create/update schema
@@ -2089,13 +2542,15 @@ index 50713b9..e71c714 100644
 -is HTTP-only development. Bundled TLS supports acme, internal, and custom.
 +is HTTP-only development. Nginx uses self-signed TLS. Bundled Caddy TLS supports
 +acme, internal, and custom.
-+The backend port defaults to saved PORT or 3000. Use --port to override it;
-+managed HTTPS remains on port 443. Setup rejects listener and SELinux conflicts
-+before changing configuration and prompts again in interactive mode.
++The backend port uses saved PORT, otherwise 3002 for a fresh RPM installation
++or 3000 for standalone and configured legacy installations. Use --port to
++override it; managed HTTPS defaults to port 443. Setup rejects listener and
++SELinux conflicts before changing configuration and prompts again in
++interactive mode.
  Saved selections are reused; explicit flags override them. Temporary skips do
  not change ownership. Setup does not download or install bundled runtimes.
  
-@@ -135,7 +144,7 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
+@@ -135,7 +146,7 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
  		RunE: func(cmd *cobra.Command, args []string) error {
  			initIO(&runner.Out, &runner.ErrOut, cmd)
  			runner.flagChanged = map[string]bool{}
@@ -2104,7 +2559,7 @@ index 50713b9..e71c714 100644
  				runner.flagChanged[name] = cmd.Flags().Changed(name)
  			}
  			return runner.Run()
-@@ -144,10 +153,11 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
+@@ -144,10 +155,11 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
  
  	flags := cmd.Flags()
  	flags.StringVar(&runner.DatabaseMode, "database-mode", "", "Database ownership: bundled or external")
@@ -2114,11 +2569,11 @@ index 50713b9..e71c714 100644
 +	flags.StringVar(&runner.TLSMode, "tls-mode", "", "Proxy TLS: self-signed (Nginx), acme, internal, or custom")
  	flags.BoolVar(&runner.Interactive, "interactive", false, "Prompt for configuration values")
  	flags.BoolVar(&runner.NonInteract, "non-interactive", false, "Accept defaults and auto-generate secrets")
-+	flags.StringVar(&runner.Port, "port", DefaultAppPort, "Backend listen port (1024-65535; fresh RPM default 3002, standalone 3000; saved PORT takes precedence unless explicitly set)")
++	flags.StringVar(&runner.Port, "port", DefaultAppPort, "Backend listen port (1024-65535; default shown is standalone; fresh RPM default 3002; saved PORT wins unless explicitly set)")
  	flags.StringVar(&runner.DBHost, "db-host", "localhost", "Database host")
  	flags.IntVar(&runner.DBPort, "db-port", 5432, "Database port")
  	flags.StringVar(&runner.DBUser, "db-user", "postgres", "Database user")
-@@ -165,7 +175,13 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
+@@ -165,7 +177,13 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
  }
  
  // Run executes the 7-step setup.
@@ -2133,7 +2588,7 @@ index 50713b9..e71c714 100644
  	existing, err := r.readConfiguration()
  	if err != nil {
  		return err
-@@ -184,8 +200,10 @@ func (r *SetupRunner) Run() error {
+@@ -184,8 +202,10 @@ func (r *SetupRunner) Run() error {
  	r.stageConfig = r.bundledRuntime && !r.Reconfigure
  	defer func() { r.stageConfig = false }()
  	// Step 1: Configuration
@@ -2145,7 +2600,7 @@ index 50713b9..e71c714 100644
  		return WrapError(err, "configuration failed",
  			"Check file permissions: ls -la "+r.Env.GetEnvFilePath())
  	}
-@@ -207,11 +225,11 @@ func (r *SetupRunner) Run() error {
+@@ -207,11 +227,11 @@ func (r *SetupRunner) Run() error {
  	// Step 2: PostgreSQL bootstrap
  	fmt.Fprintln(r.Out)
  	if r.SkipDB {
@@ -2160,7 +2615,7 @@ index 50713b9..e71c714 100644
  		if err := r.stepPostgresBootstrap(); err != nil {
  			return WrapError(err, "PostgreSQL bootstrap failed",
  				"Check the selected PostgreSQL runtime and configuration")
-@@ -221,9 +239,9 @@ func (r *SetupRunner) Run() error {
+@@ -221,9 +241,9 @@ func (r *SetupRunner) Run() error {
  	// Step 3: Connection test
  	fmt.Fprintln(r.Out)
  	if r.SkipDB {
@@ -2172,7 +2627,7 @@ index 50713b9..e71c714 100644
  		if err := r.stepConnectionTest(); err != nil {
  			return WrapError(err, "database connection test failed",
  				"Check PostgreSQL is running: sudo systemctl status postgresql")
-@@ -233,9 +251,9 @@ func (r *SetupRunner) Run() error {
+@@ -233,9 +253,9 @@ func (r *SetupRunner) Run() error {
  	// Step 4: Database migrations
  	fmt.Fprintln(r.Out)
  	if r.SkipDB {
@@ -2184,7 +2639,7 @@ index 50713b9..e71c714 100644
  		if err := r.stepMigrations(); err != nil {
  			return WrapError(err, "database migrations failed",
  				"Check DB connectivity: sudo heimdall-cli validate")
-@@ -245,12 +263,12 @@ func (r *SetupRunner) Run() error {
+@@ -245,12 +265,12 @@ func (r *SetupRunner) Run() error {
  	// Step 5: TLS reverse proxy
  	fmt.Fprintln(r.Out)
  	if r.SkipTLS {
@@ -2202,7 +2657,7 @@ index 50713b9..e71c714 100644
  		if err := r.stepTLS(); err != nil {
  			return WrapError(err, "TLS setup failed",
  				"Skip TLS and configure later: sudo heimdall-cli setup --skip-tls")
-@@ -259,14 +277,14 @@ func (r *SetupRunner) Run() error {
+@@ -259,14 +279,14 @@ func (r *SetupRunner) Run() error {
  
  	// Step 6: Security policies
  	fmt.Fprintln(r.Out)
@@ -2219,7 +2674,7 @@ index 50713b9..e71c714 100644
  	if err := r.stepStartService(); err != nil {
  		return WrapError(err, "service start failed",
  			"Check config: sudo heimdall-cli validate && sudo systemctl status "+ServiceName)
-@@ -280,6 +298,7 @@ func (r *SetupRunner) printSummary(isLocalDB bool) {
+@@ -280,6 +300,7 @@ func (r *SetupRunner) printSummary(isLocalDB bool) {
  	fmt.Fprintln(r.Out, "Heimdall Server Setup")
  	fmt.Fprintln(r.Out, "---------------------")
  	fmt.Fprintf(r.Out, "  Database mode: %s\n  Proxy mode: %s\n  TLS mode: %s\n", r.DatabaseMode, r.ProxyMode, r.TLSMode)
@@ -2227,7 +2682,7 @@ index 50713b9..e71c714 100644
  	fmt.Fprintf(r.Out, "  Database host: %s:%d\n", r.DBHost, r.DBPort)
  	fmt.Fprintf(r.Out, "  Database name: %s\n", r.DBName)
  	if r.SkipDB {
-@@ -294,7 +313,7 @@ func (r *SetupRunner) printSummary(isLocalDB bool) {
+@@ -294,7 +315,7 @@ func (r *SetupRunner) printSummary(isLocalDB bool) {
  	}
  	if r.SkipTLS {
  		fmt.Fprintln(r.Out, "  TLS reverse proxy:    skip (--skip-tls)")
@@ -2236,7 +2691,7 @@ index 50713b9..e71c714 100644
  		fmt.Fprintf(r.Out, "  TLS reverse proxy:    skip (%s)\n", r.ProxyMode)
  	} else {
  		fmt.Fprintln(r.Out, "  TLS reverse proxy:    run")
-@@ -304,16 +323,12 @@ func (r *SetupRunner) printSummary(isLocalDB bool) {
+@@ -304,16 +325,12 @@ func (r *SetupRunner) printSummary(isLocalDB bool) {
  
  // printDryRun shows what setup would do without making any changes.
  func (r *SetupRunner) printDryRun(isLocalDB bool) error {
@@ -2254,7 +2709,7 @@ index 50713b9..e71c714 100644
  	fmt.Fprintf(r.Out, "  Database: %s@%s:%d/%s\n", r.DBUser, r.DBHost, r.DBPort, r.DBName)
  	if r.DBPassword == "" {
  		fmt.Fprintln(r.Out, "  DATABASE_PASSWORD: would auto-generate")
-@@ -325,50 +340,50 @@ func (r *SetupRunner) printDryRun(isLocalDB bool) error {
+@@ -325,50 +342,50 @@ func (r *SetupRunner) printDryRun(isLocalDB bool) error {
  
  	fmt.Fprintln(r.Out)
  	if r.SkipDB {
@@ -2320,7 +2775,7 @@ index 50713b9..e71c714 100644
  	fmt.Fprintf(r.Out, "  Would enable and start: %s\n", ServiceName)
  
  	fmt.Fprintln(r.Out)
-@@ -409,6 +424,8 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+@@ -409,6 +426,8 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
  		return nil, err
  	}
  	requested := Deployment{r.DatabaseMode, r.ProxyMode, r.TLSMode}
@@ -2329,7 +2784,7 @@ index 50713b9..e71c714 100644
  	configured := isConfigured(existing)
  	if !r.bundledRuntime && requested.DatabaseMode == "" && existing["HEIMDALL_DATABASE_MODE"] == "" {
  		host := envDefault(existing, "DATABASE_HOST", "localhost")
-@@ -423,6 +440,16 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+@@ -423,6 +442,16 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
  	if !r.bundledRuntime && requested.ProxyMode == "" && existing["HEIMDALL_PROXY_MODE"] == "" {
  		requested.ProxyMode = "bundled"
  	}
@@ -2346,13 +2801,15 @@ index 50713b9..e71c714 100644
  	d, err := resolveDeployment(existing, requested, configured)
  	if err != nil {
  		return nil, err
-@@ -458,6 +485,15 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+@@ -458,6 +487,17 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
  		}
  		return envDefault(values, key, fallback)
  	}
 +	r.Port = resolve("PORT", "port", r.Port, DefaultAppPort)
-+	if r.bundledRuntime && !configured && values["PORT"] == "" && !r.flagChanged["port"] && r.Port == DefaultAppPort {
-+		r.Port = "3002"
++	// Keep saved and explicit ports, including the historical standalone default.
++	if r.bundledRuntime && !configured && values["PORT"] == "" &&
++		!r.flagChanged["port"] && r.Port == DefaultAppPort {
++		r.Port = DefaultRPMAppPort
 +	}
 +	if !r.Interactive || r.flagChanged["port"] {
 +		if err := ValidateValue("PORT", r.Port); err != nil {
@@ -2362,7 +2819,7 @@ index 50713b9..e71c714 100644
  	values["DATABASE_HOST"] = resolve("DATABASE_HOST", "db-host", r.DBHost, host)
  	values["DATABASE_PORT"] = resolve("DATABASE_PORT", "db-port", strconv.Itoa(r.DBPort), port)
  	values["DATABASE_USERNAME"] = resolve("DATABASE_USERNAME", "db-user", r.DBUser, user)
-@@ -471,7 +507,7 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+@@ -471,7 +511,7 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
  	r.ExternalURL = resolve("EXTERNAL_URL", "external-url", r.ExternalURL, "")
  	r.TLSCert = resolve("HEIMDALL_TLS_CERT", "tls-cert", r.TLSCert, "")
  	r.TLSKey = resolve("HEIMDALL_TLS_KEY", "tls-key", r.TLSKey, "")
@@ -2371,7 +2828,7 @@ index 50713b9..e71c714 100644
  		if (r.flagChanged["tls-cert"] || r.flagChanged["tls-key"]) && r.TLSCert != "" && r.TLSKey != "" {
  			d.TLSMode = "custom"
  		} else if existing["HEIMDALL_TLS_MODE"] == "" {
-@@ -483,6 +519,9 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
+@@ -483,6 +523,9 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
  		}
  	}
  	r.DatabaseMode, r.ProxyMode, r.TLSMode = d.DatabaseMode, d.ProxyMode, d.TLSMode
@@ -2381,7 +2838,7 @@ index 50713b9..e71c714 100644
  	if r.ProxyMode == "bundled" && !r.SkipTLS {
  		if (r.TLSCert == "") != (r.TLSKey == "") {
  			return nil, fmt.Errorf("--tls-cert and --tls-key must be provided together")
-@@ -619,6 +658,8 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+@@ -619,6 +662,8 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
  	// --- TLS topology ---
  	fmt.Fprintln(r.Out)
  	tlsOptions := []string{"Caddy reverse proxy (automatic HTTPS)", "External SSL termination (load balancer, nginx)", "BYO certificate (provide cert and key paths)", "No TLS (development/testing only)"}
@@ -2390,7 +2847,7 @@ index 50713b9..e71c714 100644
  	tlsDefault := tlsOptions[0]
  	switch r.ProxyMode {
  	case "external":
-@@ -630,14 +671,31 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+@@ -630,14 +675,31 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
  			tlsDefault = tlsOptions[2]
  		}
  	}
@@ -2422,7 +2879,7 @@ index 50713b9..e71c714 100644
  
  	case 1: // External SSL termination
  		r.ProxyMode = "external"
-@@ -660,26 +718,34 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+@@ -660,26 +722,34 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
  		r.ProxyMode = "none"
  	}
  
@@ -2460,7 +2917,7 @@ index 50713b9..e71c714 100644
  	if err != nil {
  		return err
  	}
-@@ -727,13 +793,13 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+@@ -727,13 +797,13 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
  	if err != nil {
  		return fmt.Errorf("invalid external URL: %w", err)
  	}
@@ -2477,7 +2934,7 @@ index 50713b9..e71c714 100644
  		if err != nil {
  			return err
  		}
-@@ -745,7 +811,7 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+@@ -745,7 +815,7 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
  			return err
  		}
  		fmt.Fprintln(r.Out, "  Applies to new certificates; existing certificates are preserved.")
@@ -2486,7 +2943,7 @@ index 50713b9..e71c714 100644
  			fmt.Fprintln(r.Out, "  Caddy may shorten new certificates to the current CA's remaining validity.")
  		}
  	}
-@@ -851,40 +917,7 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
+@@ -851,40 +921,7 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
  		fmt.Fprintln(r.Out, "  API_KEY_SECRET auto-generated")
  	}
  
@@ -2527,7 +2984,7 @@ index 50713b9..e71c714 100644
  	settings := maps.Clone(existing)
  	settings["JWT_EXPIRE_TIME"] = envDefault(prompted, "JWT_EXPIRE_TIME", envDefault(existing, "JWT_EXPIRE_TIME", "1d"))
  	settings["HEIMDALL_TLS_CERT_DAYS"] = envDefault(prompted, "HEIMDALL_TLS_CERT_DAYS", envDefault(existing, "HEIMDALL_TLS_CERT_DAYS", "7"))
-@@ -930,7 +963,7 @@ func (r *SetupRunner) stepConfigureNonInteractive(existing map[string]string) er
+@@ -930,7 +967,7 @@ func (r *SetupRunner) stepConfigureNonInteractive(existing map[string]string) er
  	adminEmail := envDefault(existing, "ADMIN_EMAIL", "admin@heimdall.local")
  	externalURL := r.ExternalURL
  	if externalURL == "" {
@@ -2536,7 +2993,7 @@ index 50713b9..e71c714 100644
  	}
  
  	return r.writeConfig(existing, dbHost, dbPort, dbUser, dbPassword, dbName,
-@@ -942,11 +975,31 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
+@@ -942,11 +979,28 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
  	dbHost, dbPort, dbUser, dbPassword, dbName,
  	jwtSecret, apiKeySecret, nginxHost, externalURL, adminEmail string) error {
  
@@ -2565,14 +3022,11 @@ index 50713b9..e71c714 100644
 +	if r.ProxyMode == "nginx" && (u.Scheme != "https" || (u.Port() != "" && u.Port() != "443")) {
 +		return fmt.Errorf("managed Nginx requires an HTTPS external URL on port 443")
 +	}
-+	if r.bundledRuntime && r.ProxyMode == "bundled" && (u.Scheme != "https" || (u.Port() != "" && u.Port() != "443")) {
-+		return fmt.Errorf("managed Caddy requires an HTTPS external URL on port 443")
-+	}
 +	// Preserve saved values unless the interactive wizard supplied replacements.
  	jwtExpire := "1d"
  	if v, ok := existing["JWT_EXPIRE_TIME"]; ok && v != "" {
  		jwtExpire = v
-@@ -963,7 +1016,7 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
+@@ -963,7 +1017,7 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
  	// Write all keys — matches heimdall-configure.sh output
  	entries := map[string]string{
  		"NODE_ENV":               "production",
@@ -2581,7 +3035,7 @@ index 50713b9..e71c714 100644
  		"DATABASE_HOST":          dbHost,
  		"DATABASE_PORT":          dbPort,
  		"DATABASE_USERNAME":      dbUser,
-@@ -992,10 +1045,30 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
+@@ -992,10 +1046,30 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
  	entries["HEIMDALL_TLS_MODE"] = r.TLSMode
  	entries["HEIMDALL_TLS_CERT"] = r.TLSCert
  	entries["HEIMDALL_TLS_KEY"] = r.TLSKey
@@ -2612,7 +3066,7 @@ index 50713b9..e71c714 100644
  	// Store resolved values back to runner so subsequent steps use them
  	// (e.g., stepConnectionTest needs the auto-generated DB password).
  	r.DBHost = dbHost
-@@ -1027,6 +1100,65 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
+@@ -1027,6 +1101,65 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
  	return nil
  }
  
@@ -2678,7 +3132,7 @@ index 50713b9..e71c714 100644
  // stepPostgresBootstrap delegates PostgreSQL bootstrap to the native
  // PostgresBootstrapRunner. Replaces the previous shell-out to
  // /usr/libexec/heimdall-server/postgres-setup.sh.
-@@ -1428,21 +1560,6 @@ func (r *SetupRunner) stepSecurityPolicies() error {
+@@ -1428,21 +1561,6 @@ func (r *SetupRunner) stepSecurityPolicies() error {
  		return err
  	}
  
@@ -2700,7 +3154,7 @@ index 50713b9..e71c714 100644
  	// File permission hardening
  	r.Exec.Run("chown", "root:heimdall", r.Paths.ConfigDir)
  	configMode := "0750"
-@@ -1452,11 +1569,15 @@ func (r *SetupRunner) stepSecurityPolicies() error {
+@@ -1452,11 +1570,15 @@ func (r *SetupRunner) stepSecurityPolicies() error {
  	r.Exec.Run("chmod", configMode, r.Paths.ConfigDir)
  	r.Exec.Run("chown", "-R", "heimdall:heimdall", r.Paths.DataDir)
  	r.Exec.Run("chmod", "0750", r.Paths.DataDir)
@@ -2713,12 +3167,12 @@ index 50713b9..e71c714 100644
  	r.Exec.Run("chmod", "0750", r.Paths.LogDir)
  	fmt.Fprintln(r.Out, "  File permissions hardened")
 -	return nil
-+	r.rollbackFirewall, err = r.configureFirewall(port, r.ProxyMode, r.previousBackendPort)
++	r.rollbackFirewall, err = r.configureFirewall(port, r.ProxyMode, r.previousBackendPort, env["EXTERNAL_URL"])
 +	return err
  }
  
  // stepStartService enables and starts the service.
-@@ -1631,11 +1752,33 @@ func checkOwnedPort(exec ExecRunner, systemd SystemdRunner, port int, unit strin
+@@ -1631,11 +1753,33 @@ func checkOwnedPort(exec ExecRunner, systemd SystemdRunner, port int, unit strin
  	pidNum, _ := strconv.Atoi(strings.TrimSpace(pid))
  	for _, line := range strings.Split(strings.TrimSpace(out), "\n") {
  		fields := strings.Fields(line)
@@ -2755,7 +3209,7 @@ index 50713b9..e71c714 100644
  				return fmt.Errorf("port %d has another owner", port)
  			}
  		}
-@@ -1659,10 +1802,11 @@ func renderBundledCaddy(env map[string]string) (string, error) {
+@@ -1659,10 +1803,11 @@ func renderBundledCaddy(env map[string]string) (string, error) {
  }
  
  func renderPrivateCaddy(env map[string]string, dir string) (string, error) {
@@ -2770,7 +3224,7 @@ index 50713b9..e71c714 100644
  	u, err := validatePublicURL(env["EXTERNAL_URL"])
  	if err != nil {
  		return "", err
-@@ -1730,14 +1874,15 @@ func (s savedFile) restore(fs FileSystem) error {
+@@ -1730,14 +1875,15 @@ func (s savedFile) restore(fs FileSystem) error {
  }
  
  type caddyUpdate struct {
@@ -2794,7 +3248,7 @@ index 50713b9..e71c714 100644
  }
  
  func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate, error) {
-@@ -1763,16 +1908,16 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
+@@ -1763,16 +1909,16 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
  		ports = append(ports, 80)
  	}
  	for _, p := range ports {
@@ -2814,7 +3268,7 @@ index 50713b9..e71c714 100644
  	update.active, err = r.Systemd.IsActive(bundledCaddyService)
  	if err != nil {
  		return nil, err
-@@ -1850,6 +1995,9 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
+@@ -1850,6 +1996,9 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
  		if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", path+".pending"); err != nil {
  			return nil, err
  		}
@@ -2824,7 +3278,7 @@ index 50713b9..e71c714 100644
  	}
  	if err := r.FS.WriteFile(update.pending, []byte(candidate), 0640); err != nil {
  		return nil, err
-@@ -1857,6 +2005,9 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
+@@ -1857,6 +2006,9 @@ func (r *SetupRunner) prepareBundledCaddy(env map[string]string) (*caddyUpdate,
  	if err := runChecked(r.Exec, "chown", "root:heimdall-caddy", update.pending); err != nil {
  		return nil, err
  	}
@@ -2834,7 +3288,7 @@ index 50713b9..e71c714 100644
  	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/caddy", r.Paths.ConfigDir+"/caddy", "/var/lib/heimdall-caddy"); err != nil {
  		return nil, err
  	}
-@@ -1887,7 +2038,7 @@ func (u *caddyUpdate) apply() (err error) {
+@@ -1887,7 +2039,7 @@ func (u *caddyUpdate) apply() (err error) {
  		if err := r.FS.WriteFile(path, data, 0640); err != nil {
  			return err
  		}
@@ -2843,7 +3297,7 @@ index 50713b9..e71c714 100644
  			return err
  		}
  		if err := runChecked(r.Exec, "chmod", "0640", path); err != nil {
-@@ -1900,7 +2051,7 @@ func (u *caddyUpdate) apply() (err error) {
+@@ -1900,7 +2052,7 @@ func (u *caddyUpdate) apply() (err error) {
  	if err := r.FS.WriteFile(u.pending, []byte(u.config), 0640); err != nil {
  		return err
  	}
@@ -2852,7 +3306,7 @@ index 50713b9..e71c714 100644
  		return err
  	}
  	if err := runChecked(r.Exec, "chmod", "0640", u.pending); err != nil {
-@@ -1909,32 +2060,32 @@ func (u *caddyUpdate) apply() (err error) {
+@@ -1909,32 +2061,32 @@ func (u *caddyUpdate) apply() (err error) {
  	if err := r.FS.Rename(u.pending, u.saved[0].path); err != nil {
  		return err
  	}
@@ -2893,7 +3347,7 @@ index 50713b9..e71c714 100644
  	}
  	return nil
  }
-@@ -1948,12 +2099,12 @@ func (u *caddyUpdate) rollback() error {
+@@ -1948,12 +2100,12 @@ func (u *caddyUpdate) rollback() error {
  		errs = append(errs, saved.restore(u.runner.FS))
  	}
  	if u.active {
@@ -2909,7 +3363,7 @@ index 50713b9..e71c714 100644
  	}
  	return errors.Join(errs...)
  }
-@@ -1981,14 +2132,15 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+@@ -1981,14 +2133,15 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
  	if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, selectedPorts, false); err != nil {
  		return err
  	}
@@ -2929,7 +3383,7 @@ index 50713b9..e71c714 100644
  		target, err := validatePublicURL(env["EXTERNAL_URL"])
  		if err != nil {
  			return err
-@@ -2004,6 +2156,9 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+@@ -2004,6 +2157,9 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
  			if err := r.rejectPrivateEndpoint(target.Hostname(), proxyPort, bundledCaddyService); err != nil {
  				return err
  			}
@@ -2939,7 +3393,7 @@ index 50713b9..e71c714 100644
  		}
  	}
  	if !r.SkipDB && r.DatabaseMode == "external" {
-@@ -2054,8 +2209,12 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+@@ -2054,8 +2210,12 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
  		return err
  	}
  	var proxy *caddyUpdate
@@ -2954,7 +3408,7 @@ index 50713b9..e71c714 100644
  		if err != nil {
  			return err
  		}
-@@ -2212,6 +2371,30 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+@@ -2212,6 +2372,30 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
  		}
  	}
  	if proxy != nil {
@@ -2985,7 +3439,7 @@ index 50713b9..e71c714 100644
  		if err := proxy.apply(); err != nil {
  			return err
  		}
-@@ -2221,20 +2404,21 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+@@ -2221,20 +2405,21 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
  	}
  	// Replacements passed their applicable preflight checks. Retain deselected state.
  	for _, selection := range []struct {
@@ -3013,7 +3467,7 @@ index 50713b9..e71c714 100644
  			state, err := r.Systemd.ShowProperty(selection.unit, "UnitFileState")
  			if err != nil {
  				return err
-@@ -2248,7 +2432,7 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
+@@ -2248,7 +2433,7 @@ func (r *SetupRunner) runBundledSetup(existing map[string]string) (err error) {
  			}
  		}
  	}
@@ -3023,7 +3477,7 @@ index 50713b9..e71c714 100644
  	}
  	if err := r.stepSecurityPolicies(); err != nil {
 diff --git a/internal/cmd/setup_expiration_test.go b/internal/cmd/setup_expiration_test.go
-index 39d2a6e..fcea86a 100644
+index 39d2a6e..da23358 100644
 --- a/internal/cmd/setup_expiration_test.go
 +++ b/internal/cmd/setup_expiration_test.go
 @@ -1,7 +1,6 @@
@@ -3050,7 +3504,7 @@ index 39d2a6e..fcea86a 100644
  		{name: "no TLS", args: []string{"--proxy-mode=none"}},
  		{name: "skip TLS", args: []string{"--skip-tls"}},
 -		{name: "HTTP URL", args: []string{"--external-url=http://localhost:3000"}},
-+		{name: "HTTP URL", args: []string{"--external-url=http://localhost:3000", "--port=3210", "--proxy-mode=none"}},
++		{name: "HTTP URL", args: []string{"--external-url=http://localhost:3000", "--port=3210"}},
  		{name: "legacy private hostname", args: []string{"--external-url=https://heimdall.internal"}, legacy: true, prompt: true},
  		{name: "legacy IP", args: []string{"--external-url=https://192.168.1.100"}, legacy: true, prompt: true},
  		{name: "legacy public hostname", args: []string{"--external-url=https://heimdall.example.com"}, legacy: true},

@@ -29,7 +29,7 @@ compilation alone does not establish successful loading or runtime confinement.
   permits traversal to its configuration, management of HTTP state, and reverse
   proxy connections to `heimdall_server_port_t`.
 - **heimdall_server_port_t** — the TCP port type registered for the
-  application listen port (default TCP 3002).
+  application listen port (fresh RPM default TCP 3002).
 - **postgresql_port_t** — the TCP port type for the selected private database
   port (default TCP 55432); external database ports must also permit connection.
 - **http_port_t** — the HTTP/HTTPS listeners, normally TCP 80 and 443.
@@ -136,9 +136,11 @@ that configuration before setting up a reinstalled package.
 A service definition is shipped at
 `/usr/lib/firewalld/services/heimdall-server.xml`.
 
-- **With managed Nginx (default) or bundled Caddy:** Setup configures a TLS reverse
-  proxy and opens port **443** via firewalld's `https` service. Setup and
-  `set-port` do not open the application port, including `setup --skip-tls`.
+- **With managed Nginx (default) or bundled Caddy:** Open the configured managed
+  proxy endpoint; keep the application port private. Setup and `set-port` open
+  the endpoint selected by `EXTERNAL_URL`, including custom Caddy ports, and do
+  not open the application port, including `setup --skip-tls`. Managed Nginx
+  requires HTTPS on port **443**.
 - **With proxy mode `none`:** Setup can expose the selected application port
   directly for HTTP-only development.
 
@@ -147,10 +149,10 @@ configuration; it does not change the saved proxy ownership mode. Review the
 host's firewall policy for the chosen deployment; the backend listens on all
 interfaces, so an independently opened port permits direct HTTP access.
 
-The CLI records the backend port rules it creates in
-`/etc/heimdall-server/firewalld-ports` and removes those rules when changing ports
-or switching to a managed proxy. It preserves administrator-created rules. If
-an existing explicit rule exposes the backend port during managed proxy setup,
+The CLI records its owned TCP port rules for backend or custom public endpoints
+in `/etc/heimdall-server/firewalld-ports` and removes obsolete owned rules when
+changing ports or proxy endpoints, or switching to a managed proxy. It preserves
+administrator-created rules. If an existing explicit rule exposes the backend port during managed proxy setup,
 the command stops and prints the exact cleanup command for operator review.
 
 ## Enabling Audit Rules

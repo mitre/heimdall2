@@ -162,14 +162,111 @@ class InputsTest(unittest.TestCase):
             env=self.make_env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             universal_newlines=True)
 
+    def test_clean_rejects_protected_paths(self):
+        source_link = Path(self.tmp.name) / 'source-link'
+        source_link.symlink_to(self.root, target_is_directory=True)
+        for target in (self.root, self.root.parent, self.root / 'output',
+                       Path.home(), Path('/'), source_link):
+            with self.subTest(target=target):
+                self.topdir = target
+                result = self.check('clean')
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn('Refusing to clean protected RPM topdir', result.stderr)
+        self.assertTrue(self.root.is_dir())
+
+    def test_clean_rejects_empty_topdir(self):
+        result = subprocess.run(
+            [sys.executable, str(CHECK), str(self.root), '', 'clean'],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('Refusing to clean protected RPM topdir', result.stderr)
+
+    def test_make_clean_preserves_source(self):
+        self.prepare_make_fixture()
+        self.topdir = self.root
+        result = self.make('clean')
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertTrue((self.root / 'VERSION').is_file())
+
+    def test_make_clean_preserves_source_ancestor(self):
+        self.prepare_make_fixture()
+        self.topdir = self.root.parent
+        sentinel = self.topdir / 'unrelated-file'
+        sentinel.write_text('preserve me')
+        result = self.make('clean')
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(sentinel.read_text(), 'preserve me')
+        self.assertTrue((self.root / 'VERSION').is_file())
+
+    def test_make_clean_preserves_symlink_to_source(self):
+        self.prepare_make_fixture()
+        self.topdir = Path(self.tmp.name) / 'source-link'
+        self.topdir.symlink_to(self.root, target_is_directory=True)
+        result = self.make('clean')
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertTrue(self.topdir.is_symlink())
+        self.assertTrue((self.root / 'VERSION').is_file())
+
+    def test_make_clean_rejects_unrelated_external_contents(self):
+        self.prepare_make_fixture()
+        self.topdir.mkdir()
+        unrelated = self.topdir / 'unrelated-file'
+        unrelated.write_text('preserve me')
+        result = self.make('clean')
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('unrelated-file', result.stderr)
+        self.assertEqual(unrelated.read_text(), 'preserve me')
+
+    def test_make_clean_rejects_external_symlink_topdir(self):
+        self.prepare_make_fixture()
+        target = Path(self.tmp.name) / 'external-output'
+        (target / 'SOURCES').mkdir(parents=True)
+        sentinel = target / 'SOURCES/artifact'
+        sentinel.write_text('build output')
+        self.topdir = Path(self.tmp.name) / 'output-link'
+        self.topdir.symlink_to(target, target_is_directory=True)
+        result = self.make('clean')
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertTrue(self.topdir.is_symlink())
+        self.assertEqual(sentinel.read_text(), 'build output')
+
+    def test_make_clean_preserves_external_symlink_child_target(self):
+        self.prepare_make_fixture()
+        self.topdir.mkdir()
+        target = Path(self.tmp.name) / 'external-output'
+        target.mkdir()
+        sentinel = target / 'preserve me'
+        sentinel.write_text('build output')
+        (self.topdir / 'SOURCES').symlink_to(target, target_is_directory=True)
+        result = self.make('clean')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertFalse(self.topdir.exists())
+        self.assertEqual(sentinel.read_text(), 'build output')
+
+    def test_make_clean_removes_only_external_output(self):
+        self.prepare_make_fixture()
+        self.topdir = Path(self.tmp.name) / 'output with spaces'
+        (self.topdir / 'SOURCES').mkdir(parents=True)
+        (self.topdir / 'SOURCES/artifact').write_text('build output')
+        sibling = Path(self.tmp.name) / 'unrelated-file'
+        sibling.write_text('preserve me')
+        (self.root / 'VERSION').unlink()
+        result = self.make('clean')
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertFalse(self.topdir.exists())
+        self.assertTrue(self.root.is_dir())
+        self.assertEqual(sibling.read_text(), 'preserve me')
+
     def test_default_archive_excludes_local_inputs_without_git(self):
         self.prepare_make_fixture()
         excluded = ('.git/config', '.beads/state', '.superpowers/state',
                     'node_modules/dependency', 'apps/backend/node_modules/dependency',
                     'dist/build', 'packaging/rpm/rpmbuild/generated',
                     '.env', 'apps/backend/.env-secret', 'apps/backend/.env.local',
-                    'manifest.yml', '.npmrc', 'apps/backend/.npmrc',
+                    'manifest.yml',
                     'apps/frontend/.env.development.local', 'package.rpm',
+                    '.npmrc', 'apps/backend/.npmrc',
+                    '.yarnrc.yml', 'apps/frontend/.yarnrc.yml',
                     'certs/corporate-ca.pem', '.cache/item', 'coverage/report',
                     'data/pgdata/base/private-database')
         for name in excluded:

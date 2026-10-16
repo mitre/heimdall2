@@ -4,7 +4,6 @@ import {NestExpressApplication} from '@nestjs/platform-express';
 import {json} from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
-import multer from 'multer';
 import winston from 'winston';
 import passport = require('passport');
 import postgresSessionStore = require('connect-pg-simple');
@@ -65,6 +64,13 @@ async function bootstrap() {
   ) {
     app.use(
       session({
+        cookie: {
+          maxAge: 60 * 60 * 1000, // 1 hour
+          secure: configService.isInProductionMode()
+        },
+        proxy: trustProxy === true ? true : undefined,
+        resave: false,
+        saveUninitialized: false,
         secret: generateDefault(),
         store: new (postgresSessionStore(session))({
           conObject: {
@@ -75,13 +81,6 @@ async function bootstrap() {
           },
           tableName: 'session'
         }),
-        proxy: trustProxy === true ? true : undefined,
-        cookie: {
-          maxAge: 60 * 60 * 1000, // 1 hour
-          secure: configService.isInProductionMode()
-        },
-        saveUninitialized: false,
-        resave: false
       })
     );
     app.use(passport.session());
@@ -98,16 +97,6 @@ async function bootstrap() {
       }
     })
   );
-  // Allow for file uploads up to 50 mb
-  multer({
-    limits: {
-      fieldSize:
-        parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') || '50') *
-        1024 *
-        1024
-    }
-  });
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

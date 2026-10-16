@@ -22,6 +22,15 @@ export class ConfigService {
     /data/i
   ];
 
+  getTrustProxy(): 'loopback' | boolean {
+    if (['bundled', 'nginx'].includes(this.get('HEIMDALL_PROXY_MODE') || '')) {
+      return 'loopback';
+    }
+    return this.isInProductionMode() && (
+      this.enabledOauthStrategies().length > 0 || this.getTenableHostUrl().length > 0
+    );
+  }
+
   isRegistrationAllowed(): boolean {
     return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
   }
@@ -84,14 +93,6 @@ export class ConfigService {
 
   getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
-  }
-
-  getTrustProxy(): 'loopback' | boolean {
-    if (['bundled', 'nginx'].includes(this.get('HEIMDALL_PROXY_MODE') || '')) {
-      return 'loopback';
-    }
-    return this.isInProductionMode()
-      && (this.enabledOauthStrategies().length > 0 || this.getTenableHostUrl().length > 0);
   }
 
   set(key: string, value: string | undefined): void {

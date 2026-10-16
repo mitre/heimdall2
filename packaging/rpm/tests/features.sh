@@ -68,7 +68,7 @@ mapfile -t private_keys < <(find /var/lib/heimdall-caddy -type f -name root.key)
 heimdall-cli setup --non-interactive
 bash /tmp/rpm-tests/lifecycle.sh verify
 # Selected private proxy must follow port changes, retaining its CA and secrets.
-heimdall-cli set-port 3003
+heimdall-cli set-port 3456
 mapfile -t roots < <(find /var/lib/heimdall-caddy -name root.crt -type f)
 bash /tmp/rpm-tests/application-ready.sh https://heimdall.example.test \
   --cacert "${roots[0]}" --resolve heimdall.example.test:443:127.0.0.1

@@ -115,10 +115,10 @@ export class GroupsService {
       // If default admin is not found, use admin with lowest ID
       const admin =
         (await this.userModel.findOne({
-          where: {role: 'admin', email: appConfig.getDefaultAdmin()}
+          where: { email: appConfig.getDefaultAdmin(), id: { [Op.ne]: userId }, role: 'admin' },
         })) ||
         (await this.userModel.findOne({
-          where: {role: 'admin'},
+          where: { id: { [Op.ne]: userId }, role: 'admin' },
           order: [['id', 'ASC']]
         }));
       if (admin !== null) {
@@ -146,7 +146,7 @@ export class GroupsService {
     const groupUser = await GroupUser.findOne({
       where: {groupId: group.id, userId: updateGroupUser.userId}
     });
-    if (groupUser) {
+    if (groupUser && updateGroupUser.groupRole !== 'owner') {
       await this.ensureGroupHasOwner(group, groupUser);
     }
     return groupUser?.update({role: updateGroupUser.groupRole});
