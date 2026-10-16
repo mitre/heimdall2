@@ -135,7 +135,7 @@ export class EvaluationsController {
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Post()
   @UseInterceptors(
-    AnyFilesInterceptor({limits: {files: 100}}),
+    AnyFilesInterceptor(),
     CreateEvaluationInterceptor
   )
   async create(

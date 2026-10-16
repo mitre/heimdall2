@@ -1,0 +1,13 @@
+# Reference only: heimdall-cli setup renders and validates the active configuration
+# at /etc/heimdall-server/caddy/Caddyfile using EXTERNAL_URL, PORT and TLS mode.
+# The bundled unit never reads /etc/caddy or the administrator's Caddy state.
+# Internal CA: /var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt
+# Import that CA explicitly on clients that should trust it.
+{
+    admin unix//run/heimdall-caddy/admin.sock
+    skip_install_trust
+}
+https://localhost {
+    tls internal
+    reverse_proxy 127.0.0.1:3002
+}
