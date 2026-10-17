@@ -5,4 +5,6 @@ export interface ICreateEvaluation {
   readonly public: boolean;
   readonly evaluationTags: ICreateEvaluationTag[] | undefined;
   readonly groups: string[] | undefined;
+  /** Client-reported (browser File.lastModified); not server-verified. */
+  readonly lastModified?: Date;
 }
