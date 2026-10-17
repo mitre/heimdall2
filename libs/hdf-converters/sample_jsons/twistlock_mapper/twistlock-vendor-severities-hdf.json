@@ -1,0 +1,251 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.14.0",
+    "target_id": "registry.io/test:1a7a431a105aa04632f5f5fbe8f753bd245add0a"
+  },
+  "version": "2.14.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Twistlock Scan",
+      "title": "Twistlock Project: All / TEST-COLLECTION",
+      "summary": "Package Vulnerability Summary: 6 Application Compliance Issue Total: 0",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "cveid": "CVE-2021-43529"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "CVE-2021-43529",
+          "id": "CVE-2021-43529",
+          "desc": "DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec",
+          "impact": 0.9,
+          "code": "{\n  \"id\": \"CVE-2021-43529\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"description\": \"DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec\",\n  \"severity\": \"critical\",\n  \"packageName\": \"nss-util\",\n  \"packageVersion\": \"3.67.0-7.el8_5\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-43529\",\n  \"riskFactors\": [\n    \"Remote execution\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Critical severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2021-12-01T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:12:25Z\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Package \"nss-util\" should be updated to latest version above impacted versions [\"*\"]",
+              "message": "Expected latest version of \"nss-util\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-util\"",
+              "start_time": "2022-05-18T12:24:22Z"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "cveid": "CVE-2022-1650"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "CVE-2022-1650",
+          "id": "CVE-2022-1650",
+          "desc": "Exposure of Sensitive Information to an Unauthorized Actor in GitHub repository eventsource/eventsource prior to v2.0.2.",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"CVE-2022-1650\",\n  \"status\": \"under investigation\",\n  \"cvss\": 8.1,\n  \"description\": \"Exposure of Sensitive Information to an Unauthorized Actor in GitHub repository eventsource/eventsource prior to v2.0.2.\",\n  \"severity\": \"unassigned\",\n  \"packageName\": \"dotnet-host\",\n  \"packageVersion\": \"6.0.5-1.el8_6\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1650\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"High severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-12T11:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Package \"dotnet-host\" should be updated to latest version above impacted versions [\"*\"]",
+              "message": "Expected latest version of \"dotnet-host\"\nDetected vulnerable version \"6.0.5-1.el8_6\" of \"dotnet-host\"",
+              "start_time": "2022-05-18T12:24:22Z"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "cveid": "CVE-2022-22824"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "CVE-2022-22824",
+          "id": "CVE-2022-22824",
+          "desc": "defineAttribute in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
+          "impact": 0.1,
+          "code": "{\n  \"id\": \"CVE-2022-22824\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"defineAttribute in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"unimportant\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22824\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+              "message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
+              "start_time": "2022-05-18T12:24:22Z"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "cveid": "CVE-2022-22823"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "CVE-2022-22823",
+          "id": "CVE-2022-22823",
+          "desc": "build_model in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
+          "impact": 0.1,
+          "code": "{\n  \"id\": \"CVE-2022-22823\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"build_model in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"negligible\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22823\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+              "message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
+              "start_time": "2022-05-18T12:24:22Z"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "cveid": "CVE-2022-22822"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "CVE-2022-22822",
+          "id": "CVE-2022-22822",
+          "desc": "addBinding in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"CVE-2022-22822\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"addBinding in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"untriaged\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22822\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+              "message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
+              "start_time": "2022-05-18T12:24:22Z"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "cveid": "CVE-2022-22827"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "CVE-2022-22827",
+          "id": "CVE-2022-22827",
+          "desc": "storeAtts in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"CVE-2022-22827\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"storeAtts in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"not yet assigned\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22827\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+              "message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
+              "start_time": "2022-05-18T12:24:22Z"
+            }
+          ]
+        }
+      ],
+      "sha256": "e91734285b650bca3ca12d03ad8c50f1585edc6d7c977bed5ccbb7843dac5455"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "Twistlock",
+        "data": {
+          "results": [
+            {
+              "id": "sha256:b1c0237ebd29860066656372da10d8d7da33b34715986f74b3d5a7e4ba060d1b",
+              "distro": "Red Hat Enterprise Linux release 8.6 (Ootpa)",
+              "distroRelease": "RHEL8",
+              "digest": "sha256:c0274cb1e0c6e92d2ccc1e23bd19b7dddedbaa2da26861c225d4ad6cec5047f4",
+              "packages": [
+                {
+                  "type": "os",
+                  "name": "expat",
+                  "version": "2.2.5-8.el8",
+                  "licenses": [
+                    "MIT"
+                  ]
+                },
+                {
+                  "type": "os",
+                  "name": "nss-util",
+                  "version": "3.67.0-7.el8_5",
+                  "licenses": [
+                    "MPLv2.0"
+                  ]
+                },
+                {
+                  "type": "os",
+                  "name": "dotnet-host",
+                  "version": "6.0.5-1.el8_6",
+                  "licenses": [
+                    "MIT and ASL 2.0 and BSD and LGPLv2+ and CC-BY and CC0 and MS-PL and EPL-1.0 and GPL+ and GPLv2 and ISC and OFL and zlib"
+                  ]
+                }
+              ],
+              "applications": [
+                {
+                  "name": "asp.net-core",
+                  "version": "5.0.17",
+                  "path": "/usr/lib64/dotnet/dotnet"
+                },
+                {
+                  "name": ".net-core",
+                  "version": "5.0.17",
+                  "path": "/usr/lib64/dotnet/dotnet"
+                }
+              ],
+              "complianceScanPassed": true,
+              "vulnerabilityScanPassed": true,
+              "scanTime": "2022-05-18T12:24:32.855444532Z",
+              "scanID": "6284e580d9600f8d0db159e2"
+            }
+          ],
+          "consoleURL": "https://twistlock.test.net/#!/monitor/vulnerabilities/images/ci?search=sha256%3Ab1c0237ebd29860066656372da10d8d7da33b34715986f74b3d5a7e4ba060d1b"
+        }
+      }
+    ]
+  }
+}
