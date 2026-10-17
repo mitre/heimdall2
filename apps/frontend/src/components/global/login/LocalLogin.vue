@@ -148,6 +148,20 @@
               />
               <div class="pl-2">Login with Okta</div>
             </v-btn>
+            <v-btn
+              v-show="authStrategySupported('saml')"
+              id="saml"
+              class="mt-5 flex-fill"
+              plain
+              @click="startExternalLogin('saml')"
+            >
+              <v-img
+                max-width="32"
+                max-height="32"
+                :src="require('@/assets/saml.svg')"
+              />
+              <div class="pl-2">Login with {{ samlName }}</div>
+            </v-btn>
           </div>
         </div>
       </v-container>
@@ -196,6 +210,10 @@ export default class LocalLogin extends Vue {
 
   get registrationEnabled() {
     return ServerModule.registrationEnabled;
+  }
+
+  get samlName() {
+    return ServerModule.samlName;
   }
 
   get showAlternateAuth() {

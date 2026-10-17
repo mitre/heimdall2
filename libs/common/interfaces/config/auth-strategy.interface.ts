@@ -6,6 +6,7 @@ export const AUTH_STRATEGY = {
   LOCAL: 'local',
   OIDC: 'oidc',
   OKTA: 'okta',
+  SAML: 'saml',
 } as const;
 
 export type AuthStrategy = (typeof AUTH_STRATEGY)[keyof typeof AUTH_STRATEGY];
