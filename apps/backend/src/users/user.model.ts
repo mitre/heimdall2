@@ -90,6 +90,11 @@ export class User extends Model {
   @Column(DataType.DATE)
   declare updatedAt: Date;
 
+  @AllowNull(false)
+  @Default(false)
+  @Column(DataType.BOOLEAN)
+  declare isDisabled: boolean;
+
   @BelongsToMany(() => Group, () => GroupUser)
   declare groups: Array<Group & {GroupUser: GroupUser}>;
 }

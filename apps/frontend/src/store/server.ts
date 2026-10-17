@@ -86,7 +86,8 @@ class Server extends VuexModule implements IServerState {
     lastLogin: undefined,
     creationMethod: '',
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
+    isDisabled: false
   };
 
   @Mutation
