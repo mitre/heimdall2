@@ -77118,8 +77118,247 @@
   "passthrough": {
     "auxiliary_data": [
       {
-        "name": "",
-        "data": {}
+        "name": "Anchore Grype",
+        "data": {
+          "source": {
+            "type": "image",
+            "target": {
+              "userInput": "tensorflow/tensorflow:latest",
+              "imageID": "sha256:8f6e945a1a52d428908c6b70f2741376279500f92c5381afbac9a790aa18c5b9",
+              "manifestDigest": "sha256:5ec32574bc7f466b5b8f7343e300e1368574a1a89a54735d332cf0f7b78aedf7",
+              "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+              "tags": [
+                "tensorflow/tensorflow:latest"
+              ],
+              "imageSize": 1860450104,
+              "layers": [
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:931b7ff0cb6f494b27d31a4cbec3efe62ac54676add9c7469560302f1541ecaf",
+                  "size": 77859294
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:a1524f41bf32513efcd516bf2723891fa950c27dda174c21c34b42ae39292593",
+                  "size": 1376
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:f161369a614659452b4992afcd119f46d58f303a542c25378f3b4e76850c1cb9",
+                  "size": 1180
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:5cdc2ec5b3289e4d7a3ef8060161ac8416d19b38f7fb768d5b501ec63d7932f6",
+                  "size": 65
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:387a348022bdf89fb3f5142e3176c4b6aa07567dc660e1e1db46d6db50723a5b",
+                  "size": 64771625
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:0bbf3e64c8b076609ce0a0b49a39e3392992b82dea57fba51f0aa1304e821869",
+                  "size": 366157730
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:ff26aa7f5c0c9aff1a659c954c125ba055397ad2d1ca3f6142a8d557ede26601",
+                  "size": 1790
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:a9612271ae2cb80b4a72958aa0fad654bd0d8754abdd5735d7d42c4382c18209",
+                  "size": 11
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:8b4c7a90e5edb88774351f3fd5c661a3fa0f8fedcf68f696981d3a5fdae85d86",
+                  "size": 98899165
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:bc30661351c21630b4168db5f461fa0b46cc7399810bcd5f948ad7aea3695db6",
+                  "size": 1252754034
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:7fc2cfd8ae5906162386489d52ebaca5012a18be55aba6f9a9d423d3b5e6f48a",
+                  "size": 1917
+                },
+                {
+                  "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+                  "digest": "sha256:bc9a32fd42951f1f87400fafa710eaa2e2db8586960ede6120b4e4050585062f",
+                  "size": 1917
+                }
+              ],
+              "manifest": "eyJzY2hlbWFWZXJzaW9uIjoyLCJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmRpc3RyaWJ1dGlvbi5tYW5pZmVzdC52Mitqc29uIiwiY29uZmlnIjp7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuY29udGFpbmVyLmltYWdlLnYxK2pzb24iLCJzaXplIjo0NTMyLCJkaWdlc3QiOiJzaGEyNTY6OGY2ZTk0NWExYTUyZDQyODkwOGM2YjcwZjI3NDEzNzYyNzk1MDBmOTJjNTM4MWFmYmFjOWE3OTBhYTE4YzViOSJ9LCJsYXllcnMiOlt7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjo4MDQxMjY3MiwiZGlnZXN0Ijoic2hhMjU2OjkzMWI3ZmYwY2I2ZjQ5NGIyN2QzMWE0Y2JlYzNlZmU2MmFjNTQ2NzZhZGQ5Yzc0Njk1NjAzMDJmMTU0MWVjYWYifSx7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjozMDcyLCJkaWdlc3QiOiJzaGEyNTY6YTE1MjRmNDFiZjMyNTEzZWZjZDUxNmJmMjcyMzg5MWZhOTUwYzI3ZGRhMTc0YzIxYzM0YjQyYWUzOTI5MjU5MyJ9LHsibWVkaWFUeXBlIjoiYXBwbGljYXRpb24vdm5kLmRvY2tlci5pbWFnZS5yb290ZnMuZGlmZi50YXIuZ3ppcCIsInNpemUiOjMwNzIsImRpZ2VzdCI6InNoYTI1NjpmMTYxMzY5YTYxNDY1OTQ1MmI0OTkyYWZjZDExOWY0NmQ1OGYzMDNhNTQyYzI1Mzc4ZjNiNGU3Njg1MGMxY2I5In0seyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwic2l6ZSI6MjA0OCwiZGlnZXN0Ijoic2hhMjU2OjVjZGMyZWM1YjMyODllNGQ3YTNlZjgwNjAxNjFhYzg0MTZkMTliMzhmN2ZiNzY4ZDViNTAxZWM2M2Q3OTMyZjYifSx7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjo2NTM3MzE4NCwiZGlnZXN0Ijoic2hhMjU2OjM4N2EzNDgwMjJiZGY4OWZiM2Y1MTQyZTMxNzZjNGI2YWEwNzU2N2RjNjYwZTFlMWRiNDZkNmRiNTA3MjNhNWIifSx7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjozNzMzNTA0MDAsImRpZ2VzdCI6InNoYTI1NjowYmJmM2U2NGM4YjA3NjYwOWNlMGEwYjQ5YTM5ZTMzOTI5OTJiODJkZWE1N2ZiYTUxZjBhYTEzMDRlODIxODY5In0seyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwic2l6ZSI6MzU4NCwiZGlnZXN0Ijoic2hhMjU2OmZmMjZhYTdmNWMwYzlhZmYxYTY1OWM5NTRjMTI1YmEwNTUzOTdhZDJkMWNhM2Y2MTQyYThkNTU3ZWRlMjY2MDEifSx7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjoyMDQ4LCJkaWdlc3QiOiJzaGEyNTY6YTk2MTIyNzFhZTJjYjgwYjRhNzI5NThhYTBmYWQ2NTRiZDBkODc1NGFiZGQ1NzM1ZDdkNDJjNDM4MmMxODIwOSJ9LHsibWVkaWFUeXBlIjoiYXBwbGljYXRpb24vdm5kLmRvY2tlci5pbWFnZS5yb290ZnMuZGlmZi50YXIuZ3ppcCIsInNpemUiOjEwMTc0MzEwNCwiZGlnZXN0Ijoic2hhMjU2OjhiNGM3YTkwZTVlZGI4ODc3NDM1MWYzZmQ1YzY2MWEzZmEwZjhmZWRjZjY4ZjY5Njk4MWQzYTVmZGFlODVkODYifSx7Im1lZGlhVHlwZSI6ImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLCJzaXplIjoxMjY3NTAxMDU2LCJkaWdlc3QiOiJzaGEyNTY6YmMzMDY2MTM1MWMyMTYzMGI0MTY4ZGI1ZjQ2MWZhMGI0NmNjNzM5OTgxMGJjZDVmOTQ4YWQ3YWVhMzY5NWRiNiJ9LHsibWVkaWFUeXBlIjoiYXBwbGljYXRpb24vdm5kLmRvY2tlci5pbWFnZS5yb290ZnMuZGlmZi50YXIuZ3ppcCIsInNpemUiOjQwOTYsImRpZ2VzdCI6InNoYTI1Njo3ZmMyY2ZkOGFlNTkwNjE2MjM4NjQ4OWQ1MmViYWNhNTAxMmExOGJlNTVhYmE2ZjlhOWQ0MjNkM2I1ZTZmNDhhIn0seyJtZWRpYVR5cGUiOiJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwic2l6ZSI6NDA5NiwiZGlnZXN0Ijoic2hhMjU2OmJjOWEzMmZkNDI5NTFmMWY4NzQwMGZhZmE3MTBlYWEyZTJkYjg1ODY5NjBlZGU2MTIwYjRlNDA1MDU4NTA2MmYifV19",
+              "config": "eyJhcmNoaXRlY3R1cmUiOiJhbWQ2NCIsImNvbmZpZyI6eyJFbnYiOlsiUEFUSD0vdXNyL2xvY2FsL3NiaW46L3Vzci9sb2NhbC9iaW46L3Vzci9zYmluOi91c3IvYmluOi9zYmluOi9iaW4iLCJERUJJQU5fRlJPTlRFTkQ9bm9uaW50ZXJhY3RpdmUiLCJMQU5HPUMuVVRGLTgiXSwiQ21kIjpbIi9iaW4vYmFzaCJdLCJMYWJlbHMiOnsib3JnLm9wZW5jb250YWluZXJzLmltYWdlLnJlZi5uYW1lIjoidWJ1bnR1Iiwib3JnLm9wZW5jb250YWluZXJzLmltYWdlLnZlcnNpb24iOiIyMi4wNCJ9fSwiY3JlYXRlZCI6IjIwMjQtMDctMTJUMTI6NDU6MjMuMTM4NDQ2NjkyWiIsImhpc3RvcnkiOlt7ImNyZWF0ZWQiOiIyMDI0LTA2LTI3VDIwOjEwOjEwLjUyODExMDYxNFoiLCJjcmVhdGVkX2J5IjoiL2Jpbi9zaCAtYyAjKG5vcCkgIEFSRyBSRUxFQVNFIiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDYtMjdUMjA6MTA6MTAuNTY2MzAwNjI1WiIsImNyZWF0ZWRfYnkiOiIvYmluL3NoIC1jICMobm9wKSAgQVJHIExBVU5DSFBBRF9CVUlMRF9BUkNIIiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDYtMjdUMjA6MTA6MTAuNjA2NzM3MDI5WiIsImNyZWF0ZWRfYnkiOiIvYmluL3NoIC1jICMobm9wKSAgTEFCRUwgb3JnLm9wZW5jb250YWluZXJzLmltYWdlLnJlZi5uYW1lPXVidW50dSIsImVtcHR5X2xheWVyIjp0cnVlfSx7ImNyZWF0ZWQiOiIyMDI0LTA2LTI3VDIwOjEwOjEwLjYzODkxNTQ2N1oiLCJjcmVhdGVkX2J5IjoiL2Jpbi9zaCAtYyAjKG5vcCkgIExBQkVMIG9yZy5vcGVuY29udGFpbmVycy5pbWFnZS52ZXJzaW9uPTIyLjA0IiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDYtMjdUMjA6MTA6MTIuNDgxOTgwNTM5WiIsImNyZWF0ZWRfYnkiOiIvYmluL3NoIC1jICMobm9wKSBBREQgZmlsZTpkNWRhOTIxOTk3MjZlNDJkYTA5YTZmNzVhNzc4YmVmYjYwN2ZlM2Y3OWU0YWZhZjdlZjUxODgzMjliMjZiMzg2IGluIC8gIn0seyJjcmVhdGVkIjoiMjAyNC0wNi0yN1QyMDoxMDoxMi43MDM1MTkyMThaIiwiY3JlYXRlZF9ieSI6Ii9iaW4vc2ggLWMgIyhub3ApICBDTUQgW1wiL2Jpbi9iYXNoXCJdIiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTJUMTI6MzY6MTAuOTM5NzY0ODI3WiIsImNyZWF0ZWRfYnkiOiJFTlYgREVCSUFOX0ZST05URU5EPW5vbmludGVyYWN0aXZlIiwiY29tbWVudCI6ImJ1aWxka2l0LmRvY2tlcmZpbGUudjAiLCJlbXB0eV9sYXllciI6dHJ1ZX0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMlQxMjozNjoxMC45Mzk3NjQ4MjdaIiwiY3JlYXRlZF9ieSI6IkVOViBMQU5HPUMuVVRGLTgiLCJjb21tZW50IjoiYnVpbGRraXQuZG9ja2VyZmlsZS52MCIsImVtcHR5X2xheWVyIjp0cnVlfSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEyVDEyOjM2OjEwLjkzOTc2NDgyN1oiLCJjcmVhdGVkX2J5IjoiQ09QWSBzZXR1cC5zb3VyY2VzLnNoIC9zZXR1cC5zb3VyY2VzLnNoICMgYnVpbGRraXQiLCJjb21tZW50IjoiYnVpbGRraXQuZG9ja2VyZmlsZS52MCJ9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTJUMTI6MzY6MTAuOTY1MTA0ODAzWiIsImNyZWF0ZWRfYnkiOiJDT1BZIHNldHVwLnBhY2thZ2VzLnNoIC9zZXR1cC5wYWNrYWdlcy5zaCAjIGJ1aWxka2l0IiwiY29tbWVudCI6ImJ1aWxka2l0LmRvY2tlcmZpbGUudjAifSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEyVDEyOjM2OjEwLjk5MDg0MzYwMVoiLCJjcmVhdGVkX2J5IjoiQ09QWSBjcHUucGFja2FnZXMudHh0IC9jcHUucGFja2FnZXMudHh0ICMgYnVpbGRraXQiLCJjb21tZW50IjoiYnVpbGRraXQuZG9ja2VyZmlsZS52MCJ9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTJUMTI6MzY6MjAuOTgxNDQ0NjY1WiIsImNyZWF0ZWRfYnkiOiJSVU4gL2Jpbi9zaCAtYyAvc2V0dXAuc291cmNlcy5zaCAjIGJ1aWxka2l0IiwiY29tbWVudCI6ImJ1aWxka2l0LmRvY2tlcmZpbGUudjAifSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEyVDEyOjM2OjQyLjkwOTQyMjAzN1oiLCJjcmVhdGVkX2J5IjoiUlVOIC9iaW4vc2ggLWMgL3NldHVwLnBhY2thZ2VzLnNoIC9jcHUucGFja2FnZXMudHh0ICMgYnVpbGRraXQiLCJjb21tZW50IjoiYnVpbGRraXQuZG9ja2VyZmlsZS52MCJ9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTJUMTI6MzY6NDIuOTA5NDIyMDM3WiIsImNyZWF0ZWRfYnkiOiJBUkcgUFlUSE9OX1ZFUlNJT049cHl0aG9uMy4xMSIsImNvbW1lbnQiOiJidWlsZGtpdC5kb2NrZXJmaWxlLnYwIiwiZW1wdHlfbGF5ZXIiOnRydWV9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTJUMTI6MzY6NDIuOTA5NDIyMDM3WiIsImNyZWF0ZWRfYnkiOiJBUkcgVEVOU09SRkxPV19QQUNLQUdFPXRlbnNvcmZsb3ctY3B1PT0yLjE3LjAiLCJjb21tZW50IjoiYnVpbGRraXQuZG9ja2VyZmlsZS52MCIsImVtcHR5X2xheWVyIjp0cnVlfSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEyVDEyOjM2OjQyLjkzNDQ4NzI0M1oiLCJjcmVhdGVkX2J5IjoiQ09QWSBzZXR1cC5weXRob24uc2ggL3NldHVwLnB5dGhvbi5zaCAjIGJ1aWxka2l0IiwiY29tbWVudCI6ImJ1aWxka2l0LmRvY2tlcmZpbGUudjAifSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEyVDEyOjM2OjQyLjk2MDIwNDE5NloiLCJjcmVhdGVkX2J5IjoiQ09QWSBjcHUucmVxdWlyZW1lbnRzLnR4dCAvY3B1LnJlcXVpcmVtZW50cy50eHQgIyBidWlsZGtpdCIsImNvbW1lbnQiOiJidWlsZGtpdC5kb2NrZXJmaWxlLnYwIn0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMlQxMjo0NDo1MC43NjY3NzEyNTVaIiwiY3JlYXRlZF9ieSI6IlJVTiB8MiBQWVRIT05fVkVSU0lPTj1weXRob24zLjExIFRFTlNPUkZMT1dfUEFDS0FHRT10ZW5zb3JmbG93LWNwdT09Mi4xNy4wIC9iaW4vc2ggLWMgL3NldHVwLnB5dGhvbi5zaCAkUFlUSE9OX1ZFUlNJT04gL2NwdS5yZXF1aXJlbWVudHMudHh0ICMgYnVpbGRraXQiLCJjb21tZW50IjoiYnVpbGRraXQuZG9ja2VyZmlsZS52MCJ9LHsiY3JlYXRlZCI6IjIwMjQtMDctMTJUMTI6NDU6MjIuODg2Mzg0MDEyWiIsImNyZWF0ZWRfYnkiOiJSVU4gfDIgUFlUSE9OX1ZFUlNJT049cHl0aG9uMy4xMSBURU5TT1JGTE9XX1BBQ0tBR0U9dGVuc29yZmxvdy1jcHU9PTIuMTcuMCAvYmluL3NoIC1jIHBpcCBpbnN0YWxsIC0tbm8tY2FjaGUtZGlyICR7VEVOU09SRkxPV19QQUNLQUdFfSAjIGJ1aWxka2l0IiwiY29tbWVudCI6ImJ1aWxka2l0LmRvY2tlcmZpbGUudjAifSx7ImNyZWF0ZWQiOiIyMDI0LTA3LTEyVDEyOjQ1OjIyLjkwOTIwNTRaIiwiY3JlYXRlZF9ieSI6IkNPUFkgYmFzaHJjIC9ldGMvYmFzaC5iYXNocmMgIyBidWlsZGtpdCIsImNvbW1lbnQiOiJidWlsZGtpdC5kb2NrZXJmaWxlLnYwIn0seyJjcmVhdGVkIjoiMjAyNC0wNy0xMlQxMjo0NToyMy4xMzg0NDY2OTJaIiwiY3JlYXRlZF9ieSI6IlJVTiB8MiBQWVRIT05fVkVSU0lPTj1weXRob24zLjExIFRFTlNPUkZMT1dfUEFDS0FHRT10ZW5zb3JmbG93LWNwdT09Mi4xNy4wIC9iaW4vc2ggLWMgY2htb2QgYStyd3ggL2V0Yy9iYXNoLmJhc2hyYyAjIGJ1aWxka2l0IiwiY29tbWVudCI6ImJ1aWxka2l0LmRvY2tlcmZpbGUudjAifV0sIm9zIjoibGludXgiLCJyb290ZnMiOnsidHlwZSI6ImxheWVycyIsImRpZmZfaWRzIjpbInNoYTI1Njo5MzFiN2ZmMGNiNmY0OTRiMjdkMzFhNGNiZWMzZWZlNjJhYzU0Njc2YWRkOWM3NDY5NTYwMzAyZjE1NDFlY2FmIiwic2hhMjU2OmExNTI0ZjQxYmYzMjUxM2VmY2Q1MTZiZjI3MjM4OTFmYTk1MGMyN2RkYTE3NGMyMWMzNGI0MmFlMzkyOTI1OTMiLCJzaGEyNTY6ZjE2MTM2OWE2MTQ2NTk0NTJiNDk5MmFmY2QxMTlmNDZkNThmMzAzYTU0MmMyNTM3OGYzYjRlNzY4NTBjMWNiOSIsInNoYTI1Njo1Y2RjMmVjNWIzMjg5ZTRkN2EzZWY4MDYwMTYxYWM4NDE2ZDE5YjM4ZjdmYjc2OGQ1YjUwMWVjNjNkNzkzMmY2Iiwic2hhMjU2OjM4N2EzNDgwMjJiZGY4OWZiM2Y1MTQyZTMxNzZjNGI2YWEwNzU2N2RjNjYwZTFlMWRiNDZkNmRiNTA3MjNhNWIiLCJzaGEyNTY6MGJiZjNlNjRjOGIwNzY2MDljZTBhMGI0OWEzOWUzMzkyOTkyYjgyZGVhNTdmYmE1MWYwYWExMzA0ZTgyMTg2OSIsInNoYTI1NjpmZjI2YWE3ZjVjMGM5YWZmMWE2NTljOTU0YzEyNWJhMDU1Mzk3YWQyZDFjYTNmNjE0MmE4ZDU1N2VkZTI2NjAxIiwic2hhMjU2OmE5NjEyMjcxYWUyY2I4MGI0YTcyOTU4YWEwZmFkNjU0YmQwZDg3NTRhYmRkNTczNWQ3ZDQyYzQzODJjMTgyMDkiLCJzaGEyNTY6OGI0YzdhOTBlNWVkYjg4Nzc0MzUxZjNmZDVjNjYxYTNmYTBmOGZlZGNmNjhmNjk2OTgxZDNhNWZkYWU4NWQ4NiIsInNoYTI1NjpiYzMwNjYxMzUxYzIxNjMwYjQxNjhkYjVmNDYxZmEwYjQ2Y2M3Mzk5ODEwYmNkNWY5NDhhZDdhZWEzNjk1ZGI2Iiwic2hhMjU2OjdmYzJjZmQ4YWU1OTA2MTYyMzg2NDg5ZDUyZWJhY2E1MDEyYTE4YmU1NWFiYTZmOWE5ZDQyM2QzYjVlNmY0OGEiLCJzaGEyNTY6YmM5YTMyZmQ0Mjk1MWYxZjg3NDAwZmFmYTcxMGVhYTJlMmRiODU4Njk2MGVkZTYxMjBiNGU0MDUwNTg1MDYyZiJdfX0=",
+              "repoDigests": [
+                "tensorflow/tensorflow@sha256:821b11952acfa67764c1f433a0629747ee49e30a69291811a2dcbef77b67cf33"
+              ],
+              "architecture": "amd64",
+              "os": "linux",
+              "labels": {
+                "org.opencontainers.image.ref.name": "ubuntu",
+                "org.opencontainers.image.version": "22.04"
+              }
+            }
+          },
+          "distro": {
+            "name": "ubuntu",
+            "version": "22.04",
+            "idLike": [
+              "debian"
+            ]
+          },
+          "descriptor": {
+            "name": "grype",
+            "version": "0.79.3",
+            "configuration": {
+              "output": [
+                "json"
+              ],
+              "file": "",
+              "distro": "",
+              "add-cpes-if-none": false,
+              "output-template-file": "",
+              "check-for-app-update": true,
+              "only-fixed": false,
+              "only-notfixed": false,
+              "ignore-wontfix": "",
+              "platform": "",
+              "search": {
+                "scope": "squashed",
+                "unindexed-archives": false,
+                "indexed-archives": true
+              },
+              "ignore": [
+                {
+                  "vulnerability": "",
+                  "reason": "",
+                  "namespace": "",
+                  "fix-state": "",
+                  "package": {
+                    "name": "kernel-headers",
+                    "version": "",
+                    "language": "",
+                    "type": "rpm",
+                    "location": "",
+                    "upstream-name": "kernel"
+                  },
+                  "vex-status": "",
+                  "vex-justification": "",
+                  "match-type": "exact-indirect-match"
+                },
+                {
+                  "vulnerability": "",
+                  "reason": "",
+                  "namespace": "",
+                  "fix-state": "",
+                  "package": {
+                    "name": "linux-headers-.*",
+                    "version": "",
+                    "language": "",
+                    "type": "deb",
+                    "location": "",
+                    "upstream-name": "linux"
+                  },
+                  "vex-status": "",
+                  "vex-justification": "",
+                  "match-type": "exact-indirect-match"
+                },
+                {
+                  "vulnerability": "",
+                  "reason": "",
+                  "namespace": "",
+                  "fix-state": "",
+                  "package": {
+                    "name": "linux-libc-dev",
+                    "version": "",
+                    "language": "",
+                    "type": "deb",
+                    "location": "",
+                    "upstream-name": "linux"
+                  },
+                  "vex-status": "",
+                  "vex-justification": "",
+                  "match-type": "exact-indirect-match"
+                }
+              ],
+              "exclude": [],
+              "db": {
+                "cache-dir": "/Users/atang/Library/Caches/grype/db",
+                "update-url": "https://toolbox-data.anchore.io/grype/databases/listing.json",
+                "ca-cert": "",
+                "auto-update": true,
+                "validate-by-hash-on-start": false,
+                "validate-age": true,
+                "max-allowed-built-age": 432000000000000,
+                "update-available-timeout": 30000000000,
+                "update-download-timeout": 120000000000
+              },
+              "externalSources": {
+                "enable": false,
+                "maven": {
+                  "searchUpstreamBySha1": true,
+                  "baseUrl": "https://search.maven.org/solrsearch/select"
+                }
+              },
+              "match": {
+                "java": {
+                  "using-cpes": false
+                },
+                "dotnet": {
+                  "using-cpes": false
+                },
+                "golang": {
+                  "using-cpes": false,
+                  "always-use-cpe-for-stdlib": true,
+                  "allow-main-module-pseudo-version-comparison": false
+                },
+                "javascript": {
+                  "using-cpes": false
+                },
+                "python": {
+                  "using-cpes": false
+                },
+                "ruby": {
+                  "using-cpes": false
+                },
+                "rust": {
+                  "using-cpes": false
+                },
+                "stock": {
+                  "using-cpes": true
+                }
+              },
+              "fail-on-severity": "",
+              "registry": {
+                "insecure-skip-tls-verify": false,
+                "insecure-use-http": false,
+                "auth": null,
+                "ca-cert": ""
+              },
+              "show-suppressed": false,
+              "by-cve": false,
+              "name": "",
+              "default-image-pull-source": "",
+              "vex-documents": [],
+              "vex-add": [],
+              "match-upstream-kernel-headers": false
+            },
+            "db": {
+              "built": "2024-08-29T01:31:52Z",
+              "schemaVersion": 5,
+              "location": "/Users/atang/Library/Caches/grype/db/5",
+              "checksum": "sha256:755b4c6811bb129d58b2f2a7ff01473c8cbcd08f1916cc6a250144601a7d1d39",
+              "error": null
+            },
+            "timestamp": "2024-08-29T13:31:15.474449-04:00"
+          }
+        }
       }
     ],
     "raw": {
