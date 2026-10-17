@@ -38,7 +38,7 @@
     "@nestjs/platform-express": "^11.1.6",
     "@nestjs/schematics": "^12.0.0",
     "@nestjs/sequelize": "^12.0.0",
-    "@nestjs/serve-static": "^5.0.3",
+    "@nestjs/serve-static": "^12.0.0",
     "@types/connect-pg-simple": "^7.0.0",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.17.3",
