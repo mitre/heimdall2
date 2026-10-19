@@ -39,6 +39,7 @@ grep -Eq '\(RPATH\).*\[/usr/libexec/heimdall-server/runtime/postgresql/lib\]' "$
 [[ -s "$scratch/usr/lib/systemd/system/heimdall-postgresql.service" ]]
 [[ -s "$scratch/usr/lib/systemd/system/heimdall-caddy.service" ]]
 [[ -s "$scratch/usr/lib/systemd/system/heimdall-nginx.service" ]]
+[[ -s "$scratch/usr/share/doc/heimdall-server/INSTALL.md" ]]
 for notice in node/LICENSE postgresql/COPYRIGHT caddy/LICENSE nginx/LICENSE; do
   [[ -s "$scratch/usr/share/licenses/heimdall-server/$notice" ]]
 done

@@ -63,6 +63,78 @@ func newTestSetupRunner() (*SetupRunner, *bytes.Buffer, *bytes.Buffer) {
 	return r, out, errOut
 }
 
+func TestSetupCompletionUsesConfiguredLogin(t *testing.T) {
+	for _, bundled := range []bool{false, true} {
+		t.Run(fmt.Sprintf("bundled=%t", bundled), func(t *testing.T) {
+			r, out, _ := newTestSetupRunner()
+			if bundled {
+				r = bundledSetupFixture(t)
+				out = r.Out.(*bytes.Buffer)
+			} else {
+				stubLocalPostgresHappy(r)
+			}
+			env := r.Env.(*FakeEnvManager)
+			env.Env["ADMIN_EMAIL"] = "operator+admin@example.test"
+			env.Env["EXTERNAL_URL"] = "https://portal.example.test"
+			env.Env["ADMIN_PASSWORD"] = "private-admin-password"
+			cmd := NewSetupCmd(r)
+			cmd.SetArgs([]string{"--non-interactive", "--skip-tls"})
+			require.NoError(t, cmd.Execute())
+			output := out.String()
+			assert.Contains(t, output, "Configured URL: https://portal.example.test")
+			assert.Contains(t, output, "Admin email: operator+admin@example.test")
+			assert.Contains(t, output, "sudo heimdall-cli reset-password 'operator+admin@example.test'")
+			assert.Contains(t, output, "unknown")
+			assert.Contains(t, output, "/usr/share/doc/heimdall-server/INSTALL.md")
+			assert.NotContains(t, output, "only on this server")
+			assert.NotContains(t, output, "private-admin-password")
+			assert.NotContains(t, output, env.Env["DATABASE_PASSWORD"])
+		})
+	}
+}
+
+func TestSetupCompletionReflectsSkippedStepsAndLoginMode(t *testing.T) {
+	for _, tc := range []struct {
+		name, proxy, tls, disabled string
+		skipDB, skipTLS, readError bool
+		want, absent               string
+	}{
+		{name: "self-signed", proxy: "nginx", tls: "self-signed", want: "browser warning"},
+		{name: "internal CA", proxy: "bundled", tls: "internal", want: "browser warning"},
+		{name: "ACME", proxy: "bundled", tls: "acme", absent: "browser warning"},
+		{name: "skipped TLS", proxy: "nginx", tls: "self-signed", skipTLS: true, want: "TLS setup was skipped", absent: "browser warning"},
+		{name: "external proxy", proxy: "external", tls: "internal", want: "Verify your external proxy", absent: "browser warning"},
+		{name: "no proxy", proxy: "none", tls: "internal", want: "No reverse proxy was configured", absent: "browser warning"},
+		{name: "skipped database", skipDB: true, want: "Database setup and migrations were skipped", absent: "sudo heimdall-cli reset-password"},
+		{name: "disabled local login", disabled: "true", want: "Local login is disabled", absent: "sudo heimdall-cli reset-password"},
+		{name: "uppercase disabled local login", disabled: "TRUE", want: "Local login is disabled", absent: "sudo heimdall-cli reset-password"},
+		{name: "unreadable configuration", readError: true, want: "Could not read login settings", absent: "sudo heimdall-cli reset-password"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			r, out, _ := newTestSetupRunner()
+			r.ProxyMode, r.TLSMode = tc.proxy, tc.tls
+			r.SkipDB, r.SkipTLS = tc.skipDB, tc.skipTLS
+			r.ExternalURL = "https://localhost"
+			r.Env.(*FakeEnvManager).Env = map[string]string{"LOCAL_LOGIN_DISABLED": tc.disabled, "EXTERNAL_URL": "https://localhost"}
+			if tc.readError {
+				r.Env = &FileEnvManager{Path: t.TempDir()}
+			}
+			r.printCompletionBanner()
+			output := out.String()
+			if tc.want != "" {
+				assert.Contains(t, output, tc.want)
+			}
+			if tc.absent != "" {
+				assert.NotContains(t, output, tc.absent)
+			}
+			assert.Contains(t, output, "only on this server")
+			if !tc.skipDB && tc.disabled == "" && !tc.readError {
+				assert.Contains(t, output, "sudo heimdall-cli reset-password 'admin@heimdall.local'")
+			}
+		})
+	}
+}
+
 // --- Command-level tests ---
 
 func TestSetupCmd_Help(t *testing.T) {

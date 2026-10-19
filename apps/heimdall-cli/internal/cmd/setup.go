@@ -1741,16 +1741,48 @@ func (r *SetupRunner) stepStartService() error {
 }
 
 func (r *SetupRunner) printCompletionBanner() {
+	env, err := r.Env.ReadEnv()
 	fmt.Fprintln(r.Out)
 	fmt.Fprintln(r.Out, "==========================================")
 	fmt.Fprintln(r.Out, " Heimdall server is running.")
-	if r.ExternalURL != "" {
-		fmt.Fprintf(r.Out, " Open: %s\n", r.ExternalURL)
+	if publicURL := envDefault(env, "EXTERNAL_URL", r.ExternalURL); publicURL != "" {
+		fmt.Fprintf(r.Out, " Configured URL: %s\n", publicURL)
+		if u, parseErr := url.Parse(publicURL); parseErr == nil && isLocalHost(u.Hostname()) {
+			fmt.Fprintln(r.Out, " This URL works only on this server.")
+		}
+	}
+	switch {
+	case r.SkipTLS:
+		fmt.Fprintln(r.Out, " TLS setup was skipped; verify your proxy and HTTPS.")
+	case r.ProxyMode == "external":
+		fmt.Fprintln(r.Out, " Verify your external proxy and HTTPS.")
+	case r.ProxyMode == "none":
+		fmt.Fprintln(r.Out, " No reverse proxy was configured; check URL reachability.")
+	case r.TLSMode == tlsSelfSigned || r.TLSMode == "internal":
+		fmt.Fprintln(r.Out, " For a TLS browser warning, see certificate trust in the guide.")
 	}
 	fmt.Fprintln(r.Out)
-	fmt.Fprintln(r.Out, " Useful commands:")
-	fmt.Fprintf(r.Out, "   systemctl status  %s\n", ServiceName)
-	fmt.Fprintf(r.Out, "   journalctl -u     %s\n", ServiceName)
+	if r.SkipDB {
+		fmt.Fprintln(r.Out, " Database setup and migrations were skipped; verify readiness before login.")
+	}
+	if err != nil {
+		fmt.Fprintf(r.Out, " Could not read login settings; check %s.\n", r.Env.GetEnvFilePath())
+	} else if strings.EqualFold(env["LOCAL_LOGIN_DISABLED"], "true") {
+		fmt.Fprintln(r.Out, " Local login is disabled; use your configured identity provider.")
+	} else {
+		adminEmail := envDefault(env, "ADMIN_EMAIL", defaultAdminEmail)
+		fmt.Fprintf(r.Out, " Admin email: %s\n", adminEmail)
+		if !r.SkipDB {
+			fmt.Fprintln(r.Out, " Web login uses a separate password from DATABASE_PASSWORD.")
+			fmt.Fprintln(r.Out, " If your web password is unknown, generate one:")
+			fmt.Fprintf(r.Out, "   sudo heimdall-cli reset-password '%s'\n", strings.ReplaceAll(adminEmail, "'", "'\\''"))
+			fmt.Fprintln(r.Out, " Save the displayed password and sign in with the email above.")
+		}
+	}
+	fmt.Fprintln(r.Out)
+	fmt.Fprintln(r.Out, " Check: sudo heimdall-cli validate && sudo heimdall-cli status")
+	fmt.Fprintf(r.Out, " View configured variables: %s\n", r.Env.GetEnvFilePath())
+	fmt.Fprintln(r.Out, " Guide: /usr/share/doc/heimdall-server/INSTALL.md")
 
 	cloud := r.detectCloud()
 	r.printCloudHint(cloud)

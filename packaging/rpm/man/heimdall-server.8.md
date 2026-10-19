@@ -24,11 +24,47 @@ hardening.
 
 ## POST-INSTALL SETUP
 
-After installing the RPM, complete the initial setup by running:
+Installing the RPM does not initialize the database or start services. For a new
+installation using the defaults, run:
 
 ```bash
 sudo heimdall-cli setup --interactive
 ```
+
+The defaults are private PostgreSQL
+on **127.0.0.1:55432**, Nginx on HTTPS port **443**, a self-signed certificate valid
+for **7 days**, backend port **3000**, and administrator email
+**admin@heimdall.local**. Leave the database password blank to generate one;
+this is separate from the web login password. If setup reports a listener or
+SELinux conflict on 3000, choose an available backend port such as **3005** when
+prompted again. Some EL policies reserve 3000–3001 for **ntop_port_t**.
+
+The **External URL** prompt defaults to localhost. Accept it only if your browser
+runs on the server; for remote access, enter the hostname or IP clients will use,
+such as **https://heimdall.example.com**, during setup.
+
+Wait for setup to finish successfully, then validate the installation and obtain
+your web login password. If you changed the admin email, replace
+**admin@heimdall.local** below; check it with
+**sudo heimdall-cli config get ADMIN_EMAIL** if needed.
+
+```bash
+sudo heimdall-cli validate
+sudo heimdall-cli status
+sudo heimdall-cli reset-password admin@heimdall.local
+```
+
+Setup does not display the seeded administrator password. **reset-password**
+displays a generated password once; save it securely. Log in with that email and password
+at the **Configured URL** printed by setup: **https://localhost** for a browser on the
+server with all defaults, or the configured HTTPS hostname/IP for remote access.
+The browser will warn until the client trusts the self-signed public certificate
+at **/etc/heimdall-server/nginx/certs/server.crt**. Never distribute server.key.
+
+Configuration and generated database credentials are stored in
+**/etc/heimdall-server/backend.env** (root:heimdall, mode 0640); setup does not
+print those secrets. For failures, run **sudo heimdall-cli logs --lines 100**.
+The full installation guide is **/usr/share/doc/heimdall-server/INSTALL.md**.
 
 The RPM includes private Node.js, PostgreSQL, Caddy and Nginx runtimes. Setup asks
 independently for **--database-mode bundled|external** and
@@ -37,16 +73,12 @@ setup tests connectivity and migrates the application but never controls the
 external service. Supported external PostgreSQL server majors are 13 through 18.
 The private database and proxy services remain disabled until selected by setup.
 
-Fresh defaults are bundled/nginx. Text fields start empty; Enter accepts the
-default shown in the question. The address prompt defaults to localhost;
-setup stores the complete HTTPS URL. Flags override saved selections; saved
+Setup stores the complete HTTPS URL. Flags override saved selections; saved
 selections override defaults. Existing configured systems without mode keys use
 external/external and retain endpoints. Temporary **--skip-db** and **--skip-tls**
 do not change ownership. **--reconfigure** writes configuration only; run full
 setup afterward to apply topology changes. Changing databases does not copy data.
 
-**--proxy-mode nginx** automatically generates a self-signed certificate for
-the configured host. Clients must trust its public certificate.
 Bundled Caddy supports **--tls-mode acme|internal|custom**. Custom mode also takes
 **--tls-cert** and **--tls-key**. External proxies forward to the configured
 application port. A port conflict returns an error without stopping its owner.
@@ -169,6 +201,11 @@ sudo heimdall-cli status
 
 :   Runtime versions, archive hashes and license inventory. Notices are installed
     under /usr/share/licenses/heimdall-server.
+
+**/usr/share/doc/heimdall-server/INSTALL.md**
+
+:   Installation guide with default setup, first login, verification and recovery
+    instructions.
 
 **/var/lib/heimdall-postgresql/18/data**
 

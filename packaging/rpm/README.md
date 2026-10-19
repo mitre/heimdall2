@@ -72,7 +72,11 @@ shipped repository definition is disabled.
 
 Installation creates accounts and files but does not launch the wizard,
 initialize the database or start services. After a successful install, continue
-with [setup](#setup) or [manual installation](#manual-installation).
+with [setup](#setup) or
+[manual installation](#manual-installation). This guide is also installed at
+`/usr/share/doc/heimdall-server/INSTALL.md`. The setup and operation instructions
+work offline; relative links to additional references require the matching source
+tree, starting at `packaging/rpm/README.md`.
 
 ## Disconnected installation
 
@@ -152,9 +156,45 @@ sudo heimdall-cli setup --non-interactive
 ```
 
 Creating the file alone does not initialize the database or start services.
-After setup, [verify the service and obtain administrator access](#verify-and-operate).
+After setup, follow the validation and password-reset steps in
+[Setup](#setup).
 
 ## Setup
+
+1. Configure and start the app:
+
+   ```sh
+   sudo heimdall-cli setup --interactive
+   ```
+
+   Defaults use private PostgreSQL on `127.0.0.1:55432` and Nginx with
+   self-signed HTTPS. For remote access, set **External URL** to the hostname
+   or IP clients will use, such as `https://heimdall.example.com`.
+   Use `localhost` only for a browser running on the server.
+
+2. After setup succeeds, verify the app and generate your web login password:
+
+   ```sh
+   sudo heimdall-cli validate
+   sudo heimdall-cli status
+   sudo heimdall-cli reset-password admin@heimdall.local
+   ```
+
+   Use your chosen admin email if different; check it with
+   `sudo heimdall-cli config get ADMIN_EMAIL` if needed. Setup does not display
+   the seeded administrator password. Save the replacement shown by
+   `reset-password`; it is displayed once and is separate from `DATABASE_PASSWORD`.
+
+3. Open the **Configured URL** printed by setup and sign in with that email
+   and password. For default HTTPS, trust the public certificate at
+   `/etc/heimdall-server/nginx/certs/server.crt` on the client. See
+   [TLS and external proxies](#tls-and-external-proxies) for trust and renewal.
+
+To view the configured variables and generated database credentials, check
+`/etc/heimdall-server/backend.env` (`root:heimdall`, mode `0640`). For failures,
+see [Verify and operate](#verify-and-operate).
+
+### Setup options
 
 | Command                                     | Behavior                                                       |
 | ------------------------------------------- | -------------------------------------------------------------- |
@@ -205,6 +245,7 @@ The CLI runs individual commands. `heimdall-cli --help` lists them without
 opening setup; the wizard requires `setup --interactive`.
 
 ```sh
+sudo heimdall-cli validate
 sudo heimdall-cli status
 sudo systemctl status heimdall-server --no-pager
 curl -fsS --retry 30 --retry-connrefused --retry-delay 1 \
@@ -216,12 +257,7 @@ setup enables the selected services. `/server` returns startup settings, not
 database readiness. Use your configured port if different, then log in and open
 stored data to verify database access.
 
-The CLI currently hides the generated administrator password from seeding.
-Generate and display a replacement (use your configured email if different):
-
-```sh
-sudo heimdall-cli reset-password admin@heimdall.local
-```
+For administrator access, follow the steps in [Setup](#setup).
 
 After initial setup, start a stopped application without the wizard:
 

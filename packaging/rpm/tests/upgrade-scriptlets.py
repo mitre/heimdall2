@@ -19,6 +19,7 @@ def scriptlet(name, root):
                     SPEC.split('\n%' + name + '\n', 1)[1], maxsplit=1)[0]
     for macro, value in {'name': 'heimdall-server', '_sysconfdir': '/etc',
                          '_datadir': '/usr/share', '_bindir': '/usr/bin',
+                         '_docdir': '/usr/share/doc',
                          '_libexecdir': '/usr/libexec', '_tmpfilesdir': '/usr/lib/tmpfiles.d',
                          '_unitdir': '/usr/lib/systemd/system'}.items():
         text = text.replace('%{' + macro + '}', value)

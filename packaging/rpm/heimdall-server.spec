@@ -117,8 +117,12 @@ access for Heimdall evaluations.
 After installation, run:
   sudo heimdall-cli setup --interactive
 
+Setup and first-login instructions:
+  %{_docdir}/%{name}/INSTALL.md
+
 %prep
 %autosetup -n heimdall2-%{version}
+cp packaging/rpm/README.md INSTALL.md
 mkdir -p rpm-man
 tar -xzf "%{SOURCE22}" -C rpm-man
 
@@ -580,8 +584,19 @@ if [ $1 -eq 1 ]; then
   echo "=========================================="
   echo " Heimdall Server installed successfully."
   echo ""
-  echo " Complete setup by running:"
+  echo " 1. Configure and start the app:"
   echo "   sudo heimdall-cli setup --interactive"
+  echo ""
+  echo " 2. After setup succeeds, generate your web login password:"
+  echo "   sudo heimdall-cli reset-password admin@heimdall.local"
+  echo "   Use your chosen email if different; save the displayed password."
+  echo ""
+  echo " 3. Verify the app:"
+  echo "   sudo heimdall-cli validate && sudo heimdall-cli status"
+  echo "   Sign in at the URL shown by setup."
+  echo ""
+  echo " View configured variables: %{_sysconfdir}/%{name}/backend.env"
+  echo " Defaults, HTTPS trust and troubleshooting: %{_docdir}/%{name}/INSTALL.md"
   echo "=========================================="
   echo ""
 elif [ $1 -eq 2 ]; then
@@ -703,7 +718,7 @@ fi
 %license %{_licensedir}/%{name}/caddy
 %license %{_licensedir}/%{name}/nginx
 %license %{_licensedir}/%{name}/icu
-%doc README.md CHANGELOG
+%doc README.md CHANGELOG INSTALL.md
 %{_unitdir}/%{name}.service
 %{_unitdir}/heimdall-postgresql.service
 %{_unitdir}/heimdall-caddy.service
