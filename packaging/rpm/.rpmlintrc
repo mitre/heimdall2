@@ -43,5 +43,5 @@ addFilter(r"non-executable-script /usr/share/heimdall-server/apps/backend/node_m
 # Bundled npm trees contain duplicate dependency files and license notices.
 # Keep individual files-duplicate warnings; exempt only the binary's total.
 addFilter(r"^heimdall-server\.(?:aarch64|x86_64): E: files-duplicated-waste [0-9]+$")
-# The installation command is intentional; sudo and cli are command tokens.
-addFilter(r"spelling-error .*%description -l en_US (?:sudo|cli) -> ")
+# Intentional command and path tokens in the package description.
+addFilter(r"spelling-error .*%description -l en_US (?:sudo|cli|usr) -> ")
