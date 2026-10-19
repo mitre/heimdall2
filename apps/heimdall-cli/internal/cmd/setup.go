@@ -54,16 +54,15 @@ type SetupRunner struct {
 	ErrOut   io.Writer
 	Paths    Paths
 
-	DatabaseMode        string
-	ProxyMode           string
-	TLSMode             string
-	flagChanged         map[string]bool
-	bundledRuntime      bool
-	previousProxyMode   string
-	previousBackendPort string
-	rollbackFirewall    func() error
-	stageConfig         bool
-	pendingConfig       map[string]string
+	DatabaseMode      string
+	ProxyMode         string
+	TLSMode           string
+	flagChanged       map[string]bool
+	bundledRuntime    bool
+	previousProxyMode string
+	rollbackFirewall  func() error
+	stageConfig       bool
+	pendingConfig     map[string]string
 
 	// Flags
 	Interactive bool
@@ -122,9 +121,8 @@ Choose each independently with --database-mode and --proxy-mode;
 external PostgreSQL 13–18 is supported, including on localhost. --proxy-mode none
 is HTTP-only development. Nginx uses self-signed TLS. Bundled Caddy TLS supports
 acme, internal, and custom.
-The backend port uses saved PORT, otherwise 3002 for a fresh RPM installation
-or 3000 for standalone and configured legacy installations. Use --port to
-override it; managed HTTPS defaults to port 443. Setup rejects listener and
+The backend port uses saved PORT, otherwise 3000. Use --port to override it;
+managed HTTPS defaults to port 443. Setup rejects listener and
 SELinux conflicts before changing configuration and prompts again in
 interactive mode.
 Saved selections are reused; explicit flags override them. Temporary skips do
@@ -180,7 +178,7 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
 	flags.StringVar(&runner.TLSMode, flagTLSMode, "", "Proxy TLS: self-signed (Nginx), acme, internal, or custom")
 	flags.BoolVar(&runner.Interactive, "interactive", false, "Prompt for configuration values")
 	flags.BoolVar(&runner.NonInteract, "non-interactive", false, "Accept defaults and auto-generate secrets")
-	flags.StringVar(&runner.Port, "port", DefaultAppPort, "Backend listen port (1024-65535; default shown is standalone; fresh RPM default 3002; saved PORT wins unless explicitly set)")
+	flags.StringVar(&runner.Port, "port", DefaultAppPort, "Backend listen port (1024-65535; saved PORT wins unless explicitly set)")
 	flags.StringVar(&runner.DBHost, flagDBHost, "localhost", "Database host")
 	flags.IntVar(&runner.DBPort, flagDBPort, 5432, "Database port")
 	flags.StringVar(&runner.DBUser, flagDBUser, "postgres", "Database user")
@@ -461,7 +459,6 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
 		return nil, err
 	}
 	r.previousProxyMode = existing["HEIMDALL_PROXY_MODE"]
-	r.previousBackendPort = existing["PORT"]
 	configured := isConfigured(existing)
 	requested := r.requestedDeployment(existing, configured)
 	nginxAvailable := r.bundledRuntime && r.FS.Exists(r.Paths.RuntimePath("nginx", "sbin", "nginx"))
@@ -478,11 +475,6 @@ func (r *SetupRunner) readConfiguration() (map[string]string, error) {
 		return r.resolveConfigValue(values, key, flag, value, fallback)
 	}
 	r.Port = resolve("PORT", "port", r.Port, DefaultAppPort)
-	// Keep saved and explicit ports, including the historical standalone default.
-	if r.bundledRuntime && !configured && values["PORT"] == "" &&
-		!r.flagChanged["port"] && r.Port == DefaultAppPort {
-		r.Port = DefaultRPMAppPort
-	}
 	if !r.Interactive || r.flagChanged["port"] {
 		if err := ValidateValue("PORT", r.Port); err != nil {
 			return nil, WrapError(err, "invalid backend port", "Choose a port from 1024 to 65535 with --port")
@@ -1718,7 +1710,7 @@ func (r *SetupRunner) stepSecurityPolicies() error {
 	r.Exec.Run("chown", "-R", "heimdall:heimdall", r.Paths.LogDir)
 	r.Exec.Run("chmod", "0750", r.Paths.LogDir)
 	fmt.Fprintln(r.Out, "  File permissions hardened")
-	r.rollbackFirewall, err = r.configureFirewall(port, r.ProxyMode, r.previousBackendPort, env["EXTERNAL_URL"])
+	r.rollbackFirewall, err = r.configureFirewall(port, r.ProxyMode, env["EXTERNAL_URL"])
 	return err
 }
 

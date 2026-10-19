@@ -43,7 +43,7 @@ verify() {
   [[ "$(readlink -f "/proc/$(systemctl show -p MainPID --value heimdall-caddy)/exe")" == "$runtime/caddy/caddy" ]]
   [[ $(systemctl show -p User --value heimdall-server) == heimdall ]]
   "$node" -e 'if(require("/usr/share/heimdall-server/apps/backend/package.json").version!==process.argv[1]) process.exit(1)' "$(rpm -q --qf '%{VERSION}' heimdall-server)"
-  curl --fail --silent --show-error --max-time 10 "http://127.0.0.1:${PORT:-3002}/" -o /tmp/rpm-index.html
+  curl --fail --silent --show-error --max-time 10 "http://127.0.0.1:${PORT:-3000}/" -o /tmp/rpm-index.html
   grep -qi '<html' /tmp/rpm-index.html
 }
 verify_state() {

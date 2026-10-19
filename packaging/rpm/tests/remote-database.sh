@@ -119,7 +119,7 @@ http {
     ssl_certificate /etc/nginx/proxy.crt;
     ssl_certificate_key /etc/nginx/proxy.key;
     location / {
-      proxy_pass http://rpm-app:3002;
+      proxy_pass http://rpm-app:3000;
       proxy_set_header Host $host;
       proxy_set_header X-Forwarded-Proto https;
     }

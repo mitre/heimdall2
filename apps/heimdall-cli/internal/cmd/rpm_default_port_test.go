@@ -12,8 +12,9 @@ func TestSetupRPMDefaultPortResolution(t *testing.T) {
 		rpm, configured             bool
 	}{
 		{name: "fresh standalone", want: "3000"},
-		{name: "fresh RPM", rpm: true, want: "3002"},
-		{name: "RPM template", rpm: true, saved: "3002", want: "3002"},
+		{name: "fresh RPM", rpm: true, want: "3000"},
+		{name: "RPM template", rpm: true, saved: "3000", want: "3000"},
+		{name: "RPM saved previous default", rpm: true, saved: "3002", want: "3002"},
 		{name: "fresh RPM saved legacy port", rpm: true, saved: "3000", want: "3000"},
 		{name: "fresh RPM saved custom port", rpm: true, saved: "3210", want: "3210"},
 		{name: "configured RPM implicit legacy port", rpm: true, configured: true, want: "3000"},
@@ -22,7 +23,7 @@ func TestSetupRPMDefaultPortResolution(t *testing.T) {
 		{name: "fresh RPM explicit legacy default", rpm: true, argument: "3000", want: "3000"},
 		{name: "fresh RPM explicit custom port", rpm: true, argument: "3456", want: "3456"},
 		{name: "RPM explicit legacy default beats saved", rpm: true, saved: "3210", argument: "3000", want: "3000"},
-		{name: "RPM explicit new default beats saved", rpm: true, saved: "3210", argument: "3002", want: "3002"},
+		{name: "RPM explicit previous default beats saved", rpm: true, saved: "3210", argument: "3002", want: "3002"},
 		{name: "standalone explicit port beats saved", saved: "3210", argument: "3000", want: "3000"},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -61,8 +62,8 @@ func TestSetupRPMDefaultPortDirectRunner(t *testing.T) {
 	}{
 		{name: "empty standalone", want: "3000"},
 		{name: "initialized standalone", initial: "3000", want: "3000"},
-		{name: "empty RPM", rpm: true, want: "3002"},
-		{name: "initialized RPM", rpm: true, initial: "3000", want: "3002"},
+		{name: "empty RPM", rpm: true, want: "3000"},
+		{name: "initialized RPM", rpm: true, initial: "3000", want: "3000"},
 		{name: "initialized RPM saved port", rpm: true, initial: "3000", saved: "3210", want: "3210"},
 		{name: "RPM saved legacy", rpm: true, saved: "3000", want: "3000"},
 		{name: "RPM custom override", rpm: true, initial: "3456", saved: "3210", want: "3456"},
@@ -88,28 +89,24 @@ func TestSetupRPMDefaultPortDirectRunner(t *testing.T) {
 	}
 }
 
-func TestSetupRPMDefaultAvoidsStockSELinuxPort(t *testing.T) {
+func TestSetupRPMDefaultRejectsStockSELinuxPort(t *testing.T) {
 	r, _, _ := newTestSetupRunner()
 	fs := r.FS.(*FakeFileSystem)
 	fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
 	fs.Files["/sys/fs/selinux/enforce"] = []byte("1")
 	exec := r.Exec.(*FakeExecRunner)
 	exec.Results["semanage port -l"] = FakeExecResult{Stdout: "ntop_port_t tcp 3000-3001\nhttp_port_t tcp 80,443\npostgresql_port_t tcp 5432\n"}
+	unchanged := assertSetupPortUnchanged(t, r)
 	command := NewSetupCmd(r)
 	command.SetArgs([]string{"--non-interactive", "--reconfigure"})
-	require.NoError(t, command.Execute())
-	require.Equal(t, "3002", r.Env.(*FakeEnvManager).Env["PORT"])
-	for _, call := range exec.Calls {
-		if call.Name == "semanage" {
-			require.Equal(t, []string{"port", "-l"}, call.Args)
-		}
-	}
+	require.ErrorContains(t, command.Execute(), "ntop_port_t")
+	unchanged()
 }
 
 func TestSetupRPMDefaultPortConflictsStillFailBeforeMutation(t *testing.T) {
 	for _, tc := range []rpmPortConflict{
-		{name: "default occupied", port: "3002", problem: "occupied", occupied: true},
-		{name: "default SELinux conflict", port: "3002", problem: "other_port_t"},
+		{name: "default occupied", port: "3000", problem: "occupied", occupied: true},
+		{name: "default SELinux conflict", port: "3000", problem: "other_port_t"},
 		{name: "explicit legacy SELinux conflict", argument: "3000", port: "3000", problem: "other_port_t"},
 		{name: "saved legacy SELinux conflict", saved: "3000", port: "3000", problem: "other_port_t"},
 	} {

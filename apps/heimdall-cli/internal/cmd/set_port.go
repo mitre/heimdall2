@@ -73,7 +73,7 @@ func (r *SetPortRunner) Run(portStr string) (err error) {
 		}
 		err = errors.Join(err, r.rollbackPortChange(env, before, proxy, wrote, restarted, bundled, rollbackFirewall))
 	}()
-	rollbackFirewall, err = setup.configureFirewall(portStr, env["HEIMDALL_PROXY_MODE"], oldPort, env["EXTERNAL_URL"])
+	rollbackFirewall, err = setup.configureFirewall(portStr, env["HEIMDALL_PROXY_MODE"], env["EXTERNAL_URL"])
 	if err != nil {
 		return err
 	}

@@ -29,7 +29,7 @@ compilation alone does not establish successful loading or runtime confinement.
   permits traversal to its configuration, management of HTTP state, and reverse
   proxy connections to `heimdall_server_port_t`.
 - **heimdall_server_port_t** — the TCP port type registered for the
-  application listen port (fresh RPM default TCP 3002).
+  application listen port (fresh RPM default TCP 3000).
 - **postgresql_port_t** — the TCP port type for the selected private database
   port (default TCP 55432); external database ports must also permit connection.
 - **http_port_t** — the HTTP/HTTPS listeners, normally TCP 80 and 443.
@@ -152,8 +152,10 @@ interfaces, so an independently opened port permits direct HTTP access.
 The CLI records its owned TCP port rules for backend or custom public endpoints
 in `/etc/heimdall-server/firewalld-ports` and removes obsolete owned rules when
 changing ports or proxy endpoints, or switching to a managed proxy. It preserves
-administrator-created rules. If an existing explicit rule exposes the backend port during managed proxy setup,
-the command stops and prints the exact cleanup command for operator review.
+administrator-created rules, including rules for a previous port that is no longer
+selected. Only an unowned explicit rule allowing the selected backend port blocks
+managed proxy setup. The error identifies that selected port and offers choosing
+another port or reviewing the exact cleanup command.
 
 ## Enabling Audit Rules
 

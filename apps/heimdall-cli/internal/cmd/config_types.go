@@ -44,9 +44,8 @@ const ServiceName = "heimdall-server"
 
 // Default port constants.
 const (
-	DefaultAppPort    = "3000"
-	DefaultRPMAppPort = "3002"
-	DefaultDBPort     = 5432
+	DefaultAppPort = "3000"
+	DefaultDBPort  = 5432
 )
 
 // SecretsSet lists env keys whose values must be masked in output.

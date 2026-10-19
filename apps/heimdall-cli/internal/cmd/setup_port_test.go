@@ -16,7 +16,7 @@ func TestSetupBackendPortDefaultsOverridesAndPersistence(t *testing.T) {
 		name, saved, argument, want string
 		explicit                    bool
 	}{
-		{name: "fresh default", want: "3002"},
+		{name: "fresh default", want: "3000"},
 		{name: "saved", saved: "3210", want: "3210"},
 		{name: "override", saved: "3210", argument: "3456", explicit: true, want: "3456"},
 		{name: "explicit default", saved: "3210", argument: "3000", explicit: true, want: "3000"},
@@ -44,7 +44,7 @@ func TestSetupBackendPortDefaultsOverridesAndPersistence(t *testing.T) {
 
 func TestSetupBackendPortInteractiveDefaults(t *testing.T) {
 	for _, tc := range []struct{ name, saved, argument, input, wantDefault, want string }{
-		{name: "fresh", wantDefault: "3002", want: "3002"},
+		{name: "fresh", wantDefault: "3000", want: "3000"},
 		{name: "saved", saved: "3210", wantDefault: "3210", want: "3210"},
 		{name: "flag overrides saved", saved: "3210", argument: "3000", wantDefault: "3000", want: "3000"},
 		{name: "answer overrides saved", saved: "3210", input: "3456", wantDefault: "3210", want: "3456"},
@@ -167,7 +167,7 @@ func TestSetupBackendPortPromptBeforeSummary(t *testing.T) {
 			}
 			cmd.SetArgs(args)
 			require.ErrorIs(t, cmd.Execute(), cancelled)
-			assert.Equal(t, []string{"3002"}, p.defaults)
+			assert.Equal(t, []string{"3000"}, p.defaults)
 			assert.Empty(t, r.Env.(*FakeEnvManager).Env)
 			assert.NotContains(t, out.String(), "=== Step ")
 		})

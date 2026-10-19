@@ -39,8 +39,9 @@ and HTTPS proxies are also supported.
   x86_64 or aarch64 architecture. Match the RPM to the host's EL major and architecture.
 - At least 2 GB RAM; 4 GB is preferable for a small deployment. Allow disk space
   for application data, PostgreSQL and backups.
-- DNF configured with an approved OS package source for the host's distribution,
-  release and architecture: RHEL repositories, an internal mirror or local media.
+- OS dependencies already installed, or DNF configured with an approved package
+  source for the host's distribution, release and architecture: RHEL repositories,
+  an internal mirror or local media.
   The host supplies its kernel, systemd, RPM/DNF, glibc, foundational libraries
   and SELinux policy. OS dependency RPMs are not included in the Heimdall bundle.
 - For an external database: PostgreSQL 13–18 and a role permitted to create the
@@ -48,7 +49,7 @@ and HTTPS proxies are also supported.
 
 CI tests Rocky Linux. RHEL and older minor/EUS releases need separate
 qualification; see [acceptance status](BUILD.md#acceptance-status). DNF resolves
-dependencies from the host's configured approved OS source. Inspect exact
+missing dependencies from the host's configured approved OS source. Inspect exact
 requirements with `rpm -qp --requires ./RPMS/*/heimdall-server-*.rpm`.
 
 ## Install an RPM
@@ -75,11 +76,31 @@ with [setup](#setup) or [manual installation](#manual-installation).
 
 ## Disconnected installation
 
-Configure DNF to use an approved internal mirror reachable from the host or a
-local-media repository containing the OS dependencies. Use packages for the
+If using an approved internal mirror reachable from the host or a local-media
+repository, configure DNF to obtain OS dependencies there. Use packages for the
 host's distribution, release and architecture. Transfer the Heimdall bundle from
 a trusted workflow run, then follow [Install an RPM](#install-an-rpm); keep the
 configured OS source enabled during installation and upgrades.
+
+For a host with no repository access, install all OS prerequisites from an
+approved source before disconnecting. The Heimdall bundle does not include OS
+dependency RPMs. Transfer and extract the matching bundle from a trusted workflow
+run into a fresh directory, then run these commands there:
+
+```sh
+sha256sum --check SHA256SUMS &&
+sudo rpm --import RPM-TEST-GPG-KEY &&
+sudo dnf install --disablerepo='*' --setopt=install_weak_deps=False \
+  --setopt=localpkg_gpgcheck=1 ./RPMS/*/heimdall-server-*.rpm &&
+rpm -q heimdall-server
+```
+
+This disables all repositories while retaining dependency and local RPM signature
+checks. It is the prepared-host installation path exercised by the
+[CI lifecycle test](BUILD.md#dnf-and-systemd-acceptance). If dependencies are
+missing, provision them from an approved OS source before retrying. For upgrades,
+use the same DNF options with `dnf upgrade` after provisioning any new OS
+dependencies.
 
 Do not proceed after a failed installation or bypass dependency checks with
 `rpm --nodeps`.
@@ -103,7 +124,7 @@ replacing the hostname:
 
 ```dotenv
 NODE_ENV=production
-PORT=3002
+PORT=3000
 EXTERNAL_URL=https://heimdall.example.com
 HEIMDALL_DATABASE_MODE=bundled
 HEIMDALL_PROXY_MODE=nginx
@@ -162,9 +183,11 @@ sudo heimdall-cli setup --non-interactive \
 ```
 
 Replace the hostname with the address clients use. Fresh RPM installations default
-to backend port **3002**; saved and legacy ports remain unchanged. Nginx listens on
+to backend port **3000**; saved and legacy ports remain unchanged. Nginx listens on
 **443**; Caddy uses its configured public HTTPS endpoint. Setup rejects listener
 or SELinux port conflicts; choose another available backend port if needed.
+Stock EL SELinux policy may reserve ports 3000–3001 as `ntop_port_t`. If setup
+reports that conflict, use `--port 3005` or another available port.
 The selected public HTTPS port must also be available for a managed proxy.
 
 Explicit flags override saved values, which override defaults. Normal reruns
@@ -185,7 +208,7 @@ opening setup; the wizard requires `setup --interactive`.
 sudo heimdall-cli status
 sudo systemctl status heimdall-server --no-pager
 curl -fsS --retry 30 --retry-connrefused --retry-delay 1 \
-  --retry-max-time 60 --max-time 5 http://localhost:3002/server
+  --retry-max-time 60 --max-time 5 http://localhost:3000/server
 ```
 
 `active` means running; `enabled` means configured to start at boot. Successful
@@ -231,7 +254,7 @@ sudo heimdall-cli validate && sudo systemctl restart heimdall-server
 Keep the file `root:heimdall`, mode `0640`. See the
 [configuration reference](man/heimdall-server-backend.env.5.md) for available keys.
 
-To set the backend port, use `sudo heimdall-cli set-port 3002`. This updates host
+To set the backend port, use `sudo heimdall-cli set-port 3000`. This updates host
 port integration and the managed proxy's upstream; Nginx remains on 443 and
 Caddy retains its configured public HTTPS endpoint.
 An external proxy's operator must update its upstream separately.

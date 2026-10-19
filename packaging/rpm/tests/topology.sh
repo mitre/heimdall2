@@ -4,7 +4,7 @@ set -euo pipefail
 [[ ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 ]] || exit 64
 db_mode=${1:?database mode}
 proxy_mode=${2:?proxy mode}
-backend_port=${3:-3002}
+backend_port=${3:-3000}
 [[ $db_mode == bundled || $db_mode == external ]] || exit 64
 [[ $proxy_mode == nginx || $proxy_mode == bundled || $proxy_mode == external ]] || exit 64
 runtime=/usr/libexec/heimdall-server/runtime

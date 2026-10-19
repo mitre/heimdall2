@@ -16,7 +16,7 @@ managing InSpec and other security scan results. It stores evaluation data
 in PostgreSQL and serves a web interface for reviewing, comparing, and
 sharing compliance results.
 
-The server listens on a configurable TCP port (fresh RPM default 3002) and is
+The server listens on a configurable TCP port (fresh RPM default 3000) and is
 typically deployed behind a TLS reverse proxy such as Caddy, nginx, or a
 load balancer. The RPM package ships a systemd service unit that runs the
 application as the unprivileged **heimdall** user with extensive security
@@ -253,14 +253,13 @@ The RPM ships a custom policy module that confines the service to the
 **heimdall_server_t** domain. Setup validates and registers the selected backend
 port as **heimdall_server_port_t**, refusing assignments owned by another service.
 Interactive setup asks for **Backend port**. Saved **PORT** wins; fresh RPM
-installations default to 3002, and configured legacy installations without
-**PORT** retain 3000.
+and configured legacy installations without **PORT** use 3000.
 Backend ports must be between 1024 and 65535; the application runs without
 privileged-port capabilities.
 Automated setup can set the backend port explicitly:
 
 ```bash
-sudo heimdall-cli setup --non-interactive --port 3002
+sudo heimdall-cli setup --non-interactive --port 3000
 ```
 
 Reruns and upgrades preserve the selected port. Nginx uses public HTTPS port 443;

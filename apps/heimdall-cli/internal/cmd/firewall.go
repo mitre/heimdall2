@@ -31,7 +31,7 @@ func (r firewallRule) record() string { return r.scope + " " + r.zone + " " + r.
 var firewallZone = regexp.MustCompile(`^[A-Za-z0-9_.-]+$`)
 
 // Track only exact TCP port rules this CLI created; pre-existing rules belong to the administrator.
-func (r *SetupRunner) configureFirewall(port, mode, previousPort, externalURL string) (func() error, error) {
+func (r *SetupRunner) configureFirewall(port, mode, externalURL string) (func() error, error) {
 	undo := func() error { return nil }
 	active, err := r.Systemd.IsActive("firewalld")
 	if err != nil {
@@ -71,7 +71,7 @@ func (r *SetupRunner) configureFirewall(port, mode, previousPort, externalURL st
 	}
 	managed := mode == "bundled" || mode == "nginx"
 	if managed {
-		if err := r.checkPrivateFirewallPorts(owned, []string{port, previousPort}); err != nil {
+		if err := r.checkPrivateFirewallPort(owned, port); err != nil {
 			return undo, err
 		}
 	}
@@ -171,7 +171,7 @@ func (r *SetupRunner) firewallZones(scope string) ([]string, error) {
 	return strings.Fields(zones), nil
 }
 
-func (r *SetupRunner) checkPrivateFirewallPorts(owned map[string]firewallRule, ports []string) error {
+func (r *SetupRunner) checkPrivateFirewallPort(owned map[string]firewallRule, port string) error {
 	for _, scope := range []string{"runtime", "permanent"} {
 		zones, err := r.firewallZones(scope)
 		if err != nil {
@@ -181,7 +181,7 @@ func (r *SetupRunner) checkPrivateFirewallPorts(owned map[string]firewallRule, p
 			if !firewallZone.MatchString(zone) {
 				return fmt.Errorf("invalid firewalld zone %q", zone)
 			}
-			if err := r.checkUnownedFirewallPorts(owned, scope, zone, ports); err != nil {
+			if err := r.checkUnownedFirewallPort(owned, scope, zone, port); err != nil {
 				return err
 			}
 		}
@@ -189,19 +189,14 @@ func (r *SetupRunner) checkPrivateFirewallPorts(owned map[string]firewallRule, p
 	return nil
 }
 
-func (r *SetupRunner) checkUnownedFirewallPorts(owned map[string]firewallRule, scope, zone string, ports []string) error {
-	for _, port := range ports {
-		if port == "" {
-			continue
-		}
-		rule := firewallRule{scope, zone, "port", port + "/tcp"}
-		exists, err := r.firewallRulePresent(rule)
-		if err != nil {
-			return err
-		}
-		if _, ours := owned[rule.record()]; exists && !ours {
-			return fmt.Errorf("backend TCP port %s is exposed by an unowned firewalld rule; review and remove it before managed HTTPS setup: sudo firewall-cmd %s", port, strings.Join(rule.args("remove"), " "))
-		}
+func (r *SetupRunner) checkUnownedFirewallPort(owned map[string]firewallRule, scope, zone, port string) error {
+	rule := firewallRule{scope, zone, "port", port + "/tcp"}
+	exists, err := r.firewallRulePresent(rule)
+	if err != nil {
+		return err
+	}
+	if _, ours := owned[rule.record()]; exists && !ours {
+		return fmt.Errorf("selected backend TCP port %s is allowed by an unowned firewalld rule; choose another backend port or review and remove this rule before managed HTTPS setup: sudo firewall-cmd %s", port, strings.Join(rule.args("remove"), " "))
 	}
 	return nil
 }

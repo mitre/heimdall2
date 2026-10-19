@@ -51,7 +51,7 @@ sudo heimdall-cli setup --non-interactive \
 ```
 
 Configure an external proxy to forward to the configured application port
-(default `http://127.0.0.1:3002`). `--proxy-mode none` retains HTTP-only development
+(default `http://127.0.0.1:3000`). `--proxy-mode none` retains HTTP-only development
 operation. Managed Nginx (`--proxy-mode nginx`) automatically creates a
 self-signed certificate and works offline; clients must trust its public
 certificate. Bundled Caddy supports `--tls-mode acme`, `internal`, or `custom`;

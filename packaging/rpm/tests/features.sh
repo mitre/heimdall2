@@ -3,7 +3,7 @@ set -euo pipefail
 [[ -e /.dockerenv && ${HEIMDALL_RPM_TEST:-} == 1 && $EUID == 0 ]] || exit 64
 runtime=/usr/libexec/heimdall-server/runtime
 source /etc/heimdall-server/backend.env
-original_port=${PORT:-3002}
+original_port=${PORT:-3000}
 [[ $DATABASE_NAME == heimdall-server-production ]]
 pg=(runuser -u heimdall-postgres -- "$runtime/postgresql/bin/psql"
   -h /run/heimdall-postgresql -p 55432 -U heimdall-postgres -v ON_ERROR_STOP=1 -At)

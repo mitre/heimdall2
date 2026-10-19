@@ -150,15 +150,58 @@ func TestManagedProxySkipTLSKeepsBackendPrivate(t *testing.T) {
 	assert.False(t, e.rules["runtime public 3210/tcp"])
 	assert.False(t, e.rules["permanent public 3210/tcp"])
 }
+func TestManagedProxyPortChangePreservesUnownedPreviousPort(t *testing.T) {
+	for _, mode := range []string{"nginx", "bundled"} {
+		for _, command := range []string{"setup", "set-port"} {
+			t.Run(mode+"/"+command, func(t *testing.T) {
+				r, e := firewallFixture(t, mode)
+				r.Env.(*FakeEnvManager).Env["PORT"] = "3002"
+				e.rules["runtime public 3002/tcp"], e.rules["permanent dmz 3002/tcp"] = true, true
+				if command == "setup" {
+					require.NoError(t, firewallSetup(t, r, "--port=3005"))
+				} else {
+					require.NoError(t, firewallSetPort(r, "3005"))
+				}
+				assert.Equal(t, "3005", r.Env.(*FakeEnvManager).Env["PORT"])
+				assert.True(t, e.rules["runtime public 3002/tcp"])
+				assert.True(t, e.rules["permanent dmz 3002/tcp"])
+				assert.False(t, r.FS.Exists(r.Paths.ConfigDir+"/firewalld-ports"))
+				for _, scope := range []string{"runtime", "permanent"} {
+					assert.True(t, e.rules[scope+" public https"])
+					assert.False(t, e.rules[scope+" public 3005/tcp"])
+				}
+			})
+		}
+	}
+}
+func TestInteractiveSetupIgnoresUnownedTemplatePort(t *testing.T) {
+	r, e := firewallFixture(t, "nginx")
+	r.Env.(*FakeEnvManager).Env = map[string]string{"PORT": "3002"}
+	p := &FakePrompter{IsTTY: true, Inputs: map[string]string{"Backend port": "3005"}}
+	r.Prompter = p
+	e.rules["runtime public 3002/tcp"], e.rules["permanent public 3002/tcp"] = true, true
+	command := NewSetupCmd(r)
+	command.SetArgs([]string{"--interactive"})
+	require.NoError(t, command.Execute())
+	assert.Equal(t, "3002", p.InputDefaults["Backend port"])
+	assert.Equal(t, "3005", r.Env.(*FakeEnvManager).Env["PORT"])
+	for _, scope := range []string{"runtime", "permanent"} {
+		assert.True(t, e.rules[scope+" public 3002/tcp"])
+		assert.True(t, e.rules[scope+" public https"])
+		assert.False(t, e.rules[scope+" public 3005/tcp"])
+	}
+}
 func TestBackendFirewallOwnershipSurvivesTopologyChange(t *testing.T) {
 	r, e := firewallFixture(t, "none")
 	e.rules["runtime dmz 9000/tcp"], e.rules["permanent public 9001/tcp"] = true, true
 	require.NoError(t, firewallSetup(t, r, "--proxy-mode=none"))
 	require.True(t, e.rules["runtime public 3210/tcp"])
 	require.True(t, e.rules["permanent public 3210/tcp"])
-	require.NoError(t, firewallSetup(t, r, "--proxy-mode=nginx"))
+	require.NoError(t, firewallSetup(t, r, "--proxy-mode=nginx", "--port=3456"))
 	assert.False(t, e.rules["runtime public 3210/tcp"])
 	assert.False(t, e.rules["permanent public 3210/tcp"])
+	assert.False(t, e.rules["runtime public 3456/tcp"])
+	assert.False(t, e.rules["permanent public 3456/tcp"])
 	assert.True(t, e.rules["runtime dmz 9000/tcp"])
 	assert.True(t, e.rules["permanent public 9001/tcp"])
 }
@@ -170,6 +213,8 @@ func TestManagedProxyRejectsUnownedBackendRule(t *testing.T) {
 			before := maps.Clone(e.rules)
 			err := firewallSetPort(r, "3456")
 			require.Error(t, err)
+			assert.Contains(t, err.Error(), "selected backend TCP port 3456")
+			assert.Contains(t, err.Error(), "choose another backend port")
 			assert.Contains(t, err.Error(), "--zone=dmz")
 			assert.Contains(t, err.Error(), "--remove-port=3456/tcp")
 			assert.Equal(t, before, e.rules)

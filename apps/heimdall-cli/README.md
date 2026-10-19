@@ -82,9 +82,8 @@ supported, using the private version-18 clients. Newer servers require a newer
 compatible RPM/client; setup and backup refuse them.
 
 Interactive setup displays each backend port, public URL, JWT expiration, and local
-certificate lifetime default. **Backend port** uses saved `PORT`, otherwise `3002`
-for a fresh RPM installation or `3000` for standalone and configured legacy
-installations. Set `--port 3456` to override it non-interactively; an explicit
+certificate lifetime default. **Backend port** uses saved `PORT`, otherwise `3000`.
+Set `--port 3456` to override it non-interactively; an explicit
 `--port 3000` also overrides a saved custom value. Listener conflicts, incompatible
 SELinux assignments, and ports selected for the managed proxy or database are
 rejected before any configuration or service changes, including `--reconfigure`.
