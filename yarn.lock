@@ -11571,7 +11571,7 @@ joi@^17.4.0:
     "@sideway/formula" "^3.0.1"
     "@sideway/pinpoint" "^2.0.0"
 
-jose@^6.2.10:
+jose@^6.2.12:
   version "6.2.12"
   resolved "https://registry.yarnpkg.com/jose/-/jose-6.2.12.tgz#65663e146edd010b98ece83f81737d3aa95fd0d7"
   integrity sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==
@@ -14132,12 +14132,12 @@ number-is-nan@^1.0.0:
     "@nx/nx-win32-x64-msvc" "23.2.1"
 
 oauth2-mock-server@^9.0.0:
-  version "9.2.0"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-9.2.0.tgz#8de47eb2a86b72d71bd411d1faa56f524d8da808"
-  integrity sha512-LKxnpwOaqmiKIenr3Uweppy4vrsWt8fCA1il7VQEh0QJoCqb94nWBjjeUoMyHvMLnWoHKrx4T8EmTt0aBrE3TA==
+  version "9.3.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-9.3.0.tgz#6e5ffbd1bf0c9d2a2dace28a32c24f11393d8b9b"
+  integrity sha512-nqdjiAfDSWWWKrLhD7DSCgNUkX35z2+h1oRHEgNdZqFwHXDNZp98RVJ7Cs45u3GPplbazTeGoBsO8SPfv5GOIw==
   dependencies:
     basic-auth "^3.0.0"
-    jose "^6.2.10"
+    jose "^6.2.12"
 
 oauth@0.10.x, oauth@^0.10.0:
   version "0.10.2"
