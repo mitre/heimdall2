@@ -41,18 +41,42 @@ function skipSeverityNegligibleOrUnknown(controls: unknown[]): unknown[] {
 
 function description(data: Record<string, unknown>): string {
   const vulnerability = data.vulnerability as Record<string, unknown>;
-  const relatedVulnerabilities = data.relatedVulnerabilities as Record<
-    string,
-    unknown
-  >[];
-  if (!vulnerability.description && relatedVulnerabilities.length > 0) {
-    return relatedVulnerabilities.filter(
-      (relatedVulnerability) => relatedVulnerability.id === vulnerability.id
-    )[0].description as string;
-  } else if (vulnerability.description) {
+  if (vulnerability.description) {
     return vulnerability.description as string;
   }
-  return 'no description found';
+
+  const relatedVulnerabilities = data.relatedVulnerabilities as Record<string, unknown>[];
+  const describedVulnerabilities = relatedVulnerabilities.filter(
+    (relatedVulnerability) => relatedVulnerability.description
+  );
+  const [matchingVulnerabilities, otherVulnerabilities] = _.partition(
+    describedVulnerabilities,
+    (relatedVulnerability) => relatedVulnerability.id === vulnerability.id
+  );
+  const matchingDescriptions = matchingVulnerabilities.map(
+    (relatedVulnerability) => {
+      const relatedDescription = relatedVulnerability.description as string;
+      if (matchingVulnerabilities.length === 1) {
+        return relatedDescription;
+      }
+
+      const namespace = relatedVulnerability.namespace as string;
+      return `${namespace}\n${relatedDescription}`;
+    }
+  );
+  const otherDescriptions = otherVulnerabilities.map(
+    (relatedVulnerability) => {
+      const id = relatedVulnerability.id as string;
+      const relatedDescription = relatedVulnerability.description as string;
+      return `${id}\n${relatedDescription}`;
+    }
+  );
+  const combinedDescription = [
+    ...matchingDescriptions,
+    ...otherDescriptions
+  ].join('\n\n');
+
+  return combinedDescription || 'no description found';
 }
 
 export class AnchoreGrypeMapper extends BaseConverter {
