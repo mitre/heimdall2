@@ -38,6 +38,7 @@ const (
 //   - application role exists with a SCRAM-SHA-256 password
 //   - application database exists
 //   - password login over the scram-sha-256 pg_hba rule actually works
+//   - application role can create tables in the public schema
 //   - pg_hba.conf carries the Heimdall marker block
 //
 // Setup eventually fails at later steps (migrations need Node.js,
@@ -133,6 +134,14 @@ func TestPostgresBootstrap_FullFlow_RealRHEL(t *testing.T) {
 			require.Equal(t, 0, code, "password login failed: %s", loginOut)
 			require.Contains(t, loginOut, "1",
 				"SELECT 1 over password login must return 1")
+
+			// Migrations need table creation, which SELECT 1 does not verify.
+			ddlOut, code, err := execCtr("env", "PGPASSWORD="+integPGPass, "psql",
+				fmt.Sprintf("postgresql://%s@127.0.0.1:5432/%s", integPGUser, integPGDB),
+				"-v", "ON_ERROR_STOP=1", "-c",
+				"BEGIN; CREATE TABLE public.heimdall_bootstrap_probe (id integer); ROLLBACK;")
+			require.NoError(t, err)
+			require.Equal(t, 0, code, "application role cannot create migration tables: %s", ddlOut)
 
 			// pg_hba.conf must carry the Heimdall marker block. PGDG
 			// installs under /var/lib/pgsql/<major>/data — the binary

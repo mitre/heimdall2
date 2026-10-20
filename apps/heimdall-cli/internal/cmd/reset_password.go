@@ -3,16 +3,11 @@ package cmd
 import (
 	"fmt"
 	"io"
-	"regexp"
+	"net/mail"
 	"strings"
 
 	"github.com/spf13/cobra"
 )
-
-// emailPattern validates that an email address is well-formed and safe for
-// use in database queries. Rejects special characters that could be used
-// for SQL injection or command injection.
-var emailPattern = regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
 
 // ResetPasswordRunner holds dependencies for the reset-password command.
 type ResetPasswordRunner struct {
@@ -34,8 +29,9 @@ func (r *ResetPasswordRunner) Run(email, password string) error {
 			return err
 		}
 	}
-	// Validate email format to prevent SQL injection
-	if !emailPattern.MatchString(email) {
+	// Wrapping the addr-spec excludes display names and comments without banning quoted local parts.
+	_, err := mail.ParseAddress("<" + email + ">")
+	if err != nil || strings.TrimSpace(email) != email || strings.ContainsAny(email, "\r\n\x00") {
 		return fmt.Errorf("invalid email format")
 	}
 

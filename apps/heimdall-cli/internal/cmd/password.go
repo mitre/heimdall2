@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 	"strings"
-	"unicode"
+	"unicode/utf16"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -46,7 +46,8 @@ func (h *BcryptHasher) Verify(password, hashedPassword string) (bool, error) {
 func ValidatePassword(password string, rules PasswordRules) []string {
 	var errs []string
 
-	if len(password) < rules.MinLength {
+	// Match JavaScript's UTF-16 length and ASCII character classes.
+	if len(utf16.Encode([]rune(password))) < rules.MinLength {
 		errs = append(errs, fmt.Sprintf("Password must be at least %d characters", rules.MinLength))
 	}
 
@@ -55,12 +56,12 @@ func ValidatePassword(password string, rules PasswordRules) []string {
 	hasDigit := false
 	hasSpecial := false
 	for _, ch := range password {
-		switch {
-		case unicode.IsLower(ch):
+		switch charClass(ch) {
+		case 0:
 			hasLower = true
-		case unicode.IsUpper(ch):
+		case 1:
 			hasUpper = true
-		case unicode.IsDigit(ch):
+		case 2:
 			hasDigit = true
 		default:
 			hasSpecial = true
@@ -86,11 +87,11 @@ func ValidatePassword(password string, rules PasswordRules) []string {
 // charClass returns a class identifier for the character.
 func charClass(ch rune) int {
 	switch {
-	case unicode.IsLower(ch):
+	case ch >= 'a' && ch <= 'z':
 		return 0
-	case unicode.IsUpper(ch):
+	case ch >= 'A' && ch <= 'Z':
 		return 1
-	case unicode.IsDigit(ch):
+	case ch >= '0' && ch <= '9':
 		return 2
 	default:
 		return 3
@@ -102,14 +103,14 @@ func hasConsecutiveRun(password string, maxConsec int) bool {
 	if maxConsec <= 0 {
 		return false
 	}
-	runes := []rune(password)
-	if len(runes) == 0 {
+	units := utf16.Encode([]rune(password))
+	if len(units) == 0 {
 		return false
 	}
 	run := 1
-	prevClass := charClass(runes[0])
-	for i := 1; i < len(runes); i++ {
-		cls := charClass(runes[i])
+	prevClass := charClass(rune(units[0]))
+	for i := 1; i < len(units); i++ {
+		cls := charClass(rune(units[i]))
 		if cls == prevClass {
 			run++
 			if run >= maxConsec {

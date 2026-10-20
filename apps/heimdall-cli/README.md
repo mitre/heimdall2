@@ -117,8 +117,10 @@ sudo heimdall-cli setup --non-interactive \
   --external-url https://heimdall.example.test
 ```
 
-Saved selections and secrets are reused. Explicit flags override saved settings;
-a configured installation without ownership keys defaults to external/external.
+Saved selections and secrets are reused. Setup database settings use explicit flags,
+then `HEIMDALL_DB_*` environment variables, then `db-*` values in the CLI YAML
+configuration, then saved settings, and finally defaults. A configured installation
+without ownership keys defaults to external/external.
 `--skip-db` and `--skip-tls` skip work temporarily without changing ownership.
 `--dry-run` makes no changes; `--reconfigure` writes settings only. Apply topology
 changes with a subsequent full setup. Database ownership changes do not transfer

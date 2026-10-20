@@ -50,6 +50,29 @@ func TestValidatePassword_Valid(t *testing.T) {
 	assert.Empty(t, errs)
 }
 
+func TestValidatePassword_MatchesApplicationUnicodeRules(t *testing.T) {
+	for _, tc := range []struct {
+		name     string
+		password string
+		valid    bool
+	}{
+		{"multibyte characters do not satisfy minimum length", "aéA1!éA1!éA1!", false},
+		{"Unicode lowercase does not replace ASCII lowercase", "éA1!éA1!éA1!éA1!", false},
+		{"Unicode uppercase does not replace ASCII uppercase", "aÉ1!aÉ1!aÉ1!aÉ1!", false},
+		{"Unicode digits do not replace ASCII digits", "aB١!aB١!aB١!aB١!", false},
+		{"non-ASCII letters supply the special class", "aB1éaB1éaB1éaB1é", true},
+		{"mixed Unicode characters form a special-class run", "aB1!éÉ١中aB1!cD2@", false},
+		{"surrogate pairs count twice toward minimum length", "aB1😀cD2😀eF3😀", true},
+		{"two surrogate pairs form a four-unit special run", "aB1😀😀cD2@eF3#", false},
+		{"three special UTF-16 units are permitted", "aB1😀!cD2@eF3#gH", true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			errs := ValidatePassword(tc.password, DefaultPasswordRules())
+			assert.Equal(t, tc.valid, len(errs) == 0, "validation errors: %v", errs)
+		})
+	}
+}
+
 func TestValidatePassword_ExactlyAtConsecutiveLimit(t *testing.T) {
 	rules := DefaultPasswordRules() // MaxConsecutive=4
 	// 3 consecutive lowercase is OK

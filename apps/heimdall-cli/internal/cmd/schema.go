@@ -107,7 +107,8 @@ func schemaEntries() []ConfigEntry {
 		{Key: "LOCAL_LOGIN_DISABLED", Category: "auth", Type: "bool", Default: "false", Description: "Disable local username/password login."},
 		{Key: "REGISTRATION_DISABLED", Category: "auth", Type: "bool", Default: "false", Description: "Disable public user registration."},
 		{Key: "ONE_SESSION_PER_USER", Category: "auth", Type: "bool", Default: "false", Description: "Only allow one active session per user."},
-		{Key: "MAX_FILE_UPLOAD_SIZE", Category: "auth", Type: "int", Default: "50", Description: "Maximum evaluation upload size in MB."},
+		// Whole MiB whose byte counts fit JavaScript's maximum safe integer.
+		{Key: "MAX_FILE_UPLOAD_SIZE", Category: "auth", Type: "int", Default: "50", Validation: "1-8589934591", Description: "Maximum evaluation upload size in MiB."},
 
 		// UI / Branding
 		{Key: "WARNING_BANNER", Category: "ui", Type: "str", Default: "", Description: "Warning banner text displayed to users."},
@@ -260,7 +261,7 @@ func validateJWTDuration(value string) error {
 
 func validateInteger(entry ConfigEntry, key, value string) error {
 	n, err := strconv.Atoi(value)
-	if err != nil {
+	if err != nil || (key == "MAX_FILE_UPLOAD_SIZE" && strings.HasPrefix(value, "+")) {
 		return fmt.Errorf("%s must be an integer", key)
 	}
 	if entry.Validation != "" {

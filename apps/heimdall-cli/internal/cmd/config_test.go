@@ -293,3 +293,41 @@ func TestConfigRootPathOverrides(t *testing.T) {
 	require.NoError(t, err)
 	require.Contains(t, out, "PORT=3210")
 }
+
+func TestConfigSetUploadSizeRejectsInvalidValuesWithoutChangingFile(t *testing.T) {
+	for _, value := range []string{"", "0", "-1", "+50", "1.5", "1e2", "50MiB", " 50", "50 ", "8589934592", "9223372036854775807", "18446744073709551616"} {
+		t.Run(value, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "backend.env")
+			original := []byte("# Keep this setting\nMAX_FILE_UPLOAD_SIZE=50\nJWT_SECRET=keep\n")
+			require.NoError(t, os.WriteFile(path, original, 0600))
+			cmd := NewConfigCmd(&ConfigRunner{Env: &FileEnvManager{Path: path}})
+			cmd.SetOut(new(bytes.Buffer))
+			cmd.SetErr(new(bytes.Buffer))
+			cmd.SetArgs([]string{"set", "--", "MAX_FILE_UPLOAD_SIZE", value})
+
+			require.ErrorContains(t, cmd.Execute(), "MAX_FILE_UPLOAD_SIZE")
+			current, err := os.ReadFile(path)
+			require.NoError(t, err)
+			require.Equal(t, original, current)
+		})
+	}
+}
+
+func TestConfigSetUploadSizeAcceptsBackendRange(t *testing.T) {
+	for _, value := range []string{"1", "50", "00050", "8589934591"} {
+		t.Run(value, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "backend.env")
+			require.NoError(t, os.WriteFile(path, []byte("MAX_FILE_UPLOAD_SIZE=50\n"), 0600))
+			env := &FileEnvManager{Path: path}
+			cmd := NewConfigCmd(&ConfigRunner{Env: env})
+			cmd.SetOut(new(bytes.Buffer))
+			cmd.SetErr(new(bytes.Buffer))
+			cmd.SetArgs([]string{"set", "MAX_FILE_UPLOAD_SIZE", value})
+
+			require.NoError(t, cmd.Execute())
+			values, err := env.ReadEnv()
+			require.NoError(t, err)
+			require.Equal(t, value, values["MAX_FILE_UPLOAD_SIZE"])
+		})
+	}
+}

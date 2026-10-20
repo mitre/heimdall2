@@ -306,7 +306,7 @@ func (r *PostgresBootstrapRunner) verifyPasswordFormat(install *pgInstall) error
 
 // ensureDatabaseSQL creates the application database if it does not
 // already exist. Idempotent; uses psql -v binding for safety.
-const ensureDatabaseSQL = `SELECT format('CREATE DATABASE %I', :'db_name')
+const ensureDatabaseSQL = `SELECT format('CREATE DATABASE %I OWNER %I', :'db_name', :'db_user')
 WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = :'db_name') \gexec
 `
 
@@ -316,15 +316,9 @@ func (r *PostgresBootstrapRunner) ensureDatabase(install *pgInstall) error {
 		"-v", psqlStopOnError,
 		"-d", "postgres",
 		"-v", "db_name=" + r.DBName,
+		"-v", psqlUserVariable + r.DBUser,
 	}...)
-	sql := ensureDatabaseSQL
-	if install.OSUser != "" {
-		sql = `SELECT format('CREATE DATABASE %I OWNER %I', :'db_name', :'db_user')
-WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = :'db_name') \gexec
-`
-		args = append(args, "-v", psqlUserVariable+r.DBUser)
-	}
-	stdout, code, err := r.Exec.RunWithStdin(sql, "runuser", args...)
+	stdout, code, err := r.Exec.RunWithStdin(ensureDatabaseSQL, "runuser", args...)
 	if err != nil {
 		return fmt.Errorf("ensuring database: %w", err)
 	}

@@ -591,6 +591,25 @@ func TestPostgresBootstrap_EnsureDatabase_ErrorsOnPSQLFailure(t *testing.T) {
 	require.Contains(t, err.Error(), "connection refused")
 }
 
+func TestPostgresBootstrap_EnsureDatabase_AssignsApplicationOwner(t *testing.T) {
+	for _, osUser := range []string{"", "heimdall-postgres"} {
+		t.Run("os_user="+osUser, func(t *testing.T) {
+			r, exec, _, _, _ := newBootstrapForTest()
+			install := &pgInstall{PsqlBin: "/usr/bin/psql", OSUser: osUser}
+
+			require.NoError(t, r.ensureDatabase(install))
+
+			require.Len(t, exec.Calls, 1)
+			call := exec.Calls[0]
+			require.Contains(t, call.Stdin, "CREATE DATABASE %I OWNER %I",
+				"the application role must own the database to create tables on PostgreSQL 15+")
+			require.Contains(t, call.Stdin, ":'db_name', :'db_user'")
+			require.Contains(t, call.Args, "db_user=heimdall")
+			require.NotContains(t, call.Stdin, "heimdall")
+		})
+	}
+}
+
 func TestPostgresBootstrap_TestConnection_PassesPGPASSWORDViaEnv(t *testing.T) {
 	r, exec, _, _, _ := newBootstrapForTest()
 	r.DBHost = "127.0.0.1"

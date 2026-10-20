@@ -65,6 +65,28 @@ func TestResetPassword_ProvidedInvalidPassword(t *testing.T) {
 	assert.Contains(t, errOut.String(), "complexity requirements")
 }
 
+func TestResetPassword_AcceptsApplicationEmailForms(t *testing.T) {
+	for _, email := range []string{
+		"o'connor@example.com",
+		"user!#$%&'*+-/=?^_`{|}~@example.com",
+		"josé@example.com",
+		"user@例え.テスト",
+		`"quoted name"@example.com`,
+		`"o'connor; admin"@example.com`,
+	} {
+		t.Run(email, func(t *testing.T) {
+			exec := &FakeExecRunner{Results: map[string]FakeExecResult{"psql -h": {Stdout: "UPDATE 1"}}}
+			runner, out, _ := newResetPasswordRunner(exec, &FakeEnvManager{Env: map[string]string{"DATABASE_PASSWORD": "secret"}})
+			require.NoError(t, runner.Run(email, "aB1!cD2@eF3#gH4$"))
+			require.Len(t, exec.Calls, 1)
+			require.Contains(t, exec.Calls[0].Args, "email="+email)
+			require.Contains(t, exec.Calls[0].Stdin, "WHERE email = :'email'")
+			require.NotContains(t, exec.Calls[0].Stdin, email)
+			require.Contains(t, out.String(), "Password reset for "+email)
+		})
+	}
+}
+
 func TestResetPassword_NoDatabasePassword(t *testing.T) {
 	exec := &FakeExecRunner{Results: map[string]FakeExecResult{}}
 	env := &FakeEnvManager{Env: map[string]string{}}
@@ -116,6 +138,12 @@ func TestResetPassword_RejectsInvalidEmail(t *testing.T) {
 		{"spaces", "admin @test.com"},
 		{"newlines", "admin@test.com\nDROP TABLE"},
 		{"semicolons", "admin;evil@test.com"},
+		{"display name", "Admin <admin@test.com>"},
+		{"angle address", "<admin@test.com>"},
+		{"comment", "admin(comment)@test.com"},
+		{"leading whitespace", " admin@test.com"},
+		{"consecutive dots", "admin..test@example.com"},
+		{"NUL", "admin\x00@test.com"},
 	}
 
 	for _, tt := range tests {

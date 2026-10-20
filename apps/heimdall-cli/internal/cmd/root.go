@@ -108,6 +108,16 @@ FILES:
 		if err := initConfig(v, cfgFile); err != nil {
 			return err
 		}
+		if cmd.Name() == "setup" {
+			for _, name := range []string{flagDBHost, flagDBPort, flagDBUser, flagDBPassword, flagDBName} {
+				if !cmd.Flags().Changed(name) && v.IsSet(name) {
+					// Apply explicit configuration through the same validation and precedence as flags.
+					if err := cmd.Flags().Set(name, v.GetString(name)); err != nil {
+						return err
+					}
+				}
+			}
+		}
 		cmd.SetContext(context.WithValue(cmd.Context(), pathsContextKey{}, NewPathsFromViper(v)))
 		return nil
 	}
