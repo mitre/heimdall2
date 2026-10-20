@@ -15,6 +15,7 @@ import (
 
 const (
 	recoveryEnvFile     = "backend.env"
+	recoverySQLFile     = "database.sql"
 	recoveryNginxConfig = "nginx-config"
 )
 
@@ -127,7 +128,7 @@ func (r *RestoreRunner) Run(archive string) error {
 	if err != nil {
 		return err
 	}
-	sqlBackup := filepath.Join(restoreDir, "database.sql")
+	sqlBackup := filepath.Join(restoreDir, recoverySQLFile)
 	_, sqlErr := os.Stat(sqlBackup)
 	hasSQL := sqlErr == nil
 	rpm, err := r.Paths.hasRuntime(r.FS)
@@ -476,7 +477,7 @@ func validateRecoveryArchive(dest string) (string, error) {
 		return "", fmt.Errorf("archive requires regular backend.env")
 	}
 	if _, err := os.Stat(filepath.Join(root, recoverySQLFormatFile)); err == nil {
-		if info, err := os.Stat(filepath.Join(root, "database.sql")); err != nil || !info.Mode().IsRegular() {
+		if info, err := os.Stat(filepath.Join(root, recoverySQLFile)); err != nil || !info.Mode().IsRegular() {
 			return "", fmt.Errorf("%s requires regular database.sql", recoverySQLFormatFile)
 		}
 	}
@@ -521,7 +522,7 @@ func validateRecoveryEntry(root, path string, entry os.DirEntry) error {
 	}
 	top := strings.Split(rel, string(filepath.Separator))[0]
 	switch top {
-	case recoveryEnvFile, "database.sql", recoverySQLFormatFile:
+	case recoveryEnvFile, recoverySQLFile, recoverySQLFormatFile:
 		if rel != top || !entry.Type().IsRegular() {
 			return fmt.Errorf("invalid archive file: %s", rel)
 		}

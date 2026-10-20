@@ -129,15 +129,9 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 			return err
 		}
 	}
-	if dbCfg.Password != "" {
-		major, err := postgresServerMajor(r.Exec, r.Paths, r.FS, dbCfg)
-		if err != nil {
-			return fmt.Errorf("cannot back up database: %w", err)
-		}
-		binary, err = matchingDumpClient(r.Exec, r.FS, binary, major)
-		if err != nil {
-			return err
-		}
+	binary, err = r.compatibleDumpClient(dbCfg, binary)
+	if err != nil {
+		return err
 	}
 	ts := time.Now().Format("20060102-150405")
 	backupName := "heimdall-backup-" + ts
@@ -235,6 +229,17 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 	}
 	keepArchive = false
 	return nil
+}
+
+func (r *BackupRunner) compatibleDumpClient(cfg DBConfig, selected string) (string, error) {
+	if cfg.Password == "" {
+		return selected, nil
+	}
+	major, err := postgresServerMajor(r.Exec, r.Paths, r.FS, cfg)
+	if err != nil {
+		return "", fmt.Errorf("cannot back up database: %w", err)
+	}
+	return matchingDumpClient(r.Exec, r.FS, selected, major)
 }
 
 // Only these Heimdall-owned trees supplement the logical SQL backup.
@@ -527,7 +532,7 @@ func (r *BackupRunner) copyRecoveryEntry(root *os.Root, source, backupDir, name,
 
 func (r *BackupRunner) backupDatabase(dbCfg DBConfig, binary, backupDir string) error {
 	if dbCfg.Password != "" {
-		dumpFile := filepath.Join(backupDir, "database.sql")
+		dumpFile := filepath.Join(backupDir, recoverySQLFile)
 		pgEnv := dbCfg.PgEnv()
 		_, exitCode, err := r.Exec.RunWithEnv(pgEnv, binary,
 			"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, dbCfg.DBName, "-f", dumpFile, "--clean", "--if-exists")

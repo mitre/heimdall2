@@ -131,26 +131,32 @@ func (e *recoveryExec) RunWithEnv(env map[string]string, name string, args ...st
 		return "f", 0, nil
 	}
 	for i, arg := range args {
-		if arg == "-f" {
-			if filepath.Base(name) == "pg_dump" {
-				server, err := strconv.Atoi(e.version)
-				if err != nil {
-					return "", 1, err
-				}
-				version := "18.6"
-				if configured, ok := e.dumpVersions[name]; ok {
-					version = configured
-				}
-				sql := fmt.Sprintf("-- PostgreSQL database dump\n\n-- Dumped from database version %d.6\n-- Dumped by pg_dump version %s\n\n-- sentinel SQL\n", server/10000, version)
-				return "", 0, os.WriteFile(args[i+1], []byte(sql), 0600)
-			}
-			data, err := os.ReadFile(args[i+1])
-			e.sql = string(data)
-			return "", 0, err
+		if arg != "-f" {
+			continue
 		}
+		if filepath.Base(name) == "pg_dump" {
+			return e.writeDump(name, args[i+1])
+		}
+		data, err := os.ReadFile(args[i+1])
+		e.sql = string(data)
+		return "", 0, err
 	}
 	return "", 1, fmt.Errorf("unexpected database command %s", key)
 }
+
+func (e *recoveryExec) writeDump(name, path string) (string, int, error) {
+	server, err := strconv.Atoi(e.version)
+	if err != nil {
+		return "", 1, err
+	}
+	version := "18.6"
+	if configured, ok := e.dumpVersions[name]; ok {
+		version = configured
+	}
+	sql := fmt.Sprintf("-- PostgreSQL database dump\n\n-- Dumped from database version %d.6\n-- Dumped by pg_dump version %s\n\n-- sentinel SQL\n", server/10000, version)
+	return "", 0, os.WriteFile(path, []byte(sql), 0600)
+}
+
 func (e *recoveryExec) RunWithEnvAndStdin(map[string]string, string, string, ...string) (string, int, error) {
 	return "", 1, fmt.Errorf("unexpected stdin command")
 }

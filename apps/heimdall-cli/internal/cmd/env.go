@@ -87,36 +87,9 @@ func (m *FileEnvManager) WriteEnvFile(entries map[string]string) error {
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
-	encoded := make(map[string]string, len(entries))
-	for key, value := range entries {
-		if !envKeyPattern.MatchString(key) {
-			return fmt.Errorf("invalid environment key %q", key)
-		}
-		encoded[key], err = encodeEnvValue(value)
-		if err != nil {
-			return err
-		}
-	}
-
-	seen := make(map[string]bool)
-	var lines []string
-	if len(data) != 0 {
-		lines = strings.Split(strings.TrimSuffix(string(data), "\n"), "\n")
-	}
-	updateEnvLines(lines, entries, encoded, seen)
-	var missing []string
-	for key := range entries {
-		if !seen[key] {
-			missing = append(missing, key)
-		}
-	}
-	sort.Strings(missing)
-	for _, key := range missing {
-		lines = append(lines, key+"="+encoded[key])
-	}
-	content := strings.Join(lines, "\n")
-	if len(missing) != 0 || strings.HasSuffix(string(data), "\n") {
-		content += "\n"
+	content, err := updateEnvContent(data, entries)
+	if err != nil {
+		return err
 	}
 	// Keep the previous secrets intact until the complete replacement is durable.
 	file, err := os.CreateTemp(filepath.Dir(path), ".backend.env-*")
@@ -154,6 +127,42 @@ func (m *FileEnvManager) WriteEnvFile(entries map[string]string) error {
 		return err
 	}
 	return dir.Sync()
+}
+
+func updateEnvContent(data []byte, entries map[string]string) (string, error) {
+	encoded := make(map[string]string, len(entries))
+	for key, value := range entries {
+		if !envKeyPattern.MatchString(key) {
+			return "", fmt.Errorf("invalid environment key %q", key)
+		}
+		var err error
+		encoded[key], err = encodeEnvValue(value)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	seen := make(map[string]bool)
+	var lines []string
+	if len(data) != 0 {
+		lines = strings.Split(strings.TrimSuffix(string(data), "\n"), "\n")
+	}
+	updateEnvLines(lines, entries, encoded, seen)
+	var missing []string
+	for key := range entries {
+		if !seen[key] {
+			missing = append(missing, key)
+		}
+	}
+	sort.Strings(missing)
+	for _, key := range missing {
+		lines = append(lines, key+"="+encoded[key])
+	}
+	content := strings.Join(lines, "\n")
+	if len(missing) != 0 || strings.HasSuffix(string(data), "\n") {
+		content += "\n"
+	}
+	return content, nil
 }
 
 // MaskSecret masks a secret value for display: first 3 + *** + last 3.
