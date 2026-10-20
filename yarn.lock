@@ -245,9 +245,9 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-sts@^3.427.0":
-  version "3.1151.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.1151.0.tgz#2e9760249d91f3023a894112eefdc06a683f9137"
-  integrity sha512-G47qlL9n1GxdprH/ymRuBEYAS7NSsmDEsN/VIlCxD9J9rMPj+Fx55VNtxfC72ZTV78SmtFw25pXRzFcZZ+OWOA==
+  version "3.1152.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.1152.0.tgz#c5d5e81745698bd2d10df6e9fd22315995c5d157"
+  integrity sha512-dLvk02UzZPRTeLLh8C86OpJBRzsJZ+fSxGqqdzoWOXACwZOf3xH6d4rQn54eZNPKYWaQNlt4VmfA5mZsfItbgw==
   dependencies:
     "@aws-sdk/core" "^3.978.3"
     "@aws-sdk/credential-provider-node" "^3.972.86"
