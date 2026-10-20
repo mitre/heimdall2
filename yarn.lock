@@ -1382,9 +1382,9 @@
     keyv "^5.6.0"
 
 "@casl/ability@^7.0.0":
-  version "7.0.1"
-  resolved "https://registry.npmjs.org/@casl/ability/-/ability-7.0.1.tgz#3c81a804a453738fc217cc2aa9987f8bcda3fe9b"
-  integrity sha512-krOW1zQGEie5lH6fpryrcsPvc5r2pe5Vn5xbthuzc5X9gwzHIyZgGGgw9dMoSLHXdjB4BIVxGG/HBkG+1NuyZQ==
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@casl/ability/-/ability-7.0.2.tgz#7c5477c11ba2ce015daccf60152f7159b4912d56"
+  integrity sha512-NOYbLTaw080a1Na4CpBtyGpL+i9NZhtGGt/tPrrNpLEv8EawFusHZCgc58ewyPBiZ0NER0iudB0et+IP8xJbLg==
   dependencies:
     "@ucast/mongo2js" "^2.0.0"
 
