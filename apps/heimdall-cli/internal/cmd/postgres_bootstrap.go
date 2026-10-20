@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/lib/pq"
 )
 
 const (
@@ -237,11 +239,7 @@ func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
 	return r.FS.WriteFile(hbaPath, []byte(strings.Join(out, "\n")), 0o640)
 }
 
-// roleSetupSQL is the SQL fed to psql for configuring the application
-// role. All identifier and credential values come in via psql -v variable
-// bindings (`:'db_user'`, `:'db_pass'`) so values are quoted by psql,
-// never string-interpolated into the SQL. format(%I, %L) handles
-// identifier and literal escaping at the server side.
+// The password placeholder is replaced with a quoted SQL literal on stdin.
 const roleSetupSQL = `ALTER SYSTEM SET password_encryption = 'scram-sha-256';
 SELECT pg_reload_conf();
 
@@ -251,23 +249,24 @@ SELECT format('ALTER ROLE %I LOGIN PASSWORD %L', :'db_user', :'db_pass') \gexec
 SELECT format('ALTER ROLE %I CREATEDB', :'db_user') \gexec
 `
 
-// configureRole creates or updates the application's PostgreSQL role
-// with a SCRAM-SHA-256 password and CREATEDB privilege. Idempotent
-// (CREATE-WHERE-NOT-EXISTS pattern) and safe (psql -v bindings — no
-// string interpolation of credentials into SQL).
+// configureRole creates or updates the application's PostgreSQL role.
 func (r *PostgresBootstrapRunner) configureRole(install *pgInstall) error {
+	if strings.ContainsRune(r.DBPassword, 0) {
+		return fmt.Errorf("DATABASE_PASSWORD must not contain NUL bytes")
+	}
 	args := append(r.adminPrefix(install), []string{
 		"-v", psqlStopOnError,
 		"-d", "postgres",
 		"-v", psqlUserVariable + r.DBUser,
-		"-v", "db_pass=" + r.DBPassword,
 	}...)
-	stdout, code, err := r.Exec.RunWithStdin(roleSetupSQL, "runuser", args...)
+	sql := strings.ReplaceAll(roleSetupSQL, ":'db_pass'", pq.QuoteLiteral(r.DBPassword))
+	_, code, err := r.Exec.RunWithStdin(sql, "runuser", args...)
 	if err != nil {
 		return fmt.Errorf("running psql for role setup: %w", err)
 	}
 	if code != 0 {
-		return fmt.Errorf("psql role setup exited %d: %s", code, strings.TrimSpace(stdout))
+		// psql errors can include the password-bearing SQL statement.
+		return fmt.Errorf("psql role setup exited %d", code)
 	}
 	return nil
 }
@@ -648,23 +647,28 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 
 // checkPostgresServer uses the shipped client, including the resolved TLS policy.
 func checkPostgresServer(exec ExecRunner, paths Paths, fs FileSystem, cfg DBConfig) error {
+	_, err := postgresServerMajor(exec, paths, fs, cfg)
+	return err
+}
+
+func postgresServerMajor(exec ExecRunner, paths Paths, fs FileSystem, cfg DBConfig) (int, error) {
 	binary, err := postgresClient(paths, fs, "psql")
 	if err != nil {
-		return err
+		return 0, err
 	}
 	out, code, err := exec.RunWithEnv(cfg.PgEnv(), binary, "-X", "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", cfg.DBName, "-v", psqlStopOnError, "-tAc", "SHOW server_version_num")
 	if err != nil || code != 0 {
-		return fmt.Errorf("checking PostgreSQL server version failed (exit %d): %v", code, err)
+		return 0, fmt.Errorf("checking PostgreSQL server version failed (exit %d): %v", code, err)
 	}
 	version, err := strconv.Atoi(strings.TrimSpace(out))
 	if err != nil {
-		return fmt.Errorf("invalid PostgreSQL server_version_num response")
+		return 0, fmt.Errorf("invalid PostgreSQL server_version_num response")
 	}
 	major := version / 10000
 	if major < 13 || major > 18 {
-		return fmt.Errorf("PostgreSQL server major %d is unsupported; use PostgreSQL 13–18 with this RPM", major)
+		return 0, fmt.Errorf("PostgreSQL server major %d is unsupported; use PostgreSQL 13–18 with this RPM", major)
 	}
-	return nil
+	return major, nil
 }
 
 func (r *PostgresBootstrapRunner) waitReady(install *pgInstall) error {

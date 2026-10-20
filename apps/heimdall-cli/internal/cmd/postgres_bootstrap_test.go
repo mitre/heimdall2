@@ -424,40 +424,88 @@ func TestPostgresBootstrap_ConfigureRole_RunsPSQLAsPostgresWithExpectedArgs(t *t
 	require.Contains(t, call.Args, "postgres",
 		"connect to the postgres maintenance database")
 
-	// Variable bindings — safe quoting, NOT string interpolation
 	require.Contains(t, call.Args, "db_user=heimdall",
 		"db_user binding must use psql -v not interpolation")
-	require.Contains(t, call.Args, "db_pass=s3cret",
-		"db_pass binding must use psql -v not interpolation")
+	require.NotContains(t, strings.Join(call.Args, " "), r.DBPassword,
+		"passwords must not appear in process arguments")
 
-	// SQL on stdin must use :'binding' references and \gexec for conditional
-	// CREATE ROLE — never raw string interpolation of credentials.
 	require.Contains(t, call.Stdin, "ALTER SYSTEM SET password_encryption = 'scram-sha-256'")
 	require.Contains(t, call.Stdin, "SELECT pg_reload_conf()")
 	require.Contains(t, call.Stdin, "CREATE ROLE %I LOGIN PASSWORD %L")
 	require.Contains(t, call.Stdin, "ALTER ROLE %I CREATEDB")
 	require.Contains(t, call.Stdin, ":'db_user'",
 		"SQL must reference db_user via psql variable, not interpolated")
-	require.Contains(t, call.Stdin, ":'db_pass'",
-		"SQL must reference db_pass via psql variable, not interpolated")
+	require.Contains(t, call.Stdin, ":'db_user', 's3cret')",
+		"password must be a quoted SQL literal delivered only through stdin")
 	require.NotContains(t, call.Stdin, "heimdall",
 		"raw username must NOT appear in SQL — bound via -v")
-	require.NotContains(t, call.Stdin, "s3cret",
-		"raw password must NOT appear in SQL — bound via -v")
 }
 
 func TestPostgresBootstrap_ConfigureRole_ErrorsOnPSQLFailure(t *testing.T) {
 	r, exec, _, _, _ := newBootstrapForTest()
 	install := &pgInstall{PsqlBin: "/usr/bin/psql"}
 	exec.Results["runuser -u postgres"] = FakeExecResult{
-		Stdout: "ERROR: syntax error", ExitCode: 1,
+		Stdout: "ERROR: statement contained password " + r.DBPassword, ExitCode: 1,
 	}
 
 	err := r.configureRole(install)
 
 	require.Error(t, err)
-	require.Contains(t, err.Error(), "syntax error",
-		"error must propagate psql stderr/stdout")
+	require.Contains(t, err.Error(), "exited 1")
+	require.NotContains(t, err.Error(), r.DBPassword,
+		"psql can echo the password-bearing statement on failure")
+}
+
+func TestPostgresBootstrap_ConfigureRole_QuotesPasswordOnStdin(t *testing.T) {
+	for _, tc := range []struct{ name, password, literal string }{
+		{"quotes", "x'); DROP ROLE postgres; --", "'x''); DROP ROLE postgres; --'"},
+		{"backslashes", `x'\n\quit`, ` E'x''\\n\\quit'`},
+		{"multiline", "x'\n\\quit\nsecret", " E'x''\n\\\\quit\nsecret'"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			r, exec, _, _, _ := newBootstrapForTest()
+			r.DBPassword = tc.password
+			require.NoError(t, r.configureRole(&pgInstall{PsqlBin: "/usr/bin/psql"}))
+			call := exec.Calls[0]
+			require.NotContains(t, strings.Join(call.Args, " "), tc.password)
+			require.Equal(t, 2, strings.Count(call.Stdin, ":'db_user', "+tc.literal+")"))
+			require.NotContains(t, call.Stdin, ":'db_pass'")
+		})
+	}
+}
+
+func TestPostgresBootstrap_ConfigureRole_RejectsNULPassword(t *testing.T) {
+	r, exec, _, _, _ := newBootstrapForTest()
+	r.DBPassword = "before\x00after"
+	err := r.configureRole(&pgInstall{PsqlBin: "/usr/bin/psql"})
+	require.Error(t, err)
+	require.NotContains(t, err.Error(), "before")
+	require.Empty(t, exec.Calls)
+}
+
+func TestPostgresServerMajorRejectsUnsupportedOrInvalidResponses(t *testing.T) {
+	for _, tc := range []struct {
+		name, response, failure string
+		exitCode, major         int
+	}{
+		{"minimum", "130023", "", 0, 13},
+		{"maximum", "180006\n", "", 0, 18},
+		{"old", "120010", "unsupported", 0, 0},
+		{"new", "190001", "unsupported", 0, 0},
+		{"malformed", "not a version", "invalid", 0, 0},
+		{"query failed", "", "exit 1", 1, 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			exec := &FakeExecRunner{Results: map[string]FakeExecResult{"psql -X": {Stdout: tc.response, ExitCode: tc.exitCode}}}
+			major, err := postgresServerMajor(exec, DefaultPaths(), NewFakeFileSystem(), DBConfig{})
+			if tc.failure != "" {
+				require.ErrorContains(t, err, tc.failure)
+			} else {
+				require.NoError(t, err)
+			}
+			require.Equal(t, tc.major, major)
+		})
+	}
 }
 
 func TestPostgresBootstrap_VerifyPasswordFormat_AcceptsScramSHA256(t *testing.T) {
@@ -659,7 +707,7 @@ func TestPostgresBootstrap_Run_PropagatesRoleConfigFailure(t *testing.T) {
 	err := r.Run()
 
 	require.Error(t, err)
-	require.Contains(t, err.Error(), "FATAL")
+	require.Contains(t, err.Error(), "psql role setup exited 1")
 }
 
 func TestPostgresBootstrap_PsqlMajorVersion_HandlesMalformedOutput(t *testing.T) {

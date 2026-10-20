@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
+	"syscall"
 )
 
 var envKeyPattern = regexp.MustCompile("^[A-Za-z_][A-Za-z0-9_]*$")
@@ -63,7 +65,25 @@ func (m *FileEnvManager) WriteEnvKey(key, value string) error {
 // WriteEnvFile updates supplied keys while preserving unrelated text and unchanged
 // assignments. New keys are appended in sorted order.
 func (m *FileEnvManager) WriteEnvFile(entries map[string]string) error {
-	data, err := os.ReadFile(m.Path)
+	path := m.Path
+	info, err := os.Lstat(path)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+	if info != nil && info.Mode()&os.ModeSymlink != 0 {
+		path, err = filepath.EvalSymlinks(path)
+		if err != nil {
+			return err
+		}
+		info, err = os.Stat(path)
+		if err != nil {
+			return err
+		}
+	}
+	if info != nil && !info.Mode().IsRegular() {
+		return fmt.Errorf("environment file must be a regular file: %s", path)
+	}
+	data, err := os.ReadFile(path)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
@@ -98,7 +118,42 @@ func (m *FileEnvManager) WriteEnvFile(entries map[string]string) error {
 	if len(missing) != 0 || strings.HasSuffix(string(data), "\n") {
 		content += "\n"
 	}
-	return os.WriteFile(m.Path, []byte(content), 0640)
+	// Keep the previous secrets intact until the complete replacement is durable.
+	file, err := os.CreateTemp(filepath.Dir(path), ".backend.env-*")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(file.Name())
+	defer file.Close()
+	if _, err := file.WriteString(content); err != nil {
+		return err
+	}
+	mode := os.FileMode(0640)
+	if info != nil {
+		mode = info.Mode().Perm()
+		stat := info.Sys().(*syscall.Stat_t)
+		if err := file.Chown(int(stat.Uid), int(stat.Gid)); err != nil {
+			return err
+		}
+	}
+	if err := file.Chmod(mode); err != nil {
+		return err
+	}
+	if err := file.Sync(); err != nil {
+		return err
+	}
+	if err := file.Close(); err != nil {
+		return err
+	}
+	dir, err := os.Open(filepath.Dir(path))
+	if err != nil {
+		return err
+	}
+	defer dir.Close()
+	if err := os.Rename(file.Name(), path); err != nil {
+		return err
+	}
+	return dir.Sync()
 }
 
 // MaskSecret masks a secret value for display: first 3 + *** + last 3.

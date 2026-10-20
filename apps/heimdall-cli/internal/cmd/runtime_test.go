@@ -171,6 +171,9 @@ func TestRealRPMClientRouting(t *testing.T) {
 	log := filepath.Join(dir, "calls")
 	t.Setenv("HEIMDALL_TEST_CALLS", log)
 	script := `#!/bin/sh
+case "$*" in
+ --version) echo 'pg_dump (PostgreSQL) 18.6'; exit 0 ;;
+esac
 [ "$PGPASSWORD" = "secret" ] || exit 91
 [ "$PGSSLMODE" = "verify-full" ] || exit 92
 [ -r "$PGSSLROOTCERT" ] || exit 94
@@ -180,7 +183,7 @@ printf '%s\n' "$PGSSLROOTCERT" >> "$HEIMDALL_TEST_CALLS"
 case "$0" in
  *pg_dump)
   while [ "$#" -gt 0 ]; do
-   if [ "$1" = "-f" ]; then shift; printf '%s\n' '-- SQL fixture' > "$1"; exit 0; fi
+   if [ "$1" = "-f" ]; then shift; printf '%s\n' '-- Dumped from database version 18.6' '-- Dumped by pg_dump version 18.6' '-- SQL fixture' > "$1"; exit 0; fi
    shift
   done
   exit 96 ;;

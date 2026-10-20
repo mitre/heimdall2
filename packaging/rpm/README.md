@@ -46,6 +46,9 @@ and HTTPS proxies are also supported.
   and SELinux policy. OS dependency RPMs are not included in the Heimdall bundle.
 - For an external database: PostgreSQL 13–18 and a role permitted to create the
   application schema and run migrations. External services remain operator-managed.
+- To back up external PostgreSQL 13–17, install PostgreSQL client tools of the
+  same major version on the Heimdall host from an approved source before
+  disconnecting. PostgreSQL 18 uses the bundled clients.
 
 CI tests Rocky Linux. RHEL and older minor/EUS releases need separate
 qualification; see [acceptance status](BUILD.md#acceptance-status). DNF resolves
@@ -340,6 +343,10 @@ this also disables the initial administrator's password login. Set
 `REGISTRATION_DISABLED=true` to disable public registration.
 
 ## Backup and restore
+
+Backups require `pg_dump` to match the database server's major version so the
+dump can be restored to that server. External PostgreSQL 13–17 therefore needs
+the matching client tools listed in [Requirements](#requirements).
 
 ```sh
 sudo heimdall-cli backup -o /root

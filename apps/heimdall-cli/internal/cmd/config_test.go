@@ -94,6 +94,30 @@ func TestConfigGet_MasksSecretValue(t *testing.T) {
 	}
 }
 
+func TestConfig_MasksDatabaseURLCredentials(t *testing.T) {
+	const databaseURL = "postgres://app:private-database-password@db.example/prod"
+	for _, operation := range []string{"get", "list", "set"} {
+		t.Run(operation, func(t *testing.T) {
+			out := new(bytes.Buffer)
+			env := &FakeEnvManager{Env: map[string]string{"DATABASE_URL": databaseURL}}
+			r := &ConfigRunner{Env: env, Out: out, ErrOut: out}
+			var err error
+			switch operation {
+			case "get":
+				err = r.Get("DATABASE_URL")
+			case "list":
+				err = r.List()
+			case "set":
+				err = r.Set("DATABASE_URL", databaseURL)
+			}
+			require.NoError(t, err)
+			require.NotContains(t, out.String(), "private-database-password")
+			require.Contains(t, out.String(), "pos***rod")
+			require.Equal(t, databaseURL, env.Env["DATABASE_URL"])
+		})
+	}
+}
+
 func TestConfigSet_UpdatesEnvFile(t *testing.T) {
 	env := &FakeEnvManager{Env: map[string]string{}}
 	r := &ConfigRunner{

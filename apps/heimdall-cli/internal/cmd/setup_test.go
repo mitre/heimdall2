@@ -2019,15 +2019,40 @@ func TestBundledFailedSetupRestoresPreviousRolePassword(t *testing.T) {
 	require.Error(t, r.Run())
 	passwords := []string{}
 	for _, call := range exec.Calls {
-		if call.Stdin == roleSetupSQL {
-			for _, arg := range call.Args {
-				if strings.HasPrefix(arg, "db_pass=") {
-					passwords = append(passwords, arg)
-				}
-			}
+		if strings.Contains(call.Stdin, "CREATE ROLE %I LOGIN PASSWORD %L") {
+			passwords = append(passwords, call.Stdin)
+			require.NotContains(t, strings.Join(call.Args, " "), "password")
 		}
 	}
-	require.Equal(t, []string{"db_pass=new-password", "db_pass=keep-password"}, passwords)
+	require.Len(t, passwords, 2)
+	require.Contains(t, passwords[0], "'new-password'")
+	require.Contains(t, passwords[1], "'keep-password'")
+}
+
+func TestBundledSetupSkipTLSRejectsProxyOwnershipChanges(t *testing.T) {
+	for _, previous := range []string{"bundled", "nginx", "external", "none"} {
+		t.Run(previous, func(t *testing.T) {
+			r := bundledSetupFixture(t)
+			env := r.Env.(*FakeEnvManager)
+			env.Env["HEIMDALL_PROXY_MODE"] = previous
+			if previous == "nginx" {
+				env.Env["HEIMDALL_TLS_MODE"] = "self-signed"
+			}
+			before, _ := env.ReadEnv()
+			r.ProxyMode = "external"
+			if previous == "external" {
+				r.ProxyMode = "none"
+			}
+			r.SkipTLS = true
+			err := r.Run()
+			require.ErrorContains(t, err, "proxy ownership changes require full setup")
+			var cliErr *CLIError
+			require.ErrorAs(t, err, &cliErr)
+			require.Contains(t, cliErr.Suggestion, "--skip-tls")
+			require.Equal(t, before, env.Env)
+			require.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
+		})
+	}
 }
 
 type externalEndpointCase struct {

@@ -135,7 +135,8 @@ elif name == 'semanage':
     assert result.returncode != 0 and not marker.exists(), ('failed backup accepted', result.stdout)
     assert not any(c[:2] == ['systemctl', 'stop'] for c in calls), calls
     for status, output in (('1', ''), ('127', ''), ('3', 'unexpected'),
-                           ('4', 'garbage'), ('0', 'inactive'), ('3', 'active')):
+                           ('4', 'garbage'), ('4', 'unknown'), ('4', 'inactive'),
+                           ('0', 'inactive'), ('3', 'active')):
         result, calls = run(FAIL_QUERY=UNITS[0], QUERY_STATUS=status, QUERY_OUTPUT=output)
         assert result.returncode != 0 and not marker.exists() and not mutating(calls), (
             'query failure accepted', status, output, result.stdout, calls)
@@ -225,14 +226,13 @@ elif name == 'semanage':
     result, calls = run(ACTIVE_UNITS='')
     assert result.returncode == 0 and marker.exists() and not mutating(calls), (result.stdout, calls)
     marker.unlink()
-    result, calls = run(FAIL_QUERY=UNITS[1], QUERY_STATUS='4', QUERY_OUTPUT='unknown')
-    assert result.returncode == 0 and marker.exists(), ('old private unit rejected', result.stdout)
-    assert ['systemctl', 'stop', UNITS[1]] not in calls, calls
-    marker.unlink()
-    result, calls = run(FAIL_QUERY=UNITS[3], QUERY_STATUS='4', QUERY_OUTPUT='unknown')
-    assert result.returncode == 0 and marker.exists(), ('old Nginx unit rejected', result.stdout)
-    assert ['systemctl', 'stop', UNITS[3]] not in calls, calls
-    marker.unlink()
+    for unit in UNITS[1:]:
+        for state in ('unknown', 'inactive'):
+            result, calls = run(FAIL_QUERY=unit, QUERY_STATUS='4', QUERY_OUTPUT=state)
+            assert result.returncode == 0 and marker.exists(), (
+                'old private unit rejected', unit, state, result.stdout)
+            assert ['systemctl', 'stop', unit] not in calls, calls
+            marker.unlink()
     result, calls = run(count='1')
     assert result.returncode == 0 and not marker.exists() and not mutating(calls), (result.stdout, calls)
 

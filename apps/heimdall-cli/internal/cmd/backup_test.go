@@ -37,7 +37,7 @@ func TestBackup_CreatesArchive(t *testing.T) {
 	require.Equal(t, want, got)
 	sql, err := os.ReadFile(filepath.Join(extracted, "database.sql"))
 	require.NoError(t, err)
-	require.Equal(t, "-- sentinel SQL\n", string(sql))
+	require.Equal(t, recoverySQLHeaders+"-- sentinel SQL\n", string(sql))
 }
 
 func TestBackup_CallsPgDumpWithCorrectArgs(t *testing.T) {
@@ -48,7 +48,7 @@ func TestBackup_CallsPgDumpWithCorrectArgs(t *testing.T) {
 	require.NoError(t, r.Run(filepath.Dir(p.ConfigDir)))
 	var found bool
 	for _, call := range e.calls {
-		if filepath.Base(call.Name) == "pg_dump" {
+		if filepath.Base(call.Name) == "pg_dump" && contains(call.Args, "-f") {
 			found = true
 			require.Equal(t, "mypass", call.Env["PGPASSWORD"])
 			require.Equal(t, []string{"-h", "db.local", "-p", "5433", "-U", "heimdall", "mydb", "-f"}, call.Args[:8])
@@ -60,7 +60,11 @@ func TestBackup_CallsPgDumpWithCorrectArgs(t *testing.T) {
 func TestBackup_HandlesPgDumpFailure(t *testing.T) {
 	for _, result := range []FakeExecResult{{ExitCode: 1}, {Err: fmt.Errorf("pg_dump not found")}} {
 		p, fs, _ := recoveryFixture(t, false)
-		exec := &FakeExecRunner{Results: map[string]FakeExecResult{"pg_dump -h": result}}
+		exec := &FakeExecRunner{Results: map[string]FakeExecResult{
+			"pg_dump -h":        result,
+			"pg_dump --version": {Stdout: "pg_dump (PostgreSQL) 18.6"},
+			"psql -X":           {Stdout: "180006"},
+		}}
 		out := new(bytes.Buffer)
 		r := &BackupRunner{Paths: p, FS: fs, Exec: exec, Env: &FileEnvManager{Path: p.EnvFile}, Out: out, ErrOut: out}
 		require.Error(t, r.Run(filepath.Dir(p.ConfigDir)))
@@ -141,7 +145,7 @@ func TestBackupRPMRequiresDatabaseAndCompatibleServer(t *testing.T) {
 		name, password, version string
 		ok                      bool
 	}{
-		{"missing password", "", "180006", false}, {"old", "secret", "120015", false}, {"newer", "secret", "190000", false}, {"malformed", "secret", "", false}, {"floor", "secret", "130022", true}, {"ceiling", "secret", "180006", true},
+		{"missing password", "", "180006", false}, {"old", "secret", "120015", false}, {"newer", "secret", "190000", false}, {"malformed", "secret", "", false}, {"floor needs matching client", "secret", "130022", false}, {"ceiling", "secret", "180006", true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			p, fs, e := recoveryFixture(t, true)
@@ -159,6 +163,84 @@ func TestBackupRPMRequiresDatabaseAndCompatibleServer(t *testing.T) {
 				require.Empty(t, archives)
 				require.NotContains(t, out.String(), "Backup saved")
 			}
+		})
+	}
+}
+
+type installedRecoveryDumpFS struct {
+	*recoveryFS
+	candidate string
+	client    string
+}
+
+func (f *installedRecoveryDumpFS) Lstat(path string) (os.FileInfo, error) {
+	if path == f.candidate {
+		return os.Lstat(f.client)
+	}
+	if path == "/usr/bin/pg_dump" || strings.HasPrefix(path, "/usr/pgsql-") || strings.HasPrefix(path, "/usr/lib/postgresql/") {
+		return nil, os.ErrNotExist
+	}
+	return f.recoveryFS.Lstat(path)
+}
+
+func (f *installedRecoveryDumpFS) Stat(path string) (os.FileInfo, error) {
+	if path == f.candidate {
+		return os.Stat(f.client)
+	}
+	if path == "/usr/bin/pg_dump" || strings.HasPrefix(path, "/usr/pgsql-") || strings.HasPrefix(path, "/usr/lib/postgresql/") {
+		return nil, os.ErrNotExist
+	}
+	return f.recoveryFS.Stat(path)
+}
+
+func TestBackupRequiresMatchingExternalDumpClient(t *testing.T) {
+	for _, version := range []string{"missing", "15.10", "14.19"} {
+		t.Run(version, func(t *testing.T) {
+			p, fs, e := recoveryFixture(t, true)
+			e.version = "140019"
+			e.dumpVersions = map[string]string{"/usr/pgsql-14/bin/pg_dump": version}
+			client := filepath.Join(filepath.Dir(p.ConfigDir), "external-pg_dump")
+			if version != "missing" {
+				require.NoError(t, os.WriteFile(client, nil, 0755))
+			}
+			r := &BackupRunner{Paths: p, FS: &installedRecoveryDumpFS{fs, "/usr/pgsql-14/bin/pg_dump", client}, Exec: e, Env: &FileEnvManager{Path: p.EnvFile}, Out: new(bytes.Buffer), ErrOut: new(bytes.Buffer)}
+			destination := filepath.Join(filepath.Dir(p.ConfigDir), "output")
+			err := r.Run(destination)
+			if version != "14.19" {
+				require.ErrorContains(t, err, "PostgreSQL 14")
+				require.NoDirExists(t, destination)
+				return
+			}
+			require.NoError(t, err)
+			var dumped bool
+			for _, call := range e.calls {
+				if filepath.Base(call.Name) == "pg_dump" && contains(call.Args, "-f") {
+					dumped = true
+					require.Equal(t, "/usr/pgsql-14/bin/pg_dump", call.Name)
+					require.Contains(t, call.Args, "--clean")
+					require.Contains(t, call.Args, "--if-exists")
+				}
+			}
+			require.True(t, dumped)
+		})
+	}
+}
+
+func TestBackupSupportedServerMajorsProduceRestorableVersions(t *testing.T) {
+	for major := 13; major <= 18; major++ {
+		t.Run(fmt.Sprint(major), func(t *testing.T) {
+			p, fs, e := recoveryFixture(t, true)
+			e.version = fmt.Sprint(major*10000 + 6)
+			candidate := fmt.Sprintf("/usr/pgsql-%d/bin/pg_dump", major)
+			e.dumpVersions = map[string]string{candidate: fmt.Sprintf("%d.6", major)}
+			client := filepath.Join(filepath.Dir(p.ConfigDir), "external-pg_dump")
+			require.NoError(t, os.WriteFile(client, nil, 0755))
+			r := &BackupRunner{Paths: p, FS: &installedRecoveryDumpFS{fs, candidate, client}, Exec: e, Env: &FileEnvManager{Path: p.EnvFile}, Out: new(bytes.Buffer), ErrOut: new(bytes.Buffer)}
+			require.NoError(t, r.Run(filepath.Dir(p.ConfigDir)))
+			archives, err := filepath.Glob(filepath.Join(filepath.Dir(p.ConfigDir), "*.tar.gz"))
+			require.NoError(t, err)
+			require.Len(t, archives, 1)
+			require.NoError(t, recoveryRestore(p, fs, e).Run(archives[0]))
 		})
 	}
 }
@@ -214,7 +296,7 @@ func TestBackupRPMAcceptsResolvedURLCredentials(t *testing.T) {
 	require.NoError(t, r.Run(filepath.Join(filepath.Dir(p.ConfigDir), "url-backups")))
 	var dumped bool
 	for _, call := range e.calls {
-		if filepath.Base(call.Name) == "pg_dump" {
+		if filepath.Base(call.Name) == "pg_dump" && contains(call.Args, "-f") {
 			dumped = true
 			require.Equal(t, "secret", call.Env["PGPASSWORD"])
 			require.Contains(t, call.Args, "db.example.test")
@@ -532,7 +614,7 @@ func requireRetainedBackup(t *testing.T, backupErr error) string {
 	require.NoError(t, err)
 	data, err := os.ReadFile(filepath.Join(root, "database.sql"))
 	require.NoError(t, err)
-	require.Equal(t, "-- sentinel SQL\n", string(data))
+	require.Equal(t, recoverySQLHeaders+"-- sentinel SQL\n", string(data))
 	return archive
 }
 

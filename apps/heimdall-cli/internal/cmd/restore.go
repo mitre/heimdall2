@@ -48,11 +48,14 @@ func NewRestoreCmd(runner *RestoreRunner) *cobra.Command {
 archive created by 'heimdall-cli backup'. The archive is extracted to
 a temporary directory, backend.env is restored with proper ownership
 (root:heimdall, mode 0640), and the database SQL dump is replayed
-using psql.
+using psql in one transaction. New backups replace the backed-up database objects;
+unrelated objects are preserved. Legacy SQL archives require an empty destination.
+Dump version compatibility is checked before configuration or service changes.
 
 The database credentials are read from the restored backend.env, so
 the restore is self-contained. Private proxy configuration and certificate/CA
-state are restored when present; older archives are accepted. RPM restores stop
+state are restored when present; older configuration-only archives are accepted.
+RPM restores stop
 the app and selected private proxy, and block app startup until successful setup
 and migrations. PostgreSQL remains available for logical SQL restore. Requires root privileges.`,
 		Example: `  # Restore from a backup archive
@@ -158,10 +161,12 @@ func (r *RestoreRunner) Run(archive string) error {
 		if err != nil {
 			return err
 		}
-		if rpm {
-			if err := checkPostgresServer(r.Exec, r.Paths, r.FS, dbCfg); err != nil {
-				return fmt.Errorf("cannot restore database: %w; newer servers require a heimdall-server RPM with compatible PostgreSQL clients", err)
-			}
+		major, err := postgresServerMajor(r.Exec, r.Paths, r.FS, dbCfg)
+		if err != nil {
+			return fmt.Errorf("cannot restore database: %w", err)
+		}
+		if err := r.preflightDatabaseRestore(binary, sqlBackup, dbCfg, major); err != nil {
+			return err
 		}
 	}
 	if rpm {
@@ -470,6 +475,11 @@ func validateRecoveryArchive(dest string) (string, error) {
 	if info, err := os.Stat(filepath.Join(root, recoveryEnvFile)); err != nil || !info.Mode().IsRegular() {
 		return "", fmt.Errorf("archive requires regular backend.env")
 	}
+	if _, err := os.Stat(filepath.Join(root, recoverySQLFormatFile)); err == nil {
+		if info, err := os.Stat(filepath.Join(root, "database.sql")); err != nil || !info.Mode().IsRegular() {
+			return "", fmt.Errorf("%s requires regular database.sql", recoverySQLFormatFile)
+		}
+	}
 	return root, nil
 }
 
@@ -489,7 +499,7 @@ func (r *RestoreRunner) confirmRestore() (bool, error) {
 
 func (r *RestoreRunner) restoreDatabase(hasSQL bool, dbCfg DBConfig, binary, sqlBackup string) error {
 	if hasSQL {
-		_, code, err := r.Exec.RunWithEnv(dbCfg.PgEnv(), binary, "-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, "-d", dbCfg.DBName, "-X", "-v", "ON_ERROR_STOP=1", "-f", sqlBackup)
+		_, code, err := r.Exec.RunWithEnv(dbCfg.PgEnv(), binary, "-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, "-d", dbCfg.DBName, "-X", "-v", "ON_ERROR_STOP=1", "--single-transaction", "-f", sqlBackup)
 		if err != nil || code != 0 {
 			fmt.Fprintln(r.ErrOut, "Database: restore FAILED")
 			return fmt.Errorf("failed to restore database: psql exited with status %d: %v", code, err)
@@ -511,7 +521,7 @@ func validateRecoveryEntry(root, path string, entry os.DirEntry) error {
 	}
 	top := strings.Split(rel, string(filepath.Separator))[0]
 	switch top {
-	case recoveryEnvFile, "database.sql":
+	case recoveryEnvFile, "database.sql", recoverySQLFormatFile:
 		if rel != top || !entry.Type().IsRegular() {
 			return fmt.Errorf("invalid archive file: %s", rel)
 		}

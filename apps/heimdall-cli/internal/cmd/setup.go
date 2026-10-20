@@ -1105,8 +1105,8 @@ func (r *SetupRunner) writeConfig(existing, values map[string]string) error {
 	jwtSecret, apiKeySecret := values["JWT_SECRET"], values["API_KEY_SECRET"]
 	nginxHost, externalURL, adminEmail := values["NGINX_HOST"], values["EXTERNAL_URL"], values["ADMIN_EMAIL"]
 
-	if r.Reconfigure && existing["HEIMDALL_PROXY_MODE"] != "" && existing["HEIMDALL_PROXY_MODE"] != r.ProxyMode {
-		return &CLIError{Summary: "proxy ownership changes require full setup", Suggestion: "Run heimdall-cli setup without --reconfigure to change proxy ownership"}
+	if (r.Reconfigure || r.SkipTLS) && existing["HEIMDALL_PROXY_MODE"] != "" && existing["HEIMDALL_PROXY_MODE"] != r.ProxyMode {
+		return &CLIError{Summary: "proxy ownership changes require full setup", Suggestion: "Run heimdall-cli setup without --reconfigure or --skip-tls to change proxy ownership"}
 	}
 	externalURL, nginxHost, err := r.configurationURL(externalURL, nginxHost)
 	if err != nil {

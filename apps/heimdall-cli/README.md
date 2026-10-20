@@ -172,10 +172,26 @@ SQL dump and configuration, plus optional `caddy-config/` and `caddy-state/`
 entries for owned Caddy configuration and CA/certificate state. It never archives
 live PostgreSQL data files. RPM database backups require resolved connection
 credentials, including a password from `DATABASE_PASSWORD` or `DATABASE_URL`.
-Restore validates the archive before writes, accepts
-older archives without Caddy entries, preserves dedicated ownership, and requires
-successful setup/migrations before application startup. Restore overwrites the
-selected configuration/database; retain a verified backup before recovery.
+The dump client must match the database server's major version. PostgreSQL 18
+uses the bundled client. For external PostgreSQL 13–17, install the matching
+client on the Heimdall host before disconnecting it: backup checks
+`/usr/pgsql-<major>/bin/pg_dump`, `/usr/lib/postgresql/<major>/bin/pg_dump`, and
+`/usr/bin/pg_dump`, verifies the executable's version, and fails before creating
+an archive if none matches.
+
+Restore checks the dump's source/client version headers before changing
+configuration or stopping services. New backups include `database.restore` and
+clean SQL that replaces the backed-up objects in one transaction; SQL errors roll
+back the database changes. Objects added after the backup remain, and dependencies
+from those objects can require a separately prepared empty destination.
+Older SQL archives without the format marker require an empty destination.
+Archives without usable version headers, or produced by a dump client newer than
+the destination server, require a compatible backup/server or manual recovery.
+Configuration-only legacy archives and archives without Caddy entries remain
+supported. Restore preserves dedicated ownership and requires successful
+setup/migrations before application startup. Configuration and proxy state are
+restored separately from the database transaction; retain a verified backup before
+recovery.
 
 SELinux relabeling and fapolicyd trust refresh run before private service
 activation. Trust covers immutable private executables/libraries and application

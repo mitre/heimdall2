@@ -150,6 +150,8 @@ optional_policy(`
     # Traverse the parent to caddy/ without reading backend.env.
     allow httpd_t heimdall_server_conf_t:dir search_dir_perms;
     allow httpd_t heimdall_server_port_t:tcp_socket name_connect;
+    # Caddy obtains and renews public certificates over HTTPS.
+    corenet_tcp_connect_http_port(httpd_t)
     apache_manage_lib(httpd_t)
 ')
 

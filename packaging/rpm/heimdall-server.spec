@@ -429,7 +429,7 @@ if [ "$1" -gt 1 ]; then
     case "$state:$query_status" in
       active:0|reloading:0|activating:3|deactivating:3) return 0 ;;
       inactive:3|failed:3) return 1 ;;
-      unknown:4)
+      unknown:4|inactive:4)
         # Older packages did not install these private units.
         case "$1" in heimdall-caddy.service|heimdall-postgresql.service|heimdall-nginx.service) return 1 ;; esac ;;
     esac

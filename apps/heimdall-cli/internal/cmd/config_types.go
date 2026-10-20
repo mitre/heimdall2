@@ -51,6 +51,7 @@ const (
 // SecretsSet lists env keys whose values must be masked in output.
 var SecretsSet = map[string]bool{
 	"DATABASE_PASSWORD":   true,
+	"DATABASE_URL":        true,
 	"JWT_SECRET":          true,
 	"API_KEY_SECRET":      true,
 	"ADMIN_PASSWORD":      true,

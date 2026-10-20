@@ -15,6 +15,7 @@ import (
 	"math/big"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"syscall"
 	"testing"
@@ -61,11 +62,13 @@ func (f *recoveryFS) RemoveAll(p string) error { return os.RemoveAll(f.path(p)) 
 func (f *recoveryFS) Exists(p string) bool     { _, e := f.Stat(p); return e == nil }
 
 type recoveryExec struct {
-	fs      *recoveryFS
-	calls   []FakeExecCall
-	version string
-	fail    string
-	sql     string
+	fs           *recoveryFS
+	calls        []FakeExecCall
+	version      string
+	dumpVersions map[string]string
+	nonempty     string
+	fail         string
+	sql          string
 }
 
 func (e *recoveryExec) Run(name string, args ...string) (string, int, error) {
@@ -96,6 +99,13 @@ func (e *recoveryExec) Run(name string, args ...string) (string, int, error) {
 	case "chown", "systemctl", "getent":
 		return "", 0, nil
 	default:
+		if filepath.Base(name) == "pg_dump" && len(args) == 1 && args[0] == "--version" {
+			version := "18.6"
+			if configured, ok := e.dumpVersions[name]; ok {
+				version = configured
+			}
+			return "pg_dump (PostgreSQL) " + version, 0, nil
+		}
 		return "", 1, fmt.Errorf("unexpected command %s", key)
 	}
 }
@@ -114,10 +124,25 @@ func (e *recoveryExec) RunWithEnv(env map[string]string, name string, args ...st
 	if strings.Contains(key, "SHOW server_version_num") {
 		return e.version, 0, nil
 	}
+	if strings.Contains(key, "pg_catalog.pg_namespace") {
+		if e.nonempty != "" {
+			return e.nonempty, 0, nil
+		}
+		return "f", 0, nil
+	}
 	for i, arg := range args {
 		if arg == "-f" {
 			if filepath.Base(name) == "pg_dump" {
-				return "", 0, os.WriteFile(args[i+1], []byte("-- sentinel SQL\n"), 0600)
+				server, err := strconv.Atoi(e.version)
+				if err != nil {
+					return "", 1, err
+				}
+				version := "18.6"
+				if configured, ok := e.dumpVersions[name]; ok {
+					version = configured
+				}
+				sql := fmt.Sprintf("-- PostgreSQL database dump\n\n-- Dumped from database version %d.6\n-- Dumped by pg_dump version %s\n\n-- sentinel SQL\n", server/10000, version)
+				return "", 0, os.WriteFile(args[i+1], []byte(sql), 0600)
 			}
 			data, err := os.ReadFile(args[i+1])
 			e.sql = string(data)
@@ -185,10 +210,13 @@ func oldRecoveryArchive(t *testing.T, env string, sql bool) string {
 	d := []string{env}
 	if sql {
 		h = append(h, &tar.Header{Name: "heimdall-backup-old/database.sql", Mode: 0644, Typeflag: tar.TypeReg})
-		d = append(d, "-- old SQL")
+		d = append(d, recoverySQLHeaders+"-- old SQL")
 	}
 	return recoveryArchive(t, h, d)
 }
+
+const recoverySQLHeaders = "-- PostgreSQL database dump\n\n-- Dumped from database version 18.6\n-- Dumped by pg_dump version 18.6\n\n"
+
 func recoveryRestore(p Paths, fs *recoveryFS, e *recoveryExec) *RestoreRunner {
 	return &RestoreRunner{Paths: p, FS: fs, Exec: e, Env: &FileEnvManager{Path: p.EnvFile}, Out: new(bytes.Buffer), ErrOut: new(bytes.Buffer)}
 }
@@ -244,7 +272,7 @@ func TestRecoveryArchiveRoundTrip(t *testing.T) {
 	restored, err = os.ReadFile(fs.state + "/data/caddy/pki/authorities/local/root.key")
 	require.NoError(t, err)
 	require.Equal(t, private, restored)
-	require.Equal(t, "-- sentinel SQL\n", e.sql)
+	require.Equal(t, recoverySQLHeaders+"-- sentinel SQL\n", e.sql)
 	for path, mode := range map[string]os.FileMode{p.EnvFile: 0640, p.ConfigDir + "/caddy/Caddyfile": 0640, p.ConfigDir + "/upgrade-pending": 0600, fs.state + "/data/caddy/pki/authorities/local/root.crt": 0600, fs.state + "/data/caddy/pki/authorities/local": 0700} {
 		info, err := os.Stat(path)
 		require.NoError(t, err)
@@ -306,7 +334,7 @@ func TestRestoreOldArchiveAndStandaloneConfigOnly(t *testing.T) {
 			archive := oldRecoveryArchive(t, "DATABASE_PASSWORD=old\nHEIMDALL_PROXY_MODE=external\n", true)
 			r := recoveryRestore(p, fs, e)
 			require.NoError(t, r.Run(archive))
-			require.Equal(t, "-- old SQL", e.sql)
+			require.Equal(t, recoverySQLHeaders+"-- old SQL", e.sql)
 			for _, c := range e.calls {
 				if c.Name == "systemctl" {
 					require.Equal(t, []string{"stop", "heimdall-server"}, c.Args)
@@ -318,6 +346,63 @@ func TestRestoreOldArchiveAndStandaloneConfigOnly(t *testing.T) {
 	r := recoveryRestore(p, fs, e)
 	require.NoError(t, r.Run(oldRecoveryArchive(t, "PORT=3000\n", false)))
 	require.Empty(t, e.sql)
+}
+
+func TestRestoreRejectsIncompatibleDumpBeforeMutation(t *testing.T) {
+	for _, sql := range []string{
+		"-- Dumped from database version 14.19\n-- Dumped by pg_dump version 18.6\nSELECT 1;\n",
+		"-- Dumped from database version 18.6\n-- Dumped by pg_dump version 14.19\nSELECT 1;\n",
+		"-- no PostgreSQL version headers\nSELECT 1;\n",
+	} {
+		t.Run(strings.Split(sql, "\n")[0], func(t *testing.T) {
+			p, fs, e := recoveryFixture(t, true)
+			e.version = "140019"
+			before, err := os.ReadFile(p.EnvFile)
+			require.NoError(t, err)
+			archive := recoveryArchive(t, []*tar.Header{
+				{Name: "backup/backend.env", Mode: 0600, Typeflag: tar.TypeReg},
+				{Name: "backup/database.sql", Mode: 0600, Typeflag: tar.TypeReg},
+			}, []string{"DATABASE_PASSWORD=secret\n", sql})
+			err = recoveryRestore(p, fs, e).Run(archive)
+			require.Error(t, err)
+			after, err := os.ReadFile(p.EnvFile)
+			require.NoError(t, err)
+			require.Equal(t, before, after)
+			require.NoFileExists(t, p.ConfigDir+"/upgrade-pending")
+			require.Empty(t, e.sql)
+			for _, call := range e.calls {
+				require.NotContains(t, []string{"systemctl", "chown", "chmod"}, call.Name)
+			}
+		})
+	}
+}
+
+func TestRestoreLegacyRequiresEmptyDestinationBeforeMutation(t *testing.T) {
+	p, fs, e := recoveryFixture(t, true)
+	e.nonempty = "t"
+	before, err := os.ReadFile(p.EnvFile)
+	require.NoError(t, err)
+	err = recoveryRestore(p, fs, e).Run(oldRecoveryArchive(t, "DATABASE_PASSWORD=old\n", true))
+	require.ErrorContains(t, err, "empty destination")
+	after, err := os.ReadFile(p.EnvFile)
+	require.NoError(t, err)
+	require.Equal(t, before, after)
+	require.NoFileExists(t, p.ConfigDir+"/upgrade-pending")
+	require.Empty(t, e.sql)
+	for _, call := range e.calls {
+		require.NotContains(t, []string{"systemctl", "chown", "chmod"}, call.Name)
+	}
+}
+
+func TestRestoreRejectsRecoveryMarkerWithoutSQL(t *testing.T) {
+	p, fs, e := recoveryFixture(t, true)
+	archive := recoveryArchive(t, []*tar.Header{
+		{Name: "backend.env", Mode: 0600, Typeflag: tar.TypeReg},
+		{Name: "database.restore", Mode: 0600, Typeflag: tar.TypeReg},
+	}, []string{"PORT=3000\n", "pg_dump-clean-v1\n"})
+	require.ErrorContains(t, recoveryRestore(p, fs, e).Run(archive), "database.sql")
+	require.Empty(t, e.calls)
+	require.NoFileExists(t, p.ConfigDir+"/upgrade-pending")
 }
 
 func TestRestoreVersionAndCommandErrors(t *testing.T) {
@@ -528,7 +613,7 @@ func TestRestorePublicationFailuresRetainRecoveryState(t *testing.T) {
 			p, fs, e := recoveryFixture(t, true)
 			require.NoError(t, os.MkdirAll(fs.state+"/data", 0700))
 			require.NoError(t, os.WriteFile(fs.state+"/data/key", []byte("prior CA key"), 0600))
-			archive := recoveryArchive(t, []*tar.Header{{Name: "backup/backend.env", Mode: 0640, Typeflag: tar.TypeReg}, {Name: "backup/database.sql", Mode: 0600, Typeflag: tar.TypeReg}, {Name: "backup/caddy-state/data/key", Mode: 0600, Typeflag: tar.TypeReg}}, []string{"DATABASE_PASSWORD=old\nHEIMDALL_PROXY_MODE=bundled\n", "-- sql must not run", "restored CA key"})
+			archive := recoveryArchive(t, []*tar.Header{{Name: "backup/backend.env", Mode: 0640, Typeflag: tar.TypeReg}, {Name: "backup/database.sql", Mode: 0600, Typeflag: tar.TypeReg}, {Name: "backup/caddy-state/data/key", Mode: 0600, Typeflag: tar.TypeReg}}, []string{"DATABASE_PASSWORD=old\nHEIMDALL_PROXY_MODE=bundled\n", recoverySQLHeaders + "-- sql must not run", "restored CA key"})
 			r := recoveryRestore(p, fs, e)
 			r.FS = &recoveryPublicationFailureFS{recoveryFS: fs, failure: failure}
 			require.Error(t, r.Run(archive))

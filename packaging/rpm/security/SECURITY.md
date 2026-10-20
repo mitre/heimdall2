@@ -27,7 +27,8 @@ compilation alone does not establish successful loading or runtime confinement.
 - **postgresql_t** — the stock PostgreSQL domain, used by the private server.
 - **httpd_t** — the stock HTTP service domain, used by private Caddy and Nginx. The policy
   permits traversal to its configuration, management of HTTP state, and reverse
-  proxy connections to `heimdall_server_port_t`.
+  proxy connections to `heimdall_server_port_t`. It also permits HTTP/HTTPS
+  connections to `http_port_t` for Caddy's public certificate issuance and renewal.
 - **heimdall_server_port_t** — the TCP port type registered for the
   application listen port (fresh RPM default TCP 3000).
 - **postgresql_port_t** — the TCP port type for the selected private database
@@ -38,7 +39,9 @@ Bundled and system PostgreSQL instances share `postgresql_t`; bundled Caddy/Ngin
 system HTTP daemons share `httpd_t`. SELinux does not isolate instances sharing
 these domains. Dedicated accounts and private filesystem modes provide that
 separation. `NoNewPrivileges=true` remains enabled; the policy includes systemd
-transition permissions for all three domains.
+transition permissions for all three domains. The HTTP/HTTPS connection permission
+also applies to system HTTP daemons in `httpd_t`; it does not require enabling the
+broader `httpd_can_network_connect` boolean.
 
 Private PostgreSQL data and sockets use `postgresql_db_t` and
 `postgresql_var_run_t`. Its libraries use `lib_t`; only `postgres`, `initdb`, and

@@ -79,6 +79,14 @@ class HeimdallPolicyTest(unittest.TestCase):
     def test_backend_can_connect_to_ldap_and_ldaps(self):
         self.assertIn('name_connect', self.permissions('ldap_port_t', 'tcp_socket'))
 
+    def test_proxy_can_connect_to_acme_without_broad_network_booleans(self):
+        rules = setools.TERuleQuery(
+            policy, ruletype=['allow'], source='httpd_t', target='http_port_t',
+            tclass=['tcp_socket'], perms=['name_connect']).results()
+        self.assertTrue(any(rule.enabled(
+            httpd_can_network_connect=False, httpd_can_network_relay=False,
+            httpd_graceful_shutdown=False, nis_enabled=False) for rule in rules))
+
 
 if __name__ == '__main__':
     unittest.main(argv=[sys.argv[0]], verbosity=2)

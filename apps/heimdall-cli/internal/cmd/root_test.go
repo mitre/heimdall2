@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"path/filepath"
 	"testing"
 
+	"github.com/spf13/afero"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -40,4 +43,24 @@ func TestRootCmd_HasGlobalFlags(t *testing.T) {
 	assert.NotNil(t, root.PersistentFlags().Lookup("db-port"))
 	assert.NotNil(t, root.PersistentFlags().Lookup("verbose"))
 	assert.NotNil(t, root.PersistentFlags().Lookup("config"))
+}
+
+func TestLocalConfigRequiresExplicitPath(t *testing.T) {
+	dir := t.TempDir()
+	t.Chdir(dir)
+	path := filepath.Join(dir, "heimdall-cli.yaml")
+	for _, explicit := range []bool{false, true} {
+		v := viper.New()
+		fs := afero.NewMemMapFs()
+		v.SetFs(fs)
+		registerPathDefaults(v)
+		require.NoError(t, afero.WriteFile(fs, path, []byte("libexec-dir: /untrusted/runtime\n"), 0600))
+		config := ""
+		expected := LibExecDir
+		if explicit {
+			config, expected = path, "/untrusted/runtime"
+		}
+		require.NoError(t, initConfig(v, config))
+		require.Equal(t, expected, NewPathsFromViper(v).LibExecDir)
+	}
 }

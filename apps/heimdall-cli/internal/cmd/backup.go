@@ -50,6 +50,8 @@ tar.gz archive named heimdall-backup-YYYYMMDD-HHMMSS.tar.gz.
 
 The database backup requires a password in DATABASE_PASSWORD or DATABASE_URL.
 RPM installations require a successful database dump and PostgreSQL 13–18.
+pg_dump must match the database server's major version. External PostgreSQL 13–17
+requires matching client tools installed in the standard OS/PGDG locations.
 A newer server requires an RPM with compatible clients. Standalone installations
 without a password retain configuration-only backups. Requires root privileges.`,
 		Example: `  # Create a backup in the current directory
@@ -126,8 +128,15 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 		if err != nil {
 			return err
 		}
-		if err := checkPostgresServer(r.Exec, r.Paths, r.FS, dbCfg); err != nil {
-			return fmt.Errorf("cannot back up database: %w; newer servers require a heimdall-server RPM with compatible PostgreSQL clients", err)
+	}
+	if dbCfg.Password != "" {
+		major, err := postgresServerMajor(r.Exec, r.Paths, r.FS, dbCfg)
+		if err != nil {
+			return fmt.Errorf("cannot back up database: %w", err)
+		}
+		binary, err = matchingDumpClient(r.Exec, r.FS, binary, major)
+		if err != nil {
+			return err
 		}
 	}
 	ts := time.Now().Format("20060102-150405")
@@ -521,16 +530,21 @@ func (r *BackupRunner) backupDatabase(dbCfg DBConfig, binary, backupDir string) 
 		dumpFile := filepath.Join(backupDir, "database.sql")
 		pgEnv := dbCfg.PgEnv()
 		_, exitCode, err := r.Exec.RunWithEnv(pgEnv, binary,
-			"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, dbCfg.DBName, "-f", dumpFile)
+			"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, dbCfg.DBName, "-f", dumpFile, "--clean", "--if-exists")
 		if err != nil || exitCode != 0 {
 			fmt.Fprintln(r.ErrOut, "Database: backup FAILED")
 			if err != nil {
 				return fmt.Errorf("failed to back up database: %w", err)
 			}
 			return fmt.Errorf("failed to back up database: pg_dump exited with status %d", exitCode)
-		} else {
-			fmt.Fprintln(r.Out, "Database: backed up")
 		}
+		if _, _, err := recoveryDumpVersions(dumpFile); err != nil {
+			return fmt.Errorf("checking database dump: %w", err)
+		}
+		if err := r.FS.WriteFile(filepath.Join(backupDir, recoverySQLFormatFile), []byte(recoverySQLFormat), 0600); err != nil {
+			return err
+		}
+		fmt.Fprintln(r.Out, "Database: backed up")
 	} else {
 		fmt.Fprintln(r.Out, "Database: skipped (no password configured)")
 	}

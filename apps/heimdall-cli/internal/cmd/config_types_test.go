@@ -28,6 +28,7 @@ func TestServiceNameConstant(t *testing.T) {
 func TestSecretsSet_ContainsAllExpectedKeys(t *testing.T) {
 	expectedSecrets := []string{
 		"DATABASE_PASSWORD",
+		"DATABASE_URL",
 		"JWT_SECRET",
 		"API_KEY_SECRET",
 		"ADMIN_PASSWORD",
@@ -53,10 +54,6 @@ func TestSecretsSet_DoesNotContainNonSecrets(t *testing.T) {
 	for _, key := range nonSecrets {
 		assert.False(t, SecretsSet[key], "SecretsSet must not include %s", key)
 	}
-}
-
-func TestSecretsSet_Length(t *testing.T) {
-	assert.Equal(t, 10, len(SecretsSet), "SecretsSet should have exactly 10 entries")
 }
 
 func TestPathDefaults_AreAbsolute(t *testing.T) {

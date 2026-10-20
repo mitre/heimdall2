@@ -3,8 +3,10 @@ package cmd
 import (
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -359,9 +361,80 @@ func TestWriteEnvReturnsReadErrors(t *testing.T) {
 	manager := &FileEnvManager{Path: path}
 	_, readErr := manager.ReadEnv()
 	require.Error(t, readErr)
-	require.EqualError(t, manager.WriteEnvFile(map[string]string{"KEY": "value"}), readErr.Error())
-	require.EqualError(t, manager.WriteEnvKey("KEY", "value"), readErr.Error())
+	require.ErrorContains(t, manager.WriteEnvFile(map[string]string{"KEY": "value"}), "must be a regular file")
+	require.ErrorContains(t, manager.WriteEnvKey("KEY", "value"), "must be a regular file")
 	info, err := os.Stat(path)
 	require.NoError(t, err)
 	require.True(t, info.IsDir())
+}
+
+func TestWriteEnvFailurePreservesOriginal(t *testing.T) {
+	if path := os.Getenv("HEIMDALL_TEST_ENV_WRITE_FAILURE"); path != "" {
+		var limit syscall.Rlimit
+		require.NoError(t, syscall.Getrlimit(syscall.RLIMIT_FSIZE, &limit))
+		original := limit
+		limit.Cur = 32
+		signal.Ignore(syscall.SIGXFSZ)
+		require.NoError(t, syscall.Setrlimit(syscall.RLIMIT_FSIZE, &limit))
+		defer func() { require.NoError(t, syscall.Setrlimit(syscall.RLIMIT_FSIZE, &original)) }()
+		manager := &FileEnvManager{Path: path}
+		require.Error(t, manager.WriteEnvKey("DATABASE_PASSWORD", strings.Repeat("new", 40)))
+		return
+	}
+	dir := t.TempDir()
+	path := filepath.Join(dir, "backend.env")
+	original := "DATABASE_PASSWORD=original\nJWT_SECRET=original-jwt\nAPI_KEY_SECRET=original-api\n"
+	require.NoError(t, os.WriteFile(path, []byte(original), 0600))
+	child := exec.Command(os.Args[0], "-test.run=^TestWriteEnvFailurePreservesOriginal$")
+	child.Env = append(os.Environ(), "HEIMDALL_TEST_ENV_WRITE_FAILURE="+path)
+	output, err := child.CombinedOutput()
+	require.NoError(t, err, string(output))
+	content, err := os.ReadFile(path)
+	require.NoError(t, err)
+	require.Equal(t, original, string(content))
+	entries, err := os.ReadDir(dir)
+	require.NoError(t, err)
+	require.Len(t, entries, 1, "failed writes must remove temporary secrets")
+}
+
+func TestWriteEnvPreservesTargetMetadata(t *testing.T) {
+	dir := t.TempDir()
+	target := filepath.Join(dir, "backend.env")
+	require.NoError(t, os.WriteFile(target, []byte("KEY=old\n"), 0600))
+	if os.Geteuid() == 0 {
+		require.NoError(t, os.Chown(target, 12345, 12346))
+	}
+	before, err := os.Stat(target)
+	require.NoError(t, err)
+	link := filepath.Join(dir, ".env")
+	require.NoError(t, os.Symlink(target, link))
+	require.NoError(t, (&FileEnvManager{Path: link}).WriteEnvKey("KEY", "new"))
+	content, err := os.ReadFile(target)
+	require.NoError(t, err)
+	require.Equal(t, "KEY=\"new\"\n", string(content))
+	after, err := os.Stat(target)
+	require.NoError(t, err)
+	require.Equal(t, before.Mode(), after.Mode())
+	require.Equal(t, before.Sys().(*syscall.Stat_t).Uid, after.Sys().(*syscall.Stat_t).Uid)
+	require.Equal(t, before.Sys().(*syscall.Stat_t).Gid, after.Sys().(*syscall.Stat_t).Gid)
+	linkInfo, err := os.Lstat(link)
+	require.NoError(t, err)
+	require.NotZero(t, linkInfo.Mode()&os.ModeSymlink)
+}
+
+func TestWriteEnvRejectsSpecialFiles(t *testing.T) {
+	dir := t.TempDir()
+	fifo := filepath.Join(dir, "pipe")
+	require.NoError(t, syscall.Mkfifo(fifo, 0600))
+	link := filepath.Join(dir, "backend.env")
+	require.NoError(t, os.Symlink(fifo, link))
+	for _, path := range []string{fifo, link} {
+		require.ErrorContains(t, (&FileEnvManager{Path: path}).WriteEnvKey("KEY", "value"), "must be a regular file")
+	}
+	info, err := os.Stat(fifo)
+	require.NoError(t, err)
+	require.NotZero(t, info.Mode()&os.ModeNamedPipe)
+	entries, err := os.ReadDir(dir)
+	require.NoError(t, err)
+	require.Len(t, entries, 2)
 }

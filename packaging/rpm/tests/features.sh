@@ -23,23 +23,26 @@ archive=$(find /tmp/heimdall-recovery -maxdepth 1 -name '*.tar.gz' -print -quit)
 [[ $(stat -c %a "$archive") == 600 ]]
 tar -tzf "$archive" > /tmp/rpm-recovery-members
 grep -q '/database.sql$' /tmp/rpm-recovery-members
+grep -q '/database.restore$' /tmp/rpm-recovery-members
 grep -q '/caddy-config/' /tmp/rpm-recovery-members
 grep -q '/caddy-state/' /tmp/rpm-recovery-members
 if grep -Eq 'PG_VERSION|/base/[0-9]+/' /tmp/rpm-recovery-members; then exit 1; fi
 systemctl stop heimdall-server heimdall-caddy
-"${pg[@]}" -d postgres -c "DROP DATABASE \"$DATABASE_NAME\""
-"${pg[@]}" -d postgres -c "CREATE DATABASE \"$DATABASE_NAME\" OWNER \"$DATABASE_USERNAME\""
-[[ $(query "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public'") == 0 ]]
+# Restore must replace existing data; the CLI receives the populated database.
+query 'UPDATE rpm_test_sentinel SET id=2'
 invalid=$(mktemp -d)
-cp /etc/heimdall-server/backend.env "$invalid/backend.env"
-printf 'SELECT rpm_test_missing_function();\nSELECT 1;\n' > "$invalid/database.sql"
-tar -czf /tmp/rpm-invalid-recovery.tar.gz -C "$invalid" backend.env database.sql
+tar -xzf "$archive" -C "$invalid" --strip-components=1
+# A failure after replaying the dump must roll back its DROP/CREATE/COPY work.
+printf '\nSELECT rpm_test_missing_function();\n' >> "$invalid/database.sql"
+tar -czf /tmp/rpm-invalid-recovery.tar.gz -C "$invalid" backend.env database.sql database.restore
 if heimdall-cli restore /tmp/rpm-invalid-recovery.tar.gz > /tmp/rpm-invalid-restore.log 2>&1; then
   cat /tmp/rpm-invalid-restore.log
   echo 'Restore incorrectly accepted a SQL error.' >&2
   exit 1
 fi
 if systemctl is-active --quiet heimdall-server; then exit 1; fi
+[[ $(query 'SELECT id FROM rpm_test_sentinel') == 2 ]]
+[[ $(query 'SELECT COUNT(*) FROM "SequelizeMeta"') == "$migrations" ]]
 cat /tmp/rpm-invalid-restore.log
 # The other entries are valid; only the escaping Caddy member must be rejected.
 printf 'SELECT 1;\n' > "$invalid/database.sql"

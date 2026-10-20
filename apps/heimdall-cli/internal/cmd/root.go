@@ -140,7 +140,6 @@ func initConfig(v *viper.Viper, cfgFile string) error {
 		v.SetConfigType("yaml")
 		v.AddConfigPath("/etc/heimdall-server")
 		v.AddConfigPath("$HOME/.heimdall")
-		v.AddConfigPath(".")
 	}
 	// Config file is optional
 	_ = v.ReadInConfig()

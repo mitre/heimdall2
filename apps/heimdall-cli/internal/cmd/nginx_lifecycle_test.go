@@ -85,7 +85,7 @@ func TestNginxRecoveryRoundTrip(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, os.FileMode(0640), info.Mode().Perm())
 	}
-	require.Equal(t, "-- sentinel SQL\n", e.sql)
+	require.Equal(t, recoverySQLHeaders+"-- sentinel SQL\n", e.sql)
 	var stops []string
 	var nginxOwner bool
 	for _, call := range e.calls {
