@@ -24,9 +24,10 @@ make test-all           # test + test-functional
 ## Native CI checks
 
 `Heimdall CLI CI` runs on every pull request and pushes to `master`, with
-native Linux jobs named `CLI / amd64` and `CLI / arm64`. It also accepts an
-optional reusable-workflow `ref` input for validating an exact release commit;
-release validation disables Actions cache reuse. Both jobs use Go 1.26.9 with
+native Linux jobs named `CLI / amd64` and `CLI / arm64`. Release validation calls
+the same workflow; all checkouts use the event's exact `github.sha`, including
+manual runs on a selected branch or tag. Actions cache reuse is enabled only for
+pull requests and pushes to `master`. Both jobs use Go 1.26.9 with
 `GOTOOLCHAIN=local`, read-only repository permissions, and no publishing secrets.
 After the first successful hosted run, maintainers should add these stable check
 names to repository rules while preserving existing required checks.

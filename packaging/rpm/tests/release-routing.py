@@ -26,13 +26,17 @@ def condition(filename, job):
     assert guard, (filename, job, "missing release guard")
     return guard.group(1)
 
-def accepts(expression, event, tag):
-    github = SimpleNamespace(event_name=event,
+def evaluate(expression, **context):
+    expression = re.sub(r"^\$\{\{\s*|\s*\}\}$", "", expression)
+    # Evaluate this repository's simple expressions against synthetic event data.
+    return eval(expression.replace("&&", " and ").replace("||", " or "),
+                {"__builtins__": {}},
+                {"startsWith": str.startswith, **context})
+
+def accepts(expression, event, tag, ref=""):
+    github = SimpleNamespace(event_name=event, ref=ref,
         event=SimpleNamespace(release=SimpleNamespace(tag_name=tag)))
-    # Evaluate this repository's simple job guards against synthetic event data.
-    return bool(eval(expression.replace("&&", " and ").replace("||", " or "),
-                     {"__builtins__": {}},
-                     {"github": github, "startsWith": str.startswith}))
+    return bool(evaluate(expression, github=github))
 
 for filename, (job, manual) in jobs.items():
     expr = condition(filename, job)
@@ -48,3 +52,36 @@ assert accepts(publish, "release", "v2.14.0")
 assert not accepts(publish, "release", "apps/heimdall-cli/v0.9.0")
 assert not accepts(publish, "workflow_dispatch", "")
 print("Server publication is isolated from CLI release events")
+
+for filename, checkout_count in (("heimdall-cli-release.yml", 2),
+                                 ("heimdall-cli-ci.yml", 1)):
+    source = (workflows / filename).read_text()
+    refs = re.findall(r"^          ref: (.+)$", source, re.M)
+    assert len(refs) == checkout_count, (filename, "review changed checkouts")
+    for ref in ("refs/heads/master", "refs/heads/cli-candidate",
+                "refs/tags/apps/heimdall-cli/v0.9.0"):
+        github = SimpleNamespace(sha="a" * 40, ref=ref,
+            event=SimpleNamespace(inputs=SimpleNamespace(ref="untrusted")))
+        for expression in refs:
+            selected = evaluate(expression, github=github,
+                inputs=SimpleNamespace(ref="untrusted"),
+                needs=SimpleNamespace(prepare=SimpleNamespace(
+                    outputs=SimpleNamespace(sha="b" * 40))))
+            assert selected == github.sha, (filename, ref, selected)
+
+ci = (workflows / "heimdall-cli-ci.yml").read_text()
+cache = re.search(r"^          cache: (.+)$", ci, re.M).group(1)
+publish = condition("heimdall-cli-release.yml", "publish")
+for event, ref, cached, published in (
+    ("pull_request", "refs/pull/42/merge", True, False),
+    ("push", "refs/heads/master", True, False),
+    ("push", "refs/tags/v2.14.0", False, False),
+    ("push", "refs/tags/apps/heimdall-cli/v0.9.0", False, True),
+    ("workflow_dispatch", "refs/heads/master", False, False),
+    ("workflow_dispatch", "refs/heads/cli-candidate", False, False),
+    ("workflow_dispatch", "refs/tags/apps/heimdall-cli/v0.9.0", False, False),
+):
+    github = SimpleNamespace(event_name=event, ref=ref)
+    assert evaluate(cache, github=github, inputs=SimpleNamespace(ref="")) == cached, (event, ref)
+    assert accepts(publish, event, "", ref) == published, (event, ref)
+print("CLI checkouts use the event commit; manual validation skips caching and publishing")

@@ -3,12 +3,7 @@ on:
   pull_request:
   push:
     branches: [master]
-  workflow_call:
-    inputs:
-      ref:
-        type: string
-        required: false
-        default: ""
+  workflow_call: {}
 permissions:
   contents: read
 concurrency:
@@ -33,13 +28,13 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.ref || github.ref }}
+          ref: ${{ github.sha }}
           persist-credentials: false
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: apps/heimdall-cli/go.mod
           cache-dependency-path: apps/heimdall-cli/go.sum
-          cache: ${{ inputs.ref == '' }}
+          cache: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/master') }}
       - name: Verify toolchain, formatting and module metadata
         run: |
           test "$(go env GOVERSION)" = go1.26.9

@@ -256,9 +256,13 @@ release does not modify existing server installations.
    including source extraction, installed CLI version/provenance, manpages,
    SRPM rebuild, and disconnected lifecycle checks. Keep compatibility pending
    until those results exist; preserve the stable RPM publication gate.
-3. Run **Release Heimdall CLI** manually with that exact commit SHA in `ref`.
-   Manual runs accept a commit, branch, or tag and only upload workflow
-   artifacts; they cannot create or change releases. Download both archives
+3. Run **Release Heimdall CLI** manually using GitHub's branch selector
+   (or `gh workflow run heimdall-cli-release.yml --ref <branch-or-tag>`).
+   The workflow validates the selected branch or tag's commit at dispatch time;
+   confirm the run's commit SHA matches the intended release commit. Manual runs
+   only upload workflow artifacts; they cannot create or change releases. All
+   jobs use that event commit to keep source and cache scope aligned, with no
+   separate source-ref input. Download both archives
    and their checksums. Inspect version/commit/date metadata, manuals, license,
    and checksums using the [archive checks](./docs/testing.md#release-archive-verification).
    A successful hosted manual run is required before calling release CI ready.

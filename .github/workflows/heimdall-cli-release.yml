@@ -2,17 +2,11 @@ name: Release Heimdall CLI
 on:
   push:
     tags: ['apps/heimdall-cli/v*']
-  workflow_dispatch:
-    inputs:
-      ref:
-        description: 'Commit, branch, or tag to validate; manual runs never publish'
-        type: string
-        required: true
-        default: master
+  workflow_dispatch: {}
 permissions:
   contents: read
 concurrency:
-  group: cli-release-${{ github.event.inputs.ref || github.ref }}
+  group: cli-release-${{ github.ref }}
   cancel-in-progress: false
 env:
   GOTOOLCHAIN: local
@@ -27,7 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.ref || github.ref }}
+          # Keep executed source in the workflow event's cache scope.
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
       - name: Validate the selected source
@@ -53,8 +48,6 @@ jobs:
   checks:
     needs: prepare
     uses: ./.github/workflows/heimdall-cli-ci.yml
-    with:
-      ref: ${{ needs.prepare.outputs.sha }}
 
   build:
     needs: [prepare, checks]
@@ -73,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ needs.prepare.outputs.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
