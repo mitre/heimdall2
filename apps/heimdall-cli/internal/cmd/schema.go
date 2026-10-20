@@ -125,6 +125,7 @@ func schemaEntries() []ConfigEntry {
 		// GitLab OAuth
 		{Key: "GITLAB_CLIENTID", Category: "gitlab", Type: "str", Default: "", Description: "GitLab OAuth app client ID. Set to enable GitLab login."},
 		{Key: "GITLAB_CLIENTSECRET", Category: "gitlab", Type: "secret", Default: "", Description: "GitLab OAuth app client secret."},
+		{Key: "GITLAB_SECRET", Category: "gitlab", Type: "secret", Default: "", Description: "Legacy alias for GITLAB_CLIENTSECRET."},
 		{Key: "GITLAB_BASEURL", Category: "gitlab", Type: "url", Default: "https://gitlab.com", Description: "GitLab instance URL."},
 
 		// Google OAuth

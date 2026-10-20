@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -151,9 +152,12 @@ func initConfig(v *viper.Viper, cfgFile string) error {
 		v.AddConfigPath("/etc/heimdall-server")
 		v.AddConfigPath("$HOME/.heimdall")
 	}
-	// Config file is optional
-	_ = v.ReadInConfig()
-	return nil
+	err := v.ReadInConfig()
+	var missing viper.ConfigFileNotFoundError
+	if cfgFile == "" && errors.As(err, &missing) {
+		return nil
+	}
+	return err
 }
 
 // Execute runs the root command.

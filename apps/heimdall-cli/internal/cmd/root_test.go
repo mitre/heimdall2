@@ -66,6 +66,71 @@ func TestLocalConfigRequiresExplicitPath(t *testing.T) {
 	}
 }
 
+func TestRootRejectsInvalidExplicitConfig(t *testing.T) {
+	for _, name := range []string{"missing", "malformed"} {
+		t.Run(name, func(t *testing.T) {
+			dir := t.TempDir()
+			config := filepath.Join(dir, "cli.yaml")
+			env := filepath.Join(dir, "backend.env")
+			require.NoError(t, os.WriteFile(env, []byte("PORT=3000\n"), 0600))
+			if name == "malformed" {
+				require.NoError(t, os.WriteFile(config, []byte("db-host: [broken\n"), 0600))
+			}
+			out, _, err := executeCommand(t, "--config", config, "--env-file", env, "config", "get", "PORT")
+			require.Error(t, err)
+			require.Empty(t, out, "invalid CLI configuration must stop the command")
+		})
+	}
+}
+
+type unreadableConfigFS struct{ afero.Fs }
+
+func (fs unreadableConfigFS) Open(name string) (afero.File, error) {
+	if filepath.Base(name) == "heimdall-cli.yaml" {
+		return nil, &os.PathError{Op: "open", Path: name, Err: os.ErrPermission}
+	}
+	return fs.Fs.Open(name)
+}
+
+func TestInitConfigOnlyIgnoresAbsentOptionalFile(t *testing.T) {
+	const path = "/etc/heimdall-server/heimdall-cli.yaml"
+	for _, tc := range []struct {
+		name, content                   string
+		explicit, unreadable, wantError bool
+	}{
+		{name: "optional missing"},
+		{name: "optional malformed", content: "db-host: [broken\n", wantError: true},
+		{name: "optional unreadable", content: "db-host: configured.example.test\n", unreadable: true, wantError: true},
+		{name: "explicit unreadable", content: "db-host: configured.example.test\n", explicit: true, unreadable: true, wantError: true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			fs := afero.NewMemMapFs()
+			if tc.content != "" {
+				require.NoError(t, fs.MkdirAll(filepath.Dir(path), 0700))
+				require.NoError(t, afero.WriteFile(fs, path, []byte(tc.content), 0600))
+			}
+			v := viper.New()
+			v.SetFs(fs)
+			if tc.unreadable {
+				v.SetFs(unreadableConfigFS{fs})
+			}
+			config := ""
+			if tc.explicit {
+				config = path
+			}
+			err := initConfig(v, config)
+			if tc.wantError {
+				require.Error(t, err)
+				if tc.unreadable {
+					require.ErrorIs(t, err, os.ErrPermission)
+				}
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
 func TestSetupDatabaseInputPrecedence(t *testing.T) {
 	const yaml = "db-host: yaml.example.test\ndb-port: 6432\ndb-user: yamluser\ndb-password: yaml-secret\ndb-name: yamldb\n"
 	const saved = "DATABASE_HOST=saved.example.test\nDATABASE_PORT=7432\nDATABASE_USERNAME=saveduser\nDATABASE_PASSWORD=saved-secret\nDATABASE_NAME=saveddb\n"

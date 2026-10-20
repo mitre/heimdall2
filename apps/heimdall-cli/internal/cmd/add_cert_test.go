@@ -3,6 +3,8 @@ package cmd
 import (
 	"bytes"
 	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -102,4 +104,64 @@ func TestAddCert_FileNotExists(t *testing.T) {
 	}
 	err := r.Run("/nonexistent/cert.pem")
 	assert.Error(t, err)
+}
+
+type addCertTrustFileSystem struct{ osFileSystem }
+
+func (*addCertTrustFileSystem) CopyFile(_, _ string) error { return nil }
+
+func TestAddCertCmdUsesSelectedEnvFile(t *testing.T) {
+	for _, tc := range []struct {
+		name     string
+		useFlag  bool
+		injected bool
+	}{
+		{name: "env-file flag", useFlag: true},
+		{name: "HEIMDALL_ENV_FILE"},
+		{name: "injected environment is preserved", useFlag: true, injected: true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dir := t.TempDir()
+			selected := filepath.Join(dir, "selected.env")
+			other := filepath.Join(dir, "other.env")
+			cert := filepath.Join(dir, "corporate-ca.pem")
+			config := filepath.Join(dir, "cli.yaml")
+			const original = "# Preserve existing settings\nEXTERNAL_URL=https://heimdall.example.test\n"
+			for path, content := range map[string]string{selected: original, other: original, cert: "certificate", config: ""} {
+				require.NoError(t, os.WriteFile(path, []byte(content), 0600))
+			}
+			t.Setenv("HEIMDALL_ENV_FILE", selected)
+			args := []string{"--config", config, "add-cert", cert}
+			if tc.useFlag {
+				t.Setenv("HEIMDALL_ENV_FILE", other)
+				args = append(args, "--env-file", selected)
+			}
+			runner := &AddCertRunner{
+				Exec: &FakeExecRunner{Results: map[string]FakeExecResult{}},
+				FS:   &addCertTrustFileSystem{},
+				Out:  new(bytes.Buffer),
+			}
+			if tc.injected {
+				runner.Env = &FileEnvManager{Path: other}
+			}
+			root := NewRootCmd()
+			previous, _, err := root.Find([]string{"add-cert"})
+			require.NoError(t, err)
+			root.RemoveCommand(previous)
+			root.AddCommand(NewAddCertCmd(runner))
+			root.SetArgs(args)
+			require.NotPanics(t, func() { err = root.Execute() }, "initialize the environment from the resolved command paths")
+			require.NoError(t, err)
+			if tc.injected {
+				selected, other = other, selected
+			}
+			updated, err := os.ReadFile(selected)
+			require.NoError(t, err)
+			require.Contains(t, string(updated), original)
+			require.Equal(t, "/etc/pki/tls/certs/ca-bundle.crt", ParseEnv(string(updated))["NODE_EXTRA_CA_CERTS"])
+			unchanged, err := os.ReadFile(other)
+			require.NoError(t, err)
+			require.Equal(t, original, string(unchanged))
+		})
+	}
 }

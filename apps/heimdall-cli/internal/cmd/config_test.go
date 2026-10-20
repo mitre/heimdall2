@@ -94,27 +94,34 @@ func TestConfigGet_MasksSecretValue(t *testing.T) {
 	}
 }
 
-func TestConfig_MasksDatabaseURLCredentials(t *testing.T) {
-	const databaseURL = "postgres://app:private-database-password@db.example/prod"
-	for _, operation := range []string{"get", "list", "set"} {
-		t.Run(operation, func(t *testing.T) {
-			out := new(bytes.Buffer)
-			env := &FakeEnvManager{Env: map[string]string{"DATABASE_URL": databaseURL}}
-			r := &ConfigRunner{Env: env, Out: out, ErrOut: out}
-			var err error
-			switch operation {
-			case "get":
-				err = r.Get("DATABASE_URL")
-			case "list":
-				err = r.List()
-			case "set":
-				err = r.Set("DATABASE_URL", databaseURL)
-			}
-			require.NoError(t, err)
-			require.NotContains(t, out.String(), "private-database-password")
-			require.Contains(t, out.String(), "pos***rod")
-			require.Equal(t, databaseURL, env.Env["DATABASE_URL"])
-		})
+func TestConfig_MasksCredentials(t *testing.T) {
+	for _, tc := range []struct{ key, value, secret, masked string }{
+		{"DATABASE_URL", "postgres://app:private-database-password@db.example/prod", "private-database-password", "pos***rod"},
+		{"GITLAB_SECRET", "example-gitlab-secret", "example-gitlab-secret", "exa***ret"},
+		{"HTTPS_PROXY", "http://proxy-user:private-proxy-password@proxy.example:8080", "private-proxy-password", "htt***080"},
+	} {
+		for _, operation := range []string{"get", "list", "set"} {
+			t.Run(tc.key+"/"+operation, func(t *testing.T) {
+				out := new(bytes.Buffer)
+				env := &FakeEnvManager{Env: map[string]string{tc.key: tc.value}}
+				r := &ConfigRunner{Env: env, Out: out, ErrOut: out}
+				var err error
+				switch operation {
+				case "get":
+					err = r.Get(tc.key)
+				case "list":
+					err = r.List()
+				case "set":
+					delete(env.Env, tc.key)
+					err = r.Set(tc.key, tc.value)
+				}
+				require.NoError(t, err)
+				require.NotContains(t, out.String(), tc.secret)
+				require.Contains(t, out.String(), tc.key)
+				require.Contains(t, out.String(), tc.masked)
+				require.Equal(t, tc.value, env.Env[tc.key])
+			})
+		}
 	}
 }
 

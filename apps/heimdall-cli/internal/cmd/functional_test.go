@@ -194,7 +194,8 @@ func TestFunctional_ConfigFlagWithValidFile(t *testing.T) {
 }
 
 func TestFunctional_ConfigFlagWithMissingFile(t *testing.T) {
-	// Config file is optional — should not error
-	_, code := run("--config", "/tmp/no-such-heimdall-config-XXXXX.yaml", "config", "list")
-	assert.Equal(t, 0, code)
+	config := filepath.Join(t.TempDir(), "missing.yaml")
+	out, code := run("--config", config, "config", "list")
+	assert.NotEqual(t, 0, code)
+	assert.Contains(t, out, config)
 }

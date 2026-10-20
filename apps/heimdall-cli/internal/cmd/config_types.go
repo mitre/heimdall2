@@ -61,6 +61,7 @@ var SecretsSet = map[string]bool{
 	"GOOGLE_CLIENTSECRET": true,
 	"OIDC_CLIENT_SECRET":  true,
 	"LDAP_PASSWORD":       true,
+	"HTTPS_PROXY":         true,
 }
 
 // PasswordRules holds password complexity settings.

@@ -62,10 +62,10 @@ func (r *AddCertRunner) Run(certPath string) error {
 
 // NewAddCertCmd creates the add-cert command.
 func NewAddCertCmd(runner *AddCertRunner) *cobra.Command {
+	useCommandEnv := runner == nil || runner.Env == nil
 	if runner == nil {
 		runner = &AddCertRunner{
 			Exec:      &execRunner{},
-			Env:       NewFileEnvManager(),
 			FS:        &osFileSystem{},
 			CheckRoot: requireRoot,
 		}
@@ -92,6 +92,9 @@ Requires root privileges.`,
   sudo heimdall-cli add-cert /tmp/my-ca.crt && sudo systemctl restart heimdall-server`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if useCommandEnv {
+				runner.Env = &FileEnvManager{Path: commandPaths(cmd).EnvFile}
+			}
 			initIO(&runner.Out, nil, cmd)
 			return runner.Run(args[0])
 		},
