@@ -79,6 +79,13 @@ function description(data: Record<string, unknown>): string {
   return combinedDescription || 'no description found';
 }
 
+function fingerprint(data: Record<string, unknown>): string {
+  const vulnerabilityId = _.get(data, 'vulnerability.id') as string;
+  const namespace = _.get(data, 'vulnerability.namespace') as string;
+  const packageId = _.get(data, 'artifact.id') as string;
+  return `${vulnerabilityId}/${namespace}/${packageId}`;
+}
+
 export class AnchoreGrypeMapper extends BaseConverter {
   withRaw: boolean;
   metadata: Record<string, unknown>;
@@ -91,7 +98,6 @@ export class AnchoreGrypeMapper extends BaseConverter {
   ): MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
     return {
       path: matchesPath,
-      key: 'id',
       tags: {
         nist: ['SA-11', 'RA-5'],
         cveid: {path: 'vulnerability.id'},
@@ -223,7 +229,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
               ...this.controlMatches(
                 'wrapper.matches',
                 (data: Record<string, unknown>): string =>
-                  `Grype/${_.get(data, 'vulnerability.id')}`,
+                  `Grype/${fingerprint(data)}`,
                 impactMapping(IMPACT_MAPPING),
                 (data: Record<string, unknown>): string =>
                   `${JSON.stringify(_.get(data, 'artifact'), null, 2)}`
@@ -233,7 +239,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
               ...this.controlMatches(
                 'wrapper.ignoredMatches',
                 (data: Record<string, unknown>): string =>
-                  `Grype-Ignored-Match/${_.get(data, 'vulnerability.id')}`,
+                  `Grype-Ignored-Match/${fingerprint(data)}`,
                 () => 0,
                 (data: Record<string, unknown>): string =>
                   `This finding is ignored due to the following applied ignored rules:\n${JSON.stringify(_.get(data, 'appliedIgnoreRules'), null, 2)}\nArtifact Information:\n${JSON.stringify(_.get(data, 'artifact'), null, 2)}`
