@@ -34,24 +34,26 @@ function filterSite<T>(input: Array<T>, name?: string) {
     );
   }
 }
+
 function impactMapping(input: unknown): number {
   if (typeof input === 'string') {
     const impact = parseInt(input);
-    if (impact == 0) {
-      return 0;
-    } else if (impact == 1) {
-      return 0.3;
-    } else if (impact === 2) {
-      return 0.5;
-    } else if (impact >= 3) {
-      return 0.7;
-    } else {
-      return 0;
+
+    switch (impact) {
+      case 1:
+        return 0.3;
+      case 2:
+        return 0.5;
+      case 3:
+        return 0.7;
+      default:
+        return 0;
     }
   } else {
     return 0;
   }
 }
+
 function nistTag(cweid: string): string[] {
   return CWE_NIST_MAPPING.nistFilter(
     [cweid],
