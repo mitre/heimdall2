@@ -542,6 +542,33 @@ The first command will start an instance of Heimdall Server and exposes addition
 
 See the [wiki](https://github.com/mitre/heimdall2/wiki/Docker-Bake).
 
+Build and validate the server image locally:
+
+```sh
+docker build --pull -t heimdall2:security-test .
+sh scripts/test-container.sh heimdall2:security-test
+```
+
+After configuring the normal Compose environment, select the rebuilt image with
+`HEIMDALL_IMAGE=heimdall2:security-test docker compose up -d`. Without this
+variable, Compose continues to use MITRE's published image.
+
+The smoke test starts disposable PostgreSQL and Heimdall containers, checks the
+frontend, registration, login, evaluation upload/readback, compressed request
+handling, and request size limits, then removes its containers and network. It
+does not connect to an existing database or expose host ports.
+
+The server uses a minimal UBI 9 runtime with the upstream Node.js 22.23.4 binary,
+which includes the [October 2026 security fixes](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
+Both build images and the UBI runtime base are pinned by digest; update their
+defaults together in `Dockerfile`, `Dockerfile.lite`, and `docker-bake.hcl` when
+adopting another release. `BUILD_CONTAINER` selects the Debian-based Node build
+image; `BASE_CONTAINER` selects the server's UBI runtime. The Node binary is
+upstream-provided, not a Red Hat-supported or FIPS-certified Node package.
+The server image does not include npm or Yarn; database migrations, seeds, and
+startup run directly through Node. For example, to run a migration manually, use
+`docker exec -w /app/apps/backend CONTAINER node node_modules/sequelize-cli/lib/sequelize db:migrate`.
+
 ### Creating a Release
 
 **Note:** This action requires appropriate privileges on the repository to perform.

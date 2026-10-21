@@ -30,7 +30,7 @@ services:
         target: /etc/pki/ca-trust/source/anchors/
 
   server:
-    image: mitre/heimdall2:release-latest
+    image: ${HEIMDALL_IMAGE:-mitre/heimdall2:release-latest}
     restart: unless-stopped
     environment:
       - NODE_ENV=production

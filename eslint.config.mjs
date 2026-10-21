@@ -60,6 +60,7 @@ export default defineConfig([
       vue.configs['flat/vue2-recommended'],
     ],
     files: ['**/*.{js,mjs,cjs,ts,mts,cts,vue}'],
+    ignores: ['scripts/container-smoke.cjs'],
     languageOptions: {
       ecmaVersion: 'latest',
       parserOptions: { 
@@ -119,6 +120,23 @@ export default defineConfig([
       'unicorn/prefer-node-protocol': 'off',
       'unicorn/prevent-abbreviations': 'off',
     },
+  },
+  {
+    extends: [js.configs.recommended, n.configs['flat/recommended']],
+    files: ['scripts/container-smoke.cjs'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        Blob: 'readonly',
+        Buffer: 'readonly',
+        fetch: 'readonly',
+        FormData: 'readonly',
+        process: 'readonly',
+        URL: 'readonly',
+        URLSearchParams: 'readonly',
+      },
+    },
+    name: 'standalone container smoke test',
   },
   {
     extends: [json.configs.recommended],

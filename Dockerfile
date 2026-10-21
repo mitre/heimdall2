@@ -1,6 +1,7 @@
-ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/nodejs-22-minimal:1
+ARG BUILD_CONTAINER=node:22.23.4-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:9.8@sha256:c4c285d42941ebb2bd4da878479008e1e4536bb599aad1dbe568f89de9053661
 
-FROM $BASE_CONTAINER AS builder
+FROM $BUILD_CONTAINER AS builder
 
 ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
@@ -12,7 +13,7 @@ USER 0
 WORKDIR /src
 
 # python3/make/compiler is a requirement for node-gyp
-RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y python3 make gcc-c++ yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
 COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/
@@ -39,7 +40,11 @@ ENV NODE_ENV=$NODE_ENV
 USER 0
 WORKDIR /app
 
-RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
+RUN microdnf update -y && microdnf install -y libstdc++ && microdnf clean all
+
+# Use the security-patched upstream runtime; UBI's Node RPM currently lags it.
+COPY --from=builder /usr/local/bin/node /usr/local/bin/node
+RUN node --version
 
 COPY --from=builder --chown=1001 /src/package.json ./
 COPY --from=builder --chown=1001 /src/apps/backend/package.json apps/backend/

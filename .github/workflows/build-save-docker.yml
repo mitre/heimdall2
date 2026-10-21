@@ -85,6 +85,10 @@ jobs:
           targets: server-${{ github.event.inputs.platform || 'amd64' }}
           set: |
             *.output=type=docker,dest=${{ runner.temp }}/heimdall.tar
+      - name: Load and smoke-test the production image
+        run: |
+          docker load --input "${{ runner.temp }}/heimdall.tar"
+          sh scripts/test-container.sh "mitre/heimdall2:${DOCKER_TAG}"
       - name: Upload docker tarball
         uses: actions/upload-artifact@v4
         with:
