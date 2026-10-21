@@ -24,7 +24,7 @@ func TestExtractDBConfig_CustomValues(t *testing.T) {
 		"DATABASE_HOST":     "db.example.com",
 		"DATABASE_PORT":     "5433",
 		"DATABASE_USERNAME": "heimdall",
-		"DATABASE_PASSWORD": "s3cret",
+		"DATABASE_PASSWORD": "<password>",
 		"DATABASE_NAME":     "mydb",
 	}
 	cfg := ExtractDBConfig(env)
@@ -32,7 +32,7 @@ func TestExtractDBConfig_CustomValues(t *testing.T) {
 	assert.Equal(t, "db.example.com", cfg.Host)
 	assert.Equal(t, 5433, cfg.Port)
 	assert.Equal(t, "heimdall", cfg.User)
-	assert.Equal(t, "s3cret", cfg.Password)
+	assert.Equal(t, "<password>", cfg.Password)
 	assert.Equal(t, "mydb", cfg.DBName)
 }
 

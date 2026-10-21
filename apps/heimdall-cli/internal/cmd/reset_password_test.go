@@ -176,14 +176,15 @@ func TestResetPassword_ErrorDoesNotLeakEmail(t *testing.T) {
 }
 
 func TestResetPassword_InteractiveDoubleEntry(t *testing.T) {
+	password := strings.Repeat("aB1!", 4)
 	runner := &ResetPasswordRunner{
 		Exec:   &FakeExecRunner{Results: map[string]FakeExecResult{"psql -h": {Stdout: "UPDATE 1"}}},
 		Env:    &FakeEnvManager{Env: map[string]string{"DATABASE_PASSWORD": "dbpass"}},
 		Hasher: &FakePasswordHasher{},
 		Prompter: &FakePrompter{
 			Inputs: map[string]string{
-				"New password (blank to auto-generate)": "aB1!cD2@eF3#gH4$",
-				"Confirm password":                      "aB1!cD2@eF3#gH4$",
+				"New password (blank to auto-generate)": password,
+				"Confirm password":                      password,
 			},
 			IsTTY: true,
 		},

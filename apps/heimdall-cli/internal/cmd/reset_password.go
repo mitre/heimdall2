@@ -22,6 +22,12 @@ type ResetPasswordRunner struct {
 	CheckRoot func() error
 }
 
+func validResetEmail(email string) bool {
+	// Wrapping the addr-spec excludes display names and comments without banning quoted local parts.
+	_, err := mail.ParseAddress("<" + email + ">")
+	return err == nil && strings.TrimSpace(email) == email && !strings.ContainsAny(email, "\r\n\x00")
+}
+
 // Run executes the reset-password logic.
 func (r *ResetPasswordRunner) Run(email, password string) error {
 	if r.CheckRoot != nil {
@@ -29,9 +35,7 @@ func (r *ResetPasswordRunner) Run(email, password string) error {
 			return err
 		}
 	}
-	// Wrapping the addr-spec excludes display names and comments without banning quoted local parts.
-	_, err := mail.ParseAddress("<" + email + ">")
-	if err != nil || strings.TrimSpace(email) != email || strings.ContainsAny(email, "\r\n\x00") {
+	if !validResetEmail(email) {
 		return fmt.Errorf("invalid email format")
 	}
 

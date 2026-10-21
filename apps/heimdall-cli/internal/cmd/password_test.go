@@ -18,7 +18,7 @@ func TestValidatePassword_TooShort(t *testing.T) {
 func TestValidatePassword_MissingClasses(t *testing.T) {
 	rules := DefaultPasswordRules()
 	// Only lowercase, long enough
-	errs := ValidatePassword("abcdefghijklmnopqrst", rules)
+	errs := ValidatePassword(strings.Repeat("a", 20), rules)
 	assert.NotEmpty(t, errs)
 	found := false
 	for _, e := range errs {
@@ -32,7 +32,7 @@ func TestValidatePassword_MissingClasses(t *testing.T) {
 func TestValidatePassword_ConsecutiveSameClass(t *testing.T) {
 	rules := DefaultPasswordRules()
 	// 4 consecutive lowercase = violation (maxConsecutive is 4)
-	errs := ValidatePassword("AAAAbbbb1111!@#$", rules)
+	errs := ValidatePassword(strings.Repeat("A", 4)+strings.Repeat("b", 4)+strings.Repeat("1", 4)+"!@#$", rules)
 	assert.NotEmpty(t, errs)
 	found := false
 	for _, e := range errs {
@@ -76,7 +76,7 @@ func TestValidatePassword_MatchesApplicationUnicodeRules(t *testing.T) {
 func TestValidatePassword_ExactlyAtConsecutiveLimit(t *testing.T) {
 	rules := DefaultPasswordRules() // MaxConsecutive=4
 	// 3 consecutive lowercase is OK
-	errs := ValidatePassword("abcD1!efG2@hiJ3#k", rules)
+	errs := ValidatePassword(strings.Repeat("abcD1!", 3), rules)
 	assert.Empty(t, errs)
 }
 

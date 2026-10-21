@@ -119,13 +119,9 @@ func TestInitConfigOnlyIgnoresAbsentOptionalFile(t *testing.T) {
 				config = path
 			}
 			err := initConfig(v, config)
-			if tc.wantError {
-				require.Error(t, err)
-				if tc.unreadable {
-					require.ErrorIs(t, err, os.ErrPermission)
-				}
-			} else {
-				require.NoError(t, err)
+			require.Equal(t, tc.wantError, err != nil, "configuration error: %v", err)
+			if tc.unreadable {
+				require.ErrorIs(t, err, os.ErrPermission)
 			}
 		})
 	}

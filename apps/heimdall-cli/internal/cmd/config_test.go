@@ -96,9 +96,9 @@ func TestConfigGet_MasksSecretValue(t *testing.T) {
 
 func TestConfig_MasksCredentials(t *testing.T) {
 	for _, tc := range []struct{ key, value, secret, masked string }{
-		{"DATABASE_URL", "postgres://app:private-database-password@db.example/prod", "private-database-password", "pos***rod"},
+		{"DATABASE_URL", "postgres://app:example-password@db.example/prod", "example-password", "pos***rod"},
 		{"GITLAB_SECRET", "example-gitlab-secret", "example-gitlab-secret", "exa***ret"},
-		{"HTTPS_PROXY", "http://proxy-user:private-proxy-password@proxy.example:8080", "private-proxy-password", "htt***080"},
+		{"HTTPS_PROXY", "http://proxy-user:example-password@proxy.example:8080", "example-password", "htt***080"},
 	} {
 		for _, operation := range []string{"get", "list", "set"} {
 			t.Run(tc.key+"/"+operation, func(t *testing.T) {
@@ -216,12 +216,12 @@ func TestConfigSet_MasksSecretInConfirmation(t *testing.T) {
 		Out:    new(bytes.Buffer),
 		ErrOut: new(bytes.Buffer),
 	}
-	err := r.Set("DATABASE_PASSWORD", "mysupersecretpw")
+	err := r.Set("DATABASE_PASSWORD", "<password>")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
 	out := r.Out.(*bytes.Buffer).String()
-	if strings.Contains(out, "mysupersecretpw") {
+	if strings.Contains(out, "<password>") {
 		t.Error("secret should be masked in confirmation")
 	}
 }

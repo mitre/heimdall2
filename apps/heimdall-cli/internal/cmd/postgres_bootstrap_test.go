@@ -599,7 +599,7 @@ func TestPostgresBootstrap_TestConnection_PassesPGPASSWORDViaEnv(t *testing.T) {
 	r.DBHost = "127.0.0.1"
 	r.DBPort = 5432
 	r.DBUser = "heimdall"
-	r.DBPassword = "s3cret"
+	r.DBPassword = "<password>"
 	r.DBName = "heimdall-server-production"
 	install := &pgInstall{PsqlBin: "/usr/bin/psql"}
 	exec.Results["/usr/bin/psql -X -h 127.0.0.1 -p 5432 -U heimdall -d heimdall-server-production -c SELECT 1"] = FakeExecResult{}
@@ -611,7 +611,7 @@ func TestPostgresBootstrap_TestConnection_PassesPGPASSWORDViaEnv(t *testing.T) {
 	call := exec.Calls[0]
 
 	require.Equal(t, install.PsqlBin, call.Name)
-	require.Equal(t, "s3cret", call.Env["PGPASSWORD"],
+	require.Equal(t, "<password>", call.Env["PGPASSWORD"],
 		"PGPASSWORD must be passed as env, not as a command arg")
 	require.Equal(t, []string{"-X", "-h", "127.0.0.1", "-p", "5432", "-U", "heimdall", "-d", "heimdall-server-production", "-c", "SELECT 1"}, call.Args)
 	require.Contains(t, call.Args, "-c")
@@ -790,7 +790,7 @@ func TestBundledPostgresNeverUsesSystemSocket(t *testing.T) {
 	r, _, _ := newTestSetupRunner()
 	r.DatabaseMode = "bundled"
 	r.DBHost, r.DBPort = "127.0.0.1", 55432
-	r.DBUser, r.DBPassword, r.DBName = "heimdall", "test-only-password", "heimdall_test"
+	r.DBUser, r.DBPassword, r.DBName = "heimdall", "<password>", "heimdall_test"
 	fs := r.FS.(*FakeFileSystem)
 	fs.Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
 	for _, tool := range []string{"psql", "postgres", "initdb", "pg_isready"} {

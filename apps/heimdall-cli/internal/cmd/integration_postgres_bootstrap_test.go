@@ -24,7 +24,6 @@ import (
 
 const (
 	integPGUser = "heimdall"
-	integPGPass = "integ-test-pass-12345"
 	integPGDB   = "heimdall-server-production"
 )
 
@@ -46,6 +45,8 @@ const (
 // We tolerate non-zero exit and verify state via psql exec — that is
 // what proves the bootstrap step did its job.
 func TestPostgresBootstrap_FullFlow_RealRHEL(t *testing.T) {
+	integPGPass, err := randomHex(24)
+	require.NoError(t, err)
 	// AlmaLinux: ships systemd in the base image AND has postgresql-server
 	// in default repos (UBI lacks the latter, Rocky's base lacks the
 	// former). Multi-arch covers amd64 (CI) and arm64 (Apple Silicon dev).
