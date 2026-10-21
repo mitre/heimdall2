@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -21,35 +20,6 @@ func TestMigrationsUseResolvedPaths(t *testing.T) {
 	require.NoError(t, r.stepMigrations())
 	call := r.Exec.(*FakeExecRunner).Calls[0]
 	assert.Equal(t, map[string]string{"HEIMDALL_ENV_FILE": "/custom/backend.env", "HEIMDALL_APP_DIR": "/custom/app", "HEIMDALL_LIBEXEC_DIR": "/custom/libexec"}, call.Env)
-}
-
-func TestPackagedHelpersUseSelectedPaths(t *testing.T) {
-	for _, helper := range []string{"heimdall-db-setup.sh", "heimdall-server.sh"} {
-		t.Run(helper, func(t *testing.T) {
-			dir := t.TempDir()
-			app, libexec := filepath.Join(dir, "app"), filepath.Join(dir, "libexec")
-			backend := filepath.Join(app, "apps/backend")
-			for _, path := range []string{filepath.Join(backend, "node_modules/.bin"), filepath.Join(backend, "dist/db"), filepath.Join(libexec, "runtime/node/bin")} {
-				require.NoError(t, os.MkdirAll(path, 0755))
-			}
-			require.NoError(t, os.WriteFile(filepath.Join(backend, "node_modules/.bin/sequelize"), []byte("#!/bin/sh\n"), 0755))
-			require.NoError(t, os.WriteFile(filepath.Join(backend, "dist/db/database.js"), []byte("fixture"), 0644))
-			require.NoError(t, os.WriteFile(filepath.Join(libexec, "runtime/node/bin/node"), []byte("#!/bin/sh\nprintf '%s|%s|%s\\n' \"$PWD\" \"$DATABASE_HOST\" \"$*\"\n"), 0755))
-			envFile := filepath.Join(dir, "chosen.env")
-			require.NoError(t, os.WriteFile(envFile, []byte("DATABASE_HOST=selected.example.test\nDATABASE_PASSWORD=fixture\nHEIMDALL_DATABASE_MODE=external\n"), 0600))
-			cmd := exec.Command("bash", filepath.Join("../../../../packaging/rpm", helper))
-			cmd.Env = append(os.Environ(), "HEIMDALL_APP_DIR="+app, "HEIMDALL_LIBEXEC_DIR="+libexec, "HEIMDALL_ENV_FILE="+envFile, "LOG_FILE=")
-			output, err := cmd.CombinedOutput()
-			require.NoError(t, err, string(output))
-			assert.Contains(t, string(output), backend+"|selected.example.test|")
-			if helper == "heimdall-db-setup.sh" {
-				assert.Contains(t, string(output), "db:migrate")
-				assert.NotContains(t, string(output), "db:create")
-			} else {
-				assert.Contains(t, string(output), "dist/src/main.js")
-			}
-		})
-	}
 }
 
 func TestConfigExternalURLRequiresManagedProxySetup(t *testing.T) {
@@ -229,9 +199,6 @@ func TestStandaloneSetupRestoresEnvironmentOnFailure(t *testing.T) {
 			original := map[string]string{"PORT": "3000", "EXTERNAL_URL": "https://old.example.test", "DATABASE_HOST": "db.example.test", "DATABASE_PASSWORD": "saved", "HEIMDALL_DATABASE_MODE": "external", "HEIMDALL_PROXY_MODE": "bundled", "HEIMDALL_TLS_MODE": "internal"}
 			r.Env.(*FakeEnvManager).Env = original
 			fs := r.FS.(*FakeFileSystem)
-			asset, err := os.ReadFile("../../../../packaging/rpm/heimdall-Caddyfile")
-			require.NoError(t, err)
-			fs.Files[r.Paths.LibExecDir+"/heimdall-Caddyfile"] = asset
 			const previous = "https://old.example.test { reverse_proxy 127.0.0.1:3000 }\n"
 			fs.Files[standaloneCaddyfile] = []byte(previous)
 			fs.Files["/etc/caddy/Caddyfile"] = []byte("import /etc/caddy/Caddyfile.d/*.caddy\n")
@@ -272,9 +239,7 @@ func TestStandaloneTLSRestoresEnabledStateOnFailure(t *testing.T) {
 }
 
 func TestStandaloneTLSRendersIndependentlyOfBundledReference(t *testing.T) {
-	asset, err := os.ReadFile("../../../../packaging/rpm/heimdall-Caddyfile")
-	require.NoError(t, err)
-	require.Contains(t, string(asset), "admin unix//run/heimdall-caddy/admin.sock")
+	const bundledReference = "{\n admin unix//run/heimdall-caddy/admin.sock\n}\nhttps://localhost {\n tls internal\n}\n"
 	for _, mode := range []string{"internal", "acme", "custom"} {
 		t.Run(mode, func(t *testing.T) {
 			r, _ := newTLSTestRunner(map[string]string{"EXTERNAL_URL": "https://portal.example.com:8443", "PORT": "3456"})
@@ -284,7 +249,7 @@ func TestStandaloneTLSRendersIndependentlyOfBundledReference(t *testing.T) {
 				r.TLSKey = "/etc/tls/key.pem"
 			}
 			fs := r.FS.(*FakeFileSystem)
-			fs.Files[r.Paths.LibExecDir+"/heimdall-Caddyfile"] = asset
+			fs.Files[r.Paths.LibExecDir+"/heimdall-Caddyfile"] = []byte(bundledReference)
 			require.NoError(t, r.stepTLS())
 			config := string(fs.Files[standaloneCaddyfile])
 			assert.Contains(t, config, "https://portal.example.com:8443 {")

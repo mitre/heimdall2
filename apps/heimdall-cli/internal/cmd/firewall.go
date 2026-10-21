@@ -97,7 +97,7 @@ func (r *SetupRunner) configureFirewall(port, mode, externalURL string) (func() 
 
 // A failed rollback may leave its only ownership evidence in the pending file.
 func (r *SetupRunner) reconcileFirewallLedger(ledger string) error {
-	pending := ledger + ".pending"
+	pending := ledger + pendingFileSuffix
 	if err := rootManagedFile(r.FS, pending); err != nil {
 		return err
 	}
@@ -288,7 +288,7 @@ func (r *SetupRunner) saveFirewallLedger(owned map[string]firewallRule, ledger s
 	if err := savePortLedger(r.Exec, r.FS, ledger, ledger+".reconcile", []byte(data)); err != nil {
 		return err
 	}
-	return r.FS.RemoveAll(ledger + ".pending")
+	return r.FS.RemoveAll(ledger + pendingFileSuffix)
 }
 
 func updateFirewallOwnership(owned map[string]firewallRule, rule firewallRule, add bool) {
@@ -340,7 +340,7 @@ func (r *SetupRunner) undoFirewallChanges(applied []firewallChange, owned map[st
 		} else if err := r.FS.RemoveAll(ledger); err != nil {
 			failures = append(failures, err)
 		} else {
-			failures = append(failures, r.FS.RemoveAll(ledger+".pending"))
+			failures = append(failures, r.FS.RemoveAll(ledger+pendingFileSuffix))
 		}
 	} else {
 		failures = append(failures, r.saveFirewallLedger(owned, ledger, before))

@@ -200,15 +200,7 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
 func (r *SetupRunner) Run() (err error) {
 	r.rollbackFirewall = nil
 	r.rollbackTLS = nil
-	defer func() {
-		if err != nil && r.rollbackFirewall != nil {
-			err = errors.Join(err, r.rollbackFirewall())
-		}
-		if err != nil && r.rollbackTLS != nil {
-			err = errors.Join(err, r.rollbackTLS())
-		}
-		r.rollbackTLS = nil
-	}()
+	defer func() { err = r.rollbackSetup(err) }()
 	existing, err := r.readConfiguration()
 	if err != nil {
 		return err
@@ -234,18 +226,7 @@ func (r *SetupRunner) Run() (err error) {
 		}
 		defer func() {
 			if err != nil {
-				if startAttempted {
-					err = errors.Join(err, r.Systemd.Stop(ServiceName))
-				}
-				if _, file := r.Env.(*FileEnvManager); file {
-					restoreErr := before.restore(r.FS)
-					if restoreErr == nil && before.exists {
-						restoreErr = runChecked(r.Exec, "chmod", fmt.Sprintf("%04o", before.mode.Perm()), before.path)
-					}
-					err = errors.Join(err, restoreErr)
-				} else {
-					err = errors.Join(err, r.Env.WriteEnvFile(existing))
-				}
+				err = errors.Join(err, r.rollbackStandaloneSetup(existing, before, startAttempted))
 			}
 		}()
 	}
@@ -297,6 +278,32 @@ func (r *SetupRunner) Run() (err error) {
 
 	r.printCompletionBanner()
 	return nil
+}
+
+func (r *SetupRunner) rollbackSetup(err error) error {
+	if err != nil && r.rollbackFirewall != nil {
+		err = errors.Join(err, r.rollbackFirewall())
+	}
+	if err != nil && r.rollbackTLS != nil {
+		err = errors.Join(err, r.rollbackTLS())
+	}
+	r.rollbackTLS = nil
+	return err
+}
+
+func (r *SetupRunner) rollbackStandaloneSetup(existing map[string]string, before savedFile, startAttempted bool) error {
+	var stopErr error
+	if startAttempted {
+		stopErr = r.Systemd.Stop(ServiceName)
+	}
+	if _, file := r.Env.(*FileEnvManager); !file {
+		return errors.Join(stopErr, r.Env.WriteEnvFile(existing))
+	}
+	restoreErr := before.restore(r.FS)
+	if restoreErr == nil && before.exists {
+		restoreErr = runChecked(r.Exec, "chmod", fmt.Sprintf("%04o", before.mode.Perm()), before.path)
+	}
+	return errors.Join(stopErr, restoreErr)
 }
 
 func (r *SetupRunner) runDatabaseSteps(isLocalDB bool) error {
@@ -1547,6 +1554,34 @@ func (r *SetupRunner) configureCaddyfile(strategy tlsStrategy, host, externalURL
 	return r.FS.WriteFile(caddyfileDst, []byte(config), 0644)
 }
 
+func (r *SetupRunner) resolveStandaloneTLSStrategy(host string) (tlsStrategy, error) {
+	if r.TLSCert != "" {
+		if err := validateFilePath(r.TLSCert); err != nil {
+			return 0, fmt.Errorf("unsafe TLS cert path: %w", err)
+		}
+	}
+	if r.TLSKey != "" {
+		if err := validateFilePath(r.TLSKey); err != nil {
+			return 0, fmt.Errorf("unsafe TLS key path: %w", err)
+		}
+	}
+	strategy := determineTLSStrategy(host, r.TLSCert, r.TLSKey)
+	switch r.TLSMode {
+	case "internal":
+		strategy = tlsPrivate
+	case "acme":
+		strategy = tlsPublic
+	case "custom":
+		strategy = tlsBYO
+	}
+	if strategy == tlsIP {
+		if err := validateFilePath(r.Paths.CertDir); err != nil {
+			return 0, err
+		}
+	}
+	return strategy, nil
+}
+
 func (r *SetupRunner) stepTLS() (err error) {
 	bundled, err := r.Paths.hasRuntime(r.FS)
 	if err != nil {
@@ -1605,30 +1640,9 @@ func (r *SetupRunner) stepTLS() (err error) {
 	if err := validateHostname(externalHost); err != nil {
 		return fmt.Errorf("unsafe hostname %q: %w", externalHost, err)
 	}
-	if r.TLSCert != "" {
-		if err := validateFilePath(r.TLSCert); err != nil {
-			return fmt.Errorf("unsafe TLS cert path: %w", err)
-		}
-	}
-	if r.TLSKey != "" {
-		if err := validateFilePath(r.TLSKey); err != nil {
-			return fmt.Errorf("unsafe TLS key path: %w", err)
-		}
-	}
-
-	strategy := determineTLSStrategy(externalHost, r.TLSCert, r.TLSKey)
-	switch r.TLSMode {
-	case "internal":
-		strategy = tlsPrivate
-	case "acme":
-		strategy = tlsPublic
-	case "custom":
-		strategy = tlsBYO
-	}
-	if strategy == tlsIP {
-		if err := validateFilePath(r.Paths.CertDir); err != nil {
-			return err
-		}
+	strategy, err := r.resolveStandaloneTLSStrategy(externalHost)
+	if err != nil {
+		return err
 	}
 	var saved []savedFile
 	for _, path := range []string{caddyfileDst, "/etc/caddy/Caddyfile", r.Paths.CertDir + "/server.crt", r.Paths.CertDir + "/server.key"} {
@@ -1649,28 +1663,14 @@ func (r *SetupRunner) stepTLS() (err error) {
 	if err != nil {
 		return err
 	}
-	wasEnabled := state == "enabled" || state == systemdEnabledRuntime
+	previous := serviceState{"caddy", wasActive, state == "enabled" || state == systemdEnabledRuntime}
 	restarted, enableAttempted, restored := false, false, false
 	rollback := func() error {
 		if restored {
 			return nil
 		}
 		restored = true
-		var failures []error
-		for _, before := range saved {
-			failures = append(failures, before.restore(r.FS))
-		}
-		if restarted {
-			if wasActive {
-				failures = append(failures, r.Systemd.Restart("caddy"))
-			} else {
-				failures = append(failures, r.Systemd.Stop("caddy"))
-			}
-		}
-		if enableAttempted && !wasEnabled {
-			failures = append(failures, runChecked(r.Exec, "systemctl", "disable", "caddy"))
-		}
-		return errors.Join(failures...)
+		return r.restoreStandaloneTLS(saved, previous, restarted, enableAttempted)
 	}
 	r.rollbackTLS = rollback
 	defer func() {
@@ -1736,6 +1736,24 @@ func (r *SetupRunner) stepTLS() (err error) {
 	}
 
 	return nil
+}
+
+func (r *SetupRunner) restoreStandaloneTLS(saved []savedFile, previous serviceState, restarted, enableAttempted bool) error {
+	var failures []error
+	for _, before := range saved {
+		failures = append(failures, before.restore(r.FS))
+	}
+	if restarted {
+		if previous.active {
+			failures = append(failures, r.Systemd.Restart(previous.unit))
+		} else {
+			failures = append(failures, r.Systemd.Stop(previous.unit))
+		}
+	}
+	if enableAttempted && !previous.enabled {
+		failures = append(failures, runChecked(r.Exec, "systemctl", "disable", previous.unit))
+	}
+	return errors.Join(failures...)
 }
 
 // filePathPattern restricts file paths to safe characters for use in sed

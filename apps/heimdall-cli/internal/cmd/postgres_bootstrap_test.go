@@ -1006,3 +1006,25 @@ func TestPostgresBootstrap_ConfigureHBA_PreservesAdjacentUnrelatedRule(t *testin
 	require.Contains(t, string(fs.Files[path]), adminRule)
 	require.NotContains(t, string(fs.Files[path]), "olduser")
 }
+
+func TestPostgresBootstrap_ConfigureHBA_PreservesMalformedAndExtraRules(t *testing.T) {
+	const oldRule = "host    all    olduser    127.0.0.1/32    scram-sha-256\n"
+	const newBlock = "# Heimdall: password authentication for TCP connections from localhost\n" +
+		"host    all    \"heimdall\"    127.0.0.1/32    scram-sha-256\n" +
+		"host    all    \"heimdall\"    ::1/128         scram-sha-256\n"
+	for _, tc := range []struct{ name, following, preserved string }{
+		{"missing prefix", "local all all peer\n", "local all all peer\n"},
+		{"wrong method", "host    all    olduser    127.0.0.1/32    reject\n", "host    all    olduser    127.0.0.1/32    reject\n"},
+		{"one owned rule", oldRule + "host all all 127.0.0.1/32 reject", "host all all 127.0.0.1/32 reject"},
+		{"two owned rules only", oldRule + oldRule + oldRule, oldRule},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			r, _, fs, _, _ := newBootstrapForTest()
+			install := &pgInstall{DataDir: "/pg"}
+			path := install.DataDir + postgresHBAFile
+			fs.Files[path] = []byte("# keep\n" + hbaMarker + "\n" + tc.following)
+			require.NoError(t, r.configureHBA(install))
+			require.Equal(t, "# keep\n"+newBlock+tc.preserved, string(fs.Files[path]))
+		})
+	}
+}

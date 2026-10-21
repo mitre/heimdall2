@@ -229,26 +229,7 @@ func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
 			preserved = append(preserved, lines[i])
 			continue
 		}
-		var ownedRole string
-		for n := 0; n < 2 && i+1 < len(lines); n++ {
-			line := strings.TrimSpace(lines[i+1])
-			const prefix = "host    all    "
-			if !strings.HasPrefix(line, prefix) {
-				break
-			}
-			var suffix string
-			for _, candidate := range []string{"    127.0.0.1/32    scram-sha-256", "    ::1/128         scram-sha-256"} {
-				if strings.HasSuffix(line, candidate) {
-					suffix = candidate
-				}
-			}
-			user := strings.TrimSuffix(strings.TrimPrefix(line, prefix), suffix)
-			if suffix == "" || (n > 0 && user != ownedRole) {
-				break
-			}
-			ownedRole = user
-			i++
-		}
+		i += managedHBARuleCount(lines[i+1:])
 	}
 	block := fmt.Sprintf("%s\nhost    all    %s    127.0.0.1/32    scram-sha-256\nhost    all    %s    ::1/128         scram-sha-256", hbaMarker, role, role)
 	insert := 0
@@ -267,6 +248,32 @@ func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
 		return nil
 	}
 	return r.FS.WriteFile(hbaPath, []byte(updated), 0o640)
+}
+
+// managedHBARuleCount recognizes at most the two same-role rules after our marker.
+func managedHBARuleCount(lines []string) int {
+	var ownedRole string
+	count := 0
+	for count < 2 && count < len(lines) {
+		line := strings.TrimSpace(lines[count])
+		const prefix = "host    all    "
+		if !strings.HasPrefix(line, prefix) {
+			break
+		}
+		var suffix string
+		for _, candidate := range []string{"    127.0.0.1/32    scram-sha-256", "    ::1/128         scram-sha-256"} {
+			if strings.HasSuffix(line, candidate) {
+				suffix = candidate
+			}
+		}
+		user := strings.TrimSuffix(strings.TrimPrefix(line, prefix), suffix)
+		if suffix == "" || (count > 0 && user != ownedRole) {
+			break
+		}
+		ownedRole = user
+		count++
+	}
+	return count
 }
 
 // The password placeholder is replaced with a quoted SQL literal on stdin.

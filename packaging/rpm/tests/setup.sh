@@ -67,9 +67,10 @@ with tempfile.TemporaryDirectory(prefix='heimdall-db-wrapper-') as directory:
     node = libexec / 'runtime/node/bin/node'
     node.parent.mkdir(parents=True)
     node.write_text('#!' + sys.executable + '\n' + '''import json, os, sys
-command = sys.argv[2]
+command = sys.argv[2] if len(sys.argv) > 2 else sys.argv[1]
 with open(os.environ['WRAPPER_ARGV'], 'a') as log:
-    log.write(json.dumps(command) + '\\n')
+    log.write(json.dumps({'command': command, 'cwd': os.getcwd(),
+                         'host': os.environ.get('DATABASE_HOST')}) + '\\n')
 scenario = os.environ['DB_CASE']
 if command == 'db:create' and os.environ.get('HEIMDALL_DATABASE_MODE') == 'external':
     print('ERROR: permission denied to create database', file=sys.stderr)
@@ -86,20 +87,24 @@ if (command, scenario) in [('db:create', 'create-error'), ('db:migrate', 'migrat
     node.chmod(0o755)
     config, log = root / 'backend.env', root / 'argv.jsonl'
     wrapper = Path(sys.argv[1])
-    def check(mode, scenario, expected, code=0, args=()):
+    def check(mode, scenario, expected, code=0, args=(), helper=wrapper):
         # Saved mode must override a conflicting inherited selection.
-        config.write_text('HEIMDALL_DATABASE_MODE=' + mode + '\n' if mode else '')
+        config.write_text('DATABASE_HOST=selected.example.test\nDATABASE_PASSWORD=fixture\n' +
+                          ('HEIMDALL_DATABASE_MODE=' + mode + '\n' if mode else ''))
         log.write_text('')
         env = dict(os.environ, WRAPPER_ARGV=str(log), DB_CASE=scenario,
                    HEIMDALL_APP_DIR=str(root), HEIMDALL_LIBEXEC_DIR=str(libexec),
-                   HEIMDALL_ENV_FILE=str(config))
+                   HEIMDALL_ENV_FILE=str(config), LOG_FILE='')
         env.pop('HEIMDALL_DATABASE_MODE', None)
         if mode:
             env['HEIMDALL_DATABASE_MODE'] = 'bundled' if mode == 'external' else 'external'
-        result = subprocess.run(['bash', str(wrapper), *args], env=env,
+        result = subprocess.run(['bash', str(helper), *args], env=env,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        calls = [json.loads(line) for line in log.read_text().splitlines()]
+        records = [json.loads(line) for line in log.read_text().splitlines()]
+        calls = [record['command'] for record in records]
         assert result.returncode == code and calls == expected, (mode, scenario, calls, result.stdout)
+        assert all(record['cwd'] == str(app.resolve()) and record['host'] == 'selected.example.test'
+                   for record in records), records
     migrate_seed = ['db:migrate', 'db:seed:all']
     check('external', 'success', migrate_seed)
     check('external', 'success', ['db:migrate'], args=('--skip-seed',))
@@ -110,5 +115,7 @@ if (command, scenario) in [('db:create', 'create-error'), ('db:migrate', 'migrat
         check(mode, 'success', ['db:create', *migrate_seed])
         check(mode, 'already-exists', ['db:create', *migrate_seed])
         check(mode, 'create-error', ['db:create'], code=1)
+    check('external', 'success', ['dist/src/main.js'], helper=wrapper.with_name('heimdall-server.sh'))
+print('database and server wrappers: selected paths and environment passed')
 print('database wrapper: external ownership, saved mode, failures and legacy creation passed')
 PY
