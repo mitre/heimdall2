@@ -118,7 +118,7 @@ func (r *RestoreRunner) preflightDatabaseRestore(binary, sqlBackup string, cfg D
       OR EXISTS (SELECT 1 FROM pg_catalog.pg_class WHERE relnamespace=n.oid)
       OR EXISTS (SELECT 1 FROM pg_catalog.pg_proc WHERE pronamespace=n.oid)
       OR EXISTS (SELECT 1 FROM pg_catalog.pg_type WHERE typnamespace=n.oid)))`
-	out, code, err := r.Exec.RunWithEnv(cfg.PgEnv(), binary, "-X", "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", cfg.DBName, "-v", "ON_ERROR_STOP=1", "-tAc", nonempty)
+	out, code, err := r.Exec.RunWithEnv(cfg.PgEnv(), binary, "-X", "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", pgDatabaseName(cfg.DBName), "-v", "ON_ERROR_STOP=1", "-tAc", nonempty)
 	if err != nil || code != 0 {
 		return fmt.Errorf("checking legacy restore destination failed (exit %d): %v", code, err)
 	}

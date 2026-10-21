@@ -47,7 +47,7 @@ This command checks all major subsystems and reports their state:
   - Database:  PostgreSQL connectivity, table count, and connection details
   - SELinux:   Enforcement mode, policy module, and port type registration
   - fapolicyd: Trust file status and number of trusted binaries
-  - firewalld: Active zone and whether the heimdall-server service is allowed
+  - firewalld: Setup's default zone and whether the configured endpoint is allowed
   - Config:    Environment file location and enabled authentication providers
 
 This command does not require root and does not modify any state. It reads
@@ -123,7 +123,7 @@ func (r *StatusRunner) Run() error {
 	r.databaseConnectionStatus(dbCfg)
 	r.selinuxStatus(port)
 	r.fapolicydStatus()
-	r.firewalldStatus()
+	r.firewalldStatus(port, deployment.ProxyMode, env["EXTERNAL_URL"])
 	r.configStatus(env)
 
 	return nil
@@ -291,8 +291,11 @@ func (r *StatusRunner) selinuxStatus(port string) {
 		}
 
 		// Port registration
-		portOut, _, _ := r.Exec.Run("semanage", "port", "-l")
-		if strings.Contains(portOut, "heimdall_server_port_t") {
+		portOut, code, err := r.Exec.RunWithEnv(map[string]string{"LC_ALL": "C"}, "semanage", "port", "-l")
+		compatible, parseErr := selinuxPortCompatible(portOut, selinuxPort{"heimdall_server_port_t", port})
+		if err != nil || code != 0 || parseErr != nil {
+			fmt.Fprintf(r.Out, "  %s\n", Warn(fmt.Sprintf("unable to check port %s registration", port)))
+		} else if compatible {
 			fmt.Fprintf(r.Out, "  %s\n", Ok("port type: heimdall_server_port_t"))
 		} else {
 			fmt.Fprintf(r.Out, "  %s\n", Fail(fmt.Sprintf("port %s not registered with SELinux", port)))
@@ -330,7 +333,7 @@ func (r *StatusRunner) fapolicydStatus() {
 
 }
 
-func (r *StatusRunner) firewalldStatus() {
+func (r *StatusRunner) firewalldStatus(port, mode, externalURL string) {
 	// firewalld
 	fmt.Fprintln(r.Out)
 	fmt.Fprintln(r.Out, "firewalld")
@@ -338,19 +341,30 @@ func (r *StatusRunner) firewalldStatus() {
 	if fwActive {
 		fmt.Fprintf(r.Out, "  %s\n", Ok("running"))
 
-		// Check service enabled
-		_, exitCode, _ := r.Exec.Run("firewall-cmd", "--query-service="+ServiceName)
-		if exitCode == 0 {
-			fmt.Fprintf(r.Out, "  %s\n", Ok("heimdall-server service enabled"))
-		} else {
-			fmt.Fprintf(r.Out, "  %s\n", Warn("heimdall-server service not enabled"))
+		zoneOut, code, err := r.Exec.Run(firewallCommand, "--get-default-zone")
+		zone := strings.TrimSpace(zoneOut)
+		if err != nil || code != 0 || !firewallZone.MatchString(zone) {
+			fmt.Fprintf(r.Out, "  %s\n", Warn("unable to determine firewalld default zone"))
+			return
 		}
-
-		// Active zone
-		zoneOut, exitCode, _ := r.Exec.Run("firewall-cmd", "--get-active-zones")
-		if exitCode == 0 && zoneOut != "" {
-			zone := strings.SplitN(strings.TrimSpace(zoneOut), "\n", 2)[0]
-			fmt.Fprintf(r.Out, "  Zone: %s\n", zone)
+		fmt.Fprintf(r.Out, "  Zone: %s\n", zone)
+		kind, value, err := firewallEndpoint(port, mode, externalURL)
+		if err != nil {
+			fmt.Fprintf(r.Out, "  %s\n", Warn("unable to determine configured firewall endpoint"))
+			return
+		}
+		for _, scope := range []string{"runtime", "permanent"} {
+			rule := firewallRule{scope, zone, kind, value}
+			_, code, err := r.Exec.Run(firewallCommand, rule.args("query")...)
+			label := scope + " " + value + " " + kind
+			switch {
+			case err != nil || (code != 0 && code != 1):
+				fmt.Fprintf(r.Out, "  %s\n", Warn("unable to query "+label))
+			case code == 0:
+				fmt.Fprintf(r.Out, "  %s\n", Ok(label+" enabled"))
+			default:
+				fmt.Fprintf(r.Out, "  %s\n", Warn(label+" not enabled"))
+			}
 		}
 	} else {
 		fmt.Fprintf(r.Out, "  %s\n", Skip("not installed"))
@@ -366,7 +380,7 @@ func (r *StatusRunner) configStatus(env map[string]string) {
 
 	// Auth providers
 	providers := []string{"Local"}
-	if env["LOCAL_LOGIN_DISABLED"] == "true" {
+	if strings.EqualFold(env["LOCAL_LOGIN_DISABLED"], "true") {
 		providers[0] = "Local (disabled)"
 	}
 	if env["OKTA_CLIENTID"] != "" {

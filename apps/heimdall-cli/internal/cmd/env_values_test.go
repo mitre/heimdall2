@@ -9,7 +9,7 @@ import (
 func TestEnvValueCodec(t *testing.T) {
 	for _, value := range []string{
 		"", "plain", " spaces stay ", "'single-quoted'", "\"double-quoted\"",
-		"backslash\\ dollar$ backtick` and quote\"", "literal\\n", "tab\tvalue",
+		"backslash\\ dollar$ backtick` and quote\"", "literal\\n", "tab\tvalue", "line\nbreak",
 	} {
 		t.Run(value, func(t *testing.T) {
 			encoded, err := encodeEnvValue(value)
@@ -17,7 +17,7 @@ func TestEnvValueCodec(t *testing.T) {
 			require.Equal(t, value, decodeEnvValue(encoded))
 		})
 	}
-	for _, value := range []string{"line\nbreak", "carriage\rreturn", "nul\x00byte"} {
+	for _, value := range []string{"carriage\rreturn", "nul\x00byte"} {
 		t.Run("reject "+value, func(t *testing.T) {
 			_, err := encodeEnvValue(value)
 			require.Error(t, err)

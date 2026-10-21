@@ -35,13 +35,13 @@ func TestBackendPrivilegedPortsRejectedBeforeMutation(t *testing.T) {
 	require.NoError(t, ValidateValue("DATABASE_PORT", "81"))
 }
 
-func TestSetupBackupPermissionFailureIsUnprivilegedAndChecked(t *testing.T) {
+func TestSetupLeavesLegacyBackupsUntouched(t *testing.T) {
 	r := bundledSetupFixture(t)
 	exec := r.Exec.(*FakeExecRunner)
 	exec.Results["runuser -u heimdall -- chmod 0700 "+r.Paths.DataDir+"/backups"] = FakeExecResult{ExitCode: 1, Stdout: "Operation not permitted"}
 	command := NewSetupCmd(r)
 	command.SetArgs([]string{"--non-interactive"})
-	require.ErrorContains(t, command.Execute(), "Operation not permitted")
+	require.NoError(t, command.Execute())
 	assert.NotContains(t, exec.Calls, FakeExecCall{Name: "chmod", Args: []string{"0700", r.Paths.DataDir + "/backups"}})
-	assert.NotContains(t, r.Systemd.(*FakeSystemdRunner).Actions, "restart:"+ServiceName)
+	assert.NotContains(t, exec.Calls, FakeExecCall{Name: "runuser", Args: []string{"-u", "heimdall", "--", "chmod", "0700", r.Paths.DataDir + "/backups"}})
 }

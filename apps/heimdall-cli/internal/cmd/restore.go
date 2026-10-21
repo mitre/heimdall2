@@ -9,8 +9,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 
 	"github.com/spf13/cobra"
+	"golang.org/x/sys/unix"
 )
 
 const (
@@ -105,7 +107,7 @@ func (r *RestoreRunner) Run(archive string) error {
 	if !info.Mode().IsRegular() {
 		return fmt.Errorf("archive must be a regular file")
 	}
-	tmpDir, err := os.MkdirTemp("", "heimdall-restore-")
+	tmpDir, err := backupWorkspace()
 	if err != nil {
 		return err
 	}
@@ -274,11 +276,30 @@ func recoveryPermissions(exec ExecRunner, path, owner string, mode os.FileMode) 
 // Stream regular files into an empty private directory. Never ask tar to interpret
 // links, special files, duplicate entries or traversal paths as root.
 func extractRecoveryArchive(archive, dest string) (string, error) {
-	file, err := os.Open(archive)
+	path, err := filepath.Abs(archive)
 	if err != nil {
 		return "", err
 	}
+	parent, err := openBackupOutput(filepath.Dir(path), false)
+	if err != nil {
+		return "", err
+	}
+	defer parent.Close()
+	fd, err := unix.Openat(int(parent.Fd()), filepath.Base(path), unix.O_RDONLY|unix.O_NOFOLLOW|unix.O_NONBLOCK|unix.O_CLOEXEC, 0)
+	if err != nil {
+		return "", err
+	}
+	file := os.NewFile(uintptr(fd), path)
 	defer file.Close()
+	info, err := file.Stat()
+	if err != nil {
+		return "", err
+	}
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	if !info.Mode().IsRegular() || !ok || stat.Nlink != 1 ||
+		(stat.Uid != 0 && stat.Uid != uint32(os.Geteuid())) || info.Mode().Perm()&0022 != 0 {
+		return "", fmt.Errorf("unprotected recovery archive: %s", path)
+	}
 	gz, err := gzip.NewReader(file)
 	if err != nil {
 		return "", err
@@ -500,7 +521,7 @@ func (r *RestoreRunner) confirmRestore() (bool, error) {
 
 func (r *RestoreRunner) restoreDatabase(hasSQL bool, dbCfg DBConfig, binary, sqlBackup string) error {
 	if hasSQL {
-		_, code, err := r.Exec.RunWithEnv(dbCfg.PgEnv(), binary, "-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, "-d", dbCfg.DBName, "-X", "-v", "ON_ERROR_STOP=1", "--single-transaction", "-f", sqlBackup)
+		_, code, err := r.Exec.RunWithEnv(dbCfg.PgEnv(), binary, "-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, "-d", pgDatabaseName(dbCfg.DBName), "-X", "-v", "ON_ERROR_STOP=1", "--single-transaction", "-f", sqlBackup)
 		if err != nil || code != 0 {
 			fmt.Fprintln(r.ErrOut, "Database: restore FAILED")
 			return fmt.Errorf("failed to restore database: psql exited with status %d: %v", code, err)

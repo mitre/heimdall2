@@ -38,8 +38,9 @@ The 'get' subcommand retrieves the current value of a specific key, masking
 secrets automatically. The 'set' subcommand updates a key after validating
 its value, and requires root privileges since it writes to backend.env.
 
-PORT changes restart the app and update its selected proxy automatically. Other
-changes made with 'config set' require a service restart to take effect.`,
+PORT changes restart the app and update its selected proxy automatically. Managed
+proxy URL changes require 'setup --external-url'. Other changes made with
+'config set' require a service restart to take effect.`,
 		Example: `  # List all known configuration keys with descriptions
   sudo heimdall-cli config list
 
@@ -47,7 +48,7 @@ changes made with 'config set' require a service restart to take effect.`,
   sudo heimdall-cli config get DATABASE_HOST
 
   # Set a configuration value (requires root)
-  sudo heimdall-cli config set EXTERNAL_URL https://heimdall.example.com
+  sudo heimdall-cli config set JWT_EXPIRE_TIME 1d
 
   # Set an authentication provider
   sudo heimdall-cli config set GITHUB_CLIENTID my-client-id`,
@@ -107,7 +108,8 @@ func newConfigSetCmd(runner *ConfigRunner) *cobra.Command {
 		Long: `Set a configuration key in backend.env. The value is validated against
 the configuration schema before writing. This command requires root
 privileges because it modifies the service environment file. After
-setting a value, restart the service for the change to take effect.`,
+setting a value, restart the service for the change to take effect. Managed proxy
+EXTERNAL_URL changes require 'heimdall-cli setup --external-url'.`,
 		Args: cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			initIO(&runner.Out, &runner.ErrOut, cmd)
@@ -194,6 +196,20 @@ func (r *ConfigRunner) Set(key, value string) error {
 		return err
 	}
 
+	if key == "EXTERNAL_URL" {
+		env, err := r.Env.ReadEnv()
+		if err != nil {
+			return err
+		}
+		mode := env["HEIMDALL_PROXY_MODE"]
+		managed := mode == "bundled" || mode == "nginx"
+		if mode == "" && r.Port != nil && r.Port.FS != nil {
+			managed = r.Port.FS.Exists(standaloneCaddyfile)
+		}
+		if env["EXTERNAL_URL"] != value && managed {
+			return fmt.Errorf("managed proxy URL changes require heimdall-cli setup --external-url to update TLS and proxy configuration together")
+		}
+	}
 	if key == "PORT" {
 		if r.Port == nil {
 			return fmt.Errorf("PORT changes require the set-port runner")

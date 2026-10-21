@@ -6,9 +6,9 @@ if [[ -e /etc/heimdall-server/upgrade-pending || -L /etc/heimdall-server/upgrade
   exit 1
 fi
 
-APP_ROOT="/usr/share/heimdall-server"
+APP_ROOT="${HEIMDALL_APP_DIR:-/usr/share/heimdall-server}"
 APP_DIR="${APP_ROOT}/apps/backend"
-ENV_FILE="/etc/heimdall-server/backend.env"
+ENV_FILE="${HEIMDALL_ENV_FILE:-/etc/heimdall-server/backend.env}"
 
 if [[ -f "${ENV_FILE}" ]]; then
   set -a
@@ -17,7 +17,7 @@ if [[ -f "${ENV_FILE}" ]]; then
   set +a
 fi
 
-NODE_BIN=/usr/libexec/heimdall-server/runtime/node/bin/node
+NODE_BIN="${HEIMDALL_LIBEXEC_DIR:-/usr/libexec/heimdall-server}/runtime/node/bin/node"
 [[ -x "$NODE_BIN" ]]
 
 if [[ -z "${DATABASE_PASSWORD:-}" ]]; then
@@ -30,7 +30,7 @@ cd "${APP_DIR}"
 
 # If LOG_FILE is set, redirect stdout/stderr to the log file.
 # Default (unset): logs go to journald via systemd.
-# Example: LOG_FILE=/var/log/heimdall-server/server.log
+# Example: LOG_FILE=/var/lib/heimdall-server/logs/server.log
 if [[ -n "${LOG_FILE:-}" ]]; then
   LOG_DIR="$(dirname "${LOG_FILE}")"
   if [[ ! -d "${LOG_DIR}" ]]; then

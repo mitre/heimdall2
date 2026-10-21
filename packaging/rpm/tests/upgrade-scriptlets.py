@@ -24,13 +24,16 @@ def scriptlet(name, root):
                          '_unitdir': '/usr/lib/systemd/system'}.items():
         text = text.replace('%{' + macro + '}', value)
     text = text.replace('%%', '%')
-    for prefix in ('/etc/', '/var/lib/', '/usr/share/', '/usr/sbin/', '/usr/bin/'):
+    # Treat the fixture root as /; host temporary-directory ancestry is outside the model.
+    text = text.replace('while [ "$current" != / ]; do',
+                        'while [ "$current" != "' + str(root) + '" ]; do')
+    for prefix in ('/etc/', '/var/lib/', '/var/backups/', '/var/log/', '/usr/share/', '/usr/sbin/', '/usr/bin/'):
         text = text.replace(prefix, str(root) + prefix)
     return text
 
 
 with tempfile.TemporaryDirectory(prefix='heimdall-upgrade-') as temp:
-    root = Path(temp)
+    root = Path(temp).resolve()
     bin_dir = root / 'bin'
     bin_dir.mkdir()
     stub = bin_dir / 'boundary'
@@ -130,6 +133,44 @@ elif name == 'semanage':
     def mutating(calls):
         return [c for c in calls if c[0] == 'heimdall-cli' or c[:2] == ['systemctl', 'stop']]
 
+    # A package must never bless an application-controlled recovery/log directory.
+    for relative in ('var/backups/heimdall-server', 'var/log/heimdall-server-journal'):
+        protected = root / relative
+        protected.mkdir(parents=True)
+        protected.chmod(0o777)
+        result, calls = run(count='1')
+        assert result.returncode != 0 and 'Unsafe protected directory' in result.stdout, result.stdout
+        protected.chmod(0o700)
+        protected.rmdir()
+    logs = root / 'var/log/heimdall-server-journal'
+    logs.mkdir()
+    sentinel = root / 'sentinel'
+    sentinel.write_text('untouched')
+    (logs / 'heimdall-server.log').symlink_to(sentinel)
+    result, calls = run(count='1')
+    assert result.returncode != 0 and sentinel.read_text() == 'untouched', result.stdout
+    (logs / 'heimdall-server.log').unlink()
+    logs.rmdir()
+
+    # Label the legacy direct-log directory after policy installation, never its contents.
+    legacy_logs = root / 'var/log/heimdall-server'
+    legacy_logs.mkdir()
+    (legacy_logs / 'operator.log').write_text('retained')
+    result, calls = run(name='post', count='1')
+    assert result.returncode == 0, result.stdout
+    assert ['restorecon', str(legacy_logs)] in calls, calls
+    assert not any(c[0] == 'restorecon' and '-R' in c and str(legacy_logs) in c for c in calls), calls
+    assert (legacy_logs / 'operator.log').read_text() == 'retained'
+    preserved_logs = root / 'legacy-logs-preserved'
+    legacy_logs.rename(preserved_logs)
+    legacy_logs.symlink_to(preserved_logs, target_is_directory=True)
+    result, calls = run(name='post', count='1')
+    assert result.returncode == 0 and 'refusing to relabel symbolic link' in result.stdout, result.stdout
+    assert not any(c[0] == 'restorecon' and str(legacy_logs) in c for c in calls), calls
+    assert (preserved_logs / 'operator.log').read_text() == 'retained'
+    legacy_logs.unlink()
+    preserved_logs.rename(legacy_logs)
+
     sysconfig.write_text('SKIP_PREUPGRADE_BACKUP=false\n')
     result, calls = run(FAIL_BACKUP='1')
     assert result.returncode != 0 and not marker.exists(), ('failed backup accepted', result.stdout)
@@ -219,7 +260,7 @@ elif name == 'semanage':
     result, calls = run(ACTIVE_UNITS='heimdall-nginx.service')
     assert result.returncode == 0 and marker.exists(), (result.stdout, calls)
     assert mutating(calls) == [
-        ['heimdall-cli', 'backup', '-o', str(root / 'var/lib/heimdall-server/backups')],
+        ['heimdall-cli', 'backup', '-o', str(root / 'var/backups/heimdall-server')],
         ['systemctl', 'stop', 'heimdall-nginx.service']], calls
     marker.unlink()
 

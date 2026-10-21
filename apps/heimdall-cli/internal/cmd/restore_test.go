@@ -191,7 +191,9 @@ func recoveryFixture(t *testing.T, rpm bool) (Paths, *recoveryFS, *recoveryExec)
 
 func recoveryArchive(t *testing.T, headers []*tar.Header, data []string) string {
 	t.Helper()
-	filename := filepath.Join(t.TempDir(), "archive.tar.gz")
+	root, err := filepath.EvalSymlinks(t.TempDir())
+	require.NoError(t, err)
+	filename := filepath.Join(root, "archive.tar.gz")
 	f, err := os.Create(filename)
 	require.NoError(t, err)
 	gz := gzip.NewWriter(f)

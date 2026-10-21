@@ -61,6 +61,7 @@ type SetupRunner struct {
 	bundledRuntime    bool
 	previousProxyMode string
 	rollbackFirewall  func() error
+	rollbackTLS       func() error
 	stageConfig       bool
 	pendingConfig     map[string]string
 
@@ -198,10 +199,15 @@ Cloud environments (AWS, Azure, GCP) are auto-detected for security group hints.
 // Run executes the 7-step setup.
 func (r *SetupRunner) Run() (err error) {
 	r.rollbackFirewall = nil
+	r.rollbackTLS = nil
 	defer func() {
 		if err != nil && r.rollbackFirewall != nil {
 			err = errors.Join(err, r.rollbackFirewall())
 		}
+		if err != nil && r.rollbackTLS != nil {
+			err = errors.Join(err, r.rollbackTLS())
+		}
+		r.rollbackTLS = nil
 	}()
 	existing, err := r.readConfiguration()
 	if err != nil {
@@ -220,6 +226,29 @@ func (r *SetupRunner) Run() (err error) {
 
 	r.stageConfig = r.bundledRuntime && !r.Reconfigure
 	defer func() { r.stageConfig = false }()
+	startAttempted := false
+	if !r.bundledRuntime && !r.Reconfigure {
+		before, snapshotErr := snapshotFile(r.FS, r.Env.GetEnvFilePath())
+		if snapshotErr != nil {
+			return snapshotErr
+		}
+		defer func() {
+			if err != nil {
+				if startAttempted {
+					err = errors.Join(err, r.Systemd.Stop(ServiceName))
+				}
+				if _, file := r.Env.(*FileEnvManager); file {
+					restoreErr := before.restore(r.FS)
+					if restoreErr == nil && before.exists {
+						restoreErr = runChecked(r.Exec, "chmod", fmt.Sprintf("%04o", before.mode.Perm()), before.path)
+					}
+					err = errors.Join(err, restoreErr)
+				} else {
+					err = errors.Join(err, r.Env.WriteEnvFile(existing))
+				}
+			}
+		}()
+	}
 	// Step 1: Configuration
 	if err := r.configure(existing); err != nil {
 		if _, ok := err.(*CLIError); ok {
@@ -260,6 +289,7 @@ func (r *SetupRunner) Run() (err error) {
 	// Step 7: Start service
 	fmt.Fprintln(r.Out)
 	fmt.Fprintln(r.Out, "Starting service")
+	startAttempted = true
 	if err := r.stepStartService(); err != nil {
 		return WrapError(err, "service start failed",
 			"Check config: sudo heimdall-cli validate && sudo systemctl status "+ServiceName)
@@ -1232,8 +1262,12 @@ func (r *SetupRunner) persistConfiguration(entries map[string]string) error {
 		return fmt.Errorf("writing env file: %w", err)
 	}
 	// Set file permissions (matches heimdall-configure.sh)
-	r.Exec.Run("chown", configFileOwner, r.Env.GetEnvFilePath())
-	r.Exec.Run("chmod", "0640", r.Env.GetEnvFilePath())
+	if err := runChecked(r.Exec, "chown", configFileOwner, r.Env.GetEnvFilePath()); err != nil {
+		return err
+	}
+	if err := runChecked(r.Exec, "chmod", "0640", r.Env.GetEnvFilePath()); err != nil {
+		return err
+	}
 
 	fmt.Fprintf(r.Out, "  Configuration saved to %s\n", r.Env.GetEnvFilePath())
 	return nil
@@ -1340,7 +1374,11 @@ func (r *SetupRunner) stepConnectionTest() error {
 
 // stepMigrations runs heimdall-server-db-setup.
 func (r *SetupRunner) stepMigrations() error {
-	_, exitCode, err := r.Exec.Run("heimdall-server-db-setup")
+	_, exitCode, err := r.Exec.RunWithEnv(map[string]string{
+		"HEIMDALL_ENV_FILE":    r.Env.GetEnvFilePath(),
+		"HEIMDALL_APP_DIR":     r.Paths.AppDir,
+		"HEIMDALL_LIBEXEC_DIR": r.Paths.LibExecDir,
+	}, "heimdall-server-db-setup")
 	if err != nil {
 		return fmt.Errorf("running heimdall-server-db-setup: %w", err)
 	}
@@ -1432,36 +1470,40 @@ func (r *SetupRunner) runTLSCommand(name string, args ...string) error {
 
 // configureCaddyfile applies the TLS strategy to the Caddyfile and generates
 // certificates when needed.
-func (r *SetupRunner) configureCaddyfile(strategy tlsStrategy, host, caddyfileDst string) error {
+func (r *SetupRunner) configureCaddyfile(strategy tlsStrategy, host, externalURL, caddyfileDst string) error {
+	env, err := r.Env.ReadEnv()
+	if err != nil {
+		return err
+	}
+	port := envDefault(env, "PORT", DefaultAppPort)
+	if err := ValidateValue("PORT", port); err != nil {
+		return err
+	}
+	externalURL, err = normalizeExternalURL(externalURL, "bundled")
+	if err != nil {
+		return err
+	}
+	publicURL, _ := url.Parse(externalURL)
 	days := 7
 	if strategy == tlsPrivate || strategy == tlsIP {
-		env, err := r.Env.ReadEnv()
-		if err != nil {
-			return err
-		}
 		days, err = certificateLifetimeDays(env)
 		if err != nil {
 			return err
 		}
 	}
-	if strategy != tlsIP {
-		if err := r.runTLSCommand("sed", "-i", fmt.Sprintf("s|^:443 {|%s {|", host), caddyfileDst); err != nil {
-			return err
-		}
-	}
+	tlsConfig := ""
 	switch strategy {
 	case tlsBYO:
-		if err := r.runTLSCommand("sed", "-i", fmt.Sprintf(`/reverse_proxy/i\\ttls %s %s`, r.TLSCert, r.TLSKey), caddyfileDst); err != nil {
-			return err
+		if r.TLSCert == "" || r.TLSKey == "" {
+			return fmt.Errorf("custom TLS requires both a certificate and a key")
 		}
+		tlsConfig = fmt.Sprintf("tls %s %s\n\t", strconv.Quote(r.TLSCert), strconv.Quote(r.TLSKey))
 		fmt.Fprintf(r.Out, "  Caddy: configured with provided certificate\n")
 		fmt.Fprintf(r.Out, "    Cert: %s\n", r.TLSCert)
 		fmt.Fprintf(r.Out, "    Key:  %s\n", r.TLSKey)
 
 	case tlsPrivate:
-		if err := r.runTLSCommand("sed", "-i", fmt.Sprintf(`/reverse_proxy/i\\ttls {\n\t\tissuer internal {\n\t\t\tlifetime %dh\n\t\t}\n\t}`, days*24), caddyfileDst); err != nil {
-			return err
-		}
+		tlsConfig = fmt.Sprintf("tls {\n\t\tissuer internal {\n\t\t\tlifetime %dh\n\t\t}\n\t}\n\t", days*24)
 		fmt.Fprintln(r.Out, "  Caddy: private hostname detected — using internal CA")
 		fmt.Fprintln(r.Out, "    Import root CA into browsers to avoid warnings:")
 		fmt.Fprintln(r.Out, "    /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt")
@@ -1498,15 +1540,14 @@ func (r *SetupRunner) configureCaddyfile(strategy tlsStrategy, host, caddyfileDs
 			}
 			fmt.Fprintf(r.Out, "  Generated self-signed cert for %s\n", host)
 		}
-		if err := r.runTLSCommand("sed", "-i", fmt.Sprintf(`/reverse_proxy/i\\ttls %s %s`, certFile, keyFile), caddyfileDst); err != nil {
-			return err
-		}
+		tlsConfig = fmt.Sprintf("tls %s %s\n\t", strconv.Quote(certFile), strconv.Quote(keyFile))
 		fmt.Fprintln(r.Out, "  Caddy: configured with self-signed cert (IP-based deployment)")
 	}
-	return nil
+	config := fmt.Sprintf("%s://%s {\n\t%sreverse_proxy 127.0.0.1:%s\n}\n", publicURL.Scheme, publicURL.Host, tlsConfig, port)
+	return r.FS.WriteFile(caddyfileDst, []byte(config), 0644)
 }
 
-func (r *SetupRunner) stepTLS() error {
+func (r *SetupRunner) stepTLS() (err error) {
 	bundled, err := r.Paths.hasRuntime(r.FS)
 	if err != nil {
 		return err
@@ -1540,23 +1581,27 @@ func (r *SetupRunner) stepTLS() error {
 		return nil
 	}
 
-	caddyfileSrc := r.Paths.LibExecDir + "/heimdall-Caddyfile"
-	caddyfileDst := "/etc/caddy/Caddyfile.d/heimdall-server.caddy"
-
-	externalHost, _ := r.resolveExternalHost()
-
-	// Copy Caddyfile template
-	if !r.FS.Exists(caddyfileSrc) {
-		fmt.Fprintln(r.Out, "  Caddyfile template not found, skipping")
-		return nil
-	}
-	if err := r.runTLSCommand("mkdir", "-p", "/etc/caddy/Caddyfile.d"); err != nil {
+	caddyfileDst := standaloneCaddyfile
+	pending := caddyfileDst + ".pending"
+	env, err := r.Env.ReadEnv()
+	if err != nil {
 		return err
 	}
-	if err := r.FS.CopyFile(caddyfileSrc, caddyfileDst); err != nil {
-		return fmt.Errorf("copying Caddyfile: %w", err)
+	value := r.ExternalURL
+	if value == "" {
+		value = env["EXTERNAL_URL"]
+	}
+	if value != "" {
+		if _, err := normalizeExternalURL(value, r.ProxyMode); err != nil {
+			return err
+		}
+	}
+	port := envDefault(env, "PORT", DefaultAppPort)
+	if err := ValidateValue("PORT", port); err != nil {
+		return err
 	}
 
+	externalHost, externalURL := r.resolveExternalHost()
 	if err := validateHostname(externalHost); err != nil {
 		return fmt.Errorf("unsafe hostname %q: %w", externalHost, err)
 	}
@@ -1572,7 +1617,78 @@ func (r *SetupRunner) stepTLS() error {
 	}
 
 	strategy := determineTLSStrategy(externalHost, r.TLSCert, r.TLSKey)
-	if err := r.configureCaddyfile(strategy, externalHost, caddyfileDst); err != nil {
+	switch r.TLSMode {
+	case "internal":
+		strategy = tlsPrivate
+	case "acme":
+		strategy = tlsPublic
+	case "custom":
+		strategy = tlsBYO
+	}
+	if strategy == tlsIP {
+		if err := validateFilePath(r.Paths.CertDir); err != nil {
+			return err
+		}
+	}
+	var saved []savedFile
+	for _, path := range []string{caddyfileDst, "/etc/caddy/Caddyfile", r.Paths.CertDir + "/server.crt", r.Paths.CertDir + "/server.key"} {
+		before, err := snapshotFile(r.FS, path)
+		if err != nil {
+			return err
+		}
+		saved = append(saved, before)
+	}
+	if err := safeManagedPath(r.FS, pending); err != nil {
+		return err
+	}
+	wasActive, err := r.Systemd.IsActive("caddy")
+	if err != nil {
+		return err
+	}
+	state, err := r.Systemd.ShowProperty("caddy", "UnitFileState")
+	if err != nil {
+		return err
+	}
+	wasEnabled := state == "enabled" || state == systemdEnabledRuntime
+	restarted, enableAttempted, restored := false, false, false
+	rollback := func() error {
+		if restored {
+			return nil
+		}
+		restored = true
+		var failures []error
+		for _, before := range saved {
+			failures = append(failures, before.restore(r.FS))
+		}
+		if restarted {
+			if wasActive {
+				failures = append(failures, r.Systemd.Restart("caddy"))
+			} else {
+				failures = append(failures, r.Systemd.Stop("caddy"))
+			}
+		}
+		if enableAttempted && !wasEnabled {
+			failures = append(failures, runChecked(r.Exec, "systemctl", "disable", "caddy"))
+		}
+		return errors.Join(failures...)
+	}
+	r.rollbackTLS = rollback
+	defer func() {
+		_ = r.FS.RemoveAll(pending)
+		if err != nil {
+			err = errors.Join(err, rollback())
+		}
+	}()
+	if err := r.runTLSCommand("mkdir", "-p", "/etc/caddy/Caddyfile.d"); err != nil {
+		return err
+	}
+	if err := r.configureCaddyfile(strategy, externalHost, externalURL, pending); err != nil {
+		return err
+	}
+	if err := runChecked(r.Exec, "caddy", "validate", "--config", pending, "--adapter", "caddyfile"); err != nil {
+		return err
+	}
+	if err := r.FS.Rename(pending, caddyfileDst); err != nil {
 		return err
 	}
 
@@ -1595,9 +1711,11 @@ func (r *SetupRunner) stepTLS() error {
 	// interactive password input on some systems.
 	r.Exec.Run("update-ca-trust")
 
+	enableAttempted = true
 	if err := r.Systemd.Enable("caddy"); err != nil {
 		return fmt.Errorf("enabling Caddy: %w", err)
 	}
+	restarted = true
 	if err := r.Systemd.Restart("caddy"); err != nil {
 		return fmt.Errorf("restarting Caddy: %w", err)
 	}
@@ -1646,6 +1764,9 @@ var hostnamePattern = regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9.\-]{0,252}[a-zA
 // validateHostname checks that a hostname is well-formed and safe for use
 // in sed commands and openssl -subj arguments.
 func validateHostname(host string) error {
+	if net.ParseIP(host) != nil {
+		return nil
+	}
 	if host == "" {
 		return fmt.Errorf("hostname is empty")
 	}
@@ -1682,6 +1803,9 @@ func (r *SetupRunner) stepSecurityPolicies() error {
 		return err
 	}
 	port := envDefault(env, "PORT", DefaultAppPort)
+	if err := rootManagedFile(r.FS, r.Paths.LogDir+"/.heimdall-log-check"); err != nil {
+		return err
+	}
 	if !r.bundledRuntime {
 		if err := configureSELinuxPorts(r.Exec, r.FS, r.Paths.ConfigDir, []selinuxPort{{"heimdall_server_port_t", port}}, true); err != nil {
 			return err
@@ -1695,20 +1819,28 @@ func (r *SetupRunner) stepSecurityPolicies() error {
 	}
 
 	// File permission hardening
-	r.Exec.Run("chown", configFileOwner, r.Paths.ConfigDir)
 	configMode := "0750"
 	if r.bundledRuntime {
 		configMode = "0751"
 	}
-	r.Exec.Run("chmod", configMode, r.Paths.ConfigDir)
-	r.Exec.Run("chown", "-R", "heimdall:heimdall", r.Paths.DataDir)
-	r.Exec.Run("chmod", "0750", r.Paths.DataDir)
-	// The app can replace this directory entry; never follow it with root privileges.
-	if err := runChecked(r.Exec, "runuser", "-u", "heimdall", "--", "chmod", "0700", r.Paths.DataDir+"/backups"); err != nil {
-		return err
+	for _, dir := range []struct{ path, owner, mode string }{
+		{r.Paths.ConfigDir, configFileOwner, configMode},
+		{r.Paths.DataDir, "heimdall:heimdall", "0750"},
+		{r.Paths.LogDir, configFileOwner, "0750"},
+	} {
+		if err := safeManagedPath(r.FS, dir.path+"/.heimdall-directory-check"); err != nil {
+			return err
+		}
+		if err := r.FS.MkdirAll(dir.path, 0750); err != nil {
+			return err
+		}
+		if err := runChecked(r.Exec, "chown", dir.owner, dir.path); err != nil {
+			return err
+		}
+		if err := runChecked(r.Exec, "chmod", dir.mode, dir.path); err != nil {
+			return err
+		}
 	}
-	r.Exec.Run("chown", "-R", "heimdall:heimdall", r.Paths.LogDir)
-	r.Exec.Run("chmod", "0750", r.Paths.LogDir)
 	fmt.Fprintln(r.Out, "  File permissions hardened")
 	r.rollbackFirewall, err = r.configureFirewall(port, r.ProxyMode, env["EXTERNAL_URL"])
 	return err

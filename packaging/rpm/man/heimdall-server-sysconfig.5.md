@@ -54,7 +54,8 @@ file.
 **HEIMDALL_DATA_DIR**=_/var/lib/heimdall-server_
 
 :   Variable data directory owned by the heimdall user. Contains the
-    backups/ subdirectory for pre-upgrade and on-demand database backups.
+    application state. Backups use the separate root-owned
+    **/var/backups/heimdall-server/** directory.
     Private PostgreSQL, Caddy and Nginx state are separate sibling directories and
     are not relocated or recursively reowned by this application setting.
 
@@ -69,11 +70,11 @@ file.
 :   Helper scripts and runtime directory. Packaged executables use fixed paths
     beneath runtime/. CLI path overrides do not relocate the RPM or units.
 
-**HEIMDALL_LOG_DIR**=_/var/log/heimdall-server_
+**HEIMDALL_LOG_DIR**=_/var/log/heimdall-server-journal_
 
-:   Log directory owned by the heimdall user. Used when LOG_FILE is set
-    in backend.env. When LOG_FILE is unset (the default), logs go to
-    journald and this directory is unused.
+:   Root-owned directory for rsyslog copies. Application LOG_FILE output
+    uses **/var/lib/heimdall-server/logs/** instead. Primary logs go to
+    journald; packaged rsyslog routing copies them into this protected directory.
 
 **HEIMDALL_CERT_DIR**=_/etc/pki/heimdall-server_
 

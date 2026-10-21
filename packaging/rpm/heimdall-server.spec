@@ -388,10 +388,11 @@ install -m 0644 %{SOURCE21} %{buildroot}%{_datadir}/%{name}/security/SECURITY.md
 install -d %{buildroot}%{_mandir}/man1
 install -p -m 0644 rpm-man/man1/*.1 %{buildroot}%{_mandir}/man1/
 
-# Runtime directories (owned by service user)
+# Service state and root-protected backup/journal directories
 install -d -m 0750 %{buildroot}/var/lib/%{name}
-install -d -m 0700 %{buildroot}/var/lib/%{name}/backups
+install -d -m 0700 %{buildroot}/var/backups/%{name}
 install -d -m 0750 %{buildroot}/var/log/%{name}
+install -d -m 0750 %{buildroot}/var/log/%{name}-journal
 install -d -m 0700 %{buildroot}/var/lib/heimdall-postgresql/18
 install -d -m 0700 %{buildroot}/var/lib/heimdall-caddy
 install -d -m 0700 %{buildroot}/var/lib/heimdall-nginx
@@ -422,6 +423,32 @@ with open(manifest_path, 'w') as stream:
 PY
 
 %pre
+# New root-written paths must never inherit trust from service-owned directories.
+for protected in /var/backups/%{name} /var/log/%{name}-journal; do
+  current="$protected"
+  while [ "$current" != / ]; do
+    if [ -e "$current" ] || [ -L "$current" ]; then
+      if [ -L "$current" ] || [ ! -d "$current" ] || \
+         [ "$(stat -c '%%u' "$current")" != 0 ] || \
+         [ $((0$(stat -c '%%a' "$current") & 022)) -ne 0 ]; then
+        echo "Unsafe protected directory: $current; review and move it aside before installing." >&2
+        exit 1
+      fi
+    fi
+    current=${current%/*}
+    [ -n "$current" ] || current=/
+  done
+done
+for logfile in /var/log/%{name}-journal/heimdall-server.log /var/log/%{name}-journal/heimdall-cli.log; do
+  if [ -e "$logfile" ] || [ -L "$logfile" ]; then
+    if [ -L "$logfile" ] || [ ! -f "$logfile" ] || \
+       [ "$(stat -c '%%u:%%h' "$logfile")" != 0:1 ] || \
+       [ $((0$(stat -c '%%a' "$logfile") & 022)) -ne 0 ]; then
+      echo "Unsafe protected log file: $logfile; review and move it aside before installing." >&2
+      exit 1
+    fi
+  fi
+done
 # Refuse unsafe/incompatible state before backup, service stops, or replacement.
 if [ "$1" -gt 1 ]; then
   unit_running() {
@@ -514,7 +541,7 @@ if [ "$1" -gt 1 ]; then
   done
   if [ "$active" = true ] && [ -s "$config_dir/backend.env" ]; then
     echo "Creating pre-upgrade backup..."
-    if ! heimdall-cli backup -o /var/lib/%{name}/backups; then
+    if ! heimdall-cli backup -o /var/backups/%{name}; then
       if [ "$skip_backup" != true ]; then
         echo "Backup failed; upgrade aborted. After verifying a separate backup, set SKIP_PREUPGRADE_BACKUP=true in $sysconfig to override." >&2
         exit 1
@@ -558,7 +585,7 @@ semodule -n -i %{_datadir}/selinux/packages/%{name}.pp || \
 if /usr/sbin/selinuxenabled 2>/dev/null; then
   /usr/sbin/load_policy || echo "WARNING: SELinux policy reload failed." >&2
   for path in %{_bindir}/%{name} %{_datadir}/%{name} %{_libexecdir}/%{name}/runtime \
-              %{_sysconfdir}/%{name} /var/lib/%{name} /var/log/%{name} \
+              %{_sysconfdir}/%{name} /var/lib/%{name} /var/backups/%{name} /var/log/%{name}-journal \
               /var/lib/heimdall-postgresql /var/lib/heimdall-caddy /var/lib/heimdall-nginx \
               /run/%{name} /run/heimdall-postgresql /run/heimdall-caddy /run/heimdall-nginx \
               %{_unitdir}/%{name}.service %{_unitdir}/heimdall-postgresql.service \
@@ -570,6 +597,14 @@ if /usr/sbin/selinuxenabled 2>/dev/null; then
     [ -e "$path" ] || continue
     restorecon -R "$path" || echo "WARNING: could not relabel $path." >&2
   done
+
+  # Preserve existing app-controlled log descendants; only their parent needs labeling.
+  legacy_logs=/var/log/%{name}
+  if [ -L "$legacy_logs" ]; then
+    echo "WARNING: refusing to relabel symbolic link $legacy_logs." >&2
+  elif [ -d "$legacy_logs" ]; then
+    restorecon "$legacy_logs" || echo "WARNING: could not relabel $legacy_logs." >&2
+  fi
 
   # Setup validates and registers only the selected ports after configuration.
 fi
@@ -604,7 +639,7 @@ elif [ $1 -eq 2 ]; then
   echo "=========================================="
   echo " Heimdall Server upgraded."
   echo ""
-  echo " Backups: /var/lib/%{name}/backups/"
+  echo " Backups: /var/backups/%{name}/"
   echo ""
   echo " Apply migrations and start the selected services:"
   echo "   sudo heimdall-cli setup --non-interactive"
@@ -742,8 +777,9 @@ fi
 %attr(0640,root,heimdall) %config(noreplace) %{_sysconfdir}/%{name}/backend.env
 %attr(0755,root,root) %dir %{_datadir}/%{name}
 %attr(0750,heimdall,heimdall) %dir /var/lib/%{name}
-%attr(0700,heimdall,heimdall) %dir /var/lib/%{name}/backups
+%attr(0700,root,root) %dir /var/backups/%{name}
 %attr(0750,heimdall,heimdall) %dir /var/log/%{name}
+%attr(0750,root,heimdall) %dir /var/log/%{name}-journal
 %attr(0700,heimdall-postgres,heimdall-postgres) %dir /var/lib/heimdall-postgresql
 %attr(0700,heimdall-postgres,heimdall-postgres) %dir /var/lib/heimdall-postgresql/18
 %attr(0700,heimdall-caddy,heimdall-caddy) %dir /var/lib/heimdall-caddy
@@ -758,8 +794,8 @@ fi
 %config(noreplace) %{_prefix}/lib/firewalld/services/%{name}.xml
 %config(noreplace) %{_sysconfdir}/yum.repos.d/%{name}.repo
 %config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%config(noreplace) %{_sysconfdir}/rsyslog.d/30-%{name}.conf
-%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
+%config %{_sysconfdir}/rsyslog.d/30-%{name}.conf
+%config %{_sysconfdir}/logrotate.d/%{name}
 %{_datadir}/%{name}/security
 %{_bindir}/heimdall-cli
 %{_mandir}/man1/heimdall-cli*.1*

@@ -120,5 +120,10 @@ func TestStepSecurityPolicies_FilePermissions(t *testing.T) {
 	}
 	assert.GreaterOrEqual(t, chownCalls, 3, "should chown config, data, and log dirs")
 	assert.GreaterOrEqual(t, chmodCalls, 3, "should chmod config dir, data dir, and log dir")
-	assert.Contains(t, calls, FakeExecCall{Name: "runuser", Args: []string{"-u", "heimdall", "--", "chmod", "0700", r.Paths.DataDir + "/backups"}})
+	assert.Contains(t, calls, FakeExecCall{Name: "chown", Args: []string{configFileOwner, r.Paths.LogDir}})
+	for _, call := range calls {
+		if call.Name == "chown" {
+			assert.NotContains(t, call.Args, "-R")
+		}
+	}
 }

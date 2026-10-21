@@ -28,7 +28,7 @@ func TestViperDefaults_RegisteredOnInit(t *testing.T) {
 	assert.Equal(t, CertDir, v.GetString("cert-dir"))
 	assert.Equal(t, EnvFile, v.GetString("env-file"))
 	assert.Equal(t, "/etc/heimdall-server", v.GetString("config-dir"))
-	assert.Equal(t, "/var/log/heimdall-server", v.GetString("log-dir"))
+	assert.Equal(t, "/var/log/heimdall-server-journal", v.GetString("log-dir"))
 }
 
 func TestViperDefaults_EnvOverridesDefault(t *testing.T) {
@@ -51,7 +51,7 @@ func TestDefaultPaths_AllAbsolute(t *testing.T) {
 	assert.Equal(t, "/usr/libexec/heimdall-server", p.LibExecDir)
 	assert.Equal(t, "/etc/heimdall-server", p.ConfigDir)
 	assert.Equal(t, "/etc/pki/heimdall-server", p.CertDir)
-	assert.Equal(t, "/var/log/heimdall-server", p.LogDir)
+	assert.Equal(t, "/var/log/heimdall-server-journal", p.LogDir)
 	assert.Equal(t, "/etc/heimdall-server/backend.env", p.EnvFile)
 }
 

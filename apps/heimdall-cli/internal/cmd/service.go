@@ -30,6 +30,9 @@ func (r *ServiceRunner) Start() error {
 	if err := r.Systemd.Start(ServiceName); err != nil {
 		return fmt.Errorf("failed to start service: %w", err)
 	}
+	if err := r.requireActive(); err != nil {
+		return err
+	}
 	fmt.Fprintln(r.Out, "Service started.")
 	return nil
 }
@@ -56,7 +59,21 @@ func (r *ServiceRunner) Restart() error {
 	if err := r.Systemd.Restart(ServiceName); err != nil {
 		return fmt.Errorf("failed to restart service: %w", err)
 	}
+	if err := r.requireActive(); err != nil {
+		return err
+	}
 	fmt.Fprintln(r.Out, "Service restarted.")
+	return nil
+}
+
+func (r *ServiceRunner) requireActive() error {
+	active, err := r.Systemd.IsActive(ServiceName)
+	if err != nil {
+		return fmt.Errorf("checking service state: %w", err)
+	}
+	if !active {
+		return fmt.Errorf("service is not active; check 'heimdall-cli status' and the journal; if an upgrade is pending, run 'heimdall-cli setup --non-interactive'")
+	}
 	return nil
 }
 
@@ -66,9 +83,12 @@ func (r *ServiceRunner) Logs(lines int, follow bool) error {
 		args := []string{"journalctl", "-u", ServiceName, "--no-pager", "-n", fmt.Sprintf("%d", lines), "-f"}
 		return execvp(args[0], args)
 	}
-	stdout, _, err := r.Exec.Run("journalctl", "-u", ServiceName, "--no-pager", "-n", fmt.Sprintf("%d", lines))
+	stdout, code, err := r.Exec.Run("journalctl", "-u", ServiceName, "--no-pager", "-n", fmt.Sprintf("%d", lines))
 	if err != nil {
 		return fmt.Errorf("failed to read logs: %w", err)
+	}
+	if code != 0 {
+		return fmt.Errorf("failed to read logs (exit %d): %s", code, strings.TrimSpace(stdout))
 	}
 	fmt.Fprint(r.Out, stdout)
 	return nil
@@ -216,7 +236,7 @@ func NewRestartCmd(runner *ServiceRunner) *cobra.Command {
 by a start, which is necessary after configuration changes (e.g., after
 running 'heimdall-cli config set'). Requires root privileges.`,
 		Example: `  # Restart after a configuration change
-  sudo heimdall-cli config set EXTERNAL_URL https://new.example.com
+  sudo heimdall-cli config set MAX_FILE_UPLOAD_SIZE 100
   sudo heimdall-cli restart`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			initIO(&runner.Out, &runner.ErrOut, cmd)
@@ -261,6 +281,7 @@ current process with journalctl, similar to 'tail -f').`,
 
 // NewDiagCmd creates the diag command.
 func NewDiagCmd(runner *ServiceRunner) *cobra.Command {
+	production := runner == nil
 	if runner == nil {
 		runner = newDefaultServiceRunner(nil, nil)
 	}
@@ -285,6 +306,10 @@ This output is suitable for attaching to bug reports or support tickets.`,
   # Save diagnostic report to a file
   sudo heimdall-cli diag > /tmp/heimdall-diag-$(date +%Y%m%d).txt`,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if production {
+				runner.Paths = commandPaths(cmd)
+				runner.Env = &FileEnvManager{Path: runner.Paths.EnvFile}
+			}
 			initIO(&runner.Out, &runner.ErrOut, cmd)
 			return runner.Diag()
 		},

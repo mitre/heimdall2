@@ -223,7 +223,7 @@ func (r *psqlConnector) query(host string, port int, user, password, dbName stri
 		env[key] = value
 	}
 	env["PGPASSWORD"] = password
-	argv := append([]string{"-X", "-h", host, "-p", strconv.Itoa(port), "-U", user, "-d", dbName}, args...)
+	argv := append([]string{"-X", "-h", host, "-p", strconv.Itoa(port), "-U", user, "-d", pgDatabaseName(dbName)}, args...)
 	out, code, err := (&execRunner{}).RunWithEnv(env, binary, argv...)
 	if err != nil {
 		return "", fmt.Errorf("running PostgreSQL client %s: %w", binary, err)

@@ -378,7 +378,7 @@ type backupOutputSwapFS struct {
 	swapped, protected              bool
 }
 
-func (f *backupOutputSwapFS) CopyFile(source, dest string) error {
+func (f *backupOutputSwapFS) WriteFile(dest string, data []byte, mode os.FileMode) error {
 	if filepath.Base(dest) == "backend.env" && !f.swapped && !f.protected {
 		stage := filepath.Dir(filepath.Dir(dest))
 		if f.kind == "staging" && !strings.HasPrefix(stage, f.output+string(os.PathSeparator)) {
@@ -412,7 +412,7 @@ func (f *backupOutputSwapFS) CopyFile(source, dest string) error {
 			f.swapped = true
 		}
 	}
-	return f.recoveryFS.CopyFile(source, dest)
+	return f.recoveryFS.WriteFile(dest, data, mode)
 }
 
 func TestBackupProtectsStagingAndOutputAncestry(t *testing.T) {

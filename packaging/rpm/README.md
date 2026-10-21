@@ -301,11 +301,21 @@ An external proxy's operator must update its upstream separately.
 Change database/proxy ownership through full `setup` with mode flags, not
 `config set`. A database mode change does not copy data. CLI path overrides also
 require matching systemd configuration; they do not relocate private runtime state.
+Setup passes the resolved `--env-file`, `--app-dir`, and `--libexec-dir` to its
+migration helper. The migration helper and server launcher also honor
+`HEIMDALL_ENV_FILE`, `HEIMDALL_APP_DIR` (the application root), and
+`HEIMDALL_LIBEXEC_DIR`. A persistent override needs a systemd drop-in with those
+environment variables and matching `EnvironmentFile`, `WorkingDirectory`,
+`ExecStartPre`, and filesystem access settings; changing a CLI flag alone does
+not update the installed unit.
 
 ## TLS and external proxies
 
 Set `EXTERNAL_URL` to the public URL clients use; it also controls login callbacks
 and email links. Clients must resolve that hostname and trust its issuing CA.
+For a managed proxy, change it with `heimdall-cli setup --external-url URL` so
+setup validates the proxy and certificate together. `config set EXTERNAL_URL`
+is available for external proxies and direct HTTP deployments.
 
 - **Nginx (default):** generates a self-signed certificate, valid for seven days
   by default (adjustable during interactive setup). Trust
@@ -448,3 +458,9 @@ See [bundle contents and downloads](BUILD.md#ci-artifacts-and-test-signatures)
 for RPMs, signing keys and manifests. The installed runtime inventory is
 `/usr/share/heimdall-server/runtime-manifest.json`. Build instructions and
 validation details are in the [build guide](BUILD.md).
+
+Backup archives default to `/var/backups/heimdall-server/` (root-only); rsyslog
+copies use `/var/log/heimdall-server-journal/` (root-owned). Upgrade preserves the
+old app-owned backup and log directories. Old archives need independent provenance
+verification before manual transfer to protected storage; changing ownership alone
+does not make an archive trustworthy. See [protected recovery paths](security/SECURITY.md#protected-backup-and-log-paths).

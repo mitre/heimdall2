@@ -27,7 +27,7 @@ NoNewPrivileges=true
 PrivateTmp=true
 PrivateDevices=true
 ProtectSystem=strict
-ReadWritePaths=/var/lib/heimdall-server
+ReadWritePaths=/var/lib/heimdall-server /var/log/heimdall-server
 ProtectHome=true
 ProtectKernelTunables=true
 ProtectKernelModules=true
@@ -49,7 +49,6 @@ CapabilityBoundingSet=
 AmbientCapabilities=
 LimitNOFILE=65536
 StateDirectory=heimdall-server
-LogsDirectory=heimdall-server
 
 [Install]
 WantedBy=multi-user.target

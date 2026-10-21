@@ -27,6 +27,15 @@ func (c DBConfig) PortStr() string {
 	return strconv.Itoa(c.Port)
 }
 
+// pgDatabaseName prevents libpq from interpreting a literal database name as
+// connection settings, or pg_dump from interpreting it as an option.
+func pgDatabaseName(name string) string {
+	if !strings.Contains(name, "=") && !strings.HasPrefix(name, "postgres://") && !strings.HasPrefix(name, "postgresql://") && !strings.HasPrefix(name, "-") {
+		return name
+	}
+	return "dbname='" + strings.NewReplacer(`\`, `\\`, "'", `\'`).Replace(name) + "'"
+}
+
 // PgEnv returns the environment map for passing PGPASSWORD to psql/pg_dump.
 func (c DBConfig) PgEnv() map[string]string {
 	env := map[string]string{"PGPASSWORD": c.Password, "PGSSLMODE": c.SSLMode}

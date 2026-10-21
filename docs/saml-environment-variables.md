@@ -1,5 +1,10 @@
 # SAML environment variables
 
+> **Unmerged feature:** This document describes a separate authentication change.
+> SAML is not available in this branch: its settings, routes, dependencies, and
+> the strategy referenced by the coverage check below are not implemented here.
+> These instructions apply only after that feature is merged.
+
 Heimdall enables SAML when all four settings below have values. There is no dedicated SAML enablement flag. Configure `EXTERNAL_URL` for the deployment so the default callback URL points to its `/authn/saml/callback` endpoint, or set `SAML_CALLBACK_URL` explicitly. Register that URL as the assertion consumer service (ACS) at the identity provider (IdP).
 
 ```dotenv

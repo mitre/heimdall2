@@ -49,7 +49,7 @@ ENVIRONMENT VARIABLES:
   HEIMDALL_LIBEXEC_DIR    Libexec directory (default: /usr/libexec/heimdall-server)
   HEIMDALL_CONFIG_DIR     Configuration directory (default: /etc/heimdall-server)
   HEIMDALL_CERT_DIR       Certificate directory (default: /etc/pki/heimdall-server)
-  HEIMDALL_LOG_DIR        Log directory (default: /var/log/heimdall-server)
+  HEIMDALL_LOG_DIR        Log directory (default: /var/log/heimdall-server-journal)
   HEIMDALL_ENV_FILE       Environment file path (default: /etc/heimdall-server/backend.env)
 
 FILES:

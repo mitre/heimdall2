@@ -82,7 +82,7 @@ http {
         ssl_certificate %s;
         ssl_certificate_key %s;
         ssl_protocols TLSv1.2 TLSv1.3;
-        client_max_body_size 500m;
+        client_max_body_size 0;
         location / {
             proxy_pass http://127.0.0.1:%d;
             proxy_http_version 1.1;

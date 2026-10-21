@@ -40,7 +40,7 @@ func (m *FileEnvManager) ReadEnv() (map[string]string, error) {
 // ParseEnv parses env file content into a map.
 func ParseEnv(content string) map[string]string {
 	env := make(map[string]string)
-	for _, line := range strings.Split(content, "\n") {
+	for _, line := range envLines(strings.ReplaceAll(content, "\r\n", "\n")) {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
@@ -145,7 +145,7 @@ func updateEnvContent(data []byte, entries map[string]string) (string, error) {
 	seen := make(map[string]bool)
 	var lines []string
 	if len(data) != 0 {
-		lines = strings.Split(strings.TrimSuffix(string(data), "\n"), "\n")
+		lines = envLines(strings.TrimSuffix(string(data), "\n"))
 	}
 	updateEnvLines(lines, entries, encoded, seen)
 	var missing []string

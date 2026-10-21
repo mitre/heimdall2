@@ -4,9 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"regexp"
 
 	"github.com/spf13/cobra"
 )
+
+const standaloneCaddyfile = "/etc/caddy/Caddyfile.d/heimdall-server.caddy"
+
+var standaloneCaddyUpstream = regexp.MustCompile(`(?m)(\breverse_proxy[ \t]+127\.0\.0\.1:)[0-9]+\b`)
 
 // SetPortRunner holds dependencies for the set-port command.
 type SetPortRunner struct {
@@ -174,14 +179,55 @@ func (r *SetPortRunner) preparePortChange(setup *SetupRunner, env map[string]str
 				return nil, before, err
 			}
 		}
+	} else if env["HEIMDALL_PROXY_MODE"] == "bundled" || (env["HEIMDALL_PROXY_MODE"] == "" && r.FS.Exists(standaloneCaddyfile)) {
+		before, err = snapshotFile(r.FS, r.Env.GetEnvFilePath())
+		if err != nil {
+			return nil, before, err
+		}
+		proxy, err = setup.prepareStandaloneCaddyPort(portStr)
+		if err != nil {
+			return nil, before, err
+		}
 	}
 	return proxy, before, nil
+}
+
+func (r *SetupRunner) prepareStandaloneCaddyPort(port string) (*caddyUpdate, error) {
+	before, err := snapshotFile(r.FS, standaloneCaddyfile)
+	if err != nil {
+		return nil, err
+	}
+	if !before.exists || len(standaloneCaddyUpstream.FindAll(before.data, -1)) != 1 {
+		return nil, fmt.Errorf("standalone Caddy upstream is missing or ambiguous; run heimdall-cli setup to regenerate it")
+	}
+	u := &caddyUpdate{runner: r, unit: "caddy", group: "caddy", runDir: "/run/caddy", pending: standaloneCaddyfile + ".pending", saved: []savedFile{before}}
+	u.config = standaloneCaddyUpstream.ReplaceAllString(string(before.data), "${1}"+port)
+	u.active, err = r.Systemd.IsActive("caddy")
+	if err != nil {
+		return nil, err
+	}
+	state, err := r.Systemd.ShowProperty("caddy", "UnitFileState")
+	if err != nil {
+		return nil, err
+	}
+	u.enabled = state == "enabled" || state == "enabled-runtime"
+	if err := safeManagedPath(r.FS, u.pending); err != nil {
+		return nil, err
+	}
+	defer u.cleanup()
+	if err := r.FS.WriteFile(u.pending, []byte(u.config), 0640); err != nil {
+		return nil, err
+	}
+	if err := runChecked(r.Exec, "caddy", "validate", "--config", u.pending, "--adapter", "caddyfile"); err != nil {
+		return nil, err
+	}
+	return u, nil
 }
 
 func (r *SetPortRunner) restorePortConfig(env map[string]string, before savedFile, bundled bool) error {
 	var rollback []error
 	rollback = append(rollback, r.Env.WriteEnvFile(env))
-	if bundled {
+	if before.path != "" {
 		if _, ok := r.Env.(*FileEnvManager); ok {
 			rollback = append(rollback, before.restore(r.FS))
 		}

@@ -1,8 +1,8 @@
 ## Heimdall Server audit rules (SAMPLE)
 ##
-## To activate, copy to /etc/audit/rules.d/ and restart auditd:
+## To activate, copy to /etc/audit/rules.d/ and load the rules:
 ##   sudo cp /usr/share/heimdall-server/security/40-heimdall.rules /etc/audit/rules.d/
-##   sudo systemctl restart auditd
+##   sudo augenrules --load
 ##
 ## These rules supplement the STIG baseline (30-stig.rules).
 ## The 40- prefix loads after STIG rules but before 99-finalize.rules.
@@ -17,8 +17,9 @@
 -w /usr/bin/heimdall-cli -p wa -k heimdall-bin
 -w /usr/bin/heimdall-server -p wa -k heimdall-bin
 
-## Data directory (backups contain database dump + credentials)
+## Application data and protected backups (database dump + credentials)
 -w /var/lib/heimdall-server/ -p wa -k heimdall-data
+-w /var/backups/heimdall-server/ -p wa -k heimdall-backup
 
 ## SELinux policy module
 -w /usr/share/selinux/packages/heimdall-server.pp -p wa -k heimdall-selinux

@@ -11,7 +11,8 @@ var (
 	LibExecDir = "/usr/libexec/heimdall-server"
 	CertDir    = "/etc/pki/heimdall-server"
 	ConfigDir  = "/etc/heimdall-server"
-	LogDir     = "/var/log/heimdall-server"
+	LogDir     = "/var/log/heimdall-server-journal"
+	BackupDir  = "/var/backups/heimdall-server"
 )
 
 // Paths holds resolved filesystem paths for the Heimdall installation.

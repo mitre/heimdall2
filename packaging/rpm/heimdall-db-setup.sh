@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-APP_ROOT="/usr/share/heimdall-server"
+APP_ROOT="${HEIMDALL_APP_DIR:-/usr/share/heimdall-server}"
 APP_DIR="${APP_ROOT}/apps/backend"
-ENV_FILE="/etc/heimdall-server/backend.env"
+ENV_FILE="${HEIMDALL_ENV_FILE:-/etc/heimdall-server/backend.env}"
 SEQUELIZE_BIN="${APP_DIR}/node_modules/.bin/sequelize"
 
 usage() {
@@ -47,7 +47,7 @@ if [[ ! -d "${APP_DIR}" ]]; then
   exit 1
 fi
 
-NODE_BIN=/usr/libexec/heimdall-server/runtime/node/bin/node
+NODE_BIN="${HEIMDALL_LIBEXEC_DIR:-/usr/libexec/heimdall-server}/runtime/node/bin/node"
 if [[ ! -x "$NODE_BIN" || ! -x "${SEQUELIZE_BIN}" ]]; then
   echo "Missing required executables in ${APP_DIR}/node_modules/.bin" >&2
   exit 1

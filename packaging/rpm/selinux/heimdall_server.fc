@@ -30,8 +30,10 @@
 /var/lib/heimdall-caddy(/.*)?                  gen_context(system_u:object_r:httpd_var_lib_t,s0)
 /var/lib/heimdall-nginx(/.*)?                  gen_context(system_u:object_r:httpd_var_lib_t,s0)
 
-# Log directory
+# Log directories: legacy direct application output and protected journal copies.
 /var/log/heimdall-server(/.*)?                 gen_context(system_u:object_r:heimdall_server_log_t,s0)
+/var/log/heimdall-server-journal(/.*)?         gen_context(system_u:object_r:var_log_t,s0)
+/var/backups/heimdall-server(/.*)?             gen_context(system_u:object_r:var_lib_t,s0)
 
 # Runtime directory
 /run/heimdall-server(/.*)?                     gen_context(system_u:object_r:heimdall_server_var_run_t,s0)

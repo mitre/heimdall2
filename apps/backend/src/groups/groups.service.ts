@@ -250,12 +250,5 @@ export class GroupsService {
           this.addUserToGroup(existingGroup, user, 'member')
         )
     );
-
-    // Ensure we didn't leave any dangling groups
-    await Promise.all(
-      groupsToLeave.map(async (group) => {
-        await this.ensureGroupHasOwner(group, user);
-      })
-    );
   }
 }

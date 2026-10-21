@@ -54,14 +54,14 @@ pg_dump must match the database server's major version. External PostgreSQL 13â€
 requires matching client tools installed in the standard OS/PGDG locations.
 A newer server requires an RPM with compatible clients. Standalone installations
 without a password retain configuration-only backups. Requires root privileges.`,
-		Example: `  # Create a backup in the current directory
+		Example: `  # Create a backup in the protected default directory
   sudo heimdall-cli backup
 
   # Create a backup in a specific directory
   sudo heimdall-cli backup --output /var/backups/heimdall
 
   # Create a backup before upgrading
-  sudo heimdall-cli backup -o /tmp && sudo dnf upgrade heimdall-server`,
+  sudo heimdall-cli backup && sudo dnf upgrade heimdall-server`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if production {
 				runner.Paths = commandPaths(cmd)
@@ -69,13 +69,13 @@ without a password retain configuration-only backups. Requires root privileges.`
 			}
 			initIO(&runner.Out, &runner.ErrOut, cmd)
 			if production && !cmd.Flags().Changed("output") {
-				outputDir = filepath.Join(runner.Paths.DataDir, "backups")
+				outputDir = BackupDir
 			}
 			return runner.Run(outputDir)
 		},
 	}
 
-	cmd.Flags().StringVarP(&outputDir, "output", "o", DataDir+"/backups", "Output directory for backup archive")
+	cmd.Flags().StringVarP(&outputDir, "output", "o", BackupDir, "Output directory for backup archive")
 	return cmd
 }
 
@@ -86,11 +86,23 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 			return err
 		}
 	}
-	env, err := r.Env.ReadEnv()
+	// Capture once so archived configuration and pg_dump use the same bytes.
+	if !filepath.IsAbs(outputDir) {
+		return fmt.Errorf("output directory must be absolute path, got: %s", outputDir)
+	}
+	if strings.Contains(outputDir, "..") {
+		return fmt.Errorf("output directory must not contain path traversal (..): %s", outputDir)
+	}
+	envPath := r.Env.GetEnvFilePath()
+	if err := requireRegular(r.FS, envPath); err != nil {
+		return fmt.Errorf("failed to back up config: %w", err)
+	}
+	content, err := r.FS.ReadFile(envPath)
 	if err != nil {
 		return fmt.Errorf("failed to read env: %w", err)
 	}
 
+	env := ParseEnv(string(content))
 	rpm, err := r.Paths.hasRuntime(r.FS)
 	if err != nil {
 		return err
@@ -107,20 +119,8 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 		return err
 	}
 
-	// Validate output directory to prevent path traversal
-	if !filepath.IsAbs(outputDir) {
-		return fmt.Errorf("output directory must be absolute path, got: %s", outputDir)
-	}
-	if strings.Contains(outputDir, "..") {
-		return fmt.Errorf("output directory must not contain path traversal (..): %s", outputDir)
-	}
-
 	if err := safeManagedPath(r.FS, filepath.Join(outputDir, ".heimdall-backup-check")); err != nil {
 		return err
-	}
-	envPath := r.Env.GetEnvFilePath()
-	if err := requireRegular(r.FS, envPath); err != nil {
-		return fmt.Errorf("failed to back up config: %w", err)
 	}
 	trees := map[string]string{}
 	if rpm {
@@ -180,7 +180,7 @@ func (r *BackupRunner) Run(outputDir string) (err error) {
 	}
 
 	// Copy backend.env
-	if err := r.FS.CopyFile(envPath, filepath.Join(backupDir, recoveryEnvFile)); err != nil {
+	if err := r.FS.WriteFile(filepath.Join(backupDir, recoveryEnvFile), content, 0600); err != nil {
 		fmt.Fprintf(r.ErrOut, "Config:   copy failed: %v\n", err)
 		return fmt.Errorf("failed to back up config: %w", err)
 	}
@@ -307,14 +307,15 @@ func backupWorkspace() (string, error) {
 	return os.MkdirTemp(parent, ".heimdall-backup-")
 }
 
-// Open each component without following links. Held descriptors continue to
-// identify the intended directory if its app-owned name or an ancestor moves.
+// Validate held directory descriptors so only root can replace stored archives.
+// The current user is also accepted for unprivileged tests; commands require root.
 func openBackupOutput(path string, create bool) (*os.File, error) {
 	dir, err := os.Open(string(os.PathSeparator))
 	if err != nil {
 		return nil, err
 	}
-	for _, component := range strings.Split(strings.TrimPrefix(filepath.Clean(path), "/"), "/") {
+	components := strings.Split(strings.TrimPrefix(filepath.Clean(path), "/"), "/")
+	for _, component := range components {
 		if component == "" {
 			continue
 		}
@@ -329,6 +330,18 @@ func openBackupOutput(path string, create bool) (*os.File, error) {
 			return nil, fmt.Errorf("%s: %w", path, err)
 		}
 		dir = os.NewFile(uintptr(fd), component)
+		info, err := dir.Stat()
+		if err != nil {
+			dir.Close()
+			return nil, err
+		}
+		stat, ok := info.Sys().(*syscall.Stat_t)
+		stickyParent := info.Mode()&os.ModeSticky != 0
+		if !ok || (stat.Uid != 0 && stat.Uid != uint32(os.Geteuid())) ||
+			(info.Mode().Perm()&0022 != 0 && !stickyParent) {
+			dir.Close()
+			return nil, fmt.Errorf("backup directory has unprotected ancestry: %s", path)
+		}
 	}
 	return dir, nil
 }
@@ -535,7 +548,7 @@ func (r *BackupRunner) backupDatabase(dbCfg DBConfig, binary, backupDir string) 
 		dumpFile := filepath.Join(backupDir, recoverySQLFile)
 		pgEnv := dbCfg.PgEnv()
 		_, exitCode, err := r.Exec.RunWithEnv(pgEnv, binary,
-			"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, dbCfg.DBName, "-f", dumpFile, "--clean", "--if-exists")
+			"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User, pgDatabaseName(dbCfg.DBName), "-f", dumpFile, "--clean", "--if-exists")
 		if err != nil || exitCode != 0 {
 			fmt.Fprintln(r.ErrOut, "Database: backup FAILED")
 			if err != nil {

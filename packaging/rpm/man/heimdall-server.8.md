@@ -230,11 +230,13 @@ sudo heimdall-cli status
 **/var/lib/heimdall-server/**
 
 :   Variable data directory owned by the heimdall user. Contains the
-    backups/ subdirectory for pre-upgrade and on-demand database backups.
+    application state. Protected backups are stored separately in
+    **/var/backups/heimdall-server/** (root:root, mode 0700).
 
-**/var/log/heimdall-server/**
+**/var/log/heimdall-server-journal/**
 
-:   Log directory. Used only when LOG_FILE is set in backend.env.
+:   Root-owned directory for rsyslog copies of journal messages.
+    Optional application LOG_FILE output uses **/var/lib/heimdall-server/logs/**.
     By default, logs go to journald via systemd.
 
 **/etc/pki/heimdall-server/**

@@ -286,7 +286,7 @@ func TestWriteEnvRejectsInvalidEntriesWithoutChangingFile(t *testing.T) {
 		{"KEY.NAME", "value"}, {"KEY NAME", "value"}, {"KEY=NAME", "value"},
 		{"KEY\tNAME", "value"}, {"KEY\nNAME", "value"}, {"KEY\rNAME", "value"},
 		{"KEY\x00NAME", "value"}, {"KÉY", "value"},
-		{"KEY", "line\nbreak"}, {"KEY", "carriage\rreturn"}, {"KEY", "nul\x00byte"},
+		{"KEY", "carriage\rreturn"}, {"KEY", "nul\x00byte"},
 	} {
 		t.Run(entry.key+"/"+entry.value, func(t *testing.T) {
 			path := filepath.Join(t.TempDir(), "backend.env")
@@ -437,4 +437,58 @@ func TestWriteEnvRejectsSpecialFiles(t *testing.T) {
 	entries, err := os.ReadDir(dir)
 	require.NoError(t, err)
 	require.Len(t, entries, 2)
+}
+
+func TestParseEnvPreservesQuotedMultilineValues(t *testing.T) {
+	for _, quote := range []string{`"`, "'"} {
+		t.Run(quote, func(t *testing.T) {
+			pem := "-----BEGIN CERTIFICATE-----\nYWJj\n-----END CERTIFICATE-----"
+			hosts := "https://one.example.test\nhttps://two.example.test"
+			content := "DATABASE_SSL_CA=" + quote + pem + quote + "\nTENABLE_HOST_URL=" + quote + hosts + quote + "\nPORT=3000\n"
+			require.Equal(t, map[string]string{"DATABASE_SSL_CA": pem, "TENABLE_HOST_URL": hosts, "PORT": "3000"}, ParseEnv(content))
+		})
+	}
+}
+
+func TestWriteEnvReplacesWholeMultilineAssignment(t *testing.T) {
+	initial := "# keep\nexport CERT=\"old\nPORT=inside certificate\nend\"\nPORT=3000\nOTHER='untouched\ntext'\n"
+	for _, value := range []string{"replacement", "new\nCERT=still inside\nlast line", "literal $HOME `false` \\\"\nnext 'line' \\\\ end"} {
+		t.Run(value, func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "backend.env")
+			require.NoError(t, os.WriteFile(path, []byte(initial), 0600))
+			manager := &FileEnvManager{Path: path}
+			require.NoError(t, manager.WriteEnvFile(map[string]string{"CERT": value, "PORT": "4000"}))
+			content, err := os.ReadFile(path)
+			require.NoError(t, err)
+			require.Equal(t, map[string]string{"CERT": value, "PORT": "4000", "OTHER": "untouched\ntext"}, ParseEnv(string(content)))
+			require.True(t, strings.HasPrefix(string(content), "# keep\n"))
+			require.True(t, strings.HasSuffix(string(content), "OTHER='untouched\ntext'\n"))
+			command := exec.Command("bash", "-c", `set -e; source "$1"; printf '%s' "$CERT"`, "test", path)
+			output, err := command.Output()
+			require.NoError(t, err)
+			require.Equal(t, value, string(output))
+		})
+	}
+}
+
+func TestWriteEnvPreservesUnchangedMultilineAssignment(t *testing.T) {
+	initial := "# keep\nexport CERT='first\nSECOND=inside value\nlast'\nPORT=3000"
+	for _, entries := range []map[string]string{{}, ParseEnv(initial), {"PORT": "4000"}} {
+		content, err := updateEnvContent([]byte(initial), entries)
+		require.NoError(t, err)
+		want := initial
+		if entries["PORT"] == "4000" {
+			want = strings.Replace(initial, "PORT=3000", "PORT=\"4000\"", 1)
+		}
+		require.Equal(t, want, content)
+	}
+}
+
+func TestParseEnvNormalizesQuotedMultilineCRLF(t *testing.T) {
+	content := "CERT=\"first\r\nSECOND=inside value\r\nlast\"\r\nPORT=3000\r\n"
+	require.Equal(t, map[string]string{"CERT": "first\nSECOND=inside value\nlast", "PORT": "3000"}, ParseEnv(content))
+	updated, err := updateEnvContent([]byte(content), map[string]string{"PORT": "4000"})
+	require.NoError(t, err)
+	require.True(t, strings.HasPrefix(updated, "CERT=\"first\r\nSECOND=inside value\r\nlast\"\r\n"))
+	require.Equal(t, map[string]string{"CERT": "first\nSECOND=inside value\nlast", "PORT": "4000"}, ParseEnv(updated))
 }

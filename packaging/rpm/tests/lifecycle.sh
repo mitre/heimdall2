@@ -177,7 +177,7 @@ SHELL
     for unit in "${units[@]}"; do if systemctl is-active --quiet "$unit"; then exit 1; fi; done
     [[ -e /etc/heimdall-server/upgrade-pending ]]
     sha256sum --check /tmp/rpm-lifecycle-env.sha256
-    [[ -n "$(find /var/lib/heimdall-server/backups -name '*.tar.gz' -print -quit)" ]]
+    [[ -n "$(find /var/backups/heimdall-server -name '*.tar.gz' -print -quit)" ]]
     heimdall-cli setup --non-interactive --reconfigure
     [[ -e /etc/heimdall-server/upgrade-pending ]]
     heimdall-cli setup --non-interactive --skip-db || true

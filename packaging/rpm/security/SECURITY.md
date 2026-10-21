@@ -178,10 +178,10 @@ Follow these steps to enable them:
    sudo cp /usr/share/heimdall-server/security/40-heimdall.rules /etc/audit/rules.d/
    ```
 
-3. **Restart auditd** to load the new rules:
+3. **Load the new rules**:
 
    ```bash
-   sudo systemctl restart auditd
+   sudo augenrules --load
    ```
 
 4. **Verify the rules loaded** successfully:
@@ -228,7 +228,7 @@ These are installed by the RPM:
 
 | File | Purpose |
 |------|---------|
-| `/etc/rsyslog.d/30-heimdall-server.conf` | Routes journald messages to `/var/log/heimdall-server/` |
+| `/etc/rsyslog.d/30-heimdall-server.conf` | Routes journald messages to `/var/log/heimdall-server-journal/` |
 | `/etc/logrotate.d/heimdall-server` | 90-day log rotation (FedRAMP Moderate AU-11) |
 
 ## Logging Architecture
@@ -245,8 +245,8 @@ NestJS app (stdout/stderr)
   → systemd (captures)
     → journald (primary storage, automatic)
       → rsyslog (routes to file via /etc/rsyslog.d/30-heimdall-server.conf)
-        → /var/log/heimdall-server/heimdall-server.log
-        → /var/log/heimdall-server/heimdall-cli.log
+        → /var/log/heimdall-server-journal/heimdall-server.log
+        → /var/log/heimdall-server-journal/heimdall-cli.log
 ```
 
 ### Viewing logs
@@ -259,10 +259,10 @@ journalctl -u heimdall-server -p err      # errors only
 journalctl -u heimdall-server --since "1 hour ago"
 
 # File-based (via rsyslog)
-tail -f /var/log/heimdall-server/heimdall-server.log
+tail -f /var/log/heimdall-server-journal/heimdall-server.log
 
 # CLI admin actions
-tail -f /var/log/heimdall-server/heimdall-cli.log
+tail -f /var/log/heimdall-server-journal/heimdall-cli.log
 
 # Audit events (if rules activated)
 ausearch -k heimdall-config               # config file changes
@@ -311,5 +311,31 @@ The service unit includes comprehensive sandboxing:
 | `/etc/logrotate.d/heimdall-server` | 0644 | root:root | Log rotation policy |
 | `/run/heimdall-server/` | 0750 | heimdall:heimdall | Runtime directory (via tmpfiles.d) |
 | `/var/lib/heimdall-server/` | 0750 | heimdall:heimdall | Variable data |
-| `/var/lib/heimdall-server/backups/` | 0700 | heimdall:heimdall | Backup archives (contain credentials) |
-| `/var/log/heimdall-server/` | 0750 | heimdall:heimdall | Log files |
+| `/var/backups/heimdall-server/` | 0700 | root:root | Backup archives (contain credentials) |
+| `/var/log/heimdall-server-journal/` | 0750 | root:heimdall | Log files |
+
+### Protected backup and log paths
+
+Backups now default to `/var/backups/heimdall-server/` (root:root, 0700).
+Backup and restore validate directory ancestry and the opened archive inode;
+restore rejects writable or multiply linked archives. Root-owned sticky temporary
+directories are allowed. SQL recovery archives execute privileged `psql` commands,
+so restore only archives whose provenance you trust.
+
+Upgrade preserves old `/var/lib/heimdall-server/backups/` archives and
+`/var/log/heimdall-server/` logs without changing their ownership or contents.
+The legacy log directory remains writable only for direct application LOG_FILE
+compatibility; root logging no longer uses it. Those locations were application
+writable and are not trusted recovery sources.
+Do not restore an old archive merely after changing its ownership. Verify it
+against an independently trusted copy or checksum before manually staging it in
+the protected backup directory; otherwise create a fresh backup from a trusted
+installation.
+
+Rsyslog now writes root:heimdall 0640 files beneath
+`/var/log/heimdall-server-journal/` (root:heimdall, 0750). The service cannot create
+or replace entries there. RPM replaces its rsyslog/logrotate configurations and
+preserves edited old versions as `.rpmsave`; review customizations before carrying
+them forward. Update `HEIMDALL_LOG_DIR` in any locally modified sysconfig to the
+new protected path. Optional application `LOG_FILE` output belongs beneath
+`/var/lib/heimdall-server/logs/` and needs separate operator-managed rotation.

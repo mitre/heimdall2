@@ -31,7 +31,7 @@ files_config_file(heimdall_server_conf_t)
 type heimdall_server_var_lib_t;
 files_type(heimdall_server_var_lib_t)
 
-# /var/log/heimdall-server/
+# Legacy direct application logs; rsyslog copies use var_log_t.
 type heimdall_server_log_t;
 logging_log_file(heimdall_server_log_t)
 
@@ -81,12 +81,12 @@ manage_files_pattern(heimdall_server_t, heimdall_server_conf_t, heimdall_server_
 manage_dirs_pattern(heimdall_server_t, heimdall_server_var_lib_t, heimdall_server_var_lib_t)
 manage_files_pattern(heimdall_server_t, heimdall_server_var_lib_t, heimdall_server_var_lib_t)
 manage_lnk_files_pattern(heimdall_server_t, heimdall_server_var_lib_t, heimdall_server_var_lib_t)
-files_var_lib_filetrans(heimdall_server_t, heimdall_server_var_lib_t, { dir file })
+files_search_var_lib(heimdall_server_t)
 
-# Logs: /var/log/heimdall-server/
+# Legacy direct application logs: /var/log/heimdall-server/
 manage_dirs_pattern(heimdall_server_t, heimdall_server_log_t, heimdall_server_log_t)
 manage_files_pattern(heimdall_server_t, heimdall_server_log_t, heimdall_server_log_t)
-logging_log_filetrans(heimdall_server_t, heimdall_server_log_t, { dir file })
+logging_search_logs(heimdall_server_t)
 
 # Runtime: /run/heimdall-server/
 manage_dirs_pattern(heimdall_server_t, heimdall_server_var_run_t, heimdall_server_var_run_t)

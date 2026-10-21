@@ -405,3 +405,24 @@ func TestRealExecRunnerCombinesInputAndPrivateTLS(t *testing.T) {
 	require.True(t, os.IsNotExist(err))
 	require.Equal(t, pem, env["PGSSLROOTCERT"])
 }
+
+func TestPSQLConnectorPreservesLiteralDatabaseNames(t *testing.T) {
+	skipIfWindows(t)
+	binary := filepath.Join(t.TempDir(), "psql")
+	require.NoError(t, os.WriteFile(binary, []byte("#!/bin/sh\nwhile [ $# -gt 0 ]; do\nif [ \"$1\" = -d ]; then shift; printf '%s' \"$1\"; exit 0; fi\nshift\ndone\nexit 1\n"), 0755))
+	for _, tc := range []struct{ name, argument string }{
+		{"ordinary", "ordinary"},
+		{"dbname=heimdall", "dbname='dbname=heimdall'"},
+		{`a='b\c`, `dbname='a=\'b\\c'`},
+		{"postgresql://other/db", "dbname='postgresql://other/db'"},
+		{"postgres://other/db", "dbname='postgres://other/db'"},
+		{"-option", "dbname='-option'"},
+		{`quote'and\slash`, `quote'and\slash`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := (&psqlConnector{Binary: binary}).query("localhost", 5432, "app", "secret", tc.name)
+			require.NoError(t, err)
+			require.Equal(t, tc.argument, got)
+		})
+	}
+}

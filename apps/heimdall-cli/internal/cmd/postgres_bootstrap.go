@@ -108,8 +108,8 @@ func (r *PostgresBootstrapRunner) Run() error {
 }
 
 func (r *PostgresBootstrapRunner) validateInputs() error {
-	if strings.TrimSpace(r.DBUser) == "" {
-		return fmt.Errorf("DATABASE_USERNAME is required")
+	if _, err := quoteHBARole(r.DBUser); err != nil {
+		return err
 	}
 	if strings.TrimSpace(r.DBPassword) == "" {
 		return fmt.Errorf("DATABASE_PASSWORD is required")
@@ -193,50 +193,80 @@ func (r *PostgresBootstrapRunner) detectPG() (*pgInstall, error) {
 	return install, nil
 }
 
-// hbaMarker is the comment that flags an entry block as managed by us.
-// configureHBA uses it to decide whether the file is already configured.
-const hbaMarker = "# Heimdall"
+// hbaMarker identifies the two localhost rules owned by Heimdall, including
+// files created before managed rules were updated on subsequent setup runs.
+const hbaMarker = "# Heimdall: password authentication for TCP connections from localhost"
 
-// configureHBA injects scram-sha-256 host rules into pg_hba.conf for
-// the configured DB user. Idempotent: the marker comment makes a second
-// run a no-op. Reads/writes via the FileSystem interface — never sed.
+func quoteHBARole(role string) (string, error) {
+	if strings.TrimSpace(role) == "" {
+		return "", fmt.Errorf("DATABASE_USERNAME is required")
+	}
+	if strings.ContainsAny(role, "\r\n\x00") {
+		return "", fmt.Errorf("DATABASE_USERNAME must not contain line breaks or NUL bytes")
+	}
+	return `"` + strings.ReplaceAll(role, `"`, `""`) + `"`, nil
+}
+
+// configureHBA replaces only our rules and places them before existing rules,
+// because PostgreSQL applies the first matching authentication rule.
 func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
+	role, err := quoteHBARole(r.DBUser)
+	if err != nil {
+		return err
+	}
 	hbaPath := install.DataDir + postgresHBAFile
 	if !r.FS.Exists(hbaPath) {
 		return nil
 	}
-
 	data, err := r.FS.ReadFile(hbaPath)
 	if err != nil {
 		return fmt.Errorf("reading %s: %w", hbaPath, err)
 	}
-	if strings.Contains(string(data), hbaMarker) {
-		return nil
-	}
-
-	heimdallBlock := fmt.Sprintf(
-		"%s: password authentication for TCP connections from localhost\n"+
-			"host    all    %s    127.0.0.1/32    scram-sha-256\n"+
-			"host    all    %s    ::1/128         scram-sha-256\n",
-		hbaMarker, r.DBUser, r.DBUser)
-
 	lines := strings.Split(string(data), "\n")
-	out := make([]string, 0, len(lines)+3)
-	inserted := false
-	for _, ln := range lines {
-		out = append(out, ln)
-		if !inserted && strings.HasPrefix(ln, "# TYPE") {
-			out = append(out, strings.TrimRight(heimdallBlock, "\n"))
-			inserted = true
+	preserved := make([]string, 0, len(lines))
+	for i := 0; i < len(lines); i++ {
+		if strings.TrimSpace(lines[i]) != hbaMarker {
+			preserved = append(preserved, lines[i])
+			continue
+		}
+		var ownedRole string
+		for n := 0; n < 2 && i+1 < len(lines); n++ {
+			line := strings.TrimSpace(lines[i+1])
+			const prefix = "host    all    "
+			if !strings.HasPrefix(line, prefix) {
+				break
+			}
+			var suffix string
+			for _, candidate := range []string{"    127.0.0.1/32    scram-sha-256", "    ::1/128         scram-sha-256"} {
+				if strings.HasSuffix(line, candidate) {
+					suffix = candidate
+				}
+			}
+			user := strings.TrimSuffix(strings.TrimPrefix(line, prefix), suffix)
+			if suffix == "" || (n > 0 && user != ownedRole) {
+				break
+			}
+			ownedRole = user
+			i++
 		}
 	}
-
-	if !inserted {
-		// File has no # TYPE header — append the block to keep us safe.
-		out = append(out, strings.TrimRight(heimdallBlock, "\n"))
+	block := fmt.Sprintf("%s\nhost    all    %s    127.0.0.1/32    scram-sha-256\nhost    all    %s    ::1/128         scram-sha-256", hbaMarker, role, role)
+	insert := 0
+	for insert < len(preserved) {
+		line := strings.TrimSpace(preserved[insert])
+		if line != "" && !strings.HasPrefix(line, "#") {
+			break
+		}
+		insert++
 	}
-
-	return r.FS.WriteFile(hbaPath, []byte(strings.Join(out, "\n")), 0o640)
+	out := append([]string{}, preserved[:insert]...)
+	out = append(out, block)
+	out = append(out, preserved[insert:]...)
+	updated := strings.Join(out, "\n")
+	if updated == string(data) {
+		return nil
+	}
+	return r.FS.WriteFile(hbaPath, []byte(updated), 0o640)
 }
 
 // The password placeholder is replaced with a quoted SQL literal on stdin.
@@ -343,11 +373,10 @@ func truncate(s string, n int) string {
 // that pg_hba.conf scram entry, role password, and database creation
 // all line up.
 func (r *PostgresBootstrapRunner) testConnection(install *pgInstall) error {
-	url := fmt.Sprintf("postgresql://%s@%s:%d/%s",
-		r.DBUser, r.DBHost, r.DBPort, r.DBName)
 	stdout, code, err := r.Exec.RunWithEnv(
 		map[string]string{"PGPASSWORD": r.DBPassword},
-		install.PsqlBin, url, "-c", "SELECT 1",
+		install.PsqlBin, "-X", "-h", r.DBHost, "-p", strconv.Itoa(r.DBPort),
+		"-U", r.DBUser, "-d", pgDatabaseName(r.DBName), "-c", "SELECT 1",
 	)
 	if err != nil {
 		return fmt.Errorf("password connection test: %w", err)
@@ -631,7 +660,7 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 		return err
 	}
 	cfg := DBConfig{Host: postgresLoopback, Port: r.DBPort, User: r.DBUser, Password: r.DBPassword, DBName: r.DBName}
-	out, code, err := r.Exec.RunWithEnv(cfg.PgEnv(), install.PsqlBin, "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", cfg.DBName, "-v", psqlStopOnError, "-c", "SELECT 1")
+	out, code, err := r.Exec.RunWithEnv(cfg.PgEnv(), install.PsqlBin, "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", pgDatabaseName(cfg.DBName), "-v", psqlStopOnError, "-c", "SELECT 1")
 	if err != nil || code != 0 {
 		return fmt.Errorf("bundled PostgreSQL connection failed (exit %d): %s: %v", code, strings.TrimSpace(out), err)
 	}
@@ -650,7 +679,7 @@ func postgresServerMajor(exec ExecRunner, paths Paths, fs FileSystem, cfg DBConf
 	if err != nil {
 		return 0, err
 	}
-	out, code, err := exec.RunWithEnv(cfg.PgEnv(), binary, "-X", "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", cfg.DBName, "-v", psqlStopOnError, "-tAc", "SHOW server_version_num")
+	out, code, err := exec.RunWithEnv(cfg.PgEnv(), binary, "-X", "-h", cfg.Host, "-p", cfg.PortStr(), "-U", cfg.User, "-d", pgDatabaseName(cfg.DBName), "-v", psqlStopOnError, "-tAc", "SHOW server_version_num")
 	if err != nil || code != 0 {
 		return 0, fmt.Errorf("checking PostgreSQL server version failed (exit %d): %v", code, err)
 	}

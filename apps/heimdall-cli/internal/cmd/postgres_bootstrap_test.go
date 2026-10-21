@@ -282,22 +282,6 @@ func TestPostgresBootstrap_ConfigureHBA_SkipsIfFileMissing(t *testing.T) {
 		"no file should be written when pg_hba.conf is absent")
 }
 
-func TestPostgresBootstrap_ConfigureHBA_SkipsIfMarkerPresent(t *testing.T) {
-	r, _, fs, _, _ := newBootstrapForTest()
-	install := &pgInstall{DataDir: "/var/lib/pgsql/16/data"}
-	hbaPath := install.DataDir + "/pg_hba.conf"
-	original := "# TYPE  DATABASE        USER            ADDRESS                 METHOD\n" +
-		"# Heimdall: already configured\n" +
-		"host    all    heimdall    127.0.0.1/32    scram-sha-256\n"
-	fs.Files[hbaPath] = []byte(original)
-
-	err := r.configureHBA(install)
-
-	require.NoError(t, err)
-	require.Equal(t, original, string(fs.Files[hbaPath]),
-		"file must be unchanged when marker already present")
-}
-
 func TestPostgresBootstrap_ConfigureHBA_InsertsHostRulesAfterTypeHeader(t *testing.T) {
 	r, _, fs, _, _ := newBootstrapForTest()
 	r.DBUser = "heimdalluser"
@@ -316,9 +300,9 @@ func TestPostgresBootstrap_ConfigureHBA_InsertsHostRulesAfterTypeHeader(t *testi
 
 	require.Contains(t, updated, "# Heimdall",
 		"updated file must contain the Heimdall marker")
-	require.Contains(t, updated, "host    all    heimdalluser    127.0.0.1/32    scram-sha-256",
+	require.Contains(t, updated, `host    all    "heimdalluser"    127.0.0.1/32    scram-sha-256`,
 		"must insert IPv4 scram rule for the configured user")
-	require.Contains(t, updated, "host    all    heimdalluser    ::1/128         scram-sha-256",
+	require.Contains(t, updated, `host    all    "heimdalluser"    ::1/128         scram-sha-256`,
 		"must insert IPv6 scram rule for the configured user")
 
 	// Heimdall block must appear immediately after the # TYPE header line,
@@ -618,7 +602,7 @@ func TestPostgresBootstrap_TestConnection_PassesPGPASSWORDViaEnv(t *testing.T) {
 	r.DBPassword = "s3cret"
 	r.DBName = "heimdall-server-production"
 	install := &pgInstall{PsqlBin: "/usr/bin/psql"}
-	exec.Results["/usr/bin/psql postgresql://heimdall@127.0.0.1:5432/heimdall-server-production -c"] = FakeExecResult{}
+	exec.Results["/usr/bin/psql -X -h 127.0.0.1 -p 5432 -U heimdall -d heimdall-server-production -c SELECT 1"] = FakeExecResult{}
 
 	err := r.testConnection(install)
 
@@ -629,9 +613,7 @@ func TestPostgresBootstrap_TestConnection_PassesPGPASSWORDViaEnv(t *testing.T) {
 	require.Equal(t, install.PsqlBin, call.Name)
 	require.Equal(t, "s3cret", call.Env["PGPASSWORD"],
 		"PGPASSWORD must be passed as env, not as a command arg")
-	require.Contains(t, call.Args,
-		"postgresql://heimdall@127.0.0.1:5432/heimdall-server-production",
-		"connection URL must include user, host, port, db name")
+	require.Equal(t, []string{"-X", "-h", "127.0.0.1", "-p", "5432", "-U", "heimdall", "-d", "heimdall-server-production", "-c", "SELECT 1"}, call.Args)
 	require.Contains(t, call.Args, "-c")
 	require.Contains(t, call.Args, "SELECT 1")
 }
@@ -639,7 +621,7 @@ func TestPostgresBootstrap_TestConnection_PassesPGPASSWORDViaEnv(t *testing.T) {
 func TestPostgresBootstrap_TestConnection_ErrorsOnFailure(t *testing.T) {
 	r, exec, _, _, _ := newBootstrapForTest()
 	install := &pgInstall{PsqlBin: "/usr/bin/psql"}
-	exec.Results["/usr/bin/psql postgresql://heimdall@127.0.0.1:5432/heimdall-server-production -c"] = FakeExecResult{
+	exec.Results["/usr/bin/psql -X -h 127.0.0.1 -p 5432 -U heimdall -d heimdall-server-production -c SELECT 1"] = FakeExecResult{
 		Stdout:   "psql: error: connection to server at \"127.0.0.1\" failed",
 		ExitCode: 2,
 	}
@@ -678,7 +660,7 @@ func TestPostgresBootstrap_Run_FullOrchestration(t *testing.T) {
 		Stdout: "SCRAM-SHA-256$4096:abc",
 	}
 	// Final connection test
-	exec.Results["/usr/pgsql-16/bin/psql postgresql://heimdall@127.0.0.1:5432/heimdall-server-production -c"] = FakeExecResult{}
+	exec.Results["/usr/pgsql-16/bin/psql -X -h 127.0.0.1 -p 5432 -U heimdall -d heimdall-server-production -c SELECT 1"] = FakeExecResult{}
 
 	err := r.Run()
 
@@ -946,4 +928,81 @@ func TestBundledPostgresRerunPreservesSettingsWithoutDuplicates(t *testing.T) {
 	actions := len(r.Systemd.(*FakeSystemdRunner).Actions)
 	require.ErrorContains(t, r.stepPostgresBootstrap(), "remove the listen_addresses override")
 	require.Len(t, r.Systemd.(*FakeSystemdRunner).Actions, actions)
+}
+
+func TestPostgresBootstrap_ConfigureHBA_ReplacesLegacyRole(t *testing.T) {
+	r, _, fs, _, _ := newBootstrapForTest()
+	r.DBUser = "new user"
+	install := &pgInstall{DataDir: "/pg"}
+	path := install.DataDir + postgresHBAFile
+	unrelated := "# operator rules\nhost all admin 127.0.0.1/32 trust\n"
+	fs.Files[path] = []byte(unrelated + "# Heimdall: password authentication for TCP connections from localhost\nhost    all    olduser    127.0.0.1/32    scram-sha-256\nhost    all    olduser    ::1/128         scram-sha-256\nhost all all 0.0.0.0/0 reject\n")
+	require.NoError(t, r.configureHBA(install))
+	updated := string(fs.Files[path])
+	require.NotContains(t, updated, "olduser")
+	require.Contains(t, updated, "# operator rules\n")
+	require.Contains(t, updated, "host all admin 127.0.0.1/32 trust\n")
+	require.Contains(t, updated, `host    all    "new user"    127.0.0.1/32    scram-sha-256`)
+	require.Contains(t, updated, "host all all 0.0.0.0/0 reject\n")
+	require.NoError(t, r.configureHBA(install))
+	require.Equal(t, updated, string(fs.Files[path]))
+	r.DBUser = "nextuser"
+	require.NoError(t, r.configureHBA(install))
+	require.NotContains(t, string(fs.Files[path]), "new user")
+	require.Contains(t, string(fs.Files[path]), `host    all    "nextuser"    ::1/128         scram-sha-256`)
+}
+
+func TestPostgresBootstrap_ConfigureHBA_PrecedesExistingRulesWithoutHeader(t *testing.T) {
+	for _, existing := range []string{"host all all 127.0.0.1/32 reject\n", "hostssl all all 0.0.0.0/0 ident\n", "include 'operator.conf'\n"} {
+		t.Run(existing, func(t *testing.T) {
+			r, _, fs, _, _ := newBootstrapForTest()
+			install := &pgInstall{DataDir: "/pg"}
+			path := install.DataDir + postgresHBAFile
+			fs.Files[path] = []byte("# operator comment\n" + existing)
+			require.NoError(t, r.configureHBA(install))
+			content := string(fs.Files[path])
+			require.Contains(t, content, existing)
+			require.Less(t, strings.Index(content, "scram-sha-256"), strings.Index(content, existing))
+		})
+	}
+}
+
+func TestPostgresBootstrap_ConfigureHBA_QuotesLiteralRoles(t *testing.T) {
+	for _, tc := range []struct{ role, token string }{
+		{"app user", `"app user"`}, {"all", `"all"`}, {"+group", `"+group"`},
+		{"a,b", `"a,b"`}, {`a"b`, `"a""b"`}, {"@file", `"@file"`}, {`a\b`, `"a\b"`},
+	} {
+		t.Run(tc.role, func(t *testing.T) {
+			r, _, fs, _, _ := newBootstrapForTest()
+			r.DBUser = tc.role
+			install := &pgInstall{DataDir: "/pg"}
+			path := install.DataDir + postgresHBAFile
+			fs.Files[path] = []byte("# TYPE\nhost all all 127.0.0.1/32 reject\n")
+			require.NoError(t, r.configureHBA(install))
+			require.Contains(t, string(fs.Files[path]), "host    all    "+tc.token+"    127.0.0.1/32    scram-sha-256")
+		})
+	}
+}
+
+func TestPostgresBootstrap_RejectsHBARoleLineBreaksBeforeWrites(t *testing.T) {
+	for _, role := range []string{"app\nuser", "app\ruser", "app\x00user"} {
+		t.Run(role, func(t *testing.T) {
+			r, exec, fs, _, _ := newBootstrapForTest()
+			r.DBUser = role
+			require.ErrorContains(t, r.Run(), "DATABASE_USERNAME")
+			require.Empty(t, exec.Calls)
+			require.Empty(t, fs.Files)
+		})
+	}
+}
+
+func TestPostgresBootstrap_ConfigureHBA_PreservesAdjacentUnrelatedRule(t *testing.T) {
+	r, _, fs, _, _ := newBootstrapForTest()
+	install := &pgInstall{DataDir: "/pg"}
+	path := install.DataDir + postgresHBAFile
+	adminRule := "host    all    admin    ::1/128         scram-sha-256\n"
+	fs.Files[path] = []byte("# Heimdall: password authentication for TCP connections from localhost\nhost    all    olduser    127.0.0.1/32    scram-sha-256\n" + adminRule)
+	require.NoError(t, r.configureHBA(install))
+	require.Contains(t, string(fs.Files[path]), adminRule)
+	require.NotContains(t, string(fs.Files[path]), "olduser")
 }

@@ -97,12 +97,80 @@ func TestStatusRunner_SELinuxEnforcing(t *testing.T) {
 	r, out := newTestStatusRunner()
 	r.Exec.(*FakeExecRunner).Results["getenforce"] = FakeExecResult{Stdout: "Enforcing"}
 	r.Exec.(*FakeExecRunner).Results["semodule -l"] = FakeExecResult{Stdout: "heimdall_server"}
-	r.Exec.(*FakeExecRunner).Results["semanage port"] = FakeExecResult{Stdout: "heimdall_server_port_t"}
+	r.Exec.(*FakeExecRunner).Results["semanage port"] = FakeExecResult{Stdout: "heimdall_server_port_t tcp 3000"}
 
 	err := r.Run()
 	require.NoError(t, err)
 	output := out.String()
 	assert.Contains(t, output, "Enforcing")
+}
+
+func TestStatusSELinuxChecksConfiguredPort(t *testing.T) {
+	for _, tc := range []struct {
+		name, listing, want string
+		code                int
+	}{
+		{"other port", "heimdall_server_port_t tcp 3000", "port 3456 not registered", 0},
+		{"wrong protocol", "heimdall_server_port_t udp 3456", "port 3456 not registered", 0},
+		{"matching range", "heimdall_server_port_t tcp 3400-3500", "port type: heimdall_server_port_t", 0},
+		{"command failure", "heimdall_server_port_t tcp 3456", "unable to check port 3456", 1},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			r, out := newTestStatusRunner()
+			exec := r.Exec.(*FakeExecRunner)
+			exec.Results["getenforce"] = FakeExecResult{Stdout: "Enforcing"}
+			exec.Results["semanage port"] = FakeExecResult{Stdout: tc.listing, ExitCode: tc.code}
+			r.selinuxStatus("3456")
+			require.Contains(t, out.String(), tc.want)
+		})
+	}
+}
+
+func TestStatusFirewallChecksConfiguredEndpoint(t *testing.T) {
+	for _, tc := range []struct{ mode, url, kind, value string }{
+		{"nginx", "https://localhost", "service", "https"},
+		{"bundled", "http://localhost", "service", "http"},
+		{"bundled", "https://localhost:8443", "port", "8443/tcp"},
+		{"external", "https://localhost", "port", "3456/tcp"},
+	} {
+		t.Run(tc.mode+tc.url, func(t *testing.T) {
+			r, out := newTestStatusRunner()
+			r.Systemd.(*FakeSystemdRunner).ActiveServices["firewalld"] = true
+			env := r.Env.(*FakeEnvManager).Env
+			env["PORT"], env["HEIMDALL_PROXY_MODE"], env["EXTERNAL_URL"] = "3456", tc.mode, tc.url
+			if tc.mode == "nginx" {
+				env["HEIMDALL_TLS_MODE"] = "self-signed"
+			}
+			exec := r.Exec.(*FakeExecRunner)
+			exec.Results["firewall-cmd --get-default-zone"] = FakeExecResult{Stdout: "work\n"}
+			exec.Results["firewall-cmd --query-service=heimdall-server"] = FakeExecResult{ExitCode: 1}
+			require.NoError(t, r.Run())
+			require.Contains(t, out.String(), tc.value+" "+tc.kind+" enabled")
+			require.Contains(t, out.String(), "Zone: work")
+			for _, scope := range []string{"runtime", "permanent"} {
+				assert.Contains(t, exec.Calls, FakeExecCall{Name: "firewall-cmd", Args: (firewallRule{scope, "work", tc.kind, tc.value}).args("query")})
+			}
+		})
+	}
+}
+
+func TestStatusAcceptsUppercaseLocalLoginSetting(t *testing.T) {
+	r, out := newTestStatusRunner()
+	require.NoError(t, ValidateValue("LOCAL_LOGIN_DISABLED", "TRUE"))
+	r.configStatus(map[string]string{"LOCAL_LOGIN_DISABLED": "TRUE"})
+	require.Contains(t, out.String(), "Local (disabled)")
+}
+
+func TestStatusFirewallReportsQueryErrors(t *testing.T) {
+	r, out := newTestStatusRunner()
+	r.Systemd.(*FakeSystemdRunner).ActiveServices["firewalld"] = true
+	exec := r.Exec.(*FakeExecRunner)
+	exec.Results["firewall-cmd --get-default-zone"] = FakeExecResult{Stdout: "work"}
+	exec.Results["firewall-cmd --zone=work"] = FakeExecResult{ExitCode: 2}
+	r.firewalldStatus("3456", "external", "https://localhost")
+	require.Contains(t, out.String(), "unable to query runtime 3456/tcp port")
+	require.Contains(t, out.String(), "unable to query permanent 3456/tcp port")
+	require.NotContains(t, out.String(), "enabled")
 }
 
 func TestStatusRunner_PasswordNotLeaked(t *testing.T) {
@@ -158,7 +226,7 @@ func TestStatusRunner_SELinuxPermissive(t *testing.T) {
 	r, out := newTestStatusRunner()
 	r.Exec.(*FakeExecRunner).Results["getenforce"] = FakeExecResult{Stdout: "Permissive"}
 	r.Exec.(*FakeExecRunner).Results["semodule -l"] = FakeExecResult{Stdout: "some_other_module"}
-	r.Exec.(*FakeExecRunner).Results["semanage port"] = FakeExecResult{Stdout: "something_else"}
+	r.Exec.(*FakeExecRunner).Results["semanage port"] = FakeExecResult{Stdout: "http_port_t tcp 8080"}
 
 	err := r.Run()
 	require.NoError(t, err)
@@ -231,10 +299,10 @@ func TestStatusRunner_FapolicydNotInstalled(t *testing.T) {
 func TestStatusRunner_FirewalldRunningWithService(t *testing.T) {
 	r, out := newTestStatusRunner()
 	r.Systemd.(*FakeSystemdRunner).ActiveServices["firewalld"] = true
-	r.Exec.(*FakeExecRunner).Results["firewall-cmd --query-service="+ServiceName] = FakeExecResult{ExitCode: 0}
-	r.Exec.(*FakeExecRunner).Results["firewall-cmd --get-active-zones"] = FakeExecResult{
-		Stdout: "public\n  interfaces: eth0", ExitCode: 0,
-	}
+	r.Env.(*FakeEnvManager).Env["HEIMDALL_PROXY_MODE"] = "bundled"
+	r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://localhost"
+	r.Exec.(*FakeExecRunner).Results["firewall-cmd --get-default-zone"] = FakeExecResult{Stdout: "public"}
+	r.Exec.(*FakeExecRunner).Results["firewall-cmd --zone=public --query-service=https"] = FakeExecResult{ExitCode: 0}
 
 	err := r.Run()
 	require.NoError(t, err)
@@ -247,10 +315,10 @@ func TestStatusRunner_FirewalldRunningWithService(t *testing.T) {
 func TestStatusRunner_FirewalldRunningWithoutService(t *testing.T) {
 	r, out := newTestStatusRunner()
 	r.Systemd.(*FakeSystemdRunner).ActiveServices["firewalld"] = true
-	r.Exec.(*FakeExecRunner).Results["firewall-cmd --query-service="+ServiceName] = FakeExecResult{ExitCode: 1}
-	r.Exec.(*FakeExecRunner).Results["firewall-cmd --get-active-zones"] = FakeExecResult{
-		Stdout: "public\n  interfaces: eth0", ExitCode: 0,
-	}
+	r.Env.(*FakeEnvManager).Env["HEIMDALL_PROXY_MODE"] = "bundled"
+	r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"] = "https://localhost"
+	r.Exec.(*FakeExecRunner).Results["firewall-cmd --get-default-zone"] = FakeExecResult{Stdout: "public"}
+	r.Exec.(*FakeExecRunner).Results["firewall-cmd --zone=public --query-service=https"] = FakeExecResult{ExitCode: 1}
 
 	err := r.Run()
 	require.NoError(t, err)

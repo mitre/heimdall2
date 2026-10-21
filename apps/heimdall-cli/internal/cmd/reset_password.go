@@ -99,7 +99,7 @@ func (r *ResetPasswordRunner) Run(email, password string) error {
 	pgEnv := dbCfg.PgEnv()
 	stdout, code, err := r.Exec.RunWithEnvAndStdin(pgEnv, sql+"\n", binary,
 		"-h", dbCfg.Host, "-p", dbCfg.PortStr(), "-U", dbCfg.User,
-		"-d", dbCfg.DBName, "-X", "-v", "ON_ERROR_STOP=1",
+		"-d", pgDatabaseName(dbCfg.DBName), "-X", "-v", "ON_ERROR_STOP=1",
 		"-v", "hash="+hashed, "-v", "email="+email, "-tA",
 	)
 	if err != nil {

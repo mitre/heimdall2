@@ -1601,6 +1601,16 @@ fi
 	if failure == "is-active" || failure == "inactive" {
 		want += "is-active " + service + "\n"
 	}
+	if service == "caddy" {
+		// Snapshot service state before staging; a failed activation restores it.
+		want = "is-active caddy\nshow -p UnitFileState --value caddy\n" + want
+		if failure == "restart" {
+			want += "restart caddy\n"
+		}
+		if failure == "is-active" || failure == "inactive" {
+			want = "is-active caddy\n"
+		}
+	}
 	require.Equal(t, want, string(data))
 }
 

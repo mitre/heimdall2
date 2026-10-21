@@ -90,6 +90,15 @@ rejected before any configuration or service changes, including `--reconfigure`.
 Interactive setup asks again so you can choose another backend port. Other services
 are never stopped or relabeled. Setup reruns and upgrades preserve the accepted
 port, and managed proxy upstreams follow it while public HTTPS stays on port 443.
+Use `setup --external-url URL` to change a managed proxy's public URL; setup
+validates the proxy and certificate together. `config set EXTERNAL_URL` remains
+available for external proxies and direct HTTP deployments.
+
+Setup passes resolved application, environment-file, and libexec paths to the
+migration helper. Both packaged migration and server helpers honor
+`HEIMDALL_APP_DIR`, `HEIMDALL_ENV_FILE`, and `HEIMDALL_LIBEXEC_DIR`.
+Persistent overrides also require matching systemd environment, working
+directory, pre-start checks, and filesystem access settings.
 
 The public URL uses the supplied or saved `EXTERNAL_URL`, then
 saved `NGINX_HOST`, and finally `localhost`. Enter accepts the displayed value.
@@ -108,6 +117,9 @@ during normal renewal. An existing intermediate CA can temporarily shorten newly
 issued certificates until it renews. Standalone Caddy keeps its administrator's
 CA configuration, which may likewise limit the requested lifetime. Use interactive
 setup again to change the saved lifetime; non-interactive reruns preserve it.
+Standalone setup renders its own Caddy site and keeps the administrator's main
+Caddy configuration. A failed setup restores the previous environment file,
+managed site, and Caddy service state.
 
 ```sh
 sudo heimdall-cli setup --non-interactive \

@@ -58,7 +58,7 @@ After changing any value, restart the service:
 
 :   When set, the application writes logs to this file path instead of
     stdout (journald). The log directory must be writable by the heimdall
-    user. Example: **/var/log/heimdall-server/server.log**. Log rotation
+    user. Example: **/var/lib/heimdall-server/logs/server.log**. Log rotation
     is the administrator's responsibility when using file-based logging.
 
 ## DEPLOYMENT MODES

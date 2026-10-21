@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"maps"
+	"os"
 	"regexp"
 	"slices"
 	"strconv"
@@ -52,6 +53,9 @@ func (r *SetupRunner) configureFirewall(port, mode, externalURL string) (func() 
 	if err := rootManagedFile(r.FS, ledger); err != nil {
 		return undo, err
 	}
+	if err := r.reconcileFirewallLedger(ledger); err != nil {
+		return undo, err
+	}
 	before, err := snapshotFile(r.FS, ledger)
 	if err != nil {
 		return undo, err
@@ -89,6 +93,46 @@ func (r *SetupRunner) configureFirewall(port, mode, externalURL string) (func() 
 		fmt.Fprintf(r.Out, "  firewalld: port %s/tcp enabled\n", port)
 	}
 	return undo, nil
+}
+
+// A failed rollback may leave its only ownership evidence in the pending file.
+func (r *SetupRunner) reconcileFirewallLedger(ledger string) error {
+	pending := ledger + ".pending"
+	if err := rootManagedFile(r.FS, pending); err != nil {
+		return err
+	}
+	data, err := r.FS.ReadFile(pending)
+	if os.IsNotExist(err) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	owned, err := parseFirewallLedger(data, pending)
+	if err != nil {
+		return err
+	}
+	before, err := snapshotFile(r.FS, ledger)
+	if err != nil {
+		return err
+	}
+	previous, err := parseFirewallLedger(before.data, ledger)
+	if err != nil {
+		return err
+	}
+	maps.Copy(owned, previous)
+	for key, rule := range owned {
+		present, err := r.firewallRulePresent(rule)
+		if err != nil {
+			return err
+		}
+		if !present {
+			delete(owned, key)
+		}
+	}
+	// Force persistence even when all pending rules were successfully removed.
+	before.exists = true
+	return r.saveFirewallLedger(owned, ledger, before)
 }
 
 func (r *SetupRunner) readFirewall(args ...string) (string, error) {
@@ -240,7 +284,11 @@ func (r *SetupRunner) saveFirewallLedger(owned map[string]firewallRule, ledger s
 	if data != "" {
 		data += "\n"
 	}
-	return savePortLedger(r.Exec, r.FS, ledger, ledger+".pending", []byte(data))
+	// A partial write must not truncate the only pending or committed evidence.
+	if err := savePortLedger(r.Exec, r.FS, ledger, ledger+".reconcile", []byte(data)); err != nil {
+		return err
+	}
+	return r.FS.RemoveAll(ledger + ".pending")
 }
 
 func updateFirewallOwnership(owned map[string]firewallRule, rule firewallRule, add bool) {
@@ -254,7 +302,21 @@ func updateFirewallOwnership(owned map[string]firewallRule, rule firewallRule, a
 	}
 }
 
+// Keep a persisted superset until all external changes (including undo) finish.
+func (r *SetupRunner) saveFirewallIntent(changes []firewallChange, owned map[string]firewallRule, ledger string, before savedFile) error {
+	intended := maps.Clone(owned)
+	for _, change := range changes {
+		updateFirewallOwnership(intended, change.rule, true)
+	}
+	return r.saveFirewallLedger(intended, ledger, before)
+}
+
 func (r *SetupRunner) undoFirewallChanges(applied []firewallChange, owned map[string]firewallRule, ledger string, before savedFile) error {
+	if len(applied) != 0 {
+		if err := r.saveFirewallIntent(applied, owned, ledger, before); err != nil {
+			return err
+		}
+	}
 	var failures []error
 	for i := len(applied) - 1; i >= 0; i-- {
 		item := applied[i]
@@ -269,15 +331,28 @@ func (r *SetupRunner) undoFirewallChanges(applied []firewallChange, owned map[st
 		updateFirewallOwnership(owned, item.rule, !item.add)
 	}
 	if len(failures) == 0 {
-		failures = append(failures, before.restore(r.FS))
+		if before.exists {
+			previous, err := parseFirewallLedger(before.data, ledger)
+			if err == nil {
+				err = r.saveFirewallLedger(previous, ledger, before)
+			}
+			failures = append(failures, err)
+		} else if err := r.FS.RemoveAll(ledger); err != nil {
+			failures = append(failures, err)
+		} else {
+			failures = append(failures, r.FS.RemoveAll(ledger+".pending"))
+		}
 	} else {
 		failures = append(failures, r.saveFirewallLedger(owned, ledger, before))
 	}
-	failures = append(failures, r.FS.RemoveAll(ledger+".pending"))
 	return errors.Join(failures...)
 }
 
 func (r *SetupRunner) applyFirewallChanges(changes []firewallChange, owned map[string]firewallRule, ledger string, before savedFile) (undo func() error, err error) {
+	undo = func() error { return nil }
+	if err = r.saveFirewallIntent(changes, owned, ledger, before); err != nil {
+		return undo, err
+	}
 	var applied []firewallChange
 	undo = func() error {
 		err := r.undoFirewallChanges(applied, owned, ledger, before)

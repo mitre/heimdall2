@@ -63,7 +63,9 @@ with tempfile.TemporaryDirectory(prefix='heimdall-db-wrapper-') as directory:
     sequelize = app / 'node_modules/.bin/sequelize'
     sequelize.touch()
     sequelize.chmod(0o755)
-    node = root / 'node'
+    libexec = root / 'libexec'
+    node = libexec / 'runtime/node/bin/node'
+    node.parent.mkdir(parents=True)
     node.write_text('#!' + sys.executable + '\n' + '''import json, os, sys
 command = sys.argv[2]
 with open(os.environ['WRAPPER_ARGV'], 'a') as log:
@@ -82,17 +84,15 @@ if (command, scenario) in [('db:create', 'create-error'), ('db:migrate', 'migrat
     sys.exit(23)
 ''')
     node.chmod(0o755)
-    config, log, wrapper = root / 'backend.env', root / 'argv.jsonl', root / 'db-setup.sh'
-    source = Path(sys.argv[1]).read_text()
-    source = source.replace('/usr/share/heimdall-server', str(root))
-    source = source.replace('/etc/heimdall-server/backend.env', str(config))
-    source = source.replace('/usr/libexec/heimdall-server/runtime/node/bin/node', str(node))
-    wrapper.write_text(source)
+    config, log = root / 'backend.env', root / 'argv.jsonl'
+    wrapper = Path(sys.argv[1])
     def check(mode, scenario, expected, code=0, args=()):
         # Saved mode must override a conflicting inherited selection.
         config.write_text('HEIMDALL_DATABASE_MODE=' + mode + '\n' if mode else '')
         log.write_text('')
-        env = dict(os.environ, WRAPPER_ARGV=str(log), DB_CASE=scenario)
+        env = dict(os.environ, WRAPPER_ARGV=str(log), DB_CASE=scenario,
+                   HEIMDALL_APP_DIR=str(root), HEIMDALL_LIBEXEC_DIR=str(libexec),
+                   HEIMDALL_ENV_FILE=str(config))
         env.pop('HEIMDALL_DATABASE_MODE', None)
         if mode:
             env['HEIMDALL_DATABASE_MODE'] = 'bundled' if mode == 'external' else 'external'

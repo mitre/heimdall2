@@ -416,3 +416,33 @@ func TestCaddyPublicEndpointFirewallRules(t *testing.T) {
 		})
 	}
 }
+
+type firewallCommitFailureFS struct {
+	FileSystem
+	commits        int
+	failAfterFirst bool
+}
+
+func (f *firewallCommitFailureFS) Rename(old, next string) error {
+	f.commits++
+	if f.failAfterFirst && f.commits > 1 {
+		return fmt.Errorf("rename denied after intent persisted")
+	}
+	return f.FileSystem.Rename(old, next)
+}
+
+func TestFirewallLedgerSurvivesFailedRollbackPersistenceAndReconciles(t *testing.T) {
+	r, e := firewallFixture(t, "none")
+	fs := &firewallCommitFailureFS{FileSystem: r.FS, failAfterFirst: true}
+	r.FS = fs
+	require.Error(t, firewallSetPort(r, "3456"))
+	require.True(t, e.rules["runtime public 3456/tcp"])
+	ledger := r.Paths.ConfigDir + "/firewalld-ports"
+	require.True(t, fs.Exists(ledger), "open rules need a committed recovery ownership record")
+	fs.failAfterFirst = false
+	r.Env.(*FakeEnvManager).Env["HEIMDALL_PROXY_MODE"] = "bundled"
+	require.NoError(t, firewallSetPort(r, "3456"))
+	require.False(t, fs.Exists(ledger+".pending"))
+	require.False(t, e.rules["runtime public 3456/tcp"])
+	require.False(t, e.rules["permanent public 3456/tcp"])
+}

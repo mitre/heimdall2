@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -35,6 +37,53 @@ func TestServiceStart(t *testing.T) {
 	require.NoError(t, err)
 	assert.Contains(t, out.String(), "Service started.")
 	assert.Contains(t, systemd.Actions, "start:"+ServiceName)
+}
+
+type skippedServiceRunner struct {
+	FakeSystemdRunner
+	queryErr error
+}
+
+func (*skippedServiceRunner) Start(string) error              { return nil }
+func (*skippedServiceRunner) Restart(string) error            { return nil }
+func (s *skippedServiceRunner) IsActive(string) (bool, error) { return false, s.queryErr }
+
+func TestServiceDetectsSkippedStart(t *testing.T) {
+	for _, action := range []string{"start", "restart"} {
+		for _, queryErr := range []error{nil, errors.New("systemd unavailable")} {
+			t.Run(fmt.Sprintf("%s/%v", action, queryErr), func(t *testing.T) {
+				r, _, _, out := newServiceRunner()
+				r.Systemd = &skippedServiceRunner{queryErr: queryErr}
+				var err error
+				if action == "start" {
+					err = r.Start()
+				} else {
+					err = r.Restart()
+				}
+				require.Error(t, err)
+				require.NotContains(t, out.String(), "Service started.")
+				require.NotContains(t, out.String(), "Service restarted.")
+			})
+		}
+	}
+}
+
+func TestServiceLogsPropagatesExitStatus(t *testing.T) {
+	r, _, exec, _ := newServiceRunner()
+	exec.Results["journalctl -u"] = FakeExecResult{ExitCode: 1, Stdout: "Failed to read journal"}
+	require.ErrorContains(t, r.Logs(50, false), "exit 1")
+}
+
+func TestDiagUsesCommandPaths(t *testing.T) {
+	dir := t.TempDir()
+	envPath := filepath.Join(dir, "backend.env")
+	require.NoError(t, os.WriteFile(envPath, []byte("HEIMDALL_DATABASE_MODE=external\nDATABASE_HOST=selected-database\n"), 0600))
+	config := filepath.Join(dir, "cli.yaml")
+	require.NoError(t, os.WriteFile(config, nil, 0600))
+	t.Setenv("PATH", dir)
+	out, _, err := executeCommand(t, "--config", config, "--env-file", envPath, "--app-dir", dir, "--data-dir", dir, "--config-dir", dir, "diag")
+	require.NoError(t, err)
+	require.Contains(t, out, "selected-database")
 }
 
 func TestServiceStop(t *testing.T) {

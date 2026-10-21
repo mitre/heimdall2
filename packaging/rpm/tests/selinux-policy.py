@@ -52,9 +52,20 @@ class HeimdallPolicyTest(unittest.TestCase):
         self.assertFalse({'getattr', 'open', 'read'} - self.permissions(
             'heimdall_server_conf_t', 'file'))
         self.assertFalse({'search', 'write', 'add_name', 'create'} - self.permissions(
-            'heimdall_server_log_t', 'dir'))
+            'heimdall_server_var_lib_t', 'dir'))
         self.assertFalse({'create', 'open', 'append'} - self.permissions(
-            'heimdall_server_log_t', 'file'))
+            'heimdall_server_var_lib_t', 'file'))
+
+    def test_backend_cannot_write_privileged_archives_or_logs(self):
+        for target in ('var_lib_t', 'var_log_t'):
+            for tclass in ('dir', 'file'):
+                with self.subTest(target=target, tclass=tclass):
+                    allowed = self.permissions(target, tclass)
+                    self.assertFalse(allowed & {
+                        'write', 'create', 'unlink', 'rename', 'add_name', 'remove_name'})
+                    if tclass == 'file':
+                        # Base policy permits inherited log-FD append, but no pathname access.
+                        self.assertNotIn('open', allowed)
 
     def test_backend_can_resolve_dns_over_tcp(self):
         self.assertIn('name_connect', self.permissions('dns_port_t', 'tcp_socket'))

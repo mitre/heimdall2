@@ -80,3 +80,14 @@ it('allows the sole administrator to retain their owner role', async () => {
   await service.updateGroupUserRole(group, { groupRole: 'owner', userId: '1' });
   expect(members.get('1')?.role).toBe('owner');
 });
+
+it.each([false, true])('synchronizes external groups when a replacement owner exists: %s', async (hasReplacement) => {
+  const { departing, group, members, service } = fixture(hasReplacement);
+  Object.assign(departing, { $get: vi.fn().mockResolvedValue([group]) });
+  vi.spyOn(service.logger, 'warn').mockReturnValue(service.logger);
+
+  await expect(service.syncUserGroups(departing, [])).resolves.toBeUndefined();
+
+  expect(members.get('1')?.role).toBe(hasReplacement ? undefined : 'owner');
+  expect(members.get('2')?.role).toBe(hasReplacement ? 'owner' : undefined);
+});

@@ -91,8 +91,6 @@ func TestDetermineTLSStrategy(t *testing.T) {
 func newTLSTestRunner(env map[string]string) (*SetupRunner, *bytes.Buffer) {
 	out := new(bytes.Buffer)
 	fs := NewFakeFileSystem()
-	// Caddyfile template exists by default
-	fs.Files[DefaultPaths().LibExecDir+"/heimdall-Caddyfile"] = []byte(":443 {\n\treverse_proxy 127.0.0.1:3000\n}\n")
 	// Main Caddyfile exists
 	fs.Files["/etc/caddy/Caddyfile"] = []byte("# default\n")
 
@@ -126,15 +124,14 @@ func TestStepTLS_CaddyNotInstalled(t *testing.T) {
 	assert.Contains(t, out.String(), "heimdall-cli setup --skip-db")
 }
 
-func TestStepTLS_CaddyfileTemplateMissing(t *testing.T) {
+func TestStepTLS_RendersWithoutTemplate(t *testing.T) {
 	r, out := newTLSTestRunner(map[string]string{"EXTERNAL_URL": "https://heimdall.example.com"})
-	// Remove Caddyfile template
-	delete(r.FS.(*FakeFileSystem).Files, DefaultPaths().LibExecDir+"/heimdall-Caddyfile")
 
 	err := r.stepTLS()
 
 	require.NoError(t, err)
-	assert.Contains(t, out.String(), "Caddyfile template not found")
+	assert.Contains(t, out.String(), "Caddy: enabled and running")
+	assert.Contains(t, string(r.FS.(*FakeFileSystem).Files[standaloneCaddyfile]), "https://heimdall.example.com {")
 }
 
 func TestStepTLS_BYOCertificate(t *testing.T) {
@@ -152,18 +149,9 @@ func TestStepTLS_BYOCertificate(t *testing.T) {
 	assert.Contains(t, output, "/etc/pki/tls/certs/heimdall.pem")
 	assert.Contains(t, output, "/etc/pki/tls/private/heimdall.key")
 
-	// Verify sed was called to insert tls directive
-	foundSed := false
-	for _, c := range r.Exec.(*FakeExecRunner).Calls {
-		if c.Name == "sed" {
-			for _, arg := range c.Args {
-				if arg == "s|^:443 {|heimdall.example.com {|" {
-					foundSed = true
-				}
-			}
-		}
-	}
-	assert.True(t, foundSed, "sed should replace :443 with hostname for BYO cert")
+	config := string(r.FS.(*FakeFileSystem).Files[standaloneCaddyfile])
+	assert.Contains(t, config, "https://heimdall.example.com {")
+	assert.Contains(t, config, `tls "/etc/pki/tls/certs/heimdall.pem" "/etc/pki/tls/private/heimdall.key"`)
 }
 
 func TestStepTLS_PrivateHostname(t *testing.T) {
@@ -179,18 +167,8 @@ func TestStepTLS_PrivateHostname(t *testing.T) {
 	assert.Contains(t, output, "internal CA")
 	assert.Contains(t, output, "root.crt")
 
-	// Verify the internal issuer and default lifetime were added via sed.
-	foundTLSInternal := false
-	for _, c := range r.Exec.(*FakeExecRunner).Calls {
-		if c.Name == "sed" {
-			for _, arg := range c.Args {
-				if arg == `/reverse_proxy/i\\ttls {\n\t\tissuer internal {\n\t\t\tlifetime 168h\n\t\t}\n\t}` {
-					foundTLSInternal = true
-				}
-			}
-		}
-	}
-	assert.True(t, foundTLSInternal, "sed should configure the internal issuer lifetime for private hostnames")
+	config := string(r.FS.(*FakeFileSystem).Files[standaloneCaddyfile])
+	assert.Contains(t, config, "issuer internal {\n\t\t\tlifetime 168h\n")
 }
 
 func TestStepTLS_PublicHostname(t *testing.T) {
@@ -204,18 +182,9 @@ func TestStepTLS_PublicHostname(t *testing.T) {
 	assert.Contains(t, out.String(), "public hostname")
 	assert.Contains(t, out.String(), "Let's Encrypt")
 
-	// Verify hostname replaces :443
-	foundHostReplace := false
-	for _, c := range r.Exec.(*FakeExecRunner).Calls {
-		if c.Name == "sed" {
-			for _, arg := range c.Args {
-				if arg == "s|^:443 {|heimdall.example.com {|" {
-					foundHostReplace = true
-				}
-			}
-		}
-	}
-	assert.True(t, foundHostReplace, "sed should replace :443 with public hostname")
+	config := string(r.FS.(*FakeFileSystem).Files[standaloneCaddyfile])
+	assert.Contains(t, config, "https://heimdall.example.com {")
+	assert.NotContains(t, config, "tls ")
 }
 
 func TestStepTLS_IPBased(t *testing.T) {
@@ -373,14 +342,12 @@ func TestStepTLS_SELinuxBooleanSet(t *testing.T) {
 func TestStepTLS_PrivateHostnameSiteAddress(t *testing.T) {
 	r, _ := newTLSTestRunner(map[string]string{"EXTERNAL_URL": "https://heimdall.internal"})
 	require.NoError(t, r.stepTLS())
-	require.Contains(t, r.Exec.(*FakeExecRunner).Calls, FakeExecCall{
-		Name: "sed", Args: []string{"-i", "s|^:443 {|heimdall.internal {|", "/etc/caddy/Caddyfile.d/heimdall-server.caddy"},
-	})
+	require.Contains(t, string(r.FS.(*FakeFileSystem).Files[standaloneCaddyfile]), "https://heimdall.internal {")
 }
 
 func TestStepTLS_RequiredCommandFailure(t *testing.T) {
 	for _, command := range []string{
-		"mkdir -p", "sed -i", "sh -c echo 'import /etc/caddy/Caddyfile.d/*.caddy' >> /etc/caddy/Caddyfile",
+		"mkdir -p", "caddy validate", "sh -c echo 'import /etc/caddy/Caddyfile.d/*.caddy' >> /etc/caddy/Caddyfile",
 		"openssl req", "chown root:caddy", "chmod 640", "chmod 644",
 	} {
 		for _, result := range []FakeExecResult{{ExitCode: 1}, {Err: errors.New("cannot execute")}} {
@@ -407,11 +374,11 @@ type tlsFailFS struct {
 	operation string
 }
 
-func (f tlsFailFS) CopyFile(src, dst string) error {
-	if f.operation == "copy" {
-		return errors.New("copy denied")
+func (f tlsFailFS) WriteFile(path string, data []byte, perm os.FileMode) error {
+	if f.operation == "write" {
+		return errors.New("write denied")
 	}
-	return f.FileSystem.CopyFile(src, dst)
+	return f.FileSystem.WriteFile(path, data, perm)
 }
 func (f tlsFailFS) ReadFile(path string) ([]byte, error) {
 	if f.operation == "read" {
@@ -427,7 +394,7 @@ func (f tlsFailFS) MkdirAll(path string, perm os.FileMode) error {
 }
 
 func TestStepTLS_RequiredFileFailure(t *testing.T) {
-	for _, operation := range []string{"copy", "read", "mkdir"} {
+	for _, operation := range []string{"write", "read", "mkdir"} {
 		t.Run(operation, func(t *testing.T) {
 			r, out := newTLSTestRunner(map[string]string{"EXTERNAL_URL": "https://192.168.1.100"})
 			r.FS = tlsFailFS{FileSystem: r.FS, operation: operation}
@@ -468,13 +435,7 @@ func TestLocalCertificateLifetime(t *testing.T) {
 				"EXTERNAL_URL": "https://localhost", "HEIMDALL_TLS_CERT_DAYS": tc.days,
 			})
 			require.NoError(t, r.stepTLS())
-			found := false
-			for _, call := range r.Exec.(*FakeExecRunner).Calls {
-				if call.Name == "sed" && strings.Contains(strings.Join(call.Args, " "), "lifetime "+tc.hours+"h") {
-					found = true
-				}
-			}
-			require.True(t, found, "legacy Caddy must receive the requested local certificate lifetime")
+			require.Contains(t, string(r.FS.(*FakeFileSystem).Files[standaloneCaddyfile]), "lifetime "+tc.hours+"h")
 		})
 	}
 }
