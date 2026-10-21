@@ -26,7 +26,10 @@ addFilter(r"shared-lib-without-dependency-information /usr/libexec/heimdall-serv
 addFilter(r"non-readable /etc/(?:heimdall-server/(?:backend\.env|caddy/Caddyfile|nginx/(?:nginx\.conf|certs/server\.(?:crt|key)))|sysconfig/heimdall-server) 640$")
 addFilter(r"non-standard-dir-perm /etc/heimdall-server 751$")
 addFilter(r"non-standard-dir-perm /(?:etc/heimdall-server/(?:caddy|nginx(?:/certs)?)|var/(?:lib|log)/heimdall-server) 750$")
-addFilter(r"non-standard-dir-perm /var/lib/(?:heimdall-server/backups|heimdall-postgresql(?:/18)?|heimdall-caddy|heimdall-nginx) 700$")
+addFilter(r"non-standard-dir-perm /var/lib/(?:heimdall-postgresql(?:/18)?|heimdall-caddy|heimdall-nginx) 700$")
+# Backups are root-only; journals allow the service group to read, but not write.
+addFilter(r"non-standard-dir-perm /var/backups/heimdall-server 700$")
+addFilter(r"non-standard-dir-perm /var/log/heimdall-server-journal 750$")
 
 # Preserve upstream empty type modules and resolver test fixtures in the pinned
 # dependency tree. Other empty application and dependency files remain visible.
