@@ -78,6 +78,11 @@ jobs:
       - name: Configure Git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
+      # shortcut: EL10 CI depends on one Fedora proxy, remove after proxy07 metadata recovers.
+      - name: Use synchronized Fedora metadata for EL10
+        if: matrix.distro == 'el10'
+        run: echo '38.145.32.20 mirrors.fedoraproject.org' >> /etc/hosts
+
       - name: Install build dependencies
         run: |
           make -C packaging/rpm deps TOPDIR="$TOPDIR"
