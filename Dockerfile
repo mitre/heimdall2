@@ -1,5 +1,7 @@
-ARG BUILD_CONTAINER=node:22.23.4-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d
-ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:9.8@sha256:c4c285d42941ebb2bd4da878479008e1e4536bb599aad1dbe568f89de9053661
+# Node.js 22.23.4, bookworm-slim.
+ARG BUILD_CONTAINER=node@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d
+# UBI 9.8 minimal.
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal@sha256:c4c285d42941ebb2bd4da878479008e1e4536bb599aad1dbe568f89de9053661
 
 FROM $BUILD_CONTAINER AS builder
 
@@ -13,7 +15,7 @@ USER 0
 WORKDIR /src
 
 # python3/make/compiler is a requirement for node-gyp
-RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends g++ make python3 && rm -rf /var/lib/apt/lists/*
 
 COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
 COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/

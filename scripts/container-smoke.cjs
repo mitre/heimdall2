@@ -41,7 +41,7 @@ test('production image', async (t) => {
       } catch (error) {
         if (error.name === 'AssertionError') throw error;
       }
-      await delay(500);
+      await delay(500); // NOSONAR: Readiness retries must wait between attempts.
     }
     assert.fail('Heimdall did not become ready');
   });
@@ -51,7 +51,7 @@ test('production image', async (t) => {
     assert.equal(response.status, 200);
     const html = await response.text();
     assert.match(html, /<div[^>]+id=["']app["']/);
-    const script = html.match(/<script[^>]+src=["']([^"']+\.js)["']/);
+    const script = /<script[^>]+src=["']([^"']+\.js)["']/.exec(html);
     assert.ok(script, 'expected a built JavaScript bundle');
     const bundle = await request(script[1]);
     assert.equal(bundle.status, 200);
@@ -88,7 +88,7 @@ test('production image', async (t) => {
     ['deflate', deflateSync],
     ['br', brotliCompressSync]
   ]) {
-    await t.test(`accepts ${encoding} JSON requests and authenticates`, async () => {
+    await t.test(`accepts ${encoding} JSON requests and authenticates`, async () => { // NOSONAR: Login cases run sequentially and update the shared token.
       const response = await request('/authn/login', {
         method: 'POST',
         headers: {'content-type': 'application/json', 'content-encoding': encoding},
@@ -160,7 +160,7 @@ test('production image', async (t) => {
   });
 
   for (const contentType of ['application/json', 'application/x-www-form-urlencoded']) {
-    await t.test(`rejects malformed Brotli ${contentType} and stays alive`, async () => {
+    await t.test(`rejects malformed Brotli ${contentType} and stays alive`, async () => { // NOSONAR: Each error case verifies server recovery before the next request.
       const response = await request('/authn/login', {
         method: 'POST',
         headers: {'content-type': contentType, 'content-encoding': 'br'},

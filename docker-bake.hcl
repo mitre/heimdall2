@@ -18,12 +18,14 @@ variable "TAG_SUFFIXES" {
   default = "dev"
 }
 
+# UBI 9.8 minimal.
 variable "BASE_CONTAINER" {
-  default = "registry.access.redhat.com/ubi9/ubi-minimal:9.8@sha256:c4c285d42941ebb2bd4da878479008e1e4536bb599aad1dbe568f89de9053661"
+  default = "registry.access.redhat.com/ubi9/ubi-minimal@sha256:c4c285d42941ebb2bd4da878479008e1e4536bb599aad1dbe568f89de9053661"
 }
 
+# Node.js 22.23.4, bookworm-slim.
 variable "BUILD_CONTAINER" {
-  default = "node:22.23.4-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d"
+  default = "node@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d"
 }
 
 variable "NODE_ENV" {
