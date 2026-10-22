@@ -41,7 +41,7 @@ function impactMapping(input: unknown): number {
 
     switch (impact) {
       case 0:
-        return 0.01;
+        return 0;
       case 1:
         return 0.3;
       case 2:
