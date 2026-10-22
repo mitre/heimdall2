@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -13,14 +12,12 @@ import (
 )
 
 const (
-	postgresLoopback          = "127.0.0.1"
-	postgresHBAFile           = "/pg_hba.conf"
-	psqlStopOnError           = "ON_ERROR_STOP=1"
-	psqlUserVariable          = "db_user="
-	postgresConfigFile        = "/postgresql.conf"
-	postgresVersionFile       = "/PG_VERSION"
-	postgresManagedConfigFile = "/heimdall.conf"
-	bundledPGOwner            = "heimdall-postgres:heimdall-postgres"
+	postgresLoopback    = "127.0.0.1"
+	postgresHBAFile     = "/pg_hba.conf"
+	psqlStopOnError     = "ON_ERROR_STOP=1"
+	psqlUserVariable    = "db_user="
+	postgresConfigFile  = "/postgresql.conf"
+	postgresVersionFile = "/PG_VERSION"
 )
 
 // PostgresBootstrapRunner replaces heimdall-postgres-setup.sh with a
@@ -215,10 +212,18 @@ func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
 		return err
 	}
 	hbaPath := install.DataDir + postgresHBAFile
-	if !r.FS.Exists(hbaPath) {
+	files, err := r.FS.OpenPostgresData(install.DataDir)
+	if os.IsNotExist(err) {
 		return nil
 	}
-	data, err := r.FS.ReadFile(hbaPath)
+	if err != nil {
+		return err
+	}
+	defer files.Close()
+	data, err := files.ReadFile("pg_hba.conf")
+	if os.IsNotExist(err) {
+		return nil
+	}
 	if err != nil {
 		return fmt.Errorf("reading %s: %w", hbaPath, err)
 	}
@@ -247,7 +252,7 @@ func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
 	if updated == string(data) {
 		return nil
 	}
-	return r.FS.WriteFile(hbaPath, []byte(updated), 0o640)
+	return files.WriteFile("pg_hba.conf", []byte(updated))
 }
 
 // managedHBARuleCount recognizes at most the two same-role rules after our marker.
@@ -399,11 +404,18 @@ func (r *PostgresBootstrapRunner) testConnection(install *pgInstall) error {
 // is present in postgresql.conf. Idempotent: appends only when missing.
 func (r *PostgresBootstrapRunner) configurePasswordEncryption(install *pgInstall) error {
 	confPath := install.DataDir + postgresConfigFile
-	if !r.FS.Exists(confPath) {
+	files, err := r.FS.OpenPostgresData(install.DataDir)
+	if os.IsNotExist(err) {
 		return nil
 	}
-
-	data, err := r.FS.ReadFile(confPath)
+	if err != nil {
+		return err
+	}
+	defer files.Close()
+	data, err := files.ReadFile("postgresql.conf")
+	if os.IsNotExist(err) {
+		return nil
+	}
 	if err != nil {
 		return fmt.Errorf("reading %s: %w", confPath, err)
 	}
@@ -424,7 +436,7 @@ func (r *PostgresBootstrapRunner) configurePasswordEncryption(install *pgInstall
 	}
 	updated += directive + "\n"
 
-	return r.FS.WriteFile(confPath, []byte(updated), 0o640)
+	return files.WriteFile("postgresql.conf", []byte(updated))
 }
 
 // startService enables and starts the PostgreSQL systemd unit. Tolerant
@@ -485,7 +497,7 @@ const bundledPGService = "heimdall-postgresql"
 
 func (r *PostgresBootstrapRunner) adminPrefix(install *pgInstall) []string {
 	if install.OSUser == "" {
-		return []string{"-u", "postgres", "--", install.PsqlBin}
+		return []string{"-u", "postgres", "--", install.PsqlBin, "-X", "-p", strconv.Itoa(r.DBPort)}
 	}
 	return []string{"-u", install.OSUser, "--", install.PsqlBin, "-X", "-h", install.SocketDir, "-p", strconv.Itoa(r.DBPort), "-U", install.OSUser}
 }
@@ -506,16 +518,18 @@ func (r *PostgresBootstrapRunner) bundledPreflight() (*pgInstall, error) {
 			return nil, err
 		}
 	}
-	for _, path := range []string{install.DataDir + postgresVersionFile, install.DataDir + postgresConfigFile, install.DataDir + "/postgresql.auto.conf", install.DataDir + postgresHBAFile, install.DataDir + postgresManagedConfigFile, bundledPGSocket + "/.s.PGSQL." + strconv.Itoa(r.DBPort) + ".lock"} {
-		if err := safeManagedPath(r.FS, path); err != nil {
+	files, err := r.FS.OpenPostgresData(install.DataDir)
+	if err != nil && !os.IsNotExist(err) {
+		return nil, err
+	}
+	if err == nil {
+		defer files.Close()
+		if err := validateBundledCluster(files); err != nil {
 			return nil, err
 		}
-	}
-	if err := r.validateBundledCluster(install); err != nil {
-		return nil, err
-	}
-	if err := r.validateBundledOverrides(install); err != nil {
-		return nil, err
+		if err := validateBundledOverrides(files); err != nil {
+			return nil, err
+		}
 	}
 	if err := checkOwnedPort(r.Exec, r.Systemd, r.DBPort, install.Service, false); err != nil {
 		return nil, err
@@ -523,33 +537,33 @@ func (r *PostgresBootstrapRunner) bundledPreflight() (*pgInstall, error) {
 	return install, nil
 }
 
-func (r *PostgresBootstrapRunner) validateBundledCluster(install *pgInstall) error {
-	version, err := r.FS.ReadFile(install.DataDir + postgresVersionFile)
+func validateBundledCluster(files postgresDataFiles) error {
+	version, err := files.ReadFile("PG_VERSION")
 	if err == nil {
 		if strings.TrimSpace(string(version)) != "18" {
 			return fmt.Errorf("bundled PostgreSQL requires cluster major 18; found %q; perform a separate database migration", strings.TrimSpace(string(version)))
 		}
 		for _, file := range []string{"postgresql.conf", "pg_hba.conf"} {
-			if err := requireRegular(r.FS, install.DataDir+"/"+file); err != nil {
+			if _, err := files.ReadFile(file); err != nil {
 				return err
 			}
 		}
 	} else if !os.IsNotExist(err) {
 		return err
 	} else {
-		entries, err := r.FS.ReadDir(install.DataDir)
+		entries, err := files.ReadDir()
 		if err != nil && !os.IsNotExist(err) {
 			return err
 		}
 		if len(entries) != 0 {
-			return fmt.Errorf("refusing to initialize nonempty PostgreSQL data directory without PG_VERSION: %s", install.DataDir)
+			return fmt.Errorf("refusing to initialize nonempty PostgreSQL data directory without PG_VERSION: %s", bundledPGData)
 		}
 	}
 	return nil
 }
 
-func (r *PostgresBootstrapRunner) validateBundledOverrides(install *pgInstall) error {
-	if data, err := r.FS.ReadFile(install.DataDir + "/postgresql.auto.conf"); err == nil {
+func validateBundledOverrides(files postgresDataFiles) error {
+	if data, err := files.ReadFile("postgresql.auto.conf"); err == nil {
 		for _, line := range strings.Split(string(data), "\n") {
 			key, _, _ := strings.Cut(strings.TrimSpace(line), "=")
 			switch strings.TrimSpace(key) {
@@ -568,27 +582,51 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 	if err != nil {
 		return err
 	}
-	if !r.FS.Exists(install.DataDir + postgresVersionFile) {
-		if err := r.FS.MkdirAll(install.DataDir, 0700); err != nil {
+	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/postgresql"); err != nil {
+		return err
+	}
+	files, err := r.FS.OpenPostgresData(install.DataDir)
+	if err != nil && !os.IsNotExist(err) {
+		return err
+	}
+	initialized := false
+	if err == nil {
+		if err := validateBundledCluster(files); err != nil {
+			files.Close()
 			return err
 		}
-		if err := runChecked(r.Exec, "chown", bundledPGOwner, filepath.Dir(install.DataDir), install.DataDir); err != nil {
+		_, err = files.ReadFile("PG_VERSION")
+		if err != nil && !os.IsNotExist(err) {
+			files.Close()
 			return err
 		}
-		if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/postgresql", "/var/lib/heimdall-postgresql"); err != nil {
-			return err
+		initialized = err == nil
+	}
+	if !initialized {
+		if files != nil {
+			files.Close()
 		}
+		// The RPM owns the fixed parent directories. Only the service account
+		// creates the mutable cluster, including PGDATA itself.
 		if err := runChecked(r.Exec, "runuser", "-u", install.OSUser, "--", install.InitdbBin, "-D", install.DataDir, "--username="+install.OSUser, "--encoding=UTF8", "--locale=C.UTF-8", "--auth-local=peer", "--auth-host=scram-sha-256"); err != nil {
 			return err
 		}
+		files, err = r.FS.OpenPostgresData(install.DataDir)
+		if err != nil {
+			return err
+		}
 		// initdb success must leave a real cluster, not merely a zero exit status.
-		version, err := r.FS.ReadFile(install.DataDir + postgresVersionFile)
+		version, err := files.ReadFile("PG_VERSION")
 		if err != nil || strings.TrimSpace(string(version)) != "18" {
+			files.Close()
 			return fmt.Errorf("initdb did not create a PostgreSQL 18 cluster")
 		}
 	}
-	confPath := install.DataDir + postgresConfigFile
-	conf, err := r.FS.ReadFile(confPath)
+	defer files.Close()
+	if err := validateBundledOverrides(files); err != nil {
+		return err
+	}
+	conf, err := files.ReadFile("postgresql.conf")
 	if err != nil {
 		return err
 	}
@@ -601,18 +639,14 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 		}
 	}
 	updated := strings.Join(append(kept, include), "\n") + "\n"
-	if err := r.FS.WriteFile(confPath, []byte(updated), 0600); err != nil {
+	if err := files.WriteFile("postgresql.conf", []byte(updated)); err != nil {
 		return err
 	}
 	settings := fmt.Sprintf("listen_addresses = '127.0.0.1'\nport = %d\nunix_socket_directories = '%s'\npassword_encryption = 'scram-sha-256'\n", r.DBPort, install.SocketDir)
-	if err := r.FS.WriteFile(install.DataDir+postgresManagedConfigFile, []byte(settings), 0600); err != nil {
+	if err := files.WriteFile("heimdall.conf", []byte(settings)); err != nil {
 		return err
 	}
-	if err := runChecked(r.Exec, "chown", bundledPGOwner, confPath, install.DataDir+postgresManagedConfigFile); err != nil {
-		return err
-	}
-	hbaPath := install.DataDir + postgresHBAFile
-	hba, err := r.FS.ReadFile(hbaPath)
+	hba, err := files.ReadFile("pg_hba.conf")
 	if err != nil {
 		return err
 	}
@@ -624,21 +658,11 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 			preserved = append(preserved, line)
 		}
 	}
-	if err := r.FS.WriteFile(hbaPath, []byte(scram+strings.Join(preserved, "\n")+"\n"), 0600); err != nil {
+	if err := files.WriteFile("pg_hba.conf", []byte(scram+strings.Join(preserved, "\n")+"\n")); err != nil {
 		return err
 	}
-	if err := runChecked(r.Exec, "chown", bundledPGOwner, hbaPath); err != nil {
-		return err
-	}
-	if err := r.FS.MkdirAll(install.SocketDir, 0750); err != nil {
-		return err
-	}
-	if err := runChecked(r.Exec, "chown", bundledPGOwner, install.SocketDir); err != nil {
-		return err
-	}
-	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/postgresql", "/var/lib/heimdall-postgresql", install.SocketDir); err != nil {
-		return err
-	}
+	// PostgreSQL data inherits its packaged directory label. systemd creates
+	// and labels RuntimeDirectory; never recursively relabel user-owned paths.
 	if err := r.Systemd.Enable(install.Service); err != nil {
 		return err
 	}

@@ -27,6 +27,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributing and security guidance rewritten for Go; the inherited templates
   described a Ruby on Rails project.
 
+### Fixed
+- Confine privileged PostgreSQL configuration access to verified cluster
+  directories, including bootstrap and rollback, and use the selected port for
+  standalone administrative connections.
+- Prevent inherited `PGHOSTADDR` from redirecting database operations, mask
+  inline database TLS keys, and preserve quoted values with trailing comments.
+- Preserve explicitly disabled API keys, reject skipped proxy updates when
+  endpoints or ownership change, and validate custom certificate dates and names.
+- Correct TLS defaults for bare public names and uppercase private names,
+  register external database TCP ports with SELinux, and leave Unix sockets out.
+- Restore the original configuration after failed port changes and verify that
+  the service actually starts before reporting success.
+
 ## [0.0.1] - 2026-02-27
 
 ### Added

@@ -172,6 +172,7 @@ func TestStatusCmd_ViaCobra(t *testing.T) {
 func TestSetPortCmd_ViaCobra(t *testing.T) {
 	env := &FakeEnvManager{Env: map[string]string{"PORT": "3000"}}
 	r := &SetPortRunner{
+		FS:        NewFakeFileSystem(),
 		Env:       env,
 		Exec:      &FakeExecRunner{Results: make(map[string]FakeExecResult)},
 		Systemd:   &FakeSystemdRunner{ActiveServices: make(map[string]bool), Properties: make(map[string]string)},

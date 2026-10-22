@@ -98,15 +98,15 @@ export class GroupsService {
 
   async ensureGroupHasOwner(
     group: Group,
-    user: User | GroupUser
+    user?: User | GroupUser
   ): Promise<void> {
-    const userId = 'userId' in user ? user.userId : user.id;
+    const userId = user && ('userId' in user ? user.userId : user.id);
     const remainingOwner = await GroupUser.findOne({
       attributes: ['userId'],
       where: {
         groupId: group.id,
         role: 'owner',
-        userId: { [Op.ne]: userId },
+        ...(userId && { userId: { [Op.ne]: userId } }),
       },
     });
     // If no other owner remains, assign an administrator.
@@ -115,10 +115,10 @@ export class GroupsService {
       // If default admin is not found, use admin with lowest ID
       const admin =
         (await this.userModel.findOne({
-          where: { email: appConfig.getDefaultAdmin(), id: { [Op.ne]: userId }, role: 'admin' },
+          where: { email: appConfig.getDefaultAdmin(), ...(userId && { id: { [Op.ne]: userId } }), role: 'admin' },
         })) ||
         (await this.userModel.findOne({
-          where: { id: { [Op.ne]: userId }, role: 'admin' },
+          where: { ...(userId && { id: { [Op.ne]: userId } }), role: 'admin' },
           order: [['id', 'ASC']]
         }));
       if (admin !== null) {
@@ -213,11 +213,13 @@ export class GroupsService {
     const groupsToLeave = currentGroups.filter(
       (group) => !groups.includes(group.name)
     );
+    const groupsLeft: Group[] = [];
 
     // Remove user from any groups that they should not be in
     for (const groupToLeave of groupsToLeave) {
       try {
         await this.removeUserFromGroup(groupToLeave, user);
+        groupsLeft.push(groupToLeave);
       } catch (err) {
         this.logger.warn(`Failed to remove user from group: ${err}`);
       }
@@ -249,6 +251,10 @@ export class GroupsService {
         .map((existingGroup) =>
           this.addUserToGroup(existingGroup, user, 'member')
         )
+    );
+    // Concurrent departures can remove all owners; recovery may restore a departed admin.
+    await Promise.all(
+      groupsLeft.map(group => this.ensureGroupHasOwner(group)),
     );
   }
 }

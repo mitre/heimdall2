@@ -263,8 +263,20 @@ func restoreSELinuxPaths(exec ExecRunner, fs FileSystem, paths ...string) error 
 
 func (r *SetupRunner) selectedSELinuxPorts(env map[string]string) ([]selinuxPort, error) {
 	ports := []selinuxPort{{"heimdall_server_port_t", envDefault(env, "PORT", DefaultAppPort)}}
-	if !r.SkipDB && r.DatabaseMode == "bundled" {
-		ports = append(ports, selinuxPort{"postgresql_port_t", strconv.Itoa(r.DBPort)})
+	if !r.SkipDB && (r.DatabaseMode == "bundled" || r.DatabaseMode == "external") {
+		port := r.DBPort
+		tcp := true
+		if r.DatabaseMode == "external" {
+			cfg, err := resolveDBConfig(env)
+			if err != nil {
+				return nil, err
+			}
+			port = cfg.Port
+			tcp = !strings.HasPrefix(cfg.Host, "/")
+		}
+		if tcp {
+			ports = append(ports, selinuxPort{"postgresql_port_t", strconv.Itoa(port)})
+		}
 	}
 	if !r.SkipTLS && r.ProxyMode == "nginx" {
 		ports = append(ports, selinuxPort{"http_port_t", "443"})

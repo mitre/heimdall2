@@ -205,7 +205,10 @@ func (s *labelOrderSystemd) check(unit string) {
 	var paths []string
 	switch unit {
 	case bundledPGService:
-		paths = []string{bundledPGSocket, bundledPGData}
+		// The packaged state root supplies postgresql_db_t inheritance, and
+		// systemd labels RuntimeDirectory using the packaged file contexts.
+		// Setup must only relabel the trusted executable tree itself.
+		paths = []string{DefaultPaths().LibExecDir + "/runtime/postgresql"}
 	case bundledCaddyService:
 		paths = []string{"/run/heimdall-caddy", DefaultPaths().ConfigDir + "/caddy"}
 	case ServiceName:
@@ -294,6 +297,45 @@ func TestBundledExternalPreflightTrustsPrivateClientFirst(t *testing.T) {
 	r.flagChanged = map[string]bool{"db-host": true, "db-port": true}
 	r.Exec = &trustOrderExec{r.Exec.(*FakeExecRunner), t, r.Paths.RuntimePath("postgresql", "bin", "psql"), r.FS}
 	require.NoError(t, r.Run())
+}
+
+func TestExternalDatabaseSELinuxPort(t *testing.T) {
+	for _, conflicting := range []bool{false, true} {
+		t.Run(fmt.Sprint("conflicting=", conflicting), func(t *testing.T) {
+			r := bundledSetupFixture(t)
+			r.DatabaseMode = "external"
+			r.DBHost = "db.example.test"
+			r.DBPort = 55433
+			r.flagChanged = map[string]bool{"db-host": true, "db-port": true}
+			fs, ex := enableSELinux(r)
+			if conflicting {
+				ex.Results["semanage port -l"] = FakeExecResult{Stdout: "other_port_t tcp 55433\n"}
+			}
+
+			err := r.Run()
+
+			if conflicting {
+				require.ErrorContains(t, err, "SELinux")
+				require.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
+			} else {
+				require.NoError(t, err)
+				require.Contains(t, string(fs.Files[r.Paths.ConfigDir+"/selinux-ports"]), "postgresql_port_t tcp 55433\n")
+			}
+		})
+	}
+}
+
+func TestExternalUnixSocketNeedsNoSELinuxTCPPort(t *testing.T) {
+	r := bundledSetupFixture(t)
+	r.DatabaseMode = "external"
+	r.DBHost = "/run/postgresql"
+	r.DBPort = 8443
+	r.flagChanged = map[string]bool{"db-host": true, "db-port": true}
+	fs, ex := enableSELinux(r)
+	ex.Results["semanage port -l"] = FakeExecResult{Stdout: "http_port_t tcp 80, 443, 8443\nunreserved_port_t tcp 1024-65535\n"}
+
+	require.NoError(t, r.Run())
+	require.NotContains(t, string(fs.Files[r.Paths.ConfigDir+"/selinux-ports"]), "postgresql_port_t")
 }
 
 func TestSecurityRound1LedgerFailureAndRetry(t *testing.T) {

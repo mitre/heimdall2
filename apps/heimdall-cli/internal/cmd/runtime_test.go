@@ -85,6 +85,19 @@ func TestRealExecRunner_RunWithEnv_PassesEnv(t *testing.T) {
 	require.Equal(t, "hello-from-env\n", out)
 }
 
+func TestRealExecRunner_DropsInheritedPGHostaddr(t *testing.T) {
+	skipIfWindows(t)
+	t.Setenv("PGHOSTADDR", "127.0.0.2")
+	t.Setenv("HEIMDALL_ENV_SENTINEL", "preserved")
+	for _, env := range []map[string]string{nil, {"PGPASSWORD": "configured-password"}} {
+		out, code, err := (&execRunner{}).RunWithEnv(env, "sh", "-c", `printf '%s|%s' "${PGHOSTADDR-unset}" "$HEIMDALL_ENV_SENTINEL"`)
+		require.NoError(t, err)
+		require.Zero(t, code)
+		require.Equal(t, "unset|preserved", out, "an inherited address must not override the configured PostgreSQL host")
+	}
+	require.Equal(t, "127.0.0.2", os.Getenv("PGHOSTADDR"), "the caller's environment must remain unchanged")
+}
+
 func TestRealOsFileSystem_FindFiles_RecursivelyMatchesByName(t *testing.T) {
 	root := t.TempDir()
 

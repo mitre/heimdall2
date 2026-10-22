@@ -5,6 +5,34 @@ import (
 	"strings"
 )
 
+// trimEnvComment removes comments after unquoted whitespace, preserving literal
+// hashes and shell expressions without evaluating them.
+func trimEnvComment(value string) string {
+	var quote byte
+	wordStart := false // A hash immediately after '=' belongs to the value.
+	for i := 0; i < len(value); i++ {
+		ch := value[i]
+		if quote != 0 {
+			if ch == quote {
+				quote = 0
+			} else if quote == '"' && ch == '\\' {
+				i++
+			}
+			continue
+		}
+		if ch == '#' && wordStart {
+			return strings.TrimSpace(value[:i])
+		}
+		if ch == '\\' {
+			i++
+		} else if ch == '\'' || ch == '"' {
+			quote = ch
+		}
+		wordStart = ch == ' ' || ch == '\t'
+	}
+	return strings.TrimSpace(value)
+}
+
 // decodeEnvValue reads the supported quoted literal format without interpolation.
 func decodeEnvValue(value string) string {
 	if len(value) >= 2 && value[0] == '\'' && value[len(value)-1] == '\'' {

@@ -933,7 +933,7 @@ func TestBundledPostgresRerunPreservesSettingsWithoutDuplicates(t *testing.T) {
 func TestPostgresBootstrap_ConfigureHBA_ReplacesLegacyRole(t *testing.T) {
 	r, _, fs, _, _ := newBootstrapForTest()
 	r.DBUser = "new user"
-	install := &pgInstall{DataDir: "/pg"}
+	install := &pgInstall{DataDir: "/var/lib/pgsql/18/data"}
 	path := install.DataDir + postgresHBAFile
 	unrelated := "# operator rules\nhost all admin 127.0.0.1/32 trust\n"
 	fs.Files[path] = []byte(unrelated + "# Heimdall: password authentication for TCP connections from localhost\nhost    all    olduser    127.0.0.1/32    scram-sha-256\nhost    all    olduser    ::1/128         scram-sha-256\nhost all all 0.0.0.0/0 reject\n")
@@ -956,7 +956,7 @@ func TestPostgresBootstrap_ConfigureHBA_PrecedesExistingRulesWithoutHeader(t *te
 	for _, existing := range []string{"host all all 127.0.0.1/32 reject\n", "hostssl all all 0.0.0.0/0 ident\n", "include 'operator.conf'\n"} {
 		t.Run(existing, func(t *testing.T) {
 			r, _, fs, _, _ := newBootstrapForTest()
-			install := &pgInstall{DataDir: "/pg"}
+			install := &pgInstall{DataDir: "/var/lib/pgsql/18/data"}
 			path := install.DataDir + postgresHBAFile
 			fs.Files[path] = []byte("# operator comment\n" + existing)
 			require.NoError(t, r.configureHBA(install))
@@ -975,7 +975,7 @@ func TestPostgresBootstrap_ConfigureHBA_QuotesLiteralRoles(t *testing.T) {
 		t.Run(tc.role, func(t *testing.T) {
 			r, _, fs, _, _ := newBootstrapForTest()
 			r.DBUser = tc.role
-			install := &pgInstall{DataDir: "/pg"}
+			install := &pgInstall{DataDir: "/var/lib/pgsql/18/data"}
 			path := install.DataDir + postgresHBAFile
 			fs.Files[path] = []byte("# TYPE\nhost all all 127.0.0.1/32 reject\n")
 			require.NoError(t, r.configureHBA(install))
@@ -998,7 +998,7 @@ func TestPostgresBootstrap_RejectsHBARoleLineBreaksBeforeWrites(t *testing.T) {
 
 func TestPostgresBootstrap_ConfigureHBA_PreservesAdjacentUnrelatedRule(t *testing.T) {
 	r, _, fs, _, _ := newBootstrapForTest()
-	install := &pgInstall{DataDir: "/pg"}
+	install := &pgInstall{DataDir: "/var/lib/pgsql/18/data"}
 	path := install.DataDir + postgresHBAFile
 	adminRule := "host    all    admin    ::1/128         scram-sha-256\n"
 	fs.Files[path] = []byte("# Heimdall: password authentication for TCP connections from localhost\nhost    all    olduser    127.0.0.1/32    scram-sha-256\n" + adminRule)
@@ -1020,7 +1020,7 @@ func TestPostgresBootstrap_ConfigureHBA_PreservesMalformedAndExtraRules(t *testi
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			r, _, fs, _, _ := newBootstrapForTest()
-			install := &pgInstall{DataDir: "/pg"}
+			install := &pgInstall{DataDir: "/var/lib/pgsql/18/data"}
 			path := install.DataDir + postgresHBAFile
 			fs.Files[path] = []byte("# keep\n" + hbaMarker + "\n" + tc.following)
 			require.NoError(t, r.configureHBA(install))

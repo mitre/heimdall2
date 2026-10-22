@@ -140,8 +140,12 @@ func TestStepTLS_BYOCertificate(t *testing.T) {
 	})
 	r.TLSCert = "/etc/pki/tls/certs/heimdall.pem"
 	r.TLSKey = "/etc/pki/tls/private/heimdall.key"
+	cert, key, err := selfSignedCertificate("heimdall.example.com", 7)
+	require.NoError(t, err)
+	r.FS.(*FakeFileSystem).Files[r.TLSCert] = cert
+	r.FS.(*FakeFileSystem).Files[r.TLSKey] = key
 
-	err := r.stepTLS()
+	err = r.stepTLS()
 
 	require.NoError(t, err)
 	output := out.String()

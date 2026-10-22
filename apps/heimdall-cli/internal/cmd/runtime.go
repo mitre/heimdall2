@@ -31,11 +31,15 @@ func (r *execRunner) RunWithEnvAndStdin(env map[string]string, stdin, name strin
 	env = prepared
 	c := exec.Command(name, args...)
 	c.Stdin = strings.NewReader(stdin)
-	if env != nil {
-		c.Env = os.Environ()
-		for k, v := range env {
-			c.Env = append(c.Env, k+"="+v)
+	c.Env = []string{}
+	for _, entry := range os.Environ() {
+		// libpq otherwise uses the inherited address instead of the explicit -h host.
+		if !strings.HasPrefix(entry, "PGHOSTADDR=") {
+			c.Env = append(c.Env, entry)
 		}
+	}
+	for k, v := range env {
+		c.Env = append(c.Env, k+"="+v)
 	}
 	out, err := c.CombinedOutput()
 	if err != nil {

@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"crypto/rand"
-	"crypto/tls"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -646,6 +645,10 @@ func defaultTLSMode(externalURL, cert, key string) string {
 	if cert != "" && key != "" {
 		return "custom"
 	}
+	externalURL, err := normalizeExternalURL(externalURL, "bundled")
+	if err != nil {
+		return "internal"
+	}
 	u, err := url.Parse(externalURL)
 	if err == nil && u.Hostname() != "" && determineTLSStrategy(u.Hostname(), "", "") == tlsPublic {
 		return "acme"
@@ -1067,8 +1070,8 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
 		}
 		fmt.Fprintln(r.Out, "  JWT_SECRET auto-generated")
 	}
-	apiKeySecret := existing["API_KEY_SECRET"]
-	if apiKeySecret == "" {
+	apiKeySecret, apiKeySet := existing["API_KEY_SECRET"]
+	if apiKeySecret == "" && (!apiKeySet || !isConfigured(existing)) {
 		apiKeySecret, err = randomHex(33)
 		if err != nil {
 			return fmt.Errorf("generating API key secret: %w", err)
@@ -1111,8 +1114,8 @@ func (r *SetupRunner) stepConfigureNonInteractive(existing map[string]string) er
 		fmt.Fprintln(r.Out, "  JWT_SECRET auto-generated")
 	}
 
-	apiKeySecret := existing["API_KEY_SECRET"]
-	if apiKeySecret == "" {
+	apiKeySecret, apiKeySet := existing["API_KEY_SECRET"]
+	if apiKeySecret == "" && (!apiKeySet || !isConfigured(existing)) {
 		var err error
 		apiKeySecret, err = randomHex(33)
 		if err != nil {
@@ -1205,6 +1208,30 @@ func (r *SetupRunner) writeConfig(existing, values map[string]string) error {
 	port, err := r.selectBackendPort(entries)
 	if err != nil {
 		return err
+	}
+	if r.SkipTLS {
+		// The interactive "Start fresh" action clears existing, but leaves the proxy running.
+		previous, err := r.Env.ReadEnv()
+		if err != nil && !errors.Is(err, os.ErrNotExist) {
+			return err
+		}
+		previousProxy := previous["HEIMDALL_PROXY_MODE"]
+		if previousProxy == "" && !r.bundledRuntime && r.FS.Exists(standaloneCaddyfile) {
+			previousProxy = "bundled"
+		}
+		if previousProxy != "" && previousProxy != r.ProxyMode {
+			return &CLIError{Summary: "proxy ownership changes require full setup", Suggestion: "Run heimdall-cli setup without --reconfigure or --skip-tls to change proxy ownership"}
+		}
+		if isConfigured(previous) && (r.ProxyMode == "bundled" || r.ProxyMode == "nginx") {
+			previousURL, _, err := r.configurationURL(previous["EXTERNAL_URL"], envDefault(previous, "NGINX_HOST", "localhost"))
+			if err != nil {
+				return err
+			}
+			previousPort, _ := strconv.Atoi(envDefault(previous, "PORT", DefaultAppPort))
+			if port != strconv.Itoa(previousPort) || externalURL != previousURL {
+				return &CLIError{Summary: "endpoint changes require proxy setup", Suggestion: "Run heimdall-cli setup without --skip-tls to change the backend port or external URL"}
+			}
+		}
 	}
 	r.Port, entries["PORT"] = port, port
 
@@ -1504,6 +1531,17 @@ func (r *SetupRunner) configureCaddyfile(strategy tlsStrategy, host, externalURL
 		if r.TLSCert == "" || r.TLSKey == "" {
 			return fmt.Errorf("custom TLS requires both a certificate and a key")
 		}
+		cert, err := r.FS.ReadFile(r.TLSCert)
+		if err != nil {
+			return fmt.Errorf("reading custom TLS certificate: %w", err)
+		}
+		key, err := r.FS.ReadFile(r.TLSKey)
+		if err != nil {
+			return fmt.Errorf("reading custom TLS key: %w", err)
+		}
+		if err := validateTLSCertificate(cert, key, publicURL.Hostname()); err != nil {
+			return err
+		}
 		tlsConfig = fmt.Sprintf("tls %s %s\n\t", strconv.Quote(r.TLSCert), strconv.Quote(r.TLSKey))
 		fmt.Fprintf(r.Out, "  Caddy: configured with provided certificate\n")
 		fmt.Fprintf(r.Out, "    Cert: %s\n", r.TLSCert)
@@ -1797,6 +1835,7 @@ func validateHostname(host string) error {
 // isPrivateHostname returns true for hostnames that need Caddy's internal CA
 // instead of Let's Encrypt ACME (which can't validate private names).
 func isPrivateHostname(host string) bool {
+	host = strings.ToLower(host)
 	privateSuffixes := []string{
 		".internal", ".local", ".lan", ".localdomain",
 		".home.arpa", ".corp", ".private", ".test",
@@ -2319,8 +2358,12 @@ func (u *caddyUpdate) customCaddyCertificates(env map[string]string, dir string)
 		if err != nil {
 			return "", fmt.Errorf("reading custom TLS key: %w", err)
 		}
-		if _, err := tls.X509KeyPair(cert, key); err != nil {
-			return "", fmt.Errorf("invalid custom TLS certificate/key: %w", err)
+		publicURL, err := validatePublicURL(env["EXTERNAL_URL"])
+		if err != nil {
+			return "", err
+		}
+		if err := validateTLSCertificate(cert, key, publicURL.Hostname()); err != nil {
+			return "", err
 		}
 		u.certs[dir+caddyCertSuffix] = cert
 		u.certs[dir+caddyKeySuffix] = key
@@ -2497,7 +2540,7 @@ type bundledSetupUpdate struct {
 	originalMarker, before, dependency                                 savedFile
 	selectedPorts                                                      []selinuxPort
 	proxy                                                              *caddyUpdate
-	previousPG                                                         []savedFile
+	previousPG                                                         []postgresConfigSnapshot
 	disabled                                                           []serviceState
 	pgWasActive, pgWasEnabled                                          bool
 	markerRemoved, pgChanged, wrote, dependencyChanged, startAttempted bool
@@ -2679,14 +2722,24 @@ func (u *bundledSetupUpdate) snapshotPostgres() error {
 		return err
 	}
 	u.pgWasEnabled = state == "enabled" || state == systemdEnabledRuntime
-	if r.FS.Exists(bundledPGData + "/PG_VERSION") {
+	files, err := r.FS.OpenPostgresData(bundledPGData)
+	if os.IsNotExist(err) {
+		return nil // A fresh cluster has no prior configuration to restore.
+	}
+	if err != nil {
+		return err
+	}
+	defer files.Close()
+	if _, err = files.ReadFile("PG_VERSION"); err == nil {
 		for _, file := range []string{"postgresql.conf", "heimdall.conf", "pg_hba.conf"} {
-			snapshot, err := snapshotFile(r.FS, bundledPGData+"/"+file)
+			snapshot, err := snapshotPostgresConfig(files, file)
 			if err != nil {
 				return err
 			}
 			u.previousPG = append(u.previousPG, snapshot)
 		}
+	} else if !os.IsNotExist(err) {
+		return err
 	}
 	return nil
 }
@@ -2752,8 +2805,16 @@ func (u *bundledSetupUpdate) restorePostgres() error {
 	}
 	r := u.runner
 	rollback := []error{u.restorePostgresPassword()}
-	for _, saved := range u.previousPG {
-		rollback = append(rollback, saved.restore(r.FS))
+	if len(u.previousPG) > 0 {
+		files, err := r.FS.OpenPostgresData(bundledPGData)
+		if err != nil {
+			rollback = append(rollback, err)
+		} else {
+			defer files.Close()
+			for _, saved := range u.previousPG {
+				rollback = append(rollback, saved.restore(files))
+			}
+		}
 	}
 	if u.pgWasActive {
 		rollback = append(rollback, r.Systemd.Restart(bundledPGService))

@@ -50,7 +50,7 @@ func ParseEnv(content string) map[string]string {
 			continue
 		}
 		key := strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(line[:idx]), "export "))
-		val := strings.TrimSpace(line[idx+1:])
+		val := trimEnvComment(line[idx+1:])
 		val = decodeEnvValue(val)
 		env[key] = val
 	}

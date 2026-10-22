@@ -260,6 +260,35 @@ func NewFakeFileSystem() *FakeFileSystem {
 	}
 }
 
+func (f *FakeFileSystem) OpenPostgresData(path string) (postgresDataFiles, error) {
+	if _, _, err := postgresDataLayout(path); err != nil {
+		return nil, err
+	}
+	if err := safeManagedPath(f, path+"/PG_VERSION"); err != nil {
+		return nil, err
+	}
+	return &fakePostgresFiles{fs: f, path: path}, nil
+}
+
+type fakePostgresFiles struct {
+	fs   *FakeFileSystem
+	path string
+}
+
+func (f *fakePostgresFiles) ReadFile(name string) ([]byte, error) {
+	data, err := f.fs.ReadFile(f.path + "/" + name)
+	return append([]byte(nil), data...), err
+}
+func (f *fakePostgresFiles) WriteFile(name string, data []byte) error {
+	return f.fs.WriteFile(f.path+"/"+name, append([]byte(nil), data...), 0600)
+}
+func (f *fakePostgresFiles) ReadDir() ([]os.DirEntry, error) { return f.fs.ReadDir(f.path) }
+func (f *fakePostgresFiles) Remove(name string) error {
+	delete(f.fs.Files, f.path+"/"+name)
+	return nil
+}
+func (f *fakePostgresFiles) Close() error { return nil }
+
 func (f *FakeFileSystem) ReadFile(path string) ([]byte, error) {
 	data, ok := f.Files[path]
 	if !ok {

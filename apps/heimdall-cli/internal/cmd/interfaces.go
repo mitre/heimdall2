@@ -34,6 +34,9 @@ type EnvManager interface {
 
 // FileSystem abstracts file I/O.
 type FileSystem interface {
+	// OpenPostgresData confines privileged configuration I/O to the verified
+	// detected cluster directory; callers must close the returned handle.
+	OpenPostgresData(path string) (postgresDataFiles, error)
 	ReadFile(path string) ([]byte, error)
 	WriteFile(path string, data []byte, perm os.FileMode) error
 	Stat(path string) (os.FileInfo, error)

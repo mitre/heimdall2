@@ -336,6 +336,11 @@ Distribute only public certificates, never private keys. For an external databas
 configure `DATABASE_SSL` and `DATABASE_SSL_CA` as required and keep certificate
 verification enabled.
 
+Setup registers the selected database TCP port with SELinux for both bundled and
+external databases. If that port is reserved for another service type, setup
+refuses the conflict; choose a compatible database port or resolve the host policy
+before retrying.
+
 ## Authentication
 
 Configure provider values in `backend.env`, then validate and restart as above.
@@ -367,9 +372,11 @@ and `backend.env`; configuration-only output is not a database backup. Archives
 are mode `0600` and include private proxy configuration and certificate/state
 files when present, not live PostgreSQL data files.
 
-Before restoring, review the archived configuration and prepare an **empty target
-database** and required role. Restore uses the **archived database endpoint**;
-copying the archive to another host does not redirect it or empty an existing database.
+Before restoring, review the archived configuration and prepare the target
+database and required role. Current backups replace the database objects included
+in the dump and preserve unrelated objects; legacy SQL archives require an empty
+target database. Restore uses the **archived database endpoint**; copying the
+archive to another host does not redirect it.
 
 ```sh
 sudo systemctl stop heimdall-server &&
@@ -380,9 +387,10 @@ sudo heimdall-cli status
 
 Use the actual archive filename. Restore leaves the app stopped until setup
 succeeds. Verify data, HTTPS and login before resuming use. On failure, leave
-services stopped and repair the cause before retrying against an empty database;
-partially applied SQL is not rolled back wholesale. External proxies remain
-operator-managed.
+services stopped and repair the cause before retrying. SQL restoration runs in a
+single transaction, so a SQL failure rolls back its database changes. Configuration
+files may already have been restored and are not rolled back with that transaction;
+check them before retrying. External proxies remain operator-managed.
 
 ## Upgrading
 

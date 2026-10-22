@@ -15,6 +15,7 @@ func newSetPortRunner() (*SetPortRunner, *FakeExecRunner, *FakeEnvManager, *Fake
 	env := &FakeEnvManager{Env: map[string]string{"PORT": "3000"}}
 	systemd := &FakeSystemdRunner{ActiveServices: map[string]bool{}, Properties: map[string]string{}}
 	return &SetPortRunner{
+		FS:      NewFakeFileSystem(),
 		Exec:    exec,
 		Env:     env,
 		Systemd: systemd,

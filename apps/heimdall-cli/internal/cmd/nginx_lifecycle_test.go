@@ -53,7 +53,7 @@ func TestNginxSELinuxRegistersHTTPS(t *testing.T) {
 	r := &SetupRunner{ProxyMode: "nginx", DatabaseMode: "external"}
 	ports, err := r.selectedSELinuxPorts(map[string]string{"PORT": "3210", "EXTERNAL_URL": "https://heimdall.example.test"})
 	require.NoError(t, err)
-	require.Equal(t, []selinuxPort{{"heimdall_server_port_t", "3210"}, {"http_port_t", "443"}}, ports)
+	require.Equal(t, []selinuxPort{{"heimdall_server_port_t", "3210"}, {"postgresql_port_t", "5432"}, {"http_port_t", "443"}}, ports)
 }
 
 func TestNginxRecoveryRoundTrip(t *testing.T) {

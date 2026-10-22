@@ -161,7 +161,7 @@ func (r *SetupRunner) prepareBundledNginx(env map[string]string) (*nginxUpdate, 
 		return nil, fmt.Errorf("incomplete Nginx certificate/key pair; restore both files before setup")
 	}
 	if cert.exists {
-		if err := validateNginxCertificate(cert.data, key.data, u.Hostname()); err != nil {
+		if err := validateTLSCertificate(cert.data, key.data, u.Hostname()); err != nil {
 			return nil, err
 		}
 	} else {
@@ -263,20 +263,20 @@ func proxyPortOwner(previous, fallback string) string {
 	return fallback
 }
 
-func validateNginxCertificate(cert, key []byte, host string) error {
+func validateTLSCertificate(cert, key []byte, host string) error {
 	pair, err := tls.X509KeyPair(cert, key)
 	if err != nil {
-		return fmt.Errorf("invalid Nginx certificate/key: %w", err)
+		return fmt.Errorf("invalid TLS certificate/key: %w", err)
 	}
 	leaf, err := x509.ParseCertificate(pair.Certificate[0])
 	if err != nil {
-		return fmt.Errorf("invalid Nginx certificate: %w", err)
+		return fmt.Errorf("invalid TLS certificate: %w", err)
 	}
 	if err := leaf.VerifyHostname(host); err != nil {
-		return fmt.Errorf("existing Nginx certificate does not match external hostname: %w", err)
+		return fmt.Errorf("TLS certificate does not match external hostname: %w", err)
 	}
 	if time.Now().Before(leaf.NotBefore) || !time.Now().Before(leaf.NotAfter) {
-		return fmt.Errorf("existing Nginx certificate is outside its validity period; replace the certificate/key pair before setup")
+		return fmt.Errorf("TLS certificate is outside its validity period; replace the certificate/key pair before setup")
 	}
 	return nil
 }

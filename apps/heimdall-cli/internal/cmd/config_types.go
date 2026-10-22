@@ -53,6 +53,7 @@ const (
 var SecretsSet = map[string]bool{
 	"DATABASE_PASSWORD":   true,
 	"DATABASE_URL":        true,
+	"DATABASE_SSL_KEY":    true,
 	"JWT_SECRET":          true,
 	"API_KEY_SECRET":      true,
 	"ADMIN_PASSWORD":      true,

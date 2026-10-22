@@ -97,6 +97,7 @@ func TestConfigGet_MasksSecretValue(t *testing.T) {
 func TestConfig_MasksCredentials(t *testing.T) {
 	for _, tc := range []struct{ key, value, secret, masked string }{
 		{"DATABASE_URL", "postgres://app:example-password@db.example/prod", "example-password", "pos***rod"},
+		{"DATABASE_SSL_KEY", "-----BEGIN PRIVATE KEY-----\nprivate-material-sentinel\n-----END PRIVATE KEY-----", "private-material-sentinel", "---***---"},
 		{"GITLAB_SECRET", "example-gitlab-secret", "example-gitlab-secret", "exa***ret"},
 		{"HTTPS_PROXY", "http://proxy-user:example-password@proxy.example:8080", "example-password", "htt***080"},
 	} {

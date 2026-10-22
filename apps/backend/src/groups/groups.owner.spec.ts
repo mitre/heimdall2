@@ -91,3 +91,72 @@ it.each([false, true])('synchronizes external groups when a replacement owner ex
   expect(members.get('1')?.role).toBe(hasReplacement ? undefined : 'owner');
   expect(members.get('2')?.role).toBe(hasReplacement ? 'owner' : undefined);
 });
+
+it.each([false, true])('restores ownership after concurrent external group departures; departing admin=%s', async (isAdminDeparting) => {
+  const members = new Map([
+    ['1', { role: 'owner', userId: '1' }],
+    ['2', { role: 'owner', userId: '2' }],
+  ]);
+  const admin = { email: 'admin@example.test', id: isAdminDeparting ? '2' : '3', role: 'admin' };
+  let ownerChecks = 0;
+  let releaseChecks!: () => void;
+  // eslint-disable-next-line unicorn/prefer-promise-with-resolvers -- Node.js 16 lacks Promise.withResolvers.
+  const bothChecked = new Promise<void>((resolve) => {
+    releaseChecks = resolve;
+  });
+  let releaseAdminDelete!: () => void;
+  // eslint-disable-next-line unicorn/prefer-promise-with-resolvers -- Node.js 16 lacks Promise.withResolvers.
+  const regularUserFinished = new Promise<void>((resolve) => {
+    releaseAdminDelete = resolve;
+  });
+  vi.spyOn(GroupUser, 'findOne').mockImplementation(async (options) => {
+    const where = options!.where as { role?: string; userId?: string | { [Op.ne]: string } };
+    const member = members.values().find(item =>
+      (!where.role || item.role === where.role)
+      && (typeof where.userId === 'string' ? item.userId === where.userId : item.userId !== where.userId?.[Op.ne]),
+    );
+    // Both requests observe another owner before either deletes its membership.
+    if (where.role === 'owner' && ownerChecks < 2) {
+      ownerChecks++;
+      if (ownerChecks === 2) {
+        releaseChecks();
+      }
+      await bothChecked;
+    }
+    return (member || null) as unknown as GroupUser | null;
+  });
+  const group = {
+    $add: (_relation: string, user: Admin, options: { through: { role: string } }) => {
+      members.set(user.id, { role: options.through.role, userId: user.id });
+      return Promise.resolve();
+    },
+    $remove: async (_relation: string, user: Admin) => {
+      if (isAdminDeparting && user.id === admin.id) {
+        await regularUserFinished;
+      }
+      return members.delete(user.id);
+    },
+    id: '10',
+    name: 'external-group',
+  };
+  const users = {
+    findOne: ({ where }: { where: { id?: { [Op.ne]: string } } }) =>
+      Promise.resolve(admin.id === where.id?.[Op.ne] ? null : admin),
+  };
+  const service = new GroupsService({} as typeof Group, users as unknown as typeof User);
+  const departingUsers = ['1', '2'].map(id => ({ $get: () => Promise.resolve([group]), id }) as unknown as User);
+
+  await Promise.all(departingUsers.map(async (user) => {
+    try {
+      await service.syncUserGroups(user, []);
+    } finally {
+      if (user.id === '1') {
+        releaseAdminDelete();
+      }
+    }
+  }));
+
+  expect(members.has('1')).toBe(false);
+  expect(members.has('2')).toBe(isAdminDeparting);
+  expect(members.get(admin.id)?.role).toBe('owner');
+});

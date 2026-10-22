@@ -247,6 +247,10 @@ func TestStandaloneTLSRendersIndependentlyOfBundledReference(t *testing.T) {
 			if mode == "custom" {
 				r.TLSCert = "/etc/tls/cert.pem"
 				r.TLSKey = "/etc/tls/key.pem"
+				cert, key, err := selfSignedCertificate("portal.example.com", 7)
+				require.NoError(t, err)
+				r.FS.(*FakeFileSystem).Files[r.TLSCert] = cert
+				r.FS.(*FakeFileSystem).Files[r.TLSKey] = key
 			}
 			fs := r.FS.(*FakeFileSystem)
 			fs.Files[r.Paths.LibExecDir+"/heimdall-Caddyfile"] = []byte(bundledReference)
