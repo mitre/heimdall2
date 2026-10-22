@@ -12,30 +12,39 @@ import (
 )
 
 func TestSetupPreservesDisabledAPIKeys(t *testing.T) {
-	for _, interactive := range []bool{false, true} {
-		for _, configured := range []bool{false, true} {
-			for _, present := range []bool{false, true} {
-				t.Run(fmt.Sprintf("interactive=%t/configured=%t/present=%t", interactive, configured, present), func(t *testing.T) {
-					r, _, _ := newTestSetupRunner()
-					if configured {
-						r = bundledSetupFixture(t)
-					}
-					env := r.Env.(*FakeEnvManager)
-					delete(env.Env, "API_KEY_SECRET")
-					if present {
-						env.Env["API_KEY_SECRET"] = ""
-					}
-					r.Interactive = interactive
-					r.Prompter = &FakePrompter{IsTTY: true}
-					require.NoError(t, r.stepConfigure())
-					if configured && present {
-						require.Empty(t, env.Env["API_KEY_SECRET"], "an explicitly empty secret disables API keys")
-					} else {
-						require.NotEmpty(t, env.Env["API_KEY_SECRET"], "fresh or missing secrets are generated")
-					}
-				})
+	for _, tc := range []struct {
+		interactive bool
+		configured  bool
+		present     bool
+	}{
+		{false, false, false},
+		{false, false, true},
+		{false, true, false},
+		{false, true, true},
+		{true, false, false},
+		{true, false, true},
+		{true, true, false},
+		{true, true, true},
+	} {
+		t.Run(fmt.Sprintf("interactive=%t/configured=%t/present=%t", tc.interactive, tc.configured, tc.present), func(t *testing.T) {
+			r, _, _ := newTestSetupRunner()
+			if tc.configured {
+				r = bundledSetupFixture(t)
 			}
-		}
+			env := r.Env.(*FakeEnvManager)
+			delete(env.Env, "API_KEY_SECRET")
+			if tc.present {
+				env.Env["API_KEY_SECRET"] = ""
+			}
+			r.Interactive = tc.interactive
+			r.Prompter = &FakePrompter{IsTTY: true}
+			require.NoError(t, r.stepConfigure())
+			if tc.configured && tc.present {
+				require.Empty(t, env.Env["API_KEY_SECRET"], "an explicitly empty secret disables API keys")
+			} else {
+				require.NotEmpty(t, env.Env["API_KEY_SECRET"], "fresh or missing secrets are generated")
+			}
+		})
 	}
 }
 
@@ -162,9 +171,17 @@ func TestCaddyRejectsInvalidCustomCertificate(t *testing.T) {
 	keyBlock, _ := pem.Decode(key)
 	privateKey, err := x509.ParsePKCS1PrivateKey(keyBlock.Bytes)
 	require.NoError(t, err)
-	for _, kind := range []string{"expired", "future", "wrong hostname", "valid"} {
+	for _, tc := range []struct {
+		kind      string
+		wantError string
+	}{
+		{"expired", "outside its validity period"},
+		{"future", "outside its validity period"},
+		{"wrong hostname", "does not match external hostname"},
+		{"valid", ""},
+	} {
 		certificate := *leaf
-		switch kind {
+		switch tc.kind {
 		case "expired":
 			certificate.NotBefore = time.Now().Add(-48 * time.Hour)
 			certificate.NotAfter = time.Now().Add(-24 * time.Hour)
@@ -177,7 +194,7 @@ func TestCaddyRejectsInvalidCustomCertificate(t *testing.T) {
 		require.NoError(t, err)
 		candidate := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: der})
 		for _, bundled := range []bool{true, false} {
-			t.Run(fmt.Sprintf("%s/bundled=%t", kind, bundled), func(t *testing.T) {
+			t.Run(fmt.Sprintf("%s/bundled=%t", tc.kind, bundled), func(t *testing.T) {
 				r := bundledSetupFixture(t)
 				fs := r.FS.(*FakeFileSystem)
 				fs.Files["/candidate.crt"], fs.Files["/candidate.key"] = candidate, key
@@ -192,19 +209,15 @@ func TestCaddyRejectsInvalidCustomCertificate(t *testing.T) {
 					r.TLSCert, r.TLSKey = "/candidate.crt", "/candidate.key"
 					err = r.configureCaddyfile(tlsBYO, "heimdall.example.test", "https://heimdall.example.test", configPath)
 				}
-				if kind == "valid" {
+				if tc.wantError == "" {
 					require.NoError(t, err)
 					require.Contains(t, string(fs.Files[configPath]), "reverse_proxy")
-				} else {
-					if kind == "wrong hostname" {
-						require.ErrorContains(t, err, "does not match external hostname")
-					} else {
-						require.ErrorContains(t, err, "outside its validity period")
-					}
-					require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
-					require.Equal(t, "previous working configuration", string(fs.Files[configPath]))
-					require.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
+					return
 				}
+				require.ErrorContains(t, err, tc.wantError)
+				require.Equal(t, before, r.Env.(*FakeEnvManager).Env)
+				require.Equal(t, "previous working configuration", string(fs.Files[configPath]))
+				require.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
 			})
 		}
 	}

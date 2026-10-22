@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"maps"
 	"regexp"
 
 	"github.com/spf13/cobra"
@@ -175,10 +176,7 @@ func (r *SetPortRunner) preparePortChange(setup *SetupRunner, env map[string]str
 	}
 	if bundled {
 		if env["HEIMDALL_PROXY_MODE"] == "bundled" || env["HEIMDALL_PROXY_MODE"] == "nginx" {
-			candidate := make(map[string]string, len(env))
-			for key, value := range env {
-				candidate[key] = value
-			}
+			candidate := maps.Clone(env)
 			candidate["PORT"] = portStr
 			if env["HEIMDALL_PROXY_MODE"] == "nginx" {
 				proxy, err = setup.prepareBundledNginx(candidate)

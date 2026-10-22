@@ -12,12 +12,14 @@ import (
 )
 
 const (
-	postgresLoopback    = "127.0.0.1"
-	postgresHBAFile     = "/pg_hba.conf"
-	psqlStopOnError     = "ON_ERROR_STOP=1"
-	psqlUserVariable    = "db_user="
-	postgresConfigFile  = "/postgresql.conf"
-	postgresVersionFile = "/PG_VERSION"
+	postgresLoopback       = "127.0.0.1"
+	postgresHBAFileName    = "pg_hba.conf"
+	postgresHBAFile        = "/" + postgresHBAFileName
+	psqlStopOnError        = "ON_ERROR_STOP=1"
+	psqlUserVariable       = "db_user="
+	postgresConfigFileName = "postgresql.conf"
+	postgresConfigFile     = "/" + postgresConfigFileName
+	postgresVersionFile    = "/PG_VERSION"
 )
 
 // PostgresBootstrapRunner replaces heimdall-postgres-setup.sh with a
@@ -220,7 +222,7 @@ func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
 		return err
 	}
 	defer files.Close()
-	data, err := files.ReadFile("pg_hba.conf")
+	data, err := files.ReadFile(postgresHBAFileName)
 	if os.IsNotExist(err) {
 		return nil
 	}
@@ -252,7 +254,7 @@ func (r *PostgresBootstrapRunner) configureHBA(install *pgInstall) error {
 	if updated == string(data) {
 		return nil
 	}
-	return files.WriteFile("pg_hba.conf", []byte(updated))
+	return files.WriteFile(postgresHBAFileName, []byte(updated))
 }
 
 // managedHBARuleCount recognizes at most the two same-role rules after our marker.
@@ -412,7 +414,7 @@ func (r *PostgresBootstrapRunner) configurePasswordEncryption(install *pgInstall
 		return err
 	}
 	defer files.Close()
-	data, err := files.ReadFile("postgresql.conf")
+	data, err := files.ReadFile(postgresConfigFileName)
 	if os.IsNotExist(err) {
 		return nil
 	}
@@ -436,7 +438,7 @@ func (r *PostgresBootstrapRunner) configurePasswordEncryption(install *pgInstall
 	}
 	updated += directive + "\n"
 
-	return files.WriteFile("postgresql.conf", []byte(updated))
+	return files.WriteFile(postgresConfigFileName, []byte(updated))
 }
 
 // startService enables and starts the PostgreSQL systemd unit. Tolerant
@@ -543,7 +545,7 @@ func validateBundledCluster(files postgresDataFiles) error {
 		if strings.TrimSpace(string(version)) != "18" {
 			return fmt.Errorf("bundled PostgreSQL requires cluster major 18; found %q; perform a separate database migration", strings.TrimSpace(string(version)))
 		}
-		for _, file := range []string{"postgresql.conf", "pg_hba.conf"} {
+		for _, file := range []string{postgresConfigFileName, postgresHBAFileName} {
 			if _, err := files.ReadFile(file); err != nil {
 				return err
 			}
@@ -577,6 +579,43 @@ func validateBundledOverrides(files postgresDataFiles) error {
 	return nil
 }
 
+func (r *PostgresBootstrapRunner) openBundledCluster(install *pgInstall) (postgresDataFiles, error) {
+	files, err := r.FS.OpenPostgresData(install.DataDir)
+	if err != nil && !os.IsNotExist(err) {
+		return nil, err
+	}
+	if err == nil {
+		if err := validateBundledCluster(files); err != nil {
+			files.Close()
+			return nil, err
+		}
+		_, err = files.ReadFile("PG_VERSION")
+		if err == nil {
+			return files, nil
+		}
+		files.Close()
+		if !os.IsNotExist(err) {
+			return nil, err
+		}
+	}
+	// The RPM owns the fixed parent directories. Only the service account
+	// creates the mutable cluster, including PGDATA itself.
+	if err := runChecked(r.Exec, "runuser", "-u", install.OSUser, "--", install.InitdbBin, "-D", install.DataDir, "--username="+install.OSUser, "--encoding=UTF8", "--locale=C.UTF-8", "--auth-local=peer", "--auth-host=scram-sha-256"); err != nil {
+		return nil, err
+	}
+	files, err = r.FS.OpenPostgresData(install.DataDir)
+	if err != nil {
+		return nil, err
+	}
+	// initdb success must leave a real cluster, not merely a zero exit status.
+	version, err := files.ReadFile("PG_VERSION")
+	if err != nil || strings.TrimSpace(string(version)) != "18" {
+		files.Close()
+		return nil, fmt.Errorf("initdb did not create a PostgreSQL 18 cluster")
+	}
+	return files, nil
+}
+
 func (r *PostgresBootstrapRunner) runBundled() error {
 	install, err := r.bundledPreflight()
 	if err != nil {
@@ -585,48 +624,15 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 	if err := restoreSELinuxPaths(r.Exec, r.FS, r.Paths.LibExecDir+"/runtime/postgresql"); err != nil {
 		return err
 	}
-	files, err := r.FS.OpenPostgresData(install.DataDir)
-	if err != nil && !os.IsNotExist(err) {
+	files, err := r.openBundledCluster(install)
+	if err != nil {
 		return err
-	}
-	initialized := false
-	if err == nil {
-		if err := validateBundledCluster(files); err != nil {
-			files.Close()
-			return err
-		}
-		_, err = files.ReadFile("PG_VERSION")
-		if err != nil && !os.IsNotExist(err) {
-			files.Close()
-			return err
-		}
-		initialized = err == nil
-	}
-	if !initialized {
-		if files != nil {
-			files.Close()
-		}
-		// The RPM owns the fixed parent directories. Only the service account
-		// creates the mutable cluster, including PGDATA itself.
-		if err := runChecked(r.Exec, "runuser", "-u", install.OSUser, "--", install.InitdbBin, "-D", install.DataDir, "--username="+install.OSUser, "--encoding=UTF8", "--locale=C.UTF-8", "--auth-local=peer", "--auth-host=scram-sha-256"); err != nil {
-			return err
-		}
-		files, err = r.FS.OpenPostgresData(install.DataDir)
-		if err != nil {
-			return err
-		}
-		// initdb success must leave a real cluster, not merely a zero exit status.
-		version, err := files.ReadFile("PG_VERSION")
-		if err != nil || strings.TrimSpace(string(version)) != "18" {
-			files.Close()
-			return fmt.Errorf("initdb did not create a PostgreSQL 18 cluster")
-		}
 	}
 	defer files.Close()
 	if err := validateBundledOverrides(files); err != nil {
 		return err
 	}
-	conf, err := files.ReadFile("postgresql.conf")
+	conf, err := files.ReadFile(postgresConfigFileName)
 	if err != nil {
 		return err
 	}
@@ -639,14 +645,14 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 		}
 	}
 	updated := strings.Join(append(kept, include), "\n") + "\n"
-	if err := files.WriteFile("postgresql.conf", []byte(updated)); err != nil {
+	if err := files.WriteFile(postgresConfigFileName, []byte(updated)); err != nil {
 		return err
 	}
 	settings := fmt.Sprintf("listen_addresses = '127.0.0.1'\nport = %d\nunix_socket_directories = '%s'\npassword_encryption = 'scram-sha-256'\n", r.DBPort, install.SocketDir)
 	if err := files.WriteFile("heimdall.conf", []byte(settings)); err != nil {
 		return err
 	}
-	hba, err := files.ReadFile("pg_hba.conf")
+	hba, err := files.ReadFile(postgresHBAFileName)
 	if err != nil {
 		return err
 	}
@@ -658,7 +664,7 @@ func (r *PostgresBootstrapRunner) runBundled() error {
 			preserved = append(preserved, line)
 		}
 	}
-	if err := files.WriteFile("pg_hba.conf", []byte(scram+strings.Join(preserved, "\n")+"\n")); err != nil {
+	if err := files.WriteFile(postgresHBAFileName, []byte(scram+strings.Join(preserved, "\n")+"\n")); err != nil {
 		return err
 	}
 	// PostgreSQL data inherits its packaged directory label. systemd creates

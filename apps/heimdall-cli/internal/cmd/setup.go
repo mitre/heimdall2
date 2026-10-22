@@ -1209,29 +1209,8 @@ func (r *SetupRunner) writeConfig(existing, values map[string]string) error {
 	if err != nil {
 		return err
 	}
-	if r.SkipTLS {
-		// The interactive "Start fresh" action clears existing, but leaves the proxy running.
-		previous, err := r.Env.ReadEnv()
-		if err != nil && !errors.Is(err, os.ErrNotExist) {
-			return err
-		}
-		previousProxy := previous["HEIMDALL_PROXY_MODE"]
-		if previousProxy == "" && !r.bundledRuntime && r.FS.Exists(standaloneCaddyfile) {
-			previousProxy = "bundled"
-		}
-		if previousProxy != "" && previousProxy != r.ProxyMode {
-			return &CLIError{Summary: "proxy ownership changes require full setup", Suggestion: "Run heimdall-cli setup without --reconfigure or --skip-tls to change proxy ownership"}
-		}
-		if isConfigured(previous) && (r.ProxyMode == "bundled" || r.ProxyMode == "nginx") {
-			previousURL, _, err := r.configurationURL(previous["EXTERNAL_URL"], envDefault(previous, "NGINX_HOST", "localhost"))
-			if err != nil {
-				return err
-			}
-			previousPort, _ := strconv.Atoi(envDefault(previous, "PORT", DefaultAppPort))
-			if port != strconv.Itoa(previousPort) || externalURL != previousURL {
-				return &CLIError{Summary: "endpoint changes require proxy setup", Suggestion: "Run heimdall-cli setup without --skip-tls to change the backend port or external URL"}
-			}
-		}
+	if err := r.validateSkippedProxy(port, externalURL); err != nil {
+		return err
 	}
 	r.Port, entries["PORT"] = port, port
 
@@ -1258,6 +1237,36 @@ func (r *SetupRunner) writeConfig(existing, values map[string]string) error {
 	r.ExternalURL = externalURL
 
 	return r.persistConfiguration(entries)
+}
+
+func (r *SetupRunner) validateSkippedProxy(port, externalURL string) error {
+	if !r.SkipTLS {
+		return nil
+	}
+	// The interactive "Start fresh" action clears existing, but leaves the proxy running.
+	previous, err := r.Env.ReadEnv()
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+	previousProxy := previous["HEIMDALL_PROXY_MODE"]
+	if previousProxy == "" && !r.bundledRuntime && r.FS.Exists(standaloneCaddyfile) {
+		previousProxy = "bundled"
+	}
+	if previousProxy != "" && previousProxy != r.ProxyMode {
+		return &CLIError{Summary: "proxy ownership changes require full setup", Suggestion: "Run heimdall-cli setup without --reconfigure or --skip-tls to change proxy ownership"}
+	}
+	if !isConfigured(previous) || (r.ProxyMode != "bundled" && r.ProxyMode != "nginx") {
+		return nil
+	}
+	previousURL, _, err := r.configurationURL(previous["EXTERNAL_URL"], envDefault(previous, "NGINX_HOST", "localhost"))
+	if err != nil {
+		return err
+	}
+	previousPort, _ := strconv.Atoi(envDefault(previous, "PORT", DefaultAppPort))
+	if port != strconv.Itoa(previousPort) || externalURL != previousURL {
+		return &CLIError{Summary: "endpoint changes require proxy setup", Suggestion: "Run heimdall-cli setup without --skip-tls to change the backend port or external URL"}
+	}
+	return nil
 }
 
 func (r *SetupRunner) configurationURL(externalURL, nginxHost string) (string, string, error) {

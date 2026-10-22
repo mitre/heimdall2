@@ -13,9 +13,10 @@ func trimEnvComment(value string) string {
 	for i := 0; i < len(value); i++ {
 		ch := value[i]
 		if quote != 0 {
-			if ch == quote {
+			switch {
+			case ch == quote:
 				quote = 0
-			} else if quote == '"' && ch == '\\' {
+			case quote == '"' && ch == '\\':
 				i++
 			}
 			continue
