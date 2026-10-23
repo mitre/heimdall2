@@ -18,18 +18,6 @@
   dependencies:
     fswin "^2.17.1227"
 
-"@angular-devkit/core@22.2.0":
-  version "22.2.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.0.tgz#47b2132f1340592e2ba29cfaa880abf0e2de488d"
-  integrity sha512-dELBwXtJWUxFALdEVvdk8qK+XBa17EH5H9NZm+041/esjNi6SaZMusqBgr2PZKq7hD+O2jSCEHbey/hwkz2Awg==
-  dependencies:
-    ajv "8.20.0"
-    ajv-formats "3.0.1"
-    jsonc-parser "3.3.1"
-    picomatch "4.0.7"
-    rxjs "7.8.2"
-    source-map "0.8.0"
-
 "@angular-devkit/core@22.2.3":
   version "22.2.3"
   resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.3.tgz#4cdcf4b2a8aa0be7035ca27e8757cba701025e64"
@@ -42,25 +30,14 @@
     rxjs "7.8.2"
     source-map "0.8.0"
 
-"@angular-devkit/schematics-cli@22.2.0":
-  version "22.2.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics-cli/-/schematics-cli-22.2.0.tgz#71520dade4ac1eda710b8f59d61073054d9eeff7"
-  integrity sha512-BGKAyxEpbZYKtCPwCMv8B9TPYb8qKHUZ2BRi61cfbMGcsrKPU4nHCPlz7Z84yDENuuQERZJh12p95mlkMC69yw==
+"@angular-devkit/schematics-cli@22.2.3":
+  version "22.2.3"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics-cli/-/schematics-cli-22.2.3.tgz#fe34c246f7534b263386fac1584eb44adec61ea6"
+  integrity sha512-GebRkurUplPBwJOz/LT40ZZ0Hxv0EzpllJD1Oj7Bjkk/9A8PKGPDSRgEGfWcVk2h35V4JNNC0g6pSMj9s0dWxg==
   dependencies:
-    "@angular-devkit/core" "22.2.0"
-    "@angular-devkit/schematics" "22.2.0"
+    "@angular-devkit/core" "22.2.3"
+    "@angular-devkit/schematics" "22.2.3"
     "@inquirer/prompts" "8.7.2"
-
-"@angular-devkit/schematics@22.2.0":
-  version "22.2.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.2.0.tgz#4e3c3a2510fd58afb9127a006045b625fa8d64f7"
-  integrity sha512-yhp/LRzKHJOzo2gFm9+H5DKnsT9adi+ItO2pW0pW2B455sqZYE8RJaSku+TSlv+PvWSmbtFsPXNgSRLA6pSk8Q==
-  dependencies:
-    "@angular-devkit/core" "22.2.0"
-    jsonc-parser "3.3.1"
-    magic-string "1.4.1"
-    ora "9.4.1"
-    rxjs "7.8.2"
 
 "@angular-devkit/schematics@22.2.3":
   version "22.2.3"
@@ -2156,7 +2133,7 @@
     "@inquirer/search" "^4.3.3"
     "@inquirer/select" "^5.2.5"
 
-"@inquirer/prompts@^8.7.2":
+"@inquirer/prompts@8.7.3", "@inquirer/prompts@^8.7.2":
   version "8.7.3"
   resolved "https://registry.yarnpkg.com/@inquirer/prompts/-/prompts-8.7.3.tgz#6ce4983574b86000558555d78fd475efd1546d66"
   integrity sha512-DHK20kO+H5k/XcJQpHQUpVQbMYHHhZchlGWhZVMUV4WIuRuBW5744hipOtriE1vMqPLgnIyXFMHWKkIbTepa4Q==
@@ -2413,14 +2390,14 @@
     "@tybys/wasm-util" "^0.10.3"
 
 "@nestjs/cli@^12.0.0":
-  version "12.0.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-12.0.8.tgz#cdff89355d470da1c1e815aa67819a74a4d987a4"
-  integrity sha512-iqm+KXb8cnpnlD4hMBf1w2/4i1GSs0DCLI7oyP4MTmwf9KmjTG1SpAjkl/D+kKuUToycBrMF4+eSwyPVdTMGKQ==
+  version "12.0.9"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-12.0.9.tgz#a4741d028db297f733a5156d0ee25a671dcca7ac"
+  integrity sha512-jny3o6hItqBnWM7gMsxDQKj/DyzQnojcFm0nI5kXvc/3Fl6uvIDbZfXDm42LzgSEptYKxOsYXjBw0u5EHLj5Sg==
   dependencies:
-    "@angular-devkit/core" "22.2.0"
-    "@angular-devkit/schematics" "22.2.0"
-    "@angular-devkit/schematics-cli" "22.2.0"
-    "@inquirer/prompts" "8.7.2"
+    "@angular-devkit/core" "22.2.3"
+    "@angular-devkit/schematics" "22.2.3"
+    "@angular-devkit/schematics-cli" "22.2.3"
+    "@inquirer/prompts" "8.7.3"
     "@nestjs/schematics" "^12.0.0"
     ansis "4.4.0"
     chokidar "5.0.0"
