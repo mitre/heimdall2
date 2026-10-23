@@ -41,7 +41,7 @@ function impactMapping(input: unknown): number {
 
     switch (impact) {
       case 0:
-        return 0.01;
+        return 0;
       case 1:
         return 0.3;
       case 2:
@@ -111,19 +111,6 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   });
   return input as ExecJSON.Control[];
 }
-function skipInformationalFindings(controls: ExecJSON.Control[]): ExecJSON.Control[] {
-  for (const control of controls) {
-    if (_.get(control, 'tags.riskcode') === '0') {
-      for (const result of control.results) {
-        result.status = ExecJSON.ControlResultStatus.Skipped;
-        result.skip_message =
-          'Informational ZAP finding requires manual review.';
-      }
-    }
-  }
-
-  return controls;
-}
 export class ZapResults {
   constructor(readonly zapJson: string, readonly name?: string, readonly withRaw = false) {}
 
@@ -170,8 +157,7 @@ export class ZapMapper extends BaseConverter {
         controls: [
           {
             path: 'site.alerts',
-            arrayTransformer: (controls: unknown[]) =>
-              skipInformationalFindings(deduplicateId(controls)),
+            arrayTransformer: deduplicateId,
             tags: {
               cci: {
                 path: 'cweid',
