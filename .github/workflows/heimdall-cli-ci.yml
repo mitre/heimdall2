@@ -1,0 +1,70 @@
+name: Heimdall CLI CI
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_call: {}
+permissions:
+  contents: read
+concurrency:
+  group: cli-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+env:
+  GOTOOLCHAIN: local
+jobs:
+  test:
+    name: CLI / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {arch: amd64, runner: ubuntu-24.04}
+          - {arch: arm64, runner: ubuntu-24.04-arm}
+    defaults:
+      run:
+        working-directory: apps/heimdall-cli
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: apps/heimdall-cli/go.mod
+          cache-dependency-path: apps/heimdall-cli/go.sum
+          cache: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/master') }}
+      - name: Verify toolchain, formatting and module metadata
+        run: |
+          test "$(go env GOVERSION)" = go1.26.9
+          test -z "$(gofmt -l .)"
+          go mod download
+          go mod verify
+          go mod tidy -diff
+          go -C tools mod verify
+          go -C tools mod tidy -diff
+          go vet ./...
+      - name: Run native unit and functional tests
+        run: |
+          go test -race -count=1 -coverprofile=coverage.out ./...
+          go test -count=1 -tags functional ./internal/cmd/
+          python3 tests/test_release.py
+      - name: Check reachable dependency vulnerabilities
+        if: matrix.arch == 'amd64'
+        run: |
+          GOBIN="$RUNNER_TEMP/cli-tools" go -C tools install -mod=readonly golang.org/x/vuln/cmd/govulncheck
+          "$RUNNER_TEMP/cli-tools/govulncheck" ./...
+      - name: Run packaging source and release-isolation fixtures
+        if: matrix.arch == 'amd64'
+        working-directory: .
+        run: |
+          python3 packaging/rpm/tests/inputs.py
+          python3 packaging/rpm/tests/cli-acquisition.py
+          python3 packaging/rpm/tests/release-routing.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: heimdall-cli-coverage-${{ matrix.arch }}
+          path: apps/heimdall-cli/coverage.out
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,415 @@
+name: Build RPM
+
+# Rocky builds supply all six EL/architecture packages.
+# Integration candidates are never eligible for release publication.
+on:
+  pull_request:
+    paths:
+      - "packaging/**"
+      - "apps/**"
+      - "libs/**"
+      - "test/**"
+      - package.json
+      - yarn.lock
+      - lerna.json
+      - tsconfig.json
+      - postcss.config.js
+      - VERSION
+      - .github/workflows/build-rpm.yml
+  push:
+    branches: [master]
+    paths:
+      - "packaging/**"
+      - "apps/**"
+      - "libs/**"
+      - "test/**"
+      - package.json
+      - yarn.lock
+      - lerna.json
+      - tsconfig.json
+      - postcss.config.js
+      - VERSION
+      - .github/workflows/build-rpm.yml
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  HEIMDALL_RELEASE: 0.4.integration
+  GOTOOLCHAIN: local
+
+jobs:
+  build:
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v')
+    name: ${{ matrix.distro }} / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.image }}
+    permissions:
+      contents: read
+    env:
+      # Keep all staging, checks, listing and uploads outside the source tree.
+      TOPDIR: /tmp/heimdall-rpmbuild
+      REBUILD_TOPDIR: /tmp/heimdall-srpm-rebuild
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: aarch64, runner: ubuntu-24.04-arm}
+
+    steps:
+      - name: Bootstrap git and make
+        run: dnf install -y git make python3
+
+      - uses: actions/checkout@v6
+        with:
+          # Release mode requires HEAD to match the VERSION tag.
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Configure Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      # shortcut: EL10 CI depends on one Fedora proxy, remove after proxy07 metadata recovers.
+      - name: Use synchronized Fedora metadata for EL10
+        if: matrix.distro == 'el10'
+        run: echo '38.145.32.20 mirrors.fedoraproject.org' >> /etc/hosts
+
+      - name: Install build dependencies
+        run: |
+          make -C packaging/rpm deps TOPDIR="$TOPDIR"
+          dnf install -y gnupg2 findutils tar
+          # Rocky 10 omits PATH from image metadata; retain the shell's system path.
+          echo "/opt/heimdall-build/go-1.26.9/bin:$PATH" >> "$GITHUB_PATH"
+
+      - name: Verify toolchain and source fixtures
+        run: |
+          test "$(go env GOVERSION)" = go1.26.9
+          bash packaging/rpm/tests/build-python.sh
+          python3 packaging/rpm/tests/inputs.py
+          python3 packaging/rpm/tests/build-shortcuts.py
+          python3 packaging/rpm/tests/version-srpm.py
+          python3 packaging/rpm/tests/runtime-inputs.py
+          python3 packaging/rpm/tests/lifecycle-status.py
+          python3 packaging/rpm/tests/download-protocols.py
+          python3 packaging/rpm/tests/runtime-extraction.py
+          python3 packaging/rpm/tests/upgrade-scriptlets.py
+          python3 packaging/rpm/tests/application-readiness.py
+          python3 packaging/rpm/tests/cli-acquisition.py
+          python3 packaging/rpm/tests/release-routing.py
+          bash packaging/rpm/tests/setup.sh
+          make -C packaging/rpm check-version TOPDIR="$TOPDIR"
+
+      - name: Build candidate RPM and verify CLI inputs
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == release ]]; then
+            source_mode=release
+          else
+            source_mode=head
+          fi
+          make -C packaging/rpm rpm SOURCE_MODE="$source_mode" \
+            TOPDIR="$TOPDIR" HEIMDALL_RELEASE="$HEIMDALL_RELEASE"
+          bash packaging/rpm/tests/cli-inputs.sh "$TOPDIR"
+          (cd "$TOPDIR/heimdall-cli-build" && go test ./...)
+
+      - name: Rebuild the SRPM in an empty tree
+        run: |
+          mapfile -t srpms < <(find "$TOPDIR/SRPMS" -name '*.src.rpm')
+          test "${#srpms[@]}" -eq 1
+          bash packaging/rpm/tests/srpm-rebuild.sh "${srpms[0]}" "$REBUILD_TOPDIR"
+
+      - name: Lint the built packages
+        run: make -C packaging/rpm lint-rpm TOPDIR="$TOPDIR"
+
+      - name: Sign disposable test artifacts
+        env:
+          HEIMDALL_RPM_TEST: "1"
+        run: |
+          mapfile -d '' -t rpms < <(find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -print0)
+          test "${#rpms[@]}" -gt 0
+          bash packaging/rpm/tests/sign-rpms.sh --container \
+            "$TOPDIR/RPM-TEST-GPG-KEY" "${rpms[@]}"
+
+      - name: Record artifact checksums
+        run: |
+          cp "$TOPDIR/SOURCES/runtime-manifest.json" "$TOPDIR/runtime-manifest.json"
+          (cd "$TOPDIR" && sha256sum RPMS/*/*.rpm SRPMS/*.src.rpm \
+            RPM-TEST-GPG-KEY runtime-manifest.json > SHA256SUMS)
+
+      - name: Record what was built
+        run: |
+          find "$TOPDIR/RPMS" "$TOPDIR/SRPMS" -name '*.rpm' -printf '%f\n' | sort
+          git rev-parse HEAD
+          cat apps/heimdall-cli/VERSION
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
+          path: |
+            ${{ env.TOPDIR }}/RPMS/**/*.rpm
+            ${{ env.TOPDIR }}/SRPMS/*.src.rpm
+            ${{ env.TOPDIR }}/RPM-TEST-GPG-KEY
+            ${{ env.TOPDIR }}/runtime-manifest.json
+            ${{ env.TOPDIR }}/SHA256SUMS
+          retention-days: 7
+          if-no-files-found: error
+
+  smoke-test:
+    name: install ${{ matrix.distro }} / ${{ matrix.arch }}
+    needs: build
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.image }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: x86_64, runner: ubuntu-latest}
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: aarch64, runner: ubuntu-24.04-arm}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: aarch64, runner: ubuntu-24.04-arm}
+
+    steps:
+      - name: Install checkout and payload inspection tools
+        run: |
+          dnf install -y git cpio systemd findutils tar gzip binutils
+          command -v rpm2cpio
+          command -v curl
+          command -v find
+
+      - uses: actions/checkout@v6
+
+      - name: Configure Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
+          path: rpms
+
+      - name: Verify checksums and install the signed package
+        run: |
+          (cd rpms && sha256sum --check SHA256SUMS)
+          mapfile -d '' -t rpms < <(find rpms/RPMS -name 'heimdall-server-*.${{ matrix.arch }}.rpm' -print0)
+          test "${#rpms[@]}" -eq 1
+          rpm --import rpms/RPM-TEST-GPG-KEY
+          rpm --checksig --verbose "${rpms[0]}" | tee /tmp/rpm-signature.log
+          grep -Eq 'Signature.*: OK' /tmp/rpm-signature.log
+          # No local server is needed for a payload-only install. Retain man pages
+          # even when the minimal image's DNF configuration defaults to nodocs.
+          dnf install -y --setopt=localpkg_gpgcheck=1 --setopt=install_weak_deps=False \
+            --setopt=tsflags= "${rpms[0]}"
+          version=$(sed -e 's/[[:space:]]//g' -e 's/^v//' VERSION)
+          bash packaging/rpm/tests/payload.sh "${rpms[0]}" "$version"
+
+      - name: Verify installed manifest, CLI provenance and man pages
+        run: |
+          rpm -q heimdall-server
+          rpm -V heimdall-server
+          cmp rpms/runtime-manifest.json /usr/share/heimdall-server/runtime-manifest.json
+          runtime=/usr/libexec/heimdall-server/runtime
+          "$runtime/node/bin/node" --version
+          bash packaging/rpm/tests/installed-icu.sh
+          "$runtime/postgresql/bin/psql" --version
+          "$runtime/caddy/caddy" version
+          "$runtime/nginx/sbin/nginx" -v
+          rpm -qa --qf '%{NAME}\n' > /tmp/installed-packages
+          if grep -Eq '^(nodejs([0-9]+)?|postgresql([0-9]+)?(-.*)?|caddy|nginx)$' /tmp/installed-packages; then exit 1; fi
+          for name in node postgresql caddy nginx; do
+            test -n "$(find /usr/share/licenses/heimdall-server -type f -ipath "*$name*" -print -quit)"
+          done
+          cli_version=$(heimdall-cli --version)
+          printf '%s\n' "$cli_version"
+          version=$(sed 's/^v//' apps/heimdall-cli/VERSION)
+          commit=$(git rev-parse HEAD)
+          date=$(git show -s --format=%cI HEAD)
+          [[ "$cli_version" == *"$version (commit $commit, built $date)"* ]]
+          find /usr/share/man/man1 -name 'heimdall-cli.1*' | grep -q .
+          find /usr/share/man/man1 -name 'heimdall-cli-setup.1*' | grep -q .
+          bash packaging/rpm/tests/logrotate.sh
+
+      - name: Verify installed SELinux permissions
+        run: |
+          dnf install -y python3-setools
+          python=python3
+          if [[ -x /usr/libexec/platform-python ]]; then python=/usr/libexec/platform-python; fi
+          "$python" packaging/rpm/tests/selinux-policy.py
+
+      - name: Verify the installed systemd units
+        run: |
+          mkdir -p diagnostics
+          systemd-analyze verify /usr/lib/systemd/system/heimdall-{server,postgresql,caddy,nginx}.service 2>&1 \
+            | tee diagnostics/systemd-verify.log
+          if [[ '${{ matrix.distro }}' == el8 ]]; then
+            # systemd 239 ignores these four newer settings. Keep the directives
+            # for newer systems, expose the limitation, and reject other warnings.
+            awk '!/^\/usr\/lib\/systemd\/system\/heimdall-(server|postgresql|caddy|nginx).service:[0-9]+: Unknown lvalue '\''(ProtectClock|ProtectHostname|ProtectKernelLogs|ProtectProc)'\'' in section '\''Service'\''$/' \
+              diagnostics/systemd-verify.log > diagnostics/unexpected.log
+            test ! -s diagnostics/unexpected.log
+            if [[ -s diagnostics/systemd-verify.log ]]; then
+              echo '::warning::EL8 systemd ignores the newer hardening settings listed in systemd-verify.log.'
+            fi
+          else
+            test ! -s diagnostics/systemd-verify.log
+          fi
+
+  lifecycle-test:
+    name: lifecycle ${{ matrix.distro }} / ${{ matrix.arch }}
+    needs: build
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: x86_64, runner: ubuntu-latest, platform: linux/amd64}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: x86_64, runner: ubuntu-latest, platform: linux/amd64}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: x86_64, runner: ubuntu-latest, platform: linux/amd64}
+          - {distro: el8, image: "rockylinux/rockylinux:8", arch: aarch64, runner: ubuntu-24.04-arm, platform: linux/arm64}
+          - {distro: el9, image: "rockylinux/rockylinux:9", arch: aarch64, runner: ubuntu-24.04-arm, platform: linux/arm64}
+          - {distro: el10, image: "rockylinux/rockylinux:10", arch: aarch64, runner: ubuntu-24.04-arm, platform: linux/arm64}
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Verify host-runner guards and readiness fixtures
+        run: |
+          bash packaging/rpm/tests/guards.sh
+          python3 packaging/rpm/tests/host-build-args.py
+          python3 packaging/rpm/tests/remote-readiness.py
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: heimdall-server-rpm-bundle-${{ matrix.distro }}-${{ matrix.arch }}
+          path: rpms
+
+      - name: Install OS prerequisites from repositories before disconnecting
+        run: |
+          docker build --platform '${{ matrix.platform }}' -f packaging/rpm/Dockerfile.ol8 \
+            --build-arg BASE_IMAGE='${{ matrix.image }}' --target test-host -t heimdall-direct-test .
+
+      - name: Verify install, setup and restart with OS prerequisites installed
+        run: |
+          (cd rpms && sha256sum --check SHA256SUMS)
+          mapfile -d '' -t candidates < <(find rpms/RPMS -name 'heimdall-server-*.${{ matrix.arch }}.rpm' -print0)
+          test "${#candidates[@]}" -eq 1
+          mkdir -p diagnostics
+          container=$(docker create --network=none --platform '${{ matrix.platform }}' --runtime=runc \
+            --privileged --cgroupns=private --tmpfs /run --tmpfs /run/lock \
+            -e container=docker -e HEIMDALL_RPM_TEST=1 \
+            -e RPM_TEST_GPG_KEY=/tmp/rpm-test-signing.asc heimdall-direct-test)
+          cleanup() {
+            result=$?
+            docker inspect "$container" > diagnostics/container.json || true
+            docker cp "$container:/tmp/rpm-lifecycle-installer-status.log" diagnostics/installer-status.log || true
+            docker exec "$container" journalctl --no-pager -u heimdall-postgresql -u heimdall-server -u heimdall-caddy -u heimdall-nginx > diagnostics/services.log || true
+            docker rm -f "$container" >/dev/null || result=1
+            exit "$result"
+          }
+          trap cleanup EXIT
+          docker cp packaging/rpm/tests/. "$container:/tmp/rpm-tests"
+          docker cp rpms/RPM-TEST-GPG-KEY "$container:/tmp/rpm-test-signing.asc"
+          docker cp "${candidates[0]}" "$container:/tmp/initial.rpm"
+          docker start "$container"
+          for attempt in $(seq 1 60); do
+            if docker exec "$container" systemctl show-environment >/dev/null 2>&1; then break; fi
+            sleep 1
+            test "$attempt" -lt 60
+          done
+          test "$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container")" = none
+          timeout 600 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh install /tmp/initial.rpm
+          # Exercise fresh Nginx defaults before the explicit Caddy lifecycle checks.
+          timeout 900 docker exec "$container" bash /tmp/rpm-tests/topology.sh bundled nginx
+          timeout 900 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh setup
+          docker restart "$container"
+          for attempt in $(seq 1 60); do
+            if docker exec "$container" systemctl show-environment >/dev/null 2>&1; then break; fi
+            sleep 1
+            test "$attempt" -lt 60
+          done
+          timeout 300 docker exec "$container" bash /tmp/rpm-tests/lifecycle.sh verify
+          test "$(docker inspect --format '{{.HostConfig.NetworkMode}}' "$container")" = none
+
+      - name: Record direct install diagnostics
+        if: always()
+        run: |
+          if [[ -d diagnostics ]]; then
+            find diagnostics -type f -print -exec cat {} \;
+          fi
+
+  publish:
+    name: Attach RPMs to the release
+    needs: [build, smoke-test, lifecycle-test]
+    if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      # Publish the six EL/architecture artifacts.
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: heimdall-server-rpm-bundle-el*
+          path: rpms
+          merge-multiple: false
+
+      - name: Verify signatures and reject integration artifacts before publication
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm
+          mkdir publish
+          for directory in rpms/heimdall-server-rpm-bundle-el*; do
+            test -d "$directory"
+            (cd "$directory" && sha256sum --check SHA256SUMS)
+            sudo rpm --import "$directory/RPM-TEST-GPG-KEY"
+            mapfile -d '' -t candidates < <(find "$directory/RPMS" "$directory/SRPMS" -name '*.rpm' -print0)
+            test "${#candidates[@]}" -eq 2
+            id=$(basename "$directory")
+            names=()
+            for candidate in "${candidates[@]}"; do
+              rpm --checksig --verbose "$candidate" | tee /tmp/rpm-publish-signature.log
+              grep -Eq 'Signature.*: OK' /tmp/rpm-publish-signature.log
+              release=$(rpm -qp --qf '%{RELEASE}' "$candidate")
+              case "$release" in
+                *integration*) echo "Refusing to publish integration RPM: $candidate" >&2; exit 1 ;;
+              esac
+              name=$(basename "$candidate")
+              # SRPM names omit CPU architecture although their staged runtime sources differ.
+              [[ $name != *.src.rpm ]] || name="$id-$name"
+              test ! -e "publish/$name"
+              cp "$candidate" "publish/$name"
+              names+=("$name")
+            done
+            for name in RPM-TEST-GPG-KEY runtime-manifest.json; do
+              cp "$directory/$name" "publish/$id-$name"
+              names+=("$id-$name")
+            done
+            (cd publish && sha256sum "${names[@]}" > "$id-SHA256SUMS")
+          done
+
+      - name: List artifacts
+        run: find publish -type f -printf '%f\n' | sort
+
+      # Provenance attestations describe the build; they are not RPM signatures.
+      # A future stable milestone must replace ephemeral acceptance-test signing
+      # and select stable RPM releases before enabling stable publication.
+      - uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: publish/*
+
+      - uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228  # v3.0.2
+        with:
+          files: publish/*
+          fail_on_unmatched_files: true

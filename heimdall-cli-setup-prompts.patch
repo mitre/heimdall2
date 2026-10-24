@@ -1,0 +1,1008 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index b50a5f1..c7631a3 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
+ ## [Unreleased]
+ 
+ ### Added
++- Interactive setup prompts for JWT expiration and local certificate lifetime,
++  with defaults of one day and seven days respectively.
+ - Extracted to its own repository from `mitre/saf-packaging`. The `go.mod`
+   module path (`github.com/mitre/heimdall-cli`) now matches the repository
+   URL, so `go install` and module vendoring work.
+@@ -15,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
+   `CONTRIBUTING.md`, `SECURITY.md`, `CHANGELOG.md`.
+ 
+ ### Changed
++- Interactive setup displays the external URL default and uses
++  `https://localhost` when no address has been configured.
+ - Contributing and security guidance rewritten for Go; the inherited templates
+   described a Ruby on Rails project.
+ 
+diff --git a/README.md b/README.md
+index 1f2eae4..4fac11f 100644
+--- a/README.md
++++ b/README.md
+@@ -47,6 +47,22 @@ uses `--tls-cert` and `--tls-key`. External PostgreSQL majors **13–18** are
+ supported, using the private version-18 clients. Newer servers require a newer
+ compatible RPM/client; setup and backup refuse them.
+ 
++Interactive setup displays each public URL, JWT expiration, and local certificate
++lifetime default. The public URL uses the supplied or saved `EXTERNAL_URL`, then
++`https://` plus saved `NGINX_HOST`, and finally `https://localhost`. Enter accepts
++the displayed value. JWT expiration (`JWT_EXPIRE_TIME`) defaults to `1d` and
++accepts durations such as `25m`; Heimdall caps the effective lifetime at two days.
++
++For locally issued HTTPS certificates, setup asks for the requested lifetime in
++whole days (1–365, default `7`) and saves `HEIMDALL_TLS_CERT_DAYS`. ACME, supplied
++certificates, external proxies, HTTP, and `--skip-tls` omit this question. Existing
++certificates and CA state are preserved; changes apply to new issuance. Bundled
++Caddy configures its intermediate CA lifetime to allow the requested leaf lifetime
++during normal renewal. An existing intermediate CA can temporarily shorten newly
++issued certificates until it renews. Standalone Caddy keeps its administrator's
++CA configuration, which may likewise limit the requested lifetime. Use interactive
++setup again to change the saved lifetime; non-interactive reruns preserve it.
++
+ ```sh
+ sudo heimdall-cli setup --non-interactive \
+   --database-mode external --proxy-mode bundled --tls-mode internal \
+diff --git a/internal/cmd/config.go b/internal/cmd/config.go
+index 65310be..b632a76 100644
+--- a/internal/cmd/config.go
++++ b/internal/cmd/config.go
+@@ -180,6 +180,8 @@ func (r *ConfigRunner) Get(key string) error {
+ // Set updates a config key after validation.
+ func (r *ConfigRunner) Set(key, value string) error {
+ 	switch key {
++	case "HEIMDALL_TLS_CERT_DAYS":
++		return fmt.Errorf("Use heimdall-cli setup --interactive to change certificate lifetime.")
+ 	case "HEIMDALL_DATABASE_MODE", "HEIMDALL_PROXY_MODE", "HEIMDALL_TLS_MODE", "HEIMDALL_TLS_CERT", "HEIMDALL_TLS_KEY":
+ 		return fmt.Errorf("Use heimdall-cli setup --database-mode or --proxy-mode to change service ownership.")
+ 	}
+diff --git a/internal/cmd/config_test.go b/internal/cmd/config_test.go
+index e31c6d2..37a8f7a 100644
+--- a/internal/cmd/config_test.go
++++ b/internal/cmd/config_test.go
+@@ -252,7 +252,7 @@ func TestConfigGet_KeyNotInEnv_ButInSchema(t *testing.T) {
+ }
+ 
+ func TestConfigSetRejectsDeploymentChanges(t *testing.T) {
+-	for _, key := range []string{"HEIMDALL_DATABASE_MODE", "HEIMDALL_PROXY_MODE", "HEIMDALL_TLS_MODE", "HEIMDALL_TLS_CERT", "HEIMDALL_TLS_KEY"} {
++	for _, key := range []string{"HEIMDALL_DATABASE_MODE", "HEIMDALL_PROXY_MODE", "HEIMDALL_TLS_MODE", "HEIMDALL_TLS_CERT", "HEIMDALL_TLS_KEY", "HEIMDALL_TLS_CERT_DAYS"} {
+ 		env := &FakeEnvManager{Env: map[string]string{key: "keep"}}
+ 		r := &ConfigRunner{Env: env, Out: new(bytes.Buffer), ErrOut: new(bytes.Buffer)}
+ 		err := r.Set(key, "external")
+diff --git a/internal/cmd/fakes_test.go b/internal/cmd/fakes_test.go
+index 2d58df2..108e1d4 100644
+--- a/internal/cmd/fakes_test.go
++++ b/internal/cmd/fakes_test.go
+@@ -352,17 +352,22 @@ func (f *FakeFileSystem) FindFiles(root, namePattern string) ([]string, error) {
+ // If a prompt has no preset answer, the default value is returned.
+ // Set Err to simulate prompt errors (e.g., user cancel via Ctrl+C).
+ type FakePrompter struct {
+-	Inputs   map[string]string // prompt text → answer
+-	Confirms map[string]bool   // prompt text → answer
+-	Selects  map[string]int    // prompt text → selected index
+-	IsTTY    bool
+-	Err      error // returned by all methods when non-nil
++	Inputs        map[string]string // prompt text → answer
++	InputDefaults map[string]string // prompt text → displayed default
++	Confirms      map[string]bool   // prompt text → answer
++	Selects       map[string]int    // prompt text → selected index
++	IsTTY         bool
++	Err           error // returned by all methods when non-nil
+ }
+ 
+ func (f *FakePrompter) Input(prompt string, defaultValue string) (string, error) {
+ 	if f.Err != nil {
+ 		return "", f.Err
+ 	}
++	if f.InputDefaults == nil {
++		f.InputDefaults = make(map[string]string)
++	}
++	f.InputDefaults[prompt] = defaultValue
+ 	if v, ok := f.Inputs[prompt]; ok {
+ 		return v, nil
+ 	}
+diff --git a/internal/cmd/schema.go b/internal/cmd/schema.go
+index fac0f40..3e5e855 100644
+--- a/internal/cmd/schema.go
++++ b/internal/cmd/schema.go
+@@ -2,6 +2,7 @@ package cmd
+ 
+ import (
+ 	"fmt"
++	"regexp"
+ 	"sort"
+ 	"strconv"
+ 	"strings"
+@@ -81,6 +82,7 @@ func schemaEntries() []ConfigEntry {
+ 		{Key: "HEIMDALL_TLS_MODE", Category: "proxy", Type: "str", Choices: []string{"acme", "internal", "custom"}, Description: "Bundled proxy TLS mode; change through setup."},
+ 		{Key: "HEIMDALL_TLS_CERT", Category: "proxy", Type: "path", Description: "Custom TLS certificate path; change through setup."},
+ 		{Key: "HEIMDALL_TLS_KEY", Category: "proxy", Type: "path", Description: "Custom TLS private key path; change through setup."},
++		{Key: "HEIMDALL_TLS_CERT_DAYS", Category: "proxy", Type: "int", Default: "7", Validation: "1-365", Description: "Requested lifetime in days for new local certificates; change through setup."},
+ 		// Database
+ 		{Key: "DATABASE_HOST", Category: "database", Type: "str", Default: "localhost", Description: "PostgreSQL hostname."},
+ 		{Key: "DATABASE_PORT", Category: "database", Type: "int", Default: "5432", Validation: "1-65535", Description: "PostgreSQL port."},
+@@ -187,6 +189,9 @@ func KeysForCategory(catID string) []string {
+ 	return keys
+ }
+ 
++// Match the backend's ms duration syntax; JWT lifetimes must be positive.
++var jwtDurationPattern = regexp.MustCompile(`(?i)^((?:[0-9]+)?\.?[0-9]+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$`)
++
+ // ValidateValue validates a value against the schema entry for key.
+ // Returns nil if valid or no schema entry exists, error otherwise.
+ func ValidateValue(key, value string) error {
+@@ -194,6 +199,16 @@ func ValidateValue(key, value string) error {
+ 	if !ok {
+ 		return nil // unknown keys pass validation
+ 	}
++	if key == "JWT_EXPIRE_TIME" {
++		match := jwtDurationPattern.FindStringSubmatch(value)
++		if len(value) > 100 || match == nil {
++			return fmt.Errorf("JWT_EXPIRE_TIME must be a positive duration such as 1d or 25m")
++		}
++		n, err := strconv.ParseFloat(match[1], 64)
++		if err != nil || n <= 0 {
++			return fmt.Errorf("JWT_EXPIRE_TIME must be a positive duration such as 1d or 25m")
++		}
++	}
+ 
+ 	switch entry.Type {
+ 	case "int":
+diff --git a/internal/cmd/setup.go b/internal/cmd/setup.go
+index 5e2ee60..50713b9 100644
+--- a/internal/cmd/setup.go
++++ b/internal/cmd/setup.go
+@@ -7,6 +7,7 @@ import (
+ 	"errors"
+ 	"fmt"
+ 	"io"
++	"maps"
+ 	"net"
+ 	"net/url"
+ 	"os"
+@@ -661,14 +662,34 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+ 
+ 	// --- Application config ---
+ 	fmt.Fprintln(r.Out)
+-	externalURL, err := r.Prompter.Input("External URL", r.ExternalURL)
++	defaultExternalURL := r.ExternalURL
++	if defaultExternalURL == "" {
++		defaultExternalURL = "https://" + def("NGINX_HOST", "localhost")
++	}
++	externalURL, err := r.Prompter.Input(fmt.Sprintf("External URL (default: %s)", defaultExternalURL), defaultExternalURL)
+ 	if err != nil {
+ 		return err
+ 	}
++	if externalURL == "" {
++		externalURL = defaultExternalURL
++	}
+ 	adminEmail, err := r.Prompter.Input("Admin email", def("ADMIN_EMAIL", "admin@heimdall.local"))
+ 	if err != nil {
+ 		return err
+ 	}
++	jwtDefault := def("JWT_EXPIRE_TIME", "1d")
++	fmt.Fprintln(r.Out, "  Heimdall caps JWT lifetimes at 2 days.")
++	jwtExpire, err := r.Prompter.Input(fmt.Sprintf("JWT expiration (e.g. 1d or 25m; default: %s)", jwtDefault), jwtDefault)
++	if err != nil {
++		return err
++	}
++	jwtExpire = strings.TrimSpace(jwtExpire)
++	if jwtExpire == "" {
++		jwtExpire = jwtDefault
++	}
++	if err := ValidateValue("JWT_EXPIRE_TIME", jwtExpire); err != nil {
++		return err
++	}
+ 
+ 	if r.ProxyMode == "bundled" && tlsChoice == 0 {
+ 		mode := r.TLSMode
+@@ -701,16 +722,45 @@ func (r *SetupRunner) stepConfigureInteractive(existing map[string]string) error
+ 	if r.ProxyMode == "bundled" && r.TLSMode == "custom" && (r.TLSCert == "" || r.TLSKey == "") {
+ 		return fmt.Errorf("custom TLS requires certificate and key paths")
+ 	}
++	certDays := def("HEIMDALL_TLS_CERT_DAYS", "7")
++	u, err := url.Parse(externalURL)
++	if err != nil {
++		return fmt.Errorf("invalid external URL: %w", err)
++	}
++	localTLS := r.TLSMode == "internal"
++	if !r.bundledRuntime {
++		strategy := determineTLSStrategy(u.Hostname(), r.TLSCert, r.TLSKey)
++		localTLS = strategy == tlsPrivate || strategy == tlsIP
++	}
++	if r.ProxyMode == "bundled" && !r.SkipTLS && u.Scheme == "https" && localTLS {
++		certDays, err = r.Prompter.Input(fmt.Sprintf("Certificate lifetime in days (default: %s)", certDays), certDays)
++		if err != nil {
++			return err
++		}
++		certDays = strings.TrimSpace(certDays)
++		if certDays == "" {
++			certDays = def("HEIMDALL_TLS_CERT_DAYS", "7")
++		}
++		if err := ValidateValue("HEIMDALL_TLS_CERT_DAYS", certDays); err != nil {
++			return err
++		}
++		fmt.Fprintln(r.Out, "  Applies to new certificates; existing certificates are preserved.")
++		if r.bundledRuntime || net.ParseIP(u.Hostname()) == nil {
++			fmt.Fprintln(r.Out, "  Caddy may shorten new certificates to the current CA's remaining validity.")
++		}
++	}
+ 
+ 	// Build the prompted values map
+ 	prompted := map[string]string{
+-		"DATABASE_HOST":     dbHost,
+-		"DATABASE_PORT":     dbPort,
+-		"DATABASE_USERNAME": dbUser,
+-		"DATABASE_PASSWORD": dbPassword,
+-		"DATABASE_NAME":     dbName,
+-		"EXTERNAL_URL":      externalURL,
+-		"ADMIN_EMAIL":       adminEmail,
++		"DATABASE_HOST":          dbHost,
++		"DATABASE_PORT":          dbPort,
++		"DATABASE_USERNAME":      dbUser,
++		"DATABASE_PASSWORD":      dbPassword,
++		"DATABASE_NAME":          dbName,
++		"EXTERNAL_URL":           externalURL,
++		"ADMIN_EMAIL":            adminEmail,
++		"JWT_EXPIRE_TIME":        jwtExpire,
++		"HEIMDALL_TLS_CERT_DAYS": certDays,
+ 	}
+ 	return r.interactiveWriteConfig(existing, prompted)
+ }
+@@ -802,7 +852,7 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
+ 	}
+ 
+ 	// Derive NGINX_HOST from external URL
+-	nginxHost := dbHost
++	nginxHost := envDefault(existing, "NGINX_HOST", "localhost")
+ 	if externalURL != "" {
+ 		h := externalURL
+ 		for _, prefix := range []string{"https://", "http://"} {
+@@ -835,7 +885,10 @@ func (r *SetupRunner) interactiveWriteConfig(existing, prompted map[string]strin
+ 	fmt.Fprintf(r.Out, "    Admin:    %s\n", prompted["ADMIN_EMAIL"])
+ 	fmt.Fprintln(r.Out)
+ 
+-	return r.writeConfig(existing, dbHost, dbPort, dbUser, dbPassword, dbName,
++	settings := maps.Clone(existing)
++	settings["JWT_EXPIRE_TIME"] = envDefault(prompted, "JWT_EXPIRE_TIME", envDefault(existing, "JWT_EXPIRE_TIME", "1d"))
++	settings["HEIMDALL_TLS_CERT_DAYS"] = envDefault(prompted, "HEIMDALL_TLS_CERT_DAYS", envDefault(existing, "HEIMDALL_TLS_CERT_DAYS", "7"))
++	return r.writeConfig(settings, dbHost, dbPort, dbUser, dbPassword, dbName,
+ 		jwtSecret, apiKeySecret, nginxHost, externalURL, adminEmail)
+ }
+ 
+@@ -889,7 +942,7 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
+ 	dbHost, dbPort, dbUser, dbPassword, dbName,
+ 	jwtSecret, apiKeySecret, nginxHost, externalURL, adminEmail string) error {
+ 
+-	// Preserve values that aren't prompted for
++	// Preserve saved values unless the interactive wizard supplied replacements.
+ 	port := DefaultAppPort
+ 	if v, ok := existing["PORT"]; ok && v != "" {
+ 		port = v
+@@ -898,23 +951,31 @@ func (r *SetupRunner) writeConfig(existing map[string]string,
+ 	if v, ok := existing["JWT_EXPIRE_TIME"]; ok && v != "" {
+ 		jwtExpire = v
+ 	}
++	if err := ValidateValue("JWT_EXPIRE_TIME", jwtExpire); err != nil {
++		return err
++	}
++	certDays := envDefault(existing, "HEIMDALL_TLS_CERT_DAYS", "7")
++	if err := ValidateValue("HEIMDALL_TLS_CERT_DAYS", certDays); err != nil {
++		return err
++	}
+ 	adminPassword := existing["ADMIN_PASSWORD"]
+ 
+ 	// Write all keys — matches heimdall-configure.sh output
+ 	entries := map[string]string{
+-		"NODE_ENV":          "production",
+-		"PORT":              port,
+-		"DATABASE_HOST":     dbHost,
+-		"DATABASE_PORT":     dbPort,
+-		"DATABASE_USERNAME": dbUser,
+-		"DATABASE_PASSWORD": dbPassword,
+-		"DATABASE_NAME":     dbName,
+-		"JWT_SECRET":        jwtSecret,
+-		"JWT_EXPIRE_TIME":   jwtExpire,
+-		"API_KEY_SECRET":    apiKeySecret,
+-		"NGINX_HOST":        nginxHost,
+-		"EXTERNAL_URL":      externalURL,
+-		"ADMIN_EMAIL":       adminEmail,
++		"NODE_ENV":               "production",
++		"PORT":                   port,
++		"DATABASE_HOST":          dbHost,
++		"DATABASE_PORT":          dbPort,
++		"DATABASE_USERNAME":      dbUser,
++		"DATABASE_PASSWORD":      dbPassword,
++		"DATABASE_NAME":          dbName,
++		"JWT_SECRET":             jwtSecret,
++		"JWT_EXPIRE_TIME":        jwtExpire,
++		"API_KEY_SECRET":         apiKeySecret,
++		"NGINX_HOST":             nginxHost,
++		"EXTERNAL_URL":           externalURL,
++		"ADMIN_EMAIL":            adminEmail,
++		"HEIMDALL_TLS_CERT_DAYS": certDays,
+ 	}
+ 	if adminPassword != "" {
+ 		entries["ADMIN_PASSWORD"] = adminPassword
+@@ -1106,6 +1167,17 @@ func (r *SetupRunner) runTLSCommand(name string, args ...string) error {
+ // configureCaddyfile applies the TLS strategy to the Caddyfile and generates
+ // certificates when needed.
+ func (r *SetupRunner) configureCaddyfile(strategy tlsStrategy, host, caddyfileDst string) error {
++	days := 7
++	if strategy == tlsPrivate || strategy == tlsIP {
++		env, err := r.Env.ReadEnv()
++		if err != nil {
++			return err
++		}
++		days, err = certificateLifetimeDays(env)
++		if err != nil {
++			return err
++		}
++	}
+ 	if strategy != tlsIP {
+ 		if err := r.runTLSCommand("sed", "-i", fmt.Sprintf("s|^:443 {|%s {|", host), caddyfileDst); err != nil {
+ 			return err
+@@ -1121,7 +1193,7 @@ func (r *SetupRunner) configureCaddyfile(strategy tlsStrategy, host, caddyfileDs
+ 		fmt.Fprintf(r.Out, "    Key:  %s\n", r.TLSKey)
+ 
+ 	case tlsPrivate:
+-		if err := r.runTLSCommand("sed", "-i", `/reverse_proxy/i\\ttls internal`, caddyfileDst); err != nil {
++		if err := r.runTLSCommand("sed", "-i", fmt.Sprintf(`/reverse_proxy/i\\ttls {\n\t\tissuer internal {\n\t\t\tlifetime %dh\n\t\t}\n\t}`, days*24), caddyfileDst); err != nil {
+ 			return err
+ 		}
+ 		fmt.Fprintln(r.Out, "  Caddy: private hostname detected — using internal CA")
+@@ -1142,7 +1214,7 @@ func (r *SetupRunner) configureCaddyfile(strategy tlsStrategy, host, caddyfileDs
+ 		certFile := certDir + "/server.crt"
+ 		keyFile := certDir + "/server.key"
+ 		if !r.FS.Exists(certFile) {
+-			if err := r.runTLSCommand("openssl", "req", "-x509", "-nodes", "-days", "365",
++			if err := r.runTLSCommand("openssl", "req", "-x509", "-nodes", "-days", strconv.Itoa(days),
+ 				"-newkey", "ec", "-pkeyopt", "ec_paramgen_curve:prime256v1",
+ 				"-keyout", keyFile, "-out", certFile,
+ 				"-subj", fmt.Sprintf("/CN=%s", host),
+@@ -1574,6 +1646,14 @@ func checkOwnedPort(exec ExecRunner, systemd SystemdRunner, port int, unit strin
+ const bundledCaddyService = "heimdall-caddy"
+ const bundledCaddyRoot = "/var/lib/heimdall-caddy/data/caddy/pki/authorities/local/root.crt"
+ 
++func certificateLifetimeDays(env map[string]string) (int, error) {
++	days := envDefault(env, "HEIMDALL_TLS_CERT_DAYS", "7")
++	if err := ValidateValue("HEIMDALL_TLS_CERT_DAYS", days); err != nil {
++		return 0, err
++	}
++	return strconv.Atoi(days)
++}
++
+ func renderBundledCaddy(env map[string]string) (string, error) {
+ 	return renderPrivateCaddy(env, ConfigDir+"/caddy")
+ }
+@@ -1591,7 +1671,13 @@ func renderPrivateCaddy(env map[string]string, dir string) (string, error) {
+ 	tlsLine := ""
+ 	switch env["HEIMDALL_TLS_MODE"] {
+ 	case "internal":
+-		tlsLine = "\ttls internal\n"
++		days, err := certificateLifetimeDays(env)
++		if err != nil {
++			return "", err
++		}
++		// Caddy renews intermediates with 20% remaining; keep that longer than a leaf lifetime.
++		global += fmt.Sprintf("\tpki {\n\t\tca local {\n\t\t\tintermediate_lifetime %dh\n\t\t}\n\t}\n", days*24*6)
++		tlsLine = fmt.Sprintf("\ttls {\n\t\tissuer internal {\n\t\t\tlifetime %dh\n\t\t}\n\t}\n", days*24)
+ 	case "custom":
+ 		tlsLine = fmt.Sprintf("\ttls %s %s\n", strconv.Quote(dir+"/certs/server.crt"), strconv.Quote(dir+"/certs/server.key"))
+ 	case "acme":
+diff --git a/internal/cmd/setup_expiration_test.go b/internal/cmd/setup_expiration_test.go
+new file mode 100644
+index 0000000..39d2a6e
+--- /dev/null
++++ b/internal/cmd/setup_expiration_test.go
+@@ -0,0 +1,172 @@
++package cmd
++
++import (
++	"fmt"
++	"strings"
++	"testing"
++
++	"github.com/stretchr/testify/assert"
++	"github.com/stretchr/testify/require"
++)
++
++func expirationSetupFixture(t *testing.T) (*SetupRunner, *FakePrompter) {
++	t.Helper()
++	r, _, _ := newTestSetupRunner()
++	r.FS.(*FakeFileSystem).Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{"runtimes":{"node":{"version":"22.23.3"},"postgresql":{"version":"18.6"},"caddy":{"version":"2.11.4"}}}`)
++	p := &FakePrompter{IsTTY: true}
++	r.Prompter = p
++	return r, p
++}
++
++func TestInteractiveExpirationDefaultsAndPersistence(t *testing.T) {
++	for _, tc := range []struct {
++		name, savedJWT, savedDays, inputJWT, inputDays, wantJWT, wantDays string
++		answer                                                            bool
++	}{
++		{name: "fresh defaults", wantJWT: "1d", wantDays: "7"},
++		{name: "saved defaults", savedJWT: "25m", savedDays: "30", wantJWT: "25m", wantDays: "30"},
++		{name: "cleared fresh defaults", answer: true, wantJWT: "1d", wantDays: "7"},
++		{name: "cleared saved defaults", savedJWT: "1.5h", savedDays: "14", answer: true, wantJWT: "1.5h", wantDays: "14"},
++		{name: "explicit values", inputJWT: "25m", inputDays: "30", answer: true, wantJWT: "25m", wantDays: "30"},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			r, p := expirationSetupFixture(t)
++			r.Env.(*FakeEnvManager).Env = map[string]string{
++				"JWT_EXPIRE_TIME": tc.savedJWT, "HEIMDALL_TLS_CERT_DAYS": tc.savedDays,
++			}
++			jwtDefault, daysDefault := tc.savedJWT, tc.savedDays
++			if jwtDefault == "" {
++				jwtDefault = "1d"
++			}
++			if daysDefault == "" {
++				daysDefault = "7"
++			}
++			jwtPrompt := fmt.Sprintf("JWT expiration (e.g. 1d or 25m; default: %s)", jwtDefault)
++			daysPrompt := fmt.Sprintf("Certificate lifetime in days (default: %s)", daysDefault)
++			if tc.answer {
++				p.Inputs = map[string]string{jwtPrompt: tc.inputJWT, daysPrompt: tc.inputDays}
++			}
++			cmd := NewSetupCmd(r)
++			cmd.SetArgs([]string{"--interactive", "--reconfigure"})
++			require.NoError(t, cmd.Execute())
++			assert.Equal(t, jwtDefault, p.InputDefaults[jwtPrompt])
++			assert.Equal(t, daysDefault, p.InputDefaults[daysPrompt])
++			env := r.Env.(*FakeEnvManager).Env
++			assert.Equal(t, tc.wantJWT, env["JWT_EXPIRE_TIME"])
++			assert.Equal(t, tc.wantDays, env["HEIMDALL_TLS_CERT_DAYS"])
++			assert.Equal(t, "https://localhost", env["EXTERNAL_URL"])
++
++			before, err := r.Env.ReadEnv()
++			require.NoError(t, err)
++			cmd = NewSetupCmd(r)
++			cmd.SetArgs([]string{"--non-interactive", "--reconfigure"})
++			require.NoError(t, cmd.Execute())
++			assert.Equal(t, before, r.Env.(*FakeEnvManager).Env)
++		})
++	}
++}
++
++func TestInteractiveCertificateLifetimePromptOwnership(t *testing.T) {
++	for _, tc := range []struct {
++		name   string
++		args   []string
++		legacy bool
++		prompt bool
++	}{
++		{name: "bundled internal", prompt: true},
++		{name: "bundled internal public hostname", args: []string{"--external-url=https://heimdall.example.com", "--tls-mode=internal"}, prompt: true},
++		{name: "ACME", args: []string{"--external-url=https://heimdall.example.com", "--tls-mode=acme"}},
++		{name: "custom certificate", args: []string{"--tls-cert=/cert.pem", "--tls-key=/key.pem"}},
++		{name: "external termination", args: []string{"--proxy-mode=external"}},
++		{name: "no TLS", args: []string{"--proxy-mode=none"}},
++		{name: "skip TLS", args: []string{"--skip-tls"}},
++		{name: "HTTP URL", args: []string{"--external-url=http://localhost:3000"}},
++		{name: "legacy private hostname", args: []string{"--external-url=https://heimdall.internal"}, legacy: true, prompt: true},
++		{name: "legacy IP", args: []string{"--external-url=https://192.168.1.100"}, legacy: true, prompt: true},
++		{name: "legacy public hostname", args: []string{"--external-url=https://heimdall.example.com"}, legacy: true},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			r, p := expirationSetupFixture(t)
++			if tc.legacy {
++				delete(r.FS.(*FakeFileSystem).Files, r.Paths.AppDir+"/runtime-manifest.json")
++			}
++			r.Env.(*FakeEnvManager).Env["HEIMDALL_TLS_CERT_DAYS"] = "14"
++			cmd := NewSetupCmd(r)
++			cmd.SetArgs(append([]string{"--interactive", "--reconfigure"}, tc.args...))
++			require.NoError(t, cmd.Execute())
++			prompted := false
++			for title, defaultValue := range p.InputDefaults {
++				if strings.HasPrefix(title, "Certificate lifetime in days") {
++					prompted = true
++					assert.Equal(t, "14", defaultValue)
++				}
++			}
++			assert.Equal(t, tc.prompt, prompted)
++			assert.Equal(t, "14", r.Env.(*FakeEnvManager).Env["HEIMDALL_TLS_CERT_DAYS"])
++			assert.Equal(t, "1d", p.InputDefaults["JWT expiration (e.g. 1d or 25m; default: 1d)"])
++		})
++	}
++}
++
++func TestExpirationSchemaValidation(t *testing.T) {
++	for _, tc := range []struct {
++		key     string
++		valid   []string
++		invalid []string
++	}{
++		{
++			key:     "JWT_EXPIRE_TIME",
++			valid:   []string{"25m", "1d", "1.5h", "2 days", "90000", "7d"},
++			invalid: []string{"", "garbage", "0", "0m", "-1d", "1h30m", "1d\nPORT=1234"},
++		},
++		{
++			key:     "HEIMDALL_TLS_CERT_DAYS",
++			valid:   []string{"1", "7", "365"},
++			invalid: []string{"", "0", "-1", "366", "1.5", "7d", "7\nPORT=1234"},
++		},
++	} {
++		t.Run(tc.key, func(t *testing.T) {
++			require.Contains(t, ConfigSchema, tc.key)
++			for _, value := range tc.valid {
++				assert.NoError(t, ValidateValue(tc.key, value), "value %q", value)
++			}
++			for _, value := range tc.invalid {
++				assert.Error(t, ValidateValue(tc.key, value), "value %q", value)
++			}
++		})
++	}
++}
++
++func TestInteractiveInvalidExpirationHasNoSideEffects(t *testing.T) {
++	for _, tc := range []struct {
++		name, title, value string
++	}{
++		{"JWT garbage", "JWT expiration (e.g. 1d or 25m; default: 1d)", "garbage"},
++		{"JWT zero", "JWT expiration (e.g. 1d or 25m; default: 1d)", "0m"},
++		{"JWT negative", "JWT expiration (e.g. 1d or 25m; default: 1d)", "-1d"},
++		{"JWT newline", "JWT expiration (e.g. 1d or 25m; default: 1d)", "1d\nPORT=1234"},
++		{"certificate zero", "Certificate lifetime in days (default: 7)", "0"},
++		{"certificate over limit", "Certificate lifetime in days (default: 7)", "366"},
++		{"certificate fraction", "Certificate lifetime in days (default: 7)", "1.5"},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			r, p := expirationSetupFixture(t)
++			p.Inputs = map[string]string{tc.title: tc.value}
++			before, err := r.Env.ReadEnv()
++			require.NoError(t, err)
++			fs := r.FS.(*FakeFileSystem)
++			files := map[string][]byte{}
++			for path, data := range fs.Files {
++				files[path] = append([]byte(nil), data...)
++			}
++			cmd := NewSetupCmd(r)
++			cmd.SetArgs([]string{"--interactive", "--reconfigure"})
++			require.Error(t, cmd.Execute())
++			assert.Equal(t, before, r.Env.(*FakeEnvManager).Env)
++			assert.Equal(t, files, fs.Files)
++			assert.Empty(t, fs.Dirs)
++			assert.Empty(t, r.Exec.(*FakeExecRunner).Calls)
++			assert.Empty(t, r.Systemd.(*FakeSystemdRunner).Actions)
++		})
++	}
++}
+diff --git a/internal/cmd/setup_test.go b/internal/cmd/setup_test.go
+index ef3a702..f1c539b 100644
+--- a/internal/cmd/setup_test.go
++++ b/internal/cmd/setup_test.go
+@@ -594,6 +594,64 @@ func TestResolveExternalHost_FallsBackToLocalhost(t *testing.T) {
+ 
+ // --- Interactive setup tests (topology-aware wizard) ---
+ 
++func TestInteractiveRPMExternalURLDefault(t *testing.T) {
++	for _, tc := range []struct {
++		name              string
++		saved             map[string]string
++		args              []string
++		clearInput        bool
++		wantURL, wantHost string
++	}{
++		{"fresh bundled database", nil, nil, false, "https://localhost", "localhost"},
++		{"external database", nil, []string{"--database-mode=external", "--db-host=db.example.com"}, false, "https://localhost", "localhost"},
++		{"saved hostname", map[string]string{"NGINX_HOST": "heimdall.example.com"}, nil, false, "https://heimdall.example.com", "heimdall.example.com"},
++		{"saved URL", map[string]string{"EXTERNAL_URL": "https://saved.example.com", "NGINX_HOST": "old.example.com"}, nil, false, "https://saved.example.com", "saved.example.com"},
++		{"explicit URL", map[string]string{"EXTERNAL_URL": "https://saved.example.com"}, []string{"--external-url=https://flag.example.com"}, false, "https://flag.example.com", "flag.example.com"},
++		{"cleared input keeps displayed default", map[string]string{"EXTERNAL_URL": "https://saved.example.com", "NGINX_HOST": "old.example.com"}, nil, true, "https://saved.example.com", "saved.example.com"},
++		{"no TLS keeps existing fallback convention", nil, []string{"--proxy-mode=none"}, false, "https://localhost", "localhost"},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			r, _, _ := newTestSetupRunner()
++			r.FS.(*FakeFileSystem).Files[r.Paths.AppDir+"/runtime-manifest.json"] = []byte(`{}`)
++			r.Env.(*FakeEnvManager).Env = tc.saved
++			prompt := "External URL (default: " + tc.wantURL + ")"
++			prompter := &FakePrompter{IsTTY: true}
++			if tc.clearInput {
++				prompter.Inputs = map[string]string{prompt: ""}
++			}
++			r.Prompter = prompter
++			cmd := NewSetupCmd(r)
++			cmd.SetArgs(append([]string{"--interactive", "--reconfigure"}, tc.args...))
++			require.NoError(t, cmd.Execute())
++			assert.Contains(t, prompter.InputDefaults, prompt)
++			assert.Equal(t, tc.wantURL, prompter.InputDefaults[prompt])
++			env := r.Env.(*FakeEnvManager).Env
++			assert.Equal(t, tc.wantURL, env["EXTERNAL_URL"])
++			assert.Equal(t, tc.wantHost, env["NGINX_HOST"])
++		})
++	}
++}
++
++func TestInteractiveRerunExternalURLFallback(t *testing.T) {
++	for _, tc := range []struct{ hostname, wantURL string }{
++		{"", "https://localhost"},
++		{"heimdall.example.com", "https://heimdall.example.com"},
++	} {
++		t.Run(tc.wantURL, func(t *testing.T) {
++			r, _, _ := newTestSetupRunner()
++			r.Interactive = true
++			r.Env.(*FakeEnvManager).Env = map[string]string{
++				"DATABASE_HOST":     "db.example.com",
++				"DATABASE_PASSWORD": "saved-password",
++				"NGINX_HOST":        tc.hostname,
++			}
++			r.Prompter = &FakePrompter{IsTTY: true}
++			require.NoError(t, r.stepConfigure())
++			assert.Equal(t, tc.wantURL, r.Env.(*FakeEnvManager).Env["EXTERNAL_URL"])
++		})
++	}
++}
++
+ // Test: External DB + External SSL (most common enterprise deployment)
+ func TestInteractive_ExternalDB_ExternalSSL(t *testing.T) {
+ 	r, out, _ := newTestSetupRunner()
+@@ -610,8 +668,8 @@ func TestInteractive_ExternalDB_ExternalSSL(t *testing.T) {
+ 			"Database password": "Str0ng!Pass#2026",
+ 			"Confirm password":  "Str0ng!Pass#2026",
+ 			"Database name":     "heimdall_prod",
+-			"External URL":      "https://heimdall.example.com",
+-			"Admin email":       "admin@example.com",
++			"External URL (default: https://localhost)": "https://heimdall.example.com",
++			"Admin email": "admin@example.com",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -644,10 +702,10 @@ func TestInteractive_LocalDB_Caddy(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "localpass",
+-			"Confirm password":  "localpass",
+-			"External URL":      "https://heimdall.local",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "localpass",
++			"Confirm password":                          "localpass",
++			"External URL (default: https://localhost)": "https://heimdall.local",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -673,16 +731,16 @@ func TestInteractive_ExternalDB_BYOCert(t *testing.T) {
+ 			"TLS/SSL setup":  2, // BYO certificate
+ 		},
+ 		Inputs: map[string]string{
+-			"Database host":        "db.example.com",
+-			"Database port":        "5432",
+-			"Database user":        "heimdall",
+-			"Database password":    "secret",
+-			"Confirm password":     "secret",
+-			"Database name":        "heimdall_prod",
+-			"TLS certificate path": "/etc/pki/tls/certs/heimdall.crt",
+-			"TLS private key path": "/etc/pki/tls/private/heimdall.key",
+-			"External URL":         "https://heimdall.example.com",
+-			"Admin email":          "admin@example.com",
++			"Database host":                             "db.example.com",
++			"Database port":                             "5432",
++			"Database user":                             "heimdall",
++			"Database password":                         "secret",
++			"Confirm password":                          "secret",
++			"Database name":                             "heimdall_prod",
++			"TLS certificate path":                      "/etc/pki/tls/certs/heimdall.crt",
++			"TLS private key path":                      "/etc/pki/tls/private/heimdall.key",
++			"External URL (default: https://localhost)": "https://heimdall.example.com",
++			"Admin email":                               "admin@example.com",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -705,10 +763,10 @@ func TestInteractive_LocalDB_NoTLS(t *testing.T) {
+ 			"TLS/SSL setup":  3, // No TLS
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "devpass",
+-			"Confirm password":  "devpass",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "devpass",
++			"Confirm password":                          "devpass",
++			"External URL (default: https://localhost)": "",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -783,8 +841,8 @@ func TestInteractive_RerunEditConfig(t *testing.T) {
+ 			"Database user":     "postgres",             // kept
+ 			"Database password": "",                     // blank keeps the existing password
+ 			"Database name":     "olddb",                // kept
+-			"External URL":      "https://old.example.com",
+-			"Admin email":       "old@example.com",
++			"External URL (default: https://old.example.com)": "https://old.example.com",
++			"Admin email": "old@example.com",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -834,9 +892,9 @@ func TestInteractive_EmptyPasswordAutoGenerates(t *testing.T) {
+ 			"TLS/SSL setup":  3, // No TLS
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "", // empty = auto-generate
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "", // empty = auto-generate
++			"External URL (default: https://localhost)": "",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -863,10 +921,10 @@ func TestInteractive_ExistingSecretsPreserved(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "pass",
+-			"Confirm password":  "pass",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "pass",
++			"Confirm password":                          "pass",
++			"External URL (default: https://localhost)": "",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -890,10 +948,10 @@ func TestInteractive_SecretsAutoGenerated(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "pass",
+-			"Confirm password":  "pass",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "pass",
++			"Confirm password":                          "pass",
++			"External URL (default: https://localhost)": "",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -918,10 +976,10 @@ func TestInteractive_DeriveExternalURL(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "pass",
+-			"Confirm password":  "pass",
+-			"External URL":      "https://heimdall.example.com:443/app",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "pass",
++			"Confirm password":                          "pass",
++			"External URL (default: https://localhost)": "https://heimdall.example.com:443/app",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -944,10 +1002,10 @@ func TestInteractive_URLDerivesNginxHostFromHTTP(t *testing.T) {
+ 			"TLS/SSL setup":  0,
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "pass",
+-			"Confirm password":  "pass",
+-			"External URL":      "http://heimdall.internal:8080/path",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "pass",
++			"Confirm password":                          "pass",
++			"External URL (default: https://localhost)": "http://heimdall.internal:8080/path",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -959,8 +1017,8 @@ func TestInteractive_URLDerivesNginxHostFromHTTP(t *testing.T) {
+ 	assert.Equal(t, "heimdall.internal", env["NGINX_HOST"], "NGINX_HOST derived from http:// URL")
+ }
+ 
+-// Test: Empty URL derives from localhost for local DB
+-func TestInteractive_EmptyURLDerivesFromHost(t *testing.T) {
++// Test: Empty URL uses the displayed localhost default
++func TestInteractive_EmptyURLUsesDefault(t *testing.T) {
+ 	r, _, _ := newTestSetupRunner()
+ 	r.Interactive = true
+ 	r.Prompter = &FakePrompter{
+@@ -969,10 +1027,10 @@ func TestInteractive_EmptyURLDerivesFromHost(t *testing.T) {
+ 			"TLS/SSL setup":  0, // Caddy
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "pass",
+-			"Confirm password":  "pass",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "pass",
++			"Confirm password":                          "pass",
++			"External URL (default: https://localhost)": "",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -981,8 +1039,7 @@ func TestInteractive_EmptyURLDerivesFromHost(t *testing.T) {
+ 	require.NoError(t, err)
+ 
+ 	env := r.Env.(*FakeEnvManager).Env
+-	// When external URL is empty, nginxHost comes from dbHost (localhost),
+-	// and externalURL = "https://" + nginxHost
++	// Empty input accepts the displayed public URL default.
+ 	assert.Equal(t, "https://localhost", env["EXTERNAL_URL"])
+ 	assert.Equal(t, "localhost", env["NGINX_HOST"])
+ }
+@@ -997,10 +1054,10 @@ func TestSetupCmd_InteractiveFlagWorks(t *testing.T) {
+ 			"TLS/SSL setup":  3, // No TLS (avoids TLS step)
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "testpass",
+-			"Confirm password":  "testpass",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "testpass",
++			"Confirm password":                          "testpass",
++			"External URL (default: https://localhost)": "",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1030,10 +1087,10 @@ func TestInteractive_StartFresh(t *testing.T) {
+ 			"TLS/SSL setup":              3, // No TLS
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "fresh-pass",
+-			"Confirm password":  "fresh-pass",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "fresh-pass",
++			"Confirm password":                          "fresh-pass",
++			"External URL (default: https://localhost)": "",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1237,8 +1294,8 @@ func TestInteractive_ExternalDB_ConnectivityTestPasses(t *testing.T) {
+ 			"Database password": "pass123",
+ 			"Confirm password":  "pass123",
+ 			"Database name":     "heimdall",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"External URL (default: https://localhost)": "",
++			"Admin email": "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1265,8 +1322,8 @@ func TestInteractive_ExternalDB_ConnectivityTestFails(t *testing.T) {
+ 			"Database password": "pass123",
+ 			"Confirm password":  "pass123",
+ 			"Database name":     "heimdall",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"External URL (default: https://localhost)": "",
++			"Admin email": "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+@@ -1309,10 +1366,10 @@ func TestInteractive_LocalDB_SkipsConnectivityTest(t *testing.T) {
+ 			"TLS/SSL setup":  3, // No TLS
+ 		},
+ 		Inputs: map[string]string{
+-			"Database password": "pass",
+-			"Confirm password":  "pass",
+-			"External URL":      "",
+-			"Admin email":       "admin@heimdall.local",
++			"Database password":                         "pass",
++			"Confirm password":                          "pass",
++			"External URL (default: https://localhost)": "",
++			"Admin email":                               "admin@heimdall.local",
+ 		},
+ 		IsTTY: true,
+ 	}
+diff --git a/internal/cmd/tls_test.go b/internal/cmd/tls_test.go
+index aa9acda..4805907 100644
+--- a/internal/cmd/tls_test.go
++++ b/internal/cmd/tls_test.go
+@@ -12,6 +12,7 @@ import (
+ 	"math/big"
+ 	"os"
+ 	"path/filepath"
++	"strings"
+ 	"testing"
+ 	"time"
+ 
+@@ -178,18 +179,18 @@ func TestStepTLS_PrivateHostname(t *testing.T) {
+ 	assert.Contains(t, output, "internal CA")
+ 	assert.Contains(t, output, "root.crt")
+ 
+-	// Verify tls internal was added via sed
++	// Verify the internal issuer and default lifetime were added via sed.
+ 	foundTLSInternal := false
+ 	for _, c := range r.Exec.(*FakeExecRunner).Calls {
+ 		if c.Name == "sed" {
+ 			for _, arg := range c.Args {
+-				if arg == `/reverse_proxy/i\\ttls internal` {
++				if arg == `/reverse_proxy/i\\ttls {\n\t\tissuer internal {\n\t\t\tlifetime 168h\n\t\t}\n\t}` {
+ 					foundTLSInternal = true
+ 				}
+ 			}
+ 		}
+ 	}
+-	assert.True(t, foundTLSInternal, "sed should insert tls internal for private hostname")
++	assert.True(t, foundTLSInternal, "sed should configure the internal issuer lifetime for private hostnames")
+ }
+ 
+ func TestStepTLS_PublicHostname(t *testing.T) {
+@@ -442,10 +443,67 @@ func TestBundledCaddyUsesConfiguredPort(t *testing.T) {
+ 	require.NoError(t, err)
+ 	require.Contains(t, config, "127.0.0.1:3210")
+ 	require.Contains(t, config, "unix//run/heimdall-caddy/admin.sock")
+-	require.Contains(t, config, "tls internal")
++	require.Contains(t, config, "issuer internal")
+ 	require.NotContains(t, config, "127.0.0.1:3000")
+ }
+ 
++func TestLocalCertificateLifetime(t *testing.T) {
++	for _, tc := range []struct {
++		days, hours, intermediateHours string
++	}{
++		{"", "168", "1008"},
++		{"30", "720", "4320"},
++	} {
++		t.Run("bundled_"+tc.days, func(t *testing.T) {
++			config, err := renderBundledCaddy(map[string]string{
++				"EXTERNAL_URL": "https://localhost", "HEIMDALL_TLS_MODE": "internal", "HEIMDALL_TLS_CERT_DAYS": tc.days,
++			})
++			require.NoError(t, err)
++			require.Contains(t, config, "issuer internal {\n\t\t\tlifetime "+tc.hours+"h\n")
++			require.Contains(t, config, "intermediate_lifetime "+tc.intermediateHours+"h")
++			require.NotContains(t, config, "sign_with_root")
++		})
++		t.Run("legacy_private_"+tc.days, func(t *testing.T) {
++			r, _ := newTLSTestRunner(map[string]string{
++				"EXTERNAL_URL": "https://localhost", "HEIMDALL_TLS_CERT_DAYS": tc.days,
++			})
++			require.NoError(t, r.stepTLS())
++			found := false
++			for _, call := range r.Exec.(*FakeExecRunner).Calls {
++				if call.Name == "sed" && strings.Contains(strings.Join(call.Args, " "), "lifetime "+tc.hours+"h") {
++					found = true
++				}
++			}
++			require.True(t, found, "legacy Caddy must receive the requested local certificate lifetime")
++		})
++	}
++	for _, tc := range []struct{ days, want string }{{"", "7"}, {"30", "30"}} {
++		t.Run("legacy_ip_"+tc.days, func(t *testing.T) {
++			r, _ := newTLSTestRunner(map[string]string{
++				"EXTERNAL_URL": "https://192.168.1.100", "HEIMDALL_TLS_CERT_DAYS": tc.days,
++			})
++			require.NoError(t, r.stepTLS())
++			found := false
++			for _, call := range r.Exec.(*FakeExecRunner).Calls {
++				if call.Name == "openssl" {
++					found = true
++					require.Contains(t, strings.Join(call.Args, " "), "-days "+tc.want+" -newkey")
++				}
++			}
++			require.True(t, found)
++		})
++	}
++}
++
++func TestBundledCaddyRejectsInvalidCertificateLifetime(t *testing.T) {
++	for _, days := range []string{"0", "-1", "1.5", "366", "7\n}"} {
++		_, err := renderBundledCaddy(map[string]string{
++			"EXTERNAL_URL": "https://localhost", "HEIMDALL_TLS_MODE": "internal", "HEIMDALL_TLS_CERT_DAYS": days,
++		})
++		require.ErrorContains(t, err, "HEIMDALL_TLS_CERT_DAYS", days)
++	}
++}
++
+ func TestBundledCaddyRejectsUnsafeSettings(t *testing.T) {
+ 	for _, value := range []string{"https://u:p@example.test", "https://example.test/path", "https://example.test?q=x", "https://example.test#x", "file:///tmp/x", "https://example.test:99999", "https://bad_{host}.test"} {
+ 		_, err := renderBundledCaddy(map[string]string{"PORT": "3210", "EXTERNAL_URL": value, "HEIMDALL_TLS_MODE": "internal"})
+@@ -550,5 +608,5 @@ func (s *caddyStartFailure) Start(unit string) error {
+ func TestBundledCaddyCanonicalWhitespace(t *testing.T) {
+ 	config, err := renderBundledCaddy(map[string]string{"PORT": "3210", "EXTERNAL_URL": "https://heimdall.example.test", "HEIMDALL_TLS_MODE": "internal"})
+ 	require.NoError(t, err)
+-	require.Equal(t, "{\n\tadmin unix//run/heimdall-caddy/admin.sock\n\tskip_install_trust\n}\n\"https://heimdall.example.test\" {\n\ttls internal\n\treverse_proxy \"127.0.0.1:3210\"\n}\n", config)
++	require.Equal(t, "{\n\tadmin unix//run/heimdall-caddy/admin.sock\n\tskip_install_trust\n\tpki {\n\t\tca local {\n\t\t\tintermediate_lifetime 1008h\n\t\t}\n\t}\n}\n\"https://heimdall.example.test\" {\n\ttls {\n\t\tissuer internal {\n\t\t\tlifetime 168h\n\t\t}\n\t}\n\treverse_proxy \"127.0.0.1:3210\"\n}\n", config)
+ }
