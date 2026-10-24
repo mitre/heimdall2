@@ -28,7 +28,7 @@ RUN yarn install --frozen-lockfile --production --network-timeout 600000
 COPY apps/frontend ./apps/frontend
 COPY libs ./libs
 
-RUN yarn frontend build
+RUN yarn common build && yarn frontend build
 
 FROM $BASE_CONTAINER AS production-stage
 

@@ -39,6 +39,9 @@ jobs:
       - name: Copy .env-ci to .env
         run: cp apps/backend/test/.env-ci apps/backend/.env
 
+      - name: Build shared interfaces
+        run: yarn common build
+
       - name: Ensure the app builds cleanly without frontend dependencies
         run: yarn backend build
 

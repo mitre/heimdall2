@@ -3,3 +3,4 @@ apps/frontend/tests
 apps/backend/test
 test
 **/node_modules
+/libs/common/lib/
