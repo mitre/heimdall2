@@ -230,6 +230,48 @@ describe('UsersController Unit Tests', () => {
     });
   });
 
+  describe('Account status', () => {
+    it('lets an administrator disable and re-enable a regular user', async () => {
+      const originalSecret = basicUser.jwtSecret;
+      const disabled = await usersController.setDisabled(
+        basicUser.id,
+        {user: adminUser},
+        true
+      );
+      expect(disabled.isDisabled).toBe(true);
+      expect((await usersService.findById(basicUser.id)).jwtSecret).not.toBe(
+        originalSecret
+      );
+      expect(
+        (await usersController.findAllUsers({user: adminUser})).find(
+          (user) => user.id === basicUser.id
+        )?.isDisabled
+      ).toBe(true);
+      await expect(
+        usersController.update(basicUser.id, {user: adminUser}, {
+          ...UPDATE_USER_DTO_TEST_OBJ,
+          role: 'admin'
+        })
+      ).rejects.toThrow(ForbiddenException);
+
+      const enabled = await usersController.setDisabled(
+        basicUser.id,
+        {user: adminUser},
+        false
+      );
+      expect(enabled.isDisabled).toBe(false);
+    });
+
+    it('rejects non-admin callers and administrator targets', async () => {
+      await expect(
+        usersController.setDisabled(basicUser.id, {user: basicUser}, true)
+      ).rejects.toThrow(ForbiddenException);
+      await expect(
+        usersController.setDisabled(adminUser.id, {user: adminUser}, true)
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
   describe('Remove function', () => {
     // Tests the remove function with valid dto (basic positive test)
     it('should remove', async () => {
