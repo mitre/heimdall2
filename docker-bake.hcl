@@ -18,8 +18,14 @@ variable "TAG_SUFFIXES" {
   default = "dev"
 }
 
+# UBI 9.8 minimal.
 variable "BASE_CONTAINER" {
-  default = "registry.access.redhat.com/ubi9/nodejs-22-minimal:1"
+  default = "registry.access.redhat.com/ubi9/ubi-minimal@sha256:c4c285d42941ebb2bd4da878479008e1e4536bb599aad1dbe568f89de9053661"
+}
+
+# Node.js 22.23.4, bookworm-slim.
+variable "BUILD_CONTAINER" {
+  default = "node@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d"
 }
 
 variable "NODE_ENV" {
@@ -36,6 +42,7 @@ target "_common" {
   dockerfile = "Dockerfile"
   tags = concat([for suffix in split(",", TAG_SUFFIXES) : "${DOCKER_HUB_REPO_SERVER}:${trimspace(suffix)}"])
   args = {
+    BUILD_CONTAINER = "${BUILD_CONTAINER}"
     BASE_CONTAINER = "${BASE_CONTAINER}"
     NODE_ENV = "${NODE_ENV}"
     YARNREPO_MIRROR = "${YARNREPO_MIRROR}"
@@ -53,7 +60,7 @@ target "_common_lite" {
   dockerfile = "Dockerfile.lite"
   tags = concat([for suffix in split(",", TAG_SUFFIXES) : "${DOCKER_HUB_REPO_LITE}:${trimspace(suffix)}"])
   args = {
-    BUILD_CONTAINER = "${BASE_CONTAINER}"
+    BUILD_CONTAINER = "${BUILD_CONTAINER}"
     BASE_CONTAINER = "nginx:alpine"
     NODE_ENV = "${NODE_ENV}"
     YARNREPO_MIRROR = "${YARNREPO_MIRROR}"
