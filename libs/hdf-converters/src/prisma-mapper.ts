@@ -4,6 +4,7 @@ import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
   ILookupPath,
+  impactMapping,
   MappedTransform,
   parseCsv
 } from './base-converter';
@@ -26,13 +27,15 @@ export type PrismaControl = {
   Cause?: string;
 };
 
-const SEVERITY_LOOKUP: Record<string, number> = {
-  low: 0.3,
-  moderate: 0.5,
-  high: 0.7,
-  important: 0.9,
-  critical: 1
-};
+const SEVERITY_LOOKUP: Map<string, number> = new Map([
+  ['low', 0.3],
+  ['medium', 0.5],
+  ['moderate', 0.5],
+  ['high', 0.7],
+  ['important', 0.9],
+  ['critical', 1]
+]);
+const severityToImpact = impactMapping(SEVERITY_LOOKUP);
 
 export function nistTag(cveTag: string | undefined) {
   if (!cveTag) {
@@ -103,13 +106,7 @@ export class PrismaControlMapper extends BaseConverter {
             },
             impact: {
               path: 'Severity',
-              transformer: (severity: string) => {
-                if (severity) {
-                  return SEVERITY_LOOKUP[severity];
-                } else {
-                  return 0.5;
-                }
-              }
+              transformer: severityToImpact
             },
             code: {
               transformer: (obj: PrismaControl) => JSON.stringify(obj, null, 2)
