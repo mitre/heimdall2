@@ -54,6 +54,7 @@ services:
     image: nginx:alpine
     environment:
       NGINX_HOST: ${NGINX_HOST}
+      NGINX_CLIENT_MAX_BODY_SIZE: "${NGINX_CLIENT_MAX_BODY_SIZE:-100m}"
     volumes:
       - ./nginx/conf/:/etc/nginx/templates/
       - ./nginx/certs/:/etc/nginx/cert/
