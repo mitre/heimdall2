@@ -4045,9 +4045,9 @@
     parse-path "*"
 
 "@types/passport-github@^1.1.5":
-  version "1.1.13"
-  resolved "https://registry.npmjs.org/@types/passport-github/-/passport-github-1.1.13.tgz#c6150dbf6269f168f1fd952f81aa2e212212930f"
-  integrity sha512-iAm6r82cEcmNVo9Uro5U2lhPpCXaKP4YW5ARdAwQS5gLleWp+ox4eGTplRAph71TKpWTdNibUjOPpHZN3AnJSg==
+  version "1.1.14"
+  resolved "https://registry.yarnpkg.com/@types/passport-github/-/passport-github-1.1.14.tgz#d530d229e0cbe6e59cbfdc30954bb9f12db9c786"
+  integrity sha512-1H0MjXtLyZ9otxhXzr79dpTQ5NuhTj6bmchVMNDJHETbGNywayfYb27gxF5bjvewITYGxp9/degBqijZ1G0IHw==
   dependencies:
     "@types/express" "*"
     "@types/passport" "*"
