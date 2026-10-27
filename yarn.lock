@@ -8792,10 +8792,10 @@ eslint-plugin-security@^4.0.0:
   dependencies:
     safe-regex "^2.1.1"
 
-eslint-plugin-unicorn@^78.0.0:
-  version "78.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-78.0.0.tgz#d6fa889af4e514b0f9dcc8184b2d57b945cab220"
-  integrity sha512-XTDqxcJeAmh2lhgU75TpuMDdFtPDnAU+DCW56nR5UzXTG+uOyvOGjV80O11my7kNb2bYSCPlWa8c4K8/rwlYog==
+eslint-plugin-unicorn@^79.0.0:
+  version "79.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-79.0.0.tgz#d522dee73be6a4a7e4c695e18301e04ce6ce4d31"
+  integrity sha512-k7MWrjoVTVCnjKpgaxBuScPNSPomLvDpsd9uADpWrIFzrnwiec27eWhGrmmyuTj1bC3xVNYP4QfG3MEzEw6ifg==
   dependencies:
     "@eslint-community/eslint-utils" "^4.10.1"
     "@eslint/css-tree" "^4.1.1"
