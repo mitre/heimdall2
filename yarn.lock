@@ -3679,9 +3679,9 @@
     assertion-error "^2.0.1"
 
 "@types/chroma-js@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.npmjs.org/@types/chroma-js/-/chroma-js-3.1.2.tgz#29dd767ae46124c9d0cd3370bedad7364adcfd10"
-  integrity sha512-YBTQqArPN8A0niHXCwrO1z5x++a+6l0mLBykncUpr23oIPW7L4h39s6gokdK/bDrPmSh8+TjMmrhBPnyiaWPmQ==
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@types/chroma-js/-/chroma-js-3.1.3.tgz#1193a5ddbb446714e9b705ae83504039bbb7af20"
+  integrity sha512-r4kI3HTbLdayBkY1f2Xv7/1TJaHTS//8f6Etv036NQMIj2jVPngUV11NczKiLFKyy01o6hGYVDypP7tJVoFPew==
 
 "@types/connect-history-api-fallback@^1.3.5":
   version "1.5.4"
