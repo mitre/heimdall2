@@ -9,6 +9,7 @@ import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
+import {EvaluationFile} from './evaluation-file.model';
 import {Evaluation} from './evaluation.model';
 import {EvaluationsController} from './evaluations.controller';
 import {EvaluationsService} from './evaluations.service';
@@ -16,6 +17,7 @@ import {EvaluationsService} from './evaluations.service';
   imports: [
     SequelizeModule.forFeature([
       Evaluation,
+      EvaluationFile,
       EvaluationTag,
       User,
       Group,

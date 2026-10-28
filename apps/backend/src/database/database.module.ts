@@ -4,6 +4,7 @@ import winston from 'winston';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
+import {EvaluationFile} from '../evaluations/evaluation-file.model';
 
 const line = '________________________________________________\n';
 const logger = winston.createLogger({
@@ -70,6 +71,7 @@ function logQuery(
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         ...configService.getDbConfig(),
+        models: [EvaluationFile],
         autoLoadModels: true,
         synchronize: getSynchronize(configService),
         logging: (sql, connection) => {

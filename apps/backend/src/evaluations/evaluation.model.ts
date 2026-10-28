@@ -18,6 +18,7 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
+import {EvaluationFile} from './evaluation-file.model';
 
 @Table
 export class Evaluation extends Model {
@@ -34,6 +35,13 @@ export class Evaluation extends Model {
   @AllowNull(false)
   @Column(DataType.JSON)
   declare data: Record<string, unknown>;
+
+  @ForeignKey(() => EvaluationFile)
+  @Column(DataType.BIGINT)
+  declare originalFileId: string | null;
+
+  @BelongsTo(() => EvaluationFile, {onDelete: 'RESTRICT', onUpdate: 'CASCADE'})
+  declare originalFile: EvaluationFile;
 
   @AllowNull(false)
   @Default(false)

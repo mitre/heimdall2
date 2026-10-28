@@ -1,13 +1,15 @@
 import {IEvalPaginationParams} from '@heimdall/common/interfaces';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions, Op, WhereOptions} from 'sequelize';
+import {FindOptions, Op, Transaction, WhereOptions} from 'sequelize';
 import {DatabaseService} from '../database/database.service';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {Group} from '../groups/group.model';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {User} from '../users/user.model';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
+import {EvaluationFile} from './evaluation-file.model';
 import {Evaluation} from './evaluation.model';
 
 interface EvaluationsResponse {
@@ -308,22 +310,69 @@ export class EvaluationsService {
     return this.evaluationModel.count();
   }
 
-  async create(evaluation: {
-    filename: string;
-    evaluationTags: CreateEvaluationTagDto[] | undefined;
-    public: boolean;
-    data: unknown;
-    userId?: string;
-    groupId?: string;
-  }): Promise<Evaluation> {
-    return Evaluation.create<Evaluation>(
-      {
-        ...evaluation
-      },
-      {
-        include: [EvaluationTag]
+  async create(
+    evaluation: {
+      filename: string;
+      evaluationTags: CreateEvaluationTagDto[] | undefined;
+      public: boolean;
+      data: unknown;
+      userId?: string;
+      groupId?: string;
+      originalFileId?: string;
+    },
+    transaction?: Transaction
+  ): Promise<Evaluation> {
+    return this.evaluationModel.create<Evaluation>(evaluation, {
+      include: [EvaluationTag],
+      transaction
+    });
+  }
+
+  // The whole request is atomic, including sources, generated results, tags and groups.
+  async createUploads(
+    uploads: {
+      originalFile: {filename: string; data: Buffer};
+      evaluations: {filename: string; data: Record<string, unknown>}[];
+    }[],
+    options: {
+      evaluationTags: CreateEvaluationTagDto[];
+      public: boolean;
+      userId?: string;
+      groupId?: string;
+      groupIds: string[];
+    }
+  ): Promise<Evaluation[]> {
+    return this.databaseService.sequelize.transaction(async (transaction) => {
+      const evaluations: Evaluation[] = [];
+      const {groupIds, ...attributes} = options;
+      for (const upload of uploads) {
+        const original = await EvaluationFile.create(
+          {
+            ...upload.originalFile,
+            role: 'original'
+          },
+          {transaction}
+        );
+        for (const result of upload.evaluations) {
+          const evaluation = await this.create(
+            {
+              ...attributes,
+              ...result,
+              originalFileId: original.id
+            },
+            transaction
+          );
+          for (const groupId of groupIds) {
+            await GroupEvaluation.create(
+              {groupId, evaluationId: evaluation.id},
+              {transaction}
+            );
+          }
+          evaluations.push(evaluation);
+        }
       }
-    );
+      return evaluations;
+    });
   }
 
   async update(
@@ -341,14 +390,31 @@ export class EvaluationsService {
       include: [EvaluationTag]
     });
     await this.databaseService.sequelize.transaction(async (transaction) => {
-      if (evaluation.evaluationTags !== null) {
-        await Promise.all([
-          evaluation.evaluationTags.map(async (evaluationTag) => {
-            await evaluationTag.destroy({transaction});
-          })
-        ]);
+      // Serialize deletion of evaluations sharing a source before checking its references.
+      if (evaluation.originalFileId) {
+        await EvaluationFile.findByPk(evaluation.originalFileId, {
+          transaction,
+          lock: transaction.LOCK.UPDATE
+        });
       }
-      return evaluation.destroy({transaction});
+      await Promise.all(
+        (evaluation.evaluationTags || []).map((tag) =>
+          tag.destroy({transaction})
+        )
+      );
+      await evaluation.destroy({transaction});
+      if (
+        evaluation.originalFileId &&
+        (await this.evaluationModel.count({
+          where: {originalFileId: evaluation.originalFileId},
+          transaction
+        })) === 0
+      ) {
+        await EvaluationFile.destroy({
+          where: {id: evaluation.originalFileId},
+          transaction
+        });
+      }
     });
     return evaluation;
   }

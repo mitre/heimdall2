@@ -11,18 +11,13 @@
   "files": [
     "lib"
   ],
-  "main": "src/index.ts",
+  "main": "lib/index.js",
   "scripts": {
     "prebuild": "tailwindcss -i data/reverse-html-mapper/tailwind.css -o data/reverse-html-mapper/style.css --minify && node data/reverse-html-mapper/convert-to-embedded-strings.ts",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --fix",
     "lint:ci": "eslint --max-warnings 0",
-    "prepack": "run-script-os",
-    "prepack:darwin:linux": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = \"lib/index.js\"' > package.json",
-    "prepack:win32": "yarn build && copy package.json package.json.orig && type package.json.orig | jq \".main = \\\"lib/index.js\\\"\" > package.json",
-    "postpack": "run-script-os",
-    "postpack:darwin:linux": "mv package.json.orig package.json",
-    "postpack:win32": "move package.json.orig package.json",
+    "prepack": "yarn build",
     "test": "vitest",
     "test:ci": "vitest run",
     "csv2json": "node data/converters/csv2json.ts",
@@ -73,5 +68,6 @@
     "@types/node": "^26.0.0",
     "vitest": "^4.0.18",
     "xml2js": "^0.6.0"
-  }
+  },
+  "types": "lib/index.d.ts"
 }

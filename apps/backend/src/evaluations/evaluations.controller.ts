@@ -33,6 +33,7 @@ import {EvaluationDto, IEvaluationResponse} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
 import {EvaluationsService} from './evaluations.service';
+import {convertReport} from './report-conversion';
 
 @Controller('evaluations')
 @UseInterceptors(LoggingInterceptor)
@@ -143,81 +144,68 @@ export class EvaluationsController {
     @UploadedFiles() data: Express.Multer.File[],
     @Request() request: {user: User | Group}
   ): Promise<EvaluationDto | EvaluationDto[]> {
-    const uploadedFiles = data.map(async (file) => {
-      let serializedDta: Record<string, unknown>;
-      try {
-        serializedDta = JSON.parse(file.buffer.toString('utf8'));
-      } catch {
-        serializedDta = {originalResultsData: file.buffer.toString('utf8')};
-      }
+    if (!data?.length) {
+      throw new BadRequestException('At least one report file is required.');
+    }
 
-      // If the "user" is a group, we'll add the evaluation to the group, and ignore any other groups
-      if (request.user instanceof Group) {
-        const evaluation = await this.evaluationsService
-          .create({
-            // Only respect custom file names for single file uploads
-            filename:
-              data.length > 1
-                ? file.originalname
-                : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
-            evaluationTags: createEvaluationDto.evaluationTags || [],
-            public: createEvaluationDto.public,
-            data: serializedDta,
-            groupId: request.user.id
-          })
-          .then(async (evaluation) => {
-            const group = await this.groupsService.findByPkBang(
-              request.user.id
-            );
-            this.groupsService.addEvaluationToGroup(group, evaluation);
-            return evaluation;
-          })
-          .catch((err) => {
-            throw new BadRequestException(err.message);
-          });
+    // Convert and validate every report before persisting any of the uploads.
+    const convertedFiles = await Promise.all(
+      data.map(async (file) => ({
+        file,
+        evaluations: await convertReport(
+          file.buffer.toString('utf8'),
+          file.originalname
+        )
+      }))
+    );
+    const uploads = convertedFiles.map(({file, evaluations}) => {
+      const filename =
+        data.length > 1 ? file.originalname : createEvaluationDto.filename;
+      return {
+        originalFile: {filename: file.originalname, data: file.buffer},
+        evaluations: evaluations.map((hdf, index) => ({
+          data: hdf,
+          filename:
+            evaluations.length > 1
+              ? `${filename.replace(/\.[^.]*$/, '')}-${index + 1}.json`
+              : filename
+        }))
+      };
+    });
 
-        const createdDto = new EvaluationDto(evaluation, true);
+    const isGroup = request.user instanceof Group;
+    let groups: Group[];
+    if (isGroup) {
+      groups = [await this.groupsService.findByPkBang(request.user.id)];
+    } else {
+      const abac = this.authz.abac.createForUser(request.user as User);
+      const requestedGroups = createEvaluationDto.groups
+        ? await this.groupsService.findByIds(createEvaluationDto.groups)
+        : [];
+      groups = requestedGroups.filter((group) =>
+        abac.can(Action.AddEvaluation, group)
+      );
+    }
 
-        return _.omit(createdDto, 'data');
-      } else {
-        let groups: Group[] = createEvaluationDto.groups
-          ? await this.groupsService.findByIds(createEvaluationDto.groups)
-          : [];
-        // Make sure the user can add evaluations to each group
-        const abac = this.authz.abac.createForUser(request.user);
-        groups = groups.filter((group) => {
-          return abac.can(Action.AddEvaluation, group);
-        });
-        const evaluation = await this.evaluationsService
-          .create({
-            // Only respect custom file names for single file uploads
-            filename:
-              data.length > 1
-                ? file.originalname
-                : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
-            evaluationTags: createEvaluationDto.evaluationTags || [],
-            public: createEvaluationDto.public,
-            data: serializedDta,
-            userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
-          })
-          .then((createdEvaluation) => {
-            groups.forEach((group) =>
-              this.groupsService.addEvaluationToGroup(group, createdEvaluation)
-            );
-            return createdEvaluation;
-          });
-        const createdDto: EvaluationDto = new EvaluationDto(
+    const evaluations = await this.evaluationsService.createUploads(uploads, {
+      evaluationTags: createEvaluationDto.evaluationTags || [],
+      public: createEvaluationDto.public,
+      ...(isGroup ? {groupId: request.user.id} : {userId: request.user.id}),
+      groupIds: groups.map((group) => group.id)
+    });
+    const response = evaluations.map((evaluation) =>
+      _.omit(
+        new EvaluationDto(
           evaluation,
           true,
-          `${this.configService.getExternalUrl()}/results/${evaluation.id}`
-        );
-        return _.omit(createdDto, 'data');
-      }
-    });
-    if (uploadedFiles.length === 1) {
-      return uploadedFiles[0];
-    }
-    return Promise.all(uploadedFiles);
+          isGroup
+            ? undefined
+            : `${this.configService.getExternalUrl()}/results/${evaluation.id}`
+        ),
+        'data'
+      )
+    );
+    return response.length === 1 ? response[0] : response;
   }
 
   @UseGuards(JwtAuthGuard)

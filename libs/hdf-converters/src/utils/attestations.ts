@@ -1,16 +1,14 @@
 import * as XLSX from '@e965/xlsx';
 import {ExecJSON} from 'inspecjs';
-import {
-  AttestationData,
-  ControlResultStatus,
-  ControlAttestationStatus
-} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import * as _ from 'lodash';
 import moment from 'moment';
 
+// Derive the attestation type through inspecjs's public API, including in declarations.
+type AttestationData = NonNullable<ExecJSON.Control['attestation_data']>;
+
 // Convert from using enum type to enum values
 export type Attestation = Omit<AttestationData, 'status'> & {
-  status: `${ControlAttestationStatus}`;
+  status: `${AttestationData['status']}`;
 };
 
 export function advanceDate(
@@ -129,7 +127,7 @@ export function convertAttestationToSegment(
   } else {
     return {
       code_desc: 'Manually verified status provided through attestation',
-      status: attestation.status as ControlResultStatus,
+      status: attestation.status as ExecJSON.ControlResultStatus,
       message: createAttestationMessage(attestation, false),
       start_time: new Date().toISOString()
     };

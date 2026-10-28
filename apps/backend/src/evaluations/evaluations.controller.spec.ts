@@ -1,8 +1,19 @@
 import {ForbiddenError} from '@casl/ability';
-import {NotFoundException} from '@nestjs/common';
+import {BadRequestException, NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
+import {Readable} from 'stream';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi
+} from 'vitest';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   EVALUATION_1,
@@ -30,20 +41,35 @@ import {GroupsService} from '../groups/groups.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {EvaluationDto} from './dto/evaluation.dto';
+import {EvaluationFile} from './evaluation-file.model';
 import {Evaluation} from './evaluation.model';
 import {EvaluationsController} from './evaluations.controller';
 import {EvaluationsService} from './evaluations.service';
 
-// This allows basic testing of the evaluations controller
-// interface without having to construct a full File object
-const mockFile: Express.Multer.File = {
-  originalname: 'abc.json',
-  buffer: Buffer.from('{}')
-};
-const secondMockFile: Express.Multer.File = {
-  originalname: 'cda.json',
-  buffer: Buffer.from('{}')
-};
+function uploadFile(originalname: string, buffer: Buffer): Express.Multer.File {
+  return {
+    fieldname: 'file',
+    originalname,
+    encoding: '7bit',
+    mimetype: 'application/octet-stream',
+    size: buffer.length,
+    destination: '',
+    filename: originalname,
+    path: '',
+    stream: Readable.from(buffer),
+    buffer
+  };
+}
+const hdfBuffer = Buffer.from(
+  JSON.stringify({
+    platform: {name: 'test', release: '1'},
+    profiles: [],
+    statistics: {},
+    version: '5.0'
+  })
+);
+const mockFile = uploadFile('abc.json', hdfBuffer);
+const secondMockFile = uploadFile('cda.json', hdfBuffer);
 
 describe('EvaluationsController', () => {
   let evaluationsController: EvaluationsController;
@@ -62,6 +88,7 @@ describe('EvaluationsController', () => {
         DatabaseModule,
         SequelizeModule.forFeature([
           EvaluationTag,
+          EvaluationFile,
           Evaluation,
           User,
           GroupEvaluation,
@@ -294,6 +321,277 @@ describe('EvaluationsController', () => {
       expect(evaluations[1].filename).toEqual(secondMockFile.originalname);
       // Creating an evaluation should return a DTO without data.
       expect(evaluations[0].data).not.toBeDefined();
+    });
+  });
+
+  describe('API upload conversion and source storage', () => {
+    const sample = (path: string, filename: string): Express.Multer.File =>
+      uploadFile(
+        filename,
+        readFileSync(
+          resolve(
+            __dirname,
+            '../../../../libs/hdf-converters/sample_jsons',
+            path
+          )
+        )
+      );
+
+    it('persists HDF and the exact original SARIF bytes separately', async () => {
+      const file = sample(
+        'sarif_mapper/sample_input_report/sarif_input.sarif',
+        'scan.sarif'
+      );
+      const response = await evaluationsController.create(
+        EVALUATION_WITH_TAGS_1,
+        [file],
+        {user}
+      );
+      if (Array.isArray(response)) {
+        throw new Error('Expected a single evaluation');
+      }
+      const evaluation = await evaluationsService.findById(response.id);
+      expect(evaluation.data).toHaveProperty('profiles.0.controls.0.id');
+      const originals = await EvaluationFile.findAll({
+        where: {id: evaluation.originalFileId}
+      });
+      expect(originals).toHaveLength(1);
+      expect(originals[0].filename).toBe('scan.sarif');
+      expect(originals[0].role).toBe('original');
+      expect(originals[0].data).toEqual(file.buffer);
+      expect(response.data).toBeUndefined();
+    });
+
+    it('preserves a valid HDF upload unchanged', async () => {
+      const response = await evaluationsController.create(
+        EVALUATION_WITH_TAGS_1,
+        [mockFile],
+        {user}
+      );
+      if (Array.isArray(response)) {
+        throw new Error('Expected a single evaluation');
+      }
+      const evaluation = await evaluationsService.findById(response.id);
+      expect(evaluation.data).toEqual(
+        JSON.parse(mockFile.buffer.toString('utf8'))
+      );
+    });
+
+    it('rejects an empty upload', async () => {
+      await expect(
+        evaluationsController.create(EVALUATION_WITH_TAGS_1, [], {user})
+      ).rejects.toBeInstanceOf(BadRequestException);
+      expect(await evaluationsService.count()).toBe(0);
+    });
+
+    it('saves no evaluations when any file in a batch cannot be converted', async () => {
+      const invalid = uploadFile('bad.json', Buffer.from('{}'));
+      await expect(
+        evaluationsController.create(
+          EVALUATION_WITH_TAGS_1,
+          [mockFile, invalid],
+          {user}
+        )
+      ).rejects.toBeInstanceOf(BadRequestException);
+      expect(await evaluationsService.count()).toBe(0);
+      expect(await EvaluationFile.count()).toBe(0);
+    });
+
+    it('stores one original shared by every generated evaluation', async () => {
+      const file = sample(
+        'asff_mapper/sample_input_report/asff_sample.json',
+        'scan.asff'
+      );
+      const response = await evaluationsController.create(
+        EVALUATION_WITH_TAGS_1,
+        [file],
+        {user}
+      );
+      if (!Array.isArray(response)) {
+        throw new Error('Expected multiple evaluations');
+      }
+      expect(response.length).toBeGreaterThan(1);
+      expect(
+        new Set(response.map((evaluation) => evaluation.filename)).size
+      ).toBe(response.length);
+      const persisted = await Promise.all(
+        response.map((evaluation) => evaluationsService.findById(evaluation.id))
+      );
+      expect(
+        new Set(persisted.map((evaluation) => evaluation.originalFileId)).size
+      ).toBe(1);
+      const originals = await EvaluationFile.findAll();
+      expect(originals).toHaveLength(1);
+      expect(originals[0].data).toEqual(file.buffer);
+      const [sizes] = await databaseService.sequelize.query(
+        'SELECT sum(octet_length(data)) AS bytes FROM "EvaluationFiles"'
+      );
+      expect(Number((sizes as {bytes: string}[])[0].bytes)).toBe(
+        file.buffer.length
+      );
+    });
+
+    it('converts group API-key uploads and retains their group ownership', async () => {
+      const group = await groupsService.create(PRIVATE_GROUP);
+      const file = sample(
+        'sarif_mapper/sample_input_report/sarif_input.sarif',
+        'scan.sarif'
+      );
+      const response = await evaluationsController.create(
+        EVALUATION_WITH_TAGS_1,
+        [file],
+        {user: group}
+      );
+      if (Array.isArray(response)) {
+        throw new Error('Expected a single evaluation');
+      }
+      const evaluation = await evaluationsService.findById(response.id);
+      expect(evaluation.groupId).toBe(group.id);
+      expect(evaluation.groups.map((item) => item.id)).toContain(group.id);
+      expect(evaluation.data).toHaveProperty('profiles.0.controls');
+      expect(
+        await EvaluationFile.count({where: {id: evaluation.originalFileId}})
+      ).toBe(1);
+    });
+
+    it('rolls back the evaluation if saving the original file fails', async () => {
+      const failure = vi
+        .spyOn(EvaluationFile, 'create')
+        .mockRejectedValue(new Error('File persistence failed'));
+      try {
+        await expect(
+          evaluationsController.create(EVALUATION_WITH_TAGS_1, [mockFile], {
+            user
+          })
+        ).rejects.toThrow('File persistence failed');
+        expect(await evaluationsService.count()).toBe(0);
+      } finally {
+        failure.mockRestore();
+      }
+    });
+
+    it.each(['user', 'group'])(
+      'rolls back every ASFF result when a later save fails for a %s upload',
+      async (principal) => {
+        const group = await groupsService.create(PRIVATE_GROUP);
+        await groupsService.addUserToGroup(group, user, 'owner');
+        const file = sample(
+          'asff_mapper/sample_input_report/asff_sample.json',
+          'scan.asff'
+        );
+        const create = evaluationsService.create.bind(evaluationsService);
+        const failure = vi
+          .spyOn(evaluationsService, 'create')
+          .mockImplementationOnce(create)
+          .mockRejectedValueOnce(new Error('Second evaluation failed'));
+        try {
+          await expect(
+            evaluationsController.create(
+              {...EVALUATION_WITH_TAGS_1, groups: [group.id]},
+              [file],
+              {user: principal === 'group' ? group : user}
+            )
+          ).rejects.toThrow('Second evaluation failed');
+          expect(await Evaluation.count()).toBe(0);
+          expect(await EvaluationFile.count()).toBe(0);
+          expect(await EvaluationTag.count()).toBe(0);
+          expect(await GroupEvaluation.count()).toBe(0);
+        } finally {
+          failure.mockRestore();
+        }
+      }
+    );
+
+    it('rolls back the whole request when a later source fails to save', async () => {
+      const create = evaluationsService.create.bind(evaluationsService);
+      const failure = vi
+        .spyOn(evaluationsService, 'create')
+        .mockImplementationOnce(create)
+        .mockRejectedValueOnce(new Error('Second source failed'));
+      try {
+        await expect(
+          evaluationsController.create(
+            EVALUATION_WITH_TAGS_1,
+            [mockFile, secondMockFile],
+            {user}
+          )
+        ).rejects.toThrow('Second source failed');
+        expect(await Evaluation.count()).toBe(0);
+        expect(await EvaluationFile.count()).toBe(0);
+        expect(await EvaluationTag.count()).toBe(0);
+      } finally {
+        failure.mockRestore();
+      }
+    });
+
+    it('rolls back results and originals when a later group association fails', async () => {
+      const group = await groupsService.create(PRIVATE_GROUP);
+      const file = sample(
+        'asff_mapper/sample_input_report/asff_sample.json',
+        'scan.asff'
+      );
+      const create = GroupEvaluation.create.bind(GroupEvaluation);
+      const failure = vi
+        .spyOn(GroupEvaluation, 'create')
+        .mockImplementationOnce(create)
+        .mockRejectedValueOnce(new Error('Group link failed'));
+      try {
+        await expect(
+          evaluationsController.create(EVALUATION_WITH_TAGS_1, [file], {
+            user: group
+          })
+        ).rejects.toThrow('Group link failed');
+        expect(await Evaluation.count()).toBe(0);
+        expect(await EvaluationFile.count()).toBe(0);
+        expect(await EvaluationTag.count()).toBe(0);
+        expect(await GroupEvaluation.count()).toBe(0);
+      } finally {
+        failure.mockRestore();
+      }
+    });
+
+    it('retains shared source bytes until the final evaluation is deleted', async () => {
+      const file = sample(
+        'asff_mapper/sample_input_report/asff_sample.json',
+        'scan.asff'
+      );
+      const response = await evaluationsController.create(
+        EVALUATION_WITH_TAGS_1,
+        [file],
+        {user}
+      );
+      if (!Array.isArray(response) || response.length < 2) {
+        throw new Error('Expected multiple evaluations');
+      }
+      await evaluationsController.remove(response[0].id, {user});
+      expect(await EvaluationFile.count()).toBe(1);
+      const sibling = await evaluationsService.findById(response[1].id);
+      const original = await EvaluationFile.findByPk(sibling.originalFileId || undefined);
+      expect(original?.data).toEqual(file.buffer);
+      await Promise.all(
+        response
+          .slice(1)
+          .map((evaluation) =>
+            evaluationsController.remove(evaluation.id, {user})
+          )
+      );
+      expect(await EvaluationFile.count()).toBe(0);
+    });
+
+    it('deletes related originals when an evaluation is removed', async () => {
+      const response = await evaluationsController.create(
+        EVALUATION_WITH_TAGS_1,
+        [mockFile],
+        {user}
+      );
+      if (Array.isArray(response)) {
+        throw new Error('Expected a single evaluation');
+      }
+      const evaluation = await evaluationsService.findById(response.id);
+      await evaluationsController.remove(response.id, {user});
+      expect(
+        await EvaluationFile.count({where: {id: evaluation.originalFileId}})
+      ).toBe(0);
     });
   });
 

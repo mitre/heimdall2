@@ -28,6 +28,7 @@ RUN yarn install --frozen-lockfile --production --network-timeout 600000
 COPY apps ./apps
 COPY libs ./libs
 RUN yarn build
+RUN mkdir -p libs/hdf-converters/node_modules
 
 FROM $BASE_CONTAINER AS app
 
@@ -52,9 +53,19 @@ COPY --from=builder --chown=1001 /src/apps/backend/migrations apps/backend/migra
 COPY --from=builder --chown=1001 /src/apps/backend/seeders apps/backend/seeders
 
 COPY --from=builder --chown=1001 /src/libs/password-complexity/ libs/password-complexity
+COPY --from=builder --chown=1001 /src/libs/inspecjs/package.json libs/inspecjs/
+COPY --from=builder --chown=1001 /src/libs/inspecjs/lib libs/inspecjs/lib
+COPY --from=builder --chown=1001 /src/libs/hdf-converters/package.json libs/hdf-converters/
+COPY --from=builder --chown=1001 /src/libs/hdf-converters/lib libs/hdf-converters/lib
+
+COPY --from=builder --chown=1001 /src/libs/hdf-converters/node_modules libs/hdf-converters/node_modules
+COPY --from=builder --chown=1001 /src/apps/backend/scripts apps/backend/scripts
 
 COPY --from=builder --chown=1001 /src/apps/backend/dist apps/backend/dist
 COPY --from=builder --chown=1001 /src/dist/ dist/
+
+# Check the compiled upload path and native dynamic imports before shipping the image.
+RUN ln -s /app/apps/backend/node_modules /app/libs/node_modules && node apps/backend/scripts/check-conversion-runtime.cjs
 
 COPY --chmod=755 cmd.sh /usr/local/bin/
 
