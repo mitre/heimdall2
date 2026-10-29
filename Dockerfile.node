@@ -12,7 +12,7 @@
 #
 # Everything here depends only on the arguments below, so the result stays cached
 # until one of them changes. Built by docker-bake.hcl as the "node" target.
-ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:latest
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:9.8
 
 FROM $BASE_CONTAINER AS node-configure
 
@@ -26,12 +26,19 @@ ARG ICU_DATA_SHA256=982619632b78887f1895b063e96e8c3cc7f99283337c8abbd05aa71635de
 USER 0
 WORKDIR /build
 
-RUN microdnf update -y && microdnf install -y --setopt=install_weak_deps=0 gcc-c++ make ninja-build python3 python3-jinja2 pkgconf-pkg-config libatomic patch unzip chrpath xz tar gzip findutils diffutils which redhat-rpm-config openssl-devel brotli-devel zlib-devel && microdnf clean all
+RUN microdnf update -y \
+    && microdnf install -y --setopt=install_weak_deps=0 \
+         gcc-c++ make ninja-build python3 python3-jinja2 pkgconf-pkg-config \
+         libatomic patch unzip chrpath xz tar gzip findutils diffutils which \
+         redhat-rpm-config openssl-devel brotli-devel zlib-devel \
+    && microdnf clean all
 
-RUN curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.tar.xz" \
-    && echo "${NODE_SHA256}  node-v${NODE_VERSION}.tar.xz" | sha256sum -c - \
-    && tar -xJf "node-v${NODE_VERSION}.tar.xz" --strip-components=1 \
-    && rm "node-v${NODE_VERSION}.tar.xz" \
+# Fetched over HTTPS and verified against the published SHA-256 by BuildKit
+ADD --checksum=sha256:${NODE_SHA256} \
+    https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.tar.xz \
+    /build/node.tar.xz
+RUN tar -xJf node.tar.xz --strip-components=1 \
+    && rm node.tar.xz \
     && grep -q "icu4c-${ICU_VERSION}-sources" tools/icu/current_ver.dep
 
 COPY node-patches/0003-fips-disable-options.patch /tmp/
@@ -39,7 +46,9 @@ RUN patch -p1 < /tmp/0003-fips-disable-options.patch
 
 # Red Hat's compiler flags: the RPM hardening flags without RPM-level LTO (the spec
 # disables it), debuginfo reduced to -g1, plus the extra flags from the spec.
-RUN optflags="$(rpm --define '_lto_cflags %{nil}' --eval '%{optflags}' | sed 's/-g /-g1 /') -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DOPENSSL_NO_ENGINE -DZLIB_CONST -O3 -fno-ipa-icf" \
+RUN optflags="$(rpm --define '_lto_cflags %{nil}' --eval '%{optflags}' | sed 's/-g /-g1 /')" \
+    && optflags="${optflags} -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DOPENSSL_NO_ENGINE" \
+    && optflags="${optflags} -DZLIB_CONST -O3 -fno-ipa-icf" \
     && { echo "export CC=gcc CXX=g++"; \
          echo "export CFLAGS='$optflags' CXXFLAGS='$optflags'"; \
          echo "export LDFLAGS='$(rpm --define '_lto_cflags %{nil}' --eval '%{build_ldflags}')'"; \
@@ -73,7 +82,9 @@ RUN mv out/Release/lib/libnode.so.* out/Release/ \
     && strip --strip-unneeded /out/usr/bin/node /out/usr/lib64/libnode.so.*
 
 # The full ICU data matching the compiled ICU, as Red Hat's nodejs-full-i18n ships it
-RUN curl -fsSLo /tmp/icu.zip "https://github.com/unicode-org/icu/releases/download/release-${ICU_VERSION}/icu4c-${ICU_VERSION}-data-bin-l.zip" \
+RUN icu_url="https://github.com/unicode-org/icu/releases/download/release-${ICU_VERSION}" \
+    && curl -fsSL --proto '=https' --tlsv1.2 -o /tmp/icu.zip \
+         "${icu_url}/icu4c-${ICU_VERSION}-data-bin-l.zip" \
     && echo "${ICU_DATA_SHA256}  /tmp/icu.zip" | sha256sum -c - \
     && mkdir -p /out/usr/share/node-22/icudata \
     && unzip -d /out/usr/share/node-22/icudata /tmp/icu.zip "icudt${ICU_VERSION%%.*}l.dat"
@@ -85,7 +96,11 @@ RUN export LD_LIBRARY_PATH=/out/usr/lib64 NODE_ICU_DATA=/out/usr/share/node-22/i
          echo "$libs" | grep -q "$lib" || { echo "node is not linked against $lib" >&2; exit 1; }; \
        done \
     && ! readelf -d /out/usr/bin/node | grep -E 'RPATH|RUNPATH' \
-    && /out/usr/bin/node -p "process.version + ' icu ' + process.versions.icu + ' locales ' + Intl.DateTimeFormat.supportedLocalesOf(['de', 'ja']).join()"
+    && /out/usr/bin/node -p \
+         "process.version + ' icu ' + process.versions.icu \
+          + ' locales ' + Intl.DateTimeFormat.supportedLocalesOf(['de', 'ja']).join()"
 
 FROM scratch
 COPY --from=node-build /out/ /
+# Only an artifact image for COPY --from; it is never run
+USER 65534

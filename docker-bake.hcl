@@ -19,7 +19,7 @@ variable "TAG_SUFFIXES" {
 }
 
 variable "BASE_CONTAINER" {
-  default = "registry.access.redhat.com/ubi9/ubi-minimal:latest"
+  default = "registry.access.redhat.com/ubi9/ubi-minimal:9.8"
 }
 
 variable "NODE_ENV" {
@@ -49,7 +49,7 @@ target "node" {
 target "_common" {
   dockerfile = "Dockerfile"
   contexts = {
-    heimdall-node = "target:node"
+    "heimdall-node:22" = "target:node"
   }
   tags = concat([for suffix in split(",", TAG_SUFFIXES) : "${DOCKER_HUB_REPO_SERVER}:${trimspace(suffix)}"])
   args = {
@@ -69,7 +69,7 @@ target "_common" {
 target "_common_lite" {
   dockerfile = "Dockerfile.lite"
   contexts = {
-    heimdall-node = "target:node"
+    "heimdall-node:22" = "target:node"
   }
   tags = concat([for suffix in split(",", TAG_SUFFIXES) : "${DOCKER_HUB_REPO_LITE}:${trimspace(suffix)}"])
   args = {

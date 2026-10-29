@@ -1,6 +1,6 @@
-ARG BUILD_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:latest
+ARG BUILD_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:9.8
 # Node.js compiled against UBI libraries (Dockerfile.node). docker-bake.hcl supplies this as a build context.
-ARG NODE_CONTAINER=heimdall-node
+ARG NODE_CONTAINER=heimdall-node:22
 ARG BASE_CONTAINER=nginx:alpine
 
 FROM $NODE_CONTAINER AS node
@@ -20,7 +20,9 @@ COPY --from=node /usr/ /usr/
 ENV npm_config_nodedir=/usr
 
 # python3/make/compiler is a requirement for node-gyp
-RUN microdnf install -y --setopt=install_weak_deps=0 libbrotli python3 make gcc-c++ && microdnf clean all && npm install -g yarn@1.22.22
+RUN microdnf install -y --setopt=install_weak_deps=0 libbrotli python3 make gcc-c++ \
+    && microdnf clean all \
+    && npm install -g --ignore-scripts yarn@1.22.22
 
 COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
 COPY apps/frontend/package.json apps/frontend/tsconfig.json ./apps/frontend/

@@ -1,6 +1,6 @@
-ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:latest
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:9.8
 # Node.js compiled against UBI libraries (Dockerfile.node). docker-bake.hcl supplies this as a build context.
-ARG NODE_CONTAINER=heimdall-node
+ARG NODE_CONTAINER=heimdall-node:22
 
 FROM $NODE_CONTAINER AS node
 
@@ -20,7 +20,9 @@ COPY --from=node /usr/ /usr/
 ENV npm_config_nodedir=/usr
 
 # python3/make/compiler is a requirement for node-gyp
-RUN microdnf install -y --setopt=install_weak_deps=0 libbrotli python3 make gcc-c++ && microdnf clean all && npm install -g yarn@1.22.22
+RUN microdnf install -y --setopt=install_weak_deps=0 libbrotli python3 make gcc-c++ \
+    && microdnf clean all \
+    && npm install -g --ignore-scripts yarn@1.22.22
 
 COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
 COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/
@@ -49,7 +51,10 @@ WORKDIR /app
 
 # Change PACKAGE_REFRESH to pick up OS package updates published since the last cached build
 ARG PACKAGE_REFRESH=0
-RUN echo "package refresh: ${PACKAGE_REFRESH}" && microdnf update -y && microdnf install -y --setopt=install_weak_deps=0 libstdc++ libbrotli zlib && microdnf clean all
+RUN echo "package refresh: ${PACKAGE_REFRESH}" \
+    && microdnf update -y \
+    && microdnf install -y --setopt=install_weak_deps=0 libstdc++ libbrotli zlib \
+    && microdnf clean all
 
 COPY --from=node /usr/bin/node /usr/bin/node
 COPY --from=node /usr/lib64/libnode.so.* /usr/lib64/
