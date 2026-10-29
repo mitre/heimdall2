@@ -1,0 +1,91 @@
+# Builds Node.js the way Red Hat builds the nodejs:22 module that ships in
+# ubi9/nodejs-22-minimal (the %build section of nodejs.spec, SRPM nodejs-22.23.2-2),
+# but from the current upstream source, so Node security releases do not have to
+# wait for a Red Hat rebuild. Keep the configure flags in step with that spec.
+#
+# Differences from Red Hat's package, on purpose:
+#   - The Node source and matching ICU data named by the arguments below, not 22.23.2.
+#   - Only Red Hat patch 0003 (disable Node's FIPS options; FIPS belongs to the OS)
+#     is applied. 0001 only compensates for Red Hat stripping OpenSSL from its
+#     tarball, and the rest patch npm's own dependencies, which we do not ship.
+#   - The binary keeps the name "node" (Red Hat renames it for alternatives).
+#
+# Everything here depends only on the arguments below, so the result stays cached
+# until one of them changes. Built by docker-bake.hcl as the "node" target.
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:latest
+
+FROM $BASE_CONTAINER AS node-configure
+
+ARG NODE_VERSION=22.23.4
+# From https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt
+ARG NODE_SHA256=7b9adc82d612d0a2a863d96c46de2292552e250cee51956ebbe0146c42aacae9
+# Must match tools/icu/current_ver.dep in the Node source (checked below)
+ARG ICU_VERSION=78.3
+ARG ICU_DATA_SHA256=982619632b78887f1895b063e96e8c3cc7f99283337c8abbd05aa71635de613c
+
+USER 0
+WORKDIR /build
+
+RUN microdnf update -y && microdnf install -y --setopt=install_weak_deps=0 gcc-c++ make ninja-build python3 python3-jinja2 pkgconf-pkg-config libatomic patch unzip chrpath xz tar gzip findutils diffutils which redhat-rpm-config openssl-devel brotli-devel zlib-devel && microdnf clean all
+
+RUN curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.tar.xz" \
+    && echo "${NODE_SHA256}  node-v${NODE_VERSION}.tar.xz" | sha256sum -c - \
+    && tar -xJf "node-v${NODE_VERSION}.tar.xz" --strip-components=1 \
+    && rm "node-v${NODE_VERSION}.tar.xz" \
+    && grep -q "icu4c-${ICU_VERSION}-sources" tools/icu/current_ver.dep
+
+COPY node-patches/0003-fips-disable-options.patch /tmp/
+RUN patch -p1 < /tmp/0003-fips-disable-options.patch
+
+# Red Hat's compiler flags: the RPM hardening flags without RPM-level LTO (the spec
+# disables it), debuginfo reduced to -g1, plus the extra flags from the spec.
+RUN optflags="$(rpm --define '_lto_cflags %{nil}' --eval '%{optflags}' | sed 's/-g /-g1 /') -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DOPENSSL_NO_ENGINE -DZLIB_CONST -O3 -fno-ipa-icf" \
+    && { echo "export CC=gcc CXX=g++"; \
+         echo "export CFLAGS='$optflags' CXXFLAGS='$optflags'"; \
+         echo "export LDFLAGS='$(rpm --define '_lto_cflags %{nil}' --eval '%{build_ldflags}')'"; \
+         echo "export NODE_GYP_FORCE_PYTHON=/usr/bin/python3"; \
+         echo "export PATH=/build/.bin:\$PATH"; } > /build/rh-env.sh \
+    && mkdir .bin && ln -srf /usr/bin/python3 .bin/python
+
+# Same configure call as Red Hat's spec for RHEL 9: OpenSSL, zlib and Brotli come from
+# the OS (libuv, c-ares, nghttp2, sqlite and undici stay bundled there too), the OS
+# CA store and OpenSSL's "openssl_conf" section (so RHEL crypto policy applies), and
+# a small ICU whose full data is a separate file.
+RUN . /build/rh-env.sh \
+    && python3 configure.py --verbose --ninja --enable-lto --prefix=/usr --shared --libdir=lib64 \
+        --shared-openssl --openssl-conf-name=openssl_conf \
+        --shared-zlib --shared-brotli \
+        --with-intl=small-icu --with-icu-default-data-dir=/usr/share/node-22/icudata \
+        --without-corepack --openssl-use-def-ca-store --use-prefix-to-find-headers
+
+FROM node-configure AS node-build
+
+# Parallel compile jobs; defaults to every core
+ARG NODE_BUILD_JOBS=
+ENV NINJA_STATUS='[%f/%t %es] '
+
+RUN . /build/rh-env.sh && ninja -C out/Release -j"${NODE_BUILD_JOBS:-$(nproc)}"
+
+# Red Hat ships the debug info in a separate package; strip it so libnode is the same size as theirs
+RUN mv out/Release/lib/libnode.so.* out/Release/ \
+    && python3 tools/install.py install --dest-dir /out --prefix /usr \
+    && chrpath --delete /out/usr/bin/node \
+    && strip --strip-unneeded /out/usr/bin/node /out/usr/lib64/libnode.so.*
+
+# The full ICU data matching the compiled ICU, as Red Hat's nodejs-full-i18n ships it
+RUN curl -fsSLo /tmp/icu.zip "https://github.com/unicode-org/icu/releases/download/release-${ICU_VERSION}/icu4c-${ICU_VERSION}-data-bin-l.zip" \
+    && echo "${ICU_DATA_SHA256}  /tmp/icu.zip" | sha256sum -c - \
+    && mkdir -p /out/usr/share/node-22/icudata \
+    && unzip -d /out/usr/share/node-22/icudata /tmp/icu.zip "icudt${ICU_VERSION%%.*}l.dat"
+
+# Fail the build if node is not the system-library, shared-libnode build we intend.
+RUN export LD_LIBRARY_PATH=/out/usr/lib64 NODE_ICU_DATA=/out/usr/share/node-22/icudata \
+    && libs="$(ldd /out/usr/bin/node)" && echo "$libs" \
+    && for lib in libnode libcrypto libssl libbrotlidec libz; do \
+         echo "$libs" | grep -q "$lib" || { echo "node is not linked against $lib" >&2; exit 1; }; \
+       done \
+    && ! readelf -d /out/usr/bin/node | grep -E 'RPATH|RUNPATH' \
+    && /out/usr/bin/node -p "process.version + ' icu ' + process.versions.icu + ' locales ' + Intl.DateTimeFormat.supportedLocalesOf(['de', 'ja']).join()"
+
+FROM scratch
+COPY --from=node-build /out/ /

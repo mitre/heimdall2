@@ -542,6 +542,12 @@ The first command will start an instance of Heimdall Server and exposes addition
 
 See the [wiki](https://github.com/mitre/heimdall2/wiki/Docker-Bake).
 
+The images are built on `ubi9/ubi-minimal`. Node.js is compiled from the upstream source by `Dockerfile.node` using the same configuration as Red Hat's `nodejs` package (system OpenSSL, zlib and Brotli, the RHEL CA store, and `openssl_conf`), so security fixes to Node.js do not have to wait for a Red Hat release. `docker-bake.hcl` builds it once and shares it with the server and lite images; the compile takes about an hour on the first build and is cached afterward. Set `NODE_BUILD_JOBS` to limit the number of parallel compile jobs (it is part of the cache key, so use the same value each time).
+
+```bash
+NODE_BUILD_JOBS=4 docker buildx bake -f docker-bake.hcl server-amd64
+```
+
 ### Creating a Release
 
 **Note:** This action requires appropriate privileges on the repository to perform.

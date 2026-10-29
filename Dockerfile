@@ -1,4 +1,8 @@
-ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/nodejs-22-minimal:1
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi9/ubi-minimal:latest
+# Node.js compiled against UBI libraries (Dockerfile.node). docker-bake.hcl supplies this as a build context.
+ARG NODE_CONTAINER=heimdall-node
+
+FROM $NODE_CONTAINER AS node
 
 FROM $BASE_CONTAINER AS builder
 
@@ -11,8 +15,12 @@ ENV YARNREPO=$YARNREPO_MIRROR
 USER 0
 WORKDIR /src
 
+COPY --from=node /usr/ /usr/
+# Build native modules against the headers of the node we ship
+ENV npm_config_nodedir=/usr
+
 # python3/make/compiler is a requirement for node-gyp
-RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y python3 make gcc-c++ yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
+RUN microdnf install -y --setopt=install_weak_deps=0 libbrotli python3 make gcc-c++ && microdnf clean all && npm install -g yarn@1.22.22
 
 COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
 COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/
@@ -39,7 +47,14 @@ ENV NODE_ENV=$NODE_ENV
 USER 0
 WORKDIR /app
 
-RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
+# Change PACKAGE_REFRESH to pick up OS package updates published since the last cached build
+ARG PACKAGE_REFRESH=0
+RUN echo "package refresh: ${PACKAGE_REFRESH}" && microdnf update -y && microdnf install -y --setopt=install_weak_deps=0 libstdc++ libbrotli zlib && microdnf clean all
+
+COPY --from=node /usr/bin/node /usr/bin/node
+COPY --from=node /usr/lib64/libnode.so.* /usr/lib64/
+COPY --from=node /usr/share/node-22/icudata /usr/share/node-22/icudata
+RUN node --version
 
 COPY --from=builder --chown=1001 /src/package.json ./
 COPY --from=builder --chown=1001 /src/apps/backend/package.json apps/backend/
