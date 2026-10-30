@@ -1,0 +1,615 @@
+{
+  "matches": [
+    {
+      "vulnerability": {
+        "id": "ALAS2-2023-1972",
+        "dataSource": "https://alas.aws.amazon.com/AL2/ALAS2-2023-1972.html",
+        "namespace": "amazon:distro:amazonlinux:2",
+        "severity": "Medium",
+        "urls": [
+          "https://alas.aws.amazon.com/AL2/ALAS2-2023-1972.html"
+        ],
+        "cvss": [],
+        "fix": {
+          "versions": [
+            "2.12-11.amzn2"
+          ],
+          "state": "fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [
+        {
+          "id": "CVE-2021-38185",
+          "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2021-38185",
+          "namespace": "nvd:cpe",
+          "severity": "High",
+          "urls": [
+            "https://git.savannah.gnu.org/cgit/cpio.git/commit/?id=dd96882877721703e19272fe25034560b794061b",
+            "https://github.com/fangqyi/cpiopwn",
+            "https://lists.debian.org/debian-lts-announce/2023/06/msg00007.html",
+            "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00000.html",
+            "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00002.html",
+            "https://git.savannah.gnu.org/cgit/cpio.git/commit/?id=dd96882877721703e19272fe25034560b794061b",
+            "https://github.com/fangqyi/cpiopwn",
+            "https://lists.debian.org/debian-lts-announce/2023/06/msg00007.html",
+            "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00000.html",
+            "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00002.html"
+          ],
+          "description": "GNU cpio through 2.13 allows attackers to execute arbitrary code via a crafted pattern file, because of a dstring.c ds_fgetstr integer overflow that triggers an out-of-bounds heap write. NOTE: it is unclear whether there are common cases where the pattern file, associated with the -E option, is untrusted data.",
+          "cvss": [
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "version": "2.0",
+              "vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+              "metrics": {
+                "baseScore": 6.8,
+                "exploitabilityScore": 8.6,
+                "impactScore": 6.4
+              },
+              "vendorMetadata": {}
+            },
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "version": "3.1",
+              "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "metrics": {
+                "baseScore": 7.8,
+                "exploitabilityScore": 1.8,
+                "impactScore": 5.9
+              },
+              "vendorMetadata": {}
+            },
+            {
+              "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0",
+              "type": "Secondary",
+              "version": "3.1",
+              "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "metrics": {
+                "baseScore": 7.8,
+                "exploitabilityScore": 1.8,
+                "impactScore": 5.9
+              },
+              "vendorMetadata": {}
+            }
+          ]
+        }
+      ],
+      "matchDetails": [
+        {
+          "type": "exact-direct-match",
+          "matcher": "rpm-matcher",
+          "searchedBy": {
+            "distro": {
+              "type": "amazonlinux",
+              "version": "2"
+            },
+            "namespace": "amazon:distro:amazonlinux:2",
+            "package": {
+              "name": "cpio",
+              "version": "0:2.11-28.amzn2"
+            }
+          },
+          "found": {
+            "versionConstraint": "< 2.12-11.amzn2 (rpm)",
+            "vulnerabilityID": "ALAS2-2023-1972"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "030256c955adbe9e",
+        "name": "cpio",
+        "version": "2.11-28.amzn2",
+        "type": "rpm",
+        "locations": [
+          {
+            "path": "/var/lib/rpm/Packages",
+            "layerID": "sha256:b90942b4756ee507c3ad3ced135e3708c43207c73cc496e2723c962f2ef190dc"
+          }
+        ],
+        "language": "",
+        "licenses": [
+          "GPLv3+"
+        ],
+        "cpes": [
+          "cpe:2.3:a:amazonlinux:cpio:2.11-28.amzn2:*:*:*:*:*:*:*",
+          "cpe:2.3:a:cpio:cpio:2.11-28.amzn2:*:*:*:*:*:*:*"
+        ],
+        "purl": "pkg:rpm/amzn/cpio@2.11-28.amzn2?arch=aarch64&upstream=cpio-2.11-28.amzn2.src.rpm&distro=amzn-2",
+        "upstreams": [],
+        "metadataType": "RpmMetadata",
+        "metadata": {
+          "epoch": null,
+          "modularityLabel": ""
+        }
+      }
+    },
+    {
+      "vulnerability": {
+        "id": "ALAS-2024-2595",
+        "dataSource": "https://alas.aws.amazon.com/AL2/ALAS-2024-2595.html",
+        "namespace": "amazon:distro:amazonlinux:2",
+        "severity": "Medium",
+        "urls": [
+          "https://alas.aws.amazon.com/AL2/ALAS-2024-2595.html"
+        ],
+        "cvss": [],
+        "fix": {
+          "versions": [
+            "1.15.1-55.amzn2.2.8"
+          ],
+          "state": "fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [
+        {
+          "id": "CVE-2024-37370",
+          "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2024-37370",
+          "namespace": "nvd:cpe",
+          "severity": "High",
+          "urls": [
+            "https://github.com/krb5/krb5/commit/55fbf435edbe2e92dd8101669b1ce7144bc96fef",
+            "https://web.mit.edu/kerberos/www/advisories/"
+          ],
+          "description": "In MIT Kerberos 5 (aka krb5) before 1.21.3, an attacker can modify the plaintext Extra Count field of a confidential GSS krb5 wrap token, causing the unwrapped token to appear truncated to the application.",
+          "cvss": [
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "version": "3.1",
+              "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+              "metrics": {
+                "baseScore": 7.5,
+                "exploitabilityScore": 3.9,
+                "impactScore": 3.6
+              },
+              "vendorMetadata": {}
+            }
+          ]
+        },
+        {
+          "id": "CVE-2024-37371",
+          "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2024-37371",
+          "namespace": "nvd:cpe",
+          "severity": "Critical",
+          "urls": [
+            "https://github.com/krb5/krb5/commit/55fbf435edbe2e92dd8101669b1ce7144bc96fef",
+            "https://web.mit.edu/kerberos/www/advisories/"
+          ],
+          "description": "In MIT Kerberos 5 (aka krb5) before 1.21.3, an attacker can cause invalid memory reads during GSS message token handling by sending message tokens with invalid length fields.",
+          "cvss": [
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "version": "3.1",
+              "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H",
+              "metrics": {
+                "baseScore": 9.1,
+                "exploitabilityScore": 3.9,
+                "impactScore": 5.2
+              },
+              "vendorMetadata": {}
+            }
+          ]
+        }
+      ],
+      "matchDetails": [
+        {
+          "type": "exact-direct-match",
+          "matcher": "rpm-matcher",
+          "searchedBy": {
+            "distro": {
+              "type": "amazonlinux",
+              "version": "2"
+            },
+            "namespace": "amazon:distro:amazonlinux:2",
+            "package": {
+              "name": "krb5-libs",
+              "version": "0:1.15.1-55.amzn2.2.7"
+            }
+          },
+          "found": {
+            "versionConstraint": "< 1.15.1-55.amzn2.2.8 (rpm)",
+            "vulnerabilityID": "ALAS-2024-2595"
+          }
+        },
+        {
+          "type": "exact-indirect-match",
+          "matcher": "rpm-matcher",
+          "searchedBy": {
+            "distro": {
+              "type": "amazonlinux",
+              "version": "2"
+            },
+            "namespace": "amazon:distro:amazonlinux:2",
+            "package": {
+              "name": "krb5",
+              "version": "1.15.1-55.amzn2.2.7"
+            }
+          },
+          "found": {
+            "versionConstraint": "< 1.15.1-55.amzn2.2.8 (rpm)",
+            "vulnerabilityID": "ALAS-2024-2595"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "3bb967025c5652e0",
+        "name": "krb5-libs",
+        "version": "1.15.1-55.amzn2.2.7",
+        "type": "rpm",
+        "locations": [
+          {
+            "path": "/var/lib/rpm/Packages",
+            "layerID": "sha256:0044b36762beca646f20eb6730e3575ec671a8857b39485f38ba0e715d375483"
+          }
+        ],
+        "language": "",
+        "licenses": [
+          "MIT"
+        ],
+        "cpes": [
+          "cpe:2.3:a:amazonlinux:krb5-libs:1.15.1-55.amzn2.2.7:*:*:*:*:*:*:*",
+          "cpe:2.3:a:amazonlinux:krb5_libs:1.15.1-55.amzn2.2.7:*:*:*:*:*:*:*",
+          "cpe:2.3:a:krb5-libs:krb5-libs:1.15.1-55.amzn2.2.7:*:*:*:*:*:*:*",
+          "cpe:2.3:a:krb5-libs:krb5_libs:1.15.1-55.amzn2.2.7:*:*:*:*:*:*:*",
+          "cpe:2.3:a:krb5_libs:krb5-libs:1.15.1-55.amzn2.2.7:*:*:*:*:*:*:*",
+          "cpe:2.3:a:krb5_libs:krb5_libs:1.15.1-55.amzn2.2.7:*:*:*:*:*:*:*",
+          "cpe:2.3:a:krb5:krb5-libs:1.15.1-55.amzn2.2.7:*:*:*:*:*:*:*",
+          "cpe:2.3:a:krb5:krb5_libs:1.15.1-55.amzn2.2.7:*:*:*:*:*:*:*"
+        ],
+        "purl": "pkg:rpm/amzn/krb5-libs@1.15.1-55.amzn2.2.7?arch=aarch64&upstream=krb5-1.15.1-55.amzn2.2.7.src.rpm&distro=amzn-2",
+        "upstreams": [
+          {
+            "name": "krb5",
+            "version": "1.15.1-55.amzn2.2.7"
+          }
+        ],
+        "metadataType": "RpmMetadata",
+        "metadata": {
+          "epoch": null,
+          "modularityLabel": ""
+        }
+      }
+    },
+    {
+      "vulnerability": {
+        "id": "CVE-2021-38185",
+        "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2021-38185",
+        "namespace": "nvd:cpe",
+        "severity": "High",
+        "urls": [
+          "https://git.savannah.gnu.org/cgit/cpio.git/commit/?id=dd96882877721703e19272fe25034560b794061b",
+          "https://github.com/fangqyi/cpiopwn",
+          "https://lists.debian.org/debian-lts-announce/2023/06/msg00007.html",
+          "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00000.html",
+          "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00002.html",
+          "https://git.savannah.gnu.org/cgit/cpio.git/commit/?id=dd96882877721703e19272fe25034560b794061b",
+          "https://github.com/fangqyi/cpiopwn",
+          "https://lists.debian.org/debian-lts-announce/2023/06/msg00007.html",
+          "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00000.html",
+          "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00002.html"
+        ],
+        "cvss": [
+          {
+            "source": "nvd@nist.gov",
+            "type": "Primary",
+            "version": "2.0",
+            "vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+            "metrics": {
+              "baseScore": 6.8,
+              "exploitabilityScore": 8.6,
+              "impactScore": 6.4
+            },
+            "vendorMetadata": {}
+          },
+          {
+            "source": "nvd@nist.gov",
+            "type": "Primary",
+            "version": "3.1",
+            "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "metrics": {
+              "baseScore": 7.8,
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9
+            },
+            "vendorMetadata": {}
+          },
+          {
+            "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0",
+            "type": "Secondary",
+            "version": "3.1",
+            "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+            "metrics": {
+              "baseScore": 7.8,
+              "exploitabilityScore": 1.8,
+              "impactScore": 5.9
+            },
+            "vendorMetadata": {}
+          }
+        ],
+        "fix": {
+          "versions": [
+            "2.12-11.amzn2"
+          ],
+          "state": "fixed"
+        },
+        "advisories": []
+      },
+      "relatedVulnerabilities": [
+        {
+          "id": "ALAS2-2023-1972",
+          "dataSource": "https://alas.aws.amazon.com/AL2/ALAS2-2023-1972.html",
+          "namespace": "amazon:distro:amazonlinux:2",
+          "severity": "Medium",
+          "urls": [
+            "https://alas.aws.amazon.com/AL2/ALAS2-2023-1972.html"
+          ],
+          "cvss": [],
+          "description": "GNU cpio through 2.13 allows attackers to execute arbitrary code via a crafted pattern file, because of a dstring.c ds_fgetstr integer overflow that triggers an out-of-bounds heap write. NOTE: it is unclear whether there are common cases where the pattern file, associated with the -E option, is untrusted data."
+        },
+        {
+          "id": "CVE-2021-38185",
+          "dataSource": "https://nvd.nist.gov/vuln/detail/CVE-2021-38185",
+          "namespace": "nvd:cpe",
+          "severity": "High",
+          "urls": [
+            "https://git.savannah.gnu.org/cgit/cpio.git/commit/?id=dd96882877721703e19272fe25034560b794061b",
+            "https://github.com/fangqyi/cpiopwn",
+            "https://lists.debian.org/debian-lts-announce/2023/06/msg00007.html",
+            "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00000.html",
+            "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00002.html",
+            "https://git.savannah.gnu.org/cgit/cpio.git/commit/?id=dd96882877721703e19272fe25034560b794061b",
+            "https://github.com/fangqyi/cpiopwn",
+            "https://lists.debian.org/debian-lts-announce/2023/06/msg00007.html",
+            "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00000.html",
+            "https://lists.gnu.org/archive/html/bug-cpio/2021-08/msg00002.html"
+          ],
+          "description": "GNU cpio through 2.13 allows attackers to execute arbitrary code via a crafted pattern file, because of a dstring.c ds_fgetstr integer overflow that triggers an out-of-bounds heap write. NOTE: it is unclear whether there are common cases where the pattern file, associated with the -E option, is untrusted data.",
+          "cvss": [
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "version": "2.0",
+              "vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
+              "metrics": {
+                "baseScore": 6.8,
+                "exploitabilityScore": 8.6,
+                "impactScore": 6.4
+              },
+              "vendorMetadata": {}
+            },
+            {
+              "source": "nvd@nist.gov",
+              "type": "Primary",
+              "version": "3.1",
+              "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "metrics": {
+                "baseScore": 7.8,
+                "exploitabilityScore": 1.8,
+                "impactScore": 5.9
+              },
+              "vendorMetadata": {}
+            },
+            {
+              "source": "134c704f-9b21-4f2e-91b3-4a467353bcc0",
+              "type": "Secondary",
+              "version": "3.1",
+              "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+              "metrics": {
+                "baseScore": 7.8,
+                "exploitabilityScore": 1.8,
+                "impactScore": 5.9
+              },
+              "vendorMetadata": {}
+            }
+          ]
+        },
+        {
+          "id": "CVE-2021-38185",
+          "dataSource": "https://ubuntu.com/security/CVE-2021-38185",
+          "namespace": "ubuntu:distro:ubuntu:22.04",
+          "severity": "Medium",
+          "urls": [
+            "https://ubuntu.com/security/CVE-2021-38185"
+          ],
+          "description": "GNU cpio through 2.13 allows attackers to execute arbitrary code via a crafted pattern file, because of a dstring.c ds_fgetstr integer overflow that triggers an out-of-bounds heap write. NOTE: it is unclear whether there are common cases where the pattern file, associated with the -E option, is untrusted data.",
+          "cvss": []
+        }
+      ],
+      "matchDetails": [
+        {
+          "type": "exact-direct-match",
+          "matcher": "rpm-matcher",
+          "searchedBy": {
+            "distro": {
+              "type": "amazonlinux",
+              "version": "2"
+            },
+            "namespace": "amazon:distro:amazonlinux:2",
+            "package": {
+              "name": "cpio",
+              "version": "0:2.11-28.amzn2"
+            }
+          },
+          "found": {
+            "versionConstraint": "< 2.12-11.amzn2 (rpm)",
+            "vulnerabilityID": "ALAS2-2023-1972"
+          }
+        }
+      ],
+      "artifact": {
+        "id": "030256c955adbe9e",
+        "name": "cpio",
+        "version": "2.11-28.amzn2",
+        "type": "rpm",
+        "locations": [
+          {
+            "path": "/var/lib/rpm/Packages",
+            "layerID": "sha256:b90942b4756ee507c3ad3ced135e3708c43207c73cc496e2723c962f2ef190dc"
+          }
+        ],
+        "language": "",
+        "licenses": [
+          "GPLv3+"
+        ],
+        "cpes": [
+          "cpe:2.3:a:amazonlinux:cpio:2.11-28.amzn2:*:*:*:*:*:*:*",
+          "cpe:2.3:a:cpio:cpio:2.11-28.amzn2:*:*:*:*:*:*:*"
+        ],
+        "purl": "pkg:rpm/amzn/cpio@2.11-28.amzn2?arch=aarch64&upstream=cpio-2.11-28.amzn2.src.rpm&distro=amzn-2",
+        "upstreams": [],
+        "metadataType": "RpmMetadata",
+        "metadata": {
+          "epoch": null,
+          "modularityLabel": ""
+        }
+      }
+    }
+  ],
+  "source": {
+    "type": "image",
+    "target": {
+      "userInput": "public.ecr.aws/eks/amazon-k8s-cni@sha256:19dacc4b46485c85ddfbee3545d34948bad08ce318c0fa997541546786aa7bc4",
+      "imageID": "sha256:dce3486c2fd013695137a57e26fb75232892c08de63009dcc54cece6b12f13aa",
+      "manifestDigest": "sha256:b3c38d6f53f839802d1075cc04567b89d60e013aa74523680870f9306ccb9ff9",
+      "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+      "tags": [],
+      "imageSize": 344450899,
+      "layers": [
+        {
+          "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+          "digest": "sha256:7f0700e3e18797cdbfe22925c7e6c1c002ff43e61765ead1fe8066f16153a24e",
+          "size": 193829930
+        },
+        {
+          "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+          "digest": "sha256:b90942b4756ee507c3ad3ced135e3708c43207c73cc496e2723c962f2ef190dc",
+          "size": 63451661
+        },
+        {
+          "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+          "digest": "sha256:36f4a4f8beddb82c1315c9d7bd81a1e181aabfe3bdc4f43ad8ae120162845c55",
+          "size": 0
+        },
+        {
+          "mediaType": "application/vnd.docker.image.rootfs.diff.tar.gzip",
+          "digest": "sha256:8ce4d8e5d81d0cd762128bc9069ef920a30ef82f8d925349f79792577f0d21ce",
+          "size": 87169308
+        }
+      ],
+      "manifest": "ewogICAic2NoZW1hVmVyc2lvbiI6IDIsCiAgICJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLmRvY2tlci5kaXN0cmlidXRpb24ubWFuaWZlc3QudjIranNvbiIsCiAgICJjb25maWciOiB7CiAgICAgICJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLmRvY2tlci5jb250YWluZXIuaW1hZ2UudjEranNvbiIsCiAgICAgICJzaXplIjogMjMyMSwKICAgICAgImRpZ2VzdCI6ICJzaGEyNTY6ZGNlMzQ4NmMyZmQwMTM2OTUxMzdhNTdlMjZmYjc1MjMyODkyYzA4ZGU2MzAwOWRjYzU0Y2VjZTZiMTJmMTNhYSIKICAgfSwKICAgImxheWVycyI6IFsKICAgICAgewogICAgICAgICAibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5kb2NrZXIuaW1hZ2Uucm9vdGZzLmRpZmYudGFyLmd6aXAiLAogICAgICAgICAic2l6ZSI6IDYzOTAyMTc5LAogICAgICAgICAiZGlnZXN0IjogInNoYTI1NjplYzNiNGMyNjY3OGIxODhkMzg3NGJlZDVlMTRkZDI3ODMxMWZjMDVjODFlNDE4ZDVmMGRhMzZlYzM4ZDlmNDg4IgogICAgICB9LAogICAgICB7CiAgICAgICAgICJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLmRvY2tlci5pbWFnZS5yb290ZnMuZGlmZi50YXIuZ3ppcCIsCiAgICAgICAgICJzaXplIjogMTg0MjI2MjMsCiAgICAgICAgICJkaWdlc3QiOiAic2hhMjU2OmY2ODdhZTllMTExMDkzZmQzOGFkYTA1YTQ3MGQ5ZGUxMDM5MDQzMTQ1MDFkMWU2YzIzMjgxMWJiNWVhMzgxMTciCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAgIm1lZGlhVHlwZSI6ICJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwKICAgICAgICAgInNpemUiOiAxMjYsCiAgICAgICAgICJkaWdlc3QiOiAic2hhMjU2OmRiMTMxNDkyZmIzODhkMDY1ZGMwNTBiMTA1MWUxNmViZTc2MDM3ODlhNmY1YThjZTc4ZWJjYjkxYjFhMjM4NzYiCiAgICAgIH0sCiAgICAgIHsKICAgICAgICAgIm1lZGlhVHlwZSI6ICJhcHBsaWNhdGlvbi92bmQuZG9ja2VyLmltYWdlLnJvb3Rmcy5kaWZmLnRhci5nemlwIiwKICAgICAgICAgInNpemUiOiAyODYzNTU1OCwKICAgICAgICAgImRpZ2VzdCI6ICJzaGEyNTY6NjA4NzY2ZGE5YjlhNWYzOTNkZGM2MGIzM2RjZjY4ZDU1MmY2ODIwZWFkOGNkNzRkZGJmNTA4ZGMzNjIwZmEyNiIKICAgICAgfQogICBdCn0=",
+      "config": "eyJhcmNoaXRlY3R1cmUiOiJhcm02NCIsImNvbmZpZyI6eyJIb3N0bmFtZSI6IiIsIkRvbWFpbm5hbWUiOiIiLCJVc2VyIjoiIiwiQXR0YWNoU3RkaW4iOmZhbHNlLCJBdHRhY2hTdGRvdXQiOmZhbHNlLCJBdHRhY2hTdGRlcnIiOmZhbHNlLCJUdHkiOmZhbHNlLCJPcGVuU3RkaW4iOmZhbHNlLCJTdGRpbk9uY2UiOmZhbHNlLCJFbnYiOlsiUEFUSD0vdXNyL2xvY2FsL3NiaW46L3Vzci9sb2NhbC9iaW46L3Vzci9zYmluOi91c3IvYmluOi9zYmluOi9iaW4iXSwiQ21kIjpudWxsLCJJbWFnZSI6InNoYTI1Njo3Y2JhYTRhYmM2ZmViNjllYjI1OGFjZDM4ZjI2NDZkZDM2YmY3NmRiNTc5MmQ1MGQ2YjM4ZWM5NDc4ODE5ZThkIiwiVm9sdW1lcyI6bnVsbCwiV29ya2luZ0RpciI6Ii9hcHAiLCJFbnRyeXBvaW50IjpbIi9hcHAvZW50cnlwb2ludC5zaCJdLCJPbkJ1aWxkIjpudWxsLCJMYWJlbHMiOm51bGx9LCJjb250YWluZXIiOiJkYmE1ZmYyY2RlYzYzNDVjZjQ1MTZiYzIwN2JmM2RhYzQwMmRjODhiOTNhYzRjNTEyMTA1ZTNhYjllY2YzMjc4IiwiY29udGFpbmVyX2NvbmZpZyI6eyJIb3N0bmFtZSI6Ijk2NDAzZDkxYWM5MSIsIkRvbWFpbm5hbWUiOiIiLCJVc2VyIjoiIiwiQXR0YWNoU3RkaW4iOmZhbHNlLCJBdHRhY2hTdGRvdXQiOmZhbHNlLCJBdHRhY2hTdGRlcnIiOmZhbHNlLCJUdHkiOmZhbHNlLCJPcGVuU3RkaW4iOmZhbHNlLCJTdGRpbk9uY2UiOmZhbHNlLCJFbnYiOlsiUEFUSD0vdXNyL2xvY2FsL3NiaW46L3Vzci9sb2NhbC9iaW46L3Vzci9zYmluOi91c3IvYmluOi9zYmluOi9iaW4iXSwiQ21kIjpbIi9iaW4vc2giLCItYyIsIiMobm9wKSAiLCJFTlRSWVBPSU5UIFtcIi9hcHAvZW50cnlwb2ludC5zaFwiXSJdLCJJbWFnZSI6InNoYTI1Njo3Y2JhYTRhYmM2ZmViNjllYjI1OGFjZDM4ZjI2NDZkZDM2YmY3NmRiNTc5MmQ1MGQ2YjM4ZWM5NDc4ODE5ZThkIiwiVm9sdW1lcyI6bnVsbCwiV29ya2luZ0RpciI6Ii9hcHAiLCJFbnRyeXBvaW50IjpbIi9hcHAvZW50cnlwb2ludC5zaCJdLCJPbkJ1aWxkIjpudWxsLCJMYWJlbHMiOnt9fSwiY3JlYXRlZCI6IjIwMjItMDYtMTJUMjA6NTI6MTcuNDIzMDEyMTkxWiIsImRvY2tlcl92ZXJzaW9uIjoiMjAuMTAuOSIsImhpc3RvcnkiOlt7ImNyZWF0ZWQiOiIyMDIyLTA0LTI4VDIxOjExOjIzLjM4MDY4MzY0MVoiLCJjcmVhdGVkX2J5IjoiL2Jpbi9zaCAtYyAjKG5vcCkgQUREIGZpbGU6MWE1MDE2MzE5ODI1YWI0YTk4Njc5NTE0YmRmMDgzZjg2MmM4YTE2NDhhMzYwZjNjYTA2MWFkMzViNjViNjcyNCBpbiAvICJ9LHsiY3JlYXRlZCI6IjIwMjItMDQtMjhUMjE6MTE6MjUuMzMyODgyODY0WiIsImNyZWF0ZWRfYnkiOiIvYmluL3NoIC1jICMobm9wKSAgQ01EIFtcIi9iaW4vYmFzaFwiXSIsImVtcHR5X2xheWVyIjp0cnVlfSx7ImNyZWF0ZWQiOiIyMDIyLTA2LTEyVDIwOjUyOjEyLjc3MTk1NDMxM1oiLCJjcmVhdGVkX2J5IjoiL2Jpbi9zaCAtYyB5dW0gdXBkYXRlIC15IFx1MDAyNlx1MDAyNiAgICAgeXVtIGluc3RhbGwgLXkgaXB0YWJsZXMgaXByb3V0ZSBqcSBcdTAwMjZcdTAwMjYgICAgIHl1bSBjbGVhbiBhbGwifSx7ImNyZWF0ZWQiOiIyMDIyLTA2LTEyVDIwOjUyOjEzLjMyMzg3OTg4N1oiLCJjcmVhdGVkX2J5IjoiL2Jpbi9zaCAtYyAjKG5vcCkgV09SS0RJUiAvYXBwIn0seyJjcmVhdGVkIjoiMjAyMi0wNi0xMlQyMDo1MjoxNS42OTM5ODIwN1oiLCJjcmVhdGVkX2J5IjoiL2Jpbi9zaCAtYyAjKG5vcCkgQ09QWSBtdWx0aTo0Nzk0Y2YxZGZjZmNhY2Y3YWI1ZjlmNDAwODFhNWQ4Y2MyYTllMjM4YjI2OTFiZWFmYTQ2ZmI4ZmZiYzQ1OWZkIGluIC9hcHAvICJ9LHsiY3JlYXRlZCI6IjIwMjItMDYtMTJUMjA6NTI6MTcuNDIzMDEyMTkxWiIsImNyZWF0ZWRfYnkiOiIvYmluL3NoIC1jICMobm9wKSAgRU5UUllQT0lOVCBbXCIvYXBwL2VudHJ5cG9pbnQuc2hcIl0iLCJlbXB0eV9sYXllciI6dHJ1ZX1dLCJvcyI6ImxpbnV4Iiwicm9vdGZzIjp7InR5cGUiOiJsYXllcnMiLCJkaWZmX2lkcyI6WyJzaGEyNTY6N2YwNzAwZTNlMTg3OTdjZGJmZTIyOTI1YzdlNmMxYzAwMmZmNDNlNjE3NjVlYWQxZmU4MDY2ZjE2MTUzYTI0ZSIsInNoYTI1NjpiOTA5NDJiNDc1NmVlNTA3YzNhZDNjZWQxMzVlMzcwOGM0MzIwN2M3M2NjNDk2ZTI3MjNjOTYyZjJlZjE5MGRjIiwic2hhMjU2OjM2ZjRhNGY4YmVkZGI4MmMxMzE1YzlkN2JkODFhMWUxODFhYWJmZTNiZGM0ZjQzYWQ4YWUxMjAxNjI4NDVjNTUiLCJzaGEyNTY6OGNlNGQ4ZTVkODFkMGNkNzYyMTI4YmM5MDY5ZWY5MjBhMzBlZjgyZjhkOTI1MzQ5Zjc5NzkyNTc3ZjBkMjFjZSJdfSwidmFyaWFudCI6InY4In0=",
+      "repoDigests": [
+        "public.ecr.aws/eks/amazon-k8s-cni@sha256:19dacc4b46485c85ddfbee3545d34948bad08ce318c0fa997541546786aa7bc4"
+      ],
+      "architecture": "arm64",
+      "os": "linux"
+    }
+  },
+  "distro": {
+    "name": "amazonlinux",
+    "version": "2",
+    "idLike": [
+      "centos",
+      "rhel",
+      "fedora"
+    ]
+  },
+  "descriptor": {
+    "name": "grype",
+    "version": "0.65.2",
+    "configuration": {
+      "configPath": "",
+      "verbosity": 0,
+      "output": [
+        "json"
+      ],
+      "file": "",
+      "distro": "",
+      "add-cpes-if-none": true,
+      "output-template-file": "",
+      "quiet": false,
+      "check-for-app-update": false,
+      "only-fixed": false,
+      "only-notfixed": false,
+      "platform": "",
+      "search": {
+        "scope": "Squashed",
+        "unindexed-archives": false,
+        "indexed-archives": true
+      },
+      "ignore": null,
+      "exclude": [],
+      "db": {
+        "cache-dir": "/.cache/grype/db",
+        "update-url": "https://toolbox-data.anchore.io/grype/databases/listing.json",
+        "ca-cert": "/grype-ca-bundle.pem",
+        "auto-update": true,
+        "validate-by-hash-on-start": false,
+        "validate-age": false,
+        "max-allowed-built-age": 432000000000000
+      },
+      "externalSources": {
+        "enable": false,
+        "maven": {
+          "searchUpstreamBySha1": true,
+          "baseUrl": "https://search.maven.org/solrsearch/select"
+        }
+      },
+      "match": {
+        "java": {
+          "using-cpes": true
+        },
+        "dotnet": {
+          "using-cpes": true
+        },
+        "golang": {
+          "using-cpes": true
+        },
+        "javascript": {
+          "using-cpes": false
+        },
+        "python": {
+          "using-cpes": true
+        },
+        "ruby": {
+          "using-cpes": true
+        },
+        "stock": {
+          "using-cpes": true
+        }
+      },
+      "dev": {
+        "profile-cpu": false,
+        "profile-mem": false
+      },
+      "fail-on-severity": "",
+      "registry": {
+        "insecure-skip-tls-verify": false,
+        "insecure-use-http": false,
+        "auth": []
+      },
+      "log": {
+        "structured": false,
+        "level": "warn",
+        "file": ""
+      },
+      "show-suppressed": false,
+      "by-cve": false,
+      "name": "",
+      "default-image-pull-source": ""
+    },
+    "db": {
+      "built": "2026-03-09T00:31:20Z",
+      "schemaVersion": 5,
+      "location": "/.cache/grype/db/5",
+      "checksum": "sha256:a65e27aecbbb2cd6671f5da84c16db7e9c60f0114075e6ae9bcc71f466460a0c",
+      "error": null
+    },
+    "timestamp": "2026-10-16T00:44:07.878107667Z"
+  }
+}
