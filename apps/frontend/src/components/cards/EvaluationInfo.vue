@@ -7,9 +7,14 @@
       </div>
       <div v-if="platform"><strong>Platform:</strong> {{ platform }}</div>
       <div v-if="duration">
-        <strong>Duration:</strong> {{ duration }} Seconds
+        <strong>Run Time (RT):</strong> {{ duration }} Seconds
       </div>
-      <div v-if="startTime"><strong>Start Time:</strong> {{ startTime }}</div>
+      <div v-if="startTime">
+        <strong>Scan Start Time (ST):</strong> {{ startTime }}
+      </div>
+      <div v-if="lastModified">
+        <strong>File Last Modified (LM):</strong> {{ lastModified }}
+      </div>
       <div v-if="evaluation" class="d-flex flex-nowrap">
         <strong class="pt-2 pr-1">Tags:</strong>
         <TagRow v-if="evaluation.id" :evaluation="evaluation" />
@@ -117,6 +122,10 @@ export default class EvaluationInfo extends Vue {
 
   get startTime(): string | null {
     return get_eval_start_time(this.file as ContextualizedEvaluation);
+  }
+
+  get lastModified(): string | undefined {
+    return this.file_object.lastModified?.toLocaleString();
   }
 }
 </script>

@@ -313,3 +313,32 @@ export function compareCompliance(
     calculateCompliance({fromFile: [b.from_file.uniqueId]})
   );
 }
+
+// Client-reported (browser File.lastModified); not server-verified. Missing
+// values always sort last, regardless of `reverse`.
+export function compareLastModified(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation,
+  reverse = false
+) {
+  const aTime = parseLastModifiedTime(a.from_file.lastModified);
+  const bTime = parseLastModifiedTime(b.from_file.lastModified);
+  if (aTime === undefined && bTime === undefined) {
+    return 0;
+  } else if (aTime === undefined) {
+    return 1;
+  } else if (bTime === undefined) {
+    return -1;
+  }
+  return reverse ? bTime - aTime : aTime - bTime;
+}
+
+// Values may arrive as strings/null (e.g. from a JSON API response) despite
+// being typed as Date, so parse defensively rather than trusting the type.
+function parseLastModifiedTime(value: unknown): number | undefined {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+  const time = new Date(value as string | number | Date).getTime();
+  return Number.isNaN(time) ? undefined : time;
+}
