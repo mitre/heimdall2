@@ -39,3 +39,6 @@ jobs:
 
       - name: Ensure the app builds cleanly with only production dependencies
         run: yarn build
+
+      - name: Verify compiled shared authentication strategies
+        run: yarn common test:ci

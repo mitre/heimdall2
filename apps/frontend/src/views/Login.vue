@@ -25,17 +25,19 @@
                 show-arrows
               >
                 <v-tab
-                  v-if="anyAuthProvidersAvailable"
+                  v-if="anyStandardTabAuthProvidersAvailable"
                   id="select-tab-standard-login"
                   href="#login-standard"
-                  >Heimdall Login (Local Authorization)</v-tab
                 >
+                  {{ standardTabLabel }}
+                </v-tab>
                 <v-tab
-                  v-if="ldapenabled"
+                  v-if="ldapEnabled"
                   id="select-tab-ldap-login"
                   href="#login-ldap"
-                  >Organization Login (LDAP Authorization)</v-tab
                 >
+                  Organization Login (LDAP)
+                </v-tab>
 
                 <v-tab-item value="login-standard">
                   <LocalLogin />
@@ -70,7 +72,7 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 })
 export default class Login extends Vue {
   activeTab: string = lastLoginTab.getDefault(
-    this.anyAuthProvidersAvailable ? 'logintab-standard' : 'login-ldap'
+    this.anyStandardTabAuthProvidersAvailable ? 'logintab-standard' : 'login-ldap'
   );
 
   logoffMessage = 'You have successfully logged off';
@@ -101,18 +103,12 @@ export default class Login extends Vue {
     this.$router.push('/signup');
   }
 
-  get anyAuthProvidersAvailable() {
-    return (
-      ServerModule.localLoginEnabled || ServerModule.enabledOAuth.length !== 0
-    );
+  get anyStandardTabAuthProvidersAvailable() {
+    return ServerModule.enabledAuthStrategies.some(strategy => strategy !== 'ldap');
   }
 
-  get ldapenabled() {
-    return ServerModule.ldap;
-  }
-
-  get localLoginEnabled() {
-    return ServerModule.localLoginEnabled;
+  get ldapEnabled() {
+    return ServerModule.enabledAuthStrategies.includes('ldap');
   }
 
   get logoffFailure() {
@@ -154,6 +150,16 @@ export default class Login extends Vue {
         return false;
       }
     }
+  }
+
+  get standardTabLabel() {
+    const strategies = ServerModule.enabledAuthStrategies;
+    const hasLocal = strategies.includes('local');
+    const hasSso = strategies.some(strategy => strategy !== 'local' && strategy !== 'ldap');
+    if (hasLocal && hasSso) {
+      return 'Heimdall Login (Local and SSO)';
+    }
+    return hasLocal ? 'Local Account Login' : 'Organization Login (SSO)';
   }
 }
 </script>

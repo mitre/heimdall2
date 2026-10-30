@@ -52,6 +52,8 @@ COPY --from=builder --chown=1001 /src/apps/backend/migrations apps/backend/migra
 COPY --from=builder --chown=1001 /src/apps/backend/seeders apps/backend/seeders
 
 COPY --from=builder --chown=1001 /src/libs/password-complexity/ libs/password-complexity
+COPY --from=builder --chown=1001 /src/libs/common/package.json libs/common/package.json
+COPY --from=builder --chown=1001 /src/libs/common/lib libs/common/lib
 
 COPY --from=builder --chown=1001 /src/apps/backend/dist apps/backend/dist
 COPY --from=builder --chown=1001 /src/dist/ dist/
