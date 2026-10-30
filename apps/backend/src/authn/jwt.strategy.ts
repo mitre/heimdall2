@@ -24,6 +24,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         };
         try {
           const user = await usersService.findById(decodedToken.sub);
+          if (user.isDisabled) {
+            return done(new UnauthorizedException('This account is disabled'));
+          }
           done(null, configService.get('JWT_SECRET') + user.jwtSecret);
         } catch {
           done(
@@ -42,6 +45,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     email: string;
     role: string;
   }): Promise<IUser> {
-    return this.usersService.findById(payload.sub);
+    const user = await this.usersService.findById(payload.sub);
+    if (user.isDisabled) {
+      throw new UnauthorizedException('This account is disabled');
+    }
+    return user;
   }
 }
