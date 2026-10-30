@@ -21,6 +21,7 @@ import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import cypress from 'eslint-plugin-cypress';
 import vue from 'eslint-plugin-vue';
+import packageJson from './package.json' with { type: 'json' };
 
 /* eslint-enable n/no-extraneous-import */
 
@@ -93,6 +94,7 @@ export default defineConfig([
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': 'off',
       curly: 'error',
+      eqeqeq: ['error', 'always'],
       'n/no-missing-import': ['error', { tryExtensions: ['.ts', '.tsx', '.d.ts', '.js', '.jsx', '.mjs', '.cjs', '.json'] }],
       'perfectionist/sort-imports': [
         'error',
@@ -112,12 +114,27 @@ export default defineConfig([
           useExperimentalDependencyDetection: true,
         },
       ],
+      'perfectionist/sort-modules': [
+        'error',
+        {
+          groups: [
+            'enum',
+            ['interface', 'type'],
+            'class',
+            'function',
+          ],
+          type: 'usage',
+        },
+      ],
       'prefer-object-has-own': 'error',
       'unicorn/filename-case': ['error', { case: 'snakeCase' }],
       'unicorn/no-null': 'off',
       'unicorn/no-process-exit': 'off',
       'unicorn/prefer-node-protocol': 'off',
       'unicorn/prevent-abbreviations': 'off',
+    },
+    settings: {
+      n: { version: packageJson.engines.node },
     },
   },
   {
@@ -134,6 +151,9 @@ export default defineConfig([
     language: 'json/json',
     name: 'package.json',
     plugins: { json },
+    rules: {
+      'e18e/ban-dependencies': ['error', { allowed: ['lodash'] }],
+    },
   },
   {
     extends: [
