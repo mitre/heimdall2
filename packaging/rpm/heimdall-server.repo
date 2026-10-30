@@ -1,0 +1,10 @@
+[mitre-saf]
+name=MITRE SAF - $releasever - $basearch
+baseurl=https://download.copr.fedorainfracloud.org/results/@mitre/saf/epel-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/@mitre/saf/pubkey.gpg
+repo_gpgcheck=0
+enabled=0
+enabled_metadata=1
