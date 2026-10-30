@@ -17541,9 +17541,9 @@ synckit@^0.11.11:
     "@pkgr/core" "^0.3.6"
 
 systeminformation@^5.31.1:
-  version "5.33.5"
-  resolved "https://registry.npmjs.org/systeminformation/-/systeminformation-5.33.5.tgz#85db4ec5553dcd15e17d0ed2690fa67786a3ff40"
-  integrity sha512-0v8l1CwFOAjfkv6ynpMrv3YGjH0M7PWCpZwusr8J1TEoQFPK7WXO6gbeAiandaWoh7vbMdnFtDqVotJVnLJtIg==
+  version "5.33.18"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.33.18.tgz#cae5983875ba291f6f036cfde86a26b422c5b71c"
+  integrity sha512-SF8DBQx3ypa8zDqZlezpHQ6M2g7TrqSEWpAtC4OsHCdLmi7J2WdxaSbA8/DJyEn2l/CHPrW0VFenoqoDccrw6g==
 
 table-layout@^0.4.3:
   version "0.4.5"
