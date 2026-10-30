@@ -30,9 +30,14 @@
             "wascid": "",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://www.owasp.org/index.php/Web_Application_Security_Testing_Cheat_Sheet"
+            }
+          ],
           "source_location": {},
           "title": "User Agent Fuzzer",
           "id": "10104",
@@ -43,7 +48,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"pluginid\": \"10104\",\n  \"alert\": \"User Agent Fuzzer\",\n  \"name\": \"User Agent Fuzzer\",\n  \"riskcode\": \"0\",\n  \"confidence\": \"2\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"desc\": \"<p>Check for differences in response based on fuzzed User Agent (eg. mobile sites, access as a Search Engine Crawler). Compares the response statuscode and the hashcode of the response body with the original response.</p>\",\n  \"instances\": [\n    {\n      \"uri\": \"http://zero.webappsecurity.com/favicon.ico\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/transfer-funds-verify.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/account-activity-show-transactions.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/sendFeedback.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/help.html?topic=/help/topic2.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/robots.txt\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/auth\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/index.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/signin.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/signin.html\",\n      \"method\": \"POST\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/online-statements.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/money-map-get-spendings-by-type.html?_dc=1544043856896\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/auth/security-check.html?user_token=8c797e39-7ab3-41d2-a53a-2a6449f13866\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"msnbot/1.1 (+http://search.msn.com/msnbot.htm)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/account-summary.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/login.html?login_error=true\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/online-statements-for-account.html\",\n      \"method\": \"POST\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/pay-bills-new-payee.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"msnbot/1.1 (+http://search.msn.com/msnbot.htm)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/money-map-get-spendings-by-type.html?_dc=1544043856896\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/logout.html\",\n      \"method\": \"GET\",\n      \"param\": \"Header User-Agent\",\n      \"attack\": \"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)\"\n    }\n  ],\n  \"count\": \"364\",\n  \"solution\": \"<p></p>\",\n  \"reference\": \"<p>https://www.owasp.org/index.php/Web_Application_Security_Testing_Cheat_Sheet</p>\",\n  \"sourceid\": \"1\"\n}",
           "results": [
             {
@@ -162,9 +167,17 @@
             "wascid": "14",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet"
+            },
+            {
+              "url": "https://blog.veracode.com/2014/03/guidelines-for-setting-security-headers/"
+            }
+          ],
           "source_location": {},
           "title": "Web Browser XSS Protection Not Enabled",
           "id": "10016",
@@ -292,9 +305,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "1",
-            "riskdesc": "Informational (Low)"
+            "riskdesc": "Informational (Low)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Cookie Slack Detector",
           "id": "90027.1",
@@ -305,7 +323,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"pluginid\": \"90027\",\n  \"alert\": \"Cookie Slack Detector\",\n  \"name\": \"Cookie Slack Detector\",\n  \"riskcode\": \"0\",\n  \"confidence\": \"1\",\n  \"riskdesc\": \"Informational (Low)\",\n  \"desc\": \"<p>Repeated GET requests: drop a different cookie each time, followed by normal request with all cookies to stabilize session, compare responses against original baseline GET. This can reveal areas where cookie based authentication/attributes are not actually enforced.</p>\",\n  \"instances\": [\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/account-activity.html?accountId=4\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/pay-bills.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/sitemap.xml\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/login.html?login_error=true\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/account-activity-find-transactions.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/pay-bills-new-payee.html\",\n      \"method\": \"POST\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/account-activity-show-transactions.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/help.html?topic=/help/topic2.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/sendFeedback.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/auth\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/online-statements.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/forgotten-password-send.html\",\n      \"method\": \"POST\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/logout.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/signin.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/signin.html\",\n      \"method\": \"POST\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/help.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/pay-bills-purchase-currency.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/forgot-password.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/account-summary.html\",\n      \"method\": \"GET\"\n    },\n    {\n      \"uri\": \"http://zero.webappsecurity.com/bank/transfer-funds-verify.html\",\n      \"method\": \"GET\"\n    }\n  ],\n  \"count\": \"52\",\n  \"solution\": \"<p></p>\",\n  \"otherinfo\": \"<p>Dropping this cookie appears to have invalidated the session: [JSESSIONID] A follow-on request with all original cookies still had a different response than the original request. </p><p></p>\",\n  \"reference\": \"<p>http://projects.webappsec.org/Fingerprinting</p><p></p>\",\n  \"cweid\": \"200\",\n  \"wascid\": \"45\",\n  \"sourceid\": \"1\"\n}",
           "results": [
             {
@@ -422,9 +440,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "1",
-            "riskdesc": "Low (Low)"
+            "riskdesc": "Low (Low)",
+            "riskcode": "1"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Cookie Slack Detector",
           "id": "90027.2",
@@ -507,9 +530,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "High (Medium)"
+            "riskdesc": "High (Medium)",
+            "riskcode": "3"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://tools.ietf.org/html/rfc7231#section-5.1.2"
+            }
+          ],
           "source_location": {},
           "title": "Proxy Disclosure",
           "id": "40025.1",
@@ -639,9 +667,17 @@
             "wascid": "15",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://msdn.microsoft.com/en-us/library/ie/gg622941%28v=vs.85%29.aspx"
+            },
+            {
+              "url": "https://www.owasp.org/index.php/List_of_useful_HTTP_headers"
+            }
+          ],
           "source_location": {},
           "title": "X-Content-Type-Options Header Missing",
           "id": "10021",
@@ -769,9 +805,17 @@
             "wascid": "19",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "High (Medium)"
+            "riskdesc": "High (Medium)",
+            "riskcode": "3"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://www.owasp.org/index.php/Top_10_2010-A1"
+            },
+            {
+              "url": "https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet"
+            }
+          ],
           "source_location": {},
           "title": "SQL Injection - SQLite",
           "id": "40024",
@@ -901,9 +945,14 @@
             "wascid": "15",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Medium (Medium)"
+            "riskdesc": "Medium (Medium)",
+            "riskcode": "2"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://blogs.msdn.com/b/ieinternals/archive/2010/03/30/combating-clickjacking-with-x-frame-options.aspx"
+            }
+          ],
           "source_location": {},
           "title": "X-Frame-Options Header Not Set",
           "id": "10020",
@@ -1031,9 +1080,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Medium (Medium)"
+            "riskdesc": "Medium (Medium)",
+            "riskcode": "2"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://tools.ietf.org/html/rfc7231#section-5.1.2"
+            }
+          ],
           "source_location": {},
           "title": "Proxy Disclosure",
           "id": "40025.2",
@@ -1116,9 +1170,17 @@
             "wascid": "19",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "High (Medium)"
+            "riskdesc": "High (Medium)",
+            "riskcode": "3"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://www.owasp.org/index.php/Top_10_2010-A1"
+            },
+            {
+              "url": "https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet"
+            }
+          ],
           "source_location": {},
           "title": "SQL Injection - MsSQL",
           "id": "40027",
@@ -1156,9 +1218,17 @@
             "wascid": "33",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "High (Medium)"
+            "riskdesc": "High (Medium)",
+            "riskcode": "3"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Path-Traversal"
+            },
+            {
+              "url": "http://cwe.mitre.org/data/definitions/22.html"
+            }
+          ],
           "source_location": {},
           "title": "Path Traversal",
           "id": "6",
@@ -1193,9 +1263,17 @@
             "wascid": "5",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "High (Medium)"
+            "riskdesc": "High (Medium)",
+            "riskcode": "3"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Remote-File-Inclusion"
+            },
+            {
+              "url": "http://cwe.mitre.org/data/definitions/98.html"
+            }
+          ],
           "source_location": {},
           "title": "Remote File Inclusion",
           "id": "7",
@@ -1228,9 +1306,14 @@
             "wascid": "6",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Medium (Medium)"
+            "riskdesc": "Medium (Medium)",
+            "riskcode": "2"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://www.owasp.org/index.php/Format_string_attack"
+            }
+          ],
           "source_location": {},
           "title": "Format String Error",
           "id": "30002",
@@ -1252,7 +1335,7 @@
           ]
         }
       ],
-      "sha256": "dc87fef5b7ce93b02f962f859309f21d08b33c3754667fac7c1214f52bb70f07"
+      "sha256": "73fb37e4fb48fe84a7d87b105a532f92bae288f99e651cb5c3621817a7ef69e0"
     }
   ],
   "passthrough": {

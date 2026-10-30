@@ -34,22 +34,28 @@ function filterSite<T>(input: Array<T>, name?: string) {
     );
   }
 }
+
 function impactMapping(input: unknown): number {
   if (typeof input === 'string') {
     const impact = parseInt(input);
-    if (0 <= impact && impact <= 1) {
-      return 0.3;
-    } else if (impact === 2) {
-      return 0.5;
-    } else if (impact >= 3) {
-      return 0.7;
-    } else {
-      return 0;
+
+    switch (impact) {
+      case 0:
+        return 0;
+      case 1:
+        return 0.3;
+      case 2:
+        return 0.5;
+      case 3:
+        return 0.7;
+      default:
+        return 0;
     }
   } else {
     return 0;
   }
 }
+
 function nistTag(cweid: string): string[] {
   return CWE_NIST_MAPPING.nistFilter(
     [cweid],
@@ -74,6 +80,15 @@ function formatCodeDesc(input: unknown): string {
   }
   return text.join('\n') + '\n';
 }
+function formatReferences(input: Record<string, unknown>): ExecJSON.Reference[] {
+  const reference: unknown = _.get(input, 'reference');
+
+  if (!_.isString(reference)) {
+    return [];
+  }
+
+  return ((reference as string).match(/https?:\/\/[^<>"'\s]+/gi) ?? []).map((url) => ({url}));
+}
 function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   const controlId = input.map((element) => {
     return _.get(element, 'id');
@@ -96,7 +111,6 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   });
   return input as ExecJSON.Control[];
 }
-
 export class ZapResults {
   constructor(readonly zapJson: string, readonly name?: string, readonly withRaw = false) {}
 
@@ -154,9 +168,10 @@ export class ZapMapper extends BaseConverter {
               wascid: {path: 'wascid'},
               sourceid: {path: 'sourceid'},
               confidence: {path: 'confidence'},
-              riskdesc: {path: 'riskdesc'}
+              riskdesc: {path: 'riskdesc'},
+              riskcode: {path: 'riskcode'}
             },
-            refs: [],
+            refs: {transformer: formatReferences} as unknown as ExecJSON.Reference[],
             source_location: {},
             title: {path: 'name'},
             id: {path: 'pluginid'},
@@ -191,7 +206,7 @@ export class ZapMapper extends BaseConverter {
           auxiliary_data: [
             {
               name: 'OWASP ZAP',
-              data: _.pick(data, ['site.@port', 'site.@ssl'])
+              data: _.pick(data, ['site.@port', 'site.@ssl', 'insights'])
             }
           ],
           ...(this.withRaw && {raw: data})
