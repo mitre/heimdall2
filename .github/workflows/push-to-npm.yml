@@ -22,7 +22,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24.22.1"
           check-latest: true
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/setup-node@v6
         if: always()
         with:
-          node-version: "22"
+          node-version: "24.22.1"
           check-latest: true
           registry-url: 'https://npm.pkg.github.com'
           cache: 'yarn'
