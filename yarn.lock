@@ -30,6 +30,18 @@
     rxjs "7.8.2"
     source-map "0.8.0"
 
+"@angular-devkit/core@22.2.4":
+  version "22.2.4"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.4.tgz#062f946ebdb4fa12483f60fc11aadd073584fbb7"
+  integrity sha512-HDlsVK/qN7p5ttKgPvVLo87yrN0UcHR7OyQo1n/lvvMQcYrA0n01E+ix4t+q4C04ifpMbNQtrK0I1222OKi99w==
+  dependencies:
+    ajv "8.20.0"
+    ajv-formats "3.0.1"
+    jsonc-parser "3.3.1"
+    picomatch "4.0.7"
+    rxjs "7.8.2"
+    source-map "0.8.0"
+
 "@angular-devkit/schematics-cli@22.2.3":
   version "22.2.3"
   resolved "https://registry.yarnpkg.com/@angular-devkit/schematics-cli/-/schematics-cli-22.2.3.tgz#fe34c246f7534b263386fac1584eb44adec61ea6"
@@ -45,6 +57,17 @@
   integrity sha512-+XfBViIGqiFQK8KJXA6PgANX9tLuMO/x8GFjlzEmA4LIe9ikAtpGZw+Ezo547BIJQoJBIKCJYR0knE4BmbFeSQ==
   dependencies:
     "@angular-devkit/core" "22.2.3"
+    jsonc-parser "3.3.1"
+    magic-string "1.4.1"
+    ora "9.4.1"
+    rxjs "7.8.2"
+
+"@angular-devkit/schematics@22.2.4":
+  version "22.2.4"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.2.4.tgz#045e1400b48bd2254e98daf95cbb2fb315add9f2"
+  integrity sha512-9pRNtcZN87yM7KQX+HTxGatrm86y30JxVwkF2WNG1pR0e9yeiYWc1KQ5hRS1Nq1LULoP95HApc+TBXqUXzF4Ag==
+  dependencies:
+    "@angular-devkit/core" "22.2.4"
     jsonc-parser "3.3.1"
     magic-string "1.4.1"
     ora "9.4.1"
@@ -2457,12 +2480,12 @@
     tslib "2.8.1"
 
 "@nestjs/schematics@^12.0.0":
-  version "12.0.10"
-  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-12.0.10.tgz#1545ac1ee17e5347e11d5f9e9790e4bb4a7988b2"
-  integrity sha512-3objKOOQDGxcckj92d7NNiYGVNoMoUqqw7eX8O/25ZL4V6ih/Hkx4WgOJ/H/2fkfag4UdiYN/GySHimn682+nQ==
+  version "12.0.11"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-12.0.11.tgz#d73c1ef563e5e1cd8c272ef26c09d93fb4240e6f"
+  integrity sha512-OaQOU8SZ7S+SYsJ3qQOQMAq4gm1hhQw2wGIgua2Jepoxn1YQfz/VdLejF3tLWjfnVbXtPGU1gTZiGPiiWTydTg==
   dependencies:
-    "@angular-devkit/core" "22.2.3"
-    "@angular-devkit/schematics" "22.2.3"
+    "@angular-devkit/core" "22.2.4"
+    "@angular-devkit/schematics" "22.2.4"
     comment-json "5.0.0"
     jsonc-parser "3.3.1"
     pluralize "8.0.0"
