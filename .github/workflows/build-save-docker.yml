@@ -90,3 +90,105 @@ jobs:
         with:
           name: heimdall.tar
           path: ${{ runner.temp }}/heimdall.tar
+      # Heimdall Lite is built too so a broken Dockerfile.lite fails the PR; nothing is exported.
+      - name: Build Heimdall Lite
+        uses: docker/bake-action@v7
+        env:
+          TAG_SUFFIXES: ${{ env.DOCKER_TAG }}
+        with:
+          files: ./docker-bake.hcl
+          targets: lite-${{ github.event.inputs.platform || 'amd64' }}
+          set: |
+            *.output=type=cacheonly
+
+  # Run the image the docker job just built, so a broken image fails the PR
+  # instead of only failing once it is published.
+  smoke:
+    runs-on: ubuntu-24.04
+    needs: docker
+    if: github.actor != 'dependabot[bot]' && github.event.inputs.platform != 'arm64'
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: heimdall-server-production
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - name: Checkout the Heimdall Repository
+        uses: actions/checkout@v6
+      - name: Download docker tarball
+        uses: actions/download-artifact@v5
+        with:
+          name: heimdall.tar
+          path: ${{ runner.temp }}
+      - name: Load the image
+        id: load
+        run: |
+          # The tag is derived from the branch name in the docker job, so read it back from the tarball.
+          echo "image=$(docker load -i "${{ runner.temp }}/heimdall.tar" | sed -n 's/^Loaded image: //p' | head -n 1)" >> "$GITHUB_OUTPUT"
+      - name: Image runs at least the Node version package.json requires
+        run: |
+          required=$(sed -n 's/.*"node": *">=\([0-9.]*\)".*/\1/p' package.json | head -n 1)
+          actual=$(docker run --rm --entrypoint node "${{ steps.load.outputs.image }}" -p 'process.versions.node')
+          echo "image Node $actual, package.json requires >= $required"
+          [ "$(printf '%s\n%s\n' "$required" "$actual" | sort -V | head -n 1)" = "$required" ]
+      - name: Start the image against Postgres
+        run: |
+          docker run -d --name heimdall --network host \
+            -e NODE_ENV=production -e DATABASE_HOST=127.0.0.1 -e DATABASE_PASSWORD=postgres \
+            -e JWT_SECRET=smoke-test-secret -e EXTERNAL_URL=http://127.0.0.1:3000 \
+            "${{ steps.load.outputs.image }}"
+      - name: Wait for migrations and startup
+        run: |
+          for _ in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:3000/server && exit 0
+            [ "$(docker inspect -f '{{.State.Running}}' heimdall)" = "true" ] || { docker logs heimdall; exit 1; }
+            sleep 2
+          done
+          docker logs heimdall
+          exit 1
+      - name: Frontend is served
+        run: curl -fsS http://127.0.0.1:3000/ | grep -qi '<html'
+      - name: A CA added with update-ca-trust is trusted by Node
+        # Same path the compose certs service uses: PEM into the anchors directory, then update-ca-trust.
+        run: |
+          image="${{ steps.load.outputs.image }}"
+          mkdir -m 755 "$RUNNER_TEMP/ca"
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj "/CN=Heimdall Smoke Test CA" \
+            -keyout "$RUNNER_TEMP/ca.key" -out "$RUNNER_TEMP/ca/ca.pem"
+          chmod 644 "$RUNNER_TEMP/ca/ca.pem"
+          # Compare fingerprints: Node re-encodes PEMs, so the text never matches byte for byte.
+          check='const {X509Certificate}=require("crypto"),fs=require("fs"),tls=require("tls");const fp=p=>new X509Certificate(p).fingerprint256;const want=fp(fs.readFileSync("/ca/ca.pem"));console.log(tls.getCACertificates("system").some(c=>fp(c)===want)?"trusted":"untrusted")'
+          before=$(docker run --rm --entrypoint node -v "$RUNNER_TEMP/ca:/ca:ro" "$image" -e "$check")
+          after=$(docker run --rm --user 0 --entrypoint sh -v "$RUNNER_TEMP/ca:/ca:ro" "$image" \
+            -c "cp /ca/ca.pem /etc/pki/ca-trust/source/anchors/smoke-test-ca.pem && update-ca-trust && node -e '$check'")
+          echo "before update-ca-trust: $before; after: $after"
+          [ "$before" = "untrusted" ] && [ "$after" = "trusted" ]
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.22.1"
+          check-latest: true
+          cache: 'yarn'
+      - name: Screenshots of the running image
+        # Same Cypress setup as the e2e job, pointed at the container (baseUrl is http://127.0.0.1:3000).
+        uses: cypress-io/github-action@v7
+        with:
+          config-file: cypress.container.config.ts
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: container-screenshots
+          path: test/screenshots
+          if-no-files-found: warn
+      - name: Server log
+        if: failure()
+        run: docker logs heimdall
