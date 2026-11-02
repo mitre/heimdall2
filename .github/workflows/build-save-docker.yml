@@ -92,7 +92,7 @@ jobs:
           path: ${{ runner.temp }}/heimdall.tar
       # Heimdall Lite is built too so a broken Dockerfile.lite fails the PR; nothing is exported.
       - name: Build Heimdall Lite
-        uses: docker/bake-action@v7
+        uses: docker/bake-action@59cb1203cd42bcefd40a1b6d73b589e48c86040e # v7.5.0
         env:
           TAG_SUFFIXES: ${{ env.DOCKER_TAG }}
         with:
@@ -111,7 +111,8 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_PASSWORD: postgres
+          # Throwaway database for this job only, so no password is needed.
+          POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_DB: heimdall-server-production
         ports:
           - 5432:5432
@@ -142,7 +143,7 @@ jobs:
       - name: Start the image against Postgres
         run: |
           docker run -d --name heimdall --network host \
-            -e NODE_ENV=production -e DATABASE_HOST=127.0.0.1 -e DATABASE_PASSWORD=postgres \
+            -e NODE_ENV=production -e DATABASE_HOST=127.0.0.1 \
             -e JWT_SECRET=smoke-test-secret -e EXTERNAL_URL=http://127.0.0.1:3000 \
             "${{ steps.load.outputs.image }}"
       - name: Wait for migrations and startup
@@ -179,7 +180,7 @@ jobs:
           cache: 'yarn'
       - name: Screenshots of the running image
         # Same Cypress setup as the e2e job, pointed at the container (baseUrl is http://127.0.0.1:3000).
-        uses: cypress-io/github-action@v7
+        uses: cypress-io/github-action@18016a55674bd02cabf197de5762a1710cb5577c # v7.4.9
         with:
           config-file: cypress.container.config.ts
       - name: Upload screenshots

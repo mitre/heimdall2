@@ -39,8 +39,9 @@ context('Container screenshots', () => {
 
     uploadModal.loadSample('Acme Overlay Example');
     cy.url().should('include', '/results');
-    // Let the charts finish animating so the screenshot isn't taken mid-draw
-    cy.wait(3000);
-    cy.screenshot('results', {capture: 'viewport'});
+    // Wait for the loaded result, then capture just the file info and result cards. The charts
+    // below them animate in and would be caught mid-draw, so they are left out of the capture.
+    cy.contains('Passed: 5').should('be.visible');
+    cy.screenshot('results', {capture: 'viewport', clip: {height: 330, width: 1000, x: 0, y: 0}});
   });
 });
