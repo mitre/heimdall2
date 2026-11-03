@@ -18605,9 +18605,9 @@ vm-browserify@^1.0.1:
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
 vue-apexcharts@^1.5.1:
-  version "1.7.1"
-  resolved "https://registry.npmjs.org/vue-apexcharts/-/vue-apexcharts-1.7.1.tgz#677a00d9a68d1e430dc9ddcf87ce06b7b967142c"
-  integrity sha512-7vCmWyKqM4P9yxPXkAiCXpoF1Sd1Mg2Vj11G+1cdkJij6RojwestIR4RXwESzHVsrqvH9/9Ii6A+BWRnZf71/w==
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/vue-apexcharts/-/vue-apexcharts-1.7.2.tgz#8aff4f9032d821d79122988b2a84003ebc260668"
+  integrity sha512-EG+qU74ZAN4/WSBCvDpJPsK7ebm78+V9B7VyXB99DXNRDuF6P1xpil3Nkpp+ixci2nTgf+Q0R12E3RHQMCbogw==
 
 vue-class-component@^7.0.2:
   version "7.2.6"
