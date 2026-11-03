@@ -127,7 +127,7 @@ function isPresent(value: unknown): value is string {
 // declares a single value.
 function normalizeToArray(value: unknown): string[] {
   if (Array.isArray(value)) {
-    return value.filter(_.isString);
+    return value.filter((entry) => _.isString(entry));
   }
   return _.isString(value) ? [value] : [];
 }
@@ -161,7 +161,7 @@ function impactMapping(result: SemgrepResult): number {
 // objects carry `name` and `shortDescription` -- so one is derived here.
 function formatTitle(result: SemgrepResult): string {
   const segments = result.check_id.split('.').filter((s) => s.length > 0);
-  const ruleName = segments[segments.length - 1] ?? result.check_id;
+  const ruleName = segments.at(-1) ?? result.check_id;
   return _.startCase(ruleName.replace(/[-_]/g, ' '));
 }
 
@@ -394,9 +394,10 @@ export class SemgrepMapper extends BaseConverter<SemgrepReport> {
                       },
                       message: {
                         transformer: (error: SemgrepError): string => {
-                          const kind = Array.isArray(error.type)
-                            ? String(error.type[0])
-                            : String(error.type ?? 'Unknown');
+                          const type = Array.isArray(error.type)
+                            ? error.type[0]
+                            : error.type;
+                          const kind = _.isString(type) ? type : 'Unknown';
                           return `${kind}: ${error.message}`;
                         }
                       },
