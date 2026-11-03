@@ -116,7 +116,7 @@ describe('Config Service', () => {
     });
   });
 
-  describe('Upload size limit', () => {
+  describe('Upload limits', () => {
     beforeAll(() => {
       mock({ '.env': '' });
     });
@@ -134,7 +134,7 @@ describe('Config Service', () => {
       expect(new ConfigService().getMaxFileUploadSizeBytes()).toBe(524_288);
     });
 
-    it('disables the cap for explicit zero', () => {
+    it('disables the file-size cap for explicit zero', () => {
       vi.stubEnv('MAX_FILE_UPLOAD_SIZE', '0');
       expect(new ConfigService().getMaxFileUploadSizeBytes()).toBe(Infinity);
     });
@@ -152,12 +152,6 @@ describe('Config Service', () => {
         'MAX_FILE_UPLOAD_SIZE must be 0 (unlimited) or a positive MiB value yielding a safe integer byte count',
       );
     });
-  });
-
-  describe('Upload field-size limit', () => {
-    beforeAll(() => {
-      mock({ '.env': '' });
-    });
 
     it.each([
       [undefined, 1_048_576],
@@ -167,12 +161,6 @@ describe('Config Service', () => {
     ])('converts MAX_UPLOAD_FIELD_SIZE=%j to %i bytes', (value, bytes) => {
       vi.stubEnv('MAX_UPLOAD_FIELD_SIZE', value);
       expect(new ConfigService().getMaxUploadFieldSizeBytes()).toBe(bytes);
-    });
-  });
-
-  describe('Upload file-count limit', () => {
-    beforeAll(() => {
-      mock({ '.env': '' });
     });
 
     it.each([undefined, ' '.repeat(3)])(
@@ -188,7 +176,7 @@ describe('Config Service', () => {
       expect(new ConfigService().getMaxFilesPerUpload()).toBe(25);
     });
 
-    it('disables the cap for explicit zero', () => {
+    it('disables the file-count cap for explicit zero', () => {
       vi.stubEnv('MAX_FILES_PER_UPLOAD', '0');
       expect(new ConfigService().getMaxFilesPerUpload()).toBe(Infinity);
     });
