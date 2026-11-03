@@ -1,13 +1,15 @@
 import {ForbiddenException, NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
-import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import {afterAll, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   EVALUATION_1,
   EVALUATION_WITH_TAGS_1
 } from '../../test/constants/evaluations-test.constant';
 import {GROUP_1} from '../../test/constants/groups-test.constant';
 import {
+  CREATE_ADMIN_DTO,
+  CREATE_SECOND_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
@@ -156,6 +158,179 @@ describe('GroupsService', () => {
       await expect(
         groupsService.removeUserFromGroup(group, groupOwner)
       ).rejects.toBeInstanceOf(ForbiddenException);
+    });
+  });
+
+  describe('group owner reassignment', () => {
+    const preferredAdminEmail = 'preferred-admin@example.com';
+    let group: Group;
+    let departingUser: User;
+
+    beforeEach(async () => {
+      vi.stubEnv('ADMIN_EMAIL', preferredAdminEmail);
+      group = await groupsService.create(GROUP_1);
+      departingUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    });
+
+    it('adds the configured administrator as owner ahead of an older administrator', async () => {
+      await usersService.create(CREATE_ADMIN_DTO);
+      const preferredAdmin = await usersService.create({
+        ...CREATE_SECOND_ADMIN_DTO,
+        email: preferredAdminEmail,
+      });
+      await groupsService.addUserToGroup(group, departingUser, 'owner');
+
+      await groupsService.removeUserFromGroup(group, departingUser);
+
+      const members = await group.$get('users');
+      expect(members).toHaveLength(1);
+      expect(members[0]).toMatchObject({
+        GroupUser: { role: 'owner' },
+        id: preferredAdmin.id,
+      });
+    });
+
+    it('promotes an existing administrator membership without replacing or duplicating it', async () => {
+      const preferredAdmin = await usersService.create({
+        ...CREATE_ADMIN_DTO,
+        email: preferredAdminEmail,
+      });
+      await groupsService.addUserToGroup(group, departingUser, 'owner');
+      await groupsService.addUserToGroup(group, preferredAdmin, 'member');
+      const membershipBefore = await GroupUser.findOne({
+        rejectOnEmpty: true,
+        where: { groupId: group.id, userId: preferredAdmin.id },
+      });
+
+      await groupsService.removeUserFromGroup(group, departingUser);
+
+      const members = await group.$get('users');
+      expect(members).toHaveLength(1);
+      expect(members[0]).toMatchObject({
+        GroupUser: {
+          createdAt: membershipBefore.createdAt,
+          id: membershipBefore.id,
+          role: 'owner',
+        },
+        id: preferredAdmin.id,
+      });
+    });
+
+    it.each(['missing', 'not an administrator'])(
+      'selects the administrator with the lowest ID when the configured account is %s',
+      async (configuredAccount) => {
+        if (configuredAccount === 'not an administrator') {
+          await usersService.create({
+            ...CREATE_USER_DTO_TEST_OBJ_2,
+            email: preferredAdminEmail,
+          });
+        }
+        const firstAdmin = await usersService.create(CREATE_ADMIN_DTO);
+        await usersService.create(CREATE_SECOND_ADMIN_DTO);
+        await groupsService.addUserToGroup(group, departingUser, 'owner');
+
+        await groupsService.removeUserFromGroup(group, departingUser);
+
+        const members = await group.$get('users');
+        expect(members).toHaveLength(1);
+        expect(members[0]).toMatchObject({
+          GroupUser: { role: 'owner' },
+          id: firstAdmin.id,
+        });
+      },
+    );
+
+    it('assigns an administrator to a group with no owner when a member leaves', async () => {
+      const admin = await usersService.create(CREATE_ADMIN_DTO);
+      await groupsService.addUserToGroup(group, departingUser, 'member');
+
+      await groupsService.removeUserFromGroup(group, departingUser);
+
+      const members = await group.$get('users');
+      expect(members).toHaveLength(1);
+      expect(members[0]).toMatchObject({
+        GroupUser: { role: 'owner' },
+        id: admin.id,
+      });
+    });
+
+    it('reassigns ownership when demoting the sole owner through a GroupUser record', async () => {
+      const admin = await usersService.create(CREATE_ADMIN_DTO);
+      // Create memberships in a different order than users to distinguish their IDs.
+      await groupsService.addUserToGroup(group, admin, 'member');
+      await groupsService.addUserToGroup(group, departingUser, 'owner');
+      const membership = await GroupUser.findOne({
+        rejectOnEmpty: true,
+        where: { groupId: group.id, userId: departingUser.id },
+      });
+      expect(membership.id).not.toEqual(departingUser.id);
+
+      const updatedMembership = await groupsService.updateGroupUserRole(group, {
+        groupRole: 'member',
+        userId: departingUser.id,
+      });
+
+      expect(updatedMembership).toMatchObject({
+        id: membership.id,
+        role: 'member',
+        userId: departingUser.id,
+      });
+      const members = await group.$get('users');
+      expect(members).toHaveLength(2);
+      expect(
+        members.map(member => ({
+          role: member.GroupUser.role,
+          userId: member.id,
+        })),
+      ).toEqual(
+        expect.arrayContaining([
+          { role: 'owner', userId: admin.id },
+          { role: 'member', userId: departingUser.id },
+        ]),
+      );
+    });
+
+    it('preserves the sole owner when demotion has no replacement administrator', async () => {
+      await groupsService.addUserToGroup(group, departingUser, 'owner');
+
+      await expect(
+        groupsService.updateGroupUserRole(group, {
+          groupRole: 'member',
+          userId: departingUser.id,
+        }),
+      ).rejects.toThrow('No admin to be promoted');
+
+      const members = await group.$get('users');
+      expect(members).toHaveLength(1);
+      expect(members[0]).toMatchObject({
+        GroupUser: { role: 'owner' },
+        id: departingUser.id,
+      });
+    });
+
+    it('preserves the other owner when demoting one of two owners without an administrator', async () => {
+      const otherOwner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
+      await groupsService.addUserToGroup(group, departingUser, 'owner');
+      await groupsService.addUserToGroup(group, otherOwner, 'owner');
+
+      await groupsService.updateGroupUserRole(group, {
+        groupRole: 'member',
+        userId: departingUser.id,
+      });
+
+      const members = await group.$get('users');
+      expect(members).toHaveLength(2);
+      expect(
+        members.map(member => ({
+          role: member.GroupUser.role,
+          userId: member.id,
+        })),
+      ).toEqual(
+        expect.arrayContaining([
+          { role: 'owner', userId: otherOwner.id },
+          { role: 'member', userId: departingUser.id },
+        ]),
+      );
     });
   });
 

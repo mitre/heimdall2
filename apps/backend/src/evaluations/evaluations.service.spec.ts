@@ -1,6 +1,7 @@
 import {NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
+import { isEmail } from 'class-validator';
 import {afterAll, beforeAll, beforeEach, describe, expect, it} from 'vitest';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
@@ -130,6 +131,99 @@ describe('EvaluationsService', () => {
       expect(foundGroup.users[0].id).toEqual(owner.id);
       expect(foundGroup.users[0].GroupUser.role).toEqual('owner');
     });
+  });
+
+  describe('evaluation visibility by email', () => {
+    it.each([
+      ['reader@example.com', 'user'],
+      ["o'connor@example.com", 'user'],
+      ["x'/**/OR/**/'x'='x@example.com", 'user'],
+      ['"x\') OR 1=1--"@example.com', 'user'],
+      ['%@yahoo.com', 'user'],
+      ['a_c@yahoo.com', 'user'],
+      ['admin@example.com', 'admin'],
+    ])(
+      'lists and counts only authorized evaluations for %s (%s)',
+      async (email, role) => {
+        expect(isEmail(email)).toBe(true);
+        const viewer = await usersService.create({
+          ...CREATE_USER_DTO_TEST_OBJ,
+          email,
+          role,
+        });
+        const otherUser = await usersService.findById(user.id);
+        const createEvaluation = (
+          filename: string,
+          userId: string,
+          isPublic = false,
+        ) =>
+          evaluationsService.create({
+            ...EVALUATION_WITH_TAGS_1,
+            data: {},
+            filename: `visibility-${filename}`,
+            public: isPublic,
+            userId,
+          });
+        const publicEvaluation = await createEvaluation('public', user.id, true);
+        const ownedEvaluation = await createEvaluation('owned', viewer.id);
+        const sharedEvaluation = await createEvaluation('shared', user.id);
+        const privateEvaluation = await createEvaluation('private', user.id);
+
+        // Multiple matching groups must not inflate the evaluation counts.
+        for (const name of ['shared-first', 'shared-second']) {
+          const group = await groupsService.create({
+            ...GROUP_1,
+            name,
+            public: false,
+          });
+          await groupsService.addUserToGroup(group, viewer, 'member');
+          await groupsService.addUserToGroup(group, otherUser, 'owner');
+          await groupsService.addEvaluationToGroup(group, sharedEvaluation);
+        }
+        const privateGroup = await groupsService.create({
+          ...GROUP_1,
+          name: 'private',
+          public: false,
+        });
+        await groupsService.addUserToGroup(privateGroup, otherUser, 'owner');
+        await groupsService.addEvaluationToGroup(privateGroup, privateEvaluation);
+
+        const expectedIds = [
+          publicEvaluation.id,
+          ownedEvaluation.id,
+          sharedEvaluation.id,
+        ];
+        if (role === 'admin') {
+          expectedIds.push(privateEvaluation.id);
+        }
+        const parameters = { limit: 100, offset: 0, order: ['id', 'ASC'] };
+        const result = await evaluationsService.getAllEvaluations(
+          parameters,
+          email,
+          role,
+        );
+        expect(
+          result.evaluations.map(evaluation => evaluation.id),
+        ).toEqual(expectedIds);
+        expect(result.totalItems).toBe(expectedIds.length);
+
+        for (const operator of ['AND', 'OR']) {
+          const searchResult = await evaluationsService.getEvaluationsWithClause(
+            {
+              ...parameters,
+              operator,
+              searchFields: ['^visibility-', '()', '()'],
+            },
+            email,
+            role,
+          );
+          expect(
+            searchResult.evaluations.map(evaluation => evaluation.id),
+          ).toEqual(expectedIds);
+          expect(searchResult.totalItems).toBe(expectedIds.length);
+        }
+      },
+    );
   });
 
   describe('findById', () => {

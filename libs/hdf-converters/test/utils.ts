@@ -34,6 +34,55 @@ export function omitHDFTitle(
   return input;
 }
 
+export function omitHDFTimes(
+  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+    profiles?: Partial<ExecJSONProfile>[];
+  }
+) {
+  return {
+    ...input,
+    profiles: input.profiles?.map((profile) => {
+      return {
+        ...profile,
+        controls: profile.controls?.map((control) => {
+          return {
+            ...control,
+            attestation_data: _.omit(control.attestation_data, 'updated'),
+            results: control.results.map((result) => {
+              return {
+                ..._.omit(result, 'start_time'),
+                message: result.message?.replace(/Updated:.*\n/g, '')
+              };
+            })
+          };
+        })
+      };
+    })
+  };
+}
+
+export function omitRuleDescs(
+  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+    profiles?: Partial<ExecJSONProfile>[];
+  }
+): Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+  profiles?: Partial<ExecJSONProfile>[];
+} {
+  return {
+    ...input,
+    profiles: input.profiles?.map((profile) => ({
+      ...profile,
+      controls: profile.controls?.map((control) => _.omit(control, 'desc'))
+    }))
+  };
+}
+
+export function controlsHaveDescs(hdf: ExecJSON.Execution): boolean {
+  return hdf.profiles
+    .flatMap((profile) => profile.controls)
+    .every((control) => _.isString(control.desc) && _.trim(control.desc).length > 0);
+}
+
 // Profile information title contains a changing value
 export function omitASFFTitle(
   input: Partial<IFindingASFF>[]
@@ -60,33 +109,6 @@ export function omitASFFVersions(
     }
     return finding;
   });
-}
-
-export function omitHDFTimes(
-  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
-    profiles?: Partial<ExecJSONProfile>[];
-  }
-) {
-  return {
-    ...input,
-    profiles: input.profiles?.map((profile) => {
-      return {
-        ...profile,
-        controls: profile.controls?.map((control) => {
-          return {
-            ...control,
-            attestation_data: _.omit(control.attestation_data, 'updated'),
-            results: control.results.map((result) => {
-              return {
-                ..._.omit(result, 'start_time'),
-                message: result.message?.replace(/Updated:.*\n/g, '')
-              };
-            })
-          };
-        })
-      };
-    })
-  };
 }
 
 // replaces the version in the checklist file with the

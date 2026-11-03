@@ -39,6 +39,16 @@ export class GroupsService {
     return this.groupModel.findAll<Group>({include: 'users'});
   }
 
+  async findPublic(excludedGroupIds: string[] = []): Promise<Group[]> {
+    return this.groupModel.findAll<Group>({
+      include: 'users',
+      where: {
+        id: { [Op.notIn]: excludedGroupIds },
+        public: true,
+      },
+    });
+  }
+
   async count(): Promise<number> {
     return this.groupModel.count();
   }
@@ -90,17 +100,17 @@ export class GroupsService {
     group: Group,
     user: User | GroupUser
   ): Promise<void> {
-    const owners = (await group.$get('users')).filter(
-      (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
-    );
-    // If there are no more owners, set an admin to owner
-    if (
-      (owners.length < 2 &&
-        owners.some(
-          (owner) => owner.id === ('userId' in user ? user.userId : user.id)
-        )) ||
-      owners.length === 0
-    ) {
+    const userId = 'userId' in user ? user.userId : user.id;
+    const remainingOwner = await GroupUser.findOne({
+      attributes: ['userId'],
+      where: {
+        groupId: group.id,
+        role: 'owner',
+        userId: { [Op.ne]: userId },
+      },
+    });
+    // If no other owner remains, assign an administrator.
+    if (remainingOwner === null) {
       const appConfig = new AppConfig();
       // If default admin is not found, use admin with lowest ID
       const admin =
@@ -113,12 +123,14 @@ export class GroupsService {
         }));
       if (admin !== null) {
         // If admin is in the group, promote it. If not, add as owner
-        const adminId = admin.id;
-        const adminInGroup = (await group.$get('users')).find(
-          (userOnGroup) => userOnGroup.id === adminId
-        );
+        const adminInGroup = await GroupUser.findOne({
+          where: {
+            groupId: group.id,
+            userId: admin.id,
+          },
+        });
         adminInGroup
-          ? await adminInGroup.GroupUser.update({role: 'owner'})
+          ? await adminInGroup.update({ role: 'owner' })
           : await this.addUserToGroup(group, admin, 'owner');
       } else {
         // No admin found in system

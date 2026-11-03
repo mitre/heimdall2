@@ -139,6 +139,104 @@ describe('GroupsController', () => {
     });
   });
 
+  describe('findForUser visibility and membership details', () => {
+    it('returns public groups and memberships once each while excluding unrelated private groups', async () => {
+      const privateMembership = await groupsService.create(PRIVATE_GROUP);
+      const publicMembership = await groupsService.create(GROUP_1);
+      const otherPublicGroup = await groupsService.create({
+        ...GROUP_1,
+        name: 'Other public group',
+      });
+      await groupsService.create({
+        ...PRIVATE_GROUP,
+        name: 'Unrelated private group',
+      });
+      await groupsService.addUserToGroup(privateMembership, basicUser, 'owner');
+      await groupsService.addUserToGroup(publicMembership, basicUser, 'member');
+
+      const groups = await groupsController.findForUser({ user: basicUser });
+
+      expect(groups).toHaveLength(3);
+      expect(groups.map(group => group.id)).toEqual(
+        expect.arrayContaining([
+          privateMembership.id,
+          publicMembership.id,
+          otherPublicGroup.id,
+        ]),
+      );
+      expect(
+        groups.find(group => group.id === privateMembership.id),
+      ).toMatchObject({ role: 'owner' });
+      expect(
+        groups.find(group => group.id === publicMembership.id),
+      ).toMatchObject({ role: 'member' });
+      expect(
+        groups.find(group => group.id === otherPublicGroup.id),
+      ).toMatchObject({ role: undefined });
+    });
+
+    it('returns only public groups when the user has no memberships', async () => {
+      const publicGroup = await groupsService.create(GROUP_1);
+      await groupsService.create(PRIVATE_GROUP);
+
+      const groups = await groupsController.findForUser({ user: basicUser });
+
+      expect(groups.map(group => group.id)).toEqual([publicGroup.id]);
+      expect(groups[0]).toMatchObject({
+        public: true,
+        role: undefined,
+        users: [],
+      });
+    });
+
+    it('returns an empty list when only unrelated private groups exist', async () => {
+      await groupsService.create(PRIVATE_GROUP);
+
+      expect(await groupsController.findForUser({ user: basicUser })).toEqual(
+        [],
+      );
+    });
+
+    it.each([true, false])(
+      'preserves all member details and roles for a public group (viewer is a member: %s)',
+      async (isMember) => {
+        const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
+        const member = await usersService.create({
+          ...CREATE_USER_DTO_TEST_OBJ_2,
+          email: 'another-member@example.com',
+        });
+        const group = await groupsService.create(GROUP_1);
+        await groupsService.addUserToGroup(group, owner, 'owner');
+        await groupsService.addUserToGroup(group, member, 'member');
+        const expectedMembers = [
+          new SlimUserDto(owner, 'owner'),
+          new SlimUserDto(member, 'member'),
+        ];
+        if (isMember) {
+          await groupsService.addUserToGroup(group, basicUser, 'member');
+          expectedMembers.push(new SlimUserDto(basicUser, 'member'));
+        }
+
+        const groups = await groupsController.findForUser({ user: basicUser });
+
+        expect(groups).toHaveLength(1);
+        expect(groups[0]).toMatchObject({
+          createdAt: group.createdAt,
+          desc: group.desc,
+          id: group.id,
+          name: group.name,
+          public: true,
+          role: isMember ? 'member' : undefined,
+          updatedAt: group.updatedAt,
+        });
+        expect(groups[0].users).toHaveLength(expectedMembers.length);
+        expect(groups[0].users).toEqual(
+          expect.arrayContaining(expectedMembers),
+        );
+      },
+    );
+  });
+
   describe('update', () => {
     let privateGroup: Group;
 

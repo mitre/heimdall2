@@ -51,7 +51,7 @@
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-regexp": "^3.1.0",
     "eslint-plugin-security": "^4.0.0",
-    "eslint-plugin-unicorn": "^73.0.0",
+    "eslint-plugin-unicorn": "^79.0.0",
     "eslint-plugin-vue": "^10.8.0",
     "eslint-plugin-yml": "^3.3.1",
     "typescript-eslint": "^8.56.1",
@@ -61,6 +61,6 @@
     "fast-glob": "3.3.3"
   },
   "engines": {
-    "node": ">=22.18.0"
+    "node": ">=24.22.1"
   }
 }
