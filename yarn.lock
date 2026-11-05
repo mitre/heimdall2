@@ -8780,9 +8780,9 @@ eslint-plugin-promise@^7.2.1:
     "@eslint-community/eslint-utils" "^4.4.0"
 
 eslint-plugin-regexp@^3.1.0:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-regexp/-/eslint-plugin-regexp-3.3.2.tgz#9c7b4a9430e8361f5484d3e578e8bd8044618126"
-  integrity sha512-hdkHQVDUtP3+U66PMZSQxw++mburJyJbFY8fu8lryMvJ2glo7xjq1Ov8A/uczxNU+IS87TFXUUBIJ7dxqgcJwg==
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-regexp/-/eslint-plugin-regexp-3.3.3.tgz#389dc957907a1ec71a80688584cf4152b0a49891"
+  integrity sha512-bIpFf1uL9AB6MY5cDUXL2lrfuBA+/WLc1AwC+56OsHWo93zoKQ4EcAQ+wsOxq5ozLC9xfTYAb4Si+0w0Ll1hYA==
   dependencies:
     "@eslint-community/eslint-utils" "^4.2.0"
     "@eslint-community/regexpp" "^4.11.0"
