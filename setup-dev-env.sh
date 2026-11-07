@@ -42,10 +42,10 @@ if [ "$1" = "--regenerate" ]; then
 	done
 fi
 
-# Function to check if a variable exists in the .env file
+# Function to check if a variable assignment exists in the .env file
 # Returns 1 if the variable does not exist, 0 otherwise
 function check_env_var() {
-	if ! grep -qF "$1" $ENV_FILE_PATH; then
+	if ! grep -q "^$1=" "$ENV_FILE_PATH"; then
 		return 1
 	fi
 	return 0

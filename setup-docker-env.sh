@@ -13,7 +13,7 @@ if ! grep -qF "DATABASE_PASSWORD" .env; then
 	echo "DATABASE_PASSWORD=$(openssl rand -hex 33)" >> .env
 fi
 
-if ! grep -qF "JWT_EXPIRE_TIME" .env; then
+if ! grep -q "^JWT_EXPIRE_TIME=" .env; then
 	read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
 	echo "JWT_EXPIRE_TIME=$expire" >> .env
 fi

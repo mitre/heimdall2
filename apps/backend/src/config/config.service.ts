@@ -1,3 +1,4 @@
+import ms from 'ms';
 import {SequelizeOptions} from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
 import {StartupSettingsDto} from './dto/startup-settings.dto';
@@ -9,6 +10,8 @@ export class ConfigService {
 
   constructor() {
     this.appConfig = new AppConfig();
+    // Validate JWT expiry inputs at startup.
+    this.getJwtExpirySettings();
   }
 
   public sensitiveKeys = [
@@ -82,6 +85,33 @@ export class ConfigService {
     return this.appConfig.getDbConfig();
   }
 
+  /**
+   * @param setting Environment variable name.
+   * @param defaultDuration Duration string; unitless values are milliseconds.
+   * @returns Seconds, rounded down.
+   */
+  private limitJWTTime(
+    setting: string,
+    defaultDuration: string,
+  ): number {
+    const timeMs = ms(this.get(setting)?.trim() || defaultDuration);
+    if (!Number.isFinite(timeMs) || timeMs < 1000) {
+      throw new Error(`${setting} must be a valid duration of at least one second.`);
+    }
+    const maxTimeMs = ms('2d');
+    if (timeMs > maxTimeMs) {
+      throw new Error(`${setting} must not exceed two days.`);
+    }
+    return Math.floor(timeMs / 1000);
+  }
+
+  getJwtExpirySettings(): { adminSeconds: number; userSeconds: number } {
+    return {
+      adminSeconds: this.limitJWTTime('ADMIN_JWT_EXPIRE_TIME', '600s'),
+      userSeconds: this.limitJWTTime('JWT_EXPIRE_TIME', '60s'),
+    };
+  }
+
   getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
   }
@@ -94,6 +124,7 @@ export class ConfigService {
     return this.appConfig.get(key);
   }
 }
+
 export const supportedOauth: string[] = [
   'github',
   'gitlab',
