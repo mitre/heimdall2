@@ -1,3 +1,4 @@
+import { AUTH_STRATEGY } from '@heimdall/common/interfaces';
 import * as dotenv from 'dotenv';
 import mock from 'mock-fs';
 import {afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
@@ -159,6 +160,10 @@ describe('Config Service', () => {
       'OIDC_CLIENTID',
       'LDAP_ENABLED',
       'LOCAL_LOGIN_DISABLED',
+      'SAML_NAME',
+      'SAML_ENTRY_POINT',
+      'SAML_ISSUER',
+      'SAML_IDP_CERT',
       'TENABLE_HOST_URL',
     ] as const;
     let authEnvironment: Record<string, string | undefined>;
@@ -183,16 +188,48 @@ describe('Config Service', () => {
       }
     });
 
-    it('separates OAuth callbacks from LDAP authentication', () => {
+    it('separates OAuth callbacks from LDAP and SAML authentication', () => {
       const configService = new ConfigService();
       configService.set('LOCAL_LOGIN_DISABLED', 'true');
       configService.set('LDAP_ENABLED', 'true');
       configService.set('OIDC_CLIENTID', 'client-id');
+      configService.set('SAML_NAME', 'MockSAML');
+      configService.set(
+        'SAML_ENTRY_POINT',
+        'http://localhost:4000/api/saml/sso',
+      );
+      configService.set('SAML_ISSUER', 'heimdall-local');
+      configService.set('SAML_IDP_CERT', 'certificate');
       expect(configService.enabledAuthStrategies()).toEqual([
         'ldap',
         'oidc',
+        'saml',
       ]);
       expect(configService.enabledOauthStrategies()).toEqual(['oidc']);
+    });
+
+    it('requires a SAML name', () => {
+      const configService = new ConfigService();
+      configService.set('LOCAL_LOGIN_DISABLED', 'true');
+      configService.set(
+        'SAML_ENTRY_POINT',
+        'http://localhost:4000/api/saml/sso',
+      );
+      configService.set('SAML_ISSUER', 'heimdall-local');
+      configService.set('SAML_IDP_CERT', 'certificate');
+
+      expect(configService.enabledAuthStrategies()).not.toContain(
+        AUTH_STRATEGY.SAML,
+      );
+    });
+
+    it('exposes the configured SAML provider name', () => {
+      const configService = new ConfigService();
+      configService.set('SAML_NAME', 'Internal SSO');
+
+      expect(configService.frontendStartupSettings().samlName).toBe(
+        'Internal SSO',
+      );
     });
   });
 });

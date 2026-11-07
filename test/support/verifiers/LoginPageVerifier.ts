@@ -16,4 +16,10 @@ export default class LoginPageVerifier {
       .should('be.visible')
       .and('contain.text', 'Login with Mock Server');
   }
+
+  samlLoginButtonPresent(): void {
+    cy.get('#saml')
+      .should('be.visible')
+      .and('contain.text', 'Login with MockSAML');
+  }
 }

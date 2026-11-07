@@ -48,6 +48,13 @@ export class ConfigService {
       enabledAuthStrategies.push(AUTH_STRATEGY.LDAP);
     }
     enabledAuthStrategies.push(...this.enabledOauthStrategies());
+    if (
+      ['SAML_NAME', 'SAML_ENTRY_POINT', 'SAML_ISSUER', 'SAML_IDP_CERT'].every(
+        setting => this.get(setting),
+      )
+    ) {
+      enabledAuthStrategies.push(AUTH_STRATEGY.SAML);
+    }
 
     return enabledAuthStrategies;
   }
@@ -71,6 +78,7 @@ export class ConfigService {
       externalUrl: this.getExternalUrl(),
       oidcName: this.get('OIDC_NAME') || '',
       registrationEnabled: this.isRegistrationAllowed(),
+      samlName: this.get('SAML_NAME') || '',
       tenableHostUrl: this.getTenableHostUrl(),
       forceTenableFrontend:
         this.get('FORCE_TENABLE_FRONTEND')?.toLowerCase() === 'true',
