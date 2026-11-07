@@ -7472,9 +7472,9 @@ d3-hierarchy@^3.1.2:
     d3-color "1 - 3"
 
 d3-scale@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.npmjs.org/d3-scale/-/d3-scale-4.0.2.tgz#82b38e8e8ff7080764f8dcec77bd4be393689396"
-  integrity sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ==
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-4.0.3.tgz#a482f46d5cc3bb6bbccc712769657c64f206a0c1"
+  integrity sha512-66cWobCNzcMvlfoaDHCxuIv9TBUWG1BLOWdv9kHHFuCr1JdqAWPvTmsaEYDD5NRMyWZ5+7u0GqiCDfMXMqh3hg==
   dependencies:
     d3-array "2.10.0 - 3"
     d3-format "1 - 3"
