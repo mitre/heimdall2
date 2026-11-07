@@ -1,6 +1,7 @@
 # compiled output
 /dist
 apps/backend/dist
+/libs/common/lib/
 node_modules
 
 # Typescript cache
