@@ -3,6 +3,10 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 
+export function userStatusLabel(text: string, isDisabled: boolean): string {
+  return isDisabled ? `${text} (DISABLED)` : text;
+}
+
 /** Compares two strings alphabetically for user-facing sorted lists,
  * ignoring case and diacritics (e.g. 'Banana' sorts between 'apple' and
  * 'zeta', not before both). */

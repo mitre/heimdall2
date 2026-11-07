@@ -25,6 +25,8 @@ export class SlimUserDto implements ISlimUser {
   @IsString()
   readonly lastName?: string;
 
+  readonly isDisabled: boolean;
+
   constructor(user: User, groupRole: string | undefined = undefined) {
     this.id = user.id;
     this.email = user.email;
@@ -32,5 +34,6 @@ export class SlimUserDto implements ISlimUser {
     this.groupRole = groupRole;
     this.firstName = user.firstName;
     this.lastName = user.lastName;
+    this.isDisabled = user.isDisabled;
   }
 }

@@ -6,6 +6,7 @@ import {
   ForbiddenException,
   Get,
   Param,
+  ParseBoolPipe,
   Post,
   Put,
   Request,
@@ -103,6 +104,22 @@ export class UsersController {
         .throwUnlessCan(Action.ForceRegistration, User);
     }
     return new UserDto(await this.usersService.create(createUserDto));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put(':id/disabled')
+  async setDisabled(
+    @Param('id') id: string,
+    @Request() request: {user: User},
+    @Body('isDisabled', ParseBoolPipe) isDisabled: boolean
+  ): Promise<UserDto> {
+    if (request.user.role !== 'admin') {
+      throw new ForbiddenException(
+        'Only administrators can change account status'
+      );
+    }
+    const user = await this.usersService.findByPkBang(id);
+    return new UserDto(await this.usersService.setDisabled(user, isDisabled));
   }
 
   @UseGuards(JwtAuthGuard)

@@ -11,4 +11,5 @@ export interface IUser {
   readonly creationMethod: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly isDisabled: boolean;
 }
