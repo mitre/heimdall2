@@ -1,0 +1,38 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.13.0"
+  },
+  "version": "2.13.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Semgrep",
+      "title": "Semgrep Static Analysis Scan",
+      "version": "1.174.0",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [],
+      "sha256": "8fcad4875895ca43affbf497f4d211f9d86747f5f81da323c8c6a2ea86c7ac7e"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "Semgrep",
+        "data": {
+          "version": "1.174.0",
+          "engine_requested": "OSS",
+          "paths": {
+            "scanned": [
+              "clean/constants.py"
+            ]
+          },
+          "skipped_rules": []
+        }
+      }
+    ]
+  }
+}
