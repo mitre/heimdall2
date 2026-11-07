@@ -309,7 +309,7 @@ export default class Compare extends Vue {
   ];
 
   sortControlSetsBy = 'Scan Start Time (ST)';
-  changedOnly = true;
+  changedOnly = false;
   expandedView = true;
   tab = 0;
   width: number = window.innerWidth;
