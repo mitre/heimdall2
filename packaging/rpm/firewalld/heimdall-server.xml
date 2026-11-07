@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service version="1.0">
+  <short>Heimdall Server</short>
+  <description>Heimdall security assessment and STIG compliance results viewer</description>
+  <port protocol="tcp" port="443"/>
+</service>

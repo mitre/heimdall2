@@ -1,0 +1,19 @@
+# Build artifacts (binary at repo root only)
+/heimdall-cli
+/heimdall-cli-*
+/gen-manpages
+
+# Generated man pages (rebuild with: make man)
+man/man1/
+
+# Generated shell completions (rebuild with: make completions)
+completions/
+
+# Test coverage
+coverage.out
+
+# Release artifacts
+dist/
+
+# Python bytecode
+__pycache__/

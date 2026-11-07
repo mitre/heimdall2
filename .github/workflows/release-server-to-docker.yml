@@ -19,6 +19,7 @@ permissions:
 
 jobs:
   docker:
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v')
     name: Build and Push Release to Docker Hub
     runs-on: ubuntu-24.04
 

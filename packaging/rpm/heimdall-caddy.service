@@ -1,0 +1,28 @@
+[Unit]
+Description=Heimdall HTTPS proxy
+After=network-online.target heimdall-server.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=heimdall-caddy
+Group=heimdall-caddy
+StateDirectory=heimdall-caddy
+StateDirectoryMode=0700
+RuntimeDirectory=heimdall-caddy
+RuntimeDirectoryMode=0750
+Environment=XDG_DATA_HOME=/var/lib/heimdall-caddy/data
+Environment=XDG_CONFIG_HOME=/var/lib/heimdall-caddy/config
+ExecStart=/usr/libexec/heimdall-server/runtime/caddy/caddy run --config /etc/heimdall-server/caddy/Caddyfile --adapter caddyfile
+ExecReload=/usr/libexec/heimdall-server/runtime/caddy/caddy reload --address unix//run/heimdall-caddy/admin.sock --config /etc/heimdall-server/caddy/Caddyfile --adapter caddyfile
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/heimdall-caddy /run/heimdall-caddy
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

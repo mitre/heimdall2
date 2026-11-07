@@ -14,3 +14,11 @@ updates:
     time: "20:00"
     timezone: America/New_York
   open-pull-requests-limit: 99
+- package-ecosystem: gomod
+  directory: /apps/heimdall-cli
+  schedule:
+    interval: weekly
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: weekly
