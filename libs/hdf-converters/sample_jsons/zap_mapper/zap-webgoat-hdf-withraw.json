@@ -28,9 +28,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - MKCOL",
           "id": "90028.1",
@@ -41,7 +46,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Insecure HTTP Method - MKCOL\",\n  \"confidence\": \"2\",\n  \"count\": \"32\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>This HTTP method is a WEBDAV method: MKCOL. If this server is not offering any WEBDAV services, these methods should not be available.</p>\",\n  \"instances\": [\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjection/servers?column=id\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/bypass.js?_=1544107787924\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/hint.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/credentials.js?_=1544108073698\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessoninfo.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/bootstrap.min.js?_=1544107787922\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/debug/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonmenu.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionMitigations.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/WebGoatIntroduction.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/assignment12.js?_=1544107787919\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8/votes\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpProxies.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/InsecureLogin.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/password-reset-simple.js?_=1544107787923\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonoverview.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MKCOL\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting/stored-xss\"\n    }\n  ],\n  \"name\": \"Insecure HTTP Method - MKCOL\",\n  \"otherinfo\": \"<p>See the discussion on stackexchange: https://security.stackexchange.com/questions/21413/how-to-exploit-http-methods</p>\",\n  \"pluginid\": \"90028\",\n  \"reference\": \"<p>http://projects.webappsec.org/Fingerprinting</p><p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p></p>\",\n  \"sourceid\": \"1\",\n  \"wascid\": \"45\"\n}",
           "results": [
             {
@@ -160,9 +165,14 @@
             "wascid": "13",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://www.owasp.org/index.php/HttpOnly"
+            }
+          ],
           "source_location": {},
           "title": "Cookie No HttpOnly Flag",
           "id": "10010",
@@ -232,9 +242,17 @@
             "wascid": "34",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Medium (Medium)"
+            "riskdesc": "Medium (Medium)",
+            "riskcode": "2"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Predictable-Resource-Location"
+            },
+            {
+              "url": "http://cwe.mitre.org/data/definitions/425.html"
+            }
+          ],
           "source_location": {},
           "title": "Backup File Disclosure",
           "id": "10095",
@@ -362,9 +380,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - COPY",
           "id": "90028.2",
@@ -375,7 +398,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Insecure HTTP Method - COPY\",\n  \"confidence\": \"2\",\n  \"count\": \"32\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>This HTTP method is a WEBDAV method: COPY. If this server is not offering any WEBDAV services, these methods should not be available.</p>\",\n  \"instances\": [\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/password-reset-simple.js?_=1544107787923\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpProxies.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting/stored-xss\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8/votes\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionAdvanced.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonmenu.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpBasics.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionMitigations.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjection\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessoninfo.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/bootstrap.min.js?_=1544107787922\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/AuthBypass.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/assignment12.js?_=1544107787919\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/WebGoatIntroduction.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/credentials.js?_=1544108073698\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonoverview.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"COPY\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/InsecureLogin.lesson.lesson\"\n    }\n  ],\n  \"name\": \"Insecure HTTP Method - COPY\",\n  \"otherinfo\": \"<p>See the discussion on stackexchange: https://security.stackexchange.com/questions/21413/how-to-exploit-http-methods</p>\",\n  \"pluginid\": \"90028\",\n  \"reference\": \"<p>http://projects.webappsec.org/Fingerprinting</p><p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p></p>\",\n  \"sourceid\": \"1\",\n  \"wascid\": \"45\"\n}",
           "results": [
             {
@@ -492,9 +515,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - MOVE",
           "id": "90028.3",
@@ -505,7 +533,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Insecure HTTP Method - MOVE\",\n  \"confidence\": \"2\",\n  \"count\": \"32\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>This HTTP method is a WEBDAV method: MOVE. If this server is not offering any WEBDAV services, these methods should not be available.</p>\",\n  \"instances\": [\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting/stored-xss\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/challenge.js?_=1544107787918\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpBasics.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpProxies.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/password-reset-simple.js?_=1544107787923\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonmenu.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionAdvanced.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonprogress.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/PasswordReset.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/stored-xss.js?_=1544108073699\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/debug/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjection/servers?column=id\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessoninfo.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/debug\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"MOVE\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/bypass.js?_=1544107787924\"\n    }\n  ],\n  \"name\": \"Insecure HTTP Method - MOVE\",\n  \"otherinfo\": \"<p>See the discussion on stackexchange: https://security.stackexchange.com/questions/21413/how-to-exploit-http-methods</p>\",\n  \"pluginid\": \"90028\",\n  \"reference\": \"<p>http://projects.webappsec.org/Fingerprinting</p><p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p></p>\",\n  \"sourceid\": \"1\",\n  \"wascid\": \"45\"\n}",
           "results": [
             {
@@ -622,9 +650,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Medium (Medium)"
+            "riskdesc": "Medium (Medium)",
+            "riskcode": "2"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - PUT",
           "id": "90028.4",
@@ -752,9 +785,17 @@
             "wascid": "9",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Cross-Site-Request-Forgery"
+            },
+            {
+              "url": "http://cwe.mitre.org/data/definitions/352.html"
+            }
+          ],
           "source_location": {},
           "title": "Absence of Anti-CSRF Tokens",
           "id": "10202",
@@ -882,7 +923,8 @@
             "wascid": "13",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
           "refs": [],
           "source_location": {},
@@ -895,7 +937,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Information Disclosure - Suspicious Comments\",\n  \"confidence\": \"2\",\n  \"count\": \"43\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>The response appears to contain suspicious comments which may help an attacker.</p>\",\n  \"instances\": [\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpBasics.lesson.lesson\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/credentials.js?_=1544108073698\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/jwt-voting.js?_=1544107787947\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/js/libs/text.js\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/start.mvc\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/credentials.js\"\n    },\n    {\n      \"method\": \"POST\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/InsecureLogin.lesson.lesson\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/stored-xss.js?_=1544107787952\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/js/libs/backbone-min.js\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/assignment12.js?_=1544107787919\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting.lesson.lesson\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/ClientSideFiltering.lesson.lesson\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/AuthBypass.lesson.lesson\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/credentials.js?_=1544106249403\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/js/libs/underscore-min.js\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/js/goatApp/view/UserAndInfoView.js\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/js/libs/jquery.form.js\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/js/goatApp/view/LessonContentView.js\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/js/modernizr-2.6.2.min.js\"\n    },\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/VulnerableComponents.lesson.lesson\"\n    }\n  ],\n  \"name\": \"Information Disclosure - Suspicious Comments\",\n  \"otherinfo\": \"<p><!-- do not remove the two following div's, this is where your feedback/output will land --></p><p><!-- do not remove the two following div's, this is where your feedback/output will land --></p><p></p>\",\n  \"pluginid\": \"10027\",\n  \"reference\": \"<p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p>Remove all comments that return information that may help an attacker and fix any underlying problems they refer to.</p>\",\n  \"sourceid\": \"3\",\n  \"wascid\": \"13\"\n}",
           "results": [
             {
@@ -1012,9 +1054,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - PROPPATCH",
           "id": "90028.5",
@@ -1025,7 +1072,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Insecure HTTP Method - PROPPATCH\",\n  \"confidence\": \"2\",\n  \"count\": \"32\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>This HTTP method is a WEBDAV method: PROPPATCH. If this server is not offering any WEBDAV services, these methods should not be available.</p>\",\n  \"instances\": [\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/bootstrap.min.js?_=1544107787922\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonprogress.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjection\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionMitigations.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpBasics.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/debug/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/challenge.js?_=1544107787918\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/bypass.js?_=1544107787924\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessoninfo.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjection/servers?column=id\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting/stored-xss\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/stored-xss.js?_=1544108073699\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionAdvanced.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/debug\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/PasswordReset.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/assignment12.js?_=1544107787919\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPPATCH\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8/votes\"\n    }\n  ],\n  \"name\": \"Insecure HTTP Method - PROPPATCH\",\n  \"otherinfo\": \"<p>See the discussion on stackexchange: https://security.stackexchange.com/questions/21413/how-to-exploit-http-methods</p>\",\n  \"pluginid\": \"90028\",\n  \"reference\": \"<p>http://projects.webappsec.org/Fingerprinting</p><p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p></p>\",\n  \"sourceid\": \"1\",\n  \"wascid\": \"45\"\n}",
           "results": [
             {
@@ -1142,9 +1189,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - PROPFIND",
           "id": "90028.6",
@@ -1155,7 +1207,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Insecure HTTP Method - PROPFIND\",\n  \"confidence\": \"2\",\n  \"count\": \"32\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>This HTTP method is a WEBDAV method: PROPFIND. If this server is not offering any WEBDAV services, these methods should not be available.</p>\",\n  \"instances\": [\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/PasswordReset.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessoninfo.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionAdvanced.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8/votes\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonoverview.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpProxies.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/InsecureLogin.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/credentials.js?_=1544108073698\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/AuthBypass.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/WebGoatIntroduction.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/assignment12.js?_=1544107787919\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjection\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/stored-xss.js?_=1544108073699\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonprogress.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/debug/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"PROPFIND\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonmenu.mvc\"\n    }\n  ],\n  \"name\": \"Insecure HTTP Method - PROPFIND\",\n  \"otherinfo\": \"<p>See the discussion on stackexchange: https://security.stackexchange.com/questions/21413/how-to-exploit-http-methods</p>\",\n  \"pluginid\": \"90028\",\n  \"reference\": \"<p>http://projects.webappsec.org/Fingerprinting</p><p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p></p>\",\n  \"sourceid\": \"1\",\n  \"wascid\": \"45\"\n}",
           "results": [
             {
@@ -1272,7 +1324,8 @@
             "wascid": "13",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
           "refs": [],
           "source_location": {},
@@ -1332,7 +1385,8 @@
             "wascid": "13",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
           "refs": [],
           "source_location": {},
@@ -1392,7 +1446,8 @@
             "wascid": "13",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
           "refs": [],
           "source_location": {},
@@ -1452,9 +1507,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Medium (Medium)"
+            "riskdesc": "Medium (Medium)",
+            "riskcode": "2"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - PATCH",
           "id": "90028.7",
@@ -1582,9 +1642,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - UNLOCK",
           "id": "90028.8",
@@ -1595,7 +1660,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Insecure HTTP Method - UNLOCK\",\n  \"confidence\": \"2\",\n  \"count\": \"32\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>This HTTP method is a WEBDAV method: UNLOCK. If this server is not offering any WEBDAV services, these methods should not be available.</p>\",\n  \"instances\": [\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonprogress.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/bootstrap.min.js?_=1544107787922\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonmenu.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpBasics.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/debug/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjection\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/hint.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting/stored-xss\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/credentials.js?_=1544108073698\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonoverview.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpProxies.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/InsecureLogin.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/WebGoatIntroduction.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionMitigations.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/assignment12.js?_=1544107787919\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"UNLOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/AuthBypass.lesson.lesson\"\n    }\n  ],\n  \"name\": \"Insecure HTTP Method - UNLOCK\",\n  \"otherinfo\": \"<p>See the discussion on stackexchange: https://security.stackexchange.com/questions/21413/how-to-exploit-http-methods</p>\",\n  \"pluginid\": \"90028\",\n  \"reference\": \"<p>http://projects.webappsec.org/Fingerprinting</p><p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p></p>\",\n  \"sourceid\": \"1\",\n  \"wascid\": \"45\"\n}",
           "results": [
             {
@@ -1712,7 +1777,8 @@
             "wascid": "13",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
           "refs": [],
           "source_location": {},
@@ -1725,7 +1791,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Information Disclosure - Sensitive Informations in URL\",\n  \"confidence\": \"2\",\n  \"count\": \"5\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>The request appeared to contain sensitive information leaked in the URL. This can violate PCI and most organizational compliance policies. You can configure the list of strings for this check to add or remove values specific to your environment.</p>\",\n  \"instances\": [\n    {\n      \"evidence\": \"ZAP\",\n      \"method\": \"GET\",\n      \"param\": \"username_reg\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/6?confirm_password_reg=ZAP&email_reg=foo-bar%40example.com&password_reg=ZAP&register-submit=Register+Now&username_reg=ZAP\"\n    },\n    {\n      \"evidence\": \"ZAP\",\n      \"method\": \"GET\",\n      \"param\": \"confirm_password_reg\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/6?confirm_password_reg=ZAP&email_reg=foo-bar%40example.com&password_reg=ZAP&register-submit=Register+Now&username_reg=ZAP\"\n    },\n    {\n      \"evidence\": \"foo-bar@example.com\",\n      \"method\": \"GET\",\n      \"param\": \"email_reg\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/6?confirm_password_reg=ZAP&email_reg=foo-bar%40example.com&password_reg=ZAP&register-submit=Register+Now&username_reg=ZAP\"\n    },\n    {\n      \"evidence\": \"Guest\",\n      \"method\": \"GET\",\n      \"param\": \"user\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/JWT/votings/login?user=Guest\"\n    },\n    {\n      \"evidence\": \"ZAP\",\n      \"method\": \"GET\",\n      \"param\": \"password_reg\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/6?confirm_password_reg=ZAP&email_reg=foo-bar%40example.com&password_reg=ZAP&register-submit=Register+Now&username_reg=ZAP\"\n    }\n  ],\n  \"name\": \"Information Disclosure - Sensitive Informations in URL\",\n  \"otherinfo\": \"<p>The URL contains potentially sensitive information.</p>\",\n  \"pluginid\": \"10024\",\n  \"reference\": \"<p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p>Do not pass sensitive information in URIs.</p>\",\n  \"sourceid\": \"3\",\n  \"wascid\": \"13\"\n}",
           "results": [
             {
@@ -1767,9 +1833,14 @@
             "wascid": "45",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "Informational (Medium)"
+            "riskdesc": "Informational (Medium)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Fingerprinting"
+            }
+          ],
           "source_location": {},
           "title": "Insecure HTTP Method - LOCK",
           "id": "90028.9",
@@ -1780,7 +1851,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Insecure HTTP Method - LOCK\",\n  \"confidence\": \"2\",\n  \"count\": \"31\",\n  \"cweid\": \"200\",\n  \"desc\": \"<p>This HTTP method is a WEBDAV method: LOCK. If this server is not offering any WEBDAV services, these methods should not be available.</p>\",\n  \"instances\": [\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionMitigations.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/hint.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/InsecureLogin.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonmenu.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonprogress.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/stored-xss.js?_=1544108073699\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/labels.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting/stored-xss\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessoninfo.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/credentials.js?_=1544108073698\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service/lessonoverview.mvc\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/service\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/WebGoatIntroduction.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjection\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/CrossSiteScripting.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/HttpBasics.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/lesson_js/bootstrap.min.js?_=1544107787922\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/SqlInjectionAdvanced.lesson.lesson\"\n    },\n    {\n      \"evidence\": \"response code 401 for potentially insecure HTTP METHOD\",\n      \"method\": \"LOCK\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/challenge/8/votes\"\n    }\n  ],\n  \"name\": \"Insecure HTTP Method - LOCK\",\n  \"otherinfo\": \"<p>See the discussion on stackexchange: https://security.stackexchange.com/questions/21413/how-to-exploit-http-methods</p>\",\n  \"pluginid\": \"90028\",\n  \"reference\": \"<p>http://projects.webappsec.org/Fingerprinting</p><p></p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Medium)\",\n  \"solution\": \"<p></p>\",\n  \"sourceid\": \"1\",\n  \"wascid\": \"45\"\n}",
           "results": [
             {
@@ -1897,7 +1968,8 @@
             "wascid": "13",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Medium (Medium)"
+            "riskdesc": "Medium (Medium)",
+            "riskcode": "2"
           },
           "refs": [],
           "source_location": {},
@@ -1959,9 +2031,17 @@
             "wascid": "34",
             "sourceid": "1",
             "confidence": "1",
-            "riskdesc": "High (Low)"
+            "riskdesc": "High (Low)",
+            "riskcode": "3"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Predictable-Resource-Location"
+            },
+            {
+              "url": "http://cwe.mitre.org/data/definitions/425.html"
+            }
+          ],
           "source_location": {},
           "title": "Source Code Disclosure - SVN",
           "id": "42",
@@ -2001,9 +2081,17 @@
             "wascid": "14",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://www.owasp.org/index.php/XSS_(Cross_Site_Scripting)_Prevention_Cheat_Sheet"
+            },
+            {
+              "url": "https://blog.veracode.com/2014/03/guidelines-for-setting-security-headers/"
+            }
+          ],
           "source_location": {},
           "title": "Web Browser XSS Protection Not Enabled",
           "id": "10016",
@@ -2041,9 +2129,17 @@
             "wascid": "9",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "High (Medium)"
+            "riskdesc": "High (Medium)",
+            "riskcode": "3"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://projects.webappsec.org/Cross-Site-Request-Forgery"
+            },
+            {
+              "url": "http://cwe.mitre.org/data/definitions/352.html"
+            }
+          ],
           "source_location": {},
           "title": "Anti CSRF Tokens Scanner",
           "id": "20012",
@@ -2156,9 +2252,14 @@
             "wascid": "20",
             "sourceid": "3",
             "confidence": "1",
-            "riskdesc": "Medium (Low)"
+            "riskdesc": "Medium (Low)",
+            "riskcode": "2"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://download.oracle.com/javaee-archive/servlet-spec.java.net/jsr340-experts/att-0317/OnParameterPollutionAttacks.pdf"
+            }
+          ],
           "source_location": {},
           "title": "HTTP Parameter Override",
           "id": "10026",
@@ -2196,9 +2297,17 @@
             "wascid": "19",
             "sourceid": "1",
             "confidence": "2",
-            "riskdesc": "High (Medium)"
+            "riskdesc": "High (Medium)",
+            "riskcode": "3"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://www.owasp.org/index.php/Top_10_2010-A1"
+            },
+            {
+              "url": "https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet"
+            }
+          ],
           "source_location": {},
           "title": "SQL Injection",
           "id": "40018",
@@ -2256,9 +2365,14 @@
             "wascid": "13",
             "sourceid": "3",
             "confidence": "2",
-            "riskdesc": "Low (Medium)"
+            "riskdesc": "Low (Medium)",
+            "riskcode": "1"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "https://tools.ietf.org/html/rfc1918"
+            }
+          ],
           "source_location": {},
           "title": "Private IP Disclosure",
           "id": "2",
@@ -2298,9 +2412,14 @@
             "wascid": "15",
             "sourceid": "3",
             "confidence": "1",
-            "riskdesc": "Informational (Low)"
+            "riskdesc": "Informational (Low)",
+            "riskcode": "0"
           },
-          "refs": [],
+          "refs": [
+            {
+              "url": "http://code.google.com/p/browsersec/wiki/Part2#Character_set_handling_and_detection"
+            }
+          ],
           "source_location": {},
           "title": "Charset Mismatch (Header Versus Meta Content-Type Charset)",
           "id": "90011",
@@ -2311,7 +2430,7 @@
               "label": "check"
             }
           ],
-          "impact": 0.3,
+          "impact": 0,
           "code": "{\n  \"alert\": \"Charset Mismatch (Header Versus Meta Content-Type Charset)\",\n  \"confidence\": \"1\",\n  \"count\": \"1\",\n  \"cweid\": \"16\",\n  \"desc\": \"<p>This check identifies responses where the HTTP Content-Type header declares a charset different from the charset defined by the body of the HTML or XML. When there's a charset mismatch between the HTTP header and content body Web browsers can be forced into an undesirable content-sniffing mode to determine the content's correct character set.</p><p></p><p>An attacker could manipulate content on the page to be interpreted in an encoding of their choice. For example, if an attacker can control content at the beginning of the page, they could inject script using UTF-7 encoded text and manipulate some browsers into interpreting that text.</p>\",\n  \"instances\": [\n    {\n      \"method\": \"GET\",\n      \"uri\": \"http://mymac.com:8191/WebGoat/start.mvc\"\n    }\n  ],\n  \"name\": \"Charset Mismatch (Header Versus Meta Content-Type Charset)\",\n  \"otherinfo\": \"<p>There was a charset mismatch between the HTTP Header and the META content-type encoding declarations: [UTF-8] and [ISO-8859-1] do not match.</p>\",\n  \"pluginid\": \"90011\",\n  \"reference\": \"<p>http://code.google.com/p/browsersec/wiki/Part2#Character_set_handling_and_detection</p>\",\n  \"riskcode\": \"0\",\n  \"riskdesc\": \"Informational (Low)\",\n  \"solution\": \"<p>Force UTF-8 for all text content in both the HTTP header and meta tags in HTML or encoding declarations in XML.</p>\",\n  \"sourceid\": \"3\",\n  \"wascid\": \"15\"\n}",
           "results": [
             {
@@ -2322,7 +2441,7 @@
           ]
         }
       ],
-      "sha256": "ee8d167c9e72685b5b28fcf3a6e964215d6395c08f081778d1332fb73876f26b"
+      "sha256": "eb0c991664224e9c50e0b9cdbe8f19e4bd1fc501dce188e68e130ee87c8e92a2"
     }
   ],
   "passthrough": {
