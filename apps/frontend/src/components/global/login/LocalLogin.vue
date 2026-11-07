@@ -89,7 +89,7 @@
               <v-img
                 max-width="32"
                 max-height="32"
-                :src="require('@/assets/openid_mark.png')"
+                :src="require('@/assets/openid.svg')"
               />
               <div class="pl-2">Login with {{ oidcName }}</div>
             </v-btn>
@@ -103,7 +103,7 @@
               <v-img
                 max-width="32"
                 max-height="32"
-                :src="require('@/assets/google_mark.png')"
+                :src="require('@/assets/google.svg')"
               />
               <div class="pl-2">Login with Google</div>
             </v-btn>
@@ -117,7 +117,7 @@
               <v-img
                 max-width="32"
                 max-height="32"
-                :src="require('@/assets/github_mark.png')"
+                :src="require('@/assets/github.svg')"
               />
               <div class="pl-2">Login with GitHub</div> </v-btn
             ><v-btn
@@ -130,7 +130,7 @@
               <v-img
                 max-width="32"
                 max-height="32"
-                :src="require('@/assets/gitlab_mark.png')"
+                :src="require('@/assets/gitlab.svg')"
               />
               <div class="pl-2">Login with GitLab</div>
             </v-btn>
@@ -144,7 +144,7 @@
               <v-img
                 max-width="32"
                 max-height="32"
-                :src="require('@/assets/okta_mark.png')"
+                :src="require('@/assets/okta.svg')"
               />
               <div class="pl-2">Login with Okta</div>
             </v-btn>
