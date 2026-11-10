@@ -8660,10 +8660,10 @@ eslint-plugin-markdown-links@^0.9.0:
     synckit "^0.11.11"
     undici "^7.15.0"
 
-eslint-plugin-markdown-preferences@^0.42.0:
-  version "0.42.0"
-  resolved "https://registry.npmjs.org/eslint-plugin-markdown-preferences/-/eslint-plugin-markdown-preferences-0.42.0.tgz#d673a8b7b4244d1e3cc52d788fb31200dff041f0"
-  integrity sha512-LVoGwsRDeLFooaj9OndJrof5OslnQQnZKStP+GX0DMnAt6Nt2tgJzP+URRNXqS54lYnIa0m6pBo7CO1n/utTsw==
+eslint-plugin-markdown-preferences@^0.43.0:
+  version "0.43.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-markdown-preferences/-/eslint-plugin-markdown-preferences-0.43.0.tgz#f45e4e586eb5e071cab1fb1616936b4ecf3ab607"
+  integrity sha512-57n6ATNj97rkoi2/iNrO87hHDoGPqv2ma8b6/sr4okoClxTRbavUoAGgJwg3mmBZsH1DmWQUgJFSOvowvbTPvg==
   dependencies:
     diff-sequences "^29.6.3"
     emoji-regex-xs "^2.0.1"
