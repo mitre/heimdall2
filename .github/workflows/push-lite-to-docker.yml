@@ -53,32 +53,12 @@ jobs:
           targets: lite
           push: true
 
-      - name: Get Docker SHA since the Iron Bank release requires us to specify the exact resources we need them to pull into the environment
+      - name: Resolve per-architecture image digests for Iron Bank
         shell: bash
-        id: get-docker-sha
-        run: |
-          MAX_RETRIES=5
-          RETRY_DELAY=0.5 # in seconds
-          RETRY_COUNT=0
-          SUCCESS=false
-
-          while [ "$RETRY_COUNT" -lt "$MAX_RETRIES" ]; do
-            if docker pull mitre/heimdall-lite:${{ github.sha }}; then
-              SUCCESS=true
-              break
-            else
-              RETRY_COUNT="$((RETRY_COUNT + 1))"
-              echo "Retry $RETRY_COUNT/$MAX_RETRIES: Docker pull failed.  Retrying in $RETRY_DELAY seconds..."
-              sleep "$RETRY_DELAY"
-            fi
-          done
-
-          if [ "$SUCCESS" = true ]; then
-            echo "DOCKER_SHA=$(docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:${{ github.sha }} | cut -d '@' -f 2)" >> $GITHUB_ENV
-          else
-            echo "Docker pull failed after $MAX_RETRIES attempts."
-            exit 1
-          fi
+        id: digests
+        env:
+          IMAGE: "mitre/heimdall-lite:${{ github.sha }}"
+        run: bash .github/scripts/ironbank-digests.sh "$IMAGE"
 
       - name: Upgrade Iron Bank
         uses: mitre/ironbank_release_action@v1
@@ -92,5 +72,6 @@ jobs:
           git_commit_author_name: "Automated Heimdall Release"
           git_commit_author_email: "saf@mitre.org"
           update_commands: |
-            yq e -i '.args.HEIMDALL_VERSION=\"${{ github.sha }}\" | .tags[0]=\"${{ github.sha }}\" | .labels.\"org.opencontainers.image.version\"=\"${{ github.sha }}\" | .resources[0].tag=\"mitre/heimdall-lite:${{ github.sha }}\" | .resources[0].url=\"docker://docker.io/mitre/heimdall-lite@${{ env.DOCKER_SHA }}\"' hardening_manifest.yaml
-            sed -i s/HEIMDALL_VERSION=\.\*/HEIMDALL_VERSION=${{ github.sha }}/ Dockerfile
+            yq e -i 'del(.args.HEIMDALL_VERSION) | .tags[0]=\"${{ github.sha }}\" | .labels.\"org.opencontainers.image.version\"=\"${{ github.sha }}\" | .resources[0].tag=\"mitre/heimdall-lite:${{ github.sha }}\" | .resources[0].url=\"docker://docker.io/mitre/heimdall-lite@${{ steps.digests.outputs.amd64 }}\" | .resources[1].tag=\"mitre/heimdall-lite:${{ github.sha }}.arm64\" | .resources[1].url=\"docker://docker.io/mitre/heimdall-lite@${{ steps.digests.outputs.arm64 }}\"' hardening_manifest.yaml
+            sed -i 's/^ARG HEIMDALL_VERSION=.*/ARG HEIMDALL_VERSION=${{ github.sha }}/' Dockerfile
+            sed -i 's/^ARG HEIMDALL_VERSION=.*/ARG HEIMDALL_VERSION=${{ github.sha }}.arm64/' Dockerfile.arm64
