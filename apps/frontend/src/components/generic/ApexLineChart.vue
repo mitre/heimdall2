@@ -144,7 +144,7 @@ export default class ApexLineChart extends Vue {
       tooltip: {
         y: {
           formatter: (val) =>
-            formatCompliance(val, false, this.tooltipMaxDisplayPrecision)
+            formatCompliance(val ?? 0, false, this.tooltipMaxDisplayPrecision)
         }
       },
       grid: {
