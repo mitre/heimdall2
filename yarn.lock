@@ -6295,9 +6295,9 @@ chownr@^3.0.0:
   integrity sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==
 
 chroma-js@^3.1.4:
-  version "3.2.0"
-  resolved "https://registry.npmjs.org/chroma-js/-/chroma-js-3.2.0.tgz#4e9e665290b9bbfece524fccf759d5120e351ff2"
-  integrity sha512-os/OippSlX1RlWWr+QDPcGUZs0uoqr32urfxESG9U93lhUfbnlyckte84Q8P1UQY/qth983AS1JONKmLS4T0nw==
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/chroma-js/-/chroma-js-3.3.0.tgz#2244067e37c31bfccd5648913cb38e4fc81abeb8"
+  integrity sha512-afEEP0zHO4dxwrqTllKSFWs83+u+htEsmyvSe8IPjKjrfy3qmNk+vpWAdpbA2fJa14LTgkGyemC74J6v3HSUZA==
 
 chrome-remote-interface@0.33.3:
   version "0.33.3"
