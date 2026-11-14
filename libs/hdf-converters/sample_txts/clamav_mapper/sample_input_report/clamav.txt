@@ -1,0 +1,57 @@
+Loading:     2s, ETA:   0s [========================>]    3.63M/3.63M sigs       
+Compiling:   1s, ETA:   0s [========================>]       41/41 tasks 
+
+/workspace/heimdall2/CODE_OF_CONDUCT.md: OK
+/workspace/heimdall2/LICENSE.md: OK
+/workspace/heimdall2/manifest.yml.example: OK
+/workspace/heimdall2/setup-dev-env.ps1: OK
+/workspace/heimdall2/setup-dev-env.sh: OK
+/workspace/heimdall2/.DS_Store: OK
+/workspace/heimdall2/.slugignore: OK
+/workspace/heimdall2/app.json: OK
+/workspace/heimdall2/CHANGELOG: OK
+/workspace/heimdall2/Dockerfile: OK
+/workspace/heimdall2/heimdall2.code-workspace: OK
+/workspace/heimdall2/Dockerfile.lite: OK
+/workspace/heimdall2/setup-docker-env.ps1: OK
+/workspace/heimdall2/canary1.txt: OK
+/workspace/heimdall2/docker-bake.hcl: OK
+/workspace/heimdall2/README.md: OK
+/workspace/heimdall2/Docker.dmg: Heuristics.Limits.Exceeded.MaxFileSize FOUND
+/workspace/heimdall2/Docker.dmg: Virus(es) detected ERROR
+/workspace/heimdall2/Docker Desktop Installer.exe: Heuristics.Limits.Exceeded.MaxFileSize FOUND
+/workspace/heimdall2/Docker Desktop Installer.exe: Virus(es) detected ERROR
+/workspace/heimdall2/yarn.lock: OK
+/workspace/heimdall2/.dockerignore: OK
+/workspace/heimdall2/.gitignore: OK
+/workspace/heimdall2/package.json: OK
+/workspace/heimdall2/VERSION: OK
+/workspace/heimdall2/bad.txt: OK
+/workspace/heimdall2/.env: OK
+/workspace/heimdall2/.nvmrc: OK
+/workspace/heimdall2/cmd.sh: OK
+/workspace/heimdall2/scan.txt: OK
+/workspace/heimdall2/tsconfig.json: OK
+/workspace/heimdall2/docker-compose.yml: OK
+/workspace/heimdall2/test-doc-see-as-virus-by-clamav.txt: Eicar-Signature FOUND
+/workspace/heimdall2/Procfile: OK
+/workspace/heimdall2/local-test.hdb: OK
+/workspace/heimdall2/setup-docker-env.sh: OK
+/workspace/heimdall2/lerna.json: OK
+/workspace/heimdall2/postcss.config.js: OK
+/workspace/heimdall2/eslint.config.mjs: OK
+/workspace/heimdall2/cypress.config.ts: OK
+
+----------- SCAN SUMMARY -----------
+Known viruses: 3628071
+Engine version: 1.5.4
+Scanned directories: 1
+Scanned files: 36
+Infected files: 1
+Total errors: 2
+Data scanned: 2.62 MiB
+Data read: 1.13 GiB (ratio 0.00:1)
+Time: 4.037 sec (0 m 4 s)
+Start Date: 2026:09:23 13:02:03
+End Date:   2026:09:23 13:02:07
+

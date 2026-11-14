@@ -10,6 +10,7 @@ import {
   AnchoreGrypeMapper,
   ASFFResults as ASFFResultsMapper,
   BurpSuiteResults,
+  ClamAvMapper,
   ChecklistResults,
   CheckovMapper,
   ConveyorResults as ConveyorResultsMapper,
@@ -257,6 +258,8 @@ export class InspecIntake extends VuexModule {
         return new XCCDFResultsResults(convertOptions.data).toHdf();
       case INPUT_TYPES.BURP:
         return new BurpSuiteResults(convertOptions.data).toHdf();
+      case INPUT_TYPES.CLAMAV:
+        return new ClamAvMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.IONCHANNEL:
         return new IonChannelMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.SCOUTSUITE:
