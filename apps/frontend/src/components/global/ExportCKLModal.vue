@@ -292,6 +292,7 @@ import {
 } from '@/utilities/export_util';
 import {
   ChecklistResults,
+  checklistTechAreaValues,
   ChecklistVuln,
   ChecklistMetadata,
   StigMetadata,
@@ -360,7 +361,7 @@ export default class ExportCKLModal extends Vue {
   originalProfileTitle = new Map<number, string>();
   roles = Object.values(Role);
   types = Object.values(Assettype);
-  techareas = Object.values(Techarea);
+  techareas = checklistTechAreaValues;
   files: ExtendedEvaluationFile[] = this.evaluations(this.filter.fromFile);
 
   @Watch('showingModal')

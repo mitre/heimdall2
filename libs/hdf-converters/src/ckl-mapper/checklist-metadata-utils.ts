@@ -1,7 +1,12 @@
 import {isFQDN, isIP, isMACAddress} from 'validator';
 import {Result} from '../utils/result';
 import {ChecklistMetadata, StigMetadata} from './checklist-jsonix-converter';
-import {Asset, Assettype, Role, Techarea} from './checklistJsonix';
+import {
+  Asset,
+  Assettype,
+  checklistTechAreaValues,
+  Role
+} from './checklistJsonix';
 import * as Revalidator from 'revalidator';
 import _ from 'lodash';
 
@@ -51,7 +56,7 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
     },
     techarea: {
       type: 'string',
-      enum: Object.values(Techarea),
+      enum: checklistTechAreaValues,
       message: 'Tech Area'
     },
     webordatabase: {
