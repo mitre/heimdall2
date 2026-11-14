@@ -20,7 +20,8 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
       conform: (ip: string) => {
         if (!ip) return true; // Allow empty input
         // Split the input string by newline, space, or comma
-        const ipAddresses = ip.split(/[\s,]+/);
+        // Drop empty entries from leading, trailing, or repeated separators
+        const ipAddresses = ip.split(/[\s,]+/).filter((address) => address.length > 0);
         // Check each IP address using the isIP function
         return ipAddresses.every((address) => isIP(address));
       },
@@ -32,7 +33,8 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
       conform: (mac: string) => {
         if (!mac) return true; // Allow empty input
         // Split the input string by newline, space, or comma
-        const macAddresses = mac.split(/[\s,]+/);
+        // Drop empty entries from leading, trailing, or repeated separators
+        const macAddresses = mac.split(/[\s,]+/).filter((address) => address.length > 0);
         // Check each MAC address using the isMACAddress function
         return macAddresses.every((address) => isMACAddress(address));
       },
