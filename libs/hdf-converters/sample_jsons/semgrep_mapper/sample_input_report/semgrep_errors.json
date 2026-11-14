@@ -1,0 +1,270 @@
+{
+  "version": "1.174.0",
+  "results": [
+    {
+      "check_id": "yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag",
+      "path": ".github/workflows/build.yml",
+      "start": {
+        "line": 7,
+        "col": 9,
+        "offset": 86
+      },
+      "end": {
+        "line": 7,
+        "col": 34,
+        "offset": 111
+      },
+      "extra": {
+        "message": "GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks \u2014 as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.",
+        "metadata": {
+          "category": "security",
+          "cwe": [
+            "CWE-1357: Reliance on Insufficiently Trustworthy Component",
+            "CWE-353: Missing Support for Integrity Check"
+          ],
+          "owasp": [
+            "A08:2021 - Software and Data Integrity Failures",
+            "A08:2025 - Software and Data Integrity Failures"
+          ],
+          "references": [
+            "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions"
+          ],
+          "technology": [
+            "github-actions"
+          ],
+          "subcategory": [
+            "vuln"
+          ],
+          "likelihood": "MEDIUM",
+          "impact": "HIGH",
+          "confidence": "HIGH",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Cryptographic Issues",
+            "Other"
+          ],
+          "source": "https://semgrep.dev/r/yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag",
+          "shortlink": "https://sg.run/2LgAL"
+        },
+        "severity": "WARNING",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    },
+    {
+      "check_id": "yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell",
+      "path": ".github/workflows/build.yml",
+      "start": {
+        "line": 9,
+        "col": 9,
+        "offset": 141
+      },
+      "end": {
+        "line": 9,
+        "col": 92,
+        "offset": 224
+      },
+      "extra": {
+        "message": "A `run:` step pipes the output of `curl` or `wget` directly into a shell interpreter. This is the \"curl | bash\" install pattern \u2014 if the remote server is compromised or the URL is hijacked, an attacker can execute arbitrary code in your CI runner. Consider downloading the file first, verifying its checksum or signature, and then executing it.",
+        "metadata": {
+          "category": "security",
+          "cwe": [
+            "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+          ],
+          "owasp": [
+            "A03:2021 - Injection",
+            "A03:2025 - Injection"
+          ],
+          "references": [
+            "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions",
+            "https://www.idontplaydarts.com/2016/04/detecting-curl-pipe-bash-server-side/"
+          ],
+          "technology": [
+            "github-actions",
+            "bash",
+            "curl"
+          ],
+          "cwe2021-top25": true,
+          "cwe2022-top25": true,
+          "subcategory": [
+            "vuln"
+          ],
+          "likelihood": "MEDIUM",
+          "impact": "HIGH",
+          "confidence": "HIGH",
+          "license": "Semgrep Rules License v1.0. For more details, visit semgrep.dev/legal/rules-license",
+          "vulnerability_class": [
+            "Command Injection"
+          ],
+          "source": "https://semgrep.dev/r/yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell",
+          "shortlink": "https://sg.run/GR8K1"
+        },
+        "severity": "ERROR",
+        "fingerprint": "requires login",
+        "lines": "requires login",
+        "validation_state": "NO_VALIDATOR",
+        "engine_kind": "OSS"
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github/workflows/build.yml",
+            "start": {
+              "line": 9,
+              "col": 61,
+              "offset": 146
+            },
+            "end": {
+              "line": 9,
+              "col": 81,
+              "offset": 166
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github/workflows/build.yml:9:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ steps.scan.outcome` was unexpected",
+      "path": ".github/workflows/build.yml",
+      "spans": [
+        {
+          "file": ".github/workflows/build.yml",
+          "start": {
+            "line": 9,
+            "col": 61,
+            "offset": 146
+          },
+          "end": {
+            "line": 9,
+            "col": 81,
+            "offset": 166
+          }
+        }
+      ]
+    },
+    {
+      "code": 3,
+      "level": "warn",
+      "type": [
+        "PartialParsing",
+        [
+          {
+            "path": ".github/workflows/build.yml",
+            "start": {
+              "line": 9,
+              "col": 61,
+              "offset": 146
+            },
+            "end": {
+              "line": 9,
+              "col": 81,
+              "offset": 166
+            }
+          }
+        ]
+      ],
+      "message": "Syntax error at line .github/workflows/build.yml:9:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell', `{ steps.scan.outcome` was unexpected",
+      "path": ".github/workflows/build.yml",
+      "spans": [
+        {
+          "file": ".github/workflows/build.yml",
+          "start": {
+            "line": 9,
+            "col": 61,
+            "offset": 146
+          },
+          "end": {
+            "line": 9,
+            "col": 81,
+            "offset": 166
+          }
+        }
+      ]
+    }
+  ],
+  "paths": {
+    "scanned": [
+      ".github/workflows/build.yml"
+    ]
+  },
+  "time": {
+    "rules": [],
+    "rules_parse_time": 0.22116518020629883,
+    "profiling_times": {
+      "config_time": 0.7548449039459229,
+      "core_time": 0.48832106590270996,
+      "ignores_time": 0.0006480216979980469,
+      "total_time": 1.2520298957824707
+    },
+    "parsing_time": {
+      "total_time": 0.0,
+      "per_file_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "scanning_time": {
+      "total_time": 0.02304387092590332,
+      "per_file_time": {
+        "mean": 0.00768129030863444,
+        "std_dev": 9.17028142768888e-05
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_files": []
+    },
+    "matching_time": {
+      "total_time": 0.0,
+      "per_file_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_files": []
+    },
+    "tainting_time": {
+      "total_time": 0.0,
+      "per_def_and_rule_time": {
+        "mean": 0.0,
+        "std_dev": 0.0
+      },
+      "very_slow_stats": {
+        "time_ratio": 0.0,
+        "count_ratio": 0.0
+      },
+      "very_slow_rules_on_defs": []
+    },
+    "fixpoint_timeouts": [],
+    "prefiltering": {
+      "project_level_time": 0.0,
+      "file_level_time": 0.0,
+      "rules_with_project_prefilters_ratio": 0.0,
+      "rules_with_file_prefilters_ratio": 0.6097560975609756,
+      "rules_selected_ratio": 0.3902439024390244,
+      "rules_matched_ratio": 0.3902439024390244
+    },
+    "targets": [],
+    "total_bytes": 0,
+    "max_memory_bytes": 734698240
+  },
+  "engine_requested": "OSS",
+  "skipped_rules": [],
+  "profiling_results": []
+}
