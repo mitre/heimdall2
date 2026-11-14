@@ -3,6 +3,46 @@ import {describe, expect, it} from 'vitest';
 import {AnchoreGrypeMapper} from '../../../src/anchore-grype-mapper';
 import {omitVersions} from '../../utils';
 
+describe('anchore-grype_mapper_missing_description', () => {
+  it.each([
+    {
+      withRaw: false,
+      expected: 'amazon-missing-descriptions-grype-hdf.json'
+    },
+    {
+      withRaw: true,
+      expected: 'amazon-missing-descriptions-grype-withraw.json'
+    }
+  ])(
+    'converts missing primary descriptions withRaw=$withRaw',
+    ({withRaw, expected}) => {
+      // Includes adjusted related-source records for description ordering and labels.
+      const mapper = new AnchoreGrypeMapper(
+        fs.readFileSync(
+          'sample_jsons/anchore_grype_mapper/sample_input_report/amazon-missing-descriptions.json',
+          {encoding: 'utf-8'}
+        ),
+        withRaw
+      );
+
+      // fs.writeFileSync(
+      //   `sample_jsons/anchore_grype_mapper/${expected}`,
+      //   JSON.stringify(mapper.toHdf(), null, 2)
+      // );
+
+      expect(omitVersions(mapper.toHdf())).toEqual(
+        omitVersions(
+          JSON.parse(
+            fs.readFileSync(`sample_jsons/anchore_grype_mapper/${expected}`, {
+              encoding: 'utf-8'
+            })
+          )
+        )
+      );
+    }
+  );
+});
+
 describe('anchore-grype_mapper', () => {
   it('Successfully converts anchore_grype targeted at a local/cloned repository data', () => {
     const mapper = new AnchoreGrypeMapper(
