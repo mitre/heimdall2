@@ -1,7 +1,12 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform
+} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {filterString, getCCIsForNISTTags} from './utils/global';
 import {
@@ -61,6 +66,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['none', 0.0],
   ['unknown', 0.5]
 ]);
+const severityToImpact = impactMapping(IMPACT_MAPPING);
 
 // Convert object type to string[] and prepend `CWE` if used directly for tag display
 function formatCWETags(
@@ -97,7 +103,7 @@ function maxImpact(ratings: FluffyRating[] | PurpleRating[]): number {
         ? // Prefer to use CVSS-based `score` field when possible
           rating.score / 10
         : // Else interpret it from `severity` field, defaulting to medium/0.5
-          (IMPACT_MAPPING.get(rating.severity?.toLowerCase() ?? '') ?? 0.5)
+          severityToImpact(rating.severity)
     )
     .reduce(
       (maxValue, newValue) =>
