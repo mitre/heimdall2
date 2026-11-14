@@ -54,6 +54,15 @@ context('Login', () => {
       // Make sure all the fields exist
       userModalVerifier.verifyFieldsExist();
     });
+    it('authenticates a saml user', () => {
+      loginPageVerifier.samlLoginButtonPresent();
+      loginPage.loginSaml('saml');
+      dropdown.openUserModal();
+      userModalVerifier.verifyFieldsExist();
+      cy.get('#email_field').should('have.value', 'saml@example.com');
+      cy.get('#firstName').should('have.value', 'saml');
+      cy.get('#lastName').should('have.value', 'saml');
+    });
 
     describe('Authentication Failures', () => {
       // Ignore 401 errors on authentication failure tests
