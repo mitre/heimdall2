@@ -7,6 +7,12 @@ import * as _ from 'lodash';
 import {createLogger, format, transports} from 'winston';
 import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
 
+// DEFAULT_ANTIVIRUS_NIST_TAGS is applicable to antivirus scanning software.
+// SI-3 (MALICIOUS CODE PROTECTION)
+export const DEFAULT_ANTIVIRUS_NIST_TAGS = ['SI-3'];
+
+export const DEFAULT_ANTIVIRUS_CCI_TAGS = getCCIsForNISTTags(DEFAULT_ANTIVIRUS_NIST_TAGS);
+
 // DEFAULT_NIST_TAG is applicable to all automated configuration tests.
 // SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
 export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
