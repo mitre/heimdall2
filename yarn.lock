@@ -1331,9 +1331,9 @@
     keyv "^5.6.0"
 
 "@casl/ability@^7.0.0":
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/@casl/ability/-/ability-7.1.2.tgz#4dbe3007542f2451598c15630b241200b35ebefc"
-  integrity sha512-7Bnd893os1JQ15U2hUUqFCQyT3HrREmroMaAPCdLkliitLpYi+GY4cyf/1q92IeWLxK0FxECVAMjELX86kxPtA==
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/@casl/ability/-/ability-7.1.3.tgz#7707dbc69a579c8f68a4c4989fe6c08406d0e607"
+  integrity sha512-4V7ER1Q7r0be9dwpJQuSA99Cazk6gnFEpYpiCV1MCSkBoLAycMgrpXjsrFR06OHBtWlTeGKAhARXQKg+pw3fbg==
   dependencies:
     "@ucast/mongo2js" "^2.0.0"
 
