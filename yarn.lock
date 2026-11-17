@@ -2389,9 +2389,9 @@
     tslib "2.8.1"
 
 "@nestjs/jwt@^12.0.1":
-  version "12.0.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/jwt/-/jwt-12.0.4.tgz#bd46f827599b94efcfed8928bc48a6217d2ccffb"
-  integrity sha512-A5mA2kOQhm4xgLKrWGbH9lTdh4GX/WAkABpFLA+v0S1Eu11eyCE5CVRF5Wt9O+8rcmIlaV8sprdiMNNm01gHpg==
+  version "12.0.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/jwt/-/jwt-12.0.5.tgz#7569c71f6f38cde1583f90e693527757c09afa1d"
+  integrity sha512-mZV4eQw7sj80sUL8A1XjkoTdjY/9oWfsHk4o0AdUzjv0i3Zh67sQpcrOdKZHyLSkmYGqUeG4VSm67kwgWOO/Rw==
   dependencies:
     "@types/jsonwebtoken" "9.0.10"
     jsonwebtoken "9.0.3"
