@@ -1,0 +1,14 @@
+LibClamAV Error: cli_loaddbdir: No supported database files found in /tmp/empty-db
+ERROR: Can't open file or directory
+
+----------- SCAN SUMMARY -----------
+Known viruses: 0
+Engine version: 1.5.4
+Scanned directories: 0
+Scanned files: 0
+Infected files: 0
+Data scanned: 0 B
+Data read: 0 B (ratio 0.00:1)
+Time: 0.060 sec (0 m 0 s)
+Start Date: 2026:11:17 06:32:32
+End Date:   2026:11:17 06:32:32

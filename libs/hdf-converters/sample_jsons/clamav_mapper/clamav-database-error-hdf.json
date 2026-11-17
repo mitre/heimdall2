@@ -1,0 +1,61 @@
+{
+  "passthrough": {
+    "clamav_summary": {
+      "Known viruses": "0",
+      "Engine version": "1.5.4",
+      "Scanned directories": "0",
+      "Scanned files": "0",
+      "Infected files": "0",
+      "Data scanned": "0 B",
+      "Data read": "0 B (ratio 0.00:1)",
+      "Time": "0.060 sec (0 m 0 s)",
+      "Start Date": "2026:11:17 06:32:32",
+      "End Date": "2026:11:17 06:32:32"
+    }
+  },
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.15.0"
+  },
+  "profiles": [
+    {
+      "attributes": [],
+      "controls": [
+        {
+          "code": "LibClamAV Error: cli_loaddbdir: No supported database files found in /tmp/empty-db\nERROR: Can't open file or directory",
+          "id": "ClamAV scanner",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:17 06:32:32",
+              "status": "error",
+              "message": "LibClamAV Error: cli_loaddbdir: No supported database files found in /tmp/empty-db\nERROR: Can't open file or directory"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        }
+      ],
+      "groups": [],
+      "name": "ClamAV Scan",
+      "sha256": "53351b25e4ce9d20f8e35ef79fcbfa217bd44a3c2c03749bdeae16377c891d1e",
+      "status": "loaded",
+      "supports": [],
+      "title": "ClamAV Scan (2026:11:17 06:32:32)",
+      "version": "1.5.4"
+    }
+  ],
+  "statistics": {
+    "duration": 0.06
+  },
+  "version": "2.15.0"
+}

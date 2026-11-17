@@ -1,0 +1,165 @@
+[
+  {
+    "passthrough": {
+      "clamav_summary": {
+        "Known viruses": "3628258",
+        "Engine version": "1.5.4",
+        "Scanned directories": "0",
+        "Scanned files": "0",
+        "Infected files": "0",
+        "Data scanned": "0 B",
+        "Data read": "0 B (ratio 0.00:1)",
+        "Time": "6.223 sec (0 m 6 s)",
+        "Start Date": "2026:11:12 21:39:33",
+        "End Date": "2026:11:12 21:39:39"
+      },
+      "raw": "\n-------------------------------------------------------------------------------\n\nempty.txt: Empty file\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 0\nInfected files: 0\nData scanned: 0 B\nData read: 0 B (ratio 0.00:1)\nTime: 6.223 sec (0 m 6 s)\nStart Date: 2026:11:12 21:39:33\nEnd Date:   2026:11:12 21:39:39\n\n-------------------------------------------------------------------------------\n\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 1\nInfected files: 0\nData scanned: 100 B\nData read: 50 B (ratio 2.00:1)\nTime: 5.869 sec (0 m 5 s)\nStart Date: 2026:11:12 21:39:39\nEnd Date:   2026:11:12 21:39:45\n\n-------------------------------------------------------------------------------\n\nempty.txt: Access denied\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 0\nInfected files: 0\nTotal errors: 1\nData scanned: 0 B\nData read: 50 B (ratio 0.00:1)\nTime: 5.709 sec (0 m 5 s)\nStart Date: 2026:11:12 21:39:45\nEnd Date:   2026:11:12 21:39:51\n"
+    },
+    "platform": {
+      "name": "Heimdall Tools",
+      "release": "2.15.0"
+    },
+    "profiles": [
+      {
+        "attributes": [],
+        "controls": [
+          {
+            "code": "empty.txt: Empty file",
+            "id": "empty.txt",
+            "impact": 0,
+            "refs": [],
+            "results": [
+              {
+                "code_desc": "",
+                "start_time": "2026:11:12 21:39:33",
+                "status": "skipped",
+                "skip_message": "Empty file"
+              }
+            ],
+            "source_location": {},
+            "tags": {
+              "cci": [
+                "CCI-001241"
+              ],
+              "nist": [
+                "SI-3"
+              ]
+            }
+          }
+        ],
+        "groups": [],
+        "name": "ClamAV Scan 1 (2026:11:12 21:39:33)",
+        "sha256": "47417b152149c9149a99b82db4f47ede2df563e144e841c3b32798b74e4cc3c3",
+        "status": "loaded",
+        "supports": [],
+        "title": "ClamAV Scan (2026:11:12 21:39:33)",
+        "version": "1.5.4"
+      }
+    ],
+    "statistics": {
+      "duration": 6.223
+    },
+    "version": "2.15.0"
+  },
+  {
+    "passthrough": {
+      "clamav_summary": {
+        "Known viruses": "3628258",
+        "Engine version": "1.5.4",
+        "Scanned directories": "0",
+        "Scanned files": "1",
+        "Infected files": "0",
+        "Data scanned": "100 B",
+        "Data read": "50 B (ratio 2.00:1)",
+        "Time": "5.869 sec (0 m 5 s)",
+        "Start Date": "2026:11:12 21:39:39",
+        "End Date": "2026:11:12 21:39:45"
+      },
+      "raw": "\n-------------------------------------------------------------------------------\n\nempty.txt: Empty file\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 0\nInfected files: 0\nData scanned: 0 B\nData read: 0 B (ratio 0.00:1)\nTime: 6.223 sec (0 m 6 s)\nStart Date: 2026:11:12 21:39:33\nEnd Date:   2026:11:12 21:39:39\n\n-------------------------------------------------------------------------------\n\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 1\nInfected files: 0\nData scanned: 100 B\nData read: 50 B (ratio 2.00:1)\nTime: 5.869 sec (0 m 5 s)\nStart Date: 2026:11:12 21:39:39\nEnd Date:   2026:11:12 21:39:45\n\n-------------------------------------------------------------------------------\n\nempty.txt: Access denied\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 0\nInfected files: 0\nTotal errors: 1\nData scanned: 0 B\nData read: 50 B (ratio 0.00:1)\nTime: 5.709 sec (0 m 5 s)\nStart Date: 2026:11:12 21:39:45\nEnd Date:   2026:11:12 21:39:51\n"
+    },
+    "platform": {
+      "name": "Heimdall Tools",
+      "release": "2.15.0"
+    },
+    "profiles": [
+      {
+        "attributes": [],
+        "controls": [],
+        "groups": [],
+        "name": "ClamAV Scan 2 (2026:11:12 21:39:39)",
+        "sha256": "dc262f254560deea5c74f98e0fc4fea2a0be16bca728d275680510f6d410d6a6",
+        "status": "loaded",
+        "supports": [],
+        "title": "ClamAV Scan (2026:11:12 21:39:39)",
+        "version": "1.5.4"
+      }
+    ],
+    "statistics": {
+      "duration": 5.869
+    },
+    "version": "2.15.0"
+  },
+  {
+    "passthrough": {
+      "clamav_summary": {
+        "Known viruses": "3628258",
+        "Engine version": "1.5.4",
+        "Scanned directories": "0",
+        "Scanned files": "0",
+        "Infected files": "0",
+        "Total errors": "1",
+        "Data scanned": "0 B",
+        "Data read": "50 B (ratio 0.00:1)",
+        "Time": "5.709 sec (0 m 5 s)",
+        "Start Date": "2026:11:12 21:39:45",
+        "End Date": "2026:11:12 21:39:51"
+      },
+      "raw": "\n-------------------------------------------------------------------------------\n\nempty.txt: Empty file\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 0\nInfected files: 0\nData scanned: 0 B\nData read: 0 B (ratio 0.00:1)\nTime: 6.223 sec (0 m 6 s)\nStart Date: 2026:11:12 21:39:33\nEnd Date:   2026:11:12 21:39:39\n\n-------------------------------------------------------------------------------\n\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 1\nInfected files: 0\nData scanned: 100 B\nData read: 50 B (ratio 2.00:1)\nTime: 5.869 sec (0 m 5 s)\nStart Date: 2026:11:12 21:39:39\nEnd Date:   2026:11:12 21:39:45\n\n-------------------------------------------------------------------------------\n\nempty.txt: Access denied\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 0\nInfected files: 0\nTotal errors: 1\nData scanned: 0 B\nData read: 50 B (ratio 0.00:1)\nTime: 5.709 sec (0 m 5 s)\nStart Date: 2026:11:12 21:39:45\nEnd Date:   2026:11:12 21:39:51\n"
+    },
+    "platform": {
+      "name": "Heimdall Tools",
+      "release": "2.15.0"
+    },
+    "profiles": [
+      {
+        "attributes": [],
+        "controls": [
+          {
+            "code": "empty.txt: Access denied",
+            "id": "empty.txt",
+            "impact": 0.5,
+            "refs": [],
+            "results": [
+              {
+                "code_desc": "",
+                "start_time": "2026:11:12 21:39:45",
+                "status": "skipped",
+                "skip_message": "Access denied"
+              }
+            ],
+            "source_location": {},
+            "tags": {
+              "cci": [
+                "CCI-001241"
+              ],
+              "nist": [
+                "SI-3"
+              ]
+            }
+          }
+        ],
+        "groups": [],
+        "name": "ClamAV Scan 3 (2026:11:12 21:39:45)",
+        "sha256": "2a78e678e69d9b037ddb0fc831fd33272c9779e728605cd8ee340bd4c374c498",
+        "status": "loaded",
+        "supports": [],
+        "title": "ClamAV Scan (2026:11:12 21:39:45)",
+        "version": "1.5.4"
+      }
+    ],
+    "statistics": {
+      "duration": 5.709
+    },
+    "version": "2.15.0"
+  }
+]

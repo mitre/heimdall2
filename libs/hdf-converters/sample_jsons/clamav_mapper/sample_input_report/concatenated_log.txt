@@ -1,0 +1,48 @@
+
+-------------------------------------------------------------------------------
+
+empty.txt: Empty file
+
+----------- SCAN SUMMARY -----------
+Known viruses: 3628258
+Engine version: 1.5.4
+Scanned directories: 0
+Scanned files: 0
+Infected files: 0
+Data scanned: 0 B
+Data read: 0 B (ratio 0.00:1)
+Time: 6.223 sec (0 m 6 s)
+Start Date: 2026:11:12 21:39:33
+End Date:   2026:11:12 21:39:39
+
+-------------------------------------------------------------------------------
+
+
+----------- SCAN SUMMARY -----------
+Known viruses: 3628258
+Engine version: 1.5.4
+Scanned directories: 0
+Scanned files: 1
+Infected files: 0
+Data scanned: 100 B
+Data read: 50 B (ratio 2.00:1)
+Time: 5.869 sec (0 m 5 s)
+Start Date: 2026:11:12 21:39:39
+End Date:   2026:11:12 21:39:45
+
+-------------------------------------------------------------------------------
+
+empty.txt: Access denied
+
+----------- SCAN SUMMARY -----------
+Known viruses: 3628258
+Engine version: 1.5.4
+Scanned directories: 0
+Scanned files: 0
+Infected files: 0
+Total errors: 1
+Data scanned: 0 B
+Data read: 50 B (ratio 0.00:1)
+Time: 5.709 sec (0 m 5 s)
+Start Date: 2026:11:12 21:39:45
+End Date:   2026:11:12 21:39:51
