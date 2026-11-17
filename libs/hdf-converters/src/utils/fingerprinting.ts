@@ -137,10 +137,7 @@ export function fingerprint(guessOptions: {
     // If we don't have valid json, look for known strings inside the file text
     if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
       return INPUT_TYPES.NESSUS;
-    } else if (
-      guessOptions.data.includes('----------- SCAN SUMMARY -----------') &&
-      guessOptions.data.includes('Engine version:')
-    ) {
+    } else if (guessOptions.data.includes('----------- SCAN SUMMARY -----------')) {
       return INPUT_TYPES.CLAMAV;
     } else if (
       guessOptions.data.match(/xmlns.*http.*\/xccdf/) || // Keys matching (hopefully) all xccdf formats
