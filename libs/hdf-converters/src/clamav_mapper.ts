@@ -96,14 +96,16 @@ class ClamAvMapper extends BaseConverter<ClamAvReport> {
       }],
       groups: [],
       name: {
-        transformer: (data: ClamAvReport): string => this.scanNumber === undefined
-          ? 'ClamAV Scan'
-          : `ClamAV Scan ${this.scanNumber}${data.summary['Start Date'] ? ` (${data.summary['Start Date']})` : ''}`,
+        transformer: (data: ClamAvReport): string => {
+          const startDate = data.summary['Start Date'];
+          const suffix = startDate ? ` (${startDate})` : '';
+          return this.scanNumber === undefined ? 'ClamAV Scan' : `ClamAV Scan ${this.scanNumber}${suffix}`;
+        },
       },
       sha256: '',
       status: 'loaded',
       supports: [],
-      title: { transformer: (data: ClamAvReport): string => `ClamAV Scan${data.summary['Start Date'] ? ` (${data.summary['Start Date']})` : ''}` },
+      title: { transformer: (data: ClamAvReport): string => data.summary['Start Date'] ? `ClamAV Scan (${data.summary['Start Date']})` : 'ClamAV Scan' },
       version: { transformer: (): string | undefined => this.data.summary['Engine version'] },
     }],
     statistics: { duration: { transformer: (data: ClamAvReport): number | undefined => data.duration } },
@@ -201,9 +203,8 @@ export class ClamAvResults {
     const lastMessage = line.slice(lastSeparator + 2);
     const verdict = lastMessage.endsWith(' ERROR') ? lastMessage.slice(0, -6) : lastMessage;
     const pathFailure = line.indexOf(': File path check failure:');
-    const separator = pathFailure > 0
-      ? pathFailure
-      : (ClamAvResults.simpleOutcomes.has(verdict) || this.isExcluded(lastMessage) ? lastSeparator : line.indexOf(': '));
+    const verdictSeparator = ClamAvResults.simpleOutcomes.has(verdict) || this.isExcluded(lastMessage) ? lastSeparator : line.indexOf(': ');
+    const separator = pathFailure > 0 ? pathFailure : verdictSeparator;
     if (separator <= 0) {
       return undefined;
     }
