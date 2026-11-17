@@ -34,10 +34,13 @@
                   <li>AWS Security Finding Format (ASFF)</li>
                   <li>Burp Suite</li>
                   <li>Checklist</li>
+                  <li>Checkov</li>
+                  <li>ClamAV</li>
                   <li>CycloneDX Software Bill of Materials (SBOM)</li>
                   <li>DBProtect</li>
                   <li>Fortify</li>
                   <li>Golang Security Checker (gosec)</li>
+                  <li>Hadolint</li>
                   <li>Ion Channel</li>
                   <li>JFrog Xray</li>
                   <li>Microsoft Secure Score</li>
