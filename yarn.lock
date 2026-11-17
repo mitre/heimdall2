@@ -14404,9 +14404,9 @@ pako@^1.0.6, pako@~1.0.2, pako@~1.0.5:
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
 papaparse@^5.3.1:
-  version "5.7.0"
-  resolved "https://registry.npmjs.org/papaparse/-/papaparse-5.7.0.tgz#791209b95dd3a0ca0b6ed9b64f853bc491a45a65"
-  integrity sha512-qBGxg/7Q3Kl9Wfhrz2Z74UnvnHTXLNG6jmKJFeBvP2+y4lV7So+7SR62+Zd47JvdrCkX+nDcnr0ObPzek/+6RA==
+  version "5.7.1"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.7.1.tgz#8952b4d3efe36e9a7d1ced702792e746ca34558a"
+  integrity sha512-qOR+UDWv6D3hMxnWWOk0ZpBdCkd+kw5Yh7aXOaNSQU8A+73EA2bhW7EiUix/hY0yulUi5FRvt7PpYSI2VDvY0g==
 
 param-case@^3.0.4:
   version "3.0.4"
