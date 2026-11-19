@@ -18,8 +18,9 @@ variable "TAG_SUFFIXES" {
   default = "dev"
 }
 
+# ubi9/nodejs-24-minimal:1 -- Node 24.22.1 on UBI 9.8.
 variable "BASE_CONTAINER" {
-  default = "registry.access.redhat.com/ubi9/nodejs-22-minimal:1"
+  default = "registry.access.redhat.com/ubi9/nodejs-24-minimal@sha256:0a082f10b090968d6b738cdf060400df845c1ac579858428c79645f9938dd338"
 }
 
 variable "NODE_ENV" {

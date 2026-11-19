@@ -82,6 +82,32 @@ export class ConfigService {
     return this.appConfig.getDbConfig();
   }
 
+  getMaxFilesPerUpload(): number {
+    const raw = this.get('MAX_FILES_PER_UPLOAD')?.trim() || '100';
+
+    // Only an explicit zero disables the cap; numeric underflow must not.
+    if (raw === '0') {
+      return Infinity;
+    }
+
+    const count = Number(raw);
+    if (!Number.isSafeInteger(count) || count <= 0) {
+      throw new Error(
+        'MAX_FILES_PER_UPLOAD must be 0 (unlimited) or a positive safe integer',
+      );
+    }
+
+    return count;
+  }
+
+  getMaxFileUploadSizeBytes(): number {
+    return this.getUploadSizeBytes('MAX_FILE_UPLOAD_SIZE', 50);
+  }
+
+  getMaxUploadFieldSizeBytes(): number {
+    return this.getUploadSizeBytes('MAX_UPLOAD_FIELD_SIZE', 1);
+  }
+
   getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
   }
@@ -92,6 +118,24 @@ export class ConfigService {
 
   get(key: string): string | undefined {
     return this.appConfig.get(key);
+  }
+
+  private getUploadSizeBytes(key: string, defaultMiB: number): number {
+    const raw = this.get(key)?.trim() || String(defaultMiB);
+
+    // Only an explicit zero disables the cap; numeric underflow must not.
+    if (raw === '0') {
+      return Infinity;
+    }
+
+    const bytes = Number(raw) * 1024 ** 2;
+    if (!Number.isSafeInteger(bytes) || bytes <= 0) {
+      throw new Error(
+        `${key} must be 0 (unlimited) or a positive MiB value yielding a safe integer byte count`,
+      );
+    }
+
+    return bytes;
   }
 }
 export const supportedOauth: string[] = [
