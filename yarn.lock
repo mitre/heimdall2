@@ -8689,10 +8689,10 @@ eslint-plugin-security@^4.0.0:
   dependencies:
     safe-regex "^2.1.1"
 
-eslint-plugin-unicorn@^79.0.0:
-  version "79.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-79.0.0.tgz#d522dee73be6a4a7e4c695e18301e04ce6ce4d31"
-  integrity sha512-k7MWrjoVTVCnjKpgaxBuScPNSPomLvDpsd9uADpWrIFzrnwiec27eWhGrmmyuTj1bC3xVNYP4QfG3MEzEw6ifg==
+eslint-plugin-unicorn@^80.0.0:
+  version "80.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unicorn/-/eslint-plugin-unicorn-80.0.0.tgz#7384f7c43ed6d201ed446039865520ecd503e100"
+  integrity sha512-aHqSTSY0VglZtQfPrAJQiYNGJgOnI2O5+yuavD3oVXnToUL15kqIN/Dl10pAxpud2v/rrXSiepRaDlYuNxjlWg==
   dependencies:
     "@eslint-community/eslint-utils" "^4.10.1"
     "@eslint/css-tree" "^4.1.1"
@@ -8707,7 +8707,6 @@ eslint-plugin-unicorn@^79.0.0:
     identifier-regex "^1.1.0"
     indent-string "^5.0.0"
     is-builtin-module "^5.0.0"
-    micromark "^4.0.3"
     parse5 "^8.0.1"
     pluralize "^8.0.0"
     quote-js-string "^0.1.0"
@@ -13079,7 +13078,7 @@ micromark-util-types@^2.0.0:
   resolved "https://registry.npmjs.org/micromark-util-types/-/micromark-util-types-2.0.2.tgz#f00225f5f5a0ebc3254f96c36b6605c4b393908e"
   integrity sha512-Yw0ECSpJoViF1qTU4DC6NwtC4aWGt1EkzaQB8KPPyCRR8z9TWeV0HbEFGTO+ZY1wB22zmxnJqhPyTpOVCpeHTA==
 
-micromark@^4.0.0, micromark@^4.0.3:
+micromark@^4.0.0:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/micromark/-/micromark-4.0.3.tgz#6d29c0a5383c1dda7975a6c897e0e18d5694f10d"
   integrity sha512-oGYfQzHSG5dOMovQcJ3fyTmZlWAWpi0XA0sJwJs+i6OT88o1+Jtw/8z0CmdowSLxGhhFK89rQ/oXph/wN02PNw==
