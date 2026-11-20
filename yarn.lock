@@ -19144,9 +19144,9 @@ ws@^8.13.0:
   integrity sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==
 
 xml-formatter@^3.6.2:
-  version "3.7.0"
-  resolved "https://registry.npmjs.org/xml-formatter/-/xml-formatter-3.7.0.tgz#ac6f8c02e2388759652e9d0c8a4b5b3dfc0694e5"
-  integrity sha512-+8qTc3zv2UcJ1v9IsSIce37Dl4MQG14Cp7tWrwmy202UaI1wqRukw5QMX1JHsV+DX64yw77EgGsj2s5wGvuMbQ==
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-3.7.1.tgz#4c150f46cac13c16ccb682573e2e67f5a78da3e6"
+  integrity sha512-km3zE1tfiz7NE+5+h9jK2VvYsumFa6yBlTUZwnJ62IIK/wmZv2nUgu61yFsodOrRCTpjacLb7DqEabGnWlVfng==
   dependencies:
     xml-parser-xo "^4.1.5"
 
