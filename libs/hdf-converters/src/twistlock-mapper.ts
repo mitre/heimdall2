@@ -12,13 +12,23 @@ import {
   getCCIsForNISTTags
 } from './utils/global';
 
+// Prisma Cloud passes OS-vendor severity terminology through verbatim, so
+// distro vocabulary appears alongside its own tiers. Vendor mapping table:
+// https://docs.prismacloud.io/admin-guide/vulnerability-management/cvss-scoring
+// Pinned copy of that page's source:
+// https://github.com/hlxsites/prisma-cloud-docs/blob/7f015228ce566c4bd928f23ed65a916a44c9dfb9/docs/en/compute-edition/32/admin-guide/vulnerability-management/cvss-scoring.adoc
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
   ['important', 0.9],
   ['high', 0.7],
   ['medium', 0.5],
   ['moderate', 0.5],
-  ['low', 0.3]
+  ['unassigned', 0.5],
+  ['not yet assigned', 0.5],
+  ['untriaged', 0.5],
+  ['low', 0.3],
+  ['unimportant', 0.1],
+  ['negligible', 0.1]
 ]);
 
 export class TwistlockResults {
