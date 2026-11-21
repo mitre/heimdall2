@@ -60,6 +60,13 @@ const testCases = [
     expectedFile:
       'sample_jsons/checklist_mapper/multiple_ip_addresses_metadata.json',
     options: {includeRaw: false}
+  },
+  {
+    description: 'checklist_with_role_value_as_tech_area',
+    inputFile:
+      'sample_jsons/checklist_mapper/sample_input_report/role_as_techarea_metadata.ckl',
+    expectedFile: 'sample_jsons/checklist_mapper/role_as_techarea_metadata.json',
+    options: {includeRaw: false}
   }
 ];
 

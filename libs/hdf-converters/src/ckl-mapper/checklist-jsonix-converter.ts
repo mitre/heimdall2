@@ -7,6 +7,7 @@ import {
   Asset,
   Assettype,
   Checklist,
+  ChecklistTechArea,
   Istig,
   LocalPartEnum,
   Name,
@@ -118,7 +119,7 @@ export type ChecklistMetadata = {
   targetcomment: string;
   role: Role;
   assettype: Assettype;
-  techarea: Techarea;
+  techarea: ChecklistTechArea;
   webordatabase: string;
   webdbsite: string;
   webdbinstance: string;
@@ -291,7 +292,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       techarea: _.get(
         jsonixData,
         'value.asset.techarea'
-      ) as unknown as Techarea,
+      ) as unknown as ChecklistTechArea,
       targetkey: _.get(
         jsonixData,
         'value.asset.targetkey'
