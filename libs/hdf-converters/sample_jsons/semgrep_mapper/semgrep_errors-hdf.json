@@ -1,0 +1,194 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.13.0"
+  },
+  "version": "2.13.0",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Semgrep",
+      "title": "Semgrep Static Analysis Scan",
+      "version": "1.174.0",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag",
+          "title": "Github Actions Mutable Action Tag",
+          "desc": "GitHub Actions step uses a mutable tag or branch reference. Tags and branch names can be silently repointed by the action owner, enabling supply-chain attacks — as seen in the trivy-action and kics-github-action compromises. Pin the reference to a full 40-character commit SHA instead, e.g. `uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608`.",
+          "impact": 0.5,
+          "refs": [
+            {
+              "url": "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions"
+            },
+            {
+              "url": "https://semgrep.dev/r/yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag"
+            },
+            {
+              "url": "https://sg.run/2LgAL"
+            }
+          ],
+          "code": "{\n  \"extra\": {\n    \"validation_state\": \"NO_VALIDATOR\"\n  }\n}",
+          "source_location": {},
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
+            "cwe": [
+              "CWE-1357: Reliance on Insufficiently Trustworthy Component",
+              "CWE-353: Missing Support for Integrity Check"
+            ],
+            "owasp": [
+              "A08:2021 - Software and Data Integrity Failures",
+              "A08:2025 - Software and Data Integrity Failures"
+            ],
+            "confidence": "HIGH",
+            "likelihood": "MEDIUM",
+            "semgrep_impact": "HIGH",
+            "category": "security",
+            "subcategory": [
+              "vuln"
+            ],
+            "technology": [
+              "github-actions"
+            ],
+            "vulnerability_class": [
+              "Cryptographic Issues",
+              "Other"
+            ],
+            "engine_kind": "OSS",
+            "check_id": "yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag",
+            "severity": "WARNING"
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Path: .github/workflows/build.yml\nLocation: line 7, columns 9-34",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell",
+          "title": "Gha Curl Pipe Shell",
+          "desc": "A `run:` step pipes the output of `curl` or `wget` directly into a shell interpreter. This is the \"curl | bash\" install pattern — if the remote server is compromised or the URL is hijacked, an attacker can execute arbitrary code in your CI runner. Consider downloading the file first, verifying its checksum or signature, and then executing it.",
+          "impact": 0.7,
+          "refs": [
+            {
+              "url": "https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions"
+            },
+            {
+              "url": "https://www.idontplaydarts.com/2016/04/detecting-curl-pipe-bash-server-side/"
+            },
+            {
+              "url": "https://semgrep.dev/r/yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell"
+            },
+            {
+              "url": "https://sg.run/GR8K1"
+            }
+          ],
+          "code": "{\n  \"extra\": {\n    \"validation_state\": \"NO_VALIDATOR\"\n  }\n}",
+          "source_location": {},
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "cci": [
+              "CCI-001310"
+            ],
+            "cwe": [
+              "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+            ],
+            "owasp": [
+              "A03:2021 - Injection",
+              "A03:2025 - Injection"
+            ],
+            "confidence": "HIGH",
+            "likelihood": "MEDIUM",
+            "semgrep_impact": "HIGH",
+            "category": "security",
+            "subcategory": [
+              "vuln"
+            ],
+            "technology": [
+              "github-actions",
+              "bash",
+              "curl"
+            ],
+            "vulnerability_class": [
+              "Command Injection"
+            ],
+            "engine_kind": "OSS",
+            "check_id": "yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell",
+            "severity": "ERROR"
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Path: .github/workflows/build.yml\nLocation: line 9, columns 9-92",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "id": "Semgrep Scan Errors",
+          "title": "Semgrep Scan Errors",
+          "desc": "Errors reported by Semgrep while scanning. A file that failed to parse was not fully analyzed, so absence of findings in it is not evidence of compliance.",
+          "impact": 0.5,
+          "refs": [],
+          "source_location": {},
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "results": [
+            {
+              "status": "error",
+              "code_desc": "Path: .github/workflows/build.yml",
+              "message": "PartialParsing: Syntax error at line .github/workflows/build.yml:9:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.curl-eval.curl-eval', `{ steps.scan.outcome` was unexpected",
+              "start_time": ""
+            },
+            {
+              "status": "error",
+              "code_desc": "Path: .github/workflows/build.yml",
+              "message": "PartialParsing: Syntax error at line .github/workflows/build.yml:9:\n When parsing a snippet as Bash for metavariable-pattern in rule 'yaml.github-actions.security.gha-curl-pipe-shell.gha-curl-pipe-shell', `{ steps.scan.outcome` was unexpected",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "53055b89b9a9c9a2f29132cb04fc2b352d9c1cec2f828f37735eff36425dbcff"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "Semgrep",
+        "data": {
+          "version": "1.174.0",
+          "engine_requested": "OSS",
+          "paths": {
+            "scanned": [
+              ".github/workflows/build.yml"
+            ]
+          },
+          "skipped_rules": []
+        }
+      }
+    ]
+  }
+}
