@@ -247,6 +247,7 @@ import InputDialog from '@/components/generic/InputDialog.vue';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
+import {userStatusLabel} from '@/utilities/helper_util';
 import {IApiKey, IUpdateUser, IUser} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
@@ -523,7 +524,7 @@ export default class UserModal extends Vue {
 
   get title(): string {
     if (this.admin) {
-      return `Update account information for ${this.user.email}`;
+      return `Update account information for ${userStatusLabel(this.user.email, this.user.isDisabled)}`;
     } else {
       return 'Update your account information';
     }

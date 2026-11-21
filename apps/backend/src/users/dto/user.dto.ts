@@ -14,6 +14,7 @@ export class UserDto implements IUser {
   readonly creationMethod: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly isDisabled: boolean;
 
   constructor(user: User) {
     this.id = user.id;
@@ -28,5 +29,6 @@ export class UserDto implements IUser {
     this.creationMethod = user.creationMethod;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
+    this.isDisabled = user.isDisabled;
   }
 }

@@ -155,6 +155,7 @@ import GroupUsers from '@/components/global/groups/GroupUsers.vue';
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {SnackbarModule} from '@/store/snackbar';
+import {userStatusLabel} from '@/utilities/helper_util';
 import {IGroup, ISlimUser} from '@heimdall/common/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -228,11 +229,8 @@ export default class GroupManagement extends Vue {
   }
 
   getMemberName(users: ISlimUser): string {
-    if (!users.firstName && !users.lastName) {
-      return users.email;
-    } else {
-      return `${users.firstName}${users.lastName ? ' ' + users.lastName : ''}`;
-    }
+    const name = [users.firstName, users.lastName].filter(Boolean).join(' ');
+    return userStatusLabel(name || users.email, users.isDisabled);
   }
 
   displayUsersDialog(members: ISlimUser[]) {
