@@ -1,0 +1,338 @@
+{
+  "passthrough": {
+    "clamav_summary": {
+      "Known viruses": "3628258",
+      "Engine version": "1.5.4",
+      "Scanned directories": "0",
+      "Scanned files": "4",
+      "Infected files": "2",
+      "Total errors": "2",
+      "Data scanned": "4.24 KiB",
+      "Data read": "132.30 KiB (ratio 0.03:1)",
+      "Time": "5.683 sec (0 m 5 s)",
+      "Start Date": "2026:11:11 06:23:36",
+      "End Date": "2026:11:11 06:23:42"
+    }
+  },
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.15.0"
+  },
+  "profiles": [
+    {
+      "attributes": [],
+      "controls": [
+        {
+          "code": "WARNING: Failed to set locale",
+          "id": "ClamAV scanner",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "WARNING: Failed to set locale"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "LICENSE.txt: OK\nLICENSE.txt FileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nLICENSE.txt FileType: CL_TYPE_TEXT_ASCII",
+          "id": "LICENSE.txt",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "passed",
+              "message": "OK\nFileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nFileType: CL_TYPE_TEXT_ASCII"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "name with spaces: and colon.txt: OK\nname with spaces: and colon.txt FileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nname with spaces: and colon.txt FileType: CL_TYPE_TEXT_ASCII",
+          "id": "name with spaces: and colon.txt",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "passed",
+              "message": "OK\nFileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nFileType: CL_TYPE_TEXT_ASCII"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "empty.txt: Empty file",
+          "id": "empty.txt",
+          "impact": 0,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "Empty file"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "excluded.txt: Excluded",
+          "id": "excluded.txt",
+          "impact": 0,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "Excluded"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "unreadable.txt: Access denied",
+          "id": "unreadable.txt",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "Access denied"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "link.txt: Symbolic link",
+          "id": "link.txt",
+          "impact": 0,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "Symbolic link"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "large.bin: Heuristics.Limits.Exceeded.MaxFileSize FOUND\nlarge.bin: Virus(es) detected ERROR",
+          "id": "large.bin",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "Heuristics.Limits.Exceeded.MaxFileSize FOUND\nVirus(es) detected ERROR"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "WARNING: pipe: Not supported file type",
+          "id": "pipe",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "Not supported file type"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "missing.txt: No such file or directory\nWARNING: missing.txt: Can't access file",
+          "id": "missing.txt",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "No such file or directory\nCan't access file"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "/proc/version: Excluded (/proc)",
+          "id": "/proc/version",
+          "impact": 0,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "skipped",
+              "skip_message": "Excluded (/proc)"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "detections.txt: Test.LDB.UNOFFICIAL FOUND\ndetections.txt: Test.NDB.UNOFFICIAL FOUND\ndetections.txt: copied to '/quarantine/detections.txt'",
+          "id": "detections.txt",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "failed",
+              "message": "Test.LDB.UNOFFICIAL FOUND\nTest.NDB.UNOFFICIAL FOUND\ncopied to '/quarantine/detections.txt'"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        },
+        {
+          "code": "mixed.bin: Virus(es) detected ERROR\nmixed.bin: Heuristics.Limits.Exceeded.MaxFileSize FOUND\nmixed.bin: Test.NDB.UNOFFICIAL FOUND",
+          "id": "mixed.bin",
+          "impact": 0.5,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:36",
+              "status": "failed",
+              "message": "Virus(es) detected ERROR\nHeuristics.Limits.Exceeded.MaxFileSize FOUND\nTest.NDB.UNOFFICIAL FOUND"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        }
+      ],
+      "groups": [],
+      "name": "ClamAV Scan",
+      "sha256": "c86d13107c4bf572d5f94712e5470614630ddc18f1c5232505e9978ed28f36f4",
+      "status": "loaded",
+      "supports": [],
+      "title": "ClamAV Scan (2026:11:11 06:23:36)",
+      "version": "1.5.4"
+    }
+  ],
+  "statistics": {
+    "duration": 5.683
+  },
+  "version": "2.15.0"
+}
