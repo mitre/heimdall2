@@ -35,11 +35,11 @@ export class GroupsService {
     private readonly userModel: typeof User
   ) {}
 
-  async findAll(): Promise<Group[]> {
+  findAll(): Promise<Group[]> {
     return this.groupModel.findAll<Group>({include: 'users'});
   }
 
-  async findPublic(excludedGroupIds: string[] = []): Promise<Group[]> {
+  findPublic(excludedGroupIds: string[] = []): Promise<Group[]> {
     return this.groupModel.findAll<Group>({
       include: 'users',
       where: {
@@ -49,7 +49,7 @@ export class GroupsService {
     });
   }
 
-  async count(): Promise<number> {
+  count(): Promise<number> {
     return this.groupModel.count();
   }
 
@@ -64,7 +64,7 @@ export class GroupsService {
 
   // This method is used to find groups by group name,
   // primarily to sync user roles from an external provider
-  async findByName(name: string): Promise<Group> {
+  findByName(name: string): Promise<Group> {
     return this.findOneBang({
       where: {
         name
@@ -83,7 +83,7 @@ export class GroupsService {
     }
   }
 
-  async findByIds(id: string[]): Promise<Group[]> {
+  findByIds(id: string[]): Promise<Group[]> {
     return this.groupModel.findAll({
       where: {id: {[Op.in]: id}},
       include: 'users'
@@ -166,7 +166,7 @@ export class GroupsService {
     });
   }
 
-  async removeEvaluationFromGroup(
+  removeEvaluationFromGroup(
     group: Group,
     evaluation: Evaluation
   ): Promise<Group> {
