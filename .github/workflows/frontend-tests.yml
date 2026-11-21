@@ -36,6 +36,9 @@ jobs:
       - name: Install frontend dev dependencies
         run: yarn frontend install --frozen-lockfile
 
+      - name: Build shared interfaces
+        run: yarn common build
+
       - name: Run frontend tests
         run: yarn frontend test:ci
 
