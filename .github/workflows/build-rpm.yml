@@ -88,11 +88,11 @@ jobs:
           make -C packaging/rpm deps TOPDIR="$TOPDIR"
           dnf install -y gnupg2 findutils tar
           # Rocky 10 omits PATH from image metadata; retain the shell's system path.
-          echo "/opt/heimdall-build/go-1.26.9/bin:$PATH" >> "$GITHUB_PATH"
+          echo "/opt/heimdall-build/go-1.26.11/bin:$PATH" >> "$GITHUB_PATH"
 
       - name: Verify toolchain and source fixtures
         run: |
-          test "$(go env GOVERSION)" = go1.26.9
+          test "$(go env GOVERSION)" = go1.26.11
           bash packaging/rpm/tests/build-python.sh
           python3 packaging/rpm/tests/inputs.py
           python3 packaging/rpm/tests/build-shortcuts.py
@@ -382,9 +382,10 @@ jobs:
               rpm --checksig --verbose "$candidate" | tee /tmp/rpm-publish-signature.log
               grep -Eq 'Signature.*: OK' /tmp/rpm-publish-signature.log
               release=$(rpm -qp --qf '%{RELEASE}' "$candidate")
-              case "$release" in
-                *integration*) echo "Refusing to publish integration RPM: $candidate" >&2; exit 1 ;;
-              esac
+              if [[ $release == *integration* ]]; then
+                echo "Refusing to publish integration RPM: $candidate" >&2
+                exit 1
+              fi
               name=$(basename "$candidate")
               # SRPM names omit CPU architecture although their staged runtime sources differ.
               [[ $name != *.src.rpm ]] || name="$id-$name"

@@ -1,7 +1,7 @@
 # heimdall-cli Testing Guide
 
 Four layers, each with a Makefile target; non-unit layers use build tags.
-Run these commands from `apps/heimdall-cli` using Go 1.26.9 and
+Run these commands from `apps/heimdall-cli` using Go 1.26.11 and
 `GOTOOLCHAIN=local`.
 
 | Layer | Tag | Target | What it covers | Speed |
@@ -27,7 +27,7 @@ make test-all           # test + test-functional
 native Linux jobs named `CLI / amd64` and `CLI / arm64`. Release validation calls
 the same workflow; all checkouts use the event's exact `github.sha`, including
 manual runs on a selected branch or tag. Actions cache reuse is enabled only for
-pull requests and pushes to `master`. Both jobs use Go 1.26.9 with
+pull requests and pushes to `master`. Both jobs use Go 1.26.11 with
 `GOTOOLCHAIN=local`, read-only repository permissions, and no publishing secrets.
 After the first successful hosted run, maintainers should add these stable check
 names to repository rules while preserving existing required checks.
@@ -36,7 +36,7 @@ Run the same checks locally from this module directory:
 
 ```bash
 export GOTOOLCHAIN=local
-test "$(go env GOVERSION)" = go1.26.9
+test "$(go env GOVERSION)" = go1.26.11
 test -z "$(gofmt -l .)"
 go mod download
 go mod verify
@@ -69,7 +69,7 @@ lifecycle coverage across EL8/EL9/EL10 on x86_64 and aarch64.
 ## Release archive verification
 
 From the repository root on Linux, build the archive with the packaging commands
-in `.github/workflows/heimdall-cli-release.yml`. Use Go 1.26.9 with
+in `.github/workflows/heimdall-cli-release.yml`. Use Go 1.26.11 with
 `GOTOOLCHAIN=local`; run only `--version`, `--help`, and `setup --help` for the
 binary smoke check. No administrative setup is needed. The workflow generates
 manuals from the same module and checks exact version/commit/date metadata.

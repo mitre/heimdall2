@@ -9,7 +9,7 @@ type ExecRunner interface {
 	RunWithEnvAndStdin(env map[string]string, stdin, name string, args ...string) (stdout string, exitCode int, err error)
 	// RunWithStdin runs the command with the given string piped to its stdin.
 	// Used for tools (e.g. psql) that read multi-statement input from stdin.
-	RunWithStdin(stdin string, name string, args ...string) (stdout string, exitCode int, err error)
+	RunWithStdin(stdin, name string, args ...string) (stdout string, exitCode int, err error)
 }
 
 // SystemdRunner manages systemd services.
@@ -73,7 +73,7 @@ type Prompter interface {
 	Input(prompt, defaultValue string) (string, error)
 	Password(prompt string) (string, error)
 	Confirm(prompt string, defaultValue bool) (bool, error)
-	Select(prompt string, defaultValue string, options []string) (int, error)
+	Select(prompt, defaultValue string, options []string) (int, error)
 	CanPrompt() bool
 }
 

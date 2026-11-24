@@ -1,6 +1,6 @@
 module github.com/mitre/heimdall2/apps/heimdall-cli
 
-go 1.26.9
+go 1.26.11
 
 require (
 	charm.land/huh/v2 v2.0.3

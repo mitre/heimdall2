@@ -37,7 +37,7 @@ jobs:
           cache: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/master') }}
       - name: Verify toolchain, formatting and module metadata
         run: |
-          test "$(go env GOVERSION)" = go1.26.9
+          test "$(go env GOVERSION)" = go1.26.11
           test -z "$(gofmt -l .)"
           go mod download
           go mod verify

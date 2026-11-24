@@ -322,7 +322,7 @@ func (p *huhPrompter) Confirm(prompt string, defaultValue bool) (bool, error) {
 	return result, err
 }
 
-func (p *huhPrompter) Select(prompt string, defaultValue string, options []string) (int, error) {
+func (p *huhPrompter) Select(prompt, defaultValue string, options []string) (int, error) {
 	opts := make([]huh.Option[int], len(options))
 	for i, o := range options {
 		opts[i] = huh.NewOption(o, i)

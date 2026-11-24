@@ -573,7 +573,7 @@ index 0000000..39d2a6e
 +	}
 +}
 diff --git a/internal/cmd/setup_test.go b/internal/cmd/setup_test.go
-index ef3a702..f1c539b 100644
+index ef3a702..c01e0ca 100644
 --- a/internal/cmd/setup_test.go
 +++ b/internal/cmd/setup_test.go
 @@ -594,6 +594,64 @@ func TestResolveExternalHost_FallsBackToLocalhost(t *testing.T) {
@@ -641,9 +641,7 @@ index ef3a702..f1c539b 100644
  // Test: External DB + External SSL (most common enterprise deployment)
  func TestInteractive_ExternalDB_ExternalSSL(t *testing.T) {
  	r, out, _ := newTestSetupRunner()
-@@ -610,8 +668,8 @@ func TestInteractive_ExternalDB_ExternalSSL(t *testing.T) {
- 			"Database password": "Str0ng!Pass#2026",
- 			"Confirm password":  "Str0ng!Pass#2026",
+@@ -612,6 +670,6 @@ func TestInteractive_ExternalDB_ExternalSSL(t *testing.T) {
  			"Database name":     "heimdall_prod",
 -			"External URL":      "https://heimdall.example.com",
 -			"Admin email":       "admin@example.com",
@@ -694,16 +692,9 @@ index ef3a702..f1c539b 100644
  		},
  		IsTTY: true,
  	}
-@@ -705,10 +763,10 @@ func TestInteractive_LocalDB_NoTLS(t *testing.T) {
- 			"TLS/SSL setup":  3, // No TLS
- 		},
- 		Inputs: map[string]string{
--			"Database password": "devpass",
--			"Confirm password":  "devpass",
+@@ -710,5 +768,5 @@ func TestInteractive_LocalDB_NoTLS(t *testing.T) {
 -			"External URL":      "",
 -			"Admin email":       "admin@heimdall.local",
-+			"Database password":                         "devpass",
-+			"Confirm password":                          "devpass",
 +			"External URL (default: https://localhost)": "",
 +			"Admin email":                               "admin@heimdall.local",
  		},

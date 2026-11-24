@@ -429,7 +429,7 @@ func (f *FakePrompter) Confirm(prompt string, defaultValue bool) (bool, error) {
 	return defaultValue, nil
 }
 
-func (f *FakePrompter) Select(prompt string, defaultValue string, options []string) (int, error) {
+func (f *FakePrompter) Select(prompt, defaultValue string, options []string) (int, error) {
 	if f.Err != nil {
 		return 0, f.Err
 	}

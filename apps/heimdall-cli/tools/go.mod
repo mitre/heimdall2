@@ -1,6 +1,6 @@
 module github.com/mitre/heimdall2/apps/heimdall-cli/tools
 
-go 1.26.9
+go 1.26.11
 
 tool golang.org/x/vuln/cmd/govulncheck
 
