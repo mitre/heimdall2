@@ -18,18 +18,6 @@
   dependencies:
     fswin "^2.17.1227"
 
-"@angular-devkit/core@22.2.6":
-  version "22.2.6"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.6.tgz#ca6342bf505001033f3c2f2bfcd47bf0829a734d"
-  integrity sha512-OtFUe9fLXpHsqO6gCSbTWIaTO64MCrESRVigs9SAW4EzIagCAhgB0Y8GflTjmKGLvJjilBFJFd0JSIzNxLyifA==
-  dependencies:
-    ajv "8.20.0"
-    ajv-formats "3.0.1"
-    jsonc-parser "3.3.1"
-    picomatch "4.0.7"
-    rxjs "7.8.2"
-    source-map "0.8.0"
-
 "@angular-devkit/core@22.2.7":
   version "22.2.7"
   resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-22.2.7.tgz#a3a0388b083a660ed0b2f46ced10f803fcc4c4e3"
@@ -42,25 +30,14 @@
     rxjs "7.8.2"
     source-map "0.8.0"
 
-"@angular-devkit/schematics-cli@22.2.6":
-  version "22.2.6"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics-cli/-/schematics-cli-22.2.6.tgz#4820e055eacbf0deec84d26d3f3d31f322460e91"
-  integrity sha512-+/zAu8jAdB5Hd6a4hYwurdwalC9wv2ElyDeDPyWZf4b8vZRdIaZwoYvrK91ArQGWn9Y3DrV3i0fpxHY38L91Pg==
+"@angular-devkit/schematics-cli@22.2.7":
+  version "22.2.7"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics-cli/-/schematics-cli-22.2.7.tgz#e40c747a295e029294bcec1da76f5c227635ae30"
+  integrity sha512-9Od0E8TiYTQWm/03QjYWnsryZA8ZSjTf/k5z61nPd/jgloVNvSW8kxC7/YMw+RoXh2idMzjiJxraKxg+gJxzPw==
   dependencies:
-    "@angular-devkit/core" "22.2.6"
-    "@angular-devkit/schematics" "22.2.6"
+    "@angular-devkit/core" "22.2.7"
+    "@angular-devkit/schematics" "22.2.7"
     "@inquirer/prompts" "8.7.2"
-
-"@angular-devkit/schematics@22.2.6":
-  version "22.2.6"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-22.2.6.tgz#36830110420883d71410ded884c8ccd028b0bf3e"
-  integrity sha512-XACkbAmAhBGDfxr8Uny2k0ErDwLpauseccNWdIFs4fiisGTqiCByzkH60/4xTmbV3FTj8bQ6cXYIhhaqe0MK1g==
-  dependencies:
-    "@angular-devkit/core" "22.2.6"
-    jsonc-parser "3.3.1"
-    magic-string "1.4.1"
-    ora "9.4.1"
-    rxjs "7.8.2"
 
 "@angular-devkit/schematics@22.2.7":
   version "22.2.7"
@@ -2508,21 +2485,21 @@
     "@tybys/wasm-util" "^0.10.3"
 
 "@nestjs/cli@^12.0.0":
-  version "12.0.13"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-12.0.13.tgz#b5d5a5f5cbfec91d8aa69484a90fffea61faa8b8"
-  integrity sha512-dfb9zbM4VRUQnkjt0IyhYWxiScDq/4j8m6Y5f6PKvg6LK47XbzBeWKCBdqVFQV85uAHdJiMa8nyemAu0xvujRQ==
+  version "12.0.15"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-12.0.15.tgz#53e51e8352d22fc4ac2b659454c14d81d7d932f7"
+  integrity sha512-oNZ70g6wtE8X82PflsW2xfW50u4XiJQwq6u4HafrgP9eVnSw6m+WqnX4/7K6ehaod5E0+WFrczjT19rx5SHlhA==
   dependencies:
-    "@angular-devkit/core" "22.2.6"
-    "@angular-devkit/schematics" "22.2.6"
-    "@angular-devkit/schematics-cli" "22.2.6"
+    "@angular-devkit/core" "22.2.7"
+    "@angular-devkit/schematics" "22.2.7"
+    "@angular-devkit/schematics-cli" "22.2.7"
     "@inquirer/prompts" "8.7.5"
     "@nestjs/schematics" "^12.0.13"
     ansis "4.5.0"
     chokidar "5.0.0"
     cli-table3 "0.6.5"
-    commander "15.0.0"
+    commander "15.1.0"
     jsonc-parser "3.3.1"
-    minimatch "11.0.5"
+    minimatch "11.0.9"
     node-emoji "2.2.0"
     ora "9.4.1"
     tsconfig-paths "4.2.0"
@@ -6820,10 +6797,10 @@ command-line-usage@^5.0.5:
     table-layout "^0.4.3"
     typical "^2.6.1"
 
-commander@15.0.0:
-  version "15.0.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-15.0.0.tgz#96f3961f12adac1799ef3fbd8bc61d40572d1b11"
-  integrity sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==
+commander@15.1.0:
+  version "15.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-15.1.0.tgz#397e6a353fda8e9d4e1eb9e3c0c28644cfd69406"
+  integrity sha512-cgnQ88TRrWcC7pVq46RzJVRMktu3W2RcbnoidnfBsl1bmDCBwJS/udcIZpKoCrbAYYaCqsz1yZCVIgbIaU3ddQ==
 
 commander@2.11.x:
   version "2.11.0"
@@ -13360,10 +13337,10 @@ minimatch@11.0.1:
     "@isaacs/nonrecursive-glob-match" "^1.0.1"
     brace-expansion "^5.0.12"
 
-minimatch@11.0.5:
-  version "11.0.5"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-11.0.5.tgz#29589e94fc4d84193b2a31b082b0ec67b5ea1d42"
-  integrity sha512-snPlVppFcYWfLLFQGhDxUyBcHNtMlWmn3jtj7pEaO+DP8pqL0IvAzXhMYmn1z9ASNtgmwLBdFxSf4tMUB0OTKA==
+minimatch@11.0.9, minimatch@^11.0.1, minimatch@^11.0.5, "minimatch@^9.0.3 || ^10.1.2 || ^11.0.1":
+  version "11.0.9"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-11.0.9.tgz#00d0088671fa0d872ba1e2578f5abf3be0fe878e"
+  integrity sha512-KCFkfyjqerNlSstjlhIGNXIKZGA/6O4V4RlhZ+Dsr621SPPw0mzlypE9D9ZOoPiVefHID+j7/XuMMlqfD/F60Q==
   dependencies:
     "@isaacs/nonrecursive-glob-match" "^1.1.0"
     brace-expansion "^5.0.12"
@@ -13374,14 +13351,6 @@ minimatch@^10.0.3, minimatch@^10.2.1, minimatch@^10.2.2:
   integrity sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==
   dependencies:
     brace-expansion "^5.0.8"
-
-minimatch@^11.0.1, minimatch@^11.0.5, "minimatch@^9.0.3 || ^10.1.2 || ^11.0.1":
-  version "11.0.9"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-11.0.9.tgz#00d0088671fa0d872ba1e2578f5abf3be0fe878e"
-  integrity sha512-KCFkfyjqerNlSstjlhIGNXIKZGA/6O4V4RlhZ+Dsr621SPPw0mzlypE9D9ZOoPiVefHID+j7/XuMMlqfD/F60Q==
-  dependencies:
-    "@isaacs/nonrecursive-glob-match" "^1.1.0"
-    brace-expansion "^5.0.12"
 
 minimatch@^3.0.2, minimatch@^3.0.4, minimatch@^3.1.1, minimatch@^3.1.2:
   version "3.1.5"
