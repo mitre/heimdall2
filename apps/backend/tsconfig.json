@@ -3,7 +3,7 @@
 
   "compilerOptions": {
     "outDir": "./dist",
-    "types": ["multer"]
+    "types": ["node", "multer"]
   },
 
   "include": ["**/*.ts"],

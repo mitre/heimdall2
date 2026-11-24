@@ -21,6 +21,7 @@ SCRIPT_NAME="$(basename "$0")"
 RUN_DNF_UPDATE=1
 ENABLE_PGDG=0
 readonly CURL_HTTPS_ONLY='=https'
+readonly NODE_MIN_VERSION=24.22.1
 
 usage() {
     cat <<EOF
@@ -121,15 +122,9 @@ if [[ "${enabled_crb}" -eq 0 ]]; then
     echo "  Warning: could not enable CRB/PowerTools (may already be enabled or not available)"
 fi
 
-# --- NodeSource (Node.js 22) ---
-# We use NodeSource on ALL platforms for consistency. AppStream modules
-# may not have Node.js 22 on all EL8/EL9 minor versions and distro variants.
-if ! rpm -q nodesource-release >/dev/null 2>&1; then
-    echo "  Installing NodeSource repo for Node.js 22..."
-    curl --proto "$CURL_HTTPS_ONLY" --proto-redir "$CURL_HTTPS_ONLY" -fsSL https://rpm.nodesource.com/setup_22.x | ${SUDO} bash -
-else
-    echo "  NodeSource: already installed"
-fi
+# Refresh the repository on existing builders that still use the Node.js 22 channel.
+echo "  Configuring NodeSource repo for Node.js 24..."
+curl --proto "$CURL_HTTPS_ONLY" --proto-redir "$CURL_HTTPS_ONLY" -fsSL https://rpm.nodesource.com/setup_24.x | ${SUDO} bash -
 
 # --- PGDG (optional) ---
 if [[ "${ENABLE_PGDG}" -eq 1 ]]; then
@@ -159,12 +154,14 @@ fi
 # ---------------------------------------------------------------------------
 echo ""
 echo "=== Step 3/5: Build packages ==="
-# EL8's default Python 3.6 cannot run the application's node-gyp 12.
-build_python=python3
-if [[ "$el_major" == 8 ]]; then build_python=python39; fi
+native_build_packages=(gcc-c++ python3)
+if [[ "$el_major" == 8 ]]; then
+    # EL8's system GCC lacks -std=gnu++20, and node-gyp needs Python 3.9 or newer.
+    native_build_packages+=(gcc-toolset-13-gcc-c++ python39)
+fi
 ${SUDO} dnf install "${DNF_ARGS[@]}" \
     gcc \
-    gcc-c++ \
+    "${native_build_packages[@]}" \
     libicu-devel \
     openssl-devel \
     zlib-devel \
@@ -173,9 +170,7 @@ ${SUDO} dnf install "${DNF_ARGS[@]}" \
     pkgconfig \
     make \
     git \
-    nodejs \
-    python3 \
-    "$build_python" \
+    "nodejs(engine) >= $NODE_MIN_VERSION" \
     perl-interpreter \
     'perl(FindBin)' \
     'perl(File::Compare)' \
@@ -191,6 +186,12 @@ ${SUDO} dnf install "${DNF_ARGS[@]}" \
     xz \
     bzip2 \
     util-linux
+
+node_version=$(node -p 'process.versions.node')
+if [[ "$node_version" != 24.* ]] || ! printf '%s\n' "$NODE_MIN_VERSION" "$node_version" | sort -VC; then
+    echo "Error: Node.js 24.x >= $NODE_MIN_VERSION is required, found $node_version." >&2
+    exit 1
+fi
 
 # ---------------------------------------------------------------------------
 # Step 4: Yarn
@@ -242,7 +243,6 @@ if [[ "$installed_go" != "$GO_VERSION" ]]; then
     export PATH="/opt/heimdall-build/go-${GO_VERSION}/bin:$PATH"
 fi
 [[ "$(go env GOVERSION)" == "go${GO_VERSION}" ]]
-node -e 'const [a,b]=process.versions.node.split(".").map(Number); if(a!==22 || b<18) process.exit(1)'
 
 # ---------------------------------------------------------------------------
 # Summary

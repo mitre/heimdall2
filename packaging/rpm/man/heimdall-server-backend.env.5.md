@@ -206,8 +206,20 @@ external/external and preserve their endpoints. Temporary **--skip-db** and
 
 **MAX_FILE_UPLOAD_SIZE**=_50_
 
-:   Positive integer MiB per file; default 50. Files reaching the configured
-    byte cap are rejected with HTTP 413. A request accepts at most 100 files.
+:   Maximum size of an evaluation file in MiB. Files reaching the cap are
+    rejected with HTTP 413. In this file, a fractional MiB value must resolve
+    to a whole number of bytes. Set to **0** to disable this limit.
+    The CLI accepts positive whole MiB values.
+
+**MAX_FILES_PER_UPLOAD**=_100_
+
+:   Maximum number of files per evaluation upload. Set to **0** to disable
+    this limit.
+
+**MAX_UPLOAD_FIELD_SIZE**=_1_
+
+:   Maximum size of each text metadata field in MiB. Set to **0** to disable
+    this limit.
 
 ## PASSWORD POLICY
 

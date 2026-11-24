@@ -2,16 +2,16 @@
   "schema": 1,
   "runtimes": {
     "node": {
-      "version": "22.23.3",
+      "version": "24.22.1",
       "license_files": ["LICENSE"],
       "archives": {
         "x86_64": {
-          "url": "https://nodejs.org/dist/v22.23.3/node-v22.23.3-linux-x64.tar.xz",
-          "sha256": "df450af89261115ef9f9e3830c3eeb2cc9213b63c720b1af623cb5dcbe2e02de"
+          "url": "https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-x64.tar.xz",
+          "sha256": "6c172a9ab6718f7b801fb5a7bd486af2ee5e32758086a04b84fcce2aa77095e6"
         },
         "aarch64": {
-          "url": "https://nodejs.org/dist/v22.23.3/node-v22.23.3-linux-arm64.tar.xz",
-          "sha256": "a44aeb94849a299b22df10b9e622ec2f605c2183501bc40590705131de7c740f"
+          "url": "https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-arm64.tar.xz",
+          "sha256": "dbabf7a1cbf947e6059ffad2c27b80041db97dea1e553b62afdee7f13fca336e"
         }
       }
     },

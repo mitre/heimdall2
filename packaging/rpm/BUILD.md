@@ -6,7 +6,7 @@ sudo heimdall-cli setup --interactive
 ```
 
 Select one RPM matching the host's EL major and architecture. The RPM contains
-Heimdall, its CLI, Node.js 22.23.3, PostgreSQL 18.6, Caddy 2.11.4, Nginx 1.30.6,
+Heimdall, its CLI, Node.js 24.22.1, PostgreSQL 18.6, Caddy 2.11.4, Nginx 1.30.6,
 and private ICU libraries. The host must meet the
 [installation requirements](README.md#requirements). DNF resolves OS dependencies
 from an approved source: RHEL repositories, an internal mirror or local media.
@@ -91,7 +91,7 @@ make -C packaging/rpm deps TOPDIR="$HOME/rpmbuild-heimdall"
 This runs [the dependency setup script](scripts/setup-build-deps.sh), which
 configures build repositories, runs `dnf update`, and installs GCC/G++, development
 libraries, Git, Python (including Python 3.9 on EL8), RPM build tools, SELinux and
-systemd build macros, archive tools, Node.js 22, Yarn Classic 1.22.22, and Go
+systemd build macros, archive tools, Node.js 24, Yarn Classic 1.22.22, and Go
 1.26.9. Yarn must be installed as an RPM to satisfy the RPM build requirements;
 an npm-global or Corepack installation alone is insufficient. The script handles
 root versus sudo automatically.
@@ -180,7 +180,7 @@ container where `make deps` runs (omit `sudo` when already root):
 sudo install -m 0644 /path/to/organization-ca.crt \
   /etc/pki/ca-trust/source/anchors/heimdall-build-ca.crt
 sudo update-ca-trust extract
-curl -fsSL -o /dev/null https://rpm.nodesource.com/setup_22.x
+curl -fsSL -o /dev/null https://rpm.nodesource.com/setup_24.x
 make -C packaging/rpm deps TOPDIR="$HOME/rpmbuild-heimdall"
 ```
 

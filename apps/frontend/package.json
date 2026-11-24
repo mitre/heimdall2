@@ -1,6 +1,6 @@
 {
   "name": "@mitre/heimdall-lite",
-  "version": "2.14.0",
+  "version": "2.15.0",
   "license": "Apache-2.0",
   "description": "Heimdall is a JavaScript based security results viewer and review tool supporting multiple security results formats, such as: InSpec, SonarQube, OWASP-Zap, and Fortify which you can load locally or from S3 and other data sources.",
   "repository": {
@@ -95,11 +95,11 @@
     "@vitejs/plugin-vue2": "^2.3.4",
     "@vue/test-utils": "^1.0.3",
     "esbuild": "^0.28.0",
-    "jsdom": "^30.0.1",
+    "jsdom": "^31.0.0",
     "vite-svg-loader": "^5.1.0",
     "vitest": "^4.0.18"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24.22.1"
   }
 }

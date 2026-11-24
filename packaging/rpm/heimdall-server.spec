@@ -58,8 +58,9 @@ ExclusiveArch:  aarch64 x86_64
 # A full Provides: bundled(npm(...)) manifest is not generated; the lockfile in
 # the source archive is the authoritative dependency record.
 
-# EL8's default Python 3.6 is too old for node-gyp; newer EL releases use python3.
+# EL8's stock GCC lacks Node 24's C++20 flag, and its Python 3.6 is too old for node-gyp.
 %if 0%{?rhel} == 8
+BuildRequires:  gcc-toolset-13-gcc-c++
 %global heimdall_build_python /usr/bin/python3.9
 %else
 %global heimdall_build_python /usr/bin/python3
@@ -77,7 +78,7 @@ BuildRequires:  tar
 BuildRequires:  xz
 BuildRequires:  bzip2
 BuildRequires:  make
-BuildRequires:  nodejs(engine) >= 22.18.0
+BuildRequires:  nodejs(engine) >= 24.22.1
 BuildRequires:  python3
 BuildRequires:  %{heimdall_build_python}
 BuildRequires:  /usr/bin/perl
@@ -104,7 +105,7 @@ Requires(pre):  findutils
 Requires(pre):  gawk
 Requires(preun): diffutils
 
-Provides:       bundled(nodejs) = 22.23.3
+Provides:       bundled(nodejs) = 24.22.1
 Provides:       bundled(postgresql) = 18.6
 Provides:       bundled(caddy) = 2.11.4
 Provides:       bundled(nginx) = 1.30.6
@@ -168,12 +169,15 @@ PY
 
 %build
 export PATH="$PWD/runtime-node/bin:$PATH"
-test "$(node --version)" = v22.23.3
+test "$(node --version)" = v24.22.1
 export NODE_ENV=production
 # Build native addons against the exact Node headers shipped in this archive.
 export npm_config_nodedir="$PWD/runtime-node"
 export npm_config_build_from_source=true
 export npm_config_python=%{heimdall_build_python}
+%if 0%{?rhel} == 8
+export CXX=/opt/rh/gcc-toolset-13/root/usr/bin/g++
+%endif
 
 # YARN_CACHE_FOLDER: if caller exported one (e.g. `make rpm CACHE=1`
 # for fast local rebuilds), honor it and leave it in place. Otherwise

@@ -61,7 +61,7 @@ See [`docs/testing.md`](./docs/testing.md) for the unit / functional / integrati
 
 ## Bundled RPM setup
 
-The architecture-specific `heimdall-server` RPM includes this CLI, Node.js 22.23.3,
+The architecture-specific `heimdall-server` RPM includes this CLI, Node.js 24.22.1,
 PostgreSQL 18.6 server/client tools, Nginx, and Caddy 2.11.4. Setup does not install or
 download runtimes. Base OS libraries and systemd remain prerequisites.
 

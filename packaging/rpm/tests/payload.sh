@@ -28,7 +28,7 @@ done
 readelf -d "$runtime/postgresql/bin/postgres" > "$scratch/postgres-dynamic"
 grep -Eq '\(RPATH\).*\[/usr/libexec/heimdall-server/runtime/postgresql/lib\]' "$scratch/postgres-dynamic"
 ! grep -Fq '(RUNPATH)' "$scratch/postgres-dynamic"
-[[ $("$runtime/node/bin/node" --version) == v22.23.3 ]]
+[[ $("$runtime/node/bin/node" --version) == v24.22.1 ]]
 "$runtime/caddy/caddy" version
 "$runtime/nginx/sbin/nginx" -v 2>&1 | grep -Fxq 'nginx version: nginx/1.30.6'
 [[ ! -e "$scratch/usr/bin/node" ]]
@@ -120,7 +120,7 @@ for library in libc libstdc++ libssl libcrypto libz; do
 done
 rpm -qp --provides "$rpm_file" > "$scratch/provides"
 ! grep -Eq '^(nodejs\(engine\)|lib(pq|ecpg|pgtypes|icu))' "$scratch/provides" || exit 1
-grep -Fxq 'bundled(nodejs) = 22.23.3' "$scratch/provides"
+grep -Fxq 'bundled(nodejs) = 24.22.1' "$scratch/provides"
 grep -Fxq 'bundled(postgresql) = 18.6' "$scratch/provides"
 grep -Fxq 'bundled(caddy) = 2.11.4' "$scratch/provides"
 grep -Fxq 'bundled(nginx) = 1.30.6' "$scratch/provides"

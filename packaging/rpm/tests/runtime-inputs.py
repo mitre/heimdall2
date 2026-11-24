@@ -35,7 +35,7 @@ class RuntimeInputsTest(unittest.TestCase):
         self.lock_path = self.root / 'lock.json'
         self.payloads = {}
         self.lock = {'schema': 1, 'runtimes': {}}
-        for name, version in [('node', '22.23.3'), ('postgresql', '18.6'), ('caddy', '2.11.4'), ('nginx', '1.30.6')]:
+        for name, version in [('node', '24.22.1'), ('postgresql', '18.6'), ('caddy', '2.11.4'), ('nginx', '1.30.6')]:
             archives = {}
             for arch in (['any'] if name in ('postgresql', 'nginx') else ['x86_64', 'aarch64']):
                 url = 'https://example.invalid/{}-{}'.format(name, arch)
@@ -52,6 +52,12 @@ class RuntimeInputsTest(unittest.TestCase):
 
     def download(self, url, timeout):
         return io.BytesIO(self.payloads[url])
+
+    def test_bundled_node_matches_project_version(self):
+        packaging = SCRIPT.parents[1]
+        lock = json.loads((packaging / 'runtime-lock.json').read_text())
+        expected = (packaging.parents[1] / '.nvmrc').read_text().strip()
+        self.assertEqual(lock['runtimes']['node']['version'], expected)
 
     def test_cli_uses_bundled_lock_and_current_directory(self):
         scripts = self.root / 'packaging/scripts'
