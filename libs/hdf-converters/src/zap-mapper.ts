@@ -37,22 +37,21 @@ function filterSite<T>(input: Array<T>, name?: string) {
 
 function impactMapping(input: unknown): number {
   if (typeof input === 'string') {
-    const impact = parseInt(input);
 
-    switch (impact) {
-      case 0:
+    switch (input) {
+      case '0':
         return 0;
-      case 1:
+      case '1':
         return 0.3;
-      case 2:
+      case '2':
         return 0.5;
-      case 3:
+      case '3':
         return 0.7;
       default:
         return 0;
     }
   } else {
-    return 0;
+    return 0.5;
   }
 }
 
@@ -111,6 +110,7 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   });
   return input as ExecJSON.Control[];
 }
+
 export class ZapResults {
   constructor(readonly zapJson: string, readonly name?: string, readonly withRaw = false) {}
 
