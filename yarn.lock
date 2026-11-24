@@ -158,12 +158,12 @@
   dependencies:
     xss "^1.0.8"
 
-"@aws-sdk/checksums@^3.1002.5":
-  version "3.1002.5"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/checksums/-/checksums-3.1002.5.tgz#33749be4a56d0bb38749eb1c1988a1c18505d6d0"
-  integrity sha512-OHlfkNzDFjYnwNPABhwAkDTUi0HPjfsKUHJDR0bSMORpCXNzRpInPCNCIT08xKDhjaPlcLJ+2Av+Sk7hHnuC8A==
+"@aws-sdk/checksums@^3.1002.6":
+  version "3.1002.6"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/checksums/-/checksums-3.1002.6.tgz#858ac565c36585e9326baebcc64be1ec33780946"
+  integrity sha512-OgxgE64MkHNGtt7YJc2Q+d1maGnYcEkCw5r+UO7cM78iVzyMhXFVMgm5un1FZzk4XB8lv436zYduIWLH9ibdBg==
   dependencies:
-    "@aws-sdk/core" "^3.981.0"
+    "@aws-sdk/core" "^3.981.1"
     "@aws-sdk/types" "^3.975.1"
     "@smithy/core" "^3.40.0"
     "@smithy/types" "^4.20.0"
@@ -184,14 +184,14 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.1171.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1171.0.tgz#b0c1a8827c2b61f16d92acc7bd329304d0fd5697"
-  integrity sha512-EIWM2ZuLBYqwM1W1PkNIWrQzFy6Y7WBwVpEDpnCrMtcQyIN3VOXbf0uy+0xG2dbv+PcvxIlEK8A1ohdbyMV72w==
+  version "3.1175.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.1175.0.tgz#c84b5fde13d96451986fa5df101564c05e9965f5"
+  integrity sha512-vBbIL3dsLsCLfoq7M8PXAybnPkFz7hbGiy6l+RCA81z6vXS88HfxPuxT+e3iuNjR4gXS7QxRSJa/4oSbsEc/Ag==
   dependencies:
-    "@aws-sdk/checksums" "^3.1002.5"
-    "@aws-sdk/core" "^3.981.0"
-    "@aws-sdk/credential-provider-node" "^3.972.97"
-    "@aws-sdk/middleware-sdk-s3" "^3.972.89"
+    "@aws-sdk/checksums" "^3.1002.6"
+    "@aws-sdk/core" "^3.981.1"
+    "@aws-sdk/credential-provider-node" "^3.972.98"
+    "@aws-sdk/middleware-sdk-s3" "^3.972.91"
     "@aws-sdk/signature-v4-multi-region" "^3.996.52"
     "@aws-sdk/types" "^3.975.1"
     "@smithy/core" "^3.40.0"
@@ -337,12 +337,12 @@
     "@smithy/types" "^4.20.0"
     tslib "^2.6.2"
 
-"@aws-sdk/middleware-sdk-s3@^3.972.89":
-  version "3.972.89"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-sdk-s3/-/middleware-sdk-s3-3.972.89.tgz#d0e6de976103eeb77f0668af86dcbe10c3729639"
-  integrity sha512-Lem2/ZT1eOicVATBukPRPm2S4JAmrTEkP3/dnJE9iTeyqIKqsJF2j04f5L0o+rrZIrwR13swiQMdzcE5jXRzNA==
+"@aws-sdk/middleware-sdk-s3@^3.972.91":
+  version "3.972.91"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-sdk-s3/-/middleware-sdk-s3-3.972.91.tgz#05fba74ad4bc2f5c317cf07de273b76d5872d6cd"
+  integrity sha512-L4rY9o4i85P/UJ8rGiHH4JYC/PnFwdAbCrXAs3g1UCxnyrnKboYm6blgx38xbOzVaZ1odpkrBRlMNMWI+aTfgg==
   dependencies:
-    "@aws-sdk/core" "^3.981.0"
+    "@aws-sdk/core" "^3.981.1"
     "@aws-sdk/signature-v4-multi-region" "^3.996.52"
     "@aws-sdk/types" "^3.975.1"
     "@smithy/core" "^3.40.0"
