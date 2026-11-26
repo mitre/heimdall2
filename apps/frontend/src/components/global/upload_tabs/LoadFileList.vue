@@ -268,7 +268,7 @@ import TagRow from '@/components/global/tags/TagRow.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 import {EvaluationModule} from '@/store/evaluations';
 import {SnackbarModule} from '@/store/snackbar';
-import {InspecDataModule} from '@/store/data_store';
+import {InspecDataModule, UNSAVED_CHANGES_MESSAGE} from '@/store/data_store';
 import {
   IEvalPaginationParams,
   IEvaluation,
@@ -653,13 +653,22 @@ export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   }
 
   async deleteItemConfirm(): Promise<void> {
-    EvaluationModule.deleteEvaluation(this.activeItem).then(async () => {
+    const fileId = await InspecDataModule.loadedFileIsForDatabaseIds(
+      Number(this.activeItem.id)
+    );
+
+    if (
+      fileId &&
+      InspecDataModule.fileHasUnsavedChanges(fileId) &&
+      !globalThis.confirm(`${UNSAVED_CHANGES_MESSAGE}\n\nDelete it anyway?`)
+    ) {
+      this.deleteItemDialog = false;
+      return;
+    }
+
+    EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
       SnackbarModule.notify('Deleted evaluation successfully.');
       this.updateEvaluations();
-      // Remove the file from the visualization panel if it is loaded.
-      const fileId = await InspecDataModule.loadedFileIsForDatabaseIds(
-        Number(this.activeItem.id)
-      );
       if (FilteredDataModule.selected_file_ids.includes(fileId)) {
         //removes uploaded file from the currently observed files
         EvaluationModule.removeEvaluation(fileId);
