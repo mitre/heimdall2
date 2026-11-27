@@ -2,6 +2,10 @@
   <Base :show-search="true" :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
+      <v-btn :disabled="!can_clear" @click="clear">
+        <span class="d-none d-md-inline pr-2"> Clear Filter </span>
+        <v-icon>mdi-filter-remove</v-icon>
+      </v-btn>
       <UploadButton />
     </template>
 
@@ -640,6 +644,24 @@ export default class Compare extends Vue {
 
   get file_filter(): FileID[] {
     return FilteredDataModule.selectedEvaluationIds;
+  }
+
+  /**
+   * Clear all search filters
+   */
+  clear() {
+    SearchModule.clear();
+  }
+
+  get can_clear(): boolean {
+    return (
+      SearchModule.severityFilter.length !== 0 ||
+      SearchModule.statusFilter.length !== 0 ||
+      SearchModule.controlIdSearchTerms.length !== 0 ||
+      SearchModule.codeSearchTerms.length !== 0 ||
+      SearchModule.tagFilter.length !== 0 ||
+      Boolean(SearchModule.freeSearch)
+    );
   }
 
   toIEvaluation(file: ProfileFile | EvaluationFile): IEvaluation | undefined {
