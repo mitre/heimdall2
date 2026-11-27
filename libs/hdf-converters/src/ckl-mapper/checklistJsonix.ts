@@ -70,7 +70,7 @@ export type Stigdata = {
   stigguid?: null | string;
   targetcomment?: null | string;
   targetkey?: null | string;
-  techarea?: Techarea;
+  techarea?: ChecklistTechArea;
   webdbinstance?: null | string;
   webdbsite?: null | string;
   webordatabase?: boolean | null;
@@ -95,7 +95,7 @@ export type Asset = {
   stigguid?: null | string;
   targetcomment?: null | string;
   targetkey: null | string;
-  techarea: Techarea;
+  techarea: ChecklistTechArea;
   webdbinstance: null | string;
   webdbsite: null | string;
   webordatabase: boolean | null;
@@ -134,6 +134,13 @@ export enum Techarea {
   WebReview = 'Web Review',
   WindowsOS = 'Windows OS'
 }
+
+// STIG Viewer allows Role values in the Tech Area field (mitre/heimdall2#8830)
+export type ChecklistTechArea = Role | Techarea;
+export const checklistTechAreaValues: ChecklistTechArea[] = [
+  ...Object.values(Techarea),
+  ...Object.values(Role)
+];
 
 export type Istig = {
   stiginfo: Stiginfo;
