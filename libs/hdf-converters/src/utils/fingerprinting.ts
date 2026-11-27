@@ -115,20 +115,29 @@ export function fingerprint(guessOptions: {
     const parsed = JSON.parse(guessOptions.data);
     const object = Array.isArray(parsed) ? parsed[0] : parsed;
     // Find the fingerprints that have the most matches
-    const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
-      (a, b) => {
-        return a[1].filter((value) => _.get(object, value)).length >
-          b[1].filter((value) => _.get(object, value)).length
-          ? {...a, count: a[1].filter((value) => _.get(object, value)).length}
-          : {
-              ...b,
-              count: b[1].filter((value) => _.get(object, value)).length
-            };
+    const matches = Object.entries(fileTypeFingerprints).map(
+      ([type, keys]) => ({
+        type: type as INPUT_TYPES,
+        matched: keys.filter((key) => _.get(object, key))
+      })
+    );
+    const best = _.maxBy(matches, (match) => match.matched.length);
+    if (best && best.matched.length > 0) {
+      // A tie between formats is ambiguous
+      const tied = matches.filter(
+        (match) => match.matched.length === best.matched.length
+      );
+      // A single key that other formats also use (e.g. `vulnerabilities`) does not identify the format
+      const sharedKey =
+        best.matched.length === 1 &&
+        matches.some(
+          (match) =>
+            match.type !== best.type &&
+            fileTypeFingerprints[match.type].includes(best.matched[0])
+        );
+      if (tied.length === 1 && !sharedKey) {
+        return best.type;
       }
-    ) as unknown as INPUT_TYPES[] & {count: number};
-    const result = fingerprinted[0];
-    if (fingerprinted.count !== 0) {
-      return result;
     }
   } catch {
     const splitLines = guessOptions.data.trim().split('\n');
