@@ -33,7 +33,7 @@ export class UsersService {
 
   async findAllUsers(): Promise<User[]> {
     return this.userModel.findAll<User>({
-      attributes: ['id', 'email', 'title', 'firstName', 'lastName']
+      attributes: ['id', 'email', 'title', 'firstName', 'lastName', 'isDisabled']
     });
   }
 
@@ -97,6 +97,11 @@ export class UsersService {
     userToUpdate.organization =
       updateUserDto.organization || userToUpdate.organization;
     if (abac.can('update-role', userToUpdate)) {
+      if (userToUpdate.isDisabled && updateUserDto.role === 'admin') {
+        throw new ForbiddenException(
+          'Enable the user before promoting them to administrator'
+        );
+      }
       // Only admins can update roles
       userToUpdate.role = updateUserDto.role || userToUpdate.role;
     }
@@ -114,6 +119,20 @@ export class UsersService {
   async updateUserSecret(user: User): Promise<void> {
     user.jwtSecret = v4();
     await user.save();
+  }
+
+  async setDisabled(user: User, isDisabled: boolean): Promise<User> {
+    if (user.role === 'admin') {
+      throw new ForbiddenException('Administrator accounts cannot be disabled');
+    }
+    if (user.isDisabled !== isDisabled) {
+      user.isDisabled = isDisabled;
+      if (isDisabled) {
+        user.jwtSecret = v4();
+      }
+      await user.save();
+    }
+    return user;
   }
 
   async remove(
