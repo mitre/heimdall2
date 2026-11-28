@@ -1,0 +1,61 @@
+{
+  "passthrough": {
+    "clamav_summary": {
+      "Known viruses": "3628258",
+      "Engine version": "1.5.4",
+      "Scanned directories": "0",
+      "Scanned files": "0",
+      "Infected files": "0",
+      "Data scanned": "0 B",
+      "Data read": "0 B (ratio 0.00:1)",
+      "Time": "5.321 sec (0 m 5 s)",
+      "Start Date": "2026:11:11 06:23:42",
+      "End Date": "2026:11:11 06:23:47"
+    }
+  },
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.15.0"
+  },
+  "profiles": [
+    {
+      "attributes": [],
+      "controls": [
+        {
+          "code": "empty.txt: Empty file",
+          "id": "empty.txt",
+          "impact": 0,
+          "refs": [],
+          "results": [
+            {
+              "code_desc": "",
+              "start_time": "2026:11:11 06:23:42",
+              "status": "skipped",
+              "skip_message": "Empty file"
+            }
+          ],
+          "source_location": {},
+          "tags": {
+            "cci": [
+              "CCI-001241"
+            ],
+            "nist": [
+              "SI-3"
+            ]
+          }
+        }
+      ],
+      "groups": [],
+      "name": "ClamAV Scan",
+      "sha256": "26bad1393339c19da054abb436a64a8dc9d9e0e3cc48008155952ad30afc56dd",
+      "status": "loaded",
+      "supports": [],
+      "title": "ClamAV Scan (2026:11:11 06:23:42)",
+      "version": "1.5.4"
+    }
+  ],
+  "statistics": {
+    "duration": 5.321
+  },
+  "version": "2.15.0"
+}

@@ -12,6 +12,7 @@ import {
   BurpSuiteResults,
   ChecklistResults,
   CheckovMapper,
+  ClamAvResults,
   ConveyorResults as ConveyorResultsMapper,
   CycloneDXSBOMResults,
   DBProtectMapper,
@@ -257,6 +258,8 @@ export class InspecIntake extends VuexModule {
         return new XCCDFResultsResults(convertOptions.data).toHdf();
       case INPUT_TYPES.BURP:
         return new BurpSuiteResults(convertOptions.data).toHdf();
+      case INPUT_TYPES.CLAMAV:
+        return new ClamAvResults(convertOptions.data).toHdf();
       case INPUT_TYPES.IONCHANNEL:
         return new IonChannelMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.SCOUTSUITE:

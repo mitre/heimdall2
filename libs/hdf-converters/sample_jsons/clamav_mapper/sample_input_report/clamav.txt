@@ -1,0 +1,40 @@
+WARNING: Failed to set locale
+Scanning folder-a/LICENSE.txt
+folder-a/LICENSE.txt: OK
+folder-a/LICENSE.txt FileHash: a411104a0e54474fa783689fe6123c6841f6d46df2cf2b070eb3138b3d679f3e (sha2-256)
+folder-a/LICENSE.txt FileType: CL_TYPE_TEXT_ASCII
+Scanning name with spaces: and colon.txt
+name with spaces: and colon.txt: OK
+name with spaces: and colon.txt FileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)
+name with spaces: and colon.txt FileType: CL_TYPE_TEXT_ASCII
+folder-b/LICENSE.txt: Empty file
+excluded.txt: Excluded
+unreadable.txt: Access denied
+link.txt: Symbolic link
+Scanning large.bin
+large.bin: Heuristics.Limits.Exceeded.MaxFileSize FOUND
+large.bin: Virus(es) detected ERROR
+WARNING: pipe: Not supported file type
+missing.txt: No such file or directory
+WARNING: missing.txt: Can't access file
+/proc/version: Excluded (/proc)
+
+detections.txt: Test.LDB.UNOFFICIAL FOUND
+detections.txt: Test.NDB.UNOFFICIAL FOUND
+detections.txt: copied to '/quarantine/detections.txt'
+mixed.bin: Virus(es) detected ERROR
+mixed.bin: Heuristics.Limits.Exceeded.MaxFileSize FOUND
+mixed.bin: Test.NDB.UNOFFICIAL FOUND
+
+----------- SCAN SUMMARY -----------
+Known viruses: 3628258
+Engine version: 1.5.4
+Scanned directories: 0
+Scanned files: 4
+Infected files: 2
+Total errors: 2
+Data scanned: 4.24 KiB
+Data read: 132.30 KiB (ratio 0.03:1)
+Time: 5.683 sec (0 m 5 s)
+Start Date: 2026:11:11 06:23:36
+End Date:   2026:11:11 06:23:42
