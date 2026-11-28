@@ -37,14 +37,14 @@ async function buildHttpsProxyAgent(proxyUrl: string): Promise<Agent> {
   ],
   providers: [
     AuthnService,
+    ApiKeyService,
     APIKeyStrategy,
-    LocalStrategy,
-    JwtStrategy,
     GithubStrategy,
     GitlabStrategy,
     GoogleStrategy,
+    JwtStrategy,
     LDAPStrategy,
-    ApiKeyService,
+    LocalStrategy,
     {
       provide: OidcStrategy,
       useFactory: async (

@@ -1,18 +1,16 @@
-import {ICreateUser} from '@heimdall/common/interfaces';
-import {IsEmail, IsIn, IsNotEmpty, IsOptional, IsString} from 'class-validator';
+import { AUTH_STRATEGIES } from '@heimdall/common/interfaces';
+import type { AuthStrategy, ICreateUser } from '@heimdall/common/interfaces';
+import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserDto implements ICreateUser {
+  @IsIn(AUTH_STRATEGIES)
+  @IsNotEmpty()
+  @IsString()
+  readonly creationMethod!: AuthStrategy;
+
   @IsEmail()
   @IsNotEmpty()
   readonly email!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly password!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  readonly passwordConfirmation!: string;
 
   @IsOptional()
   @IsString()
@@ -26,17 +24,20 @@ export class CreateUserDto implements ICreateUser {
   @IsString()
   readonly organization: string | undefined;
 
+  @IsNotEmpty()
+  @IsString()
+  readonly password!: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly passwordConfirmation!: string;
+
+  @IsIn(['user'])
+  @IsNotEmpty()
+  @IsString()
+  readonly role!: string;
+
   @IsOptional()
   @IsString()
   readonly title: string | undefined;
-
-  @IsNotEmpty()
-  @IsString()
-  @IsIn(['user'])
-  readonly role!: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @IsIn(['local', 'ldap', 'github', 'gitlab', 'google', 'okta', 'ldap'])
-  readonly creationMethod!: string;
 }
