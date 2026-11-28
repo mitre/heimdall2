@@ -1,13 +1,13 @@
 import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {NestExpressApplication} from '@nestjs/platform-express';
+import postgresSessionStore from 'connect-pg-simple';
 import {json} from 'express';
 import rateLimit from 'express-rate-limit';
+import session from 'express-session';
 import helmet from 'helmet';
+import passport from 'passport';
 import winston from 'winston';
-import passport = require('passport');
-import postgresSessionStore = require('connect-pg-simple');
-import session = require('express-session');
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
 import {generateDefault} from './token/token.providers';
@@ -29,6 +29,8 @@ const logger = winston.createLogger({
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+  const trustProxy = configService.getTrustProxy();
+  app.set('trust proxy', trustProxy);
   app.set('query parser', 'extended');
   app.enableShutdownHooks();
   app.use(
@@ -62,6 +64,13 @@ async function bootstrap() {
   ) {
     app.use(
       session({
+        cookie: {
+          maxAge: 60 * 60 * 1000, // 1 hour
+          secure: configService.isInProductionMode()
+        },
+        proxy: trustProxy === true ? true : undefined,
+        resave: false,
+        saveUninitialized: false,
         secret: generateDefault(),
         store: new (postgresSessionStore(session))({
           conObject: {
@@ -72,18 +81,8 @@ async function bootstrap() {
           },
           tableName: 'session'
         }),
-        proxy: configService.isInProductionMode() ? true : undefined,
-        cookie: {
-          maxAge: 60 * 60 * 1000, // 1 hour
-          secure: configService.isInProductionMode()
-        },
-        saveUninitialized: false,
-        resave: false
       })
     );
-    if (configService.isInProductionMode()) {
-      app.getHttpAdapter().getInstance().set('trust proxy', true);
-    }
     app.use(passport.session());
   }
   app.use(
