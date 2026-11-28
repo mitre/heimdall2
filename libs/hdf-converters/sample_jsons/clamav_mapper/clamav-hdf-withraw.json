@@ -13,7 +13,7 @@
       "Start Date": "2026:11:11 06:23:36",
       "End Date": "2026:11:11 06:23:42"
     },
-    "raw": "WARNING: Failed to set locale\nScanning LICENSE.txt\nLICENSE.txt: OK\nLICENSE.txt FileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nLICENSE.txt FileType: CL_TYPE_TEXT_ASCII\nScanning name with spaces: and colon.txt\nname with spaces: and colon.txt: OK\nname with spaces: and colon.txt FileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nname with spaces: and colon.txt FileType: CL_TYPE_TEXT_ASCII\nempty.txt: Empty file\nexcluded.txt: Excluded\nunreadable.txt: Access denied\nlink.txt: Symbolic link\nScanning large.bin\nlarge.bin: Heuristics.Limits.Exceeded.MaxFileSize FOUND\nlarge.bin: Virus(es) detected ERROR\nWARNING: pipe: Not supported file type\nmissing.txt: No such file or directory\nWARNING: missing.txt: Can't access file\n/proc/version: Excluded (/proc)\n\ndetections.txt: Test.LDB.UNOFFICIAL FOUND\ndetections.txt: Test.NDB.UNOFFICIAL FOUND\ndetections.txt: copied to '/quarantine/detections.txt'\nmixed.bin: Virus(es) detected ERROR\nmixed.bin: Heuristics.Limits.Exceeded.MaxFileSize FOUND\nmixed.bin: Test.NDB.UNOFFICIAL FOUND\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 4\nInfected files: 2\nTotal errors: 2\nData scanned: 4.24 KiB\nData read: 132.30 KiB (ratio 0.03:1)\nTime: 5.683 sec (0 m 5 s)\nStart Date: 2026:11:11 06:23:36\nEnd Date:   2026:11:11 06:23:42\n"
+    "raw": "WARNING: Failed to set locale\nScanning folder-a/LICENSE.txt\nfolder-a/LICENSE.txt: OK\nfolder-a/LICENSE.txt FileHash: a411104a0e54474fa783689fe6123c6841f6d46df2cf2b070eb3138b3d679f3e (sha2-256)\nfolder-a/LICENSE.txt FileType: CL_TYPE_TEXT_ASCII\nScanning name with spaces: and colon.txt\nname with spaces: and colon.txt: OK\nname with spaces: and colon.txt FileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nname with spaces: and colon.txt FileType: CL_TYPE_TEXT_ASCII\nfolder-b/LICENSE.txt: Empty file\nexcluded.txt: Excluded\nunreadable.txt: Access denied\nlink.txt: Symbolic link\nScanning large.bin\nlarge.bin: Heuristics.Limits.Exceeded.MaxFileSize FOUND\nlarge.bin: Virus(es) detected ERROR\nWARNING: pipe: Not supported file type\nmissing.txt: No such file or directory\nWARNING: missing.txt: Can't access file\n/proc/version: Excluded (/proc)\n\ndetections.txt: Test.LDB.UNOFFICIAL FOUND\ndetections.txt: Test.NDB.UNOFFICIAL FOUND\ndetections.txt: copied to '/quarantine/detections.txt'\nmixed.bin: Virus(es) detected ERROR\nmixed.bin: Heuristics.Limits.Exceeded.MaxFileSize FOUND\nmixed.bin: Test.NDB.UNOFFICIAL FOUND\n\n----------- SCAN SUMMARY -----------\nKnown viruses: 3628258\nEngine version: 1.5.4\nScanned directories: 0\nScanned files: 4\nInfected files: 2\nTotal errors: 2\nData scanned: 4.24 KiB\nData read: 132.30 KiB (ratio 0.03:1)\nTime: 5.683 sec (0 m 5 s)\nStart Date: 2026:11:11 06:23:36\nEnd Date:   2026:11:11 06:23:42\n"
   },
   "platform": {
     "name": "Heimdall Tools",
@@ -47,8 +47,8 @@
           }
         },
         {
-          "code": "LICENSE.txt: OK\nLICENSE.txt FileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nLICENSE.txt FileType: CL_TYPE_TEXT_ASCII",
-          "id": "LICENSE.txt",
+          "code": "folder-a/LICENSE.txt: OK\nfolder-a/LICENSE.txt FileHash: a411104a0e54474fa783689fe6123c6841f6d46df2cf2b070eb3138b3d679f3e (sha2-256)\nfolder-a/LICENSE.txt FileType: CL_TYPE_TEXT_ASCII",
+          "id": "folder-a/LICENSE.txt",
           "impact": 0.5,
           "refs": [],
           "results": [
@@ -56,7 +56,7 @@
               "code_desc": "",
               "start_time": "2026:11:11 06:23:36",
               "status": "passed",
-              "message": "OK\nFileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nFileType: CL_TYPE_TEXT_ASCII"
+              "message": "OK\nFileHash: a411104a0e54474fa783689fe6123c6841f6d46df2cf2b070eb3138b3d679f3e (sha2-256)\nFileType: CL_TYPE_TEXT_ASCII"
             }
           ],
           "source_location": {},
@@ -93,8 +93,8 @@
           }
         },
         {
-          "code": "empty.txt: Empty file",
-          "id": "empty.txt",
+          "code": "folder-b/LICENSE.txt: Empty file",
+          "id": "folder-b/LICENSE.txt",
           "impact": 0,
           "refs": [],
           "results": [
@@ -325,7 +325,7 @@
       ],
       "groups": [],
       "name": "ClamAV Scan",
-      "sha256": "c86d13107c4bf572d5f94712e5470614630ddc18f1c5232505e9978ed28f36f4",
+      "sha256": "84675f8c2f9c8bc2733f221fa1da8bcddb1bf7d8b6e0c708cb25bf96a08616d6",
       "status": "loaded",
       "supports": [],
       "title": "ClamAV Scan (2026:11:11 06:23:36)",

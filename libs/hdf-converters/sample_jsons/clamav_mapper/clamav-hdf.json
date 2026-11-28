@@ -46,8 +46,8 @@
           }
         },
         {
-          "code": "LICENSE.txt: OK\nLICENSE.txt FileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nLICENSE.txt FileType: CL_TYPE_TEXT_ASCII",
-          "id": "LICENSE.txt",
+          "code": "folder-a/LICENSE.txt: OK\nfolder-a/LICENSE.txt FileHash: a411104a0e54474fa783689fe6123c6841f6d46df2cf2b070eb3138b3d679f3e (sha2-256)\nfolder-a/LICENSE.txt FileType: CL_TYPE_TEXT_ASCII",
+          "id": "folder-a/LICENSE.txt",
           "impact": 0.5,
           "refs": [],
           "results": [
@@ -55,7 +55,7 @@
               "code_desc": "",
               "start_time": "2026:11:11 06:23:36",
               "status": "passed",
-              "message": "OK\nFileHash: d072c71bfeca1ea60c5b93486df03438091386f4c6b1b1acb3e0082d9dadf784 (sha2-256)\nFileType: CL_TYPE_TEXT_ASCII"
+              "message": "OK\nFileHash: a411104a0e54474fa783689fe6123c6841f6d46df2cf2b070eb3138b3d679f3e (sha2-256)\nFileType: CL_TYPE_TEXT_ASCII"
             }
           ],
           "source_location": {},
@@ -92,8 +92,8 @@
           }
         },
         {
-          "code": "empty.txt: Empty file",
-          "id": "empty.txt",
+          "code": "folder-b/LICENSE.txt: Empty file",
+          "id": "folder-b/LICENSE.txt",
           "impact": 0,
           "refs": [],
           "results": [
@@ -324,7 +324,7 @@
       ],
       "groups": [],
       "name": "ClamAV Scan",
-      "sha256": "c86d13107c4bf572d5f94712e5470614630ddc18f1c5232505e9978ed28f36f4",
+      "sha256": "84675f8c2f9c8bc2733f221fa1da8bcddb1bf7d8b6e0c708cb25bf96a08616d6",
       "status": "loaded",
       "supports": [],
       "title": "ClamAV Scan (2026:11:11 06:23:36)",

@@ -5,7 +5,7 @@ import { ClamAvResults } from '../../../src/clamav_mapper';
 import { omitVersions } from '../../utils';
 
 describe('clamav_mapper', () => {
-  it('Successfully converts ClamAV data', () => {
+  it('Successfully converts ClamAV data with matching filenames in different directories', () => {
     const mapper = new ClamAvResults(
       fs.readFileSync('sample_jsons/clamav_mapper/sample_input_report/clamav.txt', { encoding: 'utf8' }),
     );
@@ -21,7 +21,7 @@ describe('clamav_mapper', () => {
 });
 
 describe('clamav_mapper_withraw', () => {
-  it('Successfully converts ClamAV data with raw output', () => {
+  it('Successfully converts ClamAV data with matching filenames in different directories and raw output', () => {
     const mapper = new ClamAvResults(
       fs.readFileSync('sample_jsons/clamav_mapper/sample_input_report/clamav.txt', { encoding: 'utf8' }),
       true,
